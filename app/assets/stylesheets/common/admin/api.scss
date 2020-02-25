@@ -31,7 +31,7 @@ table.web-hooks.grid {
       }
     }
   }
-  @include breakpoint(mobile) {
+  @include breakpoint(mobile-extra-large) {
     tbody {
       tr {
         grid-template-columns: 0.5fr 1fr;
@@ -41,50 +41,34 @@ table.web-hooks.grid {
       grid-row: 2;
     }
   }
-  //IE11 Support
-  @media screen and (max-width: 767px) {
-    tr {
-      display: -ms-grid;
-      -ms-grid-columns: 0.5fr 1fr 1fr 0.5fr;
-      td {
-        display: -ms-grid;
-        &.delivery-status {
-          -ms-grid-row: 1;
-          -ms-grid-column: 1;
-        }
-        &.payload-url {
-          -ms-grid-row: 1;
-          -ms-grid-column: 2;
-        }
-        &.description {
-          -ms-grid-row: 1;
-          -ms-grid-column: 3;
-        }
-        &.controls {
-          -ms-grid-row: 1;
-          -ms-grid-column: 4;
-        }
-      }
-    }
-  }
 }
 
 // Api keys
 
 table.api-keys {
   margin-bottom: 0.25em;
-  td.key {
-    font-size: $font-down-1;
+
+  .key-controls {
+    text-align: right;
   }
+
+  tr.revoked {
+    color: $primary-medium;
+  }
+
   @include breakpoint(tablet) {
     tr {
       grid-template-columns: 0.25fr 1fr 1fr;
     }
     td.key {
-      font-size: $font-0;
-      word-wrap: break-word;
       grid-row: 1;
       grid-column-start: 1;
+      grid-column-end: 1;
+      max-width: 100%;
+    }
+    td.key-description {
+      grid-row: 1;
+      grid-column-start: 2;
       grid-column-end: -1;
       max-width: 100%;
     }
@@ -102,38 +86,45 @@ table.api-keys {
       }
     }
   }
-  //IE11 Support
-  @media screen and (max-width: 767px) {
-    tr {
-      display: -ms-grid;
-      -ms-grid-columns: 0.25fr 1fr 1fr;
-      -ms-grid-rows: auto auto;
-      td {
-        display: -ms-grid;
+}
 
-        &.key {
-          -ms-grid-row: 1;
-          -ms-grid-column: 1;
-          -ms-grid-column-span: 3;
+.admin-api-keys {
+  h2 {
+    margin-bottom: 10px;
+  }
+  .api-key {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid $primary-low;
+    .form-element,
+    .form-element-desc {
+      float: left;
+      padding: 0.5em 0;
+      &.input-area {
+        width: 75%;
+        .value-list,
+        .select-kit,
+        input[type="text"] {
+          width: 50%;
+          margin: 0;
         }
-        &.key-user {
-          -ms-grid-row: 2;
-          -ms-grid-column: 1;
-        }
-        &.key-controls {
-          -ms-grid-row: 2;
-          -ms-grid-column: 2;
-          -ms-grid-column-span: 2;
-          display: -ms-grid;
-          -ms-grid-columns: 125px 125px;
-          button:first-of-type {
-            -ms-grid-column: 1;
-          }
-          button:last-of-type {
-            -ms-grid-column: 2;
-          }
+        .ac-wrap {
+          width: 50% !important;
         }
       }
+      &.label-area {
+        width: 25%;
+        label {
+          margin: 0.5em 1em 0 0;
+          text-align: right;
+          font-weight: bold;
+        }
+      }
+    }
+    .controls {
+      float: right;
+      text-align: left;
+      width: 50%;
     }
   }
 }
@@ -159,7 +150,7 @@ table.api-keys {
 
     .hook-event {
       margin-bottom: 0.5em;
-      @include breakpoint(mobile) {
+      @include breakpoint(mobile-extra-large) {
         width: 100%;
       }
     }
@@ -167,12 +158,12 @@ table.api-keys {
 
   > p {
     padding-bottom: 10px;
-    border-bottom: darken($secondary, 10%) 1px solid;
+    border-bottom: $primary-low 1px solid;
   }
   .filters {
     margin: 5px 0;
     padding-bottom: 5px;
-    border-bottom: darken($secondary, 5%) 1px solid;
+    border-bottom: $primary-low 1px solid;
     .filter {
       margin-bottom: 1em;
     }

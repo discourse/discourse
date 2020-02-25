@@ -110,7 +110,7 @@ module I18n
       end
 
       if dup_options.present?
-        return translate_no_cache(key, options)
+        return translate_no_cache(key, **options)
       end
 
       locale ||= config.locale
@@ -137,8 +137,9 @@ module I18n
 
     def overrides_by_locale(locale)
       return unless @overrides_enabled
-
       return {} if GlobalSetting.skip_db?
+
+      execute_reload if @requires_reload
 
       site = RailsMultisite::ConnectionManagement.current_db
 
@@ -162,11 +163,12 @@ module I18n
       end
 
       by_site[locale].with_indifferent_access
-    end
-
-    def client_overrides_json(locale)
-      client_json = (overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
-      MultiJson.dump(client_json)
+    rescue ActiveRecord::StatementInvalid => e
+      if PG::UndefinedTable === e.cause
+        {}
+      else
+        raise
+      end
     end
 
     def translate(*args)

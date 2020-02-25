@@ -1,0 +1,158 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches-ignore:
+      - 'tests-passed'
+
+jobs:
+  build:
+    name: "${{ matrix.target }}-${{ matrix.build_types }}"
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+
+    env:
+      DISCOURSE_HOSTNAME: www.example.com
+      RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
+      BUILD_TYPE: ${{ matrix.build_types }}
+      TARGET: ${{ matrix.target }}
+      RAILS_ENV: test
+      PGHOST: localhost
+      PGUSER: discourse
+      PGPASSWORD: discourse
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        build_types: [ 'BACKEND', 'FRONTEND', 'LINT' ]
+        target: [ 'PLUGINS', 'CORE' ]
+        os: [ ubuntu-latest ]
+        ruby: [ '2.6' ]
+        postgres: [ '10' ]
+        redis: [ '4.x' ]
+
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: discourse
+          POSTGRES_PASSWORD: discourse
+          POSTGRES_DB: discourse_test
+        options: >-
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+
+      - name: Setup Git
+        run:  git config --global user.email "ci@ci.invalid" && git config --global user.name "Discourse CI"
+
+      - name: Setup packages
+        if: env.BUILD_TYPE != 'LINT'
+        run: |
+          sudo apt-get -yqq install postgresql-client libpq-dev gifsicle jpegoptim optipng jhead && \
+          wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
+
+      - name: Setup redis
+        uses: shogo82148/actions-setup-redis@v1
+        if: env.BUILD_TYPE != 'LINT'
+        with:
+          redis-version: ${{ matrix.redis }}
+
+      - name: Setup ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          architecture: 'x64'
+
+      - name: Setup bundler
+        run: gem install bundler -v 2.1.1 --no-doc
+
+      - name: Bundler cache
+        uses: actions/cache@v1
+        id: bundler-cache
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-
+
+      - name: Setup gems
+        run: bundle install --without development --deployment --jobs 4 --retry 3
+
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Yarn cache
+        uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.os }}-yarn-
+
+      - name: Yarn install
+        run: yarn install --dev
+
+      - name: "Checkout official plugins"
+        if: env.TARGET == 'PLUGINS'
+        run: bin/rake plugin:install_all_official
+
+      - name: Create database
+        if: env.BUILD_TYPE != 'LINT'
+        run: bin/rake db:create && bin/rake db:migrate
+
+      - name: Create parallel databases
+        if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'CORE'
+        run: bin/rake parallel:create && bin/rake parallel:migrate
+
+      - name: Rubocop
+        if: env.BUILD_TYPE == 'LINT'
+        run: bundle exec rubocop .
+
+      - name: ESLint
+        if: env.BUILD_TYPE == 'LINT'
+        run: yarn eslint app/assets/javascripts test/javascripts && yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins
+
+      - name: Prettier
+        if: env.BUILD_TYPE == 'LINT'
+        run: |
+          yarn prettier -v
+          yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
+
+      - name: Core RSpec
+        if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'CORE'
+        run: bin/turbo_rspec && bin/rake plugin:spec
+
+      - name: Plugin RSpec
+        if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'PLUGINS'
+        run: bin/rake plugin:spec
+
+      - name: Core QUnit
+        if: env.BUILD_TYPE == 'FRONTEND' && env.TARGET == 'CORE'
+        run: bundle exec rake qunit:test['1200000']
+        timeout-minutes: 30
+
+      - name: Wizard QUnit
+        if: env.BUILD_TYPE == 'FRONTEND' && env.TARGET == 'CORE'
+        run: bundle exec rake qunit:test['1200000','/wizard/qunit']
+        timeout-minutes: 30
+
+      - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
+        if: env.BUILD_TYPE == 'FRONTEND'
+        run: bundle exec rake plugin:qunit
+        timeout-minutes: 30

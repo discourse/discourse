@@ -1,27 +1,244 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'rotp'
 
 describe UsersEmailController do
 
-  describe '#confirm' do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:moderator) { Fabricate(:moderator) }
+
+  describe "#confirm-new-email" do
+    it 'redirects to login for signed out accounts' do
+      get "/u/confirm-new-email/asdfasdf"
+
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to eq("http://test.localhost/login")
+    end
+
     it 'errors out for invalid tokens' do
-      get "/u/authorize-email/asdfasdf"
+      sign_in(user)
+
+      get "/u/confirm-new-email/asdfasdf"
 
       expect(response.status).to eq(200)
       expect(response.body).to include(I18n.t('change_email.already_done'))
     end
 
-    context 'valid old address token' do
-      fab!(:user) { Fabricate(:moderator) }
-      let(:updater) { EmailUpdater.new(user.guardian, user) }
+    it 'does not change email if accounts mismatch' do
+      updater = EmailUpdater.new(guardian: user.guardian, user: user)
+      updater.change_to('new.n.cool@example.com')
+
+      old_email = user.email
+
+      sign_in(moderator)
+
+      put "/u/confirm-new-email", params: {
+        token: "#{user.email_tokens.last.token}"
+      }
+
+      user.reload
+      expect(user.email).to eq(old_email)
+    end
+
+    context "with a valid user" do
+      let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
 
       before do
+        sign_in(user)
         updater.change_to('new.n.cool@example.com')
       end
 
       it 'confirms with a correct token' do
-        get "/u/authorize-email/#{user.email_tokens.last.token}"
+        user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
+
+        put "/u/confirm-new-email", params: {
+          token: "#{user.email_tokens.last.token}"
+        }
+
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to include("done")
+
+        user.reload
+
+        expect(user.user_stat.bounce_score).to eq(0)
+        expect(user.user_stat.reset_bounce_score_after).to eq(nil)
+        expect(user.email).to eq("new.n.cool@example.com")
+      end
+
+      context 'second factor required' do
+        fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+        fab!(:backup_code) { Fabricate(:user_second_factor_backup, user: user) }
+
+        it 'requires a second factor token' do
+          get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+
+          expect(response.status).to eq(200)
+
+          response_body = response.body
+
+          expect(response_body).to include(I18n.t("login.second_factor_title"))
+          expect(response_body).not_to include(I18n.t("login.invalid_second_factor_code"))
+        end
+
+        it 'requires a backup token' do
+          get "/u/confirm-new-email/#{user.email_tokens.last.token}?show_backup=true"
+
+          expect(response.status).to eq(200)
+
+          response_body = response.body
+
+          expect(response_body).to include(I18n.t("login.second_factor_backup_title"))
+        end
+
+        it 'adds an error on a second factor attempt' do
+          put "/u/confirm-new-email", params: {
+            token: user.email_tokens.last.token,
+            second_factor_token: "000000",
+            second_factor_method: UserSecondFactor.methods[:totp]
+          }
+
+          expect(response.status).to eq(302)
+          expect(flash[:invalid_second_factor]).to eq(true)
+        end
+
+        it 'confirms with a correct second token' do
+          put "/u/confirm-new-email", params: {
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now,
+            second_factor_method: UserSecondFactor.methods[:totp],
+            token: user.email_tokens.last.token
+          }
+
+          expect(response.status).to eq(302)
+
+          user.reload
+          expect(user.email).to eq("new.n.cool@example.com")
+        end
+      end
+
+      context "security key required" do
+        fab!(:user_security_key) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_security_key_data[:credential_id],
+            public_key: valid_security_key_data[:public_key]
+          )
+        end
+
+        before do
+          simulate_localhost_webauthn_challenge
+        end
+
+        it 'requires a security key' do
+          get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+
+          expect(response.status).to eq(200)
+
+          response_body = response.body
+
+          expect(response_body).to include(I18n.t("login.security_key_authenticate"))
+          expect(response_body).to include(I18n.t("login.security_key_description"))
+        end
+
+        context "if the user has a TOTP enabled and wants to use that instead" do
+          before do
+            Fabricate(:user_second_factor_totp, user: user)
+          end
+
+          it 'allows entering the totp code instead' do
+            get "/u/confirm-new-email/#{user.email_tokens.last.token}?show_totp=true"
+
+            expect(response.status).to eq(200)
+
+            response_body = response.body
+
+            expect(response_body).to include(I18n.t("login.second_factor_title"))
+            expect(response_body).not_to include(I18n.t("login.security_key_authenticate"))
+          end
+        end
+
+        it 'adds an error on a security key attempt' do
+          get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+          put "/u/confirm-new-email", params: {
+            token: user.email_tokens.last.token,
+            second_factor_token: "{}",
+            second_factor_method: UserSecondFactor.methods[:security_key]
+          }
+
+          expect(response.status).to eq(302)
+          expect(flash[:invalid_second_factor]).to eq(true)
+        end
+
+        it 'confirms with a correct security key token' do
+          get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+          put "/u/confirm-new-email", params: {
+            second_factor_token: valid_security_key_auth_post_data.to_json,
+            second_factor_method: UserSecondFactor.methods[:security_key],
+            token: user.email_tokens.last.token
+          }
+
+          expect(response.status).to eq(302)
+
+          user.reload
+          expect(user.email).to eq("new.n.cool@example.com")
+        end
+
+        context "if the security key data JSON is garbled" do
+          it "raises an invalid parameters error" do
+            get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+            put "/u/confirm-new-email", params: {
+              second_factor_token: "{someweird: 8notjson}",
+              second_factor_method: UserSecondFactor.methods[:security_key],
+              token: user.email_tokens.last.token
+            }
+
+            expect(response.status).to eq(400)
+          end
+        end
+      end
+    end
+  end
+
+  describe '#confirm-old-email' do
+
+    it 'redirects to login for signed out accounts' do
+      get "/u/confirm-old-email/asdfasdf"
+
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to eq("http://test.localhost/login")
+    end
+
+    it 'errors out for invalid tokens' do
+      sign_in(user)
+
+      get "/u/confirm-old-email/asdfasdf"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t('change_email.already_done'))
+    end
+
+    it 'bans change when accounts do not match' do
+
+      sign_in(user)
+      updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
+      updater.change_to('new.n.cool@example.com')
+
+      get "/u/confirm-old-email/#{moderator.email_tokens.last.token}"
+
+      expect(response.status).to eq(200)
+      expect(body).to include("alert-error")
+    end
+
+    context 'valid old address token' do
+
+      it 'confirms with a correct token' do
+        # NOTE: only moderators need to confirm both old and new
+        sign_in(moderator)
+        updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
+        updater.change_to('new.n.cool@example.com')
+
+        get "/u/confirm-old-email/#{moderator.email_tokens.last.token}"
 
         expect(response.status).to eq(200)
 
@@ -32,89 +249,19 @@ describe UsersEmailController do
 
         expect(body)
           .to include(I18n.t('change_email.authorizing_old.description'))
-      end
-    end
 
-    context 'valid new address token' do
-      fab!(:user) { Fabricate(:user) }
-      let(:updater) { EmailUpdater.new(user.guardian, user) }
+        put "/u/confirm-old-email", params: {
+          token: moderator.email_tokens.last.token
+        }
 
-      before do
-        updater.change_to('new.n.cool@example.com')
-      end
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to include("done=true")
 
-      it 'confirms with a correct token' do
-        user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
-
-        events = DiscourseEvent.track_events do
-          get "/u/authorize-email/#{user.email_tokens.last.token}"
-        end
-
-        expect(events.map { |event| event[:event_name] }).to include(
-          :user_logged_in, :user_first_logged_in
-        )
-
-        expect(response.status).to eq(200)
-        expect(response.body).to include(I18n.t('change_email.confirmed'))
-
-        user.reload
-
-        expect(user.user_stat.bounce_score).to eq(0)
-        expect(user.user_stat.reset_bounce_score_after).to eq(nil)
-      end
-
-      it 'automatically adds the user to a group when the email matches' do
-        group = Fabricate(:group, automatic_membership_email_domains: "example.com")
-
-        get "/u/authorize-email/#{user.email_tokens.last.token}"
-
-        expect(response.status).to eq(200)
-        expect(group.reload.users.include?(user)).to eq(true)
-      end
-
-      context 'second factor required' do
-        fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
-
-        it 'requires a second factor token' do
-          get "/u/authorize-email/#{user.email_tokens.last.token}"
-
-          expect(response.status).to eq(200)
-
-          response_body = response.body
-
-          expect(response_body).to include(I18n.t("login.second_factor_title"))
-          expect(response_body).not_to include(I18n.t("login.invalid_second_factor_code"))
-        end
-
-        it 'adds an error on a second factor attempt' do
-          get "/u/authorize-email/#{user.email_tokens.last.token}", params: {
-            second_factor_token: "000000",
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }
-
-          expect(response.status).to eq(200)
-          expect(response.body).to include(I18n.t("login.invalid_second_factor_code"))
-        end
-
-        it 'confirms with a correct second token' do
-          get "/u/authorize-email/#{user.email_tokens.last.token}", params: {
-            second_factor_token: ROTP::TOTP.new(second_factor.data).now,
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }
-
-          expect(response.status).to eq(200)
-
-          response_body = response.body
-
-          expect(response_body).not_to include(I18n.t("login.second_factor_title"))
-          expect(response_body).not_to include(I18n.t("login.invalid_second_factor_code"))
-        end
       end
     end
   end
 
   describe '#update' do
-    fab!(:user) { Fabricate(:user) }
     let(:new_email) { 'bubblegum@adventuretime.ooo' }
 
     it "requires you to be logged in" do

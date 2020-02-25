@@ -5,37 +5,67 @@
 // Base
 // --------------------------------------------------
 
-.btn {
+@mixin btn(
+  $text-color: $primary,
+  $bg-color: $primary-low,
+  $icon-color: $primary-high,
+  $hover-text-color: $secondary,
+  $hover-bg-color: $primary-medium,
+  $hover-icon-color: $primary-low
+) {
   display: inline-block;
   margin: 0;
   padding: 6px 12px;
-  font-weight: 500;
+  min-height: 30px;
+  border: none;
+  box-sizing: border-box;
+  font-weight: normal;
+  color: $text-color;
+  background: $bg-color;
   font-size: $font-0;
   line-height: $line-height-small;
   text-align: center;
   cursor: pointer;
   transition: all 0.25s;
-  box-sizing: border-box;
-  min-height: 30px;
   .d-icon {
+    color: $icon-color;
+    margin-right: 0.45em;
     transition: color 0.25s;
+    line-height: $line-height-medium; // Match button text line-height
+  }
+  &.no-text {
+    .d-icon {
+      margin-right: 0;
+    }
+  }
+  @include hover {
+    background: $hover-bg-color;
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
+  &[href] {
+    color: $text-color;
   }
   &:active,
   &.btn-active {
-    text-shadow: none;
+    @include linear-gradient(
+      scale-color($bg-color, $lightness: -20%),
+      $bg-color
+    );
   }
   &[disabled],
   &.disabled {
-    cursor: default;
     opacity: 0.4;
-  }
-  .fa {
-    margin-right: 7px;
-  }
-  &.no-text {
-    .fa {
-      margin-right: 0;
+    &:hover {
+      color: $text-color;
+      background: $bg-color;
+      .d-icon {
+        color: $icon-color;
+      }
     }
+    cursor: not-allowed;
   }
 }
 
@@ -47,129 +77,68 @@
 // --------------------------------------------------
 
 .btn {
-  border: none;
-  color: $primary;
-  font-weight: normal;
-  background: $primary-low;
-  .d-icon {
-    color: $primary-high;
-  }
-
-  &[href] {
-    color: $primary;
-    min-height: unset; // ovverides button defaults
-  }
-  .discourse-no-touch & {
-    // only allow hover on no-touch devices
-    &:hover,
-    &.btn-hover {
-      background: $primary-medium;
-      color: $secondary;
-      .d-icon {
-        color: $secondary-very-high;
-      }
-    }
-  }
-  &[disabled],
-  &.disabled {
-    background: $primary-low;
-    .d-icon {
-      color: $primary-medium;
-    }
-    &:hover {
-      color: dark-light-choose($primary-low-mid, $secondary-high);
-      .d-icon {
-        color: $primary-low-mid;
-      }
-    }
-    cursor: not-allowed;
-  }
-
-  .d-icon {
-    line-height: $line-height-medium; // Match button text line-height
-  }
+  @include btn;
 }
 
 // Primary button
 // --------------------------------------------------
 
 .btn-primary {
-  border: none;
-  font-weight: normal;
-  color: $secondary;
-  background: $tertiary;
-  .d-icon {
-    color: currentColor;
-  }
-  &[href] {
-    color: $secondary;
-  }
-  .discourse-no-touch & {
-    // only allow hover on no-touch devices
-    &:hover,
-    &.btn-hover {
-      background: dark-light-choose(
-        scale-color($tertiary, $lightness: -20%),
-        scale-color($tertiary, $lightness: 20%)
-      );
-      .d-icon {
-        color: currentColor;
-      }
-    }
-  }
-  &:active,
-  &.btn-active {
-    @include linear-gradient(
-      scale-color($tertiary, $lightness: -20%),
-      $tertiary
-    );
-  }
-  &[disabled],
-  &.disabled {
-    background: $tertiary;
-    .d-icon {
-      color: currentColor;
-    }
-  }
+  @include btn(
+    $text-color: $secondary,
+    $bg-color: $tertiary,
+    $icon-color: $secondary,
+    $hover-bg-color: darken($tertiary, 10%),
+    $hover-icon-color: $secondary
+  );
 }
 
 // Danger button
 // --------------------------------------------------
 
 .btn-danger {
-  color: $secondary;
-  font-weight: normal;
-  background: $danger;
-  .d-icon {
-    color: $danger-low;
-  }
-  &[href] {
-    color: $secondary;
-  }
-  .discourse-no-touch & {
-    // only allow hover on no-touch devices
-    &:hover,
-    &.btn-hover {
-      background: dark-light-choose(
+  @include btn(
+    $text-color: $secondary,
+    $bg-color: $danger,
+    $icon-color: $danger-low,
+    $hover-bg-color:
+      dark-light-choose(
         scale-color($danger, $lightness: -20%),
         scale-color($danger, $lightness: 20%)
-      );
-      .d-icon {
-        color: $danger-low;
-      }
-    }
-  }
-  &:active,
-  &.btn-active {
-    @include linear-gradient(scale-color($danger, $lightness: -20%), $danger);
-  }
-  &[disabled],
-  &.disabled {
-    background: $danger;
-    .d-icon {
-      color: $danger-low;
-    }
-  }
+      ),
+    $hover-icon-color: $danger-low
+  );
+}
+
+// ✘ and ✔ buttons
+// --------------------------------------------------
+
+.btn.cancel {
+  @include btn(
+    $text-color: $secondary,
+    $bg-color: $danger,
+    $icon-color: $secondary,
+    $hover-bg-color:
+      dark-light-choose(
+        scale-color($danger, $lightness: -20%),
+        scale-color($danger, $lightness: 20%)
+      ),
+    $hover-icon-color: $secondary
+  );
+}
+
+.btn.ok {
+  @include btn(
+    $text-color: $secondary,
+    $bg-color: $success,
+    $icon-color: $secondary,
+    $hover-bg-color:
+      dark-light-choose(
+        scale-color($success, $lightness: -20%),
+        scale-color($success, $lightness: 20%)
+      ),
+    $hover-icon-color: $secondary
+  );
 }
 
 // Social buttons
@@ -231,6 +200,12 @@
       background: lighten($github, 20%);
     }
   }
+  &.discord {
+    background: $discord;
+    &:hover {
+      background: darken($discord, 10%);
+    }
+  }
 }
 
 // Button Sizes
@@ -239,8 +214,12 @@
 // Small
 
 .btn-small {
-  padding: 3px 6px;
+  padding: 6px;
   font-size: $font-down-1;
+  min-height: 20px;
+  .d-icon {
+    max-height: 0.87em;
+  }
 }
 
 // Large
@@ -260,11 +239,35 @@
   .d-icon {
     color: $primary-low-mid;
   }
-  .discourse-no-touch & {
-    &:hover {
+  @include hover {
+    .d-icon {
+      color: $primary;
+    }
+  }
+  &.close {
+    padding: 0;
+    min-height: unset;
+    background: transparent;
+    font-size: $font-up-3;
+    .d-icon {
+      color: $primary-high;
+    }
+    @include hover {
+      background: transparent;
       .d-icon {
         color: $primary;
       }
     }
+  }
+}
+
+.btn-link {
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  color: $tertiary;
+  &:focus {
+    outline: 1px currentColor dotted;
   }
 }

@@ -12,12 +12,16 @@
           placeholderKey="groups.index.all"
           class="groups-header-filters-name no-blur"}}
 
-      {{combo-box value=type
-                  content=types
-                  clearable=true
-                  allowAutoSelectFirst=false
-                  noneLabel="groups.index.filter"
-                  class="groups-header-filters-type"}}
+      {{combo-box
+        value=type
+        content=types
+        class="groups-header-filters-type"
+        onChange=(action (mut type))
+        options=(hash
+          clearable=true
+          none="groups.index.filter"
+        )
+      }}
     </div>
   </div>
 
@@ -53,7 +57,7 @@
                     {{#group-membership-button tagName='' model=group showLogin=(route-action "showLogin")}}
                       {{#if group.is_group_owner}}
                       <span class="is-group-owner">
-                        {{d-icon "shield"}}
+                        {{d-icon "shield-alt"}}
                         {{i18n "groups.index.is_group_owner"}}
                       </span>
                       {{else if group.is_group_user}}

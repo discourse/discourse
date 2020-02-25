@@ -1,72 +1,68 @@
+import { alias, not } from "@ember/object/computed";
+import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
-import { bufferedRender } from "discourse-common/lib/buffered-render";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend(
-  bufferedRender({
-    classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
-    animateAttribute: null,
-    bouncePixels: 6,
-    bounceDelay: 100,
-    rerenderTriggers: ["validation.reason"],
+export default Component.extend({
+  classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
+  animateAttribute: null,
+  bouncePixels: 6,
+  bounceDelay: 100,
+  rerenderTriggers: ["validation.reason"],
+  closeIcon: `${iconHTML("times-circle")}`.htmlSafe(),
+  tipReason: null,
 
-    click() {
-      this.set("shownAt", null);
-      this.set("validation.lastShownAt", null);
-    },
+  click() {
+    this.set("shownAt", null);
+    this.set("validation.lastShownAt", null);
+  },
 
-    bad: Ember.computed.alias("validation.failed"),
-    good: Ember.computed.not("bad"),
+  bad: alias("validation.failed"),
+  good: not("bad"),
 
-    @computed("shownAt", "validation.lastShownAt")
-    lastShownAt(shownAt, lastShownAt) {
-      return shownAt || lastShownAt;
-    },
+  @discourseComputed("shownAt", "validation.lastShownAt")
+  lastShownAt(shownAt, lastShownAt) {
+    return shownAt || lastShownAt;
+  },
 
-    @observes("lastShownAt")
-    bounce() {
-      if (this.lastShownAt) {
-        var $elem = this.$();
-        if (!this.animateAttribute) {
-          this.animateAttribute =
-            $elem.css("left") === "auto" ? "right" : "left";
-        }
-        if (this.animateAttribute === "left") {
-          this.bounceLeft($elem);
-        } else {
-          this.bounceRight($elem);
-        }
+  @observes("lastShownAt")
+  bounce() {
+    if (this.lastShownAt) {
+      var $elem = $(this.element);
+      if (!this.animateAttribute) {
+        this.animateAttribute = $elem.css("left") === "auto" ? "right" : "left";
       }
-    },
-
-    buildBuffer(buffer) {
-      const reason = this.get("validation.reason");
-      if (!reason) {
-        return;
-      }
-
-      buffer.push(
-        `<span class='close'>${iconHTML("times-circle")}</span>${reason}`
-      );
-    },
-
-    bounceLeft($elem) {
-      for (var i = 0; i < 5; i++) {
-        $elem
-          .animate({ left: "+=" + this.bouncePixels }, this.bounceDelay)
-          .animate({ left: "-=" + this.bouncePixels }, this.bounceDelay);
-      }
-    },
-
-    bounceRight($elem) {
-      for (var i = 0; i < 5; i++) {
-        $elem
-          .animate({ right: "-=" + this.bouncePixels }, this.bounceDelay)
-          .animate({ right: "+=" + this.bouncePixels }, this.bounceDelay);
+      if (this.animateAttribute === "left") {
+        this.bounceLeft($elem);
+      } else {
+        this.bounceRight($elem);
       }
     }
-  })
-);
+  },
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+    let reason = this.get("validation.reason");
+    if (reason) {
+      this.set("tipReason", `${reason}`.htmlSafe());
+    } else {
+      this.set("tipReason", null);
+    }
+  },
+
+  bounceLeft($elem) {
+    for (var i = 0; i < 5; i++) {
+      $elem
+        .animate({ left: "+=" + this.bouncePixels }, this.bounceDelay)
+        .animate({ left: "-=" + this.bouncePixels }, this.bounceDelay);
+    }
+  },
+
+  bounceRight($elem) {
+    for (var i = 0; i < 5; i++) {
+      $elem
+        .animate({ right: "-=" + this.bouncePixels }, this.bounceDelay)
+        .animate({ right: "+=" + this.bouncePixels }, this.bounceDelay);
+    }
+  }
+});

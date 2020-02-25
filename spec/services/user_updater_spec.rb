@@ -225,7 +225,7 @@ describe UserUpdater do
 
       theme = Fabricate(:theme)
       child = Fabricate(:theme, component: true)
-      theme.add_child_theme!(child)
+      theme.add_relative_theme!(:child, child)
       theme.set_default!
 
       updater.update(theme_ids: [theme.id.to_s, child.id.to_s, "", nil])
@@ -246,6 +246,61 @@ describe UserUpdater do
 
         user.reload
         expect(user.user_profile.bio_raw).not_to eq 'new bio'
+      end
+    end
+
+    context 'when updating primary group' do
+      let(:new_group) { Group.create(name: 'new_group') }
+      let(:user) { Fabricate(:user) }
+
+      it 'updates when setting is enabled' do
+        SiteSetting.user_selected_primary_groups = true
+        user.groups << new_group
+        user.update(primary_group_id: nil)
+        UserUpdater.new(acting_user, user).update(primary_group_id: new_group.id)
+
+        user.reload
+        expect(user.primary_group_id).to eq new_group.id
+      end
+
+      it 'does not update when setting is disabled' do
+        SiteSetting.user_selected_primary_groups = false
+        user.groups << new_group
+        user.update(primary_group_id: nil)
+        UserUpdater.new(acting_user, user).update(primary_group_id: new_group.id)
+
+        user.reload
+        expect(user.primary_group_id).to eq nil
+      end
+
+      it 'does not update when changing other profile data' do
+        SiteSetting.user_selected_primary_groups = true
+        user.groups << new_group
+        user.update(primary_group_id: new_group.id)
+        UserUpdater.new(acting_user, user).update(website: 'http://example.com')
+
+        user.reload
+        expect(user.primary_group_id).to eq new_group.id
+      end
+
+      it 'can be removed by the user when setting is enabled' do
+        SiteSetting.user_selected_primary_groups = true
+        user.groups << new_group
+        user.update(primary_group_id: new_group.id)
+        UserUpdater.new(acting_user, user).update(primary_group_id: '')
+
+        user.reload
+        expect(user.primary_group_id).to eq nil
+      end
+
+      it 'cannot be removed by the user when setting is disabled' do
+        SiteSetting.user_selected_primary_groups = false
+        user.groups << new_group
+        user.update(primary_group_id: new_group.id)
+        UserUpdater.new(acting_user, user).update(primary_group_id: '')
+
+        user.reload
+        expect(user.primary_group_id).to eq new_group.id
       end
     end
 

@@ -11,7 +11,6 @@ div.poll {
     padding: 0 1em;
     display: flex;
     flex-wrap: wrap;
-    border-top: 1px solid $primary-low;
     .info-text {
       display: inline;
     }
@@ -24,6 +23,17 @@ div.poll {
     }
     .info-label {
       margin-left: 0.25em;
+    }
+  }
+}
+
+div.poll.pie {
+  .poll-container {
+    width: calc(100% - 30px);
+    border-bottom: 1px solid $primary-low;
+
+    .poll-grouped-pie-container {
+      width: 100%;
     }
   }
 }

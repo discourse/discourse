@@ -1,7 +1,10 @@
-export default Ember.Controller.extend({
-  user: Ember.inject.controller(),
-  username: Ember.computed.alias("user.model.username_lower"),
-  sortedBadges: Ember.computed.sort("model", "badgeSortOrder"),
+import { alias, sort } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+export default Controller.extend({
+  user: inject(),
+  username: alias("user.model.username_lower"),
+  sortedBadges: sort("model", "badgeSortOrder"),
 
   init() {
     this._super(...arguments);

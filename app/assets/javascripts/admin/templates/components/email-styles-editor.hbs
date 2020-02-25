@@ -1,0 +1,20 @@
+<div class='row'>
+  <div class='admin-controls'>
+    <nav>
+      <ul class='nav nav-pills'>
+        <li>{{#link-to 'adminCustomizeEmailStyle.edit' 'html' replace=true}}{{i18n 'admin.customize.email_style.html'}}{{/link-to}}</li>
+        <li>{{#link-to 'adminCustomizeEmailStyle.edit' 'css' replace=true}}{{i18n 'admin.customize.email_style.css'}}{{/link-to}}</li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+{{ace-editor content=editorContents mode=currentEditorMode editorId=editorId}}
+
+<div class='admin-footer'>
+  <div class='buttons'>
+    {{#d-button action=(action "reset") disabled=resetDisabled class='btn-default'}}
+      {{i18n 'admin.customize.email_style.reset'}}
+    {{/d-button}}
+  </div>
+</div>

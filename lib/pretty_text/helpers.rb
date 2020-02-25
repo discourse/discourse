@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'inline_oneboxer'
-
 module PrettyText
   module Helpers
     extend self
@@ -66,13 +64,15 @@ module PrettyText
           reverse_map[value] << key
         end
 
-        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension).each do |row|
-          sha1, url, extension = row
+        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension, :original_filename, :secure).each do |row|
+          sha1, url, extension, original_filename, secure = row
 
           if short_urls = reverse_map[sha1]
+            secure_media = FileHelper.is_supported_media?(original_filename) && SiteSetting.secure_media? && secure
+
             short_urls.each do |short_url|
               result[short_url] = {
-                url: url,
+                url: secure_media ? Upload.secure_media_url_from_upload_url(url) : Discourse.store.cdn_url(url),
                 short_path: Upload.short_path(sha1: sha1, extension: extension),
                 base62_sha1: Upload.base62_sha1(sha1)
               }
@@ -109,7 +109,7 @@ module PrettyText
         [category.url_with_id, text]
       elsif (!is_tag && tag = Tag.find_by(name: text)) ||
             (is_tag && tag = Tag.find_by(name: text.gsub!("#{tag_postfix}", '')))
-        ["#{Discourse.base_url}/tags/#{tag.name}", text]
+        ["#{Discourse.base_url}/tag/#{tag.name}", text]
       else
         nil
       end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserSecondFactor < ActiveRecord::Base
+  include SecondFactorManager
   belongs_to :user
 
   scope :backup_codes, -> do
@@ -11,15 +12,24 @@ class UserSecondFactor < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   end
 
+  scope :all_totps, -> do
+    where(method: UserSecondFactor.methods[:totp])
+  end
+
   def self.methods
     @methods ||= Enum.new(
       totp: 1,
       backup_codes: 2,
+      security_key: 3,
     )
   end
 
-  def self.totp
-    where(method: self.methods[:totp]).first
+  def totp_object
+    get_totp_object(self.data)
+  end
+
+  def totp_provisioning_uri
+    totp_object.provisioning_uri(user.email)
   end
 
 end
@@ -36,6 +46,7 @@ end
 #  last_used  :datetime
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  name       :string
 #
 # Indexes
 #

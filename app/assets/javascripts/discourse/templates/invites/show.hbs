@@ -9,7 +9,7 @@
 
     <div class="col-form">
       {{#if successMessage}}
-        <br/><br/>
+        <br><br>
         <div class='alert alert-info'><p>{{{successMessage}}}</p></div>
       {{else}}
         <p>{{i18n 'invites.invited_by'}}</p>
@@ -56,10 +56,15 @@
             </div>
           {{/if}}
 
-          <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
+          {{d-button
+            class="btn-primary"
+            action=(action "submit")
+            type="submit"
+            disabled=submitDisabled
+            label="invites.accept_invite"}}
 
           {{#if errorMessage}}
-            <br/><br/>
+            <br><br>
             <div class='alert alert-error'>{{errorMessage}}</div>
           {{/if}}
         </form>

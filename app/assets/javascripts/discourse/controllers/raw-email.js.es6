@@ -1,18 +1,20 @@
+import { equal } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Post from "discourse/models/post";
 import IncomingEmail from "admin/models/incoming-email";
 
 // This controller handles displaying of raw email
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   rawEmail: "",
   textPart: "",
   htmlPart: "",
 
   tab: "raw",
 
-  showRawEmail: Ember.computed.equal("tab", "raw"),
-  showTextPart: Ember.computed.equal("tab", "text_part"),
-  showHtmlPart: Ember.computed.equal("tab", "html_part"),
+  showRawEmail: equal("tab", "raw"),
+  showTextPart: equal("tab", "text_part"),
+  showHtmlPart: equal("tab", "html_part"),
 
   onShow() {
     this.send("displayRaw");

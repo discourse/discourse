@@ -63,9 +63,18 @@ describe Stylesheet::Importer do
 
   context "extra_scss" do
     let(:scss) { "body { background: red}" }
+    let(:child_scss) { "body { background: green}" }
+
     let(:theme) { Fabricate(:theme).tap { |t|
       t.set_field(target: :extra_scss, name: "my_files/magic", value: scss)
       t.save!
+    }}
+
+    let(:child_theme) { Fabricate(:theme).tap { |t|
+      t.component = true
+      t.set_field(target: :extra_scss, name: "my_files/moremagic", value: child_scss)
+      t.save!
+      theme.add_relative_theme!(:child, t)
     }}
 
     let(:importer) { described_class.new(theme: theme) }
@@ -105,6 +114,13 @@ describe Stylesheet::Importer do
           "./magic",
           "theme_#{theme.id}/my_files/myfile.scss"
         ).source).to eq(scss)
+
+      # Import within a child theme
+      expect(
+        importer.imports(
+          "my_files/moremagic",
+          "theme_#{child_theme.id}/theme_field.scss"
+        ).source).to eq(child_scss)
     end
 
   end

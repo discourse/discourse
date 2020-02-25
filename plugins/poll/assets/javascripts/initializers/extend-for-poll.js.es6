@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { getRegister } from "discourse-common/lib/get-owner";
 import WidgetGlue from "discourse/widgets/glue";
 
@@ -55,38 +55,52 @@ function initializePolls(api) {
 
   function attachPolls($elem, helper) {
     const $polls = $(".poll", $elem);
-    if (!$polls.length) {
+    if (!$polls.length || !helper) {
       return;
     }
 
-    if (!helper) {
-      return;
-    }
-
-    const post = helper.getModel();
+    let post = helper.getModel();
     api.preventCloak(post.id);
-    const votes = post.get("polls_votes") || {};
-
     post.pollsChanged();
 
-    const polls = post.get("pollsObject");
-    if (!polls) {
-      return;
-    }
+    const polls = post.pollsObject || {};
+    const votes = post.polls_votes || {};
 
     _interval = _interval || setInterval(rerender, 30000);
 
     $polls.each((idx, pollElem) => {
       const $poll = $(pollElem);
       const pollName = $poll.data("poll-name");
-      const poll = polls[pollName];
+      let poll = polls[pollName];
+      let vote = votes[pollName] || [];
+
+      const quotedId = $poll.parent(".expanded-quote").data("post-id");
+      if (quotedId) {
+        const quotedPost = post.quoted[quotedId];
+        if (quotedPost) {
+          post = Ember.Object.create(quotedPost);
+          poll = Ember.Object.create(
+            quotedPost.polls.find(p => p.name === pollName)
+          );
+          vote = quotedPost.polls_votes || {};
+          vote = vote[pollName] || [];
+        }
+      }
+
       if (poll) {
-        const glue = new WidgetGlue("discourse-poll", register, {
+        const attrs = {
           id: `${pollName}-${post.id}`,
           post,
           poll,
-          vote: votes[pollName] || []
-        });
+          vote,
+          groupableUserFields: (
+            api.container.lookup("site-settings:main")
+              .poll_groupable_user_fields || ""
+          )
+            .split("|")
+            .filter(Boolean)
+        };
+        const glue = new WidgetGlue("discourse-poll", register, attrs);
         glue.appendTo(pollElem);
         _glued.push(glue);
       }

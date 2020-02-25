@@ -45,7 +45,7 @@ $rollback-darker: darken($rollback, 20%) !default;
         }
       }
     }
-    @include breakpoint(mobile) {
+    @include breakpoint(mobile-extra-large) {
       td.backup-filename {
         grid-column-start: 1;
         grid-column-end: 3;
@@ -94,5 +94,20 @@ button.ru {
   }
   .btn:first-of-type {
     margin-left: 10px;
+  }
+}
+
+.backup-options {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  .btn {
+    margin-right: 0.5em;
+  }
+  .backup-message {
+    margin-left: auto;
+    @include breakpoint(mobile-extra-large) {
+      margin: 1.25em 0 0;
+    }
   }
 }

@@ -1,15 +1,19 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Composer from "discourse/models/composer";
 import showModal from "discourse/lib/show-modal";
-import { findTopicList } from "discourse/routes/build-topic-route";
+import {
+  filterQueryParams,
+  findTopicList
+} from "discourse/routes/build-topic-route";
+import { queryParams } from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
+import Category from "discourse/models/category";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
 
-  queryParams: {
-    ascending: { refreshModel: true },
-    order: { refreshModel: true }
-  },
+  queryParams,
 
   renderTemplate() {
     const controller = this.controllerFor("tags.show");
@@ -20,8 +24,6 @@ export default Discourse.Route.extend({
     const tag = this.store.createRecord("tag", {
       id: Handlebars.Utils.escapeExpression(params.tag_id)
     });
-    let f = "";
-
     if (params.additional_tags) {
       this.set(
         "additionalTags",
@@ -35,22 +37,9 @@ export default Discourse.Route.extend({
       this.set("additionalTags", null);
     }
 
-    if (params.category) {
-      f = "c/";
-      if (params.parent_category) {
-        f += `${params.parent_category}/`;
-      }
-      f += `${params.category}/l/`;
-    }
-    f += this.navMode;
-    this.set("filterMode", f);
+    this.set("filterType", this.navMode.split("/")[0]);
 
-    if (params.category) {
-      this.set("categorySlug", params.category);
-    }
-    if (params.parent_category) {
-      this.set("parentCategorySlug", params.parent_category);
-    }
+    this.set("categorySlugPathWithID", params.category_slug_path_with_id);
 
     if (tag && tag.get("id") !== "none" && this.currentUser) {
       // If logged in, we should get the tag's user settings
@@ -67,48 +56,40 @@ export default Discourse.Route.extend({
 
   afterModel(tag, transition) {
     const controller = this.controllerFor("tags.show");
-    controller.set("loading", true);
+    controller.setProperties({
+      loading: true,
+      showInfo: false
+    });
 
-    const params = controller.getProperties("order", "ascending");
-    params.order = transition.to.queryParams.order || params.order;
-    params.ascending = transition.to.queryParams.ascending || params.ascending;
-
-    const categorySlug = this.categorySlug;
-    const parentCategorySlug = this.parentCategorySlug;
-    const filter = this.navMode;
+    const params = filterQueryParams(transition.to.queryParams, {});
+    const category = this.categorySlugPathWithID
+      ? Category.findBySlugPathWithID(this.categorySlugPathWithID)
+      : null;
+    const topicFilter = this.navMode;
     const tagId = tag ? tag.id.toLowerCase() : "none";
+    let filter;
 
-    if (categorySlug) {
-      const category = Discourse.Category.findBySlug(
-        categorySlug,
-        parentCategorySlug
-      );
-      if (parentCategorySlug) {
-        params.filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${filter}`;
-      } else {
-        params.filter = `tags/c/${categorySlug}/${tagId}/l/${filter}`;
+    if (category) {
+      category.setupGroupsAndPermissions();
+      this.set("category", category);
+      filter = `tags/c/${Category.slugFor(category)}/${category.id}`;
+
+      if (this.noSubcategories) {
+        filter += "/none";
       }
-      if (category) {
-        category.setupGroupsAndPermissions();
-        this.set("category", category);
-      }
+
+      filter += `/${tagId}/l/${topicFilter}`;
     } else if (this.additionalTags) {
-      params.filter = `tags/intersection/${tagId}/${this.get(
-        "additionalTags"
-      ).join("/")}`;
       this.set("category", null);
+      filter = `tags/intersection/${tagId}/${this.additionalTags.join("/")}`;
     } else {
-      params.filter = `tags/${tagId}/l/${filter}`;
       this.set("category", null);
+      filter = `tag/${tagId}/l/${topicFilter}`;
     }
 
-    return findTopicList(
-      this.store,
-      this.topicTrackingState,
-      params.filter,
-      params,
-      { cached: true }
-    ).then(list => {
+    return findTopicList(this.store, this.topicTrackingState, filter, params, {
+      cached: true
+    }).then(list => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)
         tag.setProperties({
@@ -166,10 +147,17 @@ export default Discourse.Route.extend({
       tag: model,
       additionalTags: this.additionalTags,
       category: this.category,
-      filterMode: this.filterMode,
+      filterType: this.filterType,
       navMode: this.navMode,
-      tagNotification: this.tagNotification
+      tagNotification: this.tagNotification,
+      noSubcategories: this.noSubcategories
     });
+    this.searchService.set("searchContext", model.get("searchContext"));
+  },
+
+  deactivate() {
+    this._super(...arguments);
+    this.searchService.set("searchContext", null);
   },
 
   actions: {

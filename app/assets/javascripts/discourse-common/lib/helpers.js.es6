@@ -1,7 +1,16 @@
-import { get } from "discourse-common/lib/raw-handlebars";
+import { get } from "@ember/object";
+import Helper from "@ember/component/helper";
+import RawHandlebars from "discourse-common/lib/raw-handlebars";
+
+export function makeArray(obj) {
+  if (obj === null || obj === undefined) {
+    return [];
+  }
+  return Array.isArray(obj) ? obj : [obj];
+}
 
 export function htmlHelper(fn) {
-  return Ember.Helper.helper(function(...args) {
+  return Helper.helper(function(...args) {
     args =
       args.length > 1 ? args[0].concat({ hash: args[args.length - 1] }) : args;
     return new Handlebars.SafeString(fn.apply(this, args) || "");
@@ -10,8 +19,19 @@ export function htmlHelper(fn) {
 
 const _helpers = {};
 
+function rawGet(ctx, property, options) {
+  if (options.types && options.data.view) {
+    var view = options.data.view;
+    return view.getStream
+      ? view.getStream(property).value()
+      : view.getAttr(property);
+  } else {
+    return get(ctx, property);
+  }
+}
+
 export function registerHelper(name, fn) {
-  _helpers[name] = Ember.Helper.helper(fn);
+  _helpers[name] = Helper.helper(fn);
 }
 
 export function findHelper(name) {
@@ -39,7 +59,7 @@ function resolveParams(ctx, options) {
         ) {
           params[k] = hash[k];
         } else if (type === "ID" || type === "PathExpression") {
-          params[k] = get(ctx, hash[k], options);
+          params[k] = rawGet(ctx, hash[k], options);
         }
       });
     } else {
@@ -59,15 +79,15 @@ export function registerUnbound(name, fn) {
         options.types &&
         (options.types[i] === "ID" || options.types[i] === "PathExpression")
       ) {
-        properties[i] = get(this, properties[i], options);
+        properties[i] = rawGet(this, properties[i], options);
       }
     }
 
     return fn.call(this, ...properties, resolveParams(this, options));
   };
 
-  _helpers[name] = Ember.Helper.extend({
+  _helpers[name] = Helper.extend({
     compute: (params, args) => fn(...params, args)
   });
-  Handlebars.registerHelper(name, func);
+  RawHandlebars.registerHelper(name, func);
 }

@@ -27,6 +27,7 @@ class PostMover
       move_posts_to topic
     end
     add_allowed_users(participants) if participants.present? && @move_to_pm
+    enqueue_jobs(topic)
     topic
   end
 
@@ -37,7 +38,7 @@ class PostMover
     raise Discourse::InvalidParameters unless post
     archetype = @move_to_pm ? Archetype.private_message : Archetype.default
 
-    Topic.transaction do
+    topic = Topic.transaction do
       new_topic = Topic.create!(
         user: post.user,
         title: title,
@@ -50,6 +51,8 @@ class PostMover
       watch_new_topic
       new_topic
     end
+    enqueue_jobs(topic)
+    topic
   end
 
   private
@@ -60,11 +63,14 @@ class PostMover
 
     moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
 
+    create_temp_table
+    delete_invalid_post_timings
     move_each_post
     notify_users_that_posts_have_moved
     update_statistics
     update_user_actions
     update_last_post_stats
+    update_upload_security_status
 
     if moving_all_posts
       @original_topic.update_status('closed', true, @user)
@@ -74,41 +80,63 @@ class PostMover
     destination_topic
   end
 
+  def create_temp_table
+    DB.exec("DROP TABLE IF EXISTS moved_posts") if Rails.env.test?
+
+    DB.exec <<~SQL
+      CREATE TEMPORARY TABLE moved_posts (
+        old_topic_id INTEGER,
+        old_post_id INTEGER,
+        old_post_number INTEGER,
+        new_topic_id INTEGER,
+        new_topic_title VARCHAR,
+        new_post_id INTEGER,
+        new_post_number INTEGER
+      ) ON COMMIT DROP;
+
+      CREATE INDEX moved_posts_old_post_number ON moved_posts(old_post_number);
+      CREATE INDEX moved_posts_old_post_id ON moved_posts(old_post_id);
+    SQL
+  end
+
   def move_each_post
     max_post_number = destination_topic.max_post_number + 1
 
+    @post_creator = nil
     @move_map = {}
     @reply_count = {}
     posts.each_with_index do |post, offset|
-      unless post.is_first_post?
-        @move_map[post.post_number] = offset + max_post_number
-      else
-        @move_map[post.post_number] = 1
-      end
+      @move_map[post.post_number] = offset + max_post_number
+
       if post.reply_to_post_number.present?
         @reply_count[post.reply_to_post_number] = (@reply_count[post.reply_to_post_number] || 0) + 1
       end
     end
 
     posts.each do |post|
-      post.is_first_post? ? create_first_post(post) : move(post)
+      metadata = movement_metadata(post)
+      new_post = post.is_first_post? ? create_first_post(post) : move(post)
+
+      store_movement(metadata, new_post)
 
       if @move_to_pm && !destination_topic.topic_allowed_users.exists?(user_id: post.user_id)
         destination_topic.topic_allowed_users.create!(user_id: post.user_id)
       end
     end
 
-    PostReply.where("reply_id IN (:post_ids) OR post_id IN (:post_ids)", post_ids: post_ids).each do |post_reply|
-      if post_reply.post && post_reply.reply && post_reply.reply.topic_id != post_reply.post.topic_id
-        PostReply
-          .where(reply_id: post_reply.reply.id, post_id: post_reply.post.id)
-          .delete_all
-      end
-    end
+    move_incoming_emails
+    move_notifications
+    update_reply_counts
+    update_quotes
+    move_first_post_replies
+    delete_post_replies
+    copy_first_post_timings
+    move_post_timings
+    copy_topic_users
   end
 
   def create_first_post(post)
-    new_post = PostCreator.create(
+    @post_creator = PostCreator.new(
       post.user,
       raw: post.raw,
       topic_id: destination_topic.id,
@@ -118,10 +146,11 @@ class PostMover
       raw_email: post.raw_email,
       skip_validations: true,
       created_at: post.created_at,
-      guardian: Guardian.new(user)
+      guardian: Guardian.new(user),
+      skip_jobs: true
     )
+    new_post = @post_creator.create
 
-    move_incoming_emails(post, new_post)
     move_email_logs(post, new_post)
 
     PostAction.copy(post, new_post)
@@ -152,21 +181,42 @@ class PostMover
     post.attributes = update
     post.save(validate: false)
 
-    move_incoming_emails(post, post)
-    move_email_logs(post, post)
-
     DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
+
+    post
   end
 
-  def move_incoming_emails(old_post, new_post)
-    return if old_post.incoming_email.nil?
+  def movement_metadata(post)
+    {
+      old_topic_id: post.topic_id,
+      old_post_id: post.id,
+      old_post_number: post.post_number,
+      new_topic_id: destination_topic.id,
+      new_post_number: @move_map[post.post_number],
+      new_topic_title: destination_topic.title
+    }
+  end
 
-    email = old_post.incoming_email
-    email.update_columns(topic_id: new_post.topic_id, post_id: new_post.id)
-    new_post.incoming_email = email
+  def store_movement(metadata, new_post)
+    metadata[:new_post_id] = new_post.id
+
+    DB.exec(<<~SQL, metadata)
+      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number)
+      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number)
+    SQL
+  end
+
+  def move_incoming_emails
+    DB.exec <<~SQL
+      UPDATE incoming_emails ie
+      SET topic_id = mp.new_topic_id,
+          post_id = mp.new_post_id
+      FROM moved_posts mp
+      WHERE ie.topic_id = mp.old_topic_id AND ie.post_id = mp.old_post_id
+    SQL
   end
 
   def move_email_logs(old_post, new_post)
@@ -175,11 +225,213 @@ class PostMover
       .update_all(post_id: new_post.id)
   end
 
+  def move_notifications
+    DB.exec <<~SQL
+      UPDATE notifications n
+      SET topic_id  = mp.new_topic_id,
+        post_number = mp.new_post_number,
+        data        = (data :: JSONB ||
+          jsonb_strip_nulls(
+              jsonb_build_object(
+                  'topic_title', CASE WHEN data :: JSONB ->> 'topic_title' IS NULL
+                                        THEN NULL
+                                      ELSE mp.new_topic_title END
+                )
+            )) :: JSON
+      FROM moved_posts mp
+      WHERE n.topic_id = mp.old_topic_id AND n.post_number = mp.old_post_number
+        AND n.notification_type <> #{Notification.types[:watching_first_post]}
+    SQL
+  end
+
+  def update_reply_counts
+    DB.exec <<~SQL
+      UPDATE posts p
+      SET reply_count = GREATEST(0, reply_count - x.moved_reply_count)
+      FROM (
+        SELECT r.post_id, mp.new_topic_id, COUNT(1) AS moved_reply_count
+        FROM moved_posts mp
+               JOIN post_replies r ON (mp.old_post_id = r.reply_post_id)
+        GROUP BY r.post_id, mp.new_topic_id
+      ) x
+      WHERE x.post_id = p.id AND x.new_topic_id <> p.topic_id
+    SQL
+  end
+
+  def update_quotes
+    DB.exec <<~SQL
+      UPDATE posts p
+      SET raw = REPLACE(p.raw,
+                        ', post:' || mp.old_post_number || ', topic:' || mp.old_topic_id,
+                        ', post:' || mp.new_post_number || ', topic:' || mp.new_topic_id),
+          baked_version = NULL
+      FROM moved_posts mp, quoted_posts qp
+      WHERE p.id = qp.post_id AND mp.old_post_id = qp.quoted_post_id
+    SQL
+  end
+
+  def move_first_post_replies
+    DB.exec <<~SQL
+      UPDATE post_replies pr
+      SET post_id = mp.new_post_id
+      FROM moved_posts mp
+      WHERE mp.old_post_id <> mp.new_post_id AND pr.post_id = mp.old_post_id AND
+        EXISTS (SELECT 1 FROM moved_posts mr WHERE mr.new_post_id = pr.reply_post_id)
+    SQL
+  end
+
+  def delete_post_replies
+    DB.exec <<~SQL
+      DELETE FROM post_replies pr USING moved_posts mp
+      WHERE (SELECT topic_id FROM posts WHERE id = pr.post_id) <>
+            (SELECT topic_id FROM posts WHERE id = pr.reply_post_id)
+        AND (pr.reply_post_id = mp.old_post_id OR pr.post_id = mp.old_post_id)
+    SQL
+  end
+
+  def copy_first_post_timings
+    DB.exec <<~SQL
+      INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
+      SELECT mp.new_topic_id, pt.user_id, mp.new_post_number, pt.msecs
+      FROM post_timings pt
+           JOIN moved_posts mp ON (pt.topic_id = mp.old_topic_id AND pt.post_number = mp.old_post_number)
+      WHERE mp.old_post_id <> mp.new_post_id
+      ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
+        SET msecs = GREATEST(post_timings.msecs, excluded.msecs)
+    SQL
+  end
+
+  def delete_invalid_post_timings
+    DB.exec(<<~SQL, topid_id: destination_topic.id)
+      DELETE
+      FROM post_timings pt
+      WHERE pt.topic_id = :topid_id
+        AND NOT EXISTS(
+          SELECT 1
+          FROM posts p
+          WHERE p.topic_id = pt.topic_id
+            AND p.post_number = pt.post_number
+        )
+    SQL
+  end
+
+  def move_post_timings
+    DB.exec <<~SQL
+      UPDATE post_timings pt
+      SET topic_id    = mp.new_topic_id,
+          post_number = mp.new_post_number
+      FROM moved_posts mp
+      WHERE pt.topic_id = mp.old_topic_id
+        AND pt.post_number = mp.old_post_number
+        AND mp.old_post_id = mp.new_post_id
+    SQL
+  end
+
+  def copy_topic_users
+    params = {
+      old_topic_id: original_topic.id,
+      new_topic_id: destination_topic.id,
+      old_highest_post_number: destination_topic.highest_post_number,
+      old_highest_staff_post_number: destination_topic.highest_staff_post_number,
+      default_notification_level: NotificationLevels.topic_levels[:regular]
+    }
+
+    DB.exec(<<~SQL, params)
+      INSERT INTO topic_users(user_id, topic_id, posted, last_read_post_number, highest_seen_post_number,
+                              last_emailed_post_number, first_visited_at, last_visited_at, notification_level,
+                              notifications_changed_at, notifications_reason_id)
+      SELECT tu.user_id,
+             :new_topic_id                               AS topic_id,
+             CASE
+               WHEN p.user_id IS NULL THEN FALSE
+               ELSE TRUE END                             AS posted,
+             (
+               SELECT MAX(lr.new_post_number)
+               FROM moved_posts lr
+               WHERE lr.old_topic_id = tu.topic_id
+                 AND lr.old_post_number <= tu.last_read_post_number
+             )                                           AS last_read_post_number,
+             (
+               SELECT MAX(hs.new_post_number)
+               FROM moved_posts hs
+               WHERE hs.old_topic_id = tu.topic_id
+                 AND hs.old_post_number <= tu.highest_seen_post_number
+             )                                           AS highest_seen_post_number,
+             (
+               SELECT MAX(le.new_post_number)
+               FROM moved_posts le
+               WHERE le.old_topic_id = tu.topic_id
+                 AND le.old_post_number <= tu.last_emailed_post_number
+             )                                           AS last_emailed_post_number,
+             GREATEST(tu.first_visited_at, t.created_at) AS first_visited_at,
+             GREATEST(tu.last_visited_at, t.created_at)  AS last_visited_at,
+             CASE
+               WHEN p.user_id IS NOT NULL THEN tu.notification_level
+               ELSE :default_notification_level END      AS notification_level,
+             tu.notifications_changed_at,
+             tu.notifications_reason_id
+      FROM topic_users tu
+           JOIN topics t ON (t.id = :new_topic_id)
+           LEFT OUTER JOIN
+           (
+             SELECT DISTINCT user_id
+             FROM posts
+             WHERE topic_id = :new_topic_id
+           ) p ON (p.user_id = tu.user_id)
+      WHERE tu.topic_id = :old_topic_id
+        AND GREATEST(
+                tu.last_read_post_number,
+                tu.highest_seen_post_number,
+                tu.last_emailed_post_number
+              ) >= (SELECT MIN(old_post_number) FROM moved_posts)
+      ON CONFLICT (topic_id, user_id) DO UPDATE
+        SET posted                   = excluded.posted,
+            last_read_post_number    = CASE
+                                         WHEN topic_users.last_read_post_number = :old_highest_staff_post_number OR (
+                                             :old_highest_post_number < :old_highest_staff_post_number
+                                             AND topic_users.last_read_post_number = :old_highest_post_number
+                                             AND NOT EXISTS(SELECT 1
+                                                            FROM users u
+                                                            WHERE u.id = topic_users.user_id
+                                                              AND (admin OR moderator))
+                                           ) THEN
+                                           GREATEST(topic_users.last_read_post_number,
+                                                    excluded.last_read_post_number)
+                                         ELSE topic_users.last_read_post_number END,
+            highest_seen_post_number = CASE
+                                         WHEN topic_users.highest_seen_post_number = :old_highest_staff_post_number OR (
+                                             :old_highest_post_number < :old_highest_staff_post_number
+                                             AND topic_users.highest_seen_post_number = :old_highest_post_number
+                                             AND NOT EXISTS(SELECT 1
+                                                            FROM users u
+                                                            WHERE u.id = topic_users.user_id
+                                                              AND (admin OR moderator))
+                                           ) THEN
+                                           GREATEST(topic_users.highest_seen_post_number,
+                                                    excluded.highest_seen_post_number)
+                                         ELSE topic_users.highest_seen_post_number END,
+            last_emailed_post_number = CASE
+                                         WHEN topic_users.last_emailed_post_number = :old_highest_staff_post_number OR (
+                                             :old_highest_post_number < :old_highest_staff_post_number
+                                             AND topic_users.last_emailed_post_number = :old_highest_post_number
+                                             AND NOT EXISTS(SELECT 1
+                                                            FROM users u
+                                                            WHERE u.id = topic_users.user_id
+                                                              AND (admin OR moderator))
+                                           ) THEN
+                                           GREATEST(topic_users.last_emailed_post_number,
+                                                    excluded.last_emailed_post_number)
+                                         ELSE topic_users.last_emailed_post_number END,
+            first_visited_at         = LEAST(topic_users.first_visited_at, excluded.first_visited_at),
+            last_visited_at          = GREATEST(topic_users.last_visited_at, excluded.last_visited_at)
+    SQL
+  end
+
   def update_statistics
     destination_topic.update_statistics
     original_topic.update_statistics
-    TopicUser.update_post_action_cache(topic_id: original_topic.id, post_action_type: :bookmark)
-    TopicUser.update_post_action_cache(topic_id: destination_topic.id, post_action_type: :bookmark)
+    TopicUser.update_post_action_cache(topic_id: original_topic.id)
+    TopicUser.update_post_action_cache(topic_id: destination_topic.id)
   end
 
   def update_user_actions
@@ -240,9 +492,15 @@ class PostMover
       attrs = {}
       attrs[:last_posted_at] = post.created_at
       attrs[:last_post_user_id] = post.user_id
-      attrs[:bumped_at] = post.created_at unless post.no_bump
+      attrs[:bumped_at] = Time.now
       attrs[:updated_at] = Time.now
       destination_topic.update_columns(attrs)
+    end
+  end
+
+  def update_upload_security_status
+    DB.after_commit do
+      Jobs.enqueue(:update_topic_upload_security, topic_id: @destination_topic.id)
     end
   end
 
@@ -275,5 +533,14 @@ class PostMover
       destination_topic.topic_allowed_users.build(user_id: user.id) unless destination_topic.topic_allowed_users.where(user_id: user.id).exists?
     end
     destination_topic.save!
+  end
+
+  def enqueue_jobs(topic)
+    @post_creator.enqueue_jobs if @post_creator
+
+    Jobs.enqueue(
+      :delete_inaccessible_notifications,
+      topic_id: topic.id
+    )
   end
 end

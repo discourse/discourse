@@ -1,15 +1,19 @@
-import AppEvents from "discourse/lib/app-events";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
 import Topic from "discourse/models/topic";
 import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import User from "discourse/models/user";
+import { Promise } from "rsvp";
 
 moduleFor("controller:topic", "controller:topic", {
-  needs: ["controller:composer", "controller:application"],
+  needs: [
+    "controller:composer",
+    "controller:application",
+    "service:app-events"
+  ],
   beforeEach() {
-    this.registry.register("app-events:main", AppEvents.create(), {
-      instantiate: false
-    });
-    this.registry.injection("controller", "appEvents", "app-events:main");
+    this.registry.injection("controller", "appEvents", "service:app-events");
   }
 });
 
@@ -191,7 +195,7 @@ QUnit.test("selectedPostsUsername", function(assert) {
 });
 
 QUnit.test("showSelectedPostsAtBottom", function(assert) {
-  const site = Ember.Object.create({ mobileView: false });
+  const site = EmberObject.create({ mobileView: false });
   const model = Topic.create({ posts_count: 3 });
   const controller = this.subject({ model, site });
 
@@ -221,7 +225,7 @@ QUnit.test("canDeleteSelected", function(assert) {
     ],
     stream: [1, 2, 3]
   };
-  const currentUser = Discourse.User.create({ admin: false });
+  const currentUser = User.create({ admin: false });
   this.registry.register("current-user:main", currentUser, {
     instantiate: false
   });
@@ -314,14 +318,17 @@ QUnit.test("Can split/merge topic", function(assert) {
 });
 
 QUnit.test("canChangeOwner", function(assert) {
-  const currentUser = Discourse.User.create({ admin: false });
+  const currentUser = User.create({ admin: false });
   this.registry.register("current-user:main", currentUser, {
     instantiate: false
   });
   this.registry.injection("controller", "currentUser", "current-user:main");
 
   const postStream = {
-    posts: [{ id: 1, username: "gary" }, { id: 2, username: "lili" }],
+    posts: [
+      { id: 1, username: "gary" },
+      { id: 2, username: "lili" }
+    ],
     stream: [1, 2]
   };
 
@@ -467,7 +474,7 @@ QUnit.test("togglePostSelection", function(assert) {
 // });
 
 QUnit.test("selectBelow", function(assert) {
-  const site = Ember.Object.create({
+  const site = EmberObject.create({
     post_types: { small_action: 3, whisper: 4 }
   });
 
@@ -511,3 +518,42 @@ QUnit.test("topVisibleChanged", function(assert) {
     "it should work with a post-placehodler"
   );
 });
+
+QUnit.test(
+  "deletePost - no modal is shown if post does not have replies",
+  function(assert) {
+    /* global server */
+    server.get("/posts/2/reply-ids.json", () => {
+      return [200, { "Content-Type": "application/json" }, []];
+    });
+
+    let destroyed;
+    const post = EmberObject.create({
+      id: 2,
+      post_number: 2,
+      can_delete: true,
+      reply_count: 3,
+      destroy: () => {
+        destroyed = true;
+        return Promise.resolve();
+      }
+    });
+
+    const postStream = EmberObject.create({
+      stream: [2, 3, 4],
+      posts: [post, { id: 3 }, { id: 4 }]
+    });
+
+    const currentUser = EmberObject.create({ moderator: true });
+    const model = Topic.create({ postStream });
+    const controller = this.subject({ model, currentUser });
+
+    const done = assert.async();
+    controller.send("deletePost", post);
+
+    next(() => {
+      assert.ok(destroyed, "post was destroyed");
+      done();
+    });
+  }
+);

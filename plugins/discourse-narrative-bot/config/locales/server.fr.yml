@@ -7,7 +7,7 @@
 
 fr:
   site_settings:
-    discourse_narrative_bot_enabled: 'Activer le rotbot de narration Discourse (discobot)'
+    discourse_narrative_bot_enabled: "Activer le rotbot de narration Discourse (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Désactiver le message de bienvenue de l'assistant Discourse"
     discourse_narrative_bot_ignored_usernames: "Noms d'utilisateurs que l'assistant Discourse doit ignorer"
     discourse_narrative_bot_disable_public_replies: "Désactiver les réponses publiques de l'assistant Discourse"
@@ -26,6 +26,14 @@ fr:
         Ce badge est décerné quand vous avez terminé avec succès le tutoriel interactif des utilisateurs avancés. Vous avez pris l'initiative d'apprendre les outils avancés de la discussion et vous êtes maintenant certifié à 100% !
   discourse_narrative_bot:
     bio: "Bonjour, je ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez **`@%{discobot_username}`** n'importe où."
+    tl2_promotion_message:
+      subject_template: "Félicitations pour votre promotion de niveau de confiance !"
+      text_body_template: |
+        Maintenant que vous êtes promu(e), il est temps d'apprendre de nouvelles fonctionnalités !
+
+        Répondez à ce message direct avec  `@%{discobot_username} %{reset_trigger}` pour en savoir sur ce que vous pouvez faire.
+
+        Nous vous encourageons à continuer de participer – on apprécie beaucoup votre compagnie.
     timeout:
       message: |-
         Hey @%{username}, je viens voir si tout va bien car je n'ai pas eu de vos nouvelles depuis un moment.
@@ -80,9 +88,9 @@ fr:
         quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteind."
         author: "Napoleon Hill"
       results: |-
-        > :left_speech_bubble: %{quote} __ &mdash;  %{author}
+        > :left_speech_bubble: %{quote} __ &mdash; %{author}
     magic_8_ball:
-      trigger: 'fortune'
+      trigger: "fortune"
       answers:
         '1': "C'est certain"
         '2': "C'est décidé"
@@ -107,26 +115,26 @@ fr:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'démarrer'
-      skip_trigger: 'passer'
-      help_trigger: 'afficher l''aide'
+      reset_trigger: "démarrer"
+      skip_trigger: "passer"
+      help_trigger: "afficher l'aide"
       random_mention:
         reply: |-
           Bonjour ! Pour voir ce que je peux faire, dites `@%{discobot_username} `.
         tracks: |-
-          Pour l'instant j'ai les compétences suivantes :
+          Pour le moment, je sais faire les choses suivantes :
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Démarre une des tutoriaux intéractifs suivants : %{tracks}.
+          `@%{discobot_username} %{reset_trigger} {nom-du-tutoriel}`
+          > Débute un tutoriel interactif. `{nom-du-tutoriel}` est l'une des options suivantes : `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
+          > :game_die: 3, 6`
 
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Les accolades peuvent faire beaucoup de bien... surtout pour les enfants._ &mdash; Princess Diana
+          @%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Vous pouvez compter dessus
+          > :crystal_ball: On peut compter dessus
       do_not_understand:
         first_response: |-
           Hey, merci pour la réponse !
@@ -232,9 +240,9 @@ fr:
         instructions: |-
           Vous pouvez avoir remarqué que j'utilise des petites images dans mes réponses :blue_car::dash: Elles sont appelées [emoji](https://fr.wikipedia.org/wiki/Emoji). Pouvez-vous **ajouter un emoji** à votre réponse ? N'importe lequel sera bien:
 
-          - Tapez  `:) ;) :D :P :O`
+          - Tapez `:) ;) :D :P :O`
 
-          - Tapez <kbd>:</kbd> puis complétez le nom de l'emoji  `:tada:`
+          - Tapez <kbd>:</kbd> puis complétez le nom de l'emoji `:tada:`
 
           - Appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur, ou sur le clavier de votre mobile.
         reply: |-
@@ -249,9 +257,9 @@ fr:
           (Si vous êtes sur un périphérique mobile, vous pouvez aussi entrer l'émoji directement depuis votre clavier.)
       mention:
         instructions: |-
-          Parfois vous avez peut-être envie d'attirer l'attention, même si vous ne lui répondez pas directement. Tapez  `@` et complétez son pseudo pour le mentionner.
+          Parfois vous avez peut-être envie d'attirer l'attention de quelqu'un, même si vous ne lui répondez pas directement. Tapez `@` et complétez son pseudo pour le mentionner.
 
-          Pouvez vous mentionner **`@%{discobot_username}`** dans votre réponse ?
+          Pouvez-vous mentionner **`@%{discobot_username}`** dans votre réponse ?
         reply: |-
           _Quelqu'un a dit mon nom ?_ :raised_hand: Je pense que vous l'avez fait ! :wave: Bien, je suis là ! Merci de m'avoir mentionné. :ok_hand:
         not_found: |-
@@ -276,11 +284,11 @@ fr:
 
           Essayer de chercher le terme "capy​&#8203;bara" dans ce sujet.
         hidden_message: |-
-          Comment avez-vous pu rater le capy​bara ? :wink:
+          Comment avez-vous manqué ce capybara? :clin d&#39;œil:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Avez-vous remarqué que nous sommes maintenant revenu au début ? Nourrissez ce pauvre capybara en **répondant avec l'emoji `:herb:`** et vous serez automatiquement amené à la fin.
+          Avez-vous remarqué que vous êtes maintenant de retour au début? Nourrissez ce pauvre capybara affamé en **répondant avec l&#39;emoji `%{search_answer}` ** et vous serez automatiquement conduit à la fin.
         reply: |-
           Vous l'avez trouvé :tada:
 
@@ -297,15 +305,15 @@ fr:
 
           %{certificate}
 
-          C'est tout pour le moment ! Regardez  [**nos dernières discussions**](%{base_uri}/latest) ou [**les catégories de discussion**](%{base_uri}/categories). :sunglasses :
+          C'est tout pour le moment ! Regardez [**nos dernières discussions**](%{base_uri}/latest) ou [**les catégories de discussion**](%{base_uri}/categories). :sunglasses :
 
           (Si vous souhaitez parler avec moi encore une fois pour en apprendre plus, envoyez moi un message ou mentionnez `@%{discobot_username}` n'importe quand !)
       certificate:
-        alt: 'Certificat d''accomplissement'
+        alt: "Certificat d'accomplissement"
     advanced_user_narrative:
-      reset_trigger: 'tutoriel avancé'
+      reset_trigger: "tutoriel avancé"
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé "
-      title: ':arrow_up: Fonctionnalités utilisateur avancé'
+      title: ":arrow_up: Fonctionnalités utilisateur avancé"
       start_message: |-
         En tant qu'utilisateur _averti_, avez-vous déjà visité la page [mes préférences](%{base_uri}/my/preferences) @%{username} ? Il y a beaucoup de possibilité pour personnaliser votre expérience, comme en sélectionnant un thème clair ou foncé.
 
@@ -336,7 +344,7 @@ fr:
 
           Pour préserver la continuité des discussions, les suppressions ne sont pas immédiates, et le message ne sera supprimé qu'après quelques temps.
       recover:
-        deleted_post_raw: 'Pourquoi @%{discobot_username} a supprimé mon message ? :anguished:'
+        deleted_post_raw: "Pourquoi @%{discobot_username} a supprimé mon message ? :anguished:"
         instructions: |-
           Oh non ! J'ai l'impression que j'ai accidentellement supprimé un nouveau message que je venais de créer pour vous.
 
@@ -418,7 +426,7 @@ fr:
           [/details]
           ```
         reply: |-
-          Bau travail  — votre attention aux _détails_ est admirable !
+          Bau travail — votre attention aux _détails_ est admirable !
       end:
         message: |-
           Vous avez suivis ce tutoriel comme un _utiliser avancé_ :bow:
@@ -429,4 +437,4 @@ fr:
 
           Au revoir ! Si vous voulez me reparler, envoyez moi un message à tout moment :sunglasses:
       certificate:
-        alt: 'Certificat de réussite de l''utilisateur avancé'
+        alt: "Certificat de réussite de l'utilisateur avancé"

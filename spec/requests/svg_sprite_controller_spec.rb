@@ -68,4 +68,29 @@ describe SvgSpriteController do
       expect(response.body).to include('my-custom-theme-icon')
     end
   end
+
+  context 'icon_picker_search' do
+    it 'should work with no filter and max out at 200 results' do
+      user = sign_in(Fabricate(:user))
+      get '/svg-sprite/picker-search'
+
+      expect(response.status).to eq(200)
+
+      data = JSON.parse(response.body)
+      expect(data.length).to eq(200)
+      expect(data[0]["id"]).to eq("ad")
+    end
+
+    it 'should filter' do
+      user = sign_in(Fabricate(:user))
+
+      get '/svg-sprite/picker-search', params: { filter: '500px' }
+
+      expect(response.status).to eq(200)
+
+      data = JSON.parse(response.body)
+      expect(data.length).to eq(1)
+      expect(data[0]["id"]).to eq("fab-500px")
+    end
+  end
 end

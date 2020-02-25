@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'post_destroyer'
 
 # TODO - test pinning, create_moderator_post
 

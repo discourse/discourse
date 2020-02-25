@@ -12,7 +12,9 @@ class PollSerializer < ApplicationSerializer
              :options,
              :voters,
              :close,
-             :preloaded_voters
+             :preloaded_voters,
+             :chart_type,
+             :groups
 
   def public
     true
@@ -32,6 +34,10 @@ class PollSerializer < ApplicationSerializer
 
   def include_step?
     object.step.present? && object.number?
+  end
+
+  def include_groups?
+    groups.present?
   end
 
   def options

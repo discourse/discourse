@@ -21,6 +21,21 @@ Fabricator(:upload) do
   extension "png"
 end
 
+Fabricator(:video_upload, from: :upload) do
+  original_filename "video.mp4"
+  width nil
+  height nil
+  thumbnail_width nil
+  thumbnail_height nil
+  extension "mp4"
+end
+
+Fabricator(:secure_upload, from: :upload) do
+  secure { true }
+  sha1 { SecureRandom.hex(20) }
+  original_sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
+end
+
 Fabricator(:upload_s3, from: :upload) do
   url do |attrs|
     sequence(:url) do |n|
@@ -35,4 +50,10 @@ Fabricator(:upload_s3, from: :upload) do
       File.join(Discourse.store.absolute_base_url, path)
     end
   end
+end
+
+Fabricator(:secure_upload_s3, from: :upload_s3) do
+  secure { true }
+  sha1 { SecureRandom.hex(20) }
+  original_sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
 end

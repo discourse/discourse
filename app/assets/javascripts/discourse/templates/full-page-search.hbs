@@ -17,6 +17,7 @@
       {{/if}}
     </div>
 
+    {{!-- context is only provided when searching from mobile view --}}
     <div class="search-context">
       {{#if context}}
         <div class='fps-search-context'>
@@ -40,8 +41,8 @@
 
         {{#if bulkSelectEnabled}}
           <div class='fps-select'>
-            <a {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
-            <a {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
+            <a href {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
+            <a href {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
           </div>
         {{/if}}
       </div>
@@ -54,7 +55,12 @@
           <span class='desc'>
             {{i18n "search.sort_by"}}
           </span>
-          {{combo-box value=sortOrder content=sortOrders castInteger=true}}
+          {{combo-box
+            value=sortOrder
+            content=sortOrders
+            castInteger=true
+            onChange=(action (mut sortOrder))
+          }}
         </div>
       </div>
     {{/if}}
@@ -125,6 +131,12 @@
               {{#if searchActive}}
                 <h3>{{i18n "search.no_results"}}</h3>
 
+                {{#if model.grouped_search_result.error}}
+                  <div class="warning">
+                    {{model.grouped_search_result.error}}
+                  </div>
+                {{/if}}
+
                 {{#if showSuggestion}}
                   <div class="no-results-suggestion">
                     {{i18n "search.cant_find"}}
@@ -173,9 +185,11 @@
     {{/if}}
 
     {{#if site.mobileView}}
-      <button class="search-advanced-title btn" {{action "toggleAdvancedSearch"}}>
-        {{{searchAdvancedIcon}}} {{i18n "search.advanced.title"}}
-      </button>
+      {{d-button
+        class="search-advanced-title"
+        action=(action "toggleAdvancedSearch")
+        icon=(if expanded "caret-down" "caret-right")
+        label="search.advanced.title"}}
     {{else}}
       <span class="search-advanced-title">
         {{i18n "search.advanced.title"}}
@@ -185,12 +199,18 @@
     {{#if site.mobileView}}
       {{#if expanded}}
         <div class="search-advanced-filters">
-          {{search-advanced-options searchTerm=searchTerm isExpanded=expanded}}
+          {{search-advanced-options
+            searchTerm=searchTerm
+            isExpanded=expanded
+          }}
         </div>
       {{/if}}
     {{else}}
       <div class="search-advanced-filters">
-        {{search-advanced-options searchTerm=searchTerm isExpanded=true}}
+        {{search-advanced-options
+          searchTerm=searchTerm
+          isExpanded=true
+        }}
 
         {{d-button
           label="submit"

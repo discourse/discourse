@@ -8,13 +8,21 @@
   </p>
 
   <form>
-    {{date-picker-past value=date containerId="date-container"}}
+    {{date-picker-past
+      value=(readonly date)
+      containerId="date-container"
+      onSelect=(action (mut date))}}
+
     {{input type="time" value=time}}
   </form>
 
-  <div id="date-container" />
+  <div id="date-container"></div>
 {{/d-modal-body}}
 
 <div class="modal-footer change-timestamp-footer">
-  <button class="btn btn-primary" disabled={{buttonDisabled}} {{action "changeTimestamp"}}>{{buttonTitle}}</button>
+  {{d-button
+    class="btn-primary"
+    disabled=buttonDisabled
+    action=(action "changeTimestamp")
+    translatedLabel=buttonTitle}}
 </div>

@@ -1,3 +1,4 @@
+import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
@@ -84,7 +85,7 @@ QUnit.test("Tests the Composer controls", async assert => {
   event[mac ? "metaKey" : "ctrlKey"] = true;
   event.keyCode = 66;
 
-  Ember.run(() => textarea.dispatchEvent(event));
+  run(() => textarea.dispatchEvent(event));
 
   const example = I18n.t(`composer.bold_text`);
   assert.equal(
@@ -233,6 +234,26 @@ QUnit.test("Create an enqueued Topic", async assert => {
   assert.ok(invisible(".d-modal"), "the modal can be dismissed");
 });
 
+QUnit.test("Can display a message and route to a URL", async assert => {
+  await visit("/");
+  await click("#create-topic");
+  await fillIn("#reply-title", "This title doesn't matter");
+  await fillIn(".d-editor-input", "custom message");
+  await click("#reply-control button.create");
+  assert.equal(
+    find(".bootbox .modal-body").text(),
+    "This is a custom response"
+  );
+  assert.equal(currentURL(), "/", "it doesn't change routes");
+
+  await click(".bootbox .btn-primary");
+  assert.equal(
+    currentURL(),
+    "/faq",
+    "can navigate to a `route_to` destination"
+  );
+});
+
 QUnit.test("Create a Reply", async assert => {
   await visit("/t/internationalization-localization/280");
 
@@ -249,7 +270,7 @@ QUnit.test("Create a Reply", async assert => {
   await click("#reply-control button.create");
   assert.equal(
     find(".cooked:last p").text(),
-    "this is the content of my reply"
+    "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
   );
 });
 
@@ -266,7 +287,7 @@ QUnit.test("Posting on a different topic", async assert => {
   await click(".btn-reply-here");
   assert.equal(
     find(".cooked:last p").text(),
-    "this is the content for a different topic"
+    "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
   );
 });
 
@@ -426,47 +447,11 @@ QUnit.test("Composer can toggle whispers", async assert => {
 
   await click(".toggle-fullscreen");
 
+  await menu.expand();
+
   assert.ok(
     menu.rowByValue("toggleWhisper").exists(),
     "whisper toggling is still present when going fullscreen"
-  );
-});
-
-QUnit.test("Switching composer whisper state", async assert => {
-  const menu = selectKit(".toolbar-popup-menu-options");
-
-  await visit("/t/this-is-a-test-topic/9");
-  await click(".topic-post:eq(0) button.reply");
-
-  await menu.expand();
-  await menu.selectRowByValue("toggleWhisper");
-
-  await fillIn(".d-editor-input", "this is the content of my reply");
-  await click("#reply-control button.create");
-
-  assert.ok(find(".topic-post:last").hasClass("whisper"));
-
-  await click("#topic-footer-buttons .btn.create");
-
-  assert.ok(
-    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
-    "doesn’t set topic reply as whisper"
-  );
-
-  await click(".topic-post:last button.reply");
-
-  assert.ok(find(".topic-post:last").hasClass("whisper"));
-  assert.ok(
-    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
-    "sets post reply as a whisper"
-  );
-
-  await click(".topic-post:nth-last-child(2) button.reply");
-
-  assert.notOk(find(".topic-post:nth-last-child(2)").hasClass("whisper"));
-  assert.ok(
-    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
-    "doesn’t set post reply as a whisper"
   );
 });
 
@@ -586,14 +571,43 @@ QUnit.test(
     await click(".topic-post:eq(0) button.reply");
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".toggler");
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:eq(1) button.edit");
     assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.equal(
+      find(".modal-footer a:eq(1)").text(),
+      I18n.t("post.abandon.no_value")
+    );
     await click(".modal-footer a:eq(0)");
     assert.equal(
       find(".d-editor-input")
         .val()
-        .indexOf("This is the first post."),
+        .indexOf("This is the second post."),
       0,
+      "it populates the input with the post text"
+    );
+  }
+);
+
+QUnit.test(
+  "Composer draft can switch to draft in new context without destroying current draft",
+  async assert => {
+    await visit("/t/this-is-a-test-topic/9");
+
+    await click(".topic-post:eq(0) button.reply");
+    await fillIn(".d-editor-input", "This is a dirty reply");
+
+    await click("#site-logo");
+    await click("#create-topic");
+
+    assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.equal(
+      find(".modal-footer a:eq(1)").text(),
+      I18n.t("post.abandon.no_save_draft")
+    );
+    await click(".modal-footer a:eq(1)");
+    assert.equal(
+      find(".d-editor-input").val(),
+      "",
       "it populates the input with the post text"
     );
   }
@@ -626,7 +640,6 @@ QUnit.test("Checks for existing draft", async assert => {
 
 QUnit.test("Can switch states without abandon popup", async assert => {
   try {
-    const composerActions = selectKit(".composer-actions");
     toggleCheckDraftPopup(true);
 
     await visit("/t/internationalization-localization/280");
@@ -647,8 +660,9 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     await click("article#post_3 button.reply");
 
+    const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
-    await composerActions.selectRowByValue("reply_to_topic");
+    await composerActions.selectRowByValue("reply_as_private_message");
 
     assert.equal(
       find(".modal-body").text(),
@@ -656,9 +670,10 @@ QUnit.test("Can switch states without abandon popup", async assert => {
       "abandon popup shouldn't come"
     );
 
-    assert.equal(
-      find(".d-editor-input").val(),
-      longText,
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .includes(longText),
       "entered text should still be there"
     );
 
@@ -729,66 +744,89 @@ QUnit.test("Image resizing buttons", async assert => {
   await click("#create-topic");
 
   let uploads = [
+    // 0 Default markdown with dimensions- should work
     "![test|690x313](upload://test.png)",
-    "[img]http://example.com/image.jpg[/img]",
-    "![anotherOne|690x463](upload://anotherOne.jpeg)",
-    "![](upload://withoutAltAndSize.jpeg)",
+    // 1 Image with scaling percentage, should work
+    "![test|690x313,50%](upload://test.png)",
+    // 2 image with scaling percentage and a proceeding whitespace, should work
+    "![test|690x313, 50%](upload://test.png)",
+    // 3 No dimensions, should not work
+    "![test](upload://test.jpeg)",
+    // 4 Wrapped in backquetes should not work
     "`![test|690x313](upload://test.png)`",
-    "![withoutSize](upload://withoutSize.png)",
+    // 5 html image - should not work
     "<img src='http://someimage.jpg' wight='20' height='20'>",
+    // 6 two images one the same line, but both are syntactically correct - both should work
     "![onTheSameLine1|200x200](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)",
+    // 7 & 8 Identical images - both should work
     "![identicalImage|300x300](upload://identicalImage.png)",
-    "![identicalImage|300x300](upload://identicalImage.png)"
+    "![identicalImage|300x300](upload://identicalImage.png)",
+    // 9 Image with whitespaces in alt - should work
+    "![image with spaces in alt|690x220](upload://test.png)",
+    // 10 Image with markdown title - should work
+    `![image|690x220](upload://test.png "image title")`,
+    // 11 bbcode - should not work
+    "[img]http://example.com/image.jpg[/img]",
+    // 12 Image with data attributes
+    "![test|foo=bar|690x313,50%|bar=baz](upload://test.png)"
   ];
 
   await fillIn(".d-editor-input", uploads.join("\n"));
 
   assert.ok(
-    find(".button-wrapper").length === 0,
-    "it does not append scaling buttons before hovering images"
-  );
-
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
-  assert.ok(
-    find(".button-wrapper").length === 6,
+    find(".button-wrapper").length === 10,
     "it adds correct amount of scaling button groups"
   );
 
-  uploads[0] = "![test|690x313,50%](upload://test.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[0]);
+  // Default
+  uploads[0] = "![test|690x313, 50%](upload://test.png)";
+  await click(
+    find(".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
-  uploads[2] = "![anotherOne|690x463,75%](upload://anotherOne.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[1]);
+  // Targets the correct image if two on the same line
+  uploads[6] =
+    "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
+  await click(
+    find(".button-wrapper[data-image-index='3'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
-  uploads[7] =
-    "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[2]);
+  // Try the other image on the same line
+  uploads[6] =
+    "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250, 75%](upload://onTheSameLine2.jpeg)";
+  await click(
+    find(".button-wrapper[data-image-index='4'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
-  uploads[7] =
-    "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250,75%](upload://onTheSameLine2.jpeg)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[3]);
+  // Make sure we target the correct image if there are duplicates
+  uploads[7] = "![identicalImage|300x300, 50%](upload://identicalImage.png)";
+  await click(
+    find(".button-wrapper[data-image-index='5'] .scale-btn[data-scale='50']")
+  );
   assertImageResized(assert, uploads);
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
-  uploads[8] = "![identicalImage|300x300,50%](upload://identicalImage.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='50']")[4]);
+  // Try the other dupe
+  uploads[8] = "![identicalImage|300x300, 75%](upload://identicalImage.png)";
+  await click(
+    find(".button-wrapper[data-image-index='6'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
+  // Don't mess with image titles
+  uploads[10] = `![image|690x220, 75%](upload://test.png "image title")`;
+  await click(
+    find(".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']")
+  );
+  assertImageResized(assert, uploads);
 
-  uploads[9] = "![identicalImage|300x300,75%](upload://identicalImage.png)";
-  await click(find(".button-wrapper .scale-btn[data-scale='75']")[5]);
+  // Keep data attributes
+  uploads[12] = `![test|foo=bar|690x313, 75%|bar=baz](upload://test.png)`;
+  await click(
+    find(".button-wrapper[data-image-index='9'] .scale-btn[data-scale='75']")
+  );
   assertImageResized(assert, uploads);
 
   await fillIn(
@@ -800,10 +838,25 @@ QUnit.test("Image resizing buttons", async assert => {
     `
   );
 
-  await triggerEvent($(".d-editor-preview img"), "mouseover");
-
   assert.ok(
     find("script").length === 0,
     "it does not unescapes script tags in code blocks"
   );
+});
+
+QUnit.test("can reply to a private message", async assert => {
+  let submitted;
+
+  /* global server */
+  server.post("/posts", () => {
+    submitted = true;
+    return [200, { "Content-Type": "application/json" }, {}];
+  });
+
+  await visit("/t/34");
+  await click(".topic-post:eq(0) button.reply");
+  await fillIn(".d-editor-input", "this is the *content* of the reply");
+  await click("#reply-control button.create");
+
+  assert.ok(submitted);
 });

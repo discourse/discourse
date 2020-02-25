@@ -1,12 +1,26 @@
+import { makeArray } from "discourse-common/lib/helpers";
+import { alias, gte, or } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
+import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
-import User from "discourse/models/user";
 
-export default Ember.Controller.extend(PreferencesTabController, {
-  ignoredUsernames: Ember.computed.alias("model.ignored_usernames"),
-  userIsMemberOrAbove: Ember.computed.gte("model.trust_level", 2),
-  ignoredEnabled: Ember.computed.or("userIsMemberOrAbove", "model.staff"),
+export default Controller.extend(PreferencesTabController, {
+  ignoredUsernames: alias("model.ignored_usernames"),
+  userIsMemberOrAbove: gte("model.trust_level", 2),
+  ignoredEnabled: or("userIsMemberOrAbove", "model.staff"),
+
+  mutedUsernames: computed("model.muted_usernames", {
+    get() {
+      let usernames = this.model.muted_usernames;
+
+      if (typeof usernames === "string") {
+        usernames = usernames.split(",").filter(Boolean);
+      }
+
+      return makeArray(usernames).uniq();
+    }
+  }),
 
   init() {
     this._super(...arguments);
@@ -14,41 +28,18 @@ export default Ember.Controller.extend(PreferencesTabController, {
     this.saveAttrNames = ["muted_usernames", "ignored_usernames"];
   },
 
-  actions: {
-    ignoredUsernamesChanged(previous, current) {
-      if (current.length > previous.length) {
-        const username = current.pop();
-        if (username) {
-          User.findByUsername(username).then(user => {
-            if (user.get("ignored")) {
-              return;
-            }
-            const controller = showModal("ignore-duration", {
-              model: user
-            });
-            controller.setProperties({
-              onClose: () => {
-                if (!user.get("ignored")) {
-                  const usernames = this.ignoredUsernames
-                    .split(",")
-                    .removeAt(this.ignoredUsernames.split(",").length - 1)
-                    .join(",");
-                  this.set("ignoredUsernames", usernames);
-                }
-              }
-            });
-          });
-        }
-      } else {
-        return this.model.save(["ignored_usernames"]).catch(popupAjaxError);
-      }
-    },
-    save() {
-      this.set("saved", false);
-      return this.model
-        .save(this.saveAttrNames)
-        .then(() => this.set("saved", true))
-        .catch(popupAjaxError);
-    }
+  @action
+  onChangeMutedUsernames(usernames) {
+    this.model.set("muted_usernames", usernames.uniq().join(","));
+  },
+
+  @action
+  save() {
+    this.set("saved", false);
+
+    return this.model
+      .save(this.saveAttrNames)
+      .then(() => this.set("saved", true))
+      .catch(popupAjaxError);
   }
 });

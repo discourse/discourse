@@ -1,32 +1,37 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
-import InputValidation from "discourse/models/input-validation";
-import { load, lookupCache } from "pretty-text/oneboxer";
+import { alias, or } from "@ember/object/computed";
+import { next } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { load } from "pretty-text/oneboxer";
+import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import afterTransition from "discourse/lib/after-transition";
+import ENV from "discourse-common/config/environment";
+import EmberObject from "@ember/object";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["title-input"],
-  watchForLink: Ember.computed.alias("composer.canEditTopicFeaturedLink"),
+  watchForLink: alias("composer.canEditTopicFeaturedLink"),
+  disabled: or("composer.loading", "composer.disableTitleInput"),
 
   didInsertElement() {
     this._super(...arguments);
     if (this.focusTarget === "title") {
-      const $input = this.$("input");
+      const $input = $(this.element.querySelector("input"));
 
-      afterTransition(this.$().closest("#reply-control"), () => {
+      afterTransition($(this.element).closest("#reply-control"), () => {
         $input.putCursorAtEnd();
       });
     }
 
     if (this.get("composer.titleLength") > 0) {
-      Ember.run.debounce(this, this._titleChanged, 10);
+      debounce(this, this._titleChanged, 10);
     }
   },
 
-  @computed(
+  @discourseComputed(
     "composer.titleLength",
     "composer.missingTitleCharacters",
     "composer.minimumTitleLength",
@@ -52,7 +57,7 @@ export default Ember.Component.extend({
     }
 
     if (reason) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason,
         lastShownAt: lastValidatedAt
@@ -60,7 +65,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("watchForLink")
+  @discourseComputed("watchForLink")
   titleMaxLength() {
     // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
     // Validation will display a message if titles are too long.
@@ -76,14 +81,14 @@ export default Ember.Component.extend({
       return;
     }
 
-    if (Ember.testing) {
-      Ember.run.next(() =>
+    if (ENV.environment === "test") {
+      next(() =>
         // not ideal but we don't want to run this in current
         // runloop to avoid an error in console
         this._checkForUrl()
       );
     } else {
-      Ember.run.debounce(this, this._checkForUrl, 500);
+      debounce(this, this._checkForUrl, 500);
     }
   },
 
@@ -132,15 +137,15 @@ export default Ember.Component.extend({
           })
           .finally(() => {
             this.set("composer.loading", false);
-            Ember.run.schedule("afterRender", () => {
-              this.$("input").putCursorAtEnd();
+            schedule("afterRender", () => {
+              $(this.element.querySelector("input")).putCursorAtEnd();
             });
           });
       } else {
         this._updatePost(loadOnebox);
         this.set("composer.loading", false);
-        Ember.run.schedule("afterRender", () => {
-          this.$("input").putCursorAtEnd();
+        schedule("afterRender", () => {
+          $(this.element.querySelector("input")).putCursorAtEnd();
         });
       }
     }
@@ -174,7 +179,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("composer.title", "composer.titleLength")
+  @discourseComputed("composer.title", "composer.titleLength")
   isAbsoluteUrl(title, titleLength) {
     return (
       titleLength > 0 &&

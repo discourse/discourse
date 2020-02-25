@@ -3,8 +3,9 @@
 // create account modals
 .login-modal,
 .create-account {
-  .modal-inner-container {
+  &.fixed-modal .modal-inner-container {
     max-width: 350px;
+    max-height: 90vh;
   }
 
   .close {
@@ -13,6 +14,7 @@
 
   #login-buttons:not(.hidden) {
     display: flex;
+    flex: 1 0 auto;
     flex-wrap: wrap;
     justify-content: center;
     width: 102%;
@@ -141,6 +143,14 @@
 // styles for the
 // create account
 // modal only
+
+#discourse-modal .create-account .modal-body {
+  max-height: 60vh !important;
+  @media screen and (max-height: 575px) {
+    max-height: 50vh !important;
+  }
+}
+
 .create-account .modal-body {
   display: flex;
   flex-direction: column;

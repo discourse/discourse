@@ -1,6 +1,8 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import CleansUp from "discourse/mixins/cleans-up";
-import computed from "ember-addons/ember-computed-decorators";
 
 function entranceDate(dt, showTime) {
   const today = new Date();
@@ -25,30 +27,30 @@ function entranceDate(dt, showTime) {
   );
 }
 
-export default Ember.Component.extend(CleansUp, {
+export default Component.extend(CleansUp, {
   elementId: "topic-entrance",
   classNameBindings: ["visible::hidden"],
   _position: null,
   topic: null,
   visible: null,
 
-  @computed("topic.created_at")
+  @discourseComputed("topic.created_at")
   createdDate: createdAt => new Date(createdAt),
 
-  @computed("topic.bumped_at")
+  @discourseComputed("topic.bumped_at")
   bumpedDate: bumpedAt => new Date(bumpedAt),
 
-  @computed("createdDate", "bumpedDate")
+  @discourseComputed("createdDate", "bumpedDate")
   showTime(createdDate, bumpedDate) {
     return (
       bumpedDate.getTime() - createdDate.getTime() < 1000 * 60 * 60 * 24 * 2
     );
   },
 
-  @computed("createdDate", "showTime")
+  @discourseComputed("createdDate", "showTime")
   topDate: (createdDate, showTime) => entranceDate(createdDate, showTime),
 
-  @computed("bumpedDate", "showTime")
+  @discourseComputed("bumpedDate", "showTime")
   bottomDate: (bumpedDate, showTime) => entranceDate(bumpedDate, showTime),
 
   didInsertElement() {
@@ -61,8 +63,8 @@ export default Ember.Component.extend(CleansUp, {
     const $self = $(this.element);
     const width = $self.width();
     const height = $self.height();
-    pos.left = parseInt(pos.left) - width / 2;
-    pos.top = parseInt(pos.top) - height / 2;
+    pos.left = parseInt(pos.left, 10) - width / 2;
+    pos.top = parseInt(pos.top, 10) - height / 2;
 
     const windowWidth = $(window).width();
     if (pos.left + width > windowWidth) {
@@ -76,7 +78,7 @@ export default Ember.Component.extend(CleansUp, {
 
     this.setProperties({ topic: data.topic, visible: true });
 
-    Ember.run.scheduleOnce("afterRender", this, this._setCSS);
+    scheduleOnce("afterRender", this, this._setCSS);
 
     $("html")
       .off("mousedown.topic-entrance")

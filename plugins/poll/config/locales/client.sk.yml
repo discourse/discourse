@@ -45,7 +45,8 @@ sk:
         label: "Zobraz výsledky"
       hide-results:
         title: "Návrat na odovzdané hlasy"
-        label: "Skryť výsledky"
+      export-results:
+        label: "Export"
       open:
         title: "Zahájiť hlasovanie"
         label: "Zahájiť"
@@ -61,7 +62,6 @@ sk:
         title: Vytvoriť hlasovanie
         insert: Vložiť hlasovanie
         help:
-          options_count: Zadajte aspoň 2 možnosti
           invalid_values: Minimálna hodnota musí byť menšia ako maximálna hodnota.
           min_step_value: Minimálna hodnota pre krok je 1
         poll_type:

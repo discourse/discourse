@@ -130,7 +130,6 @@ sq:
       visible:
         enabled: "listuar %{when}"
         disabled: "çlistuar %{when}"
-    topic_admin_menu: "veprimet administrative mbi temën"
     wizard_required: "Mirseerdhët tek faqja juaj e re Discourse! Le t'ia nisim me <a href='%{url}' data-auto-route='true'>\"setup wizard\"</a> ✨"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     themes:
@@ -199,6 +198,7 @@ sq:
       stats: "Statistikat e faqjes"
       our_admins: "Administratorët tanë"
       our_moderators: "Moderatorët tanë"
+      moderators: "Moderatorë"
       stat:
         all_time: "Gjithë kohës"
       like_count: "Pëlqime"
@@ -217,6 +217,7 @@ sq:
     bookmarks:
       created: "ju ruajtët këtë temë tek të preferuarat tuaja"
       remove: "Hiqeni nga të prefereruarat"
+      save: "Ruaj"
     drafts:
       remove: "Hiq"
       abandon:
@@ -242,10 +243,10 @@ sq:
       edit: "Modifiko këtë banderolë >>"
     choose_topic:
       none_found: "Asnjë temë nuk u gjet."
-      title:
-        placeholder: "shkruaj titullin e temës këtu"
     review:
       in_reply_to: "në përgjigje të"
+      explain:
+        total: "Total"
       delete: "Fshij"
       settings:
         save_changes: "Ruaj ndryshimet"
@@ -463,6 +464,10 @@ sq:
         normal_option: "Normal"
       activity_stream: "Aktiviteti"
       preferences: "Preferencat"
+      feature_topic_on_profile:
+        save: "Ruaj"
+        clear:
+          title: "Pastro"
       expand_profile: "Shpalos"
       bookmarks: "Të preferuarat"
       bio: "Rreth meje"
@@ -521,9 +526,7 @@ sq:
       users: "Anëtarët"
       muted_users: "Të heshtur"
       muted_users_instructions: "Çaktivizo të gjitha njoftimet nga këta anëtarë."
-      muted_topics_link: "Trego temat e heshtura"
-      watched_topics_link: "Trego temat e vëzhguara"
-      tracked_topics_link: "Trego temat e ndjekura"
+      tracked_topics_link: "Shfaq"
       automatically_unpin_topics: "Çngjiti temat automatikisht kur arrij fundin e faqes."
       apps: "Aplikimet"
       revoke_access: "Hiqi aksesin"
@@ -569,6 +572,11 @@ sq:
         regenerate: "Rigjenero"
         disable: "Çaktivizo"
         enable: "Aktivizo"
+      second_factor:
+        name: "Emri"
+        edit: "Redakto"
+        security_key:
+          delete: "Fshij"
       change_about:
         title: "Ndrysho Rreth meje"
         error: "Pati një gabim gjatë ndryshimit të kësaj të dhëne."
@@ -591,11 +599,7 @@ sq:
         uploaded_avatar: "Foto e personalizuar"
         uploaded_avatar_empty: "Shto një foto të personalizuar"
         upload_title: "Ngarkoni foton tuaj"
-        upload_picture: "Ngarko Foto"
         image_is_not_a_square: "Vini re: fotoja juaj është përshtatur, pasi nuk ishte katrore."
-      change_profile_background:
-        title: "Sfondi i profilit"
-        instructions: "Sfondi i profilit do të vendoset në qendër dhe do të ketë një gjerësi prej 850px."
       change_card_background:
         title: "Sfondi për skedën e anëtarit"
         instructions: "Sfondi do të vendoset në qendër dhe do të ketë një gjerësi prej 590px."
@@ -611,6 +615,7 @@ sq:
           other: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në {{count}} minutat e fundit."
       associated_accounts:
         revoke: "Revoko"
+        cancel: "Anulo"
       name:
         title: "Emri juaj"
         instructions: "emri i plotë (opsional)"
@@ -696,7 +701,6 @@ sq:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesat"
         user: "Anëtari i ftuar"
-        sent: "Dërguar"
         truncated:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen {{count}} ftesat e para."
@@ -778,6 +782,9 @@ sq:
         header_title: "profili, mesazhet, të preferuarat dhe preferencat"
       title:
         title: "Titulli"
+        none: "(asnjë)"
+      primary_group:
+        title: "Grupi Parësor"
         none: "(asnjë)"
       filters:
         all: "Të gjitha"
@@ -869,8 +876,6 @@ sq:
       reset: "Rivendos fjalëkalimin"
       complete_username: "Nëse në faqe ka një llogari me emër përdoruesi <b>%{username}</b> ju do të merrni një email me udhëzimet sesi mund të rikuperoni fjalëkalimin."
       complete_email: "Në në faqe ka një llogari me adresë emaili <b>%{email}</b> ju do të merrni një email me udhëzimet mbi rivendosjen e fjalëkalimit."
-      complete_username_found: "Gjetëm një llogari që i përket emrit të përdoruesit <b>%{email}</b>, një email me udhëzime sesi të rivendosni fjalëkalimin duhet t'ju vijë së shpejti."
-      complete_email_found: "Gjetëm një llogari që i përket <b>%{email}</b>, një email me udhëzime sesi të rivendosni fjalëkalimin duhet t'ju vijë së shpejti."
       complete_username_not_found: "Nuk ka llogari me emër përdoruesi <b>%{username}</b>"
       complete_email_not_found: "Nuk ka llogari për <b>%{email}</b>"
       button_ok: "OK"
@@ -910,20 +915,15 @@ sq:
       google_oauth2:
         name: "Google"
         title: "me Google"
-        message: "Duke u identifikuar me Google (bllokuesit e popup-eve duhet të jenë të çaktivizuar)"
       twitter:
         name: "Twitter"
         title: "me Twitter"
-        message: "Duke u identifikuar me Twitter (çaktivizoni bllokuesit e popupeve, nëse i përdorni)"
       instagram:
         title: "me Instagram"
-        message: "Duke u identifikuar me Instagram (bllokuesit e popup-eve duhet të jenë të çaktivizuar)"
       facebook:
         title: "me Facebook"
-        message: "Duke u identifikuar me Facebook (çaktivizoni bllokuesit e popupeve, nëse i përdorni)"
       github:
         title: "me GitHub"
-        message: "Duke u identifikuar me Github (bllokuesit e popup-eve duhet të jenë të çaktivizuar)"
     invites:
       accept_title: "Ftesë"
       welcome_to: "Mirë se vini tek %{site_name}!"
@@ -940,7 +940,6 @@ sq:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
     category_page_style:
       categories_only: "Vetëm kategoritë"
@@ -952,6 +951,9 @@ sq:
       alt: "Alt"
     conditional_loading_section:
       loading: Duke ngarkuar...
+    date_time_picker:
+      from: Nga
+      to: Për
     emoji_picker:
       flags: Sinjalizime
     composer:
@@ -977,7 +979,6 @@ sq:
         title_missing: "Titulli është i nevojshëm"
         title_too_short: "Titulli duhet të ketë të paktën {{min} shkronja."
         title_too_long: "Titulli nuk mund të ketë më shumë se {{max}} shkronja"
-        post_missing: "Postimi s'mund të jetë bosh"
         post_length: "Postimi duhet të ketë të paktën {{min} shkronja."
         category_missing: "Duhet të zgjidhni një kategori"
       save_edit: "Ruani modifikimet"
@@ -992,12 +993,10 @@ sq:
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
-      show_edit_reason: "(vendosni arsyen e redaktimit)"
       reply_placeholder: "Shkruani këtu. Mund të përdorni Markdown, BBCode, ose kod HTML për formatimin. Tërhiqni (drag and drop) ose kopjoni dhe ngjisni imazhet. "
       view_new_post: "Shikoni postimin tuaj të ri."
       saving: "Duke e ruajtur"
       saved: "U ruajt!"
-      saved_draft: "Keni një postim në shkrim e sipër. Kikoni për të vazhduar. "
       uploading: "Duke ngarkuar..."
       show_preview: "tregoni panelin e parashikimit &raquo;"
       hide_preview: "&laquo; fshiheni panelin e parashikimit"
@@ -1039,7 +1038,6 @@ sq:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
       empty: "Nuk u gjet asnjë njoftim. "
-      more: "shiko njoftimet e kaluara"
       popup:
         mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
@@ -1062,7 +1060,6 @@ sq:
       hint_for_supported_browsers: "ju mund të tërhiqni e lëshoni imazhet në editorin e tekstit"
       uploading: "Duke ngarkuar"
       select_file: "Zgjdhni një Skedar"
-      image_link: "linku për imazhin"
       default_image_alt_text: imazh
     search:
       sort_by: "Rendit sipas"
@@ -1269,6 +1266,7 @@ sq:
           title: "Pa njoftime"
           description: "Ju nuk do të njoftoheni për asgjë mbi këtë temë, dhe tema nuk do të shfaqet në listën e temave më të fundit. "
       actions:
+        title: "Veprimet"
         recover: "Rivendos temën"
         delete: "Fshi temën"
         open: "Hap temën"
@@ -1437,6 +1435,8 @@ sq:
         image_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_download_requires_login: "Na vjen keq, duhet të identifikoheni për të shkarkuar një dokument. "
+      abandon_edit:
+        no_value: "Jo, mbaji"
       abandon:
         confirm: "A jeni të sigurtë se do të braktisni postimin?"
         no_value: "Jo, mbaji"
@@ -1489,7 +1489,6 @@ sq:
           notify_moderators: "njoftoi moderatorët"
           notify_user: "dërgoi një mesazh"
           bookmark: "e shtoi këtë tek të preferuarat"
-          like: "pëlqeu këtë"
         by_you:
           off_topic: "Ti sinjalizove këtë postim si jashtë teme"
           spam: "Ti sinjalizove këtë postim si spam"
@@ -1522,6 +1521,8 @@ sq:
             button: "Tekst"
           html_part:
             button: "HTML"
+      bookmarks:
+        name: "Emri"
     category:
       can: "mund&hellip; "
       none: "(pa kategori)"
@@ -1766,7 +1767,7 @@ sq:
         this_month: "Këtë muaj"
         this_week: "Këtë javë"
         today: "Sot"
-        other_periods: "shiko më  populloret"
+        other_periods: "shiko më populloret"
     permission_types:
       full: "Krijo / Përgjigju / Shiko"
       create_post: "Përgjigju / Shiko"
@@ -1855,21 +1856,13 @@ sq:
           name: Tjetër
         posting:
           name: Postimet
-    google_search: |
-      <h3>Kërko me Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Të gjitha etiketat"
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
       changed: "etiketat e ndryshuara:"
       tags: "Etiketat"
+      add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"
       rename_tag: "Riemëro etiketën"
       rename_instructions: "Zgjidhni një emër të ri për këtë etiketë"
@@ -1975,8 +1968,6 @@ sq:
           view_table: "tabelë"
           view_graph: "grafik"
           refresh_report: "Rifresko raportin"
-          start_date: "Dita e fillimit"
-          end_date: "Dita e fundit"
           groups: "Të gjitha grupet"
           filters:
             group:
@@ -2001,7 +1992,6 @@ sq:
               public: "Të gjithë"
           membership:
             automatic: Automatik
-            trust_level: Niveli i besimit
             trust_levels_title: "Niveli i besimit që ju akordohet automatikisht anëtarëve të grupit:"
             trust_levels_none: "Asnjë"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
@@ -2029,15 +2019,13 @@ sq:
         none: "Për momentin, nuk ka çelësa API aktivë."
         user: "Përdorues"
         title: "API"
-        key: "API Key"
+        created: Krijuar
         generate: "Gjenero"
-        regenerate: "Rigjenero"
         revoke: "Revoko"
-        confirm_regen: "Are you sure you want to replace that API Key with a new one?"
-        confirm_revoke: "Are you sure you want to revoke that key?"
-        info_html: "Çelësi juaj API ju lejon të krijoni dhe updejtoni tema nëpërmjet thirrjeve JSON."
         all_users: "Gjithë Përdoruesit"
-        note_html: "Mbaje këtë çelës <strong>sekret</strong>, të gjithë përdoruesit që e kanë mund të krijojnë postime me të. "
+        show_details: Detaje
+        description: Përshkrimi
+        save: Ruaj
       web_hooks:
         title: "Webhooks"
         save: "Ruaj"
@@ -2139,7 +2127,7 @@ sq:
         opacity: "Opaciteti"
         copy: "Kopjo"
         email_templates:
-          title: "Shabllonët email"
+          title: "Email"
           subject: "Subjekti"
           multiple_subjects: "Ky shabllon ka disa tituj për mesazhin."
           body: "Përmbajtja"
@@ -2158,6 +2146,8 @@ sq:
           installed: "Instaluar"
           install_popular: "Popullore"
           about_theme: "Rreth"
+          enable: "Aktivizo"
+          disable: "Çaktivizo"
           add: "Shto"
           scss:
             text: "CSS"
@@ -2209,6 +2199,8 @@ sq:
           love:
             name: "zemra"
             description: "Ngjyra e butonit të pëlqimeve."
+        email_style:
+          css: "CSS"
       email:
         title: "Emailat"
         settings: "Rregullimet"
@@ -2366,12 +2358,13 @@ sq:
           title: "Ditar Gabimesh"
       watched_words:
         clear_filter: "Pastro"
+        download: Shkarko
+        clear_all: Pastro kriteret
         actions:
           block: "Blloko"
           flag: "Sinjalizoni"
         form:
           add: "Shto"
-          upload: "Ngarko"
       impersonate:
         title: "Personifiko"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -2560,7 +2553,7 @@ sq:
       site_text:
         description: "Mund të adaptoni çdo tekst në këtë faqe. Filloni duke bërë një kërkim më poshtë: "
         search: "Kërkoni për tekstin që dëshironi të redaktoni"
-        title: "Përmbajtje Tekstit"
+        title: "Tekst"
         edit: "redakto"
         revert: "Rikthe ndryshimet"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
@@ -2608,6 +2601,8 @@ sq:
           search: "Kërko"
           groups: "Grupet"
           dashboard: "Paneli i kontrollit"
+        default_categories:
+          modal_yes: "Po"
       badges:
         title: Stemat
         new_badge: Stemë e Re

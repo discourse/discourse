@@ -1,30 +1,44 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { alias, or, readOnly } from "@ember/object/computed";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import PasswordValidation from "discourse/mixins/password-validation";
 import { userPath } from "discourse/lib/url";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { getWebauthnCredential } from "discourse/lib/webauthn";
 
-export default Ember.Controller.extend(PasswordValidation, {
-  isDeveloper: Ember.computed.alias("model.is_developer"),
-  admin: Ember.computed.alias("model.admin"),
-  secondFactorRequired: Ember.computed.alias("model.second_factor_required"),
-  backupEnabled: Ember.computed.alias("model.backup_enabled"),
-  secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
+export default Controller.extend(PasswordValidation, {
+  isDeveloper: alias("model.is_developer"),
+  admin: alias("model.admin"),
+  secondFactorRequired: alias("model.second_factor_required"),
+  securityKeyRequired: alias("model.security_key_required"),
+  backupEnabled: alias("model.backup_enabled"),
+  securityKeyOrSecondFactorRequired: or(
+    "model.second_factor_required",
+    "model.security_key_required"
+  ),
+  otherMethodAllowed: readOnly("model.multiple_second_factor_methods"),
+  @discourseComputed("model.security_key_required")
+  secondFactorMethod(security_key_required) {
+    return security_key_required
+      ? SECOND_FACTOR_METHODS.SECURITY_KEY
+      : SECOND_FACTOR_METHODS.TOTP;
+  },
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,
   requiresApproval: false,
   redirected: false,
 
-  @computed()
+  @discourseComputed()
   continueButtonText() {
     return I18n.t("password_reset.continue", {
       site_name: this.siteSettings.title
     });
   },
 
-  @computed("redirectTo")
+  @discourseComputed("redirectTo")
   redirectHref(redirectTo) {
     return Discourse.getURL(redirectTo || "/");
   },
@@ -38,7 +52,8 @@ export default Ember.Controller.extend(PasswordValidation, {
         type: "PUT",
         data: {
           password: this.accountPassword,
-          second_factor_token: this.secondFactorToken,
+          second_factor_token:
+            this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.secondFactorMethod
         }
       })
@@ -53,15 +68,17 @@ export default Ember.Controller.extend(PasswordValidation, {
               DiscourseURL.redirectTo(result.redirect_to || "/");
             }
           } else {
-            if (result.errors && result.errors.user_second_factors) {
+            if (result.errors && !result.errors.password) {
               this.setProperties({
-                secondFactorRequired: true,
+                secondFactorRequired: this.secondFactorRequired,
+                securityKeyRequired: this.securityKeyRequired,
                 password: null,
                 errorMessage: result.message
               });
-            } else if (this.secondFactorRequired) {
+            } else if (this.secondFactorRequired || this.securityKeyRequired) {
               this.setProperties({
                 secondFactorRequired: false,
+                securityKeyRequired: false,
                 errorMessage: null
               });
             } else if (
@@ -88,6 +105,24 @@ export default Ember.Controller.extend(PasswordValidation, {
             throw new Error(e);
           }
         });
+    },
+
+    authenticateSecurityKey() {
+      getWebauthnCredential(
+        this.model.challenge,
+        this.model.allowed_credential_ids,
+        credentialData => {
+          this.set("securityKeyCredential", credentialData);
+          this.send("submit");
+        },
+        errorMessage => {
+          this.setProperties({
+            securityKeyRequired: true,
+            password: null,
+            errorMessage: errorMessage
+          });
+        }
+      );
     },
 
     done() {

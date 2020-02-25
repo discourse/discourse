@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'reviewable'
-
 class ReviewableUser < Reviewable
 
   def self.create_for(user)
@@ -60,6 +58,10 @@ class ReviewableUser < Reviewable
     # We'll delete the user if we can
     if target.present?
       destroyer = UserDestroyer.new(performed_by)
+
+      if reviewable_scores.any? { |rs| rs.reason == 'suspect_user' }
+        DiscourseEvent.trigger(:suspect_user_deleted, target)
+      end
 
       begin
         delete_args = {}

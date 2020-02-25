@@ -98,7 +98,7 @@ describe SuggestedTopicsBuilder do
     end
 
     context "category definition topics" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category_with_definition) }
 
       it "doesn't add a category definition topic" do
         expect(category.topic_id).to be_present

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "backup_restore/backup_store"
-require_dependency "disk_space"
-
 module BackupRestore
   class LocalBackupStore < BackupStore
     def self.base_directory(db: nil, root_directory: nil)

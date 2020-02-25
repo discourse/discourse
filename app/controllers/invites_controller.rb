@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-
 class InvitesController < ApplicationController
 
   requires_login only: [
@@ -35,14 +33,14 @@ class InvitesController < ApplicationController
         render layout: 'no_ember'
       end
     else
-      flash.now[:error] = I18n.t('invite.not_found')
+      flash.now[:error] = I18n.t('invite.not_found', base_url: Discourse.base_url)
       render layout: 'no_ember'
     end
   end
 
   def perform_accept_invitation
     params.require(:id)
-    params.permit(:username, :name, :password, user_custom_fields: {})
+    params.permit(:username, :name, :password, :timezone, user_custom_fields: {})
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
@@ -50,6 +48,7 @@ class InvitesController < ApplicationController
         user = invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields], ip_address: request.remote_ip)
         if user.present?
           log_on_user(user) if user.active?
+          user.update_timezone_if_missing(params[:timezone])
           post_process_invite(user)
         end
 
@@ -70,7 +69,7 @@ class InvitesController < ApplicationController
         }
       end
     else
-      render json: { success: false, message: I18n.t('invite.not_found') }
+      render json: { success: false, message: I18n.t('invite.not_found_json') }
     end
   end
 
@@ -170,6 +169,8 @@ class InvitesController < ApplicationController
   end
 
   def upload_csv
+    require 'csv'
+
     guardian.ensure_can_bulk_invite_to_forum!(current_user)
 
     hijack do

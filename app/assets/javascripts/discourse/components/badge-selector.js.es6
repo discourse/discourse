@@ -1,13 +1,13 @@
-import {
+import Component from "@ember/component";
+import discourseComputed, {
   on,
-  observes,
-  default as computed
-} from "ember-addons/ember-computed-decorators";
+  observes
+} from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 const { makeArray } = Ember;
 
-export default Ember.Component.extend({
-  @computed("placeholderKey")
+export default Component.extend({
+  @discourseComputed("placeholderKey")
   placeholder(placeholderKey) {
     return placeholderKey ? I18n.t(placeholderKey) : "";
   },

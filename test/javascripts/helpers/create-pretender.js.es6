@@ -1,3 +1,5 @@
+import User from "discourse/models/user";
+
 export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
@@ -29,7 +31,7 @@ export function success() {
   return response({ success: true });
 }
 
-const loggedIn = () => !!Discourse.User.current();
+const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 export let fixturesByUrl;
 
@@ -37,7 +39,7 @@ export default function() {
   const server = new Pretender(function() {
     // Autoload any `*-pretender` files
     Object.keys(requirejs.entries).forEach(e => {
-      let m = e.match(/^helpers\/([a-z]+)\-pretender$/);
+      let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
       if (m && m[1] !== "create") {
         let result = requirejs(e).default.call(this, helpers);
         if (m[1] === "fixture") {
@@ -62,8 +64,8 @@ export default function() {
       return response(json);
     });
 
-    this.get("/c/bug/l/latest.json", () => {
-      const json = fixturesByUrl["/c/bug/l/latest.json"];
+    this.get("/c/bug/1/l/latest.json", () => {
+      const json = fixturesByUrl["/c/bug/1/l/latest.json"];
 
       if (loggedIn()) {
         // Stuff to let us post
@@ -139,7 +141,7 @@ export default function() {
     });
 
     this.get("/topics/private-messages/eviltrout.json", () => {
-      return response({ topic_list: { topics: [] } });
+      return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
     });
 
     this.get("/topics/feature_stats.json", () => {
@@ -148,6 +150,10 @@ export default function() {
         pinned_globally_count: 0,
         banner_count: 0
       });
+    });
+
+    this.put("/t/34/convert-topic/public", () => {
+      return response({});
     });
 
     this.put("/t/280/make-banner", () => {
@@ -195,7 +201,9 @@ export default function() {
 
     this.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
     this.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
-    this.get("/t/280/20.json", () => response(fixturesByUrl["/t/280/1.json"]));
+    this.get("/t/280/:post_number.json", () =>
+      response(fixturesByUrl["/t/280/1.json"])
+    );
     this.get("/t/28830.json", () => response(fixturesByUrl["/t/28830/1.json"]));
     this.get("/t/9.json", () => response(fixturesByUrl["/t/9/1.json"]));
     this.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));
@@ -257,6 +265,7 @@ export default function() {
 
     this.put("/categories/:category_id", request => {
       const category = parsePostData(request.requestBody);
+      category.id = parseInt(request.params.category_id, 10);
 
       if (category.email_in === "duplicate@example.com") {
         return response(422, { errors: ["duplicate email"] });
@@ -318,11 +327,35 @@ export default function() {
         }
 
         return response({
-          error: "Invalid Second Factor",
+          failed: "FAILED",
+          ok: false,
+          error:
+            "Invalid authentication code. Each code can only be used once.",
           reason: "invalid_second_factor",
           backup_enabled: true,
-          sent_to_email: "eviltrout@example.com",
-          current_email: "current@example.com"
+          security_key_enabled: false,
+          totp_enabled: true,
+          multiple_second_factor_methods: false
+        });
+      }
+
+      if (data.password === "need-security-key") {
+        if (data.securityKeyCredential) {
+          return response({ username: "eviltrout" });
+        }
+
+        return response({
+          failed: "FAILED",
+          ok: false,
+          error:
+            "The selected second factor method is not enabled for your account.",
+          reason: "not_enabled_second_factor_method",
+          backup_enabled: false,
+          security_key_enabled: true,
+          totp_enabled: false,
+          multiple_second_factor_methods: false,
+          allowed_credential_ids: ["allowed_credential_ids"],
+          challenge: "challenge"
         });
       }
 
@@ -374,7 +407,13 @@ export default function() {
     this.get("/t/500.json", () => response(502, {}));
 
     this.put("/t/:slug/:id", request => {
-      const data = parsePostData(request.requestBody);
+      const isJSON = request.requestHeaders["Content-Type"].includes(
+        "application/json"
+      );
+
+      const data = isJSON
+        ? JSON.parse(request.requestBody)
+        : parsePostData(request.requestBody);
 
       return response(200, {
         basic_topic: {
@@ -416,25 +455,25 @@ export default function() {
 
     this.get("/t/:topic_id/posts.json", request => {
       const postIds = request.queryParams.post_ids;
-      const postNumber = parseInt(request.queryParams.post_number);
+      const postNumber = parseInt(request.queryParams.post_number, 10);
       let posts;
 
       if (postIds) {
         posts = postIds.map(p => ({
-          id: parseInt(p),
-          post_number: parseInt(p)
+          id: parseInt(p, 10),
+          post_number: parseInt(p, 10)
         }));
       } else if (postNumber && request.queryParams.asc === "true") {
         posts = _.range(postNumber + 1, postNumber + 6).map(p => ({
-          id: parseInt(p),
-          post_number: parseInt(p)
+          id: parseInt(p, 10),
+          post_number: parseInt(p, 10)
         }));
       } else if (postNumber && request.queryParams.asc === "false") {
         posts = _.range(postNumber - 5, postNumber)
           .reverse()
           .map(p => ({
-            id: parseInt(p),
-            post_number: parseInt(p)
+            id: parseInt(p, 10),
+            post_number: parseInt(p, 10)
           }));
       }
 
@@ -472,6 +511,15 @@ export default function() {
             id: 1234,
             raw: data.raw
           }
+        });
+      }
+
+      if (data.raw === "custom message") {
+        return response(200, {
+          success: true,
+          action: "custom",
+          message: "This is a custom response",
+          route_to: "/faq"
         });
       }
 
@@ -591,8 +639,6 @@ export default function() {
       });
     });
 
-    this.post("/admin/users/:user_id/generate_api_key", success);
-    this.delete("/admin/users/:user_id/revoke_api_key", success);
     this.delete("/admin/users/:user_id.json", () =>
       response(200, { deleted: true })
     );
@@ -600,7 +646,10 @@ export default function() {
     this.delete("/admin/badges/:id", success);
 
     this.get("/admin/logs/staff_action_logs.json", () => {
-      return response(200, { staff_action_logs: [], user_history_actions: [] });
+      return response(200, {
+        staff_action_logs: [],
+        extras: { user_history_actions: [] }
+      });
     });
 
     this.get("/admin/logs/watched_words", () => {

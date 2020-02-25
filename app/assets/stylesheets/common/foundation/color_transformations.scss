@@ -1,0 +1,77 @@
+// standard color transformations, use these if possible, and add any new dark-light-diffs here
+// any variables defined here can be added in theme color schemes
+// all variables should have the !default flag
+
+//primary
+$primary-very-low: dark-light-diff($primary, $secondary, 97%, -82%) !default;
+$primary-low: dark-light-diff($primary, $secondary, 90%, -78%) !default;
+$primary-low-mid: dark-light-diff($primary, $secondary, 70%, -45%) !default;
+$primary-medium: dark-light-diff($primary, $secondary, 50%, -35%) !default;
+$primary-high: dark-light-diff($primary, $secondary, 30%, -25%) !default;
+$primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%) !default;
+
+//header_primary
+$header_primary-low: dark-light-diff(
+  $header_primary,
+  $header_background,
+  90%,
+  -78%
+) !default;
+$header_primary-low-mid: dark-light-diff(
+  $header_primary,
+  $header_background,
+  70%,
+  -45%
+) !default;
+
+$header_primary-medium: dark-light-diff(
+  $header_primary,
+  $header_background,
+  50%,
+  -35%
+) !default;
+$header_primary-high: dark-light-diff(
+  $header_primary,
+  $header_background,
+  30%,
+  -25%
+) !default;
+$header_primary-very-high: dark-light-diff(
+  $header_primary,
+  $header_background,
+  15%,
+  -10%
+) !default;
+
+//secondary
+$secondary-low: dark-light-diff($secondary, $primary, 70%, -70%) !default;
+$secondary-medium: dark-light-diff($secondary, $primary, 50%, -50%) !default;
+$secondary-high: dark-light-diff($secondary, $primary, 30%, -35%) !default;
+$secondary-very-high: dark-light-diff($secondary, $primary, 7%, -7%) !default;
+
+//tertiary
+$tertiary-low: dark-light-diff($tertiary, $secondary, 85%, -65%) !default;
+$tertiary-medium: dark-light-diff($tertiary, $secondary, 50%, -45%) !default;
+$tertiary-high: dark-light-diff($tertiary, $secondary, 20%, -25%) !default;
+
+//quaternary
+$quaternary-low: dark-light-diff($quaternary, $secondary, 70%, -70%) !default;
+
+//highlight
+$highlight-low: dark-light-diff($highlight, $secondary, 70%, -80%) !default;
+$highlight-medium: dark-light-diff($highlight, $secondary, 50%, -55%) !default;
+$highlight-high: dark-light-diff($highlight, $secondary, -50%, -10%) !default;
+
+//danger
+$danger-low: dark-light-diff($danger, $secondary, 85%, -64%) !default;
+$danger-medium: dark-light-diff($danger, $secondary, 30%, -35%) !default;
+
+//success
+$success-low: dark-light-diff($success, $secondary, 80%, -60%) !default;
+$success-medium: dark-light-diff($success, $secondary, 50%, -40%) !default;
+
+//love
+$love-low: dark-light-diff($love, $secondary, 85%, -60%) !default;
+
+//wiki
+$wiki: green !default;

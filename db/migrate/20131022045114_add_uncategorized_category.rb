@@ -4,7 +4,7 @@ class AddUncategorizedCategory < ActiveRecord::Migration[4.2]
   def up
 
     result = execute "SELECT 1 FROM categories WHERE lower(name) = 'uncategorized'"
-    name = 'Uncategorized'
+    name = +'Uncategorized'
     if result.count > 0
       name << SecureRandom.hex
     end

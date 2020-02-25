@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'jobs/regular/create_user_reviewable'
 
 describe Jobs::CreateUserReviewable do
 

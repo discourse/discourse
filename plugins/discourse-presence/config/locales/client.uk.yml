@@ -5,4 +5,13 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-uk: {}
+uk:
+  js:
+    presence:
+      replying: "відповідаючи"
+      editing: "редагуючи"
+      replying_to_topic:
+        one: "відповідаючи"
+        few: "відповідаючи"
+        many: "відповідаючи"
+        other: "відповідаючи"

@@ -3,7 +3,7 @@
 require 'excon'
 
 module Jobs
-  class EmitWebHookEvent < Jobs::Base
+  class EmitWebHookEvent < ::Jobs::Base
     PING_EVENT = 'ping'.freeze
     MAX_RETRY_COUNT = 4.freeze
     RETRY_BACKOFF = 5
@@ -93,7 +93,8 @@ module Jobs
         @retry_count += 1
         return if @retry_count > MAX_RETRY_COUNT
         delay = RETRY_BACKOFF**(@retry_count - 1)
-        Jobs.enqueue_in(delay.minutes, :emit_web_hook_event, @arguments)
+        @arguments[:retry_count] = @retry_count
+        ::Jobs.enqueue_in(delay.minutes, :emit_web_hook_event, @arguments)
       end
     end
 

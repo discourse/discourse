@@ -1,6 +1,9 @@
-QUnit.module("model:post-stream");
-
+import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
+import User from "discourse/models/user";
+import { Promise } from "rsvp";
+
+QUnit.module("model:post-stream");
 
 const buildStream = function(id, stream) {
   const store = createStore();
@@ -139,7 +142,11 @@ QUnit.test("closestPostNumberFor", assert => {
 
 QUnit.test("closestDaysAgoFor", assert => {
   const postStream = buildStream(1231);
-  postStream.set("timelineLookup", [[1, 10], [3, 8], [5, 1]]);
+  postStream.set("timelineLookup", [
+    [1, 10],
+    [3, 8],
+    [5, 1]
+  ]);
 
   assert.equal(postStream.closestDaysAgoFor(1), 10);
   assert.equal(postStream.closestDaysAgoFor(2), 10);
@@ -173,7 +180,7 @@ QUnit.test("updateFromJson", assert => {
   });
 
   assert.equal(postStream.get("posts.length"), 1, "it loaded the posts");
-  assert.containsInstance(postStream.get("posts"), Discourse.Post);
+  assert.containsInstance(postStream.get("posts"), Post);
 
   assert.equal(postStream.get("extra_property"), 12);
 });
@@ -202,7 +209,7 @@ QUnit.test("removePosts", assert => {
 QUnit.test("cancelFilter", assert => {
   const postStream = buildStream(1235);
 
-  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
+  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
 
   postStream.set("summary", true);
   postStream.cancelFilter();
@@ -240,7 +247,7 @@ QUnit.test("findPostIdForPostNumber", assert => {
 
 QUnit.test("toggleParticipant", assert => {
   const postStream = buildStream(1236);
-  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
+  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
 
   assert.equal(
     postStream.get("userFilters.length"),
@@ -263,7 +270,7 @@ QUnit.test("toggleParticipant", assert => {
 
 QUnit.test("streamFilters", assert => {
   const postStream = buildStream(1237);
-  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
+  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
 
   assert.deepEqual(
     postStream.get("streamFilters"),
@@ -548,7 +555,7 @@ QUnit.test("staging and undoing a new post", assert => {
     "the original post is lastAppended"
   );
 
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -649,7 +656,7 @@ QUnit.test("staging and committing a post", assert => {
     "the original post is lastAppended"
   );
 
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -771,7 +778,7 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
   const store = postStream.store;
 
   postStream.appendPost(store.createRecord("post", { id: 1, post_number: 1 }));
-  const user = Discourse.User.create({
+  const user = User.create({
     username: "eviltrout",
     name: "eviltrout",
     id: 321
@@ -803,8 +810,8 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
 QUnit.test("triggerNewPostInStream for ignored posts", async assert => {
   const postStream = buildStream(280, [1]);
   const store = postStream.store;
-  Discourse.User.resetCurrent(
-    Discourse.User.create({
+  User.resetCurrent(
+    User.create({
       username: "eviltrout",
       name: "eviltrout",
       id: 321,

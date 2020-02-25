@@ -25,11 +25,12 @@
       </h2>
     {{/if}}
 
-
     {{#if tagNotification}}
       {{#unless additionalTags}}
-        {{tag-notifications-button action=(action "changeTagNotification")
-                                   notificationLevel=tagNotification.notification_level}}
+        {{tag-notifications-button
+          onChange=(action "changeTagNotificationLevel")
+          value=tagNotification.notification_level
+        }}
       {{/unless}}
     {{/if}}
 
@@ -39,45 +40,48 @@
       label=createTopicLabel
       action=(route-action "createTopic")}}
 
-     {{#if showAdminControls}}
-        {{d-button action=(route-action "renameTag") actionParam=tag icon="pencil-alt" class="admin-tag"}}
-        {{d-button action=(action "deleteTag") icon="far-trash-alt" class="admin-tag btn-danger"}}
-      {{/if}}
+    {{#if showToggleInfo}}
+      {{d-button icon="tag" label="tagging.info" action=(action "toggleInfo") id="show-tag-info"}}
+    {{/if}}
     </section>
   </div>
 </div>
+
+{{#if showInfo}}
+  {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
+{{/if}}
 
 {{plugin-outlet name="discovery-list-container-top"}}
 <div class="container list-container">
   <div class="row">
     <div class="full-width">
       <div id='list-area'>
-      {{conditional-loading-spinner condition=loading}}
+        {{#unless loading}}
+          {{#if list.topics}}
+            {{#discovery-topics-list model=list refresh=(action "refresh")}}
+            {{bulk-select-button selected=selected action=(action "refresh")}}
 
-      {{#unless loading}}
-        {{#if list.topics}}
-          {{#discovery-topics-list model=list refresh=(action "refresh")}}
-          {{bulk-select-button selected=selected action=(action "refresh")}}
+            {{topic-list topics=list.topics
+                        canBulkSelect=canBulkSelect
+                        toggleBulkSelect=(action "toggleBulkSelect")
+                        bulkSelectEnabled=bulkSelectEnabled
+                        selected=selected
+                        showPosters=true
+                        order=order
+                        ascending=ascending
+                        changeSort=(action "changeSort")}}
 
-          {{topic-list topics=list.topics
-                      canBulkSelect=canBulkSelect
-                      toggleBulkSelect=(action "toggleBulkSelect")
-                      bulkSelectEnabled=bulkSelectEnabled
-                      selected=selected
-                      showPosters=true
-                      order=order
-                      ascending=ascending
-                      changeSort=(action "changeSort")}}
+            {{/discovery-topics-list}}
+          {{else}}
+            <footer class='topic-list-bottom'>
+              <h3>
+                {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n 'topic.browse_all_categories'}}{{/link-to}} {{i18n 'or'}} {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}}.
+              </h3>
+            </footer>
+          {{/if}}
+        {{/unless}}
 
-          {{/discovery-topics-list}}
-        {{else}}
-          <footer class='topic-list-bottom'>
-            <h3>
-              {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n 'topic.browse_all_categories'}}{{/link-to}} {{i18n 'or'}} {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}}.
-            </h3>
-          </footer>
-        {{/if}}
-      {{/unless}}
+        {{conditional-loading-spinner condition=list.loadingMore}}
       </div>
     </div>
   </div>

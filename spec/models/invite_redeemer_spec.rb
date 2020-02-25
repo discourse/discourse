@@ -47,6 +47,15 @@ describe InviteRedeemer do
       expect(user.email).to eq('staged@account.com')
       expect(user.approved).to eq(true)
     end
+
+    it "should not activate user invited via links" do
+      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com', emailed_status: Invite.emailed_status_types[:not_required]), 'walter', 'Walter White')
+      expect(user.username).to eq('walter')
+      expect(user.name).to eq('Walter White')
+      expect(user.email).to eq('walter.white@email.com')
+      expect(user.approved).to eq(true)
+      expect(user.active).to eq(false)
+    end
   end
 
   describe "#redeem" do
@@ -61,6 +70,7 @@ describe InviteRedeemer do
       inviter = invite.invited_by
       inviter.admin = true
       user = invite_redeemer.redeem
+      invite.reload
 
       expect(user.name).to eq(name)
       expect(user.username).to eq(username)
@@ -144,5 +154,20 @@ describe InviteRedeemer do
       another_user = another_invite_redeemer.redeem
       expect(another_user).to eq(nil)
     end
+
+    it "should correctly update the invite redeemed_at date" do
+      SiteSetting.invite_expiry_days = 2
+      invite.update!(created_at: 10.days.ago)
+
+      inviter = invite.invited_by
+      inviter.admin = true
+      user = invite_redeemer.redeem
+      invite.reload
+
+      expect(user.invited_by).to eq(inviter)
+      expect(inviter.notifications.count).to eq(1)
+      expect(invite.redeemed_at).not_to eq(nil)
+    end
+
   end
 end

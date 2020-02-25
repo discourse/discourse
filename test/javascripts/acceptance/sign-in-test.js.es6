@@ -101,6 +101,32 @@ QUnit.test("second factor", async assert => {
   );
 });
 
+QUnit.test("security key", async assert => {
+  await visit("/");
+  await click("header .login-button");
+
+  assert.ok(exists(".login-modal"), "it shows the login modal");
+
+  await fillIn("#login-account-name", "eviltrout");
+  await fillIn("#login-account-password", "need-security-key");
+  await click(".modal-footer .btn-primary");
+
+  assert.not(exists("#modal-alert:visible"), "it hides the login error");
+  assert.not(
+    exists("#credentials:visible"),
+    "it hides the username and password prompt"
+  );
+  assert.not(
+    exists("#login-second-factor:visible"),
+    "it does not display the second factor prompt"
+  );
+  assert.ok(
+    exists("#security-key:visible"),
+    "it shows the security key prompt"
+  );
+  assert.not(exists("#login-button:visible"), "hides the login button");
+});
+
 QUnit.test("create account", async assert => {
   await visit("/");
   await click("header .sign-up-button");

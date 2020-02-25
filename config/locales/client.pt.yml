@@ -146,7 +146,6 @@ pt:
       banner:
         enabled: "tornou isto numa faixa %{when}. Esta irá aparecer no topo de cada página até que seja rejeitada pelo utilizador."
         disabled: "removeu esta faixa %{when}. Esta não irá aparecer no topo de cada página."
-    topic_admin_menu: "Ações administrativas dos Tópicos"
     wizard_required: "Bem-vindo ao seu novo Discourse! Vamos começar com <a href='%{url}' data-auto-route='true'>o assistente de configuração</a> ✨"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     bootstrap_mode_enabled: "Para que o inicio do teu Site seja o mais simples possivél, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{min_users}utilizadores se tiverem juntado ao fórum."
@@ -232,6 +231,7 @@ pt:
       stats: "Estatísticas do sítio"
       our_admins: "Os Nossos Administradores"
       our_moderators: "Os Nossos Moderadores"
+      moderators: "Moderadores"
       stat:
         all_time: "Sempre"
         last_7_days: "Últimos 7 Dias"
@@ -254,6 +254,7 @@ pt:
       not_bookmarked: "adicionar esta publicação aos marcadores"
       remove: "Remover Marcador"
       confirm_clear: "De certeza que pretende remover todos os marcadores deste tópico?"
+      save: "Guardar"
     drafts:
       resume: "Continuar"
       remove: "Remover"
@@ -297,16 +298,12 @@ pt:
       edit: "Editar esta faixa >>"
     choose_topic:
       none_found: "Nenhum tópico encontrado."
-      title:
-        search: "Procurar Tópico por título, URL ou id:"
-        placeholder: "digite o título do tópico aqui"
     choose_message:
       none_found: "Nenhuma mensagem encontrada."
-      title:
-        search: "Pesquisar por uma Mensagem por título:"
-        placeholder: "escreva o título da mensagem aqui"
     review:
       in_reply_to: "Em resposta a"
+      explain:
+        total: "Total"
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
         required: "Deve reivindicar items antes de as poder rever."
@@ -439,7 +436,6 @@ pt:
       leave: "Sair"
       request: "Pedir"
       message: "Mensagem"
-      allow_membership_requests: "Permitir que os utilizadores enviem pedidos de adesão aos donos do grupo"
       membership_request_template: "Template personalizado para mostrar aos utilizadores quando for enviado um pedido de adesão"
       membership_request:
         submit: "Submeter Pedido"
@@ -607,6 +603,10 @@ pt:
         normal_option: "Normal"
       activity_stream: "Atividade"
       preferences: "Preferências"
+      feature_topic_on_profile:
+        save: "Guardar"
+        clear:
+          title: "Remover"
       profile_hidden: "O perfil público deste utilizador está oculto."
       expand_profile: "Expandir"
       collapse_profile: "Colapsar"
@@ -688,9 +688,7 @@ pt:
       muted_users_instructions: "Suprimir todas as notificações destes utilizadores."
       ignored_users: "Ignorados"
       ignored_users_instructions: "Suprimir todas as publicações e notificações destes utilizadores."
-      muted_topics_link: "Mostrar tópicos silenciados"
-      watched_topics_link: "Mostrar tópicos vigiados"
-      tracked_topics_link: "Mostrar tópicos seguidos"
+      tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar tópicos automaticamente quando eu chegar ao final."
       apps: "Aplicações"
       revoke_access: "Rescindir Acesso"
@@ -742,17 +740,16 @@ pt:
         disable: "Desativar"
         enable: "Ativar"
         enable_long: "Ativar códigos de reserva"
-        manage: "Gerir códigos de reserva"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
         remaining_codes: "Restam <strong>{{count}}</strong> códigos de reserva."
-        use: "<a href>Usar um código de reserva</a>"
         codes:
           title: "Códigos de Reserva Gerados"
           description: "Cada um dos códigos de reserva só pode ser usado uma vez. Guarde-os num sítio seguro mas acessível."
       second_factor:
         title: "Autenticação em Dois Passos"
         confirm_password_description: "Por favor confirme a sua palavra-passe para continuar"
+        name: "Nome"
         label: "Código"
         rate_limit: "Por favor espere antes de voltar a tentar um código de autenticação."
         disable_description: "Por favor introduza o código de autenticação a partir da sua aplicação"
@@ -760,8 +757,11 @@ pt:
         extended_description: |
           A autenticação em dois passos adiciona segurança à sua conta ao pedir um código de utilização única além da sua palavra-passe. Os códigos podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Note que os logins com contas sociais vão ser desativados depois da autenticação em dois passos ser ativa na sua conta."
-        use: "<a href>Usar aplicação Authenticator</a>"
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
+        edit: "Editar"
+        security_key:
+          register: "Registar"
+          delete: "Eliminar"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -786,11 +786,7 @@ pt:
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Adicionar foto personalizada"
         upload_title: "Carregar a sua foto"
-        upload_picture: "Carregar Imagem"
         image_is_not_a_square: "Alerta: cortámos a sua imagem; o comprimento e a altura não eram iguais."
-      change_profile_background:
-        title: "Fundo de Perfil"
-        instructions: "O fundo do perfil será centrado e terá por defeito uma largura de 850px."
       change_card_background:
         title: "Fundo do cartão de utilizador"
         instructions: "As imagens de fundo serão centradas e terão por defeito uma largura de 590px."
@@ -810,6 +806,7 @@ pt:
         title: "Contas Associadas"
         connect: "Associar"
         revoke: "Remover"
+        cancel: "Cancelar"
         not_connected: "(não associado)"
       name:
         title: "Nome"
@@ -918,7 +915,6 @@ pt:
         search: "digite para pesquisar por convites..."
         title: "Convites"
         user: "Utilizador Convidado"
-        sent: "Enviado"
         none: "Sem convites para exibir."
         truncated:
           one: "A exibir o primeiro convite."
@@ -949,7 +945,7 @@ pt:
         create: "Enviar um Convite"
         generate_link: "Copiar Hiperligação do Convite"
         link_generated: "Hiperligação do convite gerada com sucesso!"
-        valid_for: "A hiperligação do convite é válida apenas para este endereço de e-mail:  %{email}"
+        valid_for: "A hiperligação do convite é válida apenas para este endereço de e-mail: %{email}"
         bulk_invite:
           none: "Ainda não convidou ninguém aqui. Envie convites individuais, ou convide muitas pessoas de uma vez só, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviando um ficheiro CSV</a>."
           text: "Convite em série a partir do 'Ficheiro'"
@@ -1021,6 +1017,9 @@ pt:
       title:
         title: "Título"
         none: "(nenhum)"
+      primary_group:
+        title: "Grupo Primário"
+        none: "(nenhum)"
       filters:
         all: "Todos"
       stream:
@@ -1056,9 +1055,6 @@ pt:
       enabled: "Este site está no modo só de leitura. Por favor, continue a navegar, mas responder, gostar e outras ações estão de momento desativadas."
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
-    too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> publicações. Os novos visitantes precisam de conversas para ler e responder."
-    too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Os novos visitantes precisam de conversas para ler e responder."
-    too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentPosts} / %{requiredPosts}</strong> publicações. Os novos visitantes precisam de conversas para ler e responder."
     learn_more: "saber mais..."
     all_time: "total"
     all_time_desc: "total de tópicos criados"
@@ -1114,6 +1110,7 @@ pt:
     trust_level: "Nível de Confiança"
     search_hint: "nome de utilizador, e-mail ou endereço de IP"
     create_account:
+      disclaimer: "Ao registar-se, concorda com a <a href='{{privacy_link}}' target='blank'>política de privacidade</a> e os <a href='{{tos_link}}' target='blank'>termos do serviço</a>."
       title: "Criar Nova Conta"
       failed: "Ocorreu algo de errado, este e-mail já pode estar registado. Tente utilizar a hiperligação \"Esqueci-me da Palavra-passe\"."
     forgot_password:
@@ -1123,8 +1120,6 @@ pt:
       reset: "Repor Palavra-passe"
       complete_username: "Se uma conta corresponder ao nome de utilizador <b>%{username}</b>, deverá receber em pouco tempo uma mensagem com as instruções para repor a sua palavra-passe."
       complete_email: "Se uma conta corresponder com<b>%{email}</b>, deverá receber em pouco tempo uma mensagem com as instruções para repor a sua palavra-passe."
-      complete_username_found: "Nós encontrámos uma conta que corresponde ao nome de utilizador <b>%{username}</b>, deverá receber em pouco tempo uma mensagem com as instruções para repor a sua palavra-passe."
-      complete_email_found: "Nós encontrámos uma conta que corresponde com <b>%{email}</b>, deverá receber em breve uma mensagem com as instruções para repor a sua palavra-passe."
       complete_username_not_found: "Nenhuma conta correspondente com o nome de utilizador <b>%{username}</b>"
       complete_email_not_found: "Nenhuma conta correspondente com <b>%{email}</b>"
       help: "A mensagem não chega? Certifique-se de que verifica primeiro a sua pasta de spam.<p>Não tem a certeza de qual o endereço de e-mail que utilizou? Digite um endereço de e-mail e nós iremos dizer-lhe se ele existe aqui.</p><p>Se já não tiver acesso ao endereço de e-mail da sua conta, por favor, contacte <a href='%{basePath}/about'>a nossa equipa de apoio.</a></p>"
@@ -1146,10 +1141,8 @@ pt:
       password: "Palavra-passe"
       second_factor_title: "Autenticação em Dois Passos"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
-      second_factor_backup: "<a href>Entrar com um código de reserva</a>"
       second_factor_backup_title: "Cópia de Segurança do Segundo Passo de Autenticação"
       second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
-      second_factor: "<a href>Entrar com a aplicação Authenticator</a>"
       email_placeholder: "e-mail ou nome de utilizador"
       caps_lock_warning: "Caps Lock está ligada"
       error: "Erro desconhecido"
@@ -1181,23 +1174,18 @@ pt:
       google_oauth2:
         name: "Google"
         title: "com Google"
-        message: "A autenticar com Google (certifique-se de que os bloqueadores de janela estão desativados)"
       twitter:
         name: "Twitter"
         title: "com Twitter"
-        message: "A autenticar com Twitter (certifique-se de que os bloqueadores de janela estão desativados)"
       instagram:
         name: "Instagram"
         title: "com Instagram"
-        message: "A autenticar com Instagram (certifique-se de que os bloqueadores de janela estão desativados)"
       facebook:
         name: "Facebook"
         title: "com Facebook"
-        message: "A autenticar com o Facebook (certifique-se de que os bloqueadores de janela estão desativados)"
       github:
         name: "GitHub"
         title: "com GitHub"
-        message: "A autenticar com GitHub (certifique-se de que os bloqueadores de janela estão desativados)"
     invites:
       accept_title: "Convite"
       welcome_to: "Bem-vindo a %{site_name}!"
@@ -1215,7 +1203,6 @@ pt:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1244,6 +1231,9 @@ pt:
       min_content_not_reached:
         one: "Selecione pelo menos {{count}} item."
         other: "Selecione pelo menos {{count}} itens."
+    date_time_picker:
+      from: De
+      to: Para
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       smileys_&_emotion: Smileys e Emojis
@@ -1297,7 +1287,6 @@ pt:
         title_missing: "O título é obrigatório"
         title_too_short: "O título tem que ter pelo menos {{min}} carateres."
         title_too_long: "O título não pode conter mais do que {{max}} carateres."
-        post_missing: "A publicação não pode estar vazia"
         post_length: "A publicação tem que ter pelo menos {{min}} carateres"
         try_like: "Já experimentou o botão {{heart}}?"
         category_missing: "Tem de escolher uma categoria"
@@ -1318,7 +1307,6 @@ pt:
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
       title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
-      show_edit_reason: "(adicione motivo da edição)"
       topic_featured_link_placeholder: "Inserir hiperligação mostrada com o título."
       remove_featured_link: "Remover hiperligação do tópico."
       reply_placeholder: "Digite aqui. Utilize Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."
@@ -1326,7 +1314,6 @@ pt:
       view_new_post: "Ver a sua nova publicação."
       saving: "A Guardar"
       saved: "Guardado!"
-      saved_draft: "Rascunho da publicação em progresso. Selecione para continuar."
       uploading: "A enviar…"
       show_preview: "mostrar pré-visualização &raquo;"
       hide_preview: "&laquo; ocultar pré-visualização"
@@ -1341,7 +1328,6 @@ pt:
       link_description: "insira aqui a descrição da hiperligação"
       link_dialog_title: "Inserir Hiperligação"
       link_optional_text: "título opcional"
-      link_url_placeholder: "https://exemplo.com"
       quote_title: "Bloco de Citação"
       quote_text: "Bloco de Citação"
       code_title: "Texto pré-formatado"
@@ -1384,7 +1370,7 @@ pt:
           desc: "Responder ao tópico, não a uma publicação especifica"
         toggle_whisper:
           label: Alternar sussurro
-          desc: Os sussurros são apenas  visíveis para os membros da equipa
+          desc: Os sussurros são apenas visíveis para os membros da equipa
         create_topic:
           label: "Novo Tópico"
         shared_draft:
@@ -1404,7 +1390,6 @@ pt:
       title: "notificações de menções de @name, respostas às suas publicações e tópicos, mensagens, etc"
       none: "De momento, não é possível carregar as notificações."
       empty: "Não foram encontradas notificações."
-      more: "ver notificações antigas"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1458,7 +1443,6 @@ pt:
       hint_for_supported_browsers: "também pode arrastar e largar ou colar as imagens no editor"
       uploading: "A enviar"
       select_file: "Selecionar Ficheiro"
-      image_link: "hiperligação da imagem irá apontar para"
       default_image_alt_text: imagem
     search:
       sort_by: "Ordenar por"
@@ -1538,7 +1522,7 @@ pt:
     hamburger_menu: "ir para outra lista de tópicos ou categorias"
     new_item: "novo"
     go_back: "voltar atrás"
-    not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências  "
+    not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
     current_user: "ir para a sua página de utilizador"
     topics:
       new_messages_marker: "última visita"
@@ -1563,7 +1547,7 @@ pt:
         notification_level: "Notificações"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
-          one: "Selecionou  <b>%{count}</b> tópico."
+          one: "Selecionou <b>%{count}</b> tópico."
           other: "Selecionou <b>{{count}}</b> tópicos."
         change_tags: "Substituir Etiquetas"
         append_tags: "Anexar Etiquetas"
@@ -1581,7 +1565,7 @@ pt:
         top: "Não existem tópicos recentes."
         educate:
           new: '<p>Os seus novos tópicos aparecem aqui.</p><p>Por defeito, os tópicos são considerados novos e mostrarão o indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> caso tenham sido criados nos últimos 2 dias.</p><p>Pode alterar isto nas suas <a href="%{userPrefsUrl}"> preferências</a>.</p>'
-          unread: '<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 4 minutos</li></ul><p>Ou marcou explicitamente  o tópico como Seguido ou Vigiado via o controle de notificações no fundo de cada tópico.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
+          unread: '<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 4 minutos</li></ul><p>Ou marcou explicitamente o tópico como Seguido ou Vigiado via o controle de notificações no fundo de cada tópico.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
       bottom:
         latest: "Não existem mais tópicos recentes."
         posted: "Não existem mais tópicos publicados."
@@ -1772,6 +1756,7 @@ pt:
           title: "Silenciado"
           description: "Nunca será notificado de nada acerca deste tópico, e este não irá aparecer nos recentes."
       actions:
+        title: "Ações"
         recover: "Recuperar Tópico"
         delete: "Eliminar Tópico"
         open: "Abrir Tópico"
@@ -1834,7 +1819,7 @@ pt:
           other: "Tópicos atualmente afixados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Tornar este tópico numa faixa que apareça no topo de todas as páginas."
         remove_banner: "Remover a faixa que aparece no topo de todas as páginas."
-        banner_note: "Os utilizadores podem  marcar vista a faixa por fecharem-na. Apenas um tópico pode ser posto como faixa em qualquer momento."
+        banner_note: "Os utilizadores podem marcar vista a faixa por fecharem-na. Apenas um tópico pode ser posto como faixa em qualquer momento."
         no_banner_exists: "Não existe tópico de faixa."
         banner_exists: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico de faixa."
       inviting: "A Convidar..."
@@ -1968,6 +1953,8 @@ pt:
         image_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar imagens."
         attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
         attachment_download_requires_login: "Desculpe, precisa de iniciar a sessão para transferir anexos."
+      abandon_edit:
+        no_value: "Não, manter"
       abandon:
         confirm: "Tem a certeza que deseja abandonar a sua publicação?"
         no_value: "Não, manter"
@@ -2020,7 +2007,6 @@ pt:
           notify_moderators: "moderadores notificados"
           notify_user: "enviou uma mensagem"
           bookmark: "adicionou um marcador disto"
-          like: "gostou disto"
         by_you:
           off_topic: "Denunciou isto como fora de contexto"
           spam: "Denunciou isto como spam"
@@ -2056,6 +2042,8 @@ pt:
             button: "Em bruto"
           html_part:
             button: "HTML"
+      bookmarks:
+        name: "Nome"
     category:
       can: "pode&hellip; "
       none: "(sem categoria)"
@@ -2148,7 +2136,7 @@ pt:
       notify_action: "Mensagem"
       official_warning: "Aviso Oficial"
       delete_spammer: "Eliminar Spammer"
-      delete_confirm_MF: "Está prestes a eliminar {POSTS, plural, one {<b>1</b> publicação} outras {<b>#</b> publicações}} e {TOPICS, plural, one {<b>1</b> tópico} outros {<b>#</b> tópicos}}  deste utilizador, remover a conta do mesmo, bloquear registos a partir do endereço de IP <b>{ip_address}</b> correspondente, e adicionar o endereço de e-mail <b>{email}</b> dos mesmos a uma lista negra permanente. Tem a certeza que este utilizador é de facto um spammer?"
+      delete_confirm_MF: "Está prestes a eliminar {POSTS, plural, one {<b>1</b> publicação} outras {<b>#</b> publicações}} e {TOPICS, plural, one {<b>1</b> tópico} outros {<b>#</b> tópicos}} deste utilizador, remover a conta do mesmo, bloquear registos a partir do endereço de IP <b>{ip_address}</b> correspondente, e adicionar o endereço de e-mail <b>{email}</b> dos mesmos a uma lista negra permanente. Tem a certeza que este utilizador é de facto um spammer?"
       yes_delete_spammer: "Sim, Eliminar Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(escondido)"
@@ -2403,29 +2391,13 @@ pt:
           name: Outros
         posting:
           name: A publicar
-    google_search: |2
-
-      <h3>Pesquisar com o Google</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "Todas as Etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
       changed: "etiquetas modificadas:"
       tags: "Etiquetas"
+      add_synonyms: "Adicionar"
       delete_tag: "Remover Etiqueta"
       rename_tag: "Renomear Etiqueta"
       rename_instructions: "Escolha o novo nome para a etiqueta:"
@@ -2537,8 +2509,6 @@ pt:
           view_table: "tabela"
           view_graph: "grafo"
           refresh_report: "Atualizar relatório"
-          start_date: "Data de Início"
-          end_date: "Data final"
           groups: "Todos os grupos"
           filters:
             group:
@@ -2563,12 +2533,9 @@ pt:
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"
-              members: "Donos do grupo, membros e administradores"
               staff: "Donos do grupo e equipa"
-              owners: "Donos do grupo e administradores"
           membership:
             automatic: Automático
-            trust_level: Nível de Confiança
             trust_levels_title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"
             trust_levels_none: "Nenhum"
             automatic_membership_email_domains: "Utilizadores que registem um domínio de email que corresponde exactamente a algum desta lista irão ser automaticamente adicionados a este grupo:"
@@ -2596,15 +2563,14 @@ pt:
         none: "Não existem chaves API ativas neste momento."
         user: "Utilizador"
         title: "API"
-        key: "Chave API"
+        created: Criado
         generate: "Gerar"
-        regenerate: "Regenerar"
         revoke: "Revogar"
-        confirm_regen: "Tem a certeza que quer substituir essa chave API por uma nova?"
-        confirm_revoke: "Tem a certeza que quer revogar essa chave?"
-        info_html: "A sua chave API permitirá a criação e edição de tópicos usando pedidos JSON."
         all_users: "Todos os Utilizadores"
-        note_html: "Manter esta chave <strong>secreta</strong>, todos os utilizadores que a tenham poderão criar publicações arbitrárias como qualquer utilizador."
+        show_details: Detalhes
+        description: Descrição
+        save: Guardar
+        continue: Continuar
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks neste momento."
@@ -2764,7 +2730,7 @@ pt:
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
         email_templates:
-          title: "Modelos de Email"
+          title: "E-mail"
           subject: "Assunto"
           multiple_subjects: "Este modelo de email tem múltiplos assuntos."
           body: "Corpo"
@@ -2785,6 +2751,8 @@ pt:
           installed: "Instalado"
           install_popular: "Popular"
           about_theme: "Sobre"
+          enable: "Ativar"
+          disable: "Desativar"
           add: "Adicionar"
           scss:
             text: "CSS"
@@ -2836,6 +2804,8 @@ pt:
           love:
             name: "amor"
             description: "A cor do botão 'gosto'."
+        email_style:
+          css: "CSS"
       email:
         title: "Emails"
         settings: "Configurações"
@@ -2999,12 +2969,15 @@ pt:
           title: "Registo de Erros em Logs"
       watched_words:
         clear_filter: "Remover"
+        download: Transferir
+        clear_all: Remover Tudo
         actions:
           block: "Bloquear"
           flag: "Denunciar"
         form:
           add: "Adicionar"
-          upload: "Carregar"
+        test:
+          no_matches: "Não foram encontradas correspondências"
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."
@@ -3052,7 +3025,7 @@ pt:
         suspended_by: "Suspendido por"
         silence_reason: "Motivo"
         delete_all_posts: "Eliminar todas as publicações"
-        delete_all_posts_confirm_MF: "Está prestes a apagar {POSTS, plural, one {1  publicação} other {# publicações}}  e {TOPICS, plural, one {1 tópico} other {# tópicos}}. Tem a certeza de que quer continuar?"
+        delete_all_posts_confirm_MF: "Está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} e {TOPICS, plural, one {1 tópico} other {# tópicos}}. Tem a certeza de que quer continuar?"
         moderator: "Moderador?"
         admin: "Administração?"
         suspended: "Suspendido?"
@@ -3137,7 +3110,7 @@ pt:
           title: "Requisitos para o Nível de Confiança 3"
           table_title:
             one: "Nos último dia:"
-            other: "Nos últimos %{count}  dias:"
+            other: "Nos últimos %{count} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
           visits: "Visitas"
@@ -3204,7 +3177,6 @@ pt:
       site_text:
         description: "Pode personalizar qualquer texto no seu fórum. Por favor comece por pesquisar abaixo:"
         search: "Pesquisar o texto que gostaria de editar"
-        title: "Conteúdo do Texto"
         edit: "editar"
         revert: "Reverter Alterações"
         revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
@@ -3252,6 +3224,8 @@ pt:
           search: "Pesquisar"
           groups: "Grupos"
           dashboard: "Painel de Administração"
+        default_categories:
+          modal_yes: "Sim"
       badges:
         title: Crachás
         new_badge: Novo Crachá
@@ -3341,20 +3315,15 @@ pt:
         category: "Publicação para Categoria"
         add_host: "Adicionar Servidor"
         settings: "Configurações de Incorporação"
-        feed_settings: "Configurações do Feed"
-        feed_description: "Fornecer um fed RSS/ATOM para o seu sítio pode melhorar a habilidade do Discourse de importar o seu conteúdo."
         crawling_settings: "Configurações de Rastreio"
         crawling_description: "Quando o Discourse cria tópicos para as suas publicações, se nenhum feed RSS/ATOM está presente o Discourse irá tentar analisar o seu conteúdo fora do seu HTML. Algumas vezes pode ser um desafio extrair o seu conteúdo, por isso temos a habilidade de especificar regras CSS para tornar a extração mais fácil. "
         embed_by_username: "Nome de uilizador para criação do tópico"
         embed_post_limit: "Número máximo de publicações a incorporar"
-        embed_username_key_from_feed: "Chave para puxar o nome de utilizador discouse do feed"
         embed_title_scrubber: "Expressão regular usada para filtrar o título de publicações"
         embed_truncate: "Truncar as publicações incorporadas"
         embed_whitelist_selector: "Seletor CSS para elementos que são permitidos nas incorporações"
         embed_blacklist_selector: "Seletor CSS para elementos que são removidos das incorporações"
         embed_classname_whitelist: "Nomes de classes CSS permitidas"
-        feed_polling_enabled: "Importar publicações através de RSS/ATOM"
-        feed_polling_url: "URL do feed RSS/ATOM para rastreio"
         save: "Guardar Configurações de Incorporação"
       permalink:
         title: "Hiperligações Permanentes"

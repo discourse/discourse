@@ -10,9 +10,14 @@
     </div>
   {{/if}}
 
-  {{i18n "user.associated_accounts.confirm_description"
-      provider=(i18n (concat "login." model.provider_name ".name"))
-      account_description=model.account_description}}
+  {{#if model.account_description}}
+    {{i18n "user.associated_accounts.confirm_description.account_specific"
+        provider=(i18n (concat "login." model.provider_name ".name"))
+        account_description=model.account_description}}
+  {{else}}
+    {{i18n "user.associated_accounts.confirm_description.generic"
+        provider=(i18n (concat "login." model.provider_name ".name"))}}
+  {{/if}}
 {{/d-modal-body}}
 
 <div class="modal-footer">

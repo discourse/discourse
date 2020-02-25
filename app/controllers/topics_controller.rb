@@ -1,14 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'topic_view'
-require_dependency 'promotion'
-require_dependency 'url_helper'
-require_dependency 'topics_bulk_action'
-require_dependency 'discourse_event'
-require_dependency 'rate_limiter'
-require_dependency 'topic_publisher'
-require_dependency 'post_action_destroyer'
-
 class TopicsController < ApplicationController
   requires_login only: [
     :timings,
@@ -45,7 +36,7 @@ class TopicsController < ApplicationController
   skip_before_action :check_xhr, only: [:show, :feed]
 
   def id_for_slug
-    topic = Topic.find_by(slug: params[:slug].downcase)
+    topic = Topic.find_by_slug(params[:slug])
     guardian.ensure_can_see!(topic)
     raise Discourse::NotFound unless topic
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
@@ -73,7 +64,7 @@ class TopicsController < ApplicationController
     # Special case: a slug with a number in front should look by slug first before looking
     # up that particular number
     if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
-      topic = Topic.find_by(slug: params[:id].downcase)
+      topic = Topic.find_by_slug(params[:id])
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic
     end
 
@@ -88,12 +79,54 @@ class TopicsController < ApplicationController
 
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
-    rescue Discourse::NotFound
+    rescue Discourse::NotFound => ex
       if params[:id]
-        topic = Topic.find_by(slug: params[:id].downcase)
+        topic = Topic.find_by_slug(params[:id])
         return redirect_to_correct_topic(topic, opts[:post_number]) if topic
       end
-      raise Discourse::NotFound
+
+      raise ex
+    rescue Discourse::NotLoggedIn => ex
+      if !SiteSetting.detailed_404
+        raise Discourse::NotFound
+      else
+        raise ex
+      end
+    rescue Discourse::InvalidAccess => ex
+      # If the user can't see the topic, clean up notifications for it.
+      Notification.remove_for(current_user.id, params[:topic_id]) if current_user
+
+      deleted = guardian.can_see_topic?(ex.obj, false) ||
+                (!guardian.can_see_topic?(ex.obj) &&
+                 ex.obj&.access_topic_via_group &&
+                 ex.obj.deleted_at)
+
+      if SiteSetting.detailed_404
+        if deleted
+          raise Discourse::NotFound.new(
+            'deleted topic',
+            custom_message: 'deleted_topic',
+            status: 410,
+            check_permalinks: true,
+            original_path: ex.obj.relative_url
+          )
+        elsif !guardian.can_see_topic?(ex.obj) && group = ex.obj&.access_topic_via_group
+          raise Discourse::InvalidAccess.new(
+            'not in group',
+            ex.obj,
+            custom_message: 'not_in_group.title_topic',
+            group: group
+          )
+        end
+
+        raise ex
+      else
+        raise Discourse::NotFound.new(
+          nil,
+          check_permalinks: deleted,
+          original_path: ex.obj.relative_url
+        )
+      end
     end
 
     page = params[:page]
@@ -129,24 +162,6 @@ class TopicsController < ApplicationController
     end
 
     perform_show_response
-
-  rescue Discourse::InvalidAccess => ex
-
-    if current_user
-      # If the user can't see the topic, clean up notifications for it.
-      Notification.remove_for(current_user.id, params[:topic_id])
-    end
-
-    if ex.obj && Topic === ex.obj && guardian.can_see_topic_if_not_deleted?(ex.obj)
-      raise Discourse::NotFound.new(
-        "topic was deleted",
-        status: 410,
-        check_permalinks: true,
-        original_path: ex.obj.relative_url
-      )
-    end
-
-    raise ex
   end
 
   def publish
@@ -172,7 +187,8 @@ class TopicsController < ApplicationController
       min_score: params[:min_score].to_i,
       min_replies: params[:min_replies].to_i,
       bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
-      only_moderator_liked: params[:only_moderator_liked].to_s == "true"
+      only_moderator_liked: params[:only_moderator_liked].to_s == "true",
+      exclude_hidden: true
     }
 
     @topic_view = TopicView.new(params[:topic_id], current_user, opts)
@@ -308,16 +324,30 @@ class TopicsController < ApplicationController
         return render_json_error(I18n.t('category.errors.not_found'))
       end
 
-      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
-        category_tags = category.tags.pluck(:name)
-        category_tag_groups = category.tag_groups.joins(:tags).pluck("tags.name")
-        allowed_tags = (category_tags + category_tag_groups).uniq
+      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
+        if topic_tags.present?
+          allowed_tags = DiscourseTagging.filter_allowed_tags(
+            guardian,
+            category: category
+          ).map(&:name)
 
-        if topic_tags.present? && allowed_tags.present?
           invalid_tags = topic_tags - allowed_tags
 
+          # Do not raise an error on a topic's hidden tags when not modifying tags
+          if params[:tags].blank?
+            invalid_tags.each do |tag_name|
+              if DiscourseTagging.hidden_tag_names.include?(tag_name)
+                invalid_tags.delete(tag_name)
+              end
+            end
+          end
+
           if !invalid_tags.empty?
-            return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
+            if (invalid_tags & DiscourseTagging.hidden_tag_names).present?
+              return render_json_error(I18n.t('category.errors.disallowed_tags_generic'))
+            else
+              return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
+            end
           end
         end
       end
@@ -340,6 +370,16 @@ class TopicsController < ApplicationController
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
+    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+  end
+
+  def update_tags
+    params.require(:tags)
+    topic = Topic.find_by(id: params[:topic_id])
+    guardian.ensure_can_edit_tags!(topic)
+
+    success = PostRevisor.new(topic.first_post, topic).revise!(current_user, { tags: params[:tags] }, validate_post: false)
+
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
@@ -409,7 +449,7 @@ class TopicsController < ApplicationController
     topic_status_update = topic.set_or_create_timer(
       status_type,
       params[:time],
-      options
+      **options
     )
 
     if topic.save
@@ -446,11 +486,15 @@ class TopicsController < ApplicationController
   def remove_bookmarks
     topic = Topic.find(params[:topic_id].to_i)
 
-    PostAction.joins(:post)
-      .where(user_id: current_user.id)
-      .where('topic_id = ?', topic.id).each do |pa|
+    if SiteSetting.enable_bookmarks_with_reminders?
+      Bookmark.where(user_id: current_user.id, topic_id: topic.id).destroy_all
+    else
+      PostAction.joins(:post)
+        .where(user_id: current_user.id)
+        .where('topic_id = ?', topic.id).each do |pa|
 
-      PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
+        PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
+      end
     end
 
     render body: nil
@@ -503,8 +547,15 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
 
-    result = PostActionCreator.create(current_user, first_post, :bookmark)
-    return render_json_error(result) if result.failed?
+    if SiteSetting.enable_bookmarks_with_reminders?
+      if Bookmark.exists?(user: current_user, post: first_post)
+        return render_json_error(I18n.t("bookmark.topic_already_bookmarked"), status: 403)
+      end
+      Bookmark.create(user: current_user, post: first_post, topic: topic)
+    else
+      result = PostActionCreator.create(current_user, first_post, :bookmark)
+      return render_json_error(result) if result.failed?
+    end
 
     render body: nil
   end
@@ -517,6 +568,8 @@ class TopicsController < ApplicationController
     PostDestroyer.new(current_user, first_post, context: params[:context]).destroy
 
     render body: nil
+  rescue Discourse::InvalidAccess
+    render_json_error I18n.t("delete_topic_failed")
   end
 
   def recover
@@ -680,7 +733,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_move_posts!(topic)
 
     # when creating a new topic, ensure the 1st post is a regular post
-    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck(:post_type).first != Post.types[:regular]
+    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) != Post.types[:regular]
       return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
     end
 
@@ -779,7 +832,17 @@ class TopicsController < ApplicationController
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
       topics = TopicQuery.unread_filter(tq.joined_topic_user, current_user.id, staff: guardian.is_staff?).listable_topics
-      topics = topics.where('category_id = ?', params[:category_id]) if params[:category_id]
+
+      if params[:category_id]
+        if params[:include_subcategories]
+          topics = topics.where(<<~SQL, category_id: params[:category_id])
+            category_id in (select id FROM categories WHERE parent_category_id = :category_id) OR
+            category_id = :category_id
+          SQL
+        else
+          topics = topics.where('category_id = ?', params[:category_id])
+        end
+      end
       topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)
@@ -797,7 +860,23 @@ class TopicsController < ApplicationController
   end
 
   def reset_new
-    current_user.user_stat.update_column(:new_since, Time.now)
+    if params[:category_id].present?
+      category_ids = [params[:category_id]]
+      if params[:include_subcategories] == 'true'
+        category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
+      end
+      category_ids.each do |category_id|
+        current_user
+          .category_users
+          .where(category_id: category_id)
+          .first_or_initialize
+          .update!(last_seen_at: Time.zone.now)
+        TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
+      end
+    else
+      current_user.user_stat.update_column(:new_since, Time.zone.now)
+      TopicTrackingState.publish_dismiss_new(current_user.id)
+    end
     render body: nil
   end
 
@@ -808,7 +887,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_convert_topic!(topic)
 
     if params[:type] == "public"
-      converted_topic = topic.convert_to_public_topic(current_user)
+      converted_topic = topic.convert_to_public_topic(current_user, category_id: params[:category_id])
     else
       converted_topic = topic.convert_to_private_message(current_user)
     end
@@ -859,7 +938,11 @@ class TopicsController < ApplicationController
   end
 
   def slugs_do_not_match
-    params[:slug] && @topic_view.topic.slug != params[:slug]
+    if SiteSetting.slug_generation_method != "encoded"
+      params[:slug] && @topic_view.topic.slug != params[:slug]
+    else
+      params[:slug] && CGI.unescape(@topic_view.topic.slug) != params[:slug]
+    end
   end
 
   def redirect_to_correct_topic(topic, post_number = nil)

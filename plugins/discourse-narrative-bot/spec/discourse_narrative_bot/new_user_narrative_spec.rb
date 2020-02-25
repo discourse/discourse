@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe DiscourseNarrativeBot::NewUserNarrative do
   let!(:welcome_topic) { Fabricate(:topic, title: 'Welcome to Discourse') }
-  let(:discobot_user) { User.find(-2) }
+  let(:discobot_user) { ::DiscourseNarrativeBot::Base.new.discobot_user }
   let(:first_post) { Fabricate(:post, user: discobot_user) }
   let(:user) { Fabricate(:user) }
 
@@ -268,6 +268,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
     describe 'onebox tutorial' do
       before do
+        Oneboxer.stubs(:cached_onebox).with('https://en.wikipedia.org/wiki/ROT13').returns('oneboxed Wikipedia')
         narrative.set_data(user, state: :tutorial_onebox, topic_id: topic.id)
       end
 
@@ -945,7 +946,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
 
           expect(post.reload.topic.first_post.raw).to include(I18n.t(
-            "discourse_narrative_bot.new_user_narrative.search.hidden_message", base_uri: ''
+            "discourse_narrative_bot.new_user_narrative.search.hidden_message",
+            base_uri: '',
+            search_answer: described_class.search_answer
           ))
         end
 
@@ -962,7 +965,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         it 'should create the right reply' do
           post.update!(
-            raw: "#{described_class::SEARCH_ANSWER} this is a capybara"
+            raw: "#{described_class.search_answer} this is a capybara"
           )
 
           expect do

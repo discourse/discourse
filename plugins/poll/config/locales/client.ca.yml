@@ -15,57 +15,84 @@ ca:
         one: "vot total"
         other: "vots totals"
       average_rating: "Classificació mitjana: <strong>%{average}</strong>."
+      public:
+        title: "Els vots són <strong>públics</strong>."
+      results:
+        vote:
+          title: "Els resultats es mostraran en <strong>votació</strong> ."
+        closed:
+          title: "Els resultats es mostraran una vegada <strong>tancada</strong> la votació."
+        staff:
+          title: "Els resultats només es mostren als membres de l'<strong>equip responsable</strong>."
       multiple:
         help:
           at_least_min_options:
-            one: "Tria com a mínim <strong>%{count}</strong> opció"
-            other: "Tria com a mínim <strong>%{count}</strong> opcions"
+            one: "Trieu com a mínim <strong>%{count}</strong> opció"
+            other: "Trieu com a mínim <strong>%{count}</strong> opcions"
           up_to_max_options:
-            one: "Tria més d'<strong>%{count}</strong> opció"
-            other: "Tria més de <strong>%{count}</strong> opcions"
+            one: "Trieu fins a <strong>%{count}</strong> opció"
+            other: "Trieu fins a <strong>%{count}</strong> opcions"
           x_options:
-            one: "Tria <strong>%{count}</strong> opció"
-            other: "Tria <strong>%{count}</strong> opcions"
-          between_min_and_max_options: "Tria entre <strong>%{min}</strong> i <strong>%{max}</strong> opcions"
+            one: "Trieu <strong>%{count}</strong> opció"
+            other: "Trieu <strong>%{count}</strong> opcions"
+          between_min_and_max_options: "Trieu entre <strong>%{min}</strong> i <strong>%{max}</strong> opcions"
       cast-votes:
-        title: "Reparteix els teus vots"
-        label: "Vota ara!"
+        title: "Repartiu els vostres vots"
+        label: "Voteu ara!"
       show-results:
         title: "Mostra els resultats de l'enquesta"
         label: "Mostra els resultats"
       hide-results:
-        title: "Torna als teus vots"
-        label: "Amaga resultats"
+        title: "Torna als vots"
+        label: "Mostra el vot"
+      group-results:
+        title: "Agrupa els vots per camp d'usuari"
+      ungroup-results:
+        title: "Combina tots els vots"
+      export-results:
+        title: "Exporta els resultats de la votació"
+        label: "Exporta"
       open:
         title: "Obre l'enquesta"
         label: "Obre"
-        confirm: "Segur que vols obrir aquesta enquesta?"
+        confirm: "Esteu segur que voleu obrir aquesta enquesta?"
       close:
         title: "Tanca l'enquesta"
         label: "Tanca"
-        confirm: "Segur que vols tancar aquesta enquesta?"
-      error_while_toggling_status: "Disculpa, s'ha produït una errada en alternar l'estat de l'enquesta."
-      error_while_casting_votes: "Disculpa, s'ha produït una errada en emetre els teus vots."
-      error_while_fetching_voters: "Disculpa, hi ha hagut una errada en mostrar els votants."
+        confirm: "Esteu segur que voleu tancar aquesta enquesta?"
+      automatic_close:
+        closes_in: "Es tanca en <strong>%{timeLeft}</strong> ."
+        age: "Tancat <strong>%{age}</strong>"
+      error_while_toggling_status: "Ho sentim. S'ha produït un error en canviar l'estat d'aquesta enquesta."
+      error_while_casting_votes: "Ho sentim. S'ha produït un error en l'emissió dels vostres vots."
+      error_while_fetching_voters: "Hi ha hagut un error en mostrar els votants."
+      error_while_exporting_results: "S'ha produït un error en exportar els resultats de la votació."
       ui_builder:
         title: Crea una enquesta
         insert: Insereix una enquesta
         help:
-          options_count: Introdueix almenys 2 opcions
-          invalid_values: El valor mínim ha de ser menor que el valor màxim.
+          invalid_values: El valor mínim ha de ser més petit que el valor màxim.
           min_step_value: L'increment mínim és 1
         poll_type:
           label: Tipus
           regular: Elecció simple
           multiple: Elecció múltiple
-          number: Classificació de nombre
+          number: Valoració numèrica
         poll_result:
           label: Resultats
+          always: Sempre visible
+          vote: En votació
+          closed: Quan estigui tancada
+          staff: Només l'equip responsable
+        poll_chart_type:
+          label: Tipus de gràfic
         poll_config:
-          max: Màx.
-          min: Mín.
+          max: Màxim
+          min: Mínim
           step: Pas
         poll_public:
           label: Mostra qui ha votat
         poll_options:
-          label: Introdueix una elecció d'enquesta per línia
+          label: Introduïu una opció d'enquesta per línia
+        automatic_close:
+          label: Tanca automàticament l'enquesta

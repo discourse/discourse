@@ -12,7 +12,7 @@ RSpec.describe ForumsController do
     end
 
     it "returns a readonly header if the site is read only" do
-      Discourse.received_readonly!
+      Discourse.received_postgres_readonly!
       get "/srv/status"
       expect(response.status).to eq(200)
       expect(response.headers['Discourse-Readonly']).to eq('true')

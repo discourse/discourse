@@ -1,21 +1,26 @@
+import { isEmpty } from "@ember/utils";
+import { alias, equal } from "@ember/object/computed";
+import { next } from "@ember/runloop";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { movePosts, mergeTopic } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   topicName: null,
   saving: false,
   categoryId: null,
   tags: null,
-  canAddTags: Ember.computed.alias("site.can_create_tag"),
-  canTagMessages: Ember.computed.alias("site.can_tag_pms"),
+  canAddTags: alias("site.can_create_tag"),
+  canTagMessages: alias("site.can_tag_pms"),
   selectedTopicId: null,
-  newTopic: Ember.computed.equal("selection", "new_topic"),
-  existingTopic: Ember.computed.equal("selection", "existing_topic"),
-  newMessage: Ember.computed.equal("selection", "new_message"),
-  existingMessage: Ember.computed.equal("selection", "existing_message"),
+  newTopic: equal("selection", "new_topic"),
+  existingTopic: equal("selection", "existing_topic"),
+  newMessage: equal("selection", "new_message"),
+  existingMessage: equal("selection", "existing_message"),
   participants: null,
 
   init() {
@@ -36,21 +41,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
     ];
   },
 
-  topicController: Ember.inject.controller("topic"),
-  selectedPostsCount: Ember.computed.alias(
-    "topicController.selectedPostsCount"
-  ),
-  selectedAllPosts: Ember.computed.alias("topicController.selectedAllPosts"),
-  selectedPosts: Ember.computed.alias("topicController.selectedPosts"),
+  topicController: inject("topic"),
+  selectedPostsCount: alias("topicController.selectedPostsCount"),
+  selectedAllPosts: alias("topicController.selectedAllPosts"),
+  selectedPosts: alias("topicController.selectedPosts"),
 
-  @computed("saving", "selectedTopicId", "topicName")
+  @discourseComputed("saving", "selectedTopicId", "topicName")
   buttonDisabled(saving, selectedTopicId, topicName) {
-    return (
-      saving || (Ember.isEmpty(selectedTopicId) && Ember.isEmpty(topicName))
-    );
+    return saving || (isEmpty(selectedTopicId) && isEmpty(topicName));
   },
 
-  @computed(
+  @discourseComputed(
     "saving",
     "newTopic",
     "existingTopic",
@@ -73,7 +74,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.setProperties({
-      "modal.modalClass": "move-to-modal",
+      "modal.modalClass": "choose-topic-modal",
       saving: false,
       selection: "new_topic",
       categoryId: null,
@@ -90,11 +91,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
       );
     } else if (!this.canSplitTopic) {
       this.set("selection", "existing_topic");
-      Ember.run.next(() => $("#choose-topic-title").focus());
+      next(() => $("#choose-topic-title").focus());
     }
   },
 
-  @computed("selectedAllPosts", "selectedPosts", "selectedPosts.[]")
+  @discourseComputed("selectedAllPosts", "selectedPosts", "selectedPosts.[]")
   canSplitTopic(selectedAllPosts, selectedPosts) {
     return (
       !selectedAllPosts &&
@@ -104,9 +105,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     );
   },
 
-  @computed("canSplitTopic")
+  @discourseComputed("canSplitTopic")
   canSplitToPM(canSplitTopic) {
-    return canSplitTopic && (this.currentUser && this.currentUser.admin);
+    return canSplitTopic && this.currentUser && this.currentUser.admin;
   },
 
   actions: {

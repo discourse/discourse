@@ -10,11 +10,29 @@ class UrlHelper
     url, fragment = url.split("#", 2)
     uri = URI.parse(url)
     if uri
-      fragment = URI.escape(fragment) if fragment&.include?('#')
+      # Addressable::URI::CharacterClasses::UNRESERVED is used here because without it
+      # the # in the fragment is not encoded
+      fragment = Addressable::URI.encode_component(fragment, Addressable::URI::CharacterClasses::UNRESERVED) if fragment&.include?('#')
       uri.fragment = fragment
       uri
     end
   rescue URI::Error
+  end
+
+  def self.encode_and_parse(url)
+    URI.parse(Addressable::URI.encode(url))
+  end
+
+  def self.encode(url)
+    Addressable::URI.encode(url)
+  end
+
+  def self.unencode(url)
+    Addressable::URI.unencode(url)
+  end
+
+  def self.encode_component(url_component)
+    Addressable::URI.encode_component(url_component)
   end
 
   def self.is_local(url)
@@ -38,26 +56,36 @@ class UrlHelper
     url.sub(/^http:/i, "")
   end
 
-  DOUBLE_ESCAPED_REGEXP ||= /%25([0-9a-f]{2})/i
+  def self.secure_proxy_without_cdn(url)
+    self.absolute(Upload.secure_media_url_from_upload_url(url), nil)
+  end
 
   # Prevents double URL encode
   # https://stackoverflow.com/a/37599235
-  def self.escape_uri(uri, pattern = URI::UNSAFE)
-    encoded = URI.encode(uri, pattern)
-    encoded.gsub!(DOUBLE_ESCAPED_REGEXP, '%\1')
-    encoded
+  def self.escape_uri(uri)
+    return uri if s3_presigned_url?(uri)
+    UrlHelper.encode_component(CGI.unescapeHTML(UrlHelper.unencode(uri)))
   end
 
-  def self.cook_url(url)
+  def self.s3_presigned_url?(url)
+    url[/x-amz-(algorithm|credential)/i].present?
+  end
+
+  def self.cook_url(url, secure: false)
     return url unless is_local(url)
 
     uri = URI.parse(url)
     filename = File.basename(uri.path)
-    is_attachment = !FileHelper.is_supported_image?(filename)
+    is_attachment = !FileHelper.is_supported_media?(filename)
 
     no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
 
-    url = absolute_without_cdn(url)
+    url = secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
+
+    # we always want secure media to come from
+    # Discourse.base_url_no_prefix/secure-media-uploads
+    # to avoid asset_host mixups
+    return schemaless(url) if secure
 
     unless is_attachment && no_cdn
       url = Discourse.store.cdn_url(url)
@@ -71,7 +99,11 @@ class UrlHelper
 
   def self.local_cdn_url(url)
     return url if Discourse.asset_host.blank?
-    url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
+    if url.start_with?("/#{Discourse.store.upload_path}/")
+      "#{Discourse.asset_host}#{url}"
+    else
+      url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
+    end
   end
 
 end

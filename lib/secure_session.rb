@@ -6,15 +6,40 @@ class SecureSession
     @prefix = prefix
   end
 
+  def self.expiry
+    @expiry ||= 1.hour.to_i
+  end
+
+  def self.expiry=(val)
+    @expiry = val
+  end
+
+  def set(key, val, expires: nil)
+    expires ||= SecureSession.expiry
+    Discourse.redis.setex(prefixed_key(key), expires.to_i, val.to_s)
+    true
+  end
+
+  def ttl(key)
+    Discourse.redis.ttl(prefixed_key(key))
+  end
+
   def [](key)
-    Discourse.redis.get("#{@prefix}#{key}")
+    Discourse.redis.get(prefixed_key(key))
   end
 
   def []=(key, val)
     if val == nil
-      Discourse.redis.del("#{@prefix}#{key}")
+      Discourse.redis.del(prefixed_key(key))
     else
-      Discourse.redis.setex("#{@prefix}#{key}", 1.hour, val.to_s)
+      Discourse.redis.setex(prefixed_key(key), SecureSession.expiry.to_i, val.to_s)
     end
+    val
+  end
+
+  private
+
+  def prefixed_key(key)
+    "#{@prefix}#{key}"
   end
 end

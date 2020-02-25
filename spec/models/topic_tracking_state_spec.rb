@@ -89,7 +89,7 @@ describe TopicTrackingState do
 
         expect(message.channel).to eq('/private-messages/inbox')
         expect(message.data["topic_id"]).to eq(private_message_topic.id)
-        expect(message.user_ids).to eq(allowed_users.map(&:id))
+        expect(message.user_ids).to contain_exactly(*allowed_users.map(&:id))
       end
     end
 
@@ -254,6 +254,81 @@ describe TopicTrackingState do
     end
   end
 
+  describe '#publish_read_private_message' do
+    fab!(:group) { Fabricate(:group) }
+    let(:read_topic_key) { "/private-messages/unread-indicator/#{@group_message.id}" }
+    let(:read_post_key) { "/topic/#{@group_message.id}" }
+    let(:latest_post_number) { 3 }
+
+    before do
+      group.add(user)
+      @group_message = Fabricate(:private_message_topic,
+        allowed_groups: [group],
+        topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
+        highest_post_number: latest_post_number
+      )
+      @post = Fabricate(:post, topic: @group_message, post_number: latest_post_number)
+    end
+
+    it 'does not trigger a read count update if no allowed groups have the option enabled' do
+      messages = MessageBus.track_publish(read_post_key) do
+        TopicTrackingState.publish_read_indicator_on_read(@group_message.id, latest_post_number, user.id)
+      end
+
+      expect(messages).to be_empty
+    end
+
+    context 'when the read indicator is enabled' do
+      before { group.update!(publish_read_state: true) }
+
+      it 'publishes a message to hide the unread indicator' do
+        message = MessageBus.track_publish(read_topic_key) do
+          TopicTrackingState.publish_read_indicator_on_read(@group_message.id, latest_post_number, user.id)
+        end.first
+
+        expect(message.data['topic_id']).to eq @group_message.id
+        expect(message.data['show_indicator']).to eq false
+      end
+
+      it 'publishes a message to show the unread indicator when a non-member creates a new post' do
+        allowed_user = Fabricate(:topic_allowed_user, topic: @group_message)
+        message = MessageBus.track_publish(read_topic_key) do
+          TopicTrackingState.publish_read_indicator_on_write(@group_message.id, latest_post_number, allowed_user.id)
+        end.first
+
+        expect(message.data['topic_id']).to eq @group_message.id
+        expect(message.data['show_indicator']).to eq true
+      end
+
+      it 'does not publish the unread indicator if the message is not the last one' do
+        not_last_post_number = latest_post_number - 1
+        Fabricate(:post, topic: @group_message, post_number: not_last_post_number)
+        messages = MessageBus.track_publish(read_topic_key) do
+          TopicTrackingState.publish_read_indicator_on_read(@group_message.id, not_last_post_number, user.id)
+        end
+
+        expect(messages).to be_empty
+      end
+
+      it 'does not publish the read indicator if the user is not a group member' do
+        allowed_user = Fabricate(:topic_allowed_user, topic: @group_message)
+        messages = MessageBus.track_publish(read_topic_key) do
+          TopicTrackingState.publish_read_indicator_on_read(@group_message.id, latest_post_number, allowed_user.user_id)
+        end
+
+        expect(messages).to be_empty
+      end
+
+      it 'publish a read count update to every client' do
+        message = MessageBus.track_publish(read_post_key) do
+          TopicTrackingState.publish_read_indicator_on_read(@group_message.id, latest_post_number, user.id)
+        end.first
+
+        expect(message.data[:type]).to eq :read
+      end
+    end
+  end
+
   it "correctly handles muted categories" do
 
     user = Fabricate(:user)
@@ -273,6 +348,132 @@ describe TopicTrackingState do
     expect(report.length).to eq(0)
 
     TopicUser.create!(user_id: user.id, topic_id: post.topic_id, last_read_post_number: 1, notification_level: 3)
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+  end
+
+  it "correctly handles category_users with null notification level" do
+    user = Fabricate(:user)
+    post
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+
+    CategoryUser.create!(user_id: user.id, category_id: post.topic.category_id)
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+  end
+
+  it "works when categories are default muted" do
+    SiteSetting.mute_all_categories_by_default = true
+
+    user = Fabricate(:user)
+    post
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(0)
+
+    CategoryUser.create!(user_id: user.id,
+                         notification_level: CategoryUser.notification_levels[:regular],
+                         category_id: post.topic.category_id
+                         )
+
+    create_post(topic_id: post.topic_id)
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+  end
+
+  context 'muted tags' do
+    it "remove_muted_tags_from_latest is set to always" do
+      SiteSetting.remove_muted_tags_from_latest = 'always'
+      user = Fabricate(:user)
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      Fabricate(:topic_tag, tag: tag1, topic: topic)
+      Fabricate(:topic_tag, tag: tag2, topic: topic)
+      post
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag1.id
+                     )
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(0)
+    end
+
+    it "remove_muted_tags_from_latest is set to only_muted" do
+      SiteSetting.remove_muted_tags_from_latest = 'only_muted'
+      user = Fabricate(:user)
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      Fabricate(:topic_tag, tag: tag1, topic: topic)
+      Fabricate(:topic_tag, tag: tag2, topic: topic)
+      post
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag1.id
+                     )
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag2.id
+                     )
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(0)
+    end
+
+    it "remove_muted_tags_from_latest is set to never" do
+      SiteSetting.remove_muted_tags_from_latest = 'never'
+      user = Fabricate(:user)
+      tag1 = Fabricate(:tag)
+      Fabricate(:topic_tag, tag: tag1, topic: topic)
+      post
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+
+      TagUser.create!(user_id: user.id,
+                      notification_level: TagUser.notification_levels[:muted],
+                      tag_id: tag1.id
+                     )
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+    end
+  end
+
+  it "correctly handles seen categories" do
+    user = Fabricate(:user)
+    post
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+
+    CategoryUser.create!(user_id: user.id,
+                         notification_level: CategoryUser.notification_levels[:regular],
+                         category_id: post.topic.category_id,
+                         last_seen_at: post.topic.created_at
+                         )
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(0)
+
+    post.topic.touch(:created_at)
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)

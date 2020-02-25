@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import PreloadStore from "preload-store";
 
 export default {
@@ -5,7 +6,7 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const banner = Ember.Object.create(PreloadStore.get("banner") || {}),
+    const banner = EmberObject.create(PreloadStore.get("banner") || {}),
       site = container.lookup("site:main");
 
     site.set("banner", banner);
@@ -16,7 +17,7 @@ export default {
     }
 
     messageBus.subscribe("/site/banner", function(ban) {
-      site.set("banner", Ember.Object.create(ban || {}));
+      site.set("banner", EmberObject.create(ban || {}));
     });
   }
 };

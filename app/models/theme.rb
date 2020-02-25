@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_cache'
-require_dependency 'stylesheet/compiler'
-require_dependency 'stylesheet/manager'
-require_dependency 'theme_settings_parser'
-require_dependency 'theme_settings_manager'
-require_dependency 'theme_translation_parser'
-require_dependency 'theme_translation_manager'
-
 class Theme < ActiveRecord::Base
 
   @cache = DistributedCache.new('theme')
@@ -22,7 +14,7 @@ class Theme < ActiveRecord::Base
   has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
   has_many :parent_themes, -> { order(:name) }, through: :parent_theme_relation, source: :parent_theme
   has_many :color_schemes
-  belongs_to :remote_theme, autosave: true
+  belongs_to :remote_theme, dependent: :destroy
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
   has_one :javascript_cache, dependent: :destroy
@@ -34,20 +26,18 @@ class Theme < ActiveRecord::Base
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
   }
 
-  def notify_color_change(color)
-    changed_colors << color
+  def notify_color_change(color, scheme: nil)
+    scheme ||= color.color_scheme
+    changed_colors << color if color
+    changed_schemes << scheme if scheme
   end
 
   after_save do
-    color_schemes = {}
-    changed_colors.each do |color|
-      color.save!
-      color_schemes[color.color_scheme_id] ||= color.color_scheme
-    end
-
-    color_schemes.values.each(&:save!)
+    changed_colors.each(&:save!)
+    changed_schemes.each(&:save!)
 
     changed_colors.clear
+    changed_schemes.clear
 
     changed_fields.each(&:save!)
     changed_fields.clear
@@ -63,6 +53,15 @@ class Theme < ActiveRecord::Base
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
 
+    update_javascript_cache!
+
+    remove_from_cache!
+    clear_cached_settings!
+    ColorScheme.hex_cache.clear
+    notify_theme_change(with_scheme: notify_with_scheme)
+  end
+
+  def update_javascript_cache!
     all_extra_js = theme_fields.where(target_id: Theme.targets[:extra_js]).pluck(:value_baked).join("\n")
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
@@ -73,11 +72,6 @@ class Theme < ActiveRecord::Base
     else
       javascript_cache&.destroy!
     end
-
-    remove_from_cache!
-    clear_cached_settings!
-    ColorScheme.hex_cache.clear
-    notify_theme_change(with_scheme: notify_with_scheme)
   end
 
   after_destroy do
@@ -125,7 +119,7 @@ class Theme < ActiveRecord::Base
 
   def self.components_for(theme_id)
     get_set_cache "theme_components_for_#{theme_id}" do
-      ChildTheme.where(parent_theme_id: theme_id).distinct.pluck(:child_theme_id)
+      ChildTheme.where(parent_theme_id: theme_id).pluck(:child_theme_id)
     end
   end
 
@@ -156,8 +150,10 @@ class Theme < ActiveRecord::Base
 
       all_ids = [parent, *components]
 
-      disabled_ids = Theme.where(id: all_ids).includes(:remote_theme)
-        .reject(&:enabled?).pluck(:id)
+      disabled_ids = Theme.where(id: all_ids)
+        .includes(:remote_theme)
+        .select { |t| !t.supported? || !t.enabled? }
+        .pluck(:id)
 
       all_ids - disabled_ids
     end
@@ -177,7 +173,7 @@ class Theme < ActiveRecord::Base
     SiteSetting.default_theme_id == id
   end
 
-  def enabled?
+  def supported?
     if minimum_version = remote_theme&.minimum_discourse_version
       return false unless Discourse.has_needed_version?(Discourse::VERSION::STRING, minimum_version)
     end
@@ -216,6 +212,7 @@ class Theme < ActiveRecord::Base
     return unless component
 
     Theme.transaction do
+      self.enabled = true
       self.component = false
       ChildTheme.where("child_theme_id = ?", id).destroy_all
       self.save!
@@ -259,6 +256,7 @@ class Theme < ActiveRecord::Base
 
     if with_scheme
       targets.prepend(:desktop, :mobile, :admin)
+      targets.append(*Discourse.find_plugin_css_assets(mobile_view: true, desktop_view: true))
       Stylesheet::Manager.cache.clear if clear_manager_cache
     end
 
@@ -285,6 +283,12 @@ class Theme < ActiveRecord::Base
 
   def self.resolve_baked_field(theme_ids, target, name)
     if target == :extra_js
+      require_rebake = ThemeField.where(theme_id: theme_ids, target_id: Theme.targets[:extra_js]).
+        where("compiler_version <> ?", ThemeField::COMPILER_VERSION)
+      require_rebake.each { |tf| tf.ensure_baked! }
+      require_rebake.map(&:theme_id).uniq.each do |theme_id|
+        Theme.find(theme_id).update_javascript_cache!
+      end
       caches = JavascriptCache.where(theme_id: theme_ids)
       caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
       return caches.map { |c| "<script src='#{c.url}'></script>" }.join("\n")
@@ -330,6 +334,10 @@ class Theme < ActiveRecord::Base
     @changed_colors ||= []
   end
 
+  def changed_schemes
+    @changed_schemes ||= Set.new
+  end
+
   def set_field(target:, name:, value: nil, type: nil, type_id: nil, upload_id: nil)
     name = name.to_s
 
@@ -368,10 +376,15 @@ class Theme < ActiveRecord::Base
     fields.values
   end
 
-  def add_child_theme!(theme)
-    new_relation = child_theme_relation.new(child_theme_id: theme.id)
+  def add_relative_theme!(kind, theme)
+    new_relation = if kind == :child
+      child_theme_relation.new(child_theme_id: theme.id)
+    else
+      parent_theme_relation.new(parent_theme_id: theme.id)
+    end
     if new_relation.save
       child_themes.reload
+      parent_themes.reload
       save!
       Theme.clear_cache!
     else
@@ -415,6 +428,16 @@ class Theme < ActiveRecord::Base
       self.settings.each do |setting|
         hash[setting.name] = setting.value
       end
+
+      theme_uploads = {}
+      theme_fields
+        .joins(:upload)
+        .where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
+
+        theme_uploads[field.name] = field.upload.url
+      end
+      hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+
       hash
     end
   end
@@ -489,6 +512,22 @@ class Theme < ActiveRecord::Base
 
     end
   end
+
+  def disabled_by
+    find_disable_action_log&.acting_user
+  end
+
+  def disabled_at
+    find_disable_action_log&.created_at
+  end
+
+  private
+
+  def find_disable_action_log
+    if component? && !enabled?
+      @disable_log ||= UserHistory.where(context: id.to_s, action: UserHistory.actions[:disable_theme_component]).order("created_at DESC").first
+    end
+  end
 end
 
 # == Schema Information
@@ -506,6 +545,7 @@ end
 #  color_scheme_id  :integer
 #  remote_theme_id  :integer
 #  component        :boolean          default(FALSE), not null
+#  enabled          :boolean          default(TRUE), not null
 #
 # Indexes
 #

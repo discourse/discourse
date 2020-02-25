@@ -1,16 +1,18 @@
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import {
-  default as computed,
-  on
-} from "ember-addons/ember-computed-decorators";
-import { defaultHomepage } from "discourse/lib/utilities";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import PreloadStore from "preload-store";
+import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
+import User from "discourse/models/user";
 
 function isNew(topic) {
   return (
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
-      topic.notification_level >= NotificationLevels.TRACKING)
+      topic.notification_level >= NotificationLevels.TRACKING) &&
+    isUnseen(topic)
   );
 }
 
@@ -22,7 +24,23 @@ function isUnread(topic) {
   );
 }
 
-const TopicTrackingState = Discourse.Model.extend({
+function isUnseen(topic) {
+  return !topic.is_seen;
+}
+
+function hasMutedTags(topicTagIds, mutedTagIds) {
+  if (!mutedTagIds || !topicTagIds) {
+    return false;
+  }
+  return (
+    (Discourse.SiteSettings.remove_muted_tags_from_latest === "always" &&
+      topicTagIds.any(tagId => mutedTagIds.includes(tagId))) ||
+    (Discourse.SiteSettings.remove_muted_tags_from_latest === "only_muted" &&
+      topicTagIds.every(tagId => mutedTagIds.includes(tagId)))
+  );
+}
+
+const TopicTrackingState = EmberObject.extend({
   messageCount: 0,
 
   @on("init")
@@ -42,9 +60,7 @@ const TopicTrackingState = Discourse.Model.extend({
       }
 
       if (["new_topic", "latest"].includes(data.message_type)) {
-        const muted_category_ids = Discourse.User.currentProp(
-          "muted_category_ids"
-        );
+        const muted_category_ids = User.currentProp("muted_category_ids");
         if (
           muted_category_ids &&
           muted_category_ids.includes(data.payload.category_id)
@@ -53,12 +69,10 @@ const TopicTrackingState = Discourse.Model.extend({
         }
       }
 
-      // fill parent_category_id we need it for counting new/unread
-      if (data.payload && data.payload.category_id) {
-        var category = Discourse.Category.findById(data.payload.category_id);
-
-        if (category && category.parent_category_id) {
-          data.payload.parent_category_id = category.parent_category_id;
+      if (["new_topic", "latest"].includes(data.message_type)) {
+        const mutedTagIds = User.currentProp("muted_tag_ids");
+        if (hasMutedTags(data.payload.topic_tag_ids, mutedTagIds)) {
+          return;
         }
       }
 
@@ -66,16 +80,29 @@ const TopicTrackingState = Discourse.Model.extend({
         tracker.notify(data);
       }
 
+      if (data.message_type === "dismiss_new") {
+        Object.keys(tracker.states).forEach(k => {
+          const topic = tracker.states[k];
+          if (
+            !data.payload.category_id ||
+            topic.category_id === parseInt(data.payload.category_id, 0)
+          ) {
+            tracker.states[k] = Object.assign({}, topic, {
+              is_seen: true
+            });
+          }
+        });
+        tracker.notifyPropertyChange("states");
+        tracker.incrementMessageCount();
+      }
+
       if (["new_topic", "unread", "read"].includes(data.message_type)) {
         tracker.notify(data);
         const old = tracker.states["t" + data.topic_id];
-
-        // don't add tracking state for read stuff that was not tracked in first place
-        if (old || data.message_type !== "read") {
-          if (!_.isEqual(old, data.payload)) {
-            tracker.states["t" + data.topic_id] = data.payload;
-            tracker.incrementMessageCount();
-          }
+        if (!_.isEqual(old, data.payload)) {
+          tracker.states["t" + data.topic_id] = data.payload;
+          tracker.notifyPropertyChange("states");
+          tracker.incrementMessageCount();
         }
       }
     };
@@ -134,22 +161,10 @@ const TopicTrackingState = Discourse.Model.extend({
     const categoryId = data.payload && data.payload.category_id;
 
     if (filterCategory && filterCategory.get("id") !== categoryId) {
-      const category = categoryId && Discourse.Category.findById(categoryId);
+      const category = categoryId && Category.findById(categoryId);
       if (
         !category ||
         category.get("parentCategory.id") !== filterCategory.get("id")
-      ) {
-        return;
-      }
-    }
-
-    if (filter === defaultHomepage()) {
-      const suppressed_from_latest_category_ids = Discourse.Site.currentProp(
-        "suppressed_from_latest_category_ids"
-      );
-      if (
-        suppressed_from_latest_category_ids &&
-        suppressed_from_latest_category_ids.includes(data.payload.category_id)
       ) {
         return;
       }
@@ -194,9 +209,9 @@ const TopicTrackingState = Discourse.Model.extend({
 
     if (split.length >= 4) {
       filter = split[split.length - 1];
-      // c/cat/subcat/l/latest
-      var category = Discourse.Category.findSingleBySlug(
-        split.splice(1, split.length - 3).join("/")
+      // c/cat/subcat/6/l/latest
+      var category = Category.findSingleBySlug(
+        split.splice(1, split.length - 4).join("/")
       );
       this.set("filterCategory", category);
     } else {
@@ -207,7 +222,7 @@ const TopicTrackingState = Discourse.Model.extend({
     this.set("incomingCount", 0);
   },
 
-  @computed("incomingCount")
+  @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount && incomingCount > 0;
   },
@@ -218,7 +233,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   // If we have a cached topic list, we can update it from our tracking information.
   updateTopics(topics) {
-    if (Ember.isEmpty(topics)) {
+    if (isEmpty(topics)) {
       return;
     }
 
@@ -228,7 +243,11 @@ const TopicTrackingState = Discourse.Model.extend({
 
       if (state) {
         const lastRead = t.get("last_read_post_number");
-        if (lastRead !== state.last_read_post_number) {
+        const isSeen = t.get("is_seen");
+        if (
+          lastRead !== state.last_read_post_number ||
+          isSeen !== state.is_seen
+        ) {
           const postsCount = t.get("posts_count");
           let newPosts = postsCount - state.highest_post_number,
             unread = postsCount - state.last_read_post_number;
@@ -248,7 +267,8 @@ const TopicTrackingState = Discourse.Model.extend({
             last_read_post_number: state.last_read_post_number,
             new_posts: newPosts,
             unread: unread,
-            unseen: !state.last_read_post_number
+            is_seen: state.is_seen,
+            unseen: !state.last_read_post_number && isUnseen(state)
           });
         }
       }
@@ -335,38 +355,43 @@ const TopicTrackingState = Discourse.Model.extend({
     this.incrementProperty("messageCount");
   },
 
-  countNew(category_id) {
+  getSubCategoryIds(categoryId) {
+    const result = [categoryId];
+    const categories = Category.list();
+
+    for (let i = 0; i < result.length; ++i) {
+      for (let j = 0; j < categories.length; ++j) {
+        if (result[i] === categories[j].parent_category_id) {
+          result[result.length] = categories[j].id;
+        }
+      }
+    }
+
+    return new Set(result);
+  },
+
+  countNew(categoryId) {
+    const subcategoryIds = this.getSubCategoryIds(categoryId);
     return _.chain(this.states)
       .filter(isNew)
       .filter(
         topic =>
           topic.archetype !== "private_message" &&
           !topic.deleted &&
-          (topic.category_id === category_id ||
-            topic.parent_category_id === category_id ||
-            !category_id)
+          (!categoryId || subcategoryIds.has(topic.category_id))
       )
       .value().length;
   },
 
-  resetNew() {
-    Object.keys(this.states).forEach(id => {
-      if (this.states[id].last_read_post_number === null) {
-        delete this.states[id];
-      }
-    });
-  },
-
-  countUnread(category_id) {
+  countUnread(categoryId) {
+    const subcategoryIds = this.getSubCategoryIds(categoryId);
     return _.chain(this.states)
       .filter(isUnread)
       .filter(
         topic =>
           topic.archetype !== "private_message" &&
           !topic.deleted &&
-          (topic.category_id === category_id ||
-            topic.parent_category_id === category_id ||
-            !category_id)
+          (!categoryId || subcategoryIds.has(topic.category_id))
       )
       .value().length;
   },
@@ -392,8 +417,8 @@ const TopicTrackingState = Discourse.Model.extend({
       );
     }
 
-    let categoryId = category ? Ember.get(category, "id") : null;
-    let categoryName = category ? Ember.get(category, "name") : null;
+    let categoryId = category ? get(category, "id") : null;
+    let categoryName = category ? get(category, "name") : null;
 
     if (name === "new") {
       return this.countNew(categoryId);
@@ -409,15 +434,10 @@ const TopicTrackingState = Discourse.Model.extend({
 
   loadStates(data) {
     const states = this.states;
-    const idMap = Discourse.Category.idMap();
 
     // I am taking some shortcuts here to avoid 500 gets for a large list
     if (data) {
       data.forEach(topic => {
-        var category = idMap[topic.category_id];
-        if (category && category.parent_category_id) {
-          topic.parent_category_id = category.parent_category_id;
-        }
         states["t" + topic.topic_id] = topic;
       });
     }

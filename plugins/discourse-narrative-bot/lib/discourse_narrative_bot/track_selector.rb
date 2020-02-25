@@ -8,8 +8,8 @@ module DiscourseNarrativeBot
     PUBLIC_DISPLAY_BOT_HELP_KEY = 'discourse-narrative-bot:track-selector:display-bot-help'.freeze
 
     TRACKS = [
-      NewUserNarrative,
-      AdvancedUserNarrative
+      AdvancedUserNarrative,
+      NewUserNarrative
     ]
 
     TOPIC_ACTIONS = [
@@ -171,7 +171,6 @@ module DiscourseNarrativeBot
         self.class.i18n_key('random_mention.tracks'),
         discobot_username: discobot_username,
         reset_trigger: self.class.reset_trigger,
-        default_track: NewUserNarrative.reset_trigger,
         tracks: [NewUserNarrative.reset_trigger, AdvancedUserNarrative.reset_trigger].join(', ')
       )
 
@@ -179,6 +178,7 @@ module DiscourseNarrativeBot
         discobot_username: discobot_username,
         dice_trigger: self.class.dice_trigger,
         quote_trigger: self.class.quote_trigger,
+        quote_sample: DiscourseNarrativeBot::QuoteGenerator.generate(@user),
         magic_8_ball_trigger: self.class.magic_8_ball_trigger
       )}"
     end
@@ -228,7 +228,7 @@ module DiscourseNarrativeBot
 
     def match_trigger?(trigger)
       discobot_username = self.discobot_user.username
-      regexp = Regexp.new("<a class=\"mention\".*>@#{discobot_username}</a> #{trigger}", 'i')
+      regexp = Regexp.new("<a class=\"mention\".*>@#{discobot_username}</a> #{trigger}</p>", 'i')
       match = @post.cooked.match(regexp)
 
       if @is_pm_to_bot

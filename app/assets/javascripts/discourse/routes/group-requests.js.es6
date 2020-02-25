@@ -1,4 +1,6 @@
-export default Discourse.Route.extend({
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   titleToken() {
     return I18n.t("groups.requests.title");
   },
@@ -16,6 +18,6 @@ export default Discourse.Route.extend({
       filterInput: this._params.filter
     });
 
-    controller.refreshRequesters(true);
+    controller.findRequesters(true);
   }
 });

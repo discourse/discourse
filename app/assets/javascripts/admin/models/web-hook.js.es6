@@ -1,10 +1,9 @@
+import { isEmpty } from "@ember/utils";
 import RestModel from "discourse/models/rest";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Site from "discourse/models/site";
 
 export default RestModel.extend({
   content_type: 1, // json
@@ -15,7 +14,7 @@ export default RestModel.extend({
   web_hook_event_types: null,
   groupsFilterInName: null,
 
-  @computed("wildcard_web_hook")
+  @discourseComputed("wildcard_web_hook")
   webHookType: {
     get(wildcard) {
       return wildcard ? "wildcard" : "individual";
@@ -25,7 +24,7 @@ export default RestModel.extend({
     }
   },
 
-  @computed("category_ids")
+  @discourseComputed("category_ids")
   categories(categoryIds) {
     return Category.findByIds(categoryIds);
   },
@@ -35,7 +34,7 @@ export default RestModel.extend({
     const groupIds = this.group_ids;
     this.set(
       "groupsFilterInName",
-      Discourse.Site.currentProp("groups").reduce((groupNames, g) => {
+      Site.currentProp("groups").reduce((groupNames, g) => {
         if (groupIds.includes(g.id)) {
           groupNames.push(g.name);
         }
@@ -48,7 +47,7 @@ export default RestModel.extend({
     return Group.findAll({ term: term, ignore_automatic: false });
   },
 
-  @computed("wildcard_web_hook", "web_hook_event_types.[]")
+  @discourseComputed("wildcard_web_hook", "web_hook_event_types.[]")
   description(isWildcardWebHook, types) {
     let desc = "";
 
@@ -78,15 +77,15 @@ export default RestModel.extend({
       wildcard_web_hook: this.wildcard_web_hook,
       verify_certificate: this.verify_certificate,
       active: this.active,
-      web_hook_event_type_ids: Ember.isEmpty(types)
+      web_hook_event_type_ids: isEmpty(types)
         ? [null]
         : types.map(type => type.id),
-      category_ids: Ember.isEmpty(categoryIds) ? [null] : categoryIds,
-      tag_names: Ember.isEmpty(tagNames) ? [null] : tagNames,
+      category_ids: isEmpty(categoryIds) ? [null] : categoryIds,
+      tag_names: isEmpty(tagNames) ? [null] : tagNames,
       group_ids:
-        Ember.isEmpty(groupNames) || Ember.isEmpty(groupNames[0])
+        isEmpty(groupNames) || isEmpty(groupNames[0])
           ? [null]
-          : Discourse.Site.currentProp("groups").reduce((groupIds, g) => {
+          : Site.currentProp("groups").reduce((groupIds, g) => {
               if (groupNames.includes(g.name)) {
                 groupIds.push(g.id);
               }

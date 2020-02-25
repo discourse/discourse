@@ -10,3 +10,6 @@ sv:
     presence:
       replying: "svarar"
       editing: "skriver"
+      replying_to_topic:
+        one: "svarar"
+        other: "svarar"

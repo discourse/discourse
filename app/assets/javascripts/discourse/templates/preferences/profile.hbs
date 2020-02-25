@@ -7,6 +7,15 @@
 </div>
 {{/if}}
 
+<div class="control-group pref-timezone">
+  <label class="control-label">{{i18n 'user.timezone'}}</label>
+  {{timezone-input
+    value=model.user_option.timezone
+    onChange=(action (mut model.user_option.timezone))
+    class="input-xxlarge"
+  }}
+</div>
+
 <div class="control-group pref-location">
   <label class="control-label">{{i18n 'user.location'}}</label>
   <div class="controls">
@@ -52,11 +61,37 @@
   </div>
 {{/if}}
 
+{{#if siteSettings.allow_featured_topic_on_user_profiles}}
+  <div class="control-group">
+    <label class="control-label">{{i18n 'user.featured_topic'}}</label>
+    {{#if model.featured_topic}}
+      <label class="featured-topic-link">
+      {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}{{{model.featured_topic.fancy_title}}}{{/link-to}}
+      </label>
+    {{/if}}
+
+    <div>
+      {{d-button action=(action "showFeaturedTopicModal")
+        class="btn-default feature-topic-on-profile-btn"
+        label="user.feature_topic_on_profile.open_search"}}
+      {{#if model.featured_topic}}
+        {{d-button action=(action "clearFeaturedTopicFromProfile")
+          class="btn-danger clear-feature-topic-on-profile-btn"
+          label="user.feature_topic_on_profile.clear.title"}}
+      {{/if}}
+    </div>
+    <div class='instructions'>
+      {{i18n 'user.change_featured_topic.instructions'}}
+    </div>
+  </div>
+{{/if}}
+
+
 {{plugin-outlet name="user-preferences-profile" args=(hash model=model save=(action "save"))}}
 
 {{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}
 
-<br/>
+<br>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 

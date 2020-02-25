@@ -181,7 +181,7 @@ class ImportScripts::MyBB < ImportScripts::Base
     if count > 5
       puts "Warning: probably incorrect quote in post #{post_id}"
     end
-    return username
+    username
   end
 
   # Take an original post id and return the migrated topic id and post number for it
@@ -190,14 +190,14 @@ class ImportScripts::MyBB < ImportScripts::Base
     if quoted_post_id_from_imported
       begin
         post = Post.find(quoted_post_id_from_imported)
-        return "post:#{post.post_number}, topic:#{post.topic_id}"
+        "post:#{post.post_number}, topic:#{post.topic_id}"
       rescue
         puts "Could not find migrated post #{quoted_post_id_from_imported} quoted by original post #{post_id} as #{quoted_post_id}"
-        return ""
+        ""
       end
     else
       puts "Original post #{post_id} quotes nonexistent post #{quoted_post_id}"
-      return ""
+      ""
     end
   end
 

@@ -1,7 +1,8 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Object.extend({
-  @computed
+export default EmberObject.extend({
+  @discourseComputed
   localizedName() {
     if (this.forceName) {
       return this.forceName;
@@ -10,18 +11,18 @@ export default Ember.Object.extend({
     return this.name ? I18n.t(this.name) : "";
   },
 
-  @computed
+  @discourseComputed
   sortIcon() {
     const asc = this.parent.ascending ? "up" : "down";
     return `chevron-${asc}`;
   },
 
-  @computed
+  @discourseComputed
   isSorting() {
     return this.sortable && this.parent.order === this.order;
   },
 
-  @computed
+  @discourseComputed
   className() {
     const name = [];
 

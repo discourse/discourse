@@ -26,11 +26,6 @@
 .groups-boxes {
   margin: 1em 0;
   width: 100%;
-  // IE11 falls back to flexbox
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  // Everything that's not IE11 uses grid
   @supports (display: grid) {
     display: grid;
     grid-template-columns: repeat(4, 24%);
@@ -40,16 +35,13 @@
       grid-template-columns: repeat(3, 32%);
       grid-column-gap: 2%;
     }
-    @include breakpoint("mobile") {
+    @include breakpoint("mobile-large") {
       grid-template-columns: 100%;
     }
   }
 
   .group-box {
-    // Flex and margin are for IE11
-    flex: 1 1 24%;
-    margin: 1%;
-    @include breakpoint("mobile") {
+    @include breakpoint("mobile-large") {
       margin: 0;
     }
     display: flex;

@@ -2,7 +2,7 @@
 
 class AdminDashboardGeneralData < AdminDashboardData
   def get_json
-    days_since_update = ((DateTime.now - Discourse.last_commit_date) / 1.day).to_i
+    days_since_update = Discourse.last_commit_date ? ((DateTime.now - Discourse.last_commit_date) / 1.day).to_i : nil
     {
       updated_at: Time.zone.now.as_json,
       discourse_updated_at: Discourse.last_commit_date,

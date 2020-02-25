@@ -51,6 +51,7 @@
     touch-action: pan-y pinch-zoom;
     overflow-y: auto;
     overflow-x: hidden;
+    max-height: 100vh;
   }
 
   .badge-notification {
@@ -68,7 +69,7 @@
 .menu-panel {
   li,
   li.heading {
-    a {
+    a.widget-link {
       padding: 0.25em 0.5em;
       display: block;
       &:hover,
@@ -83,6 +84,11 @@
       margin-left: 0.5em;
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
+  }
+
+  .categories-link {
+    display: block;
+    padding: 0.25em 0.5em;
   }
 
   li.category-link {
@@ -109,8 +115,6 @@
       line-height: $line-height-large;
     }
     .badge-wrapper {
-      overflow: hidden;
-      text-overflow: ellipsis;
       &.bar,
       &.bullet {
         color: $primary;
@@ -137,13 +141,15 @@
 
   span.badge-category {
     max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  }
+
+  div.discourse-tags {
+    font-size: $font-down-1;
   }
 }
 
 .user-menu {
-  .notifications {
+  .quick-access-panel {
     width: 100%;
     display: table;
 
@@ -183,6 +189,11 @@
         padding: 0;
         > div {
           overflow: hidden; // clears the text from wrapping below icons
+
+          // Truncate items with more than 2 lines.
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
         }
       }
 
@@ -210,8 +221,8 @@
     .none {
       padding-top: 5px;
     }
-    .spinner-container.visible {
-      min-height: 30px;
+    .spinner-container {
+      min-height: 2em;
     }
     .spinner {
       width: 20px;
@@ -219,9 +230,12 @@
       border-width: 2px;
       margin: 0 auto;
     }
-    .show-all .btn {
+    .show-all a {
       width: 100%;
-      padding: 2px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 30px;
       color: dark-light-choose($primary-medium, $secondary-high);
       background: blend-primary-secondary(5%);
       &:hover {
@@ -233,19 +247,9 @@
     @include unselectable;
   }
 
-  .logout-link,
   .dismiss-link {
     display: inline-block;
-  }
-  .dismiss-link {
     float: right;
-  }
-}
-
-.notifications .logout {
-  padding: 0.25em;
-  &:hover {
-    background-color: $highlight-medium;
   }
 }
 
@@ -255,7 +259,12 @@ div.menu-links-header {
   border-collapse: separate;
   border-spacing: 0 0.5em;
   .menu-links-row {
+    border-bottom: 1px solid dark-light-choose($primary-low, $secondary-medium);
     display: flex;
+
+    // Tabs should have "ears".
+    padding: 0 4px;
+
     li {
       display: inline-flex;
       align-items: center;
@@ -266,7 +275,42 @@ div.menu-links-header {
       &.glyphs {
         flex-wrap: wrap;
         text-align: right;
-        max-width: 65%; //IE11
+
+        a {
+          // Expand the click area a bit.
+          padding-left: 0.6em;
+          padding-right: 0.6em;
+        }
+      }
+
+      a {
+        // This is to make sure active and inactive tab icons have the same
+        // size. `box-sizing` does not work and I have no idea why.
+        border: 1px solid transparent;
+        border-bottom: 0;
+      }
+
+      a.active {
+        border: 1px solid dark-light-choose($primary-low, $secondary-medium);
+        border-bottom: 0;
+        position: relative;
+
+        &:after {
+          display: block;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          z-index: z("header") + 1; // Higher than .menu-panel
+          width: 100%;
+          height: 0;
+          content: "";
+          border-top: 1px solid $secondary;
+        }
+
+        &:focus,
+        &:hover {
+          background-color: inherit;
+        }
       }
     }
   }
@@ -279,12 +323,22 @@ div.menu-links-header {
     padding: 0.3em 0.5em;
   }
   a.user-activity-link {
-    max-width: 150px;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    align-items: center;
+    display: flex;
     margin: -0.5em 0;
+    max-width: 130px;
+
+    // `overflow: hidden` on `.user-activity-link` would hide the `::after`
+    // pseudo element (used to create the tab-looking effect). Sets `overflow:
+    // hidden` on the child username label instead.
+    overflow: visible;
+
+    span.d-label {
+      display: block;
+      max-width: 130px;
+      @include ellipsis;
+    }
+
     @include breakpoint(mobile-medium) {
       max-width: 125px;
     }
@@ -307,6 +361,6 @@ div.menu-links-header {
   }
 
   .d-icon-user {
-    margin-right: 0.2em;
+    margin-right: 0.475em;
   }
 }

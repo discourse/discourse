@@ -1,14 +1,9 @@
 # frozen_string_literal: true
 
-require_dependency 'email/message_builder'
-
 class InviteMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
-  class UserNotificationRenderer < ActionView::Base
-    include UserNotificationsHelper
-    include EmailHelper
-  end
+  layout 'email_template'
 
   def send_invite(invite)
     # Find the first topic they were invited to

@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'user_destroyer'
-require_dependency 'admin_user_index_query'
-require_dependency 'admin_confirmation'
-
 class Admin::UsersController < Admin::AdminController
 
   before_action :fetch_user, only: [:suspend,
@@ -23,8 +19,6 @@ class Admin::UsersController < Admin::AdminController
                                     :add_group,
                                     :remove_group,
                                     :primary_group,
-                                    :generate_api_key,
-                                    :revoke_api_key,
                                     :anonymize,
                                     :reset_bounce_score,
                                     :disable_second_factor,
@@ -106,7 +100,6 @@ class Admin::UsersController < Admin::AdminController
 
     User.transaction do
       @user.save!
-      @user.revoke_api_key
 
       user_history = StaffActionLogger.new(current_user).log_user_suspend(
         @user,
@@ -141,7 +134,6 @@ class Admin::UsersController < Admin::AdminController
 
     render_json_dump(
       suspension: {
-        suspended: true,
         suspend_reason: params[:reason],
         full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
@@ -161,7 +153,8 @@ class Admin::UsersController < Admin::AdminController
 
     render_json_dump(
       suspension: {
-        suspended: false
+        suspended_till: nil,
+        suspended_at: nil
       }
     )
   end
@@ -180,16 +173,6 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_revoke_admin!(@user)
     @user.revoke_admin!
     StaffActionLogger.new(current_user).log_revoke_admin(@user)
-    render body: nil
-  end
-
-  def generate_api_key
-    api_key = @user.generate_api_key(current_user)
-    render_serialized(api_key, ApiKeySerializer)
-  end
-
-  def revoke_api_key
-    @user.revoke_api_key
     render body: nil
   end
 
@@ -318,7 +301,7 @@ class Admin::UsersController < Admin::AdminController
     @user.deactivate(current_user)
     StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'), params.slice(:context))
     refresh_browser @user
-    render body: nil
+    render json: success_json
   end
 
   def silence
@@ -368,23 +351,6 @@ class Admin::UsersController < Admin::AdminController
         silenced_at: nil
       }
     )
-  end
-
-  # Kept for backwards compatibility, but is replaced by the Reviewable Queue
-  def reject_bulk
-    Discourse.deprecate("AdminUsersController#reject_bulk is deprecated. Please use the Reviewable API instead.", since: "2.3.0beta5", drop_from: "2.4")
-
-    success_count = 0
-    d = UserDestroyer.new(current_user)
-
-    User.where(id: params[:users]).each do |u|
-      success_count += 1 if guardian.can_delete_user?(u) && d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
-    end
-
-    render json: {
-      success: success_count,
-      failed: (params[:users].try(:size) || 0) - success_count
-    }
   end
 
   def disable_second_factor
@@ -457,6 +423,8 @@ class Admin::UsersController < Admin::AdminController
       render_serialized(user, AdminDetailedUserSerializer, root: false)
     rescue ActiveRecord::RecordInvalid => ex
       render json: failed_json.merge(message: ex.message), status: 403
+    rescue DiscourseSingleSignOn::BlankExternalId => ex
+      render json: failed_json.merge(message: I18n.t('sso.blank_id_error')), status: 422
     end
   end
 
@@ -505,7 +473,6 @@ class Admin::UsersController < Admin::AdminController
     end
 
     user.active = true
-    user.approved = true
     user.save!
     user.grant_admin!
     user.change_trust_level!(4)

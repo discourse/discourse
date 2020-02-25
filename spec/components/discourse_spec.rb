@@ -10,11 +10,15 @@ describe Discourse do
   end
 
   context 'current_hostname' do
-
     it 'returns the hostname from the current db connection' do
       expect(Discourse.current_hostname).to eq('foo.com')
     end
+  end
 
+  context 'avatar_sizes' do
+    it 'returns a list of integers' do
+      expect(Discourse.avatar_sizes).to contain_exactly(20, 25, 30, 32, 37, 40, 45, 48, 50, 60, 64, 67, 75, 90, 96, 120, 135, 180, 240, 360)
+    end
   end
 
   context 'running_in_rack' do
@@ -58,6 +62,33 @@ describe Discourse do
       it "returns the non standart port in the base url" do
         expect(Discourse.base_url).to eq("http://foo.com:3000")
       end
+    end
+  end
+
+  context 'plugins' do
+    let(:plugin_class) do
+      Class.new(Plugin::Instance) do
+        attr_accessor :enabled
+        def enabled?
+          @enabled
+        end
+      end
+    end
+
+    let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true } }
+    let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false } }
+
+    before { Discourse.plugins.append(plugin1, plugin2) }
+    after { Discourse.plugins.clear }
+
+    it 'can find plugins correctly' do
+      expect(Discourse.plugins).to contain_exactly(plugin1, plugin2)
+
+      # Exclude disabled plugins by default
+      expect(Discourse.find_plugins({})).to contain_exactly(plugin1)
+
+      # Include disabled plugins when requested
+      expect(Discourse.find_plugins(include_disabled: true)).to contain_exactly(plugin1, plugin2)
     end
   end
 
@@ -124,6 +155,12 @@ describe Discourse do
       expect(Discourse.site_contact_user.username).to eq("system")
     end
 
+  end
+
+  context '#system_user' do
+    it 'returns the system user' do
+      expect(Discourse.system_user.id).to eq(-1)
+    end
   end
 
   context "#store" do
@@ -219,8 +256,13 @@ describe Discourse do
         expect(Discourse.readonly_mode?).to eq(true)
       end
 
-      it "returns true when Discourse is recently read only" do
-        Discourse.received_readonly!
+      it "returns true when postgres is recently read only" do
+        Discourse.received_postgres_readonly!
+        expect(Discourse.readonly_mode?).to eq(true)
+      end
+
+      it "returns true when redis is recently read only" do
+        Discourse.received_redis_readonly!
         expect(Discourse.readonly_mode?).to eq(true)
       end
 
@@ -234,21 +276,28 @@ describe Discourse do
       end
     end
 
-    describe ".received_readonly!" do
+    describe ".received_postgres_readonly!" do
       it "sets the right time" do
-        time = Discourse.received_readonly!
-        expect(Discourse.last_read_only['default']).to eq(time)
+        time = Discourse.received_postgres_readonly!
+        expect(Discourse.postgres_last_read_only['default']).to eq(time)
+      end
+    end
+
+    describe ".received_redis_readonly!" do
+      it "sets the right time" do
+        time = Discourse.received_redis_readonly!
+        expect(Discourse.redis_last_read_only['default']).to eq(time)
       end
     end
 
     describe ".clear_readonly!" do
       it "publishes the right message" do
-        Discourse.received_readonly!
+        Discourse.received_postgres_readonly!
         messages = []
 
         expect do
           messages = MessageBus.track_publish { Discourse.clear_readonly! }
-        end.to change { Discourse.last_read_only['default'] }.to(nil)
+        end.to change { Discourse.postgres_last_read_only['default'] }.to(nil)
 
         expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL })
           .to eq(true)
@@ -339,6 +388,44 @@ describe Discourse do
       expect {
         Discourse.deprecate(SecureRandom.hex, raise_error: true)
       }.to raise_error(Discourse::Deprecation)
+    end
+  end
+
+  describe "Utils.execute_command" do
+    it "works for individual commands" do
+      expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
+      expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq("#{Rails.root.to_s}/plugins")
+    end
+
+    it "works with a block" do
+      Discourse::Utils.execute_command do |runner|
+        expect(runner.exec("pwd").strip).to eq(Rails.root.to_s)
+      end
+
+      result = Discourse::Utils.execute_command(chdir: "plugins") do |runner|
+        expect(runner.exec("pwd").strip).to eq("#{Rails.root.to_s}/plugins")
+        runner.exec("pwd")
+      end
+
+      # Should return output of block
+      expect(result.strip).to eq("#{Rails.root.to_s}/plugins")
+    end
+
+    it "does not leak chdir between threads" do
+      has_done_chdir = false
+      has_checked_chdir = false
+
+      thread = Thread.new do
+        Discourse::Utils.execute_command(chdir: "plugins") do
+          has_done_chdir = true
+          sleep(0.01) until has_checked_chdir
+        end
+      end
+
+      sleep(0.01) until has_done_chdir
+      expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
+      has_checked_chdir = true
+      thread.join
     end
   end
 

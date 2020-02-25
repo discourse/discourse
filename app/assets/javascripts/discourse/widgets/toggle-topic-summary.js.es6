@@ -1,15 +1,20 @@
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
 
+const MIN_POST_READ_TIME = 4;
+
 createWidget("toggle-summary-description", {
   description(attrs) {
     if (attrs.topicSummaryEnabled) {
       return I18n.t("summary.enabled_description");
     }
 
-    if (attrs.topicWordCount) {
-      const readingTime = Math.floor(
-        attrs.topicWordCount / this.siteSettings.read_time_word_count
+    if (attrs.topicWordCount && this.siteSettings.read_time_word_count > 0) {
+      const readingTime = Math.ceil(
+        Math.max(
+          attrs.topicWordCount / this.siteSettings.read_time_word_count,
+          (attrs.topicPostsCount * MIN_POST_READ_TIME) / 60
+        )
       );
       return I18n.t("summary.description_time", {
         replyCount: attrs.topicReplyCount,

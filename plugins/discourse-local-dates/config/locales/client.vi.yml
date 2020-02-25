@@ -10,4 +10,6 @@ vi:
     discourse_local_dates:
       create:
         form:
+          date_title: ày
           time_title: Thời gian
+          timezone: Múi giờ

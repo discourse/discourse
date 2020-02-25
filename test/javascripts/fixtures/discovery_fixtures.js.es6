@@ -2683,7 +2683,7 @@ export default {
       ]
     }
   },
-  "/c/bug/l/latest.json": {
+  "/c/bug/1/l/latest.json": {
     users: [
       { id: 1, username: "sam", avatar_template: "/images/avatar.png" },
       {
@@ -3756,7 +3756,114 @@ export default {
       ]
     }
   },
-  "/c/feature/l/latest.json": {
+  "/tag/important/l/latest.json": {
+    users: [{ id: 1, username: "sam", avatar_template: "/images/avatar.png" }],
+    primary_groups: [],
+    topic_list: {
+      can_create_topic: true,
+      draft: null,
+      draft_key: "new_topic",
+      draft_sequence: 4,
+      per_page: 30,
+      tags: [
+        {
+          id: 1,
+          name: "test",
+          topic_count: 2,
+          staff: false
+        }
+      ],
+      topics: [
+        {
+          id: 16,
+          title: "Dinosaurs are the best",
+          fancy_title: "Dinosaurs are the best",
+          slug: "dinosaurs-are-the-best",
+          posts_count: 1,
+          reply_count: 0,
+          highest_post_number: 1,
+          image_url: null,
+          created_at: "2019-11-12T05:19:52.300Z",
+          last_posted_at: "2019-11-12T05:19:52.848Z",
+          bumped: true,
+          bumped_at: "2019-11-12T05:19:52.848Z",
+          unseen: false,
+          last_read_post_number: 1,
+          unread: 0,
+          new_posts: 0,
+          pinned: false,
+          unpinned: null,
+          visible: true,
+          closed: false,
+          archived: false,
+          notification_level: 3,
+          bookmarked: false,
+          liked: false,
+          tags: ["test"],
+          views: 2,
+          like_count: 0,
+          has_summary: false,
+          archetype: "regular",
+          last_poster_username: "sam",
+          category_id: 1,
+          pinned_globally: false,
+          featured_link: null,
+          posters: [
+            {
+              extras: "latest single",
+              description: "Original Poster, Most Recent Poster",
+              user_id: 1,
+              primary_group_id: null
+            }
+          ]
+        },
+        {
+          id: 15,
+          title: "This is a test tagged post",
+          fancy_title: "This is a test tagged post",
+          slug: "this-is-a-test-tagged-post",
+          posts_count: 1,
+          reply_count: 0,
+          highest_post_number: 1,
+          image_url: null,
+          created_at: "2019-11-12T05:19:32.032Z",
+          last_posted_at: "2019-11-12T05:19:32.516Z",
+          bumped: true,
+          bumped_at: "2019-11-12T05:19:32.516Z",
+          unseen: false,
+          last_read_post_number: 1,
+          unread: 0,
+          new_posts: 0,
+          pinned: false,
+          unpinned: null,
+          visible: true,
+          closed: false,
+          archived: false,
+          notification_level: 3,
+          bookmarked: false,
+          liked: false,
+          tags: ["test"],
+          views: 1,
+          like_count: 0,
+          has_summary: false,
+          archetype: "regular",
+          last_poster_username: "sam",
+          category_id: 3,
+          pinned_globally: false,
+          featured_link: null,
+          posters: [
+            {
+              extras: "latest single",
+              description: "Original Poster, Most Recent Poster",
+              user_id: 1,
+              primary_group_id: null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "/c/feature/2/l/latest.json": {
     users: [
       { id: 1, username: "sam", avatar_template: "/images/avatar.png" },
       {
@@ -4828,7 +4935,7 @@ export default {
       ]
     }
   },
-  "/c/dev/l/latest.json": {
+  "/c/dev/7/l/latest.json": {
     users: [
       { id: 1, username: "sam", avatar_template: "/images/avatar.png" },
       {

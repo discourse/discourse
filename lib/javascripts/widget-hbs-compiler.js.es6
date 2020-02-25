@@ -191,9 +191,7 @@ class Compiler {
 
           const attrString = `{${attributes.join(", ")}}`;
           instructions.push(
-            `${parentAcc}.push(virtualDom.h('${
-              node.tag
-            }', ${attrString}, ${innerAcc}));`
+            `${parentAcc}.push(virtualDom.h('${node.tag}', ${attrString}, ${innerAcc}));`
           );
         } else {
           instructions.push(

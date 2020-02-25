@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CategorySerializer < BasicCategorySerializer
+class CategorySerializer < SiteCategorySerializer
 
   attributes :read_restricted,
              :available_groups,
@@ -11,16 +11,12 @@ class CategorySerializer < BasicCategorySerializer
              :email_in,
              :email_in_allow_strangers,
              :mailinglist_mirror,
-             :suppress_from_latest,
              :all_topics_wiki,
              :can_delete,
              :cannot_delete_reason,
              :is_special,
              :allow_badges,
              :custom_fields,
-             :allowed_tags,
-             :allowed_tag_groups,
-             :allow_global_tags,
              :topic_featured_link_allowed,
              :search_priority,
              :reviewable_by_group_name
@@ -85,30 +81,10 @@ class CategorySerializer < BasicCategorySerializer
     scope && scope.can_edit?(object)
   end
 
-  def include_suppress_from_latest?
-    scope && scope.can_edit?(object)
-  end
-
   def notification_level
     user = scope && scope.user
    object.notification_level ||
      (user && CategoryUser.where(user: user, category: object).first.try(:notification_level))
-  end
-
-  def include_allowed_tags?
-    SiteSetting.tagging_enabled
-  end
-
-  def allowed_tags
-    object.tags.pluck(:name)
-  end
-
-  def include_allowed_tag_groups?
-    SiteSetting.tagging_enabled
-  end
-
-  def allowed_tag_groups
-    object.tag_groups.pluck(:name)
   end
 
   def custom_fields

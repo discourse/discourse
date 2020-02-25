@@ -3,47 +3,61 @@
 
   <div class="controls tracking-controls">
     <label>{{d-icon "d-watching"}} {{i18n 'user.watched_categories'}}</label>
-    {{category-selector categories=model.watchedCategories blacklist=selectedCategories}}
+    {{#if canSee}}
+      <a class="show-tracking" href="{{unbound model.watchingTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
+    {{/if}}
+    {{category-selector
+      categories=model.watchedCategories
+      blacklist=selectedCategories
+      onChange=(action (mut model.watchedCategories))
+    }}
   </div>
   <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
-  {{#if canSee}}
-    <div class="controls">
-      <a href="{{unbound model.watchingTopicsPath}}">{{i18n 'user.watched_topics_link'}}</a>
-    </div>
-  {{/if}}
+
 
   <div class="controls tracking-controls">
     <label>{{d-icon "d-tracking"}} {{i18n 'user.tracked_categories'}}</label>
-    {{category-selector categories=model.trackedCategories blacklist=selectedCategories}}
+    {{#if canSee}}
+      <a class="show-tracking" href="{{unbound model.trackingTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
+    {{/if}}
+    {{category-selector
+      categories=model.trackedCategories
+      blacklist=selectedCategories
+      onChange=(action (mut model.trackedCategories))
+    }}
   </div>
   <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
-  {{#if canSee}}
-    <div class="controls">
-      <a href="{{unbound model.trackingTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
-    </div>
-  {{/if}}
+
 
   <div class="controls tracking-controls">
     <label>{{d-icon "d-watching-first"}} {{i18n 'user.watched_first_post_categories'}}</label>
-    {{category-selector categories=model.watchedFirstPostCategories blacklist=selectedCategories}}
+    {{category-selector
+      categories=model.watchedFirstPostCategories
+      blacklist=selectedCategories
+      onChange=(action (mut model.watchedFirstPostCategories))
+    }}
   </div>
   <div class="instructions">{{i18n 'user.watched_first_post_categories_instructions'}}</div>
 
-  <div class="controls tracking-controls">
-    <label>{{d-icon "d-muted"}} {{i18n 'user.muted_categories'}}</label>
-    {{category-selector categories=model.mutedCategories blacklist=selectedCategories}}
-  </div>
-  <div class="instructions">{{i18n (if hideMutedTags 'user.muted_categories_instructions' 'user.muted_categories_instructions_dont_hide')}}</div>
-  {{#if canSee}}
-    <div class="controls">
-      <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
+  {{#unless siteSettings.mute_all_categories_by_default}}
+    <div class="controls tracking-controls">
+      <label>{{d-icon "d-muted"}} {{i18n 'user.muted_categories'}}</label>
+      {{#if canSee}}
+        <a class="show-tracking" href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
+      {{/if}}
+      {{category-selector
+        categories=model.mutedCategories
+        blacklist=selectedCategories
+        onChange=(action (mut model.mutedCategories))
+      }}
     </div>
-  {{/if}}
+    <div class="instructions">{{i18n (if hideMutedTags 'user.muted_categories_instructions' 'user.muted_categories_instructions_dont_hide')}}</div>
+  {{/unless}}
 </div>
 
 {{plugin-outlet name="user-preferences-categories" args=(hash model=model save=(action "save"))}}
 
-<br/>
+<br>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 

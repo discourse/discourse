@@ -1,26 +1,27 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["group-membership-button"],
 
-  @computed("model.public_admission", "userIsGroupUser")
+  @discourseComputed("model.public_admission", "userIsGroupUser")
   canJoinGroup(publicAdmission, userIsGroupUser) {
     return publicAdmission && !userIsGroupUser;
   },
 
-  @computed("model.public_exit", "userIsGroupUser")
+  @discourseComputed("model.public_exit", "userIsGroupUser")
   canLeaveGroup(publicExit, userIsGroupUser) {
     return publicExit && userIsGroupUser;
   },
 
-  @computed("model.allow_membership_requests", "userIsGroupUser")
+  @discourseComputed("model.allow_membership_requests", "userIsGroupUser")
   canRequestMembership(allowMembershipRequests, userIsGroupUser) {
     return allowMembershipRequests && !userIsGroupUser;
   },
 
-  @computed("model.is_group_user")
+  @discourseComputed("model.is_group_user")
   userIsGroupUser(isGroupUser) {
     return !!isGroupUser;
   },
@@ -28,6 +29,14 @@ export default Ember.Component.extend({
   _showLoginModal() {
     this.showLogin();
     $.cookie("destination_url", window.location.href);
+  },
+
+  removeFromGroup() {
+    this.model
+      .removeMember(this.currentUser)
+      .then(() => this.model.set("is_group_user", false))
+      .catch(popupAjaxError)
+      .finally(() => this.set("updatingMembership", false));
   },
 
   actions: {
@@ -52,17 +61,21 @@ export default Ember.Component.extend({
 
     leaveGroup() {
       this.set("updatingMembership", true);
-      const model = this.model;
 
-      model
-        .removeMember(this.currentUser)
-        .then(() => {
-          model.set("is_group_user", false);
-        })
-        .catch(popupAjaxError)
-        .finally(() => {
-          this.set("updatingMembership", false);
-        });
+      if (this.model.public_admission) {
+        this.removeFromGroup();
+      } else {
+        return bootbox.confirm(
+          I18n.t("groups.confirm_leave"),
+          I18n.t("no_value"),
+          I18n.t("yes_value"),
+          result => {
+            result
+              ? this.removeFromGroup()
+              : this.set("updatingMembership", false);
+          }
+        );
+      }
     },
 
     showRequestMembershipForm() {

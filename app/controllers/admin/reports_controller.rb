@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'report'
-
 class Admin::ReportsController < Admin::AdminController
   def index
     reports_methods = ['page_view_total_reqs'] +
@@ -90,8 +88,12 @@ class Admin::ReportsController < Admin::AdminController
   private
 
   def parse_params(report_params)
-    start_date = (report_params[:start_date].present? ? Time.parse(report_params[:start_date]).to_date : 1.days.ago).beginning_of_day
-    end_date = (report_params[:end_date].present? ? Time.parse(report_params[:end_date]).to_date : start_date + 30.days).end_of_day
+    begin
+      start_date = (report_params[:start_date].present? ? Time.parse(report_params[:start_date]).to_date : 1.days.ago).beginning_of_day
+      end_date = (report_params[:end_date].present? ? Time.parse(report_params[:end_date]).to_date : start_date + 30.days).end_of_day
+    rescue ArgumentError => e
+      raise Discourse::InvalidParameters.new(e.message)
+    end
 
     facets = nil
     if Array === report_params[:facets]

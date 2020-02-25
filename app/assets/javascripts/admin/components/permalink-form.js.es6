@@ -1,14 +1,16 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import Permalink from "admin/models/permalink";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["permalink-form"],
   formSubmitted: false,
   permalinkType: "topic_id",
   permalinkTypePlaceholder: fmt("permalinkType", "admin.permalink.%@"),
 
-  @computed
+  @discourseComputed
   permalinkTypes() {
     return [
       { id: "topic_id", name: I18n.t("admin.permalink.topic_id") },
@@ -18,8 +20,23 @@ export default Ember.Component.extend({
     ];
   },
 
+  didInsertElement() {
+    this._super(...arguments);
+
+    schedule("afterRender", () => {
+      $(this.element.querySelector(".external-url")).keydown(e => {
+        // enter key
+        if (e.keyCode === 13) {
+          this.send("submit");
+        }
+      });
+    });
+  },
+
   focusPermalink() {
-    Ember.run.schedule("afterRender", () => this.$(".permalink-url").focus());
+    schedule("afterRender", () =>
+      this.element.querySelector(".permalink-url").focus()
+    );
   },
 
   actions: {
@@ -60,19 +77,10 @@ export default Ember.Component.extend({
             }
           );
       }
+    },
+
+    onChangePermalinkType(type) {
+      this.set("permalinkType", type);
     }
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    Ember.run.schedule("afterRender", () => {
-      this.$(".external-url").keydown(e => {
-        // enter key
-        if (e.keyCode === 13) {
-          this.send("submit");
-        }
-      });
-    });
   }
 });

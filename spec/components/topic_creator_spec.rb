@@ -36,6 +36,18 @@ describe TopicCreator do
         expect(TopicCreator.create(moderator, Guardian.new(moderator), valid_attrs)).to be_valid
       end
 
+      it "supports both meta_data and custom_fields" do
+        opts = valid_attrs.merge(
+          meta_data: { import_topic_id: "foo" },
+          custom_fields: { import_id: "bar" }
+        )
+
+        topic = TopicCreator.create(admin, Guardian.new(admin), opts)
+
+        expect(topic.custom_fields["import_topic_id"]).to eq("foo")
+        expect(topic.custom_fields["import_id"]).to eq("bar")
+      end
+
       context 'regular user' do
         before { SiteSetting.min_trust_to_create_topic = TrustLevel[0] }
 
@@ -124,6 +136,35 @@ describe TopicCreator do
           new_user = Fabricate(:newuser)
           topic = TopicCreator.create(new_user, Guardian.new(new_user), valid_attrs.merge(category: category.id))
           expect(topic).to be_valid
+        end
+      end
+
+      context 'required tag group' do
+        fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1]) }
+        fab!(:category) { Fabricate(:category, name: "beta", required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+        it "when no tags are not present" do
+          expect do
+            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id))
+          end.to raise_error(ActiveRecord::Rollback)
+        end
+
+        it "when tags are not part of the tag group" do
+          expect do
+            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id, tags: ['nope']))
+          end.to raise_error(ActiveRecord::Rollback)
+        end
+
+        it "when requirement is met" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id, tags: [tag1.name, tag2.name]))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(2)
+        end
+
+        it "lets staff ignore the restriction" do
+          topic = TopicCreator.create(user, Guardian.new(admin), valid_attrs.merge(category: category.id))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(0)
         end
       end
     end

@@ -5,11 +5,6 @@
 # Returns a TopicList object containing the topics found.
 #
 
-require_dependency 'topic_list'
-require_dependency 'suggested_topics_builder'
-require_dependency 'topic_query_sql'
-require_dependency 'avatar_lookup'
-
 class TopicQuery
   PG_MAX_INT ||= 2147483647
 
@@ -33,8 +28,7 @@ class TopicQuery
       {
         max_posts: zero_up_to_max_int,
         min_posts: zero_up_to_max_int,
-        page: zero_up_to_max_int,
-        exclude_category_ids: array_int_or_int
+        page: zero_up_to_max_int
       }
     end
   end
@@ -54,7 +48,6 @@ class TopicQuery
          before
          bumped_before
          topic_ids
-         exclude_category_ids
          category
          order
          ascending
@@ -344,16 +337,18 @@ class TopicQuery
 
   def list_private_messages_group(user)
     list = private_messages_for(user, :group)
-    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    group = Group.where('name ilike ?', @options[:group_name]).select(:id, :publish_read_state).first
+    publish_read_state = !!group&.publish_read_state
     list = list.joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
-                      gm.group_id = #{group_id.to_i}")
+                      gm.group_id = #{group&.id&.to_i}")
     list = list.where("gm.id IS NULL")
-    create_list(:private_messages, {}, list)
+    list = append_read_state(list, group) if publish_read_state
+    create_list(:private_messages, { publish_read_state: publish_read_state }, list)
   end
 
   def list_private_messages_group_archive(user)
     list = private_messages_for(user, :group)
-    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    group_id = Group.where('name ilike ?', @options[:group_name]).pluck_first(:id)
     list = list.joins("JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
                       gm.group_id = #{group_id.to_i}")
     create_list(:private_messages, {}, list)
@@ -520,6 +515,7 @@ class TopicQuery
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
+    result = remove_already_seen_for_category(result, @user)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:new, result, @user, options)
@@ -589,6 +585,11 @@ class TopicQuery
   end
 
   def apply_shared_drafts(result, category_id, options)
+
+    # PERF: avoid any penalty if there are no shared drafts enabled
+    # on some sites the cost can be high eg: gearbox
+    return result if SiteSetting.shared_drafts_category == ""
+
     drafts_category_id = SiteSetting.shared_drafts_category.to_i
     viewing_shared = category_id && category_id == drafts_category_id
     can_create_shared = guardian.can_create_shared_draft?
@@ -638,9 +639,16 @@ class TopicQuery
   end
 
   def get_category_id(category_id_or_slug)
-    return nil unless category_id_or_slug
+    return nil unless category_id_or_slug.present?
     category_id = category_id_or_slug.to_i
-    category_id = Category.where(slug: category_id_or_slug).pluck(:id).first if category_id == 0
+
+    if category_id == 0
+      category_id =
+        Category
+          .where(slug: category_id_or_slug, parent_category_id: nil)
+          .pluck_first(:id)
+    end
+
     category_id
   end
 
@@ -654,7 +662,7 @@ class TopicQuery
     options[:visible] = false if @user && @user.id == options[:filtered_to_user]
 
     # Start with a list of all topics
-    result = Topic.unscoped
+    result = Topic.unscoped.includes(:category)
 
     if @user
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
@@ -669,21 +677,24 @@ class TopicQuery
       else
         sql = <<~SQL
             categories.id IN (
-              SELECT c2.id FROM categories c2 WHERE c2.parent_category_id = :category_id
-              UNION ALL
-              SELECT :category_id
-            ) AND
-            topics.id NOT IN (
-              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id
+              WITH RECURSIVE subcategories AS (
+                SELECT :category_id id, 1 depth
+                UNION
+                SELECT categories.id, (subcategories.depth + 1) depth
+                FROM categories
+                JOIN subcategories ON subcategories.id = categories.parent_category_id
+                WHERE subcategories.depth < :max_category_nesting
             )
+              SELECT subcategories.id FROM subcategories
+            ) AND (categories.id = :category_id OR topics.id != categories.topic_id)
           SQL
-        result = result.where(sql, category_id: category_id)
+        result = result.where(sql, category_id: category_id, max_category_nesting: SiteSetting.max_category_nesting)
       end
       result = result.references(:categories)
 
       if !@options[:order]
         # category default sort order
-        sort_order, sort_ascending = Category.where(id: category_id).pluck(:sort_order, :sort_ascending).first
+        sort_order, sort_ascending = Category.where(id: category_id).pluck_first(:sort_order, :sort_ascending)
         if sort_order
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? 'true' : 'false'
@@ -691,18 +702,15 @@ class TopicQuery
       end
     end
 
-    # ALL TAGS: something like this?
-    # Topic.joins(:tags).where('tags.name in (?)', @options[:tags]).group('topic_id').having('count(*)=?', @options[:tags].size).select('topic_id')
-
     if SiteSetting.tagging_enabled
       result = result.preload(:tags)
 
-      tags = @options[:tags]
+      tags_arg = @options[:tags]
 
-      if tags && tags.size > 0
-        tags = tags.split if String === tags
+      if tags_arg && tags_arg.size > 0
+        tags_arg = tags_arg.split if String === tags_arg
 
-        tags = tags.map do |t|
+        tags_arg = tags_arg.map do |t|
           if String === t
             t.downcase
           else
@@ -710,12 +718,12 @@ class TopicQuery
           end
         end
 
+        tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
+        tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
+
         if @options[:match_all_tags]
           # ALL of the given tags:
-          tags_count = tags.length
-          tags = Tag.where_name(tags).pluck(:id) unless Integer === tags[0]
-
-          if tags_count == tags.length
+          if tags_arg.length == tags.length
             tags.each_with_index do |tag, index|
               sql_alias = ['t', index].join
               result = result.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
@@ -725,12 +733,7 @@ class TopicQuery
           end
         else
           # ANY of the given tags:
-          result = result.joins(:tags)
-          if Integer === tags[0]
-            result = result.where("tags.id in (?)", tags)
-          else
-            result = result.where("lower(tags.name) in (?)", tags)
-          end
+          result = result.joins(:tags).where("tags.id in (?)", tags)
         end
 
         # TODO: this is very side-effecty and should be changed
@@ -744,11 +747,7 @@ class TopicQuery
     end
 
     result = apply_ordering(result, options)
-    result = result.listable_topics.includes(:category)
-
-    if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
-      result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids].map(&:to_i)).references(:categories)
-    end
+    result = result.listable_topics
 
     # Don't include the category topics if excluded
     if options[:no_definitions]
@@ -856,28 +855,40 @@ class TopicQuery
 
     list
   end
+
   def remove_muted_categories(list, user, opts = nil)
     category_id = get_category_id(opts[:exclude]) if opts
 
     if user
-      list = list.references("cu")
-        .where("
-        NOT EXISTS (
-          SELECT 1
-            FROM category_users cu
-           WHERE cu.user_id = :user_id
-             AND cu.category_id = topics.category_id
-             AND cu.notification_level = :muted
-             AND cu.category_id <> :category_id
-             AND (tu.notification_level IS NULL OR tu.notification_level < :tracking)
-        )", user_id: user.id,
-            muted: CategoryUser.notification_levels[:muted],
-            tracking: TopicUser.notification_levels[:tracking],
-            category_id: category_id || -1)
+      list = list
+        .references("cu")
+        .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
+        .where("topics.category_id = :category_id
+                OR COALESCE(category_users.notification_level, :default) <> :muted
+                OR tu.notification_level > :regular",
+                category_id: category_id || -1,
+                default: CategoryUser.default_notification_level,
+                muted: CategoryUser.notification_levels[:muted],
+                regular: TopicUser.notification_levels[:regular])
+    elsif SiteSetting.mute_all_categories_by_default
+      category_ids = [
+        SiteSetting.default_categories_watching.split("|"),
+        SiteSetting.default_categories_tracking.split("|"),
+        SiteSetting.default_categories_watching_first_post.split("|")
+      ].flatten.map(&:to_i)
+      category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
+
+      list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
+    else
+      category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
+      category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
+
+      list = list.where("topics.category_id NOT IN (?)", category_ids) if category_ids.present?
     end
 
     list
   end
+
   def remove_muted_tags(list, user, opts = nil)
     if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
@@ -888,16 +899,9 @@ class TopicQuery
       return list
     end
 
-    showing_tag = if opts[:filter]
-      f = opts[:filter].split('/')
-      f[0] == 'tags' ? f[1] : nil
-    else
-      nil
-    end
-
     # if viewing the topic list for a muted tag, show all the topics
-    if showing_tag.present? && TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
-      return list
+    if !opts[:no_tags] && opts[:tags].present?
+      return list if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', opts[:tags].first).exists?
     end
 
     if SiteSetting.remove_muted_tags_from_latest == 'always'
@@ -916,6 +920,15 @@ class TopicQuery
              AND tt.topic_id = topics.id
         ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
     end
+  end
+
+  def remove_already_seen_for_category(list, user)
+    if user
+      list = list
+        .where("category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at")
+    end
+
+    list
   end
 
   def new_messages(params)
@@ -1056,5 +1069,17 @@ class TopicQuery
 
   def sanitize_sql_array(input)
     ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))
+  end
+
+  def append_read_state(list, group)
+    group_id = group&.id
+    return list if group_id.nil?
+
+    selected_values = list.select_values.empty? ? ['topics.*'] : list.select_values
+    selected_values << "COALESCE(tg.last_read_post_number, 0) AS last_read_post_number"
+
+    list
+      .joins("LEFT OUTER JOIN topic_groups tg ON topics.id = tg.topic_id AND tg.group_id = #{group_id}")
+      .select(*selected_values)
   end
 end

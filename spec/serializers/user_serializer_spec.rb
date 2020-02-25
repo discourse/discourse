@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'user'
 
 describe UserSerializer do
 
@@ -41,8 +40,9 @@ describe UserSerializer do
   end
 
   context "with a user" do
+    let(:scope) { Guardian.new }
     fab!(:user) { Fabricate(:user) }
-    let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
+    let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
     fab!(:upload) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
@@ -164,6 +164,68 @@ describe UserSerializer do
       it "has a cooked bio" do
         expect(json[:bio_cooked]).to eq 'my cooked bio'
       end
+    end
+
+    describe "second_factor_enabled" do
+      let(:scope) { Guardian.new(user) }
+      it "is false by default" do
+        expect(json[:second_factor_enabled]).to eq(false)
+      end
+
+      context "when totp enabled" do
+        before do
+          User.any_instance.stubs(:totp_enabled?).returns(true)
+        end
+
+        it "is true" do
+          expect(json[:second_factor_enabled]).to eq(true)
+        end
+      end
+
+      context "when security_keys enabled" do
+        before do
+          User.any_instance.stubs(:security_keys_enabled?).returns(true)
+        end
+
+        it "is true" do
+          expect(json[:second_factor_enabled]).to eq(true)
+        end
+      end
+    end
+
+    describe "ignored and muted" do
+      fab!(:viewing_user) { Fabricate(:user) }
+      let(:scope) { Guardian.new(viewing_user) }
+
+      it 'returns false values for muted and ignored' do
+        expect(json[:ignored]).to eq(false)
+        expect(json[:muted]).to eq(false)
+      end
+
+      context 'when ignored' do
+        before do
+          Fabricate(:ignored_user, user: viewing_user, ignored_user: user)
+          viewing_user.reload
+        end
+
+        it 'returns true for ignored' do
+          expect(json[:ignored]).to eq(true)
+          expect(json[:muted]).to eq(false)
+        end
+      end
+
+      context 'when muted' do
+        before do
+          Fabricate(:muted_user, user: viewing_user, muted_user: user)
+          viewing_user.reload
+        end
+
+        it 'returns true for muted' do
+          expect(json[:muted]).to eq(true)
+          expect(json[:ignored]).to eq(false)
+        end
+      end
+
     end
   end
 

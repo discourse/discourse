@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'active_record/connection_adapters/postgresql_fallback_adapter'
 
 describe ActiveRecord::ConnectionHandling do
   let(:replica_host) { "1.1.1.1" }

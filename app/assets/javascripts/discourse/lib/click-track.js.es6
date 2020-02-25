@@ -1,24 +1,20 @@
+import { later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { selectedText } from "discourse/lib/utilities";
+import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
+import User from "discourse/models/user";
 
 export function isValidLink($link) {
-  // Do not track:
-  //  - lightboxes
-  //  - links with disabled tracking
-  //  - category links
-  //  - quote back button
+  // .hashtag == category/tag link
+  // .back == quote back ^ button
   if ($link.is(".lightbox, .no-track-link, .hashtag, .back")) {
     return false;
   }
 
-  // Do not track links in quotes or in elided part
-  if ($link.parents("aside.quote, .elided").length !== 0) {
-    return false;
-  }
-
-  if ($link.parents(".expanded-embed").length !== 0) {
+  if ($link.parents("aside.quote, .elided, .expanded-embed").length !== 0) {
     return false;
   }
 
@@ -61,7 +57,7 @@ export default {
       // Warn the user if they cannot download the file.
       if (
         Discourse.SiteSettings.prevent_anons_from_downloading_files &&
-        !Discourse.User.current()
+        !User.current()
       ) {
         bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
       } else if (wantsNewWindow(e)) {
@@ -80,7 +76,7 @@ export default {
     const postId = $article.data("post-id");
     const topicId = $("#topic").data("topic-id") || $article.data("topic-id");
     const userId = $link.data("user-id") || $article.data("user-id");
-    const ownLink = userId && userId === Discourse.User.currentProp("id");
+    const ownLink = userId && userId === User.currentProp("id");
 
     // Update badge clicks unless it's our own.
     if (tracking && !ownLink) {
@@ -95,9 +91,9 @@ export default {
       }
     }
 
-    let trackPromise = Ember.RSVP.resolve();
+    let trackPromise = Promise.resolve();
     if (tracking) {
-      if (!Ember.testing && navigator.sendBeacon) {
+      if (ENV.environment !== "test" && navigator.sendBeacon) {
         const data = new FormData();
         data.append("url", href);
         data.append("post_id", postId);
@@ -116,9 +112,7 @@ export default {
     }
 
     const isInternal = DiscourseURL.isInternal(href);
-    const openExternalInNewTab = Discourse.User.currentProp(
-      "external_links_in_new_tab"
-    );
+    const openExternalInNewTab = User.currentProp("external_links_in_new_tab");
 
     if (!wantsNewWindow(e)) {
       if (!isInternal && openExternalInNewTab) {
@@ -134,7 +128,7 @@ export default {
           $link.attr("href", null);
           $link.data("auto-route", true);
 
-          Ember.run.later(() => {
+          later(() => {
             $link.removeClass("no-href");
             $link.attr("href", $link.data("href"));
             $link.data("href", null);

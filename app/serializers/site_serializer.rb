@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'discourse_tagging'
-require_dependency 'wizard'
-require_dependency 'wizard/builder'
-
 class SiteSerializer < ApplicationSerializer
 
   attributes(
@@ -19,7 +15,6 @@ class SiteSerializer < ApplicationSerializer
     :is_readonly,
     :disabled_plugins,
     :user_field_max_length,
-    :suppressed_from_latest_category_ids,
     :post_action_types,
     :topic_flag_types,
     :can_create_tag,
@@ -30,11 +25,11 @@ class SiteSerializer < ApplicationSerializer
     :wizard_required,
     :topic_featured_link_allowed_category_ids,
     :user_themes,
-    :censored_words,
+    :censored_regexp,
     :shared_drafts_category_id
   )
 
-  has_many :categories, serializer: BasicCategorySerializer, embed: :objects
+  has_many :categories, serializer: SiteCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
   has_many :user_fields, embed: :objects, serializer: UserFieldSerializer
@@ -59,17 +54,16 @@ class SiteSerializer < ApplicationSerializer
 
   def post_action_types
     cache_fragment("post_action_types_#{I18n.locale}") do
-      types = PostActionType.types.values.map { |id| PostActionType.new(id: id) }
+      types = ordered_flags(PostActionType.types.values)
       ActiveModel::ArraySerializer.new(types).as_json
     end
   end
 
   def topic_flag_types
     cache_fragment("post_action_flag_types_#{I18n.locale}") do
-      types = PostActionType.topic_flag_types.values.map { |id| PostActionType.new(id: id) }
+      types = ordered_flags(PostActionType.topic_flag_types.values)
       ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
     end
-
   end
 
   def default_archetype
@@ -156,8 +150,8 @@ class SiteSerializer < ApplicationSerializer
     scope.topic_featured_link_allowed_category_ids
   end
 
-  def censored_words
-    WordWatcher.words_for_action(:censor).join('|')
+  def censored_regexp
+    WordWatcher.word_matcher_regexp(:censor)&.source
   end
 
   def shared_drafts_category_id
@@ -168,4 +162,16 @@ class SiteSerializer < ApplicationSerializer
     scope.can_create_shared_draft?
   end
 
+  private
+
+  def ordered_flags(flags)
+    notify_moderators_type = PostActionType.flag_types[:notify_moderators]
+    types = flags
+
+    if notify_moderators_flag = types.index(notify_moderators_type)
+      types.insert(types.length, types.delete_at(notify_moderators_flag))
+    end
+
+    types.map { |id| PostActionType.new(id: id) }
+  end
 end

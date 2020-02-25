@@ -1,10 +1,6 @@
 # -*- encoding : utf-8 -*-
 # frozen_string_literal: true
 
-require_dependency 'email'
-require_dependency 'enum'
-require_dependency 'user_name_suggester'
-
 class Users::OmniauthCallbacksController < ApplicationController
 
   skip_before_action :redirect_to_login_if_required
@@ -17,6 +13,11 @@ class Users::OmniauthCallbacksController < ApplicationController
   # this is the only spot where we allow CSRF, our openid / oauth redirect
   # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_action :verify_authenticity_token, only: :complete
+
+  def confirm_request
+    self.class.find_authenticator(params[:provider])
+    render locals: { hide_auth_buttons: true }
+  end
 
   def complete
     auth = request.env["omniauth.auth"]
@@ -34,8 +35,8 @@ class Users::OmniauthCallbacksController < ApplicationController
       return redirect_to Discourse.base_uri("/associate/#{token}")
     else
       @auth_result = authenticator.after_authenticate(auth)
+      DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
-    DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
 
     preferred_origin = request.env['omniauth.origin']
 
@@ -52,7 +53,9 @@ class Users::OmniauthCallbacksController < ApplicationController
       rescue URI::Error
       end
 
-      if parsed && (parsed.host == nil || parsed.host == Discourse.current_hostname)
+      if parsed && # Valid
+         (parsed.host == nil || parsed.host == Discourse.current_hostname) && # Local
+         !parsed.path.starts_with?(Discourse.base_uri("/auth/")) # Not /auth URL
         @origin = +"#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end
@@ -66,27 +69,19 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if @auth_result.failed?
       flash[:error] = @auth_result.failed_reason.html_safe
-      return render('failure')
+      render('failure')
     else
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
-
-      if provider&.full_screen_login || cookies['fsl']
-        cookies.delete('fsl')
-        cookies['_bypass_cache'] = true
-        cookies[:authentication_data] = @auth_result.to_client_hash.to_json
-        redirect_to @origin
-      else
-        respond_to do |format|
-          format.html
-          format.json { render json: @auth_result.to_client_hash }
-        end
-      end
+      cookies['_bypass_cache'] = true
+      cookies[:authentication_data] = @auth_result.to_client_hash.to_json
+      redirect_to @origin
     end
   end
 
   def failure
-    flash[:error] = I18n.t("login.omniauth_error")
+    error_key = params[:message].to_s.gsub(/[^\w-]/, "") || "generic"
+    flash[:error] = I18n.t("login.omniauth_error.#{error_key}", default: I18n.t("login.omniauth_error.generic"))
     render 'failure'
   end
 
@@ -110,7 +105,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
-    if user.totp_enabled?
+    if user.has_any_second_factor_methods_enabled?
       @auth_result.omniauth_disallow_totp = true
       @auth_result.email = user.email
       return

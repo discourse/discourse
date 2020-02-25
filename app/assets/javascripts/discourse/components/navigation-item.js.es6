@@ -1,61 +1,69 @@
-import computed from "ember-addons/ember-computed-decorators";
-import { bufferedRender } from "discourse-common/lib/buffered-render";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Ember.Component.extend(
-  bufferedRender({
-    tagName: "li",
-    classNameBindings: [
-      "active",
-      "content.hasIcon:has-icon",
-      "content.classNames",
-      "hidden"
-    ],
-    attributeBindings: ["content.title:title"],
-    hidden: false,
-    rerenderTriggers: ["content.count"],
+export default Component.extend(FilterModeMixin, {
+  tagName: "li",
+  classNameBindings: [
+    "active",
+    "content.hasIcon:has-icon",
+    "content.classNames",
+    "isHidden:hidden"
+  ],
+  attributeBindings: ["content.title:title"],
+  hidden: false,
+  rerenderTriggers: ["content.count"],
+  activeClass: "",
+  hrefLink: null,
 
-    @computed("content.filterMode", "filterMode")
-    active(contentFilterMode, filterMode) {
-      return (
-        contentFilterMode === filterMode ||
-        filterMode.indexOf(contentFilterMode) === 0
-      );
-    },
-
-    buildBuffer(buffer) {
-      const content = this.content;
-
-      let href = content.get("href");
-
-      // Include the category id if the option is present
-      if (content.get("includeCategoryId")) {
-        let categoryId = this.get("category.id");
-        if (categoryId) {
-          href += `?category_id=${categoryId}`;
-        }
-      }
-
-      if (
-        !this.active &&
-        this.currentUser &&
-        this.currentUser.trust_level > 0 &&
-        (content.get("name") === "new" || content.get("name") === "unread") &&
-        content.get("count") < 1
-      ) {
-        this.set("hidden", true);
-      } else {
-        this.set("hidden", false);
-      }
-
-      buffer.push(
-        `<a href='${href}'` + (this.active ? 'class="active"' : "") + `>`
-      );
-
-      if (content.get("hasIcon")) {
-        buffer.push("<span class='" + content.get("name") + "'></span>");
-      }
-      buffer.push(this.get("content.displayName"));
-      buffer.push("</a>");
+  @discourseComputed("content.filterType", "filterType", "content.active")
+  active(contentFilterType, filterType, active) {
+    if (active !== undefined) {
+      return active;
     }
-  })
-);
+    return contentFilterType === filterType;
+  },
+
+  @discourseComputed("content.count")
+  isHidden(count) {
+    return (
+      !this.active &&
+      this.currentUser &&
+      this.currentUser.trust_level > 0 &&
+      (this.content.get("name") === "new" ||
+        this.content.get("name") === "unread") &&
+      count < 1
+    );
+  },
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+    const content = this.content;
+
+    let href = content.get("href");
+    let queryParams = [];
+
+    // Include the category id if the option is present
+    if (content.get("includeCategoryId")) {
+      let categoryId = this.get("content.category.id");
+      if (categoryId) {
+        queryParams.push(`category_id=${categoryId}`);
+      }
+    }
+
+    // ensures we keep discovery query params added through plugin api
+    if (content.persistedQueryParams) {
+      Object.keys(content.persistedQueryParams).forEach(key => {
+        const value = content.persistedQueryParams[key];
+        queryParams.push(`${key}=${value}`);
+      });
+    }
+
+    if (queryParams.length) {
+      href += `?${queryParams.join("&")}`;
+    }
+    this.set("hrefLink", href);
+
+    this.set("activeClass", this.active ? "active" : "");
+  }
+});

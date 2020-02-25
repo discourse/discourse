@@ -1,15 +1,22 @@
 import {
   WidgetClickHook,
+  WidgetDoubleClickHook,
   WidgetClickOutsideHook,
   WidgetKeyUpHook,
   WidgetKeyDownHook,
   WidgetMouseDownOutsideHook,
-  WidgetDragHook
+  WidgetDragHook,
+  WidgetInputHook,
+  WidgetChangeHook,
+  WidgetMouseUpHook,
+  WidgetMouseDownHook,
+  WidgetMouseMoveHook
 } from "discourse/widgets/hooks";
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
-
-function emptyContent() {}
+import { Promise } from "rsvp";
+import ENV from "discourse-common/config/environment";
+import { get } from "@ember/object";
 
 const _registry = {};
 
@@ -45,90 +52,14 @@ export function changeSetting(widgetName, settingName, newValue) {
   _customSettings[widgetName][settingName] = newValue;
 }
 
-function drawWidget(builder, attrs, state) {
-  const properties = {};
-
-  if (this.buildClasses) {
-    let classes = this.buildClasses(attrs, state) || [];
-    if (!Array.isArray(classes)) {
-      classes = [classes];
-    }
-
-    const customClasses = applyDecorators(this, "classNames", attrs, state);
-    if (customClasses && customClasses.length) {
-      classes = classes.concat(customClasses);
-    }
-
-    if (classes.length) {
-      properties.className = classes.join(" ");
-    }
-  }
-  if (this.buildId) {
-    properties.id = this.buildId(attrs);
-  }
-
-  if (this.buildAttributes) {
-    properties.attributes = this.buildAttributes(attrs);
-  }
-
-  if (this.keyUp) {
-    properties["widget-key-up"] = new WidgetKeyUpHook(this);
-  }
-
-  if (this.keyDown) {
-    properties["widget-key-down"] = new WidgetKeyDownHook(this);
-  }
-
-  if (this.clickOutside) {
-    properties["widget-click-outside"] = new WidgetClickOutsideHook(this);
-  }
-  if (this.click) {
-    properties["widget-click"] = new WidgetClickHook(this);
-  }
-
-  if (this.mouseDownOutside) {
-    properties["widget-mouse-down-outside"] = new WidgetMouseDownOutsideHook(
-      this
-    );
-  }
-
-  if (this.drag) {
-    properties["widget-drag"] = new WidgetDragHook(this);
-  }
-
-  const attributes = properties["attributes"] || {};
-  properties.attributes = attributes;
-
-  if (this.title) {
-    if (typeof this.title === "function") {
-      attributes.title = this.title(attrs, state);
-    } else {
-      attributes.title = I18n.t(this.title);
-    }
-  }
-
-  this.transformed = this.transform(this.attrs, this.state);
-
-  let contents = this.html(attrs, state);
-  if (this.name) {
-    const beforeContents = applyDecorators(this, "before", attrs, state) || [];
-    const afterContents = applyDecorators(this, "after", attrs, state) || [];
-    contents = beforeContents.concat(contents).concat(afterContents);
-  }
-
-  return h(this.tagName || "div", properties, contents);
-}
-
-export function createWidget(name, opts) {
-  const result = class CustomWidget extends Widget {};
+export function createWidgetFrom(base, name, opts) {
+  const result = class CustomWidget extends base {};
 
   if (name) {
     _registry[name] = result;
   }
 
   opts.name = name;
-  opts.html = opts.html || emptyContent;
-  opts.draw = drawWidget;
 
   if (opts.template) {
     opts.html = opts.template;
@@ -136,6 +67,10 @@ export function createWidget(name, opts) {
 
   Object.keys(opts).forEach(k => (result.prototype[k] = opts[k]));
   return result;
+}
+
+export function createWidget(name, opts) {
+  return createWidgetFrom(Widget, name, opts);
 }
 
 export function reopenWidget(name, opts) {
@@ -153,7 +88,7 @@ export function reopenWidget(name, opts) {
   Object.keys(opts).forEach(k => {
     let old = existing.prototype[k];
 
-    if (old) {
+    if (old instanceof Function) {
       // Add support for `this._super()` to reopened widgets if the prototype exists in the
       // base object
       existing.prototype[k] = function(...args) {
@@ -185,11 +120,13 @@ export default class Widget {
     this.currentUser = register.lookup("current-user:main");
     this.capabilities = register.lookup("capabilities:main");
     this.store = register.lookup("service:store");
-    this.appEvents = register.lookup("app-events:main");
+    this.appEvents = register.lookup("service:app-events");
     this.keyValueStore = register.lookup("key-value-store:main");
 
+    this.init(this.attrs);
+
     // Helps debug widgets
-    if (Discourse.Environment === "development" || Ember.testing) {
+    if (Discourse.Environment === "development" || ENV.environment === "test") {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
         throw new Error(`defaultState must return an object`);
@@ -214,7 +151,13 @@ export default class Widget {
     return {};
   }
 
+  init() {}
+
   destroy() {}
+
+  get(propertyPath) {
+    return get(this, propertyPath);
+  }
 
   render(prev) {
     const { dirtyKeys } = this;
@@ -270,19 +213,31 @@ export default class Widget {
     }
   }
 
-  attach(widgetName, attrs, opts) {
+  lookupWidgetClass(widgetName) {
     let WidgetClass = _registry[widgetName];
+    if (WidgetClass) {
+      return WidgetClass;
+    }
 
-    if (!WidgetClass) {
-      if (!this.register) {
-        // eslint-disable-next-line no-console
-        console.error("couldn't find register");
-        return;
-      }
-      WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
-      if (WidgetClass && WidgetClass.class) {
-        WidgetClass = WidgetClass.class;
-      }
+    if (!this.register) {
+      // eslint-disable-next-line no-console
+      console.error("couldn't find register");
+      return null;
+    }
+
+    WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
+    if (WidgetClass && WidgetClass.class) {
+      return WidgetClass.class;
+    }
+
+    return null;
+  }
+
+  attach(widgetName, attrs, opts, otherOpts = {}) {
+    let WidgetClass = this.lookupWidgetClass(widgetName);
+
+    if (!WidgetClass && otherOpts.fallbackWidgetName) {
+      WidgetClass = this.lookupWidgetClass(otherOpts.fallbackWidgetName);
     }
 
     if (WidgetClass) {
@@ -291,7 +246,9 @@ export default class Widget {
       result.dirtyKeys = this.dirtyKeys;
       return result;
     } else {
-      throw new Error(`Couldn't find ${widgetName} factory`);
+      throw new Error(
+        `Couldn't find ${widgetName} or fallback ${otherOpts.fallbackWidgetName}`
+      );
     }
   }
 
@@ -325,12 +282,12 @@ export default class Widget {
 
       if (typeof method === "string") {
         view[method](param);
-        promise = Ember.RSVP.resolve();
+        promise = Promise.resolve();
       } else {
         const target = view.get("target") || view;
         promise = method.call(target, param);
         if (!promise || !promise.then) {
-          promise = Ember.RSVP.resolve(promise);
+          promise = Promise.resolve(promise);
         }
       }
     }
@@ -374,6 +331,106 @@ export default class Widget {
 
       return this._sendComponentAction(name, param || this.findAncestorModel());
     });
+  }
+
+  html() {}
+
+  draw(builder, attrs, state) {
+    const properties = {};
+
+    if (this.buildClasses) {
+      let classes = this.buildClasses(attrs, state) || [];
+      if (!Array.isArray(classes)) {
+        classes = [classes];
+      }
+
+      const customClasses = applyDecorators(this, "classNames", attrs, state);
+      if (customClasses && customClasses.length) {
+        classes = classes.concat(customClasses);
+      }
+
+      if (classes.length) {
+        properties.className = classes.join(" ");
+      }
+    }
+    if (this.buildId) {
+      properties.id = this.buildId(attrs);
+    }
+
+    if (this.buildAttributes) {
+      properties.attributes = this.buildAttributes(attrs);
+    }
+
+    if (this.keyUp) {
+      properties["widget-key-up"] = new WidgetKeyUpHook(this);
+    }
+
+    if (this.keyDown) {
+      properties["widget-key-down"] = new WidgetKeyDownHook(this);
+    }
+
+    if (this.clickOutside) {
+      properties["widget-click-outside"] = new WidgetClickOutsideHook(this);
+    }
+    if (this.click) {
+      properties["widget-click"] = new WidgetClickHook(this);
+    }
+    if (this.doubleClick) {
+      properties["widget-double-click"] = new WidgetDoubleClickHook(this);
+    }
+
+    if (this.mouseDownOutside) {
+      properties["widget-mouse-down-outside"] = new WidgetMouseDownOutsideHook(
+        this
+      );
+    }
+
+    if (this.drag) {
+      properties["widget-drag"] = new WidgetDragHook(this);
+    }
+
+    if (this.input) {
+      properties["widget-input"] = new WidgetInputHook(this);
+    }
+
+    if (this.change) {
+      properties["widget-change"] = new WidgetChangeHook(this);
+    }
+
+    if (this.mouseDown) {
+      properties["widget-mouse-down"] = new WidgetMouseDownHook(this);
+    }
+
+    if (this.mouseUp) {
+      properties["widget-mouse-up"] = new WidgetMouseUpHook(this);
+    }
+
+    if (this.mouseMove) {
+      properties["widget-mouse-move"] = new WidgetMouseMoveHook(this);
+    }
+
+    const attributes = properties["attributes"] || {};
+    properties.attributes = attributes;
+
+    if (this.title) {
+      if (typeof this.title === "function") {
+        attributes.title = this.title(attrs, state);
+      } else {
+        attributes.title = I18n.t(this.title);
+      }
+    }
+
+    this.transformed = this.transform(this.attrs, this.state);
+
+    let contents = this.html(attrs, state);
+    if (this.name) {
+      const beforeContents =
+        applyDecorators(this, "before", attrs, state) || [];
+      const afterContents = applyDecorators(this, "after", attrs, state) || [];
+      contents = beforeContents.concat(contents).concat(afterContents);
+    }
+
+    return h(this.tagName || "div", properties, contents);
   }
 }
 

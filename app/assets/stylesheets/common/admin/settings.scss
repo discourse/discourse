@@ -71,7 +71,7 @@
         position: relative;
         line-height: $line-height-small;
         cursor: default;
-        border: 1px dashed #aaa;
+        border: 1px dashed $primary-low-mid;
         border-radius: 3px;
         background-clip: padding-box;
         -moz-user-select: none;
@@ -90,7 +90,7 @@
       color: $danger;
     }
     .desc {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-medium;
     }
     h3 {
       font-size: $font-0;

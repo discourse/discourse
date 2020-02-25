@@ -2,7 +2,7 @@
 <html<%= raw @embeddable_css_class -%>>
   <head>
     <meta charset="utf-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <%= discourse_stylesheet_link_tag 'embed', theme_ids: nil %>
     <%- unless customization_disabled? %>
       <%= discourse_stylesheet_link_tag  :embedded_theme %>
@@ -13,7 +13,7 @@
       <title><%= @topic_view.page_title %> - <%= SiteSetting.title %></title>
     <%- end %>
 
-    <meta id="data-embedded" data-referer="<%= request.referer %>">
+    <meta id="data-embedded" data-referer="<%= @data_referer %>">
     <%= preload_script 'embed-application' %>
 
     <%= yield :head %>

@@ -14,7 +14,7 @@ sk:
     formats:
       short: "%Y-%m-%d"
       short_no_year: "%B %-d"
-      date_only: "%Y,  %B %-d"
+      date_only: "%Y, %B %-d"
   date:
     month_names: [~, Január, Február, Marec, Apríl, Máj, Jún, Júl, August, September, Október, November, December]
     <<: *datetime_formats
@@ -27,6 +27,7 @@ sk:
   posts: "príspevky"
   loading: "Načítava sa"
   powered_by_html: 'Beží na <a href="https://www.discourse.org">Discourse</a>, najlepšie so zapnutým JavaScriptom'
+  sign_up: "Registrovať sa"
   log_in: "Prihlásenie"
   submit: "odošli"
   purge_reason: "Automaticky zmazaný ako opustený, dezaktivovaný účet"
@@ -106,10 +107,10 @@ sk:
     template:
       body: "Nastal problém s nasledujúcimi položkami:"
       header:
-        one: "Uloženie  %{model} zlyhalo kôli chybe"
-        few: "Uloženie  %{model} zlyhalo kôli %{count} chybám"
-        many: "Uloženie  %{model} zlyhalo kôli %{count} chybám "
-        other: "Uloženie  %{model} zlyhalo kôli %{count} chybám "
+        one: "Uloženie %{model} zlyhalo kôli chybe"
+        few: "Uloženie %{model} zlyhalo kôli %{count} chybám"
+        many: "Uloženie %{model} zlyhalo kôli %{count} chybám "
+        other: "Uloženie %{model} zlyhalo kôli %{count} chybám "
     embed:
       load_from_remote: "Nastala chyba pri načítaní príspevku"
     site_settings:
@@ -118,8 +119,6 @@ sk:
   activemodel:
     errors:
       <<: *errors
-  invite:
-    not_found: "Tvoj pozívací token je nesprávny. Prosím, kontaktujte administrátora stránky."
   bulk_invite:
     file_should_be_csv: "Nahrávaný súbor by mal byť typu CSV."
     error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
@@ -131,6 +130,8 @@ sk:
   not_found: "Požadovaná URL alebo zdroj sa nenašiel"
   invalid_access: "Nemáte oprávnenie na zobrazenie požadovaných údajov!"
   read_only_mode_enabled: "Táto stránka je v móde na čítanie. Zapisovanie je vypnuté"
+  not_in_group:
+    join_group: "Pridať sa do skupiny"
   reading_time: "Doba čítania"
   likes: "Páči sa mi"
   too_many_replies:
@@ -150,6 +151,7 @@ sk:
     permalink: "Trvalý odkaz"
     imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Vytvorené"
   no_mentions_allowed: "Ľutujeme, nesmiete zmieňovať iných používateľov"
   too_many_mentions:
     one: "Ľutujeme, v príspevku môžete zmieniť maximálne jedného používateľa."
@@ -166,15 +168,15 @@ sk:
   no_images_allowed: "Ľutujeme, noví používatelia nemôžu vkladať obrázky do príspevkov."
   too_many_images:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden obrázok do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázky do príspevku."
-    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázkov do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázkov do príspevku."
+    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázky do príspevku."
+    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázkov do príspevku."
+    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázkov do príspevku."
   no_attachments_allowed: "Ľutujeme, noví používatelia nemôžu vkladať prílohy do príspevkov."
   too_many_attachments:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  prílohy do príspevku."
-    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  príloh do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  príloh do príspevku."
+    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} prílohy do príspevku."
+    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} príloh do príspevku."
+    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} príloh do príspevku."
   no_links_allowed: "Ľutujeme, noví používatelia nemôžu vkladať odkazy do príspevkov."
   too_many_links:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden odkaz do príspevku."
@@ -342,7 +344,7 @@ sk:
       title: "bežný"
     leader:
       title: "vodca"
-    change_failed_explanation: "Pokúsili  ste sa znížiť úroveň %{user_name} na '%{new_trust_level}'. Ale jeho/jej aktuálna úroveň už je '%{current_trust_level}'. %{user_name} zostane na úrovni '%{current_trust_level}' - Ak chcete znížiť úroveň používateľa, najskôr uzamknite úroveň"
+    change_failed_explanation: "Pokúsili ste sa znížiť úroveň %{user_name} na '%{new_trust_level}'. Ale jeho/jej aktuálna úroveň už je '%{current_trust_level}'. %{user_name} zostane na úrovni '%{current_trust_level}' - Ak chcete znížiť úroveň používateľa, najskôr uzamknite úroveň"
   post:
     image_placeholder:
       broken: "Tento obrázok je poškodený"
@@ -493,7 +495,7 @@ sk:
     please_continue: "Váš nový účet je potvrdený. Budete presmerovaní na domovskú stránku."
     continue_button: "Pokračujte na %{site_name}"
     welcome_to: "Vitajte na %{site_name}!"
-    approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum.  O schválení prístupu budete upovedomení emailom."
+    approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum. O schválení prístupu budete upovedomení emailom."
     admin_confirm:
       title: "Potvrď admin účet"
       back_to: "Vráť sa na %{title}"
@@ -508,7 +510,7 @@ sk:
     spam:
       title: "Spam"
       long_form: "označiť toto ako spam"
-      email_title: '"%{title}"  bol označený ako spam'
+      email_title: '"%{title}" bol označený ako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
@@ -531,8 +533,8 @@ sk:
       long_form: "záložka na tento príspevok bola vytvorená "
     like:
       title: "Páči sa mi"
-      description: "Páči sa  mi tento príspevok"
-      short_description: "Páči sa  mi tento príspevok"
+      description: "Páči sa mi tento príspevok"
+      short_description: "Páči sa mi tento príspevok"
       long_form: "páčilo sa"
   user_activity:
     no_default:
@@ -590,6 +592,7 @@ sk:
         day: Deň
     post_edits:
       labels:
+        edited_at: Dátum
         post: Príspevok
         editor: Editor
         edit_reason: Dôvod
@@ -611,6 +614,8 @@ sk:
       xaxis: "Deň"
     new_contributors:
       xaxis: "Deň"
+    trust_level_growth:
+      yaxis: "Deň"
     consolidated_page_views:
       yaxis: "Deň"
       labels:
@@ -816,7 +821,7 @@ sk:
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
     enable_long_polling: "Zbernica správ pre upozornenia môže používať techniku long-polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
-    long_polling_interval: "Ako dlho má server čakať pred odpovedaním klientom ak nie sú na zaslanie žiadne dáta  (iba pre prihlásených používateľov)"
+    long_polling_interval: "Ako dlho má server čakať pred odpovedaním klientom ak nie sú na zaslanie žiadne dáta (iba pre prihlásených používateľov)"
     polling_interval: "Ak sa nepoužíva technika long-polling, ako často majú byť klienti dotazovaný v milisekundách"
     anon_polling_interval: "Ako často majú byť dotazovaný anonymný klienti v milisekundách"
     background_polling_interval: "Ako často majú byť dotazovaný klienti v milisekundách (ak je okno v pozadí)"
@@ -846,7 +851,6 @@ sk:
     top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoliť systém odznakov"
-    allow_index_in_robots_txt: "V súbore robots.txt nastaviť, že tieto stránky je povolené indexovať vyhľadávačmi."
     email_domains_blacklist: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
     email_domains_whitelist: "Zoznam emailových domén oddelených zvislým oddelovačom \"|\", s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
     log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
@@ -914,8 +918,8 @@ sk:
     tl2_requires_likes_received: "Koľko \"Páči sa\" musí nový používateľ dostať pred povýšením na stupeň dôvery 2."
     tl2_requires_likes_given: "Koľko \"Páči sa\" musí nový používateľ rozdať pred povýšením na stupeň dôvery 2."
     tl2_requires_topic_reply_count: "Na koľko tém musí nový používateľ odpovedať pred povýšením na stupeň dôvery 2."
-    tl3_requires_topics_viewed_all_time: "Minimálny počet všetkých tém,  ktoré musí mať používateľ zhliadnuté pre kvalifikáciu na dosiahnute stupňa dôvery 3."
-    tl3_requires_posts_read_all_time: "Minimálny počet všetkých príspevkov,  ktoré musí mať používateľ prečítané pre kvalifikáciu na stupeň dôvery 3."
+    tl3_requires_topics_viewed_all_time: "Minimálny počet všetkých tém, ktoré musí mať používateľ zhliadnuté pre kvalifikáciu na dosiahnute stupňa dôvery 3."
+    tl3_requires_posts_read_all_time: "Minimálny počet všetkých príspevkov, ktoré musí mať používateľ prečítané pre kvalifikáciu na stupeň dôvery 3."
     tl3_promotion_min_duration: "MInimálny počet dní po pridelení stupňa dôvery 3 kým môže byť používateľ degradovaný späť na stupeň dôvery 2."
     tl3_links_no_follow: "Neodstraňujte rel=nofollow z odkazov pridaných používateľmi so stupňom dôvery 3."
     min_trust_to_create_topic: "MInimálna úroveň dôvery na vytvorenie novej témy."
@@ -925,7 +929,7 @@ sk:
     newuser_max_images: "Koľko obrázkov môže nový používateľ pridať do príspevku."
     newuser_max_attachments: "Koľko príloh môže nový používateľ pridať do príspevku."
     newuser_max_mentions_per_post: "Maximálny počet notifikácií typu @meno môže nový užívateľ použiť v príspevku."
-    newuser_max_replies_per_topic: "Maximálny počet odpovedí ktoré môže nový používateľ pridať  do jednej témy pokiaľ na ne niekto neodpovie."
+    newuser_max_replies_per_topic: "Maximálny počet odpovedí ktoré môže nový používateľ pridať do jednej témy pokiaľ na ne niekto neodpovie."
     max_mentions_per_post: "Maximálný počet notifikácií typu @meno, ktoré môže ktokoľvek použiť v rámci jedného príspevku."
     max_users_notified_per_group_mention: "Maximálny počet používateľov, ktorý môže dostať upozornenie ak je zmienená skupina (ak je dosiahnutá hranica, žiadne upozornenie nebude poslané)"
     create_thumbnails: "Vytvor náhľad a okraje pre obrázoky, ktoré sú príliš veľké aby sa zmestili do príspevku."
@@ -943,7 +947,7 @@ sk:
     max_attachment_size_kb: "Mmaximálna veľkosť vloženej prílohy v kB. Rovnako musí byť nastavená v nginx (client_max_body_size) / apache alebo na proxy."
     authorized_extensions: "Zoznam povolených príloh súborov ktoré je umožnené vkladať (použite '*' na vkladanie súborov všetkých typov)"
     max_similar_results: "Koľko podobných tém sa má zobraziť nad editorom ak vytvára novú tému. Porovnanie je založené na nadpise a tele správy."
-    title_prettify: "Predchádzať bežným malým preklepom a chybám, zapnutým kapitálkam, malému prvému znaku, duplikácií  ! a ?, extra . na konci a podobne."
+    title_prettify: "Predchádzať bežným malým preklepom a chybám, zapnutým kapitálkam, malému prvému znaku, duplikácií ! a ?, extra . na konci a podobne."
     topic_views_heat_low: "Počet zobrazení aby bolo pole zobrazení jemne zvýraznené."
     topic_views_heat_medium: "Počet zobrazení aby bolo pole zobrazení stredne zvýraznené."
     topic_views_heat_high: "Počet zobrazení aby bolo pole zobrazení výrazne zvýraznené."
@@ -1011,7 +1015,7 @@ sk:
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
     disable_avatar_education_message: "Vypnúť informatívnu hlášku na zmenu avatara."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
-    disable_edit_notifications: "Ak je premenná 'download_remote_images_to_local' aktívna, vypnúť notifikácie o úpravách systémového používateľa."
+    disable_system_edit_notifications: "Ak je premenná 'download_remote_images_to_local' aktívna, vypnúť notifikácie o úpravách systémového používateľa."
     automatically_unpin_topics: "Automaticky odopnúť témy ak používateľ dostanie posledný príspevok."
     read_time_word_count: "Počet slov za minútu určený na výpočet odkazovaného času čítania."
     full_name_required: "Na používateľskom profile je vyžadované plné meno."
@@ -1026,7 +1030,7 @@ sk:
     embed_post_limit: "Maximálny počet príspevkov na vloženie."
     embed_username_required: "Na vytvorenie téme je vyžadované používateľské meno."
     show_create_topics_notice: "Zobraz výzvu žiadajúcu administrátorov o vytvorenie nejakých tém, ak majú stránky menej ako 5 verejných tém."
-    delete_drafts_older_than_n_days: Vymazať návrhy staršie ako (n) dní.
+    delete_drafts_older_than_n_days: "Vymazať návrhy staršie ako (n) dní."
     prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom sťahovať prílohy. VAROVANIE: toto nastavenie zneprístupní akékoľvek neobrázkové súbory na stánkach uložené ako prílohy."
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
     enable_emoji: "Zapnúť emoji"
@@ -1060,7 +1064,7 @@ sk:
       invalid_string_min_max: "Musí byť medzi %{min} a %{max} znakmi."
       invalid_string_min: "Musí byť minimálne %{min} znakov."
       invalid_string_max: "Nesmie byť viac ako %{max} znakov."
-      invalid_reply_by_email_address: "Hodnota musí obsahovať '%%{reply_key}' a byť odlišná od notifikačného emailu."
+      invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
       pop3_polling_password_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 heslo'."
@@ -1132,12 +1136,12 @@ sk:
     not_allowed_from_ip_address: "Nie je možné prihlásenie ako %{username} z tejto IP adresy."
     admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
     suspended: "Nemôžete sa prihlásiť do %{date}."
-    suspended_with_reason: "Tento  účet je suspendovaný do %{date}: %{reason}"
+    suspended_with_reason: "Tento účet je suspendovaný do %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
     something_already_taken: "Niečo sa pokazilo, možno je tento užívateľ, alebo e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
-    omniauth_error: "Ľutujeme, nastala chyba pri autorizácii Vášho účtu. Povolili ste autorizáciu?"
     omniauth_error_unknown: "Niečo sa pokazilo počas prihlasovania, prosím skúste sa prihlásiť znova."
+    omniauth_confirm_button: "Pokračovať"
     new_registrations_disabled: "Registrácia nových účtov momentálne nie je povolená."
     password_too_long: "Dĺžka hesla je obmedzená na 200 znakov. "
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
@@ -1163,9 +1167,9 @@ sk:
       blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
       max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
   unsubscribe_mailer:
-    subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
+    subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z %{site_title}"
   invite_password_instructions:
-    subject_template: "Nastavte heslo pre účet na  %{site_name}"
+    subject_template: "Nastavte heslo pre účet na %{site_name}"
   flag_reasons:
     off_topic: "Váš príspevok bol označený ako \"mimo-témy\": komunita cíti, že nie je vhodný do témy tak, ako je definovaná nadpisom a prvým príspevkom"
     inappropriate: "Váš príspevok bol označený ako **nevhodný**: komunita cíti, že je úrážlivý, nemiestny alebo porušuje [naše pravidlá komunity](%{base_path}/guidelines)."
@@ -1260,7 +1264,7 @@ sk:
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
-      why: "Krátky súhrn zo stránky  %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
+      why: "Krátky súhrn zo stránky %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
       since_last_visit: "Od Vašej poslednej návštevy"
       liked_received: "Obdržaných 'páči sa mi'"
       new_users: "Noví používatelia"
@@ -1281,7 +1285,7 @@ sk:
   image: "Obrázok"
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"
-    unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu  (povolené prípony sú: %{authorized_extensions})."
+    unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu (povolené prípony sú: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázok"
     store_failure: "Zlyhalo uloženie #%{upload_id} pre užívateľa #%{user_id}."
     file_missing: "Ľutujeme, ale musíte poskytnúť súbor na nahranie."
@@ -1313,6 +1317,7 @@ sk:
   csv_export:
     boolean_yes: "Áno"
     boolean_no: "Nie"
+    rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skús opäť zajtra prosím."
   static_topic_first_reply: |2
 
     Upravte prvý príspevok v téme pre zmenu obsahu %{page_name} stránky.
@@ -1471,7 +1476,7 @@ sk:
       name: Prvé "Páči sa mi"
       description: "Príspevok, ktorý sa páčil"
       long_description: |
-        Tento odznak je udelený za prvé udelené "Páči sa" použitím :heart:  talčidla. Označenie príspevku "Páči sa" je najlepšia cesta ako ukázať členom komunity, že ich príspevky sú zaujímavé, užitočné, výnimočné, alebo zábavné. Podeľte sa o to!
+        Tento odznak je udelený za prvé udelené "Páči sa" použitím :heart: talčidla. Označenie príspevku "Páči sa" je najlepšia cesta ako ukázať členom komunity, že ich príspevky sú zaujímavé, užitočné, výnimočné, alebo zábavné. Podeľte sa o to!
     first_flag:
       name: Prvé označenie
       description: Označený príspevok

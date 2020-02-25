@@ -1,31 +1,37 @@
+import { alias, not } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Controller.extend({
-  discoveryTopics: Ember.inject.controller("discovery/topics"),
-  navigationCategory: Ember.inject.controller("navigation/category"),
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  discoveryTopics: inject("discovery/topics"),
+  navigationCategory: inject("navigation/category"),
+  application: inject(),
 
   loading: false,
 
-  category: Ember.computed.alias("navigationCategory.category"),
-  noSubcategories: Ember.computed.alias("navigationCategory.noSubcategories"),
+  category: alias("navigationCategory.category"),
+  noSubcategories: alias("navigationCategory.noSubcategories"),
 
-  loadedAllItems: Ember.computed.not("discoveryTopics.model.canLoadMore"),
+  loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
+  @observes("loadedAllItems")
   _showFooter: function() {
     this.set("application.showFooter", this.loadedAllItems);
-  }.observes("loadedAllItems"),
+  },
 
   showMoreUrl(period) {
     let url = "",
       category = this.category;
+
     if (category) {
-      url =
-        "/c/" +
-        Discourse.Category.slugFor(category) +
-        (this.noSubcategories ? "/none" : "") +
-        "/l";
+      url = `/c/${Category.slugFor(category)}/${category.id}${
+        this.noSubcategories ? "/none" : ""
+      }/l`;
     }
+
     url += "/top/" + period;
     return url;
   },

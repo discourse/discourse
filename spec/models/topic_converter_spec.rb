@@ -90,6 +90,18 @@ describe TopicConverter do
           expect(other_user.user_actions.where(action_type: UserAction::REPLY).count).to eq(1)
         end
       end
+
+      it "deletes notifications for users not allowed to see the topic" do
+        staff_category = Fabricate(:private_category, group: Group[:staff])
+        user_notification = Fabricate(:mentioned_notification, post: first_post, user: Fabricate(:user))
+        admin_notification = Fabricate(:mentioned_notification, post: first_post, user: Fabricate(:admin))
+
+        Jobs.run_immediately!
+        TopicConverter.new(first_post.topic, admin).convert_to_public_topic(staff_category.id)
+
+        expect(Notification.exists?(user_notification.id)).to eq(false)
+        expect(Notification.exists?(admin_notification.id)).to eq(true)
+      end
     end
   end
 
@@ -102,7 +114,7 @@ describe TopicConverter do
 
     context 'success' do
       it "converts regular topic to private message" do
-        private_message = topic.convert_to_private_message(admin)
+        private_message = topic.convert_to_private_message(post.user)
         expect(private_message).to be_valid
         expect(topic.archetype).to eq("private_message")
         expect(topic.category_id).to eq(nil)
@@ -128,6 +140,17 @@ describe TopicConverter do
         topic.convert_to_private_message(admin)
         expect(author.user_actions.where(action_type: UserAction::NEW_TOPIC).count).to eq(0)
         expect(author.user_actions.where(action_type: UserAction::NEW_PRIVATE_MESSAGE).count).to eq(1)
+      end
+
+      it "deletes notifications for users not allowed to see the message" do
+        user_notification = Fabricate(:mentioned_notification, post: post, user: Fabricate(:user))
+        admin_notification = Fabricate(:mentioned_notification, post: post, user: Fabricate(:admin))
+
+        Jobs.run_immediately!
+        topic.convert_to_private_message(admin)
+
+        expect(Notification.exists?(user_notification.id)).to eq(false)
+        expect(Notification.exists?(admin_notification.id)).to eq(true)
       end
     end
 
@@ -157,5 +180,15 @@ describe TopicConverter do
         expect(topic.reload.archetype).to eq("private_message")
       end
     end
+
+    context 'user_profiles with newly converted PM as featured topic' do
+      it "sets all matching user_profile featured topic ids to nil" do
+        author.user_profile.update(featured_topic: topic)
+        topic.convert_to_private_message(admin)
+
+        expect(author.user_profile.reload.featured_topic).to eq(nil)
+      end
+    end
+
   end
 end

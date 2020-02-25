@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'staff_message_format'
-
 class UserSilencer
 
   attr_reader :user_history
@@ -61,7 +59,7 @@ class UserSilencer
           silenced_till: @user.silenced_till,
           silenced_at: DateTime.now
         )
-        return true
+        true
       end
     else
       false

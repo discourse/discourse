@@ -9,7 +9,9 @@
             label="admin.user.suspend_duration"
             includeFarFuture=true
             clearable=false
-            input=suspendUntil}}
+            input=suspendUntil
+            onChangeInput=(action (mut suspendUntil))
+          }}
         </label>
       </div>
       {{suspension-details reason=reason message=message}}

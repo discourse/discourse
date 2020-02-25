@@ -33,7 +33,7 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote no-group" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="EvilTrout" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
@@ -109,6 +109,48 @@ describe PrettyText do
 
           expect(cook(md)).to eq(html.strip)
         end
+
+        it "adds an only-emoji class when a line has only one emoji" do
+          md = <<~MD
+            foo 😀
+            foo 😀 bar
+            :smile_cat:
+            :smile_cat: :smile_cat:
+            :smile_cat: :smile_cat: :smile_cat: :smile_cat:
+            baz? :smile_cat:
+            😀
+            😉 foo
+            😉 😉
+             😉 😉
+            😉 😉 😉
+            😉😉😉
+            😉 😉 😉
+            😉d😉 😉
+            😉 😉 😉d
+            😉😉😉😉
+          MD
+
+          html = <<~HTML
+            <p>foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"><br>
+            foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"> bar<br>
+            <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"><br>
+            <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"><br>
+            <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"><br>
+            baz? <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:"><br>
+            <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji only-emoji" alt=":grinning:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> foo<br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:">d​:wink: <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:">d<br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"></p>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
       end
 
       it "do off topic quoting of posts from secure categories" do
@@ -116,7 +158,7 @@ describe PrettyText do
         topic = Fabricate(:topic, title: "this is topic with secret category", category: category)
 
         expected = <<~HTML
-          <aside class="quote no-group" data-post="3" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a>
@@ -139,7 +181,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -161,7 +203,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -182,7 +224,7 @@ describe PrettyText do
         MD
 
         html = <<~HTML
-          <aside class="quote no-group" data-post="555" data-topic="666">
+          <aside class="quote no-group" data-username="#{user.username}" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -209,7 +251,7 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic")
         expected = <<~HTML
-          <aside class="quote group-#{group.name}" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
@@ -269,12 +311,8 @@ describe PrettyText do
       fab!(:user) { Fabricate(:user) }
 
       context "subfolder" do
-        before do
-          GlobalSetting.stubs(:relative_url_root).returns("/forum")
-          Discourse.stubs(:base_uri).returns("/forum")
-        end
-
         it "should have correct avatar url" do
+          set_subfolder "/forum"
           md = <<~MD
             [quote="#{user.username}, post:123, topic:456, full:true"]
             ddd
@@ -309,12 +347,8 @@ describe PrettyText do
         Fabricate(:user, username: username)
       end
 
-      ['Group', 'group2'].each do |name|
-        Fabricate(:group,
-          name: name,
-          mentionable_level: Group::ALIAS_LEVELS[:everyone]
-        )
-      end
+      Fabricate(:group, name: 'Group', mentionable_level: Group::ALIAS_LEVELS[:everyone])
+      Fabricate(:group, name: 'Group2', mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
 
       [
         [
@@ -323,7 +357,7 @@ describe PrettyText do
         ],
         [
           "hi\n@user. @GROUP @somemention @group2",
-          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group" href="/groups/group">@GROUP</a> <span class="mention">@somemention</span> <a class="mention-group" href="/groups/group2">@group2</a></p>|
+          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group notify" href="/groups/group">@GROUP</a> <span class="mention">@somemention</span> <a class="mention-group" href="/groups/group2">@group2</a></p>|
         ]
       ].each do |input, expected|
         expect(PrettyText.cook(input)).to eq(expected)
@@ -331,27 +365,38 @@ describe PrettyText do
     end
 
     context 'subfolder' do
-      before do
-        GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
-      end
-
       it "handles user and group mentions correctly" do
+        set_subfolder "/forum"
+
         Fabricate(:user, username: 'user1')
         Fabricate(:group, name: 'groupA', mentionable_level: Group::ALIAS_LEVELS[:everyone])
 
         input = 'hi there @user1 and @groupA'
-        expected = '<p>hi there <a class="mention" href="/forum/u/user1">@user1</a> and <a class="mention-group" href="/forum/groups/groupa">@groupA</a></p>'
+        expected = '<p>hi there <a class="mention" href="/forum/u/user1">@user1</a> and <a class="mention-group notify" href="/forum/groups/groupa">@groupA</a></p>'
 
         expect(PrettyText.cook(input)).to eq(expected)
       end
     end
 
-    it "does not create mention for a non mentionable group" do
-      group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:nobody])
+    it "does not assign the notify class to a group that can't be mentioned" do
+      group = Fabricate(:group,
+        visibility_level: Group.visibility_levels[:members],
+        mentionable_level: Group::ALIAS_LEVELS[:nobody]
+      )
 
       expect(PrettyText.cook("test @#{group.name} test")).to eq(
-        %Q|<p>test <span class="mention">@#{group.name}</span> test</p>|
+        %Q|<p>test <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a> test</p>|
+      )
+    end
+
+    it "assigns the notify class if the user can mention" do
+      group = Fabricate(:group,
+        visibility_level: Group.visibility_levels[:members],
+        mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins]
+      )
+
+      expect(PrettyText.cook("test @#{group.name} test", user_id: Fabricate(:admin).id)).to eq(
+        %Q|<p>test <a class="mention-group notify" href="/groups/#{group.name}">@#{group.name}</a> test</p>|
       )
     end
 
@@ -551,11 +596,6 @@ describe PrettyText do
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true)).to eq("![car](http://cnn.com/a.gif)")
       end
 
-      it "should keep spoilers" do
-        expect(PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100)).to match_html "<span class='spoiler'>[image]</span>"
-        expect(PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100)).to match_html "<span class='spoiler'>spoiler</span>"
-      end
-
       it "should keep details if too long" do
         expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 6)).to match_html "<details class='disabled'><summary>expand</summary></details>"
       end
@@ -738,6 +778,34 @@ describe PrettyText do
         )).to eq("boom")
       end
     end
+
+    it 'should strip audio/video' do
+      html = <<~HTML
+        <audio controls>
+          <source src="https://awebsite.com/audio.mp3"><a href="https://awebsite.com/audio.mp3">https://awebsite.com/audio.mp3</a></source>
+        </audio>
+        <p>Listen to this!</p>
+      HTML
+
+      expect(PrettyText.excerpt(html, 100)).to eq("Listen to this!")
+
+      html = <<~HTML
+        <div class="onebox video-onebox">
+          <video controlslist="nodownload" width="100%" height="100%" controls="">
+            <source src="http://videosource.com/running.mp4">
+            <a href="http://videosource.com/running.mp4">http://videosource.com/running.mp4</a>
+          </video>
+        </div>
+        <p>Watch this, but do not include the video in the excerpt.</p>
+      HTML
+
+      ellipsis = "&hellip;"
+      excerpt_size = 40
+      excerpt = PrettyText.excerpt(html, excerpt_size)
+
+      expect(excerpt.size).to eq(excerpt_size + ellipsis.size)
+      expect(excerpt).to eq("Watch this, but do not include the video#{ellipsis}")
+    end
   end
 
   describe "strip links" do
@@ -817,6 +885,50 @@ describe PrettyText do
       html = "<p>Check out this video – <iframe src='https://player.vimeo.com/video/329875646' data-original-href='https://vimeo.com/329875646/> <script>alert(1)</script>'></iframe>.</p>"
       expect(PrettyText.format_for_email(html, post)).to match(Regexp.escape("https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E"))
     end
+
+    describe "#strip_secure_media" do
+      before do
+        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.secure_media = true
+        SiteSetting.login_required = true
+      end
+
+      it "replaces secure video content" do
+        html = <<~HTML
+          <video width="100%" height="100%" controls="">
+            <source src="#{base_url}/secure-media-uploads/original/1X/some-video.mp4">
+              <a href="#{base_url}/secure-media-uploads/original/1X/some-video.mp4">Video label</a>
+            </source>
+          </video>
+        HTML
+
+        md = PrettyText.format_for_email(html, post)
+
+        expect(md).not_to include('<video')
+        expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
+        expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
+      end
+
+      it "replaces secure audio content" do
+        html = <<~HTML
+          <audio controls>
+            <source src="#{base_url}/secure-media-uploads/original/1X/some-audio.mp3">
+              <a href="#{base_url}/secure-media-uploads/original/1X/some-audio.mp3">Audio label</a>
+            </source>
+          </audio>
+        HTML
+
+        md = PrettyText.format_for_email(html, post)
+
+        expect(md).not_to include('<video')
+        expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
+        expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
+      end
+    end
   end
 
   it 'Is smart about linebreaks and IMG tags' do
@@ -869,12 +981,23 @@ describe PrettyText do
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
     end
 
+    it "does not replace left right arrow" do
+      expect(PrettyText.cook("&harr;")).to eq('<p>↔</p>')
+    end
+
     it "doesn't replace emoji in inline code blocks with our emoji sets if emoji is enabled" do
       expect(PrettyText.cook("`💣`")).not_to match(/\:bomb\:/)
     end
 
     it "replaces some glyphs that are not in the emoji range" do
       expect(PrettyText.cook("☺")).to match(/\:slight_smile\:/)
+    end
+
+    it "replaces digits" do
+      expect(PrettyText.cook("🔢")).to match(/\:1234\:/)
+      expect(PrettyText.cook("1️⃣")).to match(/\:one\:/)
+      expect(PrettyText.cook("#️⃣")).to match(/\:hash\:/)
+      expect(PrettyText.cook("*️⃣")).to match(/\:asterisk\:/)
     end
 
     it "doesn't replace unicode emoji if emoji is disabled" do
@@ -963,7 +1086,7 @@ describe PrettyText do
     [
       "<span class=\"hashtag\">#unknown::tag</span>",
       "<a class=\"hashtag\" href=\"#{category2.url_with_id}\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"http://test.localhost/tag/known\">#<span>known</span></a>",
       "<a class=\"hashtag\" href=\"#{category.url_with_id}\">#<span>testing</span></a>"
     ].each do |element|
 
@@ -984,7 +1107,7 @@ describe PrettyText do
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
     html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tags/known">#<span>known</span></a></p>
+      <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tag/known">#<span>known</span></a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1013,7 +1136,7 @@ describe PrettyText do
   it "can handle emoji by name" do
 
     expected = <<HTML
-<p><img src="/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=":smile:" class="emoji" alt=":smile:"><img src="/images/emoji/twitter/sunny.png?v=#{Emoji::EMOJI_VERSION}" title=":sunny:" class="emoji" alt=":sunny:"></p>
+<p><img src="/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=":smile:" class="emoji only-emoji" alt=":smile:"><img src="/images/emoji/twitter/sunny.png?v=#{Emoji::EMOJI_VERSION}" title=":sunny:" class="emoji only-emoji" alt=":sunny:"></p>
 HTML
     expect(PrettyText.cook(":smile::sunny:")).to eq(expected.strip)
   end
@@ -1025,7 +1148,7 @@ HTML
   end
 
   it "can handle emoji by translation" do
-    expected = "<p><img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji\" alt=\":wink:\"></p>"
+    expected = "<p><img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji only-emoji\" alt=\":wink:\"></p>"
     expect(PrettyText.cook(";)")).to eq(expected)
   end
 
@@ -1042,15 +1165,88 @@ HTML
     expect(PrettyText.cook("abcde ^:;-P")).to include("emoji")
   end
 
-  it 'can censor words correctly' do
-    begin
-      ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
-      expect(PrettyText.cook('yay banana yay')).not_to include('banana')
-      expect(PrettyText.cook('yay `banana` yay')).not_to include('banana')
-      expect(PrettyText.cook("# banana")).not_to include('banana')
-      expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
-    ensure
-      Discourse.redis.flushall
+  describe "censoring" do
+    after(:all) { Discourse.redis.flushall }
+
+    def expect_cooked_match(raw, expected_cooked)
+      expect(PrettyText.cook(raw)).to eq(expected_cooked)
+    end
+
+    context "with basic words" do
+      fab!(:watched_words) do
+        ["shucks", "whiz", "whizzer", "a**le", "badword*", "shuck$", "café", "$uper"].each do |word|
+          Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: word)
+        end
+      end
+
+      it "works correctly" do
+        expect_cooked_match("aw shucks, golly gee whiz.",
+                            "<p>aw ■■■■■■, golly gee ■■■■.</p>")
+      end
+
+      it "doesn't censor words unless they have boundaries." do
+        expect_cooked_match("you are a whizzard! I love cheesewhiz. Whiz.",
+                            "<p>you are a whizzard! I love cheesewhiz. ■■■■.</p>")
+      end
+
+      it "censors words even if previous partial matches exist." do
+        expect_cooked_match("you are a whizzer! I love cheesewhiz. Whiz.",
+                            "<p>you are a ■■■■■■■! I love cheesewhiz. ■■■■.</p>")
+      end
+
+      it "won't break links by censoring them." do
+        expect_cooked_match("The link still works. [whiz](http://www.whiz.com)",
+                            '<p>The link still works. <a href="http://www.whiz.com" rel="nofollow noopener">■■■■</a></p>')
+      end
+
+      it "escapes regexp characters" do
+        expect_cooked_match(
+          "I have a pen, I have an a**le",
+          "<p>I have a pen, I have an ■■■■■</p>"
+        )
+      end
+
+      it "works for words ending in non-word characters" do
+        expect_cooked_match(
+          "Aw shuck$, I can't fix the problem with money",
+          "<p>Aw ■■■■■■, I can't fix the problem with money</p>")
+      end
+
+      it "works for words ending in accented characters" do
+        expect_cooked_match(
+          "Let's go to a café today",
+          "<p>Let's go to a ■■■■ today</p>")
+      end
+
+      it "works for words starting with non-word characters" do
+        expect_cooked_match(
+          "Discourse is $uper amazing",
+          "<p>Discourse is ■■■■■ amazing</p>")
+      end
+
+      it "handles * as wildcard" do
+        expect_cooked_match(
+          "No badword or apple here plz.",
+          "<p>No ■■■■■■■ or ■■■■■ here plz.</p>")
+      end
+    end
+
+    context "with watched words as regular expressions" do
+      before { SiteSetting.watched_words_regular_expressions = true }
+      it "supports words as regular expressions" do
+        ["xyz*", "plee+ase"].each do |word|
+          Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: word)
+        end
+
+        expect_cooked_match("Pleased to meet you, but pleeeease call me later, xyz123",
+        "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>")
+      end
+
+      it "supports custom boundaries" do
+        Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "\\btown\\b")
+        expect_cooked_match("Meet downtown in your town at the townhouse on Main St.",
+                            "<p>Meet downtown in your ■■■■ at the townhouse on Main St.</p>")
+      end
     end
   end
 
@@ -1060,6 +1256,14 @@ HTML
 
     SiteSetting.enable_markdown_typographer = false
     expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
+  end
+
+  it 'uses quotation marks from site settings' do
+    SiteSetting.enable_markdown_typographer = true
+    expect(PrettyText.cook(%q|"Do you know," he said, "what 'Discourse' is?"|)).to eq(%q|<p>“Do you know,” he said, “what ‘Discourse’ is?”</p>|)
+
+    SiteSetting.markdown_typographer_quotation_marks = "„|“|‚|‘"
+    expect(PrettyText.cook(%q|"Weißt du", sagte er, "was 'Discourse' ist?"|)).to eq(%q|<p>„Weißt du“, sagte er, „was ‚Discourse‘ ist?“</p>|)
   end
 
   it 'handles onebox correctly' do
@@ -1286,21 +1490,23 @@ HTML
       [some attachment|random](#{upload.short_url})
       RAW
 
+      cdn_url = Discourse.store.cdn_url(upload.url)
+
       cooked = <<~HTML
-        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
-        <p><img src="#{upload.url}" alt="upload" title="some title to test" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{cdn_url}" alt="upload" title="some title to test" data-base62-sha1="#{upload.base62_sha1}"></p>
         <ul>
         <li>
-        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
         </li>
         <li>
         <p>test</p>
         <ul>
-        <li><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></li>
+        <li><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></li>
         </ul>
         </li>
         </ul>
-        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
         <p><a href="#{upload.short_path}">some attachment</a></p>
         <p><a class="attachment" href="#{upload.short_path}">some attachment</a></p>
         <p><a href="#{upload.short_path}">some attachment|random</a></p>
@@ -1319,7 +1525,7 @@ HTML
 
       cooked = <<~HTML
       <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
-      <p><a href="/404" data-orig-href="upload://abcdefg.png">some attachment|attachment</a></p>
+      <p><a class="attachment" href="/404" data-orig-href="upload://abcdefg.png">some attachment</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)

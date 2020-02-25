@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'email/message_builder'
-
 class SubscriptionMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 

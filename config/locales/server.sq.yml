@@ -27,6 +27,7 @@ sq:
   topics: "Tema"
   posts: "postime"
   loading: "Loading"
+  sign_up: "Regjistrohu"
   log_in: "Identifikohu"
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
@@ -91,6 +92,8 @@ sq:
   not_found: "The requested URL or resource could not be found."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  not_in_group:
+    join_group: "Bashkoju grupit"
   reading_time: "Koha e leximit"
   likes: "Pëlqime"
   embed:
@@ -103,6 +106,7 @@ sq:
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Krijuar"
   no_mentions_allowed: "Na vjen keq, por s'mund të citosh anëtarë të tjerë."
   no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
   too_many_mentions_newuser:
@@ -115,7 +119,7 @@ sq:
   user_is_suspended: "Suspended users are not allowed to post."
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
   just_posted_that: "is too similar to what you recently posted"
-  invalid_characters: "përmban karaktere  jo të vlefshëm"
+  invalid_characters: "përmban karaktere jo të vlefshëm"
   next_page: "faqja tjetër →"
   prev_page: "← faqe mëparshme"
   page_num: "Faqe %{num}"
@@ -324,9 +328,6 @@ sq:
     please_continue: "Vazhdo tek %{site_name}"
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase adresa juaj email u ndryshua para pak kohësh?"
-    authorizing_old:
-      title: "Ju falënderojmë për konfirmimin e adresës tuaj email"
-      description: "Tani po ju dërgojmë një mesazh tek adresa e re e emailit për t'a konfirmuar."
   activation:
     action: "Klikoni këtu për të aktivizuar llogarinë tuaj"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase llogaria është që tani e aktivizuar?"
@@ -443,6 +444,8 @@ sq:
       xaxis: "Ditë"
     new_contributors:
       xaxis: "Day"
+    trust_level_growth:
+      yaxis: "Day"
     consolidated_page_views:
       yaxis: "Day"
       labels:
@@ -673,7 +676,6 @@ sq:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Aktivizo sistemin e targetave"
-    allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
@@ -817,7 +819,7 @@ sq:
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     automatically_unpin_topics: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes."
     read_time_word_count: "Numërimi i fjalëve për minutë për të llogaritur kohën e vlerësuar të leximit."
     full_name_required: "Full name is a required field of a user's profile."
@@ -831,7 +833,7 @@ sq:
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
-    delete_drafts_older_than_n_days: Delete drafts older than (n) days.
+    delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
@@ -853,7 +855,7 @@ sq:
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
-      invalid_reply_by_email_address: "Value must contain '%%{reply_key}' and be different from the notification email."
+      invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
   search:
     within_post: "#%{post_number} nga %{username}"
     types:
@@ -907,7 +909,6 @@ sq:
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: "Sorry, there was an error authorizing your account. Perhaps you did not approve authorization?"
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
@@ -931,11 +932,6 @@ sq:
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
-  admin_confirmation_mailer:
-    text_body_template: |
-      Ju lutemi të konfirmoni që dëshironi të shtoni **%{target_username}** si një administrator në këtë faqe.
-
-      [Konfirmo llogarinë e administratorit](%{admin_confirm_url})
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
@@ -1024,26 +1020,6 @@ sq:
     only_reply_by_email: "Përgjigjju këtij email-i për të vazhduar."
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
     posted_by: "Postuar nga %{username} më %{post_date}"
-    invited_to_private_message_body: |
-      %{username} ju ftoi tek mesazhi
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      në
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} ju ftoi në një bisedë
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tek
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       text_body_template: |
         %{header_instructions}
@@ -1175,7 +1151,6 @@ sq:
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
       click_here: "klikoni këtu"
-      from: "%{site_name} - përmbledhja"
       preheader: "Një përmbledhe e shkurtër e faqes që nga vizita juaj e fundit më %{last_seen_at}"
     forgot_password:
       title: "Harruat Fjalëkalimin"
@@ -1183,10 +1158,6 @@ sq:
       title: "Vendos Fjalëkalim"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
-      text_body_template: |
-        Konfirmoni adresën tuaj të re të emailit për "%{site_name}" duke klikuar linkun më poshtë:
-
-        %{base_url}/u/authorize-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën e tanishme të emailit "
     notify_old_email:
@@ -1248,6 +1219,7 @@ sq:
   csv_export:
     boolean_yes: "Po"
     boolean_no: "Jo"
+    rate_limit_error: "Postimet mund të shkarkohen një herë në ditë, provoni përsëri nesër. "
   static_topic_first_reply: |
     Modifiko postimin e parë të kësaj teme puer të ndryshuar përmbajtjen e faqes %{page_name}.
   guidelines_topic:
@@ -1374,14 +1346,8 @@ sq:
         Kjo stemë jepet kur merrni të paktën 5 pëlqime në 300 postime të ndryshme. Uau! Komuniteti e admiron mundin e shpeshtë dhe të një cilësie të lartë për bisedimet këtu.
     out_of_love:
       name: Me zemër të zbrazur
-      description: Përdori 50 pëlqime në një ditë
-      long_description: |
-        Kjo stemë jepet kur ju përdorni të gjitha nga 50 pëlqimet tuaja ditore. Kur kujtohesh të gjesh kohë dhe të pelqesh postimet që ju pëlqejnë dhe vlerësoni, nxit anëtarët e komunitetit të krijojnë akoma më shumë biseda të mira në të ardhmen.
     higher_love:
       name: Zemërhapur
-      description: Dha 50 pëlqime në ditë për 5 ditë rresht
-      long_description: |
-        Kjo stemë jepet kur ju pëlqeni 50 postime në 5 ditë. Faleminderit që merrni nga koha juaj për të nxitur bisedat më të mira çdo ditë!
     crazy_in_love:
       name: Zemërluan
       description: Ka dhënë 50 pëlqime në ditë mbi 20 herë

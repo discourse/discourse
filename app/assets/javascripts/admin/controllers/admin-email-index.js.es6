@@ -1,20 +1,25 @@
+import { empty } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-export default Ember.Controller.extend({
+import { observes } from "discourse-common/utils/decorators";
+
+export default Controller.extend({
   /**
     Is the "send test email" button disabled?
 
     @property sendTestEmailDisabled
   **/
-  sendTestEmailDisabled: Ember.computed.empty("testEmailAddress"),
+  sendTestEmailDisabled: empty("testEmailAddress"),
 
   /**
     Clears the 'sentTestEmail' property on successful send.
 
     @method testEmailAddressChanged
   **/
+  @observes("testEmailAddress")
   testEmailAddressChanged: function() {
     this.set("sentTestEmail", false);
-  }.observes("testEmailAddress"),
+  },
 
   actions: {
     /**

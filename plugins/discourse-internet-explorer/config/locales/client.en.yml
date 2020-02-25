@@ -1,0 +1,4 @@
+en:
+  js:
+    discourse_internet_explorer:
+      deprecation_warning: This site will soon remove support for Internet Explorer 11 - please update your browser

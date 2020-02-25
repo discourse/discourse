@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CleanUpUserExportTopics < Jobs::Onceoff
+  class CleanUpUserExportTopics < ::Jobs::Onceoff
     def execute_onceoff(args)
       translated_keys = I18n.available_locales.map do |l|
         I18n.with_locale(:"#{l}") { I18n.t("system_messages.csv_export_succeeded.subject_template") }

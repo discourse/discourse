@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 const KEY = "keyboard_shortcuts_help";
@@ -46,7 +47,7 @@ function buildShortcut(
   return I18n.t(`${KEY}.${key}`, context);
 }
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.set("modal.modalClass", "keyboard-shortcuts-modal");
   },
@@ -77,6 +78,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
         keys2: [SHIFT, "k"],
         keysDelimiter: PLUS,
         shortcutsDelimiter: "slash"
+      }),
+      go_to_unread_post: buildShortcut("navigation.go_to_unread_post", {
+        keys1: [SHIFT, "l"],
+        keysDelimiter: PLUS
       })
     },
     application: {
@@ -157,6 +162,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }),
       print: buildShortcut("actions.print", {
         keys1: [CTRL, "p"],
+        keysDelimiter: PLUS
+      }),
+      defer: buildShortcut("actions.defer", {
+        keys1: [SHIFT, "u"],
+        keysDelimiter: PLUS
+      }),
+      topic_admin_actions: buildShortcut("actions.topic_admin_actions", {
+        keys1: [SHIFT, "a"],
         keysDelimiter: PLUS
       })
     }

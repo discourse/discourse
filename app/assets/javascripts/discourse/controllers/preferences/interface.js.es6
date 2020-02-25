@@ -1,16 +1,20 @@
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { setDefaultHomepage } from "discourse/lib/utilities";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
   listThemes,
   previewTheme,
   setLocalTheme
 } from "discourse/lib/theme-selector";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { safariHacksDisabled, isiPad } from "discourse/lib/utilities";
+import {
+  safariHacksDisabled,
+  isiPad,
+  iOSWithVisualViewport
+} from "discourse/lib/utilities";
+import { computed } from "@ember/object";
 
 const USER_HOMES = {
   1: "latest",
@@ -23,8 +27,8 @@ const USER_HOMES = {
 const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
-export default Ember.Controller.extend(PreferencesTabController, {
-  @computed("makeThemeDefault")
+export default Controller.extend(PreferencesTabController, {
+  @discourseComputed("makeThemeDefault")
   saveAttrNames(makeDefault) {
     let attrs = [
       "locale",
@@ -47,43 +51,56 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return attrs;
   },
 
-  preferencesController: Ember.inject.controller("preferences"),
+  preferencesController: inject("preferences"),
 
-  @computed()
+  @discourseComputed()
   isiPad() {
-    return isiPad();
+    // TODO: remove this preference checkbox when iOS adoption > 90%
+    // (currently only applies to iOS 12 and below)
+    return isiPad() && !iOSWithVisualViewport();
   },
 
-  @computed()
+  @discourseComputed()
   disableSafariHacks() {
     return safariHacksDisabled();
   },
 
-  @computed()
+  @discourseComputed()
   availableLocales() {
     return JSON.parse(this.siteSettings.available_locales);
   },
 
-  @computed
+  @discourseComputed
   textSizes() {
     return TEXT_SIZES.map(value => {
       return { name: I18n.t(`user.text_size.${value}`), value };
     });
   },
 
-  @computed
+  homepageId: computed(
+    "model.user_option.homepage_id",
+    "userSelectableHome.[]",
+    function() {
+      return (
+        this.model.user_option.homepage_id ||
+        this.userSelectableHome.firstObject.value
+      );
+    }
+  ),
+
+  @discourseComputed
   titleCountModes() {
     return TITLE_COUNT_MODES.map(value => {
       return { name: I18n.t(`user.title_count_mode.${value}`), value };
     });
   },
 
-  @computed
+  @discourseComputed
   userSelectableThemes() {
     return listThemes(this.site);
   },
 
-  @computed("userSelectableThemes")
+  @discourseComputed("userSelectableThemes")
   showThemeSelector(themes) {
     return themes && themes.length > 1;
   },
@@ -94,12 +111,12 @@ export default Ember.Controller.extend(PreferencesTabController, {
     previewTheme([id]);
   },
 
-  @computed("model.user_option.theme_ids", "themeId")
+  @discourseComputed("model.user_option.theme_ids", "themeId")
   showThemeSetDefault(userOptionThemes, selectedTheme) {
     return !userOptionThemes || userOptionThemes[0] !== selectedTheme;
   },
 
-  @computed("model.user_option.text_size", "textSize")
+  @discourseComputed("model.user_option.text_size", "textSize")
   showTextSetDefault(userOptionTextSize, selectedTextSize) {
     return userOptionTextSize !== selectedTextSize;
   },
@@ -111,7 +128,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
     setDefaultHomepage(userHome || siteHome);
   },
 
-  @computed()
+  @discourseComputed()
   userSelectableHome() {
     let homeValues = {};
     Object.keys(USER_HOMES).forEach(newValue => {
@@ -190,6 +207,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
       // Force refresh when leaving this screen
       Discourse.set("assetVersion", "forceRefresh");
+
+      this.set("textSize", newSize);
     }
   }
 });

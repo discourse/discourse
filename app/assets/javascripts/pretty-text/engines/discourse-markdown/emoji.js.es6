@@ -231,7 +231,66 @@ function applyEmoji(
     result.push(text);
   }
 
+  // we check for a result <= 5 because we support maximum 3 large emojis
+  // EMOJI SPACE EMOJI SPACE EMOJI => 5 tokens
+  if (result && result.length > 0 && result.length <= 5) {
+    // we ensure line starts and ends with an emoji
+    // and has no more than 3 emojis
+    if (
+      result[0].type === "emoji" &&
+      result[result.length - 1].type === "emoji" &&
+      result.filter(r => r.type === "emoji").length <= 3
+    ) {
+      let onlyEmojiLine = true;
+      let index = 0;
+
+      const checkNextToken = t => {
+        if (!t) {
+          return;
+        }
+
+        if (!["emoji", "text"].includes(t.type)) {
+          onlyEmojiLine = false;
+        }
+
+        // a text token should always have an emoji before
+        // and be a space
+        if (
+          t.type === "text" &&
+          ((result[index - 1] && result[index - 1].type !== "emoji") ||
+            t.content !== " ")
+        ) {
+          onlyEmojiLine = false;
+        }
+
+        // exit as soon as possible
+        if (onlyEmojiLine) {
+          index += 1;
+          checkNextToken(result[index]);
+        }
+      };
+
+      checkNextToken(result[index]);
+
+      if (onlyEmojiLine) {
+        result.forEach(r => {
+          if (r.type === "emoji") {
+            applyOnlyEmojiClass(r);
+          }
+        });
+      }
+    }
+  }
+
   return result;
+}
+
+function applyOnlyEmojiClass(token) {
+  token.attrs.forEach(attr => {
+    if (attr[0] === "class") {
+      attr[1] = `${attr[1]} only-emoji`;
+    }
+  });
 }
 
 export function setup(helper) {
@@ -257,5 +316,10 @@ export function setup(helper) {
     );
   });
 
-  helper.whiteList(["img[class=emoji]", "img[class=emoji emoji-custom]"]);
+  helper.whiteList([
+    "img[class=emoji]",
+    "img[class=emoji emoji-custom]",
+    "img[class=emoji emoji-custom only-emoji]",
+    "img[class=emoji only-emoji]"
+  ]);
 }

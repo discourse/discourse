@@ -54,7 +54,10 @@
   .social-link {
     margin-right: s(2);
     font-size: $font-up-4;
-    .d-icon-fab-facebook-square {
+    .d-icon {
+      color: dark-light-choose($tertiary, white);
+    }
+    .d-icon-fab-facebook {
       // Adheres to Facebook brand guidelines
       color: dark-light-choose($facebook, white);
     }

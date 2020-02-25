@@ -7,19 +7,17 @@
   height: 4em;
   margin-bottom: 15px;
   #site-logo {
-    height: 2.57em;
+    height: 2.667em; // 40px with default 15px font size
   }
   #site-text-logo {
     font-size: $font-up-3;
     margin: 0;
   }
   .extra-info {
-    // header title should not be centered if there's no tags / categories
     &:not(.two-rows) {
-      min-height: 2.75em;
-    }
-    h1 {
-      margin: 0 0 0.125em 0;
+      .header-title {
+        margin-bottom: 0;
+      }
     }
   }
 }

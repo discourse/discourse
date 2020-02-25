@@ -1,3 +1,6 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias, not, gt, empty, notEmpty, equal } from "@ember/object/computed";
+import { inject } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
@@ -5,19 +8,17 @@ import { endWith } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 import TopicList from "discourse/models/topic-list";
-import computed from "ember-addons/ember-computed-decorators";
+import Topic from "discourse/models/topic";
 
 const controllerOpts = {
-  discovery: Ember.inject.controller(),
-  discoveryTopics: Ember.inject.controller("discovery/topics"),
+  discovery: inject(),
+  discoveryTopics: inject("discovery/topics"),
 
   period: null,
 
-  canStar: Ember.computed.alias("currentUser.id"),
-  showTopicPostBadges: Ember.computed.not("discoveryTopics.new"),
-  redirectedReason: Ember.computed.alias(
-    "currentUser.redirected_to_top.reason"
-  ),
+  canStar: alias("currentUser.id"),
+  showTopicPostBadges: not("discoveryTopics.new"),
+  redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
   order: "default",
   ascending: false,
@@ -82,8 +83,9 @@ const controllerOpts = {
     },
 
     resetNew() {
-      this.topicTrackingState.resetNew();
-      Discourse.Topic.resetNew().then(() => this.send("refresh"));
+      Topic.resetNew(this.category, !this.noSubcategories).then(() =>
+        this.send("refresh")
+      );
     },
 
     dismissReadPosts() {
@@ -98,17 +100,17 @@ const controllerOpts = {
     return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
   },
 
-  @computed("model.filter", "model.topics.length")
+  @discourseComputed("model.filter", "model.topics.length")
   showDismissRead(filter, topicsLength) {
     return this.isFilterPage(filter, "unread") && topicsLength > 0;
   },
 
-  @computed("model.filter", "model.topics.length")
+  @discourseComputed("model.filter", "model.topics.length")
   showResetNew(filter, topicsLength) {
-    return filter === "new" && topicsLength > 0;
+    return this.isFilterPage(filter, "new") && topicsLength > 0;
   },
 
-  @computed("model.filter", "model.topics.length")
+  @discourseComputed("model.filter", "model.topics.length")
   showDismissAtTop(filter, topicsLength) {
     return (
       (this.isFilterPage(filter, "new") ||
@@ -117,18 +119,18 @@ const controllerOpts = {
     );
   },
 
-  hasTopics: Ember.computed.gt("model.topics.length", 0),
-  allLoaded: Ember.computed.empty("model.more_topics_url"),
+  hasTopics: gt("model.topics.length", 0),
+  allLoaded: empty("model.more_topics_url"),
   latest: endWith("model.filter", "latest"),
   new: endWith("model.filter", "new"),
-  top: Ember.computed.notEmpty("period"),
-  yearly: Ember.computed.equal("period", "yearly"),
-  quarterly: Ember.computed.equal("period", "quarterly"),
-  monthly: Ember.computed.equal("period", "monthly"),
-  weekly: Ember.computed.equal("period", "weekly"),
-  daily: Ember.computed.equal("period", "daily"),
+  top: notEmpty("period"),
+  yearly: equal("period", "yearly"),
+  quarterly: equal("period", "quarterly"),
+  monthly: equal("period", "monthly"),
+  weekly: equal("period", "weekly"),
+  daily: equal("period", "daily"),
 
-  @computed("allLoaded", "model.topics.length")
+  @discourseComputed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {
     if (!allLoaded) return;
 
@@ -151,7 +153,7 @@ const controllerOpts = {
     }
   },
 
-  @computed("allLoaded", "model.topics.length")
+  @discourseComputed("allLoaded", "model.topics.length")
   footerEducation(allLoaded, topicsLength) {
     if (!allLoaded || topicsLength > 0 || !this.currentUser) {
       return;

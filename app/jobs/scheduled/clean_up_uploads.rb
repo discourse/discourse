@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CleanUpUploads < Jobs::Scheduled
+  class CleanUpUploads < ::Jobs::Scheduled
     every 1.hour
 
     def execute(args)
@@ -16,6 +16,10 @@ module Jobs
         .find_each(&:destroy!)
 
       return unless SiteSetting.clean_up_uploads?
+
+      if c = last_cleanup
+        return if (Time.zone.now.to_i - c) < (grace_period / 2).hours
+      end
 
       base_url = Discourse.store.internal? ? Discourse.store.relative_base_url : Discourse.store.absolute_base_url
       s3_hostname = URI.parse(base_url).hostname
@@ -50,6 +54,7 @@ module Jobs
       result = Upload.by_users
         .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
+        .where("uploads.access_control_post_id IS NULL")
         .joins(<<~SQL)
           LEFT JOIN site_settings ss
           ON NULLIF(ss.value, '')::integer = uploads.id
@@ -58,7 +63,6 @@ module Jobs
         .joins("LEFT JOIN post_uploads pu ON pu.upload_id = uploads.id")
         .joins("LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id")
         .joins("LEFT JOIN user_avatars ua ON ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id")
-        .joins("LEFT JOIN user_profiles up2 ON up2.profile_background = uploads.url OR up2.card_background = uploads.url")
         .joins("LEFT JOIN user_profiles up ON up.profile_background_upload_id = uploads.id OR up.card_background_upload_id = uploads.id")
         .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id")
         .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
@@ -68,7 +72,6 @@ module Jobs
         .where("u.uploaded_avatar_id IS NULL")
         .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
         .where("up.profile_background_upload_id IS NULL AND up.card_background_upload_id IS NULL")
-        .where("up2.profile_background IS NULL AND up2.card_background IS NULL")
         .where("c.uploaded_logo_id IS NULL AND c.uploaded_background_id IS NULL")
         .where("ce.upload_id IS NULL")
         .where("tf.upload_id IS NULL")
@@ -87,6 +90,28 @@ module Jobs
           upload.delete
         end
       end
+
+      self.last_cleanup = Time.zone.now.to_i
     end
+
+    def last_cleanup=(v)
+      Discourse.redis.setex(last_cleanup_key, 7.days.to_i, v.to_s)
+    end
+
+    def last_cleanup
+      v = Discourse.redis.get(last_cleanup_key)
+      v ? v.to_i : v
+    end
+
+    def reset_last_cleanup!
+      Discourse.redis.del(last_cleanup_key)
+    end
+
+    protected
+
+    def last_cleanup_key
+      "LAST_UPLOAD_CLEANUP"
+    end
+
   end
 end

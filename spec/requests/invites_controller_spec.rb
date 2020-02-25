@@ -14,7 +14,7 @@ describe InvitesController do
 
       body = response.body
       expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found', site_name: SiteSetting.title, base_url: Discourse.base_url))
+      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found', base_url: Discourse.base_url))
     end
 
     it "renders the accept invite page if invite exists" do
@@ -210,7 +210,7 @@ describe InvitesController do
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
-        expect(json["message"]).to eq(I18n.t('invite.not_found'))
+        expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -245,7 +245,7 @@ describe InvitesController do
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
-        expect(json["message"]).to eq(I18n.t('invite.not_found'))
+        expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -289,6 +289,16 @@ describe InvitesController do
             json = JSON.parse(response.body)
             expect(json["success"]).to eq(true)
             expect(json["redirect_to"]).to eq(topic.relative_url)
+          end
+
+          context "if a timezone guess is provided" do
+            it "sets the timezone of the user in user_options" do
+              put "/invites/show/#{invite.invite_key}.json", params: { timezone: "Australia/Melbourne" }
+              expect(response.status).to eq(200)
+              invite.reload
+              user = User.find(invite.user_id)
+              expect(user.user_option.timezone).to eq("Australia/Melbourne")
+            end
           end
         end
 
@@ -353,7 +363,7 @@ describe InvitesController do
 
           context "with password" do
             context "user was invited via email" do
-              before { invite.update_column(:via_email, true) }
+              before { invite.update_column(:emailed_status, Invite.emailed_status_types[:pending]) }
 
               it "doesn't send an activation email and activates the user" do
                 expect do
@@ -373,7 +383,7 @@ describe InvitesController do
             end
 
             context "user was invited via link" do
-              before { invite.update_column(:via_email, false) }
+              before { invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required]) }
 
               it "sends an activation email and doesn't activate the user" do
                 expect do

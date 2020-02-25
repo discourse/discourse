@@ -86,6 +86,36 @@ describe TopicEmbed do
         expect(post.cook_method).to eq(Post.cook_methods[:regular])
       end
     end
+
+    describe 'embedded content truncation' do
+      MAX_LENGTH_BEFORE_TRUNCATION = 100
+
+      let(:long_content) { "<p>#{'a' * MAX_LENGTH_BEFORE_TRUNCATION}</p>\n<p>more</p>" }
+
+      it 'truncates the imported post when truncation is enabled' do
+        SiteSetting.embed_truncate = true
+        post = TopicEmbed.import(user, url, title, long_content)
+
+        expect(post.raw).not_to include(long_content)
+      end
+
+      it 'keeps everything in the imported post when truncation is disabled' do
+        SiteSetting.embed_truncate = false
+        post = TopicEmbed.import(user, url, title, long_content)
+
+        expect(post.raw).to include(long_content)
+      end
+
+      it 'looks at first div when there is no paragraph' do
+
+        no_para = "<div><h>testing it</h></div>"
+
+        SiteSetting.embed_truncate = true
+        post = TopicEmbed.import(user, url, title, no_para)
+
+        expect(post.raw).to include("testing it")
+      end
+    end
   end
 
   context '.topic_id_for_embed' do
@@ -277,6 +307,16 @@ describe TopicEmbed do
         expect(response.body).to have_tag('a', with: { href: 'mailto:foo%40example.com' })
         expect(response.body).to have_tag('a', with: { href: 'mailto:bar@example.com' })
       end
+    end
+  end
+
+  describe '.absolutize_urls' do
+    let(:invalid_url) { 'http://source.com/#double#anchor' }
+    let(:contents) { "hello world new post <a href='/hello'>hello</a>" }
+
+    it "does not attempt absolutizing on a bad URI" do
+      raw = TopicEmbed.absolutize_urls(invalid_url, contents)
+      expect(raw).to eq(contents)
     end
   end
 

@@ -4,6 +4,20 @@ img.emoji {
   vertical-align: middle;
 }
 
+img.emoji.only-emoji {
+  width: 32px;
+  height: 32px;
+  margin: 0.5em 0;
+}
+
+.md-table,
+.poll {
+  img.emoji.only-emoji {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 small img.emoji,
 sub img.emoji,
 sup img.emoji {
@@ -106,10 +120,8 @@ sup img.emoji {
 }
 
 .emoji-picker .info {
-  text-overflow: ellipsis;
+  @include ellipsis;
   padding-left: 8px;
-  white-space: nowrap;
-  overflow: hidden;
   font-weight: 700;
   max-width: 125px;
 }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CheckOutOfDateThemes < Jobs::Scheduled
+  class CheckOutOfDateThemes < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

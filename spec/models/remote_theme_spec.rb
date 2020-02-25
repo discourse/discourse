@@ -11,8 +11,9 @@ describe RemoteTheme do
       `cd #{repo_dir} && git init . `
       `cd #{repo_dir} && git config user.email 'someone@cool.com'`
       `cd #{repo_dir} && git config user.name 'The Cool One'`
-      `cd #{repo_dir} && mkdir desktop mobile common assets locales scss stylesheets`
+      `cd #{repo_dir} && git config commit.gpgsign 'false'`
       files.each do |name, data|
+        FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
         File.write("#{repo_dir}/#{name}", data)
         `cd #{repo_dir} && git add #{name}`
       end
@@ -20,7 +21,7 @@ describe RemoteTheme do
       repo_dir
     end
 
-    def about_json(love_color: "FAFAFA", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
+    def about_json(love_color: "FAFAFA", tertiary_low_color: "FFFFFF", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON
         {
           "name": "awesome theme",
@@ -33,7 +34,8 @@ describe RemoteTheme do
           },
           "color_schemes": {
             "#{color_scheme_name}": {
-              "love": "#{love_color}"
+              "love": "#{love_color}",
+              "tertiary-low": "#{tertiary_low_color}"
             }
           }
         }
@@ -51,6 +53,7 @@ describe RemoteTheme do
         "scss/oldpath.scss" => ".class2{color:blue}",
         "stylesheets/file.scss" => ".class1{color:red}",
         "stylesheets/empty.scss" => "",
+        "javascripts/discourse/controllers/test.js.es6" => "console.log('test');",
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
@@ -82,7 +85,7 @@ describe RemoteTheme do
       expect(remote.theme_version).to eq("1.0")
       expect(remote.minimum_discourse_version).to eq("1.0.0")
 
-      expect(@theme.theme_fields.length).to eq(8)
+      expect(@theme.theme_fields.length).to eq(9)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
       expect(mapped["0-header"]).to eq("I AM HEADER")
@@ -95,7 +98,7 @@ describe RemoteTheme do
 
       expect(mapped["4-en"]).to eq("sometranslations")
 
-      expect(mapped.length).to eq(8)
+      expect(mapped.length).to eq(9)
 
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)
@@ -105,6 +108,7 @@ describe RemoteTheme do
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
+      expect(scheme.colors.find_by(name: 'tertiary-low').hex).to eq('ffffff')
 
       expect(@theme.color_scheme_id).to eq(scheme.id)
       @theme.update(color_scheme_id: nil)
@@ -150,7 +154,7 @@ describe RemoteTheme do
       expect(remote.about_url).to eq("https://newsite.com/about")
 
       # It should be able to remove old colors as well
-      File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", color_scheme_name: "Amazing 2"))
+      File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", tertiary_low_color: "", color_scheme_name: "Amazing 2"))
       `cd #{initial_repo} && git commit -am "update"`
 
       remote.update_from_remote
@@ -160,11 +164,15 @@ describe RemoteTheme do
       scheme_count = ColorScheme.where(theme_id: @theme.id).count
       expect(scheme_count).to eq(1)
 
+      scheme = ColorScheme.find_by(theme_id: @theme.id)
+      expect(scheme.colors.find_by(name: 'tertiary_low_color')).to eq(nil)
+
       # It should detect local changes
       @theme.set_field(target: :common, name: :scss, value: 'body {background-color: blue};')
       @theme.save
       @theme.reload
 
+      expect(remote.diff_local_changes[:diff]).not_to include("similarity index 100%")
       expect(remote.diff_local_changes[:diff]).to include("background-color: blue")
     end
   end

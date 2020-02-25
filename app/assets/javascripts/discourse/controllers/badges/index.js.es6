@@ -1,7 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
-  @computed("model")
+export default Controller.extend({
+  @discourseComputed("model")
   badgeGroups(model) {
     var sorted = _.sortBy(model, function(badge) {
       var pos = badge.get("badge_grouping.position");

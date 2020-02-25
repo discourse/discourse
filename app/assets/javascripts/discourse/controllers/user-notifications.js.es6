@@ -1,23 +1,26 @@
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { readOnly } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
+  router: service(),
+  currentPath: readOnly("router._router.currentPath"),
 
   @observes("model.canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
-  @computed("model.content.length")
+  @discourseComputed("model.content.length")
   hasNotifications(length) {
     return length > 0;
   },
 
-  @computed("model.content.@each.read")
+  @discourseComputed("model.content.@each.read")
   allNotificationsRead() {
     return !this.get("model.content").some(
       notification => !notification.get("read")

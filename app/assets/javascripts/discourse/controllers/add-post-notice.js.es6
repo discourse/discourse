@@ -1,7 +1,10 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import computed from "ember-addons/ember-computed-decorators";
+import { cookAsync } from "discourse/lib/text";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   post: null,
   resolve: null,
   reject: null,
@@ -9,9 +12,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   notice: null,
   saving: false,
 
-  @computed("saving", "notice")
+  @discourseComputed("saving", "notice")
   disabled(saving, notice) {
-    return saving || Ember.isEmpty(notice);
+    return saving || isEmpty(notice);
   },
 
   onShow() {
@@ -42,10 +45,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       post
         .updatePostField("notice", notice)
-        .then(() => {
+        .then(() => cookAsync(notice, { features: { onebox: false } }))
+        .then(cookedNotice => {
           post.setProperties({
             notice_type: "custom",
-            notice_args: notice
+            notice_args: cookedNotice.string
           });
           resolve();
           this.send("closeModal");

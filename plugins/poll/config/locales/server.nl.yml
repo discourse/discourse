@@ -11,12 +11,15 @@ nl:
     poll_maximum_options: "Maximale aantal toegestane opties in een poll."
     poll_edit_window_mins: "Aantal minuten na het aanmaken van een bericht waarin polls kunnen worden bewerkt."
     poll_minimum_trust_level_to_create: "Het minimale vertrouwensniveau dat nodig is om polls aan te maken."
+    poll_groupable_user_fields: "Een aantal gebruikersveldnamen die voor het groeperen en filteren van pollresultaten kunnen worden gebruikt."
+    poll_export_data_explorer_query_id: "ID van de te gebruiken gegevensverkennerquery voor het exporteren van pollresultaten (0 voor uitschakelen)."
   poll:
+    poll: "poll"
     invalid_argument: "Ongeldige waarde '%{value}' voor argument '%{argument}'."
     multiple_polls_without_name: "Er zijn meerdere polls zonder naam. Gebruik het attribuut '<code>naam</code>' om uw polls uniek te identificeren."
     multiple_polls_with_same_name: "Er zijn meerdere polls met dezelfde naam : <strong>%{name}</strong>. Gebruik het attribuut '<code>naam</code>' om uw polls uniek te identificeren."
-    default_poll_must_have_at_least_2_options: "De poll moet minimaal 2 opties hebben."
-    named_poll_must_have_at_least_2_options: "De poll met de naam <strong>%{name}</strong> moet minimaal 2 opties hebben."
+    default_poll_must_have_at_least_1_option: "De poll moet minstens 1 optie hebben."
+    named_poll_must_have_at_least_1_option: "De poll met de naam <strong>%{name}</strong> moet minstens 1 optie hebben."
     default_poll_must_have_less_options:
       one: "De poll moet minder dan %{count} optie hebben."
       other: "De poll moet minder dan %{count} opties hebben."
@@ -25,9 +28,11 @@ nl:
       other: "De poll met de naam <strong>%{name}</strong> moet minder dan %{count} opties hebben."
     default_poll_must_have_different_options: "De poll moet verschillende opties hebben."
     named_poll_must_have_different_options: "De poll met de naam <strong>%{name}</strong> moet verschillende opties hebben."
+    default_poll_must_not_have_any_empty_options: "De poll mag geen lege opties hebben."
+    named_poll_must_not_have_any_empty_options: "De poll met de naam <strong>%{name}</strong> mag geen lege opties hebben."
     default_poll_with_multiple_choices_has_invalid_parameters: "De poll met meerdere keuzes heeft ongeldige parameters."
     named_poll_with_multiple_choices_has_invalid_parameters: "De poll met de naam <strong>%{name}</strong> met meerdere keuzes heeft ongeldige parameters."
-    requires_at_least_1_valid_option: "Kies minstens 1 geldige optie."
+    requires_at_least_1_valid_option: "U moet minstens 1 geldige optie selecteren."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "U kunt na de eerste %{minutes} minuten geen poll wijzigen."
       cannot_edit_named_poll_with_votes: "U kunt de pollnaam <strong>${name}</strong> na de eerste %{minutes} minuten niet wijzigen."
@@ -41,3 +46,5 @@ nl:
     insufficient_rights_to_create: "U mag geen polls maken."
     email:
       link_to_poll: "Klik om de poll te bekijken."
+    user_field:
+      no_data: "Geen gegevens"

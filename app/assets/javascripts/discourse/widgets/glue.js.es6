@@ -1,6 +1,9 @@
+import { cancel } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import { diff, patch } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import DirtyKeys from "discourse/lib/dirty-keys";
+import ENV from "discourse-common/config/environment";
 
 export default class WidgetGlue {
   constructor(name, register, attrs) {
@@ -25,14 +28,14 @@ export default class WidgetGlue {
   }
 
   queueRerender() {
-    this._timeout = Ember.run.scheduleOnce("render", this, this.rerenderWidget);
+    this._timeout = scheduleOnce("render", this, this.rerenderWidget);
   }
 
   rerenderWidget() {
-    Ember.run.cancel(this._timeout);
+    cancel(this._timeout);
 
     // in test mode return early if store cannot be found
-    if (Ember.testing) {
+    if (ENV.environment === "test") {
       try {
         this.register.lookup("service:store");
       } catch (e) {
@@ -51,6 +54,18 @@ export default class WidgetGlue {
   }
 
   cleanUp() {
-    Ember.run.cancel(this._timeout);
+    const widgets = [];
+    const findWidgets = widget => {
+      widget.vnode.children.forEach(child => {
+        if (child.constructor.name === "CustomWidget") {
+          widgets.push(child);
+          findWidgets(child, widgets);
+        }
+      });
+    };
+    findWidgets(this._tree, widgets);
+    widgets.reverse().forEach(widget => widget.destroy());
+
+    cancel(this._timeout);
   }
 }

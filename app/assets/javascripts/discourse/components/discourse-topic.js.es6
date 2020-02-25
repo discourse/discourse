@@ -1,9 +1,15 @@
+import { alias } from "@ember/object/computed";
+import { throttle } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { later } from "@ember/runloop";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
 import Scrolling from "discourse/mixins/scrolling";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
 
@@ -14,12 +20,12 @@ function highlight(postNumber) {
   $contents.on("animationend", () => $contents.removeClass("highlighted"));
 }
 
-export default Ember.Component.extend(
+export default Component.extend(
   AddArchetypeClass,
   Scrolling,
   MobileScrollDirection,
   {
-    userFilters: Ember.computed.alias("topic.userFilters"),
+    userFilters: alias("topic.userFilters"),
     classNameBindings: [
       "multiSelect",
       "topic.archetype",
@@ -32,8 +38,8 @@ export default Ember.Component.extend(
     menuVisible: true,
     SHORT_POST: 1200,
 
-    postStream: Ember.computed.alias("topic.postStream"),
-    archetype: Ember.computed.alias("topic.archetype"),
+    postStream: alias("topic.postStream"),
+    archetype: alias("topic.archetype"),
     dockAt: 0,
 
     _lastShowTopic: null,
@@ -49,13 +55,13 @@ export default Ember.Component.extend(
       const enteredAt = this.enteredAt;
       if (enteredAt && this.lastEnteredAt !== enteredAt) {
         this._lastShowTopic = null;
-        Ember.run.schedule("afterRender", () => this.scrolled());
+        schedule("afterRender", () => this.scrolled());
         this.set("lastEnteredAt", enteredAt);
       }
     },
 
     _highlightPost(postNumber) {
-      Ember.run.scheduleOnce("afterRender", null, highlight, postNumber);
+      scheduleOnce("afterRender", null, highlight, postNumber);
     },
 
     _hideTopicInHeader() {
@@ -77,7 +83,7 @@ export default Ember.Component.extend(
           this.pauseHeaderTopicUpdate = true;
           this._lastShowTopic = true;
 
-          Ember.run.later(() => {
+          later(() => {
             this._lastShowTopic = false;
             this.pauseHeaderTopicUpdate = false;
           }, debounceDuration);
@@ -102,7 +108,7 @@ export default Ember.Component.extend(
 
       $(window).on("resize.discourse-on-scroll", () => this.scrolled());
 
-      this.$().on(
+      $(this.element).on(
         "click.discourse-redirect",
         ".cooked a, a.track-link",
         function(e) {
@@ -110,6 +116,7 @@ export default Ember.Component.extend(
         }
       );
 
+      this.appEvents.on("discourse:focus-changed", this, "gotFocus");
       this.appEvents.on("post:highlight", this, "_highlightPost");
       this.appEvents.on("header:update-topic", this, "_updateTopic");
     },
@@ -120,19 +127,22 @@ export default Ember.Component.extend(
       $(window).unbind("resize.discourse-on-scroll");
 
       // Unbind link tracking
-      this.$().off("click.discourse-redirect", ".cooked a, a.track-link");
+      $(this.element).off(
+        "click.discourse-redirect",
+        ".cooked a, a.track-link"
+      );
 
       this.resetExamineDockCache();
 
       // this happens after route exit, stuff could have trickled in
       this._hideTopicInHeader();
+      this.appEvents.off("discourse:focus-changed", this, "gotFocus");
       this.appEvents.off("post:highlight", this, "_highlightPost");
       this.appEvents.off("header:update-topic", this, "_updateTopic");
     },
 
-    @observes("Discourse.hasFocus")
-    gotFocus() {
-      if (Discourse.get("hasFocus")) {
+    gotFocus(hasFocus) {
+      if (hasFocus) {
         this.scrolled();
       }
     },
@@ -187,7 +197,7 @@ export default Ember.Component.extend(
       // at the start of the scroll. This feels a lot more snappy compared to waiting
       // for the scroll to end if we debounce.
       if (this.site.mobileView && this.hasScrolled) {
-        Ember.run.throttle(
+        throttle(
           this,
           this.calculateDirection,
           offset,

@@ -1,16 +1,19 @@
+import EmberObject from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 import BackupStatus from "admin/models/backup-status";
 import Backup from "admin/models/backup";
 import PreloadStore from "preload-store";
+import User from "discourse/models/user";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   activate() {
     this.messageBus.subscribe(LOG_CHANNEL, log => {
       if (log.message === "[STARTED]") {
-        Discourse.User.currentProp("hideReadOnlyAlert", true);
+        User.currentProp("hideReadOnlyAlert", true);
         this.controllerFor("adminBackups").set(
           "model.isOperationRunning",
           true
@@ -29,19 +32,19 @@ export default Discourse.Route.extend({
           })
         );
       } else if (log.message === "[SUCCESS]") {
-        Discourse.User.currentProp("hideReadOnlyAlert", false);
+        User.currentProp("hideReadOnlyAlert", false);
         this.controllerFor("adminBackups").set(
           "model.isOperationRunning",
           false
         );
         if (log.operation === "restore") {
           // redirect to homepage when the restore is done (session might be lost)
-          window.location.pathname = Discourse.getURL("/");
+          window.location = Discourse.getURL("/");
         }
       } else {
         this.controllerFor("adminBackupsLogs")
           .get("logs")
-          .pushObject(Ember.Object.create(log));
+          .pushObject(EmberObject.create(log));
       }
     });
   },

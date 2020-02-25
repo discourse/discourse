@@ -7,13 +7,12 @@
 
 bg:
   site_settings:
+    poll_enabled: "Позволи анкети?"
     poll_maximum_options: "Максимален брой опции позволени в анкетата."
     poll_edit_window_mins: "Брой минути след създаването на анкета когато тя може да бъде редактирана."
   poll:
-    multiple_polls_without_name: "Има много анкети без име. Използвай '<code>име</code>'  атрибута за да идентифицирате вашата публикация."
+    multiple_polls_without_name: "Има много анкети без име. Използвай '<code>име</code>' атрибута за да идентифицирате вашата публикация."
     multiple_polls_with_same_name: "Има много анкети с това име: <strong>%{name}</strong>. Използвайте '<code>name</code>' за да се отличат вашите анкети."
-    default_poll_must_have_at_least_2_options: "Анкетата трябва да има поне 2 опции."
-    named_poll_must_have_at_least_2_options: "Анкетата <strong>%{name}</strong> трябва да има поне  2 опции."
     default_poll_must_have_less_options:
       one: "Анкетата трябва да има по-малко от %{count} опция."
       other: "Анкетата трябва да има по-малко от %{count} опции."
@@ -21,7 +20,7 @@ bg:
       one: "Анкетата: <strong>%{name}</strong> трябва да има по-малко от %{count} опция."
       other: "Анкетата <strong>%{name}</strong> трябва да има по-малко от %{count} опции."
     default_poll_must_have_different_options: "Анкетата трябва да има различни опции."
-    named_poll_must_have_different_options: "Анкетата  <strong>%{name}</strong> трябва да има различни възможни отговори."
+    named_poll_must_have_different_options: "Анкетата <strong>%{name}</strong> трябва да има различни възможни отговори."
     default_poll_with_multiple_choices_has_invalid_parameters: "Анкетата с множество възможни избора има невалидни параметри."
     named_poll_with_multiple_choices_has_invalid_parameters: "Анкетата <strong>%{name}</strong> е с множество възможни отговори и има невалидни параметри."
     requires_at_least_1_valid_option: "Трябва да изберете най-малко 1 валиден вариант."

@@ -86,11 +86,29 @@ export default function() {
             this.route("edit", { path: "/:id" });
           }
         );
+        this.route("adminCustomizeRobotsTxt", {
+          path: "/robots",
+          resetNamespace: true
+        });
+        this.route(
+          "adminCustomizeEmailStyle",
+          { path: "/email_style", resetNamespace: true },
+          function() {
+            this.route("edit", { path: "/:field_name" });
+          }
+        );
       }
     );
 
     this.route("adminApi", { path: "/api", resetNamespace: true }, function() {
-      this.route("adminApiKeys", { path: "/keys", resetNamespace: true });
+      this.route(
+        "adminApiKeys",
+        { path: "/keys", resetNamespace: true },
+        function() {
+          this.route("show", { path: "/:api_key_id" });
+          this.route("new", { path: "/new" });
+        }
+      );
 
       this.route(
         "adminWebHooks",
@@ -172,6 +190,7 @@ export default function() {
       "adminBadges",
       { path: "/badges", resetNamespace: true },
       function() {
+        this.route("award", { path: "/award/:badge_id" });
         this.route("show", { path: "/:badge_id" });
       }
     );

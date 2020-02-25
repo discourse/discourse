@@ -15,7 +15,7 @@ describe UserAvatar do
       before do
         temp.binmode
         # tiny valid png
-        temp.write(Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw=="))
+        temp.write(Base64.decode64("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="))
         temp.rewind
         FileHelper.expects(:download).returns(temp)
       end
@@ -28,7 +28,6 @@ describe UserAvatar do
         freeze_time Time.now
 
         expect { avatar.update_gravatar! }.to change { Upload.count }.by(1)
-
         expect(avatar.gravatar_upload).to eq(Upload.last)
         expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
         expect(user.reload.uploaded_avatar).to eq(nil)
@@ -36,7 +35,13 @@ describe UserAvatar do
         expect do
           avatar.destroy
         end.to_not change { Upload.count }
+      end
 
+      it "updates gravatars even if uploads have been disabled" do
+        SiteSetting.authorized_extensions = ""
+
+        expect { avatar.update_gravatar! }.to change { Upload.count }.by(1)
+        expect(avatar.gravatar_upload).to eq(Upload.last)
       end
 
       describe 'when user has an existing custom upload' do

@@ -261,8 +261,15 @@ describe UploadsController do
       get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
       expect(response.status).to eq(200)
 
-      # rails 6 adds UTF-8 filename to disposition
-      expect(response.headers["Content-Disposition"]).to include("attachment; filename=\"logo.png\"")
+      expect(response.headers["Content-Disposition"])
+        .to eq(%Q|attachment; filename="logo.png"; filename*=UTF-8''logo.png|)
+    end
+
+    it 'returns 200 when js file' do
+      ActionDispatch::FileHandler.any_instance.stubs(:match?).returns(false)
+      upload = upload_file("test.js", "themes")
+      get upload.url
+      expect(response.status).to eq(200)
     end
 
     it "handles image without extension" do
@@ -271,7 +278,8 @@ describe UploadsController do
 
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
-      expect(response.headers["Content-Disposition"]).to include("attachment; filename=\"image_no_extension.png\"")
+      expect(response.headers["Content-Disposition"])
+        .to eq(%Q|attachment; filename="image_no_extension.png"; filename*=UTF-8''image_no_extension.png|)
     end
 
     it "handles file without extension" do
@@ -280,7 +288,8 @@ describe UploadsController do
 
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
-      expect(response.headers["Content-Disposition"]).to include("attachment; filename=\"not_an_image\"")
+      expect(response.headers["Content-Disposition"])
+        .to eq(%Q|attachment; filename="not_an_image"; filename*=UTF-8''not_an_image|)
     end
 
     context "prevent anons from downloading files" do
@@ -335,6 +344,13 @@ describe UploadsController do
         expect(response.status).to eq(404)
       end
 
+      it "returns uploads with underscore in extension correctly" do
+        fake_upload = upload_file("fake.not_image")
+        get fake_upload.short_path
+
+        expect(response.status).to eq(200)
+      end
+
       it "returns the right response when anon tries to download a file " \
          "when prevent_anons_from_downloading_files is true" do
 
@@ -361,6 +377,168 @@ describe UploadsController do
 
         expect(response).to redirect_to(upload.url)
       end
+
+      context "when upload is secure and secure media enabled" do
+        before do
+          SiteSetting.secure_media = true
+          upload.update(secure: true)
+          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+        end
+
+        it "redirects to the signed_url_for_path" do
+          get upload.short_path
+
+          expect(response).to redirect_to(Discourse.store.signed_url_for_path(Discourse.store.get_path_for_upload(upload)))
+        end
+
+        it "raises invalid access if the user cannot access the upload access control post" do
+          post = Fabricate(:post)
+          post.topic.change_category_to_id(Fabricate(:private_category, group: Fabricate(:group)).id)
+          upload.update(access_control_post: post)
+
+          get upload.short_path
+
+          expect(response.code).to eq("403")
+        end
+      end
+    end
+  end
+
+  describe "#show_secure" do
+    describe "local store" do
+      fab!(:image_upload) { upload_file("smallest.png") }
+
+      it "does not return secure media when using local store" do
+        secure_url = image_upload.url.sub("/uploads", "/secure-media-uploads")
+        get secure_url
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe "s3 store" do
+      let(:upload) { Fabricate(:upload_s3) }
+      let(:secure_url) { upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads") }
+
+      def sign_in_and_stub_head
+        sign_in(user)
+        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+      end
+
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "fakeid7974664"
+        SiteSetting.s3_secret_access_key = "fakesecretid7974664"
+        SiteSetting.s3_region = "us-east-1"
+        SiteSetting.secure_media = true
+      end
+
+      it "should return 404 for anonymous requests requests" do
+        get secure_url
+        expect(response.status).to eq(404)
+      end
+
+      it "should return signed url for legitimate request" do
+        sign_in_and_stub_head
+
+        get secure_url
+
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to match("Amz-Expires")
+      end
+
+      it "should return secure media URL when looking up urls" do
+        upload.update_column(:secure, true)
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).to match("secure-media-uploads")
+      end
+
+      context "when the upload cannot be found from the URL" do
+        it "returns a 404" do
+          sign_in_and_stub_head
+          upload.update(sha1: 'test')
+
+          get secure_url
+          expect(response.status).to eq(404)
+        end
+      end
+
+      context "when the access_control_post_id has been set for the upload" do
+        let(:post) { Fabricate(:post) }
+        let!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+        before do
+          sign_in_and_stub_head
+          upload.update(access_control_post_id: post.id)
+        end
+
+        context "when the user has access to the post via guardian" do
+          it "should return signed url for legitimate request" do
+            sign_in_and_stub_head
+            get secure_url
+            expect(response.status).to eq(302)
+            expect(response.redirect_url).to match("Amz-Expires")
+          end
+        end
+
+        context "when the user does not have access to the post via guardian" do
+          before do
+            post.topic.change_category_to_id(private_category.id)
+          end
+
+          it "returns a 403" do
+            sign_in_and_stub_head
+            get secure_url
+            expect(response.status).to eq(403)
+          end
+        end
+      end
+
+      context "when secure media is disabled" do
+        before do
+          SiteSetting.secure_media = false
+        end
+
+        context "if the upload is secure false, meaning the ACL is probably public" do
+          before do
+            upload.update(secure: false)
+          end
+
+          it "should redirect to the regular show route" do
+            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+            sign_in(user)
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+            get secure_url
+
+            expect(response.status).to eq(302)
+            expect(response.redirect_url).to eq(Discourse.store.cdn_url(upload.url))
+          end
+        end
+
+        context "if the upload is secure true, meaning the ACL is probably private" do
+          before do
+            upload.update(secure: true)
+          end
+
+          it "should redirect to the presigned URL still otherwise we will get a 403" do
+            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+            sign_in(user)
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+            get secure_url
+
+            expect(response.status).to eq(302)
+            expect(response.redirect_url).to match("Amz-Expires")
+          end
+        end
+      end
     end
   end
 
@@ -375,6 +553,42 @@ describe UploadsController do
       result = JSON.parse(response.body)
       expect(result[0]["url"]).to eq(upload.url)
       expect(result[0]["short_path"]).to eq(upload.short_path)
+    end
+
+    describe 'secure media' do
+      let(:upload) { Fabricate(:upload_s3, secure: true) }
+
+      before do
+        SiteSetting.authorized_extensions = "pdf|png"
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.secure_media = true
+      end
+
+      it 'returns secure url for a secure media upload' do
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).to match("/secure-media-uploads")
+        expect(result[0]["short_path"]).to eq(upload.short_path)
+      end
+
+      it 'does not return secure urls for non-media uploads' do
+        upload.update!(original_filename: "not-an-image.pdf", extension: "pdf")
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).not_to match("/secure-media-uploads")
+        expect(result[0]["short_path"]).to eq(upload.short_path)
+      end
     end
   end
 

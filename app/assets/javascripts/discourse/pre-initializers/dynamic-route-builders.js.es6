@@ -2,6 +2,8 @@ import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
 import DiscoverySortableController from "discourse/controllers/discovery-sortable";
 import TagsShowRoute from "discourse/routes/tags-show";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 export default {
   after: "inject-discourse-objects",
@@ -18,8 +20,9 @@ export default {
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute("default", {
       no_subcategories: true
     });
+    app.DiscoveryCategoryWithIDRoute = buildCategoryRoute("default");
 
-    const site = Discourse.Site.current();
+    const site = Site.current();
     site.get("filters").forEach(filter => {
       const filterCapitalized = filter.capitalize();
       app[
@@ -54,8 +57,8 @@ export default {
     Discourse.DiscoveryTopRoute = buildTopicRoute("top", {
       actions: {
         willTransition() {
-          Discourse.User.currentProp("should_be_redirected_to_top", false);
-          Discourse.User.currentProp("redirected_to_top.reason", null);
+          User.currentProp("should_be_redirected_to_top", false);
+          User.currentProp("redirected_to_top.reason", null);
           return this._super(...arguments);
         }
       }
@@ -95,15 +98,26 @@ export default {
     });
 
     app["TagsShowCategoryRoute"] = TagsShowRoute.extend();
+    app["TagsShowCategoryNoneRoute"] = TagsShowRoute.extend({
+      noSubcategories: true
+    });
     app["TagsShowParentCategoryRoute"] = TagsShowRoute.extend();
+
+    app["TagShowRoute"] = TagsShowRoute;
 
     site.get("filters").forEach(function(filter) {
       app["TagsShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
         navMode: filter
       });
+      app["TagShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
+        navMode: filter
+      });
       app[
         "TagsShowCategory" + filter.capitalize() + "Route"
       ] = TagsShowRoute.extend({ navMode: filter });
+      app[
+        "TagsShowNoneCategory" + filter.capitalize() + "Route"
+      ] = TagsShowRoute.extend({ navMode: filter, noSubcategories: true });
       app[
         "TagsShowParentCategory" + filter.capitalize() + "Route"
       ] = TagsShowRoute.extend({ navMode: filter });

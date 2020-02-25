@@ -18,10 +18,14 @@ fi:
       public:
         title: "Äänet ovat <strong>julkisia</strong>."
       results:
+        groups:
+          title: "Täytyy olla ryhmien %{groups} jäsen, jotta voi äänestää tässä äänestyksessä."
         vote:
           title: "Näet äänet, kun <strong>olet äänestänyt</strong>."
         closed:
           title: "Tulokset näytetään äänestyksen <strong>sulkeuduttua</strong>."
+        staff:
+          title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille. "
       multiple:
         help:
           at_least_min_options:
@@ -31,7 +35,7 @@ fi:
             one: "Valitse enintään <strong>%{count}</strong> vaihtoehto"
             other: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa"
           x_options:
-            one: "Valitse  <strong>%{count}</strong> vaihtoehto"
+            one: "Valitse <strong>%{count}</strong> vaihtoehto"
             other: "Valitse <strong>%{count}</strong> vaihtoehtoa"
           between_min_and_max_options: "Valitse <strong>%{min}</strong>-<strong>%{max}</strong> vaihtoehtoa"
       cast-votes:
@@ -42,7 +46,16 @@ fi:
         label: "Näytä tulos"
       hide-results:
         title: "Palaa äänestysvalintaasi"
-        label: "Piilota tulos"
+        label: "Näytä äänestys"
+      group-results:
+        title: "Lajittele äänet käyttäjäkentän perusteella"
+        label: "Näytä erittely"
+      ungroup-results:
+        title: "Yhdistä kaikki äänet"
+        label: "Piilota erittely"
+      export-results:
+        title: "Vie äänestystulos"
+        label: "Vie"
       open:
         title: "Avaa äänestys"
         label: "Avaa"
@@ -57,11 +70,12 @@ fi:
       error_while_toggling_status: "Pahoittelut, äänestyksen tilaa muutettaessa tapahtui virhe."
       error_while_casting_votes: "Pahoittelut, ääntä annettaessa tapahtui virhe."
       error_while_fetching_voters: "Pahoittelut, äänestäneiden näyttämisessä tapahtui virhe."
+      error_while_exporting_results: "Pahoittelut, äänestystuloksen vienti epäonnistui."
       ui_builder:
         title: Luo äänestys
         insert: Lisää äänestys
         help:
-          options_count: Valitse vähintään 2 vaihtoehtoa
+          options_count: Syötä ainakin 1 vaihtoehto
           invalid_values: Vähimmäisarvon täytyy olla enimmäisarvoa pienempi.
           min_step_value: Askelvälin on oltava vähintään 1
         poll_type:
@@ -74,6 +88,11 @@ fi:
           always: Näkyvät aina
           vote: Kun on äänestänyt
           closed: Kun äänestys suljettu
+          staff: Vain henkilökunta
+        poll_groups:
+          label: Sallitut ryhmät
+        poll_chart_type:
+          label: Kuvaajan tyyppi
         poll_config:
           max: Enint.
           min: Väh.

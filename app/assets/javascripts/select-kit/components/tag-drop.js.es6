@@ -1,187 +1,195 @@
+import Category from "discourse/models/category";
+import { readOnly, or, equal, gte } from "@ember/object/computed";
+import { i18n, setting } from "discourse/lib/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
-import { default as computed } from "ember-addons/ember-computed-decorators";
-const { isEmpty, run } = Ember;
+import { computed } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { makeArray } from "discourse-common/lib/helpers";
+
+export const NO_TAG_ID = "no-tags";
+export const ALL_TAGS_ID = "all-tags";
+export const NONE_TAG_ID = "none";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
   classNameBindings: ["categoryStyle", "tagClass"],
-  classNames: "tag-drop",
-  verticalOffset: 3,
-  value: Ember.computed.alias("tagId"),
-  headerComponent: "tag-drop/tag-drop-header",
-  allowAutoSelectFirst: false,
+  classNames: ["tag-drop"],
+  value: readOnly("tagId"),
   tagName: "li",
-  showFilterByTag: Ember.computed.alias("siteSettings.show_filter_by_tag"),
-  currentCategory: Ember.computed.or("secondCategory", "firstCategory"),
-  tagId: null,
-  categoryStyle: Ember.computed.alias("siteSettings.category_style"),
-  mutateAttributes() {},
-  fullWidthOnMobile: true,
-  caretDownIcon: "caret-right",
-  caretUpIcon: "caret-down",
-  allowContentReplacement: true,
-  isAsync: true,
+  currentCategory: or("secondCategory", "firstCategory"),
+  showFilterByTag: setting("show_filter_by_tag"),
+  categoryStyle: setting("category_style"),
+  maxTagSearchResults: setting("max_tag_search_results"),
+  sortTagsAlphabetically: setting("tags_sort_alphabetically"),
+  isVisible: computed("showFilterByTag", "content.[]", function() {
+    if (this.showFilterByTag && !isEmpty(this.content)) {
+      return true;
+    }
 
-  @computed("tagId")
-  noTagsSelected() {
-    return this.tagId === "none";
+    return false;
+  }),
+
+  selectKitOptions: {
+    allowAny: false,
+    caretDownIcon: "caret-right",
+    caretUpIcon: "caret-down",
+    fullWidthOnMobile: true,
+    filterable: true,
+    headerComponent: "tag-drop/tag-drop-header",
+    autoInsertNoneItem: false
   },
 
-  @computed("showFilterByTag", "content")
-  isHidden(showFilterByTag, content) {
-    if (showFilterByTag && !isEmpty(content)) return false;
-    return true;
-  },
+  noTagsSelected: equal("tagId", NONE_TAG_ID),
 
-  @computed("content")
-  filterable(content) {
-    return content && content.length >= 15;
-  },
+  filterable: gte("content.length", 15),
 
-  computeHeaderContent() {
-    let content = this._super(...arguments);
-
-    if (!content.value) {
-      if (this.tagId) {
-        if (this.tagId === "none") {
-          content.title = this.noTagsLabel;
-        } else {
-          content.title = this.tagId;
-        }
-      } else if (this.noTagsSelected) {
-        content.title = this.noTagsLabel;
-      } else {
-        content.title = this.allTagsLabel;
-      }
+  modifyNoSelection() {
+    if (this.noTagsSelected) {
+      return this.defaultItem(NO_TAG_ID, this.noTagsLabel);
     } else {
-      content.title = content.value;
+      return this.defaultItem(ALL_TAGS_ID, this.allTagsLabel);
+    }
+  },
+
+  modifySelection(content) {
+    if (this.tagId) {
+      if (this.noTagsSelected) {
+        content = this.defaultItem(NO_TAG_ID, this.noTagsLabel);
+      } else {
+        content = this.defaultItem(this.tagId, this.tagId);
+      }
     }
 
     return content;
   },
 
-  @computed("tagId")
-  tagClass(tagId) {
-    return tagId ? `tag-${tagId}` : "tag_all";
-  },
+  tagClass: computed("tagId", function() {
+    return this.tagId ? `tag-${this.tagId}` : "tag_all";
+  }),
 
-  @computed("firstCategory", "secondCategory")
-  allTagsUrl() {
+  currentCategoryUrl: readOnly("currentCategory.url"),
+
+  allTagsUrl: computed("firstCategory", "secondCategory", function() {
     if (this.currentCategory) {
-      return Discourse.getURL(this.get("currentCategory.url") + "?allTags=1");
+      return Discourse.getURL(`${this.currentCategoryUrl}?allTags=1`);
     } else {
       return Discourse.getURL("/");
     }
-  },
+  }),
 
-  @computed("firstCategory", "secondCategory")
-  noTagsUrl() {
-    var url = "/tags";
+  noTagsUrl: computed("firstCategory", "secondCategory", function() {
+    let url = "/tags";
     if (this.currentCategory) {
-      url += this.get("currentCategory.url");
+      url += `/c/${Category.slugFor(this.currentCategory)}/${
+        this.currentCategory.id
+      }`;
     }
-    return Discourse.getURL(`${url}/none`);
-  },
+    return Discourse.getURL(`${url}/${NONE_TAG_ID}`);
+  }),
 
-  @computed("tag")
-  allTagsLabel() {
-    return I18n.t("tagging.selector_all_tags");
-  },
+  allTagsLabel: i18n("tagging.selector_all_tags"),
 
-  @computed("tag")
-  noTagsLabel() {
-    return I18n.t("tagging.selector_no_tags");
-  },
+  noTagsLabel: i18n("tagging.selector_no_tags"),
 
-  @computed("tagId", "allTagsLabel", "noTagsLabel")
-  shortcuts(tagId, allTagsLabel, noTagsLabel) {
+  shortcuts: computed("tagId", function() {
     const shortcuts = [];
 
-    if (tagId !== "none") {
+    if (this.tagId !== NONE_TAG_ID) {
       shortcuts.push({
-        name: noTagsLabel,
-        __sk_row_type: "noopRow",
-        id: "no-tags"
+        id: NO_TAG_ID,
+        name: this.noTagsLabel
       });
     }
 
-    if (tagId) {
-      shortcuts.push({
-        name: allTagsLabel,
-        __sk_row_type: "noopRow",
-        id: "all-tags"
-      });
+    if (this.tagId) {
+      shortcuts.push({ id: ALL_TAGS_ID, name: this.allTagsLabel });
     }
 
     return shortcuts;
-  },
+  }),
 
-  @computed("site.top_tags", "shortcuts")
-  content(topTags, shortcuts) {
-    if (this.siteSettings.tags_sort_alphabetically && topTags) {
-      return shortcuts.concat(topTags.sort());
+  topTags: computed(
+    "firstCategory",
+    "secondCategory",
+    "site.category_top_tags.[]",
+    "site.top_tags.[]",
+    function() {
+      if (this.currentCategory && this.site.category_top_tags) {
+        return this.site.category_top_tags;
+      }
+
+      return this.site.top_tags;
+    }
+  ),
+
+  content: computed("topTags.[]", "shortcuts.[]", function() {
+    if (this.sortTagsAlphabetically && this.topTags) {
+      return this.shortcuts.concat(this.topTags.sort());
     } else {
-      return shortcuts.concat(Ember.makeArray(topTags));
+      return this.shortcuts.concat(makeArray(this.topTags));
+    }
+  }),
+
+  search(filter) {
+    if (filter) {
+      const data = {
+        q: filter,
+        limit: this.maxTagSearchResults
+      };
+
+      return this.searchTags("/tags/filter/search", data, this._transformJson);
+    } else {
+      return (this.content || []).map(tag => {
+        if (tag.id && tag.name) {
+          return tag;
+        }
+        return this.defaultItem(tag, tag);
+      });
     }
   },
 
-  _prepareSearch(query) {
-    const data = {
-      q: query,
-      limit: this.get("siteSettings.max_tag_search_results")
-    };
-
-    this.searchTags("/tags/filter/search", data, this._transformJson);
-  },
-
   _transformJson(context, json) {
-    let results = json.results;
-    results = results.sort((a, b) => a.id > b.id);
-
-    return results.map(r => {
-      return { id: r.id, name: r.text };
-    });
+    return json.results
+      .sort((a, b) => a.id > b.id)
+      .map(r => {
+        const content = context.defaultItem(r.id, r.text);
+        content.targetTagId = r.target_tag || r.id;
+        content.count = r.count;
+        content.pmCount = r.pm_count;
+        return content;
+      });
   },
 
   actions: {
-    onSelect(tagId) {
+    onChange(tagId, tag) {
       let url;
 
-      if (tagId === "all-tags") {
-        url = Discourse.getURL(this.allTagsUrl);
-      } else if (tagId === "no-tags") {
-        url = Discourse.getURL(this.noTagsUrl);
-      } else {
-        url = "/tags";
-        if (this.currentCategory) {
-          url += this.get("currentCategory.url");
-        }
-        url = Discourse.getURL(`${url}/${tagId.toLowerCase()}`);
+      switch (tagId) {
+        case ALL_TAGS_ID:
+          url = this.allTagsUrl;
+          break;
+        case NO_TAG_ID:
+          url = this.noTagsUrl;
+          break;
+        default:
+          if (this.currentCategory) {
+            url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
+              this.currentCategory.id
+            }`;
+          } else {
+            url = "/tag";
+          }
+
+          if (tag && tag.targetTagId) {
+            url += `/${tag.targetTagId.toLowerCase()}`;
+          } else {
+            url += `/${tagId.toLowerCase()}`;
+          }
       }
 
-      DiscourseURL.routeTo(url);
-    },
-
-    onExpand() {
-      if (isEmpty(this.asyncContent)) {
-        this.set("asyncContent", this.content);
-      }
-    },
-
-    onFilter(filter) {
-      if (isEmpty(filter)) {
-        this.set("asyncContent", this.content);
-        return;
-      }
-
-      this.startLoading();
-
-      this.set(
-        "searchDebounce",
-        run.debounce(this, this._prepareSearch, filter, 350)
-      );
+      DiscourseURL.routeTo(Discourse.getURL(url));
     }
   }
 });

@@ -12,7 +12,7 @@ describe Auth::ManagedAuthenticator do
   }
 
   let(:hash) {
-    {
+    OmniAuth::AuthHash.new(
       provider: "myauth",
       uid: "1234",
       info: {
@@ -28,14 +28,14 @@ describe Auth::ManagedAuthenticator do
           randominfo: "some info"
         }
       }
-    }
+    )
   }
 
   let(:create_hash) {
-    {
+    OmniAuth::AuthHash.new(
       provider: "myauth",
       uid: "1234"
-    }
+    )
   }
 
   describe 'after_authenticate' do
@@ -90,6 +90,11 @@ describe Auth::ManagedAuthenticator do
     end
 
     describe 'match by email' do
+      it 'downcases the email address from the authprovider' do
+        result = authenticator.after_authenticate(hash.deep_merge(info: { email: "HELLO@example.com" }))
+        expect(result.email).to eq('hello@example.com')
+      end
+
       it 'works normally' do
         user = Fabricate(:user)
         result = authenticator.after_authenticate(hash.deep_merge(info: { email: user.email }))
@@ -134,6 +139,23 @@ describe Auth::ManagedAuthenticator do
         user = Fabricate(:user, email: "awesome@example.com")
         result = authenticator.after_authenticate(hash)
         expect(result.user.id).to eq(user.id)
+      end
+
+      it 'works if there is no email' do
+        expect {
+          result = authenticator.after_authenticate(hash.deep_merge(info: { email: nil }))
+          expect(result.user).to eq(nil)
+          expect(result.username).to eq("IAmGroot")
+          expect(result.email).to eq(nil)
+        }.to change { UserAssociatedAccount.count }.by(1)
+        expect(UserAssociatedAccount.last.user).to eq(nil)
+        expect(UserAssociatedAccount.last.info["nickname"]).to eq("IAmGroot")
+      end
+
+      it 'will ignore name when equal to email' do
+        result = authenticator.after_authenticate(hash.deep_merge(info: { name: hash.info.email }))
+        expect(result.email).to eq(hash.info.email)
+        expect(result.name).to eq(nil)
       end
     end
 

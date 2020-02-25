@@ -1,5 +1,6 @@
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
-import { acceptance } from "helpers/qunit-helpers";
+
 import User from "discourse/models/user";
 
 acceptance("User Preferences", {
@@ -7,12 +8,19 @@ acceptance("User Preferences", {
   pretend(server, helper) {
     server.post("/u/second_factors.json", () => {
       return helper.response({
+        success: "OK",
+        password_required: "true"
+      });
+    });
+
+    server.post("/u/create_second_factor_totp.json", () => {
+      return helper.response({
         key: "rcyryaqage3jexfj",
         qr: '<div id="test-qr">qr-code</div>'
       });
     });
 
-    server.put("/u/second_factor.json", () => {
+    server.post("/u/enable_second_factor_totp.json", () => {
       return helper.response({ error: "invalid token" });
     });
 
@@ -152,11 +160,6 @@ QUnit.test("username", async assert => {
   assert.ok(exists("#change_username"), "it has the input element");
 });
 
-QUnit.test("about me", async assert => {
-  await visit("/u/eviltrout/preferences/about-me");
-  assert.ok(exists(".raw-bio"), "it has the input element");
-});
-
 QUnit.test("email", async assert => {
   await visit("/u/eviltrout/preferences/email");
 
@@ -215,12 +218,13 @@ QUnit.test("second factor", async assert => {
 
   await fillIn("#password", "secrets");
   await click(".user-preferences .btn-primary");
-
-  assert.ok(exists("#test-qr"), "shows qr code");
   assert.notOk(exists("#password"), "it hides the password input");
 
+  await click(".new-totp");
+  assert.ok(exists("#test-qr"), "shows qr code");
+
   await fillIn("#second-factor-token", "111111");
-  await click(".btn-primary");
+  await click(".add-totp");
 
   assert.ok(
     find(".alert-error")
@@ -228,20 +232,6 @@ QUnit.test("second factor", async assert => {
       .indexOf("invalid token") > -1,
     "shows server validation error message"
   );
-});
-
-QUnit.test("second factor backup", async assert => {
-  await visit("/u/eviltrout/preferences/second-factor-backup");
-
-  assert.ok(
-    exists("#second-factor-token"),
-    "it has a authentication token input"
-  );
-
-  await fillIn("#second-factor-token", "111111");
-  await click(".user-preferences .btn-primary");
-
-  assert.ok(exists(".backup-codes-area"), "shows backup codes");
 });
 
 QUnit.test("default avatar selector", async assert => {
@@ -257,6 +247,40 @@ QUnit.test("default avatar selector", async assert => {
     6543,
     "it should set the gravatar_avatar_upload_id property"
   );
+});
+
+acceptance("Second Factor Backups", {
+  loggedIn: true,
+  pretend(server, helper) {
+    server.post("/u/second_factors.json", () => {
+      return helper.response({
+        success: "OK",
+        totps: [{ id: 1, name: "one of them" }]
+      });
+    });
+
+    server.put("/u/second_factors_backup.json", () => {
+      return helper.response({
+        backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"]
+      });
+    });
+
+    server.get("/u/eviltrout/activity.json", () => {
+      return helper.response({});
+    });
+  }
+});
+QUnit.test("second factor backup", async assert => {
+  updateCurrentUser({ second_factor_enabled: true });
+  await visit("/u/eviltrout/preferences/second-factor");
+  await click(".edit-2fa-backup");
+  assert.ok(
+    exists(".second-factor-backup-preferences"),
+    "shows the 2fa backup panel"
+  );
+  await click(".second-factor-backup-preferences .btn-primary");
+
+  assert.ok(exists(".backup-codes-area"), "shows backup codes");
 });
 
 acceptance("Avatar selector when selectable avatars is enabled", {
@@ -338,4 +362,83 @@ QUnit.test("recently connected devices", async assert => {
     find(".pref-password.highlighted").length === 1,
     "it should highlight password preferences"
   );
+});
+
+acceptance(
+  "User can select a topic to feature on profile if site setting in enabled",
+  {
+    loggedIn: true,
+    settings: { allow_featured_topic_on_user_profiles: true },
+
+    pretend(server, helper) {
+      server.put("/u/eviltrout/feature-topic", () => {
+        return helper.response({
+          success: true
+        });
+      });
+    }
+  }
+);
+
+QUnit.test("setting featured topic on profile", async assert => {
+  await visit("/u/eviltrout/preferences/profile");
+
+  assert.ok(
+    !exists(".featured-topic-link"),
+    "no featured topic link to present"
+  );
+  assert.ok(
+    !exists(".clear-feature-topic-on-profile-btn"),
+    "clear button not present"
+  );
+
+  const selectTopicBtn = find(".feature-topic-on-profile-btn:first");
+  assert.ok(exists(selectTopicBtn), "feature topic button is present");
+
+  await click(selectTopicBtn);
+
+  assert.ok(exists(".feature-topic-on-profile"), "topic picker modal is open");
+
+  const topicRadioBtn = find('input[name="choose_topic_id"]:first');
+  assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
+  await click(topicRadioBtn);
+
+  await click(".save-featured-topic-on-profile");
+
+  assert.ok(
+    exists(".featured-topic-link"),
+    "link to featured topic is present"
+  );
+  assert.ok(
+    exists(".clear-feature-topic-on-profile-btn"),
+    "clear button is present"
+  );
+});
+
+acceptance("Custom User Fields", {
+  loggedIn: true,
+  site: {
+    user_fields: [
+      {
+        id: 30,
+        name: "What kind of pet do you have?",
+        field_type: "dropdown",
+        options: ["Dog", "Cat", "Hamster"],
+        required: true
+      }
+    ]
+  }
+});
+
+QUnit.test("can select an option from a dropdown", async assert => {
+  await visit("/u/eviltrout/preferences/profile");
+  assert.ok(exists(".user-field"), "it has at least one user field");
+  await click(".user-field.dropdown");
+
+  const field = selectKit(
+    ".user-field-what-kind-of-pet-do-you-have .combo-box"
+  );
+  await field.expand();
+  await field.selectRowByValue("Cat");
+  assert.equal(field.header().value(), "Cat", "it sets the value of the field");
 });

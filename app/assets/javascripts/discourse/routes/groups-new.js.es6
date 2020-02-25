@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import Group from "discourse/models/group";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   showFooter: true,
 
   titleToken() {

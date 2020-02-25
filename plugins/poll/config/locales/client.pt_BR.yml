@@ -22,6 +22,8 @@ pt_BR:
           title: "Resultados serão mostrados ao <strong>votar</strong>."
         closed:
           title: "Resultados serão mostrados quando a votação <strong>fechar</strong>."
+        staff:
+          title: "Resultados são somente mostrados para <strong>funcionários</strong> membros."
       multiple:
         help:
           at_least_min_options:
@@ -42,7 +44,16 @@ pt_BR:
         label: "Mostrar resultados"
       hide-results:
         title: "Voltar para os seus votos"
-        label: "Ocultar resultados"
+        label: "Mostrar voto"
+      group-results:
+        title: "Agrupar votos por campo de usuário"
+        label: "Mostrar detalhamento"
+      ungroup-results:
+        title: "Combinar todos os votos"
+        label: "Ocultar detalhamento"
+      export-results:
+        title: "Exportar os resultados da pesquisa"
+        label: "Exportar"
       open:
         title: "Abrir a votação"
         label: "Abrir"
@@ -57,11 +68,11 @@ pt_BR:
       error_while_toggling_status: "Desculpe, houve um erro ao mudar a situação desta votação."
       error_while_casting_votes: "Desculpe, houve um erro ao registrar os seus votos."
       error_while_fetching_voters: "Desculpe, houve um erro ao mostrar os votantes."
+      error_while_exporting_results: "Desculpe, houve um erro ao exportar os resultados da pesquisa."
       ui_builder:
         title: Criar Votação
         insert: Inserir Votação
         help:
-          options_count: Insira pelo menos 2 opções
           invalid_values: O valor mínimo precisa ser menor que o valor máximo.
           min_step_value: O valor mínimo de intervalo é 1
         poll_type:
@@ -74,6 +85,9 @@ pt_BR:
           always: Sempre visível
           vote: Ao votar
           closed: Quando fechada
+          staff: Somente pessoal autorizado
+        poll_chart_type:
+          label: Tipo de gráfico
         poll_config:
           max: Máx
           min: Mín

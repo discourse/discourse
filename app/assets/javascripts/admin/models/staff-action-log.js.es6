@@ -1,7 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import { escapeExpression } from "discourse/lib/utilities";
+import RestModel from "discourse/models/rest";
 
 function format(label, value, escape = true) {
   return value
@@ -9,15 +10,15 @@ function format(label, value, escape = true) {
     : "";
 }
 
-const StaffActionLog = Discourse.Model.extend({
+const StaffActionLog = RestModel.extend({
   showFullDetails: false,
 
-  @computed("action_name")
+  @discourseComputed("action_name")
   actionName(actionName) {
     return I18n.t(`admin.logs.staff_actions.actions.${actionName}`);
   },
 
-  @computed(
+  @discourseComputed(
     "email",
     "ip_address",
     "topic_id",
@@ -68,28 +69,26 @@ const StaffActionLog = Discourse.Model.extend({
     return formatted.length > 0 ? formatted + "<br/>" : "";
   },
 
-  @computed("details")
+  @discourseComputed("details")
   useModalForDetails(details) {
     return details && details.length > 100;
   },
 
-  @computed("action_name")
+  @discourseComputed("action_name")
   useCustomModalForDetails(actionName) {
     return ["change_theme", "delete_theme"].includes(actionName);
   }
 });
 
 StaffActionLog.reopenClass({
-  create(attrs) {
-    attrs = attrs || {};
-
-    if (attrs.acting_user) {
-      attrs.acting_user = AdminUser.create(attrs.acting_user);
+  munge(json) {
+    if (json.acting_user) {
+      json.acting_user = AdminUser.create(json.acting_user);
     }
-    if (attrs.target_user) {
-      attrs.target_user = AdminUser.create(attrs.target_user);
+    if (json.target_user) {
+      json.target_user = AdminUser.create(json.target_user);
     }
-    return this._super(attrs);
+    return json;
   },
 
   findAll(data) {

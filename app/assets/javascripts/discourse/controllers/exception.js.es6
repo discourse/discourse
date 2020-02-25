@@ -1,7 +1,7 @@
-import {
-  on,
-  default as computed
-} from "ember-addons/ember-computed-decorators";
+import { equal, gte, none, alias } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Controller from "@ember/controller";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 const ButtonBackBright = {
     classes: "btn-primary",
@@ -17,7 +17,7 @@ const ButtonBackBright = {
     classes: "btn-primary",
     action: "tryLoading",
     key: "errors.buttons.again",
-    icon: "refresh"
+    icon: "sync"
   },
   ButtonLoadPage = {
     classes: "btn-primary",
@@ -26,11 +26,11 @@ const ButtonBackBright = {
   };
 
 // The controller for the nice error page
-export default Ember.Controller.extend({
+export default Controller.extend({
   thrown: null,
   lastTransition: null,
 
-  @computed
+  @discourseComputed
   isNetwork() {
     // never made it on the wire
     if (this.get("thrown.readyState") === 0) return true;
@@ -41,10 +41,10 @@ export default Ember.Controller.extend({
     return false;
   },
 
-  isNotFound: Ember.computed.equal("thrown.status", 404),
-  isForbidden: Ember.computed.equal("thrown.status", 403),
-  isServer: Ember.computed.gte("thrown.status", 500),
-  isUnknown: Ember.computed.none("isNetwork", "isServer"),
+  isNotFound: equal("thrown.status", 404),
+  isForbidden: equal("thrown.status", 403),
+  isServer: gte("thrown.status", 500),
+  isUnknown: none("isNetwork", "isServer"),
 
   // TODO
   // make ajax requests to /srv/status with exponential backoff
@@ -57,7 +57,7 @@ export default Ember.Controller.extend({
     this.set("loading", false);
   },
 
-  @computed("isNetwork", "isServer", "isUnknown")
+  @discourseComputed("isNetwork", "isServer", "isUnknown")
   reason() {
     if (this.isNetwork) {
       return I18n.t("errors.reasons.network");
@@ -73,9 +73,9 @@ export default Ember.Controller.extend({
     }
   },
 
-  requestUrl: Ember.computed.alias("thrown.requestedUrl"),
+  requestUrl: alias("thrown.requestedUrl"),
 
-  @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
+  @discourseComputed("networkFixed", "isNetwork", "isServer", "isUnknown")
   desc() {
     if (this.networkFixed) {
       return I18n.t("errors.desc.network_fixed");
@@ -93,7 +93,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
+  @discourseComputed("networkFixed", "isNetwork", "isServer", "isUnknown")
   enabledButtons() {
     if (this.networkFixed) {
       return [ButtonLoadPage];
@@ -112,7 +112,7 @@ export default Ember.Controller.extend({
     tryLoading() {
       this.set("loading", true);
 
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         this.lastTransition.retry();
         this.set("loading", false);
       });

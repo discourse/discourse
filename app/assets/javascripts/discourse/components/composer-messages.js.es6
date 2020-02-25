@@ -1,8 +1,12 @@
+import { not } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import LinkLookup from "discourse/lib/link-lookup";
 
 let _messagesCache = {};
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":composer-popup-container", "hidden"],
   checkedMessages: false,
   messages: null,
@@ -13,7 +17,7 @@ export default Ember.Component.extend({
   _yourselfConfirm: null,
   similarTopics: null,
 
-  hidden: Ember.computed.not("composer.viewOpenOrFullscreen"),
+  hidden: not("composer.viewOpenOrFullscreen"),
 
   didInsertElement() {
     this._super(...arguments);
@@ -22,7 +26,7 @@ export default Ember.Component.extend({
     this.appEvents.on("composer:find-similar", this, this._findSimilar);
     this.appEvents.on("composer-messages:close", this, this._closeTop);
     this.appEvents.on("composer-messages:create", this, this._create);
-    Ember.run.scheduleOnce("afterRender", this, this.reset);
+    scheduleOnce("afterRender", this, this.reset);
   },
 
   willDestroyElement() {
@@ -93,16 +97,11 @@ export default Ember.Component.extend({
 
     const composer = this.composer;
     if (composer.get("privateMessage")) {
-      let usernames = composer.get("targetUsernames");
-
-      if (usernames) {
-        usernames = usernames.split(",");
-      }
+      const recipients = composer.targetRecipientsArray;
 
       if (
-        usernames &&
-        usernames.length === 1 &&
-        usernames[0] === this.currentUser.get("username")
+        recipients.length > 0 &&
+        recipients.every(r => r.name === this.currentUser.get("username"))
       ) {
         const message =
           this._yourselfConfirm ||
@@ -121,7 +120,7 @@ export default Ember.Component.extend({
 
   _create(info) {
     this.reset();
-    this.send("popup", Ember.Object.create(info));
+    this.send("popup", EmberObject.create(info));
   },
 
   _findSimilar() {

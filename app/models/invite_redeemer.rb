@@ -60,7 +60,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
     user.save!
 
-    if invite.via_email
+    if invite.emailed_status != Invite.emailed_status_types[:not_required]
       user.email_tokens.create!(email: user.email)
       user.activate
     end
@@ -88,7 +88,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def mark_invite_redeemed
-    count = Invite.where('id = ? AND redeemed_at IS NULL AND created_at >= ?',
+    count = Invite.where('id = ? AND redeemed_at IS NULL AND updated_at >= ?',
                  invite.id, SiteSetting.invite_expiry_days.days.ago)
       .update_all('redeemed_at = CURRENT_TIMESTAMP')
 

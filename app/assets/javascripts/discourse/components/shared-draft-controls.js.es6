@@ -1,17 +1,18 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "",
   publishing: false,
 
-  @computed("topic.destination_category_id")
+  @discourseComputed("topic.destination_category_id")
   validCategory(destCatId) {
     return destCatId && destCatId !== this.site.shared_drafts_category_id;
   },
 
   actions: {
-    updateDestinationCategory(category) {
-      return this.topic.updateDestinationCategory(category.get("id"));
+    updateDestinationCategory(categoryId) {
+      return this.topic.updateDestinationCategory(categoryId);
     },
 
     publish() {

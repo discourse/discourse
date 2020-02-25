@@ -1,0 +1,16 @@
+{{#d-modal-body title="topic.make_public.title"}}
+
+  <div class='instructions'>
+    {{i18n "topic.make_public.choose_category"}}
+  </div>
+  {{category-chooser
+    value=publicCategoryId
+    onChange=(action (mut publicCategoryId))
+  }}
+
+{{/d-modal-body}}
+
+<div class='modal-footer'>
+  {{d-button class="btn-primary" action=(action "makePublic") label="composer.modal_ok" disabled=saving}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
+</div>

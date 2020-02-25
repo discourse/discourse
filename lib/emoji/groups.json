@@ -532,7 +532,15 @@
         "diversity": false
       },
       {
+        "name": "brown_heart",
+        "diversity": false
+      },
+      {
         "name": "black_heart",
+        "diversity": false
+      },
+      {
+        "name": "white_heart",
         "diversity": false
       },
       {
@@ -730,6 +738,14 @@
         "diversity": true
       },
       {
+        "name": "mechanical_arm",
+        "diversity": false
+      },
+      {
+        "name": "mechanical_leg",
+        "diversity": false
+      },
+      {
         "name": "leg",
         "diversity": false
       },
@@ -740,6 +756,10 @@
       {
         "name": "ear",
         "diversity": true
+      },
+      {
+        "name": "hear_with_hearing_aid",
+        "diversity": false
       },
       {
         "name": "nose",
@@ -826,10 +846,6 @@
         "diversity": true
       },
       {
-        "name": "blonde_woman",
-        "diversity": true
-      },
-      {
         "name": "woman_red_haired",
         "diversity": false
       },
@@ -844,6 +860,10 @@
       {
         "name": "woman_bald",
         "diversity": false
+      },
+      {
+        "name": "blonde_woman",
+        "diversity": true
       },
       {
         "name": "older_adult",
@@ -904,6 +924,14 @@
       {
         "name": "raising_hand_woman",
         "diversity": true
+      },
+      {
+        "name": "deaf_man",
+        "diversity": false
+      },
+      {
+        "name": "deaf_woman",
+        "diversity": false
       },
       {
         "name": "bowing_man",
@@ -1234,6 +1262,46 @@
         "diversity": true
       },
       {
+        "name": "man_standing",
+        "diversity": false
+      },
+      {
+        "name": "woman_standing",
+        "diversity": false
+      },
+      {
+        "name": "man_kneeling",
+        "diversity": false
+      },
+      {
+        "name": "woman_kneeling",
+        "diversity": false
+      },
+      {
+        "name": "man_with_probing_cane",
+        "diversity": false
+      },
+      {
+        "name": "woman_with_probing_cane",
+        "diversity": false
+      },
+      {
+        "name": "man_in_motorized_wheelchair",
+        "diversity": false
+      },
+      {
+        "name": "woman_in_motorized_wheelchair",
+        "diversity": false
+      },
+      {
+        "name": "man_in_manual_wheelchair",
+        "diversity": false
+      },
+      {
+        "name": "woman_in_manual_wheelchair",
+        "diversity": false
+      },
+      {
         "name": "running_man",
         "diversity": true
       },
@@ -1412,6 +1480,10 @@
       {
         "name": "sleeping_bed",
         "diversity": true
+      },
+      {
+        "name": "people_holding_hands",
+        "diversity": false
       },
       {
         "name": "two_women_holding_hands",
@@ -1593,6 +1665,10 @@
       },
       {
         "name": "dog2",
+        "diversity": false
+      },
+      {
+        "name": "guide_dog",
         "diversity": false
       },
       {
@@ -1785,6 +1861,10 @@
       },
       {
         "name": "otter",
+        "diversity": false
+      },
+      {
+        "name": "skunk",
         "diversity": false
       },
       {
@@ -2182,6 +2262,14 @@
         "diversity": false
       },
       {
+        "name": "garlic",
+        "diversity": false
+      },
+      {
+        "name": "onion",
+        "diversity": false
+      },
+      {
         "name": "mushroom",
         "diversity": false
       },
@@ -2274,6 +2362,10 @@
         "diversity": false
       },
       {
+        "name": "falafel",
+        "diversity": false
+      },
+      {
         "name": "egg",
         "diversity": false
       },
@@ -2299,6 +2391,10 @@
       },
       {
         "name": "popcorn",
+        "diversity": false
+      },
+      {
+        "name": "butter",
         "diversity": false
       },
       {
@@ -2391,6 +2487,10 @@
       },
       {
         "name": "squid",
+        "diversity": false
+      },
+      {
+        "name": "oyster",
         "diversity": false
       },
       {
@@ -2503,6 +2603,14 @@
       },
       {
         "name": "cup_with_straw",
+        "diversity": false
+      },
+      {
+        "name": "beverage_box",
+        "diversity": false
+      },
+      {
+        "name": "maté",
         "diversity": false
       },
       {
@@ -2708,6 +2816,10 @@
         "diversity": false
       },
       {
+        "name": "hindu_temple",
+        "diversity": false
+      },
+      {
         "name": "synagogue",
         "diversity": false
       },
@@ -2905,6 +3017,14 @@
       },
       {
         "name": "motor_scooter",
+        "diversity": false
+      },
+      {
+        "name": "manual_wheelchair",
+        "diversity": false
+      },
+      {
+        "name": "motorized_wheelchair",
         "diversity": false
       },
       {
@@ -3570,6 +3690,10 @@
         "diversity": false
       },
       {
+        "name": "diving_mask",
+        "diversity": false
+      },
+      {
         "name": "running_shirt_with_sash",
         "diversity": false
       },
@@ -3708,6 +3832,10 @@
         "diversity": false
       },
       {
+        "name": "safety_vest",
+        "diversity": false
+      },
+      {
         "name": "necktie",
         "diversity": false
       },
@@ -3741,6 +3869,22 @@
       },
       {
         "name": "kimono",
+        "diversity": false
+      },
+      {
+        "name": "sari",
+        "diversity": false
+      },
+      {
+        "name": "one_piece_swimsuit",
+        "diversity": false
+      },
+      {
+        "name": "briefs",
+        "diversity": false
+      },
+      {
+        "name": "shorts",
         "diversity": false
       },
       {
@@ -3793,6 +3937,10 @@
       },
       {
         "name": "sandal",
+        "diversity": false
+      },
+      {
+        "name": "ballet_shoes",
         "diversity": false
       },
       {
@@ -3929,6 +4077,10 @@
       },
       {
         "name": "violin",
+        "diversity": false
+      },
+      {
+        "name": "banjo",
         "diversity": false
       },
       {
@@ -4069,6 +4221,10 @@
       },
       {
         "name": "izakaya_lantern",
+        "diversity": false
+      },
+      {
+        "name": "diya_lamp",
         "diversity": false
       },
       {
@@ -4384,6 +4540,10 @@
         "diversity": false
       },
       {
+        "name": "axe",
+        "diversity": false
+      },
+      {
         "name": "pick",
         "diversity": false
       },
@@ -4436,6 +4596,10 @@
         "diversity": false
       },
       {
+        "name": "probing_cane",
+        "diversity": false
+      },
+      {
         "name": "link",
         "diversity": false
       },
@@ -4484,7 +4648,19 @@
         "diversity": false
       },
       {
+        "name": "drop_of_blood",
+        "diversity": false
+      },
+      {
         "name": "pill",
+        "diversity": false
+      },
+      {
+        "name": "adhesive_bandage",
+        "diversity": false
+      },
+      {
+        "name": "stethoscope",
         "diversity": false
       },
       {
@@ -4500,6 +4676,10 @@
         "diversity": false
       },
       {
+        "name": "chair",
+        "diversity": false
+      },
+      {
         "name": "toilet",
         "diversity": false
       },
@@ -4509,6 +4689,10 @@
       },
       {
         "name": "bathtub",
+        "diversity": false
+      },
+      {
+        "name": "razor",
         "diversity": false
       },
       {
@@ -5290,7 +5474,27 @@
         "diversity": false
       },
       {
+        "name": "orange_circle",
+        "diversity": false
+      },
+      {
+        "name": "yellow_circle",
+        "diversity": false
+      },
+      {
+        "name": "green_circle",
+        "diversity": false
+      },
+      {
         "name": "large_blue_circle",
+        "diversity": false
+      },
+      {
+        "name": "purple_circle",
+        "diversity": false
+      },
+      {
+        "name": "brown_circle",
         "diversity": false
       },
       {
@@ -5299,6 +5503,34 @@
       },
       {
         "name": "white_circle",
+        "diversity": false
+      },
+      {
+        "name": "red_square",
+        "diversity": false
+      },
+      {
+        "name": "orange_square",
+        "diversity": false
+      },
+      {
+        "name": "yellow_square",
+        "diversity": false
+      },
+      {
+        "name": "green_square",
+        "diversity": false
+      },
+      {
+        "name": "blue_square",
+        "diversity": false
+      },
+      {
+        "name": "purple_square",
+        "diversity": false
+      },
+      {
+        "name": "brown_square",
         "diversity": false
       },
       {

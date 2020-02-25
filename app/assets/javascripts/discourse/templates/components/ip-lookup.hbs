@@ -1,21 +1,17 @@
 {{#if ip}}
-  <button class="btn btn-default" {{action "lookup"}}>
-    {{d-icon "globe"}}
-    {{i18n "admin.user.ip_lookup"}}
-  </button>
+  {{d-button
+    class="btn-default"
+    action=(action "lookup")
+    icon="globe"
+    label="admin.user.ip_lookup"}}
 {{/if}}
 {{#if show}}
   <div class="location-box">
-    <a class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
+    <a href class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
     {{#if copied}}
-      <a class="btn btn-default btn-hover pull-right">
-        {{d-icon "copy"}}
-        {{i18n "ip_lookup.copied"}}
-      </a>
+      {{d-button class="btn-hover pull-right" icon="copy" label="ip_lookup.copied"}}
     {{else}}
-      <a class="btn btn-default pull-right no-text" {{action "copy"}}>
-        {{d-icon "copy"}}
-      </a>
+      {{d-button action=(action "copy") class="pull-right no-text" icon="copy"}}
     {{/if}}
     <h4>{{i18n "ip_lookup.title"}}</h4>
     <p class='powered-by'>{{{i18n "ip_lookup.powered_by"}}}</p>
@@ -49,10 +45,13 @@
         {{i18n "ip_lookup.other_accounts"}}
         <strong>{{totalOthersWithSameIP}}</strong>
         {{#if other_accounts.length}}
-          <button class="btn btn-danger pull-right" {{action "deleteOtherAccounts"}}>
-            {{d-icon "warning"}}
+          {{#d-button
+            class="btn-danger pull-right"
+            action=(action "deleteOtherAccounts")
+            icon="exclamation-triangle"
+          }}
             {{i18n "ip_lookup.delete_other_accounts" count=otherAccountsToDelete}}
-          </button>
+          {{/d-button}}
         {{/if}}
       </dt>
 

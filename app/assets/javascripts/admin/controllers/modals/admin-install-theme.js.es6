@@ -1,34 +1,35 @@
+import { equal, match, alias } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
+import { set } from "@ember/object";
 
 const MIN_NAME_LENGTH = 4;
 
-export default Ember.Controller.extend(ModalFunctionality, {
-  popular: Ember.computed.equal("selection", "popular"),
-  local: Ember.computed.equal("selection", "local"),
-  remote: Ember.computed.equal("selection", "remote"),
-  create: Ember.computed.equal("selection", "create"),
+export default Controller.extend(ModalFunctionality, {
+  popular: equal("selection", "popular"),
+  local: equal("selection", "local"),
+  remote: equal("selection", "remote"),
+  create: equal("selection", "create"),
   selection: "popular",
-  adminCustomizeThemes: Ember.inject.controller(),
+  adminCustomizeThemes: inject(),
   loading: false,
   keyGenUrl: "/admin/themes/generate_key_pair",
   importUrl: "/admin/themes/import",
   recordType: "theme",
-  checkPrivate: Ember.computed.match("uploadUrl", /^git/),
+  checkPrivate: match("uploadUrl", /^git/),
   localFile: null,
   uploadUrl: null,
   urlPlaceholder: "https://github.com/discourse/sample_theme",
   advancedVisible: false,
-  themesController: Ember.inject.controller("adminCustomizeThemes"),
-  selectedType: Ember.computed.alias("themesController.currentTab"),
-  component: Ember.computed.equal("selectedType", COMPONENTS),
+  themesController: inject("adminCustomizeThemes"),
+  selectedType: alias("themesController.currentTab"),
+  component: equal("selectedType", COMPONENTS),
 
   init() {
     this._super(...arguments);
@@ -39,17 +40,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
     ];
   },
 
-  @computed("themesController.installedThemes")
+  @discourseComputed("themesController.installedThemes")
   themes(installedThemes) {
     return POPULAR_THEMES.map(t => {
       if (installedThemes.includes(t.name)) {
-        Ember.set(t, "installed", true);
+        set(t, "installed", true);
       }
       return t;
     });
   },
 
-  @computed(
+  @discourseComputed(
     "loading",
     "remote",
     "uploadUrl",
@@ -98,12 +99,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("name")
+  @discourseComputed("name")
   nameTooShort(name) {
     return !name || name.length < MIN_NAME_LENGTH;
   },
 
-  @computed("component")
+  @discourseComputed("component")
   placeholder(component) {
     if (component) {
       return I18n.t("admin.customize.theme.component_name");
@@ -112,14 +113,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("selection")
+  @discourseComputed("selection")
   submitLabel(selection) {
     return `admin.customize.theme.${
       selection === "create" ? "create" : "install"
     }`;
   },
 
-  @computed("privateChecked", "checkPrivate", "publicKey")
+  @discourseComputed("privateChecked", "checkPrivate", "publicKey")
   showPublicKey(privateChecked, checkPrivate, publicKey) {
     return privateChecked && checkPrivate && publicKey;
   },

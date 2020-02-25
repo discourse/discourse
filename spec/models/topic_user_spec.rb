@@ -246,7 +246,7 @@ describe TopicUser do
 
       let(:topic) { post.topic }
 
-      it 'should ensure recepients and senders are watching' do
+      it 'should ensure recipients and senders are watching' do
         expect(TopicUser.get(topic, post.user).notification_level)
           .to eq(TopicUser.notification_levels[:watching])
 
@@ -279,8 +279,8 @@ describe TopicUser do
         it "should use group's default notification level" do
           another_user = Fabricate(:user)
           group.add(another_user)
+
           topic.invite_group(target_user, group)
-          TopicUser.track_visit!(topic.id, another_user.id)
 
           expect(TopicUser.get(topic, another_user).notification_level)
             .to eq(TopicUser.notification_levels[:tracking])

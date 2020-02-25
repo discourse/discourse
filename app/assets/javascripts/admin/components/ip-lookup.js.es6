@@ -1,12 +1,15 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
+import { later } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import copyText from "discourse/lib/copy-text";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["ip-lookup"],
 
-  @computed("other_accounts.length", "totalOthersWithSameIP")
+  @discourseComputed("other_accounts.length", "totalOthersWithSameIP")
   otherAccountsToDelete(otherAccountsLength, totalOthersWithSameIP) {
     // can only delete up to 50 accounts at a time
     const total = Math.min(50, totalOthersWithSameIP || 0);
@@ -20,7 +23,7 @@ export default Ember.Component.extend({
 
       if (!this.location) {
         ajax("/admin/users/ip-info", { data: { ip: this.ip } }).then(location =>
-          this.set("location", Ember.Object.create(location))
+          this.set("location", EmberObject.create(location))
         );
       }
 
@@ -76,7 +79,7 @@ export default Ember.Component.extend({
       $(document.body).append($copyRange);
       if (copyText(text, $copyRange[0])) {
         this.set("copied", true);
-        Ember.run.later(() => this.set("copied", false), 2000);
+        later(() => this.set("copied", false), 2000);
       }
       $copyRange.remove();
     },

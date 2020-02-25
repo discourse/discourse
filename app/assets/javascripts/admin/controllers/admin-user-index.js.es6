@@ -1,39 +1,41 @@
+import { notEmpty, and } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
+import { htmlSafe } from "@ember/template";
 
-export default Ember.Controller.extend(CanCheckEmails, {
-  adminTools: Ember.inject.service(),
+export default Controller.extend(CanCheckEmails, {
+  adminTools: service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
   availableGroups: null,
   userTitleValue: null,
 
   showBadges: setting("enable_badges"),
-  hasLockedTrustLevel: Ember.computed.notEmpty(
-    "model.manual_locked_trust_level"
-  ),
+  hasLockedTrustLevel: notEmpty("model.manual_locked_trust_level"),
 
   primaryGroupDirty: propertyNotEqual(
     "originalPrimaryGroupId",
     "model.primary_group_id"
   ),
 
-  canDisableSecondFactor: Ember.computed.and(
+  canDisableSecondFactor: and(
     "model.second_factor_enabled",
     "model.can_disable_second_factor"
   ),
 
-  @computed("model.customGroups")
+  @discourseComputed("model.customGroups")
   customGroupIds(customGroups) {
     return customGroups.mapBy("id");
   },
 
-  @computed("customGroupIdsBuffer", "customGroupIds")
+  @discourseComputed("customGroupIdsBuffer", "customGroupIds")
   customGroupsDirty(buffer, original) {
     if (buffer === null) return false;
 
@@ -42,36 +44,40 @@ export default Ember.Controller.extend(CanCheckEmails, {
       : true;
   },
 
-  @computed("model.automaticGroups")
+  @discourseComputed("model.automaticGroups")
   automaticGroups(automaticGroups) {
     return automaticGroups
       .map(group => {
-        const name = Ember.String.htmlSafe(group.name);
+        const name = htmlSafe(group.name);
         return `<a href="/g/${name}">${name}</a>`;
       })
       .join(", ");
   },
 
-  @computed("model.associated_accounts")
+  @discourseComputed("model.associated_accounts")
   associatedAccountsLoaded(associatedAccounts) {
     return typeof associatedAccounts !== "undefined";
   },
 
-  @computed("model.associated_accounts")
+  @discourseComputed("model.associated_accounts")
   associatedAccounts(associatedAccounts) {
     return associatedAccounts
       .map(provider => `${provider.name} (${provider.description})`)
       .join(", ");
   },
 
-  @computed("model.user_fields.[]")
+  @discourseComputed("model.user_fields.[]")
   userFields(userFields) {
     return this.site.collectUserFields(userFields);
   },
 
   preferencesPath: fmt("model.username_lower", userPath("%@/preferences")),
 
-  @computed("model.can_delete_all_posts", "model.staff", "model.post_count")
+  @discourseComputed(
+    "model.can_delete_all_posts",
+    "model.staff",
+    "model.post_count"
+  )
   deleteAllPostsExplanation(canDeleteAllPosts, staff, postCount) {
     if (canDeleteAllPosts) {
       return null;
@@ -91,7 +97,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
   },
 
-  @computed("model.canBeDeleted", "model.staff")
+  @discourseComputed("model.canBeDeleted", "model.staff")
   deleteExplanation(canBeDeleted, staff) {
     if (canBeDeleted) {
       return null;
@@ -134,7 +140,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
       return this.model.resetBounceScore();
     },
     approve() {
-      return this.model.approve();
+      return this.model.approve(this.currentUser);
     },
     deactivate() {
       return this.model.deactivate();
@@ -257,10 +263,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
         .finally(() => this.toggleProperty("editingTitle"));
     },
 
-    generateApiKey() {
-      this.model.generateApiKey();
-    },
-
     saveCustomGroups() {
       const currentIds = this.customGroupIds;
       const bufferedIds = this.customGroupIdsBuffer;
@@ -276,7 +278,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     },
 
     resetCustomGroups() {
-      this.set("customGroupIdsBuffer", null);
+      this.set("customGroupIdsBuffer", this.model.customGroups.mapBy("id"));
     },
 
     savePrimaryGroup() {
@@ -293,32 +295,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     resetPrimaryGroup() {
       this.set("model.primary_group_id", this.originalPrimaryGroupId);
-    },
-
-    regenerateApiKey() {
-      bootbox.confirm(
-        I18n.t("admin.api.confirm_regen"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        result => {
-          if (result) {
-            this.model.generateApiKey();
-          }
-        }
-      );
-    },
-
-    revokeApiKey() {
-      bootbox.confirm(
-        I18n.t("admin.api.confirm_revoke"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        result => {
-          if (result) {
-            this.model.revokeApiKey();
-          }
-        }
-      );
     }
   }
 });

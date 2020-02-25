@@ -1,93 +1,63 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
-import renderTag from "discourse/lib/render-tag";
-import computed from "ember-addons/ember-computed-decorators";
-const { get, isEmpty, run, makeArray } = Ember;
+import { makeArray } from "discourse-common/lib/helpers";
+import { computed } from "@ember/object";
 
 export default MultiSelectComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-group-chooser"],
   classNames: ["tag-group-chooser", "tag-chooser"],
-  isAsync: true,
-  filterable: true,
-  filterPlaceholder: "category.tag_groups_placeholder",
-  limit: null,
-  allowAny: false,
 
-  init() {
-    this._super(...arguments);
-
-    this.set("templateForRow", rowComponent => {
-      const tag = rowComponent.get("computedContent");
-      return renderTag(get(tag, "value"), {
-        count: get(tag, "originalContent.count"),
-        noHref: true
-      });
-    });
+  selectKitOptions: {
+    allowAny: false,
+    filterable: true,
+    filterPlaceholder: "category.tag_groups_placeholder",
+    limit: null
   },
 
-  mutateValues(values) {
-    this.set("tagGroups", values.filter(v => v));
+  modifyComponentForRow() {
+    return "tag-chooser-row";
   },
 
-  @computed("tagGroups")
-  values(tagGroups) {
-    return makeArray(tagGroups);
-  },
+  value: computed("tagGroups.[]", function() {
+    return makeArray(this.tagGroups).uniq();
+  }),
 
-  @computed("tagGroups")
-  content(tagGroups) {
-    return makeArray(tagGroups);
-  },
+  content: computed("tagGroups.[]", function() {
+    return makeArray(this.tagGroups)
+      .uniq()
+      .map(t => this.defaultItem(t, t));
+  }),
 
   actions: {
-    onFilter(filter) {
-      this.expand();
-      this.set(
-        "searchDebounce",
-        run.debounce(this, this._prepareSearch, filter, 200)
-      );
-    },
-
-    onExpand() {
-      if (isEmpty(this.collectionComputedContent)) {
-        this.set(
-          "searchDebounce",
-          run.debounce(this, this._prepareSearch, this.filter, 200)
-        );
-      }
-    },
-
-    onDeselect() {
-      this.set(
-        "searchDebounce",
-        run.debounce(this, this._prepareSearch, this.filter, 200)
-      );
-    },
-
-    onSelect() {
-      this.set(
-        "searchDebounce",
-        run.debounce(this, this._prepareSearch, this.filter, 50)
-      );
+    onChange(value) {
+      this.set("tagGroups", value);
     }
   },
 
-  _prepareSearch(query) {
+  search(query) {
     const data = {
       q: query,
       limit: this.get("siteSettings.max_tag_search_results")
     };
 
-    this.searchTags("/tag_groups/filter/search", data, this._transformJson);
+    return this.searchTags(
+      "/tag_groups/filter/search",
+      data,
+      this._transformJson
+    ).then(results => {
+      if (results && results.length) {
+        return results.filter(r => {
+          return !makeArray(this.tagGroups).includes(this.getValue(r));
+        });
+      }
+    });
   },
 
   _transformJson(context, json) {
-    let results = json.results.sort((a, b) => a.id > b.id);
-
-    results = results.map(result => {
-      return { id: result.text, name: result.text, count: result.count };
-    });
-
-    return results;
+    return json.results
+      .sort((a, b) => a.id > b.id)
+      .map(result => {
+        return { id: result.text, name: result.text, count: result.count };
+      });
   }
 });

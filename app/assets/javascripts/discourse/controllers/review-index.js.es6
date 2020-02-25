@@ -1,6 +1,7 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: [
     "priority",
     "type",
@@ -8,7 +9,10 @@ export default Ember.Controller.extend({
     "category_id",
     "topic_id",
     "username",
-    "sort_order"
+    "from_date",
+    "to_date",
+    "sort_order",
+    "additional_filters"
   ],
   type: null,
   status: "pending",
@@ -18,7 +22,10 @@ export default Ember.Controller.extend({
   topic_id: null,
   filtersExpanded: false,
   username: "",
+  from_date: null,
+  to_date: null,
   sort_order: "priority",
+  additional_filters: null,
 
   init(...args) {
     this._super(...args);
@@ -26,7 +33,7 @@ export default Ember.Controller.extend({
     this.set("filtersExpanded", !this.site.mobileView);
   },
 
-  @computed("reviewableTypes")
+  @discourseComputed("reviewableTypes")
   allTypes() {
     return (this.reviewableTypes || []).map(type => {
       return {
@@ -36,7 +43,7 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed
+  @discourseComputed
   priorities() {
     return ["low", "medium", "high"].map(priority => {
       return {
@@ -46,7 +53,7 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed
+  @discourseComputed
   sortOrders() {
     return ["priority", "priority_asc", "created_at", "created_at_asc"].map(
       order => {
@@ -58,7 +65,7 @@ export default Ember.Controller.extend({
     );
   },
 
-  @computed
+  @discourseComputed
   statuses() {
     return [
       "pending",
@@ -73,9 +80,18 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed("filtersExpanded")
+  @discourseComputed("filtersExpanded")
   toggleFiltersIcon(filtersExpanded) {
     return filtersExpanded ? "chevron-up" : "chevron-down";
+  },
+
+  setRange(range) {
+    if (range.from) {
+      this.set("from", new Date(range.from).toISOString().split("T")[0]);
+    }
+    if (range.to) {
+      this.set("to", new Date(range.to).toISOString().split("T")[0]);
+    }
   },
 
   actions: {
@@ -102,8 +118,12 @@ export default Ember.Controller.extend({
         status: this.filterStatus,
         category_id: this.filterCategoryId,
         username: this.filterUsername,
-        sort_order: this.filterSortOrder
+        from_date: this.filterFromDate,
+        to_date: this.filterToDate,
+        sort_order: this.filterSortOrder,
+        additional_filters: JSON.stringify(this.additionalFilters)
       });
+
       this.send("refreshRoute");
     },
 

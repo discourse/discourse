@@ -10,10 +10,8 @@ ko:
     poll_maximum_options: "한 투표 당 설정할 수 있는 최대 투표 항목 수"
     poll_edit_window_mins: "포스트 생성 이후 투표를 편집할 수 있는 시간(분)"
   poll:
-    multiple_polls_without_name: "이름없는 투표가 여러 개 있습니다.  '<code>name</code>'  속성을 사용해서 투표에 특색을 부여해보세요."
+    multiple_polls_without_name: "이름없는 투표가 여러 개 있습니다. '<code>name</code>' 속성을 사용해서 투표에 특색을 부여해보세요."
     multiple_polls_with_same_name: "같은 이름 <strong>%{name}</strong> 으로 투표가 여러 개 있습니다. '<code>name</code>' 속성을 사용하여 투표를 구분해보세요."
-    default_poll_must_have_at_least_2_options: "한 투표에 적어도 2개 이상의 투표 항목은 있어야 합니다."
-    named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> 투표에는 적어도 2개의 투표 항목이 있어야 합니다."
     default_poll_must_have_less_options:
       other: "투표 항목은 %{count}개보다 적어야합니다."
     named_poll_must_have_less_options:

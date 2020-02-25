@@ -3,7 +3,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 function initialize(api) {
   const messageBus = api.container.lookup("message-bus:main");
   const currentUser = api.getCurrentUser();
-  const appEvents = api.container.lookup("app-events:main");
+  const appEvents = api.container.lookup("service:app-events");
 
   api.modifyClass("component:site-header", {
     didInsertElement() {

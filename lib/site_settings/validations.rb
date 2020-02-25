@@ -24,7 +24,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|")
-    ].flatten.to_set
+    ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
   end
@@ -36,7 +36,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|")
-    ].flatten.to_set
+    ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
   end
@@ -48,7 +48,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|")
-    ].flatten.to_set
+    ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
   end
@@ -60,13 +60,71 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|")
-    ].flatten.to_set
+    ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
   end
 
+  def validate_default_tags(tag_names, default_tags_selected)
+    validate_error :default_tags_already_selected if (tag_names & default_tags_selected).size > 0
+  end
+
+  def validate_default_tags_watching(new_val)
+    tag_names = new_val.split('|').to_set
+
+    default_tags_selected = [
+      SiteSetting.default_tags_tracking.split("|"),
+      SiteSetting.default_tags_muted.split("|"),
+      SiteSetting.default_tags_watching_first_post.split("|")
+    ].flatten.to_set
+
+    validate_default_tags(tag_names, default_tags_selected)
+  end
+
+  def validate_default_tags_tracking(new_val)
+    tag_names = new_val.split('|').to_set
+
+    default_tags_selected = [
+      SiteSetting.default_tags_watching.split("|"),
+      SiteSetting.default_tags_muted.split("|"),
+      SiteSetting.default_tags_watching_first_post.split("|")
+    ].flatten.to_set
+
+    validate_default_tags(tag_names, default_tags_selected)
+  end
+
+  def validate_default_tags_muted(new_val)
+    tag_names = new_val.split('|').to_set
+
+    default_tags_selected = [
+      SiteSetting.default_tags_watching.split("|"),
+      SiteSetting.default_tags_tracking.split("|"),
+      SiteSetting.default_tags_watching_first_post.split("|")
+    ].flatten.to_set
+
+    validate_default_tags(tag_names, default_tags_selected)
+  end
+
+  def validate_default_tags_watching_first_post(new_val)
+    tag_names = new_val.split('|').to_set
+
+    default_tags_selected = [
+      SiteSetting.default_tags_watching.split("|"),
+      SiteSetting.default_tags_tracking.split("|"),
+      SiteSetting.default_tags_muted.split("|")
+    ].flatten.to_set
+
+    validate_default_tags(tag_names, default_tags_selected)
+  end
+
   def validate_enable_s3_uploads(new_val)
-    validate_error :s3_upload_bucket_is_required if new_val == "t" && SiteSetting.s3_upload_bucket.blank?
+    return if new_val == "f"
+    validate_error :cannot_enable_s3_uploads_when_s3_enabled_globally if GlobalSetting.use_s3?
+    validate_error :s3_upload_bucket_is_required if SiteSetting.s3_upload_bucket.blank?
+  end
+
+  def validate_secure_media(new_val)
+    validate_error :secure_media_requirements if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end
 
   def validate_enable_s3_inventory(new_val)
@@ -89,6 +147,18 @@ module SiteSettings::Validations
 
   def validate_s3_backup_bucket(new_val)
     validate_bucket_setting("s3_backup_bucket", SiteSetting.s3_upload_bucket, new_val)
+  end
+
+  def validate_enforce_second_factor(new_val)
+    return if SiteSetting.enable_local_logins
+    return if new_val == "no"
+    validate_error :second_factor_cannot_be_enforced_with_disabled_local_login
+  end
+
+  def validate_enable_local_logins(new_val)
+    return if new_val == "t"
+    return if SiteSetting.enforce_second_factor == "no"
+    validate_error :local_login_cannot_be_disabled_if_second_factor_enforced
   end
 
   private

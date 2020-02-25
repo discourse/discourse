@@ -1,10 +1,11 @@
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
+import { Promise } from "rsvp";
 
 var cache = {},
-  cacheTopicId,
+  cacheKey,
   cacheTime,
   currentTerm,
   oldSearch;
@@ -12,6 +13,7 @@ var cache = {},
 function performSearch(
   term,
   topicId,
+  categoryId,
   includeGroups,
   includeMentionableGroups,
   includeMessageableGroups,
@@ -25,11 +27,13 @@ function performSearch(
     return;
   }
 
-  // I am not strongly against unconditionally returning
-  // however this allows us to return a list of probable
-  // users we want to mention, early on a topic
-  if (term === "" && !topicId) {
-    return [];
+  const eagerComplete = eagerCompleteSearch(term, topicId || categoryId);
+
+  if (term === "" && !eagerComplete) {
+    // The server returns no results in this case, so no point checking
+    // do not return empty list, because autocomplete will get terminated
+    resultsFn(CANCELLED_STATUS);
+    return;
   }
 
   // need to be able to cancel this
@@ -37,6 +41,7 @@ function performSearch(
     data: {
       term: term,
       topic_id: topicId,
+      category_id: categoryId,
       include_groups: includeGroups,
       include_mentionable_groups: includeMentionableGroups,
       include_messageable_groups: includeMessageableGroups,
@@ -49,6 +54,18 @@ function performSearch(
 
   oldSearch
     .then(function(r) {
+      const hasResults = !!(
+        (r.users && r.users.length) ||
+        (r.groups && r.groups.length) ||
+        (r.emails && r.emails.length)
+      );
+
+      if (eagerComplete && !hasResults) {
+        // we are trying to eager load, but received no results
+        // do not return empty list, because autocomplete will get terminated
+        r = CANCELLED_STATUS;
+      }
+
       cache[term] = r;
       cacheTime = new Date();
       // If there is a newer search term, return null
@@ -62,7 +79,7 @@ function performSearch(
     });
 }
 
-var debouncedSearch = debounce(performSearch, 300);
+var debouncedSearch = discourseDebounce(performSearch, 300);
 
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
@@ -119,14 +136,18 @@ function organizeResults(r, options) {
 // will not find me, which is a reasonable compromise
 //
 // we also ignore if we notice a double space or a string that is only a space
-const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$/;
+const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$|^[^+]*\+[^@]*$/;
 
-function skipSearch(term, allowEmails) {
+export function skipSearch(term, allowEmails) {
   if (term.indexOf("@") > -1 && !allowEmails) {
     return true;
   }
 
   return !!term.match(ignoreRegex);
+}
+
+export function eagerCompleteSearch(term, scopedId) {
+  return term === "" && !!scopedId;
 }
 
 export default function userSearch(options) {
@@ -140,6 +161,7 @@ export default function userSearch(options) {
     includeMessageableGroups = options.includeMessageableGroups,
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
+    categoryId = options.categoryId,
     groupMembersOf = options.groupMembersOf;
 
   if (oldSearch) {
@@ -149,12 +171,14 @@ export default function userSearch(options) {
 
   currentTerm = term;
 
-  return new Ember.RSVP.Promise(function(resolve) {
-    if (new Date() - cacheTime > 30000 || cacheTopicId !== topicId) {
+  return new Promise(function(resolve) {
+    const newCacheKey = `${topicId}-${categoryId}`;
+
+    if (new Date() - cacheTime > 30000 || cacheKey !== newCacheKey) {
       cache = {};
     }
 
-    cacheTopicId = topicId;
+    cacheKey = newCacheKey;
 
     var clearPromise = setTimeout(function() {
       resolve(CANCELLED_STATUS);
@@ -168,6 +192,7 @@ export default function userSearch(options) {
     debouncedSearch(
       term,
       topicId,
+      categoryId,
       includeGroups,
       includeMentionableGroups,
       includeMessageableGroups,

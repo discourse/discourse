@@ -7,5 +7,5 @@
 
 cs:
   site_settings:
-    presence_enabled: 'Zobrazit uživatele, kteří právě odpovídají na aktuální téma nebo upravují aktuální příspěvek?'
-    presence_max_users_shown: ' Maximální počet zobrazených uživatelů.'
+    presence_enabled: "Zobrazit uživatele, kteří právě odpovídají na aktuální téma nebo upravují aktuální příspěvek?"
+    presence_max_users_shown: " Maximální počet zobrazených uživatelů."

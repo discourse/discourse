@@ -10,3 +10,4 @@ bs_BA:
     discourse_local_dates_enabled: "Dozvoliti discourse-local-dates mogućnost. To će dodati podršku za lokalne vremenske zone da prepoznaju datume u objavama koristeći [date] element."
     discourse_local_dates_default_formats: "Često korišteni formati za datum i vrijeme, pogledati: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
     discourse_local_dates_default_timezones: "Uobičajena lista vremenskih zona, mora biti validna <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_email_format: "Format koji se koristi za prikaz datuma u e-porukama."

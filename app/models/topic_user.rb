@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'notification_levels'
-
 class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
@@ -217,7 +215,7 @@ class TopicUser < ActiveRecord::Base
             attrs[:notification_level] = notification_levels[:watching]
           end
         else
-          auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
+          auto_track_after = UserOption.where(user_id: user_id).pluck_first(:auto_track_topics_after_msecs)
           auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
 
           if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'oneboxer'
-
 class OneboxController < ApplicationController
   requires_login
 
@@ -21,6 +19,8 @@ class OneboxController < ApplicationController
     invalidate = params[:refresh] == 'true'
     url = params[:url]
 
+    return render(body: nil, status: 404) if Oneboxer.recently_failed?(url)
+
     hijack do
       Oneboxer.preview_onebox!(user_id)
 
@@ -36,6 +36,7 @@ class OneboxController < ApplicationController
       Oneboxer.onebox_previewed!(user_id)
 
       if preview.blank?
+        Oneboxer.cache_failed!(url)
         render body: nil, status: 404
       else
         render plain: preview

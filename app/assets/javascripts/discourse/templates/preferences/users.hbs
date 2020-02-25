@@ -1,11 +1,26 @@
 <label class="control-label">{{i18n 'user.users'}}</label>
+{{#if ignoredEnabled}}
+  <div class="control-group user-ignore">
+    <div class="controls tracking-controls user-notifications">
+      <label>{{d-icon "far-eye-slash" class="icon"}} {{i18n 'user.ignored_users'}}</label>
+      {{ignored-user-list model=model items=model.ignored_usernames saving=saved}}
+    </div>
+  </div>
+{{/if}}
+
 <div class="control-group user-mute">
   <div class="controls tracking-controls">
     <label>
       {{d-icon "d-muted" class="icon"}}
       <span>{{i18n 'user.muted_users'}}</span>
     </label>
-    {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
+    {{user-chooser
+      value=mutedUsernames
+      onChange=(action "onChangeMutedUsernames")
+      options=(hash
+        excludeCurrentUser=true
+      )
+    }}
   </div>
   <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
 </div>
@@ -17,12 +32,3 @@
     {{partial 'user/preferences/save-button'}}
   </div>
 </div>
-
-{{#if ignoredEnabled}}
-  <div class="control-group user-ignore">
-    <div class="controls tracking-controls user-notifications">
-      <label>{{d-icon "eye-slash" class="icon"}} {{i18n 'user.ignored_users'}}</label>
-      {{ignored-user-list model=model items=model.ignored_usernames saving=saved}}
-    </div>
-  </div>
-{{/if}}

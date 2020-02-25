@@ -3,18 +3,22 @@
     &.toolbar-popup-menu-options {
       .select-kit-body {
         box-shadow: none;
-        padding: 10px 10px 5px 10px;
+        padding: 0.5em 0.5em 0.25em 0.5em;
         width: 230px;
       }
 
+      .toolbar-popup-menu-options-heading {
+        width: 100%;
+      }
+
       .select-kit-row {
-        margin-bottom: 5px;
-        padding: 6px 3px;
+        margin-bottom: 0.25em;
+        padding: 0.5em 0.25em;
         background: $primary-low;
         transition: all 0.25s;
 
-        .name,
-        .d-icon {
+        .texts .name,
+        .icons .d-icon {
           font-size: $font-0;
           font-weight: normal;
           color: $primary;

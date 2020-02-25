@@ -11,7 +11,7 @@ module UserNameSuggester
   end
 
   def self.parse_name_from_email(name_or_email)
-    return name_or_email if name_or_email !~ User::EMAIL
+    return name_or_email if name_or_email.to_s !~ User::EMAIL
 
     # When 'walter@white.com' take 'walter'
     name = Regexp.last_match[1]
@@ -115,12 +115,18 @@ module UserNameSuggester
     end
 
     name.gsub!(UsernameValidator.invalid_char_pattern, '_')
-    name.chars.map! { |c| UsernameValidator.whitelisted_char?(c) ? c : '_' } if UsernameValidator.char_whitelist_exists?
+    name = apply_whitelist(name) if UsernameValidator.char_whitelist_exists?
     name.gsub!(UsernameValidator::INVALID_LEADING_CHAR_PATTERN, '')
     name.gsub!(UsernameValidator::CONFUSING_EXTENSIONS, "_")
     name.gsub!(UsernameValidator::INVALID_TRAILING_CHAR_PATTERN, '')
     name.gsub!(UsernameValidator::REPEATED_SPECIAL_CHAR_PATTERN, '_')
     name
+  end
+
+  def self.apply_whitelist(name)
+    name.grapheme_clusters
+      .map { |c| UsernameValidator.whitelisted_char?(c) ? c : '_' }
+      .join
   end
 
   def self.rightsize_username(name)

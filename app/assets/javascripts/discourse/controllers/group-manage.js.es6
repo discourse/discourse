@@ -1,9 +1,11 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  router: service(),
 
-  @computed("model.automatic")
+  @discourseComputed("model.automatic")
   tabs(automatic) {
     const defaultTabs = [
       { route: "group.manage.profile", title: "groups.manage.profile.title" },

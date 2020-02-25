@@ -16,7 +16,7 @@ describe PostAnalyzer do
     before { Oneboxer.stubs(:onebox) }
 
     it 'fetches the cached onebox for any urls in the post' do
-      Oneboxer.expects(:cached_onebox).with url
+      Oneboxer.expects(:cached_onebox).with(url).returns('something')
       post_analyzer.cook(raw, options)
       expect(post_analyzer.found_oneboxes?).to be(true)
     end
@@ -234,6 +234,13 @@ describe PostAnalyzer do
     it "ignores quotes" do
       post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n @Finn", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
+    end
+
+    it "ignores group mentions in quotes" do
+      Fabricate(:group, name: "team")
+      Fabricate(:group, name: "mods")
+      post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]\n@team\n[/quote]\n @mods", default_topic_id)
+      expect(post_analyzer.raw_mentions).to eq(["mods"])
     end
 
     it "ignores oneboxes" do

@@ -1,6 +1,11 @@
 <div class="admin-title">
-  {{period-chooser period=period}}
-  {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
+  {{period-chooser period=period onChange=(action (mut period))}}
+  {{combo-box
+    content=searchTypeOptions
+    value=searchType
+    class="search-logs-filter"
+    onChange=(action (mut searchType))
+  }}
 </div>
 
 {{#conditional-loading-spinner condition=loading}}

@@ -3,20 +3,36 @@
     <h1>{{#if model.theme_id}}{{model.name}}{{else}}{{text-field class="style-name" value=model.name}}{{/if}}</h1>
     <div class="controls">
       {{#unless model.theme_id}}
-      <button {{action "save"}} disabled={{model.disableSave}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
+      {{d-button
+        class="btn-primary"
+        action=(action "save")
+        disabled=model.disableSave
+        label="admin.customize.save"}}
       {{/unless}}
-      <button {{action "copy" model}} class='btn btn-default'>{{d-icon "copy"}} {{i18n 'admin.customize.copy'}}</button>
-      <button {{action "copyToClipboard" model}} class='btn btn-default'>{{d-icon "clipboard"}} {{i18n 'admin.customize.copy_to_clipboard'}}</button>
+      {{d-button
+        class="btn-default"
+        action=(action "copy" model)
+        icon="copy"
+        label="admin.customize.copy"}}
+      {{d-button
+        class="btn-default"
+        action=(action "copyToClipboard" model)
+        icon="far-clipboard"
+        label="admin.customize.copy_to_clipboard"}}
       {{#if model.theme_id}}
       {{i18n "admin.customize.theme_owner"}}
       {{#link-to "adminCustomizeThemes.show" model.theme_id}}{{model.theme_name}}{{/link-to}}
       {{else}}
-      <button {{action "destroy"}} class='btn btn-danger'>{{d-icon "far-trash-alt"}} {{i18n 'admin.customize.delete'}}</button>
+      {{d-button
+        action=(action "destroy")
+        class="btn-danger"
+        icon="far-trash-alt"
+        label="admin.customize.delete"}}
       {{/if}}
       <span class="saving {{unless model.savingStatus 'hidden'}}">{{model.savingStatus}}</span>
     </div>
 
-    <br/>
+    <br>
 
     <div class='admin-controls'>
       <div class='search controls'>
@@ -40,15 +56,22 @@
         {{#each colors as |c|}}
           <tr class="{{if c.changed 'changed'}} {{if c.valid 'valid' 'invalid'}}">
             <td class="name" title={{c.name}}>
-              <b>{{c.translatedName}}</b>
-              <br/>
-              <span class="description">{{c.description}}</span>
+              <h3>{{c.translatedName}}</h3>
+              <p class="description">{{c.description}}</p>
             </td>
             <td class="hex">{{color-input hexValue=c.hex brightnessValue=c.brightness valid=c.valid}}</td>
             <td class="actions">
             {{#unless model.theme_id}}
-              <button class="btn btn-default revert {{unless c.savedIsOverriden 'invisible'}}" {{action "revert" c}} title="{{i18n 'admin.customize.colors.revert_title'}}">{{i18n 'revert'}}</button>
-              <button class="btn btn-default undo {{unless c.changed 'invisible'}}" {{action "undo" c}} title="{{i18n 'admin.customize.colors.undo_title'}}">{{i18n 'undo'}}</button>
+              {{d-button
+                class=(concat "btn-default revert " (unless c.savedIsOverriden "invisible"))
+                action=(action "revert" c)
+                title="admin.customize.colors.revert_title"
+                label="revert"}}
+              {{d-button
+                class=(concat "btn-default undo " (unless c.changed "invisible"))
+                action=(action "undo" c)
+                title="admin.customize.colors.undo_title"
+                label="undo"}}
             {{/unless}}
             </td>
           </tr>

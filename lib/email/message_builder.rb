@@ -3,19 +3,6 @@
 # Builds a Mail::Message we can use for sending. Optionally supports using a template
 # for the body and subject
 module Email
-
-  module BuildEmailHelper
-    def build_email(*builder_args)
-      builder = Email::MessageBuilder.new(*builder_args)
-      headers(builder.header_args) if builder.header_args.present?
-      mail(builder.build_args).tap { |message|
-        if message && h = builder.html_part
-          message.html_part = h
-        end
-      }
-    end
-  end
-
   class MessageBuilder
     attr_reader :template_args
 
@@ -64,7 +51,10 @@ module Email
     end
 
     def subject
-      if @opts[:use_site_subject]
+      if @opts[:template] &&
+          TranslationOverride.exists?(locale: I18n.locale, translation_key: "#{@opts[:template]}.subject_template")
+        subject = I18n.t("#{@opts[:template]}.subject_template", @template_args)
+      elsif @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
         subject.gsub!("%{site_name}", @template_args[:email_prefix])
         subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re') : '')
@@ -107,16 +97,15 @@ module Email
         html_override.gsub!("%{respond_instructions}", "")
       end
 
-      styled = Email::Styles.new(html_override, @opts)
-      styled.format_basic
-
-      if style = @opts[:style]
-        styled.public_send("format_#{style}")
-      end
+      html = UserNotificationRenderer.render(
+        template: 'layouts/email_template',
+        format: :html,
+        locals: { html_body: html_override.html_safe }
+      )
 
       Mail::Part.new do
         content_type 'text/html; charset=UTF-8'
-        body styled.to_html
+        body html
       end
     end
 

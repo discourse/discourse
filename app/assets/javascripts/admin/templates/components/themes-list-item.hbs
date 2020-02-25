@@ -17,6 +17,9 @@
         {{#if theme.isBroken}}
           {{d-icon "exclamation-circle" class="broken-indicator" title="admin.customize.theme.broken_theme_tooltip"}}
         {{/if}}
+        {{#unless theme.enabled}}
+          {{d-icon "ban" class="light-grey-icon" title="admin.customize.theme.disabled_component_tooltip"}}
+        {{/unless}}
       {{else}}
         {{d-icon "caret-right"}}
       {{/unless}}
@@ -25,16 +28,16 @@
 
   {{#if displayComponents}}
     <div class="components-list">
-      <span class="components">{{childrenString}}</span>
+      <span class="components">{{{childrenString}}}</span>
 
       {{#if displayHasMore}}
-        <span {{action "toggleChildrenExpanded"}} class="others-count">
+        <a href {{action "toggleChildrenExpanded"}} class="others-count">
           {{#if childrenExpanded}}
             {{I18n "admin.customize.theme.collapse"}}
           {{else}}
             {{I18n "admin.customize.theme.and_x_more" count=moreCount}}
           {{/if}}
-        </span>
+        </a>
       {{/if}}
     </div>
   {{/if}}

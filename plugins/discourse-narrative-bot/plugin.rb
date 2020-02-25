@@ -33,6 +33,7 @@ after_initialize do
     '../autoload/jobs/narrative_timeout.rb',
     '../autoload/jobs/narrative_init.rb',
     '../autoload/jobs/send_default_welcome_message.rb',
+    '../autoload/jobs/send_advanced_tutorial_message.rb',
     '../autoload/jobs/onceoff/grant_badges.rb',
     '../autoload/jobs/onceoff/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
@@ -108,7 +109,12 @@ after_initialize do
 
       def fetch_avatar_url(user)
         avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
-        URI(avatar_url).open('rb', redirect: true, allow_redirections: :all).read
+        FileHelper.download(
+          avatar_url.to_s,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: 'narrative-bot-avatar',
+          follow_redirect: true
+        )&.read
       rescue OpenURI::HTTPError
         # Ignore if fetching image returns a non 200 response
       end
@@ -127,9 +133,9 @@ after_initialize do
     DiscourseNarrativeBot::Store.remove(self.id)
   end
 
-  self.add_model_callback(User, :after_commit, on: :create) do
-    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0 && !self.staged
-      self.enqueue_bot_welcome_post
+  self.on(:user_created) do |user|
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0 && !user.staged
+      user.enqueue_bot_welcome_post
     end
   end
 
@@ -243,6 +249,20 @@ after_initialize do
         topic_id: topic_id,
         input: :topic_notification_level_changed
       )
+    end
+  end
+
+  self.on(:user_promoted) do |args|
+    promoted_from_tl1 = args[:new_trust_level] == TrustLevel[2] &&
+      args[:old_trust_level] == TrustLevel[1]
+
+    if SiteSetting.discourse_narrative_bot_enabled && promoted_from_tl1
+      # The event 'user_promoted' is sometimes called from inside a transaction.
+      # Use this helper to ensure the job is enqueued after commit to prevent
+      # any race conditions.
+      DB.after_commit do
+        Jobs.enqueue(:send_advanced_tutorial_message, user_id: args[:user_id])
+      end
     end
   end
 end

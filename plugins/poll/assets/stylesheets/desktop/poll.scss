@@ -8,7 +8,6 @@ div.poll {
     width: 100%;
     display: table-cell;
     text-align: center;
-    border-left: 1px solid $primary-low;
 
     .info-number {
       font-size: 3.5em;
@@ -26,6 +25,7 @@ div.poll {
   .poll-container {
     display: table-cell;
     width: 100%;
+    border-right: 1px solid $primary-low;
   }
 
   .poll-buttons {
@@ -36,9 +36,27 @@ div.poll {
       line-height: 2em;
     }
 
+    :not(:first-child):not(:last-child) {
+      margin-left: 1em;
+    }
+
     .toggle-status {
       float: right;
     }
+  }
+}
+
+div.poll.pie {
+  .poll-container {
+    width: calc(100% - 190px);
+
+    .poll-grouped-pie-container {
+      width: 50%;
+    }
+  }
+  .poll-info {
+    display: inline-block;
+    width: 150px;
   }
 }
 

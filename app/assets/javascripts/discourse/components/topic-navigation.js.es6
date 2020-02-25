@@ -1,4 +1,7 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
+import { debounce, later } from "@ember/runloop";
+import Component from "@ember/component";
+import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 import PanEvents, {
   SWIPE_VELOCITY,
@@ -6,14 +9,16 @@ import PanEvents, {
   SWIPE_VELOCITY_THRESHOLD
 } from "discourse/mixins/pan-events";
 
-export default Ember.Component.extend(PanEvents, {
+const MIN_WIDTH_TIMELINE = 924;
+
+export default Component.extend(PanEvents, {
   composerOpen: null,
   info: null,
   isPanning: false,
 
   init() {
     this._super(...arguments);
-    this.set("info", Ember.Object.create());
+    this.set("info", EmberObject.create());
   },
 
   _performCheckSize() {
@@ -32,14 +37,18 @@ export default Ember.Component.extend(PanEvents, {
       let renderTimeline = !this.site.mobileView;
 
       if (renderTimeline) {
-        const width = $(window).width();
-        let height = $(window).height();
+        const width = window.innerWidth,
+          composer = document.getElementById("reply-control"),
+          timelineContainer = document.querySelector(".timeline-container"),
+          headerContainer = document.querySelector(".d-header"),
+          headerHeight = (headerContainer && headerContainer.offsetHeight) || 0;
 
-        if (this.composerOpen) {
-          height -= $("#reply-control").height();
+        if (timelineContainer && composer) {
+          renderTimeline =
+            width > MIN_WIDTH_TIMELINE &&
+            window.innerHeight - composer.offsetHeight - headerHeight >
+              timelineContainer.offsetHeight;
         }
-
-        renderTimeline = width > 924 && height > 520;
       }
 
       info.setProperties({
@@ -50,7 +59,7 @@ export default Ember.Component.extend(PanEvents, {
   },
 
   _checkSize() {
-    Ember.run.scheduleOnce("afterRender", this, this._performCheckSize);
+    debounce(this, this._performCheckSize, 300, true);
   },
 
   // we need to store this so topic progress has something to init with
@@ -85,8 +94,7 @@ export default Ember.Component.extend(PanEvents, {
 
   composerOpened() {
     this.set("composerOpen", true);
-    // we need to do the check after animation is done
-    Ember.run.later(() => this._checkSize(), 500);
+    this._checkSize();
   },
 
   composerClosed() {
@@ -97,7 +105,7 @@ export default Ember.Component.extend(PanEvents, {
   _collapseFullscreen() {
     if (this.get("info.topicProgressExpanded")) {
       $(".timeline-fullscreen").removeClass("show");
-      Ember.run.later(() => {
+      later(() => {
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
@@ -135,7 +143,7 @@ export default Ember.Component.extend(PanEvents, {
     } else if (offset <= 0) {
       $timelineContainer.css("bottom", "");
     } else {
-      Ember.run.later(() => this._handlePanDone(offset, event), 20);
+      later(() => this._handlePanDone(offset, event), 20);
     }
   },
 
@@ -187,8 +195,9 @@ export default Ember.Component.extend(PanEvents, {
       $(window).on("resize.discourse-topic-navigation", () =>
         this._checkSize()
       );
-      this.appEvents.on("composer:will-open", this, this.composerOpened);
-      this.appEvents.on("composer:will-close", this, this.composerClosed);
+      this.appEvents.on("composer:opened", this, this.composerOpened);
+      this.appEvents.on("composer:resized", this, this.composerOpened);
+      this.appEvents.on("composer:closed", this, this.composerClosed);
       $("#reply-control").on("div-resized.discourse-topic-navigation", () =>
         this._checkSize()
       );
@@ -209,8 +218,9 @@ export default Ember.Component.extend(PanEvents, {
 
     if (!this.site.mobileView) {
       $(window).off("resize.discourse-topic-navigation");
-      this.appEvents.off("composer:will-open", this, this.composerOpened);
-      this.appEvents.off("composer:will-close", this, this.composerClosed);
+      this.appEvents.off("composer:opened", this, this.composerOpened);
+      this.appEvents.off("composer:resized", this, this.composerOpened);
+      this.appEvents.off("composer:closed", this, this.composerClosed);
       $("#reply-control").off("div-resized.discourse-topic-navigation");
     }
   }

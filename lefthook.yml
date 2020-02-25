@@ -1,0 +1,55 @@
+pre-commit:
+  parallel: true
+  commands:
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop {staged_files}
+    eslint:
+      glob: "*.{js,es6}"
+      exclude: "vendor/*"
+      run: yarn eslint --ext .es6 -f compact {staged_files}
+    ember-template-lint:
+      run: yarn run ember-template-lint app
+    yaml-syntax:
+      glob: "*.{yaml,yml}"
+      # database.yml is an erb file not a yaml file
+      exclude: "database.yml"
+      run: bundle exec yaml-lint {staged_files}
+
+commands: &commands
+  bundle-install:
+    files: git diff --name-only HEAD master
+    glob: "{Gemfile,Gemfile.lock,*.gemspec}"
+    run: bundle install
+  yarn-install:
+    files: git diff --name-only HEAD master
+    glob: "{package.json,yarn.lock}"
+    run: yarn install
+
+post-checkout:
+  commands: *commands
+
+post-merge:
+  commands: *commands
+
+post-rewrite:
+  commands: *commands
+
+lints:
+  parallel: true
+  commands:
+    rubocop:
+      run: bundle exec rubocop --parallel
+    prettier:
+      glob: "{app/assets/stylesheets/**/*.scss,app/assets/javascripts/**/*.es6,test/javascripts/**/*.es6}"
+      run: yarn prettier --list-different {all_files}
+    eslint-assets:
+      run: yarn eslint --ext .es6 app/assets/javascripts
+    eslint-test:
+      run: yarn eslint --ext .es6 test/javascripts
+    eslint-plugins-assets:
+      run: yarn eslint --ext .es6 plugins/**/assets/javascripts
+    eslint-plugins-test:
+      run: yarn eslint --ext .es6 plugins/**/test/javascripts
+    eslint-assets-tests:
+      run: yarn eslint app/assets/javascripts test/javascripts

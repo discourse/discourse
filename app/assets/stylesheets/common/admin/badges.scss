@@ -75,6 +75,10 @@
         margin-right: 5px;
       }
     }
+
+    .icon-picker {
+      width: 350px;
+    }
   }
   .form-horizontal {
     .ace-wrapper {
@@ -119,6 +123,34 @@
   }
 }
 
+.award-badge {
+  margin: 15px 0 0 15px;
+  float: left;
+
+  .badge-preview {
+    min-height: 110px;
+    max-width: 300px;
+    display: flex;
+    align-items: center;
+    background-color: $primary-very-low;
+    border: 1px solid $primary-low;
+    padding: 0 10px 0 10px;
+
+    img,
+    svg {
+      width: 60px;
+      height: 60px;
+    }
+
+    .badge-display-name {
+      margin-left: 5px;
+    }
+  }
+  .badge-required {
+    font-weight: bold;
+  }
+}
+
 // badge-grouping modal
 .badge-groupings-modal {
   .badge-groupings {
@@ -159,33 +191,6 @@
     .heading {
       color: $danger;
       font-weight: bold;
-    }
-  }
-}
-
-// mobile specific styles - mostly commmon style overrides
-// TODO move to mobile sheet once mobile view has a seprate template.
-.mobile-view {
-  .admin-badges {
-    .badges {
-      margin: 0 0.25em;
-    }
-    .content-list {
-      flex: 0 0 100%;
-      .admin-badge-list {
-        max-height: 40vh;
-        margin-right: 0;
-      }
-    }
-    .badge-intro {
-      flex: 0 1 75%;
-    }
-    .current-badge {
-      margin: 20px 0;
-      width: 100%;
-    }
-    input[type="text"] {
-      width: 100%;
     }
   }
 }

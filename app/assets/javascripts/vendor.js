@@ -8,6 +8,7 @@
 //= require jquery.ui.widget.js
 //= require Markdown.Converter.js
 //= require bootbox.js
+//= require popper.js
 //= require bootstrap-modal.js
 //= require caret_position
 //= require favcount.js
@@ -24,7 +25,6 @@
 //= require mousetrap-global-bind.js
 //= require rsvp.js
 //= require show-html.js
-//= require break_string
 //= require buffered-proxy
 //= require jquery.autoellipsis-1.0.10
 //= require virtual-dom

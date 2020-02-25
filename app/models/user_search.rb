@@ -1,21 +1,23 @@
 # frozen_string_literal: true
 
 # Searches for a user by username or full text or name (if enabled in SiteSettings)
-require_dependency 'search'
-
 class UserSearch
+
+  MAX_SIZE_PRIORITY_MENTION ||= 500
 
   def initialize(term, opts = {})
     @term = term
     @term_like = "#{term.downcase.gsub("_", "\\_")}%"
     @topic_id = opts[:topic_id]
+    @category_id = opts[:category_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
     @guardian = Guardian.new(@searching_user)
-    @guardian.ensure_can_see_groups!(@groups) if @groups
+    @guardian.ensure_can_see_groups_members! @groups if @groups
+    @guardian.ensure_can_see_category! Category.find(@category_id) if @category_id
     @guardian.ensure_can_see_topic! Topic.find(@topic_id) if @topic_id
   end
 
@@ -82,7 +84,8 @@ class UserSearch
 
     # 2. in topic
     if @topic_id
-      in_topic = filtered_by_term_users.where('users.id IN (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
+      in_topic = filtered_by_term_users
+        .where('users.id IN (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
 
       if @searching_user.present?
         in_topic = in_topic.where('users.id <> ?', @searching_user.id)
@@ -97,8 +100,63 @@ class UserSearch
 
     return users.to_a if users.length >= @limit
 
-    # 3. global matches
-    if !@topic_id || @term.present?
+    secure_category_id = nil
+
+    if @category_id
+      secure_category_id = DB.query_single(<<~SQL, @category_id).first
+        SELECT id FROM categories
+        WHERE read_restricted AND id = ?
+      SQL
+    elsif @topic_id
+      secure_category_id = DB.query_single(<<~SQL, @topic_id).first
+        SELECT id FROM categories
+        WHERE read_restricted AND id IN (
+          SELECT category_id FROM topics
+          WHERE id = ?
+        )
+      SQL
+    end
+
+    # 3. category matches
+    if secure_category_id
+      @searching_user.present?
+
+      category_groups = Group.where(<<~SQL, secure_category_id, MAX_SIZE_PRIORITY_MENTION)
+        groups.id IN (
+          SELECT group_id FROM category_groups
+          JOIN groups g ON group_id = g.id
+          WHERE
+            category_id = ? AND
+            user_count < ?
+        )
+      SQL
+
+      category_groups = category_groups.members_visible_groups(@searching_user)
+
+      in_category = filtered_by_term_users
+        .where(<<~SQL, category_groups.pluck(:id))
+          users.id IN (
+            SELECT gu.user_id
+            FROM group_users gu
+            WHERE group_id IN (?)
+            LIMIT 200
+          )
+          SQL
+
+      if @searching_user.present?
+        in_category = in_category.where('users.id <> ?', @searching_user.id)
+      end
+
+      in_category
+        .order('last_seen_at DESC')
+        .limit(@limit - users.length)
+        .pluck(:id)
+        .each { |id| users << id }
+    end
+
+    return users.to_a if users.length >= @limit
+    # 4. global matches
+    if @term.present?
       filtered_by_term_users.order('last_seen_at DESC')
         .limit(@limit - users.length)
         .pluck(:id)

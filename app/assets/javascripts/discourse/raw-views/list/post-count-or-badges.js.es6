@@ -1,10 +1,12 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { or, and } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Object.extend({
-  postCountsPresent: Ember.computed.or("topic.unread", "topic.displayNewPosts"),
-  showBadges: Ember.computed.and("postBadgesEnabled", "postCountsPresent"),
+export default EmberObject.extend({
+  postCountsPresent: or("topic.unread", "topic.displayNewPosts"),
+  showBadges: and("postBadgesEnabled", "postCountsPresent"),
 
-  @computed
+  @discourseComputed
   newDotText() {
     return this.currentUser && this.currentUser.trust_level > 0
       ? ""

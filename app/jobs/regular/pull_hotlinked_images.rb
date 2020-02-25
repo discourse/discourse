@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'url_helper'
-require_dependency 'file_helper'
-require_dependency 'upload_creator'
-
 module Jobs
 
-  class PullHotlinkedImages < Jobs::Base
+  class PullHotlinkedImages < ::Jobs::Base
     sidekiq_options queue: 'low'
 
     def initialize
@@ -60,12 +56,17 @@ module Jobs
         src = original_src = node['src'] || node['href']
         src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
 
-        if should_download_image?(src)
+        if should_download_image?(src, post)
           begin
             # have we already downloaded that file?
             schemeless_src = remove_scheme(original_src)
 
             unless downloaded_images.include?(schemeless_src) || large_images.include?(schemeless_src) || broken_images.include?(schemeless_src)
+
+              # secure-media-uploads endpoint prevents anonymous downloads, so we
+              # need the presigned S3 URL here
+              src = Upload.signed_url_from_secure_media_url(src) if Upload.secure_media_url?(src)
+
               if hotlinked = download(src)
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
@@ -88,15 +89,24 @@ module Jobs
                 has_new_broken_image = true
               end
             end
+
             # have we successfully downloaded that file?
             if downloaded_urls[src].present?
               escaped_src = Regexp.escape(original_src)
 
               replace_raw = ->(match, match_src, replacement, _index) {
                 if src.include?(match_src)
+
+                  replacement =
+                    if replacement.include?(InlineUploads::PLACEHOLDER)
+                      replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
+                    elsif replacement.include?(InlineUploads::PATH_PLACEHOLDER)
+                      replacement.sub(InlineUploads::PATH_PLACEHOLDER, upload.short_path)
+                    end
+
                   raw = raw.gsub(
                     match,
-                    replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
+                    replacement
                   )
                 end
               }
@@ -140,7 +150,7 @@ module Jobs
 
       if start_raw == post.raw && raw != post.raw
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
-        post.revise(Discourse.system_user, changes, bypass_bump: true)
+        post.revise(Discourse.system_user, changes, bypass_bump: true, skip_staff_log: true)
       elsif has_downloaded_image || has_new_large_image || has_new_broken_image
         post.trigger_post_process(bypass_bump: true)
       end
@@ -154,17 +164,26 @@ module Jobs
         doc.css(".lightbox img[src]")
     end
 
-    def should_download_image?(src)
+    def should_download_image?(src, post = nil)
       # make sure we actually have a url
       return false unless src.present?
 
-      # If file is on the forum or CDN domain
-      if Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
+      # If file is on the forum or CDN domain or already has the
+      # secure media url
+      if Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i || Upload.secure_media_url?(src)
         return false if src =~ /\/images\/emoji\//
 
         # Someone could hotlink a file from a different site on the same CDN,
         # so check whether we have it in this database
-        return !Upload.get_from_url(src)
+        #
+        # if the upload already exists and is attached to a different post,
+        # or the original_sha1 is missing meaning it was created before secure
+        # media was enabled, then we definitely want to redownload again otherwise
+        # we end up reusing existing uploads which may be linked to many posts
+        # already.
+        upload = Upload.consider_for_reuse(Upload.get_from_url(src), post)
+
+        return !upload.present?
       end
 
       # Don't download non-local images unless site setting enabled

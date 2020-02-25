@@ -1,18 +1,17 @@
-import debounce from "discourse/lib/debounce";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
   queryParams: ["order", "asc", "filter", "type"],
   order: null,
   asc: null,
   filter: "",
   type: null,
 
-  @computed("model.extras.type_filters")
+  @discourseComputed("model.extras.type_filters")
   types(typeFilters) {
     const types = [];
 
@@ -26,7 +25,7 @@ export default Ember.Controller.extend({
   },
 
   @observes("filterInput")
-  _setFilter: debounce(function() {
+  _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterInput);
   }, 500),
 

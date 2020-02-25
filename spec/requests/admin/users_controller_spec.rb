@@ -123,25 +123,6 @@ RSpec.describe Admin::UsersController do
     end
   end
 
-  describe '#generate_api_key' do
-    it 'calls generate_api_key' do
-      post "/admin/users/#{user.id}/generate_api_key.json"
-      expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
-      expect(json["api_key"]["user"]["id"]).to eq(user.id)
-      expect(json["api_key"]["key"]).to be_present
-    end
-  end
-
-  describe '#revoke_api_key' do
-    it 'calls revoke_api_key' do
-      ApiKey.create!(user: user, key: SecureRandom.hex)
-      delete "/admin/users/#{user.id}/revoke_api_key.json"
-      expect(response.status).to eq(200)
-      expect(ApiKey.where(user: user).count).to eq(0)
-    end
-  end
-
   describe '#suspend' do
     fab!(:post) { Fabricate(:post) }
     let(:suspend_params) do
@@ -186,7 +167,7 @@ RSpec.describe Admin::UsersController do
       end
 
       it "won't delete a category topic" do
-        c = Fabricate(:category)
+        c = Fabricate(:category_with_definition)
         cat_post = c.topic.posts.first
         put(
           "/admin/users/#{user.id}/suspend.json",
@@ -201,7 +182,7 @@ RSpec.describe Admin::UsersController do
       end
 
       it "won't delete a category topic by replies" do
-        c = Fabricate(:category)
+        c = Fabricate(:category_with_definition)
         cat_post = c.topic.posts.first
         put(
           "/admin/users/#{user.id}/suspend.json",
@@ -269,15 +250,26 @@ RSpec.describe Admin::UsersController do
       expect(log.details).to match(/long reason/)
     end
 
-    it "also revokes any api keys" do
-      Fabricate(:api_key, user: user)
-      put "/admin/users/#{user.id}/suspend.json", params: suspend_params
+    it "also prevents use of any api keys" do
+      api_key = Fabricate(:api_key, user: user)
 
+      put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
+        bookmarked: "true",
+        api_key: api_key.key
+      }
       expect(response.status).to eq(200)
-      user.reload
 
+      put "/admin/users/#{user.id}/suspend.json", params: suspend_params
+      expect(response.status).to eq(200)
+
+      user.reload
       expect(user).to be_suspended
-      expect(ApiKey.where(user_id: user.id).count).to eq(0)
+
+      put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
+        bookmarked: "true",
+        api_key: api_key.key
+      }
+      expect(response.status).to eq(403)
     end
   end
 
@@ -426,6 +418,7 @@ RSpec.describe Admin::UsersController do
     end
 
     it 'updates the moderator flag' do
+      Jobs.expects(:enqueue).with(:send_system_message, user_id: another_user.id, message_type: 'welcome_staff', message_options: { role: :moderator })
       put "/admin/users/#{another_user.id}/grant_moderation.json"
       expect(response.status).to eq(200)
       another_user.reload
@@ -600,6 +593,19 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe '#deactivate' do
+    fab!(:reg_user) { Fabricate(:active_user) }
+
+    it "returns success" do
+      put "/admin/users/#{reg_user.id}/deactivate.json"
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json['success']).to eq("OK")
+      reg_user.reload
+      expect(reg_user.active).to eq(false)
+    end
+  end
+
   describe '#log_out' do
     fab!(:reg_user) { Fabricate(:user) }
 
@@ -715,74 +721,6 @@ RSpec.describe Admin::UsersController do
     end
   end
 
-  describe '#reject_bulk' do
-    fab!(:reject_me)     { Fabricate(:user) }
-    fab!(:reject_me_too) { Fabricate(:user) }
-
-    it 'does nothing without users' do
-      delete "/admin/users/reject-bulk.json"
-      expect(response.status).to eq(200)
-      expect(User.where(id: reject_me.id).count).to eq(1)
-      expect(User.where(id: reject_me_too.id).count).to eq(1)
-    end
-
-    it "won't delete users if not allowed" do
-      sign_in(user)
-      delete "/admin/users/reject-bulk.json", params: {
-        users: [reject_me.id]
-      }
-      expect(response.status).to eq(404)
-      expect(User.where(id: reject_me.id).count).to eq(1)
-    end
-
-    it "reports successes" do
-      delete "/admin/users/reject-bulk.json", params: {
-        users: [reject_me.id, reject_me_too.id]
-      }
-
-      expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
-      expect(json['success'].to_i).to eq(2)
-      expect(json['failed'].to_i).to eq(0)
-      expect(User.where(id: reject_me.id).count).to eq(0)
-      expect(User.where(id: reject_me_too.id).count).to eq(0)
-    end
-
-    context 'failures' do
-      it 'can handle some successes and some failures' do
-        stat = reject_me_too.user_stat
-        stat.first_post_created_at = (SiteSetting.delete_user_max_post_age.to_i + 1).days.ago
-        stat.post_count = 10
-        stat.save!
-
-        delete "/admin/users/reject-bulk.json", params: {
-          users: [reject_me.id, reject_me_too.id]
-        }
-
-        expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
-        expect(json['success'].to_i).to eq(1)
-        expect(json['failed'].to_i).to eq(1)
-        expect(User.where(id: reject_me.id).count).to eq(0)
-        expect(User.where(id: reject_me_too.id).count).to eq(1)
-      end
-
-      it 'reports failure due to a user still having posts' do
-        Fabricate(:post, user: reject_me)
-
-        delete "/admin/users/reject-bulk.json", params: {
-          users: [reject_me.id]
-        }
-
-        expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
-        expect(json['success'].to_i).to eq(0)
-        expect(json['failed'].to_i).to eq(1)
-        expect(User.where(id: reject_me.id).count).to eq(1)
-      end
-    end
-  end
-
   describe '#ip_info' do
     it "retrieves IP info" do
       ip = "81.2.69.142"
@@ -820,7 +758,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#invite_admin' do
-    let(:api_key) { Fabricate(:api_key, user: admin, key: SecureRandom.hex) }
+    let(:api_key) { Fabricate(:api_key, user: admin) }
     let(:api_params) do
       { api_key: api_key.key, api_username: admin.username }
     end
@@ -934,10 +872,20 @@ RSpec.describe Admin::UsersController do
       expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.login_error'))
       expect(JSON.parse(response.body)["message"]).not_to include(correct_payload["sig"])
     end
+
+    it "returns 404 if the external id does not exist" do
+      sso.name = "Dr. Claw"
+      sso.username = "dr_claw"
+      sso.email = "dr@claw.com"
+      sso.external_id = ""
+      post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.blank_id_error'))
+    end
   end
 
   describe '#disable_second_factor' do
-    let(:second_factor) { user.create_totp }
+    let(:second_factor) { user.create_totp(enabled: true) }
     let(:second_factor_backup) { user.generate_backup_codes }
 
     describe 'as an admin' do
@@ -945,7 +893,7 @@ RSpec.describe Admin::UsersController do
         sign_in(admin)
         second_factor
         second_factor_backup
-        expect(user.reload.user_second_factors.totp).to eq(second_factor)
+        expect(user.reload.user_second_factors.totps.first).to eq(second_factor)
       end
 
       it 'should able to disable the second factor for another user' do

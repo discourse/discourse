@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'upload_creator'
-require_dependency 'theme_store/tgz_exporter'
 require 'base64'
 
 class Admin::ThemesController < Admin::AdminController
@@ -40,6 +38,13 @@ class Admin::ThemesController < Admin::AdminController
       public_key: k.ssh_public_key
     }
   end
+
+  THEME_CONTENT_TYPES ||= %w{
+    application/gzip
+    application/x-gzip
+    application/x-zip-compressed
+    application/zip
+  }
 
   def import
     @theme = nil
@@ -88,13 +93,13 @@ class Admin::ThemesController < Admin::AdminController
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
-    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip"].include?(params[:theme].content_type))
+    elsif params[:bundle] || (params[:theme] && THEME_CONTENT_TYPES.include?(params[:theme].content_type))
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
       match_theme_by_name = !!params[:bundle] && !params.key?(:theme_id) # Old theme CLI behavior, match by name. Remove Jan 2020
       begin
-        @theme = RemoteTheme.update_tgz_theme(bundle.path, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id)
+        @theme = RemoteTheme.update_zipped_theme(bundle.path, bundle.original_filename, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id)
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
@@ -156,27 +161,21 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
+    disables_component = [false, "false"].include?(theme_params[:enabled])
+    enables_component = [true, "true"].include?(theme_params[:enabled])
 
-    [:name, :color_scheme_id, :user_selectable].each do |field|
+    [:name, :color_scheme_id, :user_selectable, :enabled].each do |field|
       if theme_params.key?(field)
         @theme.public_send("#{field}=", theme_params[field])
       end
     end
 
     if theme_params.key?(:child_theme_ids)
-      expected = theme_params[:child_theme_ids].map(&:to_i)
+      add_relative_themes!(:child, theme_params[:child_theme_ids])
+    end
 
-      @theme.child_theme_relation.to_a.each do |child|
-        if expected.include?(child.child_theme_id)
-          expected.reject! { |id| id == child.child_theme_id }
-        else
-          child.destroy
-        end
-      end
-
-      Theme.where(id: expected).each do |theme|
-        @theme.add_child_theme!(theme)
-      end
+    if theme_params.key?(:parent_theme_ids)
+      add_relative_themes!(:parent, theme_params[:parent_theme_ids])
     end
 
     set_fields
@@ -184,26 +183,26 @@ class Admin::ThemesController < Admin::AdminController
     update_translations
     handle_switch
 
-    save_remote = false
     if params[:theme][:remote_check]
       @theme.remote_theme.update_remote_version
-      save_remote = true
     end
 
     if params[:theme][:remote_update]
       @theme.remote_theme.update_from_remote
-      save_remote = true
     end
 
     respond_to do |format|
       if @theme.save
-
-        @theme.remote_theme.save! if save_remote
-
         update_default_theme
 
         @theme.reload
-        log_theme_change(original_json, @theme)
+
+        if (!disables_component && !enables_component) || theme_params.keys.size > 1
+          log_theme_change(original_json, @theme)
+        end
+        log_theme_component_disabled if disables_component
+        log_theme_component_enabled if enables_component
+
         format.json { render json: @theme, status: :ok }
       else
         format.json do
@@ -242,12 +241,13 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
-    exporter = ThemeStore::TgzExporter.new(@theme)
+    exporter = ThemeStore::ZipExporter.new(@theme)
     file_path = exporter.package_filename
+
     headers['Content-Length'] = File.size(file_path).to_s
     send_data File.read(file_path),
       filename: File.basename(file_path),
-      content_type: "application/x-gzip"
+      content_type: "application/zip"
   ensure
     exporter.cleanup!
   end
@@ -261,7 +261,45 @@ class Admin::ThemesController < Admin::AdminController
     end
   end
 
+  def update_single_setting
+    params.require("name")
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    setting_name = params[:name].to_sym
+    new_value = params[:value] || nil
+
+    previous_value = @theme.included_settings[setting_name]
+    @theme.update_setting(setting_name, new_value)
+    @theme.save
+
+    log_theme_setting_change(setting_name, previous_value, new_value)
+
+    updated_setting = @theme.included_settings.select { |key, val| key == setting_name }
+    render json: updated_setting, status: :ok
+  end
+
   private
+
+  def add_relative_themes!(kind, ids)
+    expected = ids.map(&:to_i)
+
+    relation = kind == :child ? @theme.child_theme_relation : @theme.parent_theme_relation
+
+    relation.to_a.each do |relative|
+      if kind == :child && expected.include?(relative.child_theme_id)
+        expected.reject! { |id| id == relative.child_theme_id }
+      elsif kind == :parent && expected.include?(relative.parent_theme_id)
+        expected.reject! { |id| id == relative.parent_theme_id }
+      else
+        relative.destroy
+      end
+    end
+
+    Theme.where(id: expected).each do |theme|
+      @theme.add_relative_theme!(kind, theme)
+    end
+  end
 
   def update_default_theme
     if theme_params.key?(:default)
@@ -279,6 +317,7 @@ class Admin::ThemesController < Admin::AdminController
       begin
         # deep munge is a train wreck, work around it for now
         params[:theme][:child_theme_ids] ||= [] if params[:theme].key?(:child_theme_ids)
+        params[:theme][:parent_theme_ids] ||= [] if params[:theme].key?(:parent_theme_ids)
 
         params.require(:theme).permit(
           :name,
@@ -286,10 +325,12 @@ class Admin::ThemesController < Admin::AdminController
           :default,
           :user_selectable,
           :component,
+          :enabled,
           settings: {},
           translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],
-          child_theme_ids: []
+          child_theme_ids: [],
+          parent_theme_ids: []
         )
       end
   end
@@ -326,6 +367,18 @@ class Admin::ThemesController < Admin::AdminController
 
   def log_theme_change(old_record, new_record)
     StaffActionLogger.new(current_user).log_theme_change(old_record, new_record)
+  end
+
+  def log_theme_setting_change(setting_name, previous_value, new_value)
+    StaffActionLogger.new(current_user).log_theme_setting_change(setting_name, previous_value, new_value, @theme)
+  end
+
+  def log_theme_component_disabled
+    StaffActionLogger.new(current_user).log_theme_component_disabled(@theme)
+  end
+
+  def log_theme_component_enabled
+    StaffActionLogger.new(current_user).log_theme_component_enabled(@theme)
   end
 
   def handle_switch

@@ -246,7 +246,7 @@ export default {
           browser: "Google Chrome",
           device: "Linux Computer",
           os: "Linux",
-          icon: "linux",
+          icon: "fab-linux",
           created_at: "2018-09-08T21:22:56.225Z",
           seen_at: "2018-09-08T21:22:56.512Z",
           is_active: false
@@ -258,7 +258,7 @@ export default {
           browser: "Google Chrome",
           device: "Linux Computer",
           os: "Linux",
-          icon: "linux",
+          icon: "fab-linux",
           created_at: "2018-09-08T21:33:41.616Z",
           seen_at: "2018-09-08T21:33:42.209Z",
           is_active: true
@@ -270,7 +270,7 @@ export default {
           browser: "Internet Explorer",
           device: "Windows Computer",
           os: "Windows",
-          icon: "windows",
+          icon: "fab-windows",
           created_at: "2018-09-07T21:44:41.616Z",
           seen_at: "2018-09-08T21:44:42.209Z",
           is_active: false
@@ -302,7 +302,7 @@ export default {
         acting_username: "Abhishek_Gupta",
         acting_name: "Abhishek Gupta",
         acting_user_id: 8021,
-        title: "How to check the user level via ajax?",
+        title: "How to check the user level via ajax? :/",
         deleted: false,
         hidden: false,
         moderator_action: false,
@@ -2380,7 +2380,6 @@ export default {
       can_change_bio: true,
       user_api_keys: null,
       user_auth_tokens: [],
-      user_auth_token_logs: [],
       invited_by: null,
       groups: [
         {
@@ -2675,19 +2674,6 @@ export default {
           created_at: "2019-06-26T08:41:18.436Z",
           seen_at: "2019-06-26T09:24:24.683Z",
           is_active: true
-        }
-      ],
-      user_auth_token_logs: [
-        {
-          id: 4,
-          client_ip: "127.0.0.1",
-          location: "unknown",
-          browser: "Google Chrome",
-          device: "GNU/Linux Computer",
-          os: "Linux",
-          icon: "fab-linux",
-          created_at: "2019-06-26T08:41:18.448Z",
-          action: "Log In"
         }
       ],
       invited_by: null,

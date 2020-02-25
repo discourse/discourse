@@ -1,14 +1,21 @@
-import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
+import { reads, and } from "@ember/object/computed";
+import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
+import { computed } from "@ember/object";
 
-export default SelectKitHeaderComponent.extend({
+export default SingleSelectHeaderComponent.extend({
   layoutName: "select-kit/templates/components/combo-box/combo-box-header",
-  classNames: "combo-box-header",
+  classNames: ["combo-box-header"],
+  clearable: reads("selectKit.options.clearable"),
+  caretUpIcon: reads("selectKit.options.caretUpIcon"),
+  caretDownIcon: reads("selectKit.options.caretDownIcon"),
+  shouldDisplayClearableButton: and("clearable", "value"),
 
-  clearable: Ember.computed.alias("options.clearable"),
-  caretUpIcon: Ember.computed.alias("options.caretUpIcon"),
-  caretDownIcon: Ember.computed.alias("options.caretDownIcon"),
-  shouldDisplayClearableButton: Ember.computed.and(
-    "clearable",
-    "computedContent.hasSelection"
+  caretIcon: computed(
+    "selectKit.isExpanded",
+    "caretUpIcon",
+    "caretDownIcon",
+    function() {
+      return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
+    }
   )
 });

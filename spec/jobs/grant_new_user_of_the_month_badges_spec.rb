@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'jobs/scheduled/grant_new_user_of_the_month_badges'
 
 describe Jobs::GrantNewUserOfTheMonthBadges do
 
   let(:granter) { described_class.new }
 
   it "runs correctly" do
+    freeze_time(DateTime.parse('2019-11-30 23:59 UTC'))
+
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
-    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: 1.month.ago)
+    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: Time.now)
+
+    freeze_time(DateTime.parse('2020-01-01 00:00 UTC'))
 
     user = Fabricate(:user, created_at: 1.week.ago)
     p = Fabricate(:post, user: user)
@@ -22,8 +25,9 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
 
     granter.execute({})
 
-    badge = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
-    expect(badge).to be_present
+    badges = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
+    expect(badges).to be_present
+    expect(badges.first.granted_at.to_s).to eq('2019-12-31 23:59:59 UTC')
   end
 
   it "does nothing if badges are disabled" do
@@ -64,9 +68,13 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
     expect(badge).to be_blank
   end
 
-  it "does nothing if it's been awarded recently" do
+  it "does nothing if it's already been awarded in previous month" do
+    freeze_time(DateTime.parse('2019-11-30 23:59 UTC'))
+
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
-    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0)
+    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: Time.now)
+
+    freeze_time(DateTime.parse('2019-12-01 00:00 UTC'))
 
     user = Fabricate(:user, created_at: 1.week.ago)
     p = Fabricate(:post, user: user)
@@ -84,6 +92,9 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
   end
 
   describe '.scores' do
+    def scores
+      granter.scores(1.month.ago)
+    end
 
     it "doesn't award it to accounts over a month old" do
       user = Fabricate(:user, created_at: 2.months.ago)
@@ -94,7 +105,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       old_user = Fabricate(:user, created_at: 6.months.ago)
       PostActionCreator.like(old_user, p)
 
-      expect(granter.scores.keys).not_to include(user.id)
+      expect(scores.keys).not_to include(user.id)
     end
 
     it "doesn't score users who haven't posted in two topics" do
@@ -105,7 +116,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       old_user = Fabricate(:user, created_at: 6.months.ago)
       PostActionCreator.like(old_user, p)
 
-      expect(granter.scores.keys).not_to include(user.id)
+      expect(scores.keys).not_to include(user.id)
     end
 
     it "doesn't count private topics" do
@@ -118,7 +129,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       old_user = Fabricate(:user, created_at: 6.months.ago)
       PostActionCreator.like(old_user, p)
 
-      expect(granter.scores.keys).not_to include(user.id)
+      expect(scores.keys).not_to include(user.id)
     end
 
     it "requires at least two likes to be considered" do
@@ -128,7 +139,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       old_user = Fabricate(:user, created_at: 6.months.ago)
       PostActionCreator.like(old_user, p)
 
-      expect(granter.scores.keys).not_to include(user.id)
+      expect(scores.keys).not_to include(user.id)
     end
 
     it "returns scores for accounts created within the last month" do
@@ -140,7 +151,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       old_user = Fabricate(:user, created_at: 6.months.ago)
       PostActionCreator.like(old_user, p)
 
-      expect(granter.scores.keys).to include(user.id)
+      expect(scores.keys).to include(user.id)
     end
 
     it "likes from older accounts are scored higher" do
@@ -164,11 +175,11 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       PostActionCreator.like(um, p)
       PostActionCreator.like(ua, p)
       PostActionCreator.like(Discourse.system_user, p)
-      expect(granter.scores[user.id]).to eq(1.55)
+      expect(scores[user.id]).to eq(1.55)
 
       # It goes down the more they post
       Fabricate(:post, user: user)
-      expect(granter.scores[user.id]).to eq(1.35625)
+      expect(scores[user.id]).to eq(1.35625)
     end
 
     it "is limited to two accounts" do
@@ -194,7 +205,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       PostActionCreator.like(ou1, p)
       PostActionCreator.like(ou2, p)
 
-      expect(granter.scores.keys.size).to eq(2)
+      expect(scores.keys.size).to eq(2)
     end
 
   end

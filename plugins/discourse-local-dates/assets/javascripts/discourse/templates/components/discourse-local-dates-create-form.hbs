@@ -41,9 +41,10 @@
 
         {{#unless site.mobileView}}
           {{timezone-input
-            headerIcon="globe"
+            options=(hash icon="globe")
             value=timezone
-            onSelect=(action (mut timezone))}}
+            onChange=(action (mut timezone))
+          }}
         {{/unless}}
       </div>
 
@@ -70,9 +71,10 @@
 
       {{#if site.mobileView}}
         {{timezone-input
-          headerIcon="globe"
           value=timezone
-          onSelect=(action (mut timezone))}}
+          options=(hash icon="globe")
+          onChange=(action (mut timezone))
+        }}
       {{/if}}
     </div>
 
@@ -89,7 +91,7 @@
                 content=recurringOptions
                 class="recurrence-input"
                 value=recurring
-                onSelect=(action (mut recurring))
+                onChange=(action (mut recurring))
                 none="discourse_local_dates.create.form.recurring_none"}}
             </div>
           </div>
@@ -126,7 +128,15 @@
           <label>{{i18n "discourse_local_dates.create.form.timezones_title"}}</label>
           <p>{{i18n "discourse_local_dates.create.form.timezones_description"}}</p>
           <div class="controls">
-            {{multi-select class="timezones-input" allowAny=false maximum=5 content=allTimezones values=timezones}}
+            {{multi-select
+              valueProperty=null
+              nameProperty=null
+              class="timezones-input"
+              allowAny=false
+              maximum=5
+              content=allTimezones
+              value=timezones
+            }}
           </div>
         </div>
       </div>
@@ -136,7 +146,8 @@
 
 <div class="modal-footer discourse-local-dates-create-modal-footer">
   {{#if isValid}}
-    {{d-button class="btn btn-primary"
+    {{d-button
+      class="btn-primary"
       action=(action "save")
       label="discourse_local_dates.create.form.insert"}}
   {{/if}}

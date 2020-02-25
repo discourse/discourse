@@ -34,6 +34,30 @@ describe ThemeField do
     expect(theme_field.value_baked).to_not include('<script')
   end
 
+  it 'adds an error when optimized image links are included' do
+    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "body_tag", value: <<~HTML)
+      <img src="http://mysite.invalid/uploads/default/optimized/1X/6d749a141f513f88f167e750e528515002043da1_2_1282x1000.png"/>
+    HTML
+    theme_field.ensure_baked!
+    expect(theme_field.error).to include(I18n.t("themes.errors.optimized_link"))
+
+    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: <<~SCSS)
+      body {
+        background: url(http://mysite.invalid/uploads/default/optimized/1X/6d749a141f513f88f167e750e528515002043da1_2_1282x1000.png);
+      }
+    SCSS
+    theme_field.ensure_baked!
+    expect(theme_field.error).to include(I18n.t("themes.errors.optimized_link"))
+
+    theme_field.update(value: <<~SCSS)
+      body {
+        background: url(http://notdiscourse.invalid/optimized/my_image.png);
+      }
+    SCSS
+    theme_field.ensure_baked!
+    expect(theme_field.error).to eq(nil)
+  end
+
   it 'only extracts inline javascript to an external file' do
     html = <<~HTML
     <script type="text/discourse-plugin" version="0.8">
@@ -151,7 +175,8 @@ HTML
     theme = Fabricate(:theme)
     js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello');")
     hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
-    raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.raw.hbs", value: "{{hello-world}}")
+    raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbr", value: "{{hello-world}}")
+    hbr_field = theme.set_field(target: :extra_js, name: "discourse/templates/other_discovery.hbr", value: "{{hello-world}}")
     unknown_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.blah", value: "this wont work")
     theme.save!
 
@@ -170,13 +195,14 @@ HTML
     expect(js_field.reload.value_baked).to eq(expected_js.strip)
 
     expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["discovery"]')
-    expect(raw_hbs_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["discourse/templates/discovery"]')
+    expect(raw_hbs_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["discovery"]')
+    expect(hbr_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["other_discovery"]')
     expect(unknown_field.reload.value_baked).to eq("")
     expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
 
     # All together
     expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["discovery"]')
-    expect(theme.javascript_cache.content).to include('Discourse.RAW_TEMPLATES["discourse/templates/discovery"]')
+    expect(theme.javascript_cache.content).to include('Discourse.RAW_TEMPLATES["discovery"]')
     expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery"')
     expect(theme.javascript_cache.content).to include("var settings =")
   end

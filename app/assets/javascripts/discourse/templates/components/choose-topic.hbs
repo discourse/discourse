@@ -1,4 +1,4 @@
-<label for='choose-topic-title'>{{i18n 'choose_topic.title.search'}}</label>
+<label for='choose-topic-title'>{{i18n labelText}}</label>
 
 {{text-field value=topicTitle placeholderKey="choose_topic.title.placeholder" id="choose-topic-title"}}
 
@@ -11,16 +11,14 @@
     {{#each topics as |t|}}
       <div class='controls existing-topic'>
         <label class='radio'>
-        <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>
-        <span class="topic-title">
-          {{t.title}}
-        </span>
-        <span class="topic-categories">
-          {{#if t.category.parentCategory}}
-            {{bound-category-link t.category.parentCategory}}
-          {{/if}}
-          {{bound-category-link t.category}}
-       </span>
+          <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>
+          {{raw "topic-status" topic=t}}
+          <span class="topic-title">
+            {{t.title}}
+          </span>
+          <span class="topic-categories">
+            {{bound-category-link t.category recursive=true hideParent=true}}
+          </span>
         </label>
       </div>
     {{/each}}

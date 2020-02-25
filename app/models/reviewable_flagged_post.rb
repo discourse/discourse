@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
-require_dependency 'reviewable'
-
 class ReviewableFlaggedPost < Reviewable
+
+  # Penalties are handled by the modal after the action is performed
+  def self.action_aliases
+    { agree_and_keep_hidden: :agree_and_keep,
+      agree_and_silence: :agree_and_keep,
+      agree_and_suspend: :agree_and_keep,
+      disagree_and_restore: :disagree }
+  end
 
   def self.counts_for(posts)
     result = {}
@@ -36,7 +42,16 @@ class ReviewableFlaggedPost < Reviewable
 
     agree = actions.add_bundle("#{id}-agree", icon: 'thumbs-up', label: 'reviewables.actions.agree.title')
 
-    build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
+    if !post.user_deleted? && !post.hidden?
+      build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
+    end
+
+    if post.hidden?
+      build_action(actions, :agree_and_keep_hidden, icon: 'thumbs-up', bundle: agree)
+    else
+      build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
+    end
+
     if guardian.can_suspend?(target_created_by)
       build_action(actions, :agree_and_suspend, icon: 'ban', bundle: agree, client_action: 'suspend')
       build_action(actions, :agree_and_silence, icon: 'microphone-slash', bundle: agree, client_action: 'silence')
@@ -54,8 +69,6 @@ class ReviewableFlaggedPost < Reviewable
 
     if post.user_deleted?
       build_action(actions, :agree_and_restore, icon: 'far-eye', bundle: agree)
-    elsif !post.hidden?
-      build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
     end
 
     if post.hidden?
@@ -117,16 +130,7 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  # Penalties are handled by the modal after the action is performed
   def perform_agree_and_keep(performed_by, args)
-    agree(performed_by, args)
-  end
-
-  def perform_agree_and_suspend(performed_by, args)
-    agree(performed_by, args)
-  end
-
-  def perform_agree_and_silence(performed_by, args)
     agree(performed_by, args)
   end
 
@@ -155,10 +159,6 @@ class ReviewableFlaggedPost < Reviewable
     agree(performed_by, args) do
       PostDestroyer.new(performed_by, post).recover
     end
-  end
-
-  def perform_disagree_and_restore(performed_by, args)
-    perform_disagree(performed_by, args)
   end
 
   def perform_disagree(performed_by, args)

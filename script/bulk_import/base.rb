@@ -29,7 +29,7 @@ class BulkImport::Base
   NOW ||= "now()".freeze
   PRIVATE_OFFSET ||= 2**30
 
-  # rubocop:disable Layout/AlignHash
+  # rubocop:disable Layout/HashAlignment
 
   CHARSET_MAP = {
     "armscii8" => nil,
@@ -70,7 +70,7 @@ class BulkImport::Base
     "utf8"     => Encoding::UTF_8,
   }
 
-  # rubocop:enable Layout/AlignHash
+  # rubocop:enable Layout/HashAlignment
 
   def initialize
     charset = ENV["DB_CHARSET"] || "utf8"
@@ -778,7 +778,7 @@ class BulkImport::Base
 
   def normalize_charset(text)
     return text if @encoding == Encoding::UTF_8
-    return text && text.encode(@encoding).force_encoding(Encoding::UTF_8)
+    text && text.encode(@encoding).force_encoding(Encoding::UTF_8)
   end
 
 end

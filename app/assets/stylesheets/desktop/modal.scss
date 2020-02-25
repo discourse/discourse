@@ -14,10 +14,6 @@
   animation: fade 0.25s;
 }
 
-.modal-body {
-  padding: 15px;
-}
-
 .modal-footer .btn.right {
   float: right;
 }
@@ -44,12 +40,24 @@
   .category-chooser {
     width: 50%;
   }
+
+  .modal-body.insert-link {
+    input {
+      min-width: 450px;
+    }
+  }
 }
 
 .edit-category-modal {
   .modal-body {
     position: relative;
     height: 420px;
+  }
+
+  .edit-category-tab-general {
+    .category-chooser {
+      width: 434px;
+    }
   }
 
   .disable_info_wrap {
@@ -89,7 +97,7 @@
         max-width: 48%;
       }
 
-      @include breakpoint(mobile) {
+      @include breakpoint(mobile-extra-large) {
         flex: 1 1 auto;
         min-width: 49%;
         max-width: unset;
@@ -98,13 +106,13 @@
   }
 }
 
-.move-to-modal {
+.choose-topic-modal {
   .modal-body {
     position: relative;
     height: 350px;
   }
 
-  #move-selected {
+  #choosing-topic {
     // prevents content from moving when user selects different move options 525px
     // is the same width we set on category edit modal
     width: 525px;
@@ -130,18 +138,9 @@
       width: 300px;
     }
 
-    .category-chooser {
-      margin-bottom: 9px;
-    }
-
     form {
       width: 95%;
       margin-top: 20px;
-      #split-topic-name,
-      #choose-topic-title,
-      #choose-message-title {
-        width: 100%;
-      }
 
       .participant-selector {
         width: 100%;

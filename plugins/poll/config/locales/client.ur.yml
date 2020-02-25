@@ -22,6 +22,8 @@ ur:
           title: "نتائج <strong>ووٹ</strong> پر دکھائے جائیں گے۔"
         closed:
           title: "نتائج <strong>بند ہونے</strong> پر دکھائے جائیں گے۔"
+        staff:
+          title: "نتائج صرف <strong>سٹاف</strong> ممبران کو دکھائے جاتے ہیں۔"
       multiple:
         help:
           at_least_min_options:
@@ -42,7 +44,8 @@ ur:
         label: "نتائج دکھائیں"
       hide-results:
         title: "وآپس اپنے ووٹس پر"
-        label: "نتائج چھپائیں"
+      export-results:
+        label: "ایکسپورٹ"
       open:
         title: "پول کھولیں"
         label: "کھولیں"
@@ -61,7 +64,6 @@ ur:
         title: پول شروع کریے
         insert: پول شامل کریے
         help:
-          options_count: کم از کم 2 آپشنس اینٹر کریں
           invalid_values: کم از کم قدر زیادہ سے زیادہ قدر سے چھوٹا ہونا ضروری ہے۔
           min_step_value: کم از کم اضافہ یا کمی کی قدر 1 ہے
         poll_type:
@@ -74,6 +76,7 @@ ur:
           always: ہمیشہ نظر آتا ہے
           vote: ووٹ پر
           closed: بند کر دیا جب
+          staff: صرف سٹاف کیلئے
         poll_config:
           max: زیادہ سے زیادہ
           min: کم از کم

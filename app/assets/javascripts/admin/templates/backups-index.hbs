@@ -28,6 +28,11 @@
       title="admin.backups.read_only.enable.title"
       label="admin.backups.read_only.enable.label"}}
   {{/if}}
+  <div class="backup-message">
+    {{#if status.restoreDisabled}}
+      <a href="site_settings/category/all_results?filter=allow_restore">{{d-icon "info-circle"}} {{i18n "admin.backups.operations.restore.is_disabled"}}</a>
+    {{/if}}
+  </div>
 </div>
 <table class="grid">
   <thead>

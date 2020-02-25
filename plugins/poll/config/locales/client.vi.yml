@@ -13,6 +13,8 @@ vi:
       total_votes:
         other: "tổng số bình chọn"
       average_rating: "Trung bình: <strong>%{average}</strong>."
+      public:
+        title: "Bình chọn <strong>công khai</strong>"
       multiple:
         help:
           at_least_min_options:
@@ -30,7 +32,8 @@ vi:
         label: "Hiện kết quả"
       hide-results:
         title: "Trở lại bình chọn của bạn"
-        label: "Ẩn kết quả"
+      export-results:
+        label: "Xuất"
       open:
         title: "Mở thăm dò"
         label: "Mở"
@@ -46,7 +49,6 @@ vi:
         title: Tạo thăm dò
         insert: Chèn thăm dò
         help:
-          options_count: Nhập vào ít nhất 2 lựa chọn
           invalid_values: Giá trị nhỏ nhất phải nhỏ hơn giá trị lớn nhất.
           min_step_value: Khoảng cách tối thiểu là 1
         poll_type:

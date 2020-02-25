@@ -1,17 +1,19 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
 
-export default Ember.Component.extend(UploadMixin, {
-  type: "csv",
+export default Component.extend(UploadMixin, {
+  type: "txt",
   classNames: "watched-words-uploader",
   uploadUrl: "/admin/logs/watched_words/upload",
-  addDisabled: Ember.computed.alias("uploading"),
+  addDisabled: alias("uploading"),
 
   validateUploadedFilesOptions() {
-    return { csvOnly: true };
+    return { skipValidation: true };
   },
 
-  @computed("actionKey")
+  @discourseComputed("actionKey")
   data(actionKey) {
     return { action_key: actionKey };
   },

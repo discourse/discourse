@@ -1,12 +1,14 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
+import Controller from "@ember/controller";
 import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: false,
   setAsOwner: false,
 
-  @computed("model.usernames", "loading")
+  @discourseComputed("model.usernames", "loading")
   disableAddButton(usernames, loading) {
     return loading || !usernames || !(usernames.length > 0);
   },
@@ -17,7 +19,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       const model = this.model;
       const usernames = model.get("usernames");
-      if (Ember.isEmpty(usernames)) {
+      if (isEmpty(usernames)) {
         return;
       }
       let promise;

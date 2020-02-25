@@ -1,8 +1,8 @@
 ---
 title: CommonMark Spec
 author: John MacFarlane
-version: 0.28
-date: '2017-08-01'
+version: 0.29
+date: '2019-04-06'
 license: '[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)'
 ...
 
@@ -248,7 +248,7 @@ satisfactory replacement for a spec.
 
 Because there is no unambiguous spec, implementations have diverged
 considerably.  As a result, users are often surprised to find that
-a document that renders one way on one system (say, a github wiki)
+a document that renders one way on one system (say, a GitHub wiki)
 renders differently on another (say, converting to docbook using
 pandoc).  To make matters worse, because nothing in Markdown counts
 as a "syntax error," the divergence often isn't discovered right away.
@@ -326,10 +326,15 @@ A [space](@) is `U+0020`.
 A [non-whitespace character](@) is any character
 that is not a [whitespace character].
 
+An [ASCII control character](@) is a character between `U+0000–1F` (both
+including) or `U+007F`.
+
 An [ASCII punctuation character](@)
 is `!`, `"`, `#`, `$`, `%`, `&`, `'`, `(`, `)`,
-`*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`, `?`, `@`,
-`[`, `\`, `]`, `^`, `_`, `` ` ``, `{`, `|`, `}`, or `~`.
+`*`, `+`, `,`, `-`, `.`, `/` (U+0021–2F), 
+`:`, `;`, `<`, `=`, `>`, `?`, `@` (U+003A–0040),
+`[`, `\`, `]`, `^`, `_`, `` ` `` (U+005B–0060), 
+`{`, `|`, `}`, or `~` (U+007B–007E).
 
 A [punctuation character](@) is an [ASCII
 punctuation character] or anything in
@@ -476,6 +481,347 @@ bar
 For security reasons, the Unicode character `U+0000` must be replaced
 with the REPLACEMENT CHARACTER (`U+FFFD`).
 
+
+## Backslash escapes
+
+Any ASCII punctuation character may be backslash-escaped:
+
+```````````````````````````````` example
+\!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
+.
+<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
+````````````````````````````````
+
+
+Backslashes before other characters are treated as literal
+backslashes:
+
+```````````````````````````````` example
+\→\A\a\ \3\φ\«
+.
+<p>\→\A\a\ \3\φ\«</p>
+````````````````````````````````
+
+
+Escaped characters are treated as regular characters and do
+not have their usual Markdown meanings:
+
+```````````````````````````````` example
+\*not emphasized*
+\<br/> not a tag
+\[not a link](/foo)
+\`not code`
+1\. not a list
+\* not a list
+\# not a heading
+\[foo]: /url "not a reference"
+\&ouml; not a character entity
+.
+<p>*not emphasized*
+&lt;br/&gt; not a tag
+[not a link](/foo)
+`not code`
+1. not a list
+* not a list
+# not a heading
+[foo]: /url &quot;not a reference&quot;
+&amp;ouml; not a character entity</p>
+````````````````````````````````
+
+
+If a backslash is itself escaped, the following character is not:
+
+```````````````````````````````` example
+\\*emphasis*
+.
+<p>\<em>emphasis</em></p>
+````````````````````````````````
+
+
+A backslash at the end of the line is a [hard line break]:
+
+```````````````````````````````` example
+foo\
+bar
+.
+<p>foo<br />
+bar</p>
+````````````````````````````````
+
+
+Backslash escapes do not work in code blocks, code spans, autolinks, or
+raw HTML:
+
+```````````````````````````````` example
+`` \[\` ``
+.
+<p><code>\[\`</code></p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+    \[\]
+.
+<pre><code>\[\]
+</code></pre>
+````````````````````````````````
+
+
+```````````````````````````````` example
+~~~
+\[\]
+~~~
+.
+<pre><code>\[\]
+</code></pre>
+````````````````````````````````
+
+
+```````````````````````````````` example
+<http://example.com?find=\*>
+.
+<p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+<a href="/bar\/)">
+.
+<a href="/bar\/)">
+````````````````````````````````
+
+
+But they work in all other contexts, including URLs and link titles,
+link references, and [info strings] in [fenced code blocks]:
+
+```````````````````````````````` example
+[foo](/bar\* "ti\*tle")
+.
+<p><a href="/bar*" title="ti*tle">foo</a></p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+[foo]
+
+[foo]: /bar\* "ti\*tle"
+.
+<p><a href="/bar*" title="ti*tle">foo</a></p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+``` foo\+bar
+foo
+```
+.
+<pre><code class="language-foo+bar">foo
+</code></pre>
+````````````````````````````````
+
+
+## Entity and numeric character references
+
+Valid HTML entity references and numeric character references
+can be used in place of the corresponding Unicode character,
+with the following exceptions:
+
+- Entity and character references are not recognized in code
+  blocks and code spans.
+
+- Entity and character references cannot stand in place of
+  special characters that define structural elements in
+  CommonMark.  For example, although `&#42;` can be used
+  in place of a literal `*` character, `&#42;` cannot replace
+  `*` in emphasis delimiters, bullet list markers, or thematic
+  breaks.
+
+Conforming CommonMark parsers need not store information about
+whether a particular character was represented in the source
+using a Unicode character or an entity reference.
+
+[Entity references](@) consist of `&` + any of the valid
+HTML5 entity names + `;`. The
+document <https://html.spec.whatwg.org/multipage/entities.json>
+is used as an authoritative source for the valid entity
+references and their corresponding code points.
+
+```````````````````````````````` example
+&nbsp; &amp; &copy; &AElig; &Dcaron;
+&frac34; &HilbertSpace; &DifferentialD;
+&ClockwiseContourIntegral; &ngE;
+.
+<p>  &amp; © Æ Ď
+¾ ℋ ⅆ
+∲ ≧̸</p>
+````````````````````````````````
+
+
+[Decimal numeric character
+references](@)
+consist of `&#` + a string of 1--7 arabic digits + `;`. A
+numeric character reference is parsed as the corresponding
+Unicode character. Invalid Unicode code points will be replaced by
+the REPLACEMENT CHARACTER (`U+FFFD`).  For security reasons,
+the code point `U+0000` will also be replaced by `U+FFFD`.
+
+```````````````````````````````` example
+&#35; &#1234; &#992; &#0;
+.
+<p># Ӓ Ϡ �</p>
+````````````````````````````````
+
+
+[Hexadecimal numeric character
+references](@) consist of `&#` +
+either `X` or `x` + a string of 1-6 hexadecimal digits + `;`.
+They too are parsed as the corresponding Unicode character (this
+time specified with a hexadecimal numeral instead of decimal).
+
+```````````````````````````````` example
+&#X22; &#XD06; &#xcab;
+.
+<p>&quot; ആ ಫ</p>
+````````````````````````````````
+
+
+Here are some nonentities:
+
+```````````````````````````````` example
+&nbsp &x; &#; &#x;
+&#87654321;
+&#abcdef0;
+&ThisIsNotDefined; &hi?;
+.
+<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
+&amp;#87654321;
+&amp;#abcdef0;
+&amp;ThisIsNotDefined; &amp;hi?;</p>
+````````````````````````````````
+
+
+Although HTML5 does accept some entity references
+without a trailing semicolon (such as `&copy`), these are not
+recognized here, because it makes the grammar too ambiguous:
+
+```````````````````````````````` example
+&copy
+.
+<p>&amp;copy</p>
+````````````````````````````````
+
+
+Strings that are not on the list of HTML5 named entities are not
+recognized as entity references either:
+
+```````````````````````````````` example
+&MadeUpEntity;
+.
+<p>&amp;MadeUpEntity;</p>
+````````````````````````````````
+
+
+Entity and numeric character references are recognized in any
+context besides code spans or code blocks, including
+URLs, [link titles], and [fenced code block][] [info strings]:
+
+```````````````````````````````` example
+<a href="&ouml;&ouml;.html">
+.
+<a href="&ouml;&ouml;.html">
+````````````````````````````````
+
+
+```````````````````````````````` example
+[foo](/f&ouml;&ouml; "f&ouml;&ouml;")
+.
+<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+[foo]
+
+[foo]: /f&ouml;&ouml; "f&ouml;&ouml;"
+.
+<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+``` f&ouml;&ouml;
+foo
+```
+.
+<pre><code class="language-föö">foo
+</code></pre>
+````````````````````````````````
+
+
+Entity and numeric character references are treated as literal
+text in code spans and code blocks:
+
+```````````````````````````````` example
+`f&ouml;&ouml;`
+.
+<p><code>f&amp;ouml;&amp;ouml;</code></p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+    f&ouml;f&ouml;
+.
+<pre><code>f&amp;ouml;f&amp;ouml;
+</code></pre>
+````````````````````````````````
+
+
+Entity and numeric character references cannot be used
+in place of symbols indicating structure in CommonMark
+documents.
+
+```````````````````````````````` example
+&#42;foo&#42;
+*foo*
+.
+<p>*foo*
+<em>foo</em></p>
+````````````````````````````````
+
+```````````````````````````````` example
+&#42; foo
+
+* foo
+.
+<p>* foo</p>
+<ul>
+<li>foo</li>
+</ul>
+````````````````````````````````
+
+```````````````````````````````` example
+foo&#10;&#10;bar
+.
+<p>foo
+
+bar</p>
+````````````````````````````````
+
+```````````````````````````````` example
+&#9;foo
+.
+<p>→foo</p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+[a](url &quot;tit&quot;)
+.
+<p>[a](url &quot;tit&quot;)</p>
+````````````````````````````````
+
+
+
 # Blocks and inlines
 
 We can think of a document as a sequence of
@@ -514,8 +860,8 @@ one block element does not affect the inline parsing of any other.
 ## Container blocks and leaf blocks
 
 We can divide blocks into two types:
-[container block](@)s,
-which can contain other blocks, and [leaf block](@)s,
+[container blocks](@),
+which can contain other blocks, and [leaf blocks](@),
 which cannot.
 
 # Leaf blocks
@@ -825,7 +1171,7 @@ Contents are parsed as inlines:
 ````````````````````````````````
 
 
-Leading and trailing blanks are ignored in parsing inline content:
+Leading and trailing [whitespace] is ignored in parsing inline content:
 
 ```````````````````````````````` example
 #                  foo                     
@@ -1018,6 +1364,20 @@ The content of the header may span more than one line:
 ```````````````````````````````` example
 Foo *bar
 baz*
+====
+.
+<h1>Foo <em>bar
+baz</em></h1>
+````````````````````````````````
+
+The contents are the result of parsing the headings's raw
+content as inlines.  The heading's raw content is formed by
+concatenating the lines and removing initial and final
+[whitespace].
+
+```````````````````````````````` example
+  Foo *bar
+baz*→
 ====
 .
 <h1>Foo <em>bar
@@ -1584,8 +1944,8 @@ begins with a code fence, indented no more than three spaces.
 
 The line with the opening code fence may optionally contain some text
 following the code fence; this is trimmed of leading and trailing
-whitespace and called the [info string](@).
-The [info string] may not contain any backtick
+whitespace and called the [info string](@). If the [info string] comes
+after a backtick fence, it may not contain any backtick
 characters.  (The reason for this restriction is that otherwise
 some inline code would be incorrectly interpreted as the
 beginning of a fenced code block.)
@@ -1870,7 +2230,7 @@ Code fences (opening and closing) cannot contain internal spaces:
 ``` ```
 aaa
 .
-<p><code></code>
+<p><code> </code>
 aaa</p>
 ````````````````````````````````
 
@@ -1922,9 +2282,11 @@ bar
 
 
 An [info string] can be provided after the opening code fence.
-Opening and closing spaces will be stripped, and the first word, prefixed
-with `language-`, is used as the value for the `class` attribute of the
-`code` element within the enclosing `pre` element.
+Although this spec doesn't mandate any particular treatment of
+the info string, the first word is typically used to specify
+the language of the code block. In HTML output, the language is
+normally indicated by adding a class to the `code` element consisting
+of `language-` followed by the language name.
 
 ```````````````````````````````` example
 ```ruby
@@ -1973,6 +2335,18 @@ foo</p>
 ````````````````````````````````
 
 
+[Info strings] for tilde code blocks can contain backticks and tildes:
+
+```````````````````````````````` example
+~~~ aa ``` ~~~
+foo
+~~~
+.
+<pre><code class="language-aa">foo
+</code></pre>
+````````````````````````````````
+
+
 Closing code fences cannot have [info strings]:
 
 ```````````````````````````````` example
@@ -1991,14 +2365,15 @@ Closing code fences cannot have [info strings]:
 An [HTML block](@) is a group of lines that is treated
 as raw HTML (and will not be escaped in HTML output).
 
-There are seven kinds of [HTML block], which can be defined
-by their start and end conditions.  The block begins with a line that
-meets a [start condition](@) (after up to three spaces
-optional indentation).  It ends with the first subsequent line that
-meets a matching [end condition](@), or the last line of
-the document or other [container block]), if no line is encountered that meets the
-[end condition].  If the first line meets both the [start condition]
-and the [end condition], the block will contain just that line.
+There are seven kinds of [HTML block], which can be defined by their
+start and end conditions.  The block begins with a line that meets a
+[start condition](@) (after up to three spaces optional indentation).
+It ends with the first subsequent line that meets a matching [end
+condition](@), or the last line of the document, or the last line of
+the [container block](#container-blocks) containing the current HTML
+block, if no line is encountered that meets the [end condition].  If
+the first line meets both the [start condition] and the [end
+condition], the block will contain just that line.
 
 1.  **Start condition:**  line begins with the string `<script`,
 `<pre`, or `<style` (case-insensitive), followed by whitespace,
@@ -2029,7 +2404,7 @@ followed by one of the strings (case-insensitive) `address`,
 `footer`, `form`, `frame`, `frameset`,
 `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `head`, `header`, `hr`,
 `html`, `iframe`, `legend`, `li`, `link`, `main`, `menu`, `menuitem`,
-`meta`, `nav`, `noframes`, `ol`, `optgroup`, `option`, `p`, `param`,
+`nav`, `noframes`, `ol`, `optgroup`, `option`, `p`, `param`,
 `section`, `source`, `summary`, `table`, `tbody`, `td`,
 `tfoot`, `th`, `thead`, `title`, `tr`, `track`, `ul`, followed
 by [whitespace], the end of the line, the string `>`, or
@@ -2037,16 +2412,17 @@ the string `/>`.\
 **End condition:** line is followed by a [blank line].
 
 7.  **Start condition:**  line begins with a complete [open tag]
-or [closing tag] (with any [tag name] other than `script`,
-`style`, or `pre`) followed only by [whitespace]
-or the end of the line.\
+(with any [tag name] other than `script`,
+`style`, or `pre`) or a complete [closing tag],
+followed only by [whitespace] or the end of the line.\
 **End condition:** line is followed by a [blank line].
 
 HTML blocks continue until they are closed by their appropriate
-[end condition], or the last line of the document or other [container block].
-This means any HTML **within an HTML block** that might otherwise be recognised
-as a start condition will be ignored by the parser and passed through as-is,
-without changing the parser's state.
+[end condition], or the last line of the document or other [container
+block](#container-blocks).  This means any HTML **within an HTML
+block** that might otherwise be recognised as a start condition will
+be ignored by the parser and passed through as-is, without changing
+the parser's state.
 
 For instance, `<pre>` within a HTML block started by `<table>` will not affect
 the parser state; as the HTML block was started in by start condition 6, it
@@ -2612,7 +2988,8 @@ bar
 
 
 However, a following blank line is needed, except at the end of
-a document, and except for blocks of types 1--5, above:
+a document, and except for blocks of types 1--5, [above][HTML
+block]:
 
 ```````````````````````````````` example
 <div>
@@ -2758,8 +3135,8 @@ an indented code block:
 
 Fortunately, blank lines are usually not necessary and can be
 deleted.  The exception is inside `<pre>` tags, but as described
-above, raw HTML blocks starting with `<pre>` *can* contain blank
-lines.
+[above][HTML blocks], raw HTML blocks starting with `<pre>`
+*can* contain blank lines.
 
 ## Link reference definitions
 
@@ -2811,7 +3188,7 @@ them.
 
 ```````````````````````````````` example
 [Foo bar]:
-<my%20url>
+<my url>
 'title'
 
 [Foo bar]
@@ -2874,6 +3251,29 @@ The link destination may not be omitted:
 [foo]
 .
 <p>[foo]:</p>
+<p>[foo]</p>
+````````````````````````````````
+
+ However, an empty link destination may be specified using
+ angle brackets:
+
+```````````````````````````````` example
+[foo]: <>
+
+[foo]
+.
+<p><a href="">foo</a></p>
+````````````````````````````````
+
+The title must be separated from the link destination by
+whitespace:
+
+```````````````````````````````` example
+[foo]: <bar>(baz)
+
+[foo]
+.
+<p>[foo]: <bar>(baz)</p>
 <p>[foo]</p>
 ````````````````````````````````
 
@@ -3034,6 +3434,25 @@ and thematic breaks, and it need not be followed by a blank line.
 </blockquote>
 ````````````````````````````````
 
+```````````````````````````````` example
+[foo]: /url
+bar
+===
+[foo]
+.
+<h1>bar</h1>
+<p><a href="/url">foo</a></p>
+````````````````````````````````
+
+```````````````````````````````` example
+[foo]: /url
+===
+[foo]
+.
+<p>===
+<a href="/url">foo</a></p>
+````````````````````````````````
+
 
 Several [link reference definitions]
 can occur one after another, without intervening blank lines.
@@ -3069,6 +3488,17 @@ are defined:
 </blockquote>
 ````````````````````````````````
 
+
+Whether something is a [link reference definition] is
+independent of whether the link reference it defines is
+used in the document.  Thus, for example, the following
+document contains just a link reference definition, and
+no visible content:
+
+```````````````````````````````` example
+[foo]: /url
+.
+````````````````````````````````
 
 
 ## Paragraphs
@@ -3207,7 +3637,7 @@ aaa
 
 # Container blocks
 
-A [container block] is a block that has other
+A [container block](#container-blocks) is a block that has other
 blocks as its contents.  There are two basic kinds of container blocks:
 [block quotes] and [list items].
 [Lists] are meta-containers for [list items].
@@ -3669,9 +4099,8 @@ in some browsers.)
 The following rules define [list items]:
 
 1.  **Basic case.**  If a sequence of lines *Ls* constitute a sequence of
-    blocks *Bs* starting with a [non-whitespace character] and not separated
-    from each other by more than one blank line, and *M* is a list
-    marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces, then the result
+    blocks *Bs* starting with a [non-whitespace character], and *M* is a
+    list marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces, then the result
     of prepending *M* and the following spaces to the first line of
     *Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
     list item with *Bs* as its contents.  The type of the list item
@@ -3981,8 +4410,7 @@ A start number may not be negative:
 
 2.  **Item starting with indented code.**  If a sequence of lines *Ls*
     constitute a sequence of blocks *Bs* starting with an indented code
-    block and not separated from each other by more than one blank line,
-    and *M* is a list marker of width *W* followed by
+    block, and *M* is a list marker of width *W* followed by
     one space, then the result of prepending *M* and the following
     space to the first line of *Ls*, and indenting subsequent lines of
     *Ls* by *W + 1* spaces, is a list item with *Bs* as its contents.
@@ -4458,9 +4886,10 @@ continued here.</p>
 6.  **That's all.** Nothing that is not counted as a list item by rules
     #1--5 counts as a [list item](#list-items).
 
-The rules for sublists follow from the general rules above.  A sublist
-must be indented the same number of spaces a paragraph would need to be
-in order to be included in the list item.
+The rules for sublists follow from the general rules
+[above][List items].  A sublist must be indented the same number
+of spaces a paragraph would need to be in order to be included
+in the list item.
 
 So, in this case we need two spaces indent:
 
@@ -5049,11 +5478,9 @@ item:
  - b
   - c
    - d
-    - e
-   - f
-  - g
- - h
-- i
+  - e
+ - f
+- g
 .
 <ul>
 <li>a</li>
@@ -5063,11 +5490,53 @@ item:
 <li>e</li>
 <li>f</li>
 <li>g</li>
-<li>h</li>
-<li>i</li>
 </ul>
 ````````````````````````````````
 
+
+```````````````````````````````` example
+1. a
+
+  2. b
+
+   3. c
+.
+<ol>
+<li>
+<p>a</p>
+</li>
+<li>
+<p>b</p>
+</li>
+<li>
+<p>c</p>
+</li>
+</ol>
+````````````````````````````````
+
+Note, however, that list items may not be indented more than
+three spaces.  Here `- e` is treated as a paragraph continuation
+line, because it is indented more than three spaces:
+
+```````````````````````````````` example
+- a
+ - b
+  - c
+   - d
+    - e
+.
+<ul>
+<li>a</li>
+<li>b</li>
+<li>c</li>
+<li>d
+- e</li>
+</ul>
+````````````````````````````````
+
+And here, `3. c` is treated as in indented code block,
+because it is indented four spaces and preceded by a
+blank line.
 
 ```````````````````````````````` example
 1. a
@@ -5083,10 +5552,9 @@ item:
 <li>
 <p>b</p>
 </li>
-<li>
-<p>c</p>
-</li>
 </ol>
+<pre><code>3. c
+</code></pre>
 ````````````````````````````````
 
 
@@ -5378,287 +5846,9 @@ Thus, for example, in
 <p><code>hi</code>lo`</p>
 ````````````````````````````````
 
-
 `hi` is parsed as code, leaving the backtick at the end as a literal
 backtick.
 
-## Backslash escapes
-
-Any ASCII punctuation character may be backslash-escaped:
-
-```````````````````````````````` example
-\!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
-.
-<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
-````````````````````````````````
-
-
-Backslashes before other characters are treated as literal
-backslashes:
-
-```````````````````````````````` example
-\→\A\a\ \3\φ\«
-.
-<p>\→\A\a\ \3\φ\«</p>
-````````````````````````````````
-
-
-Escaped characters are treated as regular characters and do
-not have their usual Markdown meanings:
-
-```````````````````````````````` example
-\*not emphasized*
-\<br/> not a tag
-\[not a link](/foo)
-\`not code`
-1\. not a list
-\* not a list
-\# not a heading
-\[foo]: /url "not a reference"
-.
-<p>*not emphasized*
-&lt;br/&gt; not a tag
-[not a link](/foo)
-`not code`
-1. not a list
-* not a list
-# not a heading
-[foo]: /url &quot;not a reference&quot;</p>
-````````````````````````````````
-
-
-If a backslash is itself escaped, the following character is not:
-
-```````````````````````````````` example
-\\*emphasis*
-.
-<p>\<em>emphasis</em></p>
-````````````````````````````````
-
-
-A backslash at the end of the line is a [hard line break]:
-
-```````````````````````````````` example
-foo\
-bar
-.
-<p>foo<br />
-bar</p>
-````````````````````````````````
-
-
-Backslash escapes do not work in code blocks, code spans, autolinks, or
-raw HTML:
-
-```````````````````````````````` example
-`` \[\` ``
-.
-<p><code>\[\`</code></p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-    \[\]
-.
-<pre><code>\[\]
-</code></pre>
-````````````````````````````````
-
-
-```````````````````````````````` example
-~~~
-\[\]
-~~~
-.
-<pre><code>\[\]
-</code></pre>
-````````````````````````````````
-
-
-```````````````````````````````` example
-<http://example.com?find=\*>
-.
-<p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-<a href="/bar\/)">
-.
-<a href="/bar\/)">
-````````````````````````````````
-
-
-But they work in all other contexts, including URLs and link titles,
-link references, and [info strings] in [fenced code blocks]:
-
-```````````````````````````````` example
-[foo](/bar\* "ti\*tle")
-.
-<p><a href="/bar*" title="ti*tle">foo</a></p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-[foo]
-
-[foo]: /bar\* "ti\*tle"
-.
-<p><a href="/bar*" title="ti*tle">foo</a></p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-``` foo\+bar
-foo
-```
-.
-<pre><code class="language-foo+bar">foo
-</code></pre>
-````````````````````````````````
-
-
-
-## Entity and numeric character references
-
-All valid HTML entity references and numeric character
-references, except those occuring in code blocks and code spans,
-are recognized as such and treated as equivalent to the
-corresponding Unicode characters.  Conforming CommonMark parsers
-need not store information about whether a particular character
-was represented in the source using a Unicode character or
-an entity reference.
-
-[Entity references](@) consist of `&` + any of the valid
-HTML5 entity names + `;`. The
-document <https://html.spec.whatwg.org/multipage/entities.json>
-is used as an authoritative source for the valid entity
-references and their corresponding code points.
-
-```````````````````````````````` example
-&nbsp; &amp; &copy; &AElig; &Dcaron;
-&frac34; &HilbertSpace; &DifferentialD;
-&ClockwiseContourIntegral; &ngE;
-.
-<p>  &amp; © Æ Ď
-¾ ℋ ⅆ
-∲ ≧̸</p>
-````````````````````````````````
-
-
-[Decimal numeric character
-references](@)
-consist of `&#` + a string of 1--8 arabic digits + `;`. A
-numeric character reference is parsed as the corresponding
-Unicode character. Invalid Unicode code points will be replaced by
-the REPLACEMENT CHARACTER (`U+FFFD`).  For security reasons,
-the code point `U+0000` will also be replaced by `U+FFFD`.
-
-```````````````````````````````` example
-&#35; &#1234; &#992; &#98765432; &#0;
-.
-<p># Ӓ Ϡ � �</p>
-````````````````````````````````
-
-
-[Hexadecimal numeric character
-references](@) consist of `&#` +
-either `X` or `x` + a string of 1-8 hexadecimal digits + `;`.
-They too are parsed as the corresponding Unicode character (this
-time specified with a hexadecimal numeral instead of decimal).
-
-```````````````````````````````` example
-&#X22; &#XD06; &#xcab;
-.
-<p>&quot; ആ ಫ</p>
-````````````````````````````````
-
-
-Here are some nonentities:
-
-```````````````````````````````` example
-&nbsp &x; &#; &#x;
-&ThisIsNotDefined; &hi?;
-.
-<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
-&amp;ThisIsNotDefined; &amp;hi?;</p>
-````````````````````````````````
-
-
-Although HTML5 does accept some entity references
-without a trailing semicolon (such as `&copy`), these are not
-recognized here, because it makes the grammar too ambiguous:
-
-```````````````````````````````` example
-&copy
-.
-<p>&amp;copy</p>
-````````````````````````````````
-
-
-Strings that are not on the list of HTML5 named entities are not
-recognized as entity references either:
-
-```````````````````````````````` example
-&MadeUpEntity;
-.
-<p>&amp;MadeUpEntity;</p>
-````````````````````````````````
-
-
-Entity and numeric character references are recognized in any
-context besides code spans or code blocks, including
-URLs, [link titles], and [fenced code block][] [info strings]:
-
-```````````````````````````````` example
-<a href="&ouml;&ouml;.html">
-.
-<a href="&ouml;&ouml;.html">
-````````````````````````````````
-
-
-```````````````````````````````` example
-[foo](/f&ouml;&ouml; "f&ouml;&ouml;")
-.
-<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-[foo]
-
-[foo]: /f&ouml;&ouml; "f&ouml;&ouml;"
-.
-<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-``` f&ouml;&ouml;
-foo
-```
-.
-<pre><code class="language-föö">foo
-</code></pre>
-````````````````````````````````
-
-
-Entity and numeric character references are treated as literal
-text in code spans and code blocks:
-
-```````````````````````````````` example
-`f&ouml;&ouml;`
-.
-<p><code>f&amp;ouml;&amp;ouml;</code></p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-    f&ouml;f&ouml;
-.
-<pre><code>f&amp;ouml;f&amp;ouml;
-</code></pre>
-````````````````````````````````
 
 
 ## Code spans
@@ -5669,9 +5859,16 @@ preceded nor followed by a backtick.
 
 A [code span](@) begins with a backtick string and ends with
 a backtick string of equal length.  The contents of the code span are
-the characters between the two backtick strings, with leading and
-trailing spaces and [line endings] removed, and
-[whitespace] collapsed to single spaces.
+the characters between these two backtick strings, normalized in the
+following ways:
+
+- First, [line endings] are converted to [spaces].
+- If the resulting string both begins *and* ends with a [space]
+  character, but does not consist entirely of [space]
+  characters, a single [space] character is removed from the
+  front and back.  This allows you to include code that begins
+  or ends with backtick characters, which must be separated by
+  whitespace from the opening or closing backtick strings.
 
 This is a simple code span:
 
@@ -5683,10 +5880,11 @@ This is a simple code span:
 
 
 Here two backticks are used, because the code contains a backtick.
-This example also illustrates stripping of leading and trailing spaces:
+This example also illustrates stripping of a single leading and
+trailing space:
 
 ```````````````````````````````` example
-`` foo ` bar  ``
+`` foo ` bar ``
 .
 <p><code>foo ` bar</code></p>
 ````````````````````````````````
@@ -5701,57 +5899,78 @@ spaces:
 <p><code>``</code></p>
 ````````````````````````````````
 
+Note that only *one* space is stripped:
+
+```````````````````````````````` example
+`  ``  `
+.
+<p><code> `` </code></p>
+````````````````````````````````
+
+The stripping only happens if the space is on both
+sides of the string:
+
+```````````````````````````````` example
+` a`
+.
+<p><code> a</code></p>
+````````````````````````````````
+
+Only [spaces], and not [unicode whitespace] in general, are
+stripped in this way:
+
+```````````````````````````````` example
+` b `
+.
+<p><code> b </code></p>
+````````````````````````````````
+
+No stripping occurs if the code span contains only spaces:
+
+```````````````````````````````` example
+` `
+`  `
+.
+<p><code> </code>
+<code>  </code></p>
+````````````````````````````````
+
 
 [Line endings] are treated like spaces:
 
 ```````````````````````````````` example
 ``
 foo
+bar  
+baz
 ``
 .
-<p><code>foo</code></p>
+<p><code>foo bar   baz</code></p>
 ````````````````````````````````
-
-
-Interior spaces and [line endings] are collapsed into
-single spaces, just as they would be by a browser:
 
 ```````````````````````````````` example
-`foo   bar
-  baz`
+``
+foo 
+``
 .
-<p><code>foo bar baz</code></p>
+<p><code>foo </code></p>
 ````````````````````````````````
 
 
-Not all [Unicode whitespace] (for instance, non-breaking space) is
-collapsed, however:
+Interior spaces are not collapsed:
 
 ```````````````````````````````` example
-`a  b`
+`foo   bar 
+baz`
 .
-<p><code>a  b</code></p>
+<p><code>foo   bar  baz</code></p>
 ````````````````````````````````
 
+Note that browsers will typically collapse consecutive spaces
+when rendering `<code>` elements, so it is recommended that
+the following CSS be used:
 
-Q: Why not just leave the spaces, since browsers will collapse them
-anyway?  A:  Because we might be targeting a non-HTML format, and we
-shouldn't rely on HTML-specific rendering assumptions.
-
-(Existing implementations differ in their treatment of internal
-spaces and [line endings].  Some, including `Markdown.pl` and
-`showdown`, convert an internal [line ending] into a
-`<br />` tag.  But this makes things difficult for those who like to
-hard-wrap their paragraphs, since a line break in the midst of a code
-span will cause an unintended line break in the output.  Others just
-leave internal spaces as they are, which is fine if only HTML is being
-targeted.)
-
-```````````````````````````````` example
-`foo `` bar`
-.
-<p><code>foo `` bar</code></p>
-````````````````````````````````
+    code{white-space: pre-wrap;}
 
 
 Note that backslash escapes do not work in code spans. All backslashes
@@ -5767,6 +5986,19 @@ are treated literally:
 Backslash escapes are never needed, because one can always choose a
 string of *n* backtick characters as delimiters, where the code does
 not contain any strings of exactly *n* backtick characters.
+
+```````````````````````````````` example
+``foo`bar``
+.
+<p><code>foo`bar</code></p>
+````````````````````````````````
+
+```````````````````````````````` example
+` foo `` bar `
+.
+<p><code>foo `` bar</code></p>
+````````````````````````````````
+
 
 Code span backticks have higher precedence than any other inline
 constructs except HTML tags and autolinks.  Thus, for example, this is
@@ -5905,15 +6137,17 @@ of one or more `_` characters that is not preceded or followed by
 a non-backslash-escaped `_` character.
 
 A [left-flanking delimiter run](@) is
-a [delimiter run] that is (a) not followed by [Unicode whitespace],
-and (b) not followed by a [punctuation character], or
+a [delimiter run] that is (1) not followed by [Unicode whitespace],
+and either (2a) not followed by a [punctuation character], or
+(2b) followed by a [punctuation character] and
 preceded by [Unicode whitespace] or a [punctuation character].
 For purposes of this definition, the beginning and the end of
 the line count as Unicode whitespace.
 
 A [right-flanking delimiter run](@) is
-a [delimiter run] that is (a) not preceded by [Unicode whitespace],
-and (b) not preceded by a [punctuation character], or
+a [delimiter run] that is (1) not preceded by [Unicode whitespace],
+and either (2a) not preceded by a [punctuation character], or
+(2b) preceded by a [punctuation character] and
 followed by [Unicode whitespace] or a [punctuation character].
 For purposes of this definition, the beginning and the end of
 the line count as Unicode whitespace.
@@ -6005,7 +6239,8 @@ The following rules define emphasis and strong emphasis:
     [delimiter runs].  If one of the delimiters can both
     open and close emphasis, then the sum of the lengths of the
     delimiter runs containing the opening and closing delimiters
-    must not be a multiple of 3.
+    must not be a multiple of 3 unless both lengths are
+    multiples of 3.
 
 10. Strong emphasis begins with a delimiter that
     [can open strong emphasis] and ends with a delimiter that
@@ -6015,7 +6250,8 @@ The following rules define emphasis and strong emphasis:
     [delimiter runs].  If one of the delimiters can both open
     and close strong emphasis, then the sum of the lengths of
     the delimiter runs containing the opening and closing
-    delimiters must not be a multiple of 3.
+    delimiters must not be a multiple of 3 unless both lengths
+    are multiples of 3.
 
 11. A literal `*` character cannot occur at the beginning or end of
     `*`-delimited emphasis or `**`-delimited strong emphasis, unless it
@@ -6634,7 +6870,19 @@ is precluded by the condition that a delimiter that
 can both open and close (like the `*` after `foo`)
 cannot form emphasis if the sum of the lengths of
 the delimiter runs containing the opening and
-closing delimiters is a multiple of 3.
+closing delimiters is a multiple of 3 unless
+both lengths are multiples of 3.
+
+
+For the same reason, we don't get two consecutive
+emphasis sections in this example:
+
+```````````````````````````````` example
+*foo**bar*
+.
+<p><em>foo**bar</em></p>
+````````````````````````````````
+
 
 The same condition ensures that the following
 cases are all strong emphasis nested inside
@@ -6660,6 +6908,23 @@ omitted:
 *foo**bar***
 .
 <p><em>foo<strong>bar</strong></em></p>
+````````````````````````````````
+
+
+When the lengths of the interior closing and opening
+delimiter runs are *both* multiples of 3, though,
+they can match to create emphasis:
+
+```````````````````````````````` example
+foo***bar***baz
+.
+<p>foo<em><strong>bar</strong></em>baz</p>
+````````````````````````````````
+
+```````````````````````````````` example
+foo******bar*********baz
+.
+<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>
 ````````````````````````````````
 
 
@@ -7198,15 +7463,17 @@ following rules apply:
 A [link destination](@) consists of either
 
 - a sequence of zero or more characters between an opening `<` and a
-  closing `>` that contains no spaces, line breaks, or unescaped
+  closing `>` that contains no line breaks or unescaped
   `<` or `>` characters, or
 
-- a nonempty sequence of characters that does not include
-  ASCII space or control characters, and includes parentheses
-  only if (a) they are backslash-escaped or (b) they are part of
-  a balanced pair of unescaped parentheses.  (Implementations
-  may impose limits on parentheses nesting to avoid performance
-  issues, but at least three levels of nesting should be supported.)
+- a nonempty sequence of characters that does not start with `<`,
+  does not include [ASCII control characters][ASCII control character]
+  or [whitespace][], and includes parentheses only if (a) they are
+  backslash-escaped or (b) they are part of a balanced pair of
+  unescaped parentheses.
+  (Implementations may impose limits on parentheses nesting to
+  avoid performance issues, but at least three levels of nesting
+  should be supported.)
 
 A [link title](@)  consists of either
 
@@ -7219,7 +7486,8 @@ A [link title](@)  consists of either
   backslash-escaped, or
 
 - a sequence of zero or more characters between matching parentheses
-  (`(...)`), including a `)` character only if it is backslash-escaped.
+  (`(...)`), including a `(` or `)` character only if it is
+  backslash-escaped.
 
 Although [link titles] may span multiple lines, they may not contain
 a [blank line].
@@ -7269,9 +7537,8 @@ Both the title and the destination may be omitted:
 <p><a href="">link</a></p>
 ````````````````````````````````
 
-
-The destination cannot contain spaces or line breaks,
-even if enclosed in pointy brackets:
+The destination can only contain spaces if it is
+enclosed in pointy brackets:
 
 ```````````````````````````````` example
 [link](/my uri)
@@ -7279,13 +7546,14 @@ even if enclosed in pointy brackets:
 <p>[link](/my uri)</p>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 [link](</my uri>)
 .
-<p>[link](&lt;/my uri&gt;)</p>
+<p><a href="/my%20uri">link</a></p>
 ````````````````````````````````
 
+The destination cannot contain line breaks,
+even if enclosed in pointy brackets:
 
 ```````````````````````````````` example
 [link](foo
@@ -7295,13 +7563,42 @@ bar)
 bar)</p>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 [link](<foo
 bar>)
 .
 <p>[link](<foo
 bar>)</p>
+````````````````````````````````
+
+The destination can contain `)` if it is enclosed
+in pointy brackets:
+
+```````````````````````````````` example
+[a](<b)c>)
+.
+<p><a href="b)c">a</a></p>
+````````````````````````````````
+
+Pointy brackets that enclose links must be unescaped:
+
+```````````````````````````````` example
+[link](<foo\>)
+.
+<p>[link](&lt;foo&gt;)</p>
+````````````````````````````````
+
+These are not links, because the opening pointy bracket
+is not matched properly:
+
+```````````````````````````````` example
+[a](<b)c
+[a](<b)c>
+[a](<b>c)
+.
+<p>[a](&lt;b)c
+[a](&lt;b)c&gt;
+[a](<b>c)</p>
 ````````````````````````````````
 
 Parentheses inside the link destination may be escaped:
@@ -7632,9 +7929,8 @@ perform the *Unicode case fold*, strip leading and trailing
 matching reference link definitions, the one that comes first in the
 document is used.  (It is desirable in such cases to emit a warning.)
 
-The contents of the first link label are parsed as inlines, which are
-used as the link's text.  The link's URI and title are provided by the
-matching [link reference definition].
+The link's URI and title are provided by the matching [link
+reference definition].
 
 Here is a simple example:
 
@@ -7727,11 +8023,11 @@ emphasis grouping:
 
 
 ```````````````````````````````` example
-[foo *bar][ref]
+[foo *bar][ref]*
 
 [ref]: /uri
 .
-<p><a href="/uri">foo *bar</a></p>
+<p><a href="/uri">foo *bar</a>*</p>
 ````````````````````````````````
 
 
@@ -7779,11 +8075,11 @@ Matching is case-insensitive:
 Unicode case fold is used:
 
 ```````````````````````````````` example
-[Толпой][Толпой] is a Russian word.
+[ẞ]
 
-[ТОЛПОЙ]: /url
+[SS]: /url
 .
-<p><a href="/url">Толпой</a> is a Russian word.</p>
+<p><a href="/url">ẞ</a></p>
 ````````````````````````````````
 
 
@@ -8411,14 +8707,14 @@ If you want a link after a literal `!`, backslash-escape the
 as the link label.
 
 A [URI autolink](@) consists of `<`, followed by an
-[absolute URI] not containing `<`, followed by `>`.  It is parsed as
+[absolute URI] followed by `>`.  It is parsed as
 a link to the URI, with the URI as the link's label.
 
 An [absolute URI](@),
 for these purposes, consists of a [scheme] followed by a colon (`:`)
-followed by zero or more characters other than ASCII
-[whitespace] and control characters, `<`, and `>`.  If
-the URI includes these characters, they must be percent-encoded
+followed by zero or more characters other [ASCII control
+characters][ASCII control character] or [whitespace][] , `<`, and `>`.
+If the URI includes these characters, they must be percent-encoded
 (e.g. `%20` for a space).
 
 For purposes of this spec, a [scheme](@) is any sequence
@@ -8948,10 +9244,10 @@ bar</em></p>
 Line breaks do not occur inside code spans
 
 ```````````````````````````````` example
-`code  
+`code 
 span`
 .
-<p><code>code span</code></p>
+<p><code>code  span</code></p>
 ````````````````````````````````
 
 
@@ -9153,7 +9449,7 @@ blocks.  But we cannot close unmatched blocks yet, because we may have a
 blocks, we look for new block starts (e.g. `>` for a block quote).
 If we encounter a new block start, we close any blocks unmatched
 in step 1 before creating the new block as a child of the last
-matched block.
+matched container block.
 
 3.  Finally, we look at the remainder of the line (after block
 markers like `>`, list markers, and indentation have been consumed).
@@ -9369,7 +9665,8 @@ just above `stack_bottom` (or the first element if `stack_bottom`
 is NULL).
 
 We keep track of the `openers_bottom` for each delimiter
-type (`*`, `_`).  Initialize this to `stack_bottom`.
+type (`*`, `_`) and each length of the closing delimiter run
+(modulo 3).  Initialize this to `stack_bottom`.
 
 Then we repeat the following until we run out of potential
 closers:
@@ -9401,7 +9698,7 @@ closers:
     of the delimiter stack.  If the closing node is removed, reset
     `current_position` to the next element in the stack.
 
-- If none in found:
+- If none is found:
 
   + Set `openers_bottom` to the element before `current_position`.
     (We know that there are no openers for this kind of closer up to and

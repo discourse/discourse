@@ -31,10 +31,14 @@ en:
         title: "Votes are <strong>public</strong>."
 
       results:
+        groups:
+          title: "You need to be a member of %{groups} to vote in this poll."
         vote:
           title: "Results will be shown on <strong>vote</strong>."
         closed:
           title: "Results will be shown once <strong>closed</strong>."
+        staff:
+          title: "Results are only shown to <strong>staff</strong> members."
 
       multiple:
         help:
@@ -59,7 +63,19 @@ en:
 
       hide-results:
         title: "Back to your votes"
-        label: "Hide results"
+        label: "Show vote"
+
+      group-results:
+        title: "Group votes by user field"
+        label: "Show breakdown"
+
+      ungroup-results:
+        title: "Combine all votes"
+        label: "Hide breakdown"
+
+      export-results:
+        title: "Export the poll results"
+        label: "Export"
 
       open:
         title: "Open the poll"
@@ -78,12 +94,13 @@ en:
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."
       error_while_fetching_voters: "Sorry, there was an error displaying the voters."
+      error_while_exporting_results: "Sorry, there was an error exporting poll results."
 
       ui_builder:
         title: Build Poll
         insert: Insert Poll
         help:
-          options_count: Enter at least 2 options
+          options_count: Enter at least 1 option
           invalid_values: Minimum value must be smaller than the maximum value.
           min_step_value: The minimum step value is 1
         poll_type:
@@ -96,6 +113,11 @@ en:
           always: Always visible
           vote: On vote
           closed: When closed
+          staff: Staff only
+        poll_groups:
+          label: Allowed groups
+        poll_chart_type:
+          label: Chart type
         poll_config:
           max: Max
           min: Min

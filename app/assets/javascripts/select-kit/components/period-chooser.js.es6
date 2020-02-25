@@ -1,33 +1,31 @@
+import { oneWay, readOnly } from "@ember/object/computed";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import computed, { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
-  rowComponent: "period-chooser/period-chooser-row",
-  headerComponent: "period-chooser/period-chooser-header",
-  content: Ember.computed.oneWay("site.periods"),
-  value: Ember.computed.alias("period"),
-  isHidden: Ember.computed.alias("showPeriods"),
+  content: oneWay("site.periods"),
+  value: readOnly("period"),
+  isVisible: readOnly("showPeriods"),
+  valueProperty: null,
+  nameProperty: null,
 
-  @computed("isExpanded")
-  caretIcon(isExpanded) {
-    return isExpanded ? "caret-up" : "caret-down";
+  modifyComponentForRow() {
+    return "period-chooser/period-chooser-row";
   },
 
-  @on("didUpdateAttrs", "init")
-  _setFullDay() {
-    this.headerComponentOptions.setProperties({
-      fullDay: this.fullDay
-    });
-    this.rowComponentOptions.setProperties({
-      fullDay: this.fullDay
-    });
+  selectKitOptions: {
+    filterable: false,
+    autoFilterable: false,
+    fullDay: "fullDay",
+    headerComponent: "period-chooser/period-chooser-header"
   },
 
   actions: {
-    onSelect() {
+    onChange(value) {
       if (this.action) {
-        this.action(this.computedValue);
+        this.action(value);
+      } else {
+        this.attrs.onChange && this.attrs.onChange(value);
       }
     }
   }

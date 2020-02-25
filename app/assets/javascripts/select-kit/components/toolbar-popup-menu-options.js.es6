@@ -1,34 +1,46 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import computed from "ember-addons/ember-computed-decorators";
+
+const HEADING_COLLECTION = "HEADING_COLLECTION";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["toolbar-popup-menu-options"],
   classNames: ["toolbar-popup-menu-options"],
-  isHidden: Ember.computed.empty("computedContent"),
-  showFullTitle: false,
 
-  @computed("title")
-  collectionHeader(title) {
-    return `<h3>${title}</h3>`;
+  init() {
+    this._super(...arguments);
+
+    this.prependCollection(HEADING_COLLECTION);
   },
 
-  autoHighlight() {},
+  selectKitOptions: {
+    showFullTitle: false,
+    filterable: false,
+    autoFilterable: false
+  },
 
-  computeContent(content) {
-    return content
-      .map(contentItem => {
-        if (contentItem.condition) {
+  modifyContentForCollection(collection) {
+    if (collection === HEADING_COLLECTION) {
+      return { title: this.selectKit.options.popupTitle };
+    }
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === HEADING_COLLECTION) {
+      return "toolbar-popup-menu-options/toolbar-popup-menu-options-heading";
+    }
+  },
+
+  modifyContent(contents) {
+    return contents
+      .map(content => {
+        if (content.condition) {
           return {
-            icon: contentItem.icon,
-            name: I18n.t(contentItem.label),
-            id: contentItem.action
+            icon: content.icon,
+            name: I18n.t(content.label),
+            id: content.action
           };
         }
       })
-      .filter(contentItem => contentItem);
-  },
-
-  // composer is triggering a focus on textarea, we avoid instantly closing
-  // popup menu by tweaking the focus out behavior
-  onFilterInputFocusout() {}
+      .filter(Boolean);
+  }
 });

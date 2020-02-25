@@ -35,7 +35,8 @@ da:
         label: "Vis resultat"
       hide-results:
         title: "Tilbage til dine stemmer"
-        label: "Skjul resultat"
+      export-results:
+        label: "Eksporter"
       open:
         title: "Åbn afstemningen"
         label: "Åbn"
@@ -51,7 +52,6 @@ da:
         title: Opret afstemning
         insert: Indsæt afstemning
         help:
-          options_count: Vælg mindst 2 muligheder
           invalid_values: Minimumsværdien skal være mindre end maksimumværdien.
         poll_type:
           label: Type

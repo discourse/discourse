@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'category_serializer'
-
 class CategoriesController < ApplicationController
 
   requires_login except: [:index, :categories_and_latest, :categories_and_top, :show, :redirect, :find_by_slug]
@@ -9,6 +7,9 @@ class CategoriesController < ApplicationController
   before_action :fetch_category, only: [:show, :update, :destroy]
   before_action :initialize_staff_action_logger, only: [:create, :update, :destroy]
   skip_before_action :check_xhr, only: [:index, :categories_and_latest, :categories_and_top, :redirect]
+
+  SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
+  MIN_CATEGORIES_TOPICS = 5
 
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
@@ -20,7 +21,7 @@ class CategoriesController < ApplicationController
 
     @description = SiteSetting.site_description
 
-    parent_category = Category.find_by(slug: params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
+    parent_category = Category.find_by_slug(params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
 
     category_options = {
       is_homepage: current_homepage == "categories".freeze,
@@ -48,9 +49,8 @@ class CategoriesController < ApplicationController
 
         style = SiteSetting.desktop_category_page_style
         topic_options = {
-          per_page: SiteSetting.categories_topics,
-          no_definitions: true,
-          exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
+          per_page: CategoriesController.topics_per_page,
+          no_definitions: true
         }
 
         if style == "categories_and_latest_topics".freeze
@@ -145,7 +145,7 @@ class CategoriesController < ApplicationController
 
       render_serialized(@category, CategorySerializer)
     else
-      return render_json_error(@category)
+      render_json_error(@category)
     end
   end
 
@@ -208,13 +208,36 @@ class CategoriesController < ApplicationController
   def find_by_slug
     params.require(:category_slug)
     @category = Category.find_by_slug(params[:category_slug], params[:parent_category_slug])
-    guardian.ensure_can_see!(@category)
+
+    raise Discourse::NotFound unless @category.present?
+
+    if !guardian.can_see?(@category)
+      if SiteSetting.detailed_404 && group = @category.access_category_via_group
+        raise Discourse::InvalidAccess.new(
+          'not in group',
+          @category,
+          custom_message: 'not_in_group.title_category',
+          group: group
+        )
+      else
+        raise Discourse::NotFound
+      end
+    end
 
     @category.permission = CategoryGroup.permission_types[:full] if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
     render_serialized(@category, CategorySerializer)
   end
 
   private
+
+  def self.topics_per_page
+    return SiteSetting.categories_topics if SiteSetting.categories_topics > 0
+
+    count = Category.where(parent_category: nil).count
+    count = (SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR * count).to_i
+    count > MIN_CATEGORIES_TOPICS ? count : MIN_CATEGORIES_TOPICS
+  end
+
   def categories_and_topics(topics_filter)
     discourse_expires_in 1.minute
 
@@ -225,9 +248,8 @@ class CategoriesController < ApplicationController
     }
 
     topic_options = {
-      per_page: SiteSetting.categories_topics,
-      no_definitions: true,
-      exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
+      per_page: CategoriesController.topics_per_page,
+      no_definitions: true
     }
 
     result = CategoryAndTopicLists.new
@@ -271,6 +293,7 @@ class CategoriesController < ApplicationController
       if SiteSetting.tagging_enabled
         params[:allowed_tags] ||= []
         params[:allowed_tag_groups] ||= []
+        params[:required_tag_group_name] ||= ''
       end
 
       result = params.permit(
@@ -279,7 +302,6 @@ class CategoriesController < ApplicationController
         :email_in,
         :email_in_allow_strangers,
         :mailinglist_mirror,
-        :suppress_from_latest,
         :all_topics_wiki,
         :parent_category_id,
         :auto_close_hours,
@@ -301,6 +323,8 @@ class CategoriesController < ApplicationController
         :navigate_to_first_post_after_read,
         :search_priority,
         :allow_global_tags,
+        :required_tag_group_name,
+        :min_tags_from_required_group,
         custom_fields: [params[:custom_fields].try(:keys)],
         permissions: [*p.try(:keys)],
         allowed_tags: [],
@@ -315,7 +339,7 @@ class CategoriesController < ApplicationController
   end
 
   def fetch_category
-    @category = Category.find_by(slug: params[:id]) || Category.find_by(id: params[:id].to_i)
+    @category = Category.find_by_slug(params[:id]) || Category.find_by(id: params[:id].to_i)
   end
 
   def initialize_staff_action_logger

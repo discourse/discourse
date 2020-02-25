@@ -32,7 +32,14 @@ end
 
 task 'db:create' => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
-    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
+    unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
+
+      STDERR.puts "-" * 80
+      STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
+      STDERR.puts "checking the column structure when initializing, which raises an error."
+      STDERR.puts "-" * 80
+      raise "Could not initialize discourse_test_multisite"
+    end
   end
 end
 
@@ -48,20 +55,36 @@ task 'db:drop' => [:load_config] do |_, args|
   end
 end
 
+begin
+  Rake::Task["db:migrate"].clear
+  Rake::Task["db:rollback"].clear
+end
+
+task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
+  step = ENV["STEP"] ? ENV["STEP"].to_i : 1
+  ActiveRecord::Base.connection.migration_context.rollback(step)
+  Rake::Task['db:_dump'].invoke
+end
+
 # we need to run seed_fu every time we run rake db:migrate
-task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
+task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
+
+  ActiveRecord::Tasks::DatabaseTasks.migrate
+
+  if !Discourse.is_parallel_test?
+    Rake::Task['db:_dump'].invoke
+  end
+
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
-  unless Discourse.skip_post_deployment_migrations?
+  if !Discourse.skip_post_deployment_migrations?
     puts
     print "Optimizing site icons... "
     SiteIconManager.ensure_optimized!
     puts "Done"
   end
 
-  if MultisiteTestHelpers.load_multisite?
-    system("rake db:schema:dump")
-    system("RAILS_DB=discourse_test_multisite rake db:schema:load")
+  if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
     system("RAILS_DB=discourse_test_multisite rake db:migrate")
   end
 end
@@ -119,10 +142,12 @@ task 'db:stats' => 'environment' do
       from pg_class
       where oid = ('public.' || table_name)::regclass
     ) AS row_estimate,
-    pg_size_pretty(pg_relation_size(quote_ident(table_name))) size
+    pg_size_pretty(pg_table_size(quote_ident(table_name))) table_size,
+    pg_size_pretty(pg_indexes_size(quote_ident(table_name))) index_size,
+    pg_size_pretty(pg_total_relation_size(quote_ident(table_name))) total_size
     from information_schema.tables
     where table_schema = 'public'
-    order by pg_relation_size(quote_ident(table_name)) DESC
+    order by pg_total_relation_size(quote_ident(table_name)) DESC
   SQL
 
   puts

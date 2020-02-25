@@ -105,7 +105,7 @@ class Middleware::RequestTracker
     track_view &&= env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ /text\/html/)
     track_view = !!track_view
 
-    {
+    h = {
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: helper.has_auth_cookie?,
@@ -114,9 +114,21 @@ class Middleware::RequestTracker
       track_view: track_view,
       timing: timing,
       queue_seconds: env['REQUEST_QUEUE_SECONDS']
-    }.tap do |h|
-      h[:user_agent] = env['HTTP_USER_AGENT'] if h[:is_crawler]
+    }
+
+    if h[:is_crawler]
+      user_agent = env['HTTP_USER_AGENT']
+      if user_agent && (user_agent.encoding != Encoding::UTF_8)
+        user_agent = user_agent.encode("utf-8")
+        user_agent.scrub!
+      end
+      h[:user_agent] = user_agent
     end
+
+    if cache = headers["X-Discourse-Cached"]
+      h[:cache] = cache
+    end
+    h
   end
 
   def log_request_info(env, result, info)
@@ -139,17 +151,23 @@ class Middleware::RequestTracker
 
   end
 
+  def self.populate_request_queue_seconds!(env)
+    if !env['REQUEST_QUEUE_SECONDS']
+      if queue_start = env['HTTP_X_REQUEST_START']
+        queue_start = queue_start.split("t=")[1].to_f
+        queue_time = (Time.now.to_f - queue_start)
+        env['REQUEST_QUEUE_SECONDS'] = queue_time
+      end
+    end
+  end
+
   def call(env)
     result = nil
     log_request = true
 
     # doing this as early as possible so we have an
     # accurate counter
-    if queue_start = env['HTTP_X_REQUEST_START']
-      queue_start = queue_start.split("t=")[1].to_f
-      queue_time = (Time.now.to_f - queue_start)
-      env['REQUEST_QUEUE_SECONDS'] = queue_time
-    end
+    ::Middleware::RequestTracker.populate_request_queue_seconds!(env)
 
     request = Rack::Request.new(env)
 
@@ -234,8 +252,8 @@ class Middleware::RequestTracker
       limiter60 = RateLimiter.new(
         nil,
         "global_ip_limit_60_#{ip}",
-        GlobalSetting.max_reqs_per_ip_per_10_seconds,
-        10,
+        GlobalSetting.max_reqs_per_ip_per_minute,
+        60,
         global: true
       )
 

@@ -11,7 +11,17 @@ class Reviewable < ActiveRecord::Base
       def initialize(post)
         @user = post.user
         @id = post.id
-        @excerpt = FlagQuery.excerpt(post.cooked)
+        @excerpt = self.class.excerpt(post.cooked)
+      end
+
+      def self.excerpt(cooked)
+        excerpt = ::Post.excerpt(cooked, 250, keep_emoji_images: true)
+        # remove the first link if it's the first node
+        fragment = Nokogiri::HTML.fragment(excerpt)
+        if fragment.children.first == fragment.css("a:first").first && fragment.children.first
+          fragment.children.first.remove
+        end
+        fragment.to_html.strip
       end
     end
 
@@ -20,7 +30,7 @@ class Reviewable < ActiveRecord::Base
     def initialize(meta_topic)
       @id = meta_topic.id
       @has_more = false
-      @permalink = "#{Discourse.base_url}#{meta_topic.relative_url}"
+      @permalink = "#{Discourse.base_url_no_prefix}#{meta_topic.relative_url}"
       @posts = []
 
       meta_posts = meta_topic.ordered_posts.where(post_type: ::Post.types[:regular]).limit(2)

@@ -1,11 +1,15 @@
+import { isEmpty } from "@ember/utils";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import computed from "discourse-common/utils/decorators";
 import { cookAsync } from "discourse/lib/text";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
+import { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   timeFormat: "HH:mm:ss",
   dateFormat: "YYYY-MM-DD",
   dateTimeFormat: "YYYY-MM-DD HH:mm:ss",
@@ -48,18 +52,19 @@ export default Ember.Component.extend({
     });
   },
 
-  _renderPreview: debounce(function() {
+  @observes("markup")
+  _renderPreview: discourseDebounce(function() {
     const markup = this.markup;
 
     if (markup) {
       cookAsync(markup).then(result => {
         this.set("currentPreview", result);
-        Ember.run.schedule("afterRender", () =>
+        schedule("afterRender", () =>
           this.$(".preview .discourse-local-date").applyLocalDates()
         );
       });
     }
-  }, 250).observes("markup"),
+  }, 250),
 
   @computed("date", "toDate", "toTime")
   isRange(date, toDate, toTime) {
@@ -356,7 +361,7 @@ export default Ember.Component.extend({
   },
 
   _setTimeIfValid(time, key) {
-    if (Ember.isEmpty(time)) {
+    if (isEmpty(time)) {
       this.set(key, null);
       return;
     }
@@ -376,7 +381,6 @@ export default Ember.Component.extend({
           format: "YYYY-MM-DD",
           reposition: false,
           firstDay: 1,
-          defaultDate: moment(this.date, this.dateFormat).toDate(),
           setDefaultDate: true,
           keyboardInput: false,
           i18n: {
@@ -384,7 +388,7 @@ export default Ember.Component.extend({
             nextMonth: I18n.t("dates.next_month"),
             months: moment.months(),
             weekdays: moment.weekdays(),
-            weekdaysShort: moment.weekdaysShort()
+            weekdaysShort: moment.weekdaysMin()
           },
           onSelect: date => {
             const formattedDate = moment(date).format("YYYY-MM-DD");
@@ -409,7 +413,7 @@ export default Ember.Component.extend({
       date = null;
     }
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this._picker.setMinDate(moment(date, this.dateFormat).toDate());
     });
   },
@@ -419,8 +423,8 @@ export default Ember.Component.extend({
       date = null;
     }
 
-    Ember.run.schedule("afterRender", () => {
-      this._picker.setDate(date, true);
+    schedule("afterRender", () => {
+      this._picker.setDate(moment.utc(date), true);
     });
   },
 

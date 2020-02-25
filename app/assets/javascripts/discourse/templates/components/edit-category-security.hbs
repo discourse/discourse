@@ -22,23 +22,40 @@
   {{/unless}}
   {{#if editingPermissions}}
     {{#if category.availableGroups}}
-      {{combo-box class="available-groups"
-                  allowInitialValueMutation=true
-                  allowContentReplacement=true
-                  content=category.availableGroups
-                  value=selectedGroup}}
-      {{combo-box allowInitialValueMutation=true
-                  class="permission-selector"
-                  nameProperty="description"
-                  content=category.availablePermissions
-                  value=selectedPermission}}
-      <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-default add-permission">
-        {{d-icon 'plus' class="add-permission-icon"}}
-      </button>
+      {{combo-box
+        class="available-groups"
+        content=category.availableGroups
+        onChange=(action "onSelectGroup")
+        value=selectedGroup
+        valueProperty=null
+        nameProperty=null
+      }}
+      {{combo-box
+        class="permission-selector"
+        nameProperty="description"
+        content=category.availablePermissions
+        onChange=(action "onSelectPermission")
+        value=selectedPermission
+      }}
+      {{d-button
+        action=(action "addPermission" selectedGroup selectedPermission)
+        class="btn-primary add-permission"
+        icon="plus"}}
+      {{#if showPendingGroupChangesAlert}}
+        <div class="pending-permission-change-alert">
+          <div class="arrow-div"></div>
+          {{i18n "category.pending_permission_change_alert" group=selectedGroup}}
+        </div>
+      {{/if}}
     {{/if}}
   {{else}}
     {{#unless category.is_special}}
-      <button {{action "editPermissions"}} class="btn btn-default btn-default edit-permission">{{i18n 'category.edit_permissions'}}</button>
+      {{d-button
+        action=(action "editPermissions")
+        class="btn-default edit-permission"
+        label="category.edit_permissions"}}
     {{/unless}}
   {{/if}}
 </section>
+
+{{plugin-outlet name="category-custom-security" args=(hash category=category) connectorTagName="" tagName="section"}}

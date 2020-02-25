@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require "import_export/base_exporter"
-
 module ImportExport
-  class CategoryStructureExporter < ImportExport::BaseExporter
+  class CategoryStructureExporter < BaseExporter
 
     def initialize(include_group_users = false)
       @include_group_users = include_group_users

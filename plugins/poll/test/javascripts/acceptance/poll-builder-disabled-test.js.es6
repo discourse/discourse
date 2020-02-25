@@ -14,7 +14,7 @@ acceptance("Poll Builder - polls are disabled", {
 });
 
 test("regular user - sufficient trust level", assert => {
-  updateCurrentUser({ staff: false, trust_level: 3 });
+  updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });
 
   displayPollBuilderButton();
 
@@ -27,7 +27,7 @@ test("regular user - sufficient trust level", assert => {
 });
 
 test("regular user - insufficient trust level", assert => {
-  updateCurrentUser({ staff: false, trust_level: 1 });
+  updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
   displayPollBuilderButton();
 
@@ -40,7 +40,7 @@ test("regular user - insufficient trust level", assert => {
 });
 
 test("staff", assert => {
-  updateCurrentUser({ staff: true });
+  updateCurrentUser({ moderator: true });
 
   displayPollBuilderButton();
 

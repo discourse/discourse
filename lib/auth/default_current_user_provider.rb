@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "auth/current_user_provider"
-require_dependency "rate_limiter"
-
 class Auth::DefaultCurrentUserProvider
 
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
@@ -167,6 +164,9 @@ class Auth::DefaultCurrentUserProvider
     unstage_user(user)
     make_developer_admin(user)
     enable_bootstrap_mode(user)
+
+    UserAuthToken.enforce_session_count_limit!(user.id)
+
     @env[CURRENT_USER_KEY] = user
   end
 
@@ -284,23 +284,41 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def lookup_api_user(api_key_value, request)
-    if api_key = ApiKey.where(key: api_key_value).includes(:user).first
+    if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
+
+      # Check for deprecated api auth
+      if !header_api_key?
+        if request.path == "/admin/email/handle_mail"
+          # Notify admins that the mail receiver is still using query auth and to update
+          AdminDashboardData.add_problem_message('dashboard.update_mail_receiver', 1.day)
+        else
+          # Notify admins of deprecated auth method
+          AdminDashboardData.add_problem_message('dashboard.deprecated_api_usage', 1.day)
+        end
+      end
 
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
         Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")
         return nil
       end
 
-      if api_key.user
-        api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
-      elsif api_username
-        User.find_by(username_lower: api_username.downcase)
-      elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request["api_user_id"]
-        User.find_by(id: user_id.to_i)
-      elsif external_id = header_api_key? ? @env[HEADER_API_USER_EXTERNAL_ID] : request["api_user_external_id"]
-        SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
+      user =
+        if api_key.user
+          api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
+        elsif api_username
+          User.find_by(username_lower: api_username.downcase)
+        elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request["api_user_id"]
+          User.find_by(id: user_id.to_i)
+        elsif external_id = header_api_key? ? @env[HEADER_API_USER_EXTERNAL_ID] : request["api_user_external_id"]
+          SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
+        end
+
+      if user
+        api_key.update_columns(last_used_at: Time.zone.now)
       end
+
+      user
     end
   end
 
@@ -315,7 +333,7 @@ class Auth::DefaultCurrentUserProvider
 
     RateLimiter.new(
       nil,
-      "admin_api_min_#{api_key}",
+      "admin_api_min_#{ApiKey.hash_key(api_key)}",
       GlobalSetting.max_admin_api_reqs_per_key_per_minute,
       60
     ).performed!

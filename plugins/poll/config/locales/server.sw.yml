@@ -14,8 +14,6 @@ sw:
   poll:
     multiple_polls_without_name: "Kuna chaguzi kadhaa zenye majina sawa. Tumia dhana ya '<code>jina</code>' ili kutambua chaguzi zako."
     multiple_polls_with_same_name: "Kuna chaguzi kadhaa zenye majina sawa: <strong>%{name}</strong>. Tumia dhana ya '<code>jina</code>' ilikutofautisha chaguzi zako."
-    default_poll_must_have_at_least_2_options: "Chaguzi lazima ziwe angalau na machaguo 2."
-    named_poll_must_have_at_least_2_options: "Chaguzi yenye jina <strong>%{name}</strong> lazima iwe na angalau machaguo 2."
     default_poll_must_have_less_options:
       one: "Chaguzi lazima uwe na chaguo chini ya %{count}."
       other: "Uchaguzi lazima uwe na chaguo chini ya %{count}."
@@ -26,7 +24,7 @@ sw:
     named_poll_must_have_different_options: "Uchaguzi wenye jina <strong>%{name}</strong> lazima uwe na machaguo tofauti."
     default_poll_with_multiple_choices_has_invalid_parameters: "Uchaguzi wenye machaguo mengi una vigezo ambavyo si sahihi."
     named_poll_with_multiple_choices_has_invalid_parameters: "Uchaguzi wenye jina <strong>%{name}</strong>, ambao una machaguo mengi, una vigezo ambavyo si sahihi."
-    requires_at_least_1_valid_option: "Lazima uchague angalau chaguo 1  sahihi."
+    requires_at_least_1_valid_option: "Lazima uchague angalau chaguo 1 sahihi."
     no_poll_with_this_name: "Hakuna uchaguzi wenye jina <strong>%{name}</strong> unaohusiana na bandiko hili."
     post_is_deleted: "Huwezi kufanyia kazi bandiko lililofutwa."
     user_cant_post_in_topic: "Huwezi kupiga kura kwa sababu hauwezi kuchangia kwenye hii mada."

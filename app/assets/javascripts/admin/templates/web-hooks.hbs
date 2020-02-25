@@ -1,4 +1,3 @@
-
 <div class='web-hooks-listing'>
   <p>{{i18n 'admin.web_hooks.instruction'}}</p>
   <div class='new-webhook'>
@@ -25,7 +24,7 @@
             <td class='description'>{{webHook.description}}</td>
             <td class='controls'>
               {{#link-to 'adminWebHooks.show' webHook tagName='button' classNames='btn btn-default no-text'}}{{d-icon 'far-edit'}}{{/link-to}}
-              {{d-button class="destroy btn-danger" action=(action "destroy") actionParam=webHook icon="remove"}}
+              {{d-button class="destroy btn-danger" action=(action "destroy") actionParam=webHook icon="times"}}
             </td>
           </tr>
         {{/each}}

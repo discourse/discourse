@@ -28,6 +28,7 @@ cs:
   posts: "příspěvky"
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
+  sign_up: "Registrovat se"
   log_in: "Přihlásit se"
   submit: "Odeslat"
   purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
@@ -114,7 +115,6 @@ cs:
     errors:
       <<: *errors
   invite:
-    not_found: "Odkaz pozvánky je neplatný. Kontaktujte prosím administrátora stránky."
     user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='%{base_path}/u/%{username}/summary'>je veden u tohoto účtu!</a>"
   bulk_invite:
     file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
@@ -132,6 +132,8 @@ cs:
   invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
   invalid_api_credentials: "Nemáte oprávnění na zobrazení požadovaného zdroje. Uživatelské jméno nebo klíč k API je nevalidní."
   read_only_mode_enabled: "Tato stránka je v režimu jen pro čtení. Interakce jsou zakázány."
+  not_in_group:
+    join_group: "Přidat se ke skupině"
   reading_time: "Čas čtení"
   likes: "Líbí se"
   too_many_replies:
@@ -151,6 +153,7 @@ cs:
     permalink: "Permalink"
     imported_from: "Diskuze k původnímu příspěvku na blogu: %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Vytvořený"
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
   too_many_mentions:
     one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
@@ -186,7 +189,7 @@ cs:
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   topic_not_found: "Něco se pokazilo. Téma mohlo být uzavřeno nebo smazáno během vašeho prohlížení."
   not_accepting_pms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
-  max_pm_recepients: "Bohužel, můžete poslat zprávu maximálně %{recipients_limit} příjemcům."
+  max_pm_recipients: "Bohužel, můžete poslat zprávu maximálně %{recipients_limit} příjemcům."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   invalid_characters: "obsahuje neplatné znaky"
   is_invalid: "zdá se to být nejasné, je to kompletní věta?"
@@ -613,6 +616,8 @@ cs:
       every_hour: "každou hodinu"
       daily: "denně"
       weekly: "týdně"
+      every_month: "každý měsíc"
+      every_six_months: "každých šest měsíců"
   user_api_key:
     otp_confirmation:
       confirm_title: "Pokračovat na %{site_name}"
@@ -647,6 +652,8 @@ cs:
       xaxis: "Den"
     new_contributors:
       xaxis: "Den"
+    trust_level_growth:
+      yaxis: "Den"
     consolidated_page_views:
       yaxis: "Den"
       labels:
@@ -891,6 +898,7 @@ cs:
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
+    omniauth_confirm_button: "Pokračovat"
     click_to_continue: "Pro pokračování klikněte zde."
     second_factor_title: "Dvoufázové přihlašování"
     second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"
@@ -960,7 +968,6 @@ cs:
       popular_posts: "Populární příspěvky"
       subject_template: "[%{email_prefix}] Přehled"
       click_here: "klikněte zde"
-      from: "%{site_name} - přehled"
       preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"
     forgot_password:
       title: "Zapomenuté heslo"
@@ -1007,6 +1014,7 @@ cs:
   csv_export:
     boolean_yes: "Ano"
     boolean_no: "Ne"
+    rate_limit_error: "Příspěvky mohou být staženy jen jednou za den. Zkus to, prosím, zítra."
   guidelines_topic:
     title: "FAQ/Pokyny"
   tos_topic:

@@ -1,0 +1,16 @@
+{{#d-modal-body rawTitle=(i18n "admin.watched_words.test.modal_title" action=model.name) class="watched-words-test-modal"}}
+    <p>{{i18n "admin.watched_words.test.description"}}</p>
+    {{textarea name="test_value" value=value autofocus="autofocus"}}
+    {{#if matches}}
+        <p>
+            {{i18n "admin.watched_words.test.found_matches"}}
+            <ul>
+                {{#each matches as |match|}}
+                    <li>{{match}}</li>
+                {{/each}}
+            </ul>
+        </p>
+    {{else}}
+        <p>{{i18n "admin.watched_words.test.no_matches"}}</p>
+    {{/if}}
+{{/d-modal-body}}

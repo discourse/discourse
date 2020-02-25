@@ -28,6 +28,7 @@ ja:
   posts: "投稿"
   loading: "読み込み中"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a>により提供されています。最適な表示のために、Javascriptを有効にしてください。'
+  sign_up: "アカウントを作成"
   log_in: "ログイン"
   submit: "送信"
   purge_reason: "放棄されていたため自動的に削除、アカウントを停止しました。"
@@ -145,10 +146,14 @@ ja:
   not_found: "リクエストされたURL、リソースは見つかりませんでした"
   invalid_access: "リクエストしたリソースの閲覧が許可されていません"
   read_only_mode_enabled: "このサイトは閲覧専用状態です。変更などの操作は無効になっています。"
+  not_in_group:
+    join_group: "グループに参加"
   reading_time: "閲覧時間"
   likes: "いいね！"
   too_many_replies:
     other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
+  max_consecutive_replies:
+    other: " %{count}回を超える連続の返信は禁止されています。以前の返信を編集するか、他の人の返信をお待ちください。"
   embed:
     start_discussion: "会話をする"
     continue: "会話を続ける"
@@ -161,6 +166,7 @@ ja:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count}件のリプライ"
+    created: "作成者"
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
   no_mentions_allowed_newuser: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
   no_images_allowed_trust: "ごめんなさい、ポストに画像を添付することができません"
@@ -174,7 +180,7 @@ ja:
   links_require_trust: "ごめんなさい、ポストにリンクを含めることはできません。"
   too_many_links:
     other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個のリンクしか貼り付けられません。"
-  contains_blocked_words: "ポストに許可されていない言葉が含まれています: %{word}"
+  contains_blocked_word: "ポストに許可されていない言葉が含まれています: %{word}"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
   user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
@@ -410,9 +416,6 @@ ja:
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     error_staged: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     already_done: "申し訳ありませんが、この確認リンクは有効ではありません。既にあなたのメールは変更されていませんか？"
-    authorizing_old:
-      title: "メールアドレスを確認していただきありがとうございます！\U0001F609"
-      description: "登録されたメールアドレスに確認メールを送りました\U0001F606"
   activation:
     action: "クリックしてアカウントを認証する"
     already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
@@ -551,6 +554,7 @@ ja:
         day: 日
     post_edits:
       labels:
+        edited_at: 日付
         post: 投稿
         editor: 編集者
         edit_reason: 理由
@@ -574,6 +578,8 @@ ja:
       yaxis: "登録数"
     new_contributors:
       xaxis: "日"
+    trust_level_growth:
+      yaxis: "日"
     consolidated_page_views:
       yaxis: "日"
       labels:
@@ -808,7 +814,7 @@ ja:
     must_approve_users: "ユーザがサイトにアクセスするには、スタッフの承認が必要"
     moderators_create_categories: "モデレータのカテゴリ作成を許可"
     cors_origins: "CORSを許可。オリジンはhttp://かhttps://を含む必要があります。CORSを有効にするには、環境変数　DISCOURSE_ENABLE_CORSにtrueをセットする必要があります"
-    top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例:  latest|new|unread|categories|top|read|posted|bookmarks"
+    top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "投稿メニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "開くボタンをクリックするまで投稿のメニュー項目を隠します"
     share_links: "シェアダイアログに表示する項目、表示順を指定"
@@ -823,7 +829,6 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
     email_token_valid_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを何時間有効にするか"
     enable_badges: "バッジ機能を有効にする"
-    allow_index_in_robots_txt: "サーチエンジンにインデックスを許可するようにrobots.txtを指定する"
     email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
     email_domains_whitelist: "ユーザー登録に必要なパイプ区切りのメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
@@ -909,8 +914,8 @@ ja:
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"
     category_colors: "カテゴリに利用可能な色 (16進数指定) のリスト"
     category_style: "カテゴリバッジのスタイル"
-    max_image_size_kb: "アップロード可能な画像の最大サイズ (kB)  nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
-    max_attachment_size_kb: "添付可能なファイルの最大サイズ (kB)  nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
+    max_image_size_kb: "アップロード可能な画像の最大サイズ (kB) nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
+    max_attachment_size_kb: "添付可能なファイルの最大サイズ (kB) nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
     authorized_extensions: "アップロード可能なファイルの拡張子のリスト('*'で全ての拡張子が有効になります)"
     max_similar_results: "新規トピック編集中に類似トピックをいくつ表示するか。比較はタイトルと本文に基づきます"
     title_prettify: "よくあるタイトルのミススペルや文法エラー (例: 最初の文字が小文字、文の最後で ! や ? や . などが重複) を防止する"
@@ -947,8 +952,8 @@ ja:
     pop3_polling_period_mins: "メールのためのPOP3アカウントを確認する期間（分） 注意: 再起動が必要"
     pop3_polling_port: "ポーリングを行うPOP3アカウントのポート"
     pop3_polling_host: "ポーリングを行うPOP3のホスト"
-    pop3_polling_username: "ポーリングを行うPOS3アカウントのユーザ名"
-    pop3_polling_password: "ポーリングを行うPOS3アカウントのパスワード"
+    pop3_polling_username: "ポーリングを行うPOP3アカウントのユーザー名"
+    pop3_polling_password: "ポーリングを行うPOP3アカウントのパスワード"
     email_in_min_trust: "メールでのトピック作成を許可する最低トラストレベル"
     email_prefix: "メールのタイトルに使用される[ラベル]。空白の場合、タイトルがデフォルトで使用されます"
     email_site_title: "サイトからのメールの送信者として使用されるタイトル。 空白の場合、タイトルがデフォルトで使用されます。タイトルにメールの送信者として使用できない文字列が含まれている場合、この設定を使用します"
@@ -972,7 +977,7 @@ ja:
     enable_mobile_theme: "モバイル端末にモバイル向けテーマ (通常サイト用テーマにスイッチ可能) を利用する。レスポンシブなスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
     suppress_uncategorized_badge: "トピック一覧でカテゴライズされていないトピックのバッジは表示しない"
-    disable_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
+    disable_system_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
     full_name_required: "ユーザープロフィールのフルネームを必須にする"
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームは非表示になります"
     display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"
@@ -984,7 +989,7 @@ ja:
     embed_truncate: "embedされた投稿をtruncateする"
     embed_post_limit: "表示可能な投稿の最大数を埋め込む"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
-    delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
+    delete_drafts_older_than_n_days: "(n) 日間経過したドラフトを削除"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
     slug_generation_method: "slugを生成するメソッドを選択。 'encode'はパーセントエンコードされた文字列を生成します。 'none'は、slugを無効にします"
     enable_emoji: "絵文字を有効にする"
@@ -1006,6 +1011,7 @@ ja:
       invalid_string_min_max: "文字数は%{min}と%{max}の間である必要があります"
       invalid_string_min: "少なくとも%{min}文字は必要です"
       invalid_string_max: "%{max}文字以下である必要があります"
+      invalid_reply_by_email_address: "値は'%{reply_key}'を含む必要があり、通知メールとは異なる必要があります"
       min_username_length_range: "最小値を最大値より上にすることはできません。"
   search:
     within_post: "#%{post_number} by %{username}"
@@ -1022,6 +1028,9 @@ ja:
   redirected_to_top_reasons:
     new_user: "コミュニティへようこそ！　これらが最も人気な最近のトピックです"
     not_seen_in_a_month: "お帰りなさい！　最近見かけませんでしたね。　これらがあなたが離れてから最も人気のトピックです"
+  move_posts:
+    existing_topic_moderator_post:
+      other: "%{count}つのポストが存在するトピックに統合されました：%{topic_link}"
   topic_statuses:
     autoclosed_message_max_posts:
       other: "このメッセージは%{count}つの返信に達した時に自動的に閉じます。"
@@ -1055,8 +1064,8 @@ ja:
     errors: "%{errors}"
     not_available: "それは利用できません。\"%{suggestion}\" はどうですか？"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
-    omniauth_error: "あなたの アカウントの認可に失敗しました。アカウントの認可を許可したか確認してください"
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
+    omniauth_confirm_button: "続く"
     new_registrations_disabled: "新規登録は現在行えません。"
     password_too_long: "パスワードは200文字までです"
     email_too_long: "メールアドレスが長過ぎます。アドレス部は254文字以内に、ドメイン部は253文字以内にする必要があります"
@@ -1074,7 +1083,6 @@ ja:
     username:
       short: "少なくとも%{min}文字は必要です"
       long: "%{max}文字以下である必要があります"
-      characters: "英数字、ハイフン、アンダーバーのみ利用可能です"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
       must_begin_with_alphanumeric_or_underscore: "最初は英数字で始まる必要があります"
@@ -1170,35 +1178,9 @@ ja:
     post_hidden:
       title: "非表示の投稿"
       subject_template: "コミュニティーフラッグによって非表示にされた投稿"
-      text_body_template: |
-        こんにちは、
-
-        これは%{site_name}から、あなたの投稿が非表示になったことを自動的に知らせるメールです。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        複数のコミュニティーメンバーが非表示になる前に、この投稿にフラッグを立てました。フィードバックを反映させた投稿の修正を検討してください。**あなたは%{edit_delay}分後に投稿を編集することが可能です。そして自動的に非表示では無くなります。
-
-        しかし、もしこの投稿がコミュニティーによって再度非表示になった場合、管理人が対処するまで非表示であり続けます。
-
-        追加のガイダンスについては、私たちのガイドラインを参照してください。 [community guidelines](%{base_url}/guidelines)
     post_hidden_again:
       title: "再度非表示"
       subject_template: "コミュニティーフラッグにより非表示になりました。"
-      text_body_template: |
-        こんにちは、
-
-        このメールは%{site_name}から、あなったの投稿が再度非表示になったことを自動的に知らせるメールです。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        複数のコミュニティーメンバーが非表示になる前に、このポストにフラグを立てました。**なぜならこのポストは以前に非表示になったことがあるため、あなたの投稿は管理人が対処するまで非表示であり続けます。
-
-        つかのガイダンスについては、私たちのガイドラインを参照してください。[community guidelines](%{base_url}/guidelines)
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
       text_body_template: |
@@ -1285,7 +1267,6 @@ ja:
       unsubscribe: "このまとめは、しばらくサイトを訪れていないため、%{site_link}から送られました。%{email_preferences_link}を変更するか、%{unsubscribe_link}購読を中止できます。"
       your_email_settings: "メール設定"
       click_here: "こちらをクリック"
-      from: "%{site_name}まとめ"
       preheader: "%{last_seen_at}の最後の訪問以降の簡単な要約"
     forgot_password:
       title: "パスワードを忘れた"
@@ -1314,10 +1295,6 @@ ja:
     confirm_new_email:
       title: "メールを確認してください"
       subject_template: "[%{email_prefix}]新しいメールアドレスを確認してください"
-      text_body_template: |
-        %{site_name}への新しいメールアドレスを下のリンクから確認してください。
-
-        %{base_url}/u/authorize-email/%{email_token}
     confirm_old_email:
       title: "古いメールの確認"
       subject_template: "[%{email_prefix}]現在のメールアドレスの確認"
@@ -1380,6 +1357,7 @@ ja:
   csv_export:
     boolean_yes: "はい"
     boolean_no: "いいえ"
+    rate_limit_error: "投稿者は1日1回ダウンロードすることが可能です、明日再度お試しください。"
   static_topic_first_reply: |
     %{page_name}ページのコンテンツを編集するには、このトピックの最初の投稿を編集してください
   guidelines_topic:
@@ -1405,10 +1383,10 @@ ja:
 
       このサイトで収集された情報は、次のいくつかの方法で使用されます:
 
-      *   パーソナライズ・エクスペリエンス &mdash; あなたの情報は、あなたや他のユーザーのニーズに対応するために役立ちます。
-      *   サイトの改善・最適化 &mdash; このサービスはあなたから受け取った情報やフィードバックに基づいて提供されるサイトの改善を行いつづけます。
-      *   サービスの向上 &mdash; あなたの情報は、ユーザーからの要求やサポートへより効果的に対応するために役立ちます。
-      *   定期メールの送信 &mdash; メールアドレスは、情報の送信、トピックの変更やユーザー名に関係するお知らせ、お問い合わせに関する返答、その他のリクエストや質問に関してお知らせするために使用されます。
+      * パーソナライズ・エクスペリエンス &mdash; あなたの情報は、あなたや他のユーザーのニーズに対応するために役立ちます。
+      * サイトの改善・最適化 &mdash; このサービスはあなたから受け取った情報やフィードバックに基づいて提供されるサイトの改善を行いつづけます。
+      * サービスの向上 &mdash; あなたの情報は、ユーザーからの要求やサポートへより効果的に対応するために役立ちます。
+      * 定期メールの送信 &mdash; メールアドレスは、情報の送信、トピックの変更やユーザー名に関係するお知らせ、お問い合わせに関する返答、その他のリクエストや質問に関してお知らせするために使用されます。
 
       <a name="protect"></a>
 
@@ -1421,8 +1399,8 @@ ja:
 
       このサービスは次のことを行います:
 
-      *   このサーバーへのすべての要求に対して、IPアドレスを含むサーバーログを90日以内に渡って保持します。
-      *   登録されたユーザーとその投稿に関連付けされたIPアドレスを5年以内に渡って保持します。
+      * このサーバーへのすべての要求に対して、IPアドレスを含むサーバーログを90日以内に渡って保持します。
+      * 登録されたユーザーとその投稿に関連付けされたIPアドレスを5年以内に渡って保持します。
       <a name="cookies"></a>
 
       ## [クッキーを使用していますか？](#cookies)
@@ -1588,14 +1566,8 @@ ja:
         このバッジは、300の異なる投稿で少なくとも5つの好きなものを受け取ったときに付与されます。 うわー！ コミュニティーは、あなたの頻繁で質の高い貢献をここにて賞賛します。
     out_of_love:
       name: 心から
-      description: 一日に50いいねしました
-      long_description: |
-        このバッジは、あなたが50ものいいね！をすべてを使用すると付与されます。 あなたが楽しんで感謝するポストのように、あなたの仲間のコミュニティのメンバーが今後さらに偉大な議論を生み出すことを奨励します。
     higher_love:
       name: より多くの愛
-      description: 50いいねを5日以上使用
-      long_description: |
-        このバッジは、あなたが1日に50回ものいいね！を5日間使用すると付与されます。 毎日最高の会話を積極的に励ます時間をとってくれてありがとう！
     crazy_in_love:
       name: 愛
       description: 50いいね！を20日間
@@ -1699,8 +1671,13 @@ ja:
     popup:
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
+    priorities:
+      medium: "普通"
+      high: "高い"
     sensitivity:
       disabled: "利用不可"
+      medium: "普通"
+      high: "高い"
     actions:
       agree_and_suspend:
         title: "凍結中のユーザ"

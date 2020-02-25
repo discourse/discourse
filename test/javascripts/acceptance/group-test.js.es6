@@ -51,29 +51,22 @@ QUnit.test("Anonymous Viewing Group", async assert => {
   );
   assert.ok(count(".user-stream-item") > 0, "it lists stream items");
 
-  await selectKit(".group-dropdown").expand();
+  const groupDropdown = selectKit(".group-dropdown");
+  await groupDropdown.expand();
+
+  assert.equal(groupDropdown.rowByIndex(1).name(), "discourse");
 
   assert.equal(
-    find(".select-kit-row")
-      .text()
-      .trim(),
-    "discourse",
-    "it displays the right row"
-  );
-
-  assert.equal(
-    find(".group-dropdown-filter")
-      .text()
-      .trim(),
-    I18n.t("groups.index.all").toLowerCase(),
-    "it displays the right header"
+    groupDropdown.rowByIndex(0).name(),
+    I18n.t("groups.index.all").toLowerCase()
   );
 
   Discourse.SiteSettings.enable_group_directory = false;
 
   await visit("/g");
   await visit("/g/discourse");
-  await selectKit(".group-dropdown").expand();
+
+  await groupDropdown.expand();
 
   assert.equal(
     find(".group-dropdown-filter").length,

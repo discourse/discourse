@@ -1,38 +1,30 @@
+import { readOnly } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
 import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
-import computed from "ember-addons/ember-computed-decorators";
-import Category from "discourse/models/category";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
   layoutName:
     "select-kit/templates/components/category-drop/category-drop-header",
-  classNames: "category-drop-header",
-
+  classNames: ["category-drop-header"],
   classNameBindings: ["categoryStyleClass"],
-  categoryStyleClass: Ember.computed.alias("site.category_style"),
+  categoryStyleClass: readOnly("site.category_style"),
 
-  @computed("computedContent.value", "computedContent.name")
-  category(value, name) {
-    if (Ember.isEmpty(value)) {
-      const uncat = Category.findUncategorized();
-      if (uncat && uncat.get("name") === name) {
-        return uncat;
-      }
-    } else {
-      return Category.findById(parseInt(value, 10));
-    }
-  },
-
-  @computed("category.color")
+  @discourseComputed("selectedContent.color")
   categoryBackgroundColor(categoryColor) {
     return categoryColor || "#e9e9e9";
   },
 
-  @computed("category.text_color")
+  @discourseComputed("selectedContent.text_color")
   categoryTextColor(categoryTextColor) {
     return categoryTextColor || "#333";
   },
 
-  @computed("category", "categoryBackgroundColor", "categoryTextColor")
+  @discourseComputed(
+    "selectedContent",
+    "categoryBackgroundColor",
+    "categoryTextColor"
+  )
   categoryStyle(category, categoryBackgroundColor, categoryTextColor) {
     const categoryStyle = this.siteSettings.category_style;
 
@@ -54,10 +46,16 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
     }
   },
 
-  didRender() {
+  didInsertElement() {
     this._super(...arguments);
 
-    this.$().attr("style", this.categoryStyle);
-    this.$(".caret-icon").attr("style", this.categoryStyle);
+    schedule("afterRender", () => {
+      if (this.categoryStyle) {
+        this.element.setAttribute("style", this.categoryStyle);
+        this.element
+          .querySelector(".caret-icon")
+          .setAttribute("style", this.categoryStyle);
+      }
+    });
   }
 });

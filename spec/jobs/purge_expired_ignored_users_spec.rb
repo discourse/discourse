@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require_dependency 'jobs/scheduled/purge_expired_ignored_users'
-
 describe Jobs::PurgeExpiredIgnoredUsers do
   subject { Jobs::PurgeExpiredIgnoredUsers.new.execute({}) }
 

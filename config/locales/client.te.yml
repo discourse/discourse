@@ -93,7 +93,6 @@ te:
     share:
       post: "#%{postNumber} టపా"
       close: "మూసివేయి"
-    topic_admin_menu: "విషయపు అధికార చర్యలు"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
     themes:
       default_description: "అప్రమేయ"
@@ -144,6 +143,7 @@ te:
       stats: "సైటు గణాంకాలు"
       our_admins: "మా అధికారులు"
       our_moderators: "మా నిర్వాహకులు"
+      moderators: "నిర్వాహకులు"
       stat:
         all_time: "ఆల్ టైమ్"
         last_7_days: "చివరి 7"
@@ -164,6 +164,7 @@ te:
     bookmarks:
       created: "ఈ టపాకు పేజీక ఉంచారు"
       remove: "పేజీక తొలగించండి"
+      save: "భద్రపరచు"
     drafts:
       remove: "తొలగించు"
       abandon:
@@ -186,9 +187,9 @@ te:
       close: "బ్యానరు తుడువు"
     choose_topic:
       none_found: "ఎటువంటి విషయాలూ కనపడలేదు."
-      title:
-        placeholder: "ఇక్కడ విషయపు శీర్షిక రాయండి"
     review:
+      explain:
+        total: "మొత్తం"
       delete: "తొలగించు"
       settings:
         save_changes: "మార్పులను భద్రపరచు"
@@ -221,12 +222,12 @@ te:
         ok: "సరే"
     user_action:
       user_posted_topic: "<a href='{{topicUrl}}'>విషయాన్ని</a> <a href='{{userUrl}}'>{{user}}</a> రాసారు "
-      you_posted_topic: "<a href='{{userUrl}}'>మీరు</a>  <a href='{{topicUrl}}'>విషయాన్ని</a> రాసారు"
-      user_replied_to_post: "<a href='{{postUrl}}'>{{post_number}}</a> కు <a href='{{userUrl}}'>{{user}}</a>  జవాబిచ్చారు"
-      you_replied_to_post: "<a href='{{userUrl}}'>మీరు</a>  <a href='{{postUrl}}'>{{post_number}}</a> కు జవాబిచ్చారు"
+      you_posted_topic: "<a href='{{userUrl}}'>మీరు</a> <a href='{{topicUrl}}'>విషయాన్ని</a> రాసారు"
+      user_replied_to_post: "<a href='{{postUrl}}'>{{post_number}}</a> కు <a href='{{userUrl}}'>{{user}}</a> జవాబిచ్చారు"
+      you_replied_to_post: "<a href='{{userUrl}}'>మీరు</a> <a href='{{postUrl}}'>{{post_number}}</a> కు జవాబిచ్చారు"
       user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>కు <a href='{{topicUrl}}'>విషయానికి</a> జవాబిచ్చారు"
       you_replied_to_topic: "<a href='{{userUrl}}'>మీరు</a> కు <a href='{{topicUrl}}'>విషయానికి</a> జవాబిచ్చారు"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a>,  <a href='{{user2Url}}'>{{another_user}}</a> ను ప్రస్తావించారు"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a>, <a href='{{user2Url}}'>{{another_user}}</a> ను ప్రస్తావించారు"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a>, <a href='{{user2Url}}'>మిమ్ము</a> ప్రస్తావించారు"
       you_mentioned_user: "<a href='{{user1Url}}'>మీరు</a>, <a href='{{user2Url}}'>{{another_user}}</a> ను ప్రస్తావించారు"
       posted_by_user: "<a href='{{userUrl}}'>{{user}}</a> రాసారు"
@@ -349,6 +350,10 @@ te:
         mute_option: "నిశ్శబ్దం"
       activity_stream: "కలాపం"
       preferences: "అభిరుచులు"
+      feature_topic_on_profile:
+        save: "భద్రపరచు"
+        clear:
+          title: "శుభ్రపరుచు"
       bookmarks: "పేజీకలు"
       bio: "నా గురించి"
       invited_by: "ఆహ్వానిచినవారు"
@@ -380,6 +385,7 @@ te:
       admin_delete: "తొలగించు"
       users: "వాడుకరులు"
       muted_users: "నిశ్శబ్దం"
+      tracked_topics_link: "చూపు"
       theme: "అలంకారం"
       staff_counters:
         flags_given: "సహాయకారి కేతనాలు"
@@ -409,6 +415,11 @@ te:
         regenerate: "పునరుత్పత్తించు"
         disable: "అచేతనం"
         enable: "చేతనం"
+      second_factor:
+        name: "పేరు"
+        edit: "సవరించు"
+        security_key:
+          delete: "తొలగించు"
       change_about:
         title: "నా గురించి మార్చు"
       change_username:
@@ -428,10 +439,6 @@ te:
         uploaded_avatar: "అనురూప బొమ్మ"
         uploaded_avatar_empty: "అనురూప బొమ్మను కలపండి"
         upload_title: "మీ బొమ్మను కలపండి"
-        upload_picture: "బొమ్మను ఎగుమతించండి"
-      change_profile_background:
-        title: "ప్రవర వెనుతలం"
-        instructions: "ప్రవర వెనుతలాలు కేంద్రీకరించబడతాయి మరియు అప్రమేయ వెడల్పు 850 పిక్సెలు ఉంటాయి."
       change_card_background:
         title: "సభ్య కార్డు వెనుతలం"
         instructions: "వెనుతలం బొమ్మలు కేంద్రీకరించబడతాయి మరియు అప్రమేయ వెడల్పు 590 పిక్సెలు ఉంటాయి."
@@ -439,10 +446,11 @@ te:
         title: "ఈమెయిల్"
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
-        authenticated: "మీ ఈమెయిల్  {{provider}} చేత ద్రువీకరించబడింది"
+        authenticated: "మీ ఈమెయిల్ {{provider}} చేత ద్రువీకరించబడింది"
         frequency_immediately: "మీకు వెంటనే ఈమెయిల్ చేసాము, మీరు ఈమెయిల్ విషయం చదవకపోతే. "
       associated_accounts:
         revoke: "రివోక్"
+        cancel: "రద్దుచేయి"
       name:
         title: "పేరు"
         instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)"
@@ -501,7 +509,6 @@ te:
         search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         title: "ఆహ్వానాలు"
         user: "ఆహ్వానించిన సభ్యుడు"
-        sent: "పంపిన"
         redeemed: "మన్నించిన ఆహ్వానాలు"
         redeemed_tab: "మన్నించిన"
         redeemed_at: "మన్నించిన"
@@ -541,6 +548,8 @@ te:
         title: "ప్రవర బొమ్మ"
       title:
         title: "శీర్షిక"
+      primary_group:
+        title: "ప్రాథమిక గుంపు"
       filters:
         all: "అన్నీ"
       stream:
@@ -558,7 +567,7 @@ te:
       desc:
         network: "దయచేసి మీ కనక్షన్ సరిచూడండి. "
         network_fixed: "ఇప్పుడు మరలా పనిచేస్తుంది."
-        server: "దోష కోడు:  {{status}}"
+        server: "దోష కోడు: {{status}}"
         forbidden: "దాన్ని చూడటానికి మీకు అనుమతి లేదు"
         unknown: "ఏదో తేడా జరిగింది."
       buttons:
@@ -608,10 +617,8 @@ te:
       action: "నేను నా సంకేతపదాన్ని మర్చిపోయాను"
       invite: "మీ సభ్యనామం లేదా ఈమెయిల్ చిరునామా రాయండి, మేము మీ సంకేతపదం మార్చే విధం మీకు ఈమెయిల్ చేస్తాము."
       reset: "రీసెట్ సంకేతపదం"
-      complete_username: "సభ్యనామం  <b>%{username}</b> తో ఈ ఖాతా సరిపోతే మీకు సంకేతపదం రీసెట్ చేసే సూచనలు ఈమెయిల్ ద్వారా వస్తాయి. "
-      complete_email: "ఈమెయిల్  <b>%{email}</b> తో ఈ ఖాతా సరిపోతే మీకు సంకేతపదం రీసెట్ చేసే సూచనలు ఈమెయిల్ ద్వారా వస్తాయి. "
-      complete_username_found: "మేము ఈ సభ్యనామం <b>%{username}</b> తో సరిపోయే ఒక ఖాతా కనుగొన్నాము, మీకు అతి త్వరలో సంకేతపదం రీసెట్ చేసే సూచనలతో కూడిన ఈమెయిల్ వస్తుంది."
-      complete_email_found: "మేము ఈ ఈమెయిల్ <b>%{email}</b> తో సరిపోయే ఒక ఖాతా కనుగొన్నాము, మీకు అతి త్వరలో సంకేతపదం రీసెట్ చేసే సూచనలతో కూడిన ఈమెయిల్ వస్తుంది."
+      complete_username: "సభ్యనామం <b>%{username}</b> తో ఈ ఖాతా సరిపోతే మీకు సంకేతపదం రీసెట్ చేసే సూచనలు ఈమెయిల్ ద్వారా వస్తాయి. "
+      complete_email: "ఈమెయిల్ <b>%{email}</b> తో ఈ ఖాతా సరిపోతే మీకు సంకేతపదం రీసెట్ చేసే సూచనలు ఈమెయిల్ ద్వారా వస్తాయి. "
       complete_username_not_found: "మీ సభ్యనామం <b>%{username}</b> తో ఏ ఖాతా సరిపోవడంలేదు."
       complete_email_not_found: "<b>%{email}</b> తో ఏ ఖాతా సరిపోవడంలేదు"
       button_ok: "సరే"
@@ -643,17 +650,13 @@ te:
       google_oauth2:
         name: "గూగుల్"
         title: "గూగుల్ తో"
-        message: "గూగుల్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
       twitter:
         name: "ట్విట్టర్"
         title: "ట్విట్టరు తో"
-        message: "ట్విట్టరు ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
       facebook:
         title: "ఫేస్ బుక్ తో"
-        message: "ఫేస్ బుక్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
       github:
         title: "గిట్ హబ్ తో"
-        message: "గిట్ హబ్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
     invites:
       accept_title: "ఆహ్వానం"
       welcome_to: "%{site_name} కు సుస్వాగతం!"
@@ -666,7 +669,6 @@ te:
       apple_international: "యాపిల్ , అంతర్జాతీయ"
       google: "గూగుల్"
       twitter: "ట్విట్టర్"
-      emoji_one: "ఇమెజి వన్"
     category_page_style:
       categories_only: "వర్గాలు మాత్రమే"
     conditional_loading_section:
@@ -683,9 +685,8 @@ te:
       drafts_offline: "చిత్తుప్రతులు ఆఫ్లైను."
       error:
         title_missing: "శీర్షిక తప్పనిసరి"
-        title_too_short: "శీర్షిక కనీసం  {{min}} అక్షరాలు ఉండాలి"
+        title_too_short: "శీర్షిక కనీసం {{min}} అక్షరాలు ఉండాలి"
         title_too_long: "శీర్షిక {{max}} అక్షరాలకు మించి ఉండకూడదు"
-        post_missing: "టపా ఖాళీగా ఉండకూడదు"
         post_length: "టపా కనీసం {{min}} అక్షరాలు కలిగి ఉండాలి"
         category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
       save_edit: "దాచి సవరించు"
@@ -697,10 +698,8 @@ te:
       users_placeholder: "ఒక సభ్యుడిని కలుపు"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
-      show_edit_reason: "(సవరణ కారణం రాయండి)"
       view_new_post: "మీ కొత్త టపా చూడండి"
       saved: "భద్రం!"
-      saved_draft: "టపా చిత్తుప్రతి నడుస్తోంది. కొనసాగించుటకు ఎంచుకోండి."
       uploading: "ఎగుమతవుతోంది..."
       show_preview: "మునుజూపు చూపు &raquo;"
       hide_preview: "&laquo; మునుజూపు దాచు"
@@ -733,7 +732,6 @@ te:
           label: "కొత్త విషయం"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
-      more: "పాత ప్రకటనలు చూడు"
       titles:
         watching_first_post: "కొత్త విషయం"
     upload_selector:
@@ -744,7 +742,6 @@ te:
       remote_tip: "బొమ్మకు లంకె"
       hint: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
       uploading: "ఎగుమతవుతోంది"
-      image_link: "మీ బొమ్మ చూపే లంకె"
       default_image_alt_text: బొమ్మ
     search:
       title: "విషయాలు, టపాలు, సభ్యులు లేదా వర్గాలు వెతుకు"
@@ -776,7 +773,7 @@ te:
         notification_level: "ప్రకటనలు"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
-          one: "మీరు <b>%{count}</b>  విషయం ఎంచుకున్నారు."
+          one: "మీరు <b>%{count}</b> విషయం ఎంచుకున్నారు."
           other: " మీరు <b>{{count}}</b> విషయాలు ఎంచుకున్నారు."
       none:
         unread: "మీరు చదవని విషయాలు లేవు"
@@ -785,7 +782,7 @@ te:
         posted: "మీరింకా ఏ విషయాలూ రాయలేదు."
         latest: "కొత్త విషయాలు లేవు. అహో ఎంతటి విపరిణామం."
         bookmarks: "మీకింకా ఎట్టి పేజీక విషయాలూ లేవు."
-        category: "ఎట్టి {{category}}  విషయాలూ లేవు"
+        category: "ఎట్టి {{category}} విషయాలూ లేవు"
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
       bottom:
         latest: "ఇంకా కొత్త విషయాలు లేవు."
@@ -793,7 +790,7 @@ te:
         read: "ఇంకా చదవని విషయాలు లేవు."
         new: "కొత్త విషయాలు లేవు."
         unread: "ఇంకా చదవని విషయాలు లేవు."
-        category: "ఇంకా {{category}}  విషయాలు లేవు."
+        category: "ఇంకా {{category}} విషయాలు లేవు."
         top: "ఇంకా అగ్ర విషయాలు లేవు."
         bookmarks: "ఇంకా పేజీక విషయాలు లేవు."
     topic:
@@ -828,8 +825,8 @@ te:
         one: "మీకు ఈ విషయంలో %{count} చదవని పాత టపా ఉంది"
         other: "మీకు ఈ విషయంలో {{count}} చదవని పాత టపాలు ఉన్నాయి"
       new_posts:
-        one: "మీరు చివరసారి చదివాక ఈ విషయంలో  %{count} కొత్త టపా వచ్చింది"
-        other: "మీరు చివరసారి చదివాక ఈ విషయంలో  {{count}} కొత్త టపాలు వచ్చాయి"
+        one: "మీరు చివరసారి చదివాక ఈ విషయంలో %{count} కొత్త టపా వచ్చింది"
+        other: "మీరు చివరసారి చదివాక ఈ విషయంలో {{count}} కొత్త టపాలు వచ్చాయి"
       likes:
         one: "ఈ విషయానికి %{count} ఇష్టం ఉంది"
         other: "ఈ విషయానికి {{count}} ఇష్టాలు ఉన్నాయి"
@@ -895,6 +892,7 @@ te:
         muted:
           title: "నిశ్శబ్దం"
       actions:
+        title: "చర్యలు"
         recover: "విషయం తొలగింపు రద్దుచేయి"
         delete: "విషయం తొలగించు"
         open: "విషయం తెరువు"
@@ -947,22 +945,22 @@ te:
         radio_label: "కొత్త విషయం"
         error: "టపాలను కొత్త విషయానికి జరిపేటప్పుడు దోషం తలెత్తింది"
         instructions:
-          one: "మీరు కొత్త విషయం సృష్టించి దాన్ని మీరు ఈ  టపాతో నింపబోతున్నారు."
-          other: "మీరు కొత్త విషయం సృష్టించి దాన్ని <b>{{count}}</b>  టపాలతో నింపబోతున్నారు."
+          one: "మీరు కొత్త విషయం సృష్టించి దాన్ని మీరు ఈ టపాతో నింపబోతున్నారు."
+          other: "మీరు కొత్త విషయం సృష్టించి దాన్ని <b>{{count}}</b> టపాలతో నింపబోతున్నారు."
       merge_topic:
         title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
         action: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
         error: " ఆ విషయంలోకి టపాలను జరపడంలో దోషం."
         instructions:
-          one: "ఈ  టపాలు జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
-          other: "ఈ  <b>{{count}}</b> టపాలను జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
+          one: "ఈ టపాలు జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
+          other: "ఈ <b>{{count}}</b> టపాలను జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
       change_owner:
         action: "యజమానిని మార్చు"
         error: "ఆ టపాల యజమానిని మార్చేప్పుడు దోషం జరిగింది."
         placeholder: "కొత్త యజమాని సభ్యనామం"
       multi_select:
         select: "ఎంచుకో"
-        selected: "ఎంచుకున్నవి  ({{count}})"
+        selected: "ఎంచుకున్నవి ({{count}})"
         select_post:
           label: "ఎంచుకో"
         select_replies:
@@ -995,6 +993,8 @@ te:
         image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
+      abandon_edit:
+        no_value: "లేదు, ఉంచండి"
       abandon:
         confirm: "మీరు నిజంగానే మీ టపాను వదిలేద్దామనుకుంటున్నారా?"
         no_value: "లేదు, ఉంచండి"
@@ -1038,7 +1038,6 @@ te:
           off_topic: "దీన్ని విషయాంతరంగా కేతనించాము"
           spam: "దీన్ని స్పాముగా కేతనించాము"
           inappropriate: "దీన్ని అసమంజసమైనదిగా కేతనించాము"
-          like: "ఈ టపాను ఇష్టపడ్డారు"
         by_you:
           off_topic: "మీరు దీన్ని విషయాంతరంగా కేతనించారు"
           spam: "మీరు దీన్ని స్పాముగా కేతనించారు"
@@ -1061,6 +1060,8 @@ te:
             title: "పక్క పక్కన తేడాలు చూపుతూ మొత్తం చూపు"
           side_by_side_markdown:
             title: "ముడి మూల తేడాను పక్కపక్కన చూపు"
+      bookmarks:
+        name: "పేరు"
     category:
       can: "can&hellip;"
       none: "(ఏ వర్గం లేదు)"
@@ -1168,13 +1169,13 @@ te:
       unlisted:
         help: "ఈ విషయం జాబితాలనుండి తొలగించబడింది. ఇహ కేవలం నేరు లంకె ద్వారా మాత్రమే చూడగలరు."
     posts: "టపాలు"
-    posts_long: "ఈ విషయానికి {{number}}  టపాలు ఉన్నాయి. "
+    posts_long: "ఈ విషయానికి {{number}} టపాలు ఉన్నాయి. "
     original_post: "మూల టపా"
     views: "చూపులు"
     replies: "జవాబులు"
     activity: "కలాపం"
     likes: "ఇష్టాలు"
-    likes_long: "ఈ విషయానికి  {{number}}  ఇష్టాలు ఉన్నాయి"
+    likes_long: "ఈ విషయానికి {{number}} ఇష్టాలు ఉన్నాయి"
     users: "సభ్యులు"
     users_lowercase:
       one: "వాడుకరి"
@@ -1200,7 +1201,7 @@ te:
         help: "వర్గాల వారీగా జట్టు కట్టిన అన్ని విషయాలూ"
       unread:
         title: "చదవని"
-        help: "మీరు ప్రస్తుతం కన్నేసిన లేదా గమనిస్తున్న చదవని టపాలతో ఉన్న  విషయాలు "
+        help: "మీరు ప్రస్తుతం కన్నేసిన లేదా గమనిస్తున్న చదవని టపాలతో ఉన్న విషయాలు "
       new:
         lower_title: "కొత్త"
         title: "కొత్త"
@@ -1285,6 +1286,7 @@ te:
           name: రాస్తున్నారు
     tagging:
       tags: "ట్యాగులు"
+      add_synonyms: "కలుపు"
       cancel_delete_unused: "రద్దుచేయి"
       notifications:
         watching:
@@ -1360,8 +1362,6 @@ te:
           all: "అన్ని"
           view_table: "టేబుల్"
           refresh_report: "రిపోర్టు తాజాపరుచు"
-          start_date: "ఆరంభ తేదీ"
-          end_date: "ముగింపు తేదీ"
           filters:
             group:
               label: సమూహం
@@ -1378,8 +1378,7 @@ te:
               public: "అందరూ"
           membership:
             automatic: స్వీయంగా
-            trust_level: నమ్మకం స్థాయి
-            automatic_membership_email_domains: "వినియోగదారుడు ఏ ఈ-మెయిల్ డొమైన్ తో నమోదు చేసుకున్నాడో అది ఖచ్చితంగా  ఈ జాబితాలో ఒక దానిని పోలి స్వయంసిధ్ధంగా గ్రూప్ కి కలుస్తాయి:"
+            automatic_membership_email_domains: "వినియోగదారుడు ఏ ఈ-మెయిల్ డొమైన్ తో నమోదు చేసుకున్నాడో అది ఖచ్చితంగా ఈ జాబితాలో ఒక దానిని పోలి స్వయంసిధ్ధంగా గ్రూప్ కి కలుస్తాయి:"
             automatic_membership_retroactive: "ఇప్పటికే నమోదిత వినియోగదారులను జోడించడానికి అదే ఇమెయిల్ డొమైన్ రూల్ వర్తిస్తుంది"
         name_placeholder: "గంపు పేరు, జాగా లేకుండా, సభ్యనామం వలె"
         primary: "ప్రాథమిక గుంపు"
@@ -1400,15 +1399,13 @@ te:
         none: "ప్రస్తుతం చేతన ఏపీఐ కీలు లేవు."
         user: "సభ్యుడు"
         title: "ఏపీఐ"
-        key: "ఏపీఐ కీ"
+        created: సృష్టించిన
         generate: "ఉత్పత్తించు"
-        regenerate: "పునరుత్పత్తించు"
         revoke: "రివోక్"
-        confirm_regen: "మీరు నిజంగా పాత ఏపీఐ కీని కొత్త దానితో రీప్లేస్ చెయ్యాలనుకుంటున్నారా?"
-        confirm_revoke: "మీరు నిజంగా ఆ కీని రివోకే చెయ్యాలనుకుంటున్నారా? "
-        info_html: "మీ ఏపీఐ కీ జేసన్ వాడి విషయాలు సృష్టించుట, ఉన్నతీకరించుటకు దోహదం చేస్తుంది."
         all_users: "అందరు సభ్యులు"
-        note_html: "ఈ కీ ని <strong> రహస్యంగా ఉంచండి </strong>, అది కలిగివున్న అందరూ వినియోగదారులు ఏ వినియోగదారునిలా నైనా ఏకపక్ష టపాలు సృష్టించవచ్చు."
+        show_details: వివరాలు
+        description: వివరణ
+        save: భద్రపరచు
       web_hooks:
         save: "భద్రపరచు"
         destroy: "తొలగించు"
@@ -1499,6 +1496,7 @@ te:
         opacity: "అపారదర్శకత"
         copy: "నకలు"
         email_templates:
+          title: "ఈమెయిల్"
           subject: "సబ్జెక్టు"
           body: "శరీరం"
         theme:
@@ -1511,6 +1509,8 @@ te:
           installed: "ప్రతిష్టించబడింది"
           install_popular: "ప్రముఖ"
           about_theme: "గురించి"
+          enable: "చేతనం"
+          disable: "అచేతనం"
           add: "కలుపు"
           scss:
             text: "సీయస్ యస్"
@@ -1560,12 +1560,14 @@ te:
           love:
             name: "ప్రేమ"
             description: "ఇష్ఠ బటను రంగు."
+        email_style:
+          css: "సీయస్ యస్"
       email:
         settings: "అమరికలు"
         preview_digest: "డైజెస్టు మునుజూపు"
         sending_test: "పరీక్షా ఈమెయిల్ పంపుతున్నామ్..."
         error: "<b>దోషం</b> - %{server_error}"
-        test_error: "టెస్ట్ మెయిల్ పంపడంలో  ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
+        test_error: "టెస్ట్ మెయిల్ పంపడంలో ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
         sent: "పంపిన"
         skipped: "వదిలిన"
         sent_at: "వద్ద పంపారు"
@@ -1574,7 +1576,7 @@ te:
         email_type: "ఈమెయిల్ టైపు"
         to_address: "చిరునామాకు"
         test_email_address: "పరీక్షించుటు ఈమెయిల్ "
-        send_test: "పరీక్షా  మెయిల్ పంపారు"
+        send_test: "పరీక్షా మెయిల్ పంపారు"
         sent_test: "పంపారు!"
         delivery_method: "డెలివరీ పద్దతి"
         refresh: "తాజాపరుచు"
@@ -1681,12 +1683,12 @@ te:
           title: "దోష లాగులు"
       watched_words:
         clear_filter: "శుభ్రపరుచు"
+        download: దిగుమతి
         actions:
           block: "ఖండం"
           flag: "కేతనం"
         form:
           add: "కలుపు"
-          upload: "ఎక్కించు"
       impersonate:
         title: "పరకాయప్రవేశించు"
         help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."
@@ -1723,7 +1725,7 @@ te:
           title: "ఈ సభ్యుని ఈమెయిల్ చూపు"
           text: "చూపు"
       user:
-        suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది.  {{error}}"
+        suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది. {{error}}"
         unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది {{error}}"
         suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
         suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
@@ -1770,10 +1772,10 @@ te:
         delete_and_block: "ఈ ఈ-మెయిల్ మరియు IP అడ్రస్ ను తొలగించండి మరియు <b>నిరోధించండి</b>"
         delete_dont_block: "తొలగింపు మాత్రమే"
         deleted: "ఈ సభ్యుడు తొలగించబడ్డాడు"
-        delete_failed: "వినియోగదారుని తొలగించుటలో ఒక దోషం ఉంది.వినియోగదారుని తొలగించడానికి   ప్రయత్నించకముందే టపాలు అన్ని తొలగించండి."
+        delete_failed: "వినియోగదారుని తొలగించుటలో ఒక దోషం ఉంది.వినియోగదారుని తొలగించడానికి ప్రయత్నించకముందే టపాలు అన్ని తొలగించండి."
         send_activation_email: "చేతన ఈమెయిల్ పంపు"
         activation_email_sent: "ఒక చేతన ఈమెయిల్ పంపాము."
-        send_activation_email_failed: "చేతన ఈమెయిల్ పంపుటలో దోషం  %{error}"
+        send_activation_email_failed: "చేతన ఈమెయిల్ పంపుటలో దోషం %{error}"
         activate: "ఖాతా క్రియాశీలం చేయి"
         activate_failed: "సభ్యుడిని చేతనం చేయుటలో దోషం"
         deactivate_account: "ఖాతా అక్రియాశీలం చేయి"
@@ -1849,7 +1851,6 @@ te:
           text: "పాఠ్య క్షేత్రం"
           confirm: "ఖాయము"
       site_text:
-        title: "పాఠ్య కాంటెంటు"
         edit: "సవరించు"
         show_overriden: "ప్రాబల్యం ఉన్న వాటిని మాత్రమే చూపించు"
       settings:
@@ -1890,6 +1891,8 @@ te:
           search: "వెతుకు"
           groups: "గుంపులు"
           dashboard: "రంగస్థలం"
+        default_categories:
+          modal_yes: "అవును"
       badges:
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ

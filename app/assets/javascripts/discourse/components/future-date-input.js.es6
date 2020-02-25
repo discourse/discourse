@@ -1,21 +1,18 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import { isEmpty } from "@ember/utils";
+import { equal, and, empty } from "@ember/object/computed";
+import Component from "@ember/component";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 
-export default Ember.Component.extend({
+export default Component.extend({
   selection: null,
   date: null,
   time: null,
   includeDateTime: true,
-  isCustom: Ember.computed.equal("selection", "pick_date_and_time"),
-  isBasedOnLastPost: Ember.computed.equal(
-    "selection",
-    "set_based_on_last_post"
-  ),
-  displayDateAndTimePicker: Ember.computed.and("includeDateTime", "isCustom"),
+  isCustom: equal("selection", "pick_date_and_time"),
+  isBasedOnLastPost: equal("selection", "set_based_on_last_post"),
+  displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
 
   init() {
@@ -36,7 +33,7 @@ export default Ember.Component.extend({
     }
   },
 
-  timeInputDisabled: Ember.computed.empty("date"),
+  timeInputDisabled: empty("date"),
 
   @observes("date", "time")
   _updateInput() {
@@ -48,9 +45,10 @@ export default Ember.Component.extend({
     const dateTime = moment(`${this.date}${time}`);
 
     if (dateTime.isValid()) {
-      this.set("input", dateTime.format(FORMAT));
+      this.attrs.onChangeInput &&
+        this.attrs.onChangeInput(dateTime.format(FORMAT));
     } else {
-      this.set("input", null);
+      this.attrs.onChangeInput && this.attrs.onChangeInput(null);
     }
   },
 
@@ -59,7 +57,7 @@ export default Ember.Component.extend({
     this.set("basedOnLastPost", this.isBasedOnLastPost);
   },
 
-  @computed("input", "isBasedOnLastPost")
+  @discourseComputed("input", "isBasedOnLastPost")
   duration(input, isBasedOnLastPost) {
     const now = moment();
 
@@ -70,7 +68,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("input", "isBasedOnLastPost")
+  @discourseComputed("input", "isBasedOnLastPost")
   executeAt(input, isBasedOnLastPost) {
     if (isBasedOnLastPost) {
       return moment()
@@ -87,7 +85,7 @@ export default Ember.Component.extend({
     if (this.label) this.set("displayLabel", I18n.t(this.label));
   },
 
-  @computed(
+  @discourseComputed(
     "statusType",
     "input",
     "isCustom",
@@ -107,21 +105,21 @@ export default Ember.Component.extend({
   ) {
     if (!statusType || willCloseImmediately) return false;
 
-    if (
-      statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
-      Ember.isEmpty(categoryId)
-    ) {
+    if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && isEmpty(categoryId)) {
       return false;
     }
 
     if (isCustom) {
-      return date || time;
+      if (date) {
+        return moment(`${date}${time ? " " + time : ""}`).isAfter(moment());
+      }
+      return time;
     } else {
       return input;
     }
   },
 
-  @computed("isBasedOnLastPost", "input", "lastPostedAt")
+  @discourseComputed("isBasedOnLastPost", "input", "lastPostedAt")
   willCloseImmediately(isBasedOnLastPost, input, lastPostedAt) {
     if (isBasedOnLastPost && input) {
       let closeDate = moment(lastPostedAt);
@@ -130,7 +128,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("isBasedOnLastPost", "lastPostedAt")
+  @discourseComputed("isBasedOnLastPost", "lastPostedAt")
   willCloseI18n(isBasedOnLastPost, lastPostedAt) {
     if (isBasedOnLastPost) {
       const diff = Math.round(

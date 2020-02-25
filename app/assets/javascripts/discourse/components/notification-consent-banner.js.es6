@@ -1,13 +1,11 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
-
+import discourseComputed from "discourse-common/utils/decorators";
 import { keyValueStore as pushNotificationKeyValueStore } from "discourse/lib/push-notifications";
-
-import { default as DesktopNotificationConfig } from "discourse/components/desktop-notification-config";
+import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
 
 const userDismissedPromptKey = "dismissed-prompt";
 
 export default DesktopNotificationConfig.extend({
-  @computed
+  @discourseComputed
   bannerDismissed: {
     set(value) {
       pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
@@ -18,7 +16,7 @@ export default DesktopNotificationConfig.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "isNotSupported",
     "isEnabled",
     "bannerDismissed",

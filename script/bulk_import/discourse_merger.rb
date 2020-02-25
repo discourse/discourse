@@ -148,7 +148,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     [
       UserEmail, UserStat, UserOption, UserProfile,
-      UserVisit, UserSearchData, GivenDailyLike, UserSecondFactor, UserOpenId
+      UserVisit, UserSearchData, GivenDailyLike, UserSecondFactor
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
     end
@@ -511,7 +511,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def process_post_reply(post_reply)
-    post_reply['reply_id'] = post_id_from_imported_id(post_reply['reply_id']) if post_reply['reply_id']
+    post_reply['reply_post_id'] = post_id_from_imported_id(post_reply['reply_post_id']) if post_reply['reply_post_id']
     post_reply
   end
 

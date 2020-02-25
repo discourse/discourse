@@ -1,5 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
-export default Discourse.Route.extend({
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   model() {
     return ajax("/about.json").then(result => {
       let activeAdmins = [];
@@ -16,6 +18,14 @@ export default Discourse.Route.extend({
       });
       result.about.admins = activeAdmins;
       result.about.moderators = activeModerators;
+
+      const { category_moderators: categoryModerators } = result.about;
+      if (categoryModerators && categoryModerators.length) {
+        categoryModerators.forEach((obj, index) => {
+          const category = this.site.categories.findBy("id", obj.category_id);
+          result.about.category_moderators[index].category = category;
+        });
+      }
       return result.about;
     });
   },

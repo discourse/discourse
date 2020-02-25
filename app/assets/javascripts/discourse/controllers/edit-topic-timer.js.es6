@@ -1,7 +1,10 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { setProperties } from "@ember/object";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const OPEN_STATUS_TYPE = "open";
@@ -10,11 +13,11 @@ export const DELETE_STATUS_TYPE = "delete";
 export const REMINDER_TYPE = "reminder";
 export const BUMP_TYPE = "bump";
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Controller.extend(ModalFunctionality, {
   loading: false,
   isPublic: "true",
 
-  @computed("model.closed")
+  @discourseComputed("model.closed")
   publicTimerTypes(closed) {
     let types = [
       {
@@ -47,17 +50,21 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return types;
   },
 
-  @computed()
+  @discourseComputed()
   privateTimerTypes() {
     return [{ id: REMINDER_TYPE, name: I18n.t("topic.reminder.title") }];
   },
 
-  @computed("isPublic", "publicTimerTypes", "privateTimerTypes")
+  @discourseComputed("isPublic", "publicTimerTypes", "privateTimerTypes")
   selections(isPublic, publicTimerTypes, privateTimerTypes) {
     return "true" === isPublic ? publicTimerTypes : privateTimerTypes;
   },
 
-  @computed("isPublic", "model.topic_timer", "model.private_topic_timer")
+  @discourseComputed(
+    "isPublic",
+    "model.topic_timer",
+    "model.private_topic_timer"
+  )
   topicTimer(isPublic, publicTopicTimer, privateTopicTimer) {
     return "true" === isPublic ? publicTopicTimer : privateTopicTimer;
   },
@@ -76,7 +83,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (time) {
           this.send("closeModal");
 
-          Ember.setProperties(this.topicTimer, {
+          setProperties(this.topicTimer, {
             execute_at: result.execute_at,
             duration: result.duration,
             category_id: result.category_id
@@ -86,20 +93,26 @@ export default Ember.Controller.extend(ModalFunctionality, {
         } else {
           const topicTimer =
             this.isPublic === "true" ? "topic_timer" : "private_topic_timer";
-          this.set(`model.${topicTimer}`, Ember.Object.create({}));
+          this.set(`model.${topicTimer}`, EmberObject.create({}));
 
           this.setProperties({
             selection: null
           });
         }
       })
-      .catch(error => {
-        popupAjaxError(error);
-      })
+      .catch(popupAjaxError)
       .finally(() => this.set("loading", false));
   },
 
   actions: {
+    onChangeStatusType(value) {
+      this.set("topicTimer.status_type", value);
+    },
+
+    onChangeUpdateTime(value) {
+      this.set("topicTimer.updateTime", value);
+    },
+
     saveTimer() {
       if (!this.get("topicTimer.updateTime")) {
         this.flash(

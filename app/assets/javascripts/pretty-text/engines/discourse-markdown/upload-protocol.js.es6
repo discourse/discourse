@@ -20,15 +20,12 @@ function rule(state) {
       addImage(uploads, blockToken);
     }
 
-    if (!blockToken.children) {
-      continue;
-    }
+    if (!blockToken.children) continue;
 
     for (let j = 0; j < blockToken.children.length; j++) {
       let token = blockToken.children[j];
-      if (token.tag === "img" || token.tag === "a") {
-        addImage(uploads, token);
-      }
+
+      if (token.tag === "img" || token.tag === "a") addImage(uploads, token);
     }
   }
 
@@ -47,9 +44,16 @@ function rule(state) {
             token.attrs[srcIndex][1] = mapped.url;
             token.attrs.push(["data-base62-sha1", mapped.base62_sha1]);
           } else {
-            token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
-              "/images/transparent.png"
-            );
+            // no point putting a transparent .png for audio/video
+            if (token.content.match(/\|video|\|audio/)) {
+              token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
+                "/404"
+              );
+            } else {
+              token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
+                "/images/transparent.png"
+              );
+            }
 
             token.attrs.push(["data-orig-src", origSrc]);
           }

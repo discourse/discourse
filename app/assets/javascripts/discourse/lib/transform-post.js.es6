@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
 
 const _additionalAttributes = [];
@@ -34,6 +35,8 @@ export function transformBasicPost(post) {
     username: post.username,
     avatar_template: post.avatar_template,
     bookmarked: post.bookmarked,
+    bookmarkedWithReminder: post.bookmarked_with_reminder,
+    bookmarkReminderAt: post.bookmark_reminder_at,
     yours: post.yours,
     shareUrl: post.get("shareUrl"),
     staff: post.staff,
@@ -48,7 +51,7 @@ export function transformBasicPost(post) {
     showFlagDelete: false,
     canRecover: post.can_recover,
     canEdit: post.can_edit,
-    canFlag: !Ember.isEmpty(post.get("flagsAvailable")),
+    canFlag: !isEmpty(post.get("flagsAvailable")),
     canReviewTopic: false,
     reviewableId: post.reviewable_id,
     reviewableScoreCount: post.reviewable_score_count,
@@ -71,7 +74,8 @@ export function transformBasicPost(post) {
     expandablePost: false,
     replyCount: post.reply_count,
     locked: post.locked,
-    userCustomFields: post.user_custom_fields
+    userCustomFields: post.user_custom_fields,
+    readCount: post.readers_count
   };
 
   _additionalAttributes.forEach(a => (postAtts[a] = post[a]));
@@ -237,7 +241,8 @@ export default function transformPost(
     postAtts.showFlagDelete =
       !postAtts.canDelete &&
       postAtts.yours &&
-      (currentUser && !currentUser.staff);
+      currentUser &&
+      !currentUser.staff;
   } else {
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;
     postAtts.canDelete =

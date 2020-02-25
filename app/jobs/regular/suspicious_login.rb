@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class SuspiciousLogin < Jobs::Base
+  class SuspiciousLogin < ::Jobs::Base
 
     def execute(args)
       if UserAuthToken.is_suspicious(args[:user_id], args[:client_ip])
@@ -12,7 +12,7 @@ module Jobs
                           user_agent: args[:user_agent],
                           client_ip: args[:client_ip])
 
-        Jobs.enqueue(:critical_user_email,
+        ::Jobs.enqueue(:critical_user_email,
                      type: :suspicious_login,
                      user_id: args[:user_id],
                      client_ip: args[:client_ip],

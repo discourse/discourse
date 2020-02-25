@@ -28,6 +28,7 @@ lt:
   posts: "žinutės"
   loading: "Kraunama"
   powered_by_html: 'Sukurta <a href="https://www.discourse.org">Discourse</a>, geriausias žiūrimumas su JavaScript igalinimu'
+  sign_up: "Registruotis"
   log_in: "Prisijungti"
   submit: "Pateikti"
   purge_reason: "Automatinis ištrynimas kaip atsisakyta, deaktyvuota sąskaita"
@@ -104,6 +105,7 @@ lt:
     loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
+    created: "Sukurta"
   no_mentions_allowed: "Apgailestaujame, tačiau jūs negalite minėti kitų vartotojų."
   too_many_mentions:
     one: "Apgailestaujame, tačiau jūs galite paminėti tik vieną vartotoją įraše"
@@ -453,6 +455,7 @@ lt:
         day: Diena
     post_edits:
       labels:
+        edited_at: Data
         post: Įrašai
         editor: Redaktorius
         author: Autorius
@@ -482,6 +485,8 @@ lt:
       xaxis: "Diena"
     new_contributors:
       xaxis: "Diena"
+    trust_level_growth:
+      yaxis: "Diena"
     consolidated_page_views:
       yaxis: "Diena"
       labels:
@@ -628,6 +633,7 @@ lt:
   login:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
+    omniauth_confirm_button: "Tęsti"
     second_factor_title: "Dviejų veiksmų autentifikavimas"
   admin:
     email:
@@ -866,6 +872,7 @@ lt:
   csv_export:
     boolean_yes: "Taip"
     boolean_no: "Ne"
+    rate_limit_error: "Įrašai gali būti atsiunčiami vieną kartą per dieną, prašome pakartoti operaciją rytoj."
   static_topic_first_reply: |
     Redaguoti pirmutinį įrašą kad pakeisti turinį %{page_name} puslapio.
   guidelines_topic:
@@ -957,7 +964,6 @@ lt:
       name: Gerbiamas
     out_of_love:
       name: Nebeliko meilės
-      description: Pamėgai 50 įrašų per dieną
     crazy_in_love:
       name: Įsimylėjas
     first_emoji:

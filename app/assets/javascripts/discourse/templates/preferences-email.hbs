@@ -49,7 +49,12 @@
 
       <div class="control-group">
         <div class="controls">
-          {{#d-button class="btn btn-primary" action=(action "changeEmail") disabled=saveDisabled}}
+          {{#d-button
+            class="btn-primary"
+            action=(action "changeEmail")
+            type="submit"
+            disabled=saveDisabled
+          }}
             {{saveButtonText}}
           {{/d-button}}
         </div>

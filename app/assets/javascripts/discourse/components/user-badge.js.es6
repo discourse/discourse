@@ -1,14 +1,15 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "span",
 
-  @computed("count")
+  @discourseComputed("count")
   showGrantCount(count) {
     return count && count > 1;
   },
 
-  @computed("badge", "user")
+  @discourseComputed("badge", "user")
   badgeUrl() {
     // NOTE: I tried using a link-to helper here but the queryParams mean it fails
     var username = this.get("user.username_lower") || "";

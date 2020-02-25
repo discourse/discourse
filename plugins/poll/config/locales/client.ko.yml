@@ -30,7 +30,8 @@ ko:
         label: "결과 보기"
       hide-results:
         title: "투표로 돌아가기"
-        label: "결과 숨기기"
+      export-results:
+        label: "내보내기"
       open:
         title: "투표 열기"
         label: "열기"
@@ -46,7 +47,6 @@ ko:
         title: 투표 만들기
         insert: 투표 삽입하기
         help:
-          options_count: 최소 2가지 이상의 선택지를 입력하세요
           invalid_values: 최소값은 최대값보다는 작아야 합니다.
         poll_type:
           label: 유형

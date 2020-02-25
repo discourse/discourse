@@ -21,8 +21,6 @@ module ImportScripts; end
 
 class ImportScripts::Base
 
-  include ActionView::Helpers::NumberHelper
-
   def initialize
     preload_i18n
 
@@ -127,14 +125,21 @@ class ImportScripts::Base
     raise NotImplementedError
   end
 
-  %i{ post_id_from_imported_post_id
-      topic_lookup_from_imported_post_id
-      group_id_from_imported_group_id
-      find_group_by_import_id
-      user_id_from_imported_user_id
-      find_user_by_import_id
-      category_id_from_imported_category_id
-      add_group add_user add_category add_topic add_post
+  %i{
+    add_category
+    add_group
+    add_post
+    add_topic
+    add_user
+    category_id_from_imported_category_id
+    find_group_by_import_id
+    find_user_by_import_id
+    group_id_from_imported_group_id
+    post_already_imported?
+    post_id_from_imported_post_id
+    topic_lookup_from_imported_post_id
+    user_already_imported?
+    user_id_from_imported_user_id
   }.each do |method_name|
     delegate method_name, to: :@lookup
   end
@@ -224,7 +229,7 @@ class ImportScripts::Base
 
     if existing == import_ids.length
       puts "Skipping #{import_ids.length} already imported #{type}"
-      return true
+      true
     end
   ensure
     connection.exec('DROP TABLE import_ids') unless connection.nil?
@@ -301,16 +306,8 @@ class ImportScripts::Base
     original_name = opts[:name]
     original_email = opts[:email] = opts[:email].downcase
 
-    # Allow the || operations to work with empty strings ''
-    opts[:username] = nil if opts[:username].blank?
-
-    if opts[:username].blank? ||
-      opts[:username].length < User.username_length.begin ||
-      opts[:username].length > User.username_length.end ||
-      !User.username_available?(opts[:username]) ||
-      !UsernameValidator.new(opts[:username]).valid_format?
-
-      opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
+    if !UsernameValidator.new(opts[:username]).valid_format? || !User.username_available?(opts[:username])
+      opts[:username] = UserNameSuggester.suggest(opts[:username].presence || opts[:name].presence || opts[:email])
     end
 
     unless opts[:email][EmailValidator.email_regex]
@@ -442,8 +439,13 @@ class ImportScripts::Base
   end
 
   def create_category(opts, import_id)
-    existing = Category.where("LOWER(name) = ?", opts[:name].downcase).first
-    return existing if existing && existing.parent_category.try(:id) == opts[:parent_category_id]
+    existing =
+      Category
+        .where(parent_category_id: opts[:parent_category_id])
+        .where("LOWER(name) = ?", opts[:name].downcase.strip)
+        .first
+
+    return existing if existing
 
     post_create_action = opts.delete(:post_create_action)
 

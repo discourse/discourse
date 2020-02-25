@@ -7,4 +7,7 @@
   </div>
 {{/each}}
 
-<button class='btn' disabled={{disabled}} {{action "changeNotificationLevel"}}>{{i18n 'topics.bulk.notification_level'}}</button>
+{{d-button
+  disabled=disabled
+  action=(action "changeNotificationLevel")
+  label="topics.bulk.notification_level"}}

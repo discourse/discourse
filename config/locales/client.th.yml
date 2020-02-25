@@ -116,7 +116,6 @@ th:
       banner:
         enabled: "ทำให้เป็นแบนเนอร์%{when} มันจะปรากฎที่ด้านบนสุดของทุกหน้าจนกว่าจะผู้ใช้งานจะกดลบ"
         disabled: "ลบแบนเนอร์นี้%{when} มันจะไม่ปรากฎที่ด้านบนของหน้าใดๆ"
-    topic_admin_menu: "จัดการกระทู้ "
     emails_are_disabled: "อีเมลขาออกทั้งหมดจะถูกปิดโดยผู้ดูแลระบบ ไม่มีอีเมลแจ้งเตือนใดๆจะถูกส่งออกไป"
     themes:
       default_description: "ค่าเริ่มต้น"
@@ -170,7 +169,7 @@ th:
     every_hour: "ทุกชั่วโมง"
     daily: "ทุกวัน"
     weekly: "รายสัปดาห์"
-    max_of_count: "สูงสุดของ  {{count}}"
+    max_of_count: "สูงสุดของ {{count}}"
     alternation: "หรือ"
     character_count:
       other: "{{count}} ตัวอักษร"
@@ -201,6 +200,7 @@ th:
     bookmarks:
       created: "คุณได้ทำบุ๊คม๊าคโพสแล้ว"
       remove: "ลบบุ๊คม๊าค"
+      save: "บันทึก"
     drafts:
       remove: "ลบ"
       abandon:
@@ -228,8 +228,6 @@ th:
       edit: "แก้ไขป้ายนี้ >>"
     choose_topic:
       none_found: "ไม่พบกระทู้ใดๆ"
-      title:
-        placeholder: "ระบุชื่อกระทู้ที่นี่"
     review:
       delete: "ลบ"
       settings:
@@ -447,6 +445,10 @@ th:
         normal_option: "ปกติ"
       activity_stream: "กิจกรรม"
       preferences: "การตั้งค่า"
+      feature_topic_on_profile:
+        save: "บันทึก"
+        clear:
+          title: "ล้าง"
       expand_profile: "ขยาย"
       bookmarks: "บุ๊คมาร์ค"
       bio: "เกี่ยวกับฉัน"
@@ -502,7 +504,7 @@ th:
       users: "ผู้ใช้"
       muted_users: "ปิดการแจ้งเตือน"
       muted_users_instructions: "ยกเลิกการแจ้งเตือนทุกอย่างกับบัญชีผู้ใช้นี้"
-      muted_topics_link: "แสดงกระทู้ที่ถูกปิดการแจ้งเตือน"
+      tracked_topics_link: "แสดง"
       automatically_unpin_topics: "ยกเลิกกระทู้ปกหมุดอัตโนมัติเมื่อถึงท้ายของหน้า"
       staff_counters:
         flags_given: "ธงที่เป็นประโยชน์"
@@ -540,6 +542,11 @@ th:
       second_factor_backup:
         disable: "ปิดใช้งาน"
         enable: "เปิดใช้งาน"
+      second_factor:
+        name: "ชื่อ"
+        edit: "แก้ไข"
+        security_key:
+          delete: "ลบ"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -561,11 +568,7 @@ th:
         uploaded_avatar: "รูปกำหนดเอง"
         uploaded_avatar_empty: "เพิ่มรูปกำหนดเอง"
         upload_title: "อัปโหลดรูปภาพของคุณ"
-        upload_picture: "อัปโหลดรูปภาพ"
         image_is_not_a_square: "ระวัง: เราได้ตัวรูปภาพบางส่วนของคุณ; ความยาวและความสูงจะไม่เท่ากัน"
-      change_profile_background:
-        title: "พื้นหลังโปรไฟล์"
-        instructions: "พื้นหลังโปรไฟล์จะถูกจัดให้อยู่กึ่งกลางและมีค่าปริยายของความกว้างเท่ากับ 850 พิกเซล"
       change_card_background:
         title: "พื้นหลังผู้ใช้"
         instructions: "รูปพื้นหลังจะถูกจัดกลางและมีความกว้างมาตราฐานที่ 590px"
@@ -580,6 +583,7 @@ th:
           other: "เราจะอีเมลหาคุณเฉพาะสิ่งที่คุณไม่ได้เห็นในช่วง {{count}} นาที"
       associated_accounts:
         revoke: "เอาออก"
+        cancel: "ยกเลิก"
       name:
         title: "ชื่อ"
         instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)"
@@ -663,7 +667,6 @@ th:
         search: "พิมพ์เพื่อค้นหาการเชิญ..."
         title: "เชิญชวน"
         user: "เชิญชวนผู้ใช้"
-        sent: "ส่ง"
         truncated:
           other: "กำลังแสดงคำเชิญ {{count}} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"
@@ -739,6 +742,9 @@ th:
       title:
         title: "ชื่อเรื่อง"
         none: "(ไม่มี)"
+      primary_group:
+        title: "กลุ่มหลัก"
+        none: "(ไม่มี)"
       filters:
         all: "ทั้งหมด"
       stream:
@@ -796,7 +802,7 @@ th:
       hidden_for_session: "โอเค ฉันจะถามคุณอีกทีพรุ่งนี้ คุณสามารถใช้เมนู เข้าสู่ระบบ เพื่อสร้างบัญชีได้เหมือนกันนะ"
     summary:
       enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
-      description: "ตอบทั้งหมด  <b>{{replyCount}}</b> ครั้ง"
+      description: "ตอบทั้งหมด <b>{{replyCount}}</b> ครั้ง"
       description_time: "ตอบทั้งหมด <b>{{replyCount}}</b> ครั้งโดยมีเวลาการอ่านประมาณ <b>{{readingTime}} นาที</b>."
       enable: "สรุปกระทู้นี้"
       disable: "แสดงโพสต์ทั้งหมด"
@@ -826,8 +832,6 @@ th:
       reset: "รีเซ็ทรหัสผ่าน"
       complete_username: "ถ้าบัญชีนี้ตรงกับชื่อผู้ใช้ <b>%{username}</b> คุณควรจะได้รับอีเมลเร็วๆนี้ ในอีเมลจะเป็นขั้นตอนการรีเซตรหัสผ่าน"
       complete_email: "ถ้าบัญชีตรงกับ <b>%{email}</b> คุณจะได้รับอีเมลสำหรับขั้นตอนในการรีเซ็ตรหัสผ่านในเร็วๆนี้"
-      complete_username_found: "เราพบบัญชีที่ใช้ชื่อผู้ใช้ <b>%{username}</b> คุณจะได้รับอีเมลวิธีการรีเซ็ตรหัสผ่านในเร็วๆนี้"
-      complete_email_found: "เราพบบัญชีที่ใช้ชื่อผู้ใช้ <b>%{email}</b> คุณจะได้รับอีเมลวิธีการรีเซ็ตรหัสผ่านในเร็วๆนี้"
       complete_username_not_found: "ไม่มีบัญชีตรงกับชื่อผู้ใช้ <b>%{username}</b>"
       complete_email_not_found: "ไม่มีบัญชีตรงกับอีเมล <b>%{email}</b>"
       button_ok: "ตกลง"
@@ -850,7 +854,7 @@ th:
       awaiting_activation: "บัญชีของคุณกำลังรอการเปิดใช้งาน ใช้ลิงค์ลืมรหัสผ่านถ้าค้องการส่งอีเมลยืนยันตัวตนอีกครั้ง"
       awaiting_approval: "บัญชีของคุณยังไม่ได้รับการยืนยันโดยทีมงาน คุณจะได้รับอีเมลแจ้งเมื่อคุณได้รับการยืนยันแล้ว"
       requires_invite: "ขออภัย, สามารถเข้าถึงได้เฉพาะผู้ที่ได้รับเชิญเท่านั้น"
-      not_activated: "คุณไม่สามารถเข้าสู่ระบบได้ เราได้ส่งอีเมลยืนยันตัวตนไปหาคุณที่  <b>{{sentTo}}</b> กรุณาทำตามขั้นตอนในอีเมลเพื่อยืนยันตัวตนของคุณ"
+      not_activated: "คุณไม่สามารถเข้าสู่ระบบได้ เราได้ส่งอีเมลยืนยันตัวตนไปหาคุณที่ <b>{{sentTo}}</b> กรุณาทำตามขั้นตอนในอีเมลเพื่อยืนยันตัวตนของคุณ"
       not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยไอพีนี้ได้"
       admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
       resend_activation_email: "คลิกเพื่อส่งอีเมลยืนยันตัวตนอีกครั้ง"
@@ -861,20 +865,15 @@ th:
       google_oauth2:
         name: "กูเกิ้ล"
         title: "ด้วย Google"
-        message: "กำลังตรวจสอบกับ Google (ต้องไม่ปิดกั้นป๊อปอัพ)"
       twitter:
         name: "ทวิตเตอร์"
         title: "ด้วย Twitter"
-        message: "กำลังตรวจสอบกับ Twitter (ต้องไม่ปิดกั้นป๊อปอัพ)"
       instagram:
         title: "ด้วย Instragram"
-        message: "เข้าใช้งานด้วย Instragram (โปรดแน่ใจว่าไม่ได้เปิดใช้งานการป้องกัน pop up)"
       facebook:
         title: "ด้วย Facebook"
-        message: "กำลังตรวจสอบกับ Facebook (ต้องไม่ปิดกั้นป๊อปอัพ)"
       github:
         title: "ด้วย GitHub"
-        message: "กำลังตรวจสอบกับ Github (ต้องไม่ปิดกั้นป๊อปอัพ)"
     invites:
       name_label: "ชื่อ"
       password_label: "ตั้งรหัสผ่าน"
@@ -882,13 +881,15 @@ th:
       apple_international: "แอปเปิ้ล/นานาชาติ"
       google: "กูเกิ้ล"
       twitter: "ทวิตเตอร์"
-      emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
     conditional_loading_section:
       loading: กำลังโหลด...
+    date_time_picker:
+      from: จาก
+      to: ถึง
     emoji_picker:
       flags: ธง
     composer:
@@ -907,7 +908,6 @@ th:
         title_missing: "ต้องมีชื่อเรื่อง"
         title_too_short: "ชื่อเรื่องต้องมีอย่างน้อย {{min}} ตัวอักษร"
         title_too_long: "ชื่อเรื่องต้องไม่ยาวเกิน {{max}} ตัวอักษร"
-        post_missing: "โพสไม่สามารถว่างได้"
         post_length: "โพสต้องมีอย่างน้อย {{min}} ตัวอักษร"
         category_missing: "คุณต้องเลือกหมวดหมู่"
       save_edit: "บันทึกการแก้ไข"
@@ -919,14 +919,12 @@ th:
       create_pm: "ข้อความ"
       title: "หรือกด Ctrl+Enter"
       users_placeholder: "เพิ่มผู้ใช้"
-      title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1  ประโยค"
+      title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข?"
-      show_edit_reason: "(เพิ่มสาเหตุที่แก้ไข)"
       reply_placeholder: "พิมพ์ที่นี่. ใช้ Markdown, BBCode หรือ HTML เพื่อจัดรูปแบบ สามารถลากหรือวางรูปภาพได้"
       view_new_post: "ดูโพสต์ใหม่ของคุณ"
       saving: "กำลังบันทึก"
       saved: "บันทึกแล้ว!"
-      saved_draft: "มีร่างโพส เลือกเพื่อทำต่อ"
       uploading: "กำลังอัปโหลด..."
       show_preview: "แสดงตัวอย่าง &raquo;"
       hide_preview: "&raquo; ซ่อนตัวอย่าง"
@@ -961,7 +959,6 @@ th:
     notifications:
       title: "การแจ้งเตือนการพูดถึง,การตอบกลับไปยังโพส กระทู้ หรือข้อความส่วนตัว และอื่นๆของ @name "
       none: "ไม่สามารถโหลดการแจ้งเตือนในขณะนี้"
-      more: "ดูการแจ้งเตือนก่อนหน้านี้"
       popup:
         mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
@@ -984,7 +981,6 @@ th:
       hint_for_supported_browsers: "คุณยังสามารถลากหรือวางไฟล์ในช่องแก้ไขโดยตรงได้ด้วย"
       uploading: "กำลังอัปโหลด"
       select_file: "เลือกไฟล์"
-      image_link: "ลิงค์รูปของคุณจะชี้ไปที่"
     search:
       sort_by: "เรียงโดย"
       relevance: "เกี่ยวข้อง"
@@ -1129,6 +1125,7 @@ th:
         muted:
           title: "ปิดการแจ้งเตือน"
       actions:
+        title: "การกระทำ"
         recover: "เลิกลบกระทู้"
         delete: "ลบกระทู้"
         open: "เปิดกระทู้"
@@ -1234,6 +1231,8 @@ th:
         image_upload_not_allowed_for_new_user: "ขออภัย, ผู้ใช้ใหม่ไม่สามารถอัพโหลดรูปภาพได้"
         attachment_upload_not_allowed_for_new_user: "ขออภัย, ผู้ใช้ใหม่ไม่สามารถอัพโหลดไฟล์แนบได้"
         attachment_download_requires_login: "ขออภัย, คุณต้องเข้าสู่ระบบเพื่อดาวห์โหลดไฟล์แนบ"
+      abandon_edit:
+        no_value: "ไม่ เก็บไว้"
       abandon:
         confirm: "คุณต้องการทิ้งโพสของคุณจริงๆเหรอ?"
         no_value: "ไม่ เก็บไว้"
@@ -1264,6 +1263,8 @@ th:
           bookmark: "ย้อนคืนการบุ๊คมาร์ค"
         by_you:
           bookmark: "บุ๊คมาร์คโพสนี้"
+      bookmarks:
+        name: "ชื่อ"
     category:
       edit: "แก้ไข"
       settings: "การตั้งค่า"
@@ -1470,6 +1471,7 @@ th:
       selector_all_tags: "แท็กทั้งหมด"
       changed: "เปลี่ยนแท็ก:"
       tags: "ป้าย"
+      add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       rename_tag: "เปลี่ยนชื่อแท็ก"
       rename_instructions: "เลือกชื่อใหม่สำหรับแท็ก:"
@@ -1551,8 +1553,6 @@ th:
           view_table: "ตาราง"
           view_graph: "กราฟ"
           refresh_report: "โหลดรายงานใหม่"
-          start_date: "วันที่เริ่ม"
-          end_date: "วันที่จบ"
           groups: "กลุ่มทั้งหมด"
           filters:
             group:
@@ -1571,11 +1571,8 @@ th:
             visibility_levels:
               title: "ใครสามารถเห็นกลุ่มนี้?"
               public: "ทุกคน"
-              members: "เจ้าของกลุ่ม, สมาชิก และ ผู้ดูแลระบบ"
               staff: "เจ้าของกลุ่ม และผู้ดูแล"
-              owners: "เจ้าของกลุ่ม และผู้ดูแลระบบ"
           membership:
-            trust_level: ระดับความไว้ใจ
             trust_levels_title: "ระดับความไว้ใจจะถูกให้ไปยังผู้ใช้โดยอัตโนมัติเมื่อพวกเขาเพิ่ม:"
             trust_levels_none: "ไม่มี"
         name_placeholder: "ชื่อกลุ่ม, ไม่มีเว้นวรรค, ใช้กฎเดียวกับชื่อผู้ใช้"
@@ -1596,8 +1593,11 @@ th:
       api:
         user: "ผู้ใช้"
         title: "API"
-        key: "API Key"
+        created: สร้างเมื่อ
         revoke: "เอาออก"
+        show_details: รายละเอียด
+        description: รายละเอียด
+        save: บันทึก
       web_hooks:
         save: "บันทึก"
         destroy: "ลบ"
@@ -1643,6 +1643,7 @@ th:
         new: "ใหม่"
         delete: "ลบ"
         email_templates:
+          title: "อีเมล"
           subject: "หัวข้อ"
           revert: "ย้อนกลับการแก้ไข"
           revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
@@ -1655,6 +1656,8 @@ th:
           upload: "อัปโหลด"
           installed: "ติดตั้งแล้ว"
           about_theme: "เกี่ยวกับ"
+          enable: "เปิดใช้งาน"
+          disable: "ปิดใช้งาน"
           add: "เพิ่ม"
           scss:
             text: "CSS"
@@ -1666,6 +1669,8 @@ th:
             text: "Embedded CSS"
           head_tag:
             text: "</head>"
+        email_style:
+          css: "CSS"
       email:
         title: "อีเมล"
         settings: "การตั้งค่า"
@@ -1730,11 +1735,11 @@ th:
             header: "Header"
       watched_words:
         clear_filter: "ล้าง"
+        clear_all: ล้างทั้งหมด
         actions:
           flag: "ธง"
         form:
           add: "เพิ่ม"
-          upload: "อัปโหลด"
       users:
         title: "ผู้ใช้"
         last_emailed: "อีเมลล่าสุด"
@@ -1855,7 +1860,6 @@ th:
       site_text:
         description: "คุณสามารถปรับแต่งข้อความบนฟอรั่มของคุณได้คุณอย่าง เริ่มได้โดยการค้นหาข้างล่างนี่"
         search: "ค้นหาข้อความที่คุณต้องการแก้ไข"
-        title: "เนื้อความของข้อความ"
         edit: "แก้ไข"
         revert: "ย้อนกลับการแก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
@@ -1899,6 +1903,8 @@ th:
           search: "ค้นหา"
           groups: "กลุ่ม"
           dashboard: "แดชบอร์ด"
+        default_categories:
+          modal_yes: "ใช่"
       badges:
         new: ใหม่
         name: ชื่อ
@@ -1940,7 +1946,6 @@ th:
         category: "โพสไปยังหมวดหมู่"
         add_host: "เพิ่มโฮส"
         settings: "การตั้งการการฝั่ง"
-        feed_settings: "การตั้งค่าฟีด"
         save: "บันทึกการตั้งค่าการฝั่ง"
       permalink:
         title: "ลิงค์ถาวร"

@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require_dependency 'jobs/scheduled/ignored_users_summary'
-
 describe Jobs::IgnoredUsersSummary do
   before do
     SiteSetting.ignored_users_count_message_threshold = 1

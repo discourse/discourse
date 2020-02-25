@@ -1,9 +1,17 @@
+import { next } from "@ember/runloop";
 import MountWidget from "discourse/components/mount-widget";
 import Docking from "discourse/mixins/docking";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 
-const headerPadding = () => parseInt($("#main-outlet").css("padding-top")) + 3;
+const headerPadding = () => {
+  let topPadding = parseInt($("#main-outlet").css("padding-top"), 10) + 3;
+  const iPadNavHeight = $(".footer-nav-ipad .footer-nav").height();
+  if (iPadNavHeight) {
+    topPadding += iPadNavHeight;
+  }
+  return topPadding;
+};
 
 export default MountWidget.extend(Docking, {
   adminTools: optionalService(),
@@ -51,9 +59,10 @@ export default MountWidget.extend(Docking, {
     const mainOffset = $("#main").offset();
     const offsetTop = mainOffset ? mainOffset.top : 0;
     const topicTop = $(".container.posts").offset().top - offsetTop;
-    const topicBottom = $("#topic-bottom").offset().top;
-    const $timeline = this.$(".timeline-container");
-    const timelineHeight = $timeline.height() || 400;
+    const topicBottom =
+      $("#topic-bottom").offset().top - $("#main-outlet").offset().top;
+    const timeline = this.element.querySelector(".timeline-container");
+    const timelineHeight = (timeline && timeline.offsetHeight) || 400;
     const footerHeight = $(".timeline-footer-controls").outerHeight(true) || 0;
 
     const prev = this.dockAt;
@@ -86,12 +95,28 @@ export default MountWidget.extend(Docking, {
     this._super(...arguments);
 
     if (this.fullscreen && !this.addShowClass) {
-      Ember.run.next(() => {
+      next(() => {
         this.set("addShowClass", true);
         this.queueRerender();
       });
     }
 
     this.dispatch("topic:current-post-scrolled", "timeline-scrollarea");
+    this.dispatch("topic:toggle-actions", "topic-admin-menu-button");
+    if (!this.site.mobileView) {
+      this.appEvents.on("composer:opened", this, this.queueRerender);
+      this.appEvents.on("composer:resized", this, this.queueRerender);
+      this.appEvents.on("composer:closed", this, this.queueRerender);
+    }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    if (!this.site.mobileView) {
+      this.appEvents.off("composer:opened", this, this.queueRerender);
+      this.appEvents.off("composer:resized", this, this.queueRerender);
+      this.appEvents.off("composer:closed", this, this.queueRerender);
+    }
   }
 });

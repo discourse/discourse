@@ -1,12 +1,19 @@
+import { alias } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { exportUserArchive } from "discourse/lib/export-csv";
+import { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
-  user: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
+  router: service(),
+  user: inject(),
   userActionType: null,
 
-  canDownloadPosts: Ember.computed.alias("user.viewingSelf"),
+  canDownloadPosts: alias("user.viewingSelf"),
 
+  @observes("userActionType", "model.stream.itemsLoaded")
   _showFooter: function() {
     var showFooter;
     if (this.userActionType) {
@@ -20,7 +27,7 @@ export default Ember.Controller.extend({
         this.get("model.stream.itemsLoaded");
     }
     this.set("application.showFooter", showFooter);
-  }.observes("userActionType", "model.stream.itemsLoaded"),
+  },
 
   actions: {
     exportUserArchive() {

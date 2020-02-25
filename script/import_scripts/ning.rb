@@ -19,7 +19,7 @@ class ImportScripts::Ning < ImportScripts::Base
     @discussions_json = load_ning_json("ning-discussions-local.json")
 
     # An example of a custom category from Ning:
-    @blogs_json       = load_ning_json("ning-blogs-local.json")
+    @blogs_json = load_ning_json("ning-blogs-local.json")
 
     @photos_json      = load_ning_json("ning-photos-local.json")
     @pages_json       = load_ning_json("ning-pages-local.json")

@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import componentTest from "helpers/component-test";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import formatTextWithSelection from "helpers/d-editor-helper";
@@ -198,62 +199,6 @@ testCase(`italic with a multiline selection`, async function(assert, textarea) {
   assert.equal(this.value, `hello\n\nworld\n\ntest.`);
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 12);
-});
-
-testCase("link modal (cancel)", async function(assert) {
-  assert.equal(find(".insert-link.hidden").length, 1);
-
-  await click("button.link");
-  assert.equal(find(".insert-link.hidden").length, 0);
-
-  await click(".insert-link button.btn-danger");
-  assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.value, "hello world.");
-});
-
-testCase("link modal (simple link)", async function(assert, textarea) {
-  await click("button.link");
-
-  const url = "http://eviltrout.com";
-
-  await fillIn(".insert-link input.link-url", url);
-  await click(".insert-link button.btn-primary");
-  assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.value, `hello world.[${url}](${url})`);
-  assert.equal(textarea.selectionStart, 13);
-  assert.equal(textarea.selectionEnd, 13 + url.length);
-});
-
-testCase("link modal auto http addition", async function(assert) {
-  await click("button.link");
-  await fillIn(".insert-link input.link-url", "sam.com");
-  await click(".insert-link button.btn-primary");
-  assert.equal(this.value, `hello world.[sam.com](http://sam.com)`);
-});
-
-testCase("link modal (simple link) with selected text", async function(
-  assert,
-  textarea
-) {
-  textarea.selectionStart = 0;
-  textarea.selectionEnd = 12;
-
-  await click("button.link");
-  assert.equal(find("input.link-text")[0].value, "hello world.");
-
-  await fillIn(".insert-link input.link-url", "http://eviltrout.com");
-  await click(".insert-link button.btn-primary");
-  assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.value, "[hello world.](http://eviltrout.com)");
-});
-
-testCase("link modal (link with description)", async function(assert) {
-  await click("button.link");
-  await fillIn(".insert-link input.link-url", "http://eviltrout.com");
-  await fillIn(".insert-link input.link-text", "evil trout");
-  await click(".insert-link button.btn-primary");
-  assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.value, "hello world.[evil trout](http://eviltrout.com)");
 });
 
 componentTest("advanced code", {
@@ -673,7 +618,6 @@ testCase(`doesn't jump to bottom with long text`, async function(
 });
 
 componentTest("emoji", {
-  skip: true,
   template: "{{d-editor value=value}}",
   beforeEach() {
     // Test adding a custom button
@@ -696,7 +640,7 @@ componentTest("emoji", {
     await click(
       '.emoji-picker .section[data-section="smileys_&_emotion"] button.emoji[title="grinning"]'
     );
-    assert.equal(this.value, "hello world.:grinning:");
+    assert.equal(this.value, "hello world. :grinning:");
   }
 });
 
@@ -704,7 +648,7 @@ testCase("replace-text event by default", async function(assert) {
   this.set("value", "red green blue");
 
   await this.container
-    .lookup("app-events:main")
+    .lookup("service:app-events")
     .trigger("composer:replace-text", "green", "yellow");
 
   assert.equal(this.value, "red green blue");
@@ -714,7 +658,7 @@ composerTestCase("replace-text event for composer", async function(assert) {
   this.set("value", "red green blue");
 
   await this.container
-    .lookup("app-events:main")
+    .lookup("service:app-events")
     .trigger("composer:replace-text", "green", "yellow");
 
   assert.equal(this.value, "red yellow blue");
@@ -800,10 +744,10 @@ composerTestCase("replace-text event for composer", async function(assert) {
       setTextareaSelection(textarea, start, start + len);
 
       this.container
-        .lookup("app-events:main")
+        .lookup("service:app-events")
         .trigger("composer:replace-text", "green", "yellow", { forceFocus: true });
 
-      Ember.run.next(() => {
+      next(() => {
         let expect = formatTextWithSelection(AFTER, CASE.after);
         let actual = formatTextWithSelection(
           this.value,

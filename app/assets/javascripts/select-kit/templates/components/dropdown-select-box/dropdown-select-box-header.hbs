@@ -1,7 +1,8 @@
 {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
 
-{{#if options.showFullTitle}}
-  <span class="d-button-label selected-name">
-    {{{label}}}
-  </span>
-{{/if}}
+{{component selectKit.options.selectedNameComponent
+  tabindex=tabindex
+  item=selectedContent
+  selectKit=selectKit
+  shouldDisplayClearableButton=shouldDisplayClearableButton
+}}

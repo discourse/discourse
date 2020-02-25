@@ -10,6 +10,7 @@ register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
+register_asset "stylesheets/mobile/poll-ui-builder.scss", :mobile
 
 register_svg_icon "far fa-check-square"
 
@@ -69,6 +70,14 @@ after_initialize do
 
           raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) unless poll
           raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll.is_closed?
+
+          if poll.groups
+            poll_groups = poll.groups.split(",").map(&:downcase)
+            user_groups = user.groups.map { |g| g.name.downcase }
+            if (poll_groups & user_groups).empty?
+              raise StandardError.new I18n.t("js.poll.results.groups.title", groups: poll.groups)
+            end
+          end
 
           # remove options that aren't available in the poll
           available_options = poll.poll_options.map { |o| o.digest }.to_set
@@ -174,7 +183,7 @@ after_initialize do
         elsif option_digest.present?
           poll_option = PollOption.find_by(poll: poll, digest: option_digest)
 
-          raise Discourse::InvalidParameters.new("option_id is invalid") unless poll_option
+          raise Discourse::InvalidParameters.new(:option_id) unless poll_option
 
           user_ids = PollVote
             .where(poll: poll, poll_option: poll_option)
@@ -221,12 +230,72 @@ after_initialize do
 
       def voters(post_id, poll_name, user, opts = {})
         post = Post.find_by(id: post_id)
-        raise Discourse::InvalidParameters.new("post_id is invalid") unless post
+        raise Discourse::InvalidParameters.new(:post_id) unless post
 
         poll = Poll.find_by(post_id: post_id, name: poll_name)
-        raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
+        raise Discourse::InvalidParameters.new(:poll_name) unless poll&.can_see_voters?(user)
 
         serialized_voters(poll, opts)
+      end
+
+      def transform_for_user_field_override(custom_user_field)
+        existing_field = UserField.find_by(name: custom_user_field)
+        existing_field ? "user_field_#{existing_field.id}" : custom_user_field
+      end
+
+      def grouped_poll_results(post_id, poll_name, user_field_name, user)
+        post = Post.find_by(id: post_id)
+        raise Discourse::InvalidParameters.new(:post_id) unless post
+
+        poll = Poll.includes(:poll_options).includes(:poll_votes).find_by(post_id: post_id, name: poll_name)
+        raise Discourse::InvalidParameters.new(:poll_name) unless poll
+
+        raise Discourse::InvalidParameters.new(:user_field_name) unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
+
+        poll_votes = poll.poll_votes
+
+        poll_options = {}
+        poll.poll_options.each do |option|
+          poll_options[option.id.to_s] = { html: option.html, digest: option.digest }
+        end
+
+        user_ids = poll_votes.map(&:user_id).uniq
+        user_fields = UserCustomField.where(user_id: user_ids, name: transform_for_user_field_override(user_field_name))
+
+        user_field_map = {}
+        user_fields.each do |f|
+          # Build hash, so we can quickly look up field values for each user.
+          user_field_map[f.user_id] = f.value
+        end
+
+        votes_with_field = poll_votes.map do |vote|
+          v = vote.attributes
+          v[:field_value] = user_field_map[vote.user_id]
+          v
+        end
+
+        chart_data = []
+        votes_with_field.group_by { |vote| vote[:field_value] }.each do |field_answer, votes|
+          grouped_selected_options = {}
+
+          # Create all the options with 0 votes. This ensures all the charts will have the same order of options, and same colors per option.
+          poll_options.each do |id, option|
+            grouped_selected_options[id] = {
+              digest: option[:digest],
+              html: option[:html],
+              votes: 0
+            }
+          end
+
+          # Now go back and update the vote counts. Using hashes so we dont have n^2
+          votes.group_by { |v| v["poll_option_id"] }.each do |option_id, votes_for_option|
+            grouped_selected_options[option_id.to_s][:votes] = votes_for_option.length
+          end
+
+          group_label = field_answer ? field_answer.titleize : I18n.t("poll.user_field.no_data")
+          chart_data << { group: group_label, options: grouped_selected_options.values }
+        end
+        chart_data
       end
 
       def schedule_jobs(post)
@@ -260,14 +329,16 @@ after_initialize do
           results: poll["results"].presence || "always",
           min: poll["min"],
           max: poll["max"],
-          step: poll["step"]
+          step: poll["step"],
+          chart_type: poll["charttype"] || "bar",
+          groups: poll["groups"]
         )
 
         poll["options"].each do |option|
           PollOption.create!(
             poll: created_poll,
             digest: option["id"].presence,
-            html: option["html"].presence.strip
+            html: option["html"].presence&.strip
           )
         end
       end
@@ -299,12 +370,10 @@ after_initialize do
     end
   end
 
-  require_dependency "application_controller"
-
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
-    before_action :ensure_logged_in, except: [:voters]
+    before_action :ensure_logged_in, except: [:voters, :grouped_poll_results]
 
     def vote
       post_id   = params.require(:post_id)
@@ -344,12 +413,36 @@ after_initialize do
         render_json_error e.message
       end
     end
+
+    def grouped_poll_results
+      post_id   = params.require(:post_id)
+      poll_name = params.require(:poll_name)
+      user_field_name = params.require(:user_field_name)
+
+      begin
+        render json: {
+          grouped_results: DiscoursePoll::Poll.grouped_poll_results(post_id, poll_name, user_field_name, current_user)
+        }
+      rescue StandardError => e
+        render_json_error e.message
+      end
+    end
+
+    def groupable_user_fields
+      render json: {
+        fields: SiteSetting.poll_groupable_user_fields.split('|').map do |field|
+          { name: field.humanize.capitalize, value: field }
+        end
+      }
+    end
   end
 
   DiscoursePoll::Engine.routes.draw do
     put "/vote" => "polls#vote"
     put "/toggle_status" => "polls#toggle_status"
     get "/voters" => 'polls#voters'
+    get "/grouped_poll_results" => 'polls#grouped_poll_results'
+    get "/groupable_user_fields" => 'polls#groupable_user_fields'
   end
 
   Discourse::Application.routes.append do
@@ -400,6 +493,8 @@ after_initialize do
 
     true
   end
+
+  allow_new_queued_post_payload_attribute("is_poll")
 
   NewPostManager.add_handler(1) do |manager|
     post = Post.new(raw: manager.args[:raw])

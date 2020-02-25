@@ -19,7 +19,15 @@ class Stylesheet::Manager
   end
 
   def self.clear_theme_cache!
-    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k|cache.delete(k) }
+    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k| cache.delete(k) }
+  end
+
+  def self.clear_core_cache!(targets)
+    cache.hash.keys.select { |k| k =~ /#{targets.join('|')}/ }.each { |k| cache.delete(k) }
+  end
+
+  def self.clear_plugin_cache!(plugin)
+    cache.hash.keys.select { |k| k =~ /#{plugin}/ }.each { |k| cache.delete(k) }
   end
 
   def self.stylesheet_data(target = :desktop, theme_ids = :missing)
@@ -168,7 +176,7 @@ class Stylesheet::Manager
          source_map_file: source_map_filename
       )
     rescue SassC::SyntaxError => e
-      if %w{embedded_theme mobile_theme desktop_theme}.include?(@target.to_s)
+      if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
         # no special errors for theme, handled in theme editor
         ["", nil]
       else
@@ -294,9 +302,9 @@ class Stylesheet::Manager
   # so we could end up poisoning the cache with a bad file that can not be removed
   def plugins_digest
     assets = []
-    assets += DiscoursePluginRegistry.stylesheets.to_a
-    assets += DiscoursePluginRegistry.mobile_stylesheets.to_a
-    assets += DiscoursePluginRegistry.desktop_stylesheets.to_a
+    DiscoursePluginRegistry.stylesheets.each { |_, paths| assets += paths.to_a }
+    DiscoursePluginRegistry.mobile_stylesheets.each { |_, paths| assets += paths.to_a }
+    DiscoursePluginRegistry.desktop_stylesheets.each { |_, paths| assets += paths.to_a }
     Digest::SHA1.hexdigest(assets.sort.join)
   end
 

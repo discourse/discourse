@@ -14,7 +14,11 @@ class FileHelper
   end
 
   def self.is_supported_image?(filename)
-    filename =~ supported_images_regexp
+    (filename =~ supported_images_regexp).present?
+  end
+
+  def self.is_supported_media?(filename)
+    (filename =~ supported_media_regexp).present?
   end
 
   class FakeIO
@@ -124,12 +128,28 @@ class FileHelper
     (@memoized ||= {})[args] ||= yield
   end
 
+  def self.supported_gravatar_extensions
+    @@supported_gravatar_images ||= Set.new(%w{jpg jpeg png gif})
+  end
+
   def self.supported_images
-    @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico}
+    @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico webp}
+  end
+
+  def self.supported_audio
+    @@supported_audio ||= Set.new %w{mp3 ogg wav m4a}
+  end
+
+  def self.supported_video
+    @@supported_video ||= Set.new %w{mov mp4 webm ogv}
   end
 
   def self.supported_images_regexp
     @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
   end
 
+  def self.supported_media_regexp
+    media = supported_images | supported_audio | supported_video
+    @@supported_media_regexp ||= /\.(#{media.to_a.join("|")})$/i
+  end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jobs::CreateUserReviewable < Jobs::Base
+class Jobs::CreateUserReviewable < ::Jobs::Base
   attr_reader :reviewable
 
   def execute(args)
@@ -22,7 +22,8 @@ class Jobs::CreateUserReviewable < Jobs::Base
         payload: {
           username: user.username,
           name: user.name,
-          email: user.email
+          email: user.email,
+          website: user.user_profile&.website
         }
       )
 

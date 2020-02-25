@@ -1,9 +1,9 @@
-export default Discourse.Route.extend({
+import { get } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   model(params) {
-    return this.store.findAll(
-      "web-hook-event",
-      Ember.get(params, "web_hook_id")
-    );
+    return this.store.findAll("web-hook-event", get(params, "web_hook_id"));
   },
 
   setupController(controller, model) {

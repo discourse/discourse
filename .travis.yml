@@ -21,7 +21,7 @@ env:
 
 addons:
   chrome: stable
-  postgresql: 9.6
+  postgresql: "9.6"
   apt:
     update: true
     packages:
@@ -40,10 +40,9 @@ services:
   - redis-server
 
 sudo: required
-dist: trusty
+dist: xenial
 
 cache:
-  apt: true
   yarn: true
   directories:
     - vendor/bundle
@@ -60,7 +59,7 @@ before_install:
   - git clone --depth=1 https://github.com/discourse/discourse-chat-integration.git plugins/discourse-chat-integration
   - git clone --depth=1 https://github.com/discourse/discourse-assign.git plugins/discourse-assign
   - git clone --depth=1 https://github.com/discourse/discourse-patreon.git plugins/discourse-patreon
-  - git clone --depth=1 https://github.com/discourse/discourse-staff-notes.git plugins/discourse-staff-notes
+  - git clone --depth=1 https://github.com/discourse/discourse-user-notes.git plugins/discourse-user-notes
   - git clone --depth=1 https://github.com/discourse/discourse-group-tracker
   - export PATH=$HOME/.yarn/bin:$PATH
 
@@ -74,13 +73,7 @@ script:
   - |
     bash -c "
       if [ '$RUN_LINT' == '1' ]; then
-        bundle exec rubocop --parallel && \
-        yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"
-        yarn eslint --ext .es6 app/assets/javascripts && \
-        yarn eslint --ext .es6 test/javascripts && \
-        yarn eslint --ext .es6 plugins/**/assets/javascripts && \
-        yarn eslint --ext .es6 plugins/**/test/javascripts && \
-        yarn eslint app/assets/javascripts test/javascripts
+        npx lefthook run lints
       else
         if [ '$QUNIT_RUN' == '1' ]; then
           bundle exec rake qunit:test['1200000'] && \

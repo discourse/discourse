@@ -28,6 +28,7 @@ ko:
   posts: "포스트"
   loading: "로딩중"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a> 으로 호스팅되고 있습니다. JavaScript 가 활성화되어 있을 때 가장 멋지게 보입니다.'
+  sign_up: "회원가입"
   log_in: "로그인"
   submit: "제출"
   purge_reason: "자동적으로 비활성화된 계정을 삭제하였습니다."
@@ -60,7 +61,6 @@ ko:
         auto_generated_email_error: "'precedence'헤더가 list, junk, bulk, auto_reply로 설정되어 있거나 다른 헤더에 auto-submitted, auto-replied, auto-generated가 있을 때 발생합니다."
         no_body_detected_error: "body를 추출할 수 없거나 첨부파일이 없을 때 발생합니다."
         inactive_user_error: "발신자(sender)가 비활성상태일 때 발생합니다."
-        bad_destination_address: "수신/참조/비밀참조 필드에 있는 이메일 주소가 설정된 수신 이메일 주소와 하나도 매칭되지 않을 때 발생합니다."
         strangers_not_allowed_error: "사용자가 자신이 속하지 않은 카테고리에 토픽 생성을 시도할 때 발생합니다."
         insufficient_trust_level_error: "사용자가 더 높은 신뢰 레벨이 필요한 카테고리에 토픽 생성을 시도할 때 발생합니다."
         reply_user_not_matching_error: "발신한 알림에 대하여 서로 다른 이메일로 답장이 올 때 발생합니다."
@@ -121,7 +121,6 @@ ko:
     errors:
       <<: *errors
   invite:
-    not_found: "초대 토큰이 유효하지 않습니다. 사이트 관리자에게 문의하세요."
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
@@ -141,6 +140,8 @@ ko:
   not_found: "요청한 URL이나 리소스를 찾지 못했습니다."
   invalid_access: "요청한 리소스를 볼 권한이 없습니다."
   read_only_mode_enabled: "사이트는 현재 읽기 전용 모드입니다. 상호소통이 불가능합니다."
+  not_in_group:
+    join_group: "그룹 참여하기"
   reading_time: "읽은 시간"
   likes: "좋아요"
   too_many_replies:
@@ -160,6 +161,7 @@ ko:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 댓글"
+    created: "생성일자"
   no_mentions_allowed: "죄송합니다, 다른 사용자를 언급할 수 없습니다."
   too_many_mentions:
     other: "죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다."
@@ -179,9 +181,9 @@ ko:
     other: "죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다."
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
-  topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에  토픽이 닫혔거나 지워진 건 아닐까요?"
+  topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에 토픽이 닫혔거나 지워진 건 아닐까요?"
   not_accepting_pms: "죄송합니다. %{username} 님이 당분간 메시지를 받지 않습니다."
-  max_pm_recepients: "죄송합니다. 최대 %{recipients_limit} 명의 수신자에게만 메시지를 보낼 수 있습니다."
+  max_pm_recipients: "죄송합니다. 최대 %{recipients_limit} 명의 수신자에게만 메시지를 보낼 수 있습니다."
   removed_direct_reply_full_quotes: "이전 전체 게시물의 인용을 자동으로 제거했습니다."
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
@@ -407,7 +409,7 @@ ko:
       title: "일반"
     leader:
       title: "리더"
-    change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
+    change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다. - if you wish to demote user lock trust level first"
   post:
     image_placeholder:
       broken: "이미지를 표시할수없음"
@@ -512,9 +514,6 @@ ko:
     error: "이메일 주소를 변경하는데 문제가 있습니다. 주소가 이미 사용되고 있나요?"
     error_staged: "이메일 주소 변경중에 에러가 발생했습니다. 이 주소는 격리된 사용자가 이미 사용중입니다."
     already_done: "죄송합니다. 이 확인 링크는 더 이상 유효하지 않습니다. 이메일이 이미 변경되지는 않았나요?"
-    authorizing_old:
-      title: "이메일 주소를 확인해 주셔서 감사합니다."
-      description: "확인을 위하여 새로운 이메일 주소로 메일을 전송합니다."
   activation:
     action: "여기를 눌러 계정을 활성화하세요."
     already_done: "죄송합니다. 이 계정 확인 링크는 더 이상 유효하지 않습니다."
@@ -526,7 +525,6 @@ ko:
     activated: "죄송합니다. 이 계정은 이미 활성화되었습니다."
     admin_confirm:
       title: "관리자 계정 확정하기"
-      description: "<b>%{target_username}</b>님을 관리자로 설정하고 싶은 것이 확실합니까?"
       grant: "관리자 권한 부여"
       complete: "<b>%{target_username}</b> 님은 이제 관리자입니다."
       back_to: "%{title}로 돌아가기"
@@ -658,6 +656,7 @@ ko:
         day: 일
     post_edits:
       labels:
+        edited_at: 날짜
         post: 글
         editor: 에디터
         edit_reason: 사유
@@ -683,6 +682,8 @@ ko:
     new_contributors:
       title: "새로운 기여자들"
       xaxis: "일"
+    trust_level_growth:
+      yaxis: "일"
     consolidated_page_views:
       xaxis:
         page_view_anon: "익명 사용자"
@@ -930,7 +931,7 @@ ko:
     max_image_height: "글에서 사용할 수 있는 썸네일 이미지의 최대 높이"
     fixed_category_positions: "활성화하면 고정된 순서의 카테고리들을 바꿀 수 있다. 활성화 하지 않으면 카테고리는 활동적인 순서에 따라 정렬된다."
     fixed_category_positions_on_create: "선택 시, 카테고리 정렬이 유지됩니다. (fixed_category_positions가 체크돼 있어야 합니다.)"
-    add_rel_nofollow_to_user_content: '사용자 생성 컨텐츠에 대해서 rel nofollow 를 설정함. parent domain을 포함한 internal link는 예외임. 이 설정을 바꾸려면 모든 baked markdown을  "rake posts:rebake" 명령으로 변경해주서야 함'
+    add_rel_nofollow_to_user_content: '사용자 생성 컨텐츠에 대해서 rel nofollow 를 설정함. parent domain을 포함한 internal link는 예외임. 이 설정을 바꾸려면 모든 baked markdown을 "rake posts:rebake" 명령으로 변경해주서야 함'
     post_excerpt_maxlength: "글 인용에 허용되는 최대 글자수"
     show_pinned_excerpt_mobile: "모바일 뷰에서 고정 토픽의 발췌 내용을 보여주기"
     show_pinned_excerpt_desktop: "데스크톱 뷰에서 고정 토픽의 발췌 내용을 보여주기"
@@ -949,9 +950,9 @@ ko:
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "long polling에 사용 될 Base URL (CDN이 동적 콘텐트를 제공할 시에는 origin pull로 설정) eg: http://origin.site.com"
     long_polling_interval: "보낼 데이터가 없을 때 응답 전에 서버가 기다려야하는 시간 (로그인된 유저 전용)"
-    polling_interval: "long polling을 안 쓸 때 로그인된 클라이언트가 몇 밀리초마다  poll해야 하는 지"
+    polling_interval: "long polling을 안 쓸 때 로그인된 클라이언트가 몇 밀리초마다 poll해야 하는 지"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    background_polling_interval: "(페이지를 안 보고 있을 때) 클라이언트가 몇 밀리초마다  poll해야 하는 지"
+    background_polling_interval: "(페이지를 안 보고 있을 때) 클라이언트가 몇 밀리초마다 poll해야 하는 지"
     cooldown_minutes_after_hiding_posts: "신고 당해서 숨겨진 글을 사용자가 편집할 수 있기 전까지 기대려야 하는 시간(분)"
     max_topics_in_first_day: "첫 포스트 생성 후 24시간동안 사용자가 생성할 수 있는 최대 토픽 수"
     max_replies_in_first_day: "첫 포스트 생성 후 24시간동안 사용자가 쓸 수 있는 최대 답글 수"
@@ -964,7 +965,7 @@ ko:
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
     moderators_create_categories: "운영자가 새로운 카테고리를 만드는 것을 허용"
-    cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다.  DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
+    cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
     use_admin_ip_whitelist: "관리자는 보호IP 목록에 있는 IP에서만 로그인할 수 있게 하기(관리 > 로그 > 보호 IP)."
     blacklist_ip_blocks: "Discourse가 크롤링하지 않는 차단된 사설 IP 목록"
     whitelist_internal_hosts: "박스링크나 다른 목적으로 Discourse 가 안전하게 크롤링할 수 있는 내부 호스트의 목록"
@@ -986,7 +987,6 @@ ko:
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
     enable_badges: "배지 기능 사용"
     enable_whispers: "토픽 내 운영진 비공개 커뮤니케이션 허용"
-    allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "가입하려면 반드시 사용해야하는 이메일 도메인 목록, 파이프 기호로 구분. 경고: 이 목록외의 도메인으로는 가입이 안됩니다!"
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
@@ -1023,7 +1023,7 @@ ko:
     s3_backup_bucket: "백업본을 유지할 s3 버켓 이름. 주의 : 프라이빗 버켓인지 반드시 확인해야하세요."
     s3_disable_cleanup: "로컬에서 백업 삭제 시 S3에서 백업 제거하는 기능 해제"
     backup_time_of_day: "백업이 실행되어야 할 UTC 시간"
-    backup_with_uploads: "스케쥴링된 백업을 실행할 때 업로드된 자료도 포함.  해제하면 데이터베이스만 백업합니다."
+    backup_with_uploads: "스케쥴링된 백업을 실행할 때 업로드된 자료도 포함. 해제하면 데이터베이스만 백업합니다."
     active_user_rate_limit_secs: "'last_seen_at'을 업데이트 하는 주기(초)"
     verbose_localization: "UI에 언어 팁을 확장해 보여줌"
     previous_visit_timeout_hours: "최근 방문한 시간을 저장할 주기(시간)"
@@ -1047,7 +1047,6 @@ ko:
     max_logins_per_ip_per_minute: "1분 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
-    categories_topics: "/categories 페이지에서 표시할 토픽의 수"
     suggested_topics: "글타래 아랫부분에 몇개의 글타래를 제안하여 보여준다."
     limit_suggested_to_category: "제안된 글타래는 현재의 카테고리에 있는 글타래 중에서만 보여준다."
     suggested_topics_max_days_old: "설정된 일수 이상의 토픽은 추천하지 않음"
@@ -1055,8 +1054,8 @@ ko:
     clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
     purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
     enable_s3_uploads: "Amazon S3 storage에 업로드해주세요. 중요: 올바른 S3 계정이 필요합니다.(access key id와 secret access key 둘다)"
-    s3_upload_bucket: "파일이 업로드 될 위치의 Amazon S3 bucket name.  경고: 소문자 알파벳만 허용되며 점 . 이나 밑줄문자 _ 가 없어야 함."
-    s3_cdn_url: "s3 에셋에  사용될 CDN URL (예: https://cdn.somewhere.com). 경고: 이 설정 뒤에는 모든 글을 다시 구워야rebake 합니다."
+    s3_upload_bucket: "파일이 업로드 될 위치의 Amazon S3 bucket name. 경고: 소문자 알파벳만 허용되며 점 . 이나 밑줄문자 _ 가 없어야 함."
+    s3_cdn_url: "s3 에셋에 사용될 CDN URL (예: https://cdn.somewhere.com). 경고: 이 설정 뒤에는 모든 글을 다시 구워야rebake 합니다."
     avatar_sizes: "자동 생성 아바타 사이즈 목록"
     external_system_avatars_enabled: "외부 아바타 시스템을 사용하기"
     external_system_avatars_url: "외부 아바타 서비스의 URL. {username} {first_letter} {color} {size} 의 대체가 허용됨"
@@ -1088,7 +1087,7 @@ ko:
     tl3_requires_max_flagged: "회원 레벨3의 자격을 얻으려면, 지난 (tl3 time period)일 동안 x명의 사용자로부터 x개 이상의 포스트를 신고당한 일이 없어야 합니다. x 값을 설정.(0이상)"
     tl3_promotion_min_duration: "회원등급이 2로 떨어진 후 다시 VIP 사용자-3 이 될 수 있는 최소 일 수"
     tl3_requires_likes_given: "회원 레벨3 자격을 얻기 위하여 지난 (tl3 time period)동안 줘야 하는 최소 좋아요 수."
-    tl3_requires_likes_received: "회원 레벨3 자격을 얻기 위하여 지난 (tl3 time period)일 동안 받아야 하는  최소 좋아요 수."
+    tl3_requires_likes_received: "회원 레벨3 자격을 얻기 위하여 지난 (tl3 time period)일 동안 받아야 하는 최소 좋아요 수."
     tl3_links_no_follow: "VIP 사용자-3 의 글에 있는 링크에서 rel=nofollow 를 제거하지 마시오."
     min_trust_to_create_topic: "새로운 주제를 생성하기 위한 최소 회원등급"
     min_trust_to_edit_wiki_post: "위키로 설정된 글 수정할 수 있는 최소 회원등급"
@@ -1168,11 +1167,9 @@ ko:
     soft_bounce_score: "임시 반송이 일어났을 때 사용자에게 반송 스코어 추가."
     hard_bounce_score: "영구 반송이 일어났을 때 사용자에게 반송 스코어 추가."
     bounce_score_threshold: "사용자에게 메일을 보낼 최대 반송 스코어."
-    bounce_score_threshold_deactivate: "사용자를 비활성화 할 최대 반송 스코어."
     reset_bounce_score_after_days: "X 일 이후 반송 스코어 자동 초기화."
     attachment_content_type_blacklist: "콘텐츠 타입을 기준으로 첨부를 차단할 키워드 블랙리스트."
     attachment_filename_blacklist: "파일 이름을 기준으로 첨부를 차단할 키워드 블랙리스트."
-    enable_forwarded_emails: "[베타] 사용자가 이메일 포워딩으로 토픽을 생성할 수 있도록 허용"
     always_show_trimmed_content: "항상 수신 메일의 다듬어진 부분을 표시. 경고: 메일 주소가 드러날 수 있습니다."
     manual_polling_enabled: "이메일 답장을 위한 API를 사용하여 이메일 푸시"
     pop3_polling_enabled: "POP3를 이용한 이메일 설문조사"
@@ -1192,7 +1189,7 @@ ko:
     delete_all_posts_max: "전체 글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 글 수. 만약 사용자가 이것보다 많은 글을 가지고 있으면 한번에 삭제 할 수 없다."
     email_editable: "가입 후 이메일 주소 변경 허용"
     allow_uploaded_avatars: "사용자가 커스텀 프로필 사진을 올릴 수 있도록 허용."
-    allow_animated_avatars: "사용자가 프로필 사진으로 애니메이션 GIF 파일을 올릴 수 있도록 허용. 경고: 이 설정을 바꾼 후  avatars:refresh rake task 를 실행."
+    allow_animated_avatars: "사용자가 프로필 사진으로 애니메이션 GIF 파일을 올릴 수 있도록 허용. 경고: 이 설정을 바꾼 후 avatars:refresh rake task 를 실행."
     allow_animated_thumbnails: "움직이는 gif로 썸네일을 만듭니다."
     default_avatars: "신규가입자가 받게될 기본 아바타 URL"
     automatically_download_gravatars: "사용자가 계정을 만들거나 이메일을 변경하자마자 Gravatar를 다운로드합니다."
@@ -1222,7 +1219,7 @@ ko:
     disable_avatar_education_message: "아바타 변경 교육 메시지 해제."
     suppress_uncategorized_badge: "글타래 리스트에서 카테고리가 없는 글타래에 대한 훈장을 보여주지 않는다."
     permalink_normalizations: "퍼마링크를 매칭하기 전에 다음 정규표현식을 적용. 예: /(topic.*)\\?.*/\\1 를 적용하면 토픽 루트에서 퀴리 스트링을 뽑아냅니다. 캡쳐된 값에 접근하려면 정규표현식+스트링 형식에 \\1 등을 사용하면 됩니다."
-    disable_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
+    disable_system_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
     automatically_unpin_topics: "사용자가 하단에 도달하면 토픽 고정을 자동 해제."
     read_time_word_count: "읽은 시간 추정치 계산을 위한 1분 당 워드 카운트."
     share_anonymized_statistics: "익명화된 사용 통계 공유하기"
@@ -1238,7 +1235,7 @@ ko:
     embed_post_limit: "글 개수가 최대치입니다."
     embed_username_required: "토픽 생성을 위한 사용자명이 필요합니다."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
-    delete_drafts_older_than_n_days: (n) 일지난 임시 보관글 삭제하기
+    delete_drafts_older_than_n_days: "(n) 일지난 임시 보관글 삭제하기"
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
     slug_generation_method: "slug 생성 방식. 'encoded'는 퍼센트 기호로 인코딩해서 생성합니다. 'none'은 slug 자체를 비활성화합니다.."
     enable_emoji: "emoji 활성화"
@@ -1262,7 +1259,7 @@ ko:
       invalid_string_min_max: "글자 수가 %{min}자 이상 %{max}자 이하이어야 합니다."
       invalid_string_min: "글자수가 %{min}자 이상이어야 합니다."
       invalid_string_max: "글자 수가 %{max}자 이상이어야 합니다."
-      invalid_reply_by_email_address: "값이 반드시 '%%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
+      invalid_reply_by_email_address: "값이 반드시 '%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
       invalid_regex: "허용되지 않거나 올바르지 않은 정규표현식입니다."
       min_username_length_range: "최소값은 최대값보다 크게 설정할 수 없습니다."
       max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."
@@ -1310,8 +1307,8 @@ ko:
     errors: "%{errors}"
     not_available: "불가능합니다. %{suggestion}"
     something_already_taken: "뭔가가 이상합니다. 아마도 계정의 아이디 또는 이메일이 이미 등록된것 같습니다. 비밀번호 찾기 링크를 이용해주세요."
-    omniauth_error: "죄송합니다, 회원님 계정을 인증하는데 오류가 발생했습니다. 인증을 회원님이 승인하지 않았을 수도 있습니다."
     omniauth_error_unknown: "로그인에 문제가 있습니다. 다시 시도해주세요."
+    omniauth_confirm_button: "계속"
     new_registrations_disabled: "지금은 새로 가입할 수 없습니다."
     password_too_long: "비밀번호는 200글자 이내만 허용됩니다."
     missing_user_field: "사용자 정보 입력을 덜 끝마쳤습니다."
@@ -1626,6 +1623,7 @@ ko:
   csv_export:
     boolean_yes: "네"
     boolean_no: "아니오"
+    rate_limit_error: "게시글은 하루에 한번만 다운로드할 수 있습니다. 내일 다시 시도해보세요."
   static_topic_first_reply: |2
 
     이 글타래인 %{page_name} 페이지의 첫글 수정.
@@ -1714,7 +1712,7 @@ ko:
       description: 다른 토픽에 링크를 추가했습니다
       long_description: |2
 
-        이 배지는 다른 토픽의 링크를 추가했을 때 수여됩니다.  토픽을 링크하면 토픽을 서로 연결시켜주어서 동료 사용자가 연관된 다른 대화를 찾는데 도움이 됩니다. 자유롭게 링크하세요!
+        이 배지는 다른 토픽의 링크를 추가했을 때 수여됩니다. 토픽을 링크하면 토픽을 서로 연결시켜주어서 동료 사용자가 연관된 다른 대화를 찾는데 도움이 됩니다. 자유롭게 링크하세요!
     first_quote:
       name: 처음 인용해요
       description: 포스트를 인용함
@@ -1764,16 +1762,8 @@ ko:
         이 배지는 300개의 포스트를 올려서 적어도 5개의 좋아요를 받았을 때 수여됩니다. 와우! 우리 커뮤니티는 당신의 꾸준하고 질높은 기여를 숭배합니다.
     out_of_love:
       name: 사랑꾼
-      description: 하루에 좋아요 50개를 보냈습니다
-      long_description: |2
-
-        이 배지는 하루에 50개의 좋아요를 사용했을 때 수여됩니다. 잠시 시간을 내서 당신이 좋아하는 포스트에 좋아요를 남기면 동료 사용자가 앞으로 더 훌륭한 토론을 하는 것에 힘을 보태줍니다.
     higher_love:
       name: 박애주의자
-      description: 5번이나 좋아요 50개를 보냈습니다
-      long_description: |2
-
-        이 배지는 50개의 좋아요를 사용한 날이 5일 이상일 때 수여됩니다. 매일 훌륭한 대화를 응원해주셔서 감사합니다!
     crazy_in_love:
       name: 사랑밖에 모르는 바보
       description: 20번이나 좋아요 50개를 보냈습니다
@@ -1941,8 +1931,13 @@ ko:
     not_found: "찾을 수 없음"
     unknown: "알수없음"
   reviewables:
+    priorities:
+      medium: "중간"
+      high: "높음"
     sensitivity:
       disabled: "비활성"
+      medium: "중간"
+      high: "높음"
     actions:
       agree:
         title: "동의..."

@@ -1,9 +1,14 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
+import Session from "discourse/models/session";
+import { Promise } from "rsvp";
+import Site from "discourse/models/site";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
-  const findOpts = defaultParams || {};
+  const findOpts = Object.assign({}, defaultParams || {});
+
   if (params) {
     Object.keys(queryParams).forEach(function(opt) {
       if (params[opt]) {
@@ -16,8 +21,8 @@ function filterQueryParams(params, defaultParams) {
 
 function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
-  return new Ember.RSVP.Promise(function(resolve) {
-    const session = Discourse.Session.current();
+  return new Promise(function(resolve) {
+    const session = Session.current();
 
     if (extras.cached) {
       const cachedList = session.get("topicList");
@@ -60,9 +65,13 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
       tracking.sync(list, list.filter);
       tracking.trackIncoming(list.filter);
     }
-    Discourse.Session.currentProp("topicList", list);
+    Session.currentProp("topicList", list);
     if (list.topic_list && list.topic_list.top_tags) {
-      Discourse.Site.currentProp("top_tags", list.topic_list.top_tags);
+      if (list.filter.startsWith("c/") || list.filter.startsWith("tags/c/")) {
+        Site.currentProp("category_top_tags", list.topic_list.top_tags);
+      } else {
+        Site.currentProp("top_tags", list.topic_list.top_tags);
+      }
     }
     return list;
   });
@@ -70,12 +79,15 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
 export default function(filter, extras) {
   extras = extras || {};
-  return Discourse.Route.extend(
+  return DiscourseRoute.extend(
     {
       queryParams,
 
       beforeModel() {
-        this.controllerFor("navigation/default").set("filterMode", filter);
+        this.controllerFor("navigation/default").set(
+          "filterType",
+          filter.split("/")[0]
+        );
       },
 
       model(data, transition) {

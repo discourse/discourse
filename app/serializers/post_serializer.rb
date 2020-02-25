@@ -4,7 +4,6 @@ class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
   INSTANCE_VARS ||= [
-    :topic_view,
     :parent_post,
     :add_raw,
     :add_title,
@@ -27,6 +26,7 @@ class PostSerializer < BasicPostSerializer
              :quote_count,
              :incoming_link_count,
              :reads,
+             :readers_count,
              :score,
              :yours,
              :topic_id,
@@ -49,6 +49,8 @@ class PostSerializer < BasicPostSerializer
              :user_title,
              :reply_to_user,
              :bookmarked,
+             :bookmarked_with_reminder,
+             :bookmark_reminder_at,
              :raw,
              :actions_summary,
              :moderator?,
@@ -218,10 +220,6 @@ class PostSerializer < BasicPostSerializer
     }
   end
 
-  def bookmarked
-    true
-  end
-
   def deleted_by
     BasicUserSerializer.new(object.deleted_by, root: false).as_json
   end
@@ -309,8 +307,35 @@ class PostSerializer < BasicPostSerializer
     !(SiteSetting.suppress_reply_when_quoting && object.reply_quoted?) && object.reply_to_user
   end
 
+  # this atrtribute is not even included unless include_bookmarked? is true,
+  # which is why it is always true if included
+  def bookmarked
+    true
+  end
+
+  def bookmarked_with_reminder
+    true
+  end
+
   def include_bookmarked?
-    actions.present? && actions.keys.include?(PostActionType.types[:bookmark])
+    (actions.present? && actions.keys.include?(PostActionType.types[:bookmark]))
+  end
+
+  def include_bookmarked_with_reminder?
+    post_bookmark.present?
+  end
+
+  def include_bookmark_reminder_at?
+    include_bookmarked_with_reminder?
+  end
+
+  def post_bookmark
+    return nil if !SiteSetting.enable_bookmarks_with_reminders? || @topic_view.blank?
+    @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id }
+  end
+
+  def bookmark_reminder_at
+    post_bookmark&.reminder_at
   end
 
   def include_display_username?
@@ -368,7 +393,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def notice_type
-    post_custom_fields["notice_type"]
+    post_custom_fields[Post::NOTICE_TYPE]
   end
 
   def include_notice_type?
@@ -389,7 +414,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def notice_args
-    post_custom_fields["notice_args"]
+    post_custom_fields[Post::NOTICE_ARGS]
   end
 
   def include_notice_args?
@@ -488,14 +513,6 @@ private
 
   def post_actions
     @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
-  end
-
-  def post_custom_fields
-    @post_custom_fields ||= if @topic_view
-      (@topic_view.post_custom_fields || {})[object.id] || {}
-    else
-      object.custom_fields
-    end
   end
 
 end

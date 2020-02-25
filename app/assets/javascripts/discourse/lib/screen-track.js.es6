@@ -1,3 +1,4 @@
+import { bind } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 
 // We use this class to track how long posts in a topic are on the screen.
@@ -26,7 +27,7 @@ export default class {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
       this._interval = setInterval(() => this.tick(), 1000);
-      this._boundScrolled = Ember.run.bind(this, this.scrolled);
+      this._boundScrolled = bind(this, this.scrolled);
       $(window).on("scroll.screentrack", this._boundScrolled);
     }
 
@@ -186,7 +187,7 @@ export default class {
         // Save unique topic IDs up to a max
         let topicIds = storage.get("anon-topic-ids");
         if (topicIds) {
-          topicIds = topicIds.split(",").map(e => parseInt(e));
+          topicIds = topicIds.split(",").map(e => parseInt(e, 10));
         } else {
           topicIds = [];
         }

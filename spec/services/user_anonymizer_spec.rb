@@ -203,22 +203,19 @@ describe UserAnonymizer do
       user.user_associated_accounts = [UserAssociatedAccount.create(user_id: user.id, provider_uid: "example", provider_name: "facebook")]
       user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
       user.oauth2_user_infos = [Oauth2UserInfo.create(user_id: user.id, uid: "example", provider: "example")]
-      UserOpenId.create(user_id: user.id, email: user.email, url: "http://example.com/openid", active: true)
       make_anonymous
       user.reload
       expect(user.github_user_info).to eq(nil)
       expect(user.user_associated_accounts).to be_empty
       expect(user.single_sign_on_record).to eq(nil)
       expect(user.oauth2_user_infos).to be_empty
-      expect(user.instagram_user_info).to eq(nil)
-      expect(user.user_open_ids.count).to eq(0)
     end
 
     it "removes api key" do
-      ApiKey.create(user_id: user.id, key: "123123123")
+      ApiKey.create(user_id: user.id)
       expect { make_anonymous }.to change { ApiKey.count }.by(-1)
       user.reload
-      expect(user.api_key).to eq(nil)
+      expect(user.api_keys).to be_empty
     end
 
     context "executes job" do

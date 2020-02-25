@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class ProcessSnsNotification < Jobs::Base
+  class ProcessSnsNotification < ::Jobs::Base
     sidekiq_options retry: false
 
     def execute(args)

@@ -9,7 +9,8 @@
     {{#if currentUser.admin}}
       {{group-members-dropdown
         showAddMembersModal=(route-action "showAddMembersModal")
-        showBulkAddModal=(route-action "showBulkAddModal")}}
+        showBulkAddModal=(route-action "showBulkAddModal")
+      }}
     {{else}}
       {{d-button
           icon="plus"

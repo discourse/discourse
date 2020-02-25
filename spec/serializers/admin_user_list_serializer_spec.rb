@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'user'
 
 describe AdminUserListSerializer do
-  fab!(:user) { Fabricate(:user_second_factor_totp).user }
+  fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   let(:guardian) { Guardian.new(admin) }
 
@@ -12,10 +11,26 @@ describe AdminUserListSerializer do
     AdminUserListSerializer.new(user, scope: guardian, root: false)
   end
 
-  it "returns the right values when user has second factor totp enabled" do
-    json = serializer.as_json
+  context "when totp enabled" do
+    before do
+      Fabricate(:user_second_factor_totp, user: user)
+    end
+    it "returns the right values" do
+      json = serializer.as_json
 
-    expect(json[:second_factor_enabled]).to eq(true)
+      expect(json[:second_factor_enabled]).to eq(true)
+    end
+  end
+
+  context "when security keys enabled" do
+    before do
+      Fabricate(:user_security_key, user: user)
+    end
+    it "returns the right values" do
+      json = serializer.as_json
+
+      expect(json[:second_factor_enabled]).to eq(true)
+    end
   end
 
   context "emails" do

@@ -94,7 +94,8 @@ class PostRevisor
         tc.record_change('tags', prev_tags, tags)
         DB.after_commit do
           post = tc.topic.ordered_posts.first
-          Jobs.enqueue(:notify_tag_change, post_id: post.id)
+          notified_user_ids = [post.user_id, post.last_editor_id].uniq
+          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids: notified_user_ids)
         end
       end
     end
@@ -116,6 +117,7 @@ class PostRevisor
   # - bypass_bump: do not bump the topic, even if last post
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
+  # - skip_staff_log: skip creating an entry in the staff action log
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -128,8 +130,9 @@ class PostRevisor
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
 
-    # always reset edit_reason unless provided
-    @fields[:edit_reason] = nil unless @fields[:edit_reason].present?
+    # always reset edit_reason unless provided, do not set to nil else
+    # previous reasons are lost
+    @fields.delete(:edit_reason) if @fields[:edit_reason].blank?
 
     return false unless should_revise?
 
@@ -183,7 +186,7 @@ class PostRevisor
     end
 
     # We log staff edits to posts
-    if @editor.staff? && @editor.id != @post.user.id && @fields.has_key?('raw')
+    if @editor.staff? && @editor.id != @post.user.id && @fields.has_key?('raw') && !@opts[:skip_staff_log]
       StaffActionLogger.new(@editor).log_post_edit(
         @post,
         old_raw: old_raw
@@ -242,7 +245,11 @@ class PostRevisor
 
   def should_create_new_version?
     return false if @skip_revision
-    edited_by_another_user? || !ninja_edit? || owner_changed? || force_new_version?
+    edited_by_another_user? || !ninja_edit? || owner_changed? || force_new_version? || edit_reason_specified?
+  end
+
+  def edit_reason_specified?
+    @fields[:edit_reason].present? && @fields[:edit_reason] != @post.edit_reason
   end
 
   def edited_by_another_user?
@@ -280,12 +287,11 @@ class PostRevisor
   end
 
   def diff_size(before, after)
-    changes = 0
-    ONPDiff.new(before, after).short_diff.each do |str, type|
-      next if type == :common
-      changes += str.length
+    @diff_size ||= begin
+      ONPDiff.new(before, after).short_diff.sum do |str, type|
+        type == :common ? 0 : str.size
+      end
     end
-    changes
   end
 
   def ninja_edit?
@@ -299,7 +305,7 @@ class PostRevisor
         max_diff = SiteSetting.editing_grace_period_max_diff_high_trust.to_i
       end
 
-      if (original_raw.length - new_raw.length).abs > max_diff ||
+      if (original_raw.size - new_raw.size).abs > max_diff ||
         diff_size(original_raw, new_raw) > max_diff
         return false
       end
@@ -331,6 +337,7 @@ class PostRevisor
     update_post
     update_topic if topic_changed?
     create_or_update_revision
+    remove_flags_and_unhide_post
   end
 
   USER_ACTIONS_TO_REMOVE ||= [UserAction::REPLY, UserAction::RESPONSE]
@@ -354,14 +361,15 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field)
+      if @fields.has_key?(field)
+        @post.public_send("#{field}=", @fields[field])
+      end
     end
 
+    @post.edit_reason    = @fields[:edit_reason] if should_create_new_version?
     @post.last_editor_id = @editor.id
     @post.word_count     = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
     @post.self_edits    += 1 if self_edit?
-
-    remove_flags_and_unhide_post
 
     @post.extract_quoted_post_numbers
 
@@ -407,6 +415,7 @@ class PostRevisor
   end
 
   def remove_flags_and_unhide_post
+    return if @opts[:deleting_post]
     return unless editing_a_flagged_and_hidden_post?
 
     flaggers = []
@@ -523,14 +532,17 @@ class PostRevisor
   end
 
   def only_hidden_tags_changed?
+    return false if (hidden_tag_names = DiscourseTagging.hidden_tag_names).blank?
+
     modifications = post_changes.merge(@topic_changes.diff)
-    if modifications.keys.size == 1 && tags_diff = modifications["tags"]
+    if modifications.keys.size == 1 && (tags_diff = modifications["tags"]).present?
       a, b = tags_diff[0] || [], tags_diff[1] || []
       changed_tags = ((a + b) - (a & b)).map(&:presence).compact
-      if (changed_tags - DiscourseTagging.hidden_tag_names(nil)).empty?
+      if (changed_tags - hidden_tag_names).empty?
         return true
       end
     end
+
     false
   end
 

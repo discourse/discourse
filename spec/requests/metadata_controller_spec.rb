@@ -20,7 +20,7 @@ RSpec.describe MetadataController do
 
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/manifest+json')
+      expect(response.media_type).to eq('application/manifest+json')
       manifest = JSON.parse(response.body)
 
       expect(manifest["name"]).to eq(title)
@@ -70,10 +70,13 @@ RSpec.describe MetadataController do
     end
 
     it 'uses the short_title if it is set' do
+      title = 'FooBarBaz Forum'
+      SiteSetting.title = title
+
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
-      expect(manifest).to_not have_key("short_name")
+      expect(manifest["short_name"]).to eq("FooBarBaz")
 
       SiteSetting.short_title = "foo"
 
@@ -98,7 +101,56 @@ RSpec.describe MetadataController do
       expect(response.body).to include("/search?q={searchTerms}")
       expect(response.body).to include('image/png')
       expect(response.body).to include(UrlHelper.absolute(upload.url))
-      expect(response.content_type).to eq('application/xml')
+      expect(response.media_type).to eq('application/xml')
     end
   end
+
+  describe '#app_association_android' do
+    it 'returns 404 by default' do
+      get "/.well-known/assetlinks.json"
+      expect(response.status).to eq(404)
+    end
+
+    it 'returns the right output' do
+      SiteSetting.app_association_android = <<~EOF
+        [{
+          "relation": ["delegate_permission/common.handle_all_urls"],
+          "target" : { "namespace": "android_app", "package_name": "com.example.app",
+                       "sha256_cert_fingerprints": ["hash_of_app_certificate"] }
+        }]
+      EOF
+      get "/.well-known/assetlinks.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("hash_of_app_certificate")
+      expect(response.body).to include("com.example.app")
+      expect(response.media_type).to eq('application/json')
+    end
+  end
+
+  describe '#app_association_ios' do
+    it 'returns 404 by default' do
+      get "/apple-app-site-association"
+      expect(response.status).to eq(404)
+    end
+
+    it 'returns the right output' do
+      SiteSetting.app_association_ios = <<~EOF
+        {
+          "applinks": {
+            "apps": []
+          }
+        }
+      EOF
+      get "/apple-app-site-association"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("applinks")
+      expect(response.media_type).to eq('application/json')
+
+      get "/apple-app-site-association.json"
+      expect(response.status).to eq(404)
+    end
+  end
+
 end

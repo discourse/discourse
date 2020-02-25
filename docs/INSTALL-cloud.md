@@ -1,10 +1,10 @@
-**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. We recommend [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
 
 >  🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $99, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
 ### Create New Cloud Server
 
-[Sign up for DigitalOcean][do], update billing info, then create your new cloud server.
+Create your new cloud server, for example [on DigitalOcean][do]:
 
 - The default of **Ubuntu 18.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
 
@@ -12,7 +12,7 @@
 
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 
-- Enter your domain `discourse.example.com` as the name.
+- Enter your domain `discourse.example.com` as the Droplet name.
 
 Create your new Droplet. You will receive an email with the root password. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
@@ -26,15 +26,13 @@ Enter the root password from the email DigitalOcean sent you when the server was
 
 <img src="https://www.discourse.org/images/install/15/ssh-login-terminal.png" width="600px">
 
-### Install Docker / Git
+### Install Docker / Git (Optional)
 
-    wget -qO- https://get.docker.com/ | sh
-
-This command installs the latest versions of Docker and Git on your server. Alternately, you can manually [install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and the [Docker package for your OS](https://docs.docker.com/installation/).
+If you have reason to install your own version of Docker, you may do so. If docker is not installed, `discourse-setup` will automatically install it from get.docker.com.
 
 ### Install Discourse
 
-Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it:
+Clone the [Official Discourse Docker Image][dd] into `/var/discourse`.
 
     sudo -s
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
@@ -58,9 +56,9 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 - Already own a domain name? Great. Select a subdomain such as `discourse.example.com` or `talk.example.com` or `forum.example.com` for your Discourse instance.
 
-- No domain name? We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search.aspx?utm_source=SAS&utm_medium=Affiliate&utm_campaign=1632369&affnetwork=sas), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
+- No domain name? We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search/), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
 
-- Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS A record for the `discourse.example.com` subdomain in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
+- Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS [`A` record](https://support.dnsimple.com/articles/a-record/) for the `discourse.example.com` hostname in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
 
 ### Edit Discourse Configuration
 

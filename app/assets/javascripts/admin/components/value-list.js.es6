@@ -1,17 +1,18 @@
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { makeArray } from "discourse-common/lib/helpers";
+import { empty, reads } from "@ember/object/computed";
+import Component from "@ember/component";
+import { on } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":value-list"],
-
-  inputInvalid: Ember.computed.empty("newValue"),
-
+  inputInvalid: empty("newValue"),
   inputDelimiter: null,
   inputType: null,
   newValue: "",
   collection: null,
   values: null,
-  noneKey: Ember.computed.alias("addKey"),
+  noneKey: reads("addKey"),
 
   @on("didReceiveAttrs")
   _setupCollection() {
@@ -27,9 +28,9 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed("choices.[]", "collection.[]")
+  @discourseComputed("choices.[]", "collection.[]")
   filteredChoices(choices, collection) {
-    return Ember.makeArray(choices).filter(i => collection.indexOf(i) < 0);
+    return makeArray(choices).filter(i => collection.indexOf(i) < 0);
   },
 
   keyDown(event) {
@@ -44,7 +45,7 @@ export default Ember.Component.extend({
     addValue(newValue) {
       if (this.inputInvalid) return;
 
-      this.set("newValue", "");
+      this.set("newValue", null);
       this._addValue(newValue);
     },
 
@@ -59,12 +60,25 @@ export default Ember.Component.extend({
 
   _addValue(value) {
     this.collection.addObject(value);
+
+    if (this.choices) {
+      this.set("choices", this.choices.rejectBy("id", value));
+    } else {
+      this.set("choices", []);
+    }
+
     this._saveValues();
   },
 
   _removeValue(value) {
-    const collection = this.collection;
-    collection.removeObject(value);
+    this.collection.removeObject(value);
+
+    if (this.choices) {
+      this.set("choices", this.choices.concat([value]).uniq());
+    } else {
+      this.set("choices", makeArray(value));
+    }
+
     this._saveValues();
   },
 

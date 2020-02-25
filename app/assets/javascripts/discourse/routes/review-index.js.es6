@@ -1,4 +1,6 @@
-export default Discourse.Route.extend({
+import DiscourseRoute from "discourse/routes/discourse";
+
+export default DiscourseRoute.extend({
   model(params) {
     return this.store.findAll("reviewable", params);
   },
@@ -21,8 +23,31 @@ export default Discourse.Route.extend({
       filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
       filterUsername: meta.username,
-      filterSortOrder: meta.sort_order
+      filterFromDate: meta.from_date,
+      filterToDate: meta.to_date,
+      filterSortOrder: meta.sort_order,
+      additionalFilters: meta.additional_filters || {}
     });
+  },
+
+  activate() {
+    this.messageBus.subscribe("/reviewable_claimed", data => {
+      const reviewables = this.controller.reviewables;
+      if (reviewables) {
+        const user = data.user
+          ? this.store.createRecord("user", data.user)
+          : null;
+        reviewables.forEach(reviewable => {
+          if (data.topic_id === reviewable.topic.id) {
+            reviewable.set("claimed_by", user);
+          }
+        });
+      }
+    });
+  },
+
+  deactivate() {
+    this.messageBus.unsubscribe("/reviewable_claimed");
   },
 
   actions: {

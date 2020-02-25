@@ -1,17 +1,20 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import { gt, and } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { escape } from "pretty-text/sanitizer";
+import ENV from "discourse-common/config/environment";
 
 const MAX_COMPONENTS = 4;
 
-export default Ember.Component.extend({
+export default Component.extend({
   childrenExpanded: false,
   classNames: ["themes-list-item"],
   classNameBindings: ["theme.selected:selected"],
-  hasComponents: Ember.computed.gt("children.length", 0),
-  displayComponents: Ember.computed.and("hasComponents", "theme.isActive"),
-  displayHasMore: Ember.computed.gt("theme.childThemes.length", MAX_COMPONENTS),
+  hasComponents: gt("children.length", 0),
+  displayComponents: and("hasComponents", "theme.isActive"),
+  displayHasMore: gt("theme.childThemes.length", MAX_COMPONENTS),
 
   click(e) {
     if (!$(e.target).hasClass("others-count")) {
@@ -30,15 +33,15 @@ export default Ember.Component.extend({
   },
 
   scheduleAnimation() {
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       this.animate(true);
     });
   },
 
   animate(isInitial) {
-    const $container = this.$();
-    const $list = this.$(".components-list");
-    if ($list.length === 0 || Ember.testing) {
+    const $container = $(this.element);
+    const $list = $(this.element.querySelector(".components-list"));
+    if ($list.length === 0 || ENV.environment === "test") {
       return;
     }
     const duration = 300;
@@ -49,7 +52,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "theme.component",
     "theme.childThemes.@each.name",
     "theme.childThemes.length",
@@ -64,15 +67,18 @@ export default Ember.Component.extend({
     children = this.childrenExpanded
       ? children
       : children.slice(0, MAX_COMPONENTS);
-    return children.map(t => t.get("name"));
+    return children.map(t => {
+      const name = escape(t.name);
+      return t.enabled ? name : `${iconHTML("ban")} ${name}`;
+    });
   },
 
-  @computed("children")
+  @discourseComputed("children")
   childrenString(children) {
     return children.join(", ");
   },
 
-  @computed(
+  @discourseComputed(
     "theme.childThemes.length",
     "theme.component",
     "childrenExpanded",

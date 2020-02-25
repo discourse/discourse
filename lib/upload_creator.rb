@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "fastimage"
-require_dependency "image_sizer"
 
 class UploadCreator
 
@@ -21,6 +20,7 @@ class UploadCreator
   #  - for_private_message (boolean)
   #  - pasted (boolean)
   #  - for_export (boolean)
+  #  - for_gravatar (boolean)
   def initialize(file, filename, opts = {})
     @file = file
     @filename = (filename || "").gsub(/[^[:print:]]/, "")
@@ -63,22 +63,31 @@ class UploadCreator
         image_type = @image_info.type.to_s
       end
 
-      # compute the sha of the file
+      # compute the sha of the file and generate a unique hash
+      # which is only used for secure uploads
       sha1 = Upload.generate_digest(@file)
+      unique_hash = SecureRandom.hex(20) if SiteSetting.secure_media
 
-      # do we already have that upload?
-      @upload = Upload.find_by(sha1: sha1)
+      # we do not check for duplicate uploads if secure media is
+      # enabled because we use a unique access hash to differentiate
+      # between uploads instead of the sha1, and to get around various
+      # access/permission issues for uploads
+      if !SiteSetting.secure_media
 
-      # make sure the previous upload has not failed
-      if @upload && @upload.url.blank?
-        @upload.destroy
-        @upload = nil
-      end
+        # do we already have that upload?
+        @upload = Upload.find_by(sha1: sha1)
 
-      # return the previous upload if any
-      if @upload
-        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
-        return @upload
+        # make sure the previous upload has not failed
+        if @upload && @upload.url.blank?
+          @upload.destroy
+          @upload = nil
+        end
+
+        # return the previous upload if any
+        if @upload
+          UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+          return @upload
+        end
       end
 
       fixed_original_filename = nil
@@ -101,7 +110,8 @@ class UploadCreator
       @upload.user_id           = user_id
       @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize          = filesize
-      @upload.sha1              = sha1
+      @upload.sha1              = SiteSetting.secure_media? ? unique_hash : sha1
+      @upload.original_sha1     = SiteSetting.secure_media? ? sha1 : nil
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
       @upload.extension         = image_type || File.extname(@filename)[1..10]
@@ -116,6 +126,8 @@ class UploadCreator
       @upload.for_theme           = true if @opts[:for_theme]
       @upload.for_export          = true if @opts[:for_export]
       @upload.for_site_setting    = true if @opts[:for_site_setting]
+      @upload.for_gravatar        = true if @opts[:for_gravatar]
+      @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
 
       return @upload unless @upload.save
 
@@ -142,7 +154,9 @@ class UploadCreator
       @upload
     end
   ensure
-    @file&.close
+    if @file
+      @file.respond_to?(:close!) ? @file.close! : @file.close
+    end
   end
 
   def extract_image_info!
@@ -196,10 +210,11 @@ class UploadCreator
     keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     if keep_jpeg
+      @file.respond_to?(:close!) ? @file.close! : @file.close
       @file = jpeg_tempfile
       extract_image_info!
     else
-      jpeg_tempfile&.close
+      jpeg_tempfile.close!
     end
   end
 
@@ -226,16 +241,24 @@ class UploadCreator
   def downsize!
     3.times do
       original_size = filesize
-      downsized_pixels = [pixels, max_image_pixels].min / 2
+      down_tempfile = Tempfile.new(["down", ".#{@image_info.type}"])
+
+      from = @file.path
+      to = down_tempfile.path
+
+      OptimizedImage.ensure_safe_paths!(from, to)
 
       OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "#{downsized_pixels}@",
+        from,
+        to,
+        "50%",
         filename: @filename,
         allow_animation: allow_animation,
         raise_on_error: true
       )
+
+      @file.respond_to?(:close!) ? @file.close! : @file.close
+      @file = down_tempfile
 
       extract_image_info!
 

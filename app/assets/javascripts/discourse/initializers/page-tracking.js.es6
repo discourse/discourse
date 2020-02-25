@@ -1,6 +1,7 @@
 import { cleanDOM } from "discourse/lib/clean-dom";
 import {
   startPageTracking,
+  resetPageTracking,
   googleTagManagerPageChanged
 } from "discourse/lib/page-tracker";
 import { viewTrackingRequired } from "discourse/lib/ajax";
@@ -16,7 +17,7 @@ export default {
     router.on("routeWillChange", viewTrackingRequired);
     router.on("routeDidChange", cleanDOM);
 
-    let appEvents = container.lookup("app-events:main");
+    let appEvents = container.lookup("service:app-events");
 
     startPageTracking(router, appEvents);
 
@@ -49,5 +50,9 @@ export default {
         }
       });
     }
+  },
+
+  teardown() {
+    resetPageTracking();
   }
 };

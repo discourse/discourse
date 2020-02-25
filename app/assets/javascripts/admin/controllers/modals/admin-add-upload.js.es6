@@ -1,9 +1,10 @@
+import { isEmpty } from "@ember/utils";
+import { and, not } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
@@ -52,8 +53,8 @@ const SCSS_VARIABLE_NAMES = [
   "love-low"
 ];
 
-export default Ember.Controller.extend(ModalFunctionality, {
-  adminCustomizeThemesShow: Ember.inject.controller(),
+export default Controller.extend(ModalFunctionality, {
+  adminCustomizeThemesShow: inject(),
 
   uploadUrl: "/admin/themes/upload_asset",
 
@@ -62,10 +63,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.set("fileSelected", false);
   },
 
-  enabled: Ember.computed.and("nameValid", "fileSelected"),
-  disabled: Ember.computed.not("enabled"),
+  enabled: and("nameValid", "fileSelected"),
+  disabled: not("enabled"),
 
-  @computed("name", "adminCustomizeThemesShow.model.theme_fields")
+  @discourseComputed("name", "adminCustomizeThemesShow.model.theme_fields")
   errorMessage(name, themeFields) {
     if (name) {
       if (!name.match(/^[a-z_][a-z0-9_-]*$/i)) {
@@ -90,7 +91,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return null;
   },
 
-  @computed("errorMessage")
+  @discourseComputed("errorMessage")
   nameValid(errorMessage) {
     return null === errorMessage;
   },
@@ -104,7 +105,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     updateName() {
       let name = this.name;
-      if (Ember.isEmpty(name)) {
+      if (isEmpty(name)) {
         name = $("#file-input")[0].files[0].name;
         this.set("name", name.split(".")[0]);
       }

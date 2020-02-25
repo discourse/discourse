@@ -16,7 +16,7 @@ describe RandomTopicSelector do
     expect(RandomTopicSelector.next(0)).to eq([])
     expect(RandomTopicSelector.next(2)).to eq([0, 1])
 
-    Discourse.redis.expects(:multi).returns(Discourse.received_readonly!)
+    Discourse.redis.expects(:multi).returns(Discourse.received_redis_readonly!)
     expect(RandomTopicSelector.next(2)).to eq([2, 3])
     Discourse.redis.unstub(:multi)
 

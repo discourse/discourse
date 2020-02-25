@@ -46,7 +46,8 @@ export default {
       flair_url: "fa-adjust",
       is_group_owner: true,
       mentionable: true,
-      messageable: true
+      messageable: true,
+      can_see_members: true
     },
     extras: {
       visible_group_names: ["discourse"]

@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'post'
-
 module Jobs
 
-  class NotifyMailingListSubscribers < Jobs::Base
+  class NotifyMailingListSubscribers < ::Jobs::Base
     include Skippable
 
     RETRY_TIMES = [5.minute, 15.minute, 30.minute, 45.minute, 90.minute, 180.minute, 300.minute]
@@ -18,7 +16,7 @@ module Jobs
       when SocketError
         RETRY_TIMES[count]
       else
-        Jobs::UserEmail.seconds_to_delay(count)
+        ::Jobs::UserEmail.seconds_to_delay(count)
       end
     end
 
@@ -54,6 +52,14 @@ module Jobs
                      FROM category_users cu
                      WHERE cu.category_id = ? AND cu.user_id = users.id AND cu.notification_level = ?
                   )', post.topic.category_id, CategoryUser.notification_levels[:muted])
+
+      if SiteSetting.tagging_enabled?
+        users = users.where('NOT EXISTS (
+           SELECT 1
+           FROM tag_users tu
+           WHERE tu.tag_id in (:tag_ids) AND tu.user_id = users.id AND tu.notification_level = :muted
+        )', tag_ids: post.topic.tag_ids, muted: TagUser.notification_levels[:muted])
+      end
 
       if SiteSetting.must_approve_users
         users = users.where(approved: true)

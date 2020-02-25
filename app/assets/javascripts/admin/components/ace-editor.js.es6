@@ -1,7 +1,9 @@
+import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
+import { on } from "@ember/object/evented";
 
-export default Ember.Component.extend({
+export default Component.extend({
   mode: "css",
   classNames: ["ace-wrapper"],
   _editor: null,
@@ -17,8 +19,9 @@ export default Ember.Component.extend({
 
   @observes("content")
   contentChanged() {
-    if (this._editor && !this._skipContentChangeEvent && this.content) {
-      this._editor.getSession().setValue(this.content);
+    const content = this.content || "";
+    if (this._editor && !this._skipContentChangeEvent) {
+      this._editor.getSession().setValue(content);
     }
   },
 
@@ -47,7 +50,7 @@ export default Ember.Component.extend({
     }
   },
 
-  _destroyEditor: function() {
+  _destroyEditor: on("willDestroyElement", function() {
     if (this._editor) {
       this._editor.destroy();
       this._editor = null;
@@ -58,7 +61,7 @@ export default Ember.Component.extend({
     }
 
     $(window).off("ace:resize");
-  }.on("willDestroyElement"),
+  }),
 
   resize() {
     if (this._editor) {
@@ -74,7 +77,7 @@ export default Ember.Component.extend({
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
-        const editor = loadedAce.edit(this.$(".ace")[0]);
+        const editor = loadedAce.edit(this.element.querySelector(".ace"));
 
         editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
@@ -88,7 +91,7 @@ export default Ember.Component.extend({
         editor.$blockScrolling = Infinity;
         editor.renderer.setScrollMargin(10, 10);
 
-        this.$().data("editor", editor);
+        this.element.setAttribute("data-editor", editor);
         this._editor = editor;
         this.changeDisabledState();
 

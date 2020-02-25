@@ -8,7 +8,6 @@
 #
 # It also adds an HTML part for the plain text body
 #
-require_dependency 'email/renderer'
 require 'uri'
 require 'net/smtp'
 
@@ -100,6 +99,8 @@ module Email
         # guards against deleted posts
         return skip(SkippedEmailLog.reason_types[:sender_post_deleted]) unless post
 
+        add_attachments(post)
+
         topic = post.topic
         first_post = topic.ordered_posts.first
 
@@ -113,7 +114,7 @@ module Email
 
         referenced_posts = Post.includes(:incoming_email)
           .joins("INNER JOIN post_replies ON post_replies.post_id = posts.id ")
-          .where("post_replies.reply_id = ?", post_id)
+          .where("post_replies.reply_post_id = ?", post_id)
           .order(id: :desc)
 
         referenced_post_message_ids = referenced_posts.map do |referenced_post|
@@ -238,6 +239,38 @@ module Email
     end
 
     private
+
+    def add_attachments(post)
+      max_email_size = SiteSetting.email_total_attachment_size_limit_kb.kilobytes
+      return if max_email_size == 0
+
+      email_size = 0
+      post.uploads.each do |upload|
+        next if FileHelper.is_supported_image?(upload.original_filename)
+        next if email_size + upload.filesize > max_email_size
+
+        begin
+          path = if upload.local?
+            Discourse.store.path_for(upload)
+          else
+            Discourse.store.download(upload).path
+          end
+
+          @message.attachments[upload.original_filename] = File.read(path)
+          email_size += File.size(path)
+        rescue => e
+          Discourse.warn_exception(
+            e,
+            message: "Failed to attach file to email",
+            env: {
+              post_id: post.id,
+              upload_id: upload.id,
+              filename: upload.original_filename
+            }
+          )
+        end
+      end
+    end
 
     def header_value(name)
       header = @message.header[name]

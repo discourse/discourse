@@ -22,10 +22,14 @@ he:
       public:
         title: "ההצבעות הן <strong>ציבוריות</strong>."
       results:
+        groups:
+          title: "עליך להיות חבר בקבוצה %{groups} כדי להצביע לסקר הזה."
         vote:
           title: "התוצאות יופיעו לאחר <strong>ההצבעה</strong>."
         closed:
           title: "התוצאות יופיעו לאחר <strong>הסגירה</strong>."
+        staff:
+          title: "התוצאות זמינות לחברי <strong>סגל</strong> בלבד."
       multiple:
         help:
           at_least_min_options:
@@ -52,7 +56,16 @@ he:
         label: "הצגת תוצאות"
       hide-results:
         title: "חזרה להצבעות שלך"
-        label: "הסתרת תוצאות"
+        label: "הצגת הצבעה"
+      group-results:
+        title: "קיבוץ הצבעות לפי משתמש"
+        label: "הצגת פילוח"
+      ungroup-results:
+        title: "שקלול כל ההצבעות"
+        label: "הסתרת הפילוח"
+      export-results:
+        title: "ייצוא תוצאות הסקר"
+        label: "ייצוא"
       open:
         title: "פתיחת הסקר"
         label: "פתיחה"
@@ -67,11 +80,12 @@ he:
       error_while_toggling_status: " חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
       error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."
       error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."
+      error_while_exporting_results: "אירעה שגיאה בייצוא תוצאות הסקר."
       ui_builder:
         title: בניית סקר
         insert: הכנסת סקר
         help:
-          options_count: יש להכניס 2 אפשרויות לפחות
+          options_count: יש למלא אפשרות אחת לפחות
           invalid_values: הערך המזערי חייב להיות קטן מהערך המרבי.
           min_step_value: ערך הצעד המזערי הוא 1
         poll_type:
@@ -84,6 +98,11 @@ he:
           always: גלוי תמיד
           vote: בהליכי הצבעה
           closed: כאשר סגור
+          staff: סגל בלבד
+        poll_groups:
+          label: קבוצות מורשות
+        poll_chart_type:
+          label: סוג תרשים
         poll_config:
           max: מרבי
           min: מזערי
@@ -91,6 +110,6 @@ he:
         poll_public:
           label: להציג מי המצביעים
         poll_options:
-          label: נא להכניס אפשרות בחירה אחת בכל שורה
+          label: נא למלא אפשרות בחירה אחת בכל שורה
         automatic_close:
           label: לסגור את הסקר אוטומטית

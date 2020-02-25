@@ -28,6 +28,7 @@ th:
   posts: "โพสต์"
   loading: "กำลังโหลด"
   powered_by_html: 'บอร์ดนี้ใช้<a href="https://www.discourse.org">Discourse</a> จะแสดงได้สมบูรณ์เมื่อเปิดการใช้งาน JavaScript'
+  sign_up: "สมัคร"
   log_in: "เข้าสู่ระบบ"
   submit: "ตกลง"
   disable_remote_images_download_reason: "ไม่สามารถดาวน์โหลดรูปได้เนื่องจากพื้นที่ไม่เพียงพอ"
@@ -45,11 +46,14 @@ th:
   activemodel:
     errors:
       <<: *errors
+  not_in_group:
+    join_group: "เข้าร่วมกลุ่ม"
   likes: "ถูกใจ"
   embed:
     start_discussion: "เริ่มการสนทนา"
     continue: "ดำเนินการสนทนาต่อ"
     loading: "กำลังโหลดการสนทนา"
+    created: "สร้างเมื่อ"
   user_is_suspended: "ผู้ใช้ที่ถูกระงับการใช้งานไม่สามารถโพสได้"
   just_posted_that: "คล้ายกับสิ่งคุณเพิ่งโพสมากเกินไป"
   invalid_characters: "มีตัวอักษรที่ไม่สามารถใช้งานได้"
@@ -112,6 +116,7 @@ th:
   reports:
     post_edits:
       labels:
+        edited_at: วันที่
         post: โพส
         edit_reason: เหตุผล
     user_flagging_ratio:

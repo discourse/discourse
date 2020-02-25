@@ -1,5 +1,5 @@
 {{#d-section pageClass="user-activity" class="user-secondary-navigation" scrollTop="false"}}
-  {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=application.currentPath}}
+  {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=router._router.currentPath}}
     <li>
       {{#link-to 'userActivity.index'}}{{i18n 'user.filters.all'}}{{/link-to}}
     </li>
@@ -26,7 +26,7 @@
                     connectorTagName='li'
                     args=(hash model=model)}}
   {{/mobile-nav}}
- 
+
 {{/d-section}}
 {{#if canDownloadPosts}}
     <section class='user-additional-controls'>

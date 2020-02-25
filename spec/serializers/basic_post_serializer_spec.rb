@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'post'
-require_dependency 'user'
 
 describe BasicPostSerializer do
 
@@ -22,6 +20,29 @@ describe BasicPostSerializer do
       expect(json[:name]).to be_blank
     end
 
+  end
+
+  context "cooked" do
+    it "includes membership requests" do
+      user = Fabricate(:user)
+      member = Fabricate(:user)
+      owner = Fabricate(:user)
+
+      group = Fabricate(:group)
+      group.add(member)
+      group.add_owner(owner)
+
+      post = Fabricate(:post, custom_fields: { requested_group_id: group.id })
+
+      json = BasicPostSerializer.new(post, scope: Guardian.new(user), root: false).as_json
+      expect(json[:cooked]).not_to include(I18n.t('groups.request_membership_pm.handle'))
+
+      json = BasicPostSerializer.new(post, scope: Guardian.new(member), root: false).as_json
+      expect(json[:cooked]).not_to include(I18n.t('groups.request_membership_pm.handle'))
+
+      json = BasicPostSerializer.new(post, scope: Guardian.new(owner), root: false).as_json
+      expect(json[:cooked]).to include(I18n.t('groups.request_membership_pm.handle'))
+    end
   end
 
 end

@@ -1,3 +1,4 @@
+import { set } from "@ember/object";
 export default function(helpers) {
   const { response } = helpers;
 
@@ -128,7 +129,7 @@ export default function(helpers) {
     return response(200, {
       reviewable_perform_result: {
         success: true,
-        remove_reviewable_ids: [parseInt(request.params.id)]
+        remove_reviewable_ids: [parseInt(request.params.id, 10)]
       }
     });
   });
@@ -136,7 +137,7 @@ export default function(helpers) {
   this.put("/review/:id", request => {
     let result = { payload: {} };
     Object.entries(JSON.parse(request.requestBody).reviewable).forEach(t => {
-      Ember.set(result, t[0], t[1]);
+      set(result, t[0], t[1]);
     });
     return response(200, result);
   });

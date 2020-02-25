@@ -7,7 +7,7 @@
 
 zh_CN:
   site_settings:
-    discourse_narrative_bot_enabled: '启用 Discourse 代表机器人（discobot）'
+    discourse_narrative_bot_enabled: "启用 Discourse 代表机器人（discobot）"
     disable_discourse_narrative_bot_welcome_post: "禁止 Discourse 代表机器人发送欢迎帖子"
     discourse_narrative_bot_ignored_usernames: "Discourse 代表机器人应该忽略的用户名"
     discourse_narrative_bot_disable_public_replies: "禁止 Discourse 代表机器人发布公开回复"
@@ -23,9 +23,17 @@ zh_CN:
       name: 已证明
       description: "完成了我们的高级用户教程"
       long_description: |
-        该徽章授予完成我们交互式高级用户教程的你。你已经掌握了讨论的高级工具——你已经收到了证明！
+        该徽章授予给完成交互式高级用户教程的你。你已经掌握了讨论的高级工具——本徽章就是你的证明！
   discourse_narrative_bot:
     bio: "你好，我不是真人，而是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`@%{discobot_username}`** 与我交互。"
+    tl2_promotion_message:
+      subject_template: "恭喜！你的信任等级提升了！"
+      text_body_template: |
+        现在你已经晋升了了，是时候学习一些高级特性了!
+
+        用 `@%{discobot_username} %{reset_trigger}` 来回复这条信息，了解更多你能做的事情。
+
+        我们邀请你继续参与社区活动——我们喜欢有你在身边。
     timeout:
       message: |-
         你好， @%{username}。好久没见到你了，一切可好？
@@ -82,7 +90,7 @@ zh_CN:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: '财富'
+      trigger: "财富"
       answers:
         '1': "很可能"
         '2': "一定是"
@@ -107,23 +115,23 @@ zh_CN:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: '开始'
-      skip_trigger: '跳过'
-      help_trigger: '帮助'
+      reset_trigger: "开始"
+      skip_trigger: "跳过"
+      help_trigger: "帮助"
       random_mention:
         reply: |-
           你好！想看看我能做什么吗？说 `@%{discobot_username} %{help_trigger}`。
         tracks: |-
-          我现在知道怎么做这些：
+          我现在知道应该怎样应对下面的问题了：
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > 试试这些交互教程：%{tracks}。
+          `@ %{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > 开始交互式教程。`{name-of-tutorial}`可以是一个：`%{tracks}`。
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3，6
+          > :game_die: 3, 6
 
           `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _随手做些善举，不要期待任何的回报，肯定能懂得一个道理：总有一天有人会为你做同样的事情。_ &mdash; 戴安娜公主
+          %{quote_sample}
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: 你可能需要它
@@ -225,7 +233,7 @@ zh_CN:
         instructions: |-
           如果你想了解更多，请选择下方<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做，你一会可能收到份 :gift: ！
         reply: |-
-          太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像  &#8599;
+          太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像 &#8599;
         not_found: |-
           啊哦，我没有在这个主题中看到任何收藏。你在每个帖子下找到了收藏按钮吗？如果需要的话，使用显示更多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
       emoji:
@@ -253,7 +261,7 @@ zh_CN:
 
           你能在回复中提及**@%{discobot_username}**吗？
         reply: |-
-          **谁在找我！？** :raised_hand: 我觉得是你！ :wave:  好吧，我在这儿！感谢你提到我。 :ok_hand:
+          **谁在找我！？** :raised_hand: 我觉得是你！ :wave: 好吧，我在这儿！感谢你提到我。 :ok_hand:
         not_found: |-
           我没有在任何地方看到我的名字 :frowning: 你可以再 `@%{discobot_username}` 我试试？
 
@@ -262,7 +270,7 @@ zh_CN:
         instructions: |-
           我们都喜欢友善的讨论，我们也需要你的帮助来[一起保持文明](%{guidelines_url})。如果你发现了问题，请用标记告诉作者，或者通知[我们友善的管理人员](%{about_url})来处理。
 
-          >  :imp: 我在这写了些脏话
+          > :imp: 我在这写了些脏话
 
           我猜你知道要做什么了。点击**标记该贴**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">为不合适！
         reply: |-
@@ -275,11 +283,11 @@ zh_CN:
 
           试试在这个主题中搜索关键词“capy&#8203;bara”
         hidden_message: |-
-          你怎么错过这个 capybara 哒？ :wink:
+          你怎么错过了这只水豚？ :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          注意到你回到主题开头了么？**带 `:herb:` 这个 emoji 回复** 来喂养这只可怜又饥饿的 capabara，你会自动跳转到结尾。
+          注意到你回到主题开头了么？**使用颜文字`%{search_answer}`回复**来给这只可怜又饥饿水豚投食吧，之后你就会自动回到底部。
         reply: |-
           你找到啦 :tada:
 
@@ -300,11 +308,11 @@ zh_CN:
 
           （如果你想再次与我交谈以了解更多信息，请随时留言或提及`@%{discobot_username}`！）
       certificate:
-        alt: '成就证明'
+        alt: "成就证明"
     advanced_user_narrative:
-      reset_trigger: '高级教程'
+      reset_trigger: "高级教程"
       cert_title: "你已经成功完成高级用户教程了"
-      title: ':arrow_up: 高级用户特性'
+      title: ":arrow_up: 高级用户特性"
       start_message: |-
         作为_advanced_用户，你是否访问过[你的偏好设置页面](%{base_uri}/my/preferences) @%{username}？ 有很多方法可以自定义你的体验，例如选择深色或浅色主题
 
@@ -335,7 +343,7 @@ zh_CN:
 
           为了讨论的连贯性，删除不会立即发生，所以帖子将在之后移除。
       recover:
-        deleted_post_raw: '为什么 @%{discobot_username}删除了我的帖子？:anguished:'
+        deleted_post_raw: "为什么 @%{discobot_username}删除了我的帖子？:anguished:"
         instructions: |-
           哦不！看起来我不小心删除了我刚刚给你创建的一个新帖子。
 
@@ -428,4 +436,4 @@ zh_CN:
 
           再见啦！如果你想要继续和我交流，随时给我发消息 :sunglasses:
       certificate:
-        alt: '高级用户终身成就证明'
+        alt: "高级用户终身成就证明"

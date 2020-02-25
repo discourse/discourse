@@ -1,10 +1,13 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+import FilterModeMixin from "discourse/mixins/filter-mode";
 
-export default Ember.Controller.extend({
-  discovery: Ember.inject.controller(),
-  discoveryTopics: Ember.inject.controller("discovery/topics"),
+export default Controller.extend(FilterModeMixin, {
+  discovery: inject(),
+  discoveryTopics: inject("discovery/topics"),
 
-  @computed("discoveryTopics.model", "discoveryTopics.model.draft")
+  @discourseComputed("discoveryTopics.model", "discoveryTopics.model.draft")
   draft: function() {
     return this.get("discoveryTopics.model.draft");
   }

@@ -1,42 +1,44 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import { alias, reads } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import LoadMore from "discourse/mixins/load-more";
+import { on } from "@ember/object/evented";
 
-export default Ember.Component.extend({
+export default Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
 
   // Overwrite this to perform client side filtering of topics, if desired
-  filteredTopics: Ember.computed.alias("topics"),
+  filteredTopics: alias("topics"),
 
-  _init: function() {
+  _init: on("init", function() {
     this.addObserver("hideCategory", this.rerender);
     this.addObserver("order", this.rerender);
     this.addObserver("ascending", this.rerender);
     this.refreshLastVisited();
-  }.on("init"),
+  }),
 
-  @computed("bulkSelectEnabled")
+  @discourseComputed("bulkSelectEnabled")
   toggleInTitle(bulkSelectEnabled) {
     return !bulkSelectEnabled && this.canBulkSelect;
   },
 
-  @computed
+  @discourseComputed
   sortable() {
     return !!this.changeSort;
   },
 
-  skipHeader: Ember.computed.reads("site.mobileView"),
+  skipHeader: reads("site.mobileView"),
 
-  @computed("order")
+  @discourseComputed("order")
   showLikes(order) {
     return order === "likes";
   },
 
-  @computed("order")
+  @discourseComputed("order")
   showOpLikes(order) {
     return order === "op_likes";
   },
@@ -52,6 +54,28 @@ export default Ember.Component.extend({
   @observes("topics", "order", "ascending", "category", "top")
   lastVisitedTopicChanged() {
     this.refreshLastVisited();
+  },
+
+  scrolled() {
+    this._super(...arguments);
+    let onScroll = this.onScroll;
+    if (!onScroll) return;
+
+    onScroll.call(this);
+  },
+
+  scrollToLastPosition() {
+    if (!this.scrollOnLoad) return;
+
+    let scrollTo = this.session.get("topicListScrollPosition");
+    if (scrollTo && scrollTo >= 0) {
+      schedule("afterRender", () => $(window).scrollTop(scrollTo + 1));
+    }
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.scrollToLastPosition();
   },
 
   _updateLastVisitedTopic(topics, order, ascending, top) {

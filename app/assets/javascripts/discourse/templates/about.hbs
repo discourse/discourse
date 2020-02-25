@@ -28,9 +28,7 @@
         <section class='about admins'>
           <h3>{{d-icon "users"}} {{i18n 'about.our_admins'}}</h3>
 
-          {{#each model.admins as |a|}}
-            {{user-info user=a}}
-          {{/each}}
+          {{about-page-users users=model.admins}}
           <div class='clearfix'></div>
 
         </section>
@@ -45,9 +43,7 @@
           <h3>{{d-icon "users"}} {{i18n 'about.our_moderators'}}</h3>
 
           <div class='users'>
-            {{#each model.moderators as |m|}}
-              {{user-info user=m}}
-            {{/each}}
+            {{about-page-users users=model.moderators}}
           </div>
           <div class='clearfix'></div>
         </section>
@@ -57,46 +53,59 @@
                     connectorTagName='section'
                     args=(hash model=model)}}
 
+      {{#if model.category_moderators.length}}
+        {{#each model.category_moderators as |cm|}}
+          <section class='about category-moderators moderators-{{cm.category.slug}}'>
+            <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
+            <div class='users'>
+              {{about-page-users users=cm.moderators}}
+            </div>
+            <div class='clearfix'></div>
+          </section>
+        {{/each}}
+      {{/if}}
       <section class='about stats'>
-        <h3>{{d-icon "bar-chart"}}  {{i18n 'about.stats'}}</h3>
+        <h3>{{d-icon "far-chart-bar"}}  {{i18n 'about.stats'}}</h3>
 
         <table class='table'>
-          <tr>
-            <th>&nbsp;</th>
-            <th>{{i18n 'about.stat.last_7_days'}}</th>
-            <th>{{i18n 'about.stat.last_30_days'}}</th>
-            <th>{{i18n 'about.stat.all_time'}}</th>
-          </tr>
-          <tr>
-            <td class='title'>{{i18n 'about.topic_count'}}</td>
-            <td>{{number model.stats.topics_7_days}}</td>
-            <td>{{number model.stats.topics_30_days}}</td>
-            <td>{{number model.stats.topic_count}}</td>
-          </tr>
-          <tr>
-            <td>{{i18n 'about.post_count'}}</td>
-            <td>{{number model.stats.posts_7_days}}</td>
-            <td>{{number model.stats.posts_30_days}}</td>
-            <td>{{number model.stats.post_count}}</td>
-          </tr>
-          <tr>
-            <td>{{i18n 'about.user_count'}}</td>
-            <td>{{number model.stats.users_7_days}}</td>
-            <td>{{number model.stats.users_30_days}}</td>
-            <td>{{number model.stats.user_count}}</td>
-          </tr>
-          <tr>
-            <td>{{i18n 'about.active_user_count'}}</td>
-            <td>{{number model.stats.active_users_7_days}}</td>
-            <td>{{number model.stats.active_users_30_days}}</td>
-            <td>&mdash;</td>
-          </tr>
-          <tr>
-            <td>{{i18n 'about.like_count'}}</td>
-            <td>{{number model.stats.likes_7_days}}</td>
-            <td>{{number model.stats.likes_30_days}}</td>
-            <td>{{number model.stats.like_count}}</td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>&nbsp;</th>
+              <th>{{i18n 'about.stat.last_7_days'}}</th>
+              <th>{{i18n 'about.stat.last_30_days'}}</th>
+              <th>{{i18n 'about.stat.all_time'}}</th>
+            </tr>
+            <tr>
+              <td class='title'>{{i18n 'about.topic_count'}}</td>
+              <td>{{number model.stats.topics_7_days}}</td>
+              <td>{{number model.stats.topics_30_days}}</td>
+              <td>{{number model.stats.topic_count}}</td>
+            </tr>
+            <tr>
+              <td>{{i18n 'about.post_count'}}</td>
+              <td>{{number model.stats.posts_7_days}}</td>
+              <td>{{number model.stats.posts_30_days}}</td>
+              <td>{{number model.stats.post_count}}</td>
+            </tr>
+            <tr>
+              <td>{{i18n 'about.user_count'}}</td>
+              <td>{{number model.stats.users_7_days}}</td>
+              <td>{{number model.stats.users_30_days}}</td>
+              <td>{{number model.stats.user_count}}</td>
+            </tr>
+            <tr>
+              <td>{{i18n 'about.active_user_count'}}</td>
+              <td>{{number model.stats.active_users_7_days}}</td>
+              <td>{{number model.stats.active_users_30_days}}</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <td>{{i18n 'about.like_count'}}</td>
+              <td>{{number model.stats.likes_7_days}}</td>
+              <td>{{number model.stats.likes_30_days}}</td>
+              <td>{{number model.stats.like_count}}</td>
+            </tr>
+          </tbody>
         </table>
       </section>
 

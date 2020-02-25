@@ -99,9 +99,9 @@
     margin-top: 20px;
   }
   .color-schemes li {
-    .fa {
-      margin-right: 6px;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+    .d-icon {
+      margin-right: 0.25em;
+      color: $primary-medium;
     }
   }
   .show-current-style {
@@ -150,6 +150,9 @@
     a.license-url {
       display: inline-block;
       margin-right: 10px;
+      .d-icon {
+        margin-left: 5px;
+      }
     }
 
     .mini-title {
@@ -183,26 +186,20 @@
     border-bottom: 1px solid $primary-low;
     border-top: 1px solid $primary-low;
     border-right: 1px solid $primary-low;
+    display: flex;
+
     .tab {
-      display: inline-block;
-      padding: 10px;
+      padding: 1em;
       width: 50%;
       box-sizing: border-box;
       text-align: center;
-      border-left: 1px solid $primary-low;
 
       &.active {
-        font-weight: bold;
-        color: $secondary;
-        background: $danger;
+        font-weight: 700;
       }
 
-      &:not(.active) {
-        cursor: pointer;
-
-        &:hover {
-          background-color: $primary-very-low;
-        }
+      &:last-child {
+        border-left: 1px solid $primary-low;
       }
     }
   }
@@ -294,6 +291,7 @@
 
         .others-count,
         .others-count:hover {
+          color: $primary-high;
           text-decoration: underline;
         }
       }
@@ -316,7 +314,9 @@
   }
 
   .theme.settings {
-    .theme-setting,
+    .theme-setting {
+      min-height: 35px;
+    }
     .theme-translation {
       padding-bottom: 0;
       margin-top: 18px;
@@ -435,7 +435,7 @@
         bottom: 10px;
       }
       .ace-wrapper {
-        height: calc(100% - 200px);
+        height: calc(100vh - 200px);
       }
     }
 
@@ -468,7 +468,6 @@
   }
   .color-scheme {
     .controls {
-      span,
       button,
       a {
         margin-right: 10px;
@@ -492,8 +491,14 @@
     .hex {
       text-align: center;
     }
+    h3 {
+      margin: 0;
+    }
     .description {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      margin: 0.15em 0 0;
+      color: $primary-high;
+      font-size: $font-down-1;
+      line-height: $line-height-medium;
     }
 
     .invalid .hex input {
@@ -513,8 +518,19 @@
     list-style: none;
     margin-left: 0;
     li {
+      &.disabled-child {
+        .child-link {
+          color: $primary-medium;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+      .btn {
+        margin-left: 5px;
+      }
       display: table-row;
-      .col:first-child {
+      .col.child-link {
         padding-right: 10px;
         padding-bottom: 10px;
         min-width: 80px;
@@ -573,7 +589,11 @@
   .category,
   .external_url,
   .post {
-    text-overflow: ellipsis;
+    @include ellipsis;
+    max-width: 100px;
+    @include breakpoint(tablet) {
+      max-width: 100%;
+    }
   }
 
   &.grid tr.admin-list-item {
@@ -583,7 +603,7 @@
 
 .permalink-search {
   text-align: left;
-  @media screen and (min-width: map-get($breakpoints, tablet)) {
+  @include breakpoint(tablet, min-width) {
     text-align: right;
   }
 }
@@ -593,7 +613,7 @@
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  @media screen and (min-width: map-get($breakpoints, tablet)) {
+  @include breakpoint(tablet, min-width) {
     align-items: center;
     flex-direction: row;
   }
@@ -603,7 +623,7 @@
   }
   input {
     margin: 5px 0;
-    @media screen and (min-width: map-get($breakpoints, tablet)) {
+    @include breakpoint(tablet, min-width) {
       margin: 0 5px;
     }
   }
@@ -614,7 +634,7 @@
 }
 
 .permalink-description {
-  color: dark-light-choose($primary-medium, $secondary-medium);
+  color: $primary-medium;
 }
 
 // embedding
@@ -694,7 +714,7 @@
     margin: 0.75em 0;
   }
   p.description {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
     margin-bottom: 1em;
     max-width: 700px;
   }
@@ -764,5 +784,44 @@
 
   .option {
     margin-left: 1em;
+  }
+}
+
+.robots-txt-edit {
+  div.overridden {
+    background: $highlight-medium;
+    padding: 7px;
+    margin-bottom: 7px;
+  }
+  .robots-txt-input {
+    width: 100%;
+    box-sizing: border-box;
+    height: 55vh;
+  }
+}
+
+.admin-customize-email-templates {
+  .email-template,
+  .controls {
+    margin-top: 1em;
+  }
+
+  .d-editor {
+    height: 50vh;
+  }
+}
+
+.admin-customize-email-style {
+  .ace-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
   }
 }

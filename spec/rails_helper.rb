@@ -155,10 +155,12 @@ end
 
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
+  config.silence_filter_announcements = ENV['RSPEC_SILENCE_FILTER_ANNOUNCEMENTS'] == "1"
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
+  config.include WebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.mock_framework = :mocha
   config.order = 'random'
@@ -175,6 +177,12 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.before(:suite) do
+    begin
+      ActiveRecord::Migration.check_pending!
+    rescue ActiveRecord::PendingMigrationError
+      raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
+    end
+
     Sidekiq.error_handlers.clear
 
     # Ugly, but needed until we have a user creator
@@ -195,7 +203,6 @@ RSpec.configure do |config|
       SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
     end
 
-    require_dependency 'site_settings/local_process_provider'
     SiteSetting.provider = SiteSettings::LocalProcessProvider.new
 
     WebMock.disable_net_connect!
@@ -264,18 +271,10 @@ RSpec.configure do |config|
   # force a rollback after using a multisite connection.
   def test_multisite_connection(name)
     RailsMultisite::ConnectionManagement.with_connection(name) do
-      spec_exception = nil
-
-      ActiveRecord::Base.transaction do
-        begin
-          yield
-        rescue Exception => spec_exception
-        ensure
-          raise ActiveRecord::Rollback
-        end
+      ActiveRecord::Base.transaction(joinable: false) do
+        yield
+        raise ActiveRecord::Rollback
       end
-
-      raise spec_exception if spec_exception
     end
   end
 

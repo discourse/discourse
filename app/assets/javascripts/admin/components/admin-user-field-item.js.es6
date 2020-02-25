@@ -1,16 +1,19 @@
+import { isEmpty } from "@ember/utils";
+import { empty } from "@ember/object/computed";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import UserField from "admin/models/user-field";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
 import { i18n } from "discourse/lib/computed";
-import {
-  default as computed,
+import discourseComputed, {
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend(bufferedProperty("userField"), {
-  editing: Ember.computed.empty("userField.id"),
+export default Component.extend(bufferedProperty("userField"), {
+  editing: empty("userField.id"),
   classNameBindings: [":user-field"],
 
   cantMoveUp: propertyEqual("userField", "firstField"),
@@ -18,7 +21,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
 
   userFieldsDescription: i18n("admin.user_fields.description"),
 
-  @computed("buffered.field_type")
+  @discourseComputed("buffered.field_type")
   bufferedFieldType(fieldType) {
     return UserField.fieldTypeById(fieldType);
   },
@@ -27,7 +30,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
   @observes("editing")
   _focusOnEdit() {
     if (this.editing) {
-      Ember.run.scheduleOnce("afterRender", this, "_focusName");
+      scheduleOnce("afterRender", this, "_focusName");
     }
   },
 
@@ -35,12 +38,12 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
     $(".user-field-name").select();
   },
 
-  @computed("userField.field_type")
+  @discourseComputed("userField.field_type")
   fieldName(fieldType) {
     return UserField.fieldTypeById(fieldType).get("name");
   },
 
-  @computed(
+  @discourseComputed(
     "userField.editable",
     "userField.required",
     "userField.show_on_profile",
@@ -93,7 +96,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
 
     cancel() {
       const id = this.get("userField.id");
-      if (Ember.isEmpty(id)) {
+      if (isEmpty(id)) {
         this.destroyAction(this.userField);
       } else {
         this.rollbackBuffer();

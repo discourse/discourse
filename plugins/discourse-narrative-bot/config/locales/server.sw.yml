@@ -7,7 +7,7 @@
 
 sw:
   site_settings:
-    discourse_narrative_bot_enabled: 'Ruhusu roboti wa maelezo ya Discourse (discobot)'
+    discourse_narrative_bot_enabled: "Ruhusu roboti wa maelezo ya Discourse (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Sitisha Roboti wa Discourse kukaribisha watu na taarifa"
     discourse_narrative_bot_ignored_usernames: "Majina ya watumiaji ambayo Roboti wa Discourse aya dharau"
     discourse_narrative_bot_disable_public_replies: "Sitisha majibu ya umma ya roboti wa Discourse"
@@ -40,7 +40,7 @@ sw:
     dice:
       trigger: "zungusha"
       not_enough_dice: |-
-        Nina dadu %{num_of_dice}. [Aibu]  (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), najua!
+        Nina dadu %{num_of_dice}. [Aibu] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), najua!
       results: |-
         > :game_die: %{results}
     quote:
@@ -61,7 +61,7 @@ sw:
         quote: "Amini kuwa unaweza na utakuwa umemaliza nusu ya safari."
         author: "Theodore Roosevelt"
       '6':
-        quote: "Maisha ni  kama sanduku la chocolate. Hauwezi kujua utapata nini."
+        quote: "Maisha ni kama sanduku la chocolate. Hauwezi kujua utapata nini."
         author: "Mama yake na Forrest Gump"
       '7':
         quote: "Hiyo ni hatua moja kwa mtu, hatua kubwa kwa binadamu."
@@ -78,7 +78,7 @@ sw:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'Mali au Bahati'
+      trigger: "Mali au Bahati"
       answers:
         '1': "Inawezekana"
         '2': "Imeamuliwa kuwa hivyo"
@@ -102,21 +102,12 @@ sw:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'mwanzo'
-      skip_trigger: 'ruka'
-      help_trigger: 'onyesha msaada'
+      reset_trigger: "mwanzo"
+      skip_trigger: "ruka"
+      help_trigger: "onyesha msaada"
       random_mention:
         reply: |-
           Habari! kujua ninachoweza kufanya andika `@%{discobot_username}%{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username}%{dice_trigger} 2d6`
-          > :game_die: 3 ,6
-
-          `@%{discobot_username}%{quote_trigger}`
-          > :left_speech_bubble:_Fanya vitendo vya huruma na upendo, bila kutegemea tuzo, ukijua kuwa siku moja mtu atakufanyia hivyo pia_&mdash; Princess Diana
-
-          `@%{discobot_username}%{magic_8_ball_trigger}`
-          >mpira_fuwele: Unaweza ukautegemea
       do_not_understand:
         first_response: |-
           Habari, asante kwa jibu lako!
@@ -214,7 +205,7 @@ sw:
         not_found: |-
           Mmmh, nimeshindwa kuona Emoji yoyote kwenye jibu lako? Jamani! :sob:
 
-          Jaribu  kuandika nukta mbili <kbd>:</kbd> kuchagua emojis, alafu andika herufi za kwanza unazotaka, kama `:bird:`
+          Jaribu kuandika nukta mbili <kbd>:</kbd> kuchagua emojis, alafu andika herufi za kwanza unazotaka, kama `:bird:`
 
           Au, bofya kitufe cha emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> kwenye sehemu ya kuhariri.
 
@@ -246,12 +237,6 @@ sw:
           _psst_ ...Nimeficha kitu kwenye hii mada. Kama unapenda kujua, **chagua ikoni ya utafiti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> upande wa juu mkono wako wa kulia &#8599; kukitafuta hicho kitu
 
           Jaribu kutafuta neno "capy&#8203;bara" kwenye hii mada
-        hidden_message: |-
-          Umepitwa vipi na capybara? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Umegundua umerudi ulipoanza? Shibisha capybara mwenye njaa kwa **kuandika `:herb` ishara** na utapelekwa mwisho.
         reply: |-
           Nina furaha kuwa umeiona :tada:
 
@@ -263,10 +248,10 @@ sw:
         not_found: |-
           Hmm...inaonekana kama kuna tatizo. Samahani Sana. Je ulikuwa unatafuta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> kuhusiana na **capy&#8203;bara**?
       certificate:
-        alt: 'Shahada ya Mafanikio'
+        alt: "Shahada ya Mafanikio"
     advanced_user_narrative:
       cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya wa hali ya juu"
-      title: ':arrow_up: Vipengele vya mtumiaji wa hali ya juu'
+      title: ":arrow_up: Vipengele vya mtumiaji wa hali ya juu"
       edit:
         bot_created_post_raw: "@%{discobot_username} ni, kwa kirefu, roboti mjanja ninayemjua :wink:"
         instructions: |-
@@ -293,7 +278,7 @@ sw:
 
           Kuendeleza majadiliano, ufutaji hautatokea hapo hapo, chapisho litaondolewa baada ya mda fulani.
       recover:
-        deleted_post_raw: 'Kwa nini @%{discobot_username} amefuta chapisho langu? :anguished:'
+        deleted_post_raw: "Kwa nini @%{discobot_username} amefuta chapisho langu? :anguished:"
         instructions: |-
           Inaonekana kuwa nimefuta kimakosa chapisho langu jipya nililokutengenezea.
 
@@ -315,7 +300,7 @@ sw:
           Vizuri sana! Kumbuka hii inafanya kazi kwenye kategoria _na_lebo kama lebo zikiruhusiwa.
       change_topic_notification_level:
         instructions: |-
-          Kila mada ina kiwango cha ujulishaji. Inaanza na 'kawaida',  inamaanisha utajulishwa tu mtu akikuongelea.
+          Kila mada ina kiwango cha ujulishaji. Inaanza na 'kawaida', inamaanisha utajulishwa tu mtu akikuongelea.
 
           Kama chaguo-msingi, kiwango cha ujulishaji kwa ajili ya ujumbe binafsi ipo kwenye kiwango cha juu cha 'kuangalia', ina maanisha kuwa utajulishwa kuhusu kila jibu jipya. Lakini unaweza kubadilisha kiwango hiki kwa ajili ya mada 'zinazoangaliwa', 'inayofuatiliwa' au 'kunyamazishwa'.
 
@@ -358,7 +343,7 @@ sw:
 
           Unaweza kutumia gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">kwenye uhariri kuongeza sehemu ya taarifa kwenye jibu lako lijalo?
         not_found: |-
-          Umeshindwa kutengeneza widget ya maelezo? Jaribu kuongeza yafuatayo kwenye  jibu lako lifuatao:
+          Umeshindwa kutengeneza widget ya maelezo? Jaribu kuongeza yafuatayo kwenye jibu lako lifuatao:
 
           ```neno
           [maelezo=Nichague kupata maelezo]
@@ -377,4 +362,4 @@ sw:
 
           Kwa heri kwa sasa! Kama ukitaka kuongea na mimi tena, nitumie ujumbe mda wowote :sunglasses:
       certificate:
-        alt: 'Shahada ya Mafanikio ya Mtumiaji wa Juu'
+        alt: "Shahada ya Mafanikio ya Mtumiaji wa Juu"

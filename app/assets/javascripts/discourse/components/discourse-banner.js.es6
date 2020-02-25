@@ -1,7 +1,16 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
-  @computed("user.dismissed_banner_key", "banner.key", "hide")
+export default Component.extend({
+  @discourseComputed("banner.html")
+  content(bannerHtml) {
+    const $div = $("<div>");
+    $div.append(bannerHtml);
+    $div.find("[id^='heading--']").removeAttr("id");
+    return $div.html();
+  },
+
+  @discourseComputed("user.dismissed_banner_key", "banner.key", "hide")
   visible(dismissedBannerKey, bannerKey, hide) {
     dismissedBannerKey =
       dismissedBannerKey || this.keyValueStore.get("dismissed_banner_key");

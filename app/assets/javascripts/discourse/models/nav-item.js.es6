@@ -1,62 +1,41 @@
-import { toTitleCase } from "discourse/lib/formatter";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
-import computed from "ember-addons/ember-computed-decorators";
+import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
+import { reads } from "@ember/object/computed";
+import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
-const NavItem = Discourse.Model.extend({
-  @computed("categoryName", "name")
-  title(categoryName, name) {
+const NavItem = EmberObject.extend({
+  @discourseComputed("name")
+  title(name) {
     const extra = {};
-
-    if (categoryName) {
-      name = "category";
-      extra.categoryName = categoryName;
-    }
 
     return I18n.t("filters." + name.replace("/", ".") + ".help", extra);
   },
 
-  @computed("categoryName", "name", "count")
-  displayName(categoryName, name, count) {
+  @discourseComputed("name", "count")
+  displayName(name, count) {
     count = count || 0;
 
-    if (name === "latest" && !Discourse.Site.currentProp("mobileView")) {
+    if (
+      name === "latest" &&
+      (!Site.currentProp("mobileView") || this.tagId !== undefined)
+    ) {
       count = 0;
     }
 
     let extra = { count: count };
     const titleKey = count === 0 ? ".title" : ".title_with_count";
 
-    if (categoryName) {
-      name = "category";
-      extra.categoryName = toTitleCase(categoryName);
-    }
-
     return emojiUnescape(
       I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
     );
   },
 
-  @computed("name")
-  categoryName(name) {
-    const split = name.split("/");
-    return split[0] === "category" ? split[1] : null;
-  },
-
-  @computed("name")
-  categorySlug(name) {
-    const split = name.split("/");
-    if (split[0] === "category" && split[1]) {
-      const cat = Discourse.Site.current().categories.findBy(
-        "nameLower",
-        split[1].toLowerCase()
-      );
-      return cat ? Discourse.Category.slugFor(cat) : null;
-    }
-    return null;
-  },
-
-  @computed("filterMode")
-  href(filterMode) {
+  @discourseComputed("filterType", "category", "noSubcategories", "tagId")
+  href(filterType, category, noSubcategories, tagId) {
     let customHref = null;
 
     NavItem.customNavItemHrefs.forEach(function(cb) {
@@ -70,28 +49,27 @@ const NavItem = Discourse.Model.extend({
       return customHref;
     }
 
-    return Discourse.getURL("/") + filterMode;
+    const context = { category, noSubcategories, tagId };
+    return NavItem.pathFor(filterType, context);
   },
 
-  @computed("name", "category", "categorySlug", "noSubcategories")
-  filterMode(name, category, categorySlug, noSubcategories) {
-    if (name.split("/")[0] === "category") {
-      return "c/" + categorySlug;
-    } else {
-      let mode = "";
-      if (category) {
-        mode += "c/";
-        mode += Discourse.Category.slugFor(category);
-        if (noSubcategories) {
-          mode += "/none";
-        }
-        mode += "/l/";
+  filterType: reads("name"),
+
+  @discourseComputed("name", "category", "noSubcategories")
+  filterMode(name, category, noSubcategories) {
+    let mode = "";
+    if (category) {
+      mode += "c/";
+      mode += Category.slugFor(category);
+      if (noSubcategories) {
+        mode += "/none";
       }
-      return mode + name.replace(" ", "-");
+      mode += "/l/";
     }
+    return mode + name.replace(" ", "-");
   },
 
-  @computed("name", "category", "topicTrackingState.messageCount")
+  @discourseComputed("name", "category", "topicTrackingState.messageCount")
   count(name, category) {
     const state = this.topicTrackingState;
     if (state) {
@@ -101,48 +79,103 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  @computed("href")
-  href: href => href,
+  href: discourseComputed("href", {
+    get() {
+      if (this._href) {
+        return this._href;
+      }
+
+      return this.href;
+    },
+
+    set(key, value) {
+      return (this._href = value);
+    }
+  }),
+
+  count: 0,
+
   customFilter: null
 });
 
 NavItem.reopenClass({
   extraArgsCallbacks: [],
   customNavItemHrefs: [],
-  extraNavItems: [],
+  extraNavItemDescriptors: [],
 
-  // create a nav item from the text, will return null if there is not valid nav item for this particular text
-  fromText(text, opts) {
-    var split = text.split(","),
-      name = split[0],
-      testName = name.split("/")[0],
-      anonymous = !Discourse.User.current();
+  pathFor(filterType, context) {
+    let path = Discourse.getURL("");
+    let includesCategoryContext = false;
+    let includesTagContext = false;
+
+    if (filterType === "categories") {
+      path += "/categories";
+      return path;
+    }
+
+    if (context.tagId && Site.currentProp("filters").includes(filterType)) {
+      includesTagContext = true;
+      path += "/tags";
+    }
+
+    if (context.category) {
+      includesCategoryContext = true;
+      path += `/c/${Category.slugFor(context.category)}/${context.category.id}`;
+
+      if (context.noSubcategories) {
+        path += "/none";
+      }
+    }
+
+    if (includesTagContext) {
+      path += `/${context.tagId}`;
+    }
+
+    if (includesTagContext || includesCategoryContext) {
+      path += "/l";
+    }
+
+    path += `/${filterType}`;
+
+    // In the case of top, the nav item doesn't include a period because the
+    // period has its own selector just below
+
+    return path;
+  },
+
+  // Create a nav item given a filterType. It returns null if there is not
+  // valid nav item. The name is a historical artifact.
+  fromText(filterType, opts) {
+    const anonymous = !User.current();
 
     opts = opts || {};
 
-    if (
-      anonymous &&
-      !Discourse.Site.currentProp("anonymous_top_menu_items").includes(testName)
-    )
-      return null;
+    if (anonymous) {
+      const topMenuItems = Site.currentProp("anonymous_top_menu_items");
+      if (!topMenuItems || !topMenuItems.includes(filterType)) {
+        return null;
+      }
+    }
 
-    if (!Discourse.Category.list() && testName === "categories") return null;
-    if (!Discourse.Site.currentProp("top_menu_items").includes(testName))
-      return null;
+    if (!Category.list() && filterType === "categories") return null;
+    if (!Site.currentProp("top_menu_items").includes(filterType)) return null;
 
-    var args = { name: name, hasIcon: name === "unread" },
-      extra = null,
-      self = this;
+    var args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
       args.category = opts.category;
+    }
+    if (opts.tagId) {
+      args.tagId = opts.tagId;
+    }
+    if (opts.persistedQueryParams) {
+      args.persistedQueryParams = opts.persistedQueryParams;
     }
     if (opts.noSubcategories) {
       args.noSubcategories = true;
     }
-    NavItem.extraArgsCallbacks.forEach(cb => {
-      extra = cb.call(self, text, opts);
-      _.merge(args, extra);
-    });
+    NavItem.extraArgsCallbacks.forEach(cb =>
+      _.merge(args, cb.call(this, filterType, opts))
+    );
 
     const store = Discourse.__container__.lookup("service:store");
     return store.createRecord("nav-item", args);
@@ -157,25 +190,71 @@ NavItem.reopenClass({
 
     let items = Discourse.SiteSettings.top_menu.split("|");
 
-    if (
-      args.filterMode &&
-      !items.some(i => i.indexOf(args.filterMode) !== -1)
-    ) {
-      items.push(args.filterMode);
+    const filterType = (args.filterMode || "").split("/").pop();
+
+    if (!items.some(i => filterType === i)) {
+      items.push(filterType);
     }
 
     items = items
-      .map(i => Discourse.NavItem.fromText(i, args))
+      .map(i => NavItem.fromText(i, args))
       .filter(
         i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
 
-    const extraItems = NavItem.extraNavItems.filter(item => {
-      if (!item.customFilter) return true;
-      return item.customFilter.call(this, category, args);
+    const context = {
+      category: args.category,
+      tagId: args.tagId,
+      noSubcategories: args.noSubcategories
+    };
+
+    const extraItems = NavItem.extraNavItemDescriptors
+      .map(descriptor => ExtraNavItem.create(_.merge({}, context, descriptor)))
+      .filter(item => {
+        if (!item.customFilter) return true;
+        return item.customFilter(category, args);
+      });
+
+    let forceActive = false;
+
+    extraItems.forEach(item => {
+      if (item.init) {
+        item.init(item, category, args);
+      }
+
+      const before = item.before;
+      if (before) {
+        let i = 0;
+        for (i = 0; i < items.length; i++) {
+          if (items[i].name === before) {
+            break;
+          }
+        }
+        items.splice(i, 0, item);
+      } else {
+        items.push(item);
+      }
+
+      if (item.customHref) {
+        item.set("href", item.customHref(category, args));
+      }
+
+      if (item.forceActive && item.forceActive(category, args)) {
+        item.active = true;
+        forceActive = true;
+      } else {
+        item.active = undefined;
+      }
     });
 
-    return items.concat(extraItems);
+    if (forceActive) {
+      items.forEach(i => {
+        if (i.active === undefined) {
+          i.active = false;
+        }
+      });
+    }
+    return items;
   }
 });
 
@@ -190,5 +269,15 @@ export function customNavItemHref(cb) {
 }
 
 export function addNavItem(item) {
-  NavItem.extraNavItems.push(ExtraNavItem.create(item));
+  NavItem.extraNavItemDescriptors.push(item);
 }
+
+Object.defineProperty(Discourse, "NavItem", {
+  get() {
+    deprecated("Import the NavItem class instead of using Discourse.NavItem", {
+      since: "2.4.0",
+      dropFrom: "2.5.0"
+    });
+    return NavItem;
+  }
+});

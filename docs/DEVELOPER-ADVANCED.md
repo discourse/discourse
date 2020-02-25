@@ -54,7 +54,8 @@ If everything goes alright, let's clone Discourse and start hacking:
     RAILS_ENV=test bundle exec rake db:drop
 
     # time to create the database and run migrations
-    bundle exec rake db:create db:migrate
+    bundle exec rake db:create
+    bundle exec rake db:migrate
     RAILS_ENV=test bundle exec rake db:create db:migrate
 
     # run the specs (optional)

@@ -1,13 +1,14 @@
-import {
-  default as computed,
+import { isEmpty } from "@ember/utils";
+import EmberObject from "@ember/object";
+import discourseComputed, {
   on,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
-const LogsNotice = Ember.Object.extend({
+const LogsNotice = EmberObject.extend({
   text: "",
 
   @on("init")
@@ -45,24 +46,24 @@ const LogsNotice = Ember.Object.extend({
     });
   },
 
-  @computed("text")
+  @discourseComputed("text")
   isEmpty(text) {
-    return Ember.isEmpty(text);
+    return isEmpty(text);
   },
 
-  @computed("text")
+  @discourseComputed("text")
   message(text) {
     return new Handlebars.SafeString(text);
   },
 
-  @computed("currentUser")
+  @discourseComputed("currentUser")
   isAdmin(currentUser) {
     return currentUser && currentUser.admin;
   },
 
-  @computed("isEmpty", "isAdmin")
-  hidden(isEmpty, isAdmin) {
-    return !isAdmin || isEmpty;
+  @discourseComputed("isEmpty", "isAdmin")
+  hidden(thisIsEmpty, isAdmin) {
+    return !isAdmin || thisIsEmpty;
   },
 
   @observes("text")
@@ -70,7 +71,7 @@ const LogsNotice = Ember.Object.extend({
     this.keyValueStore.setItem(LOGS_NOTICE_KEY, this.text);
   },
 
-  @computed(
+  @discourseComputed(
     "siteSettings.alert_admins_if_errors_per_hour",
     "siteSettings.alert_admins_if_errors_per_minute"
   )

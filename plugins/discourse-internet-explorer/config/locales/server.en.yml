@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    discourse_internet_explorer_enabled: "Internet Explorer support"
+    discourse_internet_explorer_deprecation_warning: "Show an Internet Explorer deprecation warning"

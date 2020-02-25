@@ -1,6 +1,6 @@
+import { next } from "@ember/runloop";
 let _started = false;
-
-const cache = {};
+let cache = {};
 let transitionCount = 0;
 
 export function setTransient(key, data, count) {
@@ -9,6 +9,12 @@ export function setTransient(key, data, count) {
 
 export function getTransient(key) {
   return cache[key];
+}
+
+export function resetPageTracking() {
+  _started = false;
+  transitionCount = 0;
+  cache = {};
 }
 
 export function startPageTracking(router, appEvents) {
@@ -26,13 +32,13 @@ export function startPageTracking(router, appEvents) {
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
-    Ember.run.next(() => {
+    next(() => {
       let title = Discourse.get("_docTitle");
 
       appEvents.trigger("page:changed", {
         url,
         title,
-        currentRouteName: router.get("currentRouteName"),
+        currentRouteName: router.currentRouteName,
         replacedOnlyQueryParams
       });
     });

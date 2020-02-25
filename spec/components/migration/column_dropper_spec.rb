@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'migration/column_dropper'
 
 RSpec.describe Migration::ColumnDropper do
   def has_column?(table, column)

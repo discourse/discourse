@@ -1,8 +1,9 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
 
-const ScreenedEmail = Discourse.Model.extend({
-  @computed("action")
+const ScreenedEmail = EmberObject.extend({
+  @discourseComputed("action")
   actionName(action) {
     return I18n.t("admin.logs.screened_actions." + action);
   },

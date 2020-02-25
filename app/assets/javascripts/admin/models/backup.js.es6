@@ -1,7 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import EmberObject from "@ember/object";
 
-const Backup = Discourse.Model.extend({
+const Backup = EmberObject.extend({
   destroy() {
     return ajax("/admin/backups/" + this.filename, { type: "DELETE" });
   },
@@ -63,7 +64,7 @@ Backup.reopenClass({
         bootbox.alert(result.message);
       } else {
         // redirect to homepage (session might be lost)
-        window.location.pathname = Discourse.getURL("/");
+        window.location = Discourse.getURL("/");
       }
     });
   }

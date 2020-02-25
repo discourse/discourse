@@ -1,0 +1,7 @@
+export default function() {
+  this.route("<%= dasherized_name %>", function() {
+    this.route("actions", function() {
+      this.route("show", { path: "/:id" });
+    });
+  });
+};

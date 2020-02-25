@@ -1,12 +1,14 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { alias, map } from "@ember/object/computed";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 
-export default Ember.Controller.extend({
-  sample: Ember.computed.alias("model.sample"),
-  errors: Ember.computed.alias("model.errors"),
-  count: Ember.computed.alias("model.grant_count"),
+export default Controller.extend({
+  sample: alias("model.sample"),
+  errors: alias("model.errors"),
+  count: alias("model.grant_count"),
 
-  @computed("count", "sample.length")
+  @discourseComputed("count", "sample.length")
   countWarning(count, sampleLength) {
     if (count <= 10) {
       return sampleLength !== count;
@@ -15,12 +17,12 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model.query_plan")
+  @discourseComputed("model.query_plan")
   hasQueryPlan(queryPlan) {
     return !!queryPlan;
   },
 
-  @computed("model.query_plan")
+  @discourseComputed("model.query_plan")
   queryPlanHtml(queryPlan) {
     let output = `<pre class="badge-query-plan">`;
 
@@ -33,7 +35,7 @@ export default Ember.Controller.extend({
     return output;
   },
 
-  processedSample: Ember.computed.map("model.sample", grant => {
+  processedSample: map("model.sample", grant => {
     let i18nKey = "admin.badges.preview.grant.with";
     const i18nParams = { username: escapeExpression(grant.username) };
 

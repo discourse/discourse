@@ -1,8 +1,9 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import PreloadStore from "preload-store";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   titleToken() {
     return I18n.t("login.reset_password");
   },

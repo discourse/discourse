@@ -6,15 +6,20 @@ export default {
     const user = container.lookup("current-user:main");
     if (!user) return; // must be logged in
 
-    this.notifications =
-      user.unread_notifications + user.unread_private_messages;
+    this.container = container;
 
     container
-      .lookup("app-events:main")
+      .lookup("service:app-events")
       .on("notifications:changed", this, "_updateTitle");
   },
 
   _updateTitle() {
-    Discourse.updateNotificationCount(this.notifications);
+    const user = this.container.lookup("current-user:main");
+    if (!user) return; // must be logged in
+
+    const notifications =
+      user.unread_notifications + user.unread_private_messages;
+
+    Discourse.updateNotificationCount(notifications);
   }
 };

@@ -8,7 +8,7 @@
 ca:
   js:
     details:
-      title: Amaga detalls
+      title: Amaga els detalls
     composer:
       details_title: Resum
       details_text: "Aquest text serà amagat"

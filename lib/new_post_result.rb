@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'has_errors'
-
 class NewPostResult
   include HasErrors
 
@@ -11,6 +9,8 @@ class NewPostResult
   attr_accessor :post
   attr_accessor :reviewable
   attr_accessor :pending_count
+  attr_accessor :route_to
+  attr_accessor :message
 
   def initialize(action, success = false)
     @action = action

@@ -15,7 +15,7 @@ worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 working_directory discourse_path
 
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
-listen (ENV["UNICORN_PORT"] || 3000).to_i
+listen "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}"
 
 if !File.exist?("#{discourse_path}/tmp/pids")
   FileUtils.mkdir_p("#{discourse_path}/tmp/pids")
@@ -53,26 +53,15 @@ initialized = false
 before_fork do |server, worker|
 
   unless initialized
-    # load up the yaml for the localization bits, in master process
-    I18n.t(:posts)
-
-    # load up all models and schema
-    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      table.classify.constantize.first rescue nil
-    end
-
-    # router warm up
-    Rails.application.routes.recognize_path('abc') rescue nil
-
-    # preload discourse version
-    Discourse.git_version
-    Discourse.git_branch
-    Discourse.full_version
+    Discourse.preload_rails!
 
     # V8 does not support forking, make sure all contexts are disposed
     ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
 
     # get rid of rubbish so we don't share it
+    # longer term we will use compact! here
+    GC.start
+    GC.start
     GC.start
 
     initialized = true

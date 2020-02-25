@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_cache'
-
 module SvgSprite
   SVG_ICONS ||= Set.new([
     "adjust",
+    "address-book",
     "ambulance",
     "anchor",
     "angle-double-down",
@@ -21,14 +20,18 @@ module SvgSprite
     "arrows-alt-h",
     "arrows-alt-v",
     "at",
+    "asterisk",
     "backward",
     "ban",
     "bars",
     "bed",
+    "bell",
     "bell-slash",
     "bold",
     "book",
+    "book-reader",
     "bookmark",
+    "discourse-bookmark-clock",
     "briefcase",
     "calendar-alt",
     "caret-down",
@@ -55,6 +58,9 @@ module SvgSprite
     "crosshairs",
     "cube",
     "desktop",
+    "discourse-bell-exclamation",
+    "discourse-bell-one",
+    "discourse-bell-slash",
     "discourse-compress",
     "discourse-expand",
     "download",
@@ -69,6 +75,7 @@ module SvgSprite
     "fab-android",
     "fab-apple",
     "fab-chrome",
+    "fab-discord",
     "fab-discourse",
     "fab-facebook-square",
     "fab-facebook",
@@ -123,6 +130,7 @@ module SvgSprite
     "heading",
     "heart",
     "home",
+    "id-card",
     "info-circle",
     "italic",
     "key",
@@ -164,6 +172,7 @@ module SvgSprite
     "signal",
     "step-backward",
     "step-forward",
+    "stream",
     "sync",
     "table",
     "tag",
@@ -236,7 +245,7 @@ module SvgSprite
 
   def self.version(theme_ids = [])
     get_set_cache("version_#{Theme.transform_ids(theme_ids).join(',')}") do
-      Digest::SHA1.hexdigest(all_icons(theme_ids).join('|'))
+      Digest::SHA1.hexdigest(bundle(theme_ids))
     end
   end
 
@@ -301,6 +310,39 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     end
 
     false
+  end
+
+  def self.icon_picker_search(keyword)
+    results = Set.new
+
+    sprite_sources([SiteSetting.default_theme_id]).each do |fname|
+      svg_file = Nokogiri::XML(File.open(fname))
+      svg_filename = "#{File.basename(fname, ".svg")}"
+
+      svg_file.css('symbol').each do |sym|
+        icon_id = prepare_symbol(sym, svg_filename)
+        if keyword.empty? || icon_id.include?(keyword)
+          sym.attributes['id'].value = icon_id
+          sym.css('title').each(&:remove)
+          results.add(id: icon_id, symbol: sym.to_xml)
+        end
+      end
+    end
+
+    results.sort_by { |icon| icon[:id] }
+  end
+
+  # For use in no_ember .html.erb layouts
+  def self.raw_svg(name)
+    get_set_cache("raw_svg_#{name}") do
+      symbol = search(name)
+      break "" unless symbol
+      symbol = Nokogiri::XML(symbol).children.first
+      symbol.name = "svg"
+      <<~HTML
+        <svg class="fa d-icon svg-icon svg-node" aria-hidden="true">#{symbol}</svg>
+      HTML
+    end.html_safe
   end
 
   def self.theme_sprite_variable_name
@@ -382,8 +424,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.process(icon_name)
-    icon_name.strip!
-    FA_ICON_MAP.each { |k, v| icon_name.sub!(k, v) }
+    icon_name = icon_name.strip
+    FA_ICON_MAP.each { |k, v| icon_name = icon_name.sub(k, v) }
     fa4_to_fa5_names[icon_name] || icon_name
   end
 

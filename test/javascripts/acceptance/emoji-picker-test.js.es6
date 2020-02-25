@@ -1,15 +1,15 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { resetCache } from "discourse/components/emoji-picker";
 
 acceptance("EmojiPicker", {
   loggedIn: true,
   beforeEach() {
-    resetCache();
+    const store = Discourse.__container__.lookup("service:emoji-store");
+    store.reset();
   }
 });
 
-QUnit.skip("emoji picker can be opened/closed", async assert => {
+QUnit.test("emoji picker can be opened/closed", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
@@ -32,7 +32,7 @@ QUnit.skip("emoji picker can be opened/closed", async assert => {
   );
 });
 
-QUnit.skip("emojis can be hovered to display info", async assert => {
+QUnit.test("emojis can be hovered to display info", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
@@ -47,7 +47,7 @@ QUnit.skip("emojis can be hovered to display info", async assert => {
   );
 });
 
-QUnit.skip("emoji picker triggers event when picking emoji", async assert => {
+QUnit.test("emoji picker triggers event when picking emoji", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
   await click("button.emoji.btn");
@@ -60,7 +60,37 @@ QUnit.skip("emoji picker triggers event when picking emoji", async assert => {
   );
 });
 
-QUnit.skip("emoji picker has a list of recently used emojis", async assert => {
+QUnit.test(
+  "emoji picker adds leading whitespace before emoji",
+  async assert => {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+
+    // Whitespace should be added on text
+    await fillIn(".d-editor-input", "This is a test input");
+    await click("button.emoji.btn");
+    await click(".emoji-picker button[title='grinning']");
+    assert.equal(
+      find(".d-editor-input").val(),
+      "This is a test input :grinning:",
+      "it adds the emoji code and a leading whitespace when there is text"
+    );
+    await click("button.emoji.btn");
+
+    // Whitespace should not be added on whitespace
+    await fillIn(".d-editor-input", "This is a test input ");
+    await click("button.emoji.btn");
+    await click(".emoji-picker button[title='grinning']");
+    assert.equal(
+      find(".d-editor-input").val(),
+      "This is a test input :grinning:",
+      "it adds the emoji code and no leading whitespace when user already entered whitespace"
+    );
+    await click("button.emoji.btn");
+  }
+);
+
+QUnit.test("emoji picker has a list of recently used emojis", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
   await click("button.emoji.btn");
@@ -106,7 +136,7 @@ QUnit.skip("emoji picker has a list of recently used emojis", async assert => {
   );
 });
 
-QUnit.skip(
+QUnit.test(
   "emoji picker correctly orders recently used emojis",
   async assert => {
     await visit("/t/internationalization-localization/280");
@@ -134,7 +164,7 @@ QUnit.skip(
   }
 );
 
-QUnit.skip("emoji picker lazy loads emojis", async assert => {
+QUnit.test("emoji picker lazy loads emojis", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
@@ -147,7 +177,7 @@ QUnit.skip("emoji picker lazy loads emojis", async assert => {
   );
 });
 
-QUnit.skip("emoji picker persists state", async assert => {
+QUnit.test("emoji picker persists state", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 

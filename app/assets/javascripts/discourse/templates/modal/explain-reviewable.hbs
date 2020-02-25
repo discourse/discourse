@@ -1,0 +1,51 @@
+{{#d-modal-body class="explain-reviewable"}}
+  {{#conditional-loading-spinner condition=loading}}
+    <table>
+      <tbody>
+        <tr>
+          <th>{{i18n "review.explain.formula"}}</th>
+          <th>{{i18n "review.explain.subtotal"}}</th>
+        </tr>
+        {{#each reviewableExplanation.scores as |s|}}
+          <tr>
+            <td>
+              {{score-value value="1.0" tagName=""}}
+              {{score-value value=s.type_bonus label="type_bonus" tagName=""}}
+              {{score-value value=s.take_action_bonus label="take_action_bonus" tagName=""}}
+              {{score-value value=s.trust_level_bonus label="trust_level_bonus" tagName=""}}
+              {{score-value value=s.user_accuracy_bonus label="user_accuracy_bonus" tagName=""}}
+            </td>
+            <td class='sum'>{{float s.score}}</td>
+          </tr>
+        {{/each}}
+        <tr class="total">
+          <td>{{i18n "review.explain.total"}}</td>
+          <td class='sum'>{{float reviewableExplanation.total_score}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class='thresholds'>
+      <tbody>
+        <tr>
+          <td>{{i18n "review.explain.min_score_visibility"}}</td>
+          <td class='sum'>
+            {{float reviewableExplanation.min_score_visibility}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{i18n "review.explain.score_to_hide"}}</td>
+          <td class='sum'>
+            {{float reviewableExplanation.hide_post_score}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  {{/conditional-loading-spinner}}
+
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action=(route-action "closeModal") label="close"}}
+</div>

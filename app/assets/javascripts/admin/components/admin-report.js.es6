@@ -1,9 +1,15 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { makeArray } from "discourse-common/lib/helpers";
+import { alias, or, and, reads, equal, notEmpty } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
 import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { isNumeric } from "discourse/lib/utilities";
-import { SCHEMA_VERSION, default as Report } from "admin/models/report";
-import computed from "ember-addons/ember-computed-decorators";
+import Report, { SCHEMA_VERSION } from "admin/models/report";
+import ENV from "discourse-common/config/environment";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -34,7 +40,7 @@ function collapseWeekly(data, average) {
   return aggregate;
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
   classNames: ["admin-report"],
   isEnabled: true,
@@ -54,13 +60,9 @@ export default Ember.Component.extend({
   showHeader: true,
   showTitle: true,
   showFilteringUI: false,
-  showDatesOptions: Ember.computed.alias("model.dates_filtering"),
-  showExport: Ember.computed.not("model.onlyTable"),
-  showRefresh: Ember.computed.or(
-    "showDatesOptions",
-    "model.available_filters.length"
-  ),
-  shouldDisplayTrend: Ember.computed.and("showTrend", "model.prev_period"),
+  showDatesOptions: alias("model.dates_filtering"),
+  showRefresh: or("showDatesOptions", "model.available_filters.length"),
+  shouldDisplayTrend: and("showTrend", "model.prev_period"),
 
   init() {
     this._super(...arguments);
@@ -68,8 +70,8 @@ export default Ember.Component.extend({
     this._reports = [];
   },
 
-  startDate: Ember.computed.reads("filters.startDate"),
-  endDate: Ember.computed.reads("filters.endDate"),
+  startDate: reads("filters.startDate"),
+  endDate: reads("filters.endDate"),
 
   didReceiveAttrs() {
     this._super(...arguments);
@@ -81,38 +83,34 @@ export default Ember.Component.extend({
     }
   },
 
-  showError: Ember.computed.or(
-    "showTimeoutError",
-    "showExceptionError",
-    "showNotFoundError"
-  ),
-  showNotFoundError: Ember.computed.equal("model.error", "not_found"),
-  showTimeoutError: Ember.computed.equal("model.error", "timeout"),
-  showExceptionError: Ember.computed.equal("model.error", "exception"),
+  showError: or("showTimeoutError", "showExceptionError", "showNotFoundError"),
+  showNotFoundError: equal("model.error", "not_found"),
+  showTimeoutError: equal("model.error", "timeout"),
+  showExceptionError: equal("model.error", "exception"),
 
-  hasData: Ember.computed.notEmpty("model.data"),
+  hasData: notEmpty("model.data"),
 
-  @computed("dataSourceName", "model.type")
+  @discourseComputed("dataSourceName", "model.type")
   dasherizedDataSourceName(dataSourceName, type) {
     return (dataSourceName || type || "undefined").replace(/_/g, "-");
   },
 
-  @computed("dataSourceName", "model.type")
+  @discourseComputed("dataSourceName", "model.type")
   dataSource(dataSourceName, type) {
     dataSourceName = dataSourceName || type;
     return `/admin/reports/${dataSourceName}`;
   },
 
-  @computed("displayedModes.length")
+  @discourseComputed("displayedModes.length")
   showModes(displayedModesLength) {
     return displayedModesLength > 1;
   },
 
-  @computed("currentMode", "model.modes", "forcedModes")
+  @discourseComputed("currentMode", "model.modes", "forcedModes")
   displayedModes(currentMode, reportModes, forcedModes) {
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
 
-    return Ember.makeArray(modes).map(mode => {
+    return makeArray(modes).map(mode => {
       const base = `btn-default mode-btn ${mode}`;
       const cssClass = currentMode === mode ? `${base} is-current` : base;
 
@@ -124,12 +122,12 @@ export default Ember.Component.extend({
     });
   },
 
-  @computed("currentMode")
+  @discourseComputed("currentMode")
   modeComponent(currentMode) {
-    return `admin-report-${currentMode}`;
+    return `admin-report-${currentMode.replace(/_/g, "-")}`;
   },
 
-  @computed("startDate")
+  @discourseComputed("startDate")
   normalizedStartDate(startDate) {
     return startDate && typeof startDate.isValid === "function"
       ? moment
@@ -141,7 +139,7 @@ export default Ember.Component.extend({
           .format("YYYYMMDD");
   },
 
-  @computed("endDate")
+  @discourseComputed("endDate")
   normalizedEndDate(endDate) {
     return endDate && typeof endDate.isValid === "function"
       ? moment
@@ -153,7 +151,7 @@ export default Ember.Component.extend({
           .format("YYYYMMDD");
   },
 
-  @computed(
+  @discourseComputed(
     "dataSourceName",
     "normalizedStartDate",
     "normalizedEndDate",
@@ -165,8 +163,8 @@ export default Ember.Component.extend({
     let reportKey = "reports:";
     reportKey += [
       dataSourceName,
-      startDate.replace(/-/g, ""),
-      endDate.replace(/-/g, ""),
+      ENV.environment === "test" ? "start" : startDate.replace(/-/g, ""),
+      ENV.environment === "test" ? "end" : endDate.replace(/-/g, ""),
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
       customFilters
@@ -184,6 +182,32 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    onChangeEndDate(date) {
+      const startDate = moment(this.startDate);
+      const newEndDate = moment(date).endOf("day");
+
+      if (newEndDate.isSameOrAfter(startDate)) {
+        this.set("endDate", newEndDate.format("YYYY-MM-DD"));
+      } else {
+        this.set("endDate", startDate.endOf("day").format("YYYY-MM-DD"));
+      }
+
+      this.send("refreshReport");
+    },
+
+    onChangeStartDate(date) {
+      const endDate = moment(this.endDate);
+      const newStartDate = moment(date).startOf("day");
+
+      if (newStartDate.isSameOrBefore(endDate)) {
+        this.set("startDate", newStartDate.format("YYYY-MM-DD"));
+      } else {
+        this.set("startDate", endDate.startOf("day").format("YYYY-MM-DD"));
+      }
+
+      this.send("refreshReport");
+    },
+
     applyFilter(id, value) {
       let customFilters = this.get("filters.customFilters") || {};
 
@@ -286,7 +310,7 @@ export default Ember.Component.extend({
 
     this.setProperties({ isLoading: true, rateLimitationString: null });
 
-    Ember.run.next(() => {
+    next(() => {
       let payload = this._buildPayload(["prev_period"]);
 
       const callback = response => {
@@ -342,12 +366,12 @@ export default Ember.Component.extend({
   _buildOptions(mode) {
     if (mode === "table") {
       const tableOptions = JSON.parse(JSON.stringify(TABLE_OPTIONS));
-      return Ember.Object.create(
+      return EmberObject.create(
         Object.assign(tableOptions, this.get("reportOptions.table") || {})
       );
     } else {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
-      return Ember.Object.create(
+      return EmberObject.create(
         Object.assign(chartOptions, this.get("reportOptions.chart") || {})
       );
     }

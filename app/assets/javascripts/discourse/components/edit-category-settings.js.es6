@@ -1,6 +1,7 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { empty, and } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import computed from "ember-addons/ember-computed-decorators";
 import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
 import Group from "discourse/models/group";
 
@@ -12,14 +13,17 @@ export function addCategorySortCriteria(criteria) {
 export default buildCategoryPanel("settings", {
   emailInEnabled: setting("email_in"),
   showPositionInput: setting("fixed_category_positions"),
-  isParentCategory: Ember.computed.empty("category.parent_category_id"),
-  showSubcategoryListStyle: Ember.computed.and(
+  @discourseComputed("category.isParent", "category.parent_category_id")
+  isParentCategory(isParent, parentCategoryId) {
+    return isParent || !parentCategoryId;
+  },
+  showSubcategoryListStyle: and(
     "category.show_subcategory_list",
     "isParentCategory"
   ),
-  isDefaultSortOrder: Ember.computed.empty("category.sort_order"),
+  isDefaultSortOrder: empty("category.sort_order"),
 
-  @computed
+  @discourseComputed
   availableSubcategoryListStyles() {
     return [
       { name: I18n.t("category.subcategory_list_styles.rows"), value: "rows" },
@@ -46,7 +50,7 @@ export default buildCategoryPanel("settings", {
     return Group.findAll({ term, ignore_automatic: true });
   },
 
-  @computed
+  @discourseComputed
   availableViews() {
     return [
       { name: I18n.t("filters.latest.title"), value: "latest" },
@@ -54,7 +58,7 @@ export default buildCategoryPanel("settings", {
     ];
   },
 
-  @computed
+  @discourseComputed
   availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
       p => {
@@ -63,7 +67,7 @@ export default buildCategoryPanel("settings", {
     );
   },
 
-  @computed
+  @discourseComputed
   searchPrioritiesOptions() {
     const options = [];
 
@@ -79,7 +83,7 @@ export default buildCategoryPanel("settings", {
     return options;
   },
 
-  @computed
+  @discourseComputed
   availableSorts() {
     return [
       "likes",
@@ -96,7 +100,7 @@ export default buildCategoryPanel("settings", {
       .sort((a, b) => a.name.localeCompare(b.name));
   },
 
-  @computed
+  @discourseComputed
   sortAscendingOptions() {
     return [
       { name: I18n.t("category.sort_ascending"), value: "true" },

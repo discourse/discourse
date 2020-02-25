@@ -1,3 +1,5 @@
-export default Ember.Controller.extend({
-  application: Ember.inject.controller()
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
+export default Controller.extend({
+  router: service()
 });

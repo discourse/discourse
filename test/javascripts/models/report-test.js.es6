@@ -398,7 +398,7 @@ QUnit.test("computed labels", assert => {
       username: "joffrey",
       user_id: 1,
       user_avatar: "/",
-      flag_count: 1876,
+      flag_count: "1876",
       time_read: 287362,
       note: "This is a long note",
       topic_id: 2,
@@ -470,7 +470,7 @@ QUnit.test("computed labels", assert => {
   assert.equal(flagCountLabel.type, "number");
   let computedFlagCountLabel = flagCountLabel.compute(row);
   assert.equal(computedFlagCountLabel.formatedValue, "1.9k");
-  assert.equal(computedFlagCountLabel.value, 1876);
+  assert.strictEqual(computedFlagCountLabel.value, 1876);
   computedFlagCountLabel = flagCountLabel.compute(row, {
     formatNumbers: false
   });

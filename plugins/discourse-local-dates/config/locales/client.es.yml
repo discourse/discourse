@@ -12,22 +12,24 @@ es:
         today: Hoy %{time}
         tomorrow: Mañana %{time}
         yesterday: Ayer %{time}
-      title: Insertar fecha / hora
+        countdown:
+          passed: la fecha ha pasado
+      title: insertar fecha / hora
       create:
         form:
           insert: Insertar
-          advanced_mode: Modo Avanzado
+          advanced_mode: Modo avanzado
           simple_mode: Modo simple
-          format_description: "Formato usado para mostrar la fecha al usuario. Use \"\\T\\Z\" para mostrar la zona horaria del usuario en palabras (Europe/Paris)"
-          timezones_title: Zonas Horarias a mostrar
-          timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retroceso.
+          format_description: "Formato usado para mostrar la fecha al usuario. Use «\\T\\Z» para mostrar la zona horaria del usuario en palabras (Europa/París)"
+          timezones_title: Zonas horarias que se muestran
+          timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retrospectiva.
           recurring_title: Recurrencia
-          recurring_description: "Definir la recurrencia de un evento. También puede editar manualmente la opción recurrente generada por el formulario y usar una de las siguientes claves: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_description: "Definir la recurrencia de un evento. También puedes editar manualmente la opción recurrente generada por el formulario y usar una de las siguientes claves: años, trimestre, meses, semanas, días, horas, minutos, segundos, milisegundos."
           recurring_none: Sin recurrencia
-          invalid_date: Fecha inválida, asegúrese de que la fecha y la hora sean correctas
+          invalid_date: Fecha inválida, asegúrate de que la fecha y hora sean correctas
           date_title: Fecha
           time_title: Hora
-          format_title: Formato de Fecha
+          format_title: Formato de fecha
           timezone: Zona horaria
           until: Hasta...
           recurring:

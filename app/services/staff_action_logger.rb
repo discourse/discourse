@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'staff_message_format'
-
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
 
@@ -206,6 +204,34 @@ class StaffActionLogger
     ))
   end
 
+  def log_theme_component_disabled(component)
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:disable_theme_component],
+      subject: component.name,
+      context: component.id
+    ))
+  end
+
+  def log_theme_component_enabled(component)
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:enable_theme_component],
+      subject: component.name,
+      context: component.id
+    ))
+  end
+
+  def log_theme_setting_change(setting_name, previous_value, new_value, theme, opts = {})
+    raise Discourse::InvalidParameters.new(:theme) unless theme
+    raise Discourse::InvalidParameters.new(:setting_name) unless theme.included_settings.has_key?(setting_name)
+
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_theme_setting],
+      subject: "#{theme.name}: #{setting_name.to_s}",
+      previous_value: previous_value,
+      new_value: new_value
+    ))
+  end
+
   def log_site_text_change(subject, new_text = nil, old_text = nil, opts = {})
     raise Discourse::InvalidParameters.new(:subject) unless subject.present?
     UserHistory.create!(params(opts).merge(
@@ -323,6 +349,38 @@ class StaffActionLogger
       action: UserHistory.actions[:revoke_badge],
       target_user_id: user_badge.user_id,
       details: user_badge.badge.name
+    ))
+  end
+
+  def log_title_revoke(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:revoke_title],
+      target_user_id: user.id,
+      details: opts[:revoke_reason],
+      previous_value: opts[:previous_value]
+    ))
+  end
+
+  def log_title_change(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_title],
+      target_user_id: user.id,
+      details: opts[:details],
+      new_value: opts[:new_value],
+      previous_value: opts[:previous_value]
+    ))
+  end
+
+  def log_change_upload_secure_status(opts = {})
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:override_upload_secure_status],
+      details: [
+        "upload_id: #{opts[:upload_id]}",
+        "reason: #{I18n.t("uploads.marked_insecure_from_theme_component_reason")}"
+      ].join("\n"),
+      new_value: opts[:new_value]
     ))
   end
 
@@ -634,6 +692,39 @@ class StaffActionLogger
       context: "host: #{embeddable_host.host}",
       previous_value: old_values&.join(", "),
       new_value: new_values&.join(", ")
+    ))
+  end
+
+  def log_api_key(api_key, action, opts = {})
+    opts[:changes]&.delete("key") # Do not log the full key
+
+    history_params = params(opts).merge(
+      action: action,
+      subject: api_key.truncated_key
+    )
+
+    if opts[:changes]
+      old_values, new_values = get_changes(opts[:changes])
+      history_params[:previous_value] = old_values&.join(", ") unless opts[:changes].keys.include?("id")
+      history_params[:new_value] = new_values&.join(", ")
+    end
+
+    UserHistory.create!(history_params)
+  end
+
+  def log_api_key_revoke(api_key)
+    UserHistory.create!(params.merge(
+      subject: api_key.truncated_key,
+      action: UserHistory.actions[:api_key_update],
+      details: I18n.t("staff_action_logs.api_key.revoked")
+    ))
+  end
+
+  def log_api_key_restore(api_key)
+    UserHistory.create!(params.merge(
+      subject: api_key.truncated_key,
+      action: UserHistory.actions[:api_key_update],
+      details: I18n.t("staff_action_logs.api_key.restored")
     ))
   end
 

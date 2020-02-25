@@ -8,6 +8,8 @@ require "base62"
 #                                    gather                                    #
 ################################################################################
 
+require_dependency "rake_helpers"
+
 task "uploads:gather" => :environment do
   ENV["RAILS_DB"] ? gather_uploads : gather_uploads_for_all_sites
 end
@@ -70,7 +72,9 @@ task "uploads:backfill_shas" => :environment do
     Upload.where(sha1: nil).find_each do |u|
       begin
         path = Discourse.store.path_for(u)
-        u.sha1 = Upload.generate_digest(path)
+        sha1 = Upload.generate_digest(path)
+        u.sha1 = u.secure? ? SecureRandom.hex(20) : sha1
+        u.original_sha1 = u.secure? ? sha1 : nil
         u.save!
         putc "."
       rescue => e
@@ -222,59 +226,23 @@ def migrate_to_s3_all_sites
   end
 end
 
-def migration_successful?(db, should_raise = false)
-  success = true
+def create_migration
+  FileStore::ToS3Migration.new(
+    s3_options: FileStore::ToS3Migration.s3_options_from_env,
+    dry_run: !!ENV["DRY_RUN"],
+    migrate_to_multisite: !!ENV["MIGRATE_TO_MULTISITE"],
+    skip_etag_verify: !!ENV["SKIP_ETAG_VERIFY"]
+  )
+end
 
-  failure_message = "S3 migration failed for db '#{db}'."
-  prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
-
-  base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
-  count = Upload.by_users.where("url NOT LIKE '#{base_url}%'").count
-
-  error_message = "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}"
-
-  raise error_message if count > 0 && should_raise
-  success &&= count == 0
-
-  puts error_message if count > 0
-
-  cdn_path = SiteSetting.cdn_path("/uploads/#{db}/original").sub(/https?:/, "")
-  count = Post.where("cooked LIKE '%#{cdn_path}%'").count
-  error_message = "#{count} posts are not remapped to new S3 upload URL. #{failure_message}"
-
-  raise error_message if count > 0 && should_raise
-  success &&= count == 0
-
-  puts error_message if count > 0
-
-  Rake::Task['posts:missing_uploads'].invoke('single_site')
-  count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
-  error_message = "rake posts:missing_uploads identified #{count} issues. #{failure_message}"
-  raise error_message if count > 0 && should_raise
-
-  success &&= count == 0
-
-  puts error_message if count > 0
-
-  count = Post.where('baked_version <> ? OR baked_version IS NULL', Post::BAKED_VERSION).count
-  if count > 0
-    puts "#{count} posts still require rebaking and will be rebaked during regular job"
-    if count > 100
-      puts "To speed up migrations of posts we recommend you run 'rake posts:rebake_uncooked_posts'"
-    end
-    success = false
-  else
-    puts "No posts require rebaking"
-  end
-
-  success
+def migrate_to_s3
+  create_migration.migrate
 end
 
 task "uploads:s3_migration_status" => :environment do
   success = true
   RailsMultisite::ConnectionManagement.each_connection do
-    db = RailsMultisite::ConnectionManagement.current_db
-    success &&= migration_successful?(db)
+    success &&= create_migration.migration_successful?
   end
 
   queued_jobs = Sidekiq::Stats.new.queues.sum { |_ , x| x }
@@ -289,266 +257,6 @@ task "uploads:s3_migration_status" => :environment do
   end
 
   puts "All sites appear to have uploads in order!"
-end
-
-def migrate_to_s3
-
-  # we don't want have migrated state, ensure we run all jobs here
-  Jobs.run_immediately!
-
-  db = RailsMultisite::ConnectionManagement.current_db
-
-  dry_run = !!ENV["DRY_RUN"]
-
-  puts "Checking if #{db} already migrated..."
-  return puts "Already migrated #{db}!" if migration_successful?(db)
-
-  puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
-  puts "Migrating uploads to S3 for '#{db}'..."
-
-  if Upload.by_users.where("url NOT LIKE '//%' AND url NOT LIKE '/uploads/#{db}/original/_X/%'").exists?
-    puts <<~TEXT
-      Some uploads were not migrated to the new scheme. Please run these commands in the rails console
-
-      SiteSetting.migrate_to_new_scheme = true
-      Jobs::MigrateUploadScheme.new.execute(nil)
-    TEXT
-    exit 1
-  end
-
-  unless ENV["DISCOURSE_S3_BUCKET"].present? &&
-    ENV["DISCOURSE_S3_REGION"].present? &&
-    (
-      (
-        ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
-        ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
-      ) ||
-      ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
-    )
-
-    puts <<~TEXT
-      Please provide the following environment variables
-        - DISCOURSE_S3_BUCKET
-        - DISCOURSE_S3_REGION
-        and either
-        - DISCOURSE_S3_ACCESS_KEY_ID
-        - DISCOURSE_S3_SECRET_ACCESS_KEY
-        or
-        - DISCOURSE_S3_USE_IAM_PROFILE
-    TEXT
-    exit 2
-  end
-
-  if SiteSetting.Upload.s3_cdn_url.blank?
-    puts "Please provide the 'DISCOURSE_S3_CDN_URL' environment variable"
-    exit 3
-  end
-
-  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
-  public_directory = Rails.root.join("public").to_s
-
-  opts = {
-    region: ENV["DISCOURSE_S3_REGION"],
-    access_key_id: ENV["DISCOURSE_S3_ACCESS_KEY_ID"],
-    secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
-  }
-
-  # S3::Client ignores the `region` option when an `endpoint` is provided.
-  # Without `region`, non-default region bucket creation will break for S3, so we can only
-  # define endpoint when not using S3 i.e. when SiteSetting.s3_endpoint is provided.
-  opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
-  s3 = Aws::S3::Client.new(opts)
-
-  if bucket_has_folder_path
-    bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
-    folder = File.join(folder, "/")
-  else
-    bucket, folder = ENV["DISCOURSE_S3_BUCKET"], ""
-  end
-
-  puts "Uploading files to S3..."
-  print " - Listing local files"
-
-  local_files = []
-  IO.popen("cd #{public_directory} && find uploads/#{db}/original -type f").each do |file|
-    local_files << file.chomp
-    putc "." if local_files.size % 1000 == 0
-  end
-
-  puts " => #{local_files.size} files"
-  print " - Listing S3 files"
-
-  s3_objects = []
-  prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
-
-  options = { bucket: bucket, prefix: folder + prefix }
-
-  loop do
-    response = s3.list_objects_v2(options)
-    s3_objects.concat(response.contents)
-    putc "."
-    break if response.next_continuation_token.blank?
-    options[:continuation_token] = response.next_continuation_token
-  end
-
-  puts " => #{s3_objects.size} files"
-  puts " - Syncing files to S3"
-
-  synced = 0
-  failed = []
-
-  skip_etag_verify = ENV["SKIP_ETAG_VERIFY"].present?
-  local_files.each do |file|
-    path = File.join(public_directory, file)
-    name = File.basename(path)
-    etag = Digest::MD5.file(path).hexdigest unless skip_etag_verify
-    key = file[file.index(prefix)..-1]
-    key.prepend(folder) if bucket_has_folder_path
-    original_path = file.sub("uploads/#{db}", "")
-
-    if s3_object = s3_objects.find { |obj| obj.key.ends_with?(original_path) }
-      next if File.size(path) == s3_object.size && (skip_etag_verify || s3_object.etag[etag])
-    end
-
-    options = {
-      acl: "public-read",
-      body: File.open(path, "rb"),
-      bucket: bucket,
-      content_type: MiniMime.lookup_by_filename(name)&.content_type,
-      key: key,
-    }
-
-    if !FileHelper.is_supported_image?(name)
-      upload = Upload.find_by(url: "/#{file}")
-
-      if upload&.original_filename
-        options[:content_disposition] =
-          %Q{attachment; filename="#{upload.original_filename}"}
-      end
-
-      if upload&.private?
-        options[:acl] = "private"
-      end
-    end
-
-    etag ||= Digest::MD5.file(path).hexdigest
-
-    if dry_run
-      puts "#{file} => #{options[:key]}"
-      synced += 1
-    elsif s3.put_object(options).etag[etag]
-      putc "."
-      synced += 1
-    else
-      putc "X"
-      failed << path
-    end
-  end
-
-  puts
-
-  failure_message = "S3 migration failed for db '#{db}'."
-
-  if failed.size > 0
-    puts "Failed to upload #{failed.size} files"
-    puts failed.join("\n")
-    raise failure_message
-  elsif s3_objects.size + synced >= local_files.size
-    puts "Updating the URLs in the database..."
-
-    from = "/uploads/#{db}/original/"
-    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}"
-
-    if dry_run
-      puts "REPLACING '#{from}' WITH '#{to}'"
-    else
-      DbHelper.remap(from, to, anchor_left: true)
-    end
-
-    [
-      [
-        "src=\"/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
-        "src=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
-      ],
-      [
-        "src='/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
-        "src='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
-      ],
-      [
-        "href=\"/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
-        "href=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
-      ],
-      [
-        "href='/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
-        "href='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
-      ],
-      [
-        "\\[img\\]/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)\\[/img\\]",
-        "[img]#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1[/img]"
-      ]
-    ].each do |from_url, to_url|
-
-      if dry_run
-        puts "REPLACING '#{from_url}' WITH '#{to_url}'"
-      else
-        DbHelper.regexp_replace(from_url, to_url)
-      end
-    end
-
-    unless dry_run
-      # Legacy inline image format
-      Post.where("raw LIKE '%![](/uploads/default/original/%)%'").each do |post|
-        regexp = /!\[\](\/uploads\/#{db}\/original\/(\dX\/(?:[a-f0-9]\/)*[a-f0-9]{40}[a-z0-9\.]*))/
-
-        post.raw.scan(regexp).each do |upload_url, _|
-          upload = Upload.get_from_url(upload_url)
-          post.raw = post.raw.gsub("![](#{upload_url})", "![](#{upload.short_url})")
-        end
-
-        post.save!(validate: false)
-      end
-    end
-
-    if Discourse.asset_host.present?
-      # Uploads that were on local CDN will now be on S3 CDN
-      from = "#{Discourse.asset_host}/uploads/#{db}/original/"
-      to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
-
-      if dry_run
-        puts "REMAPPING '#{from}' TO '#{to}'"
-      else
-        DbHelper.remap(from, to)
-      end
-    end
-
-    # Uploads that were on base hostname will now be on S3 CDN
-    from = "#{Discourse.base_url}/uploads/#{db}/original/"
-    to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
-
-    if dry_run
-      puts "REMAPPING '#{from}' TO '#{to}'"
-    else
-      DbHelper.remap(from, to)
-    end
-
-    unless dry_run
-      puts "Removing old optimized images..."
-
-      OptimizedImage
-        .joins("LEFT JOIN uploads u ON optimized_images.upload_id = u.id")
-        .where("u.id IS NOT NULL AND u.url LIKE '//%' AND optimized_images.url NOT LIKE '//%'")
-        .delete_all
-
-      puts "Flagging all posts containing lightboxes for rebake..."
-
-      count = Post.where("cooked LIKE '%class=\"lightbox\"%'").update_all(baked_version: nil)
-      puts "#{count} posts were flagged for a rebake"
-    end
-  end
-
-  migration_successful?(db, true)
-
-  puts "Done!"
 end
 
 ################################################################################
@@ -886,7 +594,6 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
 end
 
 task "uploads:fix_incorrect_extensions" => :environment do
-  require_dependency "upload_fixer"
   UploadFixer.fix_all_extensions
 end
 
@@ -895,17 +602,200 @@ task "uploads:recover_from_tombstone" => :environment do
 end
 
 task "uploads:recover" => :environment do
-  require_dependency "upload_recovery"
 
   dry_run = ENV["DRY_RUN"].present?
+  stop_on_error = ENV["STOP_ON_ERROR"].present?
 
   if ENV["RAILS_DB"]
-    UploadRecovery.new(dry_run: dry_run).recover
+    UploadRecovery.new(dry_run: dry_run, stop_on_error: stop_on_error).recover
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      UploadRecovery.new(dry_run: dry_run).recover
+      UploadRecovery.new(dry_run: dry_run, stop_on_error: stop_on_error).recover
     end
   end
+end
+
+task "uploads:disable_secure_media" => :environment do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    unless Discourse.store.external?
+      puts "This task only works for external storage."
+      exit 1
+    end
+
+    puts "Disabling secure media and resetting uploads to not secure in #{db}...", ""
+
+    SiteSetting.secure_media = false
+
+    secure_uploads = Upload.includes(:posts).where(secure: true)
+    secure_upload_count = secure_uploads.count
+
+    i = 0
+    secure_uploads.find_each(batch_size: 20).each do |upload|
+      Upload.transaction do
+        upload.secure = false
+
+        RakeHelpers.print_status_with_label("Updating ACL for upload #{upload.id}.......", i, secure_upload_count)
+        Discourse.store.update_upload_ACL(upload)
+
+        RakeHelpers.print_status_with_label("Rebaking posts for upload #{upload.id}.......", i, secure_upload_count)
+        upload.posts.each(&:rebake!)
+        upload.save
+
+        i += 1
+      end
+    end
+
+    RakeHelpers.print_status_with_label("Rebaking and updating complete!            ", i, secure_upload_count)
+    puts ""
+  end
+
+  puts "Secure media is now disabled!", ""
+end
+
+##
+# Run this task whenever the secure_media or login_required
+# settings are changed for a Discourse instance to update
+# the upload secure flag and S3 upload ACLs.
+task "uploads:ensure_correct_acl" => :environment do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    unless Discourse.store.external?
+      puts "This task only works for external storage."
+      exit 1
+    end
+
+    puts "Ensuring correct ACL for uploads in #{db}...", ""
+
+    Upload.transaction do
+      mark_secure_in_loop_because_no_login_required = false
+
+      # If secure media is enabled we need to first set the access control post of
+      # all post uploads (even uploads that are linked to multiple posts). If the
+      # upload is not set to secure media then this has no other effect on the upload,
+      # but we _must_ know what the access control post is because the with_secure_media?
+      # method is on the post, and this knows about the category security & PM status
+      if SiteSetting.secure_media?
+        update_uploads_access_control_post
+      end
+
+      # First of all only get relevant uploads (supported media).
+      #
+      # Also only get uploads that are not for a theme or a site setting, so only
+      # get post related uploads.
+      uploads_with_supported_media = Upload.includes(:posts, :access_control_post, :optimized_images).where(
+        "LOWER(original_filename) SIMILAR TO '%\.(jpg|jpeg|png|gif|svg|ico|mp3|ogg|wav|m4a|mov|mp4|webm|ogv)'"
+      ).joins(:post_uploads)
+
+      puts "There are #{uploads_with_supported_media.count} upload(s) with supported media that could be marked secure.", ""
+
+      # Simply mark all these uploads as secure if login_required because no anons will be able to access them
+      if SiteSetting.login_required?
+        mark_all_as_secure_login_required(uploads_with_supported_media)
+      else
+
+        # If NOT login_required, then we have to go for the other slower flow, where in the loop
+        # we mark the upload secure based on UploadSecurity.should_be_secure?
+        mark_secure_in_loop_because_no_login_required = true
+        puts "Marking posts as secure in the next step because login_required is false."
+      end
+
+      puts "", "Determining which of #{uploads_with_supported_media.count} upload posts need to be marked secure and be rebaked.", ""
+
+      upload_ids_to_mark_as_secure, posts_to_rebake = determine_upload_security_and_posts_to_rebake(
+        uploads_with_supported_media, mark_secure_in_loop_because_no_login_required
+      )
+
+      mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
+
+      post_rebake_errors = rebake_upload_posts(posts_to_rebake)
+      log_rebake_errors(post_rebake_errors)
+    end
+  end
+  puts "", "Done"
+end
+
+def mark_all_as_secure_login_required(uploads_with_supported_media)
+  puts "Marking #{uploads_with_supported_media.count} upload(s) as secure because login_required is true.", ""
+  uploads_with_supported_media.update_all(secure: true)
+  puts "Finished marking upload(s) as secure."
+end
+
+def log_rebake_errors(rebake_errors)
+  return if rebake_errors.empty?
+  puts "The following post rebakes failed with error:", ""
+  rebake_errors.each do |message|
+    puts message
+  end
+end
+
+def mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
+  return if upload_ids_to_mark_as_secure.empty?
+  puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because UploadSecurity determined them to be secure."
+  Upload.where(id: upload_ids_to_mark_as_secure).update_all(secure: true)
+  puts "Finished marking uploads as secure."
+end
+
+def update_uploads_access_control_post
+  access_control_post_updates = []
+  uploads_with_post_ids = DB.query(<<-SQL
+    SELECT upload_id, (
+      SELECT string_agg(CAST(post_uploads.post_id AS varchar), ',' ORDER BY post_uploads.id) as post_ids
+      FROM post_uploads
+      WHERE pu.upload_id = post_uploads.upload_id
+    ) FROM post_uploads pu
+  SQL
+  )
+  uploads_with_post_ids.each do |row|
+    first_post_id = row.post_ids.split(",").first.to_i
+    access_control_post_updates << "UPDATE uploads SET access_control_post_id = #{first_post_id} WHERE id = #{row.upload_id};"
+  end
+  DB.exec(access_control_post_updates.join("\n"))
+end
+
+def rebake_upload_posts(posts_to_rebake)
+  post_rebake_errors = []
+  puts "", "Rebaking #{posts_to_rebake.length} posts with affected uploads.", ""
+  begin
+    i = 0
+    posts_to_rebake.each do |post|
+      RakeHelpers.print_status_with_label("Determining which uploads to mark secure and rebake.....", i, posts_to_rebake.length)
+      post.rebake!
+      i += 1
+    end
+
+    RakeHelpers.print_status_with_label("Rebaking complete!            ", i, posts_to_rebake.length)
+    puts ""
+  rescue => e
+    post_rebake_errors << e.message
+  end
+  post_rebake_errors
+end
+
+def determine_upload_security_and_posts_to_rebake(uploads_with_supported_media, mark_secure_in_loop_because_no_login_required)
+  upload_ids_to_mark_as_secure = []
+  posts_to_rebake = []
+
+  i = 0
+  uploads_with_supported_media.find_each(batch_size: 50) do |upload_with_supported_media|
+    RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, uploads_with_supported_media.count)
+
+    # we just need to determine the post security here so the ACL is set to the correct thing,
+    # because the update_upload_ACL method uses upload.secure?
+    upload_with_supported_media.secure = UploadSecurity.new(upload_with_supported_media).should_be_secure?
+    Discourse.store.update_upload_ACL(upload_with_supported_media)
+
+    RakeHelpers.print_status_with_label("Determining which uploads to mark secure and rebake.....", i, uploads_with_supported_media.count)
+    upload_with_supported_media.posts.each { |post| posts_to_rebake << post }
+
+    if mark_secure_in_loop_because_no_login_required && upload_with_supported_media.secure?
+      upload_ids_to_mark_as_secure << upload_with_supported_media.id
+    end
+
+    i += 1
+  end
+  RakeHelpers.print_status_with_label("Determination complete!            ", i, uploads_with_supported_media.count)
+  puts ""
+
+  [upload_ids_to_mark_as_secure, posts_to_rebake]
 end
 
 def inline_uploads(post)

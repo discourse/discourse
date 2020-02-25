@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe DiscourseNarrativeBot::TrackSelector do
   let(:user) { Fabricate(:user) }
-  let(:discobot_user) { User.find(-2) }
+  let(:discobot_user) { ::DiscourseNarrativeBot::Base.new.discobot_user }
   let(:narrative) { DiscourseNarrativeBot::NewUserNarrative.new }
 
   let(:random_mention_reply) do
@@ -14,6 +14,11 @@ describe DiscourseNarrativeBot::TrackSelector do
     )
   end
 
+  before do
+    stub_request(:get, "http://api.forismatic.com/api/1.0/?format=json&lang=en&method=getQuote").
+      to_return(status: 200, body: "{\"quoteText\":\"Be Like Water\",\"quoteAuthor\":\"Bruce Lee\"}")
+  end
+
   let(:help_message) do
     discobot_username = discobot_user.username
 
@@ -21,7 +26,6 @@ describe DiscourseNarrativeBot::TrackSelector do
     #{I18n.t(
       'discourse_narrative_bot.track_selector.random_mention.tracks',
       discobot_username: discobot_username,
-      default_track: DiscourseNarrativeBot::NewUserNarrative.reset_trigger,
       reset_trigger: described_class.reset_trigger,
       tracks: "#{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}, #{DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}"
     )}
@@ -31,6 +35,7 @@ describe DiscourseNarrativeBot::TrackSelector do
       discobot_username: discobot_username,
       dice_trigger: described_class.dice_trigger,
       quote_trigger: described_class.quote_trigger,
+      quote_sample: DiscourseNarrativeBot::QuoteGenerator.format_quote('Be Like Water', 'Bruce Lee'),
       magic_8_ball_trigger: described_class.magic_8_ball_trigger
     )}
     RAW
@@ -536,7 +541,7 @@ describe DiscourseNarrativeBot::TrackSelector do
         describe 'when asking discobot to start new user track' do
           describe 'invalid text' do
             it 'should not trigger the bot' do
-              post.update!(raw: '`@discobot start new user track`')
+              post.update!(raw: "`@discobot #{I18n.t('discourse_narrative_bot.track_selector.reset_trigger')} #{I18n.t(DiscourseNarrativeBot::NewUserNarrative.reset_trigger)}`")
 
               expect { described_class.new(:reply, user, post_id: post.id).select }
                 .to_not change { Post.count }
@@ -578,19 +583,15 @@ describe DiscourseNarrativeBot::TrackSelector do
 
         describe 'when a quote is requested' do
           it 'should create the right reply' do
-            stub_request(:get, "http://api.forismatic.com/api/1.0/?format=json&lang=en&method=getQuote").
-              to_return(status: 200, body: "{\"quoteText\":\"Be Like Water\",\"quoteAuthor\":\"Bruce Lee\"}")
 
-            ['@discobot quote', 'hello @discobot quote there'].each do |raw|
-              post.update!(raw: raw)
-              described_class.new(:reply, user, post_id: post.id).select
-              new_post = Post.last
+            post.update!(raw: "@discobot quote")
+            described_class.new(:reply, user, post_id: post.id).select
+            new_post = Post.last
 
-              expect(new_post.raw).to eq(
-                I18n.t("discourse_narrative_bot.quote.results",
-                quote: "Be Like Water", author: "Bruce Lee"
-              ))
-            end
+            expect(new_post.raw).to eq(
+              I18n.t("discourse_narrative_bot.quote.results",
+              quote: "Be Like Water", author: "Bruce Lee"
+            ))
           end
 
           describe 'when quote is requested incorrectly' do
@@ -652,7 +653,7 @@ describe DiscourseNarrativeBot::TrackSelector do
               another_post = Fabricate(:post,
                 user: Fabricate(:user),
                 topic: topic,
-                raw: "@discobot start new user"
+                raw: "@discobot #{I18n.t('discourse_narrative_bot.track_selector.reset_trigger')} #{I18n.t(DiscourseNarrativeBot::NewUserNarrative.reset_trigger)}"
               )
 
               user
@@ -660,6 +661,32 @@ describe DiscourseNarrativeBot::TrackSelector do
               expect do
                 PostActionCreator.like(user, another_post)
               end.to_not change { Post.count }
+            end
+          end
+
+          describe "when new and advanced user triggers overlap" do
+            before do
+              @overrides = []
+
+              @overrides << TranslationOverride.upsert!(
+                I18n.locale, 'discourse_narrative_bot.new_user_narrative.reset_trigger', 'tutorial'
+              )
+
+              @overrides << TranslationOverride.upsert!(
+                I18n.locale, 'discourse_narrative_bot.advanced_user_narrative.reset_trigger', 'tutorial advanced'
+              )
+            end
+
+            after do
+              @overrides.each(&:destroy!)
+            end
+
+            it "should start the right track" do
+              post.update!(raw: "@discobot #{I18n.t('discourse_narrative_bot.track_selector.reset_trigger')} #{DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
+
+              expect do
+                described_class.new(:reply, user, post_id: post.id).select
+              end.to change { Post.count }.by(2)
             end
           end
         end

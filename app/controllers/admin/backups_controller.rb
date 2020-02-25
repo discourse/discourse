@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "backup_restore/backup_restore"
+require "backup_restore"
 require "backup_restore/backup_store"
 
 class Admin::BackupsController < Admin::AdminController
@@ -204,7 +204,7 @@ class Admin::BackupsController < Admin::AdminController
     begin
       upload_url = store.generate_upload_url(filename)
     rescue BackupRestore::BackupStore::BackupFileExists
-      return render_json_error(I18n("backup.file_exists"))
+      return render_json_error(I18n.t("backup.file_exists"))
     rescue BackupRestore::BackupStore::StorageError => e
       return render_json_error(e)
     end
@@ -215,7 +215,7 @@ class Admin::BackupsController < Admin::AdminController
   private
 
   def has_enough_space_on_disk?(size)
-    `df -Pk #{Rails.root}/public/backups | awk 'NR==2 {print $4 * 1024;}'`.to_i > size
+    DiskSpace.free("#{Rails.root}/public/backups") > size
   end
 
   def ensure_backups_enabled

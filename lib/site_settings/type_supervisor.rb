@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'site_settings/validations'
-require_dependency 'enum'
-
 module SiteSettings; end
 
 class SiteSettings::TypeSupervisor
@@ -36,6 +33,7 @@ class SiteSettings::TypeSupervisor
       upload: 18,
       group: 19,
       group_list: 20,
+      tag_list: 21,
     )
   end
 

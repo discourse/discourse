@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'version'
-require_dependency 'site_setting'
-
 module DiscourseHub
 
   STATS_FETCHED_AT_KEY = "stats_fetched_at"

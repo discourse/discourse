@@ -22,9 +22,7 @@ QUnit.test("Reply as new topic", async assert => {
     find(".d-editor-input")
       .val()
       .trim(),
-    `Continuing the discussion from [Internationalization / localization](${
-      window.location.origin
-    }/t/internationalization-localization/280):`,
+    `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
     "it fills composer with the ring string"
   );
   assert.equal(
@@ -47,9 +45,7 @@ QUnit.test("Reply as new message", async assert => {
     find(".d-editor-input")
       .val()
       .trim(),
-    `Continuing the discussion from [PM for testing](${
-      window.location.origin
-    }/t/pm-for-testing/12):`,
+    `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
     "it fills composer with the ring string"
   );
 
@@ -190,6 +186,46 @@ QUnit.test("Updating the topic title with unicode emojis", async assert => {
   );
 });
 
+QUnit.test(
+  "Updating the topic title with unicode emojis without whitespaces",
+  async assert => {
+    Discourse.SiteSettings.enable_inline_emoji_translation = true;
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-title .d-icon-pencil-alt");
+
+    await fillIn("#edit-title", "Test🙂Title");
+
+    await click("#topic-title .submit-edit");
+
+    assert.equal(
+      find(".fancy-title")
+        .html()
+        .trim(),
+      `Test<img src="/images/emoji/emoji_one/slightly_smiling_face.png?v=${v}" title="slightly_smiling_face" alt="slightly_smiling_face" class="emoji">Title`,
+      "it displays the new title with escaped unicode emojis"
+    );
+  }
+);
+
+QUnit.test("Suggested topics", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  assert.equal(
+    find("#suggested-topics .suggested-topics-title")
+      .text()
+      .trim(),
+    I18n.t("suggested_topics.title")
+  );
+});
+
+QUnit.skip("Deleting a topic", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".topic-post:eq(0) button.show-more-actions");
+  await click(".widget-button.delete");
+
+  assert.ok(exists(".widget-button.recover"), "it shows the recover button");
+});
+
 acceptance("Topic featured links", {
   loggedIn: true,
   settings: {
@@ -199,7 +235,7 @@ acceptance("Topic featured links", {
 });
 
 QUnit.test("remove featured link", async assert => {
-  await visit("/t/299/1");
+  await visit("/t/-/299/1");
   assert.ok(
     exists(".title-wrapper .topic-featured-link"),
     "link is shown with topic title"
@@ -215,6 +251,20 @@ QUnit.test("remove featured link", async assert => {
   // await click('.title-wrapper .remove-featured-link');
   // await click('.title-wrapper .submit-edit');
   // assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
+});
+
+QUnit.test("Converting to a public topic", async assert => {
+  await visit("/t/test-pm/34");
+  assert.ok(exists(".private_message"));
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-convert button");
+
+  let categoryChooser = selectKit(".convert-to-public-topic .category-chooser");
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue(21);
+
+  await click(".convert-to-public-topic .btn-primary");
+  assert.ok(!exists(".private_message"));
 });
 
 QUnit.test("Unpinning unlisted topic", async assert => {
@@ -244,13 +294,6 @@ QUnit.test("selecting posts", async assert => {
   assert.ok(
     exists(".select-all"),
     "it should allow users to select all the posts"
-  );
-
-  await click(".toggle-admin-menu");
-
-  assert.ok(
-    exists(".selected-posts.hidden"),
-    "it should hide the multi select menu"
   );
 });
 
@@ -282,4 +325,36 @@ QUnit.test("View Hidden Replies", async assert => {
   await click(".gap");
 
   assert.equal(find(".gap").length, 0, "it hides gap");
+});
+
+QUnit.test("Quoting a quote keeps the original poster name", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  const selection = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents($("#post_5 blockquote")[0]);
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  await click(".quote-button");
+
+  assert.ok(
+    find(".d-editor-input")
+      .val()
+      .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+  );
+});
+
+acceptance("Topic + Post Bookmarks with Reminders", {
+  loggedIn: true,
+  settings: {
+    enable_bookmarks_with_reminders: true
+  }
+});
+
+QUnit.test("Bookmarks Modal", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".topic-post:first-child button.show-more-actions");
+  await click(".topic-post:first-child button.bookmark");
+  assert.ok(exists("#bookmark-reminder-modal"), "it shows the bookmark modal");
 });

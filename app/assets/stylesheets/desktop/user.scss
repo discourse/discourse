@@ -124,16 +124,12 @@
           }
           h1 {
             max-width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            @include ellipsis;
           }
           .location-and-website {
             display: flex;
             max-width: 100%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            @include ellipsis;
             .user-profile-location {
               margin-right: 1em;
             }
@@ -243,12 +239,20 @@
   .category-selector,
   .tag-chooser,
   textarea,
-  input.user-selector {
+  input.user-selector,
+  .user-chooser {
     width: 100%;
   }
 
   .instructions {
     display: inline-block;
     margin-top: s(1);
+  }
+}
+
+.user-crawler {
+  .username {
+    margin-left: 5px;
+    display: inline-block;
   }
 }

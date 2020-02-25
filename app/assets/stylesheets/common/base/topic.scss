@@ -23,28 +23,29 @@
   animation-name: button-jump-up;
   width: 145px;
   text-align: center;
-  position: relative;
   margin-bottom: 0px;
+  position: absolute;
+  right: 0;
+  top: -2em;
   .btn {
     margin: 0;
   }
 }
 
 #topic-progress-wrapper {
+  display: flex;
   .topic-admin-menu-button-container {
-    position: absolute;
-    bottom: 0px;
-    left: -38px;
-    width: 0px;
-    .widget-button {
-      height: 35px;
-      border-right: 1px solid dark-light-diff($primary, $secondary, 80%, -70%);
+    display: flex;
+    > span {
+      display: flex;
     }
   }
   .topic-admin-popup-menu.right-side {
-    position: relative;
-    right: 50px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
     left: auto;
+    transition: bottom 0.5s;
     transform: translateZ(
       0
     ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
@@ -110,9 +111,6 @@ a.badge-category {
     #edit-title {
       flex: 1 1 auto;
     }
-    .private-message-glyph {
-      margin: 5px 5px 0 0;
-    }
     .category-chooser,
     .mini-tag-chooser {
       flex: 1 1 49%;
@@ -132,18 +130,37 @@ a.badge-category {
 
 .private-message-glyph {
   color: dark-light-choose($primary-low-mid, $secondary-high);
-  margin-right: 5px;
 }
 
-.archetype-private_message #topic-title .edit-topic-title .tag-chooser {
-  margin-left: 19px;
+.private-message-glyph-wrapper {
+  float: left;
+
+  .private-message-glyph {
+    margin: 0 5px 0 0;
+    display: inline-block;
+  }
 }
 
 .private_message {
   #topic-title {
     .edit-topic-title {
+      position: relative;
+      .private-message-glyph {
+        position: absolute;
+        left: 0.75em;
+        top: 6px;
+      }
       #edit-title {
         width: calc(100% - 50px);
+        padding-left: 2.25em;
+      }
+      .mini-tag-chooser {
+        margin-left: 0;
+        @include breakpoint(mobile-large, min-width) {
+          .selected-name {
+            max-width: 500px;
+          }
+        }
       }
     }
   }
@@ -219,9 +236,7 @@ a.badge-category {
     display: flex;
     align-items: center;
     span:not(.badge) {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
   }
   ul {

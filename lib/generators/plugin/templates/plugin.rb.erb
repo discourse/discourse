@@ -1,51 +1,21 @@
+# frozen_string_literal: true
+
 # name: <%= name %>
-# about:
+# about: <%= @about %>
 # version: 0.1
 # authors: <%= @github_username %>
 # url: https://github.com/<%= @github_username %>
 
-<% if @options["stylesheet"] %>
-register_asset "stylesheets/common/<%= dasherized_name %>.scss"
-<% end %>
+register_asset 'stylesheets/common/<%= dasherized_name %>.scss'
+register_asset 'stylesheets/desktop/<%= dasherized_name %>.scss', :desktop
+register_asset 'stylesheets/mobile/<%= dasherized_name %>.scss', :mobile
 
 enabled_site_setting :<%= underscored_name %>_enabled
 
-PLUGIN_NAME ||= "<%= name %>".freeze
+PLUGIN_NAME ||= '<%= classified_name %>'
+
+load File.expand_path('lib/<%= dasherized_name %>/engine.rb', __dir__)
 
 after_initialize do
-  <% if @options['help'] %>
-  # see lib/plugin/instance.rb for the methods available in this context
-  <% end %>
-
-  module ::<%= classified_name %>
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace <%= classified_name %>
-    end
-  end
-
-  <% if @options["scheduled_job"] %>
-  require File.expand_path("../jobs/scheduled/check_<%= underscored_name %>.rb", __FILE__)
-  <% end %>
-
-  <% if @options["controller"] %>
-  require_dependency "application_controller"
-  class <%= name %>::ActionsController < ::ApplicationController
-    requires_plugin PLUGIN_NAME
-
-    before_action :ensure_logged_in
-
-    def list
-      render json: success_json
-    end
-  end
-
-  <%= name %>::Engine.routes.draw do
-    get "/list" => "actions#list"
-  end
-
-  Discourse::Application.routes.append do
-    mount ::<%= name %>::Engine, at: "/<%= dasherized_name %>"
-  end
-  <% end %>
+  # https://github.com/discourse/discourse/blob/master/lib/plugin/instance.rb
 end

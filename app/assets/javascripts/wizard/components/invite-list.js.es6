@@ -1,4 +1,7 @@
-export default Ember.Component.extend({
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+
+export default Component.extend({
   classNames: ["invite-list"],
   users: null,
   inviteEmail: "",
@@ -13,6 +16,8 @@ export default Ember.Component.extend({
       { id: "moderator", label: I18n.t("wizard.invites.roles.moderator") },
       { id: "regular", label: I18n.t("wizard.invites.roles.regular") }
     ]);
+
+    this.set("inviteRole", this.get("roles.0.id"));
 
     this.updateField();
   },
@@ -58,8 +63,8 @@ export default Ember.Component.extend({
       this.updateField();
 
       this.set("inviteEmail", "");
-      Ember.run.scheduleOnce("afterRender", () =>
-        this.$(".invite-email").focus()
+      scheduleOnce("afterRender", () =>
+        this.element.querySelector(".invite-email").focus()
       );
     },
 

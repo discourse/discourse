@@ -3,9 +3,7 @@
 //= require env
 //= require jquery.debug
 //= require jquery.ui.widget
-//= require handlebars
 //= require ember.debug
-//= require ember-template-compiler
 //= require message-bus
 //= require qunit/qunit/qunit
 //= require ember-qunit
@@ -24,13 +22,18 @@
 //= require pretty-text-bundle
 //= require markdown-it-bundle
 //= require application
-//= require plugin
 //= require admin
+
+// These are not loaded in prod or development
+// But we need them for testing handlebars templates in qunit
+//= require handlebars
+//= require ember-template-compiler
 
 //= require sinon/pkg/sinon
 
 //= require helpers/assertions
 
+//= require break_string
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
 //= require_tree ./lib
@@ -74,8 +77,7 @@ if (window.Logster) {
   window.Logster = { enabled: false };
 }
 
-var origDebounce = Ember.run.debounce,
-  pretender = require("helpers/create-pretender", null, null, false),
+var pretender = require("helpers/create-pretender", null, null, false),
   fixtures = require("fixtures/site-fixtures", null, null, false).default,
   flushMap = require("discourse/models/store", null, null, false).flushMap,
   ScrollingDOMMethods = require("discourse/mixins/scrolling", null, null, false)
@@ -91,11 +93,12 @@ function dup(obj) {
 }
 
 function resetSite(siteSettings, extras) {
-  var createStore = require("helpers/create-store").default;
-  var siteAttrs = $.extend({}, fixtures["site.json"].site, extras || {});
+  let createStore = require("helpers/create-store").default;
+  let siteAttrs = $.extend({}, fixtures["site.json"].site, extras || {});
+  let Site = require("discourse/models/site").default;
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
-  Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
+  Site.resetCurrent(Site.create(siteAttrs));
 }
 
 QUnit.testStart(function(ctx) {
@@ -119,8 +122,11 @@ QUnit.testStart(function(ctx) {
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "";
   Discourse.BaseUrl = "http://localhost:3000";
-  Discourse.Session.resetCurrent();
-  Discourse.User.resetCurrent();
+
+  let User = require("discourse/models/user").default;
+  let Session = require("discourse/models/session").default;
+  Session.resetCurrent();
+  User.resetCurrent();
   resetSite(Discourse.SiteSettings);
 
   _DiscourseURL.redirectedTo = null;
@@ -138,15 +144,9 @@ QUnit.testStart(function(ctx) {
 
   // Unless we ever need to test this, let's leave it off.
   $.fn.autocomplete = function() {};
-
-  // Don't debounce in test unless we're testing debouncing
-  if (ctx.module.indexOf("debounce") === -1) {
-    Ember.run.debounce = Ember.run;
-  }
 });
 
 QUnit.testDone(function() {
-  Ember.run.debounce = origDebounce;
   window.sandbox.restore();
 
   // Destroy any modals
@@ -160,12 +160,14 @@ QUnit.testDone(function() {
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
-  var appEvents = window.Discourse.__container__.lookup("app-events:main");
+  var appEvents = window.Discourse.__container__.lookup("service:app-events");
   var events = appEvents.__proto__._events;
   Object.keys(events).forEach(function(eventKey) {
     var event = events[eventKey];
     event.forEach(function(listener) {
-      appEvents.off(eventKey, listener.target, listener.fn);
+      if (appEvents.has(eventKey)) {
+        appEvents.off(eventKey, listener.target, listener.fn);
+      }
     });
   });
 

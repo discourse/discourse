@@ -18,21 +18,25 @@ tr_TR:
       public:
         title: "Oylar <strong>halka açıktır</strong>."
       results:
+        groups:
+          title: "Bu ankette oy kullanabilmek için %{groups} üyesi olmanız gerekiyor."
         vote:
           title: "Sonuçlar <strong>oylamada</strong> gösterilecektir."
         closed:
           title: "Sonuçlar oylama <strong>kapatıldıktan</strong> sonra gösterilecektir."
+        staff:
+          title: "Sonuçlar yalnızca <strong>moderatöre</strong> gösterilir."
       multiple:
         help:
           at_least_min_options:
-            one: "En az <strong>%{count}</strong> seçecek seçiniz"
+            one: "En az <strong>%{count}</strong> seçeneği seçin"
             other: "En az <strong>%{count}</strong> seçecek seçiniz"
           up_to_max_options:
             one: "<strong>%{count}</strong> seçeneğe kadar seçebilirsiniz"
             other: "<strong>%{count}</strong> seçeneğe kadar seçebilirsiniz"
           x_options:
-            one: "<strong>%{count}</strong>  seçenek seçiniz"
-            other: "<strong>%{count}</strong>  seçenek seçiniz"
+            one: "<strong>%{count}</strong> seçenek seçiniz"
+            other: "<strong>%{count}</strong> seçenek seçiniz"
           between_min_and_max_options: "<strong>%{min}</strong> ve <strong>%{max}</strong> arasında seçenek seçiniz"
       cast-votes:
         title: "Oyunuzu kullanın"
@@ -42,7 +46,16 @@ tr_TR:
         label: "Sonuçları göster"
       hide-results:
         title: "Oylarınıza dönün"
-        label: "Sonuçları gizle"
+        label: "Oylamayı göster"
+      group-results:
+        title: "Kullanıcı alanına göre oyları gruplandır"
+        label: "Dökümü göster"
+      ungroup-results:
+        title: "Tüm oyları birleştir"
+        label: "Sorunu gizle"
+      export-results:
+        title: "Anket sonuçlarını dışa aktarma"
+        label: "Dışa Aktar"
       open:
         title: "Anketi başlat"
         label: "Başlat"
@@ -57,11 +70,12 @@ tr_TR:
       error_while_toggling_status: "Üzgünüz, anket durumunu değiştirme sırasında hata meydana geldi."
       error_while_casting_votes: "Üzgünüz, oylarınızı dönüştürme sırasında hata meydana geldi."
       error_while_fetching_voters: "Üzgünüz, oy verenleri görüntüleme sırasında hata meydana geldi"
+      error_while_exporting_results: "Maalesef anket sonuçları dışa aktarılırken bir hata oluştu."
       ui_builder:
         title: Anket Oluştur
         insert: Anket Ekle
         help:
-          options_count: En az 2 seçenek ekleyin
+          options_count: En az 1 seçenek girin
           invalid_values: Minimum değer maksimum değerden küçük olmalıdır.
           min_step_value: Minimum adım değeri 1
         poll_type:
@@ -74,6 +88,11 @@ tr_TR:
           always: Her zaman görünür
           vote: Oylamada
           closed: Kapatıldığında
+          staff: Yalnızca moderatörler
+        poll_groups:
+          label: İzin verilen gruplar
+        poll_chart_type:
+          label: Grafik tipi
         poll_config:
           max: En fazla
           min: En az

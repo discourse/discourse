@@ -17,22 +17,32 @@
       {{#topic-title cancelled=(action "cancelEditingTopic") save=(action "finishedEditingTopic") model=model}}
         {{#if editingTopic}}
           <div class="edit-topic-title">
-          {{#if model.isPrivateMessage}}
-            <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-          {{/if}}
+            {{private-message-glyph isVisible=model.isPrivateMessage}}
+
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+
             {{#if showCategoryChooser}}
               {{category-chooser
                 class="small"
-                value=(unbound buffered.category_id)
-                onSelectAny=(action "topicCategoryChanged")}}
+                value=buffered.category_id
+                onChange=(action "topicCategoryChanged")
+              }}
             {{/if}}
 
             {{#if canEditTags}}
-              {{mini-tag-chooser filterable=true tags=buffered.tags categoryId=buffered.category_id}}
+              {{mini-tag-chooser
+                value=buffered.tags
+                onChange=(action "topicTagsChanged")
+                options=(hash
+                  filterable=true
+                  categoryId=buffered.category_id
+                  filterable=true
+                )
+              }}
             {{/if}}
 
             {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+
             <div class="edit-controls">
               {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check"}}
               {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times"}}
@@ -50,11 +60,14 @@
           <h1 data-topic-id="{{unbound model.id}}">
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
-                <a href={{pmPath}}>
-                  <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-                </a>
+                {{private-message-glyph
+                  isVisible=model.isPrivateMessage
+                  href=pmPath
+                  title="topic_statuses.personal_message.title"
+                  ariaLabel="user.messages.inbox"
+                }}
               {{else}}
-                <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+                {{private-message-glyph isVisible=model.isPrivateMessage}}
               {{/if}}
             {{/unless}}
 
@@ -88,7 +101,6 @@
               topic=model
               fixed="true"
               toggleMultiSelect=(action "toggleMultiSelect")
-              hideMultiSelect=(action "hideMultiSelect")
               deleteTopic=(action "deleteTopic")
               recoverTopic=(action "recoverTopic")
               toggleClosed=(action "toggleClosed")
@@ -112,11 +124,11 @@
             jumpToPost=(action "jumpToPost")
             jumpTop=(action "jumpTop")
             jumpBottom=(action "jumpBottom")
+            jumpEnd=(action "jumpEnd")
             jumpToPostPrompt=(action "jumpToPostPrompt")
             jumpToIndex=(action "jumpToIndex")
             replyToPost=(action "replyToPost")
             toggleMultiSelect=(action "toggleMultiSelect")
-            hideMultiSelect=(action "hideMultiSelect")
             deleteTopic=(action "deleteTopic")
             recoverTopic=(action "recoverTopic")
             toggleClosed=(action "toggleClosed")
@@ -141,7 +153,6 @@
                 openUpwards="true"
                 rightSide="true"
                 toggleMultiSelect=(action "toggleMultiSelect")
-                hideMultiSelect=(action "hideMultiSelect")
                 deleteTopic=(action "deleteTopic")
                 recoverTopic=(action "recoverTopic")
                 toggleClosed=(action "toggleClosed")
@@ -174,6 +185,7 @@
                 selectedPostsCount=selectedPostsCount
                 selectedQuery=selectedQuery
                 gaps=model.postStream.gaps
+                showReadIndicator=model.show_read_indicator
                 showFlags=(action "showPostFlags")
                 editPost=(action "editPost")
                 showHistory=(route-action "showHistory")
@@ -184,6 +196,7 @@
                 expandHidden=(action "expandHidden")
                 newTopicAction=(action "replyAsNewTopic")
                 toggleBookmark=(action "toggleBookmark")
+                toggleBookmarkWithReminder=(action "toggleBookmarkWithReminder")
                 togglePostType=(action "togglePostType")
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
@@ -265,7 +278,8 @@
                     topicClosed=model.closed
                     statusType=model.private_topic_timer.status_type
                     executeAt=model.private_topic_timer.execute_at
-                    duration=model.private_topic_timer.duration}}
+                    duration=model.private_topic_timer.duration
+                    removeTopicTimer=(action "removeTopicTimer" model.private_topic_timer.status_type "private_topic_timer")}}
               {{/if}}
 
               {{topic-timer-info
@@ -274,7 +288,8 @@
                   executeAt=model.topic_timer.execute_at
                   basedOnLastPost=model.topic_timer.based_on_last_post
                   duration=model.topic_timer.duration
-                  categoryId=model.topic_timer.category_id}}
+                  categoryId=model.topic_timer.category_id
+                  removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
               {{#if session.showSignupCta}}
                 {{! replace "Log In to Reply" with the infobox }}
@@ -286,7 +301,6 @@
                   {{topic-footer-buttons
                     topic=model
                     toggleMultiSelect=(action "toggleMultiSelect")
-                    hideMultiSelect=(action "hideMultiSelect")
                     deleteTopic=(action "deleteTopic")
                     recoverTopic=(action "recoverTopic")
                     toggleClosed=(action "toggleClosed")
@@ -336,11 +350,11 @@
   {{else}}
     <div class="container">
       {{#conditional-loading-spinner condition=noErrorYet}}
-        {{#if model.notFoundHtml}}
-          <div class="not-found">{{{model.notFoundHtml}}}</div>
+        {{#if model.errorHtml}}
+          <div class="not-found">{{{model.errorHtml}}}</div>
         {{else}}
           <div class="topic-error">
-            <div>{{model.message}}</div>
+            <div>{{model.errorMessage}}</div>
             {{#if model.noRetry}}
               {{#unless currentUser}}
                 {{d-button action=(route-action "showLogin") class="btn-primary topic-retry" icon="user" label="log_in"}}

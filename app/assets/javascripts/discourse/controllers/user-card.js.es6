@@ -1,12 +1,11 @@
-import {
-  default as DiscourseURL,
-  userPath,
-  groupPath
-} from "discourse/lib/url";
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+import DiscourseURL, { userPath, groupPath } from "discourse/lib/url";
 
-export default Ember.Controller.extend({
-  topic: Ember.inject.controller(),
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  topic: inject(),
+  router: service(),
 
   actions: {
     togglePosts(user) {

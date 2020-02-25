@@ -1,24 +1,22 @@
+require:
+  - rubocop-discourse
+
 AllCops:
   TargetRubyVersion: 2.4
   DisabledByDefault: true
   Exclude:
-    - 'db/schema.rb'
-    - 'bundle/**/*'
-    - 'vendor/**/*'
-    - 'node_modules/**/*'
-    - 'public/**/*'
-    - 'plugins/**/*'
+    - "db/schema.rb"
+    - "bundle/**/*"
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - "public/**/*"
+    - "plugins/**/gems/**/*"
 
 # Prefer &&/|| over and/or.
 Style/AndOr:
   Enabled: true
 
 Style/FrozenStringLiteralComment:
-  Enabled: true
-
-# Do not use braces for hash literals when they are the last argument of a
-# method call.
-Style/BracesAroundHashParameters:
   Enabled: true
 
 # Align `when` with `case`.
@@ -57,7 +55,7 @@ Layout/SpaceAroundOperators:
   Enabled: true
 
 Layout/SpaceBeforeFirstArg:
-    Enabled: true
+  Enabled: true
 
 # Defining a method with parameters needs parentheses.
 Style/MethodDefParentheses:
@@ -83,7 +81,7 @@ Layout/Tab:
   Enabled: true
 
 # Blank lines should not have any spaces.
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: true
 
 # No trailing whitespace.
@@ -113,7 +111,7 @@ Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: true
 
 Bundler/OrderedGems:
@@ -125,6 +123,18 @@ Style/SingleLineMethods:
 Style/Semicolon:
   Enabled: true
   AllowAsExpressionSeparator: true
+
+Style/RedundantReturn:
+  Enabled: true
+
+DiscourseCops/NoChdir:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*' # Specs are run sequentially, so chdir can be used
+    - 'plugins/*/spec/**/*'
+
+DiscourseCops/NoURIEscapeEncode:
+  Enabled: true
 
 Style/GlobalVars:
   Enabled: true

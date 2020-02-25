@@ -6,11 +6,11 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
 const REPLACEMENTS = {
-  "d-tracking": "circle",
-  "d-muted": "times-circle",
-  "d-regular": "far-circle",
-  "d-watching": "exclamation-circle",
-  "d-watching-first": "far-dot-circle",
+  "d-tracking": "bell",
+  "d-muted": "discourse-bell-slash",
+  "d-regular": "far-bell",
+  "d-watching": "discourse-bell-exclamation",
+  "d-watching-first": "discourse-bell-one",
   "d-drop-expanded": "caret-down",
   "d-drop-collapsed": "caret-right",
   "d-unliked": "far-heart",
@@ -29,13 +29,15 @@ const REPLACEMENTS = {
   "notification.invited_to_private_message": "far-envelope",
   "notification.invited_to_topic": "hand-point-right",
   "notification.invitee_accepted": "user",
-  "notification.moved_post": "sign-out",
+  "notification.moved_post": "sign-out-alt",
   "notification.linked": "link",
   "notification.granted_badge": "certificate",
   "notification.topic_reminder": "far-clock",
-  "notification.watching_first_post": "far-dot-circle",
+  "notification.watching_first_post": "discourse-bell-one",
   "notification.group_message_summary": "users",
-  "notification.post_approved": "check"
+  "notification.post_approved": "check",
+  "notification.membership_request_accepted": "user-plus",
+  "notification.membership_request_consolidated": "users"
 };
 
 // TODO: use lib/svg_sprite/fa4-renames.json here
@@ -571,6 +573,7 @@ function warnIfMissing(id) {
   if (
     typeof Discourse !== "undefined" &&
     Discourse.Environment === "development" &&
+    !Discourse.disableMissingIconWarning &&
     Discourse.SvgIconList &&
     Discourse.SvgIconList.indexOf(id) === -1
   ) {
@@ -578,13 +581,25 @@ function warnIfMissing(id) {
   }
 }
 
+const reportedIcons = [];
+
 function warnIfDeprecated(oldId, newId) {
-  if (
-    typeof Discourse !== "undefined" &&
-    Discourse.Environment === "development" &&
-    !Ember.testing
-  ) {
-    deprecated(`Icon "${oldId}" is now "${newId}".`);
+  deprecated(
+    `Please replace all occurrences of "${oldId}"" with "${newId}". FontAwesome 4.7 icon names are now deprecated and will be removed in the next release.`
+  );
+  if (!Discourse.testing && !reportedIcons.includes(oldId)) {
+    const errorData = {
+      message: `FA icon deprecation: replace "${oldId}"" with "${newId}".`,
+      stacktrace: Error().stack
+    };
+
+    Ember.$.ajax(`${Discourse.BaseUri}/logs/report_js_error`, {
+      data: errorData,
+      type: "POST",
+      cache: false
+    });
+
+    reportedIcons.push(oldId);
   }
 }
 
@@ -622,6 +637,12 @@ registerIconRenderer({
       html = `<span class="svg-icon-title" title='${I18n.t(
         params.title
       ).replace(/'/g, "&#39;")}'>${html}</span>`;
+    }
+    if (params.translatedtitle) {
+      html = `<span class="svg-icon-title" title='${params.translatedtitle.replace(
+        /'/g,
+        "&#39;"
+      )}'>${html}</span>`;
     }
     return html;
   },

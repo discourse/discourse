@@ -17,7 +17,7 @@ sk:
       name: Certifikovaný
       description: "Ukončený manuál nového používateľa"
       long_description: |
-        Tento odznak sa udeľuje po úspešnom ukončení interaktívneho manuálu nového používateľa.  Zahájili ste iniciatívu na naučenie sa základným nástrojom diskusie a teraz ste certifikovaný!
+        Tento odznak sa udeľuje po úspešnom ukončení interaktívneho manuálu nového používateľa. Zahájili ste iniciatívu na naučenie sa základným nástrojom diskusie a teraz ste certifikovaný!
     licensed:
       name: Licencovaný
       description: "Dokončili sme náš tutoriál pre pokročilých používateľov"
@@ -31,7 +31,7 @@ sk:
 
         - Ak chceš pokračovať, kedzkoľvek mi odpovedz.
 
-        - Ak chceš tento krok vynechať, napíš  `%{skip_trigger}`.
+        - Ak chceš tento krok vynechať, napíš `%{skip_trigger}`.
 
         - Ak chceš začať od začiatku, povedz `%{reset_trigger}`.
 
@@ -80,7 +80,7 @@ sk:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'šťastie'
+      trigger: "šťastie"
       answers:
         '1': "Je to isté"
         '2': "Rozhodne je to tak"
@@ -104,21 +104,12 @@ sk:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'začať'
-      skip_trigger: 'preskočiť'
-      help_trigger: 'zobraziť pomoc'
+      reset_trigger: "začať"
+      skip_trigger: "preskočiť"
+      help_trigger: "zobraziť pomoc"
       random_mention:
         reply: |-
           Ahoj! Ak chcete zistiť, čo dokážem urobiť, povedzte `@%{discobot_username} %{help_trigger}`.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Vykonaj náhodný milosrdný skutok, bez akýchkoľvek očakávaní, a buď si istý, že jedného dňa niekto může urobiť to isté pre Teba_ &mdash; Princezná Diana
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Na to sa môžeš spoľahnúť
       do_not_understand:
         first_response: |-
           Hej, ďakujem za odpoveď!
@@ -139,7 +130,7 @@ sk:
         reply: |-
           To je :sparkles: _emojitastic!_ :sparkles:
     advanced_user_narrative:
-      title: ':arrow_up: Pokročilé funkcie používateľa'
+      title: ":arrow_up: Pokročilé funkcie používateľa"
       details:
         reply: |-
           Super práca — vaše zameranie na _detail_ je obdivuhodné!

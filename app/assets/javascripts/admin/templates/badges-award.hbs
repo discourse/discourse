@@ -1,0 +1,39 @@
+{{#d-section class="award-badge"}}
+  <h1>{{i18n 'admin.badges.mass_award.title'}}</h1>
+  <p>{{i18n 'admin.badges.mass_award.description'}}</p>
+
+  {{#if model}}
+    <form class="form-horizontal">
+      <div class='badge-preview'>
+        {{#if model}}
+          {{icon-or-image model}}
+          <span class="badge-display-name">{{model.name}}</span>
+        {{else}}
+          <span class='badge-placeholder'>{{I18n 'admin.badges.mass_award.no_badge_selected'}}</span>
+        {{/if}}
+      </div>
+      <div>
+        <h4>{{I18n 'admin.badges.mass_award.upload_csv'}}</h4>
+        <input type='file' id='massAwardCSVUpload' accept='.csv'>
+      </div>
+      <div>
+        <label>
+          {{input type="checkbox" checked=replaceBadgeOwners}}
+          {{i18n 'admin.badges.mass_award.replace_owners'}}
+        </label>
+      </div>
+      {{d-button
+          class="btn-primary"
+          action=(action 'massAward')
+          type="submit"
+          disabled=saving
+          label="admin.badges.mass_award.perform"}}
+      {{#link-to 'adminBadges.index' class="btn btn-danger"}}
+        {{d-icon "times"}}
+        <span>{{i18n 'cancel'}}</span>
+      {{/link-to}}
+    </form>
+  {{else}}
+    <span class='badge-required'>{{I18n 'admin.badges.mass_award.no_badge_selected'}}</span>
+  {{/if}}
+{{/d-section}}

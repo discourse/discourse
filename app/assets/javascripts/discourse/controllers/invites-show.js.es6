@@ -1,4 +1,7 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { isEmpty } from "@ember/utils";
+import { alias, notEmpty } from "@ember/object/computed";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import getUrl from "discourse-common/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
@@ -8,39 +11,39 @@ import NameValidation from "discourse/mixins/name-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 
-export default Ember.Controller.extend(
+export default Controller.extend(
   PasswordValidation,
   UsernameValidation,
   NameValidation,
   UserFieldsValidation,
   {
-    invitedBy: Ember.computed.alias("model.invited_by"),
-    email: Ember.computed.alias("model.email"),
-    accountUsername: Ember.computed.alias("model.username"),
-    passwordRequired: Ember.computed.notEmpty("accountPassword"),
+    invitedBy: alias("model.invited_by"),
+    email: alias("model.email"),
+    accountUsername: alias("model.username"),
+    passwordRequired: notEmpty("accountPassword"),
     successMessage: null,
     errorMessage: null,
     userFields: null,
     inviteImageUrl: getUrl("/images/envelope.svg"),
 
-    @computed
+    @discourseComputed
     welcomeTitle() {
       return I18n.t("invites.welcome_to", {
         site_name: this.siteSettings.title
       });
     },
 
-    @computed("email")
+    @discourseComputed("email")
     yourEmailMessage(email) {
       return I18n.t("invites.your_email", { email: email });
     },
 
-    @computed
+    @discourseComputed
     externalAuthsEnabled() {
       return findLoginMethods().length > 0;
     },
 
-    @computed(
+    @discourseComputed(
       "usernameValidation.failed",
       "passwordValidation.failed",
       "nameValidation.failed",
@@ -55,7 +58,7 @@ export default Ember.Controller.extend(
       return usernameFailed || passwordFailed || nameFailed || userFieldsFailed;
     },
 
-    @computed
+    @discourseComputed
     fullnameRequired() {
       return (
         this.siteSettings.full_name_required || this.siteSettings.enable_names
@@ -66,7 +69,7 @@ export default Ember.Controller.extend(
       submit() {
         const userFields = this.userFields;
         let userCustomFields = {};
-        if (!Ember.isEmpty(userFields)) {
+        if (!isEmpty(userFields)) {
           userFields.forEach(function(f) {
             userCustomFields[f.get("field.id")] = f.get("value");
           });
@@ -79,7 +82,8 @@ export default Ember.Controller.extend(
             username: this.accountUsername,
             name: this.accountName,
             password: this.accountPassword,
-            user_custom_fields: userCustomFields
+            user_custom_fields: userCustomFields,
+            timezone: moment.tz.guess()
           }
         })
           .then(result => {

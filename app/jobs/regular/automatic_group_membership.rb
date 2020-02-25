@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class AutomaticGroupMembership < Jobs::Base
+  class AutomaticGroupMembership < ::Jobs::Base
 
     def execute(args)
       group_id = args[:group_id]
@@ -22,7 +22,7 @@ module Jobs
         .where(staged: false)
         .find_each do |user|
         next unless user.email_confirmed?
-        group.add(user)
+        group.add(user, automatic: true)
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
 

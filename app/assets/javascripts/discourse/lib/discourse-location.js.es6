@@ -1,4 +1,6 @@
+import EmberObject from "@ember/object";
 import { defaultHomepage } from "discourse/lib/utilities";
+import { guidFor } from "@ember/object/internals";
 let popstateFired = false;
 const supportsHistoryState = window.history && "state" in window.history;
 const popstateCallbacks = [];
@@ -9,13 +11,14 @@ const popstateCallbacks = [];
 
   @class DiscourseLocation
   @namespace Discourse
-  @extends Ember.Object
+  @extends @ember/object
 */
-const DiscourseLocation = Ember.Object.extend({
+const DiscourseLocation = EmberObject.extend({
   init() {
     this._super(...arguments);
 
     this.set("location", this.location || window.location);
+
     this.initState();
   },
 
@@ -101,7 +104,7 @@ const DiscourseLocation = Ember.Object.extend({
     const state = this.getState();
     path = this.formatURL(path);
 
-    if (state && state.path !== path) {
+    if (!state || state.path !== path) {
       this.replaceState(path);
     }
   },
@@ -173,7 +176,7 @@ const DiscourseLocation = Ember.Object.extend({
     @param callback {Function}
   */
   onUpdateURL(callback) {
-    const guid = Ember.guidFor(this);
+    const guid = guidFor(this);
 
     $(window).on(`popstate.ember-location-${guid}`, () => {
       const url = this.getURL();
@@ -214,7 +217,7 @@ const DiscourseLocation = Ember.Object.extend({
   willDestroy() {
     this._super(...arguments);
 
-    const guid = Ember.guidFor(this);
+    const guid = guidFor(this);
     $(window).off(`popstate.ember-location-${guid}`);
   }
 });

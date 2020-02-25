@@ -1,8 +1,8 @@
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { htmlSafe } from "@ember/template";
 
 jQuery.fn.wiggle = function(times, duration) {
   if (times > 0) {
@@ -22,7 +22,7 @@ jQuery.fn.wiggle = function(times, duration) {
 
 const alreadyWarned = {};
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["wizard-step"],
   saving: null,
 
@@ -31,16 +31,16 @@ export default Ember.Component.extend({
     this.autoFocus();
   },
 
-  @computed("step.index")
+  @discourseComputed("step.index")
   showQuitButton: index => index === 0,
 
-  @computed("step.displayIndex", "wizard.totalSteps")
+  @discourseComputed("step.displayIndex", "wizard.totalSteps")
   showNextButton: (current, total) => current < total,
 
-  @computed("step.displayIndex", "wizard.totalSteps")
+  @discourseComputed("step.displayIndex", "wizard.totalSteps")
   showDoneButton: (current, total) => current === total,
 
-  @computed(
+  @discourseComputed(
     "step.index",
     "step.displayIndex",
     "wizard.totalSteps",
@@ -50,10 +50,10 @@ export default Ember.Component.extend({
     return index !== 0 && displayIndex !== total && completed;
   },
 
-  @computed("step.index")
+  @discourseComputed("step.index")
   showBackButton: index => index > 0,
 
-  @computed("step.banner")
+  @discourseComputed("step.banner")
   bannerImage(src) {
     if (!src) {
       return;
@@ -77,7 +77,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("step.index", "wizard.totalSteps")
+  @discourseComputed("step.index", "wizard.totalSteps")
   barStyle(displayIndex, totalSteps) {
     let ratio = parseFloat(displayIndex) / parseFloat(totalSteps - 1);
     if (ratio < 0) {
@@ -87,11 +87,11 @@ export default Ember.Component.extend({
       ratio = 1;
     }
 
-    return Ember.String.htmlSafe(`width: ${ratio * 200}px`);
+    return htmlSafe(`width: ${ratio * 200}px`);
   },
 
   autoFocus() {
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       const $invalid = $(".wizard-field.invalid:eq(0) .wizard-focusable");
 
       if ($invalid.length) {
@@ -103,7 +103,7 @@ export default Ember.Component.extend({
   },
 
   animateInvalidFields() {
-    Ember.run.scheduleOnce("afterRender", () =>
+    scheduleOnce("afterRender", () =>
       $(".invalid input[type=text], .invalid textarea").wiggle(2, 100)
     );
   },

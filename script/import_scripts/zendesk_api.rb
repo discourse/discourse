@@ -30,12 +30,22 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
     import_users
     import_topics
     import_posts
+    import_likes
   end
 
   def fetch_from_api
+    fetch_categories
+    fetch_topics
+    fetch_posts
+    fetch_users
+
+    @db.sort_posts_by_created_at
+  end
+
+  def fetch_categories
     puts '', 'fetching categories...'
 
-    get_from_api('/api/v2/community/topics.json', 'topics') do |row|
+    get_from_api('/api/v2/community/topics.json', 'topics', show_status: true) do |row|
       @db.insert_category(
         id: row['id'],
         name: row['name'],
@@ -44,10 +54,16 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
         url: row['html_url']
       )
     end
+  end
 
+  def fetch_topics
     puts '', 'fetching topics...'
 
-    get_from_api('/api/v2/community/posts.json', 'posts') do |row|
+    get_from_api('/api/v2/community/posts.json', 'posts', show_status: true) do |row|
+      if row['vote_count'] > 0
+        like_user_ids = fetch_likes("/api/v2/community/posts/#{row['id']}/votes.json")
+      end
+
       @db.insert_topic(
         id: row['id'],
         title: row['title'],
@@ -56,11 +72,15 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
         closed: row['closed'],
         user_id: row['author_id'],
         created_at: row['created_at'],
-        url: row['html_url']
+        url: row['html_url'],
+        like_user_ids: like_user_ids
       )
     end
+  end
 
+  def fetch_posts
     puts '', 'fetching posts...'
+    current_count = 0
     total_count = @db.count_topics
     start_time = Time.now
     last_id = ''
@@ -69,49 +89,72 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
       rows, last_id = @db.fetch_topics(last_id)
       break if rows.empty?
 
-      print_status(offset, total_count, start_time)
-
       rows.each do |topic_row|
-        get_from_api("/api/v2/community/posts/#{topic_row['id']}/comments.json", 'comments', show_status: false) do |row|
+        get_from_api("/api/v2/community/posts/#{topic_row['id']}/comments.json", 'comments') do |row|
+          if row['vote_count'] > 0
+            like_user_ids = fetch_likes("/api/v2/community/posts/#{topic_row['id']}/comments/#{row['id']}/votes.json")
+          end
+
           @db.insert_post(
             id: row['id'],
             raw: row['body'],
             topic_id: topic_row['id'],
             user_id: row['author_id'],
             created_at: row['created_at'],
-            url: row['html_url']
+            url: row['html_url'],
+            like_user_ids: like_user_ids
           )
         end
+
+        current_count += 1
+        print_status(current_count, total_count, start_time)
       end
     end
+  end
 
+  def fetch_users
     puts '', 'fetching users...'
 
-    results = @db.execute_sql("SELECT user_id FROM topic")
-    user_ids = results.map { |h| h['user_id']&.to_i }
-    results = @db.execute_sql("SELECT user_id FROM post")
-    user_ids += results.map { |h| h['user_id']&.to_i }
-    user_ids.uniq!
-    user_ids.sort!
+    user_ids = @db.execute_sql(<<~SQL).map { |row| row['user_id'] }
+      SELECT user_id FROM topic
+      UNION
+      SELECT user_id FROM post
+      UNION
+      SELECT user_id FROM like
+    SQL
 
-    total_users = user_ids.size
+    current_count = 0
+    total_count = user_ids.size
     start_time = Time.now
 
     while !user_ids.empty?
-      print_status(total_users - user_ids.size, total_users, start_time)
-      get_from_api("/api/v2/users/show_many.json?ids=#{user_ids.shift(50).join(',')}", 'users', show_status: false) do |row|
+      get_from_api("/api/v2/users/show_many.json?ids=#{user_ids.shift(50).join(',')}", 'users') do |row|
         @db.insert_user(
           id: row['id'],
           email: row['email'],
           name: row['name'],
           created_at: row['created_at'],
           last_seen_at: row['last_login_at'],
-          active: row['active']
+          active: row['active'],
+          avatar_path: row['photo'].present? ? row['photo']['content_url'] : nil
         )
+
+        current_count += 1
+        print_status(current_count, total_count, start_time)
+      end
+    end
+  end
+
+  def fetch_likes(url)
+    user_ids = []
+
+    get_from_api(url, 'votes') do |row|
+      if row['id'].present? && row['value'] == 1
+        user_ids << row['user_id']
       end
     end
 
-    @db.sort_posts_by_created_at
+    user_ids
   end
 
   def import_categories
@@ -150,7 +193,12 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
           name: row['name'],
           created_at: row['created_at'],
           last_seen_at: row['last_seen_at'],
-          active: row['active'] == 1
+          active: row['active'] == 1,
+          post_create_action: proc do |user|
+            if row['avatar_path'].present?
+              UserAvatar.import_url_for_user(row['avatar_path'], user) rescue nil
+            end
+          end
         }
       end
     end
@@ -222,6 +270,38 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
     end
   end
 
+  def import_likes
+    puts "", "importing likes..."
+    start_time = Time.now
+    current_count = 0
+    total_count = @db.count_likes
+    last_row_id = 0
+
+    batches do |offset|
+      rows, last_row_id = @db.fetch_likes(last_row_id)
+      break if rows.empty?
+
+      rows.each do |row|
+        import_id = row['topic_id'] ? import_topic_id(row['topic_id']) : row['post_id']
+        post = Post.find_by(id: post_id_from_imported_post_id(import_id)) if import_id
+        user = User.find_by(id: user_id_from_imported_user_id(row['user_id']))
+
+        if post && user
+          begin
+            PostActionCreator.like(user, post) if user && post
+          rescue => e
+            puts "error acting on post #{e}"
+          end
+        else
+          puts "Skipping Like from #{row['user_id']} on topic #{row['topic_id']} / post #{row['post_id']}"
+        end
+
+        current_count += 1
+        print_status(current_count, total_count, start_time)
+      end
+    end
+  end
+
   def normalize_raw(raw)
     raw = raw.gsub('\n', '')
     raw = ReverseMarkdown.convert(raw)
@@ -256,7 +336,7 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
     end
   end
 
-  def get_from_api(path, array_name, show_status: true)
+  def get_from_api(path, array_name, show_status: false)
     url = "#{@source_url}#{path}"
     start_time = Time.now
 
@@ -298,6 +378,7 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
       end
     end
   end
+
 end
 
 unless ARGV.length == 4 && Dir.exist?(ARGV[1])

@@ -1,17 +1,18 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":composer-popup", ":hidden", "message.extraClass"],
 
-  @computed("message.templateName")
+  @discourseComputed("message.templateName")
   layout(templateName) {
     return getOwner(this).lookup(`template:composer/${templateName}`);
   },
 
   didInsertElement() {
     this._super(...arguments);
-    this.$().show();
+    this.element.style.display = "block";
   },
 
   actions: {

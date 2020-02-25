@@ -1,12 +1,14 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
+import { on } from "@ember/object/evented";
 
-export default Ember.Component.extend(UploadMixin, {
+export default Component.extend(UploadMixin, {
   tagName: "span",
 
-  @computed("uploading", "uploadProgress")
+  @discourseComputed("uploading", "uploadProgress")
   uploadButtonText(uploading, progress) {
     return uploading
       ? I18n.t("admin.backups.upload.uploading_progress", { progress })
@@ -34,8 +36,8 @@ export default Ember.Component.extend(UploadMixin, {
     };
   },
 
-  _init: function() {
-    const $upload = this.$();
+  _init: on("didInsertElement", function() {
+    const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {
       ajax("/admin/backups/upload_url", {
@@ -47,5 +49,5 @@ export default Ember.Component.extend(UploadMixin, {
         })
         .catch(popupAjaxError);
     });
-  }.on("didInsertElement")
+  })
 });

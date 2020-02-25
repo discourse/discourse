@@ -1,5 +1,6 @@
 import { h } from "virtual-dom";
 import { renderIcon } from "discourse-common/lib/icon-library";
+import User from "discourse/models/user";
 
 const _decorators = [];
 
@@ -9,9 +10,7 @@ export function addFeaturedLinkMetaDecorator(decorator) {
 
 export function extractLinkMeta(topic) {
   const href = topic.get("featured_link");
-  const target = Discourse.User.currentProp("external_links_in_new_tab")
-    ? "_blank"
-    : "";
+  const target = User.currentProp("external_links_in_new_tab") ? "_blank" : "";
 
   if (!href) {
     return;
@@ -21,7 +20,7 @@ export function extractLinkMeta(topic) {
     target: target,
     href,
     domain: topic.get("featured_link_root_domain"),
-    rel: "nofollow"
+    rel: "nofollow ugc"
   };
 
   if (_decorators.length) {

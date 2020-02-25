@@ -22,7 +22,6 @@
     const dateTime = options.time
       ? `${options.date} ${options.time}`
       : options.date;
-    let utcDateTime;
 
     let displayedTimezone;
     if (options.time) {
@@ -33,6 +32,7 @@
     }
 
     // if timezone given we convert date and time from given zone to Etc/UTC
+    let utcDateTime;
     if (options.timezone) {
       utcDateTime = _applyZoneToDateTime(dateTime, options.timezone);
     } else {
@@ -43,7 +43,7 @@
       // if event is in the past we want to bump it no next occurrence when
       // recurring is set
       if (options.recurring) {
-        utcDateTime = _applyRecurrence(utcDateTime, options.recurring);
+        utcDateTime = _applyRecurrence(utcDateTime, options);
       } else {
         $element.addClass("past");
       }
@@ -78,7 +78,10 @@
       .find(".relative-time")
       .text(formatedDateTime);
 
-    this.timeout = setTimeout(() => processElement($element, options), 10000);
+    this.timeout = setTimeout(
+      () => processElement($element, options),
+      60 * 1000
+    );
   }
 
   function _formatTimezone(timezone) {
@@ -122,12 +125,29 @@
   }
 
   function _isEqualZones(timezoneA, timezoneB) {
+    if ((timezoneA || timezoneB) && (!timezoneA || !timezoneB)) {
+      return false;
+    }
+
+    if (timezoneA.includes(timezoneB) || timezoneB.includes(timezoneA)) {
+      return true;
+    }
+
     return (
       moment.tz(timezoneA).utcOffset() === moment.tz(timezoneB).utcOffset()
     );
   }
 
   function _applyFormatting(dateTime, displayedTimezone, options) {
+    if (options.countdown) {
+      const diffTime = dateTime.diff(moment());
+      if (diffTime < 0) {
+        return I18n.t("discourse_local_dates.relative_dates.countdown.passed");
+      } else {
+        return moment.duration(diffTime).humanize();
+      }
+    }
+
     const sameTimezone = _isEqualZones(displayedTimezone, moment.tz.guess());
     const inCalendarRange = dateTime.isBetween(
       moment().subtract(2, "days"),
@@ -179,22 +199,37 @@
     return dateTime;
   }
 
-  function _applyRecurrence(dateTime, recurring) {
+  function _applyRecurrence(dateTime, { recurring, timezone }) {
     const parts = recurring.split(".");
     const count = parseInt(parts[0], 10);
     const type = parts[1];
     const diff = moment().diff(dateTime, type);
     const add = Math.ceil(diff + count);
+
+    // we create new moment object from format
+    // to ensure it's created in user context
     const wasDST = moment(dateTime.format()).isDST();
-    let dateTimeWithRecurrence = dateTime.add(add, type);
+    let dateTimeWithRecurrence = moment(dateTime).add(add, type);
     const isDST = moment(dateTimeWithRecurrence.format()).isDST();
 
+    // these dates are more or less DST "certain"
+    const noDSTOffset = moment
+      .tz({ month: 0, day: 1 }, timezone || "Etc/UTC")
+      .utcOffset();
+    const withDSTOffset = moment
+      .tz({ month: 5, day: 1 }, timezone || "Etc/UTC")
+      .utcOffset();
+
+    // we remove the DST offset present when the date was created,
+    // and add current DST offset
     if (!wasDST && isDST) {
-      dateTimeWithRecurrence.subtract(1, "hour");
+      dateTimeWithRecurrence.add(-withDSTOffset + noDSTOffset, "minutes");
     }
 
+    // we add the DST offset present when the date was created,
+    // and remove current DST offset
     if (wasDST && !isDST) {
-      dateTimeWithRecurrence.add(1, "hour");
+      dateTimeWithRecurrence.add(withDSTOffset - noDSTOffset, "minutes");
     }
 
     return dateTimeWithRecurrence;
@@ -210,7 +245,9 @@
     const previewedTimezones = [];
     const watchingUserTimezone = moment.tz.guess();
     const timezones = options.timezones.filter(
-      timezone => timezone !== watchingUserTimezone
+      timezone =>
+        !_isEqualZones(timezone, watchingUserTimezone) &&
+        !_isEqualZones(timezone, options.timezone)
     );
 
     previewedTimezones.push({
@@ -232,26 +269,24 @@
       timezones.unshift(options.timezone);
     }
 
-    timezones
-      .filter(z => z)
-      .forEach(timezone => {
-        if (_isEqualZones(timezone, displayedTimezone)) {
-          return;
-        }
+    Array.from(new Set(timezones.filter(Boolean))).forEach(timezone => {
+      if (_isEqualZones(timezone, displayedTimezone)) {
+        return;
+      }
 
-        if (_isEqualZones(timezone, watchingUserTimezone)) {
-          timezone = watchingUserTimezone;
-        }
+      if (_isEqualZones(timezone, watchingUserTimezone)) {
+        timezone = watchingUserTimezone;
+      }
 
-        previewedTimezones.push({
-          timezone,
-          dateTime: options.time
-            ? moment(dateTime)
-                .tz(timezone)
-                .format("LLL")
-            : _createDateTimeRange(dateTime, timezone)
-        });
+      previewedTimezones.push({
+        timezone,
+        dateTime: options.time
+          ? moment(dateTime)
+              .tz(timezone)
+              .format("LLL")
+          : _createDateTimeRange(dateTime, timezone)
       });
+    });
 
     if (!previewedTimezones.length) {
       previewedTimezones.push({
@@ -313,6 +348,7 @@
       options.displayedTimezone = $element.attr("data-displayed-timezone");
       options.format =
         $element.attr("data-format") || (options.time ? "LLL" : "LL");
+      options.countdown = $element.attr("data-countdown");
 
       processElement($element, options);
     });

@@ -1,7 +1,9 @@
-import InputValidation from "discourse/models/input-validation";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { isEmpty } from "@ember/utils";
+import discourseComputed from "discourse-common/utils/decorators";
+import Mixin from "@ember/object/mixin";
+import EmberObject from "@ember/object";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   rejectedPasswords: null,
 
   init() {
@@ -10,21 +12,21 @@ export default Ember.Mixin.create({
     this.set("rejectedPasswordsMessages", new Map());
   },
 
-  @computed("passwordMinLength")
+  @discourseComputed("passwordMinLength")
   passwordInstructions() {
     return I18n.t("user.password.instructions", {
       count: this.passwordMinLength
     });
   },
 
-  @computed("isDeveloper", "admin")
+  @discourseComputed("isDeveloper", "admin")
   passwordMinLength(isDeveloper, admin) {
     return isDeveloper || admin
       ? this.siteSettings.min_admin_password_length
       : this.siteSettings.min_password_length;
   },
 
-  @computed(
+  @discourseComputed(
     "accountPassword",
     "passwordRequired",
     "rejectedPasswords.[]",
@@ -41,11 +43,11 @@ export default Ember.Mixin.create({
     passwordMinLength
   ) {
     if (!passwordRequired) {
-      return InputValidation.create({ ok: true });
+      return EmberObject.create({ ok: true });
     }
 
     if (rejectedPasswords.includes(password)) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason:
           this.rejectedPasswordsMessages.get(password) ||
@@ -54,34 +56,34 @@ export default Ember.Mixin.create({
     }
 
     // If blank, fail without a reason
-    if (Ember.isEmpty(password)) {
-      return InputValidation.create({ failed: true });
+    if (isEmpty(password)) {
+      return EmberObject.create({ failed: true });
     }
 
     // If too short
     if (password.length < passwordMinLength) {
-      return InputValidation.create({
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.password.too_short")
       });
     }
 
-    if (!Ember.isEmpty(accountUsername) && password === accountUsername) {
-      return InputValidation.create({
+    if (!isEmpty(accountUsername) && password === accountUsername) {
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.password.same_as_username")
       });
     }
 
-    if (!Ember.isEmpty(accountEmail) && password === accountEmail) {
-      return InputValidation.create({
+    if (!isEmpty(accountEmail) && password === accountEmail) {
+      return EmberObject.create({
         failed: true,
         reason: I18n.t("user.password.same_as_email")
       });
     }
 
     // Looks good!
-    return InputValidation.create({
+    return EmberObject.create({
       ok: true,
       reason: I18n.t("user.password.ok")
     });

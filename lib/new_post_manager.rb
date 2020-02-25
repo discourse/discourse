@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'post_creator'
-require_dependency 'new_post_result'
-require_dependency 'word_watcher'
-
 # Determines what actions should be taken with new posts.
 #
 # The default action is to create the post, but this can be extended
@@ -21,6 +17,14 @@ class NewPostManager
     sorted_handlers.map { |h| h[:proc] }
   end
 
+  def self.plugin_payload_attributes
+    @payload_attributes ||= []
+  end
+
+  def self.add_plugin_payload_attribute(attribute)
+    plugin_payload_attributes << attribute
+  end
+
   def self.clear_handlers!
     @sorted_handlers = []
   end
@@ -36,7 +40,8 @@ class NewPostManager
 
     !!(
       args[:first_post_checks] &&
-      user.post_count == 0
+      user.post_count == 0 &&
+      user.topic_count == 0
     )
   end
 
@@ -75,7 +80,11 @@ class NewPostManager
   def self.post_needs_approval?(manager)
     user = manager.user
 
+    return :email_auth_res_enqueue if manager.args[:email_auth_res_action] == :enqueue
+
     return :skip if exempt_user?(user)
+
+    return :email_spam if manager.args[:email_spam]
 
     return :post_count if (
       user.trust_level <= TrustLevel.levels[:basic] &&
@@ -119,7 +128,7 @@ class NewPostManager
     reason = post_needs_approval?(manager)
     return if reason == :skip
 
-    validator = Validators::PostValidator.new
+    validator = PostValidator.new
     post = Post.new(raw: manager.args[:raw])
     post.user = manager.user
     validator.validate(post)
@@ -152,6 +161,8 @@ class NewPostManager
       UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
     elsif matches_auto_silence_regex?(manager)
       UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_silence_regex"))
+    elsif reason == :email_spam && is_first_post?(manager)
+      UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.email_in_spam_header"))
     end
 
     result
@@ -172,9 +183,16 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
+    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?.presence
       result = NewPostResult.new(:created_post, false)
-      result.errors.add(:base, I18n.t('contains_blocked_words', word: matches[0]))
+      if matches.size == 1
+        key = 'contains_blocked_word'
+        translation_args = { word: matches[0] }
+      else
+        key = 'contains_blocked_words'
+        translation_args = { words: matches.join(', ') }
+      end
+      result.errors.add(:base, I18n.t(key, translation_args))
       return result
     end
 
@@ -201,6 +219,11 @@ class NewPostManager
     %w(typing_duration_msecs composer_open_duration_msecs reply_to_post_number).each do |a|
       payload[a] = @args[a].to_i if @args[a]
     end
+
+    self.class.plugin_payload_attributes.each { |a| payload[a] = @args[a] if @args[a].present? }
+
+    payload[:via_email] = true if !!@args[:via_email]
+    payload[:raw_email] = @args[:raw_email] if @args[:raw_email].present?
 
     reviewable = ReviewableQueuedPost.new(
       created_by: @user,

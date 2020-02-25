@@ -7,16 +7,19 @@
 
 fi:
   site_settings:
-    poll_enabled: "Salli äänestykset?"
+    poll_enabled: "Sallitaanko äänestykset?"
     poll_maximum_options: "Äänestysvaihtoehtojen suurin sallittu määrä."
     poll_edit_window_mins: "Kuinka monta minuuttia on aikaa muokata äänestystä sen luomisen jälkeen."
     poll_minimum_trust_level_to_create: "Vähimmäisluottamustaso, jolla voi luoda äänestyksiä."
+    poll_groupable_user_fields: "Käyttäjäkenttäluokat, joiden mukaan äänestystuloksia voi ryhmitellä ja suodattaa."
+    poll_export_data_explorer_query_id: "ID, jonka määräät äänestystulosten viemiseen liittyville tietoselauskyselyille (0 poistaa käytöstä)."
   poll:
+    poll: "äänestys"
     invalid_argument: "Arvo \"%{value}\" ei kelpaa argumentiksi \"%{argument}\"."
     multiple_polls_without_name: "Viesti sisältää useamman nimettömän äänestyskyselyn. Nimeä ne '<code>name</code>'-määreellä."
     multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määreellä."
-    default_poll_must_have_at_least_2_options: "Äänestyksessä pitää olla vähintään 2 vaihtoehtoa."
-    named_poll_must_have_at_least_2_options: "Äänestyksessä nimeltään <strong>%{name}</strong> pitää olla vähintään 2 vaihtoehtoa."
+    default_poll_must_have_at_least_1_option: "Äänestyksessä tulee olla ainakin 1 vaihtoehto."
+    named_poll_must_have_at_least_1_option: "<strong>%{name}</strong>-nimisellä äänestyksellä tulee olla ainakin 1 vaihtoehto."
     default_poll_must_have_less_options:
       one: "Äänestyksessä pitää olla vähemmän, kuin yksi vaihtoehto."
       other: "Äänestyksessä pitää olla vähemmän kuin %{count} vaihtoehtoa."
@@ -25,6 +28,8 @@ fi:
       other: "Äänestyksessä <strong>%{name}</strong> pitää olla vähemmän kuin %{count} vaihtoehtoa."
     default_poll_must_have_different_options: "Äänestysvaihtoehtojen on erottava toisistaan."
     named_poll_must_have_different_options: "Äänestyksen nimeltä <strong>%{name}</strong> vaihtoehtojen on erottava toisistaan."
+    default_poll_must_not_have_any_empty_options: "Äänestyksessä ei voi olla tyhjiä vaihtoehtoja."
+    named_poll_must_not_have_any_empty_options: "Äänestyksellä nimeltä <strong>%{name}</strong> ei voi olla tyhjiä vaihtoehtoja."
     default_poll_with_multiple_choices_has_invalid_parameters: "Kysely, jossa on useita vaihtoehtoja sisältää epäkelpoja parametreja."
     named_poll_with_multiple_choices_has_invalid_parameters: "Kysely nimeltä <strong>%{name}</strong>, jossa on useampia vaihtoehtoja sisältää epäkelpoja parametreja"
     requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
@@ -41,3 +46,5 @@ fi:
     insufficient_rights_to_create: "Et voi luoda äänestyksiä."
     email:
       link_to_poll: "Siirry äänestykseen klikkaamalla tästä"
+    user_field:
+      no_data: "Ei tietoa"

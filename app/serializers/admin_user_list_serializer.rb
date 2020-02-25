@@ -23,7 +23,6 @@ class AdminUserListSerializer < BasicUserSerializer
              :approved,
              :suspended_at,
              :suspended_till,
-             :suspended,
              :silenced,
              :silenced_till,
              :time_read,
@@ -60,10 +59,6 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def include_silenced_till?
     object.silenced_till?
-  end
-
-  def suspended
-    object.suspended?
   end
 
   def include_suspended_at?
@@ -114,7 +109,7 @@ class AdminUserListSerializer < BasicUserSerializer
   def include_second_factor_enabled?
     !SiteSetting.enable_sso &&
       SiteSetting.enable_local_logins &&
-      object.totps.present?
+      object.has_any_second_factor_methods_enabled?
   end
 
   def second_factor_enabled

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class PendingQueuedPostReminder < Jobs::Scheduled
+  class PendingQueuedPostsReminder < ::Jobs::Scheduled
 
     every 1.hour
 

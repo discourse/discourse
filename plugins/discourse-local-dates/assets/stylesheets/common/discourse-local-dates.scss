@@ -3,6 +3,7 @@
     color: $primary;
     cursor: pointer;
     border-bottom: 1px dashed $primary-medium;
+    white-space: nowrap;
 
     .d-icon {
       color: $primary;
@@ -10,6 +11,10 @@
 
     &.past {
       border-bottom-color: $primary-low-mid;
+    }
+
+    &.past[data-countdown] {
+      color: $primary-medium;
     }
   }
 }
@@ -57,6 +62,7 @@
 }
 
 .discourse-local-dates-create-modal {
+  box-sizing: border-box;
   min-height: 320px;
   display: flex;
   flex-direction: row;
@@ -193,9 +199,7 @@
           border: 0;
           outline: none;
           flex: 1;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include ellipsis;
           width: 100%;
           text-align: left;
         }

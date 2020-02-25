@@ -48,6 +48,11 @@ describe TopicView do
         expect(tv.filtered_post_ids).to eq([post.id, post2.id])
       end
 
+      it "returns nil for next_page" do
+        tv = TopicView.new(topic.id, evil_trout)
+        expect(tv.next_page).to eq(nil)
+      end
+
       describe "when an ignored user made the original post" do
         let!(:post) { Fabricate(:post, topic: topic, user: user) }
 
@@ -214,12 +219,8 @@ describe TopicView do
     end
 
     context 'subfolder' do
-      before do
-        GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
-      end
-
       it "provides the correct absolute url" do
+        set_subfolder "/forum"
         expect(topic_view.absolute_url).to eq("http://test.localhost/forum/t/#{topic.slug}/#{topic.id}")
       end
     end
@@ -249,22 +250,16 @@ describe TopicView do
     end
 
     describe "#next_page" do
-      let(:p2) { stub(post_number: 2) }
-      let(:topic) do
-        topic = create_topic
-        topic.stubs(:highest_post_number).returns(5)
-        topic
-      end
+      let!(:post) { Fabricate(:post, topic: topic, user: user) }
+      let!(:post2) { Fabricate(:post, topic: topic, user: user) }
+      let!(:post3) { Fabricate(:post, topic: topic, user: user) }
 
       before do
-        TopicView.any_instance.expects(:find_topic).with(1234).returns(topic)
-        TopicView.any_instance.stubs(:filter_posts)
-        TopicView.any_instance.stubs(:last_post).returns(p2)
         TopicView.stubs(:chunk_size).returns(2)
       end
 
       it "should return the next page" do
-        expect(TopicView.new(1234, user).next_page).to eql(2)
+        expect(TopicView.new(topic.id, user).next_page).to eql(2)
       end
     end
 
@@ -692,6 +687,54 @@ describe TopicView do
     it 'should return the right id' do
       expect(topic_view.first_post_id).to eq(p1.id)
       expect(topic_view.last_post_id).to eq(p3.id)
+    end
+  end
+
+  describe '#read_time' do
+    let!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      PostCreator.create!(Discourse.system_user, topic_id: topic.id, raw: "![image|100x100](upload://upload.png)")
+      topic_view.topic.reload
+    end
+
+    it 'should return the right read time' do
+      SiteSetting.read_time_word_count = 500
+      expect(topic_view.read_time).to eq(1)
+
+      SiteSetting.read_time_word_count = 0
+      expect(topic_view.read_time).to eq(nil)
+    end
+  end
+
+  describe '#image_url' do
+    let!(:post1) { Fabricate(:post, topic: topic) }
+    let!(:post2) { Fabricate(:post, topic: topic) }
+    let!(:post3) { Fabricate(:post, topic: topic).tap { |p| p.update_column(:image_url, "post3_image.png") }.reload }
+
+    def topic_view_for_post(post_number)
+      TopicView.new(topic.id, evil_trout, post_number: post_number)
+    end
+
+    context "when op has an image" do
+      before do
+        topic.update_column(:image_url, "op_image.png")
+        post1.update_column(:image_url, "op_image.png")
+      end
+
+      it "uses the topic image as a fallback when posts have no image" do
+        expect(topic_view_for_post(1).image_url).to eq("op_image.png")
+        expect(topic_view_for_post(2).image_url).to eq("op_image.png")
+        expect(topic_view_for_post(3).image_url).to eq("post3_image.png")
+      end
+    end
+
+    context "when op has no image" do
+      it "returns nil when posts have no image" do
+        expect(topic_view_for_post(1).image_url).to eq(nil)
+        expect(topic_view_for_post(2).image_url).to eq(nil)
+        expect(topic_view_for_post(3).image_url).to eq("post3_image.png")
+      end
     end
   end
 end

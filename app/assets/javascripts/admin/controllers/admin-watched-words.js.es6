@@ -1,14 +1,19 @@
-import debounce from "discourse/lib/debounce";
+import { isEmpty } from "@ember/utils";
+import { alias } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
+import discourseDebounce from "discourse/lib/debounce";
+import { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   filter: null,
   filtered: false,
   showWords: false,
-  disableShowWords: Ember.computed.alias("filtered"),
+  disableShowWords: alias("filtered"),
   regularExpressions: null,
 
   filterContentNow() {
-    if (!!Ember.isEmpty(this.allWatchedWords)) return;
+    if (!!isEmpty(this.allWatchedWords)) return;
 
     let filter;
     if (this.filter) {
@@ -27,7 +32,7 @@ export default Ember.Controller.extend({
         return wordRecord.word.indexOf(filter) > -1;
       });
       matchesByAction.pushObject(
-        Ember.Object.create({
+        EmberObject.create({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
           words: wordRecords,
@@ -39,10 +44,11 @@ export default Ember.Controller.extend({
     this.set("model", matchesByAction);
   },
 
-  filterContent: debounce(function() {
+  @observes("filter")
+  filterContent: discourseDebounce(function() {
     this.filterContentNow();
-    this.set("filtered", !Ember.isEmpty(this.filter));
-  }, 250).observes("filter"),
+    this.set("filtered", !isEmpty(this.filter));
+  }, 250),
 
   actions: {
     clearFilter() {

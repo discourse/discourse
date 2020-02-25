@@ -1,13 +1,14 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import computed from "ember-addons/ember-computed-decorators";
 import {
   PRIVATE_MESSAGE,
   CREATE_TOPIC,
   CREATE_SHARED_DRAFT,
-  REPLY,
-  EDIT,
-  NEW_PRIVATE_MESSAGE_KEY
+  REPLY
 } from "discourse/models/composer";
+import Draft from "discourse/models/draft";
+import { computed } from "@ember/object";
+import { camelize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
@@ -20,14 +21,13 @@ export function _clearSnapshots() {
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["composer-actions"],
-  classNames: "composer-actions",
-  fullWidthOnMobile: true,
-  autofilterable: false,
-  filterable: false,
-  allowInitialValueMutation: false,
-  allowAutoSelectFirst: false,
-  showFullTitle: false,
-  isHidden: Ember.computed.empty("content"),
+  classNames: ["composer-actions"],
+
+  selectKitOptions: {
+    icon: "share",
+    filterable: false,
+    showFullTitle: false
+  },
 
   didReceiveAttrs() {
     this._super(...arguments);
@@ -36,7 +36,7 @@ export default DropdownSelectBoxComponent.extend({
     if (
       this.get("composerModel.topic") &&
       (!_topicSnapshot ||
-        this.get("composerModel.topic.id") !== _topicSnapshot.get("id"))
+        this.get("composerModel.topic.id") !== _topicSnapshot.id)
     ) {
       _topicSnapshot = this.get("composerModel.topic");
       _postSnapshot = this.get("composerModel.post");
@@ -45,43 +45,26 @@ export default DropdownSelectBoxComponent.extend({
     // if we hit reply on a different post we want to change postSnapshot
     if (
       this.get("composerModel.post") &&
-      (!_postSnapshot ||
-        this.get("composerModel.post.id") !== _postSnapshot.get("id"))
+      (!_postSnapshot || this.get("composerModel.post.id") !== _postSnapshot.id)
     ) {
       _postSnapshot = this.get("composerModel.post");
     }
-  },
 
-  computeHeaderContent() {
-    let content = this._super(...arguments);
-
-    switch (this.action) {
-      case PRIVATE_MESSAGE:
-      case CREATE_TOPIC:
-      case REPLY:
-        content.icon = "share";
-        content.title = I18n.t("composer.composer_actions.reply");
-        break;
-      case EDIT:
-        content.icon = "pencil-alt";
-        content.title = I18n.t("composer.composer_actions.edit");
-        break;
-      case CREATE_SHARED_DRAFT:
-        content.icon = "clipboard";
-        content.title = I18n.t("composer.composer_actions.draft");
-        break;
+    if (isEmpty(this.content)) {
+      this.set("selectKit.isHidden", true);
     }
-
-    return content;
   },
 
-  @computed("options", "canWhisper", "action")
-  content(options, canWhisper, action) {
+  modifySelection() {
+    return {};
+  },
+
+  content: computed(function() {
     let items = [];
 
     if (
-      action !== CREATE_TOPIC &&
-      action !== CREATE_SHARED_DRAFT &&
+      this.action !== CREATE_TOPIC &&
+      this.action !== CREATE_SHARED_DRAFT &&
       _topicSnapshot
     ) {
       items.push({
@@ -95,15 +78,15 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     if (
-      (action !== REPLY && _postSnapshot) ||
-      (action === REPLY &&
+      (this.action !== REPLY && _postSnapshot) ||
+      (this.action === REPLY &&
         _postSnapshot &&
-        !(options.userAvatar && options.userLink))
+        !(this.replyOptions.userAvatar && this.replyOptions.userLink))
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_post.label", {
-          postNumber: _postSnapshot.get("post_number"),
-          postUsername: _postSnapshot.get("username")
+          postNumber: _postSnapshot.post_number,
+          postUsername: _postSnapshot.username
         }),
         description: I18n.t("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
@@ -113,7 +96,7 @@ export default DropdownSelectBoxComponent.extend({
 
     if (
       this.siteSettings.enable_personal_messages &&
-      action !== PRIVATE_MESSAGE
+      this.action !== PRIVATE_MESSAGE
     ) {
       items.push({
         name: I18n.t(
@@ -128,10 +111,12 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     if (
-      (action !== REPLY && _topicSnapshot) ||
-      (action === REPLY &&
+      (this.action !== REPLY && _topicSnapshot) ||
+      (this.action === REPLY &&
         _topicSnapshot &&
-        (options.userAvatar && options.userLink && options.topicLink))
+        this.replyOptions.userAvatar &&
+        this.replyOptions.userLink &&
+        this.replyOptions.topicLink)
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_topic.label"),
@@ -143,7 +128,7 @@ export default DropdownSelectBoxComponent.extend({
 
     // if answered post is a whisper, we can only answer with a whisper so no need for toggle
     if (
-      canWhisper &&
+      this.canWhisper &&
       (!_postSnapshot ||
         (_postSnapshot &&
           _postSnapshot.post_type !== this.site.post_types.whisper))
@@ -157,17 +142,17 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     let showCreateTopic = false;
-    if (action === CREATE_SHARED_DRAFT) {
+    if (this.action === CREATE_SHARED_DRAFT) {
       showCreateTopic = true;
     }
 
-    if (action === CREATE_TOPIC) {
+    if (this.action === CREATE_TOPIC) {
       if (this.site.shared_drafts_category_id) {
         // Shared Drafts Choice
         items.push({
           name: I18n.t("composer.composer_actions.shared_draft.label"),
           description: I18n.t("composer.composer_actions.shared_draft.desc"),
-          icon: "clipboard",
+          icon: "far-clipboard",
           id: "shared_draft"
         });
       }
@@ -191,12 +176,11 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    const currentUser = Discourse.User.current();
     const showToggleTopicBump =
-      currentUser &&
-      (currentUser.get("staff") || currentUser.trust_level === 4);
+      this.get("currentUser.staff") ||
+      this.get("currentUser.trust_level") === 4;
 
-    if (action === REPLY && showToggleTopicBump) {
+    if (this.action === REPLY && showToggleTopicBump) {
       items.push({
         name: I18n.t("composer.composer_actions.toggle_topic_bump.label"),
         description: I18n.t("composer.composer_actions.toggle_topic_bump.desc"),
@@ -206,11 +190,10 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
-  },
+  }),
 
   _replyFromExisting(options, post, topic) {
     this.closeComposer();
-
     this.openComposer(options, post, topic);
   },
 
@@ -242,9 +225,25 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   replyAsNewTopicSelected(options) {
+    Draft.get("new_topic").then(response => {
+      if (response.draft) {
+        bootbox.confirm(
+          I18n.t("composer.composer_actions.reply_as_new_topic.confirm"),
+          result => {
+            if (result) this._replyAsNewTopicSelect(options);
+          }
+        );
+      } else {
+        this._replyAsNewTopicSelect(options);
+      }
+    });
+  },
+
+  _replyAsNewTopicSelect(options) {
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
     options.disableScopedCategory = true;
+    options.skipDraftCheck = true;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
 
@@ -270,7 +269,7 @@ export default DropdownSelectBoxComponent.extend({
     options.action = PRIVATE_MESSAGE;
     options.usernames = usernames;
     options.archetypeId = "private_message";
-    options.draftKey = NEW_PRIVATE_MESSAGE_KEY;
+    options.skipDraftCheck = true;
 
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
@@ -293,18 +292,17 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   actions: {
-    onSelect(value) {
-      let action = `${Ember.String.camelize(value)}Selected`;
+    onChange(value) {
+      const action = `${camelize(value)}Selected`;
       if (this[action]) {
-        let model = this.composerModel;
         this[action](
-          model.getProperties(
+          this.composerModel.getProperties(
             "draftKey",
             "draftSequence",
             "reply",
             "disableScopedCategory"
           ),
-          model
+          this.composerModel
         );
       } else {
         // eslint-disable-next-line no-console

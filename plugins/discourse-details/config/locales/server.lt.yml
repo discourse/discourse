@@ -7,4 +7,4 @@
 
 lt:
   site_settings:
-    details_enabled: "Įgalinti detalią funkciją. Jei tai pakeisite, turėsite paleisti iš naujo visus įrašus su: \"rake posts:rebake\"."
+    details_enabled: 'Įgalinti detalią funkciją. Jei tai pakeisite, turėsite paleisti iš naujo visus įrašus su: "rake posts:rebake".'

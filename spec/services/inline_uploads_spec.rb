@@ -163,6 +163,8 @@ RSpec.describe InlineUploads do
         [img]
         #{upload2.url}
         [/img]
+
+        [img]#{upload.url}[/img][img]#{upload2.url}[/img]
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -171,6 +173,8 @@ RSpec.describe InlineUploads do
         ![](#{upload3.short_url})
 
         ![](#{upload2.short_url})
+
+        ![](#{upload.short_url})![](#{upload2.short_url})
         MD
       end
 
@@ -202,6 +206,66 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correct html and markdown uppercase references" do
+        md = <<~MD
+        [IMG]#{upload.url}[/IMG]
+        <IMG src="#{upload2.url}" />
+        <A class="attachment" href="#{upload3.url}">Text</A>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+        ![](#{upload2.short_url})
+        [Text|attachment](#{upload3.short_url})
+        MD
+      end
+
+      it "should correct image URLs with v parameters" do
+        md = <<~MD
+        <img src="#{upload.url}?v=1">
+
+        <img src="#{Discourse.base_url}#{upload.url}?v=2">
+
+        <img src="#{GlobalSetting.cdn_url}#{upload.url}?v=3">
+
+        #{Discourse.base_url}#{upload.url}?v=45
+
+        #{GlobalSetting.cdn_url}#{upload.url}?v=999
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+        MD
+      end
+
+      context "subfolder" do
+        before do
+          set_subfolder "/community"
+        end
+
+        it "should correct subfolder images" do
+          md = <<~MD
+            <img src="/community#{upload.url}">
+
+            #{Discourse.base_url}#{upload.url}
+          MD
+
+          expect(InlineUploads.process(md)).to eq(<<~MD)
+            ![](#{upload.short_url})
+
+            ![](#{upload.short_url})
+          MD
+        end
+      end
+
       it "should correct raw image URLs to the short url and paths" do
         md = <<~MD
         #{Discourse.base_url}#{upload.url}
@@ -221,6 +285,28 @@ RSpec.describe InlineUploads do
         ![](#{upload3.short_url})
 
         ![](#{upload3.short_url})
+        MD
+      end
+
+      it "should correct non image URLs to the short url" do
+        SiteSetting.authorized_extensions = "mp4"
+        upload = Fabricate(:video_upload)
+        upload2 = Fabricate(:video_upload)
+
+        md = <<~MD
+        #{Discourse.base_url}#{upload.url}
+
+        #{Discourse.base_url}#{upload.url} #{Discourse.base_url}#{upload2.url}
+
+        #{GlobalSetting.cdn_url}#{upload2.url}
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        #{Discourse.base_url}#{upload.short_path}
+
+        #{Discourse.base_url}#{upload.short_path} #{Discourse.base_url}#{upload2.short_path}
+
+        #{Discourse.base_url}#{upload2.short_path}
         MD
       end
 
@@ -263,6 +349,15 @@ RSpec.describe InlineUploads do
         #{Discourse.base_url}#{upload3.url} #{Discourse.base_url}#{upload3.url}
 
         <img src="#{upload.url}" width="5" height="4">
+        <img src="#{upload.url}" width="5px" height="auto">
+
+        `<img src="#{upload.url}" alt="image inside code quotes">`
+
+        ```
+        <img src="#{upload.url}" alt="image inside code fences">
+        ```
+
+            <img src="#{upload.url}" alt="image inside code block">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -279,6 +374,15 @@ RSpec.describe InlineUploads do
         #{Discourse.base_url}#{upload3.short_path} #{Discourse.base_url}#{upload3.short_path}
 
         ![|5x4](#{upload.short_url})
+        ![](#{upload.short_url})
+
+        `<img src="#{upload.url}" alt="image inside code quotes">`
+
+        ```
+        <img src="#{upload.url}" alt="image inside code fences">
+        ```
+
+            <img src="#{upload.url}" alt="image inside code block">
         MD
       end
 
@@ -297,6 +401,34 @@ RSpec.describe InlineUploads do
 
         ![image|690x290](#{upload.short_url})
         MD
+      end
+
+      it "should correctly update images sources within anchor tags with indentation" do
+        md = <<~MD
+        <h1></h1>
+                        <a href="http://somelink.com">
+                          <img src="#{upload2.url}" alt="test" width="500" height="500">
+                        </a>
+
+                        <a href="http://somelink.com">
+                          <img src="#{upload2.url}" alt="test" width="500" height="500">
+                        </a>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        <h1></h1>
+                        <a href="http://somelink.com">
+                          ![test|500x500](#{upload2.short_url})
+                        </a>
+
+                        <a href="http://somelink.com">
+                          <img src="#{upload2.url}" alt="test" width="500" height="500">
+                        </a>
+        MD
+
+        md = "<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.url}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>"
+
+        expect(InlineUploads.process(md)).to eq("<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        ![test|500x500](#{upload.short_url})\r\n</a>")
       end
 
       it "should correctly update image sources within anchor or paragraph tags" do
@@ -328,40 +460,27 @@ RSpec.describe InlineUploads do
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
         <a href="http://somelink.com">
-
           ![test|500x500](#{upload.short_url})
-
         </a>
 
         <p>
-
           ![test](#{upload2.short_url})
-
         </p>
 
-        <a href="http://somelink.com">
+        <a href="http://somelink.com">![test|500x500](#{upload3.short_url})</a>
 
-          ![test|500x500](#{upload3.short_url})
-
-        </a>
-
-        <a href="http://somelink.com">
-
-          ![test|500x500](#{upload.short_url})
-
-        </a>
+        <a href="http://somelink.com">  ![test|500x500](#{upload.short_url})  </a>
 
         <a href="http://somelink.com">
 
 
-          ![test|500x500](#{upload.short_url})
+        ![test|500x500](#{upload.short_url})
 
         </a>
 
         <p>Test ![test|500x500](#{upload2.short_url})</p>
 
         <hr/>
-
         ![test|500x500](#{upload2.short_url})
         MD
       end
@@ -452,6 +571,8 @@ RSpec.describe InlineUploads do
 
         <a class="test attachment" href="#{upload.url}">test3</a>
         <a class="test attachment" href="#{upload2.url}">test3</a><a class="test attachment" href="#{upload3.url}">test3</a>
+
+        <a class="test attachment" href="#{upload3.url}">This is some _test_ here</a>
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -463,6 +584,8 @@ RSpec.describe InlineUploads do
 
         [test3|attachment](#{upload.short_url})
         [test3|attachment](#{upload2.short_url})[test3|attachment](#{upload3.short_url})
+
+        [This is some _test_ here|attachment](#{upload3.short_url})
         MD
       end
 
@@ -527,8 +650,10 @@ RSpec.describe InlineUploads do
     describe "s3 uploads" do
       let(:upload) { Fabricate(:upload_s3) }
       let(:upload2) { Fabricate(:upload_s3) }
+      let(:upload3) { Fabricate(:upload) }
 
       before do
+        upload3
         SiteSetting.enable_s3_uploads = true
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "some key"
@@ -576,6 +701,7 @@ RSpec.describe InlineUploads do
 
           <img src="#{upload.url}" alt="some image">
           <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
+          <img src="#{upload3.url}">
           MD
 
           expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -584,6 +710,7 @@ RSpec.describe InlineUploads do
 
           ![some image](#{upload.short_url})
           ![some image](#{upload2.short_url})
+          ![](#{upload3.short_url})
           MD
         ensure
           Rails.configuration.multisite = false

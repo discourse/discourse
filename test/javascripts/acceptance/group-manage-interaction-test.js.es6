@@ -42,7 +42,7 @@ QUnit.test("As an admin", async assert => {
 });
 
 QUnit.test("As a group owner", async assert => {
-  updateCurrentUser({ admin: false, staff: false });
+  updateCurrentUser({ moderator: false, admin: false });
   await visit("/g/discourse/manage/interaction");
 
   assert.equal(

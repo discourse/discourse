@@ -18,7 +18,7 @@
         <dc:creator><![CDATA[<%= "@#{post.user.username}#{" #{post.user.name}" if (post.user.name.present? && SiteSetting.enable_names?)}" -%>]]></dc:creator>
         <description><![CDATA[
           <% post_url = Discourse.base_url + post.url %>
-          <p><%= t('author_wrote', author: link_to("@#{post.user.username}", user_url(post.user.username_lower))).html_safe %></p>
+          <p><%= t('author_wrote', author: link_to("@#{post.user.username}", "#{Discourse.base_url}/u/#{url_encode(post.user.username_lower)}")).html_safe %></p>
           <blockquote>
             <% if post.hidden %>
               <%= t('flagging.user_must_edit').html_safe %>

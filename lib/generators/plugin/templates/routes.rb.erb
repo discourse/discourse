@@ -1,0 +1,7 @@
+require_dependency "<%= underscored_name %>_constraint"
+
+<%= classified_name %>::Engine.routes.draw do
+  get "/" => "<%= underscored_name %>#index", constraints: <%= classified_name %>Constraint.new
+  get "/actions" => "actions#index", constraints: <%= classified_name %>Constraint.new
+  get "/actions/:id" => "actions#show", constraints: <%= classified_name %>Constraint.new
+end

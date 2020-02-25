@@ -1,16 +1,25 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'oneboxer'
 
 describe Oneboxer do
-
   it "returns blank string for an invalid onebox" do
     stub_request(:head, "http://boom.com")
     stub_request(:get, "http://boom.com").to_return(body: "")
 
     expect(Oneboxer.preview("http://boom.com")).to eq("")
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
+  end
+
+  describe "#invalidate" do
+    let(:url) { "http://test.com" }
+    it "clears the cached preview for the onebox URL and the failed URL cache" do
+      Discourse.cache.write(Oneboxer.onebox_cache_key(url), "test")
+      Discourse.cache.write(Oneboxer.onebox_failed_cache_key(url), true)
+      Oneboxer.invalidate(url)
+      expect(Discourse.cache.read(Oneboxer.onebox_cache_key(url))).to eq(nil)
+      expect(Discourse.cache.read(Oneboxer.onebox_failed_cache_key(url))).to eq(nil)
+    end
   end
 
   context "local oneboxes" do
@@ -158,5 +167,17 @@ describe Oneboxer do
     stub_request(:get, url).to_return(status: 200, body: "", headers: {})
 
     expect(Oneboxer.external_onebox(url)[:onebox]).to be_present
+  end
+
+  it "uses the Onebox custom user agent on specified hosts" do
+    SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
+    url = 'https://video.discourse.org/presentation.mp4'
+
+    stub_request(:head, url).to_return(status: 403, body: "", headers: {})
+    stub_request(:get, url).to_return(status: 403, body: "", headers: {})
+    stub_request(:head, url).with(headers: { "User-Agent" => Onebox.options.user_agent }).to_return(status: 200, body: "", headers: {})
+    stub_request(:get, url).with(headers: { "User-Agent" => Onebox.options.user_agent }).to_return(status: 200, body: "", headers: {})
+
+    expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to be_present
   end
 end

@@ -4,6 +4,10 @@ require 'rails_helper'
 describe ContentSecurityPolicy do
   before { ContentSecurityPolicy.base_url = nil }
 
+  after do
+    DiscoursePluginRegistry.reset!
+  end
+
   describe 'report-uri' do
     it 'is enabled by SiteSetting' do
       SiteSetting.content_security_policy_collect_reports = true
@@ -44,7 +48,6 @@ describe ContentSecurityPolicy do
     it 'always has self, logster, sidekiq, and assets' do
       script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include(*%w[
-        'unsafe-eval'
         'report-sample'
         http://test.localhost/logs/
         http://test.localhost/sidekiq/
@@ -120,6 +123,12 @@ describe ContentSecurityPolicy do
     Discourse.plugins.pop
   end
 
+  it 'only includes unsafe-inline for qunit paths' do
+    expect(parse(policy(path_info: "/qunit"))['script-src']).to include("'unsafe-eval'")
+    expect(parse(policy(path_info: "/wizard/qunit"))['script-src']).to include("'unsafe-eval'")
+    expect(parse(policy(path_info: "/"))['script-src']).to_not include("'unsafe-eval'")
+  end
+
   context "with a theme" do
     let!(:theme) {
       Fabricate(:theme).tap do |t|
@@ -171,7 +180,7 @@ describe ContentSecurityPolicy do
     end.to_h
   end
 
-  def policy(theme_ids = [])
-    ContentSecurityPolicy.policy(theme_ids)
+  def policy(theme_ids = [], path_info: "/")
+    ContentSecurityPolicy.policy(theme_ids, path_info: path_info)
   end
 end

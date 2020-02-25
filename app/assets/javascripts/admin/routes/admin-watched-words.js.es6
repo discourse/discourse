@@ -1,6 +1,7 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import WatchedWord from "admin/models/watched-word";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   queryParams: {
     filter: { replace: true }
   },

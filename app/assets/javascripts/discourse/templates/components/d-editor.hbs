@@ -1,13 +1,3 @@
-<div class='d-editor-overlay hidden'></div>
-
-<div class='d-editor-modals'>
-  {{#d-editor-modal class="insert-link" hidden=insertLinkHidden okAction=(action "insertLink")}}
-    <h3>{{i18n "composer.link_dialog_title"}}</h3>
-    {{text-field value=linkUrl placeholderKey="composer.link_url_placeholder" class="link-url"}}
-    {{text-field value=linkText placeholderKey="composer.link_optional_text" class="link-text"}}
-  {{/d-editor-modal}}
-</div>
-
 <div class='d-editor-container'>
   <div class="d-editor-textarea-wrapper {{if disabled "disabled"}}">
     <div class='d-editor-button-bar'>
@@ -15,12 +5,15 @@
         {{#each group.buttons as |b|}}
           {{#if b.popupMenu}}
             {{toolbar-popup-menu-options
-              onSelect=onPopupMenuAction
+              content=popupMenuOptions
+              onChange=onPopupMenuAction
               onExpand=(action b.action b)
-              title=b.title
-              headerIcon=b.icon
               class=b.className
-              content=popupMenuOptions}}
+              options=(hash
+                popupTitle=b.title
+                icon=b.icon
+              )
+            }}
           {{else}}
             {{d-button
               action=b.action
@@ -47,14 +40,14 @@
       class="d-editor-input"
       placeholder=placeholderTranslated
       disabled=disabled
-      change=change}}
+      input=change}}
     {{popup-input-tip validation=validation}}
     {{plugin-outlet name="after-d-editor" tagName="" args=outletArgs}}
   </div>
 
   <div class="d-editor-preview-wrapper {{if forcePreview 'force-preview'}}">
     <div class="d-editor-preview">{{{preview}}}</div>
-    {{plugin-outlet name="editor-preview" classNames="d-editor-plugin"}}
+    {{plugin-outlet name="editor-preview" classNames="d-editor-plugin" args=outletArgs}}
   </div>
 </div>
 

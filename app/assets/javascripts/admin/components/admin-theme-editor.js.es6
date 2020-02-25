@@ -1,8 +1,10 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { next } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 
-export default Ember.Component.extend({
-  @computed("theme.targets", "onlyOverridden", "showAdvanced")
+export default Component.extend({
+  @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
   visibleTargets(targets, onlyOverridden, showAdvanced) {
     return targets.filter(target => {
       if (target.advanced && !showAdvanced) {
@@ -15,7 +17,7 @@ export default Ember.Component.extend({
     });
   },
 
-  @computed("currentTargetName", "onlyOverridden", "theme.fields")
+  @discourseComputed("currentTargetName", "onlyOverridden", "theme.fields")
   visibleFields(targetName, onlyOverridden, fields) {
     fields = fields[targetName];
     if (onlyOverridden) {
@@ -24,14 +26,14 @@ export default Ember.Component.extend({
     return fields;
   },
 
-  @computed("currentTargetName", "fieldName")
+  @discourseComputed("currentTargetName", "fieldName")
   activeSectionMode(targetName, fieldName) {
     if (["settings", "translations"].includes(targetName)) return "yaml";
     if (["extra_scss"].includes(targetName)) return "scss";
     return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
   },
 
-  @computed("fieldName", "currentTargetName", "theme")
+  @discourseComputed("fieldName", "currentTargetName", "theme")
   activeSection: {
     get(fieldName, target, model) {
       return model.getField(target, fieldName);
@@ -44,17 +46,21 @@ export default Ember.Component.extend({
 
   editorId: fmt("fieldName", "currentTargetName", "%@|%@"),
 
-  @computed("maximized")
+  @discourseComputed("maximized")
   maximizeIcon(maximized) {
     return maximized ? "discourse-compress" : "discourse-expand";
   },
 
-  @computed("currentTargetName", "theme.targets")
+  @discourseComputed("currentTargetName", "theme.targets")
   showAddField(currentTargetName, targets) {
     return targets.find(t => t.name === currentTargetName).customNames;
   },
 
-  @computed("currentTargetName", "fieldName", "theme.theme_fields.@each.error")
+  @discourseComputed(
+    "currentTargetName",
+    "fieldName",
+    "theme.theme_fields.@each.error"
+  )
   error(target, fieldName) {
     return this.theme.getError(target, fieldName);
   },
@@ -82,7 +88,7 @@ export default Ember.Component.extend({
 
     toggleMaximize: function() {
       this.toggleProperty("maximized");
-      Ember.run.next(() => this.appEvents.trigger("ace:resize"));
+      next(() => this.appEvents.trigger("ace:resize"));
     },
 
     onlyOverriddenChanged(value) {

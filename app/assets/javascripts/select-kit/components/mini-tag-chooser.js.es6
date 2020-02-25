@@ -1,259 +1,214 @@
+import { empty, or } from "@ember/object/computed";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";
-import { default as computed } from "ember-addons/ember-computed-decorators";
-import renderTag from "discourse/lib/render-tag";
-import { escapeExpression } from "discourse/lib/utilities";
-import { iconHTML } from "discourse-common/lib/icon-library";
-const { get, isEmpty, run, makeArray } = Ember;
+import { makeArray } from "discourse-common/lib/helpers";
+import { computed } from "@ember/object";
+import { setting } from "discourse/lib/computed";
+
+const SELECTED_TAGS_COLLECTION = "MINI_TAG_CHOOSER_SELECTED_TAGS";
+import { ERRORS_COLLECTION } from "select-kit/components/select-kit";
 
 export default ComboBox.extend(TagsMixin, {
-  allowContentReplacement: true,
   headerComponent: "mini-tag-chooser/mini-tag-chooser-header",
   pluginApiIdentifiers: ["mini-tag-chooser"],
-  attributeBindings: ["categoryId"],
+  attributeBindings: ["selectKit.options.categoryId:category-id"],
   classNames: ["mini-tag-chooser"],
   classNameBindings: ["noTags"],
-  verticalOffset: 3,
-  filterable: true,
-  noTags: Ember.computed.empty("selection"),
-  allowCreate: null,
-  allowAny: Ember.computed.alias("allowCreate"),
-  caretUpIcon: Ember.computed.alias("caretIcon"),
-  caretDownIcon: Ember.computed.alias("caretIcon"),
-  isAsync: true,
-  fullWidthOnMobile: true,
+  noTags: empty("value"),
+  maxTagSearchResults: setting("max_tag_search_results"),
+  maxTagsPerTopic: setting("max_tags_per_topic"),
+  highlightedTag: null,
+  singleSelect: false,
+
+  collections: computed(
+    "mainCollection.[]",
+    "errorsCollection.[]",
+    "highlightedTag",
+    function() {
+      return this._super(...arguments);
+    }
+  ),
+
+  selectKitOptions: {
+    fullWidthOnMobile: true,
+    filterable: true,
+    caretDownIcon: "caretIcon",
+    caretUpIcon: "caretIcon",
+    termMatchesForbidden: false,
+    categoryId: null,
+    everyTag: false,
+    none: "tagging.choose_for_topic",
+    closeOnChange: false,
+    maximum: "maximumSelectedTags",
+    autoInsertNoneItem: false
+  },
+
+  modifyComponentForRow(collection, item) {
+    if (this.getValue(item) === this.selectKit.filter) {
+      return "select-kit/select-kit-row";
+    }
+
+    return "tag-row";
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === SELECTED_TAGS_COLLECTION) {
+      return "mini-tag-chooser/selected-collection";
+    }
+  },
+
+  modifyContentForCollection(collection) {
+    if (collection === SELECTED_TAGS_COLLECTION) {
+      return {
+        selectedTags: this.value,
+        highlightedTag: this.highlightedTag
+      };
+    }
+  },
+
+  allowAnyTag: or("allowCreate", "site.can_create_tag"),
+
+  maximumSelectedTags: computed(function() {
+    return parseInt(
+      this.options.limit ||
+        this.selectKit.options.maximum ||
+        this.maxTagsPerTopic,
+      10
+    );
+  }),
 
   init() {
     this._super(...arguments);
 
-    this.set("termMatchesForbidden", false);
-    this.selectionSelector = ".selected-tag";
-
-    if (this.allowCreate !== false) {
-      this.set("allowCreate", this.site.get("can_create_tag"));
-    }
-
-    this.set("templateForRow", rowComponent => {
-      const tag = rowComponent.get("computedContent");
-      return renderTag(get(tag, "value"), {
-        count: get(tag, "originalContent.count"),
-        noHref: true
-      });
-    });
-
-    this.set(
-      "maximum",
-      parseInt(
-        this.limit ||
-          this.maximum ||
-          this.get("siteSettings.max_tags_per_topic")
-      )
-    );
+    this.insertAfterCollection(ERRORS_COLLECTION, SELECTED_TAGS_COLLECTION);
   },
 
-  didInsertElement() {
-    this._super(...arguments);
+  caretIcon: computed("value.[]", function() {
+    const maximum = this.selectKit.options.maximum;
+    return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
+      ? null
+      : "plus";
+  }),
 
-    this.$(".select-kit-body").on(
-      "mousedown touchstart",
-      ".selected-tag",
-      event => {
-        const $button = $(event.target).closest(".selected-tag");
-        this._destroyEvent(event);
-        this.destroyTags(this.computeContentItem($button.attr("data-value")));
-      }
-    );
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    this.$(".select-kit-body").off("mousedown touchstart");
-  },
-
-  @computed("hasReachedMaximum")
-  caretIcon(hasReachedMaximum) {
-    return hasReachedMaximum ? null : "plus";
-  },
-
-  @computed("tags")
-  selection(tags) {
-    return makeArray(tags).map(c => this.computeContentItem(c));
-  },
-
-  filterComputedContent(computedContent) {
-    return computedContent;
-  },
-
-  // we are directly mutatings tags to define the current selection
-  mutateValue() {},
-
-  didPressTab(event) {
-    if (this.isLoading) {
-      this._destroyEvent(event);
-      return false;
-    }
-
-    if (isEmpty(this.filter) && !this.highlighted) {
-      this.$header().focus();
-      this.close(event);
-      return true;
-    }
-
-    if (this.highlighted && this.isExpanded) {
-      this._destroyEvent(event);
-      this.focus();
-      this.select(this.highlighted);
-      return false;
-    } else {
-      this.close(event);
-    }
-
-    return true;
-  },
-
-  @computed("tags.[]", "filter", "highlightedSelection.[]")
-  collectionHeader(tags, filter, highlightedSelection) {
-    if (!isEmpty(tags)) {
-      let output = "";
-
-      // if we have more than x tags we will also filter the selection
-      if (tags.length >= 20) {
-        tags = tags.filter(t => t.indexOf(filter) >= 0);
-      }
-
-      tags.map(tag => {
-        tag = escapeExpression(tag);
-        const isHighlighted = highlightedSelection
-          .map(s => get(s, "value"))
-          .includes(tag);
-        output += `
-          <button aria-label="${tag}" title="${tag}" class="selected-tag ${
-          isHighlighted ? "is-highlighted" : ""
-        }" data-value="${tag}">
-            ${tag} ${iconHTML("times")}
-          </button>
-        `;
-      });
-
-      return `<div class="selected-tags">${output}</div>`;
-    }
-  },
-
-  computeHeaderContent() {
-    let content = this._super(...arguments);
-
-    const joinedTags = this.selection
-      .map(s => Ember.get(s, "value"))
-      .join(", ");
-
-    if (isEmpty(this.selection)) {
-      content.label = I18n.t("tagging.choose_for_topic");
-    } else {
-      content.label = joinedTags;
-    }
-
-    if (!this.hasReachedMinimum && isEmpty(this.selection)) {
-      const key = this.minimumLabel || "select_kit.min_content_not_reached";
-      const label = I18n.t(key, { count: this.minimum });
+  modifySelection(content) {
+    const minimum = this.selectKit.options.minimum;
+    if (minimum && makeArray(this.value).length < parseInt(minimum, 10)) {
+      const key =
+        this.selectKit.options.minimumLabel ||
+        "select_kit.min_content_not_reached";
+      const label = I18n.t(key, { count: this.selectKit.options.minimum });
       content.title = content.name = content.label = label;
-    }
+    } else {
+      content.name = content.value = makeArray(this.value).join(",");
+      content.title = content.label = makeArray(this.value).join(", ");
 
-    content.title = content.name = content.value = joinedTags;
+      if (content.label.length > 32) {
+        content.label = `${content.label.slice(0, 32)}...`;
+      }
+    }
 
     return content;
   },
 
-  _prepareSearch(query) {
+  search(filter) {
     const data = {
-      q: query,
-      limit: this.get("siteSettings.max_tag_search_results"),
-      categoryId: this.categoryId
+      q: filter || "",
+      limit: this.maxTagSearchResults,
+      categoryId: this.selectKit.options.categoryId
     };
 
-    if (this.selection) {
-      data.selected_tags = this.selection
-        .map(s => Ember.get(s, "value"))
-        .slice(0, 100);
+    if (this.value) {
+      data.selected_tags = this.value.slice(0, 100);
     }
 
-    if (!this.everyTag) data.filterForInput = true;
+    if (!this.selectKit.options.everyTag) data.filterForInput = true;
 
-    this.searchTags("/tags/filter/search", data, this._transformJson);
+    return this.searchTags("/tags/filter/search", data, this._transformJson);
   },
 
   _transformJson(context, json) {
     let results = json.results;
 
-    context.set("termMatchesForbidden", json.forbidden ? true : false);
-    context.set("termMatchErrorMessage", json.forbidden_message);
+    context.setProperties({
+      termMatchesForbidden: json.forbidden ? true : false,
+      termMatchErrorMessage: json.forbidden_message
+    });
 
     if (context.get("siteSettings.tags_sort_alphabetically")) {
-      results = results.sort((a, b) => a.id > b.id);
+      results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 
-    results = results.filter(r => !context.get("selection").includes(r.id));
-
-    results = results.map(result => {
-      return { id: result.text, name: result.text, count: result.count };
-    });
+    results = results
+      .filter(r => !makeArray(context.tags).includes(r.id))
+      .map(result => {
+        return { id: result.text, name: result.text, count: result.count };
+      });
 
     return results;
   },
 
-  destroyTags(tags) {
-    tags = Ember.makeArray(tags).map(c => get(c, "value"));
+  select(value) {
+    this._reset();
 
-    // work around usage with buffered proxy
-    // it does not listen on array changes, similar hack already on select
-    // TODO: FIX buffered-proxy.js to support arrays
-    this.tags.removeObjects(tags);
-    this.set("tags", this.tags.slice(0));
-    this._tagsChanged();
-
-    this.set(
-      "searchDebounce",
-      run.debounce(this, this._prepareSearch, this.filter, 350)
-    );
-  },
-
-  didDeselect(tags) {
-    this.destroyTags(tags);
-  },
-
-  _tagsChanged() {
-    if (this.attrs.onChangeTags) {
-      this.attrs.onChangeTags({ target: { value: this.tags } });
+    if (!this.validateSelect(value)) {
+      return;
     }
+
+    const tags = [...new Set(makeArray(this.value).concat(value))];
+    this.selectKit.change(tags, tags);
   },
 
-  actions: {
-    onSelect(tag) {
-      this.set("tags", makeArray(this.tags).concat(tag));
-      this._tagsChanged();
+  deselect(value) {
+    this._reset();
 
-      this._prepareSearch(this.filter);
-      this.autoHighlight();
-    },
+    const tags = [...new Set(makeArray(this.value).removeObject(value))];
+    this.selectKit.change(tags, tags);
+  },
 
-    onExpand() {
-      if (isEmpty(this.collectionComputedContent)) {
-        this.set(
-          "searchDebounce",
-          run.debounce(this, this._prepareSearch, this.filter, 350)
-        );
+  _reset() {
+    this.clearErrors();
+    this.set("highlightedTag", null);
+  },
+
+  _onKeydown(event) {
+    const value = makeArray(this.value);
+
+    if (event.keyCode === 8) {
+      this._onBackspace(this.value, this.highlightedTag);
+    } else if (event.keyCode === 37) {
+      if (this.highlightedTag) {
+        const index = value.indexOf(this.highlightedTag);
+        const highlightedTag = value[index - 1]
+          ? value[index - 1]
+          : value.lastObject;
+        this.set("highlightedTag", highlightedTag);
+      } else {
+        this.set("highlightedTag", value.lastObject);
       }
-    },
+    } else if (event.keyCode === 39) {
+      if (this.highlightedTag) {
+        const index = value.indexOf(this.highlightedTag);
+        const highlightedTag = value[index + 1]
+          ? value[index + 1]
+          : value.firstObject;
+        this.set("highlightedTag", highlightedTag);
+      } else {
+        this.set("highlightedTag", value.firstObject);
+      }
+    } else {
+      this.set("highlightedTag", null);
+    }
 
-    onFilter(filter) {
-      // we start loading right away so we avoid updating createRow multiple times
-      this.startLoading();
+    return true;
+  },
 
-      filter = isEmpty(filter) ? null : filter;
-      this.set(
-        "searchDebounce",
-        run.debounce(this, this._prepareSearch, filter, 350)
-      );
+  _onBackspace(value, highlightedTag) {
+    if (value && value.length) {
+      if (!highlightedTag) {
+        this.set("highlightedTag", value.lastObject);
+      } else {
+        this.deselect(highlightedTag);
+      }
     }
   }
 });

@@ -12,8 +12,8 @@ class SiteTextSerializer < ApplicationSerializer
   end
 
   def overridden?
-    if I18n.exists?(object[:id])
-      I18n.overrides_disabled { I18n.t(object[:id]) != object[:value] }
+    if options[:overridden_keys]
+      options[:overridden_keys].include?(object[:id])
     else
       TranslationOverride.exists?(locale: I18n.locale, translation_key: object[:id])
     end

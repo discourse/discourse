@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'site_settings/deprecated_settings'
-require_dependency 'site_settings/type_supervisor'
-require_dependency 'site_settings/defaults_provider'
-require_dependency 'site_settings/db_provider'
-
 module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
 
@@ -137,7 +132,7 @@ module SiteSettingExtension
         hidden_settings << name
       end
 
-      if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
+      if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
         unless val.nil? || (val == ''.freeze)
@@ -415,6 +410,22 @@ module SiteSettingExtension
       self.public_send(name)
     else
       raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+    end
+  end
+
+  if defined?(Rails::Console)
+    # Convenience method for debugging site setting issues
+    # Returns a hash with information about a specific setting
+    def info(name)
+      {
+        resolved_value: get(name),
+        default_value: defaults[name],
+        global_override: GlobalSetting.respond_to?(name) ? GlobalSetting.public_send(name) : nil,
+        database_value: provider.find(name)&.value,
+        refresh?: refresh_settings.include?(name),
+        client?: client_settings.include?(name),
+        secret?: secret_settings.include?(name),
+      }
     end
   end
 

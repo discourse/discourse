@@ -1,3 +1,7 @@
+import { get } from "@ember/object";
+import { debounce } from "@ember/runloop";
+import { later } from "@ember/runloop";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
@@ -29,7 +33,7 @@ const SearchHelper = {
     }
 
     this._cancelSearch = true;
-    Ember.run.later(() => (this._cancelSearch = false), 400);
+    later(() => (this._cancelSearch = false), 400);
   },
 
   perform(widget) {
@@ -78,6 +82,7 @@ const SearchHelper = {
             searchData.topicId = null;
           }
         })
+        .catch(popupAjaxError)
         .finally(() => {
           searchData.loading = false;
           widget.scheduleRerender();
@@ -95,7 +100,7 @@ export default createWidget("search-menu", {
     const contextEnabled = searchData.contextEnabled;
 
     const ctx = contextEnabled ? this.searchContext() : null;
-    const type = ctx ? Ember.get(ctx, "type") : null;
+    const type = ctx ? get(ctx, "type") : null;
 
     let url = "/search";
     const params = [];
@@ -112,7 +117,7 @@ export default createWidget("search-menu", {
             this.currentUser.get("username_lower") &&
           type === "private_messages"
         ) {
-          query += " in:private";
+          query += " in:personal";
         } else {
           query += encodeURIComponent(" " + type + ":" + ctx.id);
         }
@@ -283,7 +288,7 @@ export default createWidget("search-menu", {
     searchData.noResults = false;
     this.searchService().set("highlightTerm", searchData.term);
     searchData.loading = true;
-    Ember.run.debounce(SearchHelper, SearchHelper.perform, this, 400);
+    debounce(SearchHelper, SearchHelper.perform, this, 400);
   },
 
   moreOfType(type) {

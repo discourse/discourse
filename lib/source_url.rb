@@ -20,6 +20,5 @@ class SourceURL < Tilt::Template
     code << data.inspect
     code << " + \"\\n//# sourceURL=#{scope.logical_path}\""
     code << ");\n"
-    code
   end
 end

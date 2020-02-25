@@ -7,7 +7,7 @@ task 'plugin:install_all_official' do
   skip = Set.new([
     'customer-flair',
     'discourse-nginx-performance-report',
-    'lazyYT',
+    'lazy-yt',
     'poll'
   ])
 
@@ -15,6 +15,8 @@ task 'plugin:install_all_official' do
     'Canned Replies' => 'https://github.com/discourse/discourse-canned-replies',
     'discourse-perspective' => 'https://github.com/discourse/discourse-perspective-api'
   }
+
+  STDERR.puts "Allowing write to all repos!" if ENV['GIT_WRITE']
 
   Plugin::Metadata::OFFICIAL_PLUGINS.each do |name|
     next if skip.include? name
@@ -28,7 +30,6 @@ task 'plugin:install_all_official' do
     end
 
     if ENV['GIT_WRITE']
-      STDERR.puts "Allowing write to all repos!"
       repo = repo.gsub("https://github.com/", "git@github.com:")
       repo += ".git"
     end

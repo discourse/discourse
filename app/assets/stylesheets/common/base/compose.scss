@@ -122,9 +122,7 @@
       }
 
       .action-title {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
       }
 
       .topic-link,
@@ -136,9 +134,7 @@
       .username {
         margin-right: 5px;
         max-width: 100px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include ellipsis;
         @media screen and (max-width: 500px) {
           display: none;
         }
@@ -169,12 +165,23 @@
     font-style: italic;
   }
 
+  .whisper {
+    margin-right: 0.25em;
+  }
+
   .display-edit-reason {
-    display: inline;
+    display: inline-flex;
+    a {
+      display: inline-flex;
+    }
+    .d-icon {
+      padding: 0.3em 0.5em;
+      color: $tertiary;
+    }
   }
 
   #edit-reason {
-    margin: 4px;
+    margin: 0 4px;
   }
 
   .user-selector,
@@ -259,7 +266,7 @@
   }
 
   .popup-tip {
-    z-index: z("composer", "dropdown");
+    z-index: z("composer", "dropdown") + 1;
   }
 
   .wmd-controls {
@@ -347,9 +354,7 @@
       a {
         padding: 5px;
         display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
 
         span.username {
           color: $primary;
@@ -432,6 +437,9 @@ div.ac-wrap {
     margin: 0;
     background: transparent;
     min-height: unset;
+    &.fullwidth-input {
+      width: 100%;
+    }
   }
 }
 
@@ -470,5 +478,21 @@ div.ac-wrap {
   }
   100% {
     opacity: 0;
+  }
+}
+
+body.ios-safari-composer-hacks {
+  #main-outlet,
+  header,
+  .grippie,
+  html:not(.fullscreen-composer) & .toggle-fullscreen {
+    display: none;
+  }
+
+  #reply-control {
+    top: 0px;
+    &.open {
+      height: calc(var(--composer-vh, 1vh) * 100);
+    }
   }
 }

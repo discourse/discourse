@@ -4,16 +4,26 @@ class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  RESERVED_TAGS = [
+    'c'
+  ]
+
+  validates :name,
+    presence: true,
+    uniqueness: { case_sensitive: false },
+    exclusion: { in: RESERVED_TAGS }
+
+  validate :target_tag_validator, if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
 
   scope :where_name, ->(name) do
     name = Array(name).map(&:downcase)
-    where("lower(name) IN (?)", name)
+    where("lower(tags.name) IN (?)", name)
   end
 
   scope :unused, -> { where(topic_count: 0, pm_topic_count: 0) }
+  scope :base_tags, -> { where(target_tag_id: nil) }
 
-  has_many :tag_users # notification settings
+  has_many :tag_users, dependent: :destroy # notification settings
 
   has_many :topic_tags, dependent: :destroy
   has_many :topics, through: :topic_tags
@@ -21,10 +31,14 @@ class Tag < ActiveRecord::Base
   has_many :category_tags, dependent: :destroy
   has_many :categories, through: :category_tags
 
-  has_many :tag_group_memberships
+  has_many :tag_group_memberships, dependent: :destroy
   has_many :tag_groups, through: :tag_group_memberships
 
+  belongs_to :target_tag, class_name: "Tag", optional: true
+  has_many :synonyms, class_name: "Tag", foreign_key: "target_tag_id", dependent: :destroy
+
   after_save :index_search
+  after_save :update_synonym_associations
 
   after_commit :trigger_tag_created_event, on: :create
   after_commit :trigger_tag_updated_event, on: :update
@@ -130,11 +144,30 @@ class Tag < ActiveRecord::Base
   end
 
   def full_url
-    "#{Discourse.base_url}/tags/#{self.name}"
+    "#{Discourse.base_url}/tag/#{self.name}"
   end
 
   def index_search
     SearchIndexer.index(self)
+  end
+
+  def synonym?
+    !self.target_tag_id.nil?
+  end
+
+  def target_tag_validator
+    if synonyms.exists?
+      errors.add(:target_tag_id, I18n.t("tags.synonyms_exist"))
+    elsif target_tag&.synonym?
+      errors.add(:target_tag_id, I18n.t("tags.invalid_target_tag"))
+    end
+  end
+
+  def update_synonym_associations
+    if target_tag_id && saved_change_to_target_tag_id?
+      target_tag.tag_groups.each { |tag_group| tag_group.tags << self unless tag_group.tags.include?(self) }
+      target_tag.categories.each { |category| category.tags << self unless category.tags.include?(self) }
+    end
   end
 
   %i{
@@ -159,6 +192,7 @@ end
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  pm_topic_count :integer          default(0), not null
+#  target_tag_id  :integer
 #
 # Indexes
 #

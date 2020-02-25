@@ -1,7 +1,7 @@
-import {
-  default as computed,
-  on
-} from "ember-addons/ember-computed-decorators";
+import { debounce } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import Component from "@ember/component";
+import computed, { on } from "discourse-common/utils/decorators";
 import {
   keepAliveDuration,
   bufferTime
@@ -9,7 +9,7 @@ import {
 
 const MB_GET_LAST_MESSAGE = -2;
 
-export default Ember.Component.extend({
+export default Component.extend({
   topicId: null,
   presenceUsers: null,
 
@@ -25,7 +25,7 @@ export default Ember.Component.extend({
       this.channel,
       message => {
         if (!this.isDestroyed) this.set("presenceUsers", message.users);
-        this._clearTimer = Ember.run.debounce(
+        this._clearTimer = debounce(
           this,
           "clear",
           keepAliveDuration + bufferTime
@@ -37,7 +37,7 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _destroyed() {
-    Ember.run.cancel(this._clearTimer);
+    cancel(this._clearTimer);
     this.messageBus.unsubscribe(this.channel);
   },
 

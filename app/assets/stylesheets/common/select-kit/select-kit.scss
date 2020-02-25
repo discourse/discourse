@@ -1,7 +1,3 @@
-.mobile-view .select-kit.is-expanded {
-  z-index: z("dropdown");
-}
-
 .select-kit {
   border: none;
   min-width: 220px;
@@ -29,19 +25,24 @@
       left: 0;
       position: absolute;
       top: 0;
+      align-items: center;
+      justify-content: center;
     }
 
     .select-kit-collection {
       border-radius: inherit;
+      box-sizing: border-box;
+      width: 100%;
+    }
+  }
+
+  &.is-loading {
+    .select-kit-collection {
+      overflow: hidden;
     }
   }
 
   &.is-above {
-    .select-kit-body {
-      bottom: 0;
-      top: auto;
-    }
-
     .select-kit-filter {
       border-top: 0;
     }
@@ -61,7 +62,6 @@
     overflow: hidden;
     transition: all 0.25s;
     cursor: pointer;
-    outline: none;
     display: flex;
     align-items: center;
     flex-direction: row;
@@ -70,17 +70,29 @@
     .selected-name {
       text-align: left;
       flex: 0 1 auto;
-      padding: 1px 0;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
       color: inherit;
+      display: flex;
+
+      .d-icon + .name {
+        margin-left: 0.5em;
+      }
+
+      .name {
+        display: inline-block;
+      }
+
+      &.select-kit-selected-color {
+        border-bottom-width: 5px;
+        border-bottom-style: solid;
+      }
     }
 
     .btn-clear {
-      padding: 0 10px;
+      margin-left: 0.25em;
+      padding: 0.25em;
       border: 0;
       background: none;
+      min-height: auto;
     }
 
     .icon {
@@ -111,6 +123,7 @@
     display: none;
     background: $secondary;
     box-sizing: border-box;
+    min-width: inherit;
   }
 
   .select-kit-row {
@@ -130,8 +143,9 @@
       flex: 1 1 0%;
     }
 
-    .d-icon {
-      margin-right: 5px;
+    .d-icon + .name,
+    .svg-icon-title + .name {
+      margin-left: 0.5em;
     }
 
     &.is-highlighted {
@@ -150,6 +164,11 @@
     .discourse-tag-count {
       color: $primary;
     }
+
+    &.create-color-row {
+      border-left-style: solid;
+      border-left-width: 5px;
+    }
   }
 
   .select-kit-collection {
@@ -161,6 +180,7 @@
     margin: 0;
     padding: 0;
     max-height: 200px;
+    width: 100%;
 
     .validation-message {
       white-space: nowrap;
@@ -197,14 +217,12 @@
   }
 
   .select-kit-filter {
-    display: flex;
     box-sizing: border-box;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
 
-    .filter-input,
-    .filter-input:focus,
-    .filter-input:active {
+    .filter-input {
       background: none;
       margin: 0;
       padding: 0;
@@ -213,7 +231,7 @@
       border: 0;
       border-radius: 0;
       box-shadow: none;
-      width: 100%;
+      width: auto;
     }
 
     &.is-hidden {
@@ -238,5 +256,33 @@
     display: none;
     box-sizing: border-box;
     pointer-events: none;
+  }
+
+  .select-kit-errors-collection {
+    background: $danger;
+    padding: 0.25em 1em;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+
+    .select-kit-error {
+      list-style: none;
+      color: $secondary;
+    }
+  }
+
+  .no-content,
+  .is-loading {
+    display: flex;
+    flex: 1 0 auto;
+    padding: 0.5em;
+    width: 100%;
+    box-sizing: border-box;
+    background: $secondary;
+  }
+
+  .is-loading {
+    align-items: center;
+    justify-content: center;
   }
 }

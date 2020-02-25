@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
-require_dependency 'notification_levels'
-
 class CategoryUser < ActiveRecord::Base
   belongs_to :category
   belongs_to :user
 
   def self.lookup(user, level)
     self.where(user: user, notification_level: notification_levels[level])
-  end
-
-  def self.lookup_by_category(user, category)
-    self.where(user: user, category: category)
   end
 
   def self.notification_levels
@@ -23,21 +17,49 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.batch_set(user, level, category_ids)
-    records = CategoryUser.where(user: user, notification_level: notification_levels[level])
-    old_ids = records.pluck(:category_id)
+    level_num = notification_levels[level]
+    category_ids = Category.where(id: category_ids).pluck(:id)
+
     changed = false
 
-    category_ids = Category.where('id in (?)', category_ids).pluck(:id)
+    # Update pre-existing category users
+    if category_ids.present? && CategoryUser
+        .where(user_id: user.id, category_id: category_ids)
+        .where.not(notification_level: level_num)
+        .update_all(notification_level: level_num) > 0
 
-    remove = (old_ids - category_ids)
-    if remove.present?
-      records.where('category_id in (?)', remove).destroy_all
       changed = true
     end
 
-    (category_ids - old_ids).each do |id|
-      CategoryUser.create!(user: user, category_id: id, notification_level: notification_levels[level])
+    # Remove extraneous category users
+    if CategoryUser.where(user_id: user.id, notification_level: level_num)
+        .where.not(category_id: category_ids)
+        .delete_all > 0
+
       changed = true
+    end
+
+    if category_ids.present?
+      params = {
+        user_id: user.id,
+        level_num: level_num,
+      }
+
+      sql = <<~SQL
+        INSERT INTO category_users (user_id, category_id, notification_level)
+        SELECT :user_id, :category_id, :level_num
+        ON CONFLICT DO NOTHING
+      SQL
+
+      # we could use VALUES here but it would introduce a string
+      # into the query, plus it is a bit of a micro optimisation
+      category_ids.each do |category_id|
+        params[:category_id] = category_id
+        if DB.exec(sql, params) > 0
+          changed = true
+        end
+      end
+
     end
 
     if changed
@@ -175,6 +197,36 @@ class CategoryUser < ActiveRecord::Base
     SQL
   end
 
+  def self.default_notification_level
+    SiteSetting.mute_all_categories_by_default ? notification_levels[:muted] : notification_levels[:regular]
+  end
+
+  def self.notification_levels_for(guardian)
+    if guardian.anonymous?
+      notification_levels = [
+        SiteSetting.default_categories_watching.split("|"),
+        SiteSetting.default_categories_tracking.split("|"),
+        SiteSetting.default_categories_watching_first_post.split("|"),
+      ].flatten.map { |id| [id.to_i, self.notification_levels[:regular]] }
+
+      notification_levels += SiteSetting.default_categories_muted.split("|").map { |id| [id.to_i, self.notification_levels[:muted]] }
+    else
+      notification_levels = CategoryUser.where(user: guardian.user).pluck(:category_id, :notification_level)
+    end
+
+    Hash[*notification_levels.flatten]
+  end
+
+  def self.lookup_for(user, category_ids)
+    return {} if user.blank? || category_ids.blank?
+    create_lookup(CategoryUser.where(category_id: category_ids, user_id: user.id))
+  end
+
+  def self.create_lookup(category_users)
+    category_users.each_with_object({}) do |category_user, acc|
+      acc[category_user.category_id] = category_user
+    end
+  end
 end
 
 # == Schema Information
@@ -184,10 +236,12 @@ end
 #  id                 :integer          not null, primary key
 #  category_id        :integer          not null
 #  user_id            :integer          not null
-#  notification_level :integer          not null
+#  notification_level :integer
+#  last_seen_at       :datetime
 #
 # Indexes
 #
-#  idx_category_users_u1  (user_id,category_id,notification_level) UNIQUE
-#  idx_category_users_u2  (category_id,user_id,notification_level) UNIQUE
+#  idx_category_users_category_id_user_id            (category_id,user_id) UNIQUE
+#  idx_category_users_user_id_category_id            (user_id,category_id) UNIQUE
+#  index_category_users_on_user_id_and_last_seen_at  (user_id,last_seen_at)
 #

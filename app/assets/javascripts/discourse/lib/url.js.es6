@@ -1,6 +1,11 @@
+import { isEmpty } from "@ember/utils";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
+import User from "discourse/models/user";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -23,7 +28,8 @@ const SERVER_SIDE_ONLY = [
   /\.rss$/,
   /\.json$/,
   /^\/admin\/upgrade$/,
-  /^\/logs($|\/)/
+  /^\/logs($|\/)/,
+  /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/
 ];
 
 export function rewritePath(path) {
@@ -58,13 +64,13 @@ export function groupPath(subPath) {
 
 let _jumpScheduled = false;
 export function jumpToElement(elementId) {
-  if (_jumpScheduled || Ember.isEmpty(elementId)) {
+  if (_jumpScheduled || isEmpty(elementId)) {
     return;
   }
 
   const selector = `#${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
-  Ember.run.schedule("afterRender", function() {
+  schedule("afterRender", function() {
     const lockon = new LockOn(selector, {
       finished() {
         _jumpScheduled = false;
@@ -76,7 +82,7 @@ export function jumpToElement(elementId) {
 
 let _transitioning = false;
 
-const DiscourseURL = Ember.Object.extend({
+const DiscourseURL = EmberObject.extend({
   isJumpScheduled() {
     return _transitioning || _jumpScheduled;
   },
@@ -88,9 +94,27 @@ const DiscourseURL = Ember.Object.extend({
 
     _transitioning = postNumber > 1;
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       let elementId;
       let holder;
+
+      if (opts.jumpEnd) {
+        let $holder = $(holderId);
+        let holderHeight = $holder.height();
+        let windowHeight = $(window).height() - offsetCalculator();
+
+        // scroll to the bottom of the post and if the post is yuge we go back up the
+        // timeline by a small % of the post height so we can see the bottom of the text.
+        //
+        // otherwise just jump to the top of the post using the lock & holder method.
+        if (holderHeight > windowHeight) {
+          $(window).scrollTop(
+            $holder.offset().top + (holderHeight - holderHeight / 10)
+          );
+          _transitioning = false;
+          return;
+        }
+      }
 
       if (postNumber === 1 && !opts.anchor) {
         $(window).scrollTop(0);
@@ -148,7 +172,7 @@ const DiscourseURL = Ember.Object.extend({
       // Always use replaceState in the next runloop to prevent weird routes changing
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
       // which triggers a replaceState even though the topic hasn't fully loaded yet!
-      Ember.run.next(() => {
+      next(() => {
         const location = DiscourseURL.get("router.location");
         if (location && location.replaceURL) {
           location.replaceURL(path);
@@ -181,7 +205,7 @@ const DiscourseURL = Ember.Object.extend({
   routeTo(path, opts) {
     opts = opts || {};
 
-    if (Ember.isEmpty(path)) {
+    if (isEmpty(path)) {
       return;
     }
 
@@ -219,7 +243,7 @@ const DiscourseURL = Ember.Object.extend({
     // Rewrite /my/* urls
     let myPath = `${baseUri}/my/`;
     if (path.indexOf(myPath) === 0) {
-      const currentUser = Discourse.User.current();
+      const currentUser = User.current();
       if (currentUser) {
         path = path.replace(
           myPath,
@@ -242,7 +266,7 @@ const DiscourseURL = Ember.Object.extend({
     path = rewritePath(path);
 
     if (typeof opts.afterRouteComplete === "function") {
-      Ember.run.schedule("afterRender", opts.afterRouteComplete);
+      schedule("afterRender", opts.afterRouteComplete);
     }
 
     if (this.navigatedToPost(oldPath, path, opts)) {
@@ -266,6 +290,10 @@ const DiscourseURL = Ember.Object.extend({
     }
 
     return this.handleURL(path, opts);
+  },
+
+  routeToUrl(url, opts = {}) {
+    this.routeTo(Discourse.getURL(url), opts);
   },
 
   rewrite(regexp, replacement, opts) {
@@ -346,7 +374,8 @@ const DiscourseURL = Ember.Object.extend({
 
           this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {
-            skipIfOnScreen: routeOpts.skipIfOnScreen
+            skipIfOnScreen: routeOpts.skipIfOnScreen,
+            jumpEnd: routeOpts.jumpEnd
           };
 
           const m = /#.+$/.exec(path);
@@ -397,6 +426,9 @@ const DiscourseURL = Ember.Object.extend({
     );
   },
 
+  // TODO: These container calls can be replaced eventually if we migrate this to a service
+  // object.
+
   /**
     @private
 
@@ -405,11 +437,13 @@ const DiscourseURL = Ember.Object.extend({
 
     @property router
   **/
-  router: function() {
+  get router() {
     return Discourse.__container__.lookup("router:main");
-  }
-    .property()
-    .volatile(),
+  },
+
+  get appEvents() {
+    return Discourse.__container__.lookup("service:app-events");
+  },
 
   // Get a controller. Note that currently it uses `__container__` which is not
   // advised but there is no other way to access the router.
@@ -428,13 +462,6 @@ const DiscourseURL = Ember.Object.extend({
 
     if (opts.replaceURL) {
       this.replaceState(path);
-    } else {
-      const discoveryTopics = this.controllerFor("discovery/topics");
-      if (discoveryTopics) {
-        discoveryTopics.resetParams();
-      }
-
-      router._routerMicrolib.updateURL(path);
     }
 
     const split = path.split("#");
@@ -445,7 +472,16 @@ const DiscourseURL = Ember.Object.extend({
       elementId = split[1];
     }
 
-    const transition = router.handleURL(path);
+    // The default path has a hack to allow `/` to default to defaultHomepage
+    // via BareRouter.handleUrl
+    let transition;
+    if (path === "/" || path.substring(0, 2) === "/?") {
+      router._routerMicrolib.updateURL(path);
+      transition = router.handleURL(path);
+    } else {
+      transition = router.transitionTo(path);
+    }
+
     transition._discourse_intercepted = true;
     const promise = transition.promise || transition;
     promise.then(() => jumpToElement(elementId));

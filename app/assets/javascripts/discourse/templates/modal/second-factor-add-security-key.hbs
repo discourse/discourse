@@ -1,0 +1,34 @@
+{{#d-modal-body}}
+  {{#conditional-loading-spinner condition=loading}}
+    {{#if errorMessage}}
+      <div class="control-group">
+        <div class="controls">
+          <div class='alert alert-error'>{{errorMessage}}</div>
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="control-group">
+      <div class="controls">
+        {{{i18n 'user.second_factor.enable_security_key_description'}}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        {{input value=securityKeyName id='test' placeholder='security key name'}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        {{#unless webauthnUnsupported}}
+          {{d-button
+            class="btn-primary add-totp"
+            action=(action "registerSecurityKey")
+            label="user.second_factor.security_key.register"}}
+        {{/unless}}
+      </div>
+    </div>
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}

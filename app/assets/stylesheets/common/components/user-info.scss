@@ -24,9 +24,7 @@
     }
 
     .name-line {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
 
     .username a {

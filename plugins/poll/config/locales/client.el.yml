@@ -21,10 +21,10 @@ el:
             one: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογή"
             other: "Επέλεξε τουλάχιστον <strong>%{count}</strong> επιλογές"
           up_to_max_options:
-            one: "Επιλέξτε μέχρι  <strong>%{count}</strong> επιλογή"
-            other: "Επέλεξε μέχρι  <strong>%{count}</strong> επιλογές"
+            one: "Επιλέξτε μέχρι <strong>%{count}</strong> επιλογή"
+            other: "Επέλεξε μέχρι <strong>%{count}</strong> επιλογές"
           x_options:
-            one: "Επιλέξτε <strong>%{count}</strong>  επιλογή"
+            one: "Επιλέξτε <strong>%{count}</strong> επιλογή"
             other: "Επέλεξε <strong>%{count}</strong> επιλογές"
           between_min_and_max_options: "Επιλέξτε ανάμεσα σε <strong>%{min}</strong> και <strong>%{max}</strong> επιλογές"
       cast-votes:
@@ -35,7 +35,8 @@ el:
         label: "Εμφάνισε τα αποτελέσματα"
       hide-results:
         title: "Πίσω στην ψηφοφορία"
-        label: "Κρύψε τα αποτελέσματα"
+      export-results:
+        label: "Εξαγωγή"
       open:
         title: "Να ξεκινήσει η ψηφοφορία"
         label: "Ξεκίνημα"
@@ -51,7 +52,6 @@ el:
         title: Δημιουργία Ψηφοφορίας
         insert: Εισαγωγή Ψηφοφορίας
         help:
-          options_count: Εισάγετε τουλάχιστόν 2 επιλογές
           invalid_values: Η ελάχιστη τιμή θα πρέπει να είναι μικρότερη από την μέγιστη τιμή.
           min_step_value: Η ελάχιστη τιμή για το βήμα είναι 1
         poll_type:

@@ -22,6 +22,8 @@ it:
           title: "I risultati saranno mostrati al momento del <strong>voto</strong>."
         closed:
           title: "I risultati saranno mostrati a sondaggio <strong>chiuso</strong>."
+        staff:
+          title: "I risultati saranno mostrati solo ai membri dello <strong>staff</strong>"
       multiple:
         help:
           at_least_min_options:
@@ -42,7 +44,8 @@ it:
         label: "Mostra i risultati"
       hide-results:
         title: "Torna ai tuoi voti"
-        label: "Nascondi i risultati"
+      export-results:
+        label: "Esportare"
       open:
         title: "Apri il sondaggio"
         label: "Apri"
@@ -61,7 +64,6 @@ it:
         title: Crea Sondaggio
         insert: Inserisci Sondaggio
         help:
-          options_count: Inserisci almeno 2 opzioni
           invalid_values: Il valore minimo deve essere minore del valore massimo.
           min_step_value: Il valore minimo di un passo è 1
         poll_type:
@@ -74,6 +76,7 @@ it:
           always: Sempre visibile
           vote: Al momento del voto
           closed: Quando chiuso
+          staff: Solo staff
         poll_config:
           max: Massimo
           min: Minimo

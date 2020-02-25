@@ -13,7 +13,7 @@ QUnit.test("Can open the category modal", async assert => {
   await click(".edit-category");
   assert.ok(visible(".d-modal"), "it pops up a modal");
 
-  await click("a.close");
+  await click("button.modal-close");
   assert.ok(!visible(".d-modal"), "it closes the modal");
 });
 
@@ -36,7 +36,7 @@ QUnit.test("Editing the category", async assert => {
   assert.ok(!visible(".d-modal"), "it closes the modal");
   assert.equal(
     DiscourseURL.redirectedTo,
-    "/c/bug",
+    "/c/bug/1",
     "it does one of the rare full page redirects"
   );
 });

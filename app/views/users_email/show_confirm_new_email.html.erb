@@ -1,0 +1,82 @@
+<div id="simple-container">
+  <% if @done %>
+    <h2>
+      <%= t 'change_email.confirmed' %>
+    </h2>
+    <p>
+    <a class="btn" href="<%= path "/" %>"><%= t('change_email.please_continue', site_name: SiteSetting.title) %></a>
+    </p>
+  <% elsif @error %>
+    <div class='alert alert-error'>
+      <%= @error %>
+    </div>
+  <% else %>
+    <h2><%= t 'change_email.authorizing_new.title' %></h2>
+    <p>
+      <%= t 'change_email.authorizing_new.description' %>
+    </p>
+    <p>
+      <%= @to_email %>
+    </p>
+
+    <%=form_tag(u_confirm_new_email_path, method: :put) do %>
+      <%= hidden_field_tag 'token', @token.token %>
+      <%= hidden_field_tag 'second_factor_token', nil, id: 'security-key-credential' %>
+      <div id="security-key-error"></div>
+
+      <% if @show_invalid_second_factor_error %>
+        <div class='alert alert-error'><%= @invalid_second_factor_message %></div>
+      <% end %>
+
+      <% if @show_backup_codes %>
+        <div id="backup-second-factor-form" style="">
+          <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:backup_code] %>	
+          <h3><%= t('login.second_factor_backup_title') %></h3>
+            <%= label_tag(:second_factor_token, t("login.second_factor_backup_description")) %>
+            <div><%= render 'common/second_factor_backup_input' %></div>
+            <%= submit_tag(t("submit"), class: "btn btn-primary") %>
+        </div>
+        <br/>
+        <%= link_to t("login.second_factor_toggle.totp"), show_backup: "false" %>
+        <br/>
+      <% elsif @show_security_key %>
+        <%= hidden_field_tag 'security_key_challenge', @security_key_challenge, id: 'security-key-challenge' %>	
+        <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:security_key] %>	
+        <%= hidden_field_tag 'security_key_allowed_credential_ids', @security_key_allowed_credential_ids, id: 'security-key-allowed-credential-ids' %>
+        <div id="security-key-form">
+          <h3><%= t('login.security_key_authenticate') %></h3>
+          <p><%= t('login.security_key_description') %></p>
+          <%= button_tag t('login.security_key_authenticate'), id: 'submit-security-key' %>
+        </div>
+        <br/>
+        <% if @show_second_factor %>
+          <%= link_to t("login.security_key_alternative"), show_totp: "true" %>
+        <% end %><br/>
+        <% if @backup_codes_enabled %>
+          <%= link_to t("login.second_factor_toggle.backup_code"), show_backup: "true" %>
+        <% end %>
+      <% elsif @show_second_factor %>
+        <div id="primary-second-factor-form">
+        <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:totp] %>	
+          <h3><%= t('login.second_factor_title') %></h3>
+          <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
+          <div><%= render 'common/second_factor_text_field' %></div>
+          <%= submit_tag t('submit'), class: "btn btn-primary" %>
+        </div>
+        <br/>
+        <% if @backup_codes_enabled %>
+          <%= link_to t("login.second_factor_toggle.backup_code"), show_backup: "true" %>
+        <% end %>
+      <% else %>
+        <%= submit_tag t('change_email.confirm'), class: "btn btn-primary" %>
+      <% end %>
+    <%end%>
+  <% end%>
+
+  <%= preload_script "ember_jquery" %>	
+  <%= preload_script "locales/#{I18n.locale}" %>	
+  <%= preload_script "locales/i18n" %>	
+  <%= preload_script "discourse/lib/webauthn" %>	
+  <%= preload_script "confirm-new-email/confirm-new-email" %>	
+  <%= preload_script "confirm-new-email/confirm-new-email.no-module" %>
+</div>

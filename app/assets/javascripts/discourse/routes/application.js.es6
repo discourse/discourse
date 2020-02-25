@@ -1,3 +1,6 @@
+import { once } from "@ember/runloop";
+import { next } from "@ember/runloop";
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import logout from "discourse/lib/logout";
@@ -9,6 +12,7 @@ import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import { EventTarget } from "rsvp";
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -20,7 +24,7 @@ function unlessReadOnly(method, message) {
   };
 }
 
-const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
+const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
 
@@ -43,7 +47,8 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     _collectTitleTokens(tokens) {
       tokens.push(this.siteTitle);
       if (
-        window.location.pathname === Discourse.getURL("/") &&
+        (window.location.pathname === Discourse.getURL("/") ||
+          window.location.pathname === Discourse.getURL("/login")) &&
         this.shortSiteDescription !== ""
       ) {
         tokens.push(this.shortSiteDescription);
@@ -54,7 +59,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     // Ember doesn't provider a router `willTransition` event so let's make one
     willTransition() {
       var router = getOwner(this).lookup("router:main");
-      Ember.run.once(router, router.trigger, "willTransition");
+      once(router, router.trigger, "willTransition");
       return this._super(...arguments);
     },
 
@@ -66,21 +71,24 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     composePrivateMessage(user, post) {
-      const recipient = user ? user.get("username") : "",
-        reply = post
-          ? window.location.protocol +
-            "//" +
-            window.location.host +
-            post.get("url")
-          : null;
+      const recipients = user ? user.get("username") : "";
+      const reply = post
+        ? `${window.location.protocol}//${window.location.host}${post.url}`
+        : null;
+      const title = post
+        ? I18n.t("composer.reference_topic_title", {
+            title: post.topic.title
+          })
+        : null;
 
       // used only once, one less dependency
       return this.controllerFor("composer").open({
         action: Composer.PRIVATE_MESSAGE,
-        usernames: recipient,
+        recipients,
         archetypeId: "private_message",
-        draftKey: "new_private_message",
-        reply: reply
+        draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+        reply,
+        title
       });
     },
 
@@ -137,8 +145,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     showUploadSelector(toolbarEvent) {
       showModal("uploadSelector").setProperties({
         toolbarEvent,
-        imageUrl: null,
-        imageLink: null
+        imageUrl: null
       });
     },
 
@@ -153,10 +160,17 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       this.render("hide-modal", { into: "modal", outlet: "modalBody" });
 
       const route = getOwner(this).lookup("route:application");
-      const name = route.controllerFor("modal").get("name");
-      const controller = getOwner(this).lookup(`controller:${name}`);
-      if (controller && controller.onClose) {
-        controller.onClose();
+      let modalController = route.controllerFor("modal");
+      const controllerName = modalController.get("name");
+
+      if (controllerName) {
+        const controller = getOwner(this).lookup(
+          `controller:${controllerName}`
+        );
+        if (controller && controller.onClose) {
+          controller.onClose();
+        }
+        modalController.set("name", null);
       }
     },
 
@@ -207,14 +221,14 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       );
     },
 
-    createNewMessageViaParams(username, title, body) {
-      this.openComposerWithMessageParams(username, title, body);
+    createNewMessageViaParams(recipients, title, body) {
+      this.openComposerWithMessageParams(recipients, title, body);
     }
   },
 
   activate() {
     this._super(...arguments);
-    Ember.run.next(function() {
+    next(function() {
       // Support for callbacks once the application has activated
       ApplicationRoute.trigger("activate");
     });
@@ -255,9 +269,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0], {
-        fullScreenLogin: true
-      });
+      this.controllerFor("login").send("externalLogin", methods[0]);
     } else {
       showModal(modal);
       this.controllerFor("modal").set("modalClass", modalClass);
@@ -276,5 +288,5 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   }
 });
 
-RSVP.EventTarget.mixin(ApplicationRoute);
+EventTarget.mixin(ApplicationRoute);
 export default ApplicationRoute;

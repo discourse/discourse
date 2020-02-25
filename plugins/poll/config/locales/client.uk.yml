@@ -8,12 +8,26 @@
 uk:
   js:
     poll:
+      voters:
+        one: "виборця"
+        few: "виборців"
+        many: "виборців"
+        other: "проголосували"
       total_votes:
         one: "голос"
         few: "голосів"
         many: "голоси"
         other: "голоси"
       average_rating: "Середній рейтинг: <strong>%{average}</strong>."
+      public:
+        title: "Голоси <strong>публічні</strong> ."
+      results:
+        vote:
+          title: "Результати будуть показані при <strong>голосуванні</strong> ."
+        closed:
+          title: "Результати будуть показані після <strong>закриття</strong> ."
+        staff:
+          title: "Результати показуються лише <strong>співробітникам</strong> ."
       multiple:
         help:
           at_least_min_options:
@@ -21,22 +35,76 @@ uk:
             few: "Виберіть хоча б <strong>%{count}</strong> варіантів"
             many: "Виберіть хоча б <strong>%{count}</strong> варіанти"
             other: "Виберіть хоча б <strong>%{count}</strong> варіанти"
+          up_to_max_options:
+            one: "Виберіть варіант <strong>%{count}</strong>"
+            few: "Виберіть до <strong>%{count}</strong> варіантів"
+            many: "Виберіть до <strong>%{count}</strong> варіантів"
+            other: "Виберіть до <strong>%{count}</strong> варіантів"
+          x_options:
+            one: "Виберіть варіант <strong>%{count}</strong>"
+            few: "Виберіть параметри <strong>%{count}</strong>"
+            many: "Виберіть параметри <strong>%{count}</strong>"
+            other: "Виберіть параметри <strong>%{count}</strong>"
+          between_min_and_max_options: "Виберіть параметри від<strong>%{min}</strong> до %{max}</strong>"
       cast-votes:
+        title: "Проголосуйте"
         label: "Проголосувати!"
       show-results:
+        title: "Показати результати опитування"
         label: "Показати результати"
       hide-results:
-        label: "Приховати результати"
+        title: "Назад до своїх голосів"
+        label: "Показати голосування"
+      group-results:
+        title: "Групувати голоси за полем користувача"
+        label: "Показати відбивку"
+      ungroup-results:
+        title: "Об’єднайте всі голоси"
+        label: "Сховати відбивку"
+      export-results:
+        title: "Експорт результатів опитування"
+        label: "Експорт"
       open:
+        title: "Відкрити опитування"
         label: "Відкрити"
+        confirm: "Ви впевнені, що хочете відкрити це опитування?"
       close:
+        title: "Закрити опитування"
         label: "Закрити"
+        confirm: "Ви впевнені, що хочете закрити це опитування?"
+      automatic_close:
+        closes_in: "Закривається в <strong>%{timeLeft}</strong> ."
+        age: "Закрито <strong>%{age}</strong>"
+      error_while_toggling_status: "На жаль, виникла помилка зміни статусу цього опитування."
+      error_while_casting_votes: "На жаль, сталася помилка під час голосування."
+      error_while_fetching_voters: "На жаль, під час відображення тих, хто проголосував, сталася помилка."
+      error_while_exporting_results: "На жаль, сталася помилка експорту результатів опитування."
       ui_builder:
+        title: Створити опитування
+        insert: Вставити опитування
+        help:
+          invalid_values: Мінімальне значення має бути меншим, ніж максимальне.
+          min_step_value: Мінімальне значення кроку 1
         poll_type:
           label: Тип
+          regular: Єдиний вибір
+          multiple: Широкий вибір
+          number: Рейтинг в цифрах
         poll_result:
           label: Результати
+          always: Завжди видно
+          vote: На голосування
+          closed: Коли закрито
+          staff: Для персоналу тільки
+        poll_chart_type:
+          label: Тип діаграми
         poll_config:
           max: Макс
           min: Мін
           step: Крок
+        poll_public:
+          label: Покажіть, хто проголосував
+        poll_options:
+          label: Введіть один варіант опитування на рядок
+        automatic_close:
+          label: Автоматично закрити опитування

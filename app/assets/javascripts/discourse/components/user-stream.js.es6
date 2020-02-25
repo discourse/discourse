@@ -1,3 +1,5 @@
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
 import Post from "discourse/models/post";
@@ -5,9 +7,11 @@ import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { observes } from "discourse-common/utils/decorators";
+import { on } from "@ember/object/evented";
 
-export default Ember.Component.extend(LoadMore, {
-  _initialize: function() {
+export default Component.extend(LoadMore, {
+  _initialize: on("init", function() {
     const filter = this.get("stream.filter");
     if (filter) {
       this.set("classNames", [
@@ -15,36 +19,41 @@ export default Ember.Component.extend(LoadMore, {
         "filter-" + filter.toString().replace(",", "-")
       ]);
     }
-  }.on("init"),
+  }),
 
   loading: false,
   eyelineSelector: ".user-stream .item",
   classNames: ["user-stream"],
 
+  @observes("stream.user.id")
   _scrollTopOnModelChange: function() {
-    Ember.run.schedule("afterRender", () => $(document).scrollTop(0));
-  }.observes("stream.user.id"),
+    schedule("afterRender", () => $(document).scrollTop(0));
+  },
 
-  _inserted: function() {
+  _inserted: on("didInsertElement", function() {
     this.bindScrolling({ name: "user-stream-view" });
 
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
 
-    this.$().on("click.details-disabled", "details.disabled", () => false);
-    this.$().on("click.discourse-redirect", ".excerpt a", function(e) {
+    $(this.element).on(
+      "click.details-disabled",
+      "details.disabled",
+      () => false
+    );
+    $(this.element).on("click.discourse-redirect", ".excerpt a", function(e) {
       return ClickTrack.trackClick(e);
     });
-  }.on("didInsertElement"),
+  }),
 
   // This view is being removed. Shut down operations
-  _destroyed: function() {
+  _destroyed: on("willDestroyElement", function() {
     this.unbindScrolling("user-stream-view");
     $(window).unbind("resize.discourse-on-scroll");
-    this.$().off("click.details-disabled", "details.disabled");
+    $(this.element).off("click.details-disabled", "details.disabled");
 
     // Unbind link tracking
-    this.$().off("click.discourse-redirect", ".excerpt a");
-  }.on("willDestroyElement"),
+    $(this.element).off("click.discourse-redirect", ".excerpt a");
+  }),
 
   actions: {
     removeBookmark(userAction) {
@@ -66,13 +75,16 @@ export default Ember.Component.extend(LoadMore, {
       } else {
         Draft.get(item.draft_key)
           .then(d => {
-            if (d.draft) {
-              composer.open({
-                draft: d.draft,
-                draftKey: item.draft_key,
-                draftSequence: d.draft_sequence
-              });
+            const draft = d.draft || item.data;
+            if (!draft) {
+              return;
             }
+
+            composer.open({
+              draft,
+              draftKey: item.draft_key,
+              draftSequence: d.draft_sequence
+            });
           })
           .catch(error => {
             popupAjaxError(error);

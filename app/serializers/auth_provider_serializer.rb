@@ -3,7 +3,7 @@
 class AuthProviderSerializer < ApplicationSerializer
 
   attributes :name, :custom_url, :pretty_name_override, :title_override, :message_override,
-             :frame_width, :frame_height, :full_screen_login, :can_connect, :can_revoke,
+             :frame_width, :frame_height, :can_connect, :can_revoke,
              :icon
 
   def title_override
@@ -14,12 +14,6 @@ class AuthProviderSerializer < ApplicationSerializer
   def pretty_name_override
     return SiteSetting.get(object.pretty_name_setting) if object.pretty_name_setting
     object.pretty_name
-  end
-
-  def full_screen_login
-    return SiteSetting.get(object.full_screen_login_setting) if object.full_screen_login_setting
-    return object.full_screen_login if object.full_screen_login
-    false
   end
 
   def message_override

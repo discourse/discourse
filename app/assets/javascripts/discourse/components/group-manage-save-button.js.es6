@@ -1,10 +1,11 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   saving: null,
 
-  @computed("saving")
+  @discourseComputed("saving")
   savingText(saving) {
     if (saving) return I18n.t("saving");
     return saving ? I18n.t("saving") : I18n.t("save");

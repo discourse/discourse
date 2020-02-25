@@ -2,9 +2,7 @@
   &.two-columns {
     .table .admin-report-table-cell:first-child,
     .table .admin-report-table-header:first-child {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
+      @include ellipsis;
       text-align: left;
       width: 80%;
     }
@@ -32,8 +30,7 @@
       outline: none;
       background: none;
       padding: 3px 8px;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
 
     &.is-current-sort {
@@ -53,6 +50,9 @@
       &:hover {
         color: $primary-medium;
         background: $primary-low;
+        .d-icon {
+          color: $primary-medium;
+        }
       }
     }
   }
@@ -103,9 +103,7 @@
   }
 
   .admin-report-table-cell.term {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    @include ellipsis;
   }
 }
 
@@ -129,9 +127,7 @@
 
   .admin-report-table-cell.post,
   .admin-report-table-cell.edit_reason {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    @include ellipsis;
   }
 }
 

@@ -1,39 +1,38 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias, equal, and } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import Topic from "discourse/models/topic";
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
-  userTopicsList: Ember.inject.controller("user-topics-list"),
-  user: Ember.inject.controller(),
+export default Controller.extend({
+  router: service(),
+  userTopicsList: inject("user-topics-list"),
+  user: inject(),
 
   pmView: false,
-  viewingSelf: Ember.computed.alias("user.viewingSelf"),
-  isGroup: Ember.computed.equal("pmView", "groups"),
-  currentPath: Ember.computed.alias("application.currentPath"),
-  selected: Ember.computed.alias("userTopicsList.selected"),
-  bulkSelectEnabled: Ember.computed.alias("userTopicsList.bulkSelectEnabled"),
+  viewingSelf: alias("user.viewingSelf"),
+  isGroup: equal("pmView", "groups"),
+  currentPath: alias("router._router.currentPath"),
+  selected: alias("userTopicsList.selected"),
+  bulkSelectEnabled: alias("userTopicsList.bulkSelectEnabled"),
   showToggleBulkSelect: true,
-  pmTaggingEnabled: Ember.computed.alias("site.can_tag_pms"),
+  pmTaggingEnabled: alias("site.can_tag_pms"),
   tagId: null,
 
-  @computed("user.viewingSelf")
-  showNewPM(viewingSelf) {
-    return (
-      viewingSelf && Discourse.User.currentProp("can_send_private_messages")
-    );
-  },
+  showNewPM: and("user.viewingSelf", "currentUser.can_send_private_messages"),
 
-  @computed("selected.[]", "bulkSelectEnabled")
+  @discourseComputed("selected.[]", "bulkSelectEnabled")
   hasSelection(selected, bulkSelectEnabled) {
     return bulkSelectEnabled && selected && selected.length > 0;
   },
 
-  @computed("hasSelection", "pmView", "archive")
+  @discourseComputed("hasSelection", "pmView", "archive")
   canMoveToInbox(hasSelection, pmView, archive) {
     return hasSelection && (pmView === "archive" || archive);
   },
 
-  @computed("hasSelection", "pmView", "archive")
+  @discourseComputed("hasSelection", "pmView", "archive")
   canArchive(hasSelection, pmView, archive) {
     return hasSelection && pmView !== "archive" && !archive;
   },
@@ -60,6 +59,9 @@ export default Ember.Controller.extend({
   },
 
   actions: {
+    changeGroupNotificationLevel(notificationLevel) {
+      this.group.setNotification(notificationLevel, this.get("user.id"));
+    },
     archive() {
       this.bulkOperation("archive_messages");
     },

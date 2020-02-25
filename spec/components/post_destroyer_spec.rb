@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'post_destroyer'
 
 describe PostDestroyer do
 
@@ -181,6 +180,15 @@ describe PostDestroyer do
       expect(post_action).to be_present
     end
 
+    it "works with topics and posts with no user" do
+      post = Fabricate(:post)
+      UserDestroyer.new(Discourse.system_user).destroy(post.user, delete_posts: true)
+
+      expect { PostDestroyer.new(Fabricate(:admin), post.reload).recover }
+        .to change { post.reload.user_id }.to(Discourse.system_user.id)
+        .and change { post.topic.user_id }.to(Discourse.system_user.id)
+    end
+
     describe "post_count recovery" do
       before do
         post
@@ -343,6 +351,12 @@ describe PostDestroyer do
         DiscourseEvent.off(:topic_destroyed, &topic_destroyed)
         DiscourseEvent.off(:topic_recovered, &topic_recovered)
       end
+    end
+
+    it "maintains history when a user destroys a hidden post" do
+      post.hide!(PostActionType.types[:inappropriate])
+      PostDestroyer.new(post.user, post).destroy
+      expect(post.revisions[0].modifications['raw']).to be_present
     end
 
     it "when topic is destroyed, it updates user_stats correctly" do
@@ -634,7 +648,7 @@ describe PostDestroyer do
     describe 'with a reply' do
 
       fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
-      let!(:post_reply) { PostReply.create(post_id: post.id, reply_id: reply.id) }
+      let!(:post_reply) { PostReply.create(post_id: post.id, reply_post_id: reply.id) }
 
       it 'changes the post count of the topic' do
         post.reload
@@ -793,4 +807,38 @@ describe PostDestroyer do
     end
   end
 
+  describe '#delete_with_replies' do
+    let(:reporter) { Discourse.system_user }
+    fab!(:post) { Fabricate(:post) }
+
+    before do
+      reply = Fabricate(:post, topic: post.topic)
+      post.update(replies: [reply])
+      PostActionCreator.off_topic(reporter, post)
+
+      @reviewable_reply = PostActionCreator.off_topic(reporter, reply).reviewable
+    end
+
+    it 'ignores flagged replies' do
+      PostDestroyer.delete_with_replies(reporter, post)
+
+      expect(@reviewable_reply.reload.status).to eq Reviewable.statuses[:ignored]
+    end
+
+    it 'approves flagged replies' do
+      PostDestroyer.delete_with_replies(reporter, post, defer_reply_flags: false)
+
+      expect(@reviewable_reply.reload.status).to eq Reviewable.statuses[:approved]
+    end
+  end
+
+  describe "featured topics for user_profiles" do
+    fab!(:user) { Fabricate(:user) }
+
+    it 'clears the user_profiles featured_topic column' do
+      user.user_profile.update(featured_topic: post.topic)
+      PostDestroyer.new(admin, post).destroy
+      expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
 end

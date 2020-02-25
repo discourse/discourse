@@ -20,7 +20,7 @@ acceptance("Topic - Edit timer", {
 });
 
 QUnit.test("default", async assert => {
-  updateCurrentUser({ admin: true, staff: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true, canManageTopic: true });
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -28,20 +28,20 @@ QUnit.test("default", async assert => {
   await click(".toggle-admin-menu");
   await click(".topic-admin-status-update button");
 
-  assert.equal(futureDateInputSelector.header().title(), "Select a timeframe");
+  assert.equal(futureDateInputSelector.header().label(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);
 
   await click("#private-topic-timer");
 
-  assert.equal(timerType.header().title(), "Remind Me");
+  assert.equal(timerType.header().label(), "Remind Me");
   assert.equal(timerType.header().value(), "reminder");
 
-  assert.equal(futureDateInputSelector.header().title(), "Select a timeframe");
+  assert.equal(futureDateInputSelector.header().label(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);
 });
 
 QUnit.test("autoclose - specific time", async assert => {
-  updateCurrentUser({ admin: true, staff: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true, canManageTopic: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
   await visit("/t/internationalization-localization");
@@ -51,7 +51,12 @@ QUnit.test("autoclose - specific time", async assert => {
   await futureDateInputSelector.expand();
   await futureDateInputSelector.selectRowByValue("next_week");
 
-  assert.equal(futureDateInputSelector.header().title(), "Next week");
+  assert.ok(
+    futureDateInputSelector
+      .header()
+      .label()
+      .includes("Next week")
+  );
   assert.equal(futureDateInputSelector.header().value(), "next_week");
 
   const regex = /will automatically close in/g;
@@ -62,7 +67,7 @@ QUnit.test("autoclose - specific time", async assert => {
 });
 
 QUnit.test("autoclose", async assert => {
-  updateCurrentUser({ admin: true, staff: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true, canManageTopic: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
   await visit("/t/internationalization-localization");
@@ -72,7 +77,12 @@ QUnit.test("autoclose", async assert => {
   await futureDateInputSelector.expand();
   await futureDateInputSelector.selectRowByValue("next_week");
 
-  assert.equal(futureDateInputSelector.header().title(), "Next week");
+  assert.ok(
+    futureDateInputSelector
+      .header()
+      .label()
+      .includes("Next week")
+  );
   assert.equal(futureDateInputSelector.header().value(), "next_week");
 
   const regex1 = /will automatically close in/g;
@@ -86,7 +96,12 @@ QUnit.test("autoclose", async assert => {
 
   await fillIn(".future-date-input .date-picker", "2099-11-24");
 
-  assert.equal(futureDateInputSelector.header().title(), "Pick date and time");
+  assert.ok(
+    futureDateInputSelector
+      .header()
+      .label()
+      .includes("Pick date and time")
+  );
   assert.equal(futureDateInputSelector.header().value(), "pick_date_and_time");
 
   const regex2 = /will automatically close in/g;
@@ -100,9 +115,11 @@ QUnit.test("autoclose", async assert => {
 
   await fillIn(".future-date-input input[type=number]", "2");
 
-  assert.equal(
-    futureDateInputSelector.header().title(),
-    "Close based on last post"
+  assert.ok(
+    futureDateInputSelector
+      .header()
+      .label()
+      .includes("Close based on last post")
   );
   assert.equal(
     futureDateInputSelector.header().value(),
@@ -117,7 +134,7 @@ QUnit.test("autoclose", async assert => {
 });
 
 QUnit.test("close temporarily", async assert => {
-  updateCurrentUser({ admin: true, staff: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true, canManageTopic: true });
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -128,13 +145,18 @@ QUnit.test("close temporarily", async assert => {
   await timerType.expand();
   await timerType.selectRowByValue("open");
 
-  assert.equal(futureDateInputSelector.header().title(), "Select a timeframe");
+  assert.equal(futureDateInputSelector.header().label(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);
 
   await futureDateInputSelector.expand();
   await futureDateInputSelector.selectRowByValue("next_week");
 
-  assert.equal(futureDateInputSelector.header().title(), "Next week");
+  assert.ok(
+    futureDateInputSelector
+      .header()
+      .label()
+      .includes("Next week")
+  );
   assert.equal(futureDateInputSelector.header().value(), "next_week");
 
   const regex1 = /will automatically open in/g;
@@ -148,7 +170,7 @@ QUnit.test("close temporarily", async assert => {
 
   await fillIn(".future-date-input .date-picker", "2099-11-24");
 
-  assert.equal(futureDateInputSelector.header().title(), "Pick date and time");
+  assert.equal(futureDateInputSelector.header().label(), "Pick date and time");
   assert.equal(futureDateInputSelector.header().value(), "pick_date_and_time");
 
   const regex2 = /will automatically open in/g;
@@ -159,7 +181,7 @@ QUnit.test("close temporarily", async assert => {
 });
 
 QUnit.test("schedule", async assert => {
-  updateCurrentUser({ admin: true, staff: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true, canManageTopic: true });
   const timerType = selectKit(".select-kit.timer-type");
   const categoryChooser = selectKit(".modal-body .category-chooser");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
@@ -171,10 +193,10 @@ QUnit.test("schedule", async assert => {
   await timerType.expand();
   await timerType.selectRowByValue("publish_to_category");
 
-  assert.equal(categoryChooser.header().title(), "uncategorized");
+  assert.equal(categoryChooser.header().label(), "uncategorized");
   assert.equal(categoryChooser.header().value(), null);
 
-  assert.equal(futureDateInputSelector.header().title(), "Select a timeframe");
+  assert.equal(futureDateInputSelector.header().label(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);
 
   await categoryChooser.expand();
@@ -183,7 +205,12 @@ QUnit.test("schedule", async assert => {
   await futureDateInputSelector.expand();
   await futureDateInputSelector.selectRowByValue("next_week");
 
-  assert.equal(futureDateInputSelector.header().title(), "Next week");
+  assert.ok(
+    futureDateInputSelector
+      .header()
+      .label()
+      .includes("Next week")
+  );
   assert.equal(futureDateInputSelector.header().value(), "next_week");
 
   const regex = /will be published to #dev/g;
@@ -194,7 +221,7 @@ QUnit.test("schedule", async assert => {
 });
 
 QUnit.test("TL4 can't auto-delete", async assert => {
-  updateCurrentUser({ staff: false, trust_level: 4 });
+  updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
 
   await visit("/t/internationalization-localization");
   await click(".toggle-admin-menu");
@@ -208,7 +235,7 @@ QUnit.test("TL4 can't auto-delete", async assert => {
 });
 
 QUnit.test("auto delete", async assert => {
-  updateCurrentUser({ admin: true, staff: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true, canManageTopic: true });
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -219,13 +246,18 @@ QUnit.test("auto delete", async assert => {
   await timerType.expand();
   await timerType.selectRowByValue("delete");
 
-  assert.equal(futureDateInputSelector.header().title(), "Select a timeframe");
+  assert.equal(futureDateInputSelector.header().label(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);
 
   await futureDateInputSelector.expand();
   await futureDateInputSelector.selectRowByValue("two_weeks");
 
-  assert.equal(futureDateInputSelector.header().title(), "Two Weeks");
+  assert.ok(
+    futureDateInputSelector
+      .header()
+      .label()
+      .includes("Two Weeks")
+  );
   assert.equal(futureDateInputSelector.header().value(), "two_weeks");
 
   const regex = /will be automatically deleted/g;
@@ -238,7 +270,7 @@ QUnit.test("auto delete", async assert => {
 QUnit.test(
   "Manually closing before the timer will clear the status text",
   async assert => {
-    updateCurrentUser({ admin: true, staff: true, canManageTopic: true });
+    updateCurrentUser({ moderator: true, canManageTopic: true });
     const futureDateInputSelector = selectKit(".future-date-input-selector");
 
     await visit("/t/internationalization-localization");
@@ -263,3 +295,22 @@ QUnit.test(
     assert.notOk(regex.test(newTopicStatusInfo));
   }
 );
+
+QUnit.test("Inline delete timer", async assert => {
+  updateCurrentUser({ moderator: true, canManageTopic: true });
+  const futureDateInputSelector = selectKit(".future-date-input-selector");
+
+  await visit("/t/internationalization-localization");
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-status-update button");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("next_week");
+  await click(".modal-footer button.btn-primary");
+
+  const removeTimerButton = find(".topic-status-info .topic-timer-remove");
+  assert.equal(removeTimerButton.attr("title"), "remove timer");
+
+  await click(".topic-status-info .topic-timer-remove");
+  const topicStatusInfo = find(".topic-status-info .topic-timer-remove");
+  assert.equal(topicStatusInfo.length, 0);
+});

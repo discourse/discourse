@@ -24,6 +24,7 @@ gl:
   topics: "Temas"
   posts: "publicacións"
   loading: "Cargndo"
+  sign_up: "Crear unha conta"
   log_in: "Iniciar sesión"
   submit: "Enviar"
   anonymous: "Anónimo"
@@ -81,6 +82,7 @@ gl:
     loading: "Cargando a discusión..."
     permalink: "Ligazón permanente"
     in_reply_to: "▶ %{username}"
+    created: "Creado"
   no_mentions_allowed: "Sentímolo pero non podes mencionar outros usuarios"
   invalid_characters: "contén caracteres incorrectos"
   next_page: "páxina seguinte →"
@@ -278,6 +280,7 @@ gl:
         day: Día
     post_edits:
       labels:
+        edited_at: Data
         post: Publicación
         editor: Editor
         edit_reason: Razón
@@ -295,6 +298,8 @@ gl:
       xaxis: "Día"
     new_contributors:
       xaxis: "Día"
+    trust_level_growth:
+      yaxis: "Día"
     consolidated_page_views:
       yaxis: "Día"
       labels:
@@ -504,6 +509,7 @@ gl:
   csv_export:
     boolean_yes: "Si"
     boolean_no: "Non"
+    rate_limit_error: "Só se poden descargar as publicacións unha vez por día. Téntao de novo mañá."
   tos_topic:
     title: "Termos do servizo"
   privacy_topic:

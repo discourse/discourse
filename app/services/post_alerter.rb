@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_mutex'
-require_dependency 'user_action_manager'
-
 class PostAlerter
+  USER_BATCH_SIZE = 100
+
   def self.post_created(post, opts = {})
     PostAlerter.new(opts).after_save_post(post, true)
     post
@@ -143,7 +142,7 @@ class PostAlerter
     users = User.where(id: user_ids)
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each do |user|
+    each_user_in_batches(users) do |user|
       create_notification(user, Notification.types[:watching_first_post], post)
     end
   end
@@ -224,7 +223,7 @@ class PostAlerter
     group_id = post.topic
       .topic_allowed_groups
       .where(group_id: user.groups.pluck(:id))
-      .pluck(:group_id).first
+      .pluck_first(:group_id)
 
     stat = stats.find { |s| s[:group_id] == group_id }
     return unless stat && stat[:inbox_count] > 0
@@ -251,8 +250,8 @@ class PostAlerter
     # TODO decide if it makes sense to also publish a desktop notification
   end
 
-  def should_notify_edit?(notification, opts)
-    return notification.data_hash["display_username"] != opts[:display_username]
+  def should_notify_edit?(notification, post, opts)
+    notification.data_hash["display_username"] != (opts[:display_username].presence || post.user.username)
   end
 
   def should_notify_like?(user, notification)
@@ -261,9 +260,10 @@ class PostAlerter
     false
   end
 
-  def should_notify_previous?(user, notification, opts)
+  def should_notify_previous?(user, post, notification, opts)
+    return false unless notification
     case notification.notification_type
-    when Notification.types[:edited] then should_notify_edit?(notification, opts)
+    when Notification.types[:edited] then should_notify_edit?(notification, post, opts)
     when Notification.types[:liked]  then should_notify_like?(user, notification)
     else false
     end
@@ -271,7 +271,6 @@ class PostAlerter
 
   COLLAPSED_NOTIFICATION_TYPES ||= [
     Notification.types[:replied],
-    Notification.types[:quoted],
     Notification.types[:posted],
     Notification.types[:private_message],
   ]
@@ -282,6 +281,7 @@ class PostAlerter
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
     return if user.blank? || user.bot?
+    return if (topic = post.topic).blank?
 
     is_liked = type == Notification.types[:liked]
     return if is_liked && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
@@ -289,7 +289,7 @@ class PostAlerter
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
 
-    return if user.staged? && post.topic.category&.mailinglist_mirror?
+    return if user.staged? && topic.category&.mailinglist_mirror?
 
     notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
 
@@ -307,7 +307,7 @@ class PostAlerter
 
     # skip if muted on the topic
     return if TopicUser.where(
-      topic: post.topic,
+      topic: topic,
       user: user,
       notification_level: TopicUser.notification_levels[:muted]
     ).exists?
@@ -331,38 +331,29 @@ class PostAlerter
     # Don't notify the same user about the same type of notification on the same post
     existing_notification_of_same_type = existing_notifications.find { |n| n.notification_type == type }
 
-    return if existing_notification_of_same_type && !should_notify_previous?(user, existing_notification_of_same_type, opts)
+    return if existing_notifications.present? && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
 
     notification_data = {}
 
-    if is_liked
-      if existing_notification_of_same_type &&
-        existing_notification_of_same_type.created_at > 1.day.ago &&
-        (
-          user.user_option.like_notification_frequency ==
-          UserOption.like_notification_frequency_type[:always]
-        )
+    if is_liked &&
+      existing_notification_of_same_type &&
+      existing_notification_of_same_type.created_at > 1.day.ago &&
+      (
+        user.user_option.like_notification_frequency ==
+        UserOption.like_notification_frequency_type[:always]
+      )
 
-        data = existing_notification_of_same_type.data_hash
-        notification_data["username2"] = data["display_username"]
-        notification_data["count"] = (data["count"] || 1).to_i + 1
-        # don't use destroy so we don't trigger a notification count refresh
-        Notification.where(id: existing_notification_of_same_type.id).destroy_all
-      elsif !SiteSetting.likes_notification_consolidation_threshold.zero?
-        notification = consolidate_liked_notifications(
-          user,
-          post,
-          opts[:display_username]
-        )
-
-        return notification if notification
-      end
+      data = existing_notification_of_same_type.data_hash
+      notification_data["username2"] = data["display_username"]
+      notification_data["count"] = (data["count"] || 1).to_i + 1
+      # don't use destroy so we don't trigger a notification count refresh
+      Notification.where(id: existing_notification_of_same_type.id).destroy_all
     end
 
     collapsed = false
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
-      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, post.topic)
+      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, topic)
       collapsed = true
     end
 
@@ -370,8 +361,8 @@ class PostAlerter
     original_username = opts[:display_username].presence || post.username
 
     if collapsed
-      post = first_unread_post(user, post.topic) || post
-      count = unread_count(user, post.topic)
+      post = first_unread_post(user, topic) || post
+      count = unread_count(user, topic)
       if count > 1
         I18n.with_locale(user.effective_locale) do
           opts[:display_username] = I18n.t('embed.replies', count: count)
@@ -381,9 +372,9 @@ class PostAlerter
 
     UserActionManager.notification_created(original_post, user, type, opts[:acting_user_id])
 
-    topic_title = post.topic.title
+    topic_title = topic.title
     # when sending a private message email, keep the original title
-    if post.topic.private_message? && modifications = post.revisions.map(&:modifications)
+    if topic.private_message? && modifications = post.revisions.map(&:modifications)
       if first_title_modification = modifications.find { |m| m.has_key?("title") }
         topic_title = first_title_modification["title"][0]
       end
@@ -457,7 +448,7 @@ class PostAlerter
     if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
       clients = user.user_api_keys
         .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes))")
-        .where("push_url IS NOT NULL")
+        .where("push_url IS NOT NULL AND push_url <> ''")
         .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
         .where("revoked_at IS NULL")
         .pluck(:client_id, :push_url)
@@ -471,7 +462,7 @@ class PostAlerter
   def expand_group_mentions(groups, post)
     return unless post.user && groups
 
-    Group.mentionable(post.user).where(id: groups.map(&:id)).each do |group|
+    Group.mentionable(post.user, include_public: false).where(id: groups.map(&:id)).each do |group|
       next if group.user_count >= SiteSetting.max_users_notified_per_group_mention
       yield group, group.users
     end
@@ -563,7 +554,7 @@ class PostAlerter
     end
   end
 
-  def notify_post_users(post, notified)
+  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true)
     return unless post.topic
 
     warn_if_not_sidekiq
@@ -574,8 +565,14 @@ class PostAlerter
           FROM topic_users
          WHERE notification_level = :watching
            AND topic_id = :topic_id
+         /*category*/
+         /*tags*/
+      )
+    SQL
 
-         UNION
+    if include_category_watchers
+      condition.sub! "/*category*/", <<~SQL
+        UNION
 
         SELECT cu.user_id
           FROM category_users cu
@@ -584,14 +581,12 @@ class PostAlerter
          WHERE cu.notification_level = :watching
            AND cu.category_id = :category_id
            AND tu.user_id IS NULL
-
-        /*tags*/
-      )
-    SQL
+      SQL
+    end
 
     tag_ids = post.topic.topic_tags.pluck('topic_tags.tag_id')
 
-    if tag_ids.present?
+    if include_tag_watchers && tag_ids.present?
       condition.sub! "/*tags*/", <<~SQL
         UNION
 
@@ -616,9 +611,12 @@ class PostAlerter
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
-    notify.pluck(:id).each do |user_id|
-      user = User.find_by(id: user_id)
-      create_notification(user, Notification.types[:posted], post)
+
+    already_seen_user_ids = Set.new TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
+
+    each_user_in_batches(notify) do |user|
+      notification_type = already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
+      create_notification(user, notification_type, post)
     end
   end
 
@@ -628,79 +626,10 @@ class PostAlerter
 
   private
 
-  def consolidate_liked_notifications(user, post, username)
-    user_notifications = user.notifications
-
-    consolidation_window =
-      SiteSetting.likes_notification_consolidation_window_mins.minutes.ago
-
-    liked_by_user_notifications =
-      user_notifications
-        .filter_by_display_username_and_type(
-          username, Notification.types[:liked]
-        )
-        .where(
-          "created_at > ? AND data::json ->> 'username2' IS NULL",
-          consolidation_window
-        )
-
-    user_liked_consolidated_notification =
-      user_notifications
-        .filter_by_display_username_and_type(
-          username, Notification.types[:liked_consolidated]
-        )
-        .where("created_at > ?", consolidation_window)
-        .first
-
-    if user_liked_consolidated_notification
-      return update_consolidated_liked_notification_count!(
-        user_liked_consolidated_notification
-      )
-    elsif (
-      liked_by_user_notifications.count >=
-      SiteSetting.likes_notification_consolidation_threshold
-    )
-      return create_consolidated_liked_notification!(
-        liked_by_user_notifications,
-        post,
-        username
-      )
+  def each_user_in_batches(users)
+    # This is race-condition-safe, unlike #find_in_batches
+    users.pluck(:id).each_slice(USER_BATCH_SIZE) do |user_ids_batch|
+      User.where(id: user_ids_batch).each { |user| yield(user) }
     end
-  end
-
-  def update_consolidated_liked_notification_count!(notification)
-    data = notification.data_hash
-    data["count"] += 1
-
-    notification.update!(
-      data: data.to_json,
-      read: false
-    )
-
-    notification
-  end
-
-  def create_consolidated_liked_notification!(notifications, post, username)
-    notification = nil
-
-    Notification.transaction do
-      timestamp = notifications.last.created_at
-
-      notification = Notification.create!(
-        notification_type: Notification.types[:liked_consolidated],
-        user_id: post.user_id,
-        data: {
-          username: username,
-          display_username: username,
-          count: notifications.count + 1
-        }.to_json,
-        updated_at: timestamp,
-        created_at: timestamp
-      )
-
-      notifications.each(&:destroy!)
-    end
-
-    notification
   end
 end

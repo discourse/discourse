@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class CreateAvatarThumbnails < Jobs::Base
+  class CreateAvatarThumbnails < ::Jobs::Base
     sidekiq_options queue: 'low'
 
     def execute(args)

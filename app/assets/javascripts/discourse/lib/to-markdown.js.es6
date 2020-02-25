@@ -44,7 +44,6 @@ export class Tag {
     return [
       "address",
       "article",
-      "aside",
       "dd",
       "div",
       "dl",
@@ -89,6 +88,7 @@ export class Tag {
       ...Tag.blocks(),
       ...Tag.headings(),
       ...Tag.slices(),
+      "aside",
       "li",
       "td",
       "th",
@@ -100,6 +100,10 @@ export class Tag {
       "tr",
       "ul"
     ];
+  }
+
+  static whitelists() {
+    return ["ins", "del", "small", "big", "kbd", "ruby", "rt", "rb", "rp"];
   }
 
   static block(name, prefix, suffix) {
@@ -118,6 +122,45 @@ export class Tag {
         }
 
         return `${this.gap}${this.prefix}${text}${this.suffix}${this.gap}`;
+      }
+    };
+  }
+
+  static aside() {
+    return class extends Tag.block("aside") {
+      constructor() {
+        super();
+      }
+
+      toMarkdown() {
+        if (!/\bquote\b/.test(this.element.attributes.class)) {
+          return super.toMarkdown();
+        }
+
+        const blockquote = this.element.children.find(
+          child => child.name === "blockquote"
+        );
+
+        if (!blockquote) {
+          return super.toMarkdown();
+        }
+
+        let text = Element.parse([blockquote], this.element) || "";
+        text = text.trim().replace(/^>/g, "");
+        if (text.length === 0) {
+          return "";
+        }
+
+        const username = this.element.attributes["data-username"];
+        const post = this.element.attributes["data-post"];
+        const topic = this.element.attributes["data-topic"];
+
+        const prefix =
+          username && post && topic
+            ? `[quote="${username}, post:${post}, topic:${topic}"]`
+            : "[quote]";
+
+        return `\n\n${prefix}\n${text}\n[/quote]\n\n`;
       }
     };
   }
@@ -149,7 +192,7 @@ export class Tag {
     };
   }
 
-  static keep(name) {
+  static whitelist(name) {
     return class extends Tag {
       constructor() {
         super(name, `<${name}>`, `</${name}>`);
@@ -206,8 +249,16 @@ export class Tag {
           ["lightbox", "d-lazyload"].includes(attr.class) &&
           hasChild(e, "img")
         ) {
+          let href = attr.href;
+          const img = (e.children || []).find(c => c.name === "img");
+          const base62SHA1 = img.attributes["data-base62-sha1"];
           text = attr.title || "";
-          return "![" + text + "](" + attr.href + ")";
+
+          if (base62SHA1) {
+            href = `upload://${base62SHA1}`;
+          }
+
+          return "![" + text + "](" + href + ")";
         }
 
         if (attr.href && text !== attr.href) {
@@ -313,7 +364,8 @@ export class Tag {
         if (msoListClasses.includes(attrs.class)) {
           try {
             const level = parseInt(
-              attrs.style.match(/level./)[0].replace("level", "")
+              attrs.style.match(/level./)[0].replace("level", ""),
+              10
             );
             indent = Array(level).join("\t") + indent;
           } finally {
@@ -440,7 +492,7 @@ export class Tag {
         const bullet = text.match(/\n\t*\*/)[0];
 
         for (
-          let i = parseInt(this.element.attributes.start || 1);
+          let i = parseInt(this.element.attributes.start || 1, 10);
           text.includes(bullet);
           i++
         ) {
@@ -470,16 +522,13 @@ function tags() {
     ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
     ...Tag.slices().map(s => Tag.slice(s, "\n")),
     ...Tag.emphases().map(e => Tag.emphasis(e[0], e[1])),
+    ...Tag.whitelists().map(t => Tag.whitelist(t)),
+    Tag.aside(),
     Tag.cell("td"),
     Tag.cell("th"),
     Tag.replace("br", "\n"),
     Tag.replace("hr", "\n---\n"),
     Tag.replace("head", ""),
-    Tag.keep("ins"),
-    Tag.keep("del"),
-    Tag.keep("small"),
-    Tag.keep("big"),
-    Tag.keep("kbd"),
     Tag.li(),
     Tag.link(),
     Tag.image(),

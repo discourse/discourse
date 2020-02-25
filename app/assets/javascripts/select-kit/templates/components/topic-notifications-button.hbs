@@ -1,7 +1,12 @@
 {{topic-notifications-options
   value=notificationLevel
   topic=topic
-  showFullTitle=showFullTitle}}
+  onChange=(action "changeTopicNotificationLevel")
+  options=(hash
+    showFullTitle=showFullTitle
+    placement=placement
+  )
+}}
 
 {{#if appendReason}}
   <p class="reason">

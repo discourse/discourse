@@ -67,6 +67,10 @@ class Migration::SafeMigrate
     end
   end
 
+  def self.post_migration_path
+    Discourse::DB_POST_MIGRATE_PATH
+  end
+
   def self.enable!
     return if PG::Connection.method_defined?(:exec_migrator_unpatched)
 

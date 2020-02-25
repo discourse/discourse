@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'jobs/base'
 
 describe Jobs::UserEmail do
 
@@ -31,7 +30,7 @@ describe Jobs::UserEmail do
     fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
     it "doesn't call the mailer when the user is missing" do
-      Jobs::UserEmail.new.execute(type: :digest, user_id: 1234)
+      Jobs::UserEmail.new.execute(type: :digest, user_id: User.last.id + 10000)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
@@ -235,7 +234,7 @@ describe Jobs::UserEmail do
       expect(user.last_emailed_at).to eq(last_emailed_at)
     end
 
-    it "creates a skipped email log when the usere isn't allowed to see the post" do
+    it "creates a skipped email log when the user isn't allowed to see the post" do
       user.user_option.update(email_level: UserOption.email_level_types[:always])
       post.topic.convert_to_private_message(Discourse.system_user)
 

@@ -1,3 +1,6 @@
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
 import CategoryList from "discourse/models/category-list";
@@ -6,8 +9,10 @@ import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "preload-store";
 import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
+import { hash } from "rsvp";
+import Site from "discourse/models/site";
 
-const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
+const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
     this.render("navigation/categories", { outlet: "navigation-bar" });
     this.render("discovery/categories", { outlet: "list-container" });
@@ -17,10 +22,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     let style =
       !this.site.mobileView && this.siteSettings.desktop_category_page_style;
 
-    let parentCategory = this.get("model.parentCategory");
-    if (parentCategory) {
-      return CategoryList.listForParent(this.store, parentCategory);
-    } else if (style === "categories_and_latest_topics") {
+    if (style === "categories_and_latest_topics") {
       return this._findCategoriesAndTopics("latest");
     } else if (style === "categories_and_top_topics") {
       return this._findCategoriesAndTopics("top");
@@ -41,16 +43,20 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   _findCategoriesAndTopics(filter) {
-    return Ember.RSVP.hash({
+    return hash({
       wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
       topicsList: PreloadStore.getAndRemove(`topic_list_${filter}`)
-    }).then(hash => {
-      let { wrappedCategoriesList, topicsList } = hash;
+    }).then(response => {
+      let { wrappedCategoriesList, topicsList } = response;
       let categoriesList =
         wrappedCategoriesList && wrappedCategoriesList.category_list;
 
       if (categoriesList && topicsList) {
-        return Ember.Object.create({
+        if (topicsList.topic_list && topicsList.topic_list.top_tags) {
+          Site.currentProp("top_tags", topicsList.topic_list.top_tags);
+        }
+
+        return EmberObject.create({
           categories: CategoryList.categoriesFrom(
             this.store,
             wrappedCategoriesList
@@ -65,7 +71,11 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
       }
       // Otherwise, return the ajax result
       return ajax(`/categories_and_${filter}`).then(result => {
-        return Ember.Object.create({
+        if (result.topic_list && result.topic_list.top_tags) {
+          Site.currentProp("top_tags", result.topic_list.top_tags);
+        }
+
+        return EmberObject.create({
           categories: CategoryList.categoriesFrom(this.store, result),
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
@@ -132,9 +142,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     didTransition() {
-      Ember.run.next(() =>
-        this.controllerFor("application").set("showFooter", true)
-      );
+      next(() => this.controllerFor("application").set("showFooter", true));
       return true;
     }
   }

@@ -8,12 +8,7 @@ class Emoji
 
   include ActiveModel::SerializerSupport
 
-  attr_reader :path
-  attr_accessor :name, :url
-
-  def initialize(path = nil)
-    @path = path
-  end
+  attr_accessor :name, :url, :tonable
 
   def self.all
     Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
@@ -43,24 +38,39 @@ class Emoji
     Discourse.cache.fetch(cache_key("tonable_emojis")) { db['tonableEmojis'] }
   end
 
+  def self.custom?(name)
+    name = name.delete_prefix(':').delete_suffix(':')
+    Emoji.custom.detect { |e| e.name == name }.present?
+  end
+
   def self.exists?(name)
     Emoji[name].present?
   end
 
   def self.[](name)
-    Emoji.custom.detect { |e| e.name == name }
+    name = name.delete_prefix(':').delete_suffix(':')
+    is_toned = name.match?(/.+:t[1-6]/)
+    normalized_name = name.gsub(/(.+):t[1-6]/, '\1')
+
+    Emoji.all.detect do |e|
+      e.name == normalized_name &&
+      (!is_toned || (is_toned && e.tonable))
+    end
   end
 
   def self.create_from_db_item(emoji)
     name = emoji["name"]
     filename = emoji['filename'] || name
+
     Emoji.new.tap do |e|
       e.name = name
+      e.tonable = Emoji.tonable_emojis.include?(name)
       e.url = Emoji.url_for(filename)
     end
   end
 
   def self.url_for(name)
+    name = name.delete_prefix(':').delete_suffix(':').gsub(/(.+):t([1-6])/, '\1/\2')
     "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
   end
 
@@ -123,9 +133,10 @@ class Emoji
   end
 
   def self.replacement_code(code)
-    hexes = code.split('-'.freeze).map!(&:hex)
-    # Don't replace digits, letters and some symbols
-    hexes.pack("U*".freeze) if hexes[0] > 255
+    code
+      .split('-'.freeze)
+      .map!(&:hex)
+      .pack("U*".freeze)
   end
 
   def self.unicode_replacements
@@ -136,7 +147,12 @@ class Emoji
 
       db['emojis'].each do |e|
         name = e['name']
-        next if name == 'tm'.freeze
+
+        # special cased as we prefer to keep these as symbols
+        next if name == 'registered'
+        next if name == 'copyright'
+        next if name == 'tm'
+        next if name == 'left_right_arrow'
 
         code = replacement_code(e['code'])
         next unless code

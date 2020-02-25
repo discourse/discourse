@@ -457,7 +457,7 @@ class ImportScripts::FMGP < ImportScripts::Base
     end
     # FIXME: import G+ "+1" as "like" if F+MG+E feature request implemented
 
-    return mapped
+    mapped
   end
 
   def parse_title(post, created_at)
@@ -524,7 +524,7 @@ class ImportScripts::FMGP < ImportScripts::Base
         words << fragment[1]
       end
     end
-    return words
+    words
   end
 
   def formatted_message(post)
@@ -573,7 +573,7 @@ class ImportScripts::FMGP < ImportScripts::Base
       # Also deal with 0x80 (really‽) and non-breaking spaces
       text = fragment[1].gsub(/(\u200d|\u0080)/, "").gsub(/\u00a0/, " ")
       if fragment[2].nil?
-        return text
+        text
       else
         if fragment[2]["italic"].present?
           text = "<i>#{text}</i>"
@@ -585,13 +585,13 @@ class ImportScripts::FMGP < ImportScripts::Base
           # s more likely than del to represent user intent?
           text = "<s>#{text}</s>"
         end
-        return text
+        text
       end
     elsif fragment[0] == 1
-      return "\n"
+      "\n"
     elsif fragment[0] == 2
       urls_seen.add(fragment[2])
-      return formatted_link_text(fragment[2], fragment[1])
+      formatted_link_text(fragment[2], fragment[1])
     elsif fragment[0] == 3
       # reference to a user
       if @usermap.include?(fragment[2].to_s)
@@ -604,22 +604,22 @@ class ImportScripts::FMGP < ImportScripts::Base
       # G+ occasionally doesn't put proper spaces after users
       if user = find_user_by_import_id(fragment[2])
         # user was in this import's authors
-        return "@#{user.username} "
+        "@#{user.username} "
       else
         if google_user_info = UserAssociatedAccount.find_by(provider_name: 'google_oauth2', provider_uid: fragment[2])
           # user was not in this import, but has logged in or been imported otherwise
           user = User.find(google_user_info.user_id)
-          return "@#{user.username} "
+          "@#{user.username} "
         else
           raise RuntimeError.new("Google user #{fragment[1]} (id #{fragment[2]}) not imported") if !@dryrun
           # if you want to fall back to their G+ name, just erase the raise above,
           # but this should not happen
-          return "<b>+#{fragment[1]}</b>"
+          "<b>+#{fragment[1]}</b>"
         end
       end
     elsif fragment[0] == 4
       # hashtag, the octothorpe is included
-      return fragment[1]
+      fragment[1]
     else
       raise RuntimeError.new("message code #{fragment[0]} not recognized!")
     end
@@ -669,14 +669,14 @@ class ImportScripts::FMGP < ImportScripts::Base
     end
     if text == url
       # leave the URL bare and Discourse will do the right thing
-      return url
+      url
     else
       # It turns out that the only place we get here, google has done its own text
       # interpolation that doesn't look good on Discourse, so while it looks like
       # this should be:
       # return "[#{text}](#{url})"
       # it actually looks better to throw away the google-provided text:
-      return url
+      url
     end
   end
 end

@@ -1,7 +1,8 @@
-import { default as WhiteLister } from "pretty-text/white-lister";
+import WhiteLister from "pretty-text/white-lister";
 import { sanitize } from "pretty-text/sanitizer";
 import guid from "pretty-text/guid";
-import { ATTACHMENT_CSS_CLASS } from "pretty-text/upload-short-url";
+
+export const ATTACHMENT_CSS_CLASS = "attachment";
 
 function deprecate(feature, name) {
   return function() {
@@ -123,82 +124,138 @@ function setupHoister(md) {
   md.renderer.rules.html_raw = renderHoisted;
 }
 
+export function extractDataAttribute(str) {
+  let sep = str.indexOf("=");
+  if (sep === -1) {
+    return null;
+  }
+
+  const key = `data-${str.substr(0, sep)}`.toLowerCase();
+  if (!/^[A-Za-z]+[\w\-\:\.]*$/.test(key)) {
+    return null;
+  }
+
+  const value = str.substr(sep + 1);
+  return [key, value];
+}
+
+// videoHTML and audioHTML follow the same HTML syntax
+// as oneboxer.rb when dealing with these formats
+function videoHTML(token, opts) {
+  const src = token.attrGet("src");
+  const origSrc = token.attrGet("data-orig-src");
+  const preloadType = opts.secureMedia ? "none" : "metadata";
+  return `<div class="video-container">
+    <video width="100%" height="100%" preload="${preloadType}" controls>
+      <source src="${src}" data-orig-src="${origSrc}">
+      <a href="${src}">${src}</a>
+    </video>
+  </div>`;
+}
+
+function audioHTML(token, opts) {
+  const src = token.attrGet("src");
+  const origSrc = token.attrGet("data-orig-src");
+  const preloadType = opts.secureMedia ? "none" : "metadata";
+  return `<audio preload="${preloadType}" controls>
+    <source src="${src}" data-orig-src="${origSrc}">
+    <a href="${src}">${src}</a>
+  </audio>`;
+}
+
 const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
-function renderImage(tokens, idx, options, env, slf) {
-  var token = tokens[idx];
+function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
+  const token = tokens[idx];
+  const alt = slf.renderInlineAsText(token.children, options, env);
+  const split = alt.split("|");
+  const altSplit = [];
 
-  let alt = slf.renderInlineAsText(token.children, options, env);
+  // markdown-it supports returning HTML instead of continuing to render the current token
+  // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
+  // handles |video and |audio alt transformations for image tags
+  const mediaOpts = {
+    secureMedia: options.discourse.limitedSiteSettings.secureMedia
+  };
+  if (split[1] === "video") {
+    return videoHTML(token, mediaOpts);
+  } else if (split[1] === "audio") {
+    return audioHTML(token, mediaOpts);
+  }
 
-  let split = alt.split("|");
-  if (split.length > 1) {
-    let match;
-    let info = split.splice(split.length - 1)[0];
+  // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
+  for (let i = 0, match, data; i < split.length; ++i) {
+    if ((match = split[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
+      let width = match[1];
+      let height = match[2];
 
-    if ((match = info.match(IMG_SIZE_REGEX))) {
-      if (match[1] && match[2]) {
-        alt = split.join("|");
-
-        let width = match[1];
-        let height = match[2];
-
-        // calculate using percentage
-        if (match[5] && match[6] && match[6] === "%") {
-          let percent = parseFloat(match[5]) / 100.0;
-          width = parseInt(width * percent);
-          height = parseInt(height * percent);
-        }
-
-        // calculate using only given width
-        if (match[5] && match[6] && match[6] === "x") {
-          let wr = parseFloat(match[5]) / width;
-          width = parseInt(match[5]);
-          height = parseInt(height * wr);
-        }
-
-        // calculate using only given height
-        if (match[5] && match[4] && match[4] === "x" && !match[6]) {
-          let hr = parseFloat(match[5]) / height;
-          height = parseInt(match[5]);
-          width = parseInt(width * hr);
-        }
-
-        if (token.attrIndex("width") === -1) {
-          token.attrs.push(["width", width]);
-        }
-
-        if (token.attrIndex("height") === -1) {
-          token.attrs.push(["height", height]);
-        }
-
-        if (
-          options.discourse.previewing &&
-          match[6] !== "x" &&
-          match[4] !== "x"
-        )
-          token.attrs.push(["class", "resizable"]);
+      // calculate using percentage
+      if (match[5] && match[6] && match[6] === "%") {
+        let percent = parseFloat(match[5]) / 100.0;
+        width = parseInt(width * percent, 10);
+        height = parseInt(height * percent, 10);
       }
+
+      // calculate using only given width
+      if (match[5] && match[6] && match[6] === "x") {
+        let wr = parseFloat(match[5]) / width;
+        width = parseInt(match[5], 10);
+        height = parseInt(height * wr, 10);
+      }
+
+      // calculate using only given height
+      if (match[5] && match[4] && match[4] === "x" && !match[6]) {
+        let hr = parseFloat(match[5]) / height;
+        height = parseInt(match[5], 10);
+        width = parseInt(width * hr, 10);
+      }
+
+      if (token.attrIndex("width") === -1) {
+        token.attrs.push(["width", width]);
+      }
+
+      if (token.attrIndex("height") === -1) {
+        token.attrs.push(["height", height]);
+      }
+
+      if (options.discourse.previewing && match[6] !== "x" && match[4] !== "x")
+        token.attrs.push(["class", "resizable"]);
+    } else if ((data = extractDataAttribute(split[i]))) {
+      token.attrs.push(data);
+    } else {
+      altSplit.push(split[i]);
     }
   }
 
-  token.attrs[token.attrIndex("alt")][1] = alt;
+  token.attrs[token.attrIndex("alt")][1] = altSplit.join("|");
   return slf.renderToken(tokens, idx, options);
 }
 
-function setupImageDimensions(md) {
-  md.renderer.rules.image = renderImage;
+// we have taken over the ![]() syntax in markdown to
+// be able to render a video or audio URL as well as the
+// image using |video and |audio in the text inside []
+function setupImageAndPlayableMediaRenderer(md) {
+  md.renderer.rules.image = renderImageOrPlayableMedia;
 }
 
 function renderAttachment(tokens, idx, options, env, slf) {
-  const linkOpenToken = tokens[idx];
-  const linkTextToken = tokens[idx + 1];
-  const split = linkTextToken.content.split("|");
-  const isValid = !linkOpenToken.attrs[
-    linkOpenToken.attrIndex("data-orig-href")
-  ];
+  const linkToken = tokens[idx];
+  const textToken = tokens[idx + 1];
 
-  if (isValid && split.length === 2 && split[1] === ATTACHMENT_CSS_CLASS) {
-    linkOpenToken.attrs.unshift(["class", split[1]]);
-    linkTextToken.content = split[0];
+  const split = textToken.content.split("|");
+  const contentSplit = [];
+
+  for (let i = 0, data; i < split.length; ++i) {
+    if (split[i] === ATTACHMENT_CSS_CLASS) {
+      linkToken.attrs.unshift(["class", split[i]]);
+    } else if ((data = extractDataAttribute(split[i]))) {
+      linkToken.attrs.push(data);
+    } else {
+      contentSplit.push(split[i]);
+    }
+  }
+
+  if (contentSplit.length > 0) {
+    textToken.content = contentSplit.join("|");
   }
 
   return slf.renderToken(tokens, idx, options);
@@ -281,6 +338,10 @@ export function setup(opts, siteSettings, state) {
   opts.discourse = copy;
   getOptions.f = () => opts.discourse;
 
+  opts.discourse.limitedSiteSettings = {
+    secureMedia: siteSettings.secure_media
+  };
+
   opts.engine = window.markdownit({
     discourse: opts.discourse,
     html: true,
@@ -290,13 +351,18 @@ export function setup(opts, siteSettings, state) {
     typographer: siteSettings.enable_markdown_typographer
   });
 
+  const quotation_marks = siteSettings.markdown_typographer_quotation_marks;
+  if (quotation_marks) {
+    opts.engine.options.quotes = quotation_marks.split("|");
+  }
+
   opts.engine.linkify.tlds(
     (siteSettings.markdown_linkify_tlds || "").split("|")
   );
 
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
-  setupImageDimensions(opts.engine);
+  setupImageAndPlayableMediaRenderer(opts.engine);
   setupAttachments(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);

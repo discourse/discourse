@@ -6,7 +6,10 @@
       {{/link-to}}
     </li>
   {{else}}
-    {{group-dropdown content=group.extras.visible_group_names value=group.name}}
+    {{group-dropdown
+      groups=group.extras.visible_group_names
+      value=group.name
+    }}
   {{/if}}
 
   {{#each tabs as |tab|}}
@@ -18,4 +21,5 @@
       {{/link-to}}
     </li>
   {{/each}}
+  {{plugin-outlet name="group-reports-nav-item" args=(hash group=group)}}
 {{/mobile-nav}}

@@ -1,6 +1,7 @@
+import Route from "@ember/routing/route";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Route.extend({
+export default Route.extend({
   model() {
     return this.store.findAll("theme");
   },
@@ -17,6 +18,7 @@ export default Ember.Route.extend({
 
     addTheme(theme) {
       this.refresh();
+      theme.setProperties({ recentlyInstalled: true });
       this.transitionTo("adminCustomizeThemes.show", theme.get("id"));
     }
   }

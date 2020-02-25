@@ -1,11 +1,9 @@
 {{#if visible}}
   <div class="row">
     <div id="banner" class={{overlay}}>
-      <div class="close" {{action "dismiss"}}>
-        {{d-icon "times" title="banner.close"}}
-      </div>
+      {{d-button icon="times" action="dismiss" class="btn btn-flat close" title="banner.close"}}
       <div id="banner-content">
-        {{{banner.html}}}
+        {{{content}}}
         {{#if currentUser.staff}}
           <p><a href="{{banner.url}}">{{{i18n "banner.edit"}}}</a></p>
         {{/if}}

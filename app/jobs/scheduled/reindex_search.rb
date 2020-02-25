@@ -2,10 +2,10 @@
 
 module Jobs
   # if locale changes or search algorithm changes we may want to reindex stuff
-  class ReindexSearch < Jobs::Scheduled
+  class ReindexSearch < ::Jobs::Scheduled
     every 2.hours
 
-    CLEANUP_GRACE_PERIOD = 1.day.ago
+    CLEANUP_GRACE_PERIOD ||= 1.day.ago
 
     def execute(args)
       rebuild_problem_topics

@@ -1,22 +1,20 @@
-{{category-drop
-  category=firstCategory
-  categories=parentCategoriesSorted
-  countSubcategories=true}}
-
-{{#if childCategories}}
-  {{category-drop
-    category=secondCategory
-    parentCategory=firstCategory
-    categories=childCategories
-    subCategory=true
-    noSubcategories=noSubcategories}}
-{{/if}}
+{{#each categoryBreadcrumbs as |breadcrumb|}}
+  {{#if breadcrumb.hasOptions}}
+    {{category-drop
+      category=breadcrumb.category
+      categories=breadcrumb.options
+      options=(hash
+        parentCategory=breadcrumb.parentCategory
+        subCategory=breadcrumb.isSubcategory
+        noSubcategories=breadcrumb.noSubcategories
+        autoFilterable=true
+      )
+    }}
+  {{/if}}
+{{/each}}
 
 {{#if siteSettings.tagging_enabled}}
-  {{tag-drop
-    firstCategory=firstCategory
-    secondCategory=secondCategory
-    tagId=tagId}}
+  {{tag-drop currentCategory=category tagId=tagId}}
 {{/if}}
 
 {{plugin-outlet name="bread-crumbs-right" connectorTagName="li" tagName=""}}

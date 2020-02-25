@@ -18,10 +18,14 @@ nl:
       public:
         title: "Stemmen zijn <strong>openbaar</strong>."
       results:
+        groups:
+          title: "U dient lid van %{groups} te zijn om in deze poll te stemmen."
         vote:
           title: "Resultaten worden getoond bij <strong>stemmen</strong>."
         closed:
           title: "Resultaten worden getoond zodra <strong>gesloten</strong>."
+        staff:
+          title: "Resultaten worden alleen aan <strong>stafleden</strong> getoond."
       multiple:
         help:
           at_least_min_options:
@@ -42,7 +46,16 @@ nl:
         label: "Resultaten tonen"
       hide-results:
         title: "Terug naar uw stemmen"
-        label: "Resultaten verbergen"
+        label: "Stem tonen"
+      group-results:
+        title: "Stemmen groeperen op gebruikersveld"
+        label: "Verdeling tonen"
+      ungroup-results:
+        title: "Alle stemmen combineren"
+        label: "Verdeling verbergen"
+      export-results:
+        title: "De pollresultaten exporteren"
+        label: "Exporteren"
       open:
         title: "De poll openen"
         label: "Openen"
@@ -57,11 +70,12 @@ nl:
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
       error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van uw stemmen."
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."
+      error_while_exporting_results: "Sorry, er is een fout opgetreden bij het exporteren van pollresultaten."
       ui_builder:
         title: Poll aanmaken
         insert: Poll invoegen
         help:
-          options_count: Geef ten minste 2 opties
+          options_count: Voer minstens 1 optie in
           invalid_values: Minimale waarde moet kleiner zijn dan de maximale waarde.
           min_step_value: De minimale waarde voor stap is 1
         poll_type:
@@ -74,6 +88,11 @@ nl:
           always: Altijd zichtbaar
           vote: Bij stemmen
           closed: Wanneer gesloten
+          staff: Alleen stafleden
+        poll_groups:
+          label: Toegestane groepen
+        poll_chart_type:
+          label: Diagramtype
         poll_config:
           max: Max
           min: Min
@@ -81,6 +100,6 @@ nl:
         poll_public:
           label: Tonen wie er heeft gestemd
         poll_options:
-          label: Geef één polloptie per regel op
+          label: Voer één polloptie per regel in
         automatic_close:
           label: Poll automatisch sluiten

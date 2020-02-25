@@ -2,8 +2,12 @@
   &.dropdown-select-box {
     &.notifications-button {
       .select-kit-body {
-        min-width: 550px;
-        max-width: 550px;
+        max-width: 400px;
+        width: 400px;
+
+        @media screen and (max-width: 767px) {
+          width: auto;
+        }
       }
 
       .select-kit-row {

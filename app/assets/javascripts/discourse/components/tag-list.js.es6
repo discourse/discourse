@@ -1,23 +1,42 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { sort } from "@ember/object/computed";
+import Component from "@ember/component";
+import Category from "discourse/models/category";
 
-export default Ember.Component.extend({
-  classNameBindings: [":tag-list", "categoryClass"],
+export default Component.extend({
+  classNameBindings: [
+    ":tags-list",
+    ":tag-list",
+    "categoryClass",
+    "tagGroupNameClass"
+  ],
 
   isPrivateMessage: false,
-  sortedTags: Ember.computed.sort("tags", "sortProperties"),
+  sortedTags: sort("tags", "sortProperties"),
 
-  @computed("titleKey")
+  @discourseComputed("titleKey")
   title(titleKey) {
     return titleKey && I18n.t(titleKey);
   },
 
-  @computed("categoryId")
+  @discourseComputed("categoryId")
   category(categoryId) {
-    return categoryId && Discourse.Category.findById(categoryId);
+    return categoryId && Category.findById(categoryId);
   },
 
-  @computed("category.fullSlug")
+  @discourseComputed("category.fullSlug")
   categoryClass(slug) {
     return slug && `tag-list-${slug}`;
+  },
+
+  @discourseComputed("tagGroupName")
+  tagGroupNameClass(groupName) {
+    if (groupName) {
+      groupName = groupName
+        .replace(/\s+/g, "-")
+        .replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, "")
+        .toLowerCase();
+      return groupName && `tag-group-${groupName}`;
+    }
   }
 });

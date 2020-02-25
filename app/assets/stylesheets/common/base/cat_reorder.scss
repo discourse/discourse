@@ -6,13 +6,16 @@
   }
   input {
     width: 4em;
-    @include breakpoint(mobile) {
+    @include breakpoint(mobile-extra-large) {
       width: 2em;
     }
   }
+  #rc-scroll-anchor {
+    padding: 0;
+  }
   table {
-    width: 100%;
     padding-bottom: 150px;
+    margin: 0 0.667em;
     td {
       padding: 0.5em 0.5em 0.5em 0;
       @include breakpoint(mobile, min-width) {
@@ -22,12 +25,16 @@
   }
   .badge-wrapper span.badge-category {
     max-width: 20em;
-    @include breakpoint(mobile) {
+    @include breakpoint(mobile-extra-large) {
       max-width: 30vw;
     }
   }
 }
 
-.reorder-categories-sub-cat {
+.reorder-categories-depth-1 {
   margin-left: 20px;
+}
+
+.reorder-categories-depth-2 {
+  margin-left: 40px;
 }

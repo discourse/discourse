@@ -49,7 +49,7 @@ describe PostAlerter do
       PostAlerter.post_created(reply2)
 
       # we get a green notification for a reply
-      expect(Notification.where(user_id: pm.user_id).pluck(:notification_type).first).to eq(Notification.types[:private_message])
+      expect(Notification.where(user_id: pm.user_id).pluck_first(:notification_type)).to eq(Notification.types[:private_message])
 
       TopicUser.change(pm.user_id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
 
@@ -165,9 +165,11 @@ describe PostAlerter do
   end
 
   context 'quotes' do
+    let(:category) { Fabricate(:category) }
+    let(:topic) { Fabricate(:topic, category: category) }
 
     it 'does not notify for muted users' do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
       MutedUser.create!(user_id: evil_trout.id, muted_user_id: post.user_id)
 
       expect {
@@ -176,7 +178,7 @@ describe PostAlerter do
     end
 
     it 'does not notify for ignored users' do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
       IgnoredUser.create!(user_id: evil_trout.id, ignored_user_id: post.user_id)
 
       expect {
@@ -184,9 +186,27 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
     end
 
-    it 'notifies a user by username' do
-      topic = Fabricate(:topic)
+    it 'does not notify for users with new reply notification' do
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
+      notification = Notification.create!(topic: post.topic,
+                                          post_number: post.post_number,
+                                          read: false,
+                                          notification_type: Notification.types[:replied],
+                                          user: evil_trout,
+                                          data: { topic_title: "test topic" }.to_json
+                                         )
 
+      expect {
+        PostAlerter.post_created(post)
+      }.to change(evil_trout.notifications, :count).by(0)
+
+      notification.destroy
+      expect {
+        PostAlerter.post_created(post)
+      }.to change(evil_trout.notifications, :count).by(1)
+    end
+
+    it 'does not collapse quote notifications' do
       expect {
         2.times do
           create_post_with_alerts(
@@ -194,7 +214,7 @@ describe PostAlerter do
             topic: topic
           )
         end
-      }.to change(evil_trout.notifications, :count).by(1)
+      }.to change(evil_trout.notifications, :count).by(2)
     end
 
     it "won't notify the user a second time on revision" do
@@ -258,7 +278,7 @@ describe PostAlerter do
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], linking_post])
     end
 
-    it "doesn't notify the linked user if the user is staged and the category is restricted" do
+    it "doesn't notify the linked user if the user is staged and the category is restricted and allows strangers" do
       staged_user = Fabricate(:staged)
       group = Fabricate(:group)
       group_member = Fabricate(:user)
@@ -308,6 +328,14 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
 
       expect(GroupMention.count).to eq(3)
+
+      group.update_columns(mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+      group.add_owner(user)
+      expect {
+        create_post_with_alerts(raw: "Hello @group the owner can mention you", user: user)
+      }.to change(evil_trout.notifications, :count).by(1)
+
+      expect(GroupMention.count).to eq(4)
     end
 
     it "triggers :before_create_notifications_for_users" do
@@ -982,6 +1010,34 @@ describe PostAlerter do
           PostAlerter.post_created(whispered_post)
         }.not_to add_notification(user, :posted)
       end
+
+      it "notifies a staged user about a private post, but only if the user has access" do
+        staged_member = Fabricate(:staged)
+        staged_non_member = Fabricate(:staged)
+        group = Fabricate(:group)
+        group_member = Fabricate(:user)
+
+        group.add(group_member)
+        group.add(staged_member)
+
+        private_category = Fabricate(
+          :private_category, group: group,
+                             email_in: 'test@test.com', email_in_allow_strangers: false
+        )
+
+        level = CategoryUser.notification_levels[:watching]
+        CategoryUser.set_notification_level_for_category(group_member, level, private_category.id)
+        CategoryUser.set_notification_level_for_category(staged_member, level, private_category.id)
+        CategoryUser.set_notification_level_for_category(staged_non_member, level, private_category.id)
+
+        topic = Fabricate(:topic, category: private_category, user: group_member)
+        post = Fabricate(:post, topic: topic)
+
+        expect {
+          PostAlerter.post_created(post)
+        }.to add_notification(staged_member, :posted)
+          .and not_add_notification(staged_non_member, :posted)
+      end
     end
   end
 
@@ -1017,7 +1073,7 @@ describe PostAlerter do
       it "triggers a notification" do
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
 
-        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name]) }.to change { Notification.count }.by(1)
+        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name]) }.to change { Notification.where(user_id: user.id).count }.by(1)
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
 
         expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name]) }.to change { Notification.count }.by(0)
@@ -1057,6 +1113,21 @@ describe PostAlerter do
         topic_link
         expect(PostAlerter.new.extract_linked_users(post.reload)).to eq([post2.user])
       end
+    end
+  end
+
+  describe '#notify_post_users' do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it 'creates single edit notification when post is modified' do
+      TopicUser.create!(user_id: user.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:watching], highest_seen_post_number: post.post_number)
+      PostAlerter.new.notify_post_users(post, [])
+      expect(Notification.count).to eq(1)
+      expect(Notification.last.notification_type).to eq(Notification.types[:edited])
+
+      PostAlerter.new.notify_post_users(post, [])
+      expect(Notification.count).to eq(1)
     end
   end
 end

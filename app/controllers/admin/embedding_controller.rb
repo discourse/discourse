@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'embedding'
-
 class Admin::EmbeddingController < Admin::AdminController
 
   before_action :fetch_embedding

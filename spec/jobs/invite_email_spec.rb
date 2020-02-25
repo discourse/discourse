@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'jobs/base'
 
 describe Jobs::InviteEmail do
 
@@ -27,8 +26,15 @@ describe Jobs::InviteEmail do
         InviteMailer.expects(:send_invite).never
         Jobs::InviteEmail.new.execute(invite_id: invite.id)
       end
+
+      it "updates invite emailed_status" do
+        invite.emailed_status = Invite.emailed_status_types[:pending]
+        invite.save!
+        Jobs::InviteEmail.new.execute(invite_id: invite.id)
+
+        invite.reload
+        expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sent])
+      end
     end
-
   end
-
 end

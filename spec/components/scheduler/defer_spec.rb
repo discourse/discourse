@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'scheduler/defer'
 
 describe Scheduler::Defer do
   class DeferInstance
@@ -95,7 +94,7 @@ describe Scheduler::Defer do
   it "recovers from a crash / fork" do
     s = nil
     @defer.stop!
-    wait_for(10) do
+    wait_for(1000) do
       @defer.stopped?
     end
     # hack allow thread to die
@@ -105,7 +104,7 @@ describe Scheduler::Defer do
       s = "good"
     end
 
-    wait_for(10) do
+    wait_for(1000) do
       s == "good"
     end
 
@@ -119,7 +118,7 @@ describe Scheduler::Defer do
       s = "good"
     end
 
-    wait_for(10) do
+    wait_for(1000) do
       s == "good"
     end
 

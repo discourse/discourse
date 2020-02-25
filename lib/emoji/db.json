@@ -6387,6 +6387,242 @@
     {
       "code": "1fa81",
       "name": "kite"
+    },
+    {
+      "code": "1f7eb",
+      "name": "brown_square"
+    },
+    {
+      "code": "1f7ea",
+      "name": "purple_square"
+    },
+    {
+      "code": "1f7e6",
+      "name": "blue_square"
+    },
+    {
+      "code": "1f7e9",
+      "name": "green_square"
+    },
+    {
+      "code": "1f7e8",
+      "name": "yellow_square"
+    },
+    {
+      "code": "1f7e7",
+      "name": "orange_square"
+    },
+    {
+      "code": "1f7e5",
+      "name": "red_square"
+    },
+    {
+      "code": "1f7e4",
+      "name": "brown_circle"
+    },
+    {
+      "code": "1f7e3",
+      "name": "purple_circle"
+    },
+    {
+      "code": "1f7e2",
+      "name": "green_circle"
+    },
+    {
+      "code": "1f7e1",
+      "name": "yellow_circle"
+    },
+    {
+      "code": "1f7e0",
+      "name": "orange_circle"
+    },
+    {
+      "code": "1fa92",
+      "name": "razor"
+    },
+    {
+      "code": "1fa91",
+      "name": "chair"
+    },
+    {
+      "code": "1fa7a",
+      "name": "stethoscope"
+    },
+    {
+      "code": "1fa79",
+      "name": "adhesive_bandage"
+    },
+    {
+      "code": "1fa78",
+      "name": "drop_of_blood"
+    },
+    {
+      "code": "1f9af",
+      "name": "probing_cane"
+    },
+    {
+      "code": "1fa93",
+      "name": "axe"
+    },
+    {
+      "code": "1fa94",
+      "name": "diya_lamp"
+    },
+    {
+      "code": "1fa95",
+      "name": "banjo"
+    },
+    {
+      "code": "1fa70",
+      "name": "ballet_shoes"
+    },
+    {
+      "code": "1fa73",
+      "name": "shorts"
+    },
+    {
+      "code": "1fa72",
+      "name": "briefs"
+    },
+    {
+      "code": "1fa71",
+      "name": "one_piece_swimsuit"
+    },
+    {
+      "code": "1f97b",
+      "name": "sari"
+    },
+    {
+      "code": "1f9ba",
+      "name": "safety_vest"
+    },
+    {
+      "code": "1f93f",
+      "name": "diving_mask"
+    },
+    {
+      "code": "1f9bc",
+      "name": "motorized_wheelchair"
+    },
+    {
+      "code": "1f9bd",
+      "name": "manual_wheelchair"
+    },
+    {
+      "code": "1f6d5",
+      "name": "hindu_temple"
+    },
+    {
+      "code": "1f9c9",
+      "name": "maté"
+    },
+    {
+      "code": "1f9c3",
+      "name": "beverage_box"
+    },
+    {
+      "code": "1f9aa",
+      "name": "oyster"
+    },
+    {
+      "code": "1f9c8",
+      "name": "butter"
+    },
+    {
+      "code": "1f9c6",
+      "name": "falafel"
+    },
+    {
+      "code": "1f9c5",
+      "name": "onion"
+    },
+    {
+      "code": "1f9c4",
+      "name": "garlic"
+    },
+    {
+      "code": "1f9a8",
+      "name": "skunk"
+    },
+    {
+      "code": "1f9ae",
+      "name": "guide_dog"
+    },
+    {
+      "code": "1f9d1-200d-1f91d-200d-1f9d1",
+      "name": "people_holding_hands"
+    },
+    {
+      "code": "1f469-200d-1f9bd",
+      "name": "woman_in_manual_wheelchair"
+    },
+    {
+      "code": "1f468-200d-1f9bd",
+      "name": "man_in_manual_wheelchair"
+    },
+    {
+      "code": "1f469-200d-1f9bc",
+      "name": "woman_in_motorized_wheelchair"
+    },
+    {
+      "code": "1f468-200d-1f9bc",
+      "name": "man_in_motorized_wheelchair"
+    },
+    {
+      "code": "1f469-200d-1f9af",
+      "name": "woman_with_probing_cane"
+    },
+    {
+      "code": "1f468-200d-1f9af",
+      "name": "man_with_probing_cane"
+    },
+    {
+      "code": "1f9ce-200d-2640",
+      "name": "woman_kneeling"
+    },
+    {
+      "code": "1f9ce-200d-2642",
+      "name": "man_kneeling"
+    },
+    {
+      "code": "1f9cd-200d-2642",
+      "name": "man_standing"
+    },
+    {
+      "code": "1f9cd-200d-2640",
+      "name": "woman_standing"
+    },
+    {
+      "code": "1f9cf-200d-2640",
+      "name": "deaf_woman"
+    },
+    {
+      "code": "1f9cf-200d-2642",
+      "name": "deaf_man"
+    },
+    {
+      "code": "1f9bb",
+      "name": "hear_with_hearing_aid"
+    },
+    {
+      "code": "1f9bf",
+      "name": "mechanical_leg"
+    },
+    {
+      "code": "1f9be",
+      "name": "mechanical_arm"
+    },
+    {
+      "code": "1f90d",
+      "name": "white_heart"
+    },
+    {
+      "code": "1f90e",
+      "name": "brown_heart"
+    },
+    {
+      "code": "1f3f3-fe0f-200d-26a7",
+      "name": "transgender_flag"
     }
   ],
   "tonableEmojis": [
@@ -6657,13 +6893,8 @@
     "jp": [
       "flag_jp"
     ],
-    "north_korea": [
-      "flag_kp",
-      "kp"
-    ],
     "kr": [
-      "flag_kr",
-      "south_korea"
+      "flag_kr"
     ],
     "ru": [
       "flag_ru"

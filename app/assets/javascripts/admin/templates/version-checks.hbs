@@ -5,7 +5,12 @@
 
       <div class="version-number">
         <h4>{{i18n 'admin.dashboard.installed_version'}}</h4>
-        <h3><a href={{versionCheck.gitLink}} target="_blank">{{dash-if-empty versionCheck.installed_describe}}</a></h3>
+        <h3>{{dash-if-empty versionCheck.installed_version}}</h3>
+        {{#if versionCheck.gitLink}}
+          <div class="sha-link">
+            (<a href={{versionCheck.gitLink}} target="_blank">{{versionCheck.shortSha}}</a>)
+          </div>
+        {{/if}}
       </div>
 
       {{#if versionCheck.noCheckPerformed}}

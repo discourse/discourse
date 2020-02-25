@@ -1,7 +1,8 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
-  @computed("reviewable.user_fields")
+export default Component.extend({
+  @discourseComputed("reviewable.user_fields")
   userFields(fields) {
     return this.site.collectUserFields(fields);
   }

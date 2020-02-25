@@ -9,12 +9,9 @@
 
   #revision {
     overflow: auto;
+    border-bottom: 3px solid $primary-low;
   }
 
-  #revision-controls {
-    display: inline-block;
-    margin-bottom: 5px;
-  }
   table.markdown > tbody > tr > td,
   .revision-content {
     width: 47.5%;
@@ -27,8 +24,6 @@
 
   #revision-details {
     padding: 5px;
-    margin-top: 10px;
-    border-bottom: 3px solid $primary-low;
   }
 
   #revisions .row:first-of-type {

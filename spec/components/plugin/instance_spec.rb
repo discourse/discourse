@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'plugin/instance'
 
 describe Plugin::Instance do
 
@@ -33,7 +32,10 @@ describe Plugin::Instance do
 
     context "with a plugin that extends things" do
 
-      class Trout; end
+      class Trout
+        attr_accessor :data
+      end
+
       class TroutSerializer < ApplicationSerializer
         attribute :name
 
@@ -91,7 +93,6 @@ describe Plugin::Instance do
       end
 
       it "checks enabled/disabled functionality for extensions" do
-
         # with an enabled plugin
         @plugin.enabled = true
         expect(@trout.status?).to eq("evil")
@@ -115,6 +116,17 @@ describe Plugin::Instance do
         expect(@child_serializer.include_scales?).to eq(false)
         expect(@child_serializer.name).to eq("a trout jr")
       end
+
+      it "only returns HTML if enabled" do
+        ctx = Trout.new
+        ctx.data = "hello"
+
+        @plugin.register_html_builder('test:html') { |c| "<div>#{c.data}</div>" }
+        @plugin.enabled = false
+        expect(DiscoursePluginRegistry.build_html('test:html', ctx)).to eq("")
+        @plugin.enabled = true
+        expect(DiscoursePluginRegistry.build_html('test:html', ctx)).to eq("<div>hello</div>")
+      end
     end
   end
 
@@ -126,8 +138,8 @@ describe Plugin::Instance do
 
       plugin.send :register_assets!
 
-      expect(DiscoursePluginRegistry.mobile_stylesheets.count).to eq(0)
-      expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)
+      expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name]).to be_nil
+      expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
     end
 
     it "remaps vendored_core_pretty_text asset" do
@@ -162,20 +174,26 @@ describe Plugin::Instance do
   end
 
   it 'patches the enabled? function for auth_providers if not defined' do
+    SimpleAuthenticator = Class.new(Auth::Authenticator) do
+      def name
+        "my_authenticator"
+      end
+    end
+
     plugin = Plugin::Instance.new
 
     # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
     SiteSetting.enable_badges = false
 
     # No enabled_site_setting
-    authenticator = Auth::Authenticator.new
+    authenticator = SimpleAuthenticator.new
     plugin.auth_provider(authenticator: authenticator)
     plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(true)
 
     # With enabled site setting
     plugin = Plugin::Instance.new
-    authenticator = Auth::Authenticator.new
+    authenticator = SimpleAuthenticator.new
     plugin.auth_provider(enabled_setting: 'enable_badges', authenticator: authenticator)
     plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(false)
@@ -184,7 +202,7 @@ describe Plugin::Instance do
     plugin = Plugin::Instance.new
 
     SiteSetting.enable_badges = true
-    authenticator = Class.new(Auth::Authenticator) do
+    authenticator = Class.new(SimpleAuthenticator) do
       def enabled?
         false
       end
@@ -227,7 +245,7 @@ describe Plugin::Instance do
       plugin.notify_before_auth
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(1)
       auth_provider = DiscoursePluginRegistry.auth_providers.to_a[0]
-      expect(auth_provider.authenticator.name).to eq('ubuntu')
+      expect(auth_provider.authenticator.name).to eq('facebook')
     end
 
     it "finds all the custom assets" do
@@ -252,10 +270,10 @@ describe Plugin::Instance do
 
       expect(DiscoursePluginRegistry.javascripts.count).to eq(2)
       expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
-      expect(DiscoursePluginRegistry.desktop_stylesheets.count).to eq(2)
+      expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.sass_variables.count).to eq(2)
-      expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)
-      expect(DiscoursePluginRegistry.mobile_stylesheets.count).to eq(1)
+      expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
+      expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)
     end
   end
 

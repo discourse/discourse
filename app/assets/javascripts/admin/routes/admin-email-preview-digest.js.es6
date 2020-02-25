@@ -1,9 +1,7 @@
-import {
-  default as EmailPreview,
-  oneWeekAgo
-} from "admin/models/email-preview";
+import DiscourseRoute from "discourse/routes/discourse";
+import EmailPreview, { oneWeekAgo } from "admin/models/email-preview";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   model() {
     return EmailPreview.findDigest(this.currentUser.get("username"));
   },

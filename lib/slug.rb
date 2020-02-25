@@ -9,16 +9,18 @@ module Slug
   def self.for(string, default = 'topic', max_length = MAX_LENGTH)
     string = string.gsub(/:([\w\-+]+(?::t\d)?):/, '') if string.present? # strip emoji strings
 
+    if SiteSetting.slug_generation_method == 'encoded'
+      max_length = 9999 # do not truncate encoded slugs
+    end
+
     slug =
       case (SiteSetting.slug_generation_method || :ascii).to_sym
       when :ascii then self.ascii_generator(string)
       when :encoded then self.encoded_generator(string)
       when :none then self.none_generator(string)
       end
-    # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
-    slug = (slug =~ /[^\d]/ ? slug : '')
     slug = self.prettify_slug(slug, max_length: max_length)
-    slug.blank? ? default : slug
+    (slug.blank? || slug_is_only_numbers?(slug)) ? default : slug
   end
 
   def self.sanitize(string, downcase: false, max_length: MAX_LENGTH)
@@ -28,7 +30,14 @@ module Slug
 
   private
 
+  def self.slug_is_only_numbers?(slug)
+    (slug =~ /[^\d]/).blank?
+  end
+
   def self.prettify_slug(slug, max_length:)
+    # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
+    slug = (slug_is_only_numbers?(slug) ? '' : slug)
+
     slug
       .tr("_", "-")
       .truncate(max_length, omission: '')
@@ -50,7 +59,9 @@ module Slug
       .gsub(/\s+/, '-')
       .gsub(CHAR_FILTER_REGEXP, '')
 
-    downcase ? string.downcase : string
+    string = string.downcase if downcase
+
+    CGI.escape(string)
   end
 
   def self.none_generator(string)

@@ -143,6 +143,13 @@ export function selectedText() {
   return toMarkdown($div.html());
 }
 
+export function selectedElement() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    return selection.getRangeAt(0).startContainer.parentElement;
+  }
+}
+
 // Determine the row and col of the caret in an element
 export function caretRowCol(el) {
   var cp = caretPosition(el);
@@ -193,292 +200,6 @@ export function setCaretPosition(ctrl, pos) {
     range.moveStart("character", pos);
     return range.select();
   }
-}
-
-export function validateUploadedFiles(files, opts) {
-  if (!files || files.length === 0) {
-    return false;
-  }
-
-  if (files.length > 1) {
-    bootbox.alert(I18n.t("post.errors.too_many_uploads"));
-    return false;
-  }
-
-  const upload = files[0];
-
-  // CHROME ONLY: if the image was pasted, sets its name to a default one
-  if (typeof Blob !== "undefined" && typeof File !== "undefined") {
-    if (
-      upload instanceof Blob &&
-      !(upload instanceof File) &&
-      upload.type === "image/png"
-    ) {
-      upload.name = "image.png";
-    }
-  }
-
-  opts = opts || {};
-  opts.type = uploadTypeFromFileName(upload.name);
-
-  return validateUploadedFile(upload, opts);
-}
-
-export function validateUploadedFile(file, opts) {
-  if (opts.skipValidation) return true;
-  if (!authorizesOneOrMoreExtensions()) return false;
-
-  opts = opts || {};
-
-  const name = file && file.name;
-
-  if (!name) {
-    return false;
-  }
-
-  // check that the uploaded file is authorized
-  if (opts.allowStaffToUploadAnyFileInPm && opts.isPrivateMessage) {
-    if (Discourse.User.currentProp("staff")) {
-      return true;
-    }
-  }
-
-  if (opts.imagesOnly) {
-    if (!isAnImage(name) && !isAuthorizedImage(name)) {
-      bootbox.alert(
-        I18n.t("post.errors.upload_not_authorized", {
-          authorized_extensions: authorizedImagesExtensions()
-        })
-      );
-      return false;
-    }
-  } else if (opts.csvOnly) {
-    if (!/\.csv$/i.test(name)) {
-      bootbox.alert(I18n.t("user.invited.bulk_invite.error"));
-      return false;
-    }
-  } else {
-    if (!authorizesAllExtensions() && !isAuthorizedFile(name)) {
-      bootbox.alert(
-        I18n.t("post.errors.upload_not_authorized", {
-          authorized_extensions: authorizedExtensions()
-        })
-      );
-      return false;
-    }
-  }
-
-  if (!opts.bypassNewUserRestriction) {
-    // ensures that new users can upload a file
-    if (!Discourse.User.current().isAllowedToUploadAFile(opts.type)) {
-      bootbox.alert(
-        I18n.t(`post.errors.${opts.type}_upload_not_allowed_for_new_user`)
-      );
-      return false;
-    }
-  }
-
-  // everything went fine
-  return true;
-}
-
-const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico)/i;
-
-function extensionsToArray(exts) {
-  return exts
-    .toLowerCase()
-    .replace(/[\s\.]+/g, "")
-    .split("|")
-    .filter(ext => ext.indexOf("*") === -1);
-}
-
-function extensions() {
-  return extensionsToArray(Discourse.SiteSettings.authorized_extensions);
-}
-
-function staffExtensions() {
-  return extensionsToArray(
-    Discourse.SiteSettings.authorized_extensions_for_staff
-  );
-}
-
-function imagesExtensions() {
-  let exts = extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
-  if (Discourse.User.currentProp("staff")) {
-    const staffExts = staffExtensions().filter(ext =>
-      IMAGES_EXTENSIONS_REGEX.test(ext)
-    );
-    exts = _.union(exts, staffExts);
-  }
-  return exts;
-}
-
-function extensionsRegex() {
-  return new RegExp("\\.(" + extensions().join("|") + ")$", "i");
-}
-
-function imagesExtensionsRegex() {
-  return new RegExp("\\.(" + imagesExtensions().join("|") + ")$", "i");
-}
-
-function staffExtensionsRegex() {
-  return new RegExp("\\.(" + staffExtensions().join("|") + ")$", "i");
-}
-
-function isAuthorizedFile(fileName) {
-  if (
-    Discourse.User.currentProp("staff") &&
-    staffExtensionsRegex().test(fileName)
-  ) {
-    return true;
-  }
-  return extensionsRegex().test(fileName);
-}
-
-function isAuthorizedImage(fileName) {
-  return imagesExtensionsRegex().test(fileName);
-}
-
-export function authorizedExtensions() {
-  const exts = Discourse.User.currentProp("staff")
-    ? [...extensions(), ...staffExtensions()]
-    : extensions();
-  return exts.filter(ext => ext.length > 0).join(", ");
-}
-
-export function authorizedImagesExtensions() {
-  return authorizesAllExtensions()
-    ? "png, jpg, jpeg, gif, svg, ico"
-    : imagesExtensions().join(", ");
-}
-
-export function authorizesAllExtensions() {
-  return (
-    Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0 ||
-    (Discourse.SiteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 &&
-      Discourse.User.currentProp("staff"))
-  );
-}
-
-export function authorizesOneOrMoreExtensions() {
-  if (authorizesAllExtensions()) return true;
-
-  return (
-    Discourse.SiteSettings.authorized_extensions.split("|").filter(ext => ext)
-      .length > 0
-  );
-}
-
-export function authorizesOneOrMoreImageExtensions() {
-  if (authorizesAllExtensions()) return true;
-
-  return imagesExtensions().length > 0;
-}
-
-export function isAnImage(path) {
-  return /\.(png|jpe?g|gif|svg|ico)$/i.test(path);
-}
-
-function uploadTypeFromFileName(fileName) {
-  return isAnImage(fileName) ? "image" : "attachment";
-}
-
-function isGUID(value) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-    value
-  );
-}
-
-function imageNameFromFileName(fileName) {
-  const split = fileName.split(".");
-  let name = split[split.length - 2];
-
-  if (exports.isAppleDevice() && isGUID(name)) {
-    name = I18n.t("upload_selector.default_image_alt_text");
-  }
-
-  return encodeURIComponent(name);
-}
-
-export function allowsImages() {
-  return (
-    authorizesAllExtensions() ||
-    IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions())
-  );
-}
-
-export function allowsAttachments() {
-  return (
-    authorizesAllExtensions() ||
-    authorizedExtensions().split(", ").length > imagesExtensions().length
-  );
-}
-
-export function uploadIcon() {
-  return allowsAttachments() ? "upload" : "far-image";
-}
-
-export function uploadLocation(url) {
-  if (Discourse.CDN) {
-    url = Discourse.getURLWithCDN(url);
-    return /^\/\//.test(url) ? "http:" + url : url;
-  } else if (Discourse.S3BaseUrl) {
-    return "https:" + url;
-  } else {
-    var protocol = window.location.protocol + "//",
-      hostname = window.location.hostname,
-      port = window.location.port ? ":" + window.location.port : "";
-    return protocol + hostname + port + url;
-  }
-}
-
-export function getUploadMarkdown(upload) {
-  if (isAnImage(upload.original_filename)) {
-    const name = imageNameFromFileName(upload.original_filename);
-    return `![${name}|${upload.thumbnail_width}x${
-      upload.thumbnail_height
-    }](${upload.short_url || upload.url})`;
-  } else if (
-    !Discourse.SiteSettings.prevent_anons_from_downloading_files &&
-    /\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i.test(upload.original_filename)
-  ) {
-    return uploadLocation(upload.url);
-  } else {
-    return `[${upload.original_filename}|attachment](${
-      upload.short_url
-    }) (${I18n.toHumanSize(upload.filesize)})`;
-  }
-}
-
-export function displayErrorForUpload(data) {
-  if (data.jqXHR) {
-    switch (data.jqXHR.status) {
-      // cancelled by the user
-      case 0:
-        return;
-
-      // entity too large, usually returned from the web server
-      case 413:
-        const type = uploadTypeFromFileName(data.files[0].name);
-        const max_size_kb = Discourse.SiteSettings[`max_${type}_size_kb`];
-        bootbox.alert(I18n.t("post.errors.file_too_large", { max_size_kb }));
-        return;
-
-      // the error message is provided by the server
-      case 422:
-        if (data.jqXHR.responseJSON.message) {
-          bootbox.alert(data.jqXHR.responseJSON.message);
-        } else {
-          bootbox.alert(data.jqXHR.responseJSON.errors.join("\n"));
-        }
-        return;
-    }
-  } else if (data.errors && data.errors.length > 0) {
-    bootbox.alert(data.errors.join("\n"));
-    return;
-  }
-  // otherwise, display a generic error message
-  bootbox.alert(I18n.t("post.errors.upload"));
 }
 
 export function defaultHomepage() {
@@ -538,13 +259,15 @@ export function determinePostReplaceSelection({
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  return (
-    navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-    !navigator.userAgent.match(/Trident/g)
-  );
+  const caps = Discourse.__container__.lookup("capabilities:main");
+  return caps.isIOS && !navigator.userAgent.match(/Trident/g);
 }
 
 let iPadDetected = undefined;
+
+export function iOSWithVisualViewport() {
+  return isAppleDevice() && window.visualViewport !== undefined;
+}
 
 export function isiPad() {
   if (iPadDetected === undefined) {
@@ -556,6 +279,8 @@ export function isiPad() {
 }
 
 export function safariHacksDisabled() {
+  if (iOSWithVisualViewport()) return false;
+
   let pref = localStorage.getItem("safari-hacks-disabled");
   let result = false;
   if (pref !== null) {
@@ -588,7 +313,7 @@ export function clipboardData(e, canUpload) {
     files = toArray(clipboard.items).filter(i => i.kind === "file");
   }
 
-  canUpload = files && canUpload && !types.includes("text/plain");
+  canUpload = files && canUpload && types.includes("Files");
   const canUploadImage =
     canUpload && files.filter(f => f.type.match("^image/"))[0];
   const canPasteHtml =
@@ -599,8 +324,12 @@ export function clipboardData(e, canUpload) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
+export function toNumber(input) {
+  return typeof input === "number" ? input : parseFloat(input);
+}
+
 export function isNumeric(input) {
-  return !isNaN(parseFloat(input)) && isFinite(input);
+  return !isNaN(toNumber(input)) && isFinite(input);
 }
 
 export function fillMissingDates(data, startDate, endDate) {
@@ -686,6 +415,32 @@ export function rescueThemeError(name, error, api) {
   alertDiv.classList.add("broken-theme-alert");
   alertDiv.innerHTML = `⚠️ ${message}`;
   document.body.prepend(alertDiv);
+}
+
+const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
+//                        |      ^     |   ^   |      ^      |           ^           |
+//                               |         |          |                  |
+//                               |         |          |       code blocks between [code]
+//                               |         |          |
+//                               |         |          +--- code blocks between three backquote
+//                               |         |
+//                               |         +----- inline code between backquotes
+//                               |
+//                               +------- paragraphs starting with 4 spaces or tab
+
+export function inCodeBlock(text, pos) {
+  let result = false;
+
+  let match;
+  while ((match = CODE_BLOCKS_REGEX.exec(text)) !== null) {
+    const begin = match.index;
+    const end = match.index + match[0].length;
+    if (begin <= pos && pos <= end) {
+      result = true;
+    }
+  }
+
+  return result;
 }
 
 // This prevents a mini racer crash

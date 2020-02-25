@@ -9,5 +9,5 @@ da:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "Start opstartsvejledningen for alle nye brugere"
-        welcome_message: "Send en velkomstbesked til alle nye brugere med en opstartsguide"
+        new_user_track: "Påbegynd 'ny bruger' vejledningen for alle nye brugere"
+        welcome_message: "Send en velkomsts besked til alle nye brugere med en opstartsguide"

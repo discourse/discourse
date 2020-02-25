@@ -161,9 +161,12 @@
       align-items: center;
       justify-content: center;
       font-size: 3.5em;
-
+      a {
+        width: 100%;
+      }
       img {
-        max-width: 80px;
+        width: 100%;
+        max-width: 65px;
         max-height: 80px;
       }
 
@@ -215,7 +218,7 @@
         margin-right: 0;
       }
     }
-    @include breakpoint(mobile) {
+    @include breakpoint(mobile-extra-large) {
       flex: 0 0 100%;
     }
     &:hover {

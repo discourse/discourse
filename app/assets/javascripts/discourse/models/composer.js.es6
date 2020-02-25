@@ -1,28 +1,40 @@
+import { isEmpty } from "@ember/utils";
+import { reads, equal, not, or, and } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import { throwAjaxError } from "discourse/lib/ajax-error";
 import Quote from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
-import {
-  default as computed,
+import discourseComputed, {
   observes,
   on
-} from "ember-addons/ember-computed-decorators";
-import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
+} from "discourse-common/utils/decorators";
+import {
+  escapeExpression,
+  tinyAvatar,
+  emailValid
+} from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
-import throttle from "discourse/lib/throttle";
+import { throttle } from "@ember/runloop";
+import { Promise } from "rsvp";
+import { set } from "@ember/object";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
+import deprecated from "discourse-common/lib/deprecated";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
   CREATE_SHARED_DRAFT = "createSharedDraft",
   EDIT_SHARED_DRAFT = "editSharedDraft",
   PRIVATE_MESSAGE = "privateMessage",
-  NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
-  NEW_TOPIC_KEY = "new_topic",
   REPLY = "reply",
   EDIT = "edit",
-  REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
-  REPLY_AS_NEW_PRIVATE_MESSAGE_KEY = "reply_as_new_private_message";
+  NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
+  NEW_TOPIC_KEY = "new_topic";
 
 function isEdit(action) {
   return action === EDIT || action === EDIT_SHARED_DRAFT;
@@ -43,20 +55,38 @@ const CLOSED = "closed",
     is_warning: "isWarning",
     whisper: "whisper",
     archetype: "archetypeId",
-    target_usernames: "targetUsernames",
+    target_recipients: "targetRecipients",
     typing_duration_msecs: "typingTime",
     composer_open_duration_msecs: "composerTime",
     tags: "tags",
     featured_link: "featuredLink",
     shared_draft: "sharedDraft",
-    no_bump: "noBump"
+    no_bump: "noBump",
+    draft_key: "draftKey"
   },
   _edit_topic_serializer = {
     title: "topic.title",
     categoryId: "topic.category.id",
     tags: "topic.tags",
     featuredLink: "topic.featured_link"
-  };
+  },
+  _draft_serializer = {
+    reply: "reply",
+    action: "action",
+    title: "title",
+    categoryId: "categoryId",
+    archetypeId: "archetypeId",
+    whisper: "whisper",
+    metaData: "metaData",
+    composerTime: "composerTime",
+    typingTime: "typingTime",
+    postId: "post.id",
+    // TODO remove together with 'targetUsername' deprecations
+    usernames: "targetUsernames",
+    recipients: "targetRecipients"
+  },
+  _add_draft_fields = {},
+  FAST_REPLY_LENGTH_THRESHOLD = 10000;
 
 export const SAVE_LABELS = {
   [EDIT]: "composer.save_edit",
@@ -69,11 +99,11 @@ export const SAVE_LABELS = {
 
 export const SAVE_ICONS = {
   [EDIT]: "pencil-alt",
-  [EDIT_SHARED_DRAFT]: "clipboard",
+  [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
   [CREATE_TOPIC]: "plus",
   [PRIVATE_MESSAGE]: "envelope",
-  [CREATE_SHARED_DRAFT]: "clipboard"
+  [CREATE_SHARED_DRAFT]: "far-clipboard"
 };
 
 const Composer = RestModel.extend({
@@ -83,11 +113,11 @@ const Composer = RestModel.extend({
   draftSaving: false,
   draftSaved: false,
 
-  archetypes: Ember.computed.reads("site.archetypes"),
+  archetypes: reads("site.archetypes"),
 
-  sharedDraft: Ember.computed.equal("action", CREATE_SHARED_DRAFT),
+  sharedDraft: equal("action", CREATE_SHARED_DRAFT),
 
-  @computed
+  @discourseComputed
   categoryId: {
     get() {
       return this._categoryId;
@@ -98,7 +128,7 @@ const Composer = RestModel.extend({
     set(categoryId) {
       const oldCategoryId = this._categoryId;
 
-      if (Ember.isEmpty(categoryId)) {
+      if (isEmpty(categoryId)) {
         categoryId = null;
       }
       this._categoryId = categoryId;
@@ -111,48 +141,53 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("categoryId")
+  @discourseComputed("categoryId")
   category(categoryId) {
     return categoryId ? this.site.categories.findBy("id", categoryId) : null;
   },
 
-  @computed("category")
+  @discourseComputed("category")
   minimumRequiredTags(category) {
     return category && category.minimum_required_tags > 0
       ? category.minimum_required_tags
       : null;
   },
 
-  creatingTopic: Ember.computed.equal("action", CREATE_TOPIC),
-  creatingSharedDraft: Ember.computed.equal("action", CREATE_SHARED_DRAFT),
-  creatingPrivateMessage: Ember.computed.equal("action", PRIVATE_MESSAGE),
-  notCreatingPrivateMessage: Ember.computed.not("creatingPrivateMessage"),
-  notPrivateMessage: Ember.computed.not("privateMessage"),
+  creatingTopic: equal("action", CREATE_TOPIC),
+  creatingSharedDraft: equal("action", CREATE_SHARED_DRAFT),
+  creatingPrivateMessage: equal("action", PRIVATE_MESSAGE),
+  notCreatingPrivateMessage: not("creatingPrivateMessage"),
+  notPrivateMessage: not("privateMessage"),
 
-  @computed("privateMessage", "archetype.hasOptions")
+  @discourseComputed("editingPost", "topic.details.can_edit")
+  disableTitleInput(editingPost, canEditTopic) {
+    return editingPost && !canEditTopic;
+  },
+
+  @discourseComputed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
     const manyCategories = this.site.categories.length > 1;
     return !isPrivateMessage && (hasOptions || manyCategories);
   },
 
-  @computed("creatingPrivateMessage", "topic")
+  @discourseComputed("creatingPrivateMessage", "topic")
   privateMessage(creatingPrivateMessage, topic) {
     return (
       creatingPrivateMessage || (topic && topic.archetype === "private_message")
     );
   },
 
-  topicFirstPost: Ember.computed.or("creatingTopic", "editingFirstPost"),
+  topicFirstPost: or("creatingTopic", "editingFirstPost"),
 
-  @computed("action")
+  @discourseComputed("action")
   editingPost: isEdit,
 
-  replyingToTopic: Ember.computed.equal("action", REPLY),
+  replyingToTopic: equal("action", REPLY),
 
-  viewOpen: Ember.computed.equal("composeState", OPEN),
-  viewDraft: Ember.computed.equal("composeState", DRAFT),
-  viewFullscreen: Ember.computed.equal("composeState", FULLSCREEN),
-  viewOpenOrFullscreen: Ember.computed.or("viewOpen", "viewFullscreen"),
+  viewOpen: equal("composeState", OPEN),
+  viewDraft: equal("composeState", DRAFT),
+  viewFullscreen: equal("composeState", FULLSCREEN),
+  viewOpenOrFullscreen: or("viewOpen", "viewFullscreen"),
 
   @observes("composeState")
   composeStateChanged() {
@@ -176,7 +211,7 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   composerTime: {
     get() {
       let total = this.composerTotalOpened || 0;
@@ -190,42 +225,45 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("archetypeId")
+  @discourseComputed("archetypeId")
   archetype(archetypeId) {
     return this.archetypes.findBy("id", archetypeId);
   },
 
   @observes("archetype")
   archetypeChanged() {
-    return this.set("metaData", Ember.Object.create());
+    return this.set("metaData", EmberObject.create());
   },
 
-  // view detected user is typing
-  typing: throttle(
-    function() {
-      const typingTime = this.typingTime || 0;
-      this.set("typingTime", typingTime + 100);
-    },
-    100,
-    false
-  ),
+  // called whenever the user types to update the typing time
+  typing() {
+    throttle(
+      this,
+      function() {
+        const typingTime = this.typingTime || 0;
+        this.set("typingTime", typingTime + 100);
+      },
+      100,
+      false
+    );
+  },
 
-  editingFirstPost: Ember.computed.and("editingPost", "post.firstPost"),
+  editingFirstPost: and("editingPost", "post.firstPost"),
 
-  canEditTitle: Ember.computed.or(
+  canEditTitle: or(
     "creatingTopic",
     "creatingPrivateMessage",
     "editingFirstPost",
     "creatingSharedDraft"
   ),
 
-  canCategorize: Ember.computed.and(
+  canCategorize: and(
     "canEditTitle",
     "notCreatingPrivateMessage",
     "notPrivateMessage"
   ),
 
-  @computed("canEditTitle", "creatingPrivateMessage", "categoryId")
+  @discourseComputed("canEditTitle", "creatingPrivateMessage", "categoryId")
   canEditTopicFeaturedLink(canEditTitle, creatingPrivateMessage, categoryId) {
     if (
       !this.siteSettings.topic_featured_link_enabled ||
@@ -251,14 +289,14 @@ const Composer = RestModel.extend({
     );
   },
 
-  @computed("canEditTopicFeaturedLink")
+  @discourseComputed("canEditTopicFeaturedLink")
   titlePlaceholder(canEditTopicFeaturedLink) {
     return canEditTopicFeaturedLink
       ? "composer.title_or_link_placeholder"
       : "composer.title_placeholder";
   },
 
-  @computed("action", "post", "topic", "topic.title")
+  @discourseComputed("action", "post", "topic", "topic.title")
   replyOptions(action, post, topic, topicTitle) {
     const options = {
       userLink: null,
@@ -308,17 +346,36 @@ const Composer = RestModel.extend({
     return options;
   },
 
-  @computed
-  isStaffUser() {
-    const currentUser = Discourse.User.current();
-    return currentUser && currentUser.staff;
+  @discourseComputed("targetRecipients")
+  targetUsernames(targetRecipients) {
+    deprecated(
+      "`targetUsernames` is deprecated, use `targetRecipients` instead."
+    );
+    return targetRecipients;
   },
 
-  @computed(
+  @discourseComputed("targetRecipients")
+  targetRecipientsArray(targetRecipients) {
+    const recipients = targetRecipients ? targetRecipients.split(",") : [];
+    const groups = new Set(this.site.groups.map(g => g.name));
+
+    return recipients.map(item => {
+      if (groups.has(item)) {
+        return { type: "group", name: item };
+      } else if (emailValid(item)) {
+        return { type: "email", name: item };
+      } else {
+        return { type: "user", name: item };
+      }
+    });
+  },
+
+  @discourseComputed(
     "loading",
     "canEditTitle",
     "titleLength",
-    "targetUsernames",
+    "targetRecipients",
+    "targetRecipientsArray",
     "replyLength",
     "categoryId",
     "missingReplyCharacters",
@@ -331,7 +388,8 @@ const Composer = RestModel.extend({
     loading,
     canEditTitle,
     titleLength,
-    targetUsernames,
+    targetRecipients,
+    targetRecipientsArray,
     replyLength,
     categoryId,
     missingReplyCharacters,
@@ -363,18 +421,27 @@ const Composer = RestModel.extend({
       }
     }
 
+    if (topicFirstPost) {
+      // user should modify topic template
+      const category = this.category;
+      if (category && category.topic_template) {
+        if (this.reply.trim() === category.topic_template.trim()) {
+          bootbox.alert(I18n.t("composer.error.topic_template_not_modified"));
+          return true;
+        }
+      }
+    }
+
     if (this.privateMessage) {
       // need at least one user when sending a PM
-      return (
-        targetUsernames && (targetUsernames.trim() + ",").indexOf(",") === 0
-      );
+      return targetRecipients && targetRecipientsArray.length === 0;
     } else {
       // has a category? (when needed)
       return this.requiredCategoryMissing;
     }
   },
 
-  @computed("canCategorize", "categoryId")
+  @discourseComputed("canCategorize", "categoryId")
   requiredCategoryMissing(canCategorize, categoryId) {
     return (
       canCategorize &&
@@ -383,28 +450,28 @@ const Composer = RestModel.extend({
     );
   },
 
-  @computed("minimumTitleLength", "titleLength", "post.static_doc")
+  @discourseComputed("minimumTitleLength", "titleLength", "post.static_doc")
   titleLengthValid(minTitleLength, titleLength, staticDoc) {
     if (this.user.admin && staticDoc && titleLength > 0) return true;
     if (titleLength < minTitleLength) return false;
     return titleLength <= this.siteSettings.max_topic_title_length;
   },
 
-  @computed("metaData")
+  @discourseComputed("metaData")
   hasMetaData(metaData) {
-    return metaData ? Ember.isEmpty(Ember.keys(metaData)) : false;
+    return metaData ? isEmpty(Ember.keys(metaData)) : false;
   },
 
   replyDirty: propertyNotEqual("reply", "originalText"),
 
   titleDirty: propertyNotEqual("title", "originalTitle"),
 
-  @computed("minimumTitleLength", "titleLength")
+  @discourseComputed("minimumTitleLength", "titleLength")
   missingTitleCharacters(minimumTitleLength, titleLength) {
     return minimumTitleLength - titleLength;
   },
 
-  @computed("privateMessage")
+  @discourseComputed("privateMessage")
   minimumTitleLength(privateMessage) {
     if (privateMessage) {
       return this.siteSettings.min_personal_message_title_length;
@@ -413,7 +480,11 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("minimumPostLength", "replyLength", "canEditTopicFeaturedLink")
+  @discourseComputed(
+    "minimumPostLength",
+    "replyLength",
+    "canEditTopicFeaturedLink"
+  )
   missingReplyCharacters(
     minimumPostLength,
     replyLength,
@@ -428,7 +499,11 @@ const Composer = RestModel.extend({
     return minimumPostLength - replyLength;
   },
 
-  @computed("privateMessage", "topicFirstPost", "topic.pm_with_non_human_user")
+  @discourseComputed(
+    "privateMessage",
+    "topicFirstPost",
+    "topic.pm_with_non_human_user"
+  )
   minimumPostLength(privateMessage, topicFirstPost, pmWithNonHumanUser) {
     if (pmWithNonHumanUser) {
       return 1;
@@ -442,19 +517,72 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed("title")
+  @discourseComputed("title")
   titleLength(title) {
     title = title || "";
     return title.replace(/\s+/gim, " ").trim().length;
   },
 
-  @computed("reply")
+  @discourseComputed("reply")
   replyLength(reply) {
     reply = reply || "";
-    while (Quote.REGEXP.test(reply)) {
-      reply = reply.replace(Quote.REGEXP, "");
+
+    if (reply.length > FAST_REPLY_LENGTH_THRESHOLD) {
+      return reply.length;
     }
-    return reply.replace(/\s+/gim, " ").trim().length;
+
+    while (Quote.REGEXP.test(reply)) {
+      // make it global so we can strip as many quotes at once
+      // keep in mind nested quotes mean we still need a loop here
+      const regex = new RegExp(Quote.REGEXP.source, "img");
+      reply = reply.replace(regex, "");
+    }
+
+    // This is in place so we do not generate any intermediate
+    // strings while calculating the length, this is issued
+    // every keypress in the composer so it needs to be very fast
+    let len = 0,
+      skipSpace = true;
+
+    for (let i = 0; i < reply.length; i++) {
+      const code = reply.charCodeAt(i);
+
+      let isSpace = false;
+      if (code >= 0x2000 && code <= 0x200a) {
+        isSpace = true;
+      } else {
+        switch (code) {
+          case 0x09: // \t
+          case 0x0a: // \n
+          case 0x0b: // \v
+          case 0x0c: // \f
+          case 0x0d: // \r
+          case 0x20:
+          case 0xa0:
+          case 0x1680:
+          case 0x202f:
+          case 0x205f:
+          case 0x3000:
+            isSpace = true;
+        }
+      }
+
+      if (isSpace) {
+        if (!skipSpace) {
+          len++;
+          skipSpace = true;
+        }
+      } else {
+        len++;
+        skipSpace = false;
+      }
+    }
+
+    if (len > 0 && skipSpace) {
+      len--;
+    }
+
+    return len;
   },
 
   @on("init")
@@ -529,7 +657,7 @@ const Composer = RestModel.extend({
       }
     }
 
-    if (!Ember.isEmpty(reply)) {
+    if (!isEmpty(reply)) {
       return;
     }
 
@@ -552,13 +680,10 @@ const Composer = RestModel.extend({
     if (!opts) opts = {};
     this.set("loading", false);
 
-    const replyBlank = Ember.isEmpty(this.reply);
+    const replyBlank = isEmpty(this.reply);
 
     const composer = this;
-    if (
-      !replyBlank &&
-      ((opts.reply || isEdit(opts.action)) && this.replyDirty)
-    ) {
+    if (!replyBlank && (opts.reply || isEdit(opts.action)) && this.replyDirty) {
       return;
     }
 
@@ -572,13 +697,17 @@ const Composer = RestModel.extend({
       throw new Error("draft sequence is required");
     }
 
+    if (opts.usernames) {
+      deprecated("`usernames` is deprecated, use `recipients` instead.");
+    }
+
     this.setProperties({
       draftKey: opts.draftKey,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
       action: opts.action,
       topic: opts.topic,
-      targetUsernames: opts.usernames,
+      targetRecipients: opts.usernames || opts.recipients,
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,
@@ -601,7 +730,7 @@ const Composer = RestModel.extend({
 
     this.setProperties({
       archetypeId: opts.archetypeId || this.site.default_archetype,
-      metaData: opts.metaData ? Ember.Object.create(opts.metaData) : null,
+      metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
       reply: opts.reply || this.reply || ""
     });
 
@@ -663,18 +792,30 @@ const Composer = RestModel.extend({
       composer.appEvents.trigger("composer:reply-reloaded", composer);
     }
 
+    // Ensure additional draft fields are set
+    Object.keys(_add_draft_fields).forEach(f => {
+      this.set(_add_draft_fields[f], opts[f]);
+    });
+
     return false;
   },
 
-  save(opts) {
-    if (!this.cantSubmitPost) {
-      // change category may result in some effect for topic featured link
-      if (!this.canEditTopicFeaturedLink) {
-        this.set("featuredLink", null);
-      }
+  // Overwrite to implement custom logic
+  beforeSave() {
+    return Promise.resolve();
+  },
 
-      return this.editingPost ? this.editPost(opts) : this.createPost(opts);
-    }
+  save(opts) {
+    return this.beforeSave().then(() => {
+      if (!this.cantSubmitPost) {
+        // change category may result in some effect for topic featured link
+        if (!this.canEditTopicFeaturedLink) {
+          this.set("featuredLink", null);
+        }
+
+        return this.editingPost ? this.editPost(opts) : this.createPost(opts);
+      }
+    });
   },
 
   clearState() {
@@ -698,29 +839,34 @@ const Composer = RestModel.extend({
   editPost(opts) {
     const post = this.post;
     const oldCooked = post.cooked;
-    let promise = Ember.RSVP.resolve();
+    let promise = Promise.resolve();
 
     // Update the topic if we're editing the first post
-    if (
-      this.title &&
-      post.post_number === 1 &&
-      this.get("topic.details.can_edit")
-    ) {
-      const topicProps = this.getProperties(
-        Object.keys(_edit_topic_serializer)
-      );
-
+    if (this.title && post.post_number === 1) {
       const topic = this.topic;
 
-      // If we're editing a shared draft, keep the original category
-      if (this.action === EDIT_SHARED_DRAFT) {
-        const destinationCategoryId = topicProps.categoryId;
-        promise = promise.then(() =>
-          topic.updateDestinationCategory(destinationCategoryId)
+      if (topic.details.can_edit) {
+        const topicProps = this.getProperties(
+          Object.keys(_edit_topic_serializer)
         );
-        topicProps.categoryId = topic.get("category.id");
+        // frontend should have featuredLink but backend needs featured_link
+        if (topicProps.featuredLink) {
+          topicProps.featured_link = topicProps.featuredLink;
+          delete topicProps.featuredLink;
+        }
+
+        // If we're editing a shared draft, keep the original category
+        if (this.action === EDIT_SHARED_DRAFT) {
+          const destinationCategoryId = topicProps.categoryId;
+          promise = promise.then(() =>
+            topic.updateDestinationCategory(destinationCategoryId)
+          );
+          topicProps.categoryId = topic.get("category.id");
+        }
+        promise = promise.then(() => Topic.update(topic, topicProps));
+      } else if (topic.details.can_edit_tags) {
+        promise = promise.then(() => topic.updateTags(this.tags));
       }
-      promise = promise.then(() => Topic.update(topic, topicProps));
     }
 
     const props = {
@@ -759,13 +905,17 @@ const Composer = RestModel.extend({
     Object.keys(serializer).forEach(f => {
       const val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
-        Ember.set(dest, f, val);
+        set(dest, f, val);
       }
     });
     return dest;
   },
 
   createPost(opts) {
+    if (CREATE_TOPIC === this.action || PRIVATE_MESSAGE === this.action) {
+      this.set("topic", null);
+    }
+
     const post = this.post;
     const topic = this.topic;
     const user = this.user;
@@ -877,6 +1027,11 @@ const Composer = RestModel.extend({
 
         composer.clearState();
         composer.set("createdPost", createdPost);
+        if (composer.replyingToTopic) {
+          this.appEvents.trigger("post:created", createdPost);
+        } else {
+          this.appEvents.trigger("topic:created", createdPost, composer);
+        }
 
         if (addedToStream) {
           composer.set("composeState", CLOSED);
@@ -895,7 +1050,7 @@ const Composer = RestModel.extend({
               post.set("reply_count", post.reply_count - 1);
             }
           }
-          Ember.run.next(() => composer.set("composeState", OPEN));
+          next(() => composer.set("composeState", OPEN));
         })
       );
   },
@@ -946,35 +1101,26 @@ const Composer = RestModel.extend({
     });
 
     if (this._clearingStatus) {
-      Ember.run.cancel(this._clearingStatus);
+      cancel(this._clearingStatus);
       this._clearingStatus = null;
     }
 
-    let data = this.getProperties(
-      "reply",
-      "action",
-      "title",
-      "categoryId",
-      "archetypeId",
-      "whisper",
-      "metaData",
-      "composerTime",
-      "typingTime",
-      "tags",
-      "noBump"
-    );
+    let data = this.serialize(_draft_serializer);
 
-    data = Object.assign(data, {
-      usernames: this.targetUsernames,
-      postId: this.get("post.id")
-    });
-
-    if (data.postId && !Ember.isEmpty(this.originalText)) {
+    if (data.postId && !isEmpty(this.originalText)) {
       data.originalText = this.originalText;
     }
 
-    return Draft.save(this.draftKey, this.draftSequence, data)
+    return Draft.save(
+      this.draftKey,
+      this.draftSequence,
+      data,
+      this.messageBus.clientId
+    )
       .then(result => {
+        if (result.draft_sequence) {
+          this.draftSequence = result.draft_sequence;
+        }
         if (result.conflict_user) {
           this.setProperties({
             draftSaving: false,
@@ -989,10 +1135,27 @@ const Composer = RestModel.extend({
           });
         }
       })
-      .catch(() => {
+      .catch(e => {
+        let draftStatus;
+        const xhr = e && e.jqXHR;
+
+        if (
+          xhr &&
+          xhr.status === 409 &&
+          xhr.responseJSON &&
+          xhr.responseJSON.errors &&
+          xhr.responseJSON.errors.length
+        ) {
+          const json = e.jqXHR.responseJSON;
+          draftStatus = json.errors[0];
+          if (json.extras && json.extras.description) {
+            bootbox.alert(json.extras.description);
+          }
+        }
+
         this.setProperties({
           draftSaving: false,
-          draftStatus: I18n.t("composer.drafts_offline"),
+          draftStatus: draftStatus || I18n.t("composer.drafts_offline"),
           draftConflictUser: null
         });
       });
@@ -1003,7 +1166,7 @@ const Composer = RestModel.extend({
     const draftStatus = this.draftStatus;
 
     if (draftStatus && !this._clearingStatus) {
-      this._clearingStatus = Ember.run.later(
+      this._clearingStatus = later(
         this,
         () => {
           this.setProperties({ draftStatus: null, draftConflictUser: null });
@@ -1020,8 +1183,8 @@ Composer.reopenClass({
   // TODO: Replace with injection
   create(args) {
     args = args || {};
-    args.user = args.user || Discourse.User.current();
-    args.site = args.site || Discourse.Site.current();
+    args.user = args.user || User.current();
+    args.site = args.site || Site.current();
     args.siteSettings = args.siteSettings || Discourse.SiteSettings;
     return this._super(args);
   },
@@ -1044,6 +1207,18 @@ Composer.reopenClass({
     return Object.keys(_create_serializer);
   },
 
+  serializeToDraft(fieldName, property) {
+    if (!property) {
+      property = fieldName;
+    }
+    _draft_serializer[fieldName] = property;
+    _add_draft_fields[fieldName] = property;
+  },
+
+  serializedFieldsForDraft() {
+    return Object.keys(_draft_serializer);
+  },
+
   // The status the compose view can have
   CLOSED,
   SAVING,
@@ -1061,8 +1236,7 @@ Composer.reopenClass({
 
   // Draft key
   NEW_PRIVATE_MESSAGE_KEY,
-  REPLY_AS_NEW_TOPIC_KEY,
-  REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
+  NEW_TOPIC_KEY
 });
 
 export default Composer;

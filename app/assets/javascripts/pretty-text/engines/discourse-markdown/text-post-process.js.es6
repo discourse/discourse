@@ -81,13 +81,16 @@ function allowedBoundary(content, index, utils) {
 }
 
 function textPostProcess(content, state, ruler) {
-  let result = null,
-    match,
-    pos = 0;
+  let result = null;
+  let match;
+  let pos = 0;
 
   const matcher = ruler.getMatcher();
 
   while ((match = matcher.exec(content))) {
+    // something is wrong
+    if (match.index < pos) break;
+
     // check boundary
     if (match.index > 0) {
       if (!allowedBoundary(content, match.index - 1, state.md.utils)) {
@@ -104,14 +107,13 @@ function textPostProcess(content, state, ruler) {
       }
     }
 
+    result = result || [];
+
     if (match.index > pos) {
-      result = result || [];
       let token = new state.Token("text", "", 0);
       token.content = content.slice(pos, match.index);
       result.push(token);
     }
-
-    result = result || [];
 
     ruler.applyRule(result, match, state);
 

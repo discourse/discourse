@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-require_dependency 'reviewable/actions'
-require_dependency 'reviewable/conversation'
-require_dependency 'reviewable/editable_fields'
-require_dependency 'reviewable/perform_result'
-require_dependency 'reviewable_serializer'
-
 class Reviewable < ActiveRecord::Base
   class UpdateConflict < StandardError; end
 
@@ -38,7 +31,15 @@ class Reviewable < ActiveRecord::Base
 
   after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
+  end
+
+  after_commit(on: [:create, :update]) do
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
+  end
+
+  # Can be used if several actions are equivalent
+  def self.action_aliases
+    {}
   end
 
   # The gaps are in case we want more precision in the future
@@ -70,6 +71,12 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  # This number comes from looking at forums in the wild and what numbers work.
+  # As the site accumulates real data it'll be based on the site activity instead.
+  def self.typical_sensitivity
+    12.5
+  end
+
   # Generate `pending?`, `rejected?`, etc helper methods
   statuses.each do |name, id|
     define_method("#{name}?") { status == id }
@@ -89,6 +96,18 @@ class Reviewable < ActiveRecord::Base
 
   def self.types
     %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser]
+  end
+
+  def self.custom_filters
+    @reviewable_filters ||= []
+  end
+
+  def self.add_custom_filter(new_filter)
+    custom_filters << new_filter
+  end
+
+  def self.clear_custom_filters!
+    @reviewable_filters = []
   end
 
   def created_new!
@@ -119,23 +138,47 @@ class Reviewable < ActiveRecord::Base
       potential_spam: potential_spam
     )
     reviewable.created_new!
-    reviewable.save!
-    reviewable
 
-  rescue ActiveRecord::RecordNotUnique
+    if target.blank?
+      # If there is no target there's no chance of a conflict
+      reviewable.save!
+    else
+      # In this case, a reviewable might already exist for this (type, target_id) index.
+      # ActiveRecord can only validate indexes using a SELECT before the INSERT which
+      # is not safe under concurrency. Instead, we perform an UPDATE on the status, and return
+      # the previous value. We then know:
+      #
+      #   a) if a previous row existed
+      #   b) if it was changed
+      #
+      # And that allows us to complete our logic.
 
-    row_count = DB.exec(<<~SQL, status: statuses[:pending], id: target.id, type: target.class.name)
-      UPDATE reviewables
-      SET status = :status
-      WHERE status <> :status
-        AND target_id = :id
-        AND target_type = :type
-    SQL
+      update_args = {
+        status: statuses[:pending],
+        id: target.id,
+        type: target.class.name,
+        potential_spam: potential_spam == true ? true : nil
+      }
 
-    where(target: target).update_all(potential_spam: true) if potential_spam
+      row = DB.query_single(<<~SQL, update_args)
+        UPDATE reviewables
+        SET status = :status,
+          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam)
+        FROM reviewables AS old_reviewables
+        WHERE reviewables.target_id = :id
+          AND reviewables.target_type = :type
+        RETURNING old_reviewables.status
+      SQL
+      old_status = row[0]
 
-    reviewable = find_by(target: target)
-    reviewable.log_history(:transitioned, created_by) if row_count > 0
+      if old_status.blank?
+        reviewable.save!
+      else
+        reviewable = find_by(target: target)
+        reviewable.log_history(:transitioned, created_by) if old_status != statuses[:pending]
+      end
+    end
+
     reviewable
   end
 
@@ -151,7 +194,8 @@ class Reviewable < ActiveRecord::Base
 
     type_bonus = PostActionType.where(id: reviewable_score_type).pluck(:score_bonus)[0] || 0
     take_action_bonus = take_action ? 5.0 : 0.0
-    sub_total = (ReviewableScore.user_flag_score(user) + type_bonus + take_action_bonus)
+    user_accuracy_bonus = ReviewableScore.user_accuracy_bonus(user)
+    sub_total = ReviewableScore.calculate_score(user, type_bonus, take_action_bonus)
 
     # We can force a reviewable to hit the threshold, for example with queued posts
     if force_review && sub_total < Reviewable.min_score_for_priority
@@ -163,6 +207,7 @@ class Reviewable < ActiveRecord::Base
       status: ReviewableScore.statuses[:pending],
       reviewable_score_type: reviewable_score_type,
       score: sub_total,
+      user_accuracy_bonus: user_accuracy_bonus,
       meta_topic_id: meta_topic_id,
       take_action_bonus: take_action_bonus,
       created_at: created_at || Time.zone.now
@@ -183,15 +228,24 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  def self.sensitivity_score(sensitivity, scale: 1.0)
+  def self.sensitivity_score_value(sensitivity, scale)
     return Float::MAX if sensitivity == 0
 
     ratio = sensitivity / Reviewable.sensitivity[:low].to_f
-    high = PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}")
-    return (10.0 * scale) if high.nil?
+    high = (
+      PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}") ||
+      typical_sensitivity
+    ).to_f
 
     # We want this to be hard to reach
-    (high.to_f * ratio) * scale
+    ((high.to_f * ratio) * scale).truncate(2)
+  end
+
+  def self.sensitivity_score(sensitivity, scale: 1.0)
+    # If the score is less than the default visibility, bring it up to that level.
+    # Otherwise we have the confusing situation where a post might be hidden and
+    # moderators would never see it!
+    [sensitivity_score_value(sensitivity, scale), min_score_for_priority].max
   end
 
   def self.score_to_auto_close_topic
@@ -210,7 +264,7 @@ class Reviewable < ActiveRecord::Base
     priority ||= SiteSetting.reviewable_default_visibility
     id = Reviewable.priorities[priority.to_sym]
     return 0.0 if id.nil?
-    return PluginStore.get('reviewables', "priority_#{id}").to_f
+    PluginStore.get('reviewables', "priority_#{id}").to_f
   end
 
   def history
@@ -283,11 +337,15 @@ class Reviewable < ActiveRecord::Base
   def perform(performed_by, action_id, args = nil)
     args ||= {}
 
+    # Support this action or any aliases
+    aliases = self.class.action_aliases
+    valid = [ action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first) ].flatten
+
     # Ensure the user has access to the action
     actions = actions_for(Guardian.new(performed_by), args)
-    raise InvalidAction.new(action_id, self.class) unless actions.has?(action_id)
+    raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
-    perform_method = "perform_#{action_id}".to_sym
+    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
     raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
 
     result = nil
@@ -384,7 +442,10 @@ class Reviewable < ActiveRecord::Base
     offset: nil,
     priority: nil,
     username: nil,
-    sort_order: nil
+    sort_order: nil,
+    from_date: nil,
+    to_date: nil,
+    additional_filters: {}
   )
     min_score = Reviewable.min_score_for_priority(priority)
 
@@ -411,7 +472,24 @@ class Reviewable < ActiveRecord::Base
     result = result.where(type: type) if type
     result = result.where(category_id: category_id) if category_id
     result = result.where(topic_id: topic_id) if topic_id
-    result = result.where("score >= ?", min_score) if min_score > 0
+    result = result.where("created_at >= ?", from_date) if from_date
+    result = result.where("created_at <= ?", to_date) if to_date
+
+    if min_score > 0 && status == :pending && type.nil?
+      result = result.where("score >= ? OR type = ?", min_score, ReviewableQueuedPost.name)
+    elsif min_score > 0
+      result = result.where("score >= ?", min_score)
+    end
+
+    if !custom_filters.empty?
+      result = custom_filters.reduce(result) do |memo, filter|
+        key = filter.first
+        filter_query = filter.last
+
+        next(memo) unless additional_filters[key]
+        filter_query.call(result, additional_filters[key])
+      end
+    end
 
     # If a reviewable doesn't have a target, allow us to filter on who created that reviewable.
     if user_id
@@ -462,31 +540,67 @@ class Reviewable < ActiveRecord::Base
       .count
   end
 
+  def explain_score
+    DB.query(<<~SQL, reviewable_id: id)
+      SELECT rs.reviewable_id,
+        rs.user_id,
+        CASE WHEN (u.admin OR u.moderator) THEN 5.0 ELSE u.trust_level END AS trust_level_bonus,
+        us.flags_agreed,
+        us.flags_disagreed,
+        us.flags_ignored,
+        rs.score,
+        rs.user_accuracy_bonus,
+        rs.take_action_bonus,
+        COALESCE(pat.score_bonus, 0.0) AS type_bonus
+      FROM reviewable_scores AS rs
+      INNER JOIN users AS u ON u.id = rs.user_id
+      LEFT OUTER JOIN user_stats AS us ON us.user_id = rs.user_id
+      LEFT OUTER JOIN post_action_types AS pat ON pat.id = rs.reviewable_score_type
+        WHERE rs.reviewable_id = :reviewable_id
+    SQL
+  end
+
 protected
 
   def recalculate_score
-    # Recalculate the pending score and return it
-    result = DB.query(<<~SQL, id: self.id, pending: ReviewableScore.statuses[:pending])
+    # pending/agreed scores count
+    sql = <<~SQL
       UPDATE reviewables
       SET score = COALESCE((
         SELECT sum(score)
         FROM reviewable_scores AS rs
         WHERE rs.reviewable_id = :id
+          AND rs.status IN (:pending, :agreed)
       ), 0.0)
       WHERE id = :id
       RETURNING score
     SQL
 
+    result = DB.query(
+      sql,
+      id: self.id,
+      pending: ReviewableScore.statuses[:pending],
+      agreed: ReviewableScore.statuses[:agreed]
+    )
+
     # Update topic score
-    DB.query(<<~SQL, topic_id: topic_id, pending: Reviewable.statuses[:pending])
+    sql = <<~SQL
       UPDATE topics
       SET reviewable_score = COALESCE((
         SELECT SUM(score)
         FROM reviewables AS r
         WHERE r.topic_id = :topic_id
+          AND r.status IN (:pending, :approved)
       ), 0.0)
       WHERE id = :topic_id
     SQL
+
+    DB.query(
+      sql,
+      topic_id: topic_id,
+      pending: Reviewable.statuses[:pending],
+      approved: Reviewable.statuses[:approved]
+    )
 
     self.score = result[0].score
   end
@@ -519,7 +633,7 @@ protected
     return partial_result if status == :all
 
     if status == :reviewed
-      partial_result.where(status: [statuses[:approved], statuses[:rejected], statuses[:ignored]])
+      partial_result.where(status: statuses.except(:pending).values)
     else
       partial_result.where(status: statuses[status])
     end

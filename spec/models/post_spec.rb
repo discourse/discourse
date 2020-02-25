@@ -5,6 +5,8 @@ require 'rails_helper'
 describe Post do
   before { Oneboxer.stubs :onebox }
 
+  let(:upload_path) { Discourse.store.upload_path }
+
   describe '#hidden_reasons' do
     context "verify enum sequence" do
       before do
@@ -138,8 +140,8 @@ describe Post do
     context 'a post with notices' do
       let(:post) {
         post = Fabricate(:post, post_args)
-        post.custom_fields["notice_type"] = Post.notices[:returning_user]
-        post.custom_fields["notice_args"] = 1.day.ago
+        post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
+        post.custom_fields[Post::NOTICE_ARGS] = 1.day.ago
         post.save_custom_fields
         post
       }
@@ -152,6 +154,45 @@ describe Post do
       end
     end
 
+  end
+
+  describe "with_secure_media?" do
+    let(:topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, topic: topic) }
+    it "returns false if secure media is not enabled" do
+      expect(post.with_secure_media?).to eq(false)
+    end
+
+    context "when secure media is enabled" do
+      before { enable_secure_media_and_s3 }
+
+      context "if login_required" do
+        before { SiteSetting.login_required = true }
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+
+      context "if the topic category is read_restricted" do
+        let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        before do
+          topic.change_category_to_id(category.id)
+        end
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+
+      context "if the post is in a PM topic" do
+        let(:topic) { Fabricate(:private_message_topic) }
+
+        it "returns true" do
+          expect(post.with_secure_media?).to eq(true)
+        end
+      end
+    end
   end
 
   describe 'flagging helpers' do
@@ -313,8 +354,8 @@ describe Post do
   describe "maximum attachments" do
     fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
-    let(:post_one_attachment) { post_with_body('<a class="attachment" href="/uploads/default/1/2082985.txt">file.txt</a>', newuser) }
-    let(:post_two_attachments) { post_with_body('<a class="attachment" href="/uploads/default/2/20947092.log">errors.log</a> <a class="attachment" href="/uploads/default/3/283572385.3ds">model.3ds</a>', newuser) }
+    let(:post_one_attachment) { post_with_body("<a class='attachment' href='/#{upload_path}/1/2082985.txt'>file.txt</a>", newuser) }
+    let(:post_two_attachments) { post_with_body("<a class='attachment' href='/#{upload_path}/2/20947092.log'>errors.log</a> <a class='attachment' href='/#{upload_path}/3/283572385.3ds'>model.3ds</a>", newuser) }
 
     it "returns 0 attachments for an empty post" do
       expect(Fabricate.build(:post).attachment_count).to eq(0)
@@ -729,11 +770,11 @@ describe Post do
   end
 
   describe 'before save' do
-    let(:cooked) { "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//localhost:3000/uploads/default/34784374092783e2fef84b8bc96d9b54c11ceea0\" href=\"//localhost:3000/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" class=\"lightbox\" title=\"Sword reworks.gif\"><img src=\"//localhost:3000/uploads/default/optimized/1X/34784374092783e2fef84b8bc96d9b54c11ceea0_1_690x276.gif\" width=\"690\" height=\"276\"><div class=\"meta\">\n<span class=\"filename\">Sword reworks.gif</span><span class=\"informations\">1000x400 1000 KB</span><span class=\"expand\"></span>\n</div></a></div></p>" }
+    let(:cooked) { "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//localhost:3000/#{upload_path}/34784374092783e2fef84b8bc96d9b54c11ceea0\" href=\"//localhost:3000/#{upload_path}/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" class=\"lightbox\" title=\"Sword reworks.gif\"><img src=\"//localhost:3000/#{upload_path}/optimized/1X/34784374092783e2fef84b8bc96d9b54c11ceea0_1_690x276.gif\" width=\"690\" height=\"276\"><div class=\"meta\">\n<span class=\"filename\">Sword reworks.gif</span><span class=\"informations\">1000x400 1000 KB</span><span class=\"expand\"></span>\n</div></a></div></p>" }
 
     let(:post) do
       Fabricate(:post,
-        raw: "<img src=\"/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" width=\"690\" height=\"276\">",
+        raw: "<img src=\"/#{upload_path}/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" width=\"690\" height=\"276\">",
         cooked: cooked
       )
     end
@@ -910,6 +951,16 @@ describe Post do
       expect(p6.reply_ids).to be_empty # quotes itself
     end
 
+    it "ignores posts moved to other topics" do
+      p2.update_column(:topic_id, Fabricate(:topic).id)
+      expect(p1.reply_ids).to be_blank
+    end
+
+    it "doesn't include the same reply twice" do
+      PostReply.create!(post: p4, reply: p1)
+      expect(p1.reply_ids.size).to eq(4)
+    end
+
     it "does not skip any replies" do
       expect(p1.reply_ids(only_replies_to_single_post: false)).to eq([{ id: p2.id, level: 1 }, { id: p4.id, level: 2 }, { id: p5.id, level: 3 }, { id: p6.id, level: 2 }])
       expect(p2.reply_ids(only_replies_to_single_post: false)).to eq([{ id: p4.id, level: 1 }, { id: p5.id, level: 2 }, { id: p6.id, level: 1 }])
@@ -985,6 +1036,7 @@ describe Post do
     describe 'mentions' do
       fab!(:group) do
         Fabricate(:group,
+          visibility_level: Group.visibility_levels[:members],
           mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins]
         )
       end
@@ -994,13 +1046,13 @@ describe Post do
       end
 
       describe 'when user can not mention a group' do
-        it "should not create the mention" do
+        it "should not create the mention with the notify class" do
           post = Fabricate(:post, raw: "hello @#{group.name}")
           post.trigger_post_process
           post.reload
 
           expect(post.cooked).to eq(
-            %Q|<p>hello <span class="mention">@#{group.name}</span></p>|
+            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
           )
         end
       end
@@ -1016,7 +1068,24 @@ describe Post do
           post.reload
 
           expect(post.cooked).to eq(
-            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+            %Q|<p>hello <a class="mention-group notify" href="/groups/#{group.name}">@#{group.name}</a></p>|
+          )
+        end
+      end
+
+      describe 'when group owner can mention a group' do
+        before do
+          group.update!(mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+          group.add_owner(post.user)
+        end
+
+        it 'should create the mention' do
+          post.update!(raw: "hello @#{group.name}")
+          post.trigger_post_process
+          post.reload
+
+          expect(post.cooked).to eq(
+            %Q|<p>hello <a class="mention-group notify" href="/groups/#{group.name}">@#{group.name}</a></p>|
           )
         end
       end
@@ -1228,21 +1297,23 @@ describe Post do
     expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
-  describe '#link_post_uploads' do
+  describe 'uploads' do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:image_upload) { Fabricate(:upload) }
     fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
     fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
     fab!(:attachment_upload_2) { Fabricate(:upload) }
+    fab!(:attachment_upload_3) { Fabricate(:upload, extension: nil) }
 
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_uri}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
     let(:audio_url) { "#{base_url}#{audio_upload.url}" }
 
-    let(:raw) do
+    let(:raw_multiple) do
       <<~RAW
       <a href="#{attachment_upload.url}">Link</a>
       [test|attachment](#{attachment_upload_2.short_url})
+      [test3|attachment](#{attachment_upload_3.short_url})
       <img src="#{image_upload.url}">
 
       <video width="100%" height="100%" controls>
@@ -1257,35 +1328,144 @@ describe Post do
       RAW
     end
 
-    let(:post) { Fabricate(:post, raw: raw) }
+    let(:post) { Fabricate(:post, raw: raw_multiple) }
 
-    it "finds all the uploads in the post" do
-      post.custom_fields[Post::DOWNLOADED_IMAGES] = {
-        "/uploads/default/original/1X/1/1234567890123456.csv": attachment_upload.id
-      }
+    context "#link_post_uploads" do
+      it "finds all the uploads in the post" do
+        post.custom_fields[Post::DOWNLOADED_IMAGES] = {
+          "/#{upload_path}/original/1X/1/1234567890123456.csv": attachment_upload.id
+        }
 
-      post.save_custom_fields
-      post.link_post_uploads
+        post.save_custom_fields
+        post.link_post_uploads
 
-      expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
-        video_upload.id,
-        image_upload.id,
-        audio_upload.id,
-        attachment_upload.id,
-        attachment_upload_2.id
-      )
+        expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
+          video_upload.id,
+          image_upload.id,
+          audio_upload.id,
+          attachment_upload.id,
+          attachment_upload_2.id,
+          attachment_upload_3.id
+        )
+      end
+
+      it "cleans the reverse index up for the current post" do
+        post.link_post_uploads
+
+        post_uploads_ids = post.post_uploads.pluck(:id)
+
+        post.link_post_uploads
+
+        expect(post.reload.post_uploads.pluck(:id)).to_not contain_exactly(
+          post_uploads_ids
+        )
+      end
+
+      context "when secure media is enabled" do
+        before { enable_secure_media_and_s3 }
+
+        it "sets the access_control_post_id on uploads in the post that don't already have the value set" do
+          other_post = Fabricate(:post)
+          video_upload.update(access_control_post_id: other_post.id)
+          audio_upload.update(access_control_post_id: other_post.id)
+
+          post.link_post_uploads
+
+          image_upload.reload
+          video_upload.reload
+          expect(image_upload.access_control_post_id).to eq(post.id)
+          expect(video_upload.access_control_post_id).not_to eq(post.id)
+        end
+
+        context "for custom emoji" do
+          before do
+            CustomEmoji.create(name: "meme", upload: image_upload)
+          end
+          it "never sets an access control post because they should not be secure" do
+            post.link_post_uploads
+            expect(image_upload.reload.access_control_post_id).to eq(nil)
+          end
+        end
+      end
     end
 
-    it "cleans the reverse index up for the current post" do
-      post.link_post_uploads
+    context '#update_uploads_secure_status' do
+      fab!(:user) { Fabricate(:user, trust_level: 0) }
 
-      post_uploads_ids = post.post_uploads.pluck(:id)
+      let(:raw) do
+        <<~RAW
+        <a href="#{attachment_upload.url}">Link</a>
+        <img src="#{image_upload.url}">
+        RAW
+      end
 
-      post.link_post_uploads
+      before do
+        enable_secure_media_and_s3
+        attachment_upload.update!(original_filename: "hello.csv")
 
-      expect(post.reload.post_uploads.pluck(:id)).to_not contain_exactly(
-        post_uploads_ids
-      )
+        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+        stub_request(
+          :put,
+          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{attachment_upload.sha1}.#{attachment_upload.extension}?acl"
+        )
+        stub_request(
+          :put,
+          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
+        )
+      end
+
+      it "marks image uploads as secure in PMs when secure_media is ON" do
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+        post.link_post_uploads
+        post.update_uploads_secure_status
+
+        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+          [attachment_upload.id, false],
+          [image_upload.id, true]
+        )
+      end
+
+      it "marks image uploads as not secure in PMs when when secure_media is ON" do
+        SiteSetting.secure_media = false
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+        post.link_post_uploads
+        post.update_uploads_secure_status
+
+        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+          [attachment_upload.id, false],
+          [image_upload.id, false]
+        )
+      end
+
+      it "marks attachments as secure when relevant setting is enabled" do
+        SiteSetting.prevent_anons_from_downloading_files = true
+        SiteSetting.secure_media = true
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user, category: private_category))
+        post.link_post_uploads
+        post.update_uploads_secure_status
+
+        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+          [attachment_upload.id, true],
+          [image_upload.id, true]
+        )
+      end
+
+      it "does not mark an upload as secure if it has already been used in a public topic" do
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
+        post.link_post_uploads
+        post.update_uploads_secure_status
+
+        pm = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+        pm.link_post_uploads
+        pm.update_uploads_secure_status
+
+        expect(PostUpload.where(post: pm).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+          [attachment_upload.id, false],
+          [image_upload.id, false]
+        )
+      end
     end
   end
 
@@ -1328,28 +1508,86 @@ describe Post do
   context "have_uploads" do
     it "should find all posts with the upload" do
       ids = []
-      ids << Fabricate(:post, cooked: "A post with upload <img src='/uploads/default/1/defghijklmno.png'>").id
-      ids << Fabricate(:post, cooked: "A post with optimized image <img src='/uploads/default/_optimized/601/961/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with upload <img src='/#{upload_path}/1/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with optimized image <img src='/#{upload_path}/_optimized/601/961/defghijklmno.png'>").id
       Fabricate(:post)
-      ids << Fabricate(:post, cooked: "A post with upload <img src='/uploads/default/original/1X/abc/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with upload <img src='/#{upload_path}/original/1X/abc/defghijklmno.png'>").id
       ids << Fabricate(:post, cooked: "A post with upload link <a href='https://cdn.example.com/original/1X/abc/defghijklmno.png'>").id
       ids << Fabricate(:post, cooked: "A post with optimized image <img src='https://cdn.example.com/bucket/optimized/1X/abc/defghijklmno.png'>").id
       Fabricate(:post, cooked: "A post with external link <a href='https://example.com/wp-content/uploads/abcdef.gif'>")
       ids << Fabricate(:post, cooked: 'A post with missing upload <img src="https://cdn.example.com/images/transparent.png" data-orig-src="upload://defghijklmno.png">').id
+      ids << Fabricate(:post, cooked: 'A post with video upload <video width="100%" height="100%" controls=""><source src="https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4"><a href="https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4">https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4</a></video>').id
       expect(Post.have_uploads.order(:id).pluck(:id)).to eq(ids)
     end
   end
 
   describe '#each_upload_url' do
-    let(:upload) { Fabricate(:upload_s3) }
-
     it "correctly identifies all upload urls" do
-      urls = []
+      SiteSetting.authorized_extensions = "*"
       upload1 = Fabricate(:upload)
       upload2 = Fabricate(:upload)
-      post = Fabricate(:post, raw: "A post with image and link upload.\n\n![](#{upload1.short_url})\n\n<a href='#{upload2.url}'>Link to upload</a>\n![](http://example.com/external.png)")
-      post.each_upload_url { |src, _, _| urls << src }
-      expect(urls).to eq([upload1.url, upload2.url])
+      upload3 = Fabricate(:video_upload)
+      upload4 = Fabricate(:upload)
+
+      set_cdn_url "https://awesome.com/somepath"
+
+      post = Fabricate(:post, raw: <<~RAW)
+      A post with image, video and link upload.
+
+      ![](#{upload1.short_url})
+
+      "#{GlobalSetting.cdn_url}#{upload4.url}"
+
+      <a href='#{Discourse.base_url}#{upload2.url}'>Link to upload</a>
+      ![](http://example.com/external.png)
+
+      #{Discourse.base_url}#{upload3.short_path}
+      RAW
+
+      urls = []
+      paths = []
+
+      post.each_upload_url do |src, path, _|
+        urls << src
+        paths << path
+      end
+
+      expect(urls).to contain_exactly(
+        "#{GlobalSetting.cdn_url}#{upload1.url}",
+        "#{GlobalSetting.cdn_url}#{upload4.url}",
+        "#{Discourse.base_url}#{upload2.url}",
+        "#{Discourse.base_url}#{upload3.short_path}"
+      )
+
+      expect(paths).to contain_exactly(
+        upload1.url,
+        upload4.url,
+        upload2.url,
+        nil
+      )
+    end
+
+    it "correctly identifies missing uploads with short url" do
+      upload = Fabricate(:upload)
+      url = upload.short_url
+      sha1 = upload.sha1
+      upload.destroy!
+
+      post = Fabricate(:post, raw: "![upload](#{url})")
+
+      urls = []
+      paths = []
+      sha1s = []
+
+      post.each_upload_url do |src, path, sha|
+        urls << src
+        paths << path
+        sha1s << sha
+      end
+
+      expect(urls).to contain_exactly(url)
+      expect(paths).to contain_exactly(nil)
+      expect(sha1s).to contain_exactly(sha1)
     end
 
     it "should skip external urls with upload url in query string" do
@@ -1367,4 +1605,12 @@ describe Post do
     end
   end
 
+  def enable_secure_media_and_s3
+    SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+    SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+    SiteSetting.s3_access_key_id = "some key"
+    SiteSetting.s3_secret_access_key = "some secret key"
+    SiteSetting.secure_media = true
+  end
 end

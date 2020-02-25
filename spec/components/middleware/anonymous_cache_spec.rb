@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_dependency "middleware/anonymous_cache"
 
 describe Middleware::AnonymousCache::Helper do
 
@@ -127,6 +126,24 @@ describe Middleware::AnonymousCache::Helper do
     after do
       helper.clear_cache
       crawler.clear_cache
+    end
+
+    before do
+      global_setting :anon_cache_store_threshold, 1
+    end
+
+    it "compresses body on demand" do
+      global_setting :compress_anon_cache, true
+
+      payload = "x" * 1000
+      helper.cache([200, { "HELLO" => "WORLD" }, [payload]])
+
+      helper = new_helper("ANON_CACHE_DURATION" => 10)
+      expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, [payload]])
+
+      # depends on i7z implementation, but lets assume it is stable unless we discover
+      # otherwise
+      expect(Discourse.redis.get(helper.cache_key_body).length).to eq(16)
     end
 
     it "handles brotli switching" do

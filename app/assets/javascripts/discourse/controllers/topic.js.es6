@@ -1,3 +1,10 @@
+import { isPresent, isEmpty } from "@ember/utils";
+import { or, and, not, alias } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
@@ -5,18 +12,17 @@ import Post from "discourse/models/post";
 import Quote from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { userPath } from "discourse/lib/url";
 import showModal from "discourse/lib/show-modal";
+import TopicTimer from "discourse/models/topic-timer";
+import { Promise } from "rsvp";
 
 let customPostMessageCallbacks = {};
 
@@ -32,14 +38,14 @@ export function registerCustomPostMessageCallback(type, callback) {
   customPostMessageCallbacks[type] = callback;
 }
 
-export default Ember.Controller.extend(bufferedProperty("model"), {
-  composer: Ember.inject.controller(),
-  application: Ember.inject.controller(),
+export default Controller.extend(bufferedProperty("model"), {
+  composer: inject(),
+  application: inject(),
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
   queryParams: ["filter", "username_filters"],
-  loadedAllPosts: Ember.computed.or(
+  loadedAllPosts: or(
     "model.postStream.loadedAllPosts",
     "model.postStream.loadingLastPost"
   ),
@@ -53,7 +59,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   filter: null,
   quoteState: null,
 
-  canRemoveTopicFeaturedLink: Ember.computed.and(
+  canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
     "buffered.featured_link"
   ),
@@ -65,13 +71,13 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   @observes("model.title", "category")
   _titleChanged() {
     const title = this.get("model.title");
-    if (!Ember.isEmpty(title)) {
+    if (!isEmpty(title)) {
       // force update lazily loaded titles
       this.send("refreshTitle");
     }
   },
 
-  @computed("model.details.can_create_post")
+  @discourseComputed("model.details.can_create_post")
   embedQuoteButton(canCreatePost) {
     return (
       canCreatePost &&
@@ -80,28 +86,31 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @computed("model.postStream.loaded", "model.category_id")
+  @discourseComputed("model.postStream.loaded", "model.category_id")
   showSharedDraftControls(loaded, categoryId) {
     let draftCat = this.site.shared_drafts_category_id;
     return loaded && draftCat && categoryId && draftCat === categoryId;
   },
 
-  @computed("site.mobileView", "model.posts_count")
+  @discourseComputed("site.mobileView", "model.posts_count")
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
   },
 
-  @computed("model.postStream.posts", "model.postStream.postsWithPlaceholders")
+  @discourseComputed(
+    "model.postStream.posts",
+    "model.postStream.postsWithPlaceholders"
+  )
   postsToRender(posts, postsWithPlaceholders) {
     return this.capabilities.isAndroid ? posts : postsWithPlaceholders;
   },
 
-  @computed("model.postStream.loadingFilter")
+  @discourseComputed("model.postStream.loadingFilter")
   androidLoading(loading) {
     return this.capabilities.isAndroid && loading;
   },
 
-  @computed("model")
+  @discourseComputed("model")
   pmPath(topic) {
     return this.currentUser && this.currentUser.pmPath(topic);
   },
@@ -129,12 +138,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       return;
     }
 
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       this.send("showHistory", post, revision);
     });
   },
 
-  showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
+  showCategoryChooser: not("model.isPrivateMessage"),
 
   gotoInbox(name) {
     let url = userPath(this.get("currentUser.username_lower") + "/messages");
@@ -144,12 +153,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     DiscourseURL.routeTo(url);
   },
 
-  @computed
+  @discourseComputed
   selectedQuery() {
     return post => this.postSelected(post);
   },
 
-  @computed("model.isPrivateMessage", "model.category.id")
+  @discourseComputed("model.isPrivateMessage", "model.category.id")
   canEditTopicFeaturedLink(isPrivateMessage, categoryId) {
     if (!this.siteSettings.topic_featured_link_enabled || isPrivateMessage) {
       return false;
@@ -165,12 +174,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @computed("model")
+  @discourseComputed("model")
   featuredLinkDomain(topic) {
     return extractLinkMeta(topic).domain;
   },
 
-  @computed("model.isPrivateMessage")
+  @discourseComputed("model.isPrivateMessage")
   canEditTags(isPrivateMessage) {
     return (
       this.site.get("can_tag_topics") &&
@@ -233,8 +242,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   actions: {
-    topicCategoryChanged(selection) {
-      this.set("buffered.category_id", selection.value);
+    topicCategoryChanged(categoryId) {
+      this.set("buffered.category_id", categoryId);
+    },
+
+    topicTagsChanged(value) {
+      this.set("buffered.tags", value);
     },
 
     deletePending(pending) {
@@ -253,16 +266,16 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       this.send("showFeatureTopic");
     },
 
-    selectText(postId, buffer) {
+    selectText(postId, buffer, opts) {
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
-        ? Ember.RSVP.resolve(loadedPost)
+        ? Promise.resolve(loadedPost)
         : this.get("model.postStream").loadPost(postId);
 
       return promise.then(post => {
         const composer = this.composer;
         const viewOpen = composer.get("model.viewOpen");
-        const quotedText = Quote.build(post, buffer);
+        const quotedText = Quote.build(post, buffer, opts);
 
         // If we can't create a post, delegate to reply as new topic
         if (!viewOpen && !this.get("model.details.can_create_post")) {
@@ -431,9 +444,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         : "/";
       ajax("/t/" + topic.get("id") + "/timings.json?last=1", { type: "DELETE" })
         .then(() => {
-          const highestSeenByTopic = Discourse.Session.currentProp(
-            "highestSeenByTopic"
-          );
+          const highestSeenByTopic = this.session.get("highestSeenByTopic");
           highestSeenByTopic[topic.get("id")] = null;
           DiscourseURL.routeTo(goToPath);
         })
@@ -465,6 +476,8 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       const topic = post ? post.get("topic") : this.model;
       const quoteState = this.quoteState;
       const postStream = this.get("model.postStream");
+
+      this.appEvents.trigger("page:compose-reply", topic);
 
       if (!postStream || !topic || !topic.get("details.can_create_post")) {
         return;
@@ -522,6 +535,16 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
       if (user.get("staff") && hasReplies) {
         ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
+          if (replies.length === 0) {
+            return post
+              .destroy(user)
+              .then(refresh)
+              .catch(error => {
+                popupAjaxError(error);
+                post.undoDeleteState();
+              });
+          }
+
           const buttons = [];
 
           buttons.push({
@@ -653,6 +676,16 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    toggleBookmarkWithReminder(post) {
+      if (!this.currentUser) {
+        return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
+      } else if (post) {
+        return post.toggleBookmarkWithReminder();
+      } else {
+        return this.model.toggleBookmarkWithReminder();
+      }
+    },
+
     jumpToIndex(index) {
       this._jumpToIndex(index);
     },
@@ -675,20 +708,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     jumpToPost(postNumber) {
-      if (this.get("model.postStream.isMegaTopic")) {
-        this._jumpToPostNumber(postNumber);
-      } else {
-        const postStream = this.get("model.postStream");
-        let postId = postStream.findPostIdForPostNumber(postNumber);
-
-        // If we couldn't find the post, find the closest post to it
-        if (!postId) {
-          const closest = postStream.closestPostNumberFor(postNumber);
-          postId = postStream.findPostIdForPostNumber(closest);
-        }
-
-        this._jumpToPostId(postId);
-      }
+      this._jumpToPostNumber(postNumber);
     },
 
     jumpTop() {
@@ -703,17 +723,22 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       });
     },
 
+    jumpEnd() {
+      this.appEvents.trigger(
+        "topic:jump-to-post",
+        this.get("model.highest_post_number")
+      );
+      DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
+        jumpEnd: true
+      });
+    },
+
     jumpUnread() {
       this._jumpToPostId(this.get("model.last_read_post_id"));
     },
 
     jumpToPostId(postId) {
       this._jumpToPostId(postId);
-    },
-
-    hideMultiSelect() {
-      this.set("multiSelect", false);
-      this._forceRefreshPostStream();
     },
 
     toggleMultiSelect() {
@@ -814,7 +839,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     addNotice(post) {
-      return new Ember.RSVP.Promise(function(resolve, reject) {
+      return new Promise(function(resolve, reject) {
         const controller = showModal("add-post-notice");
         controller.setProperties({ post, resolve, reject });
       });
@@ -960,13 +985,13 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         options = {
           action: Composer.PRIVATE_MESSAGE,
           archetypeId: "private_message",
-          draftKey: Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY,
+          draftKey: post.topic.draft_key,
           usernames: usernames
         };
       } else {
         options = {
           action: Composer.CREATE_TOPIC,
-          draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
+          draftKey: post.topic.draft_key,
           categoryId: this.get("model.category.id")
         };
       }
@@ -974,7 +999,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       composerController
         .open(options)
         .then(() => {
-          return Ember.isEmpty(quotedText) ? "" : quotedText;
+          return isEmpty(quotedText) ? "" : quotedText;
         })
         .then(q => {
           const postUrl = `${location.protocol}//${location.host}${post.get(
@@ -1022,11 +1047,17 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     convertToPublicTopic() {
-      this.model.convertTopic("public");
+      showModal("convert-to-public-topic", {
+        model: this.model,
+        modalClass: "convert-to-public-topic"
+      });
     },
 
     convertToPrivateMessage() {
-      this.model.convertTopic("private");
+      this.model
+        .convertTopic("private")
+        .then(() => window.location.reload())
+        .catch(popupAjaxError);
     },
 
     removeFeaturedLink() {
@@ -1035,6 +1066,18 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     resetBumpDate() {
       this.model.resetBumpDate();
+    },
+
+    removeTopicTimer(statusType, topicTimer) {
+      TopicTimer.updateStatus(
+        this.get("model.id"),
+        null,
+        null,
+        statusType,
+        null
+      )
+        .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
+        .catch(error => popupAjaxError(error));
     }
   },
 
@@ -1119,14 +1162,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  hasError: Ember.computed.or("model.notFoundHtml", "model.message"),
-  noErrorYet: Ember.computed.not("hasError"),
+  hasError: or("model.errorHtml", "model.errorMessage"),
+  noErrorYet: not("hasError"),
 
-  categories: Ember.computed.alias("site.categoriesList"),
+  categories: alias("site.categoriesList"),
 
-  selectedPostsCount: Ember.computed.alias("selectedPostIds.length"),
+  selectedPostsCount: alias("selectedPostIds.length"),
 
-  @computed(
+  @discourseComputed(
     "selectedPostIds",
     "model.postStream.posts",
     "selectedPostIds.[]",
@@ -1138,7 +1181,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       .filter(post => post !== undefined);
   },
 
-  @computed("selectedPostsCount", "selectedPosts", "selectedPosts.[]")
+  @discourseComputed("selectedPostsCount", "selectedPosts", "selectedPosts.[]")
   selectedPostsUsername(selectedPostsCount, selectedPosts) {
     if (selectedPosts.length < 1 || selectedPostsCount > selectedPosts.length) {
       return undefined;
@@ -1149,7 +1192,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       : undefined;
   },
 
-  @computed(
+  @discourseComputed(
     "selectedPostsCount",
     "model.postStream.isMegaTopic",
     "model.postStream.stream.length",
@@ -1168,14 +1211,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @computed("selectedAllPosts", "model.postStream.isMegaTopic")
+  @discourseComputed("selectedAllPosts", "model.postStream.isMegaTopic")
   canSelectAll(selectedAllPosts, isMegaTopic) {
     return isMegaTopic ? false : !selectedAllPosts;
   },
 
-  canDeselectAll: Ember.computed.alias("selectedAllPosts"),
+  canDeselectAll: alias("selectedAllPosts"),
 
-  @computed(
+  @discourseComputed(
     "currentUser.staff",
     "selectedPostsCount",
     "selectedAllPosts",
@@ -1194,19 +1237,23 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @computed("model.details.can_move_posts", "selectedPostsCount")
+  @discourseComputed("model.details.can_move_posts", "selectedPostsCount")
   canMergeTopic(canMovePosts, selectedPostsCount) {
     return canMovePosts && selectedPostsCount > 0;
   },
 
-  @computed("currentUser.admin", "selectedPostsCount", "selectedPostsUsername")
+  @discourseComputed(
+    "currentUser.admin",
+    "selectedPostsCount",
+    "selectedPostsUsername"
+  )
   canChangeOwner(isAdmin, selectedPostsCount, selectedPostsUsername) {
     return (
       isAdmin && selectedPostsCount > 0 && selectedPostsUsername !== undefined
     );
   },
 
-  @computed(
+  @discourseComputed(
     "selectedPostsCount",
     "selectedPostsUsername",
     "selectedPosts",
@@ -1229,7 +1276,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     return this.selectedAllPost || this.selectedPostIds.includes(post.id);
   },
 
-  @computed
+  @discourseComputed
   loadingHTML() {
     return spinnerHTML;
   },
@@ -1252,7 +1299,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       data => {
         const topic = this.model;
 
-        if (Ember.isPresent(data.notification_level_change)) {
+        if (isPresent(data.notification_level_change)) {
           topic.set(
             "details.notification_level",
             data.notification_level_change
@@ -1284,6 +1331,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
               })
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
+          case "read": {
+            postStream
+              .triggerReadPost(data.id, data.readers_count)
+              .then(() => refresh({ id: data.id, refreshLikes: true }));
+            break;
+          }
           case "revised":
           case "rebaked": {
             postStream
@@ -1323,7 +1376,8 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
             if (callback) {
               callback(this, data);
             } else {
-              Ember.Logger.warn("unknown topic bus message type", data);
+              // eslint-disable-next-line no-console
+              console.warn("unknown topic bus message type", data);
             }
           }
         }
@@ -1356,7 +1410,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  _scrollToPost: debounce(function(postNumber) {
+  _scrollToPost: discourseDebounce(function(postNumber) {
     const $post = $(`.topic-post article#post_${postNumber}`);
 
     if ($post.length === 0 || isElementInViewport($post)) return;
@@ -1394,7 +1448,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         // automatically unpin topics when the user reaches the bottom
         const max = _.max(postNumbers);
         if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
-          Ember.run.next(() => topic.clearPin());
+          next(() => topic.clearPin());
         }
       }
     }

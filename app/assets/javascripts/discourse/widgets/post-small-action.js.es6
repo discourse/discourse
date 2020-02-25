@@ -5,6 +5,7 @@ import { h } from "virtual-dom";
 import { avatarFor } from "discourse/widgets/post";
 import { userPath } from "discourse/lib/url";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { computed } from "@ember/object";
 
 export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);
@@ -22,12 +23,12 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
 }
 
 export function actionDescription(actionCode, createdAt, username) {
-  return function() {
+  return computed(actionCode, createdAt, function() {
     const ac = this.get(actionCode);
     if (ac) {
       return actionDescriptionHtml(ac, this.get(createdAt), this.get(username));
     }
-  }.property(actionCode, createdAt);
+  });
 }
 
 const icons = {

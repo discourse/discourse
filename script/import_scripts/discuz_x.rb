@@ -275,7 +275,6 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         description: row['description'],
         position: row['position'].to_i + max_position,
         color: color,
-        suppress_from_latest: (row['status'] == (0) || row['status'] == (3)),
         post_create_action: lambda do |category|
           if slug = @category_slug[row['id']]
             category.update(slug: slug)
@@ -294,6 +293,10 @@ class ImportScripts::DiscuzX < ImportScripts::Base
               category.color = Miro::DominantColors.new(File.join('/shared', upload.url)).to_hex.first[1, 6] if !color
               category.save!
             end
+          end
+
+          if row['status'] == (0) || row['status'] == (3)
+            SiteSetting.default_categories_muted = [SiteSetting.default_categories_muted, category.id].reject(&:blank?).join("|")
           end
           category
         end
@@ -830,9 +833,9 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     file_name = "#{part_4}_avatar_big.jpg"
 
     if absolute
-      return File.join(DISCUZX_BASE_DIR, AVATAR_DIR, part_1, part_2, part_3, file_name), file_name
+      [File.join(DISCUZX_BASE_DIR, AVATAR_DIR, part_1, part_2, part_3, file_name), file_name]
     else
-      return File.join(AVATAR_DIR, part_1, part_2, part_3, file_name), file_name
+      [File.join(AVATAR_DIR, part_1, part_2, part_3, file_name), file_name]
     end
   end
 
@@ -882,7 +885,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
       return nil
     end
 
-    return upload, real_filename
+    [upload, real_filename]
   end
 
   # find the uploaded file and real name from the db
@@ -938,12 +941,12 @@ class ImportScripts::DiscuzX < ImportScripts::Base
       return nil
     end
 
-    return upload, real_filename
+    [upload, real_filename]
   rescue Mysql2::Error => e
     puts "SQL Error"
     puts e.message
     puts sql
-    return nil
+    nil
   end
 
   def first_exists(*items)

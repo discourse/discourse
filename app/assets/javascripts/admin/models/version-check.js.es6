@@ -1,34 +1,35 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
+import EmberObject from "@ember/object";
 
-const VersionCheck = Discourse.Model.extend({
-  @computed("updated_at")
+const VersionCheck = EmberObject.extend({
+  @discourseComputed("updated_at")
   noCheckPerformed(updatedAt) {
     return updatedAt === null;
   },
 
-  @computed("missing_versions_count")
+  @discourseComputed("missing_versions_count")
   upToDate(missingVersionsCount) {
     return missingVersionsCount === 0 || missingVersionsCount === null;
   },
 
-  @computed("missing_versions_count")
+  @discourseComputed("missing_versions_count")
   behindByOneVersion(missingVersionsCount) {
     return missingVersionsCount === 1;
   },
 
-  @computed("git_branch", "installed_sha")
-  gitLink(gitBranch, installedSHA) {
-    if (gitBranch) {
-      return `https://github.com/discourse/discourse/compare/${installedSHA}...${gitBranch}`;
-    } else {
-      return `https://github.com/discourse/discourse/tree/${installedSHA}`;
+  @discourseComputed("installed_sha")
+  gitLink(installedSHA) {
+    if (installedSHA) {
+      return `https://github.com/discourse/discourse/commits/${installedSHA}`;
     }
   },
 
-  @computed("installed_sha")
+  @discourseComputed("installed_sha")
   shortSha(installedSHA) {
-    return installedSHA.substr(0, 10);
+    if (installedSHA) {
+      return installedSHA.substr(0, 10);
+    }
   }
 });
 

@@ -1,22 +1,22 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import { alias } from "@ember/object/computed";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   elementId: "topic-progress-wrapper",
   classNameBindings: ["docked"],
   docked: false,
   progressPosition: null,
-  postStream: Ember.computed.alias("topic.postStream"),
+  postStream: alias("topic.postStream"),
   _streamPercentage: null,
 
-  @computed("progressPosition")
+  @discourseComputed("progressPosition")
   jumpTopDisabled(progressPosition) {
     return progressPosition <= 3;
   },
 
-  @computed(
+  @discourseComputed(
     "postStream.filteredPostsCount",
     "topic.highest_post_number",
     "progressPosition"
@@ -28,7 +28,7 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed(
+  @discourseComputed(
     "postStream.loaded",
     "topic.currentPost",
     "postStream.filteredPostsCount"
@@ -41,14 +41,14 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed("postStream.filteredPostsCount")
+  @discourseComputed("postStream.filteredPostsCount")
   hugeNumberOfPosts(filteredPostsCount) {
     return (
       filteredPostsCount >= this.siteSettings.short_progress_text_threshold
     );
   },
 
-  @computed("hugeNumberOfPosts", "topic.highest_post_number")
+  @discourseComputed("hugeNumberOfPosts", "topic.highest_post_number")
   jumpToBottomTitle(hugeNumberOfPosts, highestPostNumber) {
     if (hugeNumberOfPosts) {
       return I18n.t("topic.progress.jump_bottom_with_number", {
@@ -59,7 +59,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("progressPosition", "topic.last_read_post_id")
+  @discourseComputed("progressPosition", "topic.last_read_post_id")
   showBackButton(position, lastReadId) {
     if (!lastReadId) {
       return;
@@ -72,7 +72,7 @@ export default Ember.Component.extend({
 
   @observes("postStream.stream.[]")
   _updateBar() {
-    Ember.run.scheduleOnce("afterRender", this, this._updateProgressBar);
+    scheduleOnce("afterRender", this, this._updateProgressBar);
   },
 
   _topicScrolled(event) {
@@ -99,16 +99,11 @@ export default Ember.Component.extend({
 
     const prevEvent = this.prevEvent;
     if (prevEvent) {
-      Ember.run.scheduleOnce(
-        "afterRender",
-        this,
-        this._topicScrolled,
-        prevEvent
-      );
+      scheduleOnce("afterRender", this, this._topicScrolled, prevEvent);
     } else {
-      Ember.run.scheduleOnce("afterRender", this, this._updateProgressBar);
+      scheduleOnce("afterRender", this, this._updateProgressBar);
     }
-    Ember.run.scheduleOnce("afterRender", this, this._dock);
+    scheduleOnce("afterRender", this, this._dock);
   },
 
   willDestroyElement() {
@@ -126,7 +121,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    const $topicProgress = this.$("#topic-progress");
+    const $topicProgress = $(this.element.querySelector("#topic-progress"));
     // speeds up stuff, bypass jquery slowness and extra checks
     if (!this._totalWidth) {
       this._totalWidth = $topicProgress[0].offsetWidth;
@@ -151,22 +146,34 @@ export default Ember.Component.extend({
   },
 
   _dock() {
-    const $wrapper = this.$();
+    const $wrapper = $(this.element);
     if (!$wrapper || $wrapper.length === 0) return;
 
     const $html = $("html");
     const offset = window.pageYOffset || $html.scrollTop();
     const progressHeight = this.site.mobileView
       ? 0
-      : $("#topic-progress").height();
+      : $("#topic-progress").outerHeight();
     const maximumOffset = $("#topic-bottom").offset().top + progressHeight;
     const windowHeight = $(window).height();
-    const composerHeight = $("#reply-control").height() || 0;
+    let composerHeight = $("#reply-control").height() || 0;
     const isDocked = offset >= maximumOffset - windowHeight + composerHeight;
-    const bottom = $("body").height() - maximumOffset;
+    let bottom = $("body").height() - maximumOffset;
+
+    const $iPadFooterNav = $(".footer-nav-ipad .footer-nav");
+    if ($iPadFooterNav && $iPadFooterNav.length > 0) {
+      bottom += $iPadFooterNav.outerHeight();
+    }
     const wrapperDir = $html.hasClass("rtl") ? "left" : "right";
+    const draftComposerHeight = 40;
 
     if (composerHeight > 0) {
+      const $iPhoneFooterNav = $(".footer-nav-visible .footer-nav");
+      const $replyDraft = $("#reply-control.draft");
+      if ($iPhoneFooterNav.outerHeight() && $replyDraft.outerHeight()) {
+        composerHeight =
+          $replyDraft.outerHeight() + $iPhoneFooterNav.outerHeight();
+      }
       $wrapper.css("bottom", isDocked ? bottom : composerHeight);
     } else {
       $wrapper.css("bottom", isDocked ? bottom : "");
@@ -175,11 +182,16 @@ export default Ember.Component.extend({
     this.set("docked", isDocked);
 
     const $replyArea = $("#reply-control .reply-area");
-    if ($replyArea && $replyArea.length > 0) {
+    if ($replyArea && $replyArea.length > 0 && wrapperDir === "left") {
       $wrapper.css(wrapperDir, `${$replyArea.offset().left}px`);
     } else {
       $wrapper.css(wrapperDir, "1em");
     }
+
+    $wrapper.css(
+      "margin-bottom",
+      !isDocked && composerHeight > draftComposerHeight ? "0px" : ""
+    );
   },
 
   click(e) {

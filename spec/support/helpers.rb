@@ -120,6 +120,14 @@ module Helpers
     end
   end
 
+  def sorted_tag_names(tag_records)
+    tag_records.map { |t| t.is_a?(String) ? t : t.name }.sort
+  end
+
+  def expect_same_tag_names(a, b)
+    expect(sorted_tag_names(a)).to eq(sorted_tag_names(b))
+  end
+
   def capture_stdout
     old_stdout = $stdout
     io = StringIO.new
@@ -128,5 +136,20 @@ module Helpers
     io.string
   ensure
     $stdout = old_stdout
+  end
+
+  def set_subfolder(f)
+    global_setting :relative_url_root, f
+    old_root = ActionController::Base.config.relative_url_root
+    ActionController::Base.config.relative_url_root = f
+
+    before_next_spec do
+      ActionController::Base.config.relative_url_root = old_root
+    end
+  end
+
+  class StubbedJob
+    def initialize; end
+    def perform(args); end
   end
 end

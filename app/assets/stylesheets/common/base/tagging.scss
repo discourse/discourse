@@ -3,15 +3,17 @@
   margin-top: 3px;
 }
 
-.tag-list {
+.tags-list {
   margin-top: 2em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid $primary-low;
 }
 
-#list-area .tag-list h3 {
+#list-area .tags-list h3 {
   margin-bottom: 20px;
 }
 
-.tag-list .tag-box {
+.tags-list .tag-box {
   display: inline-block;
   width: 300px;
   margin-bottom: 1em;
@@ -31,7 +33,14 @@
 
 .tag-show-heading {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: hidden;
+  @include breakpoint(mobile-large) {
+    width: 100%;
+  }
   .d-icon {
     margin: 0 0.25em;
   }
@@ -64,9 +73,7 @@ $tag-color: $primary-medium;
 .discourse-tag {
   max-width: 14em;
   display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  @include ellipsis;
   vertical-align: middle;
 }
 
@@ -81,6 +88,10 @@ $tag-color: $primary-medium;
 
   .extra-info-wrapper & {
     color: $header-primary_high !important;
+  }
+
+  &.large {
+    font-size: $font-up-3;
   }
 
   &.box {
@@ -98,6 +109,25 @@ $tag-color: $primary-medium;
   &.simple:hover {
     margin-right: 0;
     color: $primary-high;
+  }
+
+  &.bullet {
+    margin-right: 0.5em;
+    display: inline-flex;
+    align-items: center;
+    &:before {
+      background: $primary-low-mid;
+      margin-right: 5px;
+      position: relative;
+      width: 9px;
+      height: 9px;
+      display: inline-block;
+      content: "";
+    }
+    &.large:before {
+      width: 13px;
+      height: 13px;
+    }
   }
 }
 
@@ -144,21 +174,6 @@ $tag-color: $primary-medium;
   .discourse-tag.box {
     position: relative;
     top: 0;
-  }
-}
-
-.discourse-tag.bullet {
-  margin-right: 0.5em;
-  display: inline-flex;
-  align-items: center;
-  &:before {
-    background: $primary-low-mid;
-    margin-right: 5px;
-    position: relative;
-    width: 9px;
-    height: 9px;
-    display: inline-block;
-    content: "";
   }
 }
 
@@ -236,6 +251,9 @@ header .discourse-tag {
     .btn {
       margin-right: 10px;
     }
+    h1 input {
+      width: 100%;
+    }
   }
   .group-tags-list .tag-chooser {
     width: 100%;
@@ -247,6 +265,47 @@ header .discourse-tag {
     .tag-chooser {
       width: 200px;
       margin-right: 10px;
+    }
+  }
+}
+
+section.tag-info {
+  margin: 1em 0;
+  padding: 2em;
+  border: 1px solid $primary-low;
+
+  .field {
+    margin: 0 0 0.5em;
+  }
+
+  .btn {
+    margin-right: 0.5em;
+  }
+
+  .tag-name .discourse-tag {
+    display: block;
+    margin-bottom: 0.75em;
+  }
+
+  .synonyms-list,
+  .add-synonyms,
+  .tag-associations {
+    margin-top: 1em;
+    @include clearfix;
+  }
+
+  .synonyms-list {
+    margin: 2em 0 0;
+  }
+
+  .tag-list {
+    margin: 1em 0 0 0;
+    padding: 0;
+    border: none;
+    @include clearfix;
+    a {
+      color: $primary-medium;
+      margin-left: 0.25em;
     }
   }
 }

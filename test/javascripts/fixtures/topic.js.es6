@@ -446,7 +446,7 @@ export default {
           uploaded_avatar_id: 5253,
           created_at: "2013-02-07T14:02:07.869Z",
           cooked:
-            '<p><aside class="quote" data-post="3" data-topic="280"><div class="title">\n<div class="quote-controls"></div>\n<img width="20" height="20" src="/user_avatar/meta.discourse.org/codinghorror/40/5297.png" class="avatar">codinghorror said:</div>\n<blockquote><p>So you could replace that lookup table with the "de" one to get German.</p></blockquote></aside></p>\n\n<p>The problem I see here is that  this file is likely two grow and change massively over the next couple months, and tracking these changes in order to keep a localized file up to date is going to be a <em>bitch</em>. </p>\n\n<p>I wonder where there is a tool that can compare two yml structures and point out which nodes are missing? That would help keep track of new strings.</p>\n\n<p>Re keeping track of <em>changed</em> strings, <a class="mention" href="/users/codinghorror">@codinghorror</a> I found this very interesting: <a href="http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders" rel="nofollow">http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders</a> if plain English placeholders were used, any change in strings would lead to a <em>new</em> node in the yml file, making keeping the translation up to date easier. Maybe worth thinking about in the future.</p>',
+            '<p><aside class="quote" data-post="3" data-topic="280"><div class="title">\n<div class="quote-controls"></div>\n<img width="20" height="20" src="/user_avatar/meta.discourse.org/codinghorror/40/5297.png" class="avatar">codinghorror said:</div>\n<blockquote><p>So you could replace that lookup table with the "de" one to get German.</p></blockquote></aside></p>\n\n<p>The problem I see here is that  this file is likely two grow and change massively over the next couple months, and tracking these changes in order to keep a localized file up to date is going to be a <em>bitch</em>. </p>\n\n<p>I wonder where there is a tool that can compare two yml structures and point out which nodes are missing? That would help keep track of new strings.</p>\n\n<p>Re keeping track of <em>changed</em> strings, <a class="mention" href="/users/eviltrout">@eviltrout</a> I found this very interesting: <a href="http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders" rel="nofollow">http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders</a> if plain English placeholders were used, any change in strings would lead to a <em>new</em> node in the yml file, making keeping the translation up to date easier. Maybe worth thinking about in the future.</p>',
           post_number: 5,
           post_type: 1,
           updated_at: "2013-02-07T14:05:42.328Z",
@@ -2056,6 +2056,13 @@ export default {
           uploaded_avatar_id: 5275,
           avatar_template: "/images/avatar.png",
           post_count: 4
+        },
+        {
+          id: 5,
+          username: "charlie",
+          uploaded_avatar_id: 5275,
+          avatar_template: "/images/avatar.png",
+          post_count: 1
         },
         {
           id: 3704,
@@ -3845,6 +3852,49 @@ export default {
     destination_category_id: 3
   },
   "/t/12/1.json": {
+    suggested_topics: [
+      {
+        id: 8,
+        title: "This is a new and awesome topic!",
+        fancy_title: "This is a new and awesome topic!",
+        slug: "this-is-a-new-and-awesome-topic",
+        posts_count: 3,
+        reply_count: 0,
+        highest_post_number: 5,
+        image_url: null,
+        created_at: "2015-08-13T05:17:00.000Z",
+        last_posted_at: "2015-08-13T10:14:34.799Z",
+        bumped: true,
+        bumped_at: "2015-08-13T10:14:34.799Z",
+        unseen: false,
+        last_read_post_number: 5,
+        unread: 0,
+        new_posts: 0,
+        pinned: false,
+        unpinned: null,
+        visible: true,
+        closed: false,
+        archived: false,
+        notification_level: 2,
+        bookmarked: false,
+        liked: false,
+        archetype: "regular",
+        like_count: 0,
+        views: 2,
+        category_id: 1,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
+      }
+    ],
     post_stream: {
       posts: [
         {

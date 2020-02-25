@@ -10,6 +10,9 @@
     <span class='status'>
       {{reviewable-status reviewable.status}}
     </span>
+    <a href {{action "explainReviewable" reviewable}} class='explain' title={{i18n "review.explain.why"}}>
+      {{d-icon "question-circle"}}
+    </a>
   </div>
 
   <div class='reviewable-contents'>
@@ -24,13 +27,13 @@
 
         {{#each reviewable.editable_fields as |f|}}
           <div class='editable-field {{dasherize f.id}}'>
-            {{component
-              (concat "reviewable-field-" f.type)
+            {{component (concat "reviewable-field-" f.type)
               tagName=''
               value=(editable-value reviewable f.id)
               tagCategoryId=reviewable.category.id
               valueChanged=(action "valueChanged" f.id)
-              categoryChanged=(action "categoryChanged")}}
+              categoryChanged=(action "categoryChanged")
+            }}
           </div>
         {{/each}}
       </div>
@@ -44,7 +47,7 @@
     {{#if claimEnabled}}
       <div class='claimed-actions'>
         <span class='help'>{{{claimHelp}}}</span>
-        {{reviewable-claimed-topic topicId=reviewable.topic.id claimedBy=reviewable.claimed_by}}
+        {{reviewable-claimed-topic topicId=topicId claimedBy=reviewable.claimed_by}}
       </div>
     {{/if}}
 

@@ -1,16 +1,10 @@
 # frozen_string_literal: true
 
 require "digest"
-require_dependency "new_post_manager"
-require_dependency "html_to_markdown"
-require_dependency "plain_text_to_markdown"
-require_dependency "upload_creator"
 
 module Email
 
   class Receiver
-    include ActionView::Helpers::NumberHelper
-
     # If you add a new error, you need to
     #   * add it to Email::Processor#handle_failure()
     #   * add text to server.en.yml (parent key: "emails.incoming.errors")
@@ -112,7 +106,7 @@ module Email
     def create_incoming_email
       IncomingEmail.create(
         message_id: @message_id,
-        raw: @raw_email,
+        raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
         to_addresses: @mail.to&.map(&:downcase)&.join(";"),
@@ -166,7 +160,6 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post.topic,
                      skip_validations: user.staged?,
@@ -176,7 +169,7 @@ module Email
 
         destinations.each do |destination|
           begin
-            return process_destination(destination, user, body, elided, hidden_reason_id)
+            return process_destination(destination, user, body, elided)
           rescue => e
             first_exception ||= e
           end
@@ -199,10 +192,6 @@ module Email
 
         raise BadDestinationAddress
       end
-    end
-
-    def hidden_reason_id
-      @hidden_reason_id ||= is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
     end
 
     def log_and_validate_user(user)
@@ -241,7 +230,6 @@ module Email
           create_reply(user: @from_user,
                        raw: body,
                        elided: elided,
-                       hidden_reason_id: hidden_reason_id,
                        post: post,
                        topic: topic,
                        skip_validations: true,
@@ -278,11 +266,7 @@ module Email
         user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
         user.user_stat.save!
 
-        if user.active && range === SiteSetting.bounce_score_threshold_deactivate
-          user.update!(active: false)
-          reason = I18n.t("user.deactivated", email: user.email)
-          StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
-        elsif range === SiteSetting.bounce_score_threshold
+        if range === SiteSetting.bounce_score_threshold
           # NOTE: we check bounce_score before sending emails
           # So log we revoked the email...
           reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
@@ -307,9 +291,15 @@ module Email
         @mail[:x_spam_flag].to_s[/YES/i]
       when 'X-Spam-Status'
         @mail[:x_spam_status].to_s[/^Yes, /i]
+      when 'X-SES-Spam-Verdict'
+        @mail[:x_ses_spam_verdict].to_s[/FAIL/i]
       else
         false
       end
+    end
+
+    def auth_res_action
+      @auth_res_action ||= AuthenticationResults.new(@mail.header[:authentication_results]).action
     end
 
     def select_body
@@ -660,8 +650,8 @@ module Email
       nil
     end
 
-    def process_destination(destination, user, body, elided, hidden_reason_id)
-      return if SiteSetting.enable_forwarded_emails &&
+    def process_destination(destination, user, body, elided)
+      return if SiteSetting.forwarded_emails_behaviour != "hide" &&
                 has_been_forwarded? &&
                 process_forwarded_email(destination, user)
 
@@ -672,7 +662,7 @@ module Email
         user ||= stage_from_user
 
         group = destination[:obj]
-        create_group_post(group, user, body, elided, hidden_reason_id)
+        create_group_post(group, user, body, elided)
 
       when :category
         category = destination[:obj]
@@ -686,7 +676,6 @@ module Email
         create_topic(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      title: subject,
                      category: category.id,
                      skip_validations: user.staged?)
@@ -706,7 +695,6 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post&.topic,
                      skip_validations: user.staged?,
@@ -714,7 +702,7 @@ module Email
       end
     end
 
-    def create_group_post(group, user, body, elided, hidden_reason_id)
+    def create_group_post(group, user, body, elided)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
@@ -732,7 +720,6 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post.topic,
                      skip_validations: true)
@@ -742,7 +729,6 @@ module Email
         create_topic(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      title: subject,
                      archetype: Archetype.private_message,
                      target_group_names: [group.name],
@@ -801,27 +787,30 @@ module Email
 
     def process_forwarded_email(destination, user)
       user ||= stage_from_user
-      embedded = Mail.new(embedded_email_raw)
-      email, display_name = parse_from_field(embedded)
+      case SiteSetting.forwarded_emails_behaviour
+      when "create_replies"
+        forwarded_email_create_replies(destination, user)
+      when "quote"
+        forwarded_email_quote_forwarded(destination, user)
+      else
+        false
+      end
+    end
 
-      return false if email.blank? || !email["@"]
-
-      raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
-      title = embedded.subject.presence || subject
-
+    def forwarded_email_create_topic(destination: , user: , raw: , title: , date: nil, embedded_user: nil)
       case destination[:type]
       when :group
         group = destination[:obj]
-        embedded_user = find_or_create_user(email, display_name)
-        post = create_topic(user: embedded_user,
-                            raw: raw,
-                            title: title,
-                            archetype: Archetype.private_message,
-                            target_usernames: [user.username],
-                            target_group_names: [group.name],
-                            is_group_message: true,
-                            skip_validations: true,
-                            created_at: embedded.date)
+        topic_user = embedded_user&.call || user
+        create_topic(user: topic_user,
+                     raw: raw,
+                     title: title,
+                     archetype: Archetype.private_message,
+                     target_usernames: [user.username],
+                     target_group_names: [group.name],
+                     is_group_message: true,
+                     skip_validations: true,
+                     created_at: date)
 
       when :category
         category = destination[:obj]
@@ -829,25 +818,40 @@ module Email
         return false if user.staged? && !category.email_in_allow_strangers
         return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
-        embedded_user = find_or_create_user(email, display_name)
-        post = create_topic(user: embedded_user,
-                            raw: raw,
-                            title: title,
-                            category: category.id,
-                            skip_validations: embedded_user.staged?,
-                            created_at: embedded.date)
+        topic_user = embedded_user&.call || user
+        create_topic(user: topic_user,
+                     raw: raw,
+                     title: title,
+                     category: category.id,
+                     skip_validations: topic_user.staged?,
+                     created_at: date)
       else
-        return false
+        false
       end
+    end
 
-      if post&.topic
+    def forwarded_email_create_replies(destination, user)
+      embedded = Mail.new(embedded_email_raw)
+      email, display_name = parse_from_field(embedded)
+
+      return false if email.blank? || !email["@"]
+
+      post = forwarded_email_create_topic(destination: destination,
+                                          user: user,
+                                          raw: try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s,
+                                          title: embedded.subject.presence || subject,
+                                          date: embedded.date,
+                                          embedded_user: lambda { find_or_create_user(email, display_name) })
+      return false unless post
+
+      if post.topic
         # mark post as seen for the forwarder
         PostTiming.record_timing(user_id: user.id, topic_id: post.topic_id, post_number: post.post_number, msecs: 5000)
 
         # create reply when available
         if @before_embedded.present?
           post_type = Post.types[:regular]
-          post_type = Post.types[:whisper] if post.topic.private_message? && group.usernames[user.username]
+          post_type = Post.types[:whisper] if post.topic.private_message? && destination[:obj].usernames[user.username]
 
           create_reply(user: user,
                        raw: @before_embedded,
@@ -855,10 +859,25 @@ module Email
                        topic: post.topic,
                        post_type: post_type,
                        skip_validations: user.staged?)
+        else
+          post.topic.add_small_action(user, "forwarded")
         end
       end
 
       true
+    end
+
+    def forwarded_email_quote_forwarded(destination, user)
+      embedded = embedded_email_raw
+      raw = <<~EOF
+        #{@before_embedded}
+
+        [quote]
+        #{PlainTextToMarkdown.new(embedded).to_markdown}
+        [/quote]
+      EOF
+
+      return true if forwarded_email_create_topic(destination: destination, user: user, raw: raw, title: subject)
     end
 
     def self.reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
@@ -896,7 +915,7 @@ module Email
       return if message_ids.empty?
 
       host = Email::Sender.host_for(Discourse.base_url)
-      post_id_regexp  = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
+      post_id_regexp = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
       topic_id_regexp = Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
 
       post_ids =  message_ids.map { |message_id| message_id[post_id_regexp, 1] }.compact.map(&:to_i)
@@ -1027,7 +1046,7 @@ module Email
           # create the upload for the user
           opts = { for_group_message: options[:is_group_message] }
           upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
-          if upload&.valid?
+          if upload.errors.empty?
             # try to inline images
             if attachment.content_type&.start_with?("image/")
               if raw[attachment.url]
@@ -1035,19 +1054,16 @@ module Email
 
                 InlineUploads.match_img(raw) do |match, src, replacement, _|
                   if src == upload.url
-                    raw = raw.sub(
-                      match,
-                      "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
-                    )
+                    raw = raw.sub(match, UploadMarkdown.new(upload).image_markdown)
                   end
                 end
               elsif raw[/\[image:.*?\d+[^\]]*\]/i]
-                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
+                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
               else
-                raw << "\n\n#{attachment_markdown(upload)}\n\n"
+                raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
               end
             else
-              raw << "\n\n#{attachment_markdown(upload)}\n\n"
+              raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
             end
           else
             rejected_attachments << upload
@@ -1082,14 +1098,6 @@ module Email
       Email::Sender.new(client_message, :email_reject_attachment).send
     end
 
-    def attachment_markdown(upload)
-      if FileHelper.is_supported_image?(upload.original_filename)
-        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
-      else
-        "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{number_to_human_size(upload.filesize)})"
-      end
-    end
-
     def create_post(options = {})
       options[:via_email] = true
       options[:raw_email] = @raw_email
@@ -1108,6 +1116,10 @@ module Email
       if sent_to_mailinglist_mirror?
         options[:skip_validations] = true
         options[:skip_guardian] = true
+      else
+        options[:email_spam] = is_spam?
+        options[:first_post_checks] = true if is_spam?
+        options[:email_auth_res_action] = auth_res_action
       end
 
       user = options.delete(:user)
@@ -1221,5 +1233,4 @@ module Email
       end
     end
   end
-
 end

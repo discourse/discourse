@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
+import EmberObject from "@ember/object";
 
-const WatchedWord = Discourse.Model.extend({
+const WatchedWord = EmberObject.extend({
   save() {
     return ajax(
       "/admin/logs/watched_words" + (this.id ? "/" + this.id : "") + ".json",
@@ -37,12 +38,13 @@ WatchedWord.reopenClass({
       });
 
       return Object.keys(actions).map(n => {
-        return Ember.Object.create({
+        return EmberObject.create({
           nameKey: n,
           name: I18n.t("admin.watched_words.actions." + n),
           words: actions[n],
           count: actions[n].length,
-          regularExpressions: list.regular_expressions
+          regularExpressions: list.regular_expressions,
+          compiledRegularExpression: list.compiled_regular_expressions[n]
         });
       });
     });

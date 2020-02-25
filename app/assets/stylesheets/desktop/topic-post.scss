@@ -6,6 +6,12 @@
   margin-left: 0;
 }
 
+.topic-post:first-child {
+  nav.post-controls .post-admin-menu {
+    bottom: -125px;
+  }
+}
+
 .topic-body {
   // this ensures consistent top margin on topic posts even if the first line of a post
   // is a top-margin-less element like a list or image.
@@ -65,8 +71,10 @@ nav.post-controls {
       }
       margin-left: 0;
       margin-right: 0;
-      &.my-likes {
-        // Like count on my posts
+      &.my-likes,
+      &.read-indicator,
+      &.regular-likes {
+        // Like count on posts
         .d-icon {
           color: $primary-low-mid;
           padding-left: 0.45em;
@@ -440,9 +448,6 @@ nav.post-controls {
 #topic-footer-buttons {
   padding: 10px 10px 0 0;
   float: left;
-  p {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
   .btn {
     @include topic-footer-button;
     .d-icon-bookmark.bookmarked {
@@ -450,6 +455,9 @@ nav.post-controls {
     }
   }
   .bookmark.bookmarked .d-icon-bookmark {
+    color: $tertiary;
+  }
+  .feature-on-profile.featured-on-profile .d-icon-id-card {
     color: $tertiary;
   }
 }
@@ -481,6 +489,7 @@ span.post-count {
 
 button.expand-post {
   margin-top: 10px;
+  margin-left: $topic-body-width-padding;
 }
 
 .quote-button.visible {
@@ -493,6 +502,14 @@ iframe {
 
 video {
   max-height: 500px;
+}
+
+.video {
+  // Height determined by aspect-ratio
+  max-height: 500px;
+  > video {
+    max-height: unset;
+  }
 }
 
 @-webkit-keyframes fadein {
@@ -510,52 +527,6 @@ video {
   }
   to {
     opacity: 1;
-  }
-}
-
-.extra-info-wrapper {
-  overflow: hidden;
-  .badge-wrapper,
-  i,
-  .topic-link {
-    -webkit-animation: fadein 0.7s;
-    animation: fadein 0.7s;
-  }
-  .topic-statuses {
-    .d-icon {
-      color: $header_primary-medium;
-    }
-    .d-icon-envelope {
-      color: $danger;
-    }
-  }
-  .topic-link {
-    color: $header_primary;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-/* default docked header CSS for all topics, including those without categories */
-
-.extra-info {
-  h1 {
-    margin: 5px 0 0 0;
-    font-size: $font-up-3;
-    line-height: $line-height-large;
-    width: 100%;
-  }
-}
-
-/* override docked header CSS for topics with categories */
-
-.extra-info.two-rows {
-  h1 {
-    line-height: $line-height-medium;
-    margin: 0;
-    width: 100%;
   }
 }
 
@@ -839,7 +810,8 @@ a.attachment:before {
   }
 }
 
-.who-liked {
+.who-liked,
+.who-read {
   margin-top: 20px;
   margin-bottom: 0;
   width: 100%;
@@ -864,8 +836,9 @@ span.highlighted {
 }
 
 .read-state.read {
+  visibility: hidden;
   opacity: 0;
-  transition: opacity ease-out 1s;
+  transition: visibility 1s, opacity ease-out 1s;
 }
 
 .signup-cta {
@@ -874,7 +847,7 @@ span.highlighted {
 
 /* Tablet (portrait) ----------- */
 
-@media all and (max-width: 775px) {
+@media all and (max-width: 790px) {
   .topic-avatar {
     width: 45px;
   }

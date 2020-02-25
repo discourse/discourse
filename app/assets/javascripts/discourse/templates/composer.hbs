@@ -37,7 +37,7 @@
                   {{/unless}}
 
                   {{#if canEdit}}
-                    {{#link-to-input onClick=(action "displayEditReason") showInput=showEditReason key="composer.show_edit_reason" class="display-edit-reason"}}
+                    {{#link-to-input onClick=(action "displayEditReason") showInput=showEditReason icon="info-circle" class="display-edit-reason"}}
                       {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
                     {{/link-to-input}}
                   {{/if}}
@@ -53,7 +53,7 @@
                 {{#if model.creatingPrivateMessage}}
                   <div class='user-selector'>
                     {{composer-user-selector topicId=topicModel.id
-                                             usernames=model.targetUsernames
+                                             usernames=model.targetRecipients
                                              hasGroups=model.hasTargetGroups
                                              focusTarget=focusTarget
                                              class="users-input"}}
@@ -73,15 +73,28 @@
                   {{#if model.showCategoryChooser}}
                     <div class="category-input">
                       {{category-chooser
-                        fullWidthOnMobile=true
                         value=model.categoryId
-                        scopedCategoryId=scopedCategoryId
-                        tabindex="3"}}
+                        tabindex="3"
+                        onChange=(action (mut model.categoryId))
+                        isDisabled=disableCategoryChooser
+                        options=(hash
+                          scopedCategoryId=scopedCategoryId
+                        )
+                      }}
                       {{popup-input-tip validation=categoryValidation}}
                     </div>
                   {{/if}}
                   {{#if canEditTags}}
-                    {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId minimum=model.minimumRequiredTags}}
+                    {{mini-tag-chooser
+                      value=model.tags
+                      tabindex=4
+                      isDisabled=disableTagsChooser
+                      onChange=(action (mut model.tags))
+                      options=(hash
+                        categoryId=model.categoryId
+                        minimum=model.minimumRequiredTags
+                      )
+                    }}
                     {{popup-input-tip validation=tagValidation}}
                   {{/if}}
                 </div>
@@ -183,7 +196,7 @@
                   </a>
                 {{/if}}
 
-                <a class="btn btn-default no-text mobile-preview" title="{{i18n 'composer.show_preview'}}" {{action "togglePreview"}}>
+                <a href class="btn btn-default no-text mobile-preview" title="{{i18n 'composer.show_preview'}}" {{action "togglePreview"}}>
                   {{d-icon "desktop"}}
                 </a>
 

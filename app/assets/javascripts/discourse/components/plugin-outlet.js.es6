@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 /**
    A plugin outlet is an extension point for templates where other templates can
    be inserted by plugins.
@@ -29,9 +30,12 @@
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
+import {
+  renderedConnectorsFor,
+  buildArgsWithDeprecations
+} from "discourse/lib/plugin-connectors";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "span",
   connectors: null,
 
@@ -45,7 +49,10 @@ export default Ember.Component.extend({
     this._super(...arguments);
     const name = this.name;
     if (name) {
-      const args = this.args;
+      const args = buildArgsWithDeprecations(
+        this.args || {},
+        this.deprecatedArgs || {}
+      );
       this.set("connectors", renderedConnectorsFor(name, args, this));
     }
   }

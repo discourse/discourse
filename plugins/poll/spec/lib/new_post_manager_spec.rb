@@ -11,8 +11,8 @@ describe NewPostManager do
       SiteSetting.poll_minimum_trust_level_to_create = 0
     end
 
-    it "should render the poll upon approval" do
-      params = {
+    let(:params) do
+      {
         raw: "[poll]\n* 1\n* 2\n* 3\n[/poll]",
         archetype: "regular",
         category: "",
@@ -27,13 +27,33 @@ describe NewPostManager do
         referrer: "http://localhost:3000/",
         first_post_checks: true
       }
+    end
 
+    it "should render the poll upon approval" do
       result = NewPostManager.new(user, params).perform
       expect(result.action).to eq(:enqueued)
       expect(result.reviewable).to be_present
 
       review_result = result.reviewable.perform(admin, :approve_post)
       expect(Poll.where(post: review_result.created_post).exists?).to eq(true)
+    end
+
+    it 're-validates the poll when the approve_post event is triggered' do
+      invalid_raw_poll = <<~RAW
+        [poll type=multiple min=0]
+        * 1
+        * 2
+        [/poll]
+      RAW
+
+      result = NewPostManager.new(user, params).perform
+
+      reviewable = result.reviewable
+      reviewable.payload["raw"] = invalid_raw_poll
+      reviewable.save!
+
+      review_result = result.reviewable.perform(admin, :approve_post)
+      expect(Poll.where(post: review_result.created_post).exists?).to eq(false)
     end
   end
 end

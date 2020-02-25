@@ -1,22 +1,21 @@
 <div class='topic-footer-main-buttons'>
-  {{#if showAdminButton}}
-    {{topic-admin-menu-button
-      topic=topic
-      openUpwards="true"
-      toggleMultiSelect=toggleMultiSelect
-      hideMultiSelect=hideMultiSelect
-      deleteTopic=deleteTopic
-      recoverTopic=recoverTopic
-      toggleClosed=toggleClosed
-      toggleArchived=toggleArchived
-      toggleVisibility=toggleVisibility
-      showTopicStatusUpdate=showTopicStatusUpdate
-      showFeatureTopic=showFeatureTopic
-      showChangeTimestamp=showChangeTimestamp
-      resetBumpDate=resetBumpDate
-      convertToPublicTopic=convertToPublicTopic
-      convertToPrivateMessage=convertToPrivateMessage}}
-  {{/if}}
+  {{topic-admin-menu-button
+    topic=topic
+    openUpwards="true"
+    toggleMultiSelect=toggleMultiSelect
+    deleteTopic=deleteTopic
+    recoverTopic=recoverTopic
+    toggleFeaturedOnProfile=toggleFeaturedOnProfile
+    toggleClosed=toggleClosed
+    toggleArchived=toggleArchived
+    toggleVisibility=toggleVisibility
+    showTopicStatusUpdate=showTopicStatusUpdate
+    showFeatureTopic=showFeatureTopic
+    showChangeTimestamp=showChangeTimestamp
+    resetBumpDate=resetBumpDate
+    convertToPublicTopic=convertToPublicTopic
+    convertToPrivateMessage=convertToPrivateMessage
+  }}
 
   {{#if site.mobileView}}
     {{topic-footer-mobile-dropdown topic=topic content=dropdownButtons}}
@@ -55,7 +54,10 @@
 </div>
 
 {{#if showNotificationsButton}}
-  {{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}
+  {{topic-notifications-button
+    notificationLevel=topic.details.notification_level
+    topic=topic
+  }}
 {{/if}}
 
 {{plugin-outlet name="after-topic-footer-buttons"

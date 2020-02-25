@@ -1,19 +1,25 @@
-<div class="container">
+{{plugin-outlet name="advanced-search-options-above" args=(hash searchedTerms=searchedTerms) tagName=""}}
+
+<div class="container advanced-search-posted-by-group">
   <div class="control-group pull-left">
     <label class="control-label" for="search-posted-by">{{i18n "search.advanced.posted_by.label"}}</label>
     <div class="controls">
       {{user-selector
-          excludeCurrentUser=false
-          usernames=searchedTerms.username
-          class="user-selector"
-          single="true"
-          canReceiveUpdates="true"}}
+        excludeCurrentUser=false
+        usernames=searchedTerms.username
+        single=true
+        canReceiveUpdates=true
+        class="user-selector"
+      }}
     </div>
   </div>
   <div class="control-group pull-left">
     <label class="control-label" for="search-in-category">{{i18n "search.advanced.in_category.label"}}</label>
     <div class="controls">
-      {{search-advanced-category-chooser value=searchedTerms.category}}
+      {{search-advanced-category-chooser
+        value=searchedTerms.category.id
+        onChange=(action "onChangeCategory")
+      }}
     </div>
   </div>
 </div>
@@ -36,7 +42,7 @@
 -->
 
 {{#if siteSettings.tagging_enabled}}
-  <div class="container">
+  <div class="container advanced-search-tag-group">
     <div class="control-group">
       <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
       <div class="controls">
@@ -45,7 +51,9 @@
           allowCreate=false
           filterPlaceholder=null
           everyTag=true
-          unlimitedTagCount=true}}
+          unlimitedTagCount=true
+          onChange=(action (mut searchedTerms.tags))
+        }}
       <section class="field">
           <label>{{ input type="checkbox" class="all-tags" checked=searchedTerms.special.all_tags}} {{i18n "search.advanced.filters.all_tags"}} </label>
       </section>
@@ -54,7 +62,7 @@
   </div>
 {{/if}}
 
-<div class="container">
+<div class="container advanced-search-topics-posts-group">
   <div class="control-group pull-left">
     <label class="control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</label>
     <div class="controls">
@@ -62,27 +70,51 @@
         <section class='field'>
           <label>{{input type="checkbox" class="in-title" checked=searchedTerms.special.in.title}} {{i18n "search.advanced.filters.title"}}</label>
           <label>{{input type="checkbox" class="in-likes" checked=searchedTerms.special.in.likes}} {{i18n "search.advanced.filters.likes"}}</label>
-          <label>{{input type="checkbox" class="in-private" checked=searchedTerms.special.in.private}} {{i18n "search.advanced.filters.private"}}</label>
+          <label>{{input type="checkbox" class="in-private" checked=searchedTerms.special.in.personal}} {{i18n "search.advanced.filters.private"}}</label>
           <label>{{input type="checkbox" class="in-seen" checked=searchedTerms.special.in.seen}} {{i18n "search.advanced.filters.seen"}}</label>
         </section>
       {{/if}}
-      {{combo-box id="in" valueAttribute="value" content=inOptions value=searchedTerms.in none="user.locale.any"}}
+      {{combo-box
+        id="in"
+        valueProperty="value"
+        content=inOptions
+        value=searchedTerms.in
+        none="user.locale.any"
+        onChange=(action (mut searchedTerms.in))
+      }}
     </div>
   </div>
   <div class="control-group pull-left">
     <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
     <div class="controls">
-      {{combo-box id="status" valueAttribute="value" content=statusOptions value=searchedTerms.status none="user.locale.any"}}
+      {{combo-box
+        id="status"
+        valueProperty="value"
+        content=statusOptions
+        value=searchedTerms.status
+        none="user.locale.any"
+        onChange=(action (mut searchedTerms.status))
+      }}
     </div>
   </div>
 </div>
 
-<div class="container">
+<div class="container advanced-search-date-count-group">
   <div class="control-group pull-left">
     <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
     <div class="controls full-search-dates">
-      {{combo-box id="postTime" valueAttribute="value" content=postTimeOptions value=searchedTerms.time.when}}
-      {{date-picker value=searchedTerms.time.days id="search-post-date"}}
+      {{combo-box
+        id="postTime"
+        valueProperty="value"
+        content=postTimeOptions
+        value=searchedTerms.time.when
+        onChange=(action "onChangeWhenTime")
+      }}
+      {{date-input
+        date=searchedTerms.time.days
+        onChange=(action "onChangeWhenDate")
+        id="search-post-date"
+      }}
     </div>
   </div>
   <div class="control-group pull-left">
@@ -92,3 +124,5 @@
     </div>
   </div>
 </div>
+
+{{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms) tagName=""}}

@@ -1,7 +1,11 @@
+import { makeArray } from "discourse-common/lib/helpers";
+import { debounce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import Component from "@ember/component";
 import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["admin-report-chart"],
   limit: 8,
   total: 0,
@@ -10,7 +14,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     this.resizeHandler = () =>
-      Ember.run.debounce(this, this._scheduleChartRendering, 500);
+      debounce(this, this._scheduleChartRendering, 500);
   },
 
   didInsertElement() {
@@ -30,23 +34,24 @@ export default Ember.Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    Ember.run.debounce(this, this._scheduleChartRendering, 100);
+    debounce(this, this._scheduleChartRendering, 100);
   },
 
   _scheduleChartRendering() {
-    Ember.run.schedule("afterRender", () => {
-      this._renderChart(this.model, this.$(".chart-canvas"));
+    schedule("afterRender", () => {
+      this._renderChart(
+        this.model,
+        this.element && this.element.querySelector(".chart-canvas")
+      );
     });
   },
 
-  _renderChart(model, $chartCanvas) {
-    if (!$chartCanvas || !$chartCanvas.length) return;
+  _renderChart(model, chartCanvas) {
+    if (!chartCanvas) return;
 
-    const context = $chartCanvas[0].getContext("2d");
-    const chartData = Ember.makeArray(
-      model.get("chartData") || model.get("data")
-    );
-    const prevChartData = Ember.makeArray(
+    const context = chartCanvas.getContext("2d");
+    const chartData = makeArray(model.get("chartData") || model.get("data"));
+    const prevChartData = makeArray(
       model.get("prevChartData") || model.get("prev_data")
     );
 
@@ -82,6 +87,11 @@ export default Ember.Component.extend({
 
     loadScript("/javascripts/Chart.min.js").then(() => {
       this._resetChart();
+
+      if (!this.element) {
+        return;
+      }
+
       this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
   },
@@ -102,6 +112,10 @@ export default Ember.Component.extend({
         },
         responsive: true,
         maintainAspectRatio: false,
+        responsiveAnimationDuration: 0,
+        animation: {
+          duration: 0
+        },
         layout: {
           padding: {
             left: 0,
@@ -118,7 +132,10 @@ export default Ember.Component.extend({
                 userCallback: label => {
                   if (Math.floor(label) === label) return label;
                 },
-                callback: label => number(label)
+                callback: label => number(label),
+                sampleSize: 5,
+                maxRotation: 25,
+                minRotation: 25
               }
             }
           ],
@@ -129,6 +146,11 @@ export default Ember.Component.extend({
               type: "time",
               time: {
                 parser: "YYYY-MM-DD"
+              },
+              ticks: {
+                sampleSize: 5,
+                maxRotation: 50,
+                minRotation: 50
               }
             }
           ]

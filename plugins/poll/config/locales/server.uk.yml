@@ -7,15 +7,44 @@
 
 uk:
   site_settings:
+    poll_enabled: "Дозволити опитування?"
     poll_maximum_options: "Максимальна кількість варіантів в опитуванні"
+    poll_edit_window_mins: "Кількість хвилин після створення публікації, протягом якої опитування можна редагувати."
+    poll_minimum_trust_level_to_create: "Визначте мінімальний рівень довіри, необхідний для створення опитувань."
+    poll_groupable_user_fields: "Набір назв полів користувача, які можна використовувати для групування та фільтрування результатів опитування."
+    poll_export_data_explorer_query_id: "ID з Data Explorer Query, який потрібно використовувати для експорту результатів опитування (0 для відключення)."
   poll:
-    default_poll_must_have_at_least_2_options: "Голосування повинно мати щонайменше 2 варіанти."
-    named_poll_must_have_at_least_2_options: "Голосування під назвою <strong>%{name}</strong> повинно мати щонайменше 2 варіанти."
-    default_poll_must_have_different_options: "Голосування повинно мати різні варіанти."
+    poll: "опитування"
+    invalid_argument: "Неправильне значення '%{value}' для аргументу '%{argument}'."
+    multiple_polls_without_name: "Існує кілька опитувань без імені. Використовуйте атрибут '<code>name</code>', щоб однозначно визначити свої опитування."
+    multiple_polls_with_same_name: "Існує кілька опитувань з однаковою назвою: <strong>%{name}</strong> . Використовуйте атрибут '<code>name</code>', щоб однозначно визначити свої опитування."
+    default_poll_must_have_less_options:
+      one: "Опитування повинно мати менше опції %{count}."
+      few: "Опитування повинно мати менше варіантів %{count}."
+      many: "Опитування повинно мати менше варіантів %{count}."
+      other: "Опитування повинно мати менше %{count} варіантів."
+    named_poll_must_have_less_options:
+      one: "Опитування з назвою <strong>%{name}</strong> повинно мати менше, ніж опції %{count}."
+      few: "Опитування з назвою <strong>%{name}</strong> повинно мати менше варіантів %{count}."
+      many: "Опитування з назвою <strong>%{name}</strong> повинно мати менше варіантів %{count}."
+      other: "Опитування з назвою <strong>%{name}</strong> повинно мати менше %{count} варіантів."
+    default_poll_must_have_different_options: "Опитування повинно мати різні варіанти."
     named_poll_must_have_different_options: "Голосування під назвою <strong>%{name}</strong> повинно мати різні варіанти."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Опитування з кількома варіантами має недійсні параметри."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Опитування з назвою <strong>%{name}</strong> з множинним вибором має недійсні параметри."
     requires_at_least_1_valid_option: "Ви маєте обрати щонайменше 1 валідний варіант."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Ви не можете змінити опитування після перших %{minutes} хвилин."
+      cannot_edit_named_poll_with_votes: "Ви не можете змінити назву опитування <strong>${name}</strong> після перших %{minutes} хвилин."
     no_poll_with_this_name: "Для цього допису відсутнє голосування під назвою <strong>%{name}</strong>."
+    post_is_deleted: "Немає дій над видаленою публікацією."
+    user_cant_post_in_topic: "Ви не можете голосувати, тому що ви не можете писати в цій темі."
     topic_must_be_open_to_vote: "Тема має бути відкрита для голосування."
     poll_must_be_open_to_vote: "Опитування має бути відкритим для голосування."
+    topic_must_be_open_to_toggle_status: "Тема повинна бути відкритою для зміни статусу."
+    only_staff_or_op_can_toggle_status: "Тільки співробітник або автор можуть змінити статус опитування."
+    insufficient_rights_to_create: "Вам не дозволено створювати опитування."
     email:
       link_to_poll: "Натисніть, щоб подивитися опитування."
+    user_field:
+      no_data: "Немає даних"

@@ -1,5 +1,8 @@
+import { get } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
+
 export function buildGroupPage(type) {
-  return Discourse.Route.extend({
+  return DiscourseRoute.extend({
     type,
 
     titleToken() {
@@ -7,7 +10,7 @@ export function buildGroupPage(type) {
     },
 
     model(params, transition) {
-      let categoryId = Ember.get(transition.to, "queryParams.category_id");
+      let categoryId = get(transition.to, "queryParams.category_id");
       return this.modelFor("group").findPosts({ type, categoryId });
     },
 

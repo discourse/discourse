@@ -1,19 +1,38 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { makeArray } from "discourse-common/lib/helpers";
+import {
+  empty,
+  filterBy,
+  match,
+  mapBy,
+  notEmpty
+} from "@ember/object/computed";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import { url } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import ThemeSettings from "admin/models/theme-settings";
 import { THEMES, COMPONENTS } from "admin/models/theme";
+import EmberObject from "@ember/object";
 
 const THEME_UPLOAD_VAR = 2;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
-  addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
+  addButtonDisabled: empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
+  parentThemesNames: mapBy("model.parentThemes", "name"),
+  availableParentThemes: filterBy("allThemes", "component", false),
+  availableActiveParentThemes: filterBy("availableParentThemes", "isActive"),
+  availableThemesNames: mapBy("availableParentThemes", "name"),
+  availableActiveThemesNames: mapBy("availableActiveParentThemes", "name"),
+  availableActiveChildThemes: filterBy("availableChildThemes", "hasParents"),
+  availableComponentsNames: mapBy("availableChildThemes", "name"),
+  availableActiveComponentsNames: mapBy("availableActiveChildThemes", "name"),
+  childThemesNames: mapBy("model.childThemes", "name"),
 
-  @computed("model.editedFields")
+  @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
     const descriptions = [];
     ["common", "desktop", "mobile"].forEach(target => {
@@ -31,13 +50,13 @@ export default Ember.Controller.extend({
     return descriptions;
   },
 
-  @computed("colorSchemeId", "model.color_scheme_id")
+  @discourseComputed("colorSchemeId", "model.color_scheme_id")
   colorSchemeChanged(colorSchemeId, existingId) {
-    colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId);
+    colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId, 10);
     return colorSchemeId !== existingId;
   },
 
-  @computed("availableChildThemes", "model.childThemes.[]", "model")
+  @discourseComputed("availableChildThemes", "model.childThemes.[]", "model")
   selectableChildThemes(available, childThemes) {
     if (available) {
       const themes = !childThemes
@@ -47,7 +66,43 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("allThemes", "model.component", "model")
+  @discourseComputed("model.parentThemes.[]")
+  relativesSelectorSettingsForComponent() {
+    return EmberObject.create({
+      list_type: "compact",
+      type: "list",
+      preview: null,
+      anyValue: false,
+      setting: "parent_theme_ids",
+      label: I18n.t("admin.customize.theme.component_on_themes"),
+      choices: this.availableThemesNames,
+      default: this.parentThemesNames.join("|"),
+      value: this.parentThemesNames.join("|"),
+      defaultValues: this.availableActiveThemesNames.join("|"),
+      allThemes: this.allThemes,
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes")
+    });
+  },
+
+  @discourseComputed("model.parentThemes.[]")
+  relativesSelectorSettingsForTheme() {
+    return EmberObject.create({
+      list_type: "compact",
+      type: "list",
+      preview: null,
+      anyValue: false,
+      setting: "child_theme_ids",
+      label: I18n.t("admin.customize.theme.included_components"),
+      choices: this.availableComponentsNames,
+      default: this.childThemesNames.join("|"),
+      value: this.childThemesNames.join("|"),
+      defaultValues: this.availableActiveComponentsNames.join("|"),
+      allThemes: this.allThemes,
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all")
+    });
+  },
+
+  @discourseComputed("allThemes", "model.component", "model")
   availableChildThemes(allThemes) {
     if (!this.get("model.component")) {
       const themeId = this.get("model.id");
@@ -57,38 +112,38 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model.component")
+  @discourseComputed("model.component")
   convertKey(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}`;
   },
 
-  @computed("model.component")
+  @discourseComputed("model.component")
   convertIcon(component) {
     return component ? "cube" : "";
   },
 
-  @computed("model.component")
+  @discourseComputed("model.component")
   convertTooltip(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}_tooltip`;
   },
 
-  @computed("model.settings")
+  @discourseComputed("model.settings")
   settings(settings) {
     return settings.map(setting => ThemeSettings.create(setting));
   },
 
-  hasSettings: Ember.computed.notEmpty("settings"),
+  hasSettings: notEmpty("settings"),
 
-  @computed("model.translations")
+  @discourseComputed("model.translations")
   translations(translations) {
     return translations.map(setting => ThemeSettings.create(setting));
   },
 
-  hasTranslations: Ember.computed.notEmpty("translations"),
+  hasTranslations: notEmpty("translations"),
 
-  @computed("model.remoteError", "updatingRemote")
+  @discourseComputed("model.remoteError", "updatingRemote")
   showRemoteError(errorMessage, updating) {
     return errorMessage && !updating;
   },
@@ -124,8 +179,8 @@ export default Ember.Controller.extend({
         });
 
         this.get("parentController.model.content").forEach(theme => {
-          const children = Ember.makeArray(theme.get("childThemes"));
-          const rawChildren = Ember.makeArray(theme.get("child_themes"));
+          const children = makeArray(theme.get("childThemes"));
+          const rawChildren = makeArray(theme.get("child_themes"));
           const index = children ? children.indexOf(model) : -1;
           if (index > -1) {
             children.splice(index, 1);
@@ -147,10 +202,7 @@ export default Ember.Controller.extend({
       "scss"
     );
   },
-  sourceIsHttp: Ember.computed.match(
-    "model.remote_theme.remote_url",
-    /^http(s)?:\/\//
-  ),
+  sourceIsHttp: match("model.remote_theme.remote_url", /^http(s)?:\/\//),
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);
@@ -189,7 +241,7 @@ export default Ember.Controller.extend({
       let schemeId = this.colorSchemeId;
       this.set(
         "model.color_scheme_id",
-        schemeId === null ? null : parseInt(schemeId)
+        schemeId === null ? null : parseInt(schemeId, 10)
       );
       this.model.saveChanges("color_scheme_id");
     },
@@ -239,9 +291,9 @@ export default Ember.Controller.extend({
     },
 
     addChildTheme() {
-      let themeId = parseInt(this.selectedChildThemeId);
+      let themeId = parseInt(this.selectedChildThemeId, 10);
       let theme = this.allThemes.findBy("id", themeId);
-      this.model.addChildTheme(theme);
+      this.model.addChildTheme(theme).then(() => this.store.findAll("theme"));
     },
 
     removeUpload(upload) {
@@ -258,7 +310,9 @@ export default Ember.Controller.extend({
     },
 
     removeChildTheme(theme) {
-      this.model.removeChildTheme(theme);
+      this.model
+        .removeChildTheme(theme)
+        .then(() => this.store.findAll("theme"));
     },
 
     destroy() {
@@ -271,6 +325,7 @@ export default Ember.Controller.extend({
         result => {
           if (result) {
             const model = this.model;
+            model.setProperties({ recentlyInstalled: false });
             model.destroyRecord().then(() => {
               this.allThemes.removeObject(model);
               this.transitionToRoute("adminCustomizeThemes");
@@ -301,6 +356,20 @@ export default Ember.Controller.extend({
       } else {
         this.commitSwitchType();
       }
+    },
+
+    enableComponent() {
+      this.model.set("enabled", true);
+      this.model
+        .saveChanges("enabled")
+        .catch(() => this.model.set("enabled", false));
+    },
+
+    disableComponent() {
+      this.model.set("enabled", false);
+      this.model
+        .saveChanges("enabled")
+        .catch(() => this.model.set("enabled", true));
     }
   }
 });

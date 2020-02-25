@@ -9,13 +9,16 @@ function addLocalDate(buffer, matches, state) {
     timezone: null,
     format: null,
     timezones: null,
-    displayedTimezone: null
+    displayedTimezone: null,
+    countdown: null
   };
 
+  const matchString = matches[1].replace(/„|“/g, '"');
+
   let parsed = parseBBCodeTag(
-    "[date date" + matches[1] + "]",
+    "[date date" + matchString + "]",
     0,
-    matches[1].length + 11
+    matchString.length + 11
   );
 
   config.date = parsed.attrs.date;
@@ -26,6 +29,7 @@ function addLocalDate(buffer, matches, state) {
   config.recurring = parsed.attrs.recurring;
   config.timezones = parsed.attrs.timezones;
   config.displayedTimezone = parsed.attrs.displayedTimezone;
+  config.countdown = parsed.attrs.countdown;
 
   token = new state.Token("span_open", "span", 1);
   token.attrs = [["data-date", state.md.utils.escapeHtml(config.date)]];
@@ -55,6 +59,13 @@ function addLocalDate(buffer, matches, state) {
 
   if (config.format) {
     token.attrs.push(["data-format", state.md.utils.escapeHtml(config.format)]);
+  }
+
+  if (config.countdown) {
+    token.attrs.push([
+      "data-countdown",
+      state.md.utils.escapeHtml(config.countdown)
+    ]);
   }
 
   if (config.calendar) {

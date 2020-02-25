@@ -1,6 +1,9 @@
-export default Ember.Controller.extend({
-  adminBackups: Ember.inject.controller(),
-  status: Ember.computed.alias("adminBackups.model"),
+import { alias } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+export default Controller.extend({
+  adminBackups: inject(),
+  status: alias("adminBackups.model"),
 
   init() {
     this._super(...arguments);

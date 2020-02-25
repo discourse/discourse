@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class MigrateUrlSiteSettings < Jobs::Onceoff
+  class MigrateUrlSiteSettings < ::Jobs::Onceoff
     SETTINGS = [
       ['logo_url', 'logo'],
       ['logo_small_url', 'logo_small'],

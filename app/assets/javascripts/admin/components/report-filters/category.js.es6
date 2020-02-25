@@ -1,5 +1,4 @@
-import Category from "discourse/models/category";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { readOnly } from "@ember/object/computed";
 import FilterComponent from "admin/components/report-filters/filter";
 
 export default FilterComponent.extend({
@@ -7,14 +6,11 @@ export default FilterComponent.extend({
 
   layoutName: "admin/templates/components/report-filters/category",
 
-  @computed("filter.default")
-  category(categoryId) {
-    return Category.findById(categoryId);
-  },
+  category: readOnly("filter.default"),
 
   actions: {
-    onDeselect() {
-      this.applyFilter(this.get("filter.id"), undefined);
+    onChange(categoryId) {
+      this.applyFilter(this.get("filter.id"), categoryId || undefined);
     }
   }
 });

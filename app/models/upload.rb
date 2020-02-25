@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 require "digest/sha1"
-require_dependency "file_helper"
-require_dependency "url_helper"
-require_dependency "db_helper"
-require_dependency "validators/upload_validator"
-require_dependency "file_store/local_store"
-require_dependency "base62"
 
 class Upload < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
@@ -15,8 +9,10 @@ class Upload < ActiveRecord::Base
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
+  SECURE_MEDIA_ROUTE = "secure-media-uploads".freeze
 
   belongs_to :user
+  belongs_to :access_control_post, class_name: 'Post'
 
   has_many :post_uploads, dependent: :destroy
   has_many :posts, through: :post_uploads
@@ -29,11 +25,12 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_private_message
   attr_accessor :for_export
   attr_accessor :for_site_setting
+  attr_accessor :for_gravatar
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
-  validates_with ::Validators::UploadValidator
+  validates_with UploadValidator
 
   after_destroy do
     User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
@@ -124,6 +121,27 @@ class Upload < ActiveRecord::Base
     self.class.short_path(sha1: self.sha1, extension: self.extension)
   end
 
+  def self.consider_for_reuse(upload, post)
+    return upload if !SiteSetting.secure_media? || upload.blank? || post.blank?
+    return nil if upload.access_control_post_id != post.id || upload.original_sha1.blank?
+    upload
+  end
+
+  def self.secure_media_url?(url)
+    # we do not want to exclude topic links that for whatever reason
+    # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
+    url.include?(SECURE_MEDIA_ROUTE) && !url.include?("/t/") && FileHelper.is_supported_media?(url)
+  end
+
+  def self.signed_url_from_secure_media_url(url)
+    secure_upload_s3_path = url.sub(Discourse.base_url, "").sub("/#{SECURE_MEDIA_ROUTE}/", "")
+    Discourse.store.signed_url_for_path(secure_upload_s3_path)
+  end
+
+  def self.secure_media_url_from_upload_url(url)
+    url.sub(SiteSetting.Upload.absolute_base_url, "/#{SECURE_MEDIA_ROUTE}")
+  end
+
   def self.short_path(sha1:, extension:)
     @url_helpers ||= Rails.application.routes.url_helpers
 
@@ -143,11 +161,6 @@ class Upload < ActiveRecord::Base
 
   def local?
     !(url =~ /^(https?:)?\/\//)
-  end
-
-  def private?
-    return false if self.for_theme || self.for_site_setting
-    SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(self.original_filename)
   end
 
   def fix_dimensions!
@@ -238,6 +251,16 @@ class Upload < ActiveRecord::Base
 
   def rebake_posts_on_old_scheme
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
+  end
+
+  def update_secure_status(secure_override_value: nil)
+    mark_secure = secure_override_value.nil? ? UploadSecurity.new(self).should_be_secure? : secure_override_value
+
+    secure_status_did_change = self.secure? != mark_secure
+    self.update_column("secure", mark_secure)
+    Discourse.store.update_upload_ACL(self) if Discourse.store.external?
+
+    secure_status_did_change
   end
 
   def self.migrate_to_new_scheme(limit: nil)
@@ -358,10 +381,14 @@ class Upload < ActiveRecord::Base
     problems
   end
 
+  def self.reset_unknown_extensions!
+    Upload.where(extension: "unknown").update_all(extension: nil)
+  end
+
   private
 
   def short_url_basename
-    "#{Upload.base62_sha1(sha1)}.#{extension}"
+    "#{Upload.base62_sha1(sha1)}#{extension.present? ? ".#{extension}" : ""}"
   end
 
 end
@@ -370,29 +397,38 @@ end
 #
 # Table name: uploads
 #
-#  id                :integer          not null, primary key
-#  user_id           :integer          not null
-#  original_filename :string           not null
-#  filesize          :integer          not null
-#  width             :integer
-#  height            :integer
-#  url               :string           not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  sha1              :string(40)
-#  origin            :string(1000)
-#  retain_hours      :integer
-#  extension         :string(10)
-#  thumbnail_width   :integer
-#  thumbnail_height  :integer
-#  etag              :string
+#  id                     :integer          not null, primary key
+#  user_id                :integer          not null
+#  original_filename      :string           not null
+#  filesize               :integer          not null
+#  width                  :integer
+#  height                 :integer
+#  url                    :string           not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  sha1                   :string(40)
+#  origin                 :string(1000)
+#  retain_hours           :integer
+#  extension              :string(10)
+#  thumbnail_width        :integer
+#  thumbnail_height       :integer
+#  etag                   :string
+#  secure                 :boolean          default(FALSE), not null
+#  access_control_post_id :bigint
+#  original_sha1          :string
 #
 # Indexes
 #
-#  index_uploads_on_etag        (etag)
-#  index_uploads_on_extension   (lower((extension)::text))
-#  index_uploads_on_id_and_url  (id,url)
-#  index_uploads_on_sha1        (sha1) UNIQUE
-#  index_uploads_on_url         (url)
-#  index_uploads_on_user_id     (user_id)
+#  index_uploads_on_access_control_post_id  (access_control_post_id)
+#  index_uploads_on_etag                    (etag)
+#  index_uploads_on_extension               (lower((extension)::text))
+#  index_uploads_on_id_and_url              (id,url)
+#  index_uploads_on_original_sha1           (original_sha1)
+#  index_uploads_on_sha1                    (sha1) UNIQUE
+#  index_uploads_on_url                     (url)
+#  index_uploads_on_user_id                 (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (access_control_post_id => posts.id)
 #

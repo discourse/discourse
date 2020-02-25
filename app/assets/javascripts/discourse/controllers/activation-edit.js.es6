@@ -1,16 +1,18 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { extractError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
 
-export default Ember.Controller.extend(ModalFunctionality, {
-  login: Ember.inject.controller(),
+export default Controller.extend(ModalFunctionality, {
+  login: inject(),
 
   currentEmail: null,
   newEmail: null,
   password: null,
 
-  @computed("newEmail", "currentEmail")
+  @discourseComputed("newEmail", "currentEmail")
   submitDisabled(newEmail, currentEmail) {
     return newEmail === currentEmail;
   },

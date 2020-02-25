@@ -1,3 +1,5 @@
+import { get } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { avatarImg } from "discourse/widgets/post";
@@ -265,7 +267,7 @@ createWidget("header-cloak", {
   scheduleRerender() {}
 });
 
-const forceContextEnabled = ["category", "user", "private_messages"];
+const forceContextEnabled = ["category", "user", "private_messages", "tag"];
 
 let additionalPanels = [];
 export function attachAdditionalPanel(name, toggle, transformAttrs) {
@@ -399,14 +401,12 @@ export default createWidget("header", {
       var params = "";
 
       if (context) {
-        params = `?context=${context.type}&context_id=${
-          context.id
-        }&skip_context=${this.state.skipSearchContext}`;
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
       }
 
       const currentPath = this.register
-        .lookup("controller:application")
-        .get("currentPath");
+        .lookup("service:router")
+        .get("_router.currentPath");
 
       if (currentPath === "full-page-search") {
         scrollTop();
@@ -421,7 +421,7 @@ export default createWidget("header", {
     this.updateHighlight();
 
     if (this.state.searchVisible) {
-      Ember.run.schedule("afterRender", () => {
+      schedule("afterRender", () => {
         const $searchInput = $("#search-term");
         $searchInput.focus().select();
 
@@ -481,8 +481,8 @@ export default createWidget("header", {
     state.contextEnabled = false;
 
     const currentPath = this.register
-      .lookup("controller:application")
-      .get("currentPath");
+      .lookup("service:router")
+      .get("_router.currentPath");
     const blacklist = [/^discovery\.categories/];
     const whitelist = [/^topic\./];
     const check = function(regex) {
@@ -559,7 +559,7 @@ export default createWidget("header", {
     if (service) {
       const ctx = service.get("searchContext");
       if (ctx) {
-        return Ember.get(ctx, "type");
+        return get(ctx, "type");
       }
     }
   }

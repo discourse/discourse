@@ -5,10 +5,20 @@
 {{#if showDismissAtTop}}
   <div class="row">
     {{#if showDismissRead}}
-      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics-top' class='btn btn-default dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-topics-top"
+        action=(action "dismissReadPosts")
+        title="topics.bulk.dismiss_tooltip"
+        label="topics.bulk.dismiss_button"}}
     {{/if}}
     {{#if showResetNew}}
-    <button id='dismiss-new-top' class='btn btn-default dismiss-read' {{action "resetNew"}}>{{d-icon "check"}} {{i18n 'topics.bulk.dismiss_new'}}</button>
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-new-top"
+        action=(action "resetNew")
+        icon="check"
+        label="topics.bulk.dismiss_new"}}
     {{/if}}
   </div>
 {{/if}}
@@ -26,7 +36,7 @@
 
 {{bulk-select-button selected=selected action=(action "refresh") category=category}}
 
-{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount}}
+{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
   {{#if top}}
     <div class='top-lists'>
       {{period-chooser period=period action=(action "changePeriod")}}
@@ -34,11 +44,9 @@
   {{else}}
     {{#if topicTrackingState.hasIncoming}}
       <div class="show-more {{if hasTopics 'has-topics'}}">
-        <div class='alert alert-info clickable' {{action "showInserted"}}>
-          <a tabindex="0" href="" {{action "showInserted"}}>
-            {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
-          </a>
-        </div>
+        <a class='alert alert-info clickable' tabindex="0" href {{action "showInserted"}}>
+          {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+        </a>
       </div>
     {{/if}}
   {{/if}}
@@ -61,7 +69,9 @@
       expandAllPinned=expandAllPinned
       category=category
       topics=model.topics
-      discoveryList=true}}
+      discoveryList=true
+      scrollOnLoad=true
+      onScroll=discoveryTopicList.saveScrollPosition}}
   {{/if}}
 {{/discovery-topics-list}}
 
@@ -69,11 +79,20 @@
   {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
-      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn btn-default dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-topics"
+        action=(action "dismissReadPosts")
+        title="topics.bulk.dismiss_tooltip"
+        label="topics.bulk.dismiss_button"}}
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new' class='btn btn-default dismiss-read' {{action "resetNew"}}>
-        {{d-icon "check"}} {{i18n 'topics.bulk.dismiss_new'}}</button>
+      {{d-button
+        class="btn-default dismiss-read"
+        action=(action "resetNew")
+        id="dismiss-new"
+        icon="check"
+        label="topics.bulk.dismiss_new"}}
     {{/if}}
 
     {{#footer-message education=footerEducation message=footerMessage}}

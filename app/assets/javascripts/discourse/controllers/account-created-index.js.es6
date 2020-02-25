@@ -1,6 +1,7 @@
+import Controller from "@ember/controller";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   actions: {
     sendActivationEmail() {
       resendActivationEmail(this.get("accountCreated.username")).then(() => {

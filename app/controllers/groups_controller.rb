@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
-  include ApplicationHelper
-
   requires_login only: [
     :set_notifications,
     :mentionable,
@@ -31,10 +29,7 @@ class GroupsController < ApplicationController
       groups.where(public_admission: true, automatic: false)
     },
     close: Proc.new { |groups|
-      groups.where(
-        public_admission: false,
-        automatic: false
-      )
+      groups.where(public_admission: false, automatic: false)
     },
     automatic: Proc.new { |groups|
       groups.where(automatic: true)
@@ -46,24 +41,23 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    page_size = mobile_device? ? 15 : 36
-    page = params[:page]&.to_i || 0
     order = %w{name user_count}.delete(params[:order])
-    dir = params[:asc] ? 'ASC' : 'DESC'
-    groups = Group.visible_groups(current_user, order ? "#{order} #{dir}" : nil)
+    dir = params[:asc].to_s == "true" ? "ASC" : "DESC"
+    sort = order ? "#{order} #{dir}" : nil
+    groups = Group.visible_groups(current_user, sort)
+    type_filters = TYPE_FILTERS.keys
+
+    if (username = params[:username]).present?
+      raise Discourse::NotFound unless user = User.find_by_username(username)
+      groups = TYPE_FILTERS[:my].call(groups.members_visible_groups(current_user, sort), user)
+      type_filters = type_filters - [:my, :owner]
+    end
 
     if (filter = params[:filter]).present?
       groups = Group.search_groups(filter, groups: groups)
     end
 
-    type_filters = TYPE_FILTERS.keys
-
-    if username = params[:username]
-      groups = TYPE_FILTERS[:my].call(groups, User.find_by_username(username))
-      type_filters = type_filters - [:my, :owner]
-    end
-
-    unless guardian.is_staff?
+    if !guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
       groups = groups.where("automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}")
       type_filters.delete(:automatic)
@@ -74,10 +68,7 @@ class GroupsController < ApplicationController
     end
 
     if type = params[:type]&.to_sym
-      callback = TYPE_FILTERS[type]
-      if !callback
-        raise Discourse::InvalidParameters.new(:type)
-      end
+      raise Discourse::InvalidParameters.new(:type) unless callback = TYPE_FILTERS[type]
       groups = callback.call(groups, current_user)
     end
 
@@ -89,7 +80,11 @@ class GroupsController < ApplicationController
       type_filters = type_filters - [:my, :owner]
     end
 
-    count = groups.count
+    # count the total before doing pagination
+    total = groups.count
+
+    page = params[:page].to_i
+    page_size = MobileDetection.mobile_device?(request.user_agent) ? 15 : 36
     groups = groups.offset(page * page_size).limit(page_size)
 
     render_json_dump(
@@ -101,14 +96,14 @@ class GroupsController < ApplicationController
       extras: {
         type_filters: type_filters
       },
-      total_rows_groups: count,
+      total_rows_groups: total,
       load_more_groups: groups_path(
         page: page + 1,
         type: type,
         order: order,
         asc: params[:asc],
         filter: filter
-      ),
+      )
     )
   end
 
@@ -124,10 +119,7 @@ class GroupsController < ApplicationController
 
       format.json do
         groups = Group.visible_groups(current_user)
-
-        if !guardian.is_staff?
-          groups = groups.where(automatic: false)
-        end
+        groups = groups.where(automatic: false) if !guardian.is_staff?
 
         render_json_dump(
           group: serialize_data(group, GroupShowSerializer, root: nil),
@@ -159,6 +151,8 @@ class GroupsController < ApplicationController
 
   def posts
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     posts = group.posts_for(
       guardian,
       params.permit(:before_post_id, :category_id)
@@ -168,6 +162,8 @@ class GroupsController < ApplicationController
 
   def posts_feed
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     @posts = group.posts_for(
       guardian,
       params.permit(:before_post_id, :category_id)
@@ -204,22 +200,15 @@ class GroupsController < ApplicationController
   def members
     group = find_group(:group_id)
 
-    limit = (params[:limit] || 20).to_i
+    guardian.ensure_can_see_group_members!(group)
+
+    limit = (params[:limit] || 50).to_i
     offset = params[:offset].to_i
 
-    if limit < 0
-      raise Discourse::InvalidParameters.new(:limit)
-    end
+    raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > 1000
+    raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
-    if limit > 1000
-      raise Discourse::InvalidParameters.new(:limit)
-    end
-
-    if offset < 0
-      raise Discourse::InvalidParameters.new(:offset)
-    end
-
-    dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
+    dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
     order = ""
 
     if params[:requesters]
@@ -274,7 +263,7 @@ class GroupsController < ApplicationController
       end
     end
 
-    users = users.select('users.*, group_users.created_at as added_at')
+    users = users.joins(:user_option).select('users.*, user_options.timezone, group_users.created_at as added_at')
 
     members = users
       .order('NOT group_users.owner')
@@ -351,7 +340,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new(:user_id) if user.blank?
 
       if params[:accept]
-        group.add(user)
+        group.add(user, notify: true)
         GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
       end
 
@@ -420,12 +409,18 @@ class GroupsController < ApplicationController
   end
 
   def request_membership
-    params.require(:reason)
+    params.require(:reason) if params[:topic_id].blank?
 
     group = find_group(:id)
 
+    if params[:topic_id] && topic = Topic.find_by_id(params[:topic_id])
+      reason = I18n.t("groups.view_hidden_topic_request_reason", group_name: group.name, topic_url: topic.url)
+    end
+
+    reason ||= params[:reason]
+
     begin
-      GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
+      GroupRequest.create!(group: group, user: current_user, reason: reason)
     rescue ActiveRecord::RecordNotUnique => e
       return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
     end
@@ -437,20 +432,12 @@ class GroupsController < ApplicationController
         .pluck("users.username")
     )
 
-    raw = <<~EOF
-      #{params[:reason]}
-
-      ---
-      <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
-        #{I18n.t('groups.request_membership_pm.handle')}
-      </a>
-    EOF
-
     post = PostCreator.new(current_user,
       title: I18n.t('groups.request_membership_pm.title', group_name: group.name),
-      raw: raw,
+      raw: params[:reason],
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
+      custom_fields: { requested_group_id: group.id },
       skip_validations: true
     ).create!
 
@@ -495,7 +482,7 @@ class GroupsController < ApplicationController
       .where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
       .order(:name)
 
-    if term = params[:term].to_s
+    if (term = params[:term]).present?
       groups = groups.where("name ILIKE :term OR full_name ILIKE :term", term: "%#{term}%")
     end
 
@@ -544,10 +531,12 @@ class GroupsController < ApplicationController
             :incoming_email,
             :primary_group,
             :visibility_level,
+            :members_visibility_level,
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
-            :automatic_membership_retroactive
+            :automatic_membership_retroactive,
+            :publish_read_state
           ])
 
           custom_fields = Group.editable_group_custom_fields
@@ -562,8 +551,7 @@ class GroupsController < ApplicationController
 
   def find_group(param_name, ensure_can_see: true)
     name = params.require(param_name)
-    group = Group
-    group = group.find_by("lower(name) = ?", name.downcase)
+    group = Group.find_by("LOWER(name) = ?", name.downcase)
     guardian.ensure_can_see!(group) if ensure_can_see
     group
   end

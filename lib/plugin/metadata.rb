@@ -60,7 +60,7 @@ class Plugin::Metadata
     "discourse-sitemap",
     "discourse-solved",
     "discourse-spoiler-alert",
-    "discourse-staff-notes",
+    "discourse-user-notes",
     "discourse-styleguide",
     "discourse-tooltips",
     "discourse-translator",
@@ -68,9 +68,13 @@ class Plugin::Metadata
     "discourse-voting",
     "discourse-yearly-review",
     "discourse-openid-connect",
+    "discourse-restricted-replies",
+    "discourse-rss-polling",
+    "discourse-zendesk-plugin",
     "docker_manager",
-    "lazyYT",
-    "poll"
+    "lazy-yt",
+    "poll",
+    "discourse-internet-explorer"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]

@@ -33,9 +33,7 @@
       color: $primary;
     }
   }
-  .private-message-glyph {
-    display: none;
-  }
+
   .remove-featured-link {
     float: right;
     text-transform: lowercase;
@@ -44,15 +42,8 @@
   }
 }
 
-.private-message-glyph {
-  float: left;
-}
-
-.private_message #topic-title .private-message-glyph {
-  display: inline;
-}
-
-.topic-error {
+.topic-error,
+.topic-notice {
   padding: 18px;
   width: 60%;
   margin-left: auto;
@@ -61,7 +52,8 @@
   text-align: center;
   line-height: $line-height-medium;
 
-  .topic-retry {
+  .topic-retry,
+  .topic-join-group {
     display: block;
     margin-top: 28px;
     margin-left: auto;
@@ -72,8 +64,17 @@
 .topic-status-info {
   border-top: 1px solid $primary-low;
   padding: 10px 0;
-  height: 20px;
   max-width: 758px;
+  .topic-timer-heading {
+    display: flex;
+    align-items: center;
+    margin: 0px;
+  }
+  .topic-timer-remove {
+    font-size: $font-down-2;
+    background: transparent;
+    margin-left: auto;
+  }
 }
 
 #topic-progress-wrapper {

@@ -1,4 +1,5 @@
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { isEmpty } from "@ember/utils";
+import { on, observes } from "discourse-common/utils/decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -7,10 +8,34 @@ export default TextField.extend({
   autocorrect: false,
   autocapitalize: false,
   name: "user-selector",
+  canReceiveUpdates: false,
+  single: false,
+  fullWidthWrap: false,
 
-  @observes("usernames")
-  _update() {
-    if (this.canReceiveUpdates === "true") {
+  init() {
+    this._super(...arguments);
+
+    this._paste = e => {
+      let pastedText = "";
+      if (window.clipboardData && window.clipboardData.getData) {
+        // IE
+        pastedText = window.clipboardData.getData("Text");
+      } else if (e.clipboardData && e.clipboardData.getData) {
+        pastedText = e.clipboardData.getData("text/plain");
+      }
+
+      if (pastedText.length > 0) {
+        this.importText(pastedText);
+        e.preventDefault();
+        return false;
+      }
+    };
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+
+    if (this.canReceiveUpdates) {
       this._createAutocompleteInstance({ updateData: true });
     }
   },
@@ -18,6 +43,7 @@ export default TextField.extend({
   @on("willDestroyElement")
   _destroyAutocompleteInstance() {
     $(this.element).autocomplete("destroy");
+    this.element.addEventListener("paste", this._paste);
   },
 
   @on("didInsertElement")
@@ -41,15 +67,18 @@ export default TextField.extend({
       allowEmails = bool("allowEmails"),
       fullWidthWrap = bool("fullWidthWrap");
 
-    const excludedUsernames = () => {
+    const allExcludedUsernames = () => {
       // hack works around some issues with allowAny eventing
-      const usernames = single ? [] : selected;
+      let usernames = single ? [] : selected;
 
       if (currentUser && excludeCurrentUser) {
-        return usernames.concat([currentUser.username]);
+        usernames.concat([currentUser.username]);
       }
-      return usernames;
+
+      return usernames.concat(this.excludedUsernames || []);
     };
+
+    this.element.addEventListener("paste", this._paste);
 
     const userSelectorComponent = this;
 
@@ -67,7 +96,7 @@ export default TextField.extend({
           return userSearch({
             term,
             topicId: userSelectorComponent.topicId,
-            exclude: excludedUsernames(),
+            exclude: allExcludedUsernames(),
             includeGroups,
             allowedUsers,
             includeMentionableGroups,
@@ -84,7 +113,7 @@ export default TextField.extend({
             }
             return v.username || v.name;
           } else {
-            const excludes = excludedUsernames();
+            const excludes = allExcludedUsernames();
             return v.usernames.filter(item => excludes.indexOf(item) === -1);
           }
         },
@@ -127,10 +156,32 @@ export default TextField.extend({
       });
   },
 
+  importText(text) {
+    let usernames = [];
+    if ((this.usernames || "").length > 0) {
+      usernames = this.usernames.split(",");
+    }
+
+    (text || "").split(/[, \n]+/).forEach(val => {
+      val = val.replace(/^@+/, "").trim();
+      if (
+        val.length > 0 &&
+        (!this.excludedUsernames || !this.excludedUsernames.includes(val))
+      ) {
+        usernames.push(val);
+      }
+    });
+    this.set("usernames", usernames.uniq().join(","));
+
+    if (!this.canReceiveUpdates) {
+      this._createAutocompleteInstance({ updateData: true });
+    }
+  },
+
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
   @observes("usernames")
   _clearInput() {
-    if (arguments.length > 1 && Ember.isEmpty(this.usernames)) {
+    if (arguments.length > 1 && isEmpty(this.usernames)) {
       $(this.element)
         .parent()
         .find("a")

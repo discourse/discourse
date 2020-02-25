@@ -8,7 +8,8 @@
 $breakpoints: (
   mobile-small: 320px,
   mobile-medium: 350px,
-  mobile: 550px,
+  mobile-large: 450px,
+  mobile-extra-large: 550px,
   tablet: 768px,
   medium: 850px,
   large: 1000px,
@@ -46,12 +47,29 @@ $breakpoints: (
 // Visibility
 // --------------------------------------------------
 
+// Only shows hover on non-touch devices
 @mixin hover {
   .discourse-no-touch & {
-    &:hover {
+    &:hover,
+    &.btn-hover {
       @content;
     }
   }
+}
+
+@mixin ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
 }
 
 //

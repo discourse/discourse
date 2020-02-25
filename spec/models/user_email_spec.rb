@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'user_email'
 
 describe UserEmail do
   context "validation" do

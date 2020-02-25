@@ -153,6 +153,73 @@ describe Admin::BadgesController do
         expect(badge.name).to eq('123456')
         expect(badge.query).to eq(sql)
       end
+
+      context 'when there is a user with a title granted using the badge' do
+        fab!(:user_with_badge_title) { Fabricate(:active_user) }
+        fab!(:badge) { Fabricate(:badge, name: 'Oathbreaker', allow_title: true) }
+
+        before do
+          BadgeGranter.grant(badge, user_with_badge_title)
+          user_with_badge_title.update(title: 'Oathbreaker')
+        end
+
+        it 'updates the user title in a job' do
+          Jobs.expects(:enqueue).with(
+            :bulk_user_title_update,
+            new_title: 'Shieldbearer',
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+          )
+
+          put "/admin/badges/#{badge.id}.json", params: {
+            name: "Shieldbearer"
+          }
+        end
+      end
+    end
+
+    describe '#mass_award' do
+      it 'does nothing when there is no file' do
+        post "/admin/badges/award/#{badge.id}.json", params: { file: '' }
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'does nothing when the badge id is not valid' do
+        post '/admin/badges/award/fake_id.json', params: { file: fixture_file_upload(Tempfile.new) }
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'does nothing when the file is not a csv' do
+        file = file_from_fixtures('cropped.png')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'awards the badge using a list of user emails' do
+        Jobs.run_immediately!
+
+        user = Fabricate(:user, email: 'user1@test.com')
+        file = file_from_fixtures('user_emails.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
+      end
+
+      it 'awards the badge using a list of usernames' do
+        Jobs.run_immediately!
+
+        user = Fabricate(:user, username: 'username1')
+        file = file_from_fixtures('usernames.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
+      end
     end
   end
 end

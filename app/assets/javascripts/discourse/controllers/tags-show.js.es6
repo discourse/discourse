@@ -1,61 +1,19 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import { alias } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
-import {
-  default as NavItem,
-  extraNavItemProperties,
-  customNavItemHref
-} from "discourse/models/nav-item";
+import NavItem from "discourse/models/nav-item";
+import FilterModeMixin from "discourse/mixins/filter-mode";
+import { queryParams } from "discourse/controllers/discovery-sortable";
 
-if (extraNavItemProperties) {
-  extraNavItemProperties(function(text, opts) {
-    if (opts && opts.tagId) {
-      return { tagId: opts.tagId };
-    } else {
-      return {};
-    }
-  });
-}
-
-if (customNavItemHref) {
-  customNavItemHref(function(navItem) {
-    if (navItem.get("tagId")) {
-      const name = navItem.get("name");
-
-      if (!Discourse.Site.currentProp("filters").includes(name)) {
-        return null;
-      }
-
-      let path = "/tags/";
-      const category = navItem.get("category");
-
-      if (category) {
-        path += "c/";
-        path += Discourse.Category.slugFor(category);
-        if (navItem.get("noSubcategories")) {
-          path += "/none";
-        }
-        path += "/";
-      }
-
-      path += `${navItem.get("tagId")}/l/`;
-      return `${path}${name.replace(" ", "-")}`;
-    } else {
-      return null;
-    }
-  });
-}
-
-export default Ember.Controller.extend(BulkTopicSelection, {
-  application: Ember.inject.controller(),
+export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
+  application: inject(),
 
   tag: null,
   additionalTags: null,
   list: null,
-  canAdminTag: Ember.computed.alias("currentUser.staff"),
-  filterMode: null,
+  canAdminTag: alias("currentUser.staff"),
   navMode: "latest",
   loading: false,
   canCreateTopic: false,
@@ -66,15 +24,16 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   search: null,
   max_posts: null,
   q: null,
+  showInfo: false,
 
-  categories: Ember.computed.alias("site.categoriesList"),
+  categories: alias("site.categoriesList"),
 
-  @computed("list", "list.draft")
+  @discourseComputed("list", "list.draft")
   createTopicLabel(list, listDraft) {
     return listDraft ? "topic.open_draft" : "topic.create";
   },
 
-  @computed(
+  @discourseComputed(
     "canCreateTopic",
     "category",
     "canCreateTopicOnCategory",
@@ -95,32 +54,25 @@ export default Ember.Controller.extend(BulkTopicSelection, {
     );
   },
 
-  queryParams: [
-    "order",
-    "ascending",
-    "status",
-    "state",
-    "search",
-    "max_posts",
-    "q"
-  ],
+  queryParams: Object.keys(queryParams),
 
-  @computed("category", "tag.id", "filterMode")
-  navItems(category, tagId, filterMode) {
+  @discourseComputed("category", "tag.id", "filterType", "noSubcategories")
+  navItems(category, tagId, filterType, noSubcategories) {
     return NavItem.buildList(category, {
       tagId,
-      filterMode
+      filterType,
+      noSubcategories
     });
   },
 
-  @computed("category")
+  @discourseComputed("category")
   showTagFilter() {
     return Discourse.SiteSettings.show_filter_by_tag;
   },
 
-  @computed("additionalTags", "canAdminTag", "category")
-  showAdminControls(additionalTags, canAdminTag, category) {
-    return !additionalTags && canAdminTag && !category;
+  @discourseComputed("additionalTags", "category", "tag.id")
+  showToggleInfo(additionalTags, category, tagId) {
+    return !additionalTags && !category && tagId !== "none";
   },
 
   loadMoreTopics() {
@@ -132,7 +84,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
     this.set("application.showFooter", !this.get("list.canLoadMore"));
   },
 
-  @computed("navMode", "list.topics.length", "loading")
+  @discourseComputed("navMode", "list.topics.length", "loading")
   footerMessage(navMode, listTopicsLength, loading) {
     if (loading || listTopicsLength !== 0) {
       return;
@@ -157,7 +109,13 @@ export default Ember.Controller.extend(BulkTopicSelection, {
         this.setProperties({ order, ascending: false });
       }
 
-      this.send("invalidateModel");
+      this.transitionToRoute({
+        queryParams: { order, ascending: this.ascending }
+      });
+    },
+
+    toggleInfo() {
+      this.toggleProperty("showInfo");
     },
 
     refresh() {
@@ -170,14 +128,22 @@ export default Ember.Controller.extend(BulkTopicSelection, {
         });
     },
 
-    deleteTag() {
+    deleteTag(tagInfo) {
       const numTopics =
         this.get("list.topic_list.tags.firstObject.topic_count") || 0;
 
-      const confirmText =
+      let confirmText =
         numTopics === 0
           ? I18n.t("tagging.delete_confirm_no_topics")
           : I18n.t("tagging.delete_confirm", { count: numTopics });
+
+      if (tagInfo.synonyms.length > 0) {
+        confirmText +=
+          " " +
+          I18n.t("tagging.delete_confirm_synonyms", {
+            count: tagInfo.synonyms.length
+          });
+      }
 
       bootbox.confirm(confirmText, result => {
         if (!result) return;
@@ -189,9 +155,8 @@ export default Ember.Controller.extend(BulkTopicSelection, {
       });
     },
 
-    changeTagNotification(id) {
-      const tagNotification = this.tagNotification;
-      tagNotification.update({ notification_level: id });
+    changeTagNotificationLevel(notificationLevel) {
+      this.tagNotification.update({ notification_level: notificationLevel });
     }
   }
 });

@@ -40,7 +40,8 @@ class UserUpdater
     :homepage_id,
     :hide_profile_and_presence,
     :text_size,
-    :title_count_mode
+    :title_count_mode,
+    :timezone
   ]
 
   def initialize(actor, user)
@@ -80,6 +81,19 @@ class UserUpdater
       attributes[:title] != user.title &&
       guardian.can_grant_title?(user, attributes[:title])
       user.title = attributes[:title]
+    end
+
+    if SiteSetting.user_selected_primary_groups &&
+      attributes[:primary_group_id] &&
+      attributes[:primary_group_id] != user.primary_group_id &&
+      guardian.can_use_primary_group?(user, attributes[:primary_group_id])
+
+      user.primary_group_id = attributes[:primary_group_id]
+    elsif SiteSetting.user_selected_primary_groups &&
+      attributes[:primary_group_id] &&
+      attributes[:primary_group_id].blank?
+
+      user.primary_group_id = nil
     end
 
     CATEGORY_IDS.each do |attribute, level|

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'user_destroyer'
 
 describe UserDestroyer do
 
@@ -128,7 +127,7 @@ describe UserDestroyer do
     end
 
     context "with a draft" do
-      let!(:draft) { Draft.set(user, 'test', 1, 'test') }
+      let!(:draft) { Draft.set(user, 'test', 0, 'test') }
 
       it "removed the draft" do
         UserDestroyer.new(admin).destroy(user)
@@ -323,7 +322,7 @@ describe UserDestroyer do
     end
 
     context 'user created a category' do
-      let!(:category) { Fabricate(:category, user: @user) }
+      let!(:category) { Fabricate(:category_with_definition, user: @user) }
 
       it "assigns the system user to the categories" do
         UserDestroyer.new(@admin).destroy(@user, delete_posts: true)

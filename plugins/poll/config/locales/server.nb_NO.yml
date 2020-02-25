@@ -14,8 +14,6 @@ nb_NO:
   poll:
     multiple_polls_without_name: "Det er flere avstemninger uten et navn. Bruk '<code>navn</code>'-attributten til å identifisere avstemningene dine."
     multiple_polls_with_same_name: "Det er flere avstemninger med samme navn: <strong>%{name}</strong>. Bruk '<code>name</code>'-attributten til å identifisere avstemningene dine entydig."
-    default_poll_must_have_at_least_2_options: "Avstemninger må inneholde minst 2 alternativer."
-    named_poll_must_have_at_least_2_options: "Avstemningen <strong>%{name}</strong> må ha minst 2 svaralternativer."
     default_poll_must_have_less_options:
       one: "Avstemningen må ha mindre enn %{count} svaralternativ"
       other: "Avstemningen må ha mindre enn %{max} svaralternativer."

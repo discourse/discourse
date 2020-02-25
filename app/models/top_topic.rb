@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "distributed_memoizer"
-
 class TopTopic < ActiveRecord::Base
 
   belongs_to :topic

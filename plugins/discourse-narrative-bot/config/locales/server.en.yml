@@ -1,6 +1,6 @@
 en:
   site_settings:
-    discourse_narrative_bot_enabled: 'Enable Discourse Narrative Bot (discobot)'
+    discourse_narrative_bot_enabled: "Enable Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Disable the welcome post by Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Usernames that the Discourse Narrative Bot should ignore"
     discourse_narrative_bot_disable_public_replies: "Disable public replies by Discourse Narrative Bot"
@@ -17,10 +17,19 @@ en:
       name: Licensed
       description: "Completed our advanced user tutorial"
       long_description: |
-        This badge is granted upon successful completion of the interactive advanced user tutorial. You’ve mastered the advanced tools of discussion  — and now you’re fully licensed!
+        This badge is granted upon successful completion of the interactive advanced user tutorial. You’ve mastered the advanced tools of discussion — and now you’re fully licensed!
 
   discourse_narrative_bot:
     bio: "Hi, I’m not a real person. I’m a bot that can teach you about this site. To interact with me, send me a message or mention **`@%{discobot_username}`** anywhere."
+
+    tl2_promotion_message:
+      subject_template: "Congratulations on your trust level promotion!"
+      text_body_template: |
+        Now that you’ve been promoted, it’s time to learn about some advanced features!
+
+        Reply to this message with `@%{discobot_username} %{reset_trigger}` to find out more about what you can do.
+
+        We invite you to keep getting involved – we enjoy having you around.
 
     timeout:
       message: |-
@@ -81,7 +90,7 @@ en:
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
 
     magic_8_ball:
-      trigger: 'fortune'
+      trigger: "fortune"
       answers:
         "1": "It is certain"
         "2": "It is decidedly so"
@@ -107,9 +116,9 @@ en:
         > :crystal_ball: %{result}
 
     track_selector:
-      reset_trigger: 'start'
-      skip_trigger: 'skip'
-      help_trigger: 'display help'
+      reset_trigger: "start"
+      skip_trigger: "skip"
+      help_trigger: "display help"
 
       random_mention:
         reply: |-
@@ -117,14 +126,14 @@ en:
         tracks: |-
           I currently know how to do the following things:
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Starts one of the following interactive tutorials: %{tracks}.
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Starts an interactive tutorial. `{name-of-tutorial}` can be one of: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
 
           `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Princess Diana
+          %{quote_sample}
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: You may rely on it
@@ -134,8 +143,7 @@ en:
           Hey, thanks for the reply!
 
           Unfortunately, as a poorly programmed bot, I can’t quite understand that one. :frowning:
-        track_response:
-          You can try again, or if you’d like to skip this step, say `%{skip_trigger}`. Otherwise, to start over, say `%{reset_trigger}`.
+        track_response: You can try again, or if you’d like to skip this step, say `%{skip_trigger}`. Otherwise, to start over, say `%{reset_trigger}`.
         second_response: |-
           Aw, sorry. I’m still not getting it. :anguished:
 
@@ -234,11 +242,11 @@ en:
 
       bookmark:
         instructions: |-
-          If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below  and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this personal message**.  If you do, there may be a :gift: in your future!
+          If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this personal message**. If you do, there may be a :gift: in your future!
         reply: |-
           Excellent! Now you can easily find your way back to our private conversation any time, right from [the bookmarks tab on your profile](%{profile_page_url}/activity/bookmarks). Just select your profile picture at the upper right &#8599;
         not_found: |-
-          Uh oh, I don’t see any bookmarks in this topic. Did you find the bookmark under each post?  Use the show more <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal additional actions if needed.
+          Uh oh, I don’t see any bookmarks in this topic. Did you find the bookmark under each post? Use the show more <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal additional actions if needed.
 
       emoji:
         instructions: |-
@@ -266,7 +274,7 @@ en:
 
           Can you mention **`@%{discobot_username}`** in your reply?
         reply: |-
-          _Did someone say my name!?_ :raised_hand: I believe you did! :wave:  Well, here I am! Thanks for mentioning me.  :ok_hand:
+          _Did someone say my name!?_ :raised_hand: I believe you did! :wave: Well, here I am! Thanks for mentioning me. :ok_hand:
         not_found: |-
           I don’t see my name in there anywhere :frowning: Can you try mentioning me as `@%{discobot_username}` again?
 
@@ -276,7 +284,7 @@ en:
         instructions: |-
           We like our discussions friendly, and we need your help to [keep things civilized](%{guidelines_url}). If you see a problem, please flag to privately let the author, or [our helpful staff](%{about_url}), know about it.
 
-          >  :imp: I wrote something nasty here
+          > :imp: I wrote something nasty here
 
           I guess you know what to do. Go ahead and **flag this post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> as inappropriate!
         reply: |-
@@ -294,7 +302,7 @@ en:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the `:herb:` emoji** and you’ll be automatically taken to the end.
+          Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the `%{search_answer}` emoji** and you’ll be automatically taken to the end.
         reply: |-
           Yay you found it :tada:
 
@@ -317,12 +325,12 @@ en:
           (If you’d like to speak with me again to learn more, just message or mention `@%{discobot_username}` any time!)
 
       certificate:
-        alt: 'Certificate of Achievement'
+        alt: "Certificate of Achievement"
 
     advanced_user_narrative:
-      reset_trigger: 'advanced tutorial'
+      reset_trigger: "advanced tutorial"
       cert_title: "In recognition of successful completion of the advanced user tutorial"
-      title: ':arrow_up: Advanced user features'
+      title: ":arrow_up: Advanced user features"
       start_message: |-
         As an _advanced_ user, have you visited [your preferences page](%{base_uri}/my/preferences) yet @%{username}? There are lots of ways to customize your experience, such as selecting a dark or light theme.
 
@@ -356,7 +364,7 @@ en:
           To preserve continuity of discussions, deletes aren’t immediate, so the post will be removed after some time.
 
       recover:
-        deleted_post_raw: 'Why did @%{discobot_username} delete my post? :anguished:'
+        deleted_post_raw: "Why did @%{discobot_username} delete my post? :anguished:"
         instructions: |-
           Oh no! It looks like I accidentally deleted a new post that I just created for you.
 
@@ -386,7 +394,7 @@ en:
         instructions: |-
           Every topic has a notification level. It starts at 'normal', which means you’ll normally only be notified when someone is speaking directly to you.
 
-          By default, the notification level for a private message is set to the highest level of 'watching', which means you’ll be notified of every new reply.  But you can override the notification level for _any_ topic to 'watch', 'tracking' or 'muted'.
+          By default, the notification level for a private message is set to the highest level of 'watching', which means you’ll be notified of every new reply. But you can override the notification level for _any_ topic to 'watch', 'tracking' or 'muted'.
 
           Let’s try changing the notification level for this topic. At the bottom of the topic, you’ll find a button which shows that you’re **watching** this topic. Can you change the notification level to **tracking**?
         not_found: |-
@@ -452,4 +460,4 @@ en:
 
           Bye for now! If you’d like to speak with me again, send me a message any time :sunglasses:
       certificate:
-        alt: 'Advanced User Track Certificate of Achievement'
+        alt: "Advanced User Track Certificate of Achievement"

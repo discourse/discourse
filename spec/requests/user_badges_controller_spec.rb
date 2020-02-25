@@ -111,10 +111,10 @@ describe UserBadgesController do
     end
 
     it 'does not grant badges from regular api calls' do
-      Fabricate(:api_key, user: user)
+      api_key = Fabricate(:api_key, user: user)
 
       post "/user_badges.json", params: {
-        badge_id: badge.id, username: user.username, api_key: user.api_key.key
+        badge_id: badge.id, username: user.username, api_key: api_key.key
       }
 
       expect(response.status).to eq(403)
@@ -192,16 +192,9 @@ describe UserBadgesController do
     end
 
     describe 'with relative_url_root' do
-      before do
-        @orig_relative_url_root = ActionController::Base.config.relative_url_root
-        ActionController::Base.config.relative_url_root = "/discuss"
-      end
-
-      after do
-        ActionController::Base.config.relative_url_root = @orig_relative_url_root
-      end
-
       it 'grants badge when valid post/topic link is given in reason' do
+        set_subfolder "/discuss"
+
         admin = Fabricate(:admin)
         post = create_post
 

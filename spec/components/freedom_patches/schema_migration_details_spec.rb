@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency "freedom_patches/schema_migration_details"
 
 describe FreedomPatches::SchemaMigrationDetails do
 
@@ -16,13 +15,13 @@ describe FreedomPatches::SchemaMigrationDetails do
   end
 
   it "logs information on migration" do
-    migration = TestMigration.new("awesome_migration", "20160225050318")
+    migration = TestMigration.new("awesome_migration", "20110225050318")
 
     ActiveRecord::Base.connection_pool.with_connection do |conn|
       migration.exec_migration(conn, :up)
     end
 
-    info = SchemaMigrationDetail.find_by(version: "20160225050318")
+    info = SchemaMigrationDetail.find_by(version: "20110225050318")
 
     expect(info.duration).to be > 0
     expect(info.git_version).to eq Discourse.git_version

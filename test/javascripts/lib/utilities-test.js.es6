@@ -2,22 +2,16 @@
 import {
   emailValid,
   extractDomainFromUrl,
-  isAnImage,
   avatarUrl,
-  authorizedExtensions,
-  allowsImages,
-  allowsAttachments,
   getRawSize,
   avatarImg,
   defaultHomepage,
   setDefaultHomepage,
-  validateUploadedFiles,
-  getUploadMarkdown,
   caretRowCol,
   setCaretPosition,
-  fillMissingDates
+  fillMissingDates,
+  inCodeBlock
 } from "discourse/lib/utilities";
-import * as Utilities from "discourse/lib/utilities";
 
 QUnit.module("lib:utilities");
 
@@ -53,176 +47,6 @@ QUnit.test("extractDomainFromUrl", assert => {
     "localhost",
     "works for localhost"
   );
-});
-
-var validUpload = validateUploadedFiles;
-
-QUnit.test("validateUploadedFiles", assert => {
-  assert.not(validUpload(null), "no files are invalid");
-  assert.not(validUpload(undefined), "undefined files are invalid");
-  assert.not(validUpload([]), "empty array of files is invalid");
-});
-
-QUnit.test("uploading one file", assert => {
-  sandbox.stub(bootbox, "alert");
-
-  assert.not(validUpload([1, 2]));
-  assert.ok(bootbox.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
-});
-
-QUnit.test("new user cannot upload images", assert => {
-  Discourse.SiteSettings.newuser_max_images = 0;
-  Discourse.User.resetCurrent(Discourse.User.create());
-  sandbox.stub(bootbox, "alert");
-
-  assert.not(validUpload([{ name: "image.png" }]), "the upload is not valid");
-  assert.ok(
-    bootbox.alert.calledWith(
-      I18n.t("post.errors.image_upload_not_allowed_for_new_user")
-    ),
-    "the alert is called"
-  );
-});
-
-QUnit.test("new user cannot upload attachments", assert => {
-  Discourse.SiteSettings.newuser_max_attachments = 0;
-  sandbox.stub(bootbox, "alert");
-  Discourse.User.resetCurrent(Discourse.User.create());
-
-  assert.not(validUpload([{ name: "roman.txt" }]));
-  assert.ok(
-    bootbox.alert.calledWith(
-      I18n.t("post.errors.attachment_upload_not_allowed_for_new_user")
-    )
-  );
-});
-
-QUnit.test("ensures an authorized upload", assert => {
-  sandbox.stub(bootbox, "alert");
-  assert.not(validUpload([{ name: "unauthorized.html" }]));
-  assert.ok(
-    bootbox.alert.calledWith(
-      I18n.t("post.errors.upload_not_authorized", {
-        authorized_extensions: authorizedExtensions()
-      })
-    )
-  );
-});
-
-QUnit.test("skipping validation works", assert => {
-  const files = [{ name: "backup.tar.gz" }];
-  sandbox.stub(bootbox, "alert");
-
-  assert.not(validUpload(files, { skipValidation: false }));
-  assert.ok(validUpload(files, { skipValidation: true }));
-});
-
-QUnit.test("staff can upload anything in PM", assert => {
-  const files = [{ name: "some.docx" }];
-  Discourse.SiteSettings.authorized_extensions = "jpeg";
-  Discourse.User.resetCurrent(Discourse.User.create({ moderator: true }));
-
-  sandbox.stub(bootbox, "alert");
-
-  assert.not(validUpload(files));
-  assert.ok(
-    validUpload(files, {
-      isPrivateMessage: true,
-      allowStaffToUploadAnyFileInPm: true
-    })
-  );
-});
-
-var imageSize = 10 * 1024;
-
-var dummyBlob = function() {
-  var BlobBuilder =
-    window.BlobBuilder ||
-    window.WebKitBlobBuilder ||
-    window.MozBlobBuilder ||
-    window.MSBlobBuilder;
-  if (BlobBuilder) {
-    var bb = new BlobBuilder();
-    bb.append([new Int8Array(imageSize)]);
-    return bb.getBlob("image/png");
-  } else {
-    return new Blob([new Int8Array(imageSize)], { type: "image/png" });
-  }
-};
-
-QUnit.test("allows valid uploads to go through", assert => {
-  Discourse.User.resetCurrent(Discourse.User.create());
-  Discourse.User.currentProp("trust_level", 1);
-  sandbox.stub(bootbox, "alert");
-
-  // image
-  var image = { name: "image.png", size: imageSize };
-  assert.ok(validUpload([image]));
-  // pasted image
-  var pastedImage = dummyBlob();
-  assert.ok(validUpload([pastedImage]));
-
-  assert.not(bootbox.alert.calledOnce);
-});
-
-var testUploadMarkdown = function(filename, opts = {}) {
-  return getUploadMarkdown(
-    Object.assign(
-      {
-        original_filename: filename,
-        filesize: 42,
-        thumbnail_width: 100,
-        thumbnail_height: 200,
-        url: "/uploads/123/abcdef.ext"
-      },
-      opts
-    )
-  );
-};
-
-QUnit.test("getUploadMarkdown", assert => {
-  assert.equal(
-    testUploadMarkdown("lolcat.gif"),
-    "![lolcat|100x200](/uploads/123/abcdef.ext)"
-  );
-  assert.equal(
-    testUploadMarkdown("[foo|bar].png"),
-    "![%5Bfoo%7Cbar%5D|100x200](/uploads/123/abcdef.ext)"
-  );
-
-  const short_url = "uploads://asdaasd.ext";
-
-  assert.equal(
-    testUploadMarkdown("important.txt", { short_url }),
-    `[important.txt|attachment](${short_url}) (42 Bytes)`
-  );
-});
-
-QUnit.test("replaces GUID in image alt text on iOS", assert => {
-  assert.equal(
-    testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
-    "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
-  );
-
-  sandbox.stub(Utilities, "isAppleDevice").returns(true);
-  assert.equal(
-    testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
-    "![image|100x200](/uploads/123/abcdef.ext)"
-  );
-});
-
-QUnit.test("isAnImage", assert => {
-  ["png", "jpg", "jpeg", "gif", "ico"].forEach(extension => {
-    var image = "image." + extension;
-    assert.ok(isAnImage(image), image + " is recognized as an image");
-    assert.ok(
-      isAnImage("http://foo.bar/path/to/" + image),
-      image + " is recognized as an image"
-    );
-  });
-  assert.not(isAnImage("file.txt"));
-  assert.not(isAnImage("http://foo.bar/path/to/file.txt"));
-  assert.not(isAnImage(""));
 });
 
 QUnit.test("avatarUrl", assert => {
@@ -285,46 +109,6 @@ QUnit.test("avatarImg", assert => {
   );
 
   setDevicePixelRatio(oldRatio);
-});
-
-QUnit.test("allowsImages", assert => {
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
-  assert.ok(allowsImages(), "works");
-
-  Discourse.SiteSettings.authorized_extensions = ".jpg|.jpeg|.gif";
-  assert.ok(allowsImages(), "works with old extensions syntax");
-
-  Discourse.SiteSettings.authorized_extensions = "txt|pdf|*";
-  assert.ok(
-    allowsImages(),
-    "images are allowed when all extensions are allowed"
-  );
-
-  Discourse.SiteSettings.authorized_extensions = "json|jpg|pdf|txt";
-  assert.ok(
-    allowsImages(),
-    "images are allowed when at least one extension is an image extension"
-  );
-});
-
-QUnit.test("allowsAttachments", assert => {
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
-  assert.not(allowsAttachments(), "no attachments allowed by default");
-
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|*";
-  assert.ok(
-    allowsAttachments(),
-    "attachments are allowed when all extensions are allowed"
-  );
-
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
-  assert.ok(
-    allowsAttachments(),
-    "attachments are allowed when at least one extension is not an image extension"
-  );
-
-  Discourse.SiteSettings.authorized_extensions = ".jpg|.jpeg|.gif|.pdf";
-  assert.ok(allowsAttachments(), "works with old extensions syntax");
 });
 
 QUnit.test("defaultHomepage", assert => {
@@ -402,4 +186,33 @@ QUnit.test("fillMissingDates", assert => {
     31,
     "it returns a JSON array with 31 dates"
   );
+});
+
+QUnit.test("inCodeBlock", assert => {
+  const text =
+    "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`000";
+  for (let i = 0; i < text.length; ++i) {
+    if (text[i] === "0") {
+      assert.notOk(inCodeBlock(text, i), `position ${i} is not in code block`);
+    } else if (text[i] === "1") {
+      assert.ok(inCodeBlock(text, i), `position ${i} is in code block`);
+    }
+  }
+});
+
+QUnit.skip("inCodeBlock - runs fast", assert => {
+  const phrase = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+  const text = `${phrase}\n\n\`\`\`\n${phrase}\n\`\`\`\n\n${phrase}\n\n\`${phrase}\n${phrase}\n\n${phrase}\n\n[code]\n${phrase}\n[/code]\n\n${phrase}\n\n    ${phrase}\n\n\`${phrase}\`\n\n${phrase}`;
+
+  let time = Number.MAX_VALUE;
+  for (let i = 0; i < 10; ++i) {
+    const start = performance.now();
+    inCodeBlock(text, text.length);
+    const end = performance.now();
+    time = Math.min(time, end - start);
+  }
+
+  // This runs in 'keyUp' event handler so it should run as fast as
+  // possible. It should take less than 1ms for the test text.
+  assert.ok(time < 10);
 });

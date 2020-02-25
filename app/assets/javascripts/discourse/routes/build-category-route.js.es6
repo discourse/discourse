@@ -1,3 +1,4 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import {
   filterQueryParams,
   findTopicList
@@ -7,39 +8,65 @@ import TopicList from "discourse/models/topic-list";
 import PermissionType from "discourse/models/permission-type";
 import CategoryList from "discourse/models/category-list";
 import Category from "discourse/models/category";
+import { Promise, all } from "rsvp";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
-  return Discourse.Route.extend({
+  return DiscourseRoute.extend({
     queryParams,
 
+    serialize(modelParams) {
+      if (!modelParams.category_slug_path_with_id) {
+        if (modelParams.id === "none") {
+          const category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug
+          ].join("/");
+          const category = Category.findBySlugPathWithID(
+            category_slug_path_with_id
+          );
+          this.replaceWith("discovery.categoryNone", {
+            category,
+            category_slug_path_with_id
+          });
+        } else {
+          modelParams.category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug,
+            modelParams.id
+          ]
+            .filter(x => x)
+            .join("/");
+        }
+      }
+
+      return modelParams;
+    },
+
     model(modelParams) {
-      const category = Category.findBySlug(
-        modelParams.slug,
-        modelParams.parentSlug
+      modelParams = this.serialize(modelParams);
+
+      const category = Category.findBySlugPathWithID(
+        modelParams.category_slug_path_with_id
       );
+
       if (!category) {
-        return Category.reloadBySlug(
-          modelParams.slug,
-          modelParams.parentSlug
-        ).then(atts => {
-          if (modelParams.parentSlug) {
-            atts.category.parentCategory = Category.findBySlug(
-              modelParams.parentSlug
-            );
-          }
-          const record = this.store.createRecord("category", atts.category);
+        const parts = modelParams.category_slug_path_with_id.split("/");
+        if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
+          parts.pop();
+        }
+
+        return Category.reloadBySlugPath(parts.join("/")).then(result => {
+          const record = this.store.createRecord("category", result.category);
           record.setupGroupsAndPermissions();
           this.site.updateCategory(record);
-          return {
-            category: Category.findBySlug(
-              modelParams.slug,
-              modelParams.parentSlug
-            )
-          };
+          return { category: record };
         });
       }
-      return { category };
+
+      if (category) {
+        return { category };
+      }
     },
 
     afterModel(model, transition) {
@@ -49,7 +76,7 @@ export default (filterArg, params) => {
       }
 
       this._setupNavigation(model.category);
-      return Ember.RSVP.all([
+      return all([
         this._createSubcategoryList(model.category),
         this._retrieveTopicList(model.category, transition)
       ]);
@@ -63,36 +90,32 @@ export default (filterArg, params) => {
 
     _setupNavigation(category) {
       const noSubcategories = params && !!params.no_subcategories,
-        filterMode = `c/${Discourse.Category.slugFor(category)}${
-          noSubcategories ? "/none" : ""
-        }/l/${this.filter(category)}`;
+        filterType = this.filter(category).split("/")[0];
 
       this.controllerFor("navigation/category").setProperties({
         category,
-        filterMode: filterMode,
-        noSubcategories: params && params.no_subcategories
+        filterType,
+        noSubcategories
       });
     },
 
     _createSubcategoryList(category) {
       this._categoryList = null;
-      if (
-        Ember.isNone(category.get("parentCategory")) &&
-        category.get("show_subcategory_list")
-      ) {
+
+      if (category.isParent && category.show_subcategory_list) {
         return CategoryList.listForParent(this.store, category).then(
           list => (this._categoryList = list)
         );
       }
 
       // If we're not loading a subcategory list just resolve
-      return Ember.RSVP.resolve();
+      return Promise.resolve();
     },
 
     _retrieveTopicList(category, transition) {
-      const listFilter = `c/${Discourse.Category.slugFor(
-          category
-        )}/l/${this.filter(category)}`,
+      const listFilter = `c/${Category.slugFor(category)}/${
+          category.id
+        }/l/${this.filter(category)}`,
         findOpts = filterQueryParams(transition.to.queryParams, params),
         extras = { cached: this.isPoppedState(transition) };
 
@@ -198,8 +221,24 @@ export default (filterArg, params) => {
     },
 
     actions: {
+      error(err) {
+        const json = err.jqXHR.responseJSON;
+        if (json && json.extras && json.extras.html) {
+          this.controllerFor("discovery").set(
+            "errorHtml",
+            err.jqXHR.responseJSON.extras.html
+          );
+        } else {
+          this.replaceWith("exception");
+        }
+      },
+
       setNotification(notification_level) {
         this.currentModel.setNotification(notification_level);
+      },
+
+      triggerRefresh() {
+        this.refresh();
       }
     }
   });

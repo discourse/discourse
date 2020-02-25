@@ -1,12 +1,13 @@
-import {
+import { isEmpty } from "@ember/utils";
+import Component from "@ember/component";
+import discourseComputed, {
   on,
-  observes,
-  default as computed
-} from "ember-addons/ember-computed-decorators";
+  observes
+} from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 
-export default Ember.Component.extend({
-  @computed("placeholderKey")
+export default Component.extend({
+  @discourseComputed("placeholderKey")
   placeholder(placeholderKey) {
     return placeholderKey ? I18n.t(placeholderKey) : "";
   },
@@ -22,11 +23,11 @@ export default Ember.Component.extend({
     let selectedGroups;
     let groupNames = this.groupNames;
 
-    this.$("input").autocomplete({
+    $(this.element.querySelector("input")).autocomplete({
       allowAny: false,
       items: _.isArray(groupNames)
         ? groupNames
-        : Ember.isEmpty(groupNames)
+        : isEmpty(groupNames)
         ? []
         : [groupNames],
       single: this.single,

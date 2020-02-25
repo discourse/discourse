@@ -1,3 +1,4 @@
+import DiscourseURL from "discourse/lib/url";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
 moduleForWidget("user-menu");
@@ -8,9 +9,9 @@ widgetTest("basics", {
   test(assert) {
     assert.ok(find(".user-menu").length);
     assert.ok(find(".user-activity-link").length);
+    assert.ok(find(".user-notifications-link").length);
     assert.ok(find(".user-bookmarks-link").length);
-    assert.ok(find(".user-preferences-link").length);
-    assert.ok(find(".notifications").length);
+    assert.ok(find(".quick-access-panel").length);
     assert.ok(find(".dismiss-link").length);
   }
 });
@@ -18,10 +19,10 @@ widgetTest("basics", {
 widgetTest("notifications", {
   template: '{{mount-widget widget="user-menu"}}',
 
-  test(assert) {
-    const $links = find(".notifications li a");
+  async test(assert) {
+    const $links = find(".quick-access-panel li a");
 
-    assert.equal($links.length, 2);
+    assert.equal($links.length, 5);
     assert.ok($links[0].href.includes("/t/a-slug/123"));
 
     assert.ok(
@@ -36,6 +37,39 @@ widgetTest("notifications", {
         count: 5
       })}`
     );
+
+    assert.ok($links[2].href.includes("/u/test2/messages/group/test"));
+    assert.ok(
+      $links[2].innerHTML.includes(
+        I18n.t("notifications.group_message_summary", {
+          count: 5,
+          group_name: "test"
+        })
+      )
+    );
+
+    assert.ok($links[3].href.includes("/u/test1"));
+    assert.ok(
+      $links[3].innerHTML.includes(
+        I18n.t("notifications.invitee_accepted", { username: "test1" })
+      )
+    );
+
+    assert.ok($links[4].href.includes("/g/test"));
+    assert.ok(
+      $links[4].innerHTML.includes(
+        I18n.t("notifications.membership_request_accepted", {
+          group_name: "test"
+        })
+      )
+    );
+
+    const routeToStub = sandbox.stub(DiscourseURL, "routeTo");
+    await click(".user-notifications-link");
+    assert.ok(
+      routeToStub.calledWith(find(".user-notifications-link")[0].href),
+      "a second click should redirect to the full notifications page"
+    );
   }
 });
 
@@ -47,6 +81,7 @@ widgetTest("log out", {
   },
 
   async test(assert) {
+    await click(".user-activity-link");
     assert.ok(find(".logout").length);
 
     await click(".logout");
@@ -71,8 +106,63 @@ widgetTest("private messages - enabled", {
     this.siteSettings.enable_personal_messages = true;
   },
 
-  test(assert) {
-    assert.ok(find(".user-pms-link").length);
+  async test(assert) {
+    const userPmsLink = find(".user-pms-link")[0];
+    assert.ok(userPmsLink);
+    await click(".user-pms-link");
+
+    const message = find(".quick-access-panel li a")[0];
+    assert.ok(message);
+
+    assert.ok(
+      message.href.includes("/t/bug-can-not-render-emoji-properly/174/2"),
+      "should link to the next unread post"
+    );
+    assert.ok(
+      message.innerHTML.includes("mixtape"),
+      "should include the last poster's username"
+    );
+    assert.ok(
+      message.innerHTML.match(/<img.*class="emoji".*>/),
+      "should correctly render emoji in message title"
+    );
+
+    const routeToStub = sandbox.stub(DiscourseURL, "routeTo");
+    await click(".user-pms-link");
+    assert.ok(
+      routeToStub.calledWith(userPmsLink.href),
+      "a second click should redirect to the full private messages page"
+    );
+  }
+});
+
+widgetTest("bookmarks", {
+  template: '{{mount-widget widget="user-menu"}}',
+
+  async test(assert) {
+    await click(".user-bookmarks-link");
+
+    const bookmark = find(".quick-access-panel li a")[0];
+    assert.ok(bookmark);
+
+    assert.ok(
+      bookmark.href.includes("/t/how-to-check-the-user-level-via-ajax/11993")
+    );
+    assert.ok(
+      bookmark.innerHTML.includes("Abhishek_Gupta"),
+      "should include the last poster's username"
+    );
+    assert.ok(
+      bookmark.innerHTML.match(/<img.*class="emoji".*>/),
+      "should correctly render emoji in bookmark title"
+    );
+
+    const routeToStub = sandbox.stub(DiscourseURL, "routeTo");
+    await click(".user-bookmarks-link");
+    assert.ok(
+      routeToStub.calledWith(find(".user-bookmarks-link")[0].href),
+      "a second click should redirect to the full bookmarks page"
+    );
   }
 });
 
@@ -89,7 +179,9 @@ widgetTest("anonymous", {
   },
 
   async test(assert) {
+    await click(".user-activity-link");
     assert.ok(find(".enable-anonymous").length);
+
     await click(".enable-anonymous");
     assert.ok(this.anonymous);
   }
@@ -102,7 +194,8 @@ widgetTest("anonymous - disabled", {
     this.siteSettings.allow_anonymous_posting = false;
   },
 
-  test(assert) {
+  async test(assert) {
+    await click(".user-activity-link");
     assert.ok(!find(".enable-anonymous").length);
   }
 });
@@ -115,12 +208,14 @@ widgetTest("anonymous - switch back", {
     this.currentUser.setProperties({ is_anonymous: true });
     this.siteSettings.allow_anonymous_posting = true;
 
-    this.on("toggleAnonymous", () => (this.anonymous = true));
+    this.on("toggleAnonymous", () => (this.anonymous = false));
   },
 
   async test(assert) {
+    await click(".user-activity-link");
     assert.ok(find(".disable-anonymous").length);
+
     await click(".disable-anonymous");
-    assert.ok(this.anonymous);
+    assert.notOk(this.anonymous);
   }
 });

@@ -1,9 +1,13 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
-import computed from "ember-addons/ember-computed-decorators";
+import { Promise } from "rsvp";
+import Topic from "discourse/models/topic";
+import EmberObject from "@ember/object";
+import User from "discourse/models/user";
 
-const UserBadge = Discourse.Model.extend({
-  @computed
+const UserBadge = EmberObject.extend({
+  @discourseComputed
   postUrl: function() {
     if (this.topic_title) {
       return "/t/-/" + this.topic_id + "/" + this.post_number;
@@ -25,7 +29,7 @@ UserBadge.reopenClass({
     }
     var users = {};
     json.users.forEach(function(userJson) {
-      users[userJson.id] = Discourse.User.create(userJson);
+      users[userJson.id] = User.create(userJson);
     });
 
     // Create Topic objects.
@@ -34,7 +38,7 @@ UserBadge.reopenClass({
     }
     var topics = {};
     json.topics.forEach(function(topicJson) {
-      topics[topicJson.id] = Discourse.Topic.create(topicJson);
+      topics[topicJson.id] = Topic.create(topicJson);
     });
 
     // Create the badges.
@@ -96,7 +100,7 @@ UserBadge.reopenClass({
   **/
   findByUsername: function(username, options) {
     if (!username) {
-      return Ember.RSVP.resolve([]);
+      return Promise.resolve([]);
     }
     var url = "/user-badges/" + username + ".json";
     if (options && options.grouped) {

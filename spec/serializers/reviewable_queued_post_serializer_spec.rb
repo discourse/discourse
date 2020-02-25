@@ -49,6 +49,8 @@ describe ReviewableQueuedPostSerializer do
 
       expect(payload['raw']).to eq('hello world post contents.')
       expect(payload['title']).to be_blank
+      expect(payload['via_email']).to eq(true)
+      expect(payload['raw_email']).to eq('store_me')
       expect(json[:topic_id]).to eq(reviewable.topic_id)
       expect(json[:topic_url]).to eq(reviewable.topic.url)
       expect(json[:can_edit]).to eq(true)

@@ -1,19 +1,25 @@
 <div class="admin-title">
   <h2>{{title}}</h2>
   {{#if canCheckEmails}}
-      {{#if showEmails}}
-        <button {{action "toggleEmailVisibility"}} class="hide-emails btn btn-default">{{i18n 'admin.users.hide_emails'}}</button>
-      {{else}}
-        <button {{action "toggleEmailVisibility"}} class="show-emails btn btn-default">{{i18n 'admin.users.show_emails'}}</button>
-      {{/if}}
+    {{#if showEmails}}
+      {{d-button
+        action=(action "toggleEmailVisibility")
+        class="hide-emails btn-default"
+        label="admin.users.hide_emails"}}
+    {{else}}
+      {{d-button
+        action=(action "toggleEmailVisibility")
+        class="show-emails btn-default"
+        label="admin.users.show_emails"}}
+    {{/if}}
   {{/if}}
 </div>
+
 <div class='username controls'>
   {{text-field value=listFilter placeholder=searchHint}}
-
 </div>
 
-{{#conditional-loading-spinner condition=refreshing}}
+{{#load-more selector=".users-list tr" action=(action "loadMore")}}
   {{#if model}}
     <table class='table users-list grid'>
       <thead>
@@ -85,13 +91,15 @@
               {{#if user.second_factor_enabled}}
                 {{d-icon "lock" title="admin.user.second_factor_enabled" }}
               {{/if}}
+              {{plugin-outlet name="admin-users-list-icon" tagName="" args=(hash user=user query=query)}}
             </td>
           </tr>
         {{/each}}
       </tbody>
     </table>
+    {{conditional-loading-spinner condition=refreshing}}
 
   {{else}}
     <p>{{i18n 'search.no_results'}}</p>
   {{/if}}
-{{/conditional-loading-spinner}}
+{{/load-more}}

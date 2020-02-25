@@ -1,5 +1,5 @@
 import MountWidget from "discourse/components/mount-widget";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "discourse-common/utils/decorators";
 
 export default MountWidget.extend({
   widget: "user-notifications-large",

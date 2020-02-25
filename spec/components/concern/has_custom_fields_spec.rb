@@ -7,7 +7,11 @@ describe HasCustomFields do
   context "custom_fields" do
     before do
       DB.exec("create temporary table custom_fields_test_items(id SERIAL primary key)")
-      DB.exec("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text)")
+      DB.exec("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text, created_at TIMESTAMP, updated_at TIMESTAMP)")
+      DB.exec(<<~SQL)
+        CREATE UNIQUE INDEX ON custom_fields_test_item_custom_fields (custom_fields_test_item_id)
+        WHERE NAME = 'rare'
+      SQL
 
       class CustomFieldsTestItem < ActiveRecord::Base
         include HasCustomFields
@@ -28,7 +32,7 @@ describe HasCustomFields do
       Object.send(:remove_const, :CustomFieldsTestItemCustomField)
     end
 
-    it "simple modification of custom fields" do
+    it "allows simple modification of custom fields" do
       test_item = CustomFieldsTestItem.new
 
       expect(test_item.custom_fields["a"]).to eq(nil)
@@ -67,7 +71,7 @@ describe HasCustomFields do
       expect(test_item.custom_fields["a"]).to eq("0")
     end
 
-    it "reload loads from database" do
+    it "reloads from the database" do
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields["a"] = 0
 
@@ -87,7 +91,7 @@ describe HasCustomFields do
       expect(test_item.custom_fields["a"]).to eq("1")
     end
 
-    it "double save actually saves" do
+    it "actually saves on double save" do
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields = { "a" => "b" }
       test_item.save
@@ -165,7 +169,7 @@ describe HasCustomFields do
       expect((before_ids - after_ids).size).to eq(1)
     end
 
-    it "simple modifications don't interfere" do
+    it "doesn't allow simple modifications to interfere" do
       test_item = CustomFieldsTestItem.new
 
       expect(test_item.custom_fields["a"]).to eq(nil)
@@ -214,7 +218,6 @@ describe HasCustomFields do
     end
 
     it "will not fail to load custom fields if json is corrupt" do
-
       field_type = "bad_json"
       CustomFieldsTestItem.register_custom_field_type(field_type, :json)
 
@@ -268,10 +271,52 @@ describe HasCustomFields do
       expect(test_item.reload.custom_fields).to eq(expected)
     end
 
+    describe "create_singular" do
+      it "creates new records" do
+        item = CustomFieldsTestItem.create!
+        item.create_singular('hello', 'world')
+        expect(item.reload.custom_fields['hello']).to eq('world')
+      end
+
+      it "upserts on a database constraint error" do
+        item0 = CustomFieldsTestItem.new
+        item0.custom_fields = { "rare" => "gem" }
+        item0.save
+        expect(item0.reload.custom_fields['rare']).to eq("gem")
+
+        item0.create_singular('rare', "diamond")
+        expect(item0.reload.custom_fields['rare']).to eq("diamond")
+      end
+    end
+
     describe "upsert_custom_fields" do
       it 'upserts records' do
         test_item = CustomFieldsTestItem.create
         test_item.upsert_custom_fields('hello' => 'world', 'abc' => 'def')
+
+        # In memory
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('def')
+
+        # Persisted
+        test_item.reload
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('def')
+
+        # In memory
+        test_item.upsert_custom_fields('abc' => 'ghi')
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('ghi')
+
+        # Persisted
+        test_item.reload
+        expect(test_item.custom_fields['hello']).to eq('world')
+        expect(test_item.custom_fields['abc']).to eq('ghi')
+      end
+
+      it 'allows upsert to use keywords' do
+        test_item = CustomFieldsTestItem.create
+        test_item.upsert_custom_fields(hello: 'world', abc: 'def')
 
         # In memory
         expect(test_item.custom_fields['hello']).to eq('world')

@@ -1,9 +1,8 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import { get } from "@ember/object";
+import EmberObject from "@ember/object";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   searchContextEnabled: false, // checkbox to scope search
   searchContext: null,
   term: null,
@@ -14,11 +13,11 @@ export default Ember.Object.extend({
     this.set("highlightTerm", this.term);
   },
 
-  @computed("searchContext")
+  @discourseComputed("searchContext")
   contextType: {
     get(searchContext) {
       if (searchContext) {
-        return Ember.get(searchContext, "type");
+        return get(searchContext, "type");
       }
     },
     set(value, searchContext) {

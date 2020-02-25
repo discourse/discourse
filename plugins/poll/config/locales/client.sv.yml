@@ -15,6 +15,17 @@ sv:
         one: "totalt antal röst"
         other: "totalt antal röster"
       average_rating: "Medelbetyg: <strong>%{average}</strong>."
+      public:
+        title: "Röster är <strong>offentliga</strong>."
+      results:
+        groups:
+          title: "Du måste vara medlem i %{groups} för att rösta i denna omröstning."
+        vote:
+          title: "Resultat kommer att visas vid <strong>röstning</strong>."
+        closed:
+          title: "Resultat kommer att visas när den<strong>stängts</strong>."
+        staff:
+          title: "Resultatet visas enbart för medlemmar i <strong>personalen</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -35,7 +46,16 @@ sv:
         label: "Visa resultat"
       hide-results:
         title: "Tillbaka till dina röster"
-        label: "Göm resultat"
+        label: "Visa röst"
+      group-results:
+        title: "Gruppera röster baserat på användarfält"
+        label: " Visa uppdelning"
+      ungroup-results:
+        title: "Kombinera alla röster"
+        label: "Göm uppdelning"
+      export-results:
+        title: "Exportera omröstningsresultatet"
+        label: "Exportera"
       open:
         title: "Öppna omröstningen"
         label: "Öppna"
@@ -44,15 +64,20 @@ sv:
         title: "Stäng omröstningen"
         label: "Stäng"
         confirm: "Är du säker på att du vill stänga denna omröstning?"
+      automatic_close:
+        closes_in: "Stänger om <strong>%{timeLeft}</strong>."
+        age: "Stängd <strong>%{age}</strong>"
       error_while_toggling_status: "Tyvärr, ett fel uppstod vid ändring av status för den här omröstningen."
       error_while_casting_votes: "Tyvärr, ett fel uppstod vid röstningen."
       error_while_fetching_voters: "Tyvärr, ett fel uppstod vid visningen av röster."
+      error_while_exporting_results: "Tyvärr, ett fel uppstod vid export av omröstningsresultatet."
       ui_builder:
         title: Skapa omröstning
         insert: Lägg till omröstning
         help:
-          options_count: Ange minst 2 alternativ
+          options_count: Ange minst 1 alternativ
           invalid_values: Minimivärde måste vara mindre än det maximala värdet.
+          min_step_value: Minsta stegintervall är 1
         poll_type:
           label: Typ
           regular: Ett val
@@ -60,6 +85,14 @@ sv:
           number: Sifferbetyg
         poll_result:
           label: Resultat
+          always: Alltid synlig
+          vote: Vid röstning
+          closed: När stängd
+          staff: Endast personal
+        poll_groups:
+          label: Tillåtna grupper
+        poll_chart_type:
+          label: Diagramtyp
         poll_config:
           max: Max
           min: Min
@@ -68,3 +101,5 @@ sv:
           label: Visa vilka som röstat
         poll_options:
           label: Ange ett omröstningsalternativ per rad
+        automatic_close:
+          label: Stäng omröstning automatiskt

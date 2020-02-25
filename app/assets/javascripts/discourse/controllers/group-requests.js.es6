@@ -1,79 +1,67 @@
+import Controller, { inject } from "@ember/controller";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import Group from "discourse/models/group";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
+  application: inject(),
+
   queryParams: ["order", "desc", "filter"],
+
   order: "",
   desc: null,
-  loading: false,
-  limit: null,
-  offset: null,
   filter: null,
   filterInput: null,
-  application: Ember.inject.controller(),
+
+  loading: false,
 
   @observes("filterInput")
-  _setFilter: debounce(function() {
+  _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterInput);
   }, 500),
 
   @observes("order", "desc", "filter")
-  refreshRequesters(force) {
-    if (this.loading || !this.model) {
+  _filtersChanged() {
+    this.findRequesters(true);
+  },
+
+  findRequesters(refresh) {
+    if (this.loading) {
       return;
     }
 
-    if (
-      !force &&
-      this.count &&
-      this.get("model.requesters.length") >= this.count
-    ) {
+    const model = this.model;
+    if (!model) {
+      return;
+    }
+
+    if (!refresh && model.members.length >= model.user_count) {
       this.set("application.showFooter", true);
       return;
     }
 
     this.set("loading", true);
-    this.set("application.showFooter", false);
-
-    Group.loadMembers(
-      this.get("model.name"),
-      force ? 0 : this.get("model.requesters.length"),
-      this.limit,
-      {
-        order: this.order,
-        desc: this.desc,
-        filter: this.filter,
-        requesters: true
-      }
-    ).then(result => {
-      const requesters = (!force && this.get("model.requesters")) || [];
-      requesters.addObjects(result.members.map(m => Discourse.User.create(m)));
-      this.set("model.requesters", requesters);
-
-      this.setProperties({
-        loading: false,
-        count: result.meta.total,
-        limit: result.meta.limit,
-        offset: Math.min(
-          result.meta.offset + result.meta.limit,
-          result.meta.total
-        )
-      });
+    model.findRequesters(this.memberParams, refresh).finally(() => {
+      this.set(
+        "application.showFooter",
+        model.requesters.length >= model.user_count
+      );
+      this.set("loading", false);
     });
   },
 
-  @computed("model.requesters")
+  @discourseComputed("order", "desc", "filter")
+  memberParams(order, desc, filter) {
+    return { order, desc, filter };
+  },
+
+  @discourseComputed("model.requesters.[]")
   hasRequesters(requesters) {
     return requesters && requesters.length > 0;
   },
 
-  @computed
+  @discourseComputed
   filterPlaceholder() {
     if (this.currentUser && this.currentUser.admin) {
       return "groups.members.filter_placeholder_admin";
@@ -91,7 +79,7 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore() {
-      this.refreshRequesters();
+      this.findRequesters();
     },
 
     acceptRequest(user) {

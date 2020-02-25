@@ -2,11 +2,6 @@
 
 # Responsible for creating posts and topics
 #
-require_dependency 'rate_limiter'
-require_dependency 'topic_creator'
-require_dependency 'post_jobs_enqueuer'
-require_dependency 'distributed_mutex'
-require_dependency 'has_errors'
 
 class PostCreator
   include HasErrors
@@ -39,6 +34,8 @@ class PostCreator
   #                             dequeue before the commit finishes. If you do this, be sure to
   #                             call `enqueue_jobs` after the transaction is comitted.
   #   hidden_reason_id        - Reason for hiding the post (optional)
+  #   skip_validations        - Do not validate any of the content in the post
+  #   draft_key               - the key of the draft we are creating (will be deleted on success)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -107,7 +104,7 @@ class PostCreator
       if names.length > max_allowed_message_recipients
         errors.add(
           :base,
-          I18n.t(:max_pm_recepients, recipients_limit: max_allowed_message_recipients)
+          I18n.t(:max_pm_recipients, recipients_limit: max_allowed_message_recipients)
         )
 
         return false
@@ -139,6 +136,12 @@ class PostCreator
       return false unless skip_validations? || validate_child(topic_creator)
     else
       @topic = Topic.find_by(id: @opts[:topic_id])
+
+      if @topic.present? && @opts[:archetype] == Archetype.private_message
+        errors.add(:base, I18n.t(:create_pm_on_existing_topic))
+        return false
+      end
+
       unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
         errors.add(:base, I18n.t(:topic_not_found))
         return false
@@ -158,7 +161,7 @@ class PostCreator
     DiscourseEvent.trigger :before_create_post, @post
     DiscourseEvent.trigger :validate_post, @post
 
-    post_validator = Validators::PostValidator.new(skip_topic: true)
+    post_validator = PostValidator.new(skip_topic: true)
     post_validator.validate(@post)
 
     valid = @post.errors.blank?
@@ -180,10 +183,13 @@ class PostCreator
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
-        link_post_uploads
+        @post.link_post_uploads
+        update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
-        @post.advance_draft_sequence unless @opts[:import_mode]
+        if !@opts[:import_mode]
+          DraftSequence.next!(@user, draft_key)
+        end
         @post.save_reply_relationships
       end
     end
@@ -295,14 +301,17 @@ class PostCreator
 
   protected
 
+  def draft_key
+    @draft_key ||= @opts[:draft_key]
+    @draft_key ||= @topic ? "topic_#{@topic.id}" : "new_topic"
+  end
+
   def build_post_stats
     if PostCreator.track_post_stats
-      draft_key = @topic ? "topic_#{@topic.id}" : "new_topic"
-
       sequence = DraftSequence.current(@user, draft_key)
       revisions = Draft.where(sequence: sequence,
                               user_id: @user.id,
-                              draft_key: draft_key).pluck(:revisions).first || 0
+                              draft_key: draft_key).pluck_first(:revisions) || 0
 
       @post.build_post_stat(
         drafts_saved: revisions,
@@ -369,8 +378,10 @@ class PostCreator
     rollback_from_errors!(embed) unless embed.save
   end
 
-  def link_post_uploads
-    @post.link_post_uploads
+  def update_uploads_secure_status
+    if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
+      @post.update_uploads_secure_status
+    end
   end
 
   def handle_spam
@@ -530,7 +541,9 @@ class PostCreator
 
     @user.user_stat.save!
 
-    @user.update(last_posted_at: @post.created_at)
+    if !@topic.private_message? && @post.post_type != Post.types[:whisper]
+      @user.update(last_posted_at: @post.created_at)
+    end
   end
 
   def create_post_notice
@@ -543,10 +556,10 @@ class PostCreator
       .first
 
     if !last_post_time
-      @post.custom_fields["notice_type"] = Post.notices[:new_user]
+      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:new_user]
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
-      @post.custom_fields["notice_type"] = Post.notices[:returning_user]
-      @post.custom_fields["notice_args"] = last_post_time.iso8601
+      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
+      @post.custom_fields[Post::NOTICE_ARGS] = last_post_time.iso8601
     end
   end
 

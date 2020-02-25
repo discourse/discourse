@@ -1,0 +1,10 @@
+module <%= classified_name %>
+  class <%= classified_name %>Controller < ::ApplicationController
+    requires_plugin <%= classified_name %>
+
+    before_action :ensure_logged_in
+
+    def index
+    end
+  end
+end

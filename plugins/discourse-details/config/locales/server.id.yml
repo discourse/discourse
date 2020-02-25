@@ -7,4 +7,4 @@
 
 id:
   site_settings:
-    details_enabled: "Aktifkan fitur detail. Jika Anda mengganti ini, Anda perlu memproses ulang semua post dengan: \"rake posts:rebake\""
+    details_enabled: 'Aktifkan fitur detail. Jika Anda mengganti ini, Anda perlu memproses ulang semua post dengan: "rake posts:rebake"'

@@ -1,82 +1,109 @@
+import EmberObject from "@ember/object";
+import { equal } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
-import Category from "discourse/models/category";
-import User from "discourse/models/user";
 import Topic from "discourse/models/topic";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import User from "discourse/models/user";
+import { Promise } from "rsvp";
 
 const Group = RestModel.extend({
-  limit: 50,
-  offset: 0,
   user_count: 0,
+  limit: null,
+  offset: null,
+
+  request_count: 0,
+  requestersLimit: null,
+  requestersOffset: null,
 
   init() {
     this._super(...arguments);
-
-    this.set("owners", []);
+    this.setProperties({ members: [], requesters: [] });
   },
 
-  hasOwners: Ember.computed.notEmpty("owners"),
-
-  @computed("automatic_membership_email_domains")
+  @discourseComputed("automatic_membership_email_domains")
   emailDomains(value) {
-    return Ember.isEmpty(value) ? "" : value;
+    return isEmpty(value) ? "" : value;
   },
 
-  @computed("automatic")
+  @discourseComputed("automatic")
   type(automatic) {
     return automatic ? "automatic" : "custom";
   },
 
-  @computed("user_count")
-  userCountDisplay(userCount) {
-    // don't display zero its ugly
-    if (userCount > 0) {
-      return userCount;
+  findMembers(params, refresh) {
+    if (isEmpty(this.name) || !this.can_see_members) {
+      return Promise.reject();
     }
+
+    if (refresh) {
+      this.setProperties({ limit: null, offset: null });
+    }
+
+    params = Object.assign(
+      { offset: (this.offset || 0) + (this.limit || 0) },
+      params
+    );
+
+    return Group.loadMembers(this.name, params).then(result => {
+      const ownerIds = new Set();
+      result.owners.forEach(owner => ownerIds.add(owner.id));
+
+      const members = refresh ? [] : this.members;
+      members.pushObjects(
+        result.members.map(member => {
+          member.owner = ownerIds.has(member.id);
+          return User.create(member);
+        })
+      );
+
+      this.setProperties({
+        members,
+        user_count: result.meta.total,
+        limit: result.meta.limit,
+        offset: result.meta.offset
+      });
+    });
   },
 
-  findMembers(params) {
-    if (Ember.isEmpty(this.name)) {
-      return;
+  findRequesters(params, refresh) {
+    if (isEmpty(this.name) || !this.can_see_members) {
+      return Promise.reject();
     }
 
-    const offset = Math.min(this.user_count, Math.max(this.offset, 0));
+    if (refresh) {
+      this.setProperties({ requestersOffset: null, requestersLimit: null });
+    }
 
-    return Group.loadMembers(this.name, offset, this.limit, params).then(
-      result => {
-        const ownerIds = {};
-        result.owners.forEach(owner => (ownerIds[owner.id] = true));
-
-        this.setProperties({
-          user_count: result.meta.total,
-          limit: result.meta.limit,
-          offset: result.meta.offset,
-          members: result.members.map(member => {
-            if (ownerIds[member.id]) {
-              member.owner = true;
-            }
-            return User.create(member);
-          }),
-          owners: result.owners.map(owner => User.create(owner))
-        });
-      }
+    params = Object.assign(
+      {
+        offset: (this.requestersOffset || 0) + (this.requestersLimit || 0),
+        requesters: true
+      },
+      params
     );
+
+    return Group.loadMembers(this.name, params).then(result => {
+      const requesters = refresh ? [] : this.requesters;
+      requesters.pushObjects(result.members.map(m => User.create(m)));
+
+      this.setProperties({
+        requesters,
+        request_count: result.meta.total,
+        requestersLimit: result.meta.limit,
+        requestersOffset: result.meta.offset
+      });
+    });
   },
 
   removeOwner(member) {
     return ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "DELETE",
       data: { user_id: member.id }
-    }).then(() => {
-      // reload member list
-      this.findMembers();
-    });
+    }).then(() => this.findMembers());
   },
 
   removeMember(member, params) {
@@ -116,30 +143,30 @@ const Group = RestModel.extend({
     return this.findMembers({ filter: response.usernames.join(",") });
   },
 
-  @computed("display_name", "name")
+  @discourseComputed("display_name", "name")
   displayName(groupDisplayName, name) {
     return groupDisplayName || name;
   },
 
-  @computed("flair_bg_color")
+  @discourseComputed("flair_bg_color")
   flairBackgroundHexColor(flairBgColor) {
     return flairBgColor
       ? flairBgColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   },
 
-  @computed("flair_color")
+  @discourseComputed("flair_color")
   flairHexColor(flairColor) {
     return flairColor
       ? flairColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   },
 
-  canEveryoneMention: Ember.computed.equal("mentionable_level", 99),
+  canEveryoneMention: equal("mentionable_level", 99),
 
-  @computed("visibility_level")
+  @discourseComputed("visibility_level")
   isPrivate(visibilityLevel) {
-    return visibilityLevel !== 0;
+    return visibilityLevel > 1;
   },
 
   @observes("isPrivate", "canEveryoneMention")
@@ -149,19 +176,13 @@ const Group = RestModel.extend({
     }
   },
 
-  @observes("visibility_level")
-  _updatePublic() {
-    if (this.isPrivate) {
-      this.setProperties({ public: false, allow_membership_requests: false });
-    }
-  },
-
   asJSON() {
     const attrs = {
       name: this.name,
       mentionable_level: this.mentionable_level,
       messageable_level: this.messageable_level,
       visibility_level: this.visibility_level,
+      members_visibility_level: this.members_visibility_level,
       automatic_membership_email_domains: this.emailDomains,
       automatic_membership_retroactive: !!this.automatic_membership_retroactive,
       title: this.title,
@@ -177,7 +198,8 @@ const Group = RestModel.extend({
       allow_membership_requests: this.allow_membership_requests,
       full_name: this.full_name,
       default_notification_level: this.default_notification_level,
-      membership_request_template: this.membership_request_template
+      membership_request_template: this.membership_request_template,
+      publish_read_state: this.publish_read_state
     };
 
     if (!this.id) {
@@ -221,7 +243,7 @@ const Group = RestModel.extend({
     return ajax(`/groups/${this.name}/logs.json`, {
       data: { offset, filters }
     }).then(results => {
-      return Ember.Object.create({
+      return EmberObject.create({
         logs: results["logs"].map(log => GroupHistory.create(log)),
         all_loaded: results["all_loaded"]
       });
@@ -238,7 +260,7 @@ const Group = RestModel.extend({
     }
 
     if (opts.categoryId) {
-      data.category_id = parseInt(opts.categoryId);
+      data.category_id = parseInt(opts.categoryId, 10);
     }
 
     return ajax(`/groups/${this.name}/${type}.json`, { data }).then(posts => {
@@ -246,7 +268,7 @@ const Group = RestModel.extend({
         p.user = User.create(p.user);
         p.topic = Topic.create(p.topic);
         p.category = Category.findById(p.category_id);
-        return Ember.Object.create(p);
+        return EmberObject.create(p);
       });
     });
   },
@@ -274,16 +296,8 @@ Group.reopenClass({
     );
   },
 
-  loadMembers(name, offset, limit, params) {
-    return ajax(`/groups/${name}/members.json`, {
-      data: Object.assign(
-        {
-          limit: limit || 50,
-          offset: offset || 0
-        },
-        params || {}
-      )
-    });
+  loadMembers(name, opts) {
+    return ajax(`/groups/${name}/members.json`, { data: opts });
   },
 
   mentionable(name) {
@@ -295,9 +309,7 @@ Group.reopenClass({
   },
 
   checkName(name) {
-    return ajax("/groups/check-name", {
-      data: { group_name: name }
-    }).catch(popupAjaxError);
+    return ajax("/groups/check-name", { data: { group_name: name } });
   }
 });
 

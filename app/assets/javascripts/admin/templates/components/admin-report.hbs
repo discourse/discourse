@@ -130,9 +130,10 @@
             </span>
 
             <div class="input">
-              {{date-picker-past
-                value=startDate
-                defaultDate=startDate}}
+              {{date-input
+                date=startDate
+                onChange=(action "onChangeStartDate")
+              }}
             </div>
           </div>
 
@@ -142,9 +143,10 @@
             </span>
 
             <div class="input">
-              {{date-picker-past
-                value=endDate
-                defaultDate=endDate}}
+              {{date-input
+                date=endDate
+                onChange=(action "onChangeEndDate")
+              }}
             </div>
           </div>
         {{/if}}
@@ -164,17 +166,15 @@
           </div>
         {{/each}}
 
-        {{#if showExport}}
-          <div class="control">
-            <div class="input">
-              {{d-button
-                class="btn-default export-csv-btn"
-                action=(action "exportCsv")
-                label="admin.export_csv.button_text"
-                icon="download"}}
-            </div>
+        <div class="control">
+          <div class="input">
+            {{d-button
+              class="btn-default export-csv-btn"
+              action=(action "exportCsv")
+              label="admin.export_csv.button_text"
+              icon="download"}}
           </div>
-        {{/if}}
+        </div>
 
         {{#if showRefresh}}
           <div class="control">

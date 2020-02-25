@@ -1,14 +1,23 @@
+import { later } from "@ember/runloop";
+import {
+  localCache,
+  failedCache,
+  setLocalCache,
+  setFailedCache,
+  resetLocalCache,
+  resetFailedCache,
+  normalize
+} from "pretty-text/oneboxer-cache";
+
 let timeout;
 const loadingQueue = [];
-let localCache = {};
-let failedCache = {};
 
 export const LOADING_ONEBOX_CSS_CLASS = "loading-onebox";
 
 export function resetCache() {
   loadingQueue.clear();
-  localCache = {};
-  failedCache = {};
+  resetLocalCache();
+  resetFailedCache();
 }
 
 function resolveSize(img) {
@@ -67,7 +76,7 @@ function loadNext(ajax) {
     .then(
       html => {
         let $html = $(html);
-        localCache[normalize(url)] = $html;
+        setLocalCache(normalize(url), $html);
         $elem.replaceWith($html);
         applySquareGenericOnebox($html, normalize(url));
       },
@@ -77,12 +86,12 @@ function loadNext(ajax) {
           removeLoading = false;
           loadingQueue.unshift({ url, refresh, $elem, categoryId, topicId });
         } else {
-          failedCache[normalize(url)] = true;
+          setFailedCache(normalize(url), true);
         }
       }
     )
     .finally(() => {
-      timeout = Ember.run.later(() => loadNext(ajax), timeoutMs);
+      timeout = later(() => loadNext(ajax), timeoutMs);
       if (removeLoading) {
         $elem.removeClass(LOADING_ONEBOX_CSS_CLASS);
         $elem.data("onebox-loaded");
@@ -129,17 +138,6 @@ export function load({
   if (synchronous) {
     return loadNext(ajax);
   } else {
-    timeout = timeout || Ember.run.later(() => loadNext(ajax), 150);
+    timeout = timeout || later(() => loadNext(ajax), 150);
   }
-}
-
-// Sometimes jQuery will return URLs with trailing slashes when the
-// `href` didn't have them.
-function normalize(url) {
-  return url.replace(/\/$/, "");
-}
-
-export function lookupCache(url) {
-  const cached = localCache[normalize(url)];
-  return cached && cached.prop("outerHTML");
 }

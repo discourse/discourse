@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import ComponentConnector from "discourse/widgets/component-connector";
 import { h } from "virtual-dom";
@@ -9,9 +10,22 @@ import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
 
 const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;
+const MIN_SCROLLAREA_HEIGHT = 170;
+const MAX_SCROLLAREA_HEIGHT = 300;
 
 function scrollareaHeight() {
-  return $(window).height() < 425 ? 150 : 300;
+  const composerHeight =
+      document.getElementById("reply-control").offsetHeight || 0,
+    headerHeight = document.querySelectorAll(".d-header")[0].offsetHeight || 0;
+
+  // scrollarea takes up about half of the timeline's height
+  const availableHeight =
+    (window.innerHeight - composerHeight - headerHeight) / 2;
+
+  return Math.max(
+    MIN_SCROLLAREA_HEIGHT,
+    Math.min(availableHeight, MAX_SCROLLAREA_HEIGHT)
+  );
 }
 
 function scrollareaRemaining() {
@@ -148,7 +162,8 @@ createWidget("timeline-scrollarea", {
     const postStream = topic.get("postStream");
     const total = postStream.get("filteredPostsCount");
 
-    const current = clamp(Math.floor(total * percentage) + 1, 1, total);
+    const scrollPosition = clamp(Math.floor(total * percentage), 0, total) + 1;
+    const current = clamp(scrollPosition, 1, total);
 
     const daysAgo = postStream.closestDaysAgoFor(current);
     let date;
@@ -168,6 +183,7 @@ createWidget("timeline-scrollarea", {
 
     const result = {
       current,
+      scrollPosition,
       total,
       date,
       lastRead: null,
@@ -183,9 +199,9 @@ createWidget("timeline-scrollarea", {
       result.lastReadPercentage = this._percentFor(topic, idx);
     }
 
-    if (this.state.position !== result.current) {
-      this.state.position = result.current;
-      this.sendWidgetAction("updatePosition", result.current);
+    if (this.state.position !== result.scrollPosition) {
+      this.state.position = result.scrollPosition;
+      this.sendWidgetAction("updatePosition", current);
     }
 
     return result;
@@ -208,7 +224,8 @@ createWidget("timeline-scrollarea", {
       position.lastRead > 3 &&
       Math.abs(position.lastRead - position.current) > 3 &&
       Math.abs(position.lastRead - position.total) > 1 &&
-      (position.lastRead && position.lastRead !== position.total);
+      position.lastRead &&
+      position.lastRead !== position.total;
 
     if (hasBackPosition) {
       const lastReadTop = Math.round(
@@ -259,7 +276,11 @@ createWidget("timeline-scrollarea", {
     const position = this.position();
     this.state.scrolledPost = position.current;
 
-    this.sendWidgetAction("jumpToIndex", position.current);
+    if (position.current === position.scrollPosition) {
+      this.sendWidgetAction("jumpToIndex", position.current);
+    } else {
+      this.sendWidgetAction("jumpEnd");
+    }
   },
 
   topicCurrentPostScrolled(event) {
@@ -313,8 +334,13 @@ createWidget("timeline-controls", {
     const controls = [];
     const { fullScreen, currentUser, topic } = attrs;
 
-    if (!fullScreen && currentUser && currentUser.get("canManageTopic")) {
-      controls.push(this.attach("topic-admin-menu-button", { topic }));
+    if (!fullScreen && currentUser) {
+      controls.push(
+        this.attach("topic-admin-menu-button", {
+          topic,
+          addKeyboardTargetClass: true
+        })
+      );
     }
 
     return controls;
@@ -356,13 +382,15 @@ createWidget("timeline-footer-controls", {
       controls.push(
         new ComponentConnector(
           this,
-          "topic-notifications-options",
+          "topic-notifications-button",
           {
-            value: notificationLevel,
+            notificationLevel,
             topic,
-            showFullTitle: false
+            showFullTitle: false,
+            appendReason: false,
+            placement: "bottom-end"
           },
-          ["value"]
+          ["notificationLevel"]
         )
       );
     }
@@ -380,25 +408,24 @@ export default createWidget("topic-timeline", {
     return { position: null, excerpt: null };
   },
 
-  updatePosition(pos) {
+  updatePosition(scrollPosition) {
     if (!this.attrs.fullScreen) {
       return;
     }
 
-    this.state.position = pos;
+    this.state.position = scrollPosition;
     this.state.excerpt = "";
     const stream = this.attrs.topic.get("postStream");
 
     // a little debounce to avoid flashing
-    Ember.run.later(() => {
-      if (!this.state.position === pos) {
+    later(() => {
+      if (!this.state.position === scrollPosition) {
         return;
       }
 
       // we have an off by one, stream is zero based,
-      // pos is 1 based
-      stream.excerpt(pos - 1).then(info => {
-        if (info && this.state.position === pos) {
+      stream.excerpt(scrollPosition - 1).then(info => {
+        if (info && this.state.position === scrollPosition) {
           let excerpt = "";
 
           if (info.username) {

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class FixS3Etags < Jobs::Onceoff
+  class FixS3Etags < ::Jobs::Onceoff
 
     def execute_onceoff(args)
       [Upload, OptimizedImage].each do |model|

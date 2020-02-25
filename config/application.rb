@@ -21,6 +21,7 @@ require 'action_mailer/railtie'
 require 'sprockets/railtie'
 
 # Plugin related stuff
+require_relative '../lib/plugin_initialization_guard'
 require_relative '../lib/discourse_event'
 require_relative '../lib/discourse_plugin'
 require_relative '../lib/discourse_plugin_registry'
@@ -93,14 +94,20 @@ module Discourse
     # issue is image_optim crashes on missing dependencies
     config.assets.image_optim = false
 
-    # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += Dir["#{config.root}/app/serializers"]
-    config.autoload_paths += Dir["#{config.root}/lib/validators/"]
-    config.autoload_paths += Dir["#{config.root}/app"]
+    config.autoloader = :zeitwerk
 
-    if Rails.env.development? && !Sidekiq.server?
-      config.autoload_paths += Dir["#{config.root}/lib"]
-    end
+    # Custom directories with classes and modules you want to be autoloadable.
+    config.autoload_paths += Dir["#{config.root}/app"]
+    config.autoload_paths += Dir["#{config.root}/app/jobs"]
+    config.autoload_paths += Dir["#{config.root}/app/serializers"]
+    config.autoload_paths += Dir["#{config.root}/lib"]
+    config.autoload_paths += Dir["#{config.root}/lib/active_record/connection_adapters"]
+    config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
+    config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
+    config.autoload_paths += Dir["#{config.root}/lib/i18n"]
+    config.autoload_paths += Dir["#{config.root}/lib/validators/"]
+
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -132,8 +139,6 @@ module Discourse
       pretty-text-bundle.js
       wizard-application.js
       wizard-vendor.js
-      plugin.js
-      plugin-third-party.js
       markdown-it-bundle.js
       service-worker.js
       google-tag-manager.js
@@ -144,6 +149,10 @@ module Discourse
       activate-account.js
       auto-redirect.js
       wizard-start.js
+      locales/i18n.js
+      discourse/lib/webauthn.js
+      confirm-new-email/confirm-new-email.js
+      confirm-new-email/confirm-new-email.no-module.js
       onpopstate-handler.js
       embed-application.js
     }
@@ -160,7 +169,7 @@ module Discourse
     initializer :fix_sprockets_loose_file_searcher, after: :set_default_precompile do |app|
       app.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
       start_path = ::Rails.root.join("app/assets").to_s
-      exclude = ['.es6', '.hbs', '.js', '.css', '']
+      exclude = ['.es6', '.hbs', '.hbr', '.js', '.css', '']
       app.config.assets.precompile << lambda do |logical_path, filename|
         filename.start_with?(start_path) &&
         !exclude.include?(File.extname(logical_path))
@@ -215,7 +224,7 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    unless Rails.env.development?
+    if !(Rails.env.development? || ENV['SKIP_ENFORCE_HOSTNAME'] == "1")
       require 'middleware/enforce_hostname'
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
@@ -229,10 +238,11 @@ module Discourse
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
     config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
+    Sprockets.register_mime_type 'text/x-handlebars', extensions: ['.hbr']
+    Sprockets.register_transformer 'text/x-handlebars', 'application/javascript', Ember::Handlebars::Template
 
     require 'discourse_redis'
     require 'logster/redis_store'
-    require 'freedom_patches/redis'
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
     $redis = DiscourseRedis.new # rubocop:disable Style/GlobalVars
@@ -258,7 +268,13 @@ module Discourse
         Discourse.activate_plugins!
       end
     else
-      Discourse.activate_plugins!
+      plugin_initialization_guard do
+        Discourse.activate_plugins!
+      end
+    end
+
+    Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
+      config.assets.precompile << "#{file}.js"
     end
 
     require_dependency 'stylesheet/manager'
@@ -285,11 +301,10 @@ module Discourse
       # Ensure that Discourse event triggers for web hooks are loaded
       require_dependency 'web_hook'
 
-      # So open id logs somewhere sane
-      OpenID::Util.logger = Rails.logger
-
       # Load plugins
-      Discourse.plugins.each(&:notify_after_initialize)
+      plugin_initialization_guard do
+        Discourse.plugins.each(&:notify_after_initialize)
+      end
 
       # we got to clear the pool in case plugins connect
       ActiveRecord::Base.connection_handler.clear_active_connections!

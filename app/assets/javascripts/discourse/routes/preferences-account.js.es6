@@ -8,7 +8,10 @@ export default RestrictedUserRoute.extend({
     const user = this.modelFor("user");
     if (this.siteSettings.enable_badges) {
       return UserBadge.findByUsername(user.get("username")).then(userBadges => {
-        user.set("badges", userBadges.map(ub => ub.badge));
+        user.set(
+          "badges",
+          userBadges.map(ub => ub.badge)
+        );
         return user;
       });
     } else {
@@ -21,7 +24,8 @@ export default RestrictedUserRoute.extend({
     controller.setProperties({
       model: user,
       newNameInput: user.get("name"),
-      newTitleInput: user.get("title")
+      newTitleInput: user.get("title"),
+      newPrimaryGroupInput: user.get("primary_group_id")
     });
   },
 

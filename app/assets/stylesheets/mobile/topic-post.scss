@@ -38,6 +38,7 @@ span.badge-posts {
       flex: 0 1 auto;
       button {
         &.like,
+        &.read-indicator,
         &.create-flag {
           flex: 1 1 auto;
         }
@@ -47,7 +48,8 @@ span.badge-posts {
           + .create-flag {
             padding: s(2 2 2 1);
           }
-          &.my-likes {
+          &.my-likes,
+          &.regular-likes {
             display: flex;
             max-width: unset;
             padding: s(2);
@@ -245,10 +247,19 @@ a.reply-to-tab {
   }
 }
 
-#topic-footer-buttons .reason {
-  /* this is to force the drop-down notification state description para below the button */
-  margin: 0;
-  color: dark-light-choose($primary-medium, $secondary-medium);
+#topic-footer-buttons {
+  .topic-notifications-button,
+  .pinned-button {
+    display: flex;
+    align-items: center;
+    @include breakpoint(mobile-medium) {
+      display: inline-block;
+      .reason {
+        display: block;
+        margin: 0.5em 0 0 0;
+      }
+    }
+  }
 }
 
 #topic-footer-button {

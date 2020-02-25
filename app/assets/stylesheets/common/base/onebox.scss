@@ -87,7 +87,7 @@ a.loading-onebox {
 
 @mixin onebox-favicon($class, $image) {
   &.#{$class} .source {
-    background: image-url("favicons/#{$image}.png") no-repeat;
+    background: image-url("favicons/#{$image}.png") no-repeat 0% 50%;
     background-size: 16px 16px;
     padding-left: 20px;
   }
@@ -233,6 +233,13 @@ aside.onebox {
         max-height: 100%;
         float: none;
       }
+
+      @include breakpoint(mobile-extra-large) {
+        // Prevent twitter embeds from being taller than the mobile viewport
+        iframe {
+          max-height: 70vh;
+        }
+      }
     }
 
     &.user-onebox {
@@ -371,6 +378,98 @@ pre.onebox code {
   white-space: normal;
 }
 
+// Onebox - Github - PR, Commit & Issue
+.onebox.githubpullrequest,
+.onebox.githubcommit,
+.onebox.githubissue {
+  .onebox-body {
+    h4 {
+      margin-bottom: 5px;
+    }
+
+    > .github-icon {
+      // For backwards compatibility with old onebox
+      float: left;
+      margin-right: 5px;
+    }
+  }
+
+  .github-row {
+    display: flex;
+  }
+
+  .github-icon-container {
+    display: flex;
+    align-items: flex-start;
+    margin-right: 5px;
+  }
+
+  .github-icon {
+    fill: $primary-high;
+    width: 40px;
+    height: 40px;
+  }
+
+  .branches {
+    font-size: $font-down-1;
+    code {
+      word-break: break-all;
+    }
+  }
+
+  .github-info-container {
+    width: 100%;
+  }
+
+  .github-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+
+    > div {
+      margin: 2.5px 0;
+    }
+
+    > div:not(:last-child) {
+      margin-right: 15px;
+    }
+
+    .lines {
+      font-weight: bold;
+
+      .added {
+        color: $success;
+      }
+      .removed {
+        color: $danger;
+      }
+    }
+  }
+
+  .onebox-avatar-inline {
+    height: 20px;
+    width: 20px;
+    border-radius: 2px;
+    float: none;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    max-width: none;
+  }
+
+  .github-content {
+    margin: 5px 0 0 0;
+  }
+
+  .labels span {
+    // !important required to override inline style attribute
+    background-color: $primary-medium !important;
+    color: $secondary !important;
+    padding: 2px 4px !important;
+  }
+}
+
 //Onebox - Github - Pull request
 .onebox-body .github-commit-status {
   background: #f5f5f5;
@@ -423,36 +522,58 @@ aside.onebox.twitterstatus .onebox-body {
   }
   p,
   .tweet {
-    white-space: pre-wrap;
+    white-space: pre-line;
     padding-top: 3px;
     margin-left: 70px;
+
+    .quoted {
+      border: 1px solid $primary-low;
+      padding: 0px 14px 0px 12px;
+      white-space: normal;
+      margin-top: 15px;
+
+      .quoted-link {
+        color: inherit;
+      }
+
+      .quoted-title {
+        font-weight: bold;
+        margin: 5px 2px;
+
+        span {
+          font-weight: lighter;
+          color: $primary-medium;
+        }
+      }
+
+      div {
+        margin-bottom: 5px;
+      }
+    }
   }
   .date {
     clear: left;
-    padding-top: 10px;
   }
 }
 
-// Onebox - Imgur - Album
-.onebox.imgur-album {
+// Onebox - Imgur/Flickr - Album
+.onebox.imgur-album,
+.onebox.flickr-album {
   .outer-box {
     position: absolute;
     z-index: z("base");
-    overflow: hidden;
     font-size: $font-down-1;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
-    text-overflow: ellipsis;
-    max-width: 100%;
+    @include ellipsis;
+    max-width: 690px;
     padding: 5px 0;
 
     .inner-box {
       padding-left: 10px;
       padding-right: 10px;
       overflow: hidden;
-      text-overflow: ellipsis;
-      word-wrap: normal;
-      white-space: nowrap;
+      @include ellipsis;
 
       .album-title {
         width: 100%;
@@ -570,7 +691,8 @@ aside.onebox.stackexchange .onebox-body {
 }
 
 // Force oneboxed videos to 16:9 aspect ratio
-.onebox.video-onebox {
+.onebox.video-onebox,
+.video-container {
   position: relative;
   padding: 0 0 56.25% 0;
   width: 100%;
@@ -579,5 +701,54 @@ aside.onebox.stackexchange .onebox-body {
     position: absolute;
     width: 100%;
     height: 100%;
+  }
+}
+
+.onebox-placeholder-container {
+  position: relative;
+  width: 100%;
+  padding: 0 0 48.25% 0;
+  background-color: $primary-low;
+
+  .placeholder-icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.video {
+      &:before {
+        opacity: 0.8;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="grey" d="M336.2 64H47.8C21.4 64 0 85.4 0 111.8v288.4C0 426.6 21.4 448 47.8 448h288.4c26.4 0 47.8-21.4 47.8-47.8V111.8c0-26.4-21.4-47.8-47.8-47.8zm189.4 37.7L416 177.3v157.4l109.6 75.5c21.2 14.6 50.4-.3 50.4-25.8V127.5c0-25.4-29.1-40.4-50.4-25.8z"></path></svg>'
+        );
+      }
+    }
+    &.audio {
+      &:before {
+        opacity: 0.4;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M511.99 32.01c0-21.71-21.1-37.01-41.6-30.51L150.4 96c-13.3 4.2-22.4 16.5-22.4 30.5v261.42c-10.05-2.38-20.72-3.92-32-3.92-53.02 0-96 28.65-96 64s42.98 64 96 64 96-28.65 96-64V214.31l256-75.02v184.63c-10.05-2.38-20.72-3.92-32-3.92-53.02 0-96 28.65-96 64s42.98 64 96 64 96-28.65 96-64l-.01-351.99z"></path></svg>'
+        );
+      }
+    }
+    &.map {
+      &:before {
+        opacity: 0.4;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z"></path></svg>'
+        );
+      }
+    }
+    &.generic {
+      &:before {
+        opacity: 0.4;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M288 248v28c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-28c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm-12 72H108c-6.6 0-12 5.4-12 12v28c0 6.6 5.4 12 12 12h168c6.6 0 12-5.4 12-12v-28c0-6.6-5.4-12-12-12zm108-188.1V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V48C0 21.5 21.5 0 48 0h204.1C264.8 0 277 5.1 286 14.1L369.9 98c9 8.9 14.1 21.2 14.1 33.9zm-128-80V128h76.1L256 51.9zM336 464V176H232c-13.3 0-24-10.7-24-24V48H48v416h288z"></path></svg>'
+        );
+      }
+    }
   }
 }

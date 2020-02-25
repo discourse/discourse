@@ -46,6 +46,21 @@ QUnit.test("undefined color", assert => {
   );
 });
 
+QUnit.test("topic count", assert => {
+  const store = createStore();
+  const category = store.createRecord("category", { name: "hello", id: 123 });
+
+  assert.equal(
+    categoryBadgeHTML(category).indexOf("topic-count"),
+    -1,
+    "it does not include topic count by default"
+  );
+  assert.ok(
+    categoryBadgeHTML(category, { topicCount: 20 }).indexOf("topic-count") > 20,
+    "is included when specified"
+  );
+});
+
 QUnit.test("allowUncategorized", assert => {
   const store = createStore();
   const uncategorized = store.createRecord("category", {
@@ -90,4 +105,43 @@ QUnit.test("category names are wrapped in dir-spans", assert => {
   tag = $.parseHTML(categoryBadgeHTML(ltrCategory))[0];
   dirSpan = tag.children[1].children[0];
   assert.equal(dirSpan.dir, "ltr");
+});
+
+QUnit.test("recursive", assert => {
+  const store = createStore();
+
+  const foo = store.createRecord("category", {
+    name: "foo",
+    id: 1
+  });
+
+  const bar = store.createRecord("category", {
+    name: "bar",
+    id: 2,
+    parent_category_id: foo.id
+  });
+
+  const baz = store.createRecord("category", {
+    name: "baz",
+    id: 3,
+    parent_category_id: bar.id
+  });
+
+  Discourse.set("SiteSettings.max_category_nesting", 0);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") === -1);
+
+  Discourse.set("SiteSettings.max_category_nesting", 1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") === -1);
+
+  Discourse.set("SiteSettings.max_category_nesting", 2);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("foo") === -1);
+
+  Discourse.set("SiteSettings.max_category_nesting", 3);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") !== -1);
+  assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("foo") !== -1);
 });

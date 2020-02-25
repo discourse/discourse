@@ -1,7 +1,9 @@
 import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 import { timeframeDetails } from "select-kit/components/future-date-input-selector";
+import Mixin from "@ember/object/mixin";
+import { isNone } from "@ember/utils";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   _computeIconsForValue(value) {
     let { icon } = this._updateAt(value);
 
@@ -13,7 +15,7 @@ export default Ember.Mixin.create({
   },
 
   _computeDatetimeForValue(value) {
-    if (Ember.isNone(value)) {
+    if (isNone(value)) {
       return null;
     }
 
@@ -31,7 +33,7 @@ export default Ember.Mixin.create({
   },
 
   _updateAt(selection) {
-    let details = timeframeDetails(selection);
+    const details = timeframeDetails(selection);
 
     if (details) {
       return {

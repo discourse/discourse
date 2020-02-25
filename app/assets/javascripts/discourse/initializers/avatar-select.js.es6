@@ -10,7 +10,7 @@ export default {
     ).selectable_avatars_enabled;
 
     container
-      .lookup("app-events:main")
+      .lookup("service:app-events")
       .on("show-avatar-select", this, "_showAvatarSelect");
   },
 

@@ -31,7 +31,7 @@ class DiscourseCLI < Thor
   option :regex, type: :boolean
   def remap(from, to)
     load_rails
-    require 'remap'
+    require 'db_helper'
 
     if options[:regex]
       puts "Rewriting all occurences of #{from} to #{to} using regexp_replace"
@@ -59,7 +59,7 @@ class DiscourseCLI < Thor
   desc "backup", "Backup a discourse forum"
   def backup(filename = nil)
     load_rails
-    require "backup_restore/backup_restore"
+    require "backup_restore"
     require "backup_restore/backuper"
 
     store = BackupRestore::BackupStore.create
@@ -117,7 +117,7 @@ class DiscourseCLI < Thor
     end
 
     load_rails
-    require "backup_restore/backup_restore"
+    require "backup_restore"
     require "backup_restore/restorer"
     require "backup_restore/backup_store"
 
@@ -135,9 +135,10 @@ class DiscourseCLI < Thor
     begin
       puts "Starting restore: #{filename}"
       restorer = BackupRestore::Restorer.new(
-        Discourse.system_user.id,
+        user_id: Discourse.system_user.id,
         filename: filename,
-        disable_emails: options[:disable_emails]
+        disable_emails: options[:disable_emails],
+        factory: BackupRestore::Factory.new(user_id: Discourse.system_user.id)
       )
       restorer.run
       puts 'Restore done.'
@@ -264,12 +265,12 @@ class DiscourseCLI < Thor
   end
 
   def load_import_export
-    require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export/import_export")
+    require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export")
   end
 
   def do_remap(from, to, regex = false)
     begin
-      Remap.new(from, to, regex: regex, verbose: true).perform
+      regex ? DbHelper.regexp_replace(from, to, verbose: true) : DbHelper.remap(from, to, verbose: true)
       puts 'Done', ''
     rescue => ex
       puts "Error: #{ex}"

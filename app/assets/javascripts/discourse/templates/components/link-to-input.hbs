@@ -1,5 +1,12 @@
 {{#if showInput}}
   {{yield}}
 {{else}}
-  <a href>{{i18n key}}</a>
+  <a href>
+    {{#if key}}
+      {{i18n key}}
+    {{/if}}
+    {{#if icon}}
+      {{d-icon icon}}
+    {{/if}}
+  </a>
 {{/if}}

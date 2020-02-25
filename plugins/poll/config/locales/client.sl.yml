@@ -52,7 +52,8 @@ sl:
         label: "Prikaži rezultate"
       hide-results:
         title: "Nazaj na vašo glasovnico"
-        label: "Skrij rezultate"
+      export-results:
+        label: "Izvozi"
       open:
         title: "Odpri anketo"
         label: "Odpri"
@@ -71,7 +72,6 @@ sl:
         title: Ustvari anketo
         insert: Vstavi anketo
         help:
-          options_count: Vnesite vsaj dve opciji
           invalid_values: Najmanjša vrednost mora biti manjša od največje vrednosti.
           min_step_value: Najmanjša vrednost koraka je 1.
         poll_type:

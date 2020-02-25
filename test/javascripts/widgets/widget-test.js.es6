@@ -1,6 +1,8 @@
+import { next } from "@ember/runloop";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 import { createWidget } from "discourse/widgets/widget";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { Promise } from "rsvp";
 import hbs from "discourse/widgets/hbs-compiler";
 
 moduleForWidget("base");
@@ -158,8 +160,8 @@ widgetTest("widget update with promise", {
       `,
 
       click() {
-        return new Ember.RSVP.Promise(resolve => {
-          Ember.run.next(() => {
+        return new Promise(resolve => {
+          next(() => {
             this.state.name = "Robin";
             resolve();
           });
@@ -377,5 +379,25 @@ widgetTest("override settings", {
 
   test(assert) {
     assert.equal(find(".settings").text(), "age is 37");
+  }
+});
+
+widgetTest("get accessor", {
+  template: `{{mount-widget widget="get-accessor-test"}}`,
+
+  beforeEach() {
+    createWidget("get-accessor-test", {
+      tagName: "div.test",
+      template: hbs`Hello {{transformed.name}}`,
+      transform() {
+        return {
+          name: this.get("currentUser.username")
+        };
+      }
+    });
+  },
+
+  test(assert) {
+    assert.equal(find("div.test").text(), "Hello eviltrout");
   }
 });

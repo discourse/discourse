@@ -1,12 +1,13 @@
 import Quote from "discourse/lib/quote";
 import Post from "discourse/models/post";
-import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
+import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/context/inline-onebox-css-classes";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox
 } from "pretty-text/inline-oneboxer";
+import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 
 QUnit.module("lib:pretty-text");
 
@@ -21,7 +22,6 @@ const rawOpts = {
     enable_markdown_linkify: true,
     markdown_linkify_tlds: "com"
   },
-  censoredWords: "shucks|whiz|whizzer|a**le|badword*|shuck$|café|$uper",
   getURL: url => url
 };
 
@@ -395,7 +395,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     '[quote="eviltrout, post: 1"]\na quote\n\nsecond line\n\nthird line\n[/quote]',
     { topicId: 2 },
-    `<aside class=\"quote no-group\" data-post=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -411,7 +411,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     '[quote="bob, post:1"]\nmy quote\n[/quote]',
     { topicId: 2, lookupAvatar: function() {} },
-    `<aside class=\"quote no-group\" data-post=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"bob\" data-post=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  bob:</div>
@@ -440,7 +440,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     `[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`,
     { lookupPrimaryUserGroupByPostNumber: () => "aUserGroup" },
-    `<aside class="quote group-aUserGroup" data-post="1" data-topic="1">
+    `<aside class="quote group-aUserGroup" data-username="bob" data-post="1" data-topic="1">
 <div class="title">
 <div class="quote-controls"></div>
  bob:</div>
@@ -973,90 +973,66 @@ QUnit.test("images", assert => {
   );
 });
 
+QUnit.test("video - secure media enabled", assert => {
+  assert.cookedOptions(
+    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
+    { siteSettings: { secure_media: true } },
+    `<p><div class="video-container">
+    <video width="100%" height="100%" preload="none" controls>
+      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
+      <a href="/404">/404</a>
+    </video>
+  </div></p>`,
+    "It returns the correct video player HTML"
+  );
+});
+
+QUnit.test("audio - secure media enabled", assert => {
+  assert.cookedOptions(
+    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
+    { siteSettings: { secure_media: true } },
+    `<p><audio preload="none" controls>
+    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
+    <a href="/404">/404</a>
+  </audio></p>`,
+    "It returns the correct audio player HTML"
+  );
+});
+
+QUnit.test("video", assert => {
+  assert.cooked(
+    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
+    `<p><div class="video-container">
+    <video width="100%" height="100%" preload="metadata" controls>
+      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
+      <a href="/404">/404</a>
+    </video>
+  </div></p>`,
+    "It returns the correct video player HTML"
+  );
+});
+
+QUnit.test("audio", assert => {
+  assert.cooked(
+    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
+    `<p><audio preload="metadata" controls>
+    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
+    <a href="/404">/404</a>
+  </audio></p>`,
+    "It returns the correct audio player HTML"
+  );
+});
+
 QUnit.test("censoring", assert => {
-  assert.cooked(
-    "aw shucks, golly gee whiz.",
-    "<p>aw ■■■■■■, golly gee ■■■■.</p>",
-    "it censors words in the Site Settings"
-  );
-
-  assert.cooked(
-    "you are a whizzard! I love cheesewhiz. Whiz.",
-    "<p>you are a whizzard! I love cheesewhiz. ■■■■.</p>",
-    "it doesn't censor words unless they have boundaries."
-  );
-
-  assert.cooked(
-    "you are a whizzer! I love cheesewhiz. Whiz.",
-    "<p>you are a ■■■■■■■! I love cheesewhiz. ■■■■.</p>",
-    "it censors words even if previous partial matches exist."
-  );
-
-  assert.cooked(
-    "The link still works. [whiz](http://www.whiz.com)",
-    '<p>The link still works. <a href="http://www.whiz.com">■■■■</a></p>',
-    "it won't break links by censoring them."
-  );
-
-  assert.cooked(
-    "Call techapj the computer whiz at 555-555-1234 for free help.",
-    "<p>Call techapj the computer ■■■■ at 555-555-1234 for free help.</p>",
-    "uses both censored words and patterns from site settings"
-  );
-
-  assert.cooked(
-    "I have a pen, I have an a**le",
-    "<p>I have a pen, I have an ■■■■■</p>",
-    "it escapes regexp chars"
-  );
-
-  assert.cooked(
-    "Aw shuck$, I can't fix the problem with money",
-    "<p>Aw ■■■■■■, I can't fix the problem with money</p>",
-    "it works for words ending in non-word characters"
-  );
-
-  assert.cooked(
-    "Let's go to a café today",
-    "<p>Let's go to a ■■■■ today</p>",
-    "it works for words ending in accented characters"
-  );
-
-  assert.cooked(
-    "Discourse is $uper amazing",
-    "<p>Discourse is ■■■■■ amazing</p>",
-    "it works for words starting with non-word characters"
-  );
-
-  assert.cooked(
-    "No badword or apple here plz.",
-    "<p>No ■■■■■■■ or ■■■■■ here plz.</p>",
-    "it handles * as wildcard"
-  );
-
   assert.cookedOptions(
     "Pleased to meet you, but pleeeease call me later, xyz123",
     {
-      siteSettings: {
-        watched_words_regular_expressions: true
-      },
-      censoredWords: "xyz*|plee+ase"
+      censoredRegexp: "(xyz*|plee+ase)"
     },
-    "<p>Pleased to meet you, but ■■■■ call me later, ■■■■123</p>",
-    "supports words as regular expressions"
+    "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>",
+    "supports censoring"
   );
-
-  assert.cookedOptions(
-    "Meet downtown in your town at the townhouse on Main St.",
-    {
-      siteSettings: {
-        watched_words_regular_expressions: true
-      },
-      censoredWords: "\\btown\\b"
-    },
-    "<p>Meet downtown in your ■■■■ at the townhouse on Main St.</p>",
-    "supports words as regular expressions"
-  );
+  // More tests in pretty_text_spec.rb
 });
 
 QUnit.test("code blocks/spans hoisting", assert => {
@@ -1264,7 +1240,7 @@ QUnit.test("quotes", assert => {
 QUnit.test("quote formatting", assert => {
   assert.cooked(
     '[quote="EvilTrout, post:123, topic:456, full:true"]\n[sam]\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
+    `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  EvilTrout:</div>
@@ -1277,7 +1253,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="eviltrout, post:1, topic:1"]\nabc\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -1290,7 +1266,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="eviltrout, post:1, topic:1"]\nabc\n[/quote]\nhello',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -1304,12 +1280,12 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="Alice, post:1, topic:1"]\n[quote="Bob, post:2, topic:1"]\n[/quote]\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<aside class=\"quote no-group\" data-post=\"2\" data-topic=\"1\">
+<aside class=\"quote no-group\" data-username=\"Bob\" data-post=\"2\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Bob:</div>
@@ -1323,7 +1299,7 @@ QUnit.test("quote formatting", assert => {
   assert.cooked(
     '[quote="Alice, post:1, topic:1"]\n[quote="Bob, post:2, topic:1"]\n[/quote]',
     `<p>[quote=&quot;Alice, post:1, topic:1&quot;]</p>
-<aside class=\"quote no-group\" data-post=\"2\" data-topic=\"1\">
+<aside class=\"quote no-group\" data-username=\"Bob\" data-post=\"2\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Bob:</div>
@@ -1335,7 +1311,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     "[quote=\"Alice, post:1, topic:1\"]\n```javascript\nvar foo ='foo';\nvar bar = 'bar';\n```\n[/quote]",
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
@@ -1350,7 +1326,7 @@ var bar = 'bar';
 
   assert.cooked(
     "[quote=\"Alice, post:1, topic:1\"]\n\n```javascript\nvar foo ='foo';\nvar bar = 'bar';\n```\n[/quote]",
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
@@ -1370,7 +1346,7 @@ QUnit.test("quotes with trailing formatting", assert => {
   );
   assert.equal(
     result,
-    `<aside class=\"quote no-group\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
+    `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  EvilTrout:</div>
@@ -1407,15 +1383,15 @@ QUnit.test("enable/disable features", assert => {
 QUnit.test("emoji", assert => {
   assert.cooked(
     ":smile:",
-    `<p><img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`
+    `<p><img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
   );
   assert.cooked(
     ":(",
-    `<p><img src="/images/emoji/emoji_one/frowning.png?v=${v}" title=":frowning:" class="emoji" alt=":frowning:"></p>`
+    `<p><img src="/images/emoji/emoji_one/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:"></p>`
   );
   assert.cooked(
     "8-)",
-    `<p><img src="/images/emoji/emoji_one/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>`
+    `<p><img src="/images/emoji/emoji_one/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:"></p>`
   );
 });
 
@@ -1437,6 +1413,14 @@ QUnit.test("emoji - emojiSet", assert => {
   assert.cookedOptions(
     ":smile:",
     { siteSettings: { emoji_set: "twitter" } },
-    `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`
+    `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
   );
+});
+
+QUnit.test("extractDataAttribute", assert => {
+  assert.deepEqual(extractDataAttribute("foo="), ["data-foo", ""]);
+  assert.deepEqual(extractDataAttribute("foo=bar"), ["data-foo", "bar"]);
+
+  assert.notOk(extractDataAttribute("foo?=bar"));
+  assert.notOk(extractDataAttribute("https://discourse.org/?q=hello"));
 });

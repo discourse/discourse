@@ -18,6 +18,10 @@ class Auth::Result
     @failed = false
   end
 
+  def email
+    @email&.downcase
+  end
+
   def failed?
     !!@failed
   end

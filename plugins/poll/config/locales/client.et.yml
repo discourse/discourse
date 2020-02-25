@@ -35,7 +35,8 @@ et:
         label: "Kuva tulemused"
       hide-results:
         title: "Tagasi sinu vastuse juurde"
-        label: "Peida tulemused"
+      export-results:
+        label: "Ekspordi"
       open:
         title: "Ava hääletus"
         label: "Ava"
@@ -51,7 +52,6 @@ et:
         title: Koosta hääletus
         insert: Sisesta hääletus
         help:
-          options_count: Sisesta vähemalt 2 valikut
           min_step_value: Sammu minimaalne väärtus on 1
         poll_type:
           label: Tüüp

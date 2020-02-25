@@ -7,5 +7,5 @@
 
 nb_NO:
   site_settings:
-    presence_enabled: 'Vis brukere som akkurat nå svarer på gjeldende emne, eller redigerer gjeldende innlegg?'
-    presence_max_users_shown: 'Maksimalt antall brukere som vises.'
+    presence_enabled: "Vis brukere som akkurat nå svarer på gjeldende emne, eller redigerer gjeldende innlegg?"
+    presence_max_users_shown: "Maksimalt antall brukere som vises."

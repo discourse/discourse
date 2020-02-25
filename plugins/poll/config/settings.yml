@@ -14,3 +14,11 @@ plugins:
     default: 1
     client: true
     enum: 'TrustLevelSetting'
+  poll_groupable_user_fields:
+    default: ""
+    type: list
+    client: true
+  poll_export_data_explorer_query_id:
+    default: -16
+    min: -9999
+    client: true

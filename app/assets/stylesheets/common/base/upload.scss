@@ -18,9 +18,11 @@
   .image-upload-controls {
     position: relative;
     display: flex;
+    padding: 10px;
 
     .btn {
       margin-right: 5px;
+      padding: 7px 10px;
     }
 
     .image-uploader-lightbox-btn {

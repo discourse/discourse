@@ -162,7 +162,7 @@ RSpec.describe TopicsController do
             user = sign_in(moderator)
             p1 = Fabricate(:post, topic: topic, user: user)
             p2 = Fabricate(:post, topic: topic, user: user, reply_to_post_number: p1.post_number)
-            PostReply.create(post_id: p1.id, reply_id: p2.id)
+            PostReply.create(post_id: p1.id, reply_post_id: p2.id)
 
             post "/t/#{topic.id}/move-posts.json", params: {
               title: 'new topic title',
@@ -860,7 +860,7 @@ RSpec.describe TopicsController do
         it "raises an exception when the user doesn't have permission to delete the topic" do
           sign_in(user)
           delete "/t/#{topic.id}.json"
-          expect(response).to be_forbidden
+          expect(response.status).to eq(422)
         end
       end
 
@@ -1027,6 +1027,31 @@ RSpec.describe TopicsController do
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
           end
 
+          it "can add a tag to wiki topic" do
+            SiteSetting.min_trust_to_edit_wiki_post = 2
+            topic.first_post.update!(wiki: true)
+            user = Fabricate(:user)
+            sign_in(user)
+
+            expect do
+              put "/t/#{topic.id}/tags.json", params: {
+                tags: [tag.name]
+              }
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(403)
+            user.update!(trust_level: 2)
+
+            expect do
+              put "/t/#{topic.id}/tags.json", params: {
+                tags: [tag.name]
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
           it 'does not remove tag if no params is given' do
             topic.tags << tag
 
@@ -1078,6 +1103,7 @@ RSpec.describe TopicsController do
           fab!(:restricted_category) { Fabricate(:category) }
           fab!(:tag1) { Fabricate(:tag) }
           fab!(:tag2) { Fabricate(:tag) }
+          let(:tag3) { Fabricate(:tag) }
           let!(:tag_group_1) { Fabricate(:tag_group, tag_names: [tag1.name]) }
           fab!(:tag_group_2) { Fabricate(:tag_group) }
 
@@ -1133,6 +1159,72 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
           end
+
+          it 'can’t add a category-only tags from another category to a category' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [tag2.name],
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(422)
+            expect(result['errors']).to be_present
+            expect(result['errors'][0]).to include(tag2.name)
+            expect(topic.reload.category_id).not_to eq(restricted_category.id)
+          end
+
+          it 'allows category change when topic has a hidden tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag1.name])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to include(tag1)
+          end
+
+          it 'allows category change when topic has a read-only tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1, "everyone" => 3 }, tag_names: [tag3.name])
+            topic.update!(tags: [tag3])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to contain_exactly(tag3)
+          end
+
+          it 'does not leak tag name when trying to use a staff tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag3.name])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [tag3.name],
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(422)
+            expect(result['errors']).to be_present
+            expect(result['errors'][0]).not_to include(tag3.name)
+          end
+
+          it 'will clean tag params' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [""],
+              category_id: restricted_category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+          end
         end
 
         context "allow_uncategorized_topics is false" do
@@ -1164,12 +1256,13 @@ RSpec.describe TopicsController do
 
     describe 'when topic is not allowed' do
       it 'should return the right response' do
+        SiteSetting.detailed_404 = true
         sign_in(user)
 
         get "/t/#{private_topic.id}.json"
 
         expect(response.status).to eq(403)
-        expect(response.body).to eq(I18n.t('invalid_access'))
+        expect(response.body).to include(I18n.t('invalid_access'))
       end
     end
 
@@ -1279,6 +1372,7 @@ RSpec.describe TopicsController do
     context 'permission errors' do
       fab!(:allowed_user) { Fabricate(:user) }
       let(:allowed_group) { Fabricate(:group) }
+      let(:accessible_group) { Fabricate(:group, public_admission: true) }
       let(:secure_category) do
         c = Fabricate(:category)
         c.permissions = [[allowed_group, :full]]
@@ -1287,6 +1381,12 @@ RSpec.describe TopicsController do
         allowed_user.save
         c
       end
+      let(:accessible_category) do
+        Fabricate(:category).tap do |c|
+          c.set_permissions(accessible_group => :full)
+          c.save!
+        end
+      end
       let(:normal_topic) { Fabricate(:topic) }
       let(:secure_topic) { Fabricate(:topic, category: secure_category) }
       let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
@@ -1294,6 +1394,7 @@ RSpec.describe TopicsController do
       let(:deleted_secure_topic) { Fabricate(:topic, category: secure_category, deleted_at: 1.day.ago) }
       let(:deleted_private_topic) { Fabricate(:private_message_topic, user: allowed_user, deleted_at: 1.day.ago) }
       let(:nonexist_topic_id) { Topic.last.id + 10000 }
+      let(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
       shared_examples "various scenarios" do |expected|
         expected.each do |key, value|
@@ -1306,102 +1407,224 @@ RSpec.describe TopicsController do
         end
       end
 
-      context 'anonymous' do
-        expected = {
-          normal_topic: 200,
-          secure_topic: 403,
-          private_topic: 403,
-          deleted_topic: 410,
-          deleted_secure_topic: 403,
-          deleted_private_topic: 403,
-          nonexist: 404
-        }
-        include_examples "various scenarios", expected
-      end
-
-      context 'anonymous with login required' do
+      context 'without detailed error pages' do
         before do
-          SiteSetting.login_required = true
-        end
-        expected = {
-          normal_topic: 302,
-          secure_topic: 302,
-          private_topic: 302,
-          deleted_topic: 302,
-          deleted_secure_topic: 302,
-          deleted_private_topic: 302,
-          nonexist: 302
-        }
-        include_examples "various scenarios", expected
-      end
-
-      context 'normal user' do
-        before do
-          sign_in(user)
+          SiteSetting.detailed_404 = false
         end
 
-        expected = {
-          normal_topic: 200,
-          secure_topic: 403,
-          private_topic: 403,
-          deleted_topic: 410,
-          deleted_secure_topic: 403,
-          deleted_private_topic: 403,
-          nonexist: 404
-        }
-        include_examples "various scenarios", expected
-      end
-
-      context 'allowed user' do
-        before do
-          sign_in(allowed_user)
+        context 'anonymous' do
+          expected = {
+            normal_topic: 200,
+            secure_topic: 404,
+            private_topic: 404,
+            deleted_topic: 404,
+            deleted_secure_topic: 404,
+            deleted_private_topic: 404,
+            nonexist: 404,
+            secure_accessible_topic: 404
+          }
+          include_examples "various scenarios", expected
         end
 
-        expected = {
-          normal_topic: 200,
-          secure_topic: 200,
-          private_topic: 200,
-          deleted_topic: 410,
-          deleted_secure_topic: 410,
-          deleted_private_topic: 410,
-          nonexist: 404
-        }
-        include_examples "various scenarios", expected
-      end
-
-      context 'moderator' do
-        before do
-          sign_in(moderator)
+        context 'anonymous with login required' do
+          before do
+            SiteSetting.login_required = true
+          end
+          expected = {
+            normal_topic: 302,
+            secure_topic: 302,
+            private_topic: 302,
+            deleted_topic: 302,
+            deleted_secure_topic: 302,
+            deleted_private_topic: 302,
+            nonexist: 302,
+            secure_accessible_topic: 302
+          }
+          include_examples "various scenarios", expected
         end
 
-        expected = {
-          normal_topic: 200,
-          secure_topic: 403,
-          private_topic: 403,
-          deleted_topic: 200,
-          deleted_secure_topic: 403,
-          deleted_private_topic: 403,
-          nonexist: 404
-        }
-        include_examples "various scenarios", expected
-      end
+        context 'normal user' do
+          before do
+            sign_in(user)
+          end
 
-      context 'admin' do
-        before do
-          sign_in(admin)
+          expected = {
+            normal_topic: 200,
+            secure_topic: 404,
+            private_topic: 404,
+            deleted_topic: 404,
+            deleted_secure_topic: 404,
+            deleted_private_topic: 404,
+            nonexist: 404,
+            secure_accessible_topic: 404
+          }
+          include_examples "various scenarios", expected
         end
 
-        expected = {
-          normal_topic: 200,
-          secure_topic: 200,
-          private_topic: 200,
-          deleted_topic: 200,
-          deleted_secure_topic: 200,
-          deleted_private_topic: 200,
-          nonexist: 404
-        }
-        include_examples "various scenarios", expected
+        context 'allowed user' do
+          before do
+            sign_in(allowed_user)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 200,
+            private_topic: 200,
+            deleted_topic: 404,
+            deleted_secure_topic: 404,
+            deleted_private_topic: 404,
+            nonexist: 404,
+            secure_accessible_topic: 404
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'moderator' do
+          before do
+            sign_in(moderator)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 404,
+            private_topic: 404,
+            deleted_topic: 200,
+            deleted_secure_topic: 404,
+            deleted_private_topic: 404,
+            nonexist: 404,
+            secure_accessible_topic: 404
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'admin' do
+          before do
+            sign_in(admin)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 200,
+            private_topic: 200,
+            deleted_topic: 200,
+            deleted_secure_topic: 200,
+            deleted_private_topic: 200,
+            nonexist: 404,
+            secure_accessible_topic: 200
+          }
+          include_examples "various scenarios", expected
+        end
       end
+
+      context 'with detailed error pages' do
+        before do
+          SiteSetting.detailed_404 = true
+        end
+
+        context 'anonymous' do
+          expected = {
+            normal_topic: 200,
+            secure_topic: 403,
+            private_topic: 403,
+            deleted_topic: 410,
+            deleted_secure_topic: 403,
+            deleted_private_topic: 403,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'anonymous with login required' do
+          before do
+            SiteSetting.login_required = true
+          end
+          expected = {
+            normal_topic: 302,
+            secure_topic: 302,
+            private_topic: 302,
+            deleted_topic: 302,
+            deleted_secure_topic: 302,
+            deleted_private_topic: 302,
+            nonexist: 302,
+            secure_accessible_topic: 302
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'normal user' do
+          before do
+            sign_in(user)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 403,
+            private_topic: 403,
+            deleted_topic: 410,
+            deleted_secure_topic: 403,
+            deleted_private_topic: 403,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'allowed user' do
+          before do
+            sign_in(allowed_user)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 200,
+            private_topic: 200,
+            deleted_topic: 410,
+            deleted_secure_topic: 410,
+            deleted_private_topic: 410,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'moderator' do
+          before do
+            sign_in(moderator)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 403,
+            private_topic: 403,
+            deleted_topic: 200,
+            deleted_secure_topic: 403,
+            deleted_private_topic: 403,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'admin' do
+          before do
+            sign_in(admin)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 200,
+            private_topic: 200,
+            deleted_topic: 200,
+            deleted_secure_topic: 200,
+            deleted_private_topic: 200,
+            nonexist: 404,
+            secure_accessible_topic: 200
+          }
+          include_examples "various scenarios", expected
+        end
+      end
+
     end
 
     it 'records a view' do
@@ -1538,7 +1761,7 @@ RSpec.describe TopicsController do
       end
 
       context 'and the user is not logged in' do
-        let(:api_key) { topic.user.generate_api_key(topic.user) }
+        let(:api_key) { Fabricate(:api_key, user: topic.user) }
 
         it 'redirects to the login page' do
           get "/t/#{topic.slug}/#{topic.id}.json"
@@ -1558,7 +1781,7 @@ RSpec.describe TopicsController do
           [:json, :html].each do |format|
             get "/t/#{topic.slug}/#{topic.id}.#{format}", params: { api_key: "bad" }
 
-            expect(response.code.to_i).to be(403)
+            expect(response.code.to_i).to eq(403)
             expect(response.body).to include(I18n.t("invalid_access"))
           end
         end
@@ -1638,7 +1861,8 @@ RSpec.describe TopicsController do
 
     describe 'clear_notifications' do
       it 'correctly clears notifications if specified via cookie' do
-        Discourse.stubs(:base_uri).returns("/eviltrout")
+        set_subfolder "/eviltrout"
+
         notification = Fabricate(:notification)
         sign_in(notification.user)
 
@@ -1762,7 +1986,7 @@ RSpec.describe TopicsController do
       end
 
       it "returns a readonly header if the site is read only" do
-        Discourse.received_readonly!
+        Discourse.received_postgres_readonly!
         get "/t/#{topic.id}.json"
         expect(response.status).to eq(200)
         expect(response.headers['Discourse-Readonly']).to eq('true')
@@ -1919,12 +2143,11 @@ RSpec.describe TopicsController do
     it 'renders rss of the topic' do
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/rss+xml')
+      expect(response.media_type).to eq('application/rss+xml')
     end
 
     it 'renders rss of the topic correctly with subfolder' do
-      GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      set_subfolder "/forum"
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(200)
       expect(response.body).to_not include("/forum/forum")
@@ -2039,6 +2262,26 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
+      it "can mark sub-categories unread" do
+        category = Fabricate(:category)
+        sub = Fabricate(:category, parent_category_id: category.id)
+
+        topic.update!(category_id: sub.id)
+
+        post1 = create_post(user: user, topic_id: topic.id)
+        create_post(topic_id: topic.id)
+
+        put "/topics/bulk.json", params: {
+          category_id: category.id,
+          include_subcategories: true,
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' }
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
+      end
+
       it "can find unread" do
         # mark all unread muted
         put "/topics/bulk.json", params: {
@@ -2084,6 +2327,64 @@ RSpec.describe TopicsController do
       put "/t/#{pm.topic_id}/bookmark.json"
       expect(response).to be_forbidden
     end
+
+    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
+      before do
+        SiteSetting.enable_bookmarks_with_reminders = true
+      end
+      it "deletes all the bookmarks for the user in the topic" do
+        sign_in(user)
+        post = create_post
+        Fabricate(:bookmark, post: post, topic: post.topic, user: user)
+        put "/t/#{post.topic_id}/remove_bookmarks.json"
+        expect(Bookmark.where(user: user, topic: topic).count).to eq(0)
+      end
+    end
+  end
+
+  describe "#bookmark" do
+    before do
+      sign_in(user)
+    end
+
+    it "should create a new post action for the bookmark on the first post of the topic" do
+      post = create_post
+      post2 = create_post(topic_id: post.topic_id)
+      put "/t/#{post.topic_id}/bookmark.json"
+
+      expect(PostAction.find_by(user_id: user.id, post_action_type: PostActionType.types[:bookmark]).post_id).to eq(post.id)
+    end
+
+    it "errors if the topic is already bookmarked for the user" do
+      post = create_post
+      PostActionCreator.new(user, post, PostActionType.types[:bookmark]).perform
+
+      put "/t/#{post.topic_id}/bookmark.json"
+      expect(response).to be_forbidden
+    end
+
+    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
+      before do
+        SiteSetting.enable_bookmarks_with_reminders = true
+      end
+      it "should create a new bookmark on the first post of the topic" do
+        post = create_post
+        post2 = create_post(topic_id: post.topic_id)
+        put "/t/#{post.topic_id}/bookmark.json"
+
+        bookmarks_for_topic = Bookmark.where(topic: post.topic, user: user)
+        expect(bookmarks_for_topic.count).to eq(1)
+        expect(bookmarks_for_topic.first.post_id).to eq(post.id)
+      end
+
+      it "errors if the topic is already bookmarked for the user" do
+        post = create_post
+        Bookmark.create(post: post, topic: post.topic, user: user)
+
+        put "/t/#{post.topic_id}/bookmark.json"
+        expect(response).to be_forbidden
+      end
+    end
   end
 
   describe '#reset_new' do
@@ -2099,10 +2400,40 @@ RSpec.describe TopicsController do
 
       user.user_stat.update_column(:new_since, old_date)
 
+      TopicTrackingState.expects(:publish_dismiss_new).with(user.id)
+
       put "/topics/reset-new.json"
       expect(response.status).to eq(200)
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
+    end
+
+    context 'category' do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+
+      it 'updates last_seen_at for main category' do
+        sign_in(user)
+        category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
+        subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
+
+        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, category.id.to_s)
+
+        put "/topics/reset-new.json?category_id=#{category.id}"
+
+        expect(category_user.reload.last_seen_at).not_to be_nil
+        expect(subcategory_user.reload.last_seen_at).to be_nil
+      end
+
+      it 'updates last_seen_at for main category and subcategories' do
+        sign_in(user)
+        category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
+        subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
+        put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
+
+        expect(category_user.reload.last_seen_at).not_to be_nil
+        expect(subcategory_user.reload.last_seen_at).not_to be_nil
+      end
     end
   end
 
@@ -2195,12 +2526,15 @@ RSpec.describe TopicsController do
       end
 
       context "success" do
+        fab!(:category) { Fabricate(:category) }
+
         it "returns success" do
           sign_in(admin)
-          put "/t/#{topic.id}/convert-topic/public.json"
+          put "/t/#{topic.id}/convert-topic/public.json?category_id=#{category.id}"
 
           topic.reload
           expect(topic.archetype).to eq(Archetype.default)
+          expect(topic.category_id).to eq(category.id)
           expect(response.status).to eq(200)
 
           result = ::JSON.parse(response.body)

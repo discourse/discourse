@@ -20,6 +20,9 @@
       }
     }
   }
+  .explain {
+    margin-left: 0.5em;
+  }
 
   .nav-pills {
     margin-bottom: 1em;
@@ -118,6 +121,17 @@
     .category-chooser {
       width: 100%;
     }
+
+    .d-date-time-input-range {
+      width: inherit;
+      border: none;
+      padding: 0;
+
+      .d-date-input {
+        flex: 1 1 auto;
+        border: 1px solid $primary-medium;
+      }
+    }
   }
 }
 
@@ -131,7 +145,8 @@
 
 .reviewable-actions .claimed-actions {
   display: flex;
-  width: 100%;
+  flex: 1 1 100%;
+  margin-right: 0;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5em;
@@ -251,6 +266,7 @@
   .reviewable-actions {
     display: flex;
     flex-wrap: wrap;
+    width: 100%;
 
     button {
       white-space: nowrap;
@@ -281,7 +297,6 @@
   .reviewed-by {
     display: flex;
     align-items: center;
-    white-space: nowrap;
   }
 
   .user-flag-percentage {
@@ -306,8 +321,7 @@
       &.user a,
       &.reviewed-by a {
         max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include ellipsis;
       }
     }
 
@@ -323,9 +337,8 @@
       &:not(:empty) {
         padding: 0.5em 1em 0.5em 0;
       }
-      @include breakpoint("mobile") {
-        overflow: hidden;
-        text-overflow: ellipsis;
+      @include breakpoint("mobile-large") {
+        @include ellipsis;
         padding-right: 0.5em;
       }
     }
@@ -360,13 +373,17 @@
 }
 
 .reviewable-item {
+  .show-raw-email {
+    color: $primary-medium;
+    font-size: $font-down-2;
+  }
   .post-title {
     background-color: yellow;
   }
   .created-by {
     margin-right: 1em;
     padding-top: 0.35em;
-    @include breakpoint("mobile") {
+    @include breakpoint("mobile-large") {
       float: left;
       margin-bottom: 1em;
     }
@@ -381,7 +398,7 @@
     margin-top: 1em;
     min-width: 275px;
     word-break: break-word;
-    @include breakpoint("mobile", min-width) {
+    @include breakpoint("mobile-large", min-width) {
       display: flex;
     }
   }
@@ -491,7 +508,7 @@
   }
 }
 
-@include breakpoint("mobile") {
+@include breakpoint("mobile-large") {
   tr.reviewable-score {
     grid-template-columns: auto auto auto;
   }

@@ -8,6 +8,7 @@ export default {
       { id: 4, word: "scheme", action: "flag" },
       { id: 5, word: "coupon", action: "require_approval" },
       { id: 6, word: '<img src="x">', action: "block" }
-    ]
+    ],
+    compiled_regular_expressions: {}
   }
 };

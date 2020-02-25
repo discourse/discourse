@@ -2,14 +2,6 @@
 # frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
-require_dependency 'guardian'
-require_dependency 'unread'
-require_dependency 'age_words'
-require_dependency 'configurable_urls'
-require_dependency 'mobile_detection'
-require_dependency 'category_badge'
-require_dependency 'global_path'
-require_dependency 'emoji'
 
 module ApplicationHelper
   include CurrentUser
@@ -58,6 +50,10 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
+  def is_gzip_req?
+    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
+  end
+
   def script_asset_path(script)
     path = asset_path("#{script}.js")
 
@@ -77,6 +73,8 @@ module ApplicationHelper
 
       if is_brotli_req?
         path = path.gsub(/\.([^.]+)$/, '.br.\1')
+      elsif is_gzip_req?
+        path = path.gsub(/\.([^.]+)$/, '.gz.\1')
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
@@ -95,9 +93,14 @@ module ApplicationHelper
 
   def preload_script(script)
     path = script_asset_path(script)
+    preload_script_url(path)
+  end
 
-"<link rel='preload' href='#{path}' as='script'/>
-<script src='#{path}'></script>".html_safe
+  def preload_script_url(url)
+    <<~HTML.html_safe
+      <link rel="preload" href="#{url}" as="script">
+      <script src="#{url}"></script>
+    HTML
   end
 
   def discourse_csrf_tags
@@ -129,7 +132,7 @@ module ApplicationHelper
 
     if current_user.present? &&
         current_user.primary_group_id &&
-        primary_group_name = Group.where(id: current_user.primary_group_id).pluck(:name).first
+        primary_group_name = Group.where(id: current_user.primary_group_id).pluck_first(:name)
       result << "primary-group-#{primary_group_name.downcase}"
     end
 
@@ -328,6 +331,12 @@ module ApplicationHelper
     current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
   end
 
+  def ios_app_argument
+    # argument only makes sense for DiscourseHub app
+    SiteSetting.ios_app_id == "1173672076" ?
+      ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
+  end
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end
@@ -368,14 +377,13 @@ module ApplicationHelper
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(file: erb) }
+    erbs.each { |erb| result << render(inline: File.read(erb)) }
     result.html_safe
   end
 
   def topic_featured_link_domain(link)
     begin
-      uri = URI.encode(link)
-      uri = URI.parse(uri)
+      uri = UrlHelper.encode_and_parse(link)
       uri = URI.parse("http://#{uri}") if uri.scheme.nil?
       host = uri.host.downcase
       host.start_with?('www.') ? host[4..-1] : host
@@ -421,17 +429,14 @@ module ApplicationHelper
 
   def theme_lookup(name)
     Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
-      &.html_safe
   end
 
   def theme_translations_lookup
     Theme.lookup_field(theme_ids, :translations, I18n.locale)
-      &.html_safe
   end
 
   def theme_js_lookup
     Theme.lookup_field(theme_ids, :extra_js, nil)
-      &.html_safe
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
@@ -470,6 +475,10 @@ module ApplicationHelper
 
     if Rails.env.development?
       setup_data[:svg_icon_list] = SvgSprite.all_icons(theme_ids)
+
+      if ENV['DEBUG_PRELOADED_APP_DATA']
+        setup_data[:debug_preloaded_app_data] = true
+      end
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]
@@ -497,5 +506,11 @@ module ApplicationHelper
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
     end
     absolute_url
+  end
+
+  def can_sign_up?
+    SiteSetting.allow_new_registrations &&
+    !SiteSetting.invite_only &&
+    !SiteSetting.enable_sso
   end
 end

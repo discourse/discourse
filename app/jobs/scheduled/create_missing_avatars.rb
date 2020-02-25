@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CreateMissingAvatars < Jobs::Scheduled
+  class CreateMissingAvatars < ::Jobs::Scheduled
     every 1.hour
 
     def execute(args)

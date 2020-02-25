@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'theme_serializer'
 
 describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
@@ -38,6 +37,21 @@ describe Admin::ThemesController do
       expect(upload.id).not_to be_nil
       expect(JSON.parse(response.body)["upload_id"]).to eq(upload.id)
     end
+
+    context "when trying to upload an existing file" do
+      let(:uploaded_file) { Upload.find_by(original_filename: "fake.woff2") }
+      let(:response_json) { JSON.parse(response.body) }
+
+      before do
+        post "/admin/themes/upload_asset.json", params: { file: upload }
+        expect(response.status).to eq(201)
+      end
+
+      it "reuses the original upload" do
+        expect(response.status).to eq(201)
+        expect(response_json["upload_id"]).to eq(uploaded_file.id)
+      end
+    end
   end
 
   describe '#export' do
@@ -45,16 +59,17 @@ describe Admin::ThemesController do
       theme = Fabricate(:theme, name: "Awesome Theme")
       theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
       theme.set_field(target: :desktop, name: :after_header, value: '<b>test</b>')
+      theme.set_field(target: :extra_js, name: "discourse/controller/blah", value: 'console.log("test");')
       theme.save!
 
       get "/admin/customize/themes/#{theme.id}/export"
       expect(response.status).to eq(200)
 
       # Save the output in a temp file (automatically cleaned up)
-      file = Tempfile.new('archive.tar.gz')
+      file = Tempfile.new('archive.zip')
       file.write(response.body)
       file.rewind
-      uploaded_file = Rack::Test::UploadedFile.new(file.path, "application/x-gzip")
+      uploaded_file = Rack::Test::UploadedFile.new(file.path, "application/zip")
 
       # Now import it again
       expect do
@@ -65,7 +80,7 @@ describe Admin::ThemesController do
       json = ::JSON.parse(response.body)
 
       expect(json["theme"]["name"]).to eq("Awesome Theme")
-      expect(json["theme"]["theme_fields"].length).to eq(2)
+      expect(json["theme"]["theme_fields"].length).to eq(3)
     end
   end
 
@@ -75,7 +90,7 @@ describe Admin::ThemesController do
     end
 
     let(:theme_archive) do
-      Rack::Test::UploadedFile.new(file_from_fixtures("discourse-test-theme.tar.gz", "themes"), "application/x-gzip")
+      Rack::Test::UploadedFile.new(file_from_fixtures("discourse-test-theme.zip", "themes"), "application/zip")
     end
 
     let(:image) do
@@ -136,11 +151,19 @@ describe Admin::ThemesController do
       existing_theme = Fabricate(:theme, name: "Header Icons")
       other_existing_theme = Fabricate(:theme, name: "Some other name")
 
-      expect do
-        post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: other_existing_theme.id }
-      end.to change { Theme.count }.by (0)
+      messages = MessageBus.track_publish do
+        expect do
+          post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: other_existing_theme.id }
+        end.to change { Theme.count }.by (0)
+      end
       expect(response.status).to eq(201)
       json = ::JSON.parse(response.body)
+
+      # Ensure only one refresh message is sent.
+      # More than 1 is wasteful, and can trigger unusual race conditions in the client
+      # If this test fails, it probably means `theme.save` is being called twice - check any 'autosave' relations
+      file_change_messages = messages.filter { |m| m[:channel] == "/file-change" }
+      expect(file_change_messages.count).to eq(1)
 
       expect(json["theme"]["name"]).to eq("Some other name")
       expect(json["theme"]["id"]).to eq(other_existing_theme.id)
@@ -282,6 +305,16 @@ describe Admin::ThemesController do
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
+    it 'updates a child theme' do
+      child_theme = Fabricate(:theme, component: true)
+      put "/admin/themes/#{child_theme.id}.json", params: {
+        theme: {
+          parent_theme_ids: [theme.id],
+        }
+      }
+      expect(child_theme.parent_themes).to eq([theme])
+    end
+
     it 'can update translations' do
       theme.set_field(target: :translations, name: :en, value: { en: { somegroup: { somestring: "defaultstring" } } }.deep_stringify_keys.to_yaml)
       theme.save!
@@ -322,8 +355,84 @@ describe Admin::ThemesController do
       expect(theme.theme_translation_overrides.count).to eq(0)
     end
 
+    it 'checking for updates saves the remote_theme record' do
+      theme.remote_theme = RemoteTheme.create!(remote_url: "http://discourse.org", remote_version: "a", local_version: "a", commits_behind: 0)
+      theme.save!
+      ThemeStore::GitImporter.any_instance.stubs(:import!)
+      ThemeStore::GitImporter.any_instance.stubs(:commits_since).returns(["b", 1])
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          remote_check: true
+        }
+      }
+      theme.reload
+      expect(theme.remote_theme.remote_version).to eq("b")
+      expect(theme.remote_theme.commits_behind).to eq(1)
+    end
+
+    it 'can disable component' do
+      child = Fabricate(:theme, component: true)
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          enabled: false
+        }
+      }
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["theme"]["enabled"]).to eq(false)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+      expect(json["theme"]["disabled_by"]["id"]).to eq(admin.id)
+    end
+
+    it "enabling/disabling a component creates the correct staff action log" do
+      child = Fabricate(:theme, component: true)
+      UserHistory.destroy_all
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          enabled: false
+        }
+      }
+      expect(response.status).to eq(200)
+
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:enable_theme_component]
+      ).size).to eq(0)
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          enabled: true
+        }
+      }
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:enable_theme_component]
+      ).size).to eq(1)
+
+      expect(json["theme"]["disabled_by"]).to eq(nil)
+      expect(json["theme"]["enabled"]).to eq(true)
+    end
+
     it 'handles import errors on update' do
       theme.create_remote_theme!(remote_url: "https://example.com/repository")
+      theme.save!
 
       # RemoteTheme is extensively tested, and setting up the test scaffold is a large overhead
       # So use a stub here to test the controller
@@ -385,6 +494,41 @@ describe Admin::ThemesController do
     it "should return empty for a default theme" do
       get "/admin/themes/#{theme.id}/diff_local_changes.json"
       expect(response.body).to eq("{}")
+    end
+  end
+
+  describe '#update_single_setting' do
+    let(:theme) { Fabricate(:theme) }
+
+    before do
+      theme.set_field(target: :settings, name: :yaml, value: "bg: red")
+      theme.save!
+    end
+
+    it "should update a theme setting" do
+      put "/admin/themes/#{theme.id}/setting.json", params: {
+        name: "bg",
+        value: "green"
+      }
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["bg"]).to eq("green")
+
+      theme.reload
+      expect(theme.included_settings[:bg]).to eq("green")
+      user_history = UserHistory.last
+
+      expect(user_history.action).to eq(
+        UserHistory.actions[:change_theme_setting]
+      )
+    end
+
+    it "should clear a theme setting" do
+      put "/admin/themes/#{theme.id}/setting.json", params: { name: "bg" }
+      theme.reload
+
+      expect(response.status).to eq(200)
+      expect(theme.included_settings[:bg]).to eq("")
     end
   end
 end

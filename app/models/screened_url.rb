@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'screening_model'
-
 # A ScreenedUrl record represents a URL that is being watched.
 # If the URL is found in a post, some action can be performed.
 

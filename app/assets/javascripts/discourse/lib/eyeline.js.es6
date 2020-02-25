@@ -1,19 +1,42 @@
-//  Track visible elemnts on the screen.
+import ENV from "discourse-common/config/environment";
+import { EventTarget } from "rsvp";
+
+let _skipUpdate;
+let _rootElement;
+
+export function configureEyeline(opts) {
+  if (opts) {
+    _skipUpdate = opts.skipUpdate;
+    _rootElement = opts.rootElement;
+  } else {
+    _skipUpdate = ENV.environment === "test";
+    _rootElement = null;
+  }
+}
+
+configureEyeline();
+
+//  Track visible elements on the screen.
 const Eyeline = function Eyeline(selector) {
   this.selector = selector;
 };
 
 Eyeline.prototype.update = function() {
-  if (Ember.testing) {
+  if (_skipUpdate) {
     return;
   }
 
-  const docViewTop = $(window).scrollTop(),
-    windowHeight = $(window).height(),
-    docViewBottom = docViewTop + windowHeight,
-    $elements = $(this.selector),
-    bottomOffset = $elements.last().offset(),
-    self = this;
+  const docViewTop = _rootElement
+    ? $(_rootElement).scrollTop()
+    : $(window).scrollTop();
+  const windowHeight = _rootElement
+    ? $(_rootElement).height()
+    : $(window).height();
+  const docViewBottom = docViewTop + windowHeight;
+  const $elements = $(this.selector);
+  const bottomOffset = _rootElement
+    ? $elements.last().position()
+    : $elements.last().offset();
 
   let atBottom = false;
   if (bottomOffset) {
@@ -21,9 +44,9 @@ Eyeline.prototype.update = function() {
       bottomOffset.top <= docViewBottom && bottomOffset.top >= docViewTop;
   }
 
-  return $elements.each(function(i, elem) {
+  return $elements.each((i, elem) => {
     const $elem = $(elem),
-      elemTop = $elem.offset().top,
+      elemTop = _rootElement ? $elem.position().top : $elem.offset().top,
       elemBottom = elemTop + $elem.height();
 
     let markSeen = false;
@@ -45,32 +68,30 @@ Eyeline.prototype.update = function() {
 
     // If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
     if (!atBottom) {
-      self.trigger("saw", { detail: $elem });
+      this.trigger("saw", { detail: $elem });
       if (i === 0) {
-        self.trigger("sawTop", { detail: $elem });
+        this.trigger("sawTop", { detail: $elem });
       }
       return false;
     }
     if (i === 0) {
-      self.trigger("sawTop", { detail: $elem });
+      this.trigger("sawTop", { detail: $elem });
     }
     if (i === $elements.length - 1) {
-      return self.trigger("sawBottom", { detail: $elem });
+      return this.trigger("sawBottom", { detail: $elem });
     }
   });
 };
 
 //  Call this when we know aren't loading any more elements. Mark the rest as seen
 Eyeline.prototype.flushRest = function() {
-  if (Ember.testing) {
+  if (ENV.environment === "test") {
     return;
   }
-  const self = this;
-  $(this.selector).each(function(i, elem) {
-    return self.trigger("saw", { detail: $(elem) });
-  });
+
+  $(this.selector).each((i, elem) => this.trigger("saw", { detail: $(elem) }));
 };
 
-RSVP.EventTarget.mixin(Eyeline.prototype);
+EventTarget.mixin(Eyeline.prototype);
 
 export default Eyeline;

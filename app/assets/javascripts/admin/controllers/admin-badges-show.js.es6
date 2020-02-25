@@ -1,24 +1,52 @@
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { reads } from "@ember/object/computed";
+import Controller, { inject } from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
-import computed from "ember-addons/ember-computed-decorators";
+import { run } from "@ember/runloop";
 
-export default Ember.Controller.extend(bufferedProperty("model"), {
-  adminBadges: Ember.inject.controller(),
+export default Controller.extend(bufferedProperty("model"), {
+  adminBadges: inject(),
   saving: false,
   savingStatus: "",
-
-  badgeTypes: Ember.computed.alias("adminBadges.badgeTypes"),
-  badgeGroupings: Ember.computed.alias("adminBadges.badgeGroupings"),
-  badgeTriggers: Ember.computed.alias("adminBadges.badgeTriggers"),
-  protectedSystemFields: Ember.computed.alias(
-    "adminBadges.protectedSystemFields"
-  ),
-
-  readOnly: Ember.computed.alias("buffered.system"),
+  badgeTypes: reads("adminBadges.badgeTypes"),
+  badgeGroupings: reads("adminBadges.badgeGroupings"),
+  badgeTriggers: reads("adminBadges.badgeTriggers"),
+  protectedSystemFields: reads("adminBadges.protectedSystemFields"),
+  readOnly: reads("buffered.system"),
   showDisplayName: propertyNotEqual("name", "displayName"),
 
-  @computed("model.query", "buffered.query")
+  init() {
+    this._super(...arguments);
+
+    // this is needed because the model doesnt have default values
+    // and as we are using a bufferedProperty it's not accessible
+    // in any other way
+    run.next(() => {
+      if (this.model) {
+        if (!this.model.badge_type_id) {
+          this.model.set(
+            "badge_type_id",
+            this.get("badgeTypes.firstObject.id")
+          );
+        }
+
+        if (!this.model.badge_grouping_id) {
+          this.model.set(
+            "badge_grouping_id",
+            this.get("badgeGroupings.firstObject.id")
+          );
+        }
+
+        if (!this.model.trigger) {
+          this.model.set("trigger", this.get("badgeTriggers.firstObject.id"));
+        }
+      }
+    });
+  },
+
+  @discourseComputed("model.query", "buffered.query")
   hasQuery(modelQuery, bufferedQuery) {
     if (bufferedQuery) {
       return bufferedQuery.trim().length > 0;
@@ -26,10 +54,11 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     return modelQuery && modelQuery.trim().length > 0;
   },
 
+  @observes("model.id")
   _resetSaving: function() {
     this.set("saving", false);
     this.set("savingStatus", "");
-  }.observes("model.id"),
+  },
 
   actions: {
     save() {

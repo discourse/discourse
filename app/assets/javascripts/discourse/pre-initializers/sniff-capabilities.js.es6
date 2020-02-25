@@ -35,8 +35,19 @@ export default {
         caps.canPasteImages = caps.isChrome || caps.isFirefox;
       }
 
+      caps.isIpadOS =
+        ua.indexOf("Mac OS") !== -1 &&
+        !/iPhone|iPod/.test(navigator.userAgent) &&
+        touch;
+
       caps.isIOS =
-        /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        (/iPhone|iPod/.test(navigator.userAgent) || caps.isIpadOS) &&
+        !window.MSStream;
+
+      caps.hasContactPicker =
+        "contacts" in navigator && "ContactsManager" in window;
+
+      caps.canVibrate = "vibrate" in navigator;
     }
 
     // We consider high res a device with 1280 horizontal pixels. High DPI tablets like

@@ -24,7 +24,7 @@ describe TrustLevel3Requirements do
 
     describe "penalty_counts" do
 
-      it "returns if the user has ever been silenced" do
+      it "returns if the user has been silenced in last 6 months" do
         expect(tl3_requirements.penalty_counts.silenced).to eq(0)
         expect(tl3_requirements.penalty_counts.total).to eq(0)
         UserSilencer.new(user, moderator).silence
@@ -35,7 +35,18 @@ describe TrustLevel3Requirements do
         expect(tl3_requirements.penalty_counts.total).to eq(0)
       end
 
-      it "returns if the user has ever been suspended" do
+      it "ignores system user unsilences" do
+        expect(tl3_requirements.penalty_counts.silenced).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+        UserSilencer.new(user, moderator).silence
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+        UserSilencer.new(user, Discourse.system_user).unsilence
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+      end
+
+      it "returns if the user has been suspended in last 6 months" do
         user.save!
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(0)
@@ -43,6 +54,7 @@ describe TrustLevel3Requirements do
 
         UserHistory.create!(
           target_user_id: user.id,
+          acting_user_id: moderator.id,
           action: UserHistory.actions[:suspend_user]
         )
 
@@ -51,11 +63,70 @@ describe TrustLevel3Requirements do
 
         UserHistory.create!(
           target_user_id: user.id,
+          acting_user_id: moderator.id,
           action: UserHistory.actions[:unsuspend_user]
         )
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(0)
         expect(tl3_requirements.penalty_counts.total).to eq(0)
+      end
+
+      it "ignores system user un-suspend" do
+        user.save!
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+
+        UserHistory.create!(
+          target_user_id: user.id,
+          acting_user_id: Discourse.system_user.id,
+          action: UserHistory.actions[:suspend_user]
+        )
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+
+        UserHistory.create!(
+          target_user_id: user.id,
+          acting_user_id: Discourse.system_user.id,
+          action: UserHistory.actions[:unsuspend_user]
+        )
+
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+      end
+
+      it "does not return if the user been silenced or suspended over 6 months ago" do
+        freeze_time 1.year.ago do
+          UserSilencer.new(user, moderator, silenced_till: 1.months.from_now).silence
+          UserHistory.create!(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
+        end
+
+        expect(tl3_requirements.penalty_counts.silenced).to eq(0)
+        expect(tl3_requirements.penalty_counts.suspended).to eq(0)
+        expect(tl3_requirements.penalty_counts.total).to eq(0)
+
+        freeze_time 3.months.ago do
+          UserSilencer.new(user).unsilence
+          UserSilencer.new(user, moderator, silenced_till: 1.months.from_now).silence
+          UserHistory.create!(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
+        end
+
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(2)
+      end
+
+      it "does return if the user has been silenced or suspended over 6 months ago and continues" do
+        freeze_time 1.year.ago do
+          UserSilencer.new(user, moderator, silenced_till: 10.years.from_now).silence
+          UserHistory.create!(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
+          user.update(suspended_till: 10.years.from_now)
+        end
+
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(2)
       end
     end
 
@@ -171,7 +242,7 @@ describe TrustLevel3Requirements do
       _not_a_reply = create_post(user: user) # user created the topic, so it doesn't count
 
       topic1 = create_post.topic
-      _reply1      = create_post(topic: topic1, user: user)
+      _reply1 = create_post(topic: topic1, user: user)
       _reply_again = create_post(topic: topic1, user: user) # two replies in one topic
 
       topic2 = create_post(created_at: 101.days.ago).topic
@@ -286,7 +357,7 @@ describe TrustLevel3Requirements do
       UserActionManager.enable
 
       t = Fabricate(:topic, user: user, created_at: 102.days.ago)
-      old_post     = create_post(topic: t, user: user, created_at: 102.days.ago)
+      old_post = create_post(topic: t, user: user, created_at: 102.days.ago)
       recent_post2 = create_post(topic: t, user: user, created_at: 10.days.ago)
       recent_post1 = create_post(topic: t, user: user, created_at: 1.hour.ago)
 

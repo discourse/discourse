@@ -4,14 +4,40 @@
 require 'pathname'
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
   Pathname.new(__FILE__).realpath)
+RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 
 require 'rubygems'
 require 'bundler/setup'
+require 'digest'
+
+dev_mode = false
+
+def ensure_cache_clean!
+  all_plugin_directories = Pathname.new(RAILS_ROOT + '/plugins').children.select(&:directory?)
+  core_git_sha = `git rev-parse HEAD`.strip
+  plugins_combined_git_sha = `git ls-files -s plugins | git hash-object --stdin`.strip
+  super_sha = Digest::SHA1.hexdigest(core_git_sha + plugins_combined_git_sha)
+  hash_file = "#{RAILS_ROOT}/tmp/plugin-hash"
+
+  old_hash = File.exists?(hash_file) ? File.read(hash_file) : nil
+
+  if old_hash && old_hash != super_sha
+    puts "WARNING: It looks like your discourse plugins or core version have recently changed."
+    puts "The tmp/cache directory will be wiped to avoid development issues."
+    `rm -rf #{RAILS_ROOT}/tmp/cache`
+    puts
+  end
+
+  FileUtils.mkdir_p(RAILS_ROOT + "/tmp")
+  File.write(hash_file, super_sha)
+end
 
 # in development do some fussing around, to automate config
 if !ARGV.include?("-E") &&
     !ARGV.include?("--env") &&
     (ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"])
+
+  dev_mode = true
 
   ARGV.push("-N")
   if !ARGV.include?("-c") && !ARGV.include?("--config-file")
@@ -34,6 +60,7 @@ if !ARGV.include?("-E") &&
 
   ENV["UNICORN_SIDEKIQS"] ||= "1"
 
+  ensure_cache_clean!
 end
 
 if ARGV.include?("--help")
@@ -46,4 +73,36 @@ if ARGV.include?("--help")
   exit
 end
 
-load Gem.bin_path('unicorn', 'unicorn')
+# this dev_mode hackery enables, the following to be used to restart unicorn:
+#
+# pkill -USR2 -f 'ruby bin/unicorn'
+#
+# This is handy if you want to bind a key to restarting unicorn in dev
+
+if dev_mode
+  restart = true
+  while restart
+    restart = false
+    pid = fork do
+      load Gem.bin_path('unicorn', 'unicorn')
+    end
+    done = false
+
+    Signal.trap('INT') do
+      # wait for parent to be done
+    end
+
+    Signal.trap('USR2') do
+      Process.kill('QUIT', pid)
+      puts "RESTARTING UNICORN"
+      restart = true
+    end
+
+    while !done
+      sleep 1
+      done = Process.waitpid(pid, Process::WNOHANG)
+    end
+  end
+else
+  load Gem.bin_path('unicorn', 'unicorn')
+end

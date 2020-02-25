@@ -1,7 +1,11 @@
-import debounce from "discourse/lib/debounce";
+import { equal } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
+import discourseDebounce from "discourse/lib/debounce";
+import { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+export default Controller.extend({
+  application: inject(),
   queryParams: ["period", "order", "asc", "name", "group", "exclude_usernames"],
   period: "weekly",
   order: "likes_received",
@@ -10,15 +14,17 @@ export default Ember.Controller.extend({
   group: null,
   exclude_usernames: null,
 
-  showTimeRead: Ember.computed.equal("period", "all"),
+  showTimeRead: equal("period", "all"),
 
-  _setName: debounce(function() {
+  @observes("nameInput")
+  _setName: discourseDebounce(function() {
     this.set("name", this.nameInput);
-  }, 500).observes("nameInput"),
+  }, 500),
 
+  @observes("model.canLoadMore")
   _showFooter: function() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
-  }.observes("model.canLoadMore"),
+  },
 
   actions: {
     loadMore() {

@@ -107,6 +107,10 @@ describe UserNotifications do
 
     subject { UserNotifications.digest(user) }
 
+    after do
+      Discourse.redis.keys('summary-new-users:*').each { |key| Discourse.redis.del(key) }
+    end
+
     context "without new topics" do
 
       it "doesn't send the email" do
@@ -138,6 +142,19 @@ describe UserNotifications do
         expect(subject.html_part.body.to_s).to be_present
         expect(subject.text_part.body.to_s).to be_present
         expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
+        expect(subject.html_part.body.to_s).to include('New Users')
+      end
+
+      it "doesn't include new user count if digest_after_minutes is low" do
+        user.user_option.digest_after_minutes = 60
+        expect(subject.html_part.body.to_s).to_not include('New Users')
+      end
+
+      it "works with min_date string" do
+        digest = UserNotifications.digest(user, since: 1.month.ago.to_date.to_s)
+        expect(digest.html_part.body.to_s).to be_present
+        expect(digest.text_part.body.to_s).to be_present
+        expect(digest.html_part.body.to_s).to include('New Users')
       end
 
       it "includes email_prefix in email subject instead of site title" do
@@ -190,8 +207,7 @@ describe UserNotifications do
       it "uses theme color" do
         cs = Fabricate(:color_scheme, name: 'Fancy', color_scheme_colors: [
           Fabricate(:color_scheme_color, name: 'header_primary', hex: 'F0F0F0'),
-          Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E'),
-          Fabricate(:color_scheme_color, name: 'tertiary', hex: '858585')
+          Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E')
         ])
         theme = Fabricate(:theme,
                           user_selectable: true,
@@ -204,12 +220,10 @@ describe UserNotifications do
         html = subject.html_part.body.to_s
         expect(html).to include 'F0F0F0'
         expect(html).to include '1E1E1E'
-        expect(html).to include '858585'
       end
 
       it "supports subfolder" do
-        GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
+        set_subfolder "/forum"
         html = subject.html_part.body.to_s
         text = subject.text_part.body.to_s
         expect(html).to be_present
@@ -260,7 +274,7 @@ describe UserNotifications do
       expect(mail.subject).to match(/Taggo/)
       expect(mail.subject).to match(/Taggie/)
 
-      mail_html = mail.html_part.to_s
+      mail_html = mail.html_part.body.to_s
 
       expect(mail_html.scan(/My super duper cool topic/).count).to eq(1)
       expect(mail_html.scan(/In Reply To/).count).to eq(1)
@@ -287,7 +301,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.html_part.to_s.scan(/In Reply To/).count).to eq(0)
+      expect(mail.html_part.body.to_s.scan(/In Reply To/).count).to eq(0)
 
       SiteSetting.enable_names = true
       SiteSetting.display_name_on_posts = true
@@ -304,7 +318,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      mail_html = mail.html_part.to_s
+      mail_html = mail.html_part.body.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(1)
       expect(mail_html.scan(/>bobmarley/).count).to eq(0)
 
@@ -317,7 +331,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      mail_html = mail.html_part.to_s
+      mail_html = mail.html_part.body.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(0)
       expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
@@ -331,10 +345,29 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.html_part.to_s).to_not include(response.raw)
-      expect(mail.html_part.to_s).to_not include(topic.url)
+      expect(mail.html_part.body.to_s).to_not include(response.raw)
+      expect(mail.html_part.body.to_s).to_not include(topic.url)
       expect(mail.text_part.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(topic.url)
+    end
+
+    it "includes excerpt when post_excerpts_in_emails is enabled" do
+      paragraphs = [
+        "This is the first paragraph, but you should read more.",
+        "And here is its friend, the second paragraph."
+      ]
+      SiteSetting.post_excerpts_in_emails = true
+      SiteSetting.post_excerpt_maxlength = paragraphs.first.length
+      response.update!(raw: paragraphs.join("\n\n"))
+      mail = UserNotifications.user_replied(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      mail_html = mail.html_part.body.to_s
+      expect(mail_html.scan(/#{paragraphs[0]}/).count).to eq(1)
+      expect(mail_html.scan(/#{paragraphs[1]}/).count).to eq(0)
     end
   end
 
@@ -365,10 +398,10 @@ describe UserNotifications do
       expect(mail.subject).not_to match(/Uncategorized/)
 
       # 1 respond to links as no context by default
-      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/to respond/).count).to eq(1)
 
       # 1 unsubscribe link
-      expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/To unsubscribe/).count).to eq(1)
 
       # side effect, topic user is updated with post number
       tu = TopicUser.get(post.topic_id, user)
@@ -384,7 +417,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.html_part.to_s).to_not include(response.raw)
+      expect(mail.html_part.body.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(response.raw)
     end
 
@@ -451,13 +484,13 @@ describe UserNotifications do
       expect(mail.subject).to include("[PM] ")
 
       # 1 "visit message" link
-      expect(mail.html_part.to_s.scan(/Visit Message/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/Visit Message/).count).to eq(1)
 
       # 1 respond to link
-      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/to respond/).count).to eq(1)
 
       # 1 unsubscribe link
-      expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/To unsubscribe/).count).to eq(1)
 
       # side effect, topic user is updated with post number
       tu = TopicUser.get(topic.id, user)
@@ -473,8 +506,8 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.html_part.to_s).to_not include(response.raw)
-      expect(mail.html_part.to_s).to_not include(topic.url)
+      expect(mail.html_part.body.to_s).to_not include(response.raw)
+      expect(mail.html_part.body.to_s).to_not include(topic.url)
       expect(mail.text_part.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(topic.url)
     end
@@ -635,8 +668,52 @@ describe UserNotifications do
 
     # WARNING: you reached the limit of 100 email notifications per day. Further emails will be suppressed.
     # Consider watching less topics or disabling mailing list mode.
-    expect(mail.html_part.to_s).to match(I18n.t("user_notifications.reached_limit", count: 2))
+    expect(mail.html_part.body.to_s).to match(I18n.t("user_notifications.reached_limit", count: 2))
     expect(mail.body.to_s).to match(I18n.t("user_notifications.reached_limit", count: 2))
+  end
+
+  describe "secure media" do
+    let(:video_upload) { Fabricate(:upload, extension: "mov") }
+    let(:user) { Fabricate(:user) }
+    let(:post) { Fabricate(:post) }
+
+    before do
+      SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+      SiteSetting.s3_access_key_id = "s3-access-key-id"
+      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+      SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.secure_media = true
+      SiteSetting.login_required = true
+
+      video_upload.update!(url: "#{SiteSetting.s3_cdn_url}/#{Discourse.store.get_path_for_upload(video_upload)}")
+      user.email_logs.create!(
+        email_type: 'blah',
+        to_address: user.email,
+        user_id: user.id
+      )
+    end
+
+    it "replaces secure audio/video with placeholder" do
+      reply = Fabricate(:post, topic_id: post.topic_id, raw: "Video: #{video_upload.url}")
+
+      notification = Fabricate(
+        :notification,
+        topic_id: post.topic_id,
+        post_number: reply.post_number,
+        user: post.user,
+        data: { original_username: 'bob' }.to_json
+      )
+
+      mail = UserNotifications.user_replied(
+        user,
+        post: reply,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.body.to_s).to match(I18n.t("emails.secure_media_placeholder"))
+    end
   end
 
   def expects_build_with(condition)

@@ -1,13 +1,64 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { filter } from "@ember/object/computed";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
+import deprecated from "discourse-common/lib/deprecated";
 
 //  A breadcrumb including category drop downs
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["hidden:hidden", ":category-breadcrumb"],
   tagName: "ol",
 
-  parentCategory: Ember.computed.alias("category.parentCategory"),
+  @discourseComputed("categories")
+  filteredCategories(categories) {
+    return categories.filter(
+      category =>
+        this.siteSettings.allow_uncategorized_topics ||
+        category.id !== this.site.uncategorized_category_id
+    );
+  },
 
-  parentCategories: Ember.computed.filter("categories", function(c) {
+  @discourseComputed(
+    "category.ancestors",
+    "filteredCategories",
+    "noSubcategories"
+  )
+  categoryBreadcrumbs(categoryAncestors, filteredCategories, noSubcategories) {
+    categoryAncestors = categoryAncestors || [];
+    const parentCategories = [undefined, ...categoryAncestors];
+    const categories = [...categoryAncestors, undefined];
+    const zipped = parentCategories.map((x, i) => [x, categories[i]]);
+
+    return zipped.map(record => {
+      const [parentCategory, category] = record;
+
+      const options = filteredCategories.filter(
+        c =>
+          c.get("parentCategory.id") === (parentCategory && parentCategory.id)
+      );
+
+      return {
+        category,
+        parentCategory,
+        options,
+        isSubcategory: !!parentCategory,
+        noSubcategories: !category && noSubcategories,
+        hasOptions: options.length !== 0
+      };
+    });
+  },
+
+  @discourseComputed("category")
+  parentCategory(category) {
+    deprecated(
+      "The parentCategory property of the bread-crumbs component is deprecated"
+    );
+    return category && category.parentCategory;
+  },
+
+  parentCategories: filter("categories", function(c) {
+    deprecated(
+      "The parentCategories property of the bread-crumbs component is deprecated"
+    );
     if (
       c.id === this.site.get("uncategorized_category_id") &&
       !this.siteSettings.allow_uncategorized_topics
@@ -19,8 +70,11 @@ export default Ember.Component.extend({
     return !c.get("parentCategory");
   }),
 
-  @computed("parentCategories")
+  @discourseComputed("parentCategories")
   parentCategoriesSorted(parentCategories) {
+    deprecated(
+      "The parentCategoriesSorted property of the bread-crumbs component is deprecated"
+    );
     if (this.siteSettings.fixed_category_positions) {
       return parentCategories;
     }
@@ -28,21 +82,32 @@ export default Ember.Component.extend({
     return parentCategories.sortBy("totalTopicCount").reverse();
   },
 
-  @computed("category")
+  @discourseComputed("category")
   hidden(category) {
     return this.site.mobileView && !category;
   },
 
-  firstCategory: Ember.computed.or("{parentCategory,category}"),
-
-  @computed("category", "parentCategory")
-  secondCategory(category, parentCategory) {
-    if (parentCategory) return category;
-    return null;
+  @discourseComputed("category", "parentCategory")
+  firstCategory(category, parentCategory) {
+    deprecated(
+      "The firstCategory property of the bread-crumbs component is deprecated"
+    );
+    return parentCategory || category;
   },
 
-  @computed("firstCategory", "hideSubcategories")
+  @discourseComputed("category", "parentCategory")
+  secondCategory(category, parentCategory) {
+    deprecated(
+      "The secondCategory property of the bread-crumbs component is deprecated"
+    );
+    return parentCategory && category;
+  },
+
+  @discourseComputed("firstCategory", "hideSubcategories")
   childCategories(firstCategory, hideSubcategories) {
+    deprecated(
+      "The childCategories property of the bread-crumbs component is deprecated"
+    );
     if (hideSubcategories) {
       return [];
     }

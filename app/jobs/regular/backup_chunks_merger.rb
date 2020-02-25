@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency "backup_restore/local_backup_store"
-require_dependency "backup_restore/backup_store"
-
 module Jobs
 
-  class BackupChunksMerger < Jobs::Base
+  class BackupChunksMerger < ::Jobs::Base
     sidekiq_options queue: 'critical', retry: false
 
     def execute(args)

@@ -47,20 +47,7 @@ $meta-element-margin: 6px;
 
   .filename {
     margin: $meta-element-margin;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    // TODO: delete this by May 2019
-    &:before {
-      // ideally, the SVG used here should be in HTML and reference the SVG sprite
-      content: svg-uri(
-        '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 512 512" fill="#{$secondary}"><path d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 336H54a6 6 0 0 1-6-6V118a6 6 0 0 1 6-6h404a6 6 0 0 1 6 6v276a6 6 0 0 1-6 6zM128 152c-22.091 0-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40-17.909-40-40-40zM96 352h320v-80l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L192 304l-39.515-39.515c-4.686-4.686-12.284-4.686-16.971 0L96 304v48z"/></svg>'
-      );
-      margin-right: $meta-element-margin;
-      display: inline-block;
-      vertical-align: middle;
-      opacity: 0.8;
-    }
+    @include ellipsis;
   }
 
   .d-icon {
@@ -69,10 +56,6 @@ $meta-element-margin: 6px;
     color: $secondary;
     + .filename {
       margin-left: 0px;
-    }
-    // TODO: delete this by May 2019
-    + .filename:before {
-      display: none;
     }
   }
 
@@ -84,23 +67,23 @@ $meta-element-margin: 6px;
     flex-shrink: 0;
     flex-grow: 3;
   }
-
-  // TODO: delete this by May 2019
-  .expand {
-    position: absolute;
-    bottom: 2px;
-    right: 7px;
-    &:before {
-      // ideally, the SVG used here should be in HTML and reference the SVG sprite
-      // the SVG used here is the "expand" icon from FontAwesome 4.7.0
-      content: svg-uri(
-        '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 1792 1792" fill="#{$secondary}"><path d="M883 1056q0 13-10 23l-332 332 144 144q19 19 19 45t-19 45-45 19h-448q-26 0-45-19t-19-45v-448q0-26 19-45t45-19 45 19l144 144 332-332q10-10 23-10t23 10l114 114q10 10 10 23zm781-864v448q0 26-19 45t-45 19-45-19l-144-144-332 332q-10 10-23 10t-23-10l-114-114q-10-10-10-23t10-23l332-332-144-144q-19-19-19-45t19-45 45-19h448q26 0 45 19t19 45z"/></svg>'
-      );
-      opacity: 0.8;
-    }
-  }
 }
 
 .mfp-preloader .spinner {
   margin: auto;
+}
+
+.discourse-no-touch {
+  @if is-light-color-scheme() {
+    a.lightbox {
+      -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    a.lightbox:hover {
+      border-radius: 5px;
+      box-shadow: 0 2px 5px 0 rgba($primary, 0.2),
+        0 2px 10px 0 rgba($primary, 0.2);
+    }
+  }
 }

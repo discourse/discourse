@@ -1,3 +1,7 @@
-{{category-chooser value=value allowUncategorized="true"}}
+{{category-chooser
+  value=value
+  allowUncategorized=true
+  onChange=(action (mut value))
+}}
 {{setting-validation-message message=validationMessage}}
 <div class='desc'>{{{unbound setting.description}}}</div>

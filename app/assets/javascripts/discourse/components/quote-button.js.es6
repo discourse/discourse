@@ -1,7 +1,9 @@
-import debounce from "discourse/lib/debounce";
-import { selectedText } from "discourse/lib/utilities";
+import { scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseDebounce from "discourse/lib/debounce";
+import { selectedText, selectedElement } from "discourse/lib/utilities";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
   visible: false,
@@ -46,8 +48,26 @@ export default Ember.Component.extend({
       }
     }
 
+    let opts = { raw: true };
+    for (
+      let element = selectedElement();
+      element && element.tagName !== "ARTICLE";
+      element = element.parentElement
+    ) {
+      if (element.tagName === "ASIDE" && element.classList.contains("quote")) {
+        opts.username =
+          element.dataset.username ||
+          element
+            .querySelector(".title")
+            .textContent.trim()
+            .replace(/:$/, "");
+        opts.post = element.dataset.post;
+        opts.topic = element.dataset.topic;
+      }
+    }
+
     const _selectedText = selectedText();
-    quoteState.selected(postId, _selectedText);
+    quoteState.selected(postId, _selectedText, opts);
     this.set("visible", quoteState.buffer.length > 0);
 
     // avoid hard loops in quote selection unconditionally
@@ -83,7 +103,7 @@ export default Ember.Component.extend({
     const $markerElement = $(markerElement);
     const markerOffset = $markerElement.offset();
     const parentScrollLeft = $markerElement.parent().scrollLeft();
-    const $quoteButton = this.$();
+    const $quoteButton = $(this.element);
 
     // remove the marker
     const parent = markerElement.parentNode;
@@ -102,15 +122,18 @@ export default Ember.Component.extend({
     }
 
     // change the position of the button
-    Ember.run.scheduleOnce("afterRender", () => {
+    scheduleOnce("afterRender", () => {
       let top = markerOffset.top;
       let left = markerOffset.left + Math.max(0, parentScrollLeft);
 
       if (showAtEnd) {
-        top = top + 20;
+        const nearRightEdgeOfScreen =
+          $(window).width() - $quoteButton.outerWidth() < left + 10;
+
+        top = nearRightEdgeOfScreen ? top + 50 : top + 20;
         left = Math.min(
           left + 10,
-          $(window).width() - $quoteButton.outerWidth()
+          $(window).width() - $quoteButton.outerWidth() - 10
         );
       } else {
         top = top - $quoteButton.outerHeight() - 5;
@@ -123,7 +146,10 @@ export default Ember.Component.extend({
   didInsertElement() {
     const { isWinphone, isAndroid } = this.capabilities;
     const wait = isWinphone || isAndroid ? 250 : 25;
-    const onSelectionChanged = debounce(() => this._selectionChanged(), wait);
+    const onSelectionChanged = discourseDebounce(
+      () => this._selectionChanged(),
+      wait
+    );
 
     $(document)
       .on("mousedown.quote-button", e => {
@@ -157,8 +183,8 @@ export default Ember.Component.extend({
   },
 
   click() {
-    const { postId, buffer } = this.quoteState;
-    this.attrs.selectText(postId, buffer).then(() => this._hideButton());
+    const { postId, buffer, opts } = this.quoteState;
+    this.attrs.selectText(postId, buffer, opts).then(() => this._hideButton());
     return false;
   }
 });

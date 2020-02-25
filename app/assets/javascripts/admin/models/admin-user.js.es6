@@ -1,28 +1,24 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { filter, or, gt, lt, not } from "@ember/object/computed";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import ApiKey from "admin/models/api-key";
 import Group from "discourse/models/group";
 import { userPath } from "discourse/lib/url";
+import { Promise } from "rsvp";
+import User from "discourse/models/user";
 
 const wrapAdmin = user => (user ? AdminUser.create(user) : null);
 
-const AdminUser = Discourse.User.extend({
+const AdminUser = User.extend({
   adminUserView: true,
-  customGroups: Ember.computed.filter(
-    "groups",
-    g => !g.automatic && Group.create(g)
-  ),
-  automaticGroups: Ember.computed.filter(
-    "groups",
-    g => g.automatic && Group.create(g)
-  ),
+  customGroups: filter("groups", g => !g.automatic && Group.create(g)),
+  automaticGroups: filter("groups", g => g.automatic && Group.create(g)),
 
-  canViewProfile: Ember.computed.or("active", "staged"),
+  canViewProfile: or("active", "staged"),
 
-  @computed("bounce_score", "reset_bounce_score_after")
+  @discourseComputed("bounce_score", "reset_bounce_score_after")
   bounceScore(bounce_score, reset_bounce_score_after) {
     if (bounce_score > 0) {
       return `${bounce_score} - ${moment(reset_bounce_score_after).format(
@@ -33,7 +29,7 @@ const AdminUser = Discourse.User.extend({
     }
   },
 
-  @computed("bounce_score")
+  @discourseComputed("bounce_score")
   bounceScoreExplanation(bounce_score) {
     if (bounce_score === 0) {
       return I18n.t("admin.user.bounce_score_explanation.none");
@@ -44,12 +40,12 @@ const AdminUser = Discourse.User.extend({
     }
   },
 
-  @computed
+  @discourseComputed
   bounceLink() {
     return Discourse.getURL("/admin/email/bounced");
   },
 
-  canResetBounceScore: Ember.computed.gt("bounce_score", 0),
+  canResetBounceScore: gt("bounce_score", 0),
 
   resetBounceScore() {
     return ajax(`/admin/users/${this.id}/reset_bounce_score`, {
@@ -60,16 +56,6 @@ const AdminUser = Discourse.User.extend({
         reset_bounce_score_after: null
       })
     );
-  },
-
-  generateApiKey() {
-    return ajax(`/admin/users/${this.id}/generate_api_key`, {
-      type: "POST"
-    }).then(result => {
-      const apiKey = ApiKey.create(result.api_key);
-      this.set("api_key", apiKey);
-      return apiKey;
-    });
   },
 
   groupAdded(added) {
@@ -227,14 +213,14 @@ const AdminUser = Discourse.User.extend({
       .catch(popupAjaxError);
   },
 
-  approve() {
+  approve(approvedBy) {
     return ajax(`/admin/users/${this.id}/approve`, {
       type: "PUT"
     }).then(() => {
       this.setProperties({
         can_approve: false,
         approved: true,
-        approved_by: Discourse.User.current()
+        approved_by: approvedBy
       });
     });
   },
@@ -243,12 +229,12 @@ const AdminUser = Discourse.User.extend({
     this.set("originalTrustLevel", this.trust_level);
   },
 
-  dirty: propertyNotEqual("originalTrustLevel", "trustLevel.id"),
+  dirty: propertyNotEqual("originalTrustLevel", "trust_level"),
 
   saveTrustLevel() {
     return ajax(`/admin/users/${this.id}/trust_level`, {
       type: "PUT",
-      data: { level: this.get("trustLevel.id") }
+      data: { level: this.trust_level }
     })
       .then(() => window.location.reload())
       .catch(e => {
@@ -266,7 +252,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   restoreTrustLevel() {
-    this.set("trustLevel.id", this.originalTrustLevel);
+    this.set("trust_level", this.originalTrustLevel);
   },
 
   lockTrustLevel(locked) {
@@ -289,11 +275,11 @@ const AdminUser = Discourse.User.extend({
       });
   },
 
-  canLockTrustLevel: Ember.computed.lt("trust_level", 4),
+  canLockTrustLevel: lt("trust_level", 4),
 
-  canSuspend: Ember.computed.not("staff"),
+  canSuspend: not("staff"),
 
-  @computed("suspended_till", "suspended_at")
+  @discourseComputed("suspended_till", "suspended_at")
   suspendDuration(suspendedTill, suspendedAt) {
     suspendedAt = moment(suspendedAt);
     suspendedTill = moment(suspendedTill);
@@ -519,7 +505,7 @@ const AdminUser = Discourse.User.extend({
 
   loadDetails() {
     if (this.loadedDetails) {
-      return Ember.RSVP.resolve(this);
+      return Promise.resolve(this);
     }
 
     return AdminUser.find(this.id).then(result => {
@@ -528,20 +514,20 @@ const AdminUser = Discourse.User.extend({
     });
   },
 
-  @computed("tl3_requirements")
+  @discourseComputed("tl3_requirements")
   tl3Requirements(requirements) {
     if (requirements) {
       return this.store.createRecord("tl3Requirements", requirements);
     }
   },
 
-  @computed("suspended_by")
+  @discourseComputed("suspended_by")
   suspendedBy: wrapAdmin,
 
-  @computed("silenced_by")
+  @discourseComputed("silenced_by")
   silencedBy: wrapAdmin,
 
-  @computed("approved_by")
+  @discourseComputed("approved_by")
   approvedBy: wrapAdmin,
 
   _formatError(event) {
@@ -557,9 +543,9 @@ AdminUser.reopenClass({
     });
   },
 
-  findAll(query, filter) {
+  findAll(query, userFilter) {
     return ajax(`/admin/users/list/${query}.json`, {
-      data: filter
+      data: userFilter
     }).then(users => users.map(u => AdminUser.create(u)));
   }
 });

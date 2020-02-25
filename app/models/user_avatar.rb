@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'letter_avatar'
-require_dependency 'upload_creator'
-
 class UserAvatar < ActiveRecord::Base
   belongs_to :user
   belongs_to :gravatar_upload, class_name: 'Upload'
@@ -43,7 +40,8 @@ class UserAvatar < ActiveRecord::Base
             tempfile,
             "gravatar#{ext}",
             origin: gravatar_url,
-            type: "avatar"
+            type: "avatar",
+            for_gravatar: true
           ).create_for(user_id)
 
           if gravatar_upload_id != upload.id

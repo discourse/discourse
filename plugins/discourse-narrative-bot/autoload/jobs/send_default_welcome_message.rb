@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class SendDefaultWelcomeMessage < Jobs::Base
+  class SendDefaultWelcomeMessage < ::Jobs::Base
     def execute(args)
       if user = User.find_by(id: args[:user_id])
         type = user.invited_by ? 'welcome_invite' : 'welcome_user'
@@ -9,7 +9,7 @@ module Jobs
 
         title = I18n.t("system_messages.#{type}.subject_template", params)
         raw = I18n.t("system_messages.#{type}.text_body_template", params)
-        discobot_user = User.find(-2)
+        discobot_user = ::DiscourseNarrativeBot::Base.new.discobot_user
 
         post = PostCreator.create!(
           discobot_user,

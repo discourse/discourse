@@ -7,7 +7,7 @@
 
 de:
   site_settings:
-    discourse_narrative_bot_enabled: 'Aktiviere den Discourse Lerntrainings-Bot (discobot)'
+    discourse_narrative_bot_enabled: "Aktiviere den Discourse Lerntrainings-Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Die vom Discourse Narrative Bot gesendete Willkommensnachricht deaktivieren"
     discourse_narrative_bot_ignored_usernames: "Benutzernamen, die vom Discourse Narrative Bot ignoriert werden sollen"
     discourse_narrative_bot_disable_public_replies: "Öffentliche Antworten von Discourse Narrative Bot deaktivieren"
@@ -26,6 +26,8 @@ de:
         Das Abzeichen wird verliehen, wenn das interaktive Tutorial für fortgeschrittene Benutzer erfolgreich abgeschlossen wurde. Du beherrscht die fortgeschrittenen Werkzeuge für Diskussionen erlernt und besitzt nun die Lizenz zum Diskutieren.
   discourse_narrative_bot:
     bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne irgendwo **`@%{discobot_username}`**, um mit mir zu interagieren."
+    tl2_promotion_message:
+      subject_template: "Herzlichen Glückwunsch zur Beförderung ihrer Vertrauensstufe!"
     timeout:
       message: |-
         Hallo @%{username}! Ich wollte mich nur wieder einmal melden, weil ich schon länger nichts von dir gehört habe.
@@ -82,7 +84,7 @@ de:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'Vorhersage'
+      trigger: "Vorhersage"
       answers:
         '1': "Es ist sicher"
         '2': "Es ist entschieden so"
@@ -107,25 +109,17 @@ de:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'starte'
-      skip_trigger: 'überspringen'
-      help_trigger: 'Hilfe anzeigen'
+      reset_trigger: "starte"
+      skip_trigger: "überspringen"
+      help_trigger: "Hilfe anzeigen"
       random_mention:
         reply: |-
           Hallo! Um herauszufinden, was ich kann, schreibe `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           Ich weiß jetzt, wie man die folgenden Dinge macht:
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`> Startet eins der folgenden interaktiven Tutorials: %{tracks}.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Wie angenehm ist es doch, freundlich zu sein! Ein gutes Wort entschlüpft wie ein wohliger Seufzer._ &mdash; Bertolt Brecht
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Darauf kannst du dich verlassen
+          `@%{discobot_username} %{reset_trigger} {Name-des-Tutorials}`
+          > Startet ein interaktives Tutorial. `{Name-des-Tutorials}` kann eins von: `%{tracks}` sein.
       do_not_understand:
         first_response: |-
           Danke für die Antwort!
@@ -151,7 +145,7 @@ de:
 
           - Aus Sicherheitsgründen limitieren wir, was neue Benutzer machen können. Du bekommst [neue Fähigkeiten](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) und [Abzeichen](%{base_uri}/badges)), wenn wir dich besser kennenlernen.
 
-          - Wir glauben an  [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu jeder Zeit.
+          - Wir glauben an [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu jeder Zeit.
       onebox:
         instructions: |-
           Als Nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile**, und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.
@@ -222,7 +216,7 @@ de:
           Das Auswählen von beliebigem Text in meinem Beitrag lässt die <kbd>**Zitat**</kbd>-Schaltfläche erscheinen. Und das Drücken von **Antworten** mit einem beliebigen ausgewählten Text wird auch funktionieren! Kannst du es nochmal versuchen?
       bookmark:
         instructions: |-
-          Wenn du gerne mehr darüber erfahren möchtest, wähle unten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">   aus und klicke auf <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **Lesezeichen für diese Nachricht**.  Wenn du das machst, wird es demnächst vielleicht ein :gift: geben!
+          Wenn du gerne mehr darüber erfahren möchtest, wähle unten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> aus und klicke auf <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **Lesezeichen für diese Nachricht**. Wenn du das machst, wird es demnächst vielleicht ein :gift: geben!
         reply: |-
           Hervorragend! Jetzt kannst du jederzeit über [den Lesezeichen-Reiter in deinem Profil](%{profile_page_url}/activity/bookmarks) zu unserer Unterhaltung zurückkehren. Gehe dazu einfach auf dein Profilbild oben rechts &#8599;.
         not_found: |-
@@ -252,7 +246,7 @@ de:
 
           Kannst du **`@%{discobot_username}`** in deiner Antwort erwähnen?
         reply: |-
-          _Hat jemand meinen Namen gesagt!?_ :raised_hand: Ich glaube du warst das! :wave: Nun, hier bin ich! Danke, dass du mich erwähnt hast.  :ok_hand:
+          _Hat jemand meinen Namen gesagt!?_ :raised_hand: Ich glaube du warst das! :wave: Nun, hier bin ich! Danke, dass du mich erwähnt hast. :ok_hand:
         not_found: |-
           Ich sehe meinen Namen darin nicht :frowning: Kannst du nochmal versuchen, mich als `@%{discobot_username}` zu erwähnen?
 
@@ -274,11 +268,11 @@ de:
 
           Versuche, in diesem Thema nach dem Begriff „Capy&#8203;bara“ zu suchen.
         hidden_message: |-
-          Wie konntest du das Capybara übersehen? :wink:
+          Wie konntest du das Capybara übersehen? :zwinkern:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Hast du bemerkt, dass du jetzt zurück am Anfang bist? Füttere dieses arme, hungrige Capybara, indem du **mit dem `:herb:`-Emoji antwortest** und du wirst automatisch zum Ende gebracht.
+          Hast du gemerkt, dass du jetzt wieder am Anfang bist? Füttere diesen armen hungrigen Capybara, indem du **mit dem `%{search_answer}` Emoji antwortest**, und du wirst automatisch zum Ende gebracht.
         reply: |-
           Juhu! Du hast es gefunden :tada:
 
@@ -291,21 +285,21 @@ de:
           Hm… es sieht so aus, als hättest du Schwierigkeiten. Das tut mir leid. Hast du nach dem Begriff **Capy&#8203;bara** gesucht <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">?
       end:
         message: |-
-          Danke, dass du mir treu geblieben bist,  @%{username}! Ich habe dies für dich gemacht. Ich denke, du hast es verdient:
+          Danke, dass du mir treu geblieben bist, @%{username}! Ich habe dies für dich gemacht. Ich denke, du hast es verdient:
 
           %{certificate}
 
-          Das ist erstmal alles für den Augenblick! Aber schau dir doch [**unsere neuesten Diskussionsthemen**]((%{base_uri}/latest) oder [**Diskussionskategorien**](%{base_uri}/categories) an. :sunglasses:
+          Das ist erstmal alles für den Augenblick! Aber schau dir doch [**unsere neuesten Diskussionsthemen**](%{base_uri}/latest) oder [**Diskussionskategorien**](%{base_uri}/categories) an. :sunglasses:
 
           (Wenn du wieder mit mir sprechen möchtest, um noch mehr zu lernen, schreibe mir einfach eine Nachricht oder erwähne `@%{discobot_username}` zu jeder Zeit!)
       certificate:
-        alt: 'Urkunde'
+        alt: "Urkunde"
     advanced_user_narrative:
-      reset_trigger: 'fortgeschrittenes Tutorial'
+      reset_trigger: "fortgeschrittenes Tutorial"
       cert_title: "In Anerkennung des erfolgreichen Abschlusses des Tutorials für fortgeschrittene Benutzer"
-      title: ':arrow_up: Fortgeschrittene Benutzerfunktionen'
+      title: ":arrow_up: Fortgeschrittene Benutzerfunktionen"
       start_message: |-
-        Als ein _fortgeschrittener_ Benutzer hast du dir sicherlich schon die [Benutzer-Einstellungen](%{base_uri}/my/preferences) angesehen @%{username}oder? Dort gibt es eine Vielzahl an Möglichkeiten, um alles an deine Bedürfnisse anzupassen. Unter anderem kannst du ein helles oder dunkles Design auswählen.
+        Als ein _fortgeschrittener_ Benutzer hast du dir sicherlich schon die [Benutzer-Einstellungen](%{base_uri}/my/preferences) angesehen @%{username} oder? Dort gibt es eine Vielzahl an Möglichkeiten, um alles an deine Bedürfnisse anzupassen. Unter anderem kannst du ein helles oder dunkles Design auswählen.
 
         Aber ich schweife ab. Lass uns beginnen!
       edit:
@@ -334,13 +328,13 @@ de:
 
           Um die Kontinuität deiner Diskussionen zu bewahren, werden Löschungen nicht sofort durchgeführt. Gelöschte Beiträge werden erst nach einer gewissen Zeit entfernt.
       recover:
-        deleted_post_raw: 'Warum hat @%{discobot_username} meinen Beitrag gelöscht? :anguished:'
+        deleted_post_raw: "Warum hat @%{discobot_username} meinen Beitrag gelöscht? :anguished:"
         instructions: |-
           Oh nein! Es sieht so aus als hätte ich versehentlich einen neuen Beitrag gelöscht, den ich gerade für dich erstellt hatte.
 
           Kannst du mir einen Gefallen tun und ihn <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **wiederherstellen**?
         not_found: |-
-          Hast du Schwierigkeiten? Denk daran, dass <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> „Mehr anzeigen“ auch die Aktion <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">  „Wiederherstellen“ anzeigt.
+          Hast du Schwierigkeiten? Denk daran, dass <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> „Mehr anzeigen“ auch die Aktion <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> „Wiederherstellen“ anzeigt.
         reply: |-
           Puh, dass war knapp! Danke für's Beheben :wink:
 
@@ -427,4 +421,4 @@ de:
 
           Bis bald! Wenn du wieder mit mir sprechen möchtest, schicke mir jederzeit eine Nachricht :sunglasses:
       certificate:
-        alt: 'Urkunde für fortgeschrittene Benutzer'
+        alt: "Urkunde für fortgeschrittene Benutzer"

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
@@ -50,7 +48,6 @@ class Group < ActiveRecord::Base
   end
 
   def remove_review_groups
-    puts self.id!
     Category.where(review_group_id: self.id).update_all(review_group_id: nil)
     Category.where(review_group_id: self.id).update_all(review_group_id: nil)
   end
@@ -83,15 +80,17 @@ class Group < ActiveRecord::Base
     only_admins: 1,
     mods_and_admins: 2,
     members_mods_and_admins: 3,
+    owners_mods_and_admins: 4,
     everyone: 99
   }
 
   def self.visibility_levels
     @visibility_levels = Enum.new(
       public: 0,
-      members: 1,
-      staff: 2,
-      owners: 3
+      logged_on_users: 1,
+      members: 2,
+      staff: 3,
+      owners: 4
     )
   end
 
@@ -105,49 +104,105 @@ class Group < ActiveRecord::Base
       groups = groups.where("groups.id > 0")
     end
 
-    unless user&.admin
+    if !user&.admin
       sql = <<~SQL
         groups.id IN (
-          SELECT g.id FROM groups g WHERE g.visibility_level = :public
+          SELECT id
+            FROM groups
+           WHERE visibility_level = :public
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id
-          WHERE g.visibility_level = :members
+          SELECT id
+            FROM groups
+           WHERE visibility_level = :logged_on_users
+             AND :user_id IS NOT NULL
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          LEFT JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id AND
-                                 gu.owner
-          WHERE g.visibility_level = :staff AND (gu.id IS NOT NULL OR :is_staff)
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
+           WHERE g.visibility_level = :members
 
           UNION ALL
 
-          SELECT g.id FROM groups g
-          JOIN group_users gu ON gu.group_id = g.id AND
-                                 gu.user_id = :user_id AND
-                                 gu.owner
-          WHERE g.visibility_level = :owners
+          SELECT g.id
+            FROM groups g
+       LEFT JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.visibility_level = :staff
+             AND (gu.id IS NOT NULL OR :is_staff)
 
+          UNION ALL
+
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.visibility_level = :owners
         )
       SQL
 
-      groups = groups.where(
-        sql,
-        Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
-      )
-
+      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      groups = groups.where(sql, params)
     end
 
     groups
   }
 
-  scope :mentionable, lambda { |user|
-    where(self.mentionable_sql_clause,
+  scope :members_visible_groups, Proc.new { |user, order, opts|
+    groups = self.order(order || "name ASC")
+
+    if !opts || !opts[:include_everyone]
+      groups = groups.where("groups.id > 0")
+    end
+
+    if !user&.admin
+      sql = <<~SQL
+        groups.id IN (
+          SELECT id
+            FROM groups
+           WHERE members_visibility_level = :public
+
+          UNION ALL
+
+          SELECT id
+            FROM groups
+           WHERE members_visibility_level = :logged_on_users
+             AND :user_id IS NOT NULL
+
+          UNION ALL
+
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
+           WHERE g.members_visibility_level = :members
+
+          UNION ALL
+
+          SELECT g.id
+            FROM groups g
+       LEFT JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.members_visibility_level = :staff
+             AND (gu.id IS NOT NULL OR :is_staff)
+
+          UNION ALL
+
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.members_visibility_level = :owners
+        )
+      SQL
+
+      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      groups = groups.where(sql, params)
+    end
+
+    groups
+  }
+
+  scope :mentionable, lambda { |user, include_public: true|
+    where(self.mentionable_sql_clause(include_public: include_public),
       levels: alias_levels(user),
       user_id: user&.id
     )
@@ -158,35 +213,52 @@ class Group < ActiveRecord::Base
           (
             messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
+          ) OR (
+            messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
           )", levels: alias_levels(user), user_id: user && user.id)
   }
 
-  def self.mentionable_sql_clause
-    <<~SQL
-    mentionable_level in (:levels)
-    OR (
-      mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
-      AND id in (
-        SELECT group_id FROM group_users WHERE user_id = :user_id)
+  def self.mentionable_sql_clause(include_public: true)
+    clause = +<<~SQL
+      mentionable_level in (:levels)
+      OR (
+        mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
+        AND id in (
+          SELECT group_id FROM group_users WHERE user_id = :user_id)
+      ) OR (
+        mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
+        AND id in (
+          SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
       )
-    SQL
+      SQL
+
+    if include_public
+      clause << "OR visibility_level = #{Group.visibility_levels[:public]}"
+    end
+
+    clause
   end
 
   def self.alias_levels(user)
-    levels = [ALIAS_LEVELS[:everyone]]
-
-    if user && user.admin?
-      levels = [ALIAS_LEVELS[:everyone],
-                ALIAS_LEVELS[:only_admins],
-                ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
-    elsif user && user.moderator?
-      levels = [ALIAS_LEVELS[:everyone],
-                ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+    if user&.admin?
+      [
+        ALIAS_LEVELS[:everyone],
+        ALIAS_LEVELS[:only_admins],
+        ALIAS_LEVELS[:mods_and_admins],
+        ALIAS_LEVELS[:members_mods_and_admins],
+        ALIAS_LEVELS[:owners_mods_and_admins],
+      ]
+    elsif user&.moderator?
+      [
+        ALIAS_LEVELS[:everyone],
+        ALIAS_LEVELS[:mods_and_admins],
+        ALIAS_LEVELS[:members_mods_and_admins],
+        ALIAS_LEVELS[:owners_mods_and_admins],
+      ]
+    else
+      [ALIAS_LEVELS[:everyone]]
     end
-
-    levels
   end
 
   def self.plugin_editable_group_custom_fields
@@ -290,6 +362,25 @@ class Group < ActiveRecord::Base
     (10..19).to_a
   end
 
+  def set_message_default_notification_levels!(topic, ignore_existing: false)
+    group_users.pluck(:user_id, :notification_level).each do |user_id, notification_level|
+      next if user_id == -1
+      next if user_id == topic.user_id
+      next if ignore_existing && TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
+
+      action =
+        case notification_level
+        when TopicUser.notification_levels[:tracking] then "track!"
+        when TopicUser.notification_levels[:regular]  then "regular!"
+        when TopicUser.notification_levels[:muted]    then "mute!"
+        when TopicUser.notification_levels[:watching] then "watch!"
+        else "track!"
+        end
+
+      topic.notifier.public_send(action, user_id)
+    end
+  end
+
   def self.refresh_automatic_group!(name)
     return unless id = AUTO_GROUPS[name]
 
@@ -323,6 +414,8 @@ class Group < ActiveRecord::Base
     when :moderators
       group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
+
+    group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) if group.visibility_level == Group.visibility_levels[:public]
 
     # Remove people from groups they don't belong in.
     remove_subquery =
@@ -523,8 +616,19 @@ class Group < ActiveRecord::Base
 
   PUBLISH_CATEGORIES_LIMIT = 10
 
-  def add(user)
+  def add(user, notify: false, automatic: false)
     self.users.push(user) unless self.users.include?(user)
+
+    if notify
+      Notification.create!(
+        notification_type: Notification.types[:membership_request_accepted],
+        user_id: user.id,
+        data: {
+          group_id: id,
+          group_name: name
+        }.to_json
+      )
+    end
 
     if self.categories.count < PUBLISH_CATEGORIES_LIMIT
       MessageBus.publish('/categories', {
@@ -534,12 +638,15 @@ class Group < ActiveRecord::Base
       Discourse.request_refresh!(user_ids: [user.id])
     end
 
+    DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)
+
     self
   end
 
   def remove(user)
     self.group_users.where(user: user).each(&:destroy)
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
+    DiscourseEvent.trigger(:user_removed_from_group, user, self)
   end
 
   def add_owner(user)
@@ -617,9 +724,9 @@ class Group < ActiveRecord::Base
   end
 
   def self.member_of(groups, user)
-    groups.joins(
-      "LEFT JOIN group_users gu ON gu.group_id = groups.id
-    ").where("gu.user_id = ?", user.id)
+    groups
+      .joins("LEFT JOIN group_users gu ON gu.group_id = groups.id ")
+      .where("gu.user_id = ?", user.id)
   end
 
   def self.owner_of(groups, user)
@@ -640,7 +747,6 @@ class Group < ActiveRecord::Base
   protected
 
   def name_format_validator
-
     return if !name_changed?
 
     # avoid strip! here, it works now
@@ -796,9 +902,11 @@ end
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
+#  publish_read_state                 :boolean          default(FALSE), not null
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  members_visibility_level           :integer          default(0), not null
 #
 # Indexes
 #

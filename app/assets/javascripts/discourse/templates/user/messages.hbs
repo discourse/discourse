@@ -58,41 +58,53 @@
 <section class='user-content'>
 
 <div class="list-actions">
-  
+
     {{#unless site.mobileView}}
       {{#if showToggleBulkSelect}}
-        <button {{action "toggleBulkSelect"}} class="btn btn-default bulk-select no-text" title="{{i18n "user.messages.bulk_select"}}">
-          {{d-icon "list"}}
-        </button>
+        {{d-button
+          class="btn-default bulk-select"
+          action=(action "toggleBulkSelect")
+          title="user.messages.bulk_select"
+          icon="list"}}
       {{/if}}
     {{/unless}}
 
     {{#if site.mobileView}}
       {{#if showNewPM}}
-        {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+        {{d-button
+          class="btn-primary new-private-message"
+          action=(route-action "composePrivateMessage")
+          icon="envelope"
+          label="user.new_private_message"}}
       {{/if}}
     {{/if}}
 
     {{#if canArchive}}
-    <button {{action "archive"}} class="btn btn-default btn-archive">
-      {{i18n "user.messages.move_to_archive"}}
-    </button>
+      {{d-button
+        class="btn-default btn-archive"
+        action=(action "archive")
+        label="user.messages.move_to_archive"}}
     {{/if}}
 
     {{#if canMoveToInbox}}
-    <button {{action "toInbox"}} class="btn btn-default btn-to-inbox">
-      {{i18n "user.messages.move_to_inbox"}}
-    </button>
+      {{d-button
+        class="btn-default btn-to-inbox"
+        action=(action "toInbox")
+        label="user.messages.move_to_inbox"}}
     {{/if}}
 
     {{#if bulkSelectEnabled}}
-    <button {{action "selectAll"}} class="btn btn-default btn-select-all">
-      {{i18n "user.messages.select_all"}}
-    </button>
+      {{d-button
+        class="btn-default btn-select-all"
+        action=(action "selectAll")
+        label="user.messages.select_all"}}
     {{/if}}
 
     {{#if isGroup}}
-      {{group-notifications-button value=group.group_user.notification_level group=group user=model}}
+      {{group-notifications-button
+        value=group.group_user.notification_level
+        onChange=(action "changeGroupNotificationLevel")
+      }}
     {{/if}}
 </div>
 

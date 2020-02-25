@@ -35,6 +35,9 @@
 
 .login-modal,
 .create-account {
+  tbody {
+    border: none;
+  }
   tr {
     border: none;
   }
@@ -167,4 +170,22 @@ button#login-link,
 button#new-account-link {
   background: transparent;
   color: $primary-high;
+}
+
+#security-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  button {
+    margin-right: 1.5em;
+  }
+  p {
+    margin: 0;
+    font-size: $font-0;
+  }
+  a {
+    display: inline-block;
+    padding: 1em 0.5em 1em 0;
+    color: $tertiary;
+  }
 }

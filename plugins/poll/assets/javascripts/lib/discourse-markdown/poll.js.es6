@@ -10,6 +10,8 @@ const WHITELISTED_ATTRIBUTES = [
   "order",
   "public",
   "results",
+  "chartType",
+  "groups",
   "status",
   "step",
   "type"

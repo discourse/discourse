@@ -1,20 +1,22 @@
+import EmberObject from "@ember/object";
+import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Controller.extend({
-  @computed("model.@each.id")
+export default Controller.extend({
+  @discourseComputed("model.@each.id")
   baseColorScheme() {
     return this.model.findBy("is_base", true);
   },
 
-  @computed("model.@each.id")
+  @discourseComputed("model.@each.id")
   baseColorSchemes() {
     return this.model.filterBy("is_base", true);
   },
 
-  @computed("baseColorScheme")
+  @discourseComputed("baseColorScheme")
   baseColors(baseColorScheme) {
-    const baseColorsHash = Ember.Object.create({});
+    const baseColorsHash = EmberObject.create({});
     baseColorScheme.get("colors").forEach(color => {
       baseColorsHash.set(color.get("name"), color);
     });

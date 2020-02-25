@@ -1,0 +1,51 @@
+{{#d-modal-body}}
+<section class="user-preferences solo-preference  second-factor-backup-preferences">
+  <form class="form-horizontal">
+    {{#if successMessage}}
+      <div class="alert alert-success">
+        {{successMessage}}
+      </div>
+    {{/if}}
+
+    {{#if errorMessage}}
+      <div class="alert alert-error">
+        {{errorMessage}}
+      </div>
+    {{/if}}
+
+    {{#if backupEnabled}}
+      {{{i18n "user.second_factor_backup.remaining_codes" count=remainingCodes}}}
+    {{/if}}
+
+    <div class="actions">
+      {{d-button
+        class="btn-primary"
+        action=(action "generateSecondFactorCodes")
+        type="submit"
+        disabled=loading
+        label=generateBackupCodeBtnLabel}}
+      {{#if backupEnabled}}
+        {{d-button
+          class="btn-danger"
+          action=(action "disableSecondFactorBackup")
+          disabled=loading
+          label="user.second_factor_backup.disable"}}
+      {{/if}}
+    </div>
+
+    {{#conditional-loading-section isLoading=loading}}
+      {{#if backupCodes}}
+        <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
+
+        <p>
+          {{i18n "user.second_factor_backup.codes.description"}}
+        </p>
+
+        {{backup-codes
+          copyBackupCode=(action "copyBackupCode")
+          backupCodes=backupCodes}}
+      {{/if}}
+    {{/conditional-loading-section}}
+  </form>
+</section>
+{{/d-modal-body}}

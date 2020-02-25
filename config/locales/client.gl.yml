@@ -130,7 +130,6 @@ gl:
       visible:
         enabled: "listado o %{when}"
         disabled: "retirado da lista o %{when}"
-    topic_admin_menu: "accións do administrador de temas"
     emails_are_disabled: "Todos os correos electrónicos saíntes foron desactivados globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     themes:
       default_description: "Predeterminado"
@@ -199,6 +198,7 @@ gl:
       stats: "Estatísticas do sitio"
       our_admins: "Administradores"
       our_moderators: "Os moderadores"
+      moderators: "Moderadores"
       stat:
         all_time: "Todos"
       like_count: "Gústames"
@@ -217,6 +217,7 @@ gl:
     bookmarks:
       created: "engadiches aos marcadores esta publicación"
       remove: "Eliminar marcador"
+      save: "Gardar"
     drafts:
       remove: "Eliminar"
       abandon:
@@ -241,9 +242,9 @@ gl:
       edit: "Editar este báner »"
     choose_topic:
       none_found: "Non se atoparon temas."
-      title:
-        placeholder: "escribe o título do tema aquí"
     review:
+      explain:
+        total: "Total"
       delete: "Eliminar"
       settings:
         save_changes: "Gardar os cambios"
@@ -358,7 +359,7 @@ gl:
           description: "Notificaráseche cada publicación nova en cada mensaxe e amosarase o número de novas respostas."
         tracking:
           title: "Seguimento"
-          description: "Notificaráseche se alguén menciona o teu @nome ou che responde e tamén  aparecerá o número de novas respostas."
+          description: "Notificaráseche se alguén menciona o teu @nome ou che responde e tamén aparecerá o número de novas respostas."
         regular:
           title: "Normal"
           description: "Notificaráseche se alguén menciona o teu @nome ou che responde."
@@ -429,6 +430,10 @@ gl:
         normal_option: "Normal"
       activity_stream: "Actividade"
       preferences: "Preferencias"
+      feature_topic_on_profile:
+        save: "Gardar"
+        clear:
+          title: "Borrar"
       expand_profile: "Expandir"
       bookmarks: "Marcadores"
       bio: "Verbo de min"
@@ -451,7 +456,7 @@ gl:
       change: "cambiar"
       moderator: "{{user}} é moderador"
       admin: "{{user}} é administrador"
-      moderator_tooltip: "Este usuario é  un moderador"
+      moderator_tooltip: "Este usuario é un moderador"
       admin_tooltip: "Este usuario é un administrador"
       suspended_notice: "Este usuario está suspendido até o {{date}}."
       suspended_reason: "Razón:"
@@ -470,7 +475,7 @@ gl:
       users: "Usuarios"
       muted_users: "Silenciado"
       muted_users_instructions: "Suprimir todas as notificacións destes usuarios."
-      muted_topics_link: "Amosar os temas silenciados"
+      tracked_topics_link: "Amosar"
       automatically_unpin_topics: "Despegar os temas automaticamente cando alcance o fondo."
       staff_counters:
         flags_given: "denuncias útiles"
@@ -505,6 +510,11 @@ gl:
         regenerate: "Rexenerar"
         disable: "Desactivar"
         enable: "Activar"
+      second_factor:
+        name: "Nome"
+        edit: "Editar"
+        security_key:
+          delete: "Eliminar"
       change_about:
         title: "Cambiar «Verbo de min»"
       change_username:
@@ -525,11 +535,7 @@ gl:
         uploaded_avatar: "Imaxe personalizada"
         uploaded_avatar_empty: "Engadir unha imaxe personalizada"
         upload_title: "Envía a túa imaxe"
-        upload_picture: "Enviar imaxe"
         image_is_not_a_square: "Aviso: recortamos a túa imaxe; a largura e a altura eran distintas."
-      change_profile_background:
-        title: "Fondo do perfil"
-        instructions: "Os fondos dos perfís centraranse e terán unha largura predeterminada de 850px."
       change_card_background:
         title: "Fondo das fichas dos usuarios"
         instructions: "As imaxes dos fondos centraranse e terán unha largura predeterminada de 590px."
@@ -544,6 +550,7 @@ gl:
           other: "Só che eviaremos un correo-e se non te vimos nos últimos {{count}} minutos."
       associated_accounts:
         revoke: "Revogar"
+        cancel: "Cancelar"
       name:
         title: "Nome"
         instructions_required: "Nome completo"
@@ -617,14 +624,13 @@ gl:
         after_1_minute: "despois de 1 minuto"
         after_2_minutes: "despois de 2 minutos"
         after_3_minutes: "despois de 3 minutos"
-        after_4_minutes: "despois de 4  minutos"
+        after_4_minutes: "despois de 4 minutos"
         after_5_minutes: "despois de 5 minutos"
         after_10_minutes: "despois de 10 minutos"
       invited:
         search: "escribir para buscar convites..."
         title: "Convites"
         user: "Usuario convidado"
-        sent: "Enviado"
         truncated:
           one: "Amosando o primeiro convite."
           other: "Amosando os primeiros {{count}} convites."
@@ -679,6 +685,8 @@ gl:
         header_title: "perfil, mensaxes, marcadores e preferencias"
       title:
         title: "Título"
+      primary_group:
+        title: "Grupo primario"
       filters:
         all: "Todo"
       stream:
@@ -767,8 +775,6 @@ gl:
       reset: "Restabelecer contrasinal"
       complete_username: "Se unha conta corresponde ao nome de usuario <b>%{username}</b>, deberas recibir en breve un correo-e coas instrucións sobre como restabelecer o teu contrasinal."
       complete_email: "Se unha conta coincide con <b>%{email}</b>, deberías recibir en breve un correo-e con instrucións sobre como restabelecer o teu contrasinal."
-      complete_username_found: "Atopamos unha conta co mesmo nome de usuario <b>%{username}</b>, deberas recibir en breve un correo-e coas instrucións sobre como restabelecer o teu contrasinal."
-      complete_email_found: "Atopamos unha conta que coincide con <b>%{email}</b>, deberas recibir en breve unha mensaxe coas instrucións sobre como restabelecer o contrasinal."
       complete_username_not_found: "Ningunha conta coincide co nome do usuario <b>%{username}</b>"
       complete_email_not_found: "Ningunha conta coincide co <b>%{email}</b>"
       button_ok: "De acordo"
@@ -803,20 +809,15 @@ gl:
       google_oauth2:
         name: "Google"
         title: "co Google"
-        message: "Autenticación mediante Google (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
       twitter:
         name: "Twitter"
         title: "co Twitter"
-        message: "Autenticación mediante Twitter (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
       instagram:
         title: "con Instagram"
-        message: "Autenticación con Instagram (asegúrate que os bloqueadores de publicidade estean desactivados)"
       facebook:
         title: "co Facebook"
-        message: "Autenticación mediante Facebook (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
       github:
         title: "co GitHub"
-        message: "Autenticación mediante Github (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
     invites:
       welcome_to: "Benvido/a a %{site_name}!"
       name_label: "Nome"
@@ -827,13 +828,15 @@ gl:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: "Maiús."
       ctrl: "Ctrl"
       alt: "Alt"
     conditional_loading_section:
       loading: Cargando...
+    date_time_picker:
+      from: De
+      to: A
     emoji_picker:
       flags: Denuncias
     composer:
@@ -852,7 +855,6 @@ gl:
         title_missing: "O título é obrigatorio"
         title_too_short: "O título debe ter alomenos {{min}} caracteres"
         title_too_long: "O título non debe ter máis de {{max}} caracteres"
-        post_missing: "A publicación non pode estar baleira"
         post_length: "A publicación debe ter alomenos {{min}} caracteres"
         category_missing: "Debes seleccionar unha categoría"
       save_edit: "Gardar a edición"
@@ -866,12 +868,10 @@ gl:
       users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión nunha soa frase?"
       edit_reason_placeholder: "por que estás editando?"
-      show_edit_reason: "(engadir unha razón para editar)"
       reply_placeholder: "Escribe aquí. Usa Markdown, BBCode ou HTML para formatar. Arrastra ou pega imaxes."
       view_new_post: "Ver a nova publicación."
       saving: "Gardando"
       saved: "Gardado!"
-      saved_draft: "A publicación do borrador está en proceso. Selecciona continuar."
       uploading: "Enviando..."
       show_preview: "amosar visualización &raquo;"
       hide_preview: "&laquo; ocultar previsualización"
@@ -906,7 +906,6 @@ gl:
     notifications:
       title: "notificacións das mencións ao teu @nome, respostas ás túas publicacións e temas, mensaxes, etc"
       none: "Non é posíbel cargar as notificacións neste intre"
-      more: "ver notificacións anteriores"
       popup:
         mentioned: '{{username}} mencionoute en "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionoute en "{{topic}}" - {{site_title}}'
@@ -929,7 +928,6 @@ gl:
       hint_for_supported_browsers: "tamén podes arrastrar e soltar ou pegar imaxes no editor"
       uploading: "Enviando"
       select_file: "Seleccionar ficheiro"
-      image_link: "ligazón onde levará a túa imaxe"
       default_image_alt_text: imaxe
     search:
       sort_by: "Ordenar por"
@@ -1111,6 +1109,7 @@ gl:
           title: "Silenciado"
           description: "Non se che notificará nada sobre este tema e non aparecerá no listado de últimos."
       actions:
+        title: "Accións"
         recover: "Recuperar tema"
         delete: "Eliminar tema"
         open: "Abrir tema"
@@ -1273,6 +1272,8 @@ gl:
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir anexos."
         attachment_download_requires_login: "Sentímolo pero debes iniciar sesión para descargar anexos."
+      abandon_edit:
+        no_value: "Non, seguir"
       abandon:
         confirm: "Confirmas o abandono da túa publicación?"
         no_value: "Non, seguir"
@@ -1323,7 +1324,6 @@ gl:
           notify_moderators: "moderadores notificados"
           notify_user: "enviou unha mensaxe"
           bookmark: "marcou isto"
-          like: "gustou disto"
         by_you:
           off_topic: "Informaches disto como non relacionado"
           spam: "Denunciaches isto como spam"
@@ -1348,6 +1348,8 @@ gl:
             title: "Amosar o resultado coas diferenzas comparadas"
           side_by_side_markdown:
             title: "Amosar a fonte crúa coas diferenzas comparadas"
+      bookmarks:
+        name: "Nome"
     category:
       can: "podes&hellip; "
       none: "(sen categoría)"
@@ -1641,16 +1643,8 @@ gl:
           name: Outro
         posting:
           name: Publicación
-    google_search: |
-      <h3>Buscar no Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
     tagging:
+      add_synonyms: "Engadir"
       cancel_delete_unused: "Cancelar"
       notifications:
         watching:
@@ -1725,8 +1719,6 @@ gl:
           all: "Todo"
           view_table: "táboa"
           refresh_report: "Actualiza informe"
-          start_date: "Data de inicio"
-          end_date: "Data de remate"
           groups: "Todos os grupos"
           filters:
             group:
@@ -1749,7 +1741,6 @@ gl:
               public: "Todos"
           membership:
             automatic: Automático
-            trust_level: Nivel de confianza
             trust_levels_title: "Nivel de confianza automático concedido aos membros cando son engadidos:"
             trust_levels_none: "Ningún"
             automatic_membership_email_domains: "Os usuarios que se rexistraron cun dominio de correo electrónico que coincida exactamente con algún da lista engadiranse automaticamente a este grupo:"
@@ -1777,15 +1768,13 @@ gl:
         none: "Non hai chaves activas da API agora mesmo."
         user: "Usuario"
         title: "API"
-        key: "Chave da API"
+        created: Creado
         generate: "Xerar"
-        regenerate: "Rexenerar"
         revoke: "Revogar"
-        confirm_regen: "Confirmas a substitución da chave da API por unha nova?"
-        confirm_revoke: "Confirmas a revogación desta chave?"
-        info_html: "A chave da API permitirache crear e actualizar temas usando chamadas JSON."
         all_users: "Todos os usuarios"
-        note_html: "Manter esta chave en <strong>secreto</strong>, todos os usuarios que a teñan poderían crear e publicar co nome da calquera usuario."
+        show_details: Detalles
+        description: Descrición
+        save: Gardar
       web_hooks:
         save: "Gardar"
         destroy: "Eliminar"
@@ -1882,7 +1871,7 @@ gl:
         opacity: "Opacidade"
         copy: "Copiar"
         email_templates:
-          title: "Modelos de correo-e"
+          title: "Correo electrónico"
           subject: "Asunto"
           multiple_subjects: "Este modelo de correo-e ten varios asuntos."
           body: "Corpo"
@@ -1897,6 +1886,8 @@ gl:
           upload: "Enviar"
           installed: "Instalado"
           about_theme: "Sobre"
+          enable: "Activar"
+          disable: "Desactivar"
           add: "Engadir"
           scss:
             text: "CSS"
@@ -1948,6 +1939,8 @@ gl:
           love:
             name: "gústame"
             description: "Cor do botón Gústame."
+        email_style:
+          css: "CSS"
       email:
         title: "Correos electrónicos"
         settings: "Axustes"
@@ -2097,12 +2090,13 @@ gl:
           title: "Rexistros de erros"
       watched_words:
         clear_filter: "Borrar"
+        download: Descargar
+        clear_all: Borrar todo
         actions:
           block: "Bloquear"
           flag: "Denunciar"
         form:
           add: "Engadir"
-          upload: "Enviar"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberás saír da sesión ao rematar."
@@ -2191,14 +2185,14 @@ gl:
         delete_forbidden_because_staff: "Non é posíbel eliminiar os administradores e moderadores."
         delete_posts_forbidden_because_staff: "Non é posíbel eliminar todas as publicacións dos administradores ou moderadores."
         delete_forbidden:
-          one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de  %{count} día)"
-          other: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de  %{count} días)"
+          one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} día)"
+          other: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} días)"
         cant_delete_all_posts:
           one: "Non é posíbel eliminar todas as publicacións. Algunhas teñen máis de %{count} día. (o axuste delete_user_max_post_age.)"
           other: "Non é posíbel eliminar todas as publicacións. Algunhas teñen máis de %{count} días. (o axuste delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación.  (delete_all_posts_max)"
-          other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións.  (delete_all_posts_max)"
+          one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación. (delete_all_posts_max)"
+          other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións. (delete_all_posts_max)"
         delete_and_block: "Eliminar e <b>bloquear</b> este correo-e e enderezo IP"
         delete_dont_block: "Só eliminar"
         deleted: "Eliminouse o usuario."
@@ -2285,7 +2279,6 @@ gl:
       site_text:
         description: "Podes personalizar calquera texto do teu foro. Comeza por buscar debaixo:"
         search: "Busca o texto que queres editar"
-        title: "Contido do texto"
         edit: "editar"
         revert: "Reverter os cambios"
         revert_confirm: "Confirmas a reversión dos cambios?"
@@ -2331,6 +2324,8 @@ gl:
           search: "Buscar"
           groups: "Grupos"
           dashboard: "Panel"
+        default_categories:
+          modal_yes: "Si"
       badges:
         title: Insignias
         new_badge: Nova insignia
@@ -2413,18 +2408,13 @@ gl:
         category: "Publicación a categoría"
         add_host: "Engadir host"
         settings: "Axustes para o encaixado"
-        feed_settings: "Axustes das fontes"
-        feed_description: "Dotar dunha fonte RSS/ATOM o teu sitio pode mellorar a capacidade de Discourse para importar o teu contido."
         crawling_settings: "Axustes do extractor"
         crawling_description: "Cando o Discourse crea temas para as túas publicacións, se non existe unha fonte RSS/ATOM, tentará analizar o contido do teu HTML. Ás veces pode ser difícil extraer o contido, por iso damos a posibilidade de especificar as regras do CSS para facilitar a extracción."
         embed_by_username: "Nome do usuario para crear o tema"
         embed_post_limit: "Número máximo de publicacións a encaixar"
-        embed_username_key_from_feed: "Clave para extraer da fonte o nome do usuario do discourse"
         embed_truncate: "Truncar as publicacións encaixadas"
         embed_whitelist_selector: "Selector CSS de elementos permitidos nos encaixados"
         embed_blacklist_selector: "Selector CSS para elementos retirados nos encaixados"
-        feed_polling_enabled: "Importar publicacións vía RSS/ATOM"
-        feed_polling_url: "URL da fonte RSS/ATOM para facer a extracción"
         save: "Gardar axustes de encaixado"
       permalink:
         title: "Ligazóns permanentes"

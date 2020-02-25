@@ -158,7 +158,7 @@ module PostGuardian
         return true
       end
 
-      return !post.edit_time_limit_expired?
+      return !post.edit_time_limit_expired?(@user)
     end
 
     false
@@ -187,7 +187,7 @@ module PostGuardian
   # Recovery Method
   def can_recover_post?(post)
     if is_staff?
-      post.deleted_at && post.user
+      !!post.deleted_at
     else
       is_my_own?(post) && post.user_deleted && !post.deleted_at
     end
@@ -238,7 +238,7 @@ module PostGuardian
 
     if @user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post)
       return false if post.hidden?
-      return !post.edit_time_limit_expired?
+      return !post.edit_time_limit_expired?(@user)
     end
 
     false

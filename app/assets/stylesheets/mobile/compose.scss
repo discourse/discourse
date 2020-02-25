@@ -24,10 +24,34 @@
     }
   }
 
+  body.ios-safari-composer-hacks &.open {
+    height: calc(var(--composer-vh, 1vh) * 100);
+    .reply-area {
+      padding-bottom: 0px;
+    }
+  }
+
   .reply-to {
     margin: 5px 0;
     .reply-details {
       max-width: calc(100% - 75px);
+    }
+
+    // Protection for languages with long strings on very small screens. This
+    // has no effect on most users but we need it for some cases. If this is
+    // not added, "add edit reason" will overlap with the composer controls
+    @include breakpoint(mobile-small) {
+      .reply-details {
+        flex-wrap: wrap;
+      }
+
+      .display-edit-reason {
+        margin-top: 0.5em;
+      }
+
+      .composer-controls {
+        align-self: flex-start;
+      }
     }
   }
 
@@ -47,9 +71,7 @@
     }
     .draft-text {
       width: calc(100% - 40px);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
   }
 
@@ -141,17 +163,6 @@
   }
 
   .d-editor-button-bar .btn {
-    svg {
-      -webkit-transform: translate3d(
-        0,
-        0,
-        0
-      ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
-    }
-    @include breakpoint(mobile-medium) {
-      padding: 4px;
-      font-size: 0.96em;
-    }
     &.preview {
       margin: 0;
     }
@@ -171,7 +182,6 @@
 
   .with-tags {
     .category-input {
-      flex-basis: auto;
       flex: 1 0 0px;
       margin: 0;
       width: 45%;
@@ -184,6 +194,21 @@
       margin-left: 5px;
       margin-bottom: 5px;
       z-index: z("base");
+    }
+
+    .selected-name {
+      overflow: hidden;
+      .name {
+        @include ellipsis;
+        font-size: $font-down-1;
+        .badge-wrapper {
+          font-size: $font-0;
+        }
+      }
+    }
+
+    .title-and-category .select-kit {
+      min-width: unset;
     }
   }
 

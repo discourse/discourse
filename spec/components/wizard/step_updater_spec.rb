@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'wizard'
-require_dependency 'wizard/builder'
-require_dependency 'wizard/step_updater'
 
 describe Wizard::StepUpdater do
   before do
@@ -101,19 +98,19 @@ describe Wizard::StepUpdater do
       expect(SiteSetting.site_contact_username).to eq(user.username)
 
       # Should update the TOS topic
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
       expect(raw).to eq("<eviltrout@example.com> template")
 
       # Can update the TOS topic again
       updater = wizard.create_updater('contact', contact_email: 'alice@example.com')
       updater.update
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
       expect(raw).to eq("<alice@example.com> template")
 
       # Can update the TOS to nothing
       updater = wizard.create_updater('contact', {})
       updater.update
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
       expect(raw).to eq("<contact_email> template")
 
       expect(wizard.completed_steps?('contact')).to eq(true)
@@ -148,7 +145,7 @@ describe Wizard::StepUpdater do
       expect(SiteSetting.city_for_disputes).to eq("Fairfield, New Jersey")
 
       # Should update the TOS topic
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
       expect(raw).to eq("ACME, Inc. - New Jersey law - Fairfield, New Jersey template")
 
       # Can update the TOS topic again
@@ -157,13 +154,13 @@ describe Wizard::StepUpdater do
                                       governing_law: 'California law',
                                       city_for_disputes: 'San Francisco, California')
       updater.update
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
       expect(raw).to eq("Pied Piper Inc - California law - San Francisco, California template")
 
       # Can update the TOS to nothing
       updater = wizard.create_updater('corporate', {})
       updater.update
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
       expect(raw).to eq("company_name - governing_law - city_for_disputes template")
 
       expect(wizard.completed_steps?('corporate')).to eq(true)

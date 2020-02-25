@@ -1,3 +1,6 @@
+import { next } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import MountWidget from "discourse/components/mount-widget";
 import { cloak, uncloak } from "discourse/widgets/post-stream";
@@ -40,7 +43,8 @@ export default MountWidget.extend({
       "gaps",
       "selectedQuery",
       "selectedPostsCount",
-      "searchService"
+      "searchService",
+      "showReadIndicator"
     );
   },
 
@@ -89,7 +93,9 @@ export default MountWidget.extend({
     const windowTop = $w.scrollTop();
 
     const postsWrapperTop = $(".posts-wrapper").offset().top;
-    const $posts = this.$(".onscreen-post, .cloaked-post");
+    const $posts = $(
+      this.element.querySelectorAll(".onscreen-post, .cloaked-post")
+    );
     const viewportTop = windowTop - slack;
     const topView = findTopView(
       $posts,
@@ -201,7 +207,7 @@ export default MountWidget.extend({
               // will cause the browser to scroll to the top of the document
               // in Chrome. This makes sure the scroll works correctly if that
               // happens.
-              Ember.run.next(() => $("html, body").scrollTop(whereY));
+              next(() => $("html, body").scrollTop(whereY));
             }
           });
         };
@@ -267,7 +273,7 @@ export default MountWidget.extend({
   },
 
   _scrollTriggered() {
-    Ember.run.scheduleOnce("afterRender", this, this.scrolled);
+    scheduleOnce("afterRender", this, this.scrolled);
   },
 
   _posted(staged) {
@@ -289,6 +295,12 @@ export default MountWidget.extend({
             onRefresh: "refreshLikes"
           });
         }
+
+        if (args.refreshReaders) {
+          this.dirtyKeys.keyDirty(`post-menu-${args.id}`, {
+            onRefresh: "refreshReaders"
+          });
+        }
       } else if (args.force) {
         this.dirtyKeys.forceAll();
       }
@@ -297,13 +309,12 @@ export default MountWidget.extend({
   },
 
   _debouncedScroll() {
-    Ember.run.debounce(this, this._scrollTriggered, 10);
+    debounce(this, this._scrollTriggered, 10);
   },
 
   didInsertElement() {
     this._super(...arguments);
-    const debouncedScroll = () =>
-      Ember.run.debounce(this, this._scrollTriggered, 10);
+    const debouncedScroll = () => debounce(this, this._scrollTriggered, 10);
 
     this._previouslyNearby = {};
 
@@ -314,12 +325,12 @@ export default MountWidget.extend({
 
     this.appEvents.on("post-stream:posted", this, "_posted");
 
-    this.$().on("mouseenter.post-stream", "button.widget-button", e => {
+    $(this.element).on("mouseenter.post-stream", "button.widget-button", e => {
       $("button.widget-button").removeClass("d-hover");
       $(e.target).addClass("d-hover");
     });
 
-    this.$().on("mouseleave.post-stream", "button.widget-button", () => {
+    $(this.element).on("mouseleave.post-stream", "button.widget-button", () => {
       $("button.widget-button").removeClass("d-hover");
     });
 
@@ -331,8 +342,8 @@ export default MountWidget.extend({
     $(document).unbind("touchmove.post-stream");
     $(window).unbind("scroll.post-stream");
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
-    this.$().off("mouseenter.post-stream");
-    this.$().off("mouseleave.post-stream");
+    $(this.element).off("mouseenter.post-stream");
+    $(this.element).off("mouseleave.post-stream");
     this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
   }

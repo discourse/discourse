@@ -11,14 +11,78 @@ RSpec.describe ApplicationController do
       SiteSetting.login_required = true
     end
 
-    it "should carry-forward authComplete param to login page redirect" do
-      get "/?authComplete=true"
-      expect(response).to redirect_to('/login?authComplete=true')
-    end
-
     it "should never cache a login redirect" do
       get "/"
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+
+    it "should redirect to login normally" do
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    it "should redirect to SSO if enabled" do
+      SiteSetting.sso_url = 'http://someurl.com'
+      SiteSetting.enable_sso = true
+      get "/"
+      expect(response).to redirect_to("/session/sso")
+    end
+
+    it "should redirect to authenticator if only one, and local logins disabled" do
+      # Local logins and google enabled, direct to login UI
+      SiteSetting.enable_google_oauth2_logins = true
+      get "/"
+      expect(response).to redirect_to("/login")
+
+      # Only google enabled, login immediately
+      SiteSetting.enable_local_logins = false
+      get "/"
+      expect(response).to redirect_to("/auth/google_oauth2")
+
+      # Google and GitHub enabled, direct to login UI
+      SiteSetting.enable_github_logins = true
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    context "with omniauth in test mode" do
+      before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2,
+          info: OmniAuth::AuthHash::InfoHash.new(
+            email: "address@example.com",
+          ),
+          extra: {
+            raw_info: OmniAuth::AuthHash.new(
+              email_verified: true,
+              email: "address@example.com",
+            )
+          }
+        )
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      end
+
+      after do
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
+        OmniAuth.config.test_mode = false
+      end
+
+      it "should not redirect to authenticator if registration in progress" do
+        SiteSetting.enable_local_logins = false
+        SiteSetting.enable_google_oauth2_logins = true
+
+        get "/"
+        expect(response).to redirect_to("/auth/google_oauth2")
+
+        expect(cookies[:authentication_data]).to eq(nil)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response).to redirect_to("/")
+        expect(cookies[:authentication_data]).not_to eq(nil)
+
+        get "/"
+        expect(response).to redirect_to("/login")
+      end
     end
   end
 
@@ -44,6 +108,18 @@ RSpec.describe ApplicationController do
 
       get "/"
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+    end
+
+    it "should not redirect anonymous users when enforce_second_factor is 'all'" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.allow_anonymous_posting = true
+      sign_in(user)
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+
+      get "/"
+      expect(response.status).to eq(200)
     end
 
     it "should redirect admins when enforce_second_factor is 'staff'" do
@@ -76,6 +152,42 @@ RSpec.describe ApplicationController do
 
       get "/"
       expect(response.status).to eq(200)
+    end
+
+    context "when enforcing second factor for staff" do
+      before do
+        SiteSetting.enforce_second_factor = "staff"
+        sign_in(admin)
+      end
+
+      context "when the staff member has not enabled TOTP or security keys" do
+        it "redirects the staff to the second factor preferences" do
+          get "/"
+          expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
+        end
+      end
+
+      context "when the staff member has enabled TOTP" do
+        before do
+          Fabricate(:user_second_factor_totp, user: admin)
+        end
+
+        it "does not redirects the staff to set up 2FA" do
+          get "/"
+          expect(response.status).to eq(200)
+        end
+      end
+
+      context "when the staff member has enabled security keys" do
+        before do
+          Fabricate(:user_security_key_with_random_credential, user: admin)
+        end
+
+        it "does not redirects the staff to set up 2FA" do
+          get "/"
+          expect(response.status).to eq(200)
+        end
+      end
     end
   end
 
@@ -138,6 +250,12 @@ RSpec.describe ApplicationController do
         topic = create_post.topic
         Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
         topic.trash!
+
+        SiteSetting.detailed_404 = false
+        get topic.relative_url
+        expect(response.status).to eq(404)
+
+        SiteSetting.detailed_404 = true
         get topic.relative_url
         expect(response.status).to eq(410)
       end
@@ -162,8 +280,7 @@ RSpec.describe ApplicationController do
       end
 
       it 'supports subfolder with permalinks' do
-        GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
+        set_subfolder "/forum"
 
         trashed_topic = create_post.topic
         trashed_topic.trash!
@@ -197,7 +314,7 @@ RSpec.describe ApplicationController do
         response_body = response.body
 
         expect(response_body).to include(I18n.t('page_not_found.search_button'))
-        expect(response_body).to have_tag("input", with: { value: 'nopenope' })
+        expect(response_body).to have_tag("input", with: { value: 'nope nope' })
       end
 
       it 'should not include Google search if login_required is enabled' do
@@ -293,7 +410,7 @@ RSpec.describe ApplicationController do
       expect(controller.theme_ids).to eq([theme2.id])
 
       theme2.update!(user_selectable: false, component: true)
-      theme.add_child_theme!(theme2)
+      theme.add_relative_theme!(:child, theme2)
       cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
 
       get "/"
@@ -349,6 +466,20 @@ RSpec.describe ApplicationController do
       )
 
       expect(response.body).not_to include("test123")
+    end
+  end
+
+  describe 'allow_embedding_site_in_an_iframe' do
+
+    it "should have the 'X-Frame-Options' header with value 'sameorigin'" do
+      get("/latest")
+      expect(response.headers['X-Frame-Options']).to eq("SAMEORIGIN")
+    end
+
+    it "should not include the 'X-Frame-Options' header" do
+      SiteSetting.allow_embedding_site_in_an_iframe = true
+      get("/latest")
+      expect(response.headers).not_to include('X-Frame-Options')
     end
   end
 
@@ -441,7 +572,6 @@ RSpec.describe ApplicationController do
       script_src = parse(response.headers['Content-Security-Policy'])['script-src']
 
       expect(script_src).to include('example.com')
-      expect(script_src).to include("'unsafe-eval'")
     end
 
     it 'does not set CSP when responding to non-HTML' do
@@ -460,5 +590,11 @@ RSpec.describe ApplicationController do
         [directive, sources]
       end.to_h
     end
+  end
+
+  it 'can respond to a request with */* accept header' do
+    get '/', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.status).to eq(200)
+    expect(response.body).to include('Discourse')
   end
 end

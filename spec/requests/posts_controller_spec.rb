@@ -236,7 +236,7 @@ describe PostsController do
 
       describe "can delete replies" do
         before do
-          PostReply.create(post_id: post1.id, reply_id: post2.id)
+          PostReply.create(post_id: post1.id, reply_post_id: post2.id)
         end
 
         it "deletes the post and the reply to it" do
@@ -313,8 +313,26 @@ describe PostsController do
         sign_in(user)
       end
 
-      it 'does not allow to update when edit time limit expired' do
+      it 'does not allow TL0 or TL1 to update when edit time limit expired' do
         SiteSetting.post_edit_time_limit = 5
+        SiteSetting.tl2_post_edit_time_limit = 30
+
+        post = Fabricate(:post, created_at: 10.minutes.ago, user: user)
+
+        user.update_columns(trust_level: 1)
+
+        put "/posts/#{post.id}.json", params: update_params
+
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
+      end
+
+      it 'does not allow TL2 to update when edit time limit expired' do
+        SiteSetting.post_edit_time_limit = 12
+        SiteSetting.tl2_post_edit_time_limit = 8
+
+        user.update_columns(trust_level: 2)
+
         post = Fabricate(:post, created_at: 10.minutes.ago, user: user)
 
         put "/posts/#{post.id}.json", params: update_params
@@ -506,8 +524,8 @@ describe PostsController do
     end
 
     context "api" do
-      let(:api_key) { user.generate_api_key(user) }
-      let(:master_key) { ApiKey.create_master_key }
+      let(:api_key) { Fabricate(:api_key, user: user) }
+      let(:master_key) { Fabricate(:api_key, user: nil) }
 
       # choosing an arbitrarily easy to mock trusted activity
       it 'allows users with api key to bookmark posts' do
@@ -693,7 +711,7 @@ describe PostsController do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -722,7 +740,7 @@ describe PostsController do
         Jobs.run_immediately!
         NotificationEmailer.enable
         post_1 = Fabricate(:post)
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -763,7 +781,7 @@ describe PostsController do
 
       it 'prevents whispers for regular users' do
         post_1 = Fabricate(:post)
-        user_key = ApiKey.create!(user: user, key: SecureRandom.hex).key
+        user_key = ApiKey.create!(user: user).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -778,7 +796,7 @@ describe PostsController do
 
       it 'will raise an error if specified category cannot be found' do
         user = Fabricate(:admin)
-        master_key = ApiKey.create_master_key.key
+        master_key = Fabricate(:api_key).key
 
         post "/posts.json", params: {
           api_username: user.username,
@@ -841,6 +859,30 @@ describe PostsController do
           expect(user).not_to be_silenced
         end
 
+        it "doesn't enqueue posts when user first creates a topic" do
+          user.user_stat.update_column(:topic_count, 1)
+
+          Draft.set(user, "should_clear", 0, "{'a' : 'b'}")
+
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            composer_open_duration_msecs: 204,
+            typing_duration_msecs: 100,
+            topic_id: topic.id,
+            draft_key: "should_clear"
+          }
+
+          expect(response.status).to eq(200)
+          parsed = ::JSON.parse(response.body)
+
+          expect(parsed["action"]).not_to be_present
+
+          expect {
+            Draft.get(user, "should_clear", 0)
+          }.to raise_error(Draft::OutOfSequence)
+        end
+
         it "doesn't enqueue replies when the topic is closed" do
           topic = Fabricate(:closed_topic)
 
@@ -897,7 +939,7 @@ describe PostsController do
         post "/posts.json", params: {
           raw: 'I can haz a test',
           title: 'I loves my test',
-          target_usernames: group.name,
+          target_recipients: group.name,
           archetype: Archetype.private_message
         }
 
@@ -909,7 +951,7 @@ describe PostsController do
         post "/posts.json", params: {
           raw: 'I can haz a test',
           title: 'I loves my test',
-          target_usernames: group.name,
+          target_recipients: group.name,
           archetype: Archetype.private_message
         }
 
@@ -964,6 +1006,23 @@ describe PostsController do
         }
 
         expect(response.status).to eq(403)
+      end
+
+      it 'can not create a post with a tag that is restricted' do
+        SiteSetting.tagging_enabled = true
+        tag = Fabricate(:tag)
+        category.allowed_tags = [tag.name]
+        category.save!
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(422)
+        json = JSON.parse(response.body)
+        expect(json['errors']).to be_present
       end
 
       it 'creates the post' do
@@ -1038,7 +1097,7 @@ describe PostsController do
           raw: 'this is the test content',
           archetype: 'private_message',
           title: "this is some post",
-          target_usernames: "#{user_2.username},#{user_3.username}"
+          target_recipients: "#{user_2.username},#{user_3.username}"
         }
 
         expect(response.status).to eq(200)
@@ -1049,6 +1108,43 @@ describe PostsController do
         expect(new_post.user).to eq(user)
         expect(new_topic.private_message?).to eq(true)
         expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3)
+      end
+
+      context "when target_recipients not provided" do
+        it "errors when creating a private post" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            archetype: 'private_message',
+            title: "this is some post",
+            target_recipients: ""
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["errors"]).to include(
+            I18n.t("activerecord.errors.models.topic.attributes.base.no_user_selected")
+          )
+        end
+      end
+
+      context "when topic_id is set" do
+        fab!(:topic) { Fabricate(:topic) }
+
+        it "errors when creating a private post" do
+          user_2 = Fabricate(:user)
+
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            archetype: 'private_message',
+            title: "this is some post",
+            target_recipients: user_2.username,
+            topic_id: topic.id
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["errors"]).to include(
+            I18n.t("create_pm_on_existing_topic")
+          )
+        end
       end
 
       context "errors" do
@@ -1165,7 +1261,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: true
           }
 
@@ -1182,7 +1278,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: false
           }
 
@@ -1202,7 +1298,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: true
           }
 
@@ -1787,6 +1883,85 @@ describe PostsController do
       expect(response.status).to eq(200)
       public_post.reload
       expect(public_post).not_to be_locked
+    end
+  end
+
+  describe "#notice" do
+    before do
+      sign_in(moderator)
+    end
+
+    it 'can create and remove notices' do
+      put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
+
+      expect(response.status).to eq(200)
+      public_post.reload
+      expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
+
+      put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
+
+      expect(response.status).to eq(200)
+      public_post.reload
+      expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+      expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+    end
+  end
+
+  describe Plugin::Instance do
+    describe '#add_permitted_post_create_param' do
+      fab!(:user) { Fabricate(:user) }
+      let(:instance) { Plugin::Instance.new }
+      let(:request) do
+        Proc.new {
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            composer_open_duration_msecs: 204,
+            typing_duration_msecs: 100,
+            reply_to_post_number: 123,
+            string_arg: '123',
+            hash_arg: { key1: 'val' },
+            array_arg: ['1', '2', '3']
+          }
+        }
+      end
+
+      before do
+        sign_in(user)
+        SiteSetting.min_first_post_typing_time = 0
+      end
+
+      it 'allows strings to be added' do
+        request.call
+        expect(@controller.send(:create_params)).not_to include(string_arg: '123')
+
+        instance.add_permitted_post_create_param(:string_arg)
+        request.call
+        expect(@controller.send(:create_params)).to include(string_arg: '123')
+      end
+
+      it 'allows hashes to be added' do
+        instance.add_permitted_post_create_param(:hash_arg)
+        request.call
+        expect(@controller.send(:create_params)).not_to include(hash_arg: { key1: 'val' })
+
+        instance.add_permitted_post_create_param(:hash_arg, :hash)
+        request.call
+        expect(@controller.send(:create_params)).to include(hash_arg: { key1: 'val' })
+      end
+
+      it 'allows strings to be added' do
+        instance.add_permitted_post_create_param(:array_arg)
+        request.call
+        expect(@controller.send(:create_params)).not_to include(array_arg: ['1', '2', '3'])
+
+        instance.add_permitted_post_create_param(:array_arg, :array)
+        request.call
+        expect(@controller.send(:create_params)).to include(array_arg: ['1', '2', '3'])
+      end
+
     end
   end
 end

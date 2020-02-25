@@ -1,14 +1,18 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { notEmpty, empty, equal } from "@ember/object/computed";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 
-export default Ember.Component.extend({
+export default Component.extend({
   // subclasses need this
   layoutName: "components/d-button",
 
   form: null,
 
+  type: "button",
+
   tagName: "button",
-  classNameBindings: [":btn", "noText", "btnType"],
+  classNameBindings: ["btnLink::btn", "btnLink", "noText", "btnType"],
   attributeBindings: [
     "form",
     "disabled",
@@ -18,9 +22,11 @@ export default Ember.Component.extend({
     "type"
   ],
 
-  btnIcon: Ember.computed.notEmpty("icon"),
+  btnIcon: notEmpty("icon"),
 
-  @computed("icon", "translatedLabel")
+  btnLink: equal("display", "link"),
+
+  @discourseComputed("icon", "translatedLabel")
   btnType(icon, translatedLabel) {
     if (icon) {
       return translatedLabel ? "btn-icon-text" : "btn-icon";
@@ -29,9 +35,9 @@ export default Ember.Component.extend({
     }
   },
 
-  noText: Ember.computed.empty("translatedLabel"),
+  noText: empty("translatedLabel"),
 
-  @computed("title")
+  @discourseComputed("title")
   translatedTitle: {
     get() {
       if (this._translatedTitle) return this._translatedTitle;
@@ -42,7 +48,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("label")
+  @discourseComputed("label")
   translatedLabel: {
     get() {
       if (this._translatedLabel) return this._translatedLabel;

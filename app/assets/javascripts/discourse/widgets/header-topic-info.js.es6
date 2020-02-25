@@ -69,8 +69,10 @@ export default createWidget("header-topic-info", {
         heading.push(
           h(
             "a.private-message-glyph-wrapper",
-            { attributes: { href } },
-            h("span.private-message-glyph", iconNode("envelope"))
+            {
+              attributes: { href, "aria-label": I18n.t("user.messages.inbox") }
+            },
+            iconNode("envelope", { class: "private-message-glyph" })
           )
         );
       }
@@ -94,7 +96,7 @@ export default createWidget("header-topic-info", {
       );
     }
 
-    const title = [h("h1", heading)];
+    const title = [h("h1.header-title", heading)];
     const category = topic.get("category");
 
     if (loaded || category) {

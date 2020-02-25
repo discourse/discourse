@@ -24,6 +24,7 @@ sr:
   topics: "Teme"
   posts: "poruke"
   loading: "Učitavanje"
+  sign_up: "Registrujte se"
   log_in: "Prijava"
   disable_remote_images_download_reason: "Daljinske slike za download je onemogućeno zato što nije bilo dovoljno slobodnog prostora na disku."
   anonymous: "Anonimno"
@@ -67,6 +68,7 @@ sr:
   embed:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
+    created: "Napravljeno"
   no_links_allowed: "Žao nam je, novi korisnici ne mogu postavljati linkove u svoje postove."
   user_is_suspended: "Suspendovanim korisnicima nije dozvoljeno da objavljuju postove."
   topic_not_found: "Nešto se dogodilo. Možda je tema zatvorena ili izbrisana dok ste je gledali?"
@@ -122,9 +124,6 @@ sr:
   password_reset:
     save: "Postavi Šifru"
     title: "Resetujte Šifru"
-  change_email:
-    authorizing_old:
-      title: "Hvala što ste potvrdili svoju važeću email adresu"
   activation:
     welcome_to: "Dobrodošao na %{site_name}!"
   reviewable_score_types:
@@ -228,7 +227,6 @@ sr:
     delete_email_logs_after_days: "Obriši email logove posle (N) dana. Uneti 0 za neograničeno čuvanje."
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."
     ignore_by_title: "Ignoriši dolazne email poruke na osnovu njihovog naslova"
-    enable_forwarded_emails: "[BETA] Dozvoli korisnicima da kreiraju temu prosleđivanjem email poruke."
     pop3_polling_ssl: "Koristi SSL pri povezivanju na POP3 server. (Preporučeno)"
     pop3_polling_period_mins: "Period u minutima za proveru novih email poruka na POP3 nalogu. NAPOMENA: zahteva ponovno pokretanje. "
     pop3_polling_port: "Port za proveru POP3 naloga."
@@ -245,7 +243,7 @@ sr:
     email_link_color: "Boja linkova u HTML email porukama. Unesite ime boje ('blue') ili heksadecimalnu vrednost ('#0000FF'). "
     allow_anonymous_posting: "Dozvoli korisnicima da se prebace u anonimni mod"
     hide_user_profiles_from_public: "Onemogući korisničke kartice, profile i direktorijume za anonimne korisnike."
-    sequential_replies_threshold: "Broj poruka koje korisnik može zaredom da pošalje pre upozoravanja o  prevelikom broju uzastopnih odgovora."
+    sequential_replies_threshold: "Broj poruka koje korisnik može zaredom da pošalje pre upozoravanja o prevelikom broju uzastopnih odgovora."
     disable_avatar_education_message: "Onemogući edukativne poruke za izmenu avatara."
     read_time_word_count: "Broj reči po minutu za računanje procenjenog vremena čitanja"
     share_anonymized_statistics: "Deli anonimizirane statistike korišćenja"
@@ -257,10 +255,10 @@ sr:
     autohighlight_all_code: "Forsiraj primenu označavanja koda za sve preformatirane blokove koda i kada nije eksplicitno naveden jezik."
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
     show_create_topics_notice: "Ako sajt ima manje od 5 javnih tema, prikaži poruku koja sugeriše administratorima da kreiraju neke teme."
-    delete_drafts_older_than_n_days: Izbriši radne verzije poruka starije od (n) dana
+    delete_drafts_older_than_n_days: "Izbriši radne verzije poruka starije od (n) dana"
     enable_emoji: "Omogući emotikone"
     emoji_set: "Koliko bi ste želeli vas emoji?"
-    auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori  (0 da se isključi)"
+    auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
@@ -292,6 +290,7 @@ sr:
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
+    rate_limit_error: "Poruke mogu biti preuzimate jednom na dan, molimo pokušajte sutra."
   tos_topic:
     title: "Uslovi Korišćenja"
   privacy_topic:

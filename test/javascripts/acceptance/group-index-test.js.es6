@@ -26,7 +26,7 @@ QUnit.test("Viewing Members as anon user", async assert => {
 acceptance("Group Members", { loggedIn: true });
 
 QUnit.test("Viewing Members as a group owner", async assert => {
-  updateCurrentUser({ admin: false, staff: false });
+  updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/g/discourse");
   await click(".group-members-add");

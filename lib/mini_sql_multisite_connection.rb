@@ -26,8 +26,9 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
   end
 
   class AfterCommitWrapper
-    def initialize
-      @callback = Proc.new
+    def initialize(&blk)
+      raise ArgumentError, "tried to create a Proc without a block in AfterCommitWrapper" if !blk
+      @callback = blk
     end
 
     def committed!(*)
@@ -36,6 +37,9 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
 
     def before_committed!(*); end
     def rolledback!(*); end
+    def trigger_transactional_callbacks?
+      true
+    end
   end
 
   # Allows running arbitrary code after the current transaction has been committed.

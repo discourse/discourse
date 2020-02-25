@@ -27,6 +27,7 @@ et:
   topics: "Teemad"
   posts: "postitused"
   loading: "Laetakse"
+  sign_up: "Liitu"
   log_in: "Logi sisse"
   submit: "Saada"
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
@@ -44,7 +45,6 @@ et:
         auto_generated_email_error: "Juhtub, kui 'precedence' päis on seatud väärtusele: list, junk, bulk või auto_reply või kui mingi muu päis sisaldab väärtusi: auto-submitted, auto-replied või auto-generated."
         no_body_detected_error: "Juhtub, kui meil ei õnnestunud keha eraldada ja manused puudusid."
         inactive_user_error: "Juhtub, kui saatja ei ole aktiveeritud."
-        bad_destination_address: "Juhtub, kui ükski To/Cc/Bcc meiliaadresidest ei lange kokku seadistatud sissetulavate meiliaadressidega."
         strangers_not_allowed_error: "Juhtub, kui kasutaja proovib teha teemat liiki, millesse ta ise ei kuulu."
         insufficient_trust_level_error: "Juhtub, kui kasutaja proovib teha teemat liiki, millele tal puudub vajalik usaldustase."
         reply_user_not_matching_error: "Juhtub, kui vastus tuleb teistsuguselt meiliaadressilt kui see, millele märguanne saadeti."
@@ -120,6 +120,8 @@ et:
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
   read_only_mode_enabled: "Sait on kirjutuskaitstud. Interaktsioonid on keelatud."
+  not_in_group:
+    join_group: "Liitu grupiga"
   reading_time: "Lugemise aeg"
   likes: "Meeldimisi"
   too_many_replies:
@@ -139,6 +141,7 @@ et:
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Loodud"
   no_mentions_allowed: "Vabandust, sa ei saa teisi kasutajaid mainida."
   too_many_mentions:
     one: "Vabandust, sa tohid postituses vaid üht kasutajat mainida."
@@ -449,9 +452,6 @@ et:
     error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
     already_done: "Vabandust, see kinnitamise link ei kehti enam. Äkki on teie meiliaadress juba muudetud?"
-    authorizing_old:
-      title: "Täname, et oma kehtiva meiliaadressi kinnitasid"
-      description: "Saadame nüüd kinnituse Teie uuele meiliaadressile."
   activation:
     action: "Oma konto aktiveerimiseks kliki siia"
     already_done: "Vabandust, see konto kinnitamise link ei kehti enam. Äkki on Teie konto juba aktiveeritud?"
@@ -554,6 +554,7 @@ et:
         day: Päev
     post_edits:
       labels:
+        edited_at: Date
         post: Postitus
         author: Autor
         edit_reason: Põhjus
@@ -583,6 +584,8 @@ et:
       xaxis: "Päev"
     new_contributors:
       xaxis: "Päev"
+    trust_level_growth:
+      yaxis: "Päev"
     consolidated_page_views:
       yaxis: "Päev"
       labels:
@@ -785,6 +788,7 @@ et:
   login:
     not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
+    omniauth_confirm_button: "Jätka"
     already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   admin:
     email:
@@ -842,7 +846,6 @@ et:
       subject_template: "[%{email_prefix}] Kokkuvõte"
       your_email_settings: "sinu e-posti seaded"
       click_here: "kliki siia"
-      from: "%{site_name} kokkuvõte"
     forgot_password:
       title: "Unustasin parooli"
       subject_template: "[%{email_prefix}] Parooli taastamine"
@@ -883,6 +886,7 @@ et:
   csv_export:
     boolean_yes: "Jah"
     boolean_no: "Ei"
+    rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."
   tos_topic:
     title: "Teenuse tingimused"
   privacy_topic:

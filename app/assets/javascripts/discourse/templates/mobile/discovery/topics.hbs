@@ -1,28 +1,29 @@
-{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount}}
+{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
   {{#if top}}
     <div class='top-lists'>
       {{period-chooser period=period action=(action "changePeriod")}}
     </div>
   {{else}}
     {{#if topicTrackingState.hasIncoming}}
-      <div class='alert alert-info clickable' {{action "showInserted"}}>
+      <a href class='alert alert-info clickable' {{action "showInserted"}}>
         {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
-      </div>
+      </a>
     {{/if}}
   {{/if}}
 
   {{#if hasTopics}}
     {{topic-list
-        highlightLastVisited=true
-        showPosters=true
-        hideCategory=model.hideCategory
-        order=order
-        ascending=ascending
-        topics=model.topics
-        expandGloballyPinned=expandGloballyPinned
-        expandAllPinned=expandAllPinned
-        category=category
-        }}
+      highlightLastVisited=true
+      showPosters=true
+      hideCategory=model.hideCategory
+      order=order
+      ascending=ascending
+      topics=model.topics
+      expandGloballyPinned=expandGloballyPinned
+      expandAllPinned=expandAllPinned
+      scrollOnLoad=true
+      onScroll=discoveryTopicList.saveScrollPosition
+      category=category}}
   {{/if}}
 {{/discovery-topics-list}}
 
@@ -30,12 +31,20 @@
   {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
-      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn btn-default dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-topics"
+        action=(action "dismissReadPosts")
+        title="topics.bulk.dismiss_tooltip"
+        label="topics.bulk.dismiss_button"}}
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new' class='btn btn-default dismiss-read' {{action "resetNew"}}>
-        {{d-icon "check"}}
-        {{i18n 'topics.bulk.dismiss_new'}}</button>
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-new"
+        action=(action "resetNew")
+        icon="check"
+        label="topics.bulk.dismiss_new"}}
     {{/if}}
 
     {{#footer-message education=footerEducation message=footerMessage}}

@@ -7,7 +7,7 @@
 
 ko:
   site_settings:
-    discourse_narrative_bot_enabled: 'Discourse 이야기봇 사용 (discobot)'
+    discourse_narrative_bot_enabled: "Discourse 이야기봇 사용 (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Discourse 이야기봇 환영 포스트 비활성화"
     discourse_narrative_bot_ignored_usernames: "Discourse 이야기봇이 무시할 사용자 아이디"
     discourse_narrative_bot_disable_public_replies: "Discourse 이야기봇의 공개 답글 비활성화"
@@ -82,7 +82,7 @@ ko:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: '운세'
+      trigger: "운세"
       answers:
         '1': "이건 확실해."
         '2': "이건 분명히 돼."
@@ -106,21 +106,12 @@ ko:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: '시작하기'
-      skip_trigger: '건너뛰기'
-      help_trigger: '도움말 표시'
+      reset_trigger: "시작하기"
+      skip_trigger: "건너뛰기"
+      help_trigger: "도움말 표시"
       random_mention:
         reply: |-
           내가 뭘 할 수 있는지 알고 싶다면 `@%{discobot_username} %{help_trigger}` 라고 말하렴.
-        bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
-
-          `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _언젠가 다른 누군가도 당신이 그랬던 것 처럼 친절한 행동을 할 거라고 믿으면서, 보상에 대한 어떠한 기대도 없이 친절한 행동을 하라._ &mdash; 다이애나비
-
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: 믿어도 좋아.
       do_not_understand:
         first_response: |-
           우와, 답글을 써줘서 고마워!
@@ -130,14 +121,14 @@ ko:
         second_response: |-
           오 미안. 아직도 무슨 말인지 모르겠어. :anguished:
 
-          난 그냥 로봇일 뿐이야. 진짜 사람한테 연락하고 싶다면  [우리 연락처 페이지](%{base_path}/about) 를 참고해.
+          난 그냥 로봇일 뿐이야. 진짜 사람한테 연락하고 싶다면 [우리 연락처 페이지](%{base_path}/about) 를 참고해.
 
           그럼, 난 잠시 자리를 비워줄게.
     new_user_narrative:
       cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
       onebox:
         reply: |-
-          좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해.  딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
+          좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해. 딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
         not_found: |-
           미안해. 답글에서 링크를 찾지 못했어! :cry:
 
@@ -225,7 +216,7 @@ ko:
 
           답글에 **`@%{discobot_username}`** 를 써서 멘션을 날려볼래?
         reply: |-
-          _내 이름 부른 사람!?_ :raised_hand: 너인 거 같은데! :wave:  그래, 난 여깄어! 내 얘기해줘서 고마워.  :ok_hand:
+          _내 이름 부른 사람!?_ :raised_hand: 너인 거 같은데! :wave: 그래, 난 여깄어! 내 얘기해줘서 고마워. :ok_hand:
         not_found: |-
           내 이름을 못찾겠네. :frowning: `@%{discobot_username}` 라고 쳐서 나한테 멘션을 날려줄래?
 
@@ -238,18 +229,12 @@ ko:
 
           뭘 할지 잘 알고 있지? **이 포스트 신고하기** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 를 눌러서 부적절하다고 알려줘!
         not_found: |-
-          이런 내가 쓴 나쁜 포스트가 아직 신고가 안됐네. :worried:  부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
+          이런 내가 쓴 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
       search:
         instructions: |-
           이봐, 내가 이 토픽에 놀라운 걸 숨겼다구. 찾아보고 싶다면, 우측 상단에 있는 **검색 아이콘을** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 선택해서 &#8599; 찾아봐.
 
           이 토픽에서 "capy&#8203;bara"를 찾으면 돼.
-        hidden_message: |-
-          어떻게 이 capybara를 잊을 수 있어? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          다시 처음으로 온 걸 눈치챘어? 이 배고픈 불쌍한 capybara에게 **`:herb:` emoji로 답을 해서** 먹이를 주렴. 그러면 자동으로 끝으로 가게 될거야.
         reply: |-
           예이, 찾았네! :tada:
 
@@ -261,10 +246,10 @@ ko:
         not_found: |-
           흠.... 아무래도 문제가 있어 보이네. 미안해. 검색<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">을 눌러서 **capy&#8203;bara**를 찾아봤어?
       certificate:
-        alt: '목표달성 인증'
+        alt: "목표달성 인증"
     advanced_user_narrative:
       cert_title: "고급 사용자 튜토리얼을 훌륭하게 완료한 것에 대한 보상으로"
-      title: ':arrow_up: 고급 사용자 기능'
+      title: ":arrow_up: 고급 사용자 기능"
       edit:
         bot_created_post_raw: "@%{discobot_username}는 내가 아는 한, 현존하는 가장 쿨한 봇이지:wink:"
         instructions: |-
@@ -283,7 +268,7 @@ ko:
         instructions: |-
           작성한 포스트를 없애고 싶으면, 삭제를 하면 돼.
 
-          위에 있는 포스트 중에서 어떤 것이든 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **삭제하기** 기능으로  **삭제**해보렴. 그래도 첫번째 포스트는 삭제하지마!
+          위에 있는 포스트 중에서 어떤 것이든 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **삭제하기** 기능으로 **삭제**해보렴. 그래도 첫번째 포스트는 삭제하지마!
         not_found: |-
           삭제된 포스트가 없는 것 같은데? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 더보기를 통해서 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> 삭제하기를 볼 수 있어.
         reply: |-
@@ -291,7 +276,7 @@ ko:
 
           토론이 잘 진행될 수 있도록, 곧장 삭제되지는 않아. 어느 정도 시간이 지나면 포스트가 없어질거야.
       recover:
-        deleted_post_raw: '왜 @%{discobot_username}가 내 포스트를 지웠지? :anguished:'
+        deleted_post_raw: "왜 @%{discobot_username}가 내 포스트를 지웠지? :anguished:"
         instructions: |-
           오 이런! 너한테 만들어 준 새 포스트를 실수로 삭제해버린 것 같아.
 
@@ -304,4 +289,4 @@ ko:
 
           문장 중간에 `#`을 넣고 어떤 카테고리나 태그든 선택해봐.
       certificate:
-        alt: '고급 사용자 추적 인증'
+        alt: "고급 사용자 추적 인증"

@@ -42,7 +42,8 @@ hy:
         label: "Ցուցադրել արդյունքները"
       hide-results:
         title: "Վերադառնալ դեպի Ձեր քվեները"
-        label: "Թաքցնել արդյունքները"
+      export-results:
+        label: "Արտահանել"
       open:
         title: "Բացել հարցումը"
         label: "Բացել"
@@ -52,8 +53,8 @@ hy:
         label: "Փակել"
         confirm: " Դուք համոզվա՞ծ եք, որ ցանկանում եք փակել այս հարցումը:"
       automatic_close:
-        closes_in: "Փակվում է <strong>%{timeLeft}</strong>  անց:"
-        age: "Փակված է՝  <strong>%{age}</strong>"
+        closes_in: "Փակվում է <strong>%{timeLeft}</strong> անց:"
+        age: "Փակված է՝ <strong>%{age}</strong>"
       error_while_toggling_status: "Ներողություն, այս հարցման կարգավիճակը փոխելիս տեղի է ունեցել սխալ:"
       error_while_casting_votes: "Ներողություն, Ձեր քվեարկելիս տեղի է ունեցել սխալ:"
       error_while_fetching_voters: "Ներողություն, քվեարկողներին ցուցադրելիս տեղի է ունեցել սխալ:"
@@ -61,7 +62,6 @@ hy:
         title: Ստեղծել Հարցում
         insert: Ներմուծել Հարցում
         help:
-          options_count: Մուտքագրեք առնվազն 2 տարբերակ
           invalid_values: 'Նվազագույն արժեքը պետք է լինի առավելագույն արժեքից փոքր:'
           min_step_value: Քայլի նվազագույն արժեքն է 1
         poll_type:

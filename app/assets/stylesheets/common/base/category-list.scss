@@ -7,10 +7,16 @@
   .category-name {
     display: inline-block;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     vertical-align: text-top;
     line-height: $line-height-medium;
+  }
+  &.with-topics {
+    .subcategories-with-subcategories {
+      .category-description {
+        display: none;
+      }
+    }
   }
 }
 
@@ -24,21 +30,31 @@
   width: 100%;
 
   .category-box {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-content: flex-start;
-    cursor: pointer;
-
     box-sizing: border-box;
-
     border-width: 0;
     border-left-width: 6px;
-
     border-style: solid;
     border-color: $primary-low;
 
     .mobile-view & {
       width: 100%;
+    }
+
+    .parent-box-link {
+      // This avoids an issue with nested links by layering links instead
+      &:before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
     }
 
     .logo.aspect-image img {
@@ -51,6 +67,7 @@
     @supports (--custom: property) {
       .logo.aspect-image img {
         --height: 40px;
+        height: var(--height);
         width: calc(var(--height) * var(--aspect-ratio));
         max-width: 100%;
       }
@@ -58,6 +75,7 @@
   }
 
   .category-box-inner {
+    box-sizing: border-box;
     width: 100%;
     padding: 0;
     display: flex;
@@ -106,10 +124,16 @@
     text-align: center;
     font-size: $font-0;
     color: dark-light-choose($primary-medium, $secondary-high);
+    position: relative;
+
+    //  allow clicks to fall through the description text to the category below...
+    pointer-events: none;
     .overflow {
       max-height: 6em;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      div a {
+        //  ...but links in description should still be clickable
+        pointer-events: auto;
+      }
     }
   }
 
@@ -121,7 +145,58 @@
     text-align: center;
     color: $primary;
     overflow: hidden;
-    text-overflow: ellipsis;
+  }
+
+  h4 a {
+    color: $primary;
+  }
+
+  .subcategory.with-subcategories {
+    position: relative;
+    border: none;
+    border-left-width: 4px;
+    border-left-style: solid;
+    margin-bottom: 0.25em;
+
+    .category-title-link {
+      display: flex;
+      .category-logo {
+        flex: 1 0 auto;
+        margin: 0.25em 0.5em 0.5em 0;
+        --max-height: 40px;
+      }
+      .category-text-title {
+        order: 2;
+        line-height: $line-height-medium;
+        overflow: hidden;
+        margin-bottom: 0.25em;
+        word-wrap: break-word;
+      }
+      &:before {
+        // This avoids an issue with nested links by layering links instead
+        content: "";
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
+
+    .subcategory-box-inner {
+      border: 1px solid $primary-low;
+      border-left: none;
+      padding: 0.5em 0.5em 0.4em 0.5em;
+    }
+
+    &:not(:last-of-type) {
+      margin-bottom: 0.75em;
+    }
+
+    .subcategory {
+      margin-bottom: 0.25em;
+    }
   }
 
   .subcategories {
@@ -130,19 +205,25 @@
     .subcategory {
       display: flex;
       align-items: center;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      margin-right: 1em;
+      @include ellipsis;
       margin-bottom: 0.6em;
+      .badge-wrapper {
+        overflow: hidden;
+      }
       .subcategory-image-placeholder {
         display: inline-block;
         margin-right: 0.6em;
+        flex: 1 0 auto;
+      }
+      .subcategory-link {
+        min-width: 0;
+        @include ellipsis;
       }
       .logo img {
         display: inline-block;
-        height: 20px;
-        width: 20px;
+        --height: 20px;
+        height: var(--height);
+        width: calc(var(--height) * var(--aspect-ratio));
         margin: 0;
       }
     }
@@ -160,7 +241,6 @@
     font-size: $font-up-2;
     text-align: center;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .category-box-heading {
@@ -186,7 +266,6 @@
       .overflow {
         max-height: 3em;
         overflow: hidden;
-        text-overflow: ellipsis;
       }
       .d-icon {
         margin-right: 0.15em;
@@ -198,12 +277,24 @@
 }
 
 .categories-list .category {
-  h3 .d-icon {
-    color: $primary-medium;
-    height: 0.76em;
-    width: 0.76em;
-    vertical-align: baseline;
-    margin-right: 0.15em;
+  h3,
+  h4 {
+    margin-bottom: 0;
+    .d-icon {
+      color: $primary-high;
+      height: 0.76em;
+      width: 0.76em;
+      vertical-align: baseline;
+      margin-right: 0.1em;
+    }
+  }
+  .category-description {
+    margin-top: 0.5em;
+    overflow: hidden;
+    color: $primary-high;
+  }
+  .category-logo.aspect-image {
+    margin-top: 0.5em;
   }
 }
 
@@ -211,5 +302,17 @@
 .category-boxes {
   .category-box h3 .d-icon {
     margin-right: 0;
+  }
+}
+
+.category-list.subcategories-with-subcategories {
+  margin-top: 1em;
+  margin-bottom: 0;
+  border-top: 1px solid $primary-low;
+  .category-description {
+    font-size: $font-down-1;
+  }
+  .category-logo.aspect-image {
+    --max-height: 75px;
   }
 }

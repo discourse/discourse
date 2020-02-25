@@ -13,10 +13,8 @@ id:
   poll:
     multiple_polls_without_name: "Ada beberapa polling tanpa sebuah nama. Gunakan atribut '<code>nama</code>' untuk membuat identitas polling anda unik."
     multiple_polls_with_same_name: "Ada beberapa polling dengan nama yang sama: <strong>%{name}</strong>. Gunakan atribut '<code>nama</code>' untuk mengidentifikasi polling anda secara unik."
-    default_poll_must_have_at_least_2_options: "Polling harus memiliki setidaknya 2 pilihan."
-    named_poll_must_have_at_least_2_options: "Polling dengan nama <strong>%{name}</strong> harus memiliki setidaknya 2 pilihan."
     default_poll_must_have_less_options:
-      other: "Polling harus kurang dari %{count}  pilihan."
+      other: "Polling harus kurang dari %{count} pilihan."
     named_poll_must_have_less_options:
       other: "Polling dengan nama <strong>%{name}</strong> harus kurang dari %{count} pilihan."
     default_poll_must_have_different_options: "Polling harus memiliki pilihan yang berbeda."

@@ -60,7 +60,8 @@ QUnit.module("lib:i18n", {
           days: {
             one: "%{count} day",
             other: "%{count} days"
-          }
+          },
+          dollar_sign: "Hi {{description}}"
         }
       }
     };
@@ -221,5 +222,14 @@ QUnit.test("fallback", assert => {
     I18n.t("topic.reply.help"),
     "begin composing a reply to this topic",
     "falls back to English translations"
+  );
+});
+
+QUnit.test("Dollar signs are properly escaped", assert => {
+  assert.equal(
+    I18n.t("dollar_sign", {
+      description: "$& $&"
+    }),
+    "Hi $& $&"
   );
 });

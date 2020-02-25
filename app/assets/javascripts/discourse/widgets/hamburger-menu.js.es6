@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
@@ -59,7 +60,7 @@ export default createWidget("hamburger-menu", {
 
     if (currentUser.admin) {
       links.push({
-        href: "/admin/site_settings/category/required",
+        href: "/admin/site_settings",
         icon: "cog",
         label: "admin.site_settings.title",
         className: "settings-link"
@@ -172,7 +173,7 @@ export default createWidget("hamburger-menu", {
   listCategories() {
     const maxCategoriesToDisplay = this.siteSettings
       .header_dropdown_category_count;
-    let categories = this.site.get("categoriesByCount");
+    let categories = [];
 
     if (this.currentUser) {
       const allCategories = this.site
@@ -202,6 +203,10 @@ export default createWidget("hamburger-menu", {
           .filter(c => !categories.includes(c))
           .sort((a, b) => b.topic_count - a.topic_count)
       );
+    } else {
+      categories = this.site
+        .get("categoriesByCount")
+        .filter(c => c.notification_level !== NotificationLevels.MUTED);
     }
 
     if (!this.siteSettings.allow_uncategorized_topics) {
@@ -304,7 +309,7 @@ export default createWidget("hamburger-menu", {
 
     if (this.settings.showCategories) {
       results.push(this.listCategories());
-      results.push(h("hr"));
+      results.push(h("hr.categories-separator"));
     }
 
     results.push(
@@ -334,7 +339,7 @@ export default createWidget("hamburger-menu", {
       this.sendWidgetAction("toggleHamburger");
     } else {
       const $window = $(window);
-      const windowWidth = parseInt($window.width(), 10);
+      const windowWidth = $window.width();
       const $panel = $(".menu-panel");
       $panel.addClass("animate");
       const panelOffsetDirection = this.site.mobileView ? "left" : "right";
@@ -342,7 +347,7 @@ export default createWidget("hamburger-menu", {
       const $headerCloak = $(".header-cloak");
       $headerCloak.addClass("animate");
       $headerCloak.css("opacity", 0);
-      Ember.run.later(() => this.sendWidgetAction("toggleHamburger"), 200);
+      later(() => this.sendWidgetAction("toggleHamburger"), 200);
     }
   },
 

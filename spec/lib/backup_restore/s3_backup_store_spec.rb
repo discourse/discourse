@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 's3_helper'
 require 'backup_restore/s3_backup_store'
 require_relative 'shared_examples_for_backup_store'
 
@@ -21,7 +22,7 @@ describe BackupRestore::S3BackupStore do
       expect(context.params[:prefix]).to eq(expected_prefix) if context.params.key?(:prefix)
     end
 
-    @s3_client.stub_responses(:list_objects, -> (context) do
+    @s3_client.stub_responses(:list_objects_v2, -> (context) do
       check_context(context)
 
       { contents: objects_with_prefix(context) }

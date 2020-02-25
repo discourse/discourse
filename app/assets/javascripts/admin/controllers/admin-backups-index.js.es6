@@ -1,15 +1,18 @@
+import { alias, equal } from "@ember/object/computed";
+import { inject } from "@ember/controller";
+import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { setting, i18n } from "discourse/lib/computed";
 
-export default Ember.Controller.extend({
-  adminBackups: Ember.inject.controller(),
-  status: Ember.computed.alias("adminBackups.model"),
+export default Controller.extend({
+  adminBackups: inject(),
+  status: alias("adminBackups.model"),
   uploadLabel: i18n("admin.backups.upload.label"),
   backupLocation: setting("backup_location"),
-  localBackupStorage: Ember.computed.equal("backupLocation", "local"),
+  localBackupStorage: equal("backupLocation", "local"),
 
-  @computed("status.allowRestore", "status.isOperationRunning")
+  @discourseComputed("status.allowRestore", "status.isOperationRunning")
   restoreTitle(allowRestore, isOperationRunning) {
     if (!allowRestore) {
       return "admin.backups.operations.restore.is_disabled";
@@ -29,7 +32,7 @@ export default Ember.Controller.extend({
           I18n.t("yes_value"),
           confirmed => {
             if (confirmed) {
-              Discourse.User.currentProp("hideReadOnlyAlert", true);
+              this.set("currentUser.hideReadOnlyAlert", true);
               this._toggleReadOnlyMode(true);
             }
           }

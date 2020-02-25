@@ -73,6 +73,14 @@ describe Invite do
         end
       end
 
+      context 'links' do
+        it 'does not enqueue a job to email the invite' do
+          expect do
+            Invite.generate_invite_link(iceking, inviter, topic)
+          end.not_to change { Jobs::InviteEmail.jobs.size }
+        end
+      end
+
       context 'destroyed' do
         it "can invite the same user after their invite was destroyed" do
           Invite.invite_by_email(iceking, inviter, topic).destroy!
@@ -101,7 +109,6 @@ describe Invite do
             expect(new_invite.invite_key).not_to eq(invite.invite_key)
             expect(new_invite.topics).to eq([topic])
           end
-
         end
 
         context 'when adding a duplicate' do
@@ -129,7 +136,7 @@ describe Invite do
 
           it 'returns a new invite if the other has expired' do
             SiteSetting.invite_expiry_days = 1
-            invite.update!(created_at: 2.days.ago)
+            invite.update!(updated_at: 2.days.ago)
 
             new_invite = Invite.invite_by_email(
               'iceking@adventuretime.ooo', inviter, topic
@@ -151,26 +158,34 @@ describe Invite do
           end
         end
 
-        it 'correctly marks invite as sent via email' do
-          expect(invite.via_email).to eq(true)
+        it 'resets expiry of a resent invite' do
+          SiteSetting.invite_expiry_days = 2
+          invite.update!(updated_at: 10.days.ago)
+          expect(invite).to be_expired
 
-          Invite.invite_by_email(iceking, inviter, topic)
-          expect(invite.reload.via_email).to eq(true)
+          invite.resend_invite
+          expect(invite).not_to be_expired
         end
 
-        it 'does not mark invite as sent via email after generating invite link' do
-          expect(invite.via_email).to eq(true)
-
-          Invite.generate_invite_link(iceking, inviter, topic)
-          expect(invite.reload.via_email).to eq(false)
+        it 'correctly marks invite emailed_status for email invites' do
+          expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sending])
 
           Invite.invite_by_email(iceking, inviter, topic)
-          expect(invite.reload.via_email).to eq(false)
-
-          Invite.generate_invite_link(iceking, inviter, topic)
-          expect(invite.reload.via_email).to eq(false)
+          expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:sending])
         end
 
+        it 'does not mark emailed_status as sending after generating invite link' do
+          expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sending])
+
+          Invite.generate_invite_link(iceking, inviter, topic)
+          expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
+
+          Invite.invite_by_email(iceking, inviter, topic)
+          expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
+
+          Invite.generate_invite_link(iceking, inviter, topic)
+          expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
+        end
       end
     end
   end
@@ -207,7 +222,7 @@ describe Invite do
 
     it 'wont redeem an expired invite' do
       SiteSetting.invite_expiry_days = 10
-      invite.update_column(:created_at, 20.days.ago)
+      invite.update_column(:updated_at, 20.days.ago)
       expect(invite.redeem).to be_blank
     end
 
@@ -486,7 +501,7 @@ describe Invite do
       invite_1 = Fabricate(:invite, invited_by: user)
       invite_2 = Fabricate(:invite, invited_by: user)
       expired_invite = Fabricate(:invite, invited_by: user)
-      expired_invite.update!(created_at: 2.days.ago)
+      expired_invite.update!(updated_at: 2.days.ago)
       Invite.rescind_all_expired_invites_from(user)
       invite_1.reload
       invite_2.reload
@@ -494,6 +509,22 @@ describe Invite do
       expect(invite_1.deleted_at).to eq(nil)
       expect(invite_2.deleted_at).to eq(nil)
       expect(expired_invite.deleted_at).to be_present
+    end
+  end
+
+  describe '#emailed_status_types' do
+    context "verify enum sequence" do
+      before do
+        @emailed_status_types = Invite.emailed_status_types
+      end
+
+      it "'not_required' should be at 0 position" do
+        expect(@emailed_status_types[:not_required]).to eq(0)
+      end
+
+      it "'sent' should be at 4th position" do
+        expect(@emailed_status_types[:sent]).to eq(4)
+      end
     end
   end
 end

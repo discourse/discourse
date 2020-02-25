@@ -35,7 +35,7 @@ export default class LockOn {
 
   elementTop() {
     const $selected = $(this.selector);
-    if ($selected && $selected.offset && $selected.offset()) {
+    if ($selected.length && $selected.offset && $selected.offset()) {
       return $selected.offset().top - minimumOffset();
     }
   }
@@ -49,13 +49,18 @@ export default class LockOn {
   }
 
   lock() {
-    let previousTop = this.elementTop();
     const startedAt = new Date().getTime();
-
-    $(window).scrollTop(previousTop);
+    let previousTop = this.elementTop();
+    previousTop && $(window).scrollTop(previousTop);
 
     const interval = setInterval(() => {
-      const top = Math.max(0, this.elementTop());
+      const elementTop = this.elementTop();
+      if (!previousTop && !elementTop) {
+        // we can't find the element yet, wait a little bit more
+        return;
+      }
+
+      const top = Math.max(0, elementTop);
       const scrollTop = $(window).scrollTop();
 
       if (typeof top === "undefined" || isNaN(top)) {
@@ -67,7 +72,7 @@ export default class LockOn {
         previousTop = top;
       }
 
-      // Commit suicide after a little while
+      // Stop after a little while
       if (new Date().getTime() - startedAt > LOCK_DURATION_MS) {
         return this.clearLock(interval);
       }

@@ -1,18 +1,9 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-require_dependency 'single_sign_on'
-require_dependency 'single_sign_on_provider'
-require_dependency 'url_helper'
-
 class SessionController < ApplicationController
-  class LocalLoginNotAllowed < StandardError; end
-  rescue_from LocalLoginNotAllowed do
-    render body: nil, status: 500
-  end
-
-  before_action :check_local_login_allowed, only: %i(create forgot_password email_login email_login_info)
+  before_action :check_local_login_allowed, only: %i(create forgot_password)
   before_action :rate_limit_login, only: %i(create email_login)
+  before_action :rate_limit_second_factor_totp, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy one_time_password)
 
@@ -39,20 +30,41 @@ class SessionController < ApplicationController
       if SiteSetting.verbose_sso_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
-      redirect_to sso.to_url
+      redirect_to sso_url(sso)
     else
       render body: nil, status: 404
     end
   end
 
   def sso_provider(payload = nil)
-    payload ||= request.query_string
-
     if SiteSetting.enable_sso_provider
-      sso = SingleSignOnProvider.parse(payload)
+      begin
+        if !payload
+          params.require(:sso)
+          payload = request.query_string
+        end
+        sso = SingleSignOnProvider.parse(payload)
+      rescue SingleSignOnProvider::BlankSecret
+        render plain: I18n.t("sso.missing_secret"), status: 400
+        return
+      rescue SingleSignOnProvider::ParseError => e
+        if SiteSetting.verbose_sso_logging
+          Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
+        end
+
+        # Do NOT pass the error text to the client, it would give them the correct signature
+        render plain: I18n.t("sso.login_error"), status: 422
+        return
+      end
 
       if sso.return_sso_url.blank?
         render plain: "return_sso_url is blank, it must be provided", status: 400
+        return
+      end
+
+      if sso.logout
+        params[:return_url] = sso.return_sso_url
+        destroy
         return
       end
 
@@ -256,10 +268,6 @@ class SessionController < ApplicationController
   end
 
   def create
-    unless params[:second_factor_token].blank?
-      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-    end
-
     params.require(:login)
     params.require(:password)
 
@@ -291,25 +299,22 @@ class SessionController < ApplicationController
     end
 
     if payload = login_error_check(user)
-      render json: payload
-    else
-      if user.totp_enabled? && !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
-        return render json: failed_json.merge(
-          error: I18n.t("login.invalid_second_factor_code"),
-          reason: "invalid_second_factor",
-          backup_enabled: user.backup_codes_enabled?
-        )
-      end
-
-      (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
+      return render json: payload
     end
+
+    if !authenticate_second_factor(user)
+      return render(json: @second_factor_failure_payload)
+    end
+
+    (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
   def email_login_info
-    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
-
     token = params[:token]
     matched_token = EmailToken.confirmable(token)
+    user = matched_token&.user
+
+    check_local_login_allowed(user: user, check_login_via_email: true)
 
     if matched_token
       response = {
@@ -318,10 +323,18 @@ class SessionController < ApplicationController
         token_email: matched_token.email
       }
 
-      if matched_token.user&.totp_enabled?
+      matched_user = matched_token.user
+      if matched_user&.totp_enabled?
         response.merge!(
           second_factor_required: true,
-          backup_codes_enabled: matched_token.user&.backup_codes_enabled?
+          backup_codes_enabled: matched_user&.backup_codes_enabled?
+        )
+      end
+
+      if matched_user&.security_keys_enabled?
+        Webauthn.stage_challenge(matched_user, secure_session)
+        response.merge!(
+          Webauthn.allowed_credentials(matched_user, secure_session).merge(security_key_required: true)
         )
       end
 
@@ -335,19 +348,14 @@ class SessionController < ApplicationController
   end
 
   def email_login
-    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
-    second_factor_token = params[:second_factor_token]
-    second_factor_method = params[:second_factor_method].to_i
     token = params[:token]
     matched_token = EmailToken.confirmable(token)
+    user = matched_token&.user
 
-    if matched_token&.user&.totp_enabled?
-      if !second_factor_token.present?
-        return render json: { error: I18n.t('login.invalid_second_factor_code') }
-      elsif !matched_token.user.authenticate_second_factor(second_factor_token, second_factor_method)
-        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        return render json: { error: I18n.t('login.invalid_second_factor_code') }
-      end
+    check_local_login_allowed(user: user, check_login_via_email: true)
+
+    if user.present? && !authenticate_second_factor(user)
+      return render(json: @second_factor_failure_payload)
     end
 
     if user = EmailToken.confirm(token)
@@ -361,7 +369,7 @@ class SessionController < ApplicationController
       end
     end
 
-    return render json: { error: I18n.t('email_login.invalid_token') }
+    render json: { error: I18n.t('email_login.invalid_token') }
   end
 
   def one_time_password
@@ -382,7 +390,7 @@ class SessionController < ApplicationController
       @error = I18n.t('user_api_key.invalid_token')
     end
 
-    render layout: 'no_ember'
+    render layout: 'no_ember', locals: { hide_auth_buttons: true }
   end
 
   def forgot_password
@@ -432,13 +440,33 @@ class SessionController < ApplicationController
 
   protected
 
-  def check_local_login_allowed
-    if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
-      raise LocalLoginNotAllowed, "SSO takes over local login or the local login is disallowed."
+  def check_local_login_allowed(user: nil, check_login_via_email: false)
+    # admin-login can get around enabled SSO/disabled local logins
+    return if user&.admin?
+
+    if (check_login_via_email && !SiteSetting.enable_local_logins_via_email) ||
+        SiteSetting.enable_sso ||
+        !SiteSetting.enable_local_logins
+      raise Discourse::InvalidAccess, "SSO takes over local login or the local login is disallowed."
     end
   end
 
   private
+
+  def authenticate_second_factor(user)
+    second_factor_authentication_result = user.authenticate_second_factor(params, secure_session)
+    if !second_factor_authentication_result.ok
+      failure_payload = second_factor_authentication_result.to_h
+      if user.security_keys_enabled?
+        Webauthn.stage_challenge(user, secure_session)
+        failure_payload.merge!(Webauthn.allowed_credentials(user, secure_session))
+      end
+      @second_factor_failure_payload = failed_json.merge(failure_payload)
+      return false
+    end
+
+    true
+  end
 
   def login_error_check(user)
     return failed_to_login(user) if user.suspended?
@@ -448,7 +476,7 @@ class SessionController < ApplicationController
     end
 
     if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
-      return admin_not_allowed_from_ip_address(user)
+      admin_not_allowed_from_ip_address(user)
     end
   end
 
@@ -496,6 +524,7 @@ class SessionController < ApplicationController
 
   def login(user)
     session.delete(ACTIVATE_USER_KEY)
+    user.update_timezone_if_missing(params[:timezone])
     log_on_user(user)
 
     if payload = cookies.delete(:sso_payload)
@@ -521,8 +550,18 @@ class SessionController < ApplicationController
     ).performed!
   end
 
+  def rate_limit_second_factor_totp
+    return if params[:second_factor_token].blank?
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+  end
+
   def render_sso_error(status:, text:)
     @sso_error = text
     render status: status, layout: 'no_ember'
+  end
+
+  # extension to allow plugins to customize the SSO URL
+  def sso_url(sso)
+    sso.to_url
   end
 end

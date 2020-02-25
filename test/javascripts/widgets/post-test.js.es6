@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
 moduleForWidget("post");
@@ -579,7 +580,7 @@ widgetTest("toggle moderator post", {
   template:
     '{{mount-widget widget="post" args=args togglePostType=(action "togglePostType")}}',
   beforeEach() {
-    this.currentUser.set("staff", true);
+    this.currentUser.set("moderator", true);
     this.set("args", { canManage: true });
     this.on("togglePostType", () => (this.toggled = true));
   },
@@ -595,7 +596,7 @@ widgetTest("toggle moderator post", {
   template:
     '{{mount-widget widget="post" args=args togglePostType=(action "togglePostType")}}',
   beforeEach() {
-    this.currentUser.set("staff", true);
+    this.currentUser.set("moderator", true);
     this.set("args", { canManage: true });
     this.on("togglePostType", () => (this.toggled = true));
   },
@@ -861,7 +862,7 @@ widgetTest("pm map", {
       showTopicMap: true,
       showPMMap: true,
       allowedGroups: [],
-      allowedUsers: [Ember.Object.create({ username: "eviltrout" })]
+      allowedUsers: [EmberObject.create({ username: "eviltrout" })]
     });
   },
   test(assert) {
@@ -875,6 +876,7 @@ widgetTest("post notice - with username", {
   beforeEach() {
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+    this.siteSettings.display_name_on_posts = false;
     this.siteSettings.prioritize_username_in_ux = true;
     this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
@@ -892,7 +894,7 @@ widgetTest("post notice - with username", {
         .trim(),
       I18n.t("post.notice.returning_user", {
         user: "codinghorror",
-        time: "2d ago"
+        time: "2 days ago"
       })
     );
   }
@@ -901,6 +903,7 @@ widgetTest("post notice - with username", {
 widgetTest("post notice - with name", {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
+    this.siteSettings.display_name_on_posts = true;
     this.siteSettings.prioritize_username_in_ux = false;
     this.siteSettings.old_post_notice_days = 14;
     this.set("args", {

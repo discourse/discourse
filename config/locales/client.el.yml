@@ -139,7 +139,6 @@ el:
       banner:
         enabled: "το έκανε ανακοίνωση στις %{when}. Θα εμφανίζεται στην κορυφή κάθε σελίδας μέχρι να απορριφθεί από τον χρήστη."
         disabled: "το αφαίρεσε από ανακοίνωση %{when}. Δεν θα εμφανίζεται πλέον στην κορυφή κάθε σελίδας."
-    topic_admin_menu: "εργαλεία διαχείρισης νήματος"
     wizard_required: "Καλώς ήλθατε στο νέο σας Discourse! Ας αρχίσουμε με τον <a href='%{url}' data-auto-route='true'>οδηγό εγκατάστασης</a> ✨"
     emails_are_disabled: "Τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί κανένα email."
     themes:
@@ -195,11 +194,14 @@ el:
     every_hour: "κάθε ώρα"
     daily: "καθημερινά"
     weekly: "κάθε εβδομάδα"
+    every_month: "κάθε μήνα"
     max_of_count: "μέγιστο {{count}}"
     alternation: "ή"
     character_count:
       one: "{{count}} χαρακτήρα"
       other: "{{count}} χαρακτήρες"
+    related_messages:
+      title: "Σχετικά Μηνύματα"
     suggested_topics:
       title: "Προτεινόμενα Νήματα"
       pm_title: "Προτεινόμενα Μηνύματα"
@@ -209,6 +211,7 @@ el:
       stats: "Στατιστικά Ιστοσελίδας"
       our_admins: "Οι διαχειριστές μας"
       our_moderators: "Οι συντονιστές μας"
+      moderators: "Συντονιστές"
       stat:
         all_time: "Συνολικά"
       like_count: "Αρέσει"
@@ -227,6 +230,7 @@ el:
     bookmarks:
       created: "έχεις προσθέσει σελιδοδείκτη σε αυτή την ανάρτηση"
       remove: "Αφαίρεση Σελιδοδείκτη"
+      save: "Αποθήκευση"
     drafts:
       remove: "Αναίρεση Πρόσκλησης"
       abandon:
@@ -252,11 +256,12 @@ el:
       edit: "Επεξεργασία αυτής της ανακοίνωσης >>"
     choose_topic:
       none_found: "Δεν βρέθηκαν νήματα."
-      title:
-        placeholder: "γράψε εδώ τον τίτλο του νήματος"
     review:
+      explain:
+        total: "Σύνολο"
       delete: "Σβήσιμο"
       settings:
+        saved: "Αποθηκεύτηκε! "
         save_changes: "Αποθήκευση Αλλαγών"
         title: "Ρυθμίσεις"
       topic: "Νήμα:"
@@ -265,6 +270,7 @@ el:
         username: "Όνομα Χρήστη"
         email: "Διεύθυνση Email"
         name: "Όνομα"
+        fields: "Πεδία"
       topics:
         topic: "Νήμα"
         details: "λεπτομέρειες"
@@ -281,8 +287,14 @@ el:
       statuses:
         pending:
           title: "Εκκρεμή"
+        approved:
+          title: "Εγκρίθηκε "
         rejected:
           title: "Απορρίφθηκε"
+        ignored:
+          title: "Αγνοήθηκε "
+        deleted:
+          title: "Διαγράφηκε"
       types:
         reviewable_user:
           title: "Χρήστης"
@@ -370,7 +382,6 @@ el:
       add: "Προσθήκη"
       request: "Αίτημα"
       message: "Μήνυμα"
-      allow_membership_requests: "Επιτρέψτε στα μέλη να στέλνουν αιτήματα συμμετοχής στους ιδιοκτήτες ομάδων"
       membership_request_template: "Προσαρμοσμένο πρότυπο που θα εμφανίζεται στους χρήστες όταν αποστέλλεται αίτημα συμμετοχής"
       membership_request:
         submit: "Αποστολή Αιτήματος"
@@ -500,10 +511,15 @@ el:
       user_notifications:
         ignore_duration_username: "Όνομα Χρήστη"
         ignore_duration_save: "Αγνόηση"
+        ignore_option: "Αγνοήθηκε "
         mute_option: "Σίγαση"
         normal_option: "Φυσιολογικά"
       activity_stream: "Δραστηριότητα"
       preferences: "Προτιμήσεις"
+      feature_topic_on_profile:
+        save: "Αποθήκευση"
+        clear:
+          title: "Καθαρισμός"
       expand_profile: "Επέκτεινε"
       bookmarks: "Σελιδοδείκτες"
       bio: "Σχετικά με εμένα"
@@ -573,9 +589,8 @@ el:
       users: "Χρήστες"
       muted_users: "Σε σίγαση"
       muted_users_instructions: "Αποσιώπησε όλες τις ειδοποιήσεις από αυτούς τους χρήστες."
-      muted_topics_link: "Δείξε τα νήματα που είναι σε σίγαση"
-      watched_topics_link: "Δείξε τα νήματα που επιτηρούνται"
-      tracked_topics_link: "Δείξτε τα νήματα που παρακολουθούνται"
+      ignored_users: "Αγνοήθηκε "
+      tracked_topics_link: "Δείξε"
       automatically_unpin_topics: "Τα νήματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος."
       apps: "Εφαρμογές"
       revoke_access: "Ανάκληση Πρόσβασης"
@@ -625,6 +640,12 @@ el:
         enable: "Ενεργοποίηση"
         copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
+      second_factor:
+        name: "Όνομα"
+        edit: "Επεξεργασία"
+        security_key:
+          register: "Εγγραφή"
+          delete: "Σβήσιμο"
       change_about:
         title: "Άλλαξε τα «σχετικά με εμένα»"
         error: "Προέκυψε σφάλμα στην αλλαγή της αξίας."
@@ -647,11 +668,7 @@ el:
         uploaded_avatar: "Προσαρμοσμένη εικόνα"
         uploaded_avatar_empty: "Πρόσθεσε μια δική σου εικόνα"
         upload_title: "Ανέβασε την εικόνα σου"
-        upload_picture: "Ανέβασμα Εικόνας"
         image_is_not_a_square: "Προσοχή: Περικόψαμε την εικόνα σου γιατί το ύψος και το πλάτος δεν ήταν ίσα."
-      change_profile_background:
-        title: "Φόντο Προφίλ"
-        instructions: "Οι εικόνες που μπαίνουν στο φόντο του προφίλ σου θα κεντραρίζονται και το προκαθορισμένο πλάτος τους είναι 850px."
       change_card_background:
         title: "Φόντο Καρτέλας Χρήστη"
         instructions: "Οι εικόνες στο φόντο θα κεντραρίζονται και το προκαθορισμένο πλάτος τους είναι 590px."
@@ -666,6 +683,7 @@ el:
           other: "Θα σου στείλουμε ηλεκτρονικό μήνυμα μόνο εάν δεν σε έχουμε δει τα τελευταία {{count}} λεπτά."
       associated_accounts:
         revoke: "Ανάκληση"
+        cancel: "Άκυρο"
       name:
         title: "Όνομα"
         instructions: "το ονοματεπώνυμό σου (προαιρετικό)"
@@ -719,6 +737,7 @@ el:
         every_hour: "ωριαία"
         daily: "καθημερινά"
         weekly: "εβδομαδιαία"
+        every_month: "κάθε μήνα"
       email_level:
         title: "Στείλε μου ένα email όταν κάποιος παραθέσει ανάρτησή μου, απαντήσει σε ανάρτησή μου, αναφέρει το @username μου ή με προσκαλεί σε ένα νήμα."
         always: "πάντα"
@@ -752,7 +771,6 @@ el:
         search: "γράψε για να αναζητήσεις προσκλήσεις..."
         title: "Προσκλήσεις"
         user: "Προσκεκλημένος Χρήστης"
-        sent: "Απεσταλμένα"
         truncated:
           one: "Δείχνοντας την πρώτη πρόσκληση."
           other: "Προβάλονται οι πρώτες {{count}} προσκλήσεις."
@@ -848,6 +866,8 @@ el:
         header_title: "προφίλ, μηνύματα, σελιδοδείκτες και προτιμήσεις"
       title:
         title: "Τίτλος"
+      primary_group:
+        title: "Κύρια ομάδα"
       filters:
         all: "Όλα"
       stream:
@@ -934,6 +954,7 @@ el:
     trust_level: "Επίπεδο Εμπιστοσύνης"
     search_hint: "όνομα χρήστη, email ή IP διεύθυνση"
     create_account:
+      disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='{{privacy_link}}'>πολιτική ιδιωτικότητας</a> και με τους <a href='{{tos_link}}'>όρους χρήσης</a>."
       title: "Δημιουργία Λογαριασμού"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
     forgot_password:
@@ -943,8 +964,6 @@ el:
       reset: "Επαναφορά Κωδικού Πρόσβασης"
       complete_username: "Αν βρεθεί λογαριασμός με το όνομα χρήστη <b>%{username}</b>, σύντομα θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
       complete_email: "Αν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>, σε λίγο θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
-      complete_username_found: "Βρήκαμε έναν λογαριασμό με το όνομα χρήστη <b>%{username}</b>. Σύντομα θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
-      complete_email_found: "Βρήκαμε έναν λογαριασμό με τη διεύθυνση <b>%{email}</b>. Σε λίγο θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
       complete_username_not_found: "Δεν υπάρχει λογαριασμός με το όνομα χρήστη <b>%{username}</b>"
       complete_email_not_found: "Δεν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>"
       help: "Δεν λαμβάνετε το email; Ελέγξτε αρχικά τον φάκελο spam.<p>Δεν γνωρίζετε ποια διεύθυνση email χρησιμοποιήσατε; Πείτε μας την διεύθυνση που θεωρείτε πιο πιθανή και θα σας πούμε αν υπάρχει στο σύστημα.</p><p>Αν δεν έχετε πλέον πρόσβαση στην διεύθυνση email του λογαριασμού σας, παρακαλούμε επικοινωνήστε<a href='%{basePath}/about'>με την ομάδα διαχείρισης.</a></p>"
@@ -986,20 +1005,15 @@ el:
       google_oauth2:
         name: "Google"
         title: "μέσω της Google"
-        message: "Ταυτοποίηση μέσω της Google (βεβαιώσου πως δεν έχει ενεργοποιηθεί το μπλοκάρισμα των αναδυόμενων παραθύρων)"
       twitter:
         name: "Twitter"
         title: "μέσω του Twitter"
-        message: "Ταυτοποίηση μέσω του Twitter (βεβαιώσου πως δεν έχει ενεργοποιηθεί το μπλοκάρισμα των αναδυόμενων παραθύρων)"
       instagram:
         title: "μέσω του Instagram"
-        message: "Ταυτοποίηση μέσω του Instagram (βεβαιώσου πως δεν έχει ενεργοποιηθεί το μπλοκάρισμα των αναδυόμενων παραθύρων)"
       facebook:
         title: "μέσω του Facebook"
-        message: "Ταυτοποίηση μέσω του Facebook (βεβαιώσου πως δεν έχει ενεργοποιηθεί το μπλοκάρισμα των αναδυόμενων παραθύρων)"
       github:
         title: "μέσω του GitHub"
-        message: "Ταυτοποίηση μέσω του Github (βεβαιώσου πως δεν έχει ενεργοποιηθεί το μπλοκάρισμα των αναδυόμενων παραθύρων)"
     invites:
       accept_title: "Πρόσκληση"
       welcome_to: "Καλώς ήλθατε στην %{site_name}!"
@@ -1017,7 +1031,6 @@ el:
       apple_international: "Apple/Διεθνής"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1035,6 +1048,9 @@ el:
       default_header_text: Επιλογή...
       no_content: Δεν βρέθηκαν αποτελέσματα
       filter_placeholder: Αναζήτηση...
+    date_time_picker:
+      from: Από
+      to: Προς
     emoji_picker:
       filter_placeholder: Αναζήτηση για emoji
       objects: Αντικείμενα
@@ -1072,7 +1088,6 @@ el:
         title_missing: "Απαιτείται τίτλος"
         title_too_short: "Ο τίτλος πρέπει να έχει τουλάχιστον {{min}} χαρακτήρες"
         title_too_long: "Ο τίτλος δεν μπορεί να έχει πάνω από {{max}} χαρακτήρες"
-        post_missing: "Μία ανάρτηση δεν μπορεί να είναι κενή"
         post_length: "Κάθε ανάρτηση πρέπει να περιέχει τουλάχιστον {{min}} χαρακτήρες"
         category_missing: "Πρέπει να διαλέξεις μια κατηγορία"
       save_edit: "Αποθήκευση Επεξεργασίας"
@@ -1088,13 +1103,11 @@ el:
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
       edit_reason_placeholder: "γιατί αναθεωρείς;"
-      show_edit_reason: "(δώσε αιτιολόγηση για την επεξεργασία) "
       topic_featured_link_placeholder: "Εισάγετε τον συνδέσμο που εμφανίζεται με τον τίτλο"
       reply_placeholder: "Πληκτρολόγησε εδώ. Χρησιμοποίησε την μορφή Markdown, BBCode, ή HTML. Σύρε ή επικόλλησε εικόνες."
       view_new_post: "Δες τη νέα σου ανάρτηση."
       saving: "Αποθηκεύεται"
       saved: "Αποθηκεύτηκε!"
-      saved_draft: "Η ανάρτηση είναι σε φάση επεξεργασίας. Πάτα εδώ για να συνεχίσεις."
       uploading: "Ανεβαίνει..."
       show_preview: "εμφάνιση προεπισκόπησης &raquo;"
       hide_preview: "&laquo; απόκρυψη προεπισκόπησης"
@@ -1136,7 +1149,6 @@ el:
       title: "ειδοποιήσεις για αναφορές στο @name, απαντήσεις στις αναρτήσεις σου και στα νήματά σου, προσωπικά μηνύματα, κλπ."
       none: "Αυτή τη στιγμή δεν είναι δυνατόν να φορτωθούν οι ειδοποιήσεις."
       empty: "Δεν βρέθηκαν ειδοποιήσεις."
-      more: "εμφάνιση παλαιότερων ειδοποιήσεων"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1152,7 +1164,7 @@ el:
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
-      invitee_accepted: "<span>{{username}}</span> αποδέχτηκε την  πρόσκλησή σου"
+      invitee_accepted: "<span>{{username}}</span> αποδέχτηκε την πρόσκλησή σου"
       moved_post: "<span>{{username}}</span> μετακίνησε {{description}}"
       linked: "<span>{{username}}</span> {{description}}"
       granted_badge: "Έλαβες '{{description}}'"
@@ -1183,7 +1195,6 @@ el:
       hint_for_supported_browsers: "μπορείς επίσης να σύρεις ή να επικόλλησεις εικόνες στον editor"
       uploading: "Ανεβαίνει"
       select_file: "Επιλογή Αρχείου"
-      image_link: "υπερσύνδεσμος στον οποίο θα δείχνει η εικόνα σου"
       default_image_alt_text: εικόνα
     search:
       sort_by: "Ταξινόμηση κατά"
@@ -1359,7 +1370,7 @@ el:
       view_latest_topics: δες τα πρόσφατα νήματα
       suggest_create_topic: Γιατί δεν φτιάχνεις ένα νέο νήμα;
       jump_reply_up: μετάβαση στην απάντηση που προηγείται
-      jump_reply_down: μετάβαση στην  απάντηση που ακολουθεί
+      jump_reply_down: μετάβαση στην απάντηση που ακολουθεί
       deleted: "Το νήμα έχει διαγραφεί "
       topic_status_update:
         title: "Χρονοδιακόπτης Νήματος"
@@ -1473,6 +1484,7 @@ el:
           title: "Σε σίγαση"
           description: "Δε θα ειδοποιείσαι ποτέ για οτιδήποτε σχετικά με αυτό το θέμα και δε θα εμφανίζεται στα τελευταία."
       actions:
+        title: "Ενέργειες"
         recover: "Επαναφορά του νήματος"
         delete: "Διαγραφή Νήματος"
         open: "Νέο Νήμα"
@@ -1619,7 +1631,7 @@ el:
       edit_reason: "Αιτία:"
       post_number: "ανάρτηση {{number}}"
       wiki_last_edited_on: "το βίκι επεξεργάστηκε τελευταία φορά στις"
-      last_edited_on: "η ανάρτηση  επεξεργάστηκε τελευταία φορά στις"
+      last_edited_on: "η ανάρτηση επεξεργάστηκε τελευταία φορά στις"
       reply_as_new_topic: "Απάντηση με διασυνδεδεμένο νήμα"
       reply_as_new_private_message: "Απάντηση ως νέο μήνυμα στον ίδιο παραλήπτη"
       continue_discussion: "Συνέχιση της συζήτησης από το {{postLink}}:"
@@ -1652,6 +1664,8 @@ el:
         image_upload_not_allowed_for_new_user: "Λυπούμαστε, οι νέοι χρήστες δεν μπορούν να ανεβάσουν εικόνες."
         attachment_upload_not_allowed_for_new_user: "Λυπούμαστε, οι νέοι χρήστες δεν μπορούν να επισυνάψουν αρχεία."
         attachment_download_requires_login: "Λυπούμαστε, για να κατεβάσεις συνημμένα αρχεία, πρέπει πρώτα να συνδεθείς."
+      abandon_edit:
+        no_value: "Όχι, κράτησέ τη"
       abandon:
         confirm: "Σίγουρα θέλεις να απορρίψεις την ανάρτησή σου;"
         no_value: "Όχι, κράτησέ τη"
@@ -1707,7 +1721,6 @@ el:
           notify_moderators: "ειδοποιήθηκαν οι συντονιστές"
           notify_user: "έστειλαν ένα μήνυμα"
           bookmark: "έβαλαν σελιδοδείκτη"
-          like: "άρεσαν αυτό"
           like_capped:
             one: "και {{count}} άλλος το άρεσε αυτό "
             other: "και {{count}} άλλοι το άρεσαν αυτό "
@@ -1755,6 +1768,8 @@ el:
           html_part:
             title: "Εμφάνιση του τμήματος html του email"
             button: "HTML"
+      bookmarks:
+        name: "Όνομα"
     category:
       can: "μπορεί&hellip; "
       none: "(χωρίς κατηγορία)"
@@ -2119,29 +2134,13 @@ el:
           name: Άλλο
         posting:
           name: Αναρτάται
-    google_search: |2
-
-      <h3>Αναζήτηση στο Google</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "Όλες οι Ετικέτες"
       selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
       changed: "αλλαγμένες ετικέτες:"
       tags: "Ετικέτες"
+      add_synonyms: "Προσθήκη"
       delete_tag: "Αφαίρεση Ετικέτας"
       delete_confirm:
         one: "Είσαι βέβαιος πως θέλεις να διαγράψεις αυτήν την ετικέτα και να την αφαιρέσεις από το %{count} νήμα στο οποίο είναι προσαρτημένη;"
@@ -2259,8 +2258,6 @@ el:
           view_table: "πίνακας"
           view_graph: "γράφημα"
           refresh_report: "Ανανέωση αναφοράς"
-          start_date: "Ημερομηνία Έναρξης"
-          end_date: "Ημερομηνία Λήξης"
           groups: "Όλες οι ομάδες"
           filters:
             group:
@@ -2286,12 +2283,9 @@ el:
             visibility_levels:
               title: "Ποιος μπορεί να δει αυτή την ομάδα;"
               public: "Όλοι"
-              members: "Ιδιοκτήτες ομάδας, μέλη και διαχειριστές"
               staff: "Ιδιοκτήτες ομάδας και συνεργάτες"
-              owners: "Ιδιοκτήτες ομάδας και διαχειριστές"
           membership:
             automatic: Αυτόματα
-            trust_level: Επίπεδο Εμπιστοσύνης
             trust_levels_title: "Επίπεδο εμπιστοσύνης που δίνεται αυτόματα στα μέλη όταν προστίθενται:"
             trust_levels_none: "Κανένα"
             automatic_membership_email_domains: "Οι χρήστης των οποίων το email domain ταιριάζει με κάποιο από αυτά της λίστας, θα προστίθενται αυτόματα σε αυτή την ομάδα:"
@@ -2321,19 +2315,17 @@ el:
         none: "Δεν υπάρχουν ενεργά κλειδιά API αυτή την στιγμή."
         user: "Χρήστης"
         title: "API"
-        key: "API Key"
+        created: Δημιουργήθηκε
         generate: "Δημιουργία"
-        regenerate: "Αναδημιουγία"
         revoke: "Ανάκληση"
-        confirm_regen: "Θέλεις να αντικαταστήσεις το API Key με ένα καινούργιο;"
-        confirm_revoke: "Θέλεις σίγουρα να ανακαλέσεις το API Key;"
-        info_html: "Το API Key σου δίνει τη δυνατότητα να δημιουργήσεις και να επεξεργαστείς νήματα μέσω κλήσεων JSON."
         all_users: "Όλοι οι χρήστες"
-        note_html: "Κράτα αυτό το κλειδί <strong>κρυφό</strong>. Όλοι οι χρήστες που το κατέχουν μπορούν να δημιουργήσουν αναρτήσεις υποδυόμενοι οποιονδήποτε χρήστη χωρίς κανέναν περιορισμό."
+        show_details: Λεπτομέρειες
+        description: Περιγραφή
+        save: Αποθήκευση
       web_hooks:
         title: "Webhooks"
         none: "Δεν υπάρχουν Webhooks αυτή τη στιγμή."
-        instruction: "Τα \"Webhooks\" επιτρέπουν στην ιστοσελίδα να ειδοποιεί εξωτερικές υπηρεσίες όταν ένα γεγονός συμβεί στον ιστότοπό σας. Όταν το \"webhook\"  τεθεί σε λειτουργία θα στείλει ένα αίτημα τύπου POST στα URLs τα οποία δόθηκαν. "
+        instruction: "Τα \"Webhooks\" επιτρέπουν στην ιστοσελίδα να ειδοποιεί εξωτερικές υπηρεσίες όταν ένα γεγονός συμβεί στον ιστότοπό σας. Όταν το \"webhook\" τεθεί σε λειτουργία θα στείλει ένα αίτημα τύπου POST στα URLs τα οποία δόθηκαν. "
         detailed_instruction: "Ένα POST request θα σταλεί στο παρεχόμενο URL όταν συμβεί το γεγονός που έχει επιλεγεί."
         new: "Νέο Webhook"
         create: "Δημιουργία"
@@ -2452,7 +2444,7 @@ el:
             alert: "Σας στάλθηκε με email ένας σύνδεσμος για να κάνετε λήψη αυτού του αντιγράφου ασφαλείας."
           destroy:
             title: "Διαγραφή αντιγράφου ασφαλείας"
-            confirm: "Είσαι σίγουρος ότι θέλεις να σβήσεις  αυτό το αντίγραφο ασφαλείας;"
+            confirm: "Είσαι σίγουρος ότι θέλεις να σβήσεις αυτό το αντίγραφο ασφαλείας;"
           restore:
             is_disabled: "Η επαναφορά είναι απενεργοποιημένη στις ρυθμίσεις του ιστότοπου."
             label: "Επαναφορά"
@@ -2494,7 +2486,7 @@ el:
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
         theme_owner: "Μη επεξεργάσιμο, ανήκει σε:"
         email_templates:
-          title: "Πρότυπα Email"
+          title: "Διεύθυνση Email"
           subject: "Θέμα"
           multiple_subjects: "Αυτό το πρότυπο email έχει πολλά θέματα."
           body: "Σώμα"
@@ -2536,6 +2528,8 @@ el:
           install_popular: "Δημοφιλή"
           about_theme: "Σχετικά"
           license: "Άδεια Χρήσης"
+          enable: "Ενεργοποίηση"
+          disable: "Απενεργοποίηση"
           update_to_latest: "Ενημέρωση στην τελευταία έκδοση"
           check_for_updates: "Έλεγχος για ενημερώσεις"
           updating: "Ενημέρωση..."
@@ -2601,6 +2595,8 @@ el:
           love:
             name: "αγάπη"
             description: "Το χρώμα του κουμπιού «μου αρέσει»."
+        email_style:
+          css: "CSS"
       email:
         title: "Emails"
         settings: "Ρυθμίσεις"
@@ -2766,7 +2762,7 @@ el:
             filter: "Αναζήτηση"
           roll_up:
             text: "Σύνοψη"
-            title: "Δημιουργεί νέες εγγραφές για τον αποκλεισμό υποδικτύων αν υπάρχουν τουλάχιστον  'min_ban_entries_for_roll_up' εγγραφές."
+            title: "Δημιουργεί νέες εγγραφές για τον αποκλεισμό υποδικτύων αν υπάρχουν τουλάχιστον 'min_ban_entries_for_roll_up' εγγραφές."
         search_logs:
           title: "Αναζήτηση καταγραφών"
           term: "Όρος"
@@ -2780,6 +2776,8 @@ el:
         search: "αναζήτηση"
         clear_filter: "Καθαρισμός"
         show_words: "προβολή λέξεων"
+        download: Κατέβασμα
+        clear_all: Καθαρισμός Όλων
         word_count:
           one: "%{count} λέξη"
           other: "%{count} λέξεις"
@@ -2799,8 +2797,9 @@ el:
           placeholder_regexp: "regular expression"
           add: "Προσθήκη"
           success: "Επιτυχία"
-          upload: "Μεταφόρτωση"
           upload_successful: "Επιτυχημένη μεταφόρτωση. Οι λέξεις προστέθηκαν."
+        test:
+          no_matches: "Δεν βρέθηκαν αποτελέσματα"
       impersonate:
         title: "Υποδυθείτε"
         help: "Χρησιμοποίησε αυτό το εργαλείο για να εντοπίσεις λάθη υποδυόμενος κάποιον άλλο χρήστη. Θα πρέπει να αποσυνδεθείς όταν τελειώσεις."
@@ -2918,7 +2917,7 @@ el:
         cant_delete_all_too_many_posts:
           one: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
           other: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
-        delete_and_block: "Σβήσε και <b>απόκλεισε</b> αυτή την διεύθυνση email και τη διεύθυνση IP  "
+        delete_and_block: "Σβήσε και <b>απόκλεισε</b> αυτή την διεύθυνση email και τη διεύθυνση IP "
         delete_dont_block: "Μόνο διαγραφή"
         deleted: "Ο χρήστης διαγράφτηκε."
         delete_failed: "Παρουσιάστηκε ένα σφάλμα κατά τη διαγραφή αυτού του χρήστη. Βεβαιώσου πρώτα πως έχουν σβηστεί όλες οι αναρτήσεις του."
@@ -3025,7 +3024,7 @@ el:
       site_text:
         description: "Μπορείς να προσαρμόσεις οποιοδήποτε κείμενο στο χώρο συζητήσεων σου. Παρακαλώ ξεκίνησε κάνοντας αναζήτηση παρακάτω:"
         search: "Αναζήτησε το κείμενο που θα ήθελες να επεξεργαστείς"
-        title: "Περιεχόμενο κειμένου"
+        title: "Κείμενο"
         edit: "επεξεργασία"
         revert: "Επαναφορά αλλαγών"
         revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"
@@ -3073,6 +3072,8 @@ el:
           search: "Αναζήτηση"
           groups: "Ομάδες"
           dashboard: "Πίνακας ελέγχου"
+        default_categories:
+          modal_yes: "Ναι "
       badges:
         title: Παράσημα
         new_badge: Νέο Παράσημο
@@ -3119,7 +3120,7 @@ el:
           post_action: "Όταν ένας χρήστης δρα σε μία ανάρτηση"
           post_revision: "Όταν ένας χρήστης επεξεργάζεται ή δημιουργεί μια ανάρτηση"
           trust_level_change: "Όταν το επίπεδο εμπιστοσύνης ενός χρήστη αλλάξει"
-          user_change: "Όταν ένας χρήστης δημιουργείται ή υφίσταται επεξεργασία  "
+          user_change: "Όταν ένας χρήστης δημιουργείται ή υφίσταται επεξεργασία "
           post_processed: "Αφού μια ανάρτηση έχει δεχτεί επεξεργασία"
         preview:
           link_text: "Προεπισκόπηση απονεμηθέντων παράσημων"
@@ -3159,21 +3160,15 @@ el:
         category: "Ανάρτηση στην Κατηγορία"
         add_host: "Προσθήκη host"
         settings: "Ρυθμίσεις Ενσωμάτωσης"
-        feed_settings: "Ρυθμίσεις Τροφοδοσίας"
-        feed_description: "Με το να συμπεριλαμβάνετε ένα  RSS/ATOM feed για τον ιστότοπό σας βελτιώνετε την δυνατότητα του Discourse να εισάγει τα περιεχόμενά σας. "
         crawling_settings: "Ρυθμίσεις Crawler "
         crawling_description: "Όταν η ιστοσελίδα δημιουργεί νήματα για τις αναρτήσεις σου, άν δεν υπάρχει RSS/ATOM feed θα προσπαθήσει να αναλύσει το περιεχόμενο του HTML σου. Κάποιες φορές μπορεί να αποτελεί πρόκληση το να εξάγει το περιεχόμενο σου, έτσι σου παρέχουμε την ικανότητα να προσδιορίσεις τα CSS rules για να κάνεις την εξαγωγή ευκολότερη."
         embed_by_username: "Όνομα χρήστη για δημιουργία νήματος"
         embed_post_limit: "Μέγιστος αριθμός αναρτήσεων για συγχώνευση"
-        embed_username_key_from_feed: "Κλειδί για λήψη του ονόματος χρήστη από το feed"
         embed_title_scrubber: "Regular expression που χρησιμοποιείται για την λήψη των τίτλων των αναρτήσεων"
         embed_truncate: "Truncate the embedded posts"
         embed_whitelist_selector: "CSS selector για στοιχεία που επιτρέπονται στα συγχωνευμένα"
         embed_blacklist_selector: "CSS selector για στοιχεία που έχουν απομακρυνθεί από τα συγχωνευμένα"
         embed_classname_whitelist: "Επιτρεπόμενα CSS class names"
-        feed_polling_enabled: "Εισαγωγή αναρτήσεων μέσω RSS/ATOM"
-        feed_polling_url: "URL of RSS/ATOM feed to crawl"
-        feed_polling_frequency_mins: "Συχνότητα του feed polling (σε λεπτά)"
         save: "Αποθήκευση των ρυθμίσεων Embedding "
       permalink:
         title: "Permalinks"

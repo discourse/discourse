@@ -1,6 +1,8 @@
-export default Ember.Component.extend({
+import { equal } from "@ember/object/computed";
+import Component from "@ember/component";
+export default Component.extend({
   classNames: ["user-stat"],
   type: "number",
-  isNumber: Ember.computed.equal("type", "number"),
-  isDuration: Ember.computed.equal("type", "duration")
+  isNumber: equal("type", "number"),
+  isDuration: equal("type", "duration")
 });

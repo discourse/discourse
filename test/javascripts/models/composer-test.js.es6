@@ -1,6 +1,8 @@
+import EmberObject from "@ember/object";
 import { currentUser } from "helpers/qunit-helpers";
-import AppEvents from "discourse/lib/app-events";
+import AppEvents from "discourse/services/app-events";
 import Composer from "discourse/models/composer";
+import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
 
 QUnit.module("model:composer");
@@ -236,7 +238,7 @@ QUnit.test("Title length for private messages", assert => {
 
 QUnit.test("Post length for private messages with non human users", assert => {
   const composer = createComposer({
-    topic: Ember.Object.create({ pm_with_non_human_user: true })
+    topic: EmberObject.create({ pm_with_non_human_user: true })
   });
 
   assert.equal(composer.get("minimumPostLength"), 1);
@@ -246,7 +248,7 @@ QUnit.test("editingFirstPost", assert => {
   const composer = createComposer();
   assert.ok(!composer.get("editingFirstPost"), "it's false by default");
 
-  const post = Discourse.Post.create({ id: 123, post_number: 2 });
+  const post = Post.create({ id: 123, post_number: 2 });
   composer.setProperties({ post: post, action: Composer.EDIT });
   assert.ok(
     !composer.get("editingFirstPost"),
@@ -264,7 +266,7 @@ QUnit.test("clearState", assert => {
   const composer = createComposer({
     originalText: "asdf",
     reply: "asdf2",
-    post: Discourse.Post.create({ id: 1 }),
+    post: Post.create({ id: 1 }),
     title: "wat"
   });
 
@@ -328,7 +330,7 @@ QUnit.test("Title length for static page topics as admin", assert => {
   Discourse.SiteSettings.max_topic_title_length = 10;
   const composer = createComposer();
 
-  const post = Discourse.Post.create({
+  const post = Post.create({
     id: 123,
     post_number: 2,
     static_doc: true
@@ -393,4 +395,16 @@ QUnit.test("allows featured link before choosing a category", assert => {
     "placeholder invites you to paste a link"
   );
   assert.ok(composer.get("canEditTopicFeaturedLink"), "can paste link");
+});
+
+QUnit.test("targetRecipientsArray contains types", assert => {
+  let composer = createComposer({
+    targetRecipients: "test,codinghorror,staff,foo@bar.com"
+  });
+  assert.ok(composer.targetRecipientsArray, [
+    { type: "group", name: "test" },
+    { type: "user", name: "codinghorror" },
+    { type: "group", name: "staff" },
+    { type: "email", name: "foo@bar.com" }
+  ]);
 });

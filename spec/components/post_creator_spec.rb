@@ -139,11 +139,10 @@ describe PostCreator do
         cat.save
 
         created_post = nil
-        reply = nil
 
         messages = MessageBus.track_publish do
           created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.id)).create
-          reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
+          _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
         # 2 for topic, one to notify of new topic another for tracking state
@@ -218,6 +217,7 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
@@ -227,6 +227,7 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
         creator.opts[:image_sizes] = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
         creator.create
@@ -446,8 +447,8 @@ describe PostCreator do
             end
 
             it "creates missing tags if some exist" do
-              existing_tag1 = Fabricate(:tag, name: tag_names[0])
-              existing_tag1 = Fabricate(:tag, name: tag_names[1])
+              _existing_tag1 = Fabricate(:tag, name: tag_names[0])
+              _existing_tag1 = Fabricate(:tag, name: tag_names[1])
               expect { @post = creator_with_tags.create }.to change { Tag.count }.by(tag_names.size - 2)
               expect(@post.topic.tags.map(&:name).sort).to eq(tag_names.sort)
             end
@@ -483,9 +484,16 @@ describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it 'whispers do not mess up the public view' do
-      first = PostCreator.new(user,
+
+      freeze_time
+
+      first = PostCreator.new(
+        user,
         topic_id: topic.id,
-        raw: 'this is the first post').create
+        raw: 'this is the first post'
+      ).create
+
+      freeze_time 1.year.from_now
 
       user_stat = user.user_stat
 
@@ -511,6 +519,9 @@ describe PostCreator do
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
 
       expect(user_stat.reload.post_count).to eq(0)
+
+      user.reload
+      expect(user.last_posted_at).to eq_time(1.year.ago)
 
       # date is not precise enough in db
       whisper_reply.reload
@@ -742,6 +753,10 @@ describe PostCreator do
     end
 
     it 'acts correctly' do
+      freeze_time
+
+      user.update_columns(last_posted_at: 1.year.ago)
+
       # It's not a warning
       expect(post.topic.user_warning).to be_blank
 
@@ -759,6 +774,9 @@ describe PostCreator do
       # PMs do not increase post count or topic count
       expect(post.user.user_stat.post_count).to eq(0)
       expect(post.user.user_stat.topic_count).to eq(0)
+
+      user.reload
+      expect(user.last_posted_at).to eq_time(1.year.ago)
 
       # archive this message and ensure archive is cleared for all users on reply
       UserArchivedMessage.create(user_id: target_user2.id, topic_id: post.topic_id)
@@ -1342,10 +1360,10 @@ describe PostCreator do
 
     it "generates post notices for new users" do
       post = PostCreator.create!(user, title: "one of my first topics", raw: "one of my first posts")
-      expect(post.custom_fields["notice_type"]).to eq("new_user")
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:new_user])
 
       post = PostCreator.create!(user, title: "another one of my first topics", raw: "another one of my first posts")
-      expect(post.custom_fields["notice_type"]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
     end
 
     it "generates post notices for returning users" do
@@ -1353,12 +1371,12 @@ describe PostCreator do
       old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
 
       post = PostCreator.create!(user, title: "this is a returning topic", raw: "this is a post")
-      expect(post.custom_fields["notice_type"]).to eq(Post.notices[:returning_user])
-      expect(post.custom_fields["notice_args"]).to eq(old_post.created_at.iso8601)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:returning_user])
+      expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(old_post.created_at.iso8601)
 
       post = PostCreator.create!(user, title: "this is another topic", raw: "this is my another post")
-      expect(post.custom_fields["notice_type"]).to eq(nil)
-      expect(post.custom_fields["notice_args"]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
     end
 
     it "does not generate for non-human, staged or anonymous users" do
@@ -1367,9 +1385,40 @@ describe PostCreator do
       [anonymous, Discourse.system_user, staged].each do |user|
         expect(user.posts.size).to eq(0)
         post = PostCreator.create!(user, title: "#{user.username}'s first topic", raw: "#{user.name}'s first post")
-        expect(post.custom_fields["notice_type"]).to eq(nil)
-        expect(post.custom_fields["notice_args"]).to eq(nil)
+        expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+        expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
       end
+    end
+  end
+
+  context "secure media uploads" do
+    fab!(:image_upload) { Fabricate(:upload, secure: true) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:public_topic) { Fabricate(:topic) }
+
+    before do
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+      SiteSetting.s3_access_key_id = "some key"
+      SiteSetting.s3_secret_access_key = "some secret key"
+      SiteSetting.s3_region = "us-east-1"
+      SiteSetting.secure_media = true
+
+      stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+      stub_request(
+        :put,
+        "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
+      )
+    end
+
+    it "links post uploads" do
+      public_post = PostCreator.create(
+        user,
+        topic_id: public_topic.id,
+        raw: "A public post with an image.\n![](#{image_upload.short_path})"
+      )
     end
   end
 end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'secure_session'
 
 describe SecureSession do
   it "operates correctly" do
@@ -14,5 +13,17 @@ describe SecureSession do
 
     s["hello"] = nil
     expect(s["hello"]).to eq(nil)
+  end
+
+  it "can override expiry" do
+    s = SecureSession.new("abc")
+    key = SecureRandom.hex
+
+    s.set(key, "test2", expires: 5.minutes)
+    expect(s.ttl(key)).to be_within(1.second).of (5.minutes)
+
+    key = SecureRandom.hex
+    s.set(key, "test2")
+    expect(s.ttl(key)).to be_within(1.second).of (SecureSession.expiry)
   end
 end

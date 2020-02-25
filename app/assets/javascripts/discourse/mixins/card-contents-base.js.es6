@@ -1,14 +1,19 @@
+import { alias, match } from "@ember/object/computed";
+import { throttle } from "@ember/runloop";
+import { next } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
+import Mixin from "@ember/object/mixin";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
   _showCallback: null, //username, $target - load up data for when show is called, should call this._positionCard($target) when it's done.
 
-  postStream: Ember.computed.alias("topic.postStream"),
-  viewingTopic: Ember.computed.match("currentPath", /^topic\./),
+  postStream: alias("topic.postStream"),
+  viewingTopic: match("currentPath", /^topic\./),
 
   visible: false,
   username: null,
@@ -73,7 +78,7 @@ export default Ember.Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    afterTransition(this.$(), this._hide.bind(this));
+    afterTransition($(this.element), this._hide.bind(this));
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
     const clickOutsideEventName = `mousedown.outside-${id}`;
@@ -121,7 +126,7 @@ export default Ember.Mixin.create({
       if (wantsNewWindow(e)) {
         return;
       }
-      const $target = $(e.target);
+      const $target = $(e.currentTarget);
       return this._show($target.text().replace(/^@/, ""), $target);
     });
 
@@ -142,7 +147,7 @@ export default Ember.Mixin.create({
   _bindMobileScroll() {
     const mobileScrollEvent = this.mobileScrollEvent;
     const onScroll = () => {
-      Ember.run.throttle(this, this._close, 1000);
+      throttle(this, this._close, 1000);
     };
 
     $(window).on(mobileScrollEvent, onScroll);
@@ -164,14 +169,14 @@ export default Ember.Mixin.create({
     if (!target) {
       return;
     }
-    const width = this.$().width();
+    const width = $(this.element).width();
     const height = 175;
     const isFixed = this.isFixed;
     const isDocked = this.isDocked;
 
     let verticalAdjustments = 0;
 
-    Ember.run.schedule("afterRender", () => {
+    schedule("afterRender", () => {
       if (target) {
         if (!this.site.mobileView) {
           let position = target.offset();
@@ -227,7 +232,7 @@ export default Ember.Mixin.create({
               position.top = avatarOverflowSize;
             }
 
-            this.$().css(position);
+            $(this.element).css(position);
           }
         }
 
@@ -236,23 +241,26 @@ export default Ember.Mixin.create({
           let position = target.offset();
           position.top = "10%"; // match modal behaviour
           position.left = 0;
-          this.$().css(position);
+          $(this.element).css(position);
         }
-        this.$().toggleClass("docked-card", isDocked);
+        $(this.element).toggleClass("docked-card", isDocked);
 
         // After the card is shown, focus on the first link
         //
         // note: we DO NOT use afterRender here cause _positionCard may
         // run afterwards, if we allowed this to happen the usercard
         // may be offscreen and we may scroll all the way to it on focus
-        Ember.run.next(null, () => this.$("a:first").focus());
+        next(null, () => {
+          const firstLink = this.element.querySelector("a");
+          firstLink && firstLink.focus();
+        });
       }
     });
   },
 
   _hide() {
     if (!this.visible) {
-      this.$().css({ left: -9999, top: -9999 });
+      $(this.element).css({ left: -9999, top: -9999 });
       if (this.site.mobileView) {
         $(".card-cloak").addClass("hidden");
       }

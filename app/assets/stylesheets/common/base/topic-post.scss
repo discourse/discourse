@@ -53,9 +53,7 @@
     font-size: $font-0;
     margin-right: 8px;
     display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     vertical-align: middle;
     a {
       color: dark-light-choose($primary-high, $secondary-low);
@@ -211,8 +209,7 @@ aside.quote {
     @include post-aside;
 
     color: dark-light-choose($primary-high, $secondary-low);
-    // IE will screw up the blockquote underneath if bottom padding is 0px
-    padding: 12px 12px 1px 12px;
+    padding: 12px 12px 0px 12px;
     // blockquote is underneath this and has top margin
     .avatar {
       margin-right: 7px;
@@ -262,9 +259,12 @@ blockquote {
 }
 
 .post-hidden {
-  opacity: 0.5; // opacity sets a new z-index context,
-  position: relative; // so the positioning is required,
-  z-index: z("base"); // otherwise post controls are stacked too low
+  .topic-avatar,
+  .cooked,
+  .topic-meta-data,
+  .post-actions {
+    opacity: 0.5;
+  }
 }
 
 .topic-post.staged {
@@ -639,7 +639,8 @@ blockquote > *:last-child {
   font-size: $font-down-1;
 }
 
-.who-liked {
+.who-liked,
+.who-read {
   transition: height 0.5s;
   a {
     margin: 0 0.25em 0.5em 0;
@@ -757,14 +758,34 @@ blockquote > *:last-child {
   }
 }
 
-a.mention,
-a.mention-group {
-  padding: 2px 4px;
-  color: dark-light-choose($primary-high, $secondary-low);
-  background: $primary-low;
-  border-radius: 8px;
+a.mention {
   font-weight: bold;
   font-size: 0.93em;
+  color: $primary;
+  color: dark-light-choose($primary-high, $secondary-low);
+  padding: 2px 4px;
+  background: $primary-low;
+  border-radius: 8px;
+}
+
+span.mention {
+  font-weight: bold;
+  font-size: 0.93em;
+  color: $primary;
+}
+
+a.mention-group {
+  font-weight: bold;
+  font-size: 0.93em;
+  color: $primary;
+
+  &.notify,
+  .small-action-desc & {
+    color: dark-light-choose($primary-high, $secondary-low);
+    padding: 2px 4px;
+    background: $primary-low;
+    border-radius: 8px;
+  }
 }
 
 .popup-menu {
@@ -825,12 +846,14 @@ a.mention-group {
   }
 }
 
-.broken-image,
-.large-image {
+.broken-image {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
   font-size: $font-up-5;
-  padding: 16px;
+
+  .d-icon {
+    margin: 16px;
+  }
 }
 
 /* below standard tablet portrait ----------- */
@@ -905,11 +928,15 @@ a.mention-group {
 }
 
 .post-notice {
+  align-items: center;
   background-color: $tertiary-low;
   border-top: 1px solid $primary-low;
-  color: $primary;
+  display: flex;
+  max-width: calc(
+    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
+      (0.8em * 2)
+  );
   padding: 0.8em;
-  max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
 
   &.old {
     background-color: unset;
@@ -921,8 +948,6 @@ a.mention-group {
   }
 
   p {
-    display: flex;
-    align-items: center;
     margin: 0;
   }
 
@@ -930,5 +955,14 @@ a.mention-group {
     font-size: 2em;
     color: $primary-high;
     margin-right: 0.65em;
+  }
+}
+
+#topic-footer-buttons {
+  .reason {
+    color: $primary-high;
+    display: inline;
+    margin: 0 0 0 8px;
+    line-height: $line-height-medium;
   }
 }

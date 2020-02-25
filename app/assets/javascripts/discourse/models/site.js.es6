@@ -1,12 +1,18 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { alias, sort } from "@ember/object/computed";
+import EmberObject from "@ember/object";
 import Archetype from "discourse/models/archetype";
 import PostActionType from "discourse/models/post-action-type";
 import Singleton from "discourse/mixins/singleton";
 import RestModel from "discourse/models/rest";
+import TrustLevel from "discourse/models/trust-level";
 import PreloadStore from "preload-store";
+import deprecated from "discourse-common/lib/deprecated";
 
 const Site = RestModel.extend({
-  isReadOnly: Ember.computed.alias("is_readonly"),
+  isReadOnly: alias("is_readonly"),
 
   init() {
     this._super(...arguments);
@@ -14,7 +20,7 @@ const Site = RestModel.extend({
     this.topicCountDesc = ["topic_count:desc"];
   },
 
-  @computed("notification_types")
+  @discourseComputed("notification_types")
   notificationLookup(notificationTypes) {
     const result = [];
     Object.keys(notificationTypes).forEach(
@@ -23,21 +29,21 @@ const Site = RestModel.extend({
     return result;
   },
 
-  @computed("post_action_types.[]")
+  @discourseComputed("post_action_types.[]")
   flagTypes() {
     const postActionTypes = this.post_action_types;
     if (!postActionTypes) return [];
     return postActionTypes.filterBy("is_flag", true);
   },
 
-  categoriesByCount: Ember.computed.sort("categories", "topicCountDesc"),
+  categoriesByCount: sort("categories", "topicCountDesc"),
 
   collectUserFields(fields) {
     fields = fields || {};
 
     let siteFields = this.user_fields;
 
-    if (!Ember.isEmpty(siteFields)) {
+    if (!isEmpty(siteFields)) {
       return siteFields.map(f => {
         let value = fields ? fields[f.id.toString()] : null;
         value = value || "&mdash;".htmlSafe();
@@ -48,7 +54,7 @@ const Site = RestModel.extend({
   },
 
   // Sort subcategories under parents
-  @computed("categoriesByCount", "categories.[]")
+  @discourseComputed("categoriesByCount", "categories.[]")
   sortedCategories(cats) {
     const result = [],
       remaining = {};
@@ -75,13 +81,13 @@ const Site = RestModel.extend({
     return result;
   },
 
-  @computed
+  @discourseComputed
   baseUri() {
     return Discourse.baseUri;
   },
 
   // Returns it in the correct order, by setting
-  @computed
+  @discourseComputed("categories.[]")
   categoriesList() {
     return this.siteSettings.fixed_category_positions
       ? this.categories
@@ -107,7 +113,7 @@ const Site = RestModel.extend({
 
   updateCategory(newCategory) {
     const categories = this.categories;
-    const categoryId = Ember.get(newCategory, "id");
+    const categoryId = get(newCategory, "id");
     const existingCategory = categories.findBy("id", categoryId);
 
     // Don't update null permissions
@@ -117,11 +123,13 @@ const Site = RestModel.extend({
 
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
+      return existingCategory;
     } else {
       // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
       categories.pushObject(newCategory);
       this.categoriesById[categoryId] = newCategory;
+      return newCategory;
     }
   }
 });
@@ -172,14 +180,12 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.trust_levels) {
-      result.trustLevels = result.trust_levels.map(tl =>
-        Discourse.TrustLevel.create(tl)
-      );
+      result.trustLevels = result.trust_levels.map(tl => TrustLevel.create(tl));
       delete result.trust_levels;
     }
 
     if (result.post_action_types) {
-      result.postActionByIdLookup = Ember.Object.create();
+      result.postActionByIdLookup = EmberObject.create();
       result.post_action_types = result.post_action_types.map(p => {
         const actionType = PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
@@ -188,7 +194,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.topic_flag_types) {
-      result.topicFlagByIdLookup = Ember.Object.create();
+      result.topicFlagByIdLookup = EmberObject.create();
       result.topic_flag_types = result.topic_flag_types.map(p => {
         const actionType = PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
@@ -204,12 +210,24 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.user_fields) {
-      result.user_fields = result.user_fields.map(uf =>
-        Ember.Object.create(uf)
-      );
+      result.user_fields = result.user_fields.map(uf => EmberObject.create(uf));
     }
 
     return result;
+  }
+});
+
+let warned = false;
+Object.defineProperty(Discourse, "Site", {
+  get() {
+    if (!warned) {
+      deprecated("Import the Site class instead of using Discourse.Site", {
+        since: "2.4.0",
+        dropFrom: "2.6.0"
+      });
+      warned = true;
+    }
+    return Site;
   }
 });
 

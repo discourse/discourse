@@ -2,15 +2,26 @@
 
 {{#if showCategoryAdmin}}
   {{categories-admin-dropdown
-    create=createCategory
-    reorder=reorderCategories}}
+    onChange=(action "selectCategoryAdminDropdownAction")
+  }}
 {{/if}}
 
 {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
 
 {{#if showCategoryNotifications}}
-  {{category-notifications-button value=category.notification_level category=category}}
+  {{category-notifications-button
+    value=category.notification_level
+    category=category
+    onChange=(action "changeCategoryNotificationLevel")
+  }}
 {{/if}}
+
+{{plugin-outlet name="before-create-topic-button"
+  args=(hash
+    canCreateTopic=canCreateTopic
+    createTopicDisabled=createTopicDisabled
+    createTopicLabel=createTopicLabel)
+}}
 
 {{create-topic-button
   canCreateTopic=canCreateTopic

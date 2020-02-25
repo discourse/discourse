@@ -1,8 +1,9 @@
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import BadgeGrouping from "discourse/models/badge-grouping";
 
-export default Discourse.Route.extend({
+export default DiscourseRoute.extend({
   _json: null,
 
   model() {

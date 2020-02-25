@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 # This is used in topic lists
-require_dependency 'topic_poster'
-
 class TopicPostersSummary
 
   # localization is fast, but this allows us to avoid

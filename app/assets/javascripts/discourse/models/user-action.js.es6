@@ -1,9 +1,12 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { or, equal, and } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 import UserActionGroup from "discourse/models/user-action-group";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
+import Category from "discourse/models/category";
+import User from "discourse/models/user";
 
 const UserActionTypes = {
   likes_given: 1,
@@ -30,11 +33,11 @@ const UserAction = RestModel.extend({
   _attachCategory() {
     const categoryId = this.category_id;
     if (categoryId) {
-      this.set("category", Discourse.Category.findById(categoryId));
+      this.set("category", Category.findById(categoryId));
     }
   },
 
-  @computed("action_type")
+  @discourseComputed("action_type")
   descriptionKey(action) {
     if (action === null || UserAction.TO_SHOW.indexOf(action) >= 0) {
       if (this.isPM) {
@@ -65,61 +68,55 @@ const UserAction = RestModel.extend({
     }
   },
 
-  @computed("username")
+  @discourseComputed("username")
   sameUser(username) {
-    return username === Discourse.User.currentProp("username");
+    return username === User.currentProp("username");
   },
 
-  @computed("target_username")
+  @discourseComputed("target_username")
   targetUser(targetUsername) {
-    return targetUsername === Discourse.User.currentProp("username");
+    return targetUsername === User.currentProp("username");
   },
 
-  presentName: Ember.computed.or("name", "username"),
-  targetDisplayName: Ember.computed.or("target_name", "target_username"),
-  actingDisplayName: Ember.computed.or("acting_name", "acting_username"),
+  presentName: or("name", "username"),
+  targetDisplayName: or("target_name", "target_username"),
+  actingDisplayName: or("acting_name", "acting_username"),
 
-  @computed("target_username")
+  @discourseComputed("target_username")
   targetUserUrl(username) {
     return userPath(username);
   },
 
-  @computed("username")
+  @discourseComputed("username")
   usernameLower(username) {
     return username.toLowerCase();
   },
 
-  @computed("usernameLower")
+  @discourseComputed("usernameLower")
   userUrl(usernameLower) {
     return userPath(usernameLower);
   },
 
-  @computed()
+  @discourseComputed()
   postUrl() {
     return postUrl(this.slug, this.topic_id, this.post_number);
   },
 
-  @computed()
+  @discourseComputed()
   replyUrl() {
     return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
   },
 
-  replyType: Ember.computed.equal("action_type", UserActionTypes.replies),
-  postType: Ember.computed.equal("action_type", UserActionTypes.posts),
-  topicType: Ember.computed.equal("action_type", UserActionTypes.topics),
-  bookmarkType: Ember.computed.equal("action_type", UserActionTypes.bookmarks),
-  messageSentType: Ember.computed.equal(
-    "action_type",
-    UserActionTypes.messages_sent
-  ),
-  messageReceivedType: Ember.computed.equal(
-    "action_type",
-    UserActionTypes.messages_received
-  ),
-  mentionType: Ember.computed.equal("action_type", UserActionTypes.mentions),
-  isPM: Ember.computed.or("messageSentType", "messageReceivedType"),
-  postReplyType: Ember.computed.or("postType", "replyType"),
-  removableBookmark: Ember.computed.and("bookmarkType", "sameUser"),
+  replyType: equal("action_type", UserActionTypes.replies),
+  postType: equal("action_type", UserActionTypes.posts),
+  topicType: equal("action_type", UserActionTypes.topics),
+  bookmarkType: equal("action_type", UserActionTypes.bookmarks),
+  messageSentType: equal("action_type", UserActionTypes.messages_sent),
+  messageReceivedType: equal("action_type", UserActionTypes.messages_received),
+  mentionType: equal("action_type", UserActionTypes.mentions),
+  isPM: or("messageSentType", "messageReceivedType"),
+  postReplyType: or("postType", "replyType"),
+  removableBookmark: and("bookmarkType", "sameUser"),
 
   addChild(action) {
     let groups = this.childGroups;
@@ -150,7 +147,7 @@ const UserAction = RestModel.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "childGroups",
     "childGroups.likes.items",
     "childGroups.likes.items.[]",

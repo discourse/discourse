@@ -6,13 +6,20 @@ require 'rails_helper'
 describe ApplicationHelper do
 
   describe "preload_script" do
+    def preload_link(url)
+      <<~HTML
+          <link rel="preload" href="#{url}" as="script">
+          <script src="#{url}"></script>
+      HTML
+    end
+
     it "provides brotli links to brotli cdn" do
       set_cdn_url "https://awesome.com"
 
       helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
       link = helper.preload_script('application')
 
-      expect(link).to eq("<link rel='preload' href='https://awesome.com/brotli_asset/application.js' as='script'/>\n<script src='https://awesome.com/brotli_asset/application.js'></script>")
+      expect(link).to eq(preload_link("https://awesome.com/brotli_asset/application.js"))
     end
 
     context "with s3 CDN" do
@@ -24,19 +31,15 @@ describe ApplicationHelper do
         global_setting :s3_cdn_url, 'https://s3cdn.com'
       end
 
-      after do
-        ActionController::Base.config.relative_url_root = nil
-      end
-
       it "deals correctly with subfolder" do
-        ActionController::Base.config.relative_url_root = "/community"
+        set_subfolder "/community"
         expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
       end
 
       it "replaces cdn URLs with s3 cdn subfolder paths" do
         global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
         set_cdn_url "https://awesome.com"
-        ActionController::Base.config.relative_url_root = "/community"
+        set_subfolder "/community"
         expect(helper.preload_script("application")).to include('https://s3cdn.com/s3_subpath/assets/application.js')
       end
 
@@ -45,20 +48,26 @@ describe ApplicationHelper do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.br.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.br.js'></script>")
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.br.js"))
       end
 
       it "gives s3 cdn if asset host is not set" do
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.js'></script>")
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
+      end
+
+      it "can fall back to gzip compression" do
+        helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip'
+        link = helper.preload_script('application')
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.gz.js"))
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script('application')
 
-        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.js'></script>")
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
       end
     end
   end
@@ -253,6 +262,36 @@ describe ApplicationHelper do
     it 'escapes and strips invalid unicode and strips in json body' do
       @preloaded = { test: %{["< \x80"]} }
       expect(helper.preloaded_json).to eq(%{{"test":"[\\"\\u003c \uFFFD\\"]"}})
+    end
+  end
+
+  describe "client_side_setup_data" do
+    context "when Rails.env.development? is true" do
+      before do
+        Rails.env.stubs(:development?).returns(true)
+      end
+
+      it "returns the correct service worker url" do
+        expect(helper.client_side_setup_data[:service_worker_url]).to eq("service-worker.js")
+      end
+
+      it "returns the svg_icon_list in the setup data" do
+        expect(helper.client_side_setup_data[:svg_icon_list]).not_to eq(nil)
+      end
+
+      it "does not return debug_preloaded_app_data without the env var" do
+        expect(helper.client_side_setup_data.key?(:debug_preloaded_app_data)).to eq(false)
+      end
+
+      context "if the DEBUG_PRELOADED_APP_DATA env var is provided" do
+        before do
+          ENV['DEBUG_PRELOADED_APP_DATA'] = 'true'
+        end
+
+        it "returns that key as true" do
+          expect(helper.client_side_setup_data[:debug_preloaded_app_data]).to eq(true)
+        end
+      end
     end
   end
 

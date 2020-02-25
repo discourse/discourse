@@ -1,14 +1,20 @@
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
+import { computed } from "@ember/object";
+import { alias, and, equal } from "@ember/object/computed";
+import EmberObject from "@ember/object";
+import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
-import computed from "ember-addons/ember-computed-decorators";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import { i18n } from "discourse/lib/computed";
+import { getNativeContact } from "discourse/lib/pwa-utils";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: null,
 
-  inviteModel: Ember.computed.alias("panel.model.inviteModel"),
-  userInvitedShow: Ember.computed.alias("panel.model.userInvitedShow"),
+  inviteModel: alias("panel.model.inviteModel"),
+  userInvitedShow: alias("panel.model.userInvitedShow"),
 
   // If this isn't defined, it will proxy to the user topic on the preferences
   // page which is wrong.
@@ -18,7 +24,7 @@ export default Ember.Component.extend({
   inviteIcon: "envelope",
   invitingExistingUserToTopic: false,
 
-  isAdmin: Ember.computed.alias("currentUser.admin"),
+  isAdmin: alias("currentUser.admin"),
 
   willDestroyElement() {
     this._super(...arguments);
@@ -26,7 +32,7 @@ export default Ember.Component.extend({
     this.reset();
   },
 
-  @computed(
+  @discourseComputed(
     "isAdmin",
     "emailOrUsername",
     "invitingToTopic",
@@ -45,7 +51,7 @@ export default Ember.Component.extend({
     can_invite_to
   ) {
     if (saving) return true;
-    if (Ember.isEmpty(emailOrUsername)) return true;
+    if (isEmpty(emailOrUsername)) return true;
 
     const emailTrimmed = emailOrUsername.trim();
 
@@ -60,11 +66,7 @@ export default Ember.Component.extend({
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (
-      isPrivateTopic &&
-      Ember.isEmpty(groupNames) &&
-      emailValid(emailTrimmed)
-    ) {
+    if (isPrivateTopic && isEmpty(groupNames) && emailValid(emailTrimmed)) {
       return true;
     }
 
@@ -73,7 +75,7 @@ export default Ember.Component.extend({
     return false;
   },
 
-  @computed(
+  @discourseComputed(
     "isAdmin",
     "emailOrUsername",
     "inviteModel.saving",
@@ -91,7 +93,7 @@ export default Ember.Component.extend({
   ) {
     if (hasCustomMessage) return true;
     if (saving) return true;
-    if (Ember.isEmpty(emailOrUsername)) return true;
+    if (isEmpty(emailOrUsername)) return true;
 
     const email = emailOrUsername.trim();
 
@@ -106,49 +108,49 @@ export default Ember.Component.extend({
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && Ember.isEmpty(groupNames) && emailValid(email)) {
+    if (isPrivateTopic && isEmpty(groupNames) && emailValid(email)) {
       return true;
     }
 
     return false;
   },
 
-  @computed("inviteModel.saving")
+  @discourseComputed("inviteModel.saving")
   buttonTitle(saving) {
     return saving ? "topic.inviting" : "topic.invite_reply.action";
   },
 
   // We are inviting to a topic if the topic isn't the current user.
   // The current user would mean we are inviting to the forum in general.
-  @computed("inviteModel")
+  @discourseComputed("inviteModel")
   invitingToTopic(inviteModel) {
     return inviteModel !== this.currentUser;
   },
 
-  @computed("inviteModel", "inviteModel.details.can_invite_via_email")
+  @discourseComputed("inviteModel", "inviteModel.details.can_invite_via_email")
   canInviteViaEmail(inviteModel, canInviteViaEmail) {
     return this.inviteModel === this.currentUser ? true : canInviteViaEmail;
   },
 
-  @computed("isPM", "canInviteViaEmail")
+  @discourseComputed("isPM", "canInviteViaEmail")
   showCopyInviteButton(isPM, canInviteViaEmail) {
     return canInviteViaEmail && !isPM;
   },
 
-  topicId: Ember.computed.alias("inviteModel.id"),
+  topicId: alias("inviteModel.id"),
 
   // eg: visible only to specific group members
-  isPrivateTopic: Ember.computed.and(
+  isPrivateTopic: and(
     "invitingToTopic",
     "inviteModel.category.read_restricted"
   ),
 
-  isPM: Ember.computed.equal("inviteModel.archetype", "private_message"),
+  isPM: equal("inviteModel.archetype", "private_message"),
 
   // scope to allowed usernames
-  allowExistingMembers: Ember.computed.alias("invitingToTopic"),
+  allowExistingMembers: alias("invitingToTopic"),
 
-  @computed("isAdmin", "inviteModel.group_users")
+  @discourseComputed("isAdmin", "inviteModel.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {
     return (
       isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner))
@@ -156,7 +158,7 @@ export default Ember.Component.extend({
   },
 
   // Show Groups? (add invited user to private group)
-  @computed(
+  @discourseComputed(
     "isGroupOwnerOrAdmin",
     "emailOrUsername",
     "isPrivateTopic",
@@ -180,13 +182,17 @@ export default Ember.Component.extend({
     );
   },
 
-  @computed("emailOrUsername")
+  showContactPicker: computed(function() {
+    return this.capabilities.hasContactPicker;
+  }),
+
+  @discourseComputed("emailOrUsername")
   showCustomMessage(emailOrUsername) {
     return this.inviteModel === this.currentUser || emailValid(emailOrUsername);
   },
 
   // Instructional text for the modal.
-  @computed(
+  @discourseComputed(
     "isPM",
     "invitingToTopic",
     "emailOrUsername",
@@ -215,7 +221,7 @@ export default Ember.Component.extend({
         return I18n.t("topic.invite_reply.to_username");
       } else {
         // when inviting to a topic, display instructions based on provided entity
-        if (Ember.isEmpty(emailOrUsername)) {
+        if (isEmpty(emailOrUsername)) {
           return I18n.t("topic.invite_reply.to_topic_blank");
         } else if (emailValid(emailOrUsername)) {
           this.set("inviteIcon", "envelope");
@@ -231,7 +237,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("isPrivateTopic")
+  @discourseComputed("isPrivateTopic")
   showGroupsClass(isPrivateTopic) {
     return isPrivateTopic ? "required" : "optional";
   },
@@ -240,7 +246,7 @@ export default Ember.Component.extend({
     return Group.findAll({ term, ignore_automatic: true });
   },
 
-  @computed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
+  @discourseComputed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
   successMessage(isPM, emailOrUsername, invitingExistingUserToTopic) {
     if (this.hasGroups) {
       return I18n.t("topic.invite_private.success_group");
@@ -257,14 +263,14 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("isPM")
+  @discourseComputed("isPM")
   errorMessage(isPM) {
     return isPM
       ? I18n.t("topic.invite_private.error")
       : I18n.t("topic.invite_reply.error");
   },
 
-  @computed("canInviteViaEmail")
+  @discourseComputed("canInviteViaEmail")
   placeholderKey(canInviteViaEmail) {
     return canInviteViaEmail
       ? "topic.invite_private.email_or_username_placeholder"
@@ -323,7 +329,7 @@ export default Ember.Component.extend({
           .then(data => {
             model.setProperties({ saving: false, finished: true });
             this.get("inviteModel.details.allowed_groups").pushObject(
-              Ember.Object.create(data.group)
+              EmberObject.create(data.group)
             );
             this.appEvents.trigger("post-stream:refresh");
           })
@@ -349,7 +355,7 @@ export default Ember.Component.extend({
               });
             } else if (this.isPM && result && result.user) {
               this.get("inviteModel.details.allowed_users").pushObject(
-                Ember.Object.create(result.user)
+                EmberObject.create(result.user)
               );
               this.appEvents.trigger("post-stream:refresh");
             } else if (
@@ -433,6 +439,12 @@ export default Ember.Component.extend({
       } else {
         this.set("customMessage", null);
       }
+    },
+
+    searchContact() {
+      getNativeContact(["email"], false).then(result => {
+        this.set("emailOrUsername", result[0].email[0]);
+      });
     }
   }
 });

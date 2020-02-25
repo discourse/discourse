@@ -11,10 +11,8 @@ fa_IR:
     poll_maximum_options: "حداکثر تعداد گزینه برای نظرسنجی‌ها."
     poll_edit_window_mins: "چند دقیقه بعد از ارسال نظر می توان آن را ویرایش کرد"
   poll:
-    multiple_polls_without_name: "چند نظرسنجی متفاوت بدون اسم وچود دارد. از ویژگی '<code>اسم</code>' برای  شناسایی منحصر به فرد رای‌گیری‌های خود استفاده کنید. "
+    multiple_polls_without_name: "چند نظرسنجی متفاوت بدون اسم وچود دارد. از ویژگی '<code>اسم</code>' برای شناسایی منحصر به فرد رای‌گیری‌های خود استفاده کنید. "
     multiple_polls_with_same_name: "چند نظرسنجی با اسم مشابه وجود دارند: <strong>%{name}</strong>. از ویژگی '<code>اسم</code>' برای شناسایی منحصر به فرد رای‌گیری‌های خود استفاده کنید."
-    default_poll_must_have_at_least_2_options: "نظرسنجی باید حداقل 2 گزینه داشته باشد."
-    named_poll_must_have_at_least_2_options: "اسم نظرسنجی <strong>%{name}</strong> باید  حداقل 2 گزینه داشته باشد. "
     default_poll_must_have_less_options:
       one: "نظرسنجی باید کمتر از %{count} گزینه داشته باشد."
       other: "نظرسنجی باید کمتر از %{count} گزینه داشته باشد."

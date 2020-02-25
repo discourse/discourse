@@ -1,5 +1,7 @@
 {{#d-modal-body class='change-ownership'}}
-  {{{i18n 'topic.change_owner.instructions' count=selectedPostsCount old_user=selectedPostsUsername}}}
+  <span>
+    {{{i18n 'topic.change_owner.instructions' count=selectedPostsCount old_user=selectedPostsUsername}}}
+  </span>
 
   <form>
     <label></label>
@@ -11,5 +13,9 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  <button class='btn btn-primary' disabled={{buttonDisabled}} {{action "changeOwnershipOfPosts"}}>{{buttonTitle}}</button>
+  {{d-button
+    class="btn-primary"
+    action=(action "changeOwnershipOfPosts")
+    disabled=buttonDisabled
+    label=(if saving "saving" "topic.change_owner.action")}}
 </div>

@@ -1,3 +1,6 @@
+import { isEmpty } from "@ember/utils";
+import { run } from "@ember/runloop";
+import { later } from "@ember/runloop";
 /* global QUnit, resetSite */
 
 import sessionFixtures from "fixtures/session-fixtures";
@@ -15,22 +18,22 @@ import { initSearchData } from "discourse/widgets/search-menu";
 import { resetDecorators } from "discourse/widgets/widget";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
+import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
+import User from "discourse/models/user";
 
 export function currentUser() {
-  return Discourse.User.create(
-    sessionFixtures["/session/current.json"].current_user
-  );
+  return User.create(sessionFixtures["/session/current.json"].current_user);
 }
 
 export function updateCurrentUser(properties) {
-  Discourse.User.current().setProperties(properties);
+  User.current().setProperties(properties);
 }
 
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead
 export function logIn() {
-  Discourse.User.resetCurrent(currentUser());
+  User.resetCurrent(currentUser());
 }
 
 const Plugin = $.fn.modal;
@@ -116,7 +119,7 @@ export function acceptance(name, options) {
       }
       flushMap();
       localStorage.clear();
-      Discourse.User.resetCurrent();
+      User.resetCurrent();
       resetSite(Discourse.SiteSettings);
       resetExtraClasses();
       clearOutletCache();
@@ -126,6 +129,7 @@ export function acceptance(name, options) {
       initSearchData();
       resetDecorators();
       resetPostCookedDecorators();
+      resetPluginOutletDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
       Discourse._runInitializer("instanceInitializers", function(
@@ -155,7 +159,7 @@ export function controllerFor(controller, model) {
 export function asyncTestDiscourse(text, func) {
   QUnit.test(text, function(assert) {
     const done = assert.async();
-    Ember.run(() => {
+    run(() => {
       func.call(this, assert);
       done();
     });
@@ -180,7 +184,7 @@ QUnit.assert.not = function(actual, message) {
 
 QUnit.assert.blank = function(actual, message) {
   this.pushResult({
-    result: Ember.isEmpty(actual),
+    result: isEmpty(actual),
     actual,
     message
   });
@@ -188,7 +192,7 @@ QUnit.assert.blank = function(actual, message) {
 
 QUnit.assert.present = function(actual, message) {
   this.pushResult({
-    result: !Ember.isEmpty(actual),
+    result: !isEmpty(actual),
     actual,
     message
   });
@@ -206,7 +210,7 @@ export function waitFor(assert, callback, timeout) {
   timeout = timeout || 500;
 
   const done = assert.async();
-  Ember.run.later(() => {
+  later(() => {
     callback();
     done();
   }, timeout);

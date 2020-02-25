@@ -14,7 +14,7 @@
   .btn {
     float: right;
     margin-left: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 9px;
     font-size: $font-up-1;
     font-weight: normal;
   }
@@ -88,6 +88,9 @@
     }
   }
 
+  $td-posters-height: 29px; // min-height of td with avatar glow
+  $td-posters-more-lh: $td-posters-height - 4;
+
   .posters {
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
@@ -98,10 +101,17 @@
       &:last-of-type {
         margin-right: 0;
       }
+
+      &.posters-more-count {
+        cursor: default;
+        color: dark-light-choose($primary-medium, $secondary-medium);
+        line-height: $td-posters-more-lh;
+        font-size: $font-down-1;
+      }
     }
   }
   td.posters {
-    height: 29px; // min-height of td with avatar glow
+    height: $td-posters-height;
   }
   .posters a:first-child .avatar.latest:not(.single) {
     box-shadow: 0 0 3px 1px desaturate($tertiary-medium, 35%);

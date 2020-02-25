@@ -1,9 +1,7 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import Component from "@ember/component";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["inline-edit"],
 
   checked: null,
@@ -20,12 +18,12 @@ export default Ember.Component.extend({
     this.set("checkedInternal", this.checked);
   },
 
-  @computed("labelKey")
+  @discourseComputed("labelKey")
   label(key) {
     return I18n.t(key);
   },
 
-  @computed("checked", "checkedInternal")
+  @discourseComputed("checked", "checkedInternal")
   changed(checked, checkedInternal) {
     return !!checked !== !!checkedInternal;
   },

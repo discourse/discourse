@@ -292,33 +292,14 @@
 
   {{#if currentUser.admin}}
     <div class="display-row">
-      <div class="field">{{i18n "admin.api.key"}}</div>
-      {{#if model.api_key}}
-        <div class="long-value">
-          {{model.api_key.key}}
-          {{d-button
-            class="btn-default"
-            action=(action "regenerateApiKey")
-            icon="undo"
-            label="admin.api.regenerate"}}
-          {{d-button
-            class="btn-default"
-            action=(action "revokeApiKey")
-            icon="times"
-            label="admin.api.revoke"}}
-        </div>
-      {{else}}
-        <div class="value">
-          &mdash;
-        </div>
-        <div class="controls">
-          {{d-button
-            class="btn-default"
-            action=(action "generateApiKey")
-            icon="key"
-            label="admin.api.generate"}}
-        </div>
-      {{/if}}
+      <div class="field">{{i18n "admin.api.active_keys"}}</div>
+      <div class="value">
+        {{model.api_key_count}}
+      </div>
+      <div class="controls">
+        {{d-button href="/admin/api/keys" label="admin.api.manage_keys"}}
+
+      </div>
     </div>
   {{/if}}
 
@@ -369,8 +350,10 @@
     <div class="value">
       {{combo-box
         content=site.trustLevels
+        nameProperty="detailedName"
         value=model.trustLevel.id
-        nameProperty="detailedName"}}
+        onChange=(action (mut model.trust_level))
+      }}
 
       {{#if model.dirty}}
         <div>
@@ -532,9 +515,10 @@
         <div class="field">{{i18n "admin.groups.custom"}}</div>
         <div class="value">
           {{admin-group-selector
-            selected=model.customGroups
-            available=availableGroups
-            buffer=customGroupIdsBuffer}}
+            content=availableGroups
+            value=customGroupIdsBuffer
+            onChange=(action (mut customGroupIdsBuffer))
+          }}
         </div>
         {{#if customGroupsDirty}}
           <div class="controls">
@@ -550,7 +534,9 @@
             {{combo-box
               content=model.customGroups
               value=model.primary_group_id
-              none="admin.groups.no_primary"}}
+              none="admin.groups.no_primary"
+              onChange=(action (mut model.primary_group_id))
+            }}
           </div>
           {{#if primaryGroupDirty}}
             <div class="controls">

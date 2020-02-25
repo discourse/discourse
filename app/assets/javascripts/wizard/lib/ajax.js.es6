@@ -1,4 +1,7 @@
+import { run } from "@ember/runloop";
 import getUrl from "discourse-common/lib/get-url";
+import { Promise } from "rsvp";
+import jQuery from "jquery";
 
 let token;
 
@@ -11,11 +14,11 @@ export function getToken() {
 }
 
 export function ajax(args) {
-  return new Ember.RSVP.Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     args.headers = { "X-CSRF-Token": getToken() };
-    args.success = data => Ember.run(null, resolve, data);
-    args.error = xhr => Ember.run(null, reject, xhr);
+    args.success = data => run(null, resolve, data);
+    args.error = xhr => run(null, reject, xhr);
     args.url = getUrl(args.url);
-    Ember.$.ajax(args);
+    jQuery.ajax(args);
   });
 }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'search/grouped_search_results'
-
 class Search
   DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
@@ -30,7 +28,7 @@ class Search
   end
 
   def self.facets
-    %w(topic category user private_messages tags)
+    %w(topic category user private_messages tags all_topics)
   end
 
   def self.ts_config(locale = SiteSetting.default_locale)
@@ -178,6 +176,10 @@ class Search
       @search_context = @guardian.user
     end
 
+    if @search_all_topics
+      @opts[:type_filter] = "all_topics"
+    end
+
     @results = GroupedSearchResults.new(
       @opts[:type_filter],
       clean_term,
@@ -213,7 +215,7 @@ class Search
 
   # Query a term
   def execute
-    if SiteSetting.log_search_queries? && @opts[:search_type].present?
+    if SiteSetting.log_search_queries? && @opts[:search_type].present? && !Discourse.readonly_mode?
       status, search_log_id = SearchLog.log(
         term: @term,
         search_type: @opts[:search_type],
@@ -235,7 +237,7 @@ class Search
     end
 
     # If the term is a number or url to a topic, just include that topic
-    if @opts[:search_for_id] && (@results.type_filter == 'topic' || @results.type_filter == 'private_messages')
+    if @opts[:search_for_id] && ['topic', 'private_messages', 'all_topics'].include?(@results.type_filter)
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
       else
@@ -265,12 +267,52 @@ class Search
     @advanced_filters
   end
 
+  advanced_filter(/^in:personal-direct$/) do |posts|
+    if @guardian.user
+      posts
+        .joins("LEFT JOIN topic_allowed_groups tg ON posts.topic_id = tg.topic_id")
+        .where(<<~SQL, user_id: @guardian.user.id)
+          tg.id IS NULL
+          AND posts.topic_id IN (
+            SELECT tau.topic_id
+            FROM topic_allowed_users tau
+            JOIN topic_allowed_users tau2
+            ON tau2.topic_id = tau.topic_id
+            AND tau2.id != tau.id
+            WHERE tau.user_id = :user_id
+            GROUP BY tau.topic_id
+            HAVING COUNT(*) = 1
+          )
+        SQL
+    end
+  end
+
+  advanced_filter(/^in:tagged$/) do |posts|
+    posts
+      .where('EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)')
+  end
+
+  advanced_filter(/^in:untagged$/) do |posts|
+    posts
+      .joins("LEFT JOIN topic_tags ON
+        topic_tags.topic_id = posts.topic_id")
+      .where("topic_tags.id IS NULL")
+  end
+
   advanced_filter(/^status:open$/) do |posts|
     posts.where('NOT topics.closed AND NOT topics.archived')
   end
 
   advanced_filter(/^status:closed$/) do |posts|
     posts.where('topics.closed')
+  end
+
+  advanced_filter(/^status:public$/) do |posts|
+    category_ids = Category
+      .where(read_restricted: false)
+      .pluck(:id)
+
+    posts.where("topics.category_id in (?)", category_ids)
   end
 
   advanced_filter(/^status:archived$/) do |posts|
@@ -314,7 +356,7 @@ class Search
   end
 
   advanced_filter(/^badge:(.*)$/) do |posts, match|
-    badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
+    badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck_first(:id)
     if badge_id
       posts.where('posts.user_id IN (SELECT ub.user_id FROM user_badges ub WHERE ub.badge_id = ?)', badge_id)
     else
@@ -338,6 +380,15 @@ class Search
 
   advanced_filter(/^in:posted$/) do |posts|
     posts.where("posts.user_id = #{@guardian.user.id}") if @guardian.user
+  end
+
+  advanced_filter(/^in:created$/) do |posts|
+    posts.where(user_id: @guardian.user.id, post_number: 1) if @guardian.user
+  end
+
+  advanced_filter(/^created:@(.*)$/) do |posts, match|
+    user_id = User.where(username: match.downcase).pluck_first(:id)
+    posts.where(user_id: user_id, post_number: 1)
   end
 
   advanced_filter(/^in:(watching|tracking)$/) do |posts, match|
@@ -451,26 +502,43 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where_name(category_slug).pluck(:id).first
+      tag_id = Tag.where_name(category_slug).pluck_first(:id)
       if (tag_id)
-        posts.where("topics.id IN (
-          SELECT DISTINCT(tt.topic_id)
-          FROM topic_tags tt
-          WHERE tt.tag_id = ?
-          )", tag_id)
+        posts.where(<<~SQL, tag_id)
+          topics.id IN (
+            SELECT DISTINCT(tt.topic_id)
+            FROM topic_tags tt
+            WHERE tt.tag_id = ?
+          )
+        SQL
       else
+        if tag_group_id = TagGroup.find_id_by_slug(category_slug)
+          posts.where(<<~SQL, tag_group_id)
+            topics.id IN (
+              SELECT DISTINCT(tt.topic_id)
+              FROM topic_tags tt
+              WHERE tt.tag_id in (
+                SELECT tag_id
+                FROM tag_group_memberships
+                WHERE tag_group_id = ?
+              )
+            )
+          SQL
+
         # a bit yucky but we got to add the term back in
-        if match.to_s.length >= SiteSetting.min_search_term_length
-          posts.where("posts.id IN (
-            SELECT post_id FROM post_search_data pd1
-            WHERE pd1.search_data @@ #{Search.ts_query(term: "##{match}")})")
+        elsif match.to_s.length >= SiteSetting.min_search_term_length
+          posts.where <<~SQL
+            posts.id IN (
+              SELECT post_id FROM post_search_data pd1
+              WHERE pd1.search_data @@ #{Search.ts_query(term: "##{match}")})
+          SQL
         end
       end
     end
   end
 
   advanced_filter(/^group:(.+)$/) do |posts, match|
-    group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck(:id).first
+    group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck_first(:id)
     if group_id
       posts.where("posts.user_id IN (select gu.user_id from group_users gu where gu.group_id = ?)", group_id)
     else
@@ -479,7 +547,7 @@ class Search
   end
 
   advanced_filter(/^user:(.+)$/) do |posts, match|
-    user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
+    user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck_first(:id)
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
@@ -488,7 +556,7 @@ class Search
   end
 
   advanced_filter(/^\@([a-zA-Z0-9_\-.]+)$/) do |posts, match|
-    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck(:id).first
+    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck_first(:id)
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
@@ -602,10 +670,17 @@ class Search
       elsif word == 'order:likes'
         @order = :likes
         nil
-      elsif word == 'in:private'
+      elsif word == 'in:all'
+        @search_all_topics = true
+        nil
+      elsif %w{in:private in:personal}.include?(word) # remove private after 2.4 release
         @search_pms = true
         nil
-      elsif word =~ /^private_messages:(.+)$/
+      elsif word == "in:personal-direct"
+        @search_pms = true
+        @direct_pms_only = true
+        nil
+      elsif word =~ /^personal_messages:(.+)$/
         @search_pms = true
         nil
       else
@@ -745,12 +820,17 @@ class Search
 
     posts = posts.where("topics.visible") unless is_topic_search
 
-    if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
+    if opts[:type_filter] === "private_messages" || (is_topic_search && @search_context.private_message?)
       posts = posts.where("topics.archetype =  ?", Archetype.private_message)
 
        unless @guardian.is_admin?
          posts = posts.private_posts_for_user(@guardian.user)
        end
+    elsif opts[:type_filter] === "all_topics"
+      private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
+      private_posts = private_posts.private_posts_for_user(@guardian.user)
+
+      posts = posts.where("topics.archetype <> ?", Archetype.private_message).or(private_posts)
     else
       posts = posts.where("topics.archetype <> ?", Archetype.private_message)
     end
@@ -796,8 +876,8 @@ class Search
     posts =
       if @search_context.present?
         if @search_context.is_a?(User)
-          if opts[:private_messages]
-            posts.private_posts_for_user(@search_context)
+          if opts[:type_filter] === "private_messages"
+            @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end
@@ -811,6 +891,11 @@ class Search
         elsif @search_context.is_a?(Topic)
           posts.where("topics.id = #{@search_context.id}")
             .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
+        elsif @search_context.is_a?(Tag)
+          posts = posts
+            .joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id")
+            .joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
+          posts.where("tags.id = #{@search_context.id}")
         end
       else
         posts = categories_ignored(posts) unless @category_filter_matched
@@ -861,7 +946,11 @@ class Search
           THEN #{SiteSetting.category_search_priority_high_weight}
           WHEN #{Searchable::PRIORITIES[:very_high]}
           THEN #{SiteSetting.category_search_priority_very_high_weight}
-          ELSE 1
+          ELSE
+            CASE WHEN topics.closed
+            THEN 0.9
+            ELSE 1
+            END
           END
         )
       )
@@ -941,10 +1030,10 @@ class Search
     query =
       if @order == :likes
         # likes are a pain to aggregate so skip
-        posts_query(limit, private_messages: opts[:private_messages])
+        posts_query(limit, type_filter: opts[:type_filter])
           .select('topics.id', "posts.post_number")
       else
-        posts_query(limit, aggregate_search: true, private_messages: opts[:private_messages])
+        posts_query(limit, aggregate_search: true, type_filter: opts[:type_filter])
           .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
           .group('topics.id')
       end
@@ -987,7 +1076,11 @@ class Search
   def private_messages_search
     raise Discourse::InvalidAccess.new("anonymous can not search PMs") unless @guardian.user
 
-    aggregate_search(private_messages: true)
+    aggregate_search(type_filter: "private_messages")
+  end
+
+  def all_topics_search
+    aggregate_search(type_filter: "all_topics")
   end
 
   def topic_search

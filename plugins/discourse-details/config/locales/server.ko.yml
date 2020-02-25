@@ -7,4 +7,4 @@
 
 ko:
   site_settings:
-    details_enabled: "상세 기능을 사용. 이를 변경하면 다음 명령어를 사용하여 모든 게시물을 다시 게시해야합니다: \"rake posts:rebake\"."
+    details_enabled: '상세 기능을 사용. 이를 변경하면 다음 명령어를 사용하여 모든 게시물을 다시 게시해야합니다: "rake posts:rebake".'

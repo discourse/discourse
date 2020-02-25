@@ -1,11 +1,12 @@
-import computed from "ember-addons/ember-computed-decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "span",
   classNames: ["group-info-details"],
 
-  @computed("group.full_name", "group.title")
-  showFullName(fullName, title) {
-    return fullName && fullName.length && fullName !== title;
+  @discourseComputed("group.full_name")
+  showFullName(fullName) {
+    return fullName && fullName.length;
   }
 });

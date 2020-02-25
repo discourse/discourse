@@ -407,4 +407,133 @@ describe NewPostManager do
       end
     end
   end
+
+  context "via email" do
+    let(:manager) do
+      NewPostManager.new(
+        topic.user,
+        raw: 'this is emailed content',
+        topic_id: topic.id,
+        via_email: true,
+        raw_email: 'raw email contents'
+      )
+    end
+
+      before do
+        SiteSetting.approve_post_count = 100
+        topic.user.trust_level = 0
+      end
+
+    it "will store via_email and raw_email in the enqueued post" do
+      result = manager.perform
+      expect(result.action).to eq(:enqueued)
+      expect(result.reviewable).to be_present
+      expect(result.reviewable.payload['via_email']).to eq(true)
+      expect(result.reviewable.payload['raw_email']).to eq('raw email contents')
+
+      post = result.reviewable.perform(Discourse.system_user, :approve_post).created_post
+      expect(post.via_email).to eq(true)
+      expect(post.raw_email).to eq("raw email contents")
+    end
+  end
+
+  context "via email with a spam failure" do
+    let(:user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
+
+    it "silences users if its their first post" do
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is emailed content',
+        via_email: true,
+        raw_email: 'raw email contents',
+        email_spam: true,
+        first_post_checks: true
+      )
+
+      result = manager.perform
+      expect(result.action).to eq(:enqueued)
+      expect(user.silenced?).to be(true)
+    end
+
+    it "doesn't silence or enqueue exempt users" do
+      manager = NewPostManager.new(
+        admin,
+        raw: 'this is emailed content',
+        via_email: true,
+        raw_email: 'raw email contents',
+        email_spam: true,
+        first_post_checks: true
+      )
+
+      result = manager.perform
+      expect(result.action).to eq(:create_post)
+      expect(admin.silenced?).to be(false)
+    end
+  end
+
+  context "via email with an authentication results failure" do
+    let(:user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
+
+    it "doesn't silence users" do
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is emailed content',
+        via_email: true,
+        raw_email: 'raw email contents',
+        email_auth_res_action: :enqueue,
+        first_post_checks: true
+      )
+
+      result = manager.perform
+      expect(result.action).to eq(:enqueued)
+      expect(user.silenced?).to be(false)
+    end
+
+    it "still enqueues exempt users" do
+      manager = NewPostManager.new(
+        admin,
+        raw: 'this is emailed content',
+        via_email: true,
+        raw_email: 'raw email contents',
+        email_auth_res_action: :enqueue
+      )
+
+      result = manager.perform
+      expect(result.action).to eq(:enqueued)
+      expect(user.silenced?).to be(false)
+    end
+  end
+
+  context "private message via email" do
+    it "doesn't enqueue authentiation results failure" do
+      manager = NewPostManager.new(
+        topic.user,
+        raw: 'this is emailed content',
+        archetype: Archetype.private_message,
+        via_email: true,
+        raw_email: 'raw email contents',
+        email_auth_res_action: :enqueue
+      )
+
+      result = manager.perform
+      expect(result.action).to eq(:create_post)
+    end
+
+    it "doesn't enqueue spam failure" do
+      manager = NewPostManager.new(
+        topic.user,
+        raw: 'this is emailed content',
+        archetype: Archetype.private_message,
+        via_email: true,
+        raw_email: 'raw email contents',
+        email_spam: true
+      )
+
+      result = manager.perform
+      expect(result.action).to eq(:create_post)
+    end
+  end
+
 end

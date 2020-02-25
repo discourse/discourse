@@ -359,12 +359,12 @@ class ImportScripts::VBulletin < ImportScripts::Base
       return nil
     end
 
-    return upload, real_filename
+    [upload, real_filename]
   rescue Mysql2::Error => e
     puts "SQL Error"
     puts e.message
     puts sql
-    return nil
+    nil
   end
 
   def import_attachments

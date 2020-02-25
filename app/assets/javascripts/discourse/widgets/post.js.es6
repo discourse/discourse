@@ -1,6 +1,7 @@
 import PostCooked from "discourse/widgets/post-cooked";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
+import RawHtml from "discourse/widgets/raw-html";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
@@ -13,7 +14,9 @@ import {
   formatUsername
 } from "discourse/lib/utilities";
 import hbs from "discourse/widgets/hbs-compiler";
-import { durationTiny } from "discourse/lib/formatter";
+import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import { Promise } from "rsvp";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -453,26 +456,29 @@ createWidget("post-notice", {
 
   html(attrs) {
     const user =
-      this.siteSettings.prioritize_username_in_ux || !attrs.name
-        ? attrs.username
-        : attrs.name;
+      this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name)
+        ? attrs.name
+        : attrs.username;
     let text, icon;
     if (attrs.noticeType === "custom") {
       icon = "user-shield";
-      text = attrs.noticeMessage;
+      text = new RawHtml({ html: `<div>${attrs.noticeMessage}</div>` });
     } else if (attrs.noticeType === "new_user") {
       icon = "hands-helping";
-      text = I18n.t("post.notice.new_user", { user });
+      text = h("p", I18n.t("post.notice.new_user", { user }));
     } else if (attrs.noticeType === "returning_user") {
       icon = "far-smile";
       const distance = (new Date() - new Date(attrs.noticeTime)) / 1000;
-      text = I18n.t("post.notice.returning_user", {
-        user,
-        time: durationTiny(distance, { addAgo: true })
-      });
+      text = h(
+        "p",
+        I18n.t("post.notice.returning_user", {
+          user,
+          time: relativeAgeMediumSpan(distance, true)
+        })
+      );
     }
 
-    return h("p", [iconNode(icon), text]);
+    return [iconNode(icon), text];
   }
 });
 
@@ -528,7 +534,9 @@ createWidget("post-article", {
   },
 
   html(attrs, state) {
-    const rows = [h("a.tabLoc", { attributes: { href: "" } })];
+    const rows = [
+      h("a.tabLoc", { attributes: { href: "", "aria-hidden": true } })
+    ];
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map(p => {
         return this.attach("embedded-post", p, {
@@ -581,7 +589,7 @@ createWidget("post-article", {
       if (topicUrl) {
         DiscourseURL.routeTo(`${topicUrl}/${replyPostNumber}`);
       }
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     }
 
     if (this.state.repliesAbove.length) {
@@ -591,7 +599,7 @@ createWidget("post-article", {
           `${this.attrs.topicUrl}/${this.attrs.post_number}`
         );
       }
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     } else {
       const topicUrl = this._getTopicUrl();
       return this.store
@@ -685,9 +693,10 @@ export default createWidget("post", {
     const likeAction = post.get("likeAction");
 
     if (likeAction && likeAction.get("canToggle")) {
-      return likeAction
-        .togglePromise(post)
-        .then(result => this._warnIfClose(result));
+      return likeAction.togglePromise(post).then(result => {
+        this.appEvents.trigger("page:like-toggled", post, likeAction);
+        return this._warnIfClose(result);
+      });
     }
   },
 
@@ -701,7 +710,7 @@ export default createWidget("post", {
 
     // only warn once per day
     const yesterday = new Date().getTime() - 1000 * 60 * 60 * 24;
-    if (lastWarnedLikes && parseInt(lastWarnedLikes) > yesterday) {
+    if (lastWarnedLikes && parseInt(lastWarnedLikes, 10) > yesterday) {
       return;
     }
 
