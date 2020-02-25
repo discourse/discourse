@@ -36,6 +36,17 @@ describe ReviewableClaimedTopicsController do
         expect(messages[0].data[:user][:id]).to eq(moderator.id)
       end
 
+      it "works with deleted topics" do
+        SiteSetting.reviewable_claiming = 'optional'
+        first_post = topic.first_post || Fabricate(:post, topic: topic)
+        PostDestroyer.new(Discourse.system_user, first_post).destroy
+
+        post "/reviewable_claimed_topics.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(true)
+      end
+
       it "raises an error if user cannot claim the topic" do
         post "/reviewable_claimed_topics.json", params: params
 
@@ -73,6 +84,17 @@ describe ReviewableClaimedTopicsController do
       expect(messages[0].channel).to eq("/reviewable_claimed")
       expect(messages[0].data[:topic_id]).to eq(topic.id)
       expect(messages[0].data[:user]).to eq(nil)
+    end
+
+    it "works with deleted topics" do
+      SiteSetting.reviewable_claiming = 'optional'
+      first_post = topic.first_post || Fabricate(:post, topic: topic)
+      PostDestroyer.new(Discourse.system_user, first_post).destroy
+
+      delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
+
+      expect(response.status).to eq(200)
+      expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(false)
     end
 
     it "raises an error if topic is missing" do
