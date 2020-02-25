@@ -36,6 +36,17 @@ describe ReviewableClaimedTopicsController do
         expect(messages[0].data[:user][:id]).to eq(moderator.id)
       end
 
+      it "works with deleted topics" do
+        SiteSetting.reviewable_claiming = 'optional'
+        first_post = topic.first_post || Fabricate(:post, topic: topic)
+        PostDestroyer.new(Discourse.system_user, first_post).destroy
+
+        post "/reviewable_claimed_topics.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(true)
+      end
+
       it "raises an error if user cannot claim the topic" do
         post "/reviewable_claimed_topics.json", params: params
 
