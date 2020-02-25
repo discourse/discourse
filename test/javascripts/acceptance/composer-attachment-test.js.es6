@@ -55,12 +55,15 @@ acceptance("Composer Attachment - Secure Media Enabled", {
   }
 });
 
-QUnit.test("attachments are cooked properly when secure media is enabled", async assert => {
-  await writeInComposer(assert);
-  assert.equal(
-    find(".d-editor-preview:visible")
-      .html()
-      .trim(),
-    '<p><a class="attachment" href="/uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
-  );
-});
+QUnit.test(
+  "attachments are cooked properly when secure media is enabled",
+  async assert => {
+    await writeInComposer(assert);
+    assert.equal(
+      find(".d-editor-preview:visible")
+        .html()
+        .trim(),
+      '<p><a class="attachment" href="/uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
+    );
+  }
+);
