@@ -39,3 +39,6 @@ id:
         label: "Tutup"
         confirm: "Apakah Anda yakin ingin menutup akun ini?"
       error_while_toggling_status: "Maaf, telah terjadi kesalahan pengalihan status dari pemilihan ini."
+      ui_builder:
+        poll_type:
+          label: Tipe

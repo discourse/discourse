@@ -18,6 +18,8 @@ es:
     invalid_argument: "Valor inválido «%{value}» para el argumento «%{argument}»."
     multiple_polls_without_name: "Hay múltiples encuestas sin nombre. Utiliza el atributo «<code>nombre</code>» para identificar de forma única tus encuestas."
     multiple_polls_with_same_name: "Hay múltiples encuestas con el mismo nombre: <strong>%{name}</strong>. Utiliza el atributo «<code>nombre</code>» para identificar de forma única tus encuestas."
+    default_poll_must_have_at_least_1_option: "La encuesta debe tener al menos 1 opción."
+    named_poll_must_have_at_least_1_option: "La encuesta llamada <strong>%{name}</strong> debe tener al menos 1 opción."
     default_poll_must_have_less_options:
       one: "Las encuestas deben tener menos de %{count} opción."
       other: "La encuesta debe tener menos de %{count} opciones."

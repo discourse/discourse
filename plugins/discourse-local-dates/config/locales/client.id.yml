@@ -18,3 +18,5 @@ id:
           advanced_mode: Mode lanjutan
           simple_mode: Mode sederhana
           timezones_title: Zona waktu yang ditampilkan
+          date_title: Tanggal
+          timezone: Zona Waktu

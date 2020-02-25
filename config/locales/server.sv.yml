@@ -289,6 +289,7 @@ sv:
   pm_reached_recipients_limit: "Tyvärr kan du inte ha fler än %{recipients_limit} mottagare för ett meddelande."
   removed_direct_reply_full_quotes: "Automatiskt borttaget citat av hela det föregående inlägget."
   secure_upload_not_allowed_in_public_topic: "Tyvärr kan följande säkra uppladdning(ar) inte användas i ett offentligt ämne: %{upload_filenames}."
+  create_pm_on_existing_topic: "Tyvärr kan du inte skapa ett PM för ett existerande ämne."
   just_posted_that: "är för likt det du nyligen postade"
   invalid_characters: "innehåller otillåtna tecken"
   is_invalid: "verkar oklart, det är en komplett mening"
@@ -1625,13 +1626,13 @@ sv:
     desktop_category_page_style: "Visuell stil för den/kategori sidan."
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
     category_style: "Visuell stil för kategori-utmärkelser."
-    max_image_size_kb: "Högsta bilduppladdningsstorlek i kB. Konfiguration krävs i nginx (client_max_body_size) / apache eller proxy också."
+    max_image_size_kb: "Högsta bilduppladdningsstorlek i kB. Konfiguration krävs också i nginx (client_max_body_size) / apache eller proxy. Bilder större än detta eller mindre än client_max_body_size kommer  vid uppladdning att ändras i storlek för att passa."
     max_attachment_size_kb: "Högsta storlek på uppladdad bilaga i kB. Konfiguration krävs i nginx (client_max_body_size) / apace eller proxy också."
     authorized_extensions: "En lista av alla filändelser som är tillåtna för uppladdning (använd '*' för att aktivera alla filtyper)"
     authorized_extensions_for_staff: "En lista av alla filändelser som är tillåtna vid uppladning från personal utöver listan definierad i  webbplatsens inställningar för `authorized_extensions`. (använd '*' för att aktivera alla filtyper)"
     theme_authorized_extensions: "En lista av alla filändelser som är tillåtna för temauppladdningar (använd '*' för att aktivera alla filtyper)"
     max_similar_results: "Hur många liknande ämnen som visas ovanför redigeraren vid författandet av ett nytt ämne. Jämförelsen är baserad på ämnesrubrik och innehåll."
-    max_image_megapixels: "Maximalt antal megapixlar tillåtet för en bild."
+    max_image_megapixels: "Maximalt antal megapixlar tillåtet för en bild. Bilder med ett högre värde av megapixlar kommer att nekas."
     title_prettify: "Förhindra vanliga felskrivningar och misstag, inklusive endast versaler, inledande gemen, flera ! och ?, extra . i slutet osv."
     title_remove_extraneous_space: "Ta bort ledande blanksteg framför punkter."
     automatic_topic_heat_values: 'Uppdatera automatiskt inställningarna för "heta ämnesvyer " och "heta ämnesinlägg" baserat på webbplatsaktivitet.'
@@ -1671,6 +1672,8 @@ sv:
     reviewable_claiming: "Behöver kontroll tas för granskningsbart innehåll innan det kan ageras på?"
     reviewable_default_topics: "Visa granskningsbart innehåll grupperat efter ämne som standard"
     reviewable_default_visibility: "Visa inte artiklar som kan granskas om de inte uppfyller denna prioritering"
+    high_trust_flaggers_auto_hide_posts: "Ny användares inlägg blir automatiskt dolda efter att de har flaggats som skräppost av en FN3+ användare"
+    cooldown_hours_until_reflag: "Hur lång tid användare måste avvakta tills de kan återflagga ett  inlägg"
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
     reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %%{reply_key}@svar.exempel.se eller svar+%%{reply_key}@exempel.se"
     alternative_reply_by_email_addresses: "Lista på alternativa mallar för svar genom inkommen e-post. Exempelvis: %%{reply_key}@svar.exempel.se|replies+%% {reply_key}@exempel.se"
@@ -1751,7 +1754,7 @@ sv:
     public_user_custom_fields: "En lista med användaranpassade fält som kan hämtas genom API."
     staff_user_custom_fields: "En lista med användaranpassade fält som kan hämtas för personal genom API."
     enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
-    enable_group_directory: "Förse en fil till grupper som surfar"
+    enable_group_directory: "Tillhandahåll en bläddringsbar gruppkatalog"
     enable_category_group_review: " Tillåt grupper att granska innehåll i specifika kategorier"
     group_in_subject: "Sätt ämnet %%{optional_pm} i e-post till namnet på den första gruppen i PM, se: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Anpassa ämnesformat för standardmeddelanden</a>"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
@@ -1766,6 +1769,7 @@ sv:
     ignored_users_message_gap_days: "Hur lång tid att vänta innan moderatorer meddelas igen om en användare som ignorerats av många andra."
     clean_up_inactive_users_after_days: "Antal dagar innan en inaktiv användare (förtroendenivå 0 utan några inlägg) tas bort. Ställ in till 0 för att inaktivera rensning."
     user_selected_primary_groups: "Tillåt användare att ställa in sin egna primära grupp"
+    max_notifications_per_user: "Maximalt antal notifikationer per användare, om detta värde överskrids kommer äldre notifikationer att raderas. Verkställs veckovis. Sätt till 0 för att inaktivera."
     user_website_domains_whitelist: "Användare websidor kommer att verifieras mot dessa domäner. Pipe- avgränsad lista."
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
     sequential_replies_threshold: "Antal inlägg en användare måste ha skrivit i rad i ett ämne innan användaren blir påmind om för många svar i sekvens. "
@@ -2972,7 +2976,7 @@ sv:
       popular_posts: "Populära meddelanden"
       more_new: "Nytt för er"
       subject_template: "[%{email_prefix}] Summering"
-      unsubscribe: "Den här sammanfattningen har skickats från %{site_link} när vi inte har sett dig på ett tag. Ändra %{email_preferences_link}, eller %{unsubscribe_link}för att avprenumerera."
+      unsubscribe: "Den här sammanfattningen har skickats från %{site_link} när vi inte har sett dig på ett tag. Ändra %{email_preferences_link}, eller %{unsubscribe_link} för att avprenumerera."
       your_email_settings: "dina e-postinställningar"
       click_here: "klicka här"
       from: "%{site_name}"
@@ -3159,7 +3163,7 @@ sv:
     body: |
       <a name="collect"></a>
 
-      ## [Vilken information samlar vi in?] (#collect)
+      ## [Vilken information samlar vi in?](#collect)
 
       Vi samlar in information från dig när du registrerar dig på vår webbplats och samlar in data när du deltar i forumet genom att läsa, skriva och utvärdera innehållet som delas här.
        
@@ -3169,7 +3173,7 @@ sv:
 
       <a name="use"></a>
 
-      ## [Vad använder vi din information till?] (#use)
+      ## [Vad använder vi din information till?](#use)
 
        All information som vi samlar in från dig kan användas på något av följande sätt:
        
@@ -3180,13 +3184,13 @@ sv:
 
       <a name="protect"></a>
 
-      ## [Hur skyddar vi din information?] (#protect)
+      ## [Hur skyddar vi din information?](#protect)
 
        Vi genomför olika säkerhetsåtgärder för att upprätthålla säkerheten för din personliga information när du skriver in, skickar in eller får åtkomst till din personliga information.
        
       <a name="data-retention"></a>
 
-      ## [Vad är vår datalagringspolicy?] (#data-retention)
+      ## [Vad är vår datalagringspolicy?](#data-retention)
 
       Vi kommer ansträngningar oss i god tro för att:
 
@@ -3195,7 +3199,7 @@ sv:
 
       <a name="cookies"></a>
 
-       ##[Använder vi cookies?](#cookies)
+       ## [Använder vi cookies?](#cookies)
 
       Ja. Cookies är små filer som en webbplats eller dess tjänsteleverantör överför till din dators hårddisk genom din webbläsare (om du tillåter det). Dessa cookies gör det möjligt för webbplatsen att känna igen din webbläsare och koppla den till ditt registrerade konto om du har ett registrerat konto.
 
@@ -3227,7 +3231,7 @@ sv:
 
       <a name="consent"></a>
 
-      ## [Ditt samtycke] (#consent)
+      ## [Ditt samtycke](#consent)
 
       Genom att använda vår webbplats godkänner du vår integritetspolicy för webbplatsen.
 
@@ -3237,7 +3241,7 @@ sv:
 
       Om vi ​​beslutar att ändra vår integritetspolicy kommer vi att publicera dessa ändringar på denna sida.
 
-      Detta dokument är licensierat genom  CC-BY-SA ([Creative Commons Attribution-ShareAlike](https://creativecommons.org/licenses/by-sa/4.0/)). Den uppdaterades senast den 31 maj 2013.
+      Detta dokument är licensierat genom  CC-BY-SA ([Creative Commons Attribution-ShareAlike](https://creativecommons.org/licenses/by-sa/4.0/deed.sv)). Den uppdaterades senast den 31 maj 2013.
   badges:
     mass_award:
       errors:
@@ -3698,6 +3702,7 @@ sv:
       revoked: Återkallad
       restored: Återställd
   reviewables:
+    already_handled: "Tack, men vi har redan granskat det inlägget och beslutat att det inte behöver flaggas igen."
     priorities:
       low: "Låg"
       medium: "Medium"

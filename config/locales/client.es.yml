@@ -153,6 +153,7 @@ es:
       banner:
         enabled: "hizo esto un encabezado %{when}. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
         disabled: "eliminó este encabezado %{when}. Ya no aparecerá en la parte superior de cada página."
+      forwarded: "reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido deshabilitados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
@@ -993,7 +994,7 @@ es:
         instructions: "Nunca se mostrará al público."
         ok: "Te enviaremos un correo electrónico para confirmar"
         invalid: "Por favor, ingresa una dirección de correo electrónico válida"
-        authenticated: "Tu dirección de correo electrónico ha sido autenticada por {{provider}}"
+        authenticated: "Tu  correo electrónico ha sido autenticado por {{provider}}"
         frequency_immediately: "Te enviaremos un correo electrónico inmediatamente si no has leído el asunto por el cual te estamos enviando el correo."
         frequency:
           one: "Sólo te enviaremos emails si no te hemos visto en el último minuto."
@@ -1162,7 +1163,7 @@ es:
         too_short: "Tu contraseña es demasiada corta."
         common: "Esta contraseña es demasiado común."
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
-        same_as_email: "Tu contraseña es la misma que tu dirección de correo electrónico."
+        same_as_email: "Tu contraseña es la misma que tu correo electrónico."
         ok: "Tu contraseña es válida."
         instructions: "debe tener al menos %{count} caracteres"
       summary:
@@ -1333,6 +1334,8 @@ es:
       reset: "Restablecer contraseña"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
+      complete_username_found: "Encontramos una cuenta que coincide con el nombre de usuario <b>%{username}</b>. Debes recibir pronto un correo electrónico con instrucciones para restablecer tu contraseña."
+      complete_email_found: "Encontramos una cuenta que coincide con el correo electrónico <b>%{email}</b>. Debes recibir pronto un correo electrónico con instrucciones para restablecer tu contraseña."
       complete_username_not_found: "No hay ninguna cuenta que coincida con el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "No hay ninguna cuenta que coincida con el correo electrónico <b>%{email}</b>"
       help: "¿No te ha llegado el correo? Asegúrate de comprobar primero tu carpeta de correo no deseado. <p>¿No estás seguro de qué correo has usado? Ingresa tu correo electrónico y te avisaremos si lo tenemos registrado.</p><p>Si no tienes acceso al correo electrónico asociado a tu cuenta, por favor, contacta <a href='%{basePath}/about'>a nuestro amable staff.</a></p>"
@@ -1366,7 +1369,7 @@ es:
       security_key_not_allowed_error: "La autenticación de la clave de seguridad fue cancelada o se agotó el tiempo."
       security_key_no_matching_credential_error: "No se encontraron credenciales que coincidan en la clave de seguridad provista."
       security_key_support_missing_error: "Tu dispositivo o navegador actual no soporta el uso de claves de seguridad. Por favor, utiliza un método diferente."
-      email_placeholder: "dirección de correo electrónico o nombre de usuario"
+      email_placeholder: "correo electrónico o nombre de usuario"
       caps_lock_warning: "El bloqueo de mayúsculas está activado"
       error: "Error desconocido"
       cookies_error: "Parece que tu navegador tiene deshabilitados los cookies. Es posible que no puedas iniciar sesión sin habilitarlos primero."
@@ -1465,6 +1468,7 @@ es:
       min_content_not_reached:
         one: "Seleccionar al menos {{count}} item."
         other: "Selecciona al menos {{count}} elementos."
+      invalid_selection_length: "La selección debe tener al menos {{count}} caracteres."
     date_time_picker:
       from: Desde
       to: Hasta
@@ -1604,6 +1608,7 @@ es:
         reply_as_new_topic:
           label: Responder como tema enlazado
           desc: Crear un nuevo tema enlazado a este tema
+          confirm: Tienes un borrador de tema nuevo guardado. Este se sobrescribirá si creas un tema enlazado.
         reply_as_private_message:
           label: Nuevo mensaje
           desc: Crear un nuevo mensaje personal
@@ -2416,6 +2421,10 @@ es:
         name: "Nombre"
         name_placeholder: "Ponle un nombre a la publicación que has guardado en marcadores para ayudarte a recordarla"
         set_reminder: "Establecer un recordatorio"
+        actions:
+          delete_bookmark:
+            name: "Eliminar marcador"
+            description: "Elimina el marcador de tu perfil y cancela todos los recordatorios para tal marcador"
     category:
       can: "puede&hellip; "
       none: "(sin categoría)"
@@ -2830,15 +2839,6 @@ es:
           name: Miscelánea
         posting:
           name: Publicación
-    google_search: |
-      <h3>Buscar con Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
     tagging:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
@@ -2849,6 +2849,7 @@ es:
       choose_for_topic: "etiquetas opcionales"
       info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
+      category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
       synonyms: "Sinónimos"
       synonyms_description: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -3987,7 +3988,7 @@ es:
           label: "Restablecer"
           title: "Restablecer la puntuación de rebote a 0"
         visit_profile: "Visita <a href='%{url}'>la página de preferencias de este usuario</a> para editar su perfil"
-        deactivate_explanation: "Un usuario desactivado debe revalidar su dirección de correo electrónico."
+        deactivate_explanation: "Un usuario desactivado debe revalidar su correo electrónico."
         suspended_explanation: "Un usuario suspendido no puede iniciar sesión."
         silence_explanation: "Un usuario silenciado no puede crear mensajes ni temas."
         staged_explanation: "Un usuario temporal solo puede publicar por correo electrónico en temas específicos."
@@ -4217,8 +4218,8 @@ es:
           description: Concede la misma medalla a muchos usuarios a la vez.
           no_badge_selected: "Por favor, selecciona una medalla para empezar."
           perform: "Conceder medalla a los usuarios"
-          upload_csv: Subir archivo CSV con los correos electrónicos de los usuarios
-          aborted: "Por favor, sube un archivo CSV que contenga los correos electrónicos de los usuarios"
+          upload_csv: Sube un archivo CSV con correos electrónicos o nombres de usuario.
+          aborted: Sube un archivo CSV que contenga correos electrónicos o nombres de usuario.
           success: Se recibió el CSV y los usuarios recibirán la medalla dentro de poco.
           replace_owners: Quitar medalla de los anteriores portadores
       emoji:
