@@ -7,8 +7,8 @@
 # url: https://github.com/<%= @github_username %>
 
 register_asset 'stylesheets/common/<%= dasherized_name %>.scss'
-register_asset 'stylesheets/desktop/<%= dasherized_name %>.scss'
-register_asset 'stylesheets/mobile/<%= dasherized_name %>.scss'
+register_asset 'stylesheets/desktop/<%= dasherized_name %>.scss', :desktop
+register_asset 'stylesheets/mobile/<%= dasherized_name %>.scss', :mobile
 
 enabled_site_setting :<%= underscored_name %>_enabled
 
