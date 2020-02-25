@@ -2223,23 +2223,6 @@ ko:
           name: 기타
         posting:
           name: 포스팅
-    google_search: |2
-
-      <h3>Google로 검색하기</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "모든 태그"
       other_tags: "기타 태그"

@@ -22,6 +22,8 @@ ru:
       public:
         title: "Голосов <strong>публичных</strong>."
       results:
+        groups:
+          title: "Вы должны быть участником %{groups} чтобы голосовать в этом опросе."
         vote:
           title: "Результаты будут показаны при <strong>голосовании</strong>."
         closed:
@@ -54,6 +56,13 @@ ru:
         label: "Показать результаты"
       hide-results:
         title: "Вернуться к опросу"
+        label: "Показать голосование"
+      group-results:
+        title: "Группировать голоса по полю пользователя"
+        label: "Показать распределение"
+      ungroup-results:
+        title: "Объединить все голоса"
+        label: "Скрыть распределение"
       export-results:
         title: "Экспорт результатов опроса"
         label: "Экспорт"
@@ -76,6 +85,7 @@ ru:
         title: Создать опрос
         insert: Вставить опрос в сообщение
         help:
+          options_count: Введите хотя бы 1 вариант
           invalid_values: Минимальное значение должно быть меньше максимального значения.
           min_step_value: Минимальное значение шага = 1
         poll_type:
@@ -89,6 +99,8 @@ ru:
           vote: При голосовании
           closed: При закрытии
           staff: Только для персонала
+        poll_groups:
+          label: Разрешенные группы
         poll_chart_type:
           label: Тип диаграммы
         poll_config:

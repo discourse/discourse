@@ -131,6 +131,7 @@ zh_CN:
       banner:
         enabled: "于%{when}将此设置为横幅。用户关闭横幅前，横幅将显示在每一页的顶部。"
         disabled: "于%{when}移除了该横幅。横幅将不再显示在每一页的顶部。"
+      forwarded: "转发上述邮件"
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你新安装的 Discourse！让我们开始<a href='%{url}' data-auto-route='true'>设置向导</a>✨"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
@@ -358,6 +359,7 @@ zh_CN:
       deleted_user: "(用户已删除)"
       user:
         bio: "简介"
+        website: "网站"
         username: "用户名"
         email: "邮箱"
         name: "名称"
@@ -542,6 +544,7 @@ zh_CN:
       request: "请求"
       message: "私信"
       confirm_leave: "你确定你要离开这个团队吗？"
+      allow_membership_requests: "允许用户向群组所有者发送成员资格请求（需要公开可见的群组）"
       membership_request_template: "用户发送会员请求时向其显示的自定义模板"
       membership_request:
         submit: "提交成员申请"
@@ -821,7 +824,7 @@ zh_CN:
         flags_given: "采纳标记"
         flagged_posts: "被标记"
         deleted_posts: "已删除"
-        suspensions: "禁用"
+        suspensions: "封禁"
         warnings_received: "警告"
       messages:
         all: "所有"
@@ -1267,7 +1270,7 @@ zh_CN:
     last_seen: "最后活动"
     created: "创建时间"
     created_lowercase: "创建时间"
-    trust_level: "用户级别"
+    trust_level: "信任等级"
     search_hint: "用户名、电子邮件或 IP 地址"
     create_account:
       disclaimer: "注册即表示你同意<a href='{{privacy_link}}' target='blank'>隐私策略</a>和<a href='{{tos_link}}' target='blank'>服务条款</a>。"
@@ -1280,6 +1283,8 @@ zh_CN:
       reset: "重置密码"
       complete_username: "如果你的账户名 <b>%{username}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
       complete_email: "如果你的账户 <b>%{email}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
+      complete_username_found: "我们找到一个与用户名<b>%{username}</b>匹配的账户。你应该会收到一封说明如何重设密码的电子邮件。"
+      complete_email_found: "我们找到一个与<b>%{email}</b>相匹配的账户。你应该会收到一封说明如何重设密码的电子邮件。"
       complete_username_not_found: "没有找到用户 <b>%{username}</b>"
       complete_email_not_found: "没有找到用户 <b>%{email}</b> "
       help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账户的邮箱，请联系<a href='%{basePath}/about'>我们的工作人员。</a></p>"
@@ -1359,6 +1364,7 @@ zh_CN:
         title: "GitHub 登录"
       discord:
         name: "Discord"
+        title: "with Discord"
       second_factor_toggle:
         totp: "改用身份验证APP"
         backup_code: "使用备份码"
@@ -1409,6 +1415,7 @@ zh_CN:
         other: "你只能选择 {{count}} 条记录。"
       min_content_not_reached:
         other: "选择至少{{count}}条。"
+      invalid_selection_length: "选择的字符至少为{{count}}个字符。"
     date_time_picker:
       from: 从
       to: 发至
@@ -1487,16 +1494,17 @@ zh_CN:
       title: "或 Ctrl + 回车"
       users_placeholder: "添加用户"
       title_placeholder: "一句话概况讨论内容…"
-      title_or_link_placeholder: "键入标题，或粘贴一个链接在这里"
+      title_or_link_placeholder: "输入标题，或粘贴一个链接"
       edit_reason_placeholder: "编辑理由"
       topic_featured_link_placeholder: "在标题里输入链接"
       remove_featured_link: "从主题中移除链接。"
-      reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
-      reply_placeholder_no_images: "在此输入。 使用Markdown，BBCode或HTML格式。"
+      reply_placeholder: "在此键入。使用 Markdown，BBCode 或 HTML 格式。可拖拽或粘贴图片。"
+      reply_placeholder_no_images: "在此输入。 使用 Markdown，BBCode 或 HTML 格式。"
       reply_placeholder_choose_category: "输入前请选择一个分类。"
-      view_new_post: "浏览新帖。"
+      view_new_post: "浏览你的新帖。"
       saving: "保存中"
       saved: "已保存！"
+      saved_draft: "正在发布草稿。点击以继续。"
       uploading: "上传中…"
       show_preview: "显示预览 &raquo;"
       hide_preview: "&laquo; 隐藏预览"
@@ -1508,14 +1516,14 @@ zh_CN:
       italic_title: "斜体"
       italic_text: "斜体示例"
       link_title: "链接"
-      link_description: "输入链接描述"
+      link_description: "在此输入链接描述"
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
-      link_url_placeholder: "粘贴URL或键入以搜索主题"
+      link_url_placeholder: "粘贴 URL 或键入以搜索主题"
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
-      code_text: "文字缩进 4 格"
+      code_text: "预格式化文本将缩进 4 格"
       paste_code_text: "输入或粘贴代码"
       upload_title: "上传"
       upload_description: "在此输入上传资料的描述"
@@ -1546,6 +1554,7 @@ zh_CN:
         reply_as_new_topic:
           label: 回复为联结主题
           desc: 创建一个新主题链接到这一主题
+          confirm: 您保存了新的主题草稿，如果您创建链接主题该草稿将被覆盖。
         reply_as_private_message:
           label: 新消息
           desc: 新建一个私信
@@ -2319,6 +2328,10 @@ zh_CN:
         name: "名称"
         name_placeholder: "命名收藏夹以帮助你记忆"
         set_reminder: "设置一个提醒"
+        actions:
+          delete_bookmark:
+            name: "删除收藏"
+            description: "从你的个人资料中删除收藏并停止所有有关该收藏的提醒"
     category:
       can: "能够&hellip; "
       none: "（未分类）"
@@ -2340,6 +2353,7 @@ zh_CN:
       allow_global_tags_label: "总是允许其它标题"
       tag_group_selector_placeholder: "（可选）标签组"
       required_tag_group_description: "要求新主题包含标签组中的标签："
+      min_tags_from_required_group_label: "Num标签:"
       required_tag_group_label: "标签组："
       topic_featured_link_allowed: "允许在该分类中发布特色链接标题"
       delete: "删除分类"
@@ -2713,15 +2727,6 @@ zh_CN:
           name: 其它
         posting:
           name: 发帖
-    google_search: |
-      <h3>用 Google 搜索</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"
@@ -2732,6 +2737,7 @@ zh_CN:
       choose_for_topic: "可选标签"
       info: "详情"
       default_info: "该标签不限于任何类别，并且没有同义词。"
+      category_restricted: "此标签仅限于你无权访问的分类。"
       synonyms: "同义词"
       synonyms_description: "使用以下标签时，它们将被替换为<b>%{base_tag_name}</b> 。"
       tag_groups_info:
@@ -2906,7 +2912,7 @@ zh_CN:
           last_7_days: "过去7天"
           last_30_days: "过去30天"
           all_time: "所有时间内"
-          7_days_ago: "7天之前"
+          7_days_ago: "7 天前"
           30_days_ago: "30天之前"
           all: "全部"
           view_table: "表格"
@@ -2971,6 +2977,7 @@ zh_CN:
           membership:
             automatic: 自动
             trust_levels_title: "这些用户加入时，将自动赋予信任等级："
+            effects: 影响
             trust_levels_none: "无"
             automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
             automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
@@ -3549,7 +3556,7 @@ zh_CN:
             change_site_text: "更改站点文字"
             suspend_user: "封禁用户"
             unsuspend_user: "解禁用户"
-            removed_suspend_user: "禁止用户（已移除）"
+            removed_suspend_user: "封禁用户（已移除）"
             removed_unsuspend_user: "禁止的用户（已移除）"
             grant_badge: "授予徽章"
             revoke_badge: "撤销徽章"
@@ -3734,8 +3741,8 @@ zh_CN:
           staff: "管理人员"
           admins: "管理员"
           moderators: "版主"
-          silenced: "被禁言的用户"
-          suspended: "被禁用户"
+          silenced: "已禁言的用户"
+          suspended: "已封禁的用户"
           suspect: "嫌疑用户"
           staged: "暂存用户"
         not_verified: "未验证"
@@ -3743,25 +3750,25 @@ zh_CN:
           title: "显示用户电子邮件"
           text: "显示"
       user:
-        suspend_failed: "禁止此用户时发生了错误 {{error}}"
+        suspend_failed: "封禁此用户时发生了错误 {{error}}"
         unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
-        suspend_duration: "该用户将被封禁多久？"
-        suspend_reason_label: "为什么封禁该用户？该理由将公开显示在用户个人页面上，当其尝试登录时，也看到这条理由。尽量简洁。"
-        suspend_reason_hidden_label: "你为什么被封禁了？该理由将在用户尝试登录时显示。尽量简洁。"
+        suspend_duration: "将该用户封禁多久？"
+        suspend_reason_label: "你为什么封禁该用户？该理由<b>对所有人可见</b>并将放置在用户的个人主页上，当用户尝试登陆时也会显示该理由。语句尽量简洁。"
+        suspend_reason_hidden_label: "你为什么封禁该用户？当用户尝试登陆时会显示该理由。语句尽量简洁。"
         suspend_reason: "封禁的理由"
-        suspend_reason_placeholder: "禁用理由"
+        suspend_reason_placeholder: "封禁理由"
         suspend_message: "邮件消息"
-        suspend_message_placeholder: "（可选）你可以提供更多封禁的理由并邮件用户该理由。"
+        suspend_message_placeholder: "可选内容，可以提供关于此次封禁的更多信息，这些信息会通过邮件告知用户。"
         suspended_by: "封禁操作者："
-        silence_reason: "理由"
-        silenced_by: "已禁用，由"
-        silence_modal_title: "被禁言用户"
+        silence_reason: "禁言理由"
+        silenced_by: "禁言操作者："
+        silence_modal_title: "禁言用户"
         silence_duration: "该用户将被禁言多久？"
         silence_reason_label: "为何禁言该用户？"
         silence_reason_placeholder: "禁言理由"
         silence_message: "邮件消息"
-        silence_message_placeholder: "(留空以发送默认消息)"
-        suspended_until: "（直到%{until}）"
+        silence_message_placeholder: "（留空以发送默认消息）"
+        suspended_until: "（直到 %{until}）"
         cant_suspend: "该用户不能被封禁。"
         delete_all_posts: "删除所有帖子"
         delete_posts_progress: "删除帖子..."
@@ -3774,14 +3781,14 @@ zh_CN:
         penalty_count: "处罚计数"
         clear_penalty_history:
           title: "清除处罚历史"
-          description: "有处罚的用户无法达到TL3"
+          description: "有处罚的用户无法达到信任等级3"
         delete_all_posts_confirm_MF: "你将要删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个主题} other {# 个主题}}。确定吗？"
         silence: "禁言"
         unsilence: "解除禁言"
-        silenced: "禁言？"
+        silenced: "已禁言？"
         moderator: "版主？"
         admin: "管理员？"
-        suspended: "已禁止？"
+        suspended: "已封禁？"
         staged: "暂存？"
         show_admin_profile: "管理员"
         show_public_profile: "显示公开介绍"
@@ -3796,7 +3803,7 @@ zh_CN:
         revoke_moderation: "吊销论坛版主资格"
         grant_moderation: "赋予论坛版主资格"
         unsuspend: "解禁"
-        suspend: "禁止"
+        suspend: "封禁"
         show_flags_received: "显示收到的标记"
         flags_received_by: "%{username}收到的标记"
         flags_received_none: "此用户未收到任何标记。"
@@ -3847,7 +3854,7 @@ zh_CN:
         deactivate_failed: "在停用用户帐号时发生了错误。"
         unsilence_failed: "解除禁言时出错了。"
         silence_failed: "禁言用户时出错了。"
-        silence_confirm: "你确定要禁言该用户吗？他们将不能创建主题或帖子。"
+        silence_confirm: "你确定要禁言该用户吗？他们将不能发或创建主题。"
         silence_accept: "是的，禁言该用户"
         bounce_score: "累计退信分值"
         reset_bounce_score:
@@ -3855,16 +3862,16 @@ zh_CN:
           title: "重置累计退信分值为 0"
         visit_profile: "访问<a href='%{url}'>用户设置页面</a>编辑他们的个人页"
         deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
-        suspended_explanation: "一个被封禁的用户不能登录。"
-        silence_explanation: "被禁言的用户不能发帖或创建主题。"
+        suspended_explanation: "已禁封的用户不能登录。"
+        silence_explanation: "已禁言的用户不能发帖或创建主题。"
         staged_explanation: "暂存用户只能通过邮件回复指定主题。"
         bounce_score_explanation:
           none: "近期该邮箱没有退信。"
           some: "近期该邮箱有少量退信。"
           threshold_reached: "近期该邮箱有过多退信。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
-        suspend_modal_title: "被禁用户"
-        trust_level_2_users: "二级信任等级用户"
+        suspend_modal_title: "封禁用户"
+        trust_level_2_users: "信任等级2用户"
         trust_level_3_requirements: "信任等级 3 要求"
         trust_level_locked_tip: "信任等级已经被锁定，系统将不会升降用户的信任等级"
         trust_level_unlocked_tip: "信任等级已经解锁，系统将自动升降用户的信任等级"
@@ -3889,7 +3896,7 @@ zh_CN:
           likes_received: "获得赞"
           likes_received_days: "获得赞：独立天数"
           likes_received_users: "获得赞：每用户"
-          suspended: "禁止（最近6个月）"
+          suspended: "已封禁（最近6个月）"
           silenced: "禁言（最近6个月）"
           qualifies: "符合信任等级3要求"
           does_not_qualify: "不符合信任等级3要求"
@@ -4080,9 +4087,10 @@ zh_CN:
         mass_award:
           title: 批量授予
           description: 一次性将同一个的徽章授予多个用户。
+          no_badge_selected: 请选择一个徽章开始使用。
           perform: "授予徽章给用户"
-          upload_csv: 上传包含用户邮箱的csv文件
-          aborted: 请上传一个包含用户邮箱的csv文件
+          upload_csv: 上传包含用户邮箱或用户名的CSV文件
+          aborted: 请上传一个包含用户电子邮件或用户名的CSV文件
           success: 你的CSV已收到，用户很快就会收到他们的徽章。
           replace_owners: 从所有者中删除这个徽章
       emoji:

@@ -2824,15 +2824,6 @@ de:
           name: Andere
         posting:
           name: Schreiben
-    google_search: |
-      <h3>Mit Google suchen</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
@@ -4211,8 +4202,6 @@ de:
           description: Das gleiche Abzeichen vielen Benutzern auf einmal verleihen.
           no_badge_selected: "Bitte wähle ein Abzeichen, um anzufangen."
           perform: "Verleihe Abzeichen an Benutzer"
-          upload_csv: Lade eine CSV Datei mit Benutzer E-Mails hoch
-          aborted: "Bitte lade eine CSV-Datei hoch, die Benutzer E-Mails enthält"
           success: Deine CSV Datei wurde empfangen und die Benutzer werden ihr Abzeichen in Kürzle bekommen.
           replace_owners: Entferne das Abzeichen von vorherigen Eigentümern
       emoji:

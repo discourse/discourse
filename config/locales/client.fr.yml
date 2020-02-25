@@ -153,6 +153,7 @@ fr:
       banner:
         enabled: "a mis à la une %{when}. Il sera affiché en haut de chaque page jusqu’à ce qu'il soit ignoré par un utilisateur."
         disabled: "a supprimé de la une %{when}. Il ne sera plus affiché en haut de chaque page."
+      forwarded: "a transmis le courriel ci-dessus"
     topic_admin_menu: "actions du sujet"
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
@@ -386,6 +387,7 @@ fr:
       deleted_user: "(utilisateur supprimé)"
       user:
         bio: "Biographie"
+        website: "Site web"
         username: "Pseudo"
         email: "Courriel"
         name: "Nom"
@@ -578,6 +580,7 @@ fr:
       request: "Requête"
       message: "Message"
       confirm_leave: "Êtes-vous sûr(e) de vouloir quitter ce groupe ?"
+      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe (nécessite que le groupe soit visible publiquement)"
       membership_request_template: "Modèle personnalisé à afficher aux utilisateurs lors de l'envoi d'une demande d'adhésion"
       membership_request:
         submit: "Soumettre la demande"
@@ -1332,6 +1335,8 @@ fr:
       reset: "Réinitialiser votre mot de passe"
       complete_username: "Si un compte correspond au pseudo <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
       complete_email: "Si un compte correspond à l'adresse de courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
+      complete_username_found: "Nous avons trouvé un compte correspondant au pseudo <b>%{username}</b>. Vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
+      complete_email_found: "Nous avons trouvé un compte correspondant au courriel <b>%{email}</b>. Vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
       complete_username_not_found: "Aucun compte ne correspond au pseudo <b>%{username}</b>"
       complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
       help: "Le courriel n'est pas arrivé ? Pensez bien à vérifier dans votre dossier de spam.<p>Vous n'êtes pas sûr de l'adresse électronique que vous avez utilisée ? Saisissez ici une adresse électronique, et nous vous dirons si elle existe ici.</p><p>Si vous n'avez plus accès à l'adresse électronique de votre compte, merci de contacter <a href='%{basePath}/about'>nos responsables serviables.</a></p>"
@@ -1464,6 +1469,7 @@ fr:
       min_content_not_reached:
         one: "Séléctionner au moins {{count}} élément."
         other: "Séléctionner au moins {{count}} éléments."
+      invalid_selection_length: "La sélection doit faire au minimum {{count}} caractères ."
     date_time_picker:
       from: From
       to: À
@@ -1553,6 +1559,7 @@ fr:
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
       saved: "Sauvegardé !"
+      saved_draft: "Brouillon de message en cours. Appuyer pour reprendre."
       uploading: "Envoi en cours…"
       show_preview: "afficher la prévisualisation &raquo;"
       hide_preview: "&laquo; cacher la prévisualisation"
@@ -2414,6 +2421,9 @@ fr:
         name: "Nom"
         name_placeholder: "Nommez le signet pour alléger votre mémoire"
         set_reminder: "Ajouter un rappel"
+        actions:
+          delete_bookmark:
+            name: "Supprimer le signet"
     category:
       can: "peut&hellip; "
       none: "(aucune catégorie)"
@@ -2833,23 +2843,6 @@ fr:
           name: Autre
         posting:
           name: Contribution
-    google_search: |2
-
-      <h3>Rechercher avec Google</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
@@ -2860,6 +2853,7 @@ fr:
       choose_for_topic: "étiquettes optionnelles"
       info: "Information"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
+      category_restricted: "Cette étiquette est limitée à des catégories dont vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
       synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -4225,8 +4219,6 @@ fr:
           description: Accorder le même badge à plusieurs utilisateurs à la fois.
           no_badge_selected: Merci de sélectionner un badge pour commencer.
           perform: "Accorder un Badge aux Utilisateurs"
-          upload_csv: Envoyer un CSV avec les courriels des utilisateurs
-          aborted: Merci d'envoyer un CSV contenant des courriels d'utilisateurs
           success: Votre CSV a été envoyé et les utilisateurs recevront leur badge rapidement.
       emoji:
         title: "Emoji"
