@@ -440,6 +440,7 @@ module PrettyText
 
   USER_TYPE ||= 'user'
   GROUP_TYPE ||= 'group'
+  GROUP_MENTIONABLE_TYPE ||= 'group-mentionable'
 
   def self.add_mentions(doc, user_id: nil)
     elements = doc.css("span.mention")
@@ -461,6 +462,9 @@ module PrettyText
         case type
         when USER_TYPE
           element['href'] = "#{Discourse::base_uri}/u/#{name}"
+        when GROUP_MENTIONABLE_TYPE
+          element['class'] = 'mention-group notify'
+          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
           element['href'] = "#{Discourse::base_uri}/groups/#{name}"
@@ -486,8 +490,16 @@ module PrettyText
         :group_type AS type,
         lower(name) AS name
       FROM groups
-      WHERE lower(name) IN (:names) AND (#{Group.mentionable_sql_clause})
     )
+    UNION
+    (
+      SELECT
+        :group_mentionable_type AS type,
+        lower(name) AS name
+      FROM groups
+      WHERE lower(name) IN (:names) AND (#{Group.mentionable_sql_clause(include_public: false)})
+    )
+    ORDER BY type
     SQL
 
     user = User.find_by(id: user_id)
@@ -497,6 +509,7 @@ module PrettyText
       names: names,
       user_type: USER_TYPE,
       group_type: GROUP_TYPE,
+      group_mentionable_type: GROUP_MENTIONABLE_TYPE,
       levels: Group.alias_levels(user),
       user_id: user_id
     )

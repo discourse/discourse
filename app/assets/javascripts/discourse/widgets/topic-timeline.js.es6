@@ -382,21 +382,15 @@ createWidget("timeline-footer-controls", {
       controls.push(
         new ComponentConnector(
           this,
-          "topic-notifications-options",
+          "topic-notifications-button",
           {
-            value: notificationLevel,
+            notificationLevel,
             topic,
-            options: {
-              showFullTitle: false,
-              placement: "bottom-end"
-            },
-            onChange: newNotificationLevel => {
-              if (newNotificationLevel !== notificationLevel) {
-                topic.details.updateNotifications(newNotificationLevel);
-              }
-            }
+            showFullTitle: false,
+            appendReason: false,
+            placement: "bottom-end"
           },
-          ["value"]
+          ["notificationLevel"]
         )
       );
     }

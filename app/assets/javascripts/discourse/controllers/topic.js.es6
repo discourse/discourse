@@ -1,4 +1,4 @@
-import { isEmpty } from "@ember/utils";
+import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
@@ -1299,7 +1299,7 @@ export default Controller.extend(bufferedProperty("model"), {
       data => {
         const topic = this.model;
 
-        if (Ember.isPresent(data.notification_level_change)) {
+        if (isPresent(data.notification_level_change)) {
           topic.set(
             "details.notification_level",
             data.notification_level_change

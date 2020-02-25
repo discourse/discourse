@@ -44,6 +44,25 @@ class Notification < ActiveRecord::Base
     send_email unless NotificationConsolidator.new(self).consolidate!
   end
 
+  def self.purge_old!
+    return if SiteSetting.max_notifications_per_user == 0
+
+    DB.exec(<<~SQL, SiteSetting.max_notifications_per_user)
+      DELETE FROM notifications n1
+      USING (
+        SELECT * FROM (
+          SELECT
+            user_id,
+            id,
+            rank() OVER (PARTITION BY user_id ORDER BY id DESC)
+          FROM notifications
+        ) AS X
+        WHERE rank = ?
+      ) n2
+      WHERE n1.user_id = n2.user_id AND n1.id < n2.id
+    SQL
+  end
+
   def self.ensure_consistency!
     DB.exec(<<~SQL, Notification.types[:private_message])
       DELETE

@@ -6,7 +6,6 @@ RSpec.describe "tasks/uploads" do
   before do
     Rake::Task.clear
     Discourse::Application.load_tasks
-    disable_puts_stdout
   end
 
   describe "uploads:ensure_correct_acl" do
@@ -33,7 +32,9 @@ RSpec.describe "tasks/uploads" do
     end
 
     def invoke_task
-      Rake::Task['uploads:ensure_correct_acl'].invoke
+      capture_stdout do
+        Rake::Task['uploads:ensure_correct_acl'].invoke
+      end
     end
 
     context "when the store is internal" do

@@ -1,5 +1,5 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["group-members-dropdown"],
@@ -27,5 +27,10 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
-  })
+  }),
+
+  @action
+  onChange(id) {
+    this.attrs && this.attrs[id] && this.attrs[id]();
+  }
 });

@@ -10,7 +10,8 @@ export default Component.extend({
   classNames: ["suggested-topics"],
 
   suggestedTitleLabel: computed("topic", function() {
-    if (this.currentUser && this.currentUser.pmPath(this.topic)) {
+    const href = this.currentUser && this.currentUser.pmPath(this.topic);
+    if (this.topic.get("isPrivateMessage") && href) {
       return "suggested_topics.pm_title";
     } else {
       return "suggested_topics.title";

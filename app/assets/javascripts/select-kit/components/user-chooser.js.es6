@@ -28,7 +28,7 @@ export default MultiSelectComponent.extend({
   },
 
   content: computed("value.[]", function() {
-    return Ember.makeArray(this.value).map(x => this.defaultItem(x, x));
+    return makeArray(this.value).map(x => this.defaultItem(x, x));
   }),
 
   excludedUsers: computed(

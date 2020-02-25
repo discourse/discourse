@@ -99,6 +99,29 @@ describe PostActionCreator do
       expect(score.reviewed_at).to be_blank
     end
 
+    describe "Auto hide spam flagged posts" do
+      before do
+        user.trust_level = TrustLevel[3]
+        post.user.trust_level = TrustLevel[0]
+      end
+
+      it "hides the post when the flagger is a TL3 user and the poster is a TL0 user" do
+        SiteSetting.high_trust_flaggers_auto_hide_posts = true
+
+        result = PostActionCreator.create(user, post, :spam)
+
+        expect(post.hidden?).to eq(true)
+      end
+
+      it 'does not hide the post if the setting is disabled' do
+        SiteSetting.high_trust_flaggers_auto_hide_posts = false
+
+        result = PostActionCreator.create(user, post, :spam)
+
+        expect(post.hidden?).to eq(false)
+      end
+    end
+
     context "existing reviewable" do
       let!(:reviewable) {
         PostActionCreator.create(Fabricate(:user), post, :inappropriate).reviewable
