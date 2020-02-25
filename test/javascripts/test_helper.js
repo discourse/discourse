@@ -1,5 +1,4 @@
 /*global document, sinon, QUnit, Logster */
-
 //= require env
 //= require jquery.debug
 //= require jquery.ui.widget
@@ -103,6 +102,8 @@ function resetSite(siteSettings, extras) {
 
 QUnit.testStart(function(ctx) {
   server = createPretender.default;
+  createPretender.applyDefaultHandlers(server);
+  server.handlers = []
 
   server.prepareBody = function(body) {
     if (body && typeof body === "object") {

@@ -33,25 +33,30 @@ export function success() {
 
 const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
+
 export let fixturesByUrl;
 
-export default new Pretender(function() {
+export default new Pretender();
+
+export function applyDefaultHandlers(pretender) {
   // Autoload any `*-pretender` files
   Object.keys(requirejs.entries).forEach(e => {
     let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
     if (m && m[1] !== "create") {
-      let result = requirejs(e).default.call(this, helpers);
+      let result = requirejs(e).default.call(pretender, helpers);
       if (m[1] === "fixture") {
         fixturesByUrl = result;
       }
     }
   });
 
-  this.get("/admin/plugins", () => response({ plugins: [] }));
+  pretender.get("/admin/plugins", () => response({ plugins: [] }));
 
-  this.get("/composer_messages", () => response({ composer_messages: [] }));
+  pretender.get("/composer_messages", () =>
+    response({ composer_messages: [] })
+  );
 
-  this.get("/latest.json", () => {
+  pretender.get("/latest.json", () => {
     const json = fixturesByUrl["/latest.json"];
 
     if (loggedIn()) {
@@ -63,7 +68,7 @@ export default new Pretender(function() {
     return response(json);
   });
 
-  this.get("/c/bug/1/l/latest.json", () => {
+  pretender.get("/c/bug/1/l/latest.json", () => {
     const json = fixturesByUrl["/c/bug/1/l/latest.json"];
 
     if (loggedIn()) {
@@ -75,7 +80,7 @@ export default new Pretender(function() {
     return response(json);
   });
 
-  this.get("/tags", () => {
+  pretender.get("/tags", () => {
     return [
       200,
       { "Content-Type": "application/json" },
@@ -117,11 +122,11 @@ export default new Pretender(function() {
     ];
   });
 
-  this.get("/tags/filter/search", () => {
+  pretender.get("/tags/filter/search", () => {
     return response({ results: [{ text: "monkey", count: 1 }] });
   });
 
-  this.get(`/u/:username/emails.json`, request => {
+  pretender.get(`/u/:username/emails.json`, request => {
     if (request.params.username === "regular2") {
       return response({
         email: "regular2@example.com",
@@ -134,13 +139,13 @@ export default new Pretender(function() {
     return response({ email: "eviltrout@example.com" });
   });
 
-  this.get("/u/eviltrout.json", () => {
+  pretender.get("/u/eviltrout.json", () => {
     const json = fixturesByUrl["/u/eviltrout.json"];
     json.user.can_edit = loggedIn();
     return response(json);
   });
 
-  this.get("/u/eviltrout/summary.json", () => {
+  pretender.get("/u/eviltrout/summary.json", () => {
     return response({
       user_summary: {
         topic_ids: [1234],
@@ -169,21 +174,21 @@ export default new Pretender(function() {
     });
   });
 
-  this.get("/u/eviltrout/invited_count.json", () => {
+  pretender.get("/u/eviltrout/invited_count.json", () => {
     return response({
       counts: { pending: 1, redeemed: 0, total: 0 }
     });
   });
 
-  this.get("/u/eviltrout/invited.json", () => {
+  pretender.get("/u/eviltrout/invited.json", () => {
     return response({ invites: [{ id: 1 }] });
   });
 
-  this.get("/topics/private-messages/eviltrout.json", () => {
+  pretender.get("/topics/private-messages/eviltrout.json", () => {
     return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
   });
 
-  this.get("/topics/feature_stats.json", () => {
+  pretender.get("/topics/feature_stats.json", () => {
     return response({
       pinned_in_category_count: 0,
       pinned_globally_count: 0,
@@ -191,24 +196,24 @@ export default new Pretender(function() {
     });
   });
 
-  this.put("/t/34/convert-topic/public", () => {
+  pretender.put("/t/34/convert-topic/public", () => {
     return response({});
   });
 
-  this.put("/t/280/make-banner", () => {
+  pretender.put("/t/280/make-banner", () => {
     return response({});
   });
 
-  this.put("/t/internationalization-localization/280/status", () => {
+  pretender.put("/t/internationalization-localization/280/status", () => {
     return response({
       success: "OK",
       topic_status_update: null
     });
   });
 
-  this.post("/clicks/track", success);
+  pretender.post("/clicks/track", success);
 
-  this.get("/search", request => {
+  pretender.get("/search", request => {
     if (request.queryParams.q === "posts") {
       return response({
         posts: [
@@ -236,19 +241,21 @@ export default new Pretender(function() {
     return response({});
   });
 
-  this.put("/u/eviltrout.json", () => response({ user: {} }));
+  pretender.put("/u/eviltrout.json", () => response({ user: {} }));
 
-  this.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
-  this.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
-  this.get("/t/280/:post_number.json", () =>
+  pretender.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
+  pretender.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
+  pretender.get("/t/280/:post_number.json", () =>
     response(fixturesByUrl["/t/280/1.json"])
   );
-  this.get("/t/28830.json", () => response(fixturesByUrl["/t/28830/1.json"]));
-  this.get("/t/9.json", () => response(fixturesByUrl["/t/9/1.json"]));
-  this.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));
-  this.put("/t/1234/re-pin", success);
+  pretender.get("/t/28830.json", () =>
+    response(fixturesByUrl["/t/28830/1.json"])
+  );
+  pretender.get("/t/9.json", () => response(fixturesByUrl["/t/9/1.json"]));
+  pretender.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));
+  pretender.put("/t/1234/re-pin", success);
 
-  this.get("/t/id_for/:slug", () => {
+  pretender.get("/t/id_for/:slug", () => {
     return response({
       id: 280,
       slug: "internationalization-localization",
@@ -256,11 +263,11 @@ export default new Pretender(function() {
     });
   });
 
-  this.delete("/t/:id", success);
-  this.put("/t/:id/recover", success);
-  this.put("/t/:id/publish", success);
+  pretender.delete("/t/:id", success);
+  pretender.put("/t/:id/recover", success);
+  pretender.put("/t/:id/publish", success);
 
-  this.get("/404-body", () => {
+  pretender.get("/404-body", () => {
     return [
       200,
       { "Content-Type": "text/html" },
@@ -268,12 +275,12 @@ export default new Pretender(function() {
     ];
   });
 
-  this.delete("/draft.json", success);
-  this.post("/draft.json", success);
+  pretender.delete("/draft.json", success);
+  pretender.post("/draft.json", success);
 
-  this.get("/u/:username/staff-info.json", () => response({}));
+  pretender.get("/u/:username/staff-info.json", () => response({}));
 
-  this.get("/post_action_users", () => {
+  pretender.get("/post_action_users", () => {
     return response({
       post_action_users: [
         {
@@ -286,23 +293,23 @@ export default new Pretender(function() {
     });
   });
 
-  this.get("/post_replies", () => {
+  pretender.get("/post_replies", () => {
     return response({ post_replies: [{ id: 1234, cooked: "wat" }] });
   });
 
-  this.get("/post_reply_histories", () => {
+  pretender.get("/post_reply_histories", () => {
     return response({ post_reply_histories: [{ id: 1234, cooked: "wat" }] });
   });
 
-  this.get("/category_hashtags/check", () => {
+  pretender.get("/category_hashtags/check", () => {
     return response({ valid: [{ slug: "bug", url: "/c/bugs" }] });
   });
 
-  this.get("/categories_and_latest", () =>
+  pretender.get("/categories_and_latest", () =>
     response(fixturesByUrl["/categories_and_latest.json"])
   );
 
-  this.put("/categories/:category_id", request => {
+  pretender.put("/categories/:category_id", request => {
     const category = parsePostData(request.requestBody);
     category.id = parseInt(request.params.category_id, 10);
 
@@ -313,7 +320,7 @@ export default new Pretender(function() {
     return response({ category });
   });
 
-  this.get("/draft.json", request => {
+  pretender.get("/draft.json", request => {
     if (request.queryParams.draft_key === "new_topic") {
       return response(fixturesByUrl["/draft.json"]);
     } else if (request.queryParams.draft_key.startsWith("topic_"))
@@ -326,19 +333,19 @@ export default new Pretender(function() {
     return response({});
   });
 
-  this.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
+  pretender.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
 
-  this.put("/queued_posts/:queued_post_id", function(request) {
+  pretender.put("/queued_posts/:queued_post_id", function(request) {
     return response({ queued_post: { id: request.params.queued_post_id } });
   });
 
-  this.get("/queued_posts", function() {
+  pretender.get("/queued_posts", function() {
     return response({
       queued_posts: [{ id: 1, raw: "queued post text", can_delete_user: true }]
     });
   });
 
-  this.post("/session", function(request) {
+  pretender.post("/session", function(request) {
     const data = parsePostData(request.requestBody);
 
     if (data.password === "correct") {
@@ -403,40 +410,40 @@ export default new Pretender(function() {
     return response(400, { error: "invalid login" });
   });
 
-  this.post("/u/action/send_activation_email", success);
-  this.put("/u/update-activation-email", success);
+  pretender.post("/u/action/send_activation_email", success);
+  pretender.put("/u/update-activation-email", success);
 
-  this.get("/u/hp.json", function() {
+  pretender.get("/u/hp.json", function() {
     return response({
       value: "32faff1b1ef1ac3",
       challenge: "61a3de0ccf086fb9604b76e884d75801"
     });
   });
 
-  this.get("/session/csrf", function() {
+  pretender.get("/session/csrf", function() {
     return response({ csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=" });
   });
 
-  this.get("/groups/check-name", () => {
+  pretender.get("/groups/check-name", () => {
     return response({ available: true });
   });
 
-  this.get("/u/check_username", function(request) {
+  pretender.get("/u/check_username", function(request) {
     if (request.queryParams.username === "taken") {
       return response({ available: false, suggestion: "nottaken" });
     }
     return response({ available: true });
   });
 
-  this.post("/u", () => response({ success: true }));
+  pretender.post("/u", () => response({ success: true }));
 
-  this.get("/login.html", () => [200, {}, "LOGIN PAGE"]);
+  pretender.get("/login.html", () => [200, {}, "LOGIN PAGE"]);
 
-  this.delete("/posts/:post_id", success);
-  this.put("/posts/:post_id/recover", success);
-  this.get("/posts/:post_id/expand-embed", success);
+  pretender.delete("/posts/:post_id", success);
+  pretender.put("/posts/:post_id/recover", success);
+  pretender.get("/posts/:post_id/expand-embed", success);
 
-  this.put("/posts/:post_id", request => {
+  pretender.put("/posts/:post_id", request => {
     const data = parsePostData(request.requestBody);
     if (data.post.raw === "this will 409") {
       return [
@@ -450,11 +457,11 @@ export default new Pretender(function() {
     return response(200, data.post);
   });
 
-  this.get("/t/403.json", () => response(403, {}));
-  this.get("/t/404.json", () => response(404, "not found"));
-  this.get("/t/500.json", () => response(502, {}));
+  pretender.get("/t/403.json", () => response(403, {}));
+  pretender.get("/t/404.json", () => response(404, "not found"));
+  pretender.get("/t/500.json", () => response(502, {}));
 
-  this.put("/t/:slug/:id", request => {
+  pretender.put("/t/:slug/:id", request => {
     const isJSON = request.requestHeaders["Content-Type"].includes(
       "application/json"
     );
@@ -473,35 +480,35 @@ export default new Pretender(function() {
     });
   });
 
-  this.get("groups", () => {
+  pretender.get("groups", () => {
     return response(200, fixturesByUrl["/groups.json"]);
   });
 
-  this.get("/groups.json", () => {
+  pretender.get("/groups.json", () => {
     return response(200, fixturesByUrl["/groups.json?username=eviltrout"]);
   });
 
-  this.get("groups/search.json", () => {
+  pretender.get("groups/search.json", () => {
     return response(200, []);
   });
 
-  this.get("/topics/groups/discourse.json", () => {
+  pretender.get("/topics/groups/discourse.json", () => {
     return response(200, fixturesByUrl["/topics/groups/discourse.json"]);
   });
 
-  this.get("/groups/discourse/mentions.json", () => {
+  pretender.get("/groups/discourse/mentions.json", () => {
     return response(200, fixturesByUrl["/groups/discourse/posts.json"]);
   });
 
-  this.get("/groups/discourse/messages.json", () => {
+  pretender.get("/groups/discourse/messages.json", () => {
     return response(200, fixturesByUrl["/groups/discourse/posts.json"]);
   });
 
-  this.get("/groups/moderators/members.json", () => {
+  pretender.get("/groups/moderators/members.json", () => {
     return response(200, fixturesByUrl["/groups/discourse/members.json"]);
   });
 
-  this.get("/t/:topic_id/posts.json", request => {
+  pretender.get("/t/:topic_id/posts.json", request => {
     const postIds = request.queryParams.post_ids;
     const postNumber = parseInt(request.queryParams.post_number, 10);
     let posts;
@@ -528,21 +535,23 @@ export default new Pretender(function() {
     return response(200, { post_stream: { posts } });
   });
 
-  this.get("/posts/:post_id/reply-history.json", () => {
+  pretender.get("/posts/:post_id/reply-history.json", () => {
     return response(200, [{ id: 2222, post_number: 2222 }]);
   });
 
-  this.get("/posts/:post_id/reply-ids.json", () => {
+  pretender.get("/posts/:post_id/reply-ids.json", () => {
     return response(200, {
       direct_reply_ids: [45],
       all_reply_ids: [45, 100]
     });
   });
 
-  this.post("/user_badges", () => response(200, fixturesByUrl["/user_badges"]));
-  this.delete("/user_badges/:badge_id", success);
+  pretender.post("/user_badges", () =>
+    response(200, fixturesByUrl["/user_badges"])
+  );
+  pretender.delete("/user_badges/:badge_id", success);
 
-  this.post("/posts", function(request) {
+  pretender.post("/posts", function(request) {
     const data = parsePostData(request.requestBody);
 
     if (data.title === "this title triggers an error") {
@@ -580,7 +589,7 @@ export default new Pretender(function() {
     });
   });
 
-  this.post("/topics/timings", () => response(200, {}));
+  pretender.post("/topics/timings", () => response(200, {}));
 
   const siteText = { id: "site.test", value: "Test McTest" };
   const overridden = {
@@ -589,7 +598,7 @@ export default new Pretender(function() {
     overridden: true
   };
 
-  this.get("/admin/users/list/active.json", request => {
+  pretender.get("/admin/users/list/active.json", request => {
     let store = [
       {
         id: 1,
@@ -628,7 +637,7 @@ export default new Pretender(function() {
     return response(200, store);
   });
 
-  this.get("/admin/users/list/suspect.json", () => {
+  pretender.get("/admin/users/list/suspect.json", () => {
     return response(200, [
       {
         id: 2,
@@ -638,7 +647,7 @@ export default new Pretender(function() {
     ]);
   });
 
-  this.get("/admin/customize/site_texts", request => {
+  pretender.get("/admin/customize/site_texts", request => {
     if (request.queryParams.overridden) {
       return response(200, { site_texts: [overridden] });
     } else {
@@ -646,23 +655,23 @@ export default new Pretender(function() {
     }
   });
 
-  this.get("/admin/customize/site_texts/:key", () =>
+  pretender.get("/admin/customize/site_texts/:key", () =>
     response(200, { site_text: siteText })
   );
-  this.delete("/admin/customize/site_texts/:key", () =>
+  pretender.delete("/admin/customize/site_texts/:key", () =>
     response(200, { site_text: siteText })
   );
 
-  this.put("/admin/customize/site_texts/:key", request => {
+  pretender.put("/admin/customize/site_texts/:key", request => {
     const result = parsePostData(request.requestBody);
     result.id = request.params.key;
     result.can_revert = true;
     return response(200, { site_text: result });
   });
 
-  this.get("/tag_groups", () => response(200, { tag_groups: [] }));
+  pretender.get("/tag_groups", () => response(200, { tag_groups: [] }));
 
-  this.get("/admin/users/1.json", () => {
+  pretender.get("/admin/users/1.json", () => {
     return response(200, {
       id: 1,
       username: "eviltrout",
@@ -671,7 +680,7 @@ export default new Pretender(function() {
     });
   });
 
-  this.get("/admin/users/2.json", () => {
+  pretender.get("/admin/users/2.json", () => {
     return response(200, {
       id: 2,
       username: "sam",
@@ -679,7 +688,7 @@ export default new Pretender(function() {
     });
   });
 
-  this.get("/admin/users/3.json", () => {
+  pretender.get("/admin/users/3.json", () => {
     return response(200, {
       id: 3,
       username: "markvanlan",
@@ -688,51 +697,51 @@ export default new Pretender(function() {
     });
   });
 
-  this.get("/admin/users/1234.json", () => {
+  pretender.get("/admin/users/1234.json", () => {
     return response(200, {
       id: 1234,
       username: "regular"
     });
   });
 
-  this.get("/admin/users/1235.json", () => {
+  pretender.get("/admin/users/1235.json", () => {
     return response(200, {
       id: 1235,
       username: "regular2"
     });
   });
 
-  this.delete("/admin/users/:user_id.json", () =>
+  pretender.delete("/admin/users/:user_id.json", () =>
     response(200, { deleted: true })
   );
-  this.post("/admin/badges", success);
-  this.delete("/admin/badges/:id", success);
+  pretender.post("/admin/badges", success);
+  pretender.delete("/admin/badges/:id", success);
 
-  this.get("/admin/logs/staff_action_logs.json", () => {
+  pretender.get("/admin/logs/staff_action_logs.json", () => {
     return response(200, {
       staff_action_logs: [],
       extras: { user_history_actions: [] }
     });
   });
 
-  this.get("/admin/logs/watched_words", () => {
+  pretender.get("/admin/logs/watched_words", () => {
     return response(200, fixturesByUrl["/admin/logs/watched_words.json"]);
   });
-  this.delete("/admin/logs/watched_words/:id.json", success);
+  pretender.delete("/admin/logs/watched_words/:id.json", success);
 
-  this.post("/admin/logs/watched_words.json", request => {
+  pretender.post("/admin/logs/watched_words.json", request => {
     const result = parsePostData(request.requestBody);
     result.id = new Date().getTime();
     return response(200, result);
   });
 
-  this.get("/admin/logs/search_logs.json", () => {
+  pretender.get("/admin/logs/search_logs.json", () => {
     return response(200, [
       { term: "foobar", searches: 35, click_through: 6, unique: 16 }
     ]);
   });
 
-  this.get("/admin/logs/search_logs/term.json", () => {
+  pretender.get("/admin/logs/search_logs/term.json", () => {
     return response(200, {
       term: {
         type: "search_log_term",
@@ -743,7 +752,7 @@ export default new Pretender(function() {
     });
   });
 
-  this.post("/uploads/lookup-metadata", () => {
+  pretender.post("/uploads/lookup-metadata", () => {
     return response(200, {
       imageFilename: "somefile.png",
       imageFilesize: "10 KB",
@@ -752,7 +761,7 @@ export default new Pretender(function() {
     });
   });
 
-  this.get("/inline-onebox", request => {
+  pretender.get("/inline-onebox", request => {
     if (
       request.queryParams.urls.includes("http://www.example.com/has-title.html")
     ) {
@@ -764,7 +773,7 @@ export default new Pretender(function() {
     }
   });
 
-  this.get("/onebox", request => {
+  pretender.get("/onebox", request => {
     if (
       request.queryParams.url === "http://www.example.com/has-title.html" ||
       request.queryParams.url ===
@@ -814,4 +823,4 @@ export default new Pretender(function() {
     }
     return [404, { "Content-Type": "application/html" }, ""];
   });
-});
+}
