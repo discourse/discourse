@@ -1,5 +1,5 @@
 import componentTest from "helpers/component-test";
-import pretender, { fixturesByUrl } from "helpers/create-pretender";
+import pretender from "helpers/create-pretender";
 
 moduleForComponent("admin-report", {
   integration: true
@@ -145,16 +145,6 @@ componentTest("rate limited", {
           error_type: "rate_limit",
           extras: { wait_seconds: 10 }
         }
-      ];
-    });
-  },
-
-  afterEach() {
-    pretender.get("/admin/reports/bulk", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        fixturesByUrl["/admin/reports/bulk"]
       ];
     });
   },
