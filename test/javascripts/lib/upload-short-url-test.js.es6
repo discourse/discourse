@@ -6,13 +6,12 @@ import {
 import { ajax } from "discourse/lib/ajax";
 import { fixture } from "helpers/qunit-helpers";
 
-QUnit.module("lib:pretty-text/upload-short-url", {
-  beforeEach() {
-    const response = object => {
-      return [200, { "Content-Type": "application/json" }, object];
-    };
-
-    const imageSrcs = [
+function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
+  const response = object => {
+    return [200, { "Content-Type": "application/json" }, object];
+  };
+  if (!imageSrcs) {
+    imageSrcs = [
       {
         short_url: "upload://a.jpeg",
         url: "/uploads/default/original/3X/c/b/1.jpeg",
@@ -24,16 +23,20 @@ QUnit.module("lib:pretty-text/upload-short-url", {
         short_path: "/uploads/short-url/b.jpeg"
       }
     ];
+  }
 
-    const attachmentSrcs = [
+  if (!attachmentSrcs) {
+    attachmentSrcs = [
       {
         short_url: "upload://c.pdf",
         url: "/uploads/default/original/3X/c/b/3.pdf",
         short_path: "/uploads/short-url/c.pdf"
       }
     ];
+  }
 
-    const otherMediaSrcs = [
+  if (!otherMediaSrcs) {
+    otherMediaSrcs = [
       {
         short_url: "upload://d.mp4",
         url: "/uploads/default/original/3X/c/b/4.mp4",
@@ -45,29 +48,30 @@ QUnit.module("lib:pretty-text/upload-short-url", {
         short_path: "/uploads/short-url/e.mp3"
       }
     ];
+  }
+  // prettier-ignore
+  server.post("/uploads/lookup-urls", () => { //eslint-disable-line
+    return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
+  });
 
-    // prettier-ignore
-    server.post("/uploads/lookup-urls", () => { //eslint-disable-line
-      return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
-    });
-
-    fixture().html(
-      imageSrcs.map(src => `<img data-orig-src="${src.short_url}"/>`).join("") +
-        attachmentSrcs
-          .map(
-            src =>
-              `<a data-orig-href="${src.short_url}">big enterprise contract.pdf</a>`
-          )
-          .join("")
-    );
-  },
-
+  fixture().html(
+    imageSrcs.map(src => `<img data-orig-src="${src.short_url}"/>`).join("") +
+      attachmentSrcs
+        .map(
+          src =>
+            `<a data-orig-href="${src.short_url}">big enterprise contract.pdf</a>`
+        )
+        .join("")
+  );
+}
+QUnit.module("lib:pretty-text/upload-short-url", {
   afterEach() {
     resetCache();
   }
 });
 
 QUnit.test("resolveAllShortUrls", async assert => {
+  stubUrls();
   let lookup;
 
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
@@ -114,6 +118,7 @@ QUnit.test("resolveAllShortUrls", async assert => {
 QUnit.test(
   "resolveAllShortUrls - href + src replaced correctly",
   async assert => {
+    stubUrls();
     await resolveAllShortUrls(ajax);
 
     let image1 = fixture()
@@ -133,10 +138,24 @@ QUnit.test(
 QUnit.test(
   "resolveAllShortUrls - when secure media is enabled use the attachment full URL",
   async assert => {
+    stubUrls(
+      null,
+      [
+        {
+          short_url: "upload://c.pdf",
+          url: "/secure-media-uploads/default/original/3X/c/b/3.pdf",
+          short_path: "/uploads/short-url/c.pdf"
+        }
+      ],
+      null
+    );
     Discourse.SiteSettings.secure_media = true;
     await resolveAllShortUrls(ajax);
 
     let link = fixture().find("a");
-    assert.equal(link.attr("href"), "/uploads/default/original/3X/c/b/3.pdf");
+    assert.equal(
+      link.attr("href"),
+      "/secure-media-uploads/default/original/3X/c/b/3.pdf"
+    );
   }
 );

@@ -52,6 +52,8 @@ function retrieveCachedUrl($upload, dataAttribute, callback) {
 }
 
 function getAttributeBasedUrl(dataAttribute, cachedUpload) {
+  if (!cachedUpload.url) { return; }
+
   // non-attachments always use the full URL
   if (dataAttribute !== "orig-href") {
     return cachedUpload.url;

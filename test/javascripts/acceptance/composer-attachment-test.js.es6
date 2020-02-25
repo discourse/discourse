@@ -5,7 +5,7 @@ function setupPretender(server, helper) {
     return helper.response([
       {
         short_url: "upload://asdsad.png",
-        url: "/uploads/default/3X/1/asjdiasjdiasida.png",
+        url: "/secure-media-uploads/default/3X/1/asjdiasjdiasida.png",
         short_path: "/uploads/short-url/asdsad.png"
       }
     ]);
@@ -63,7 +63,7 @@ QUnit.test(
       find(".d-editor-preview:visible")
         .html()
         .trim(),
-      '<p><a class="attachment" href="/uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
+      '<p><a class="attachment" href="/secure-media-uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
     );
   }
 );
