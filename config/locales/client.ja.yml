@@ -9,8 +9,8 @@ ja:
   js:
     number:
       format:
-        separator: "。"
-        delimiter: "、"
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: "%n %u"
@@ -791,7 +791,6 @@ ja:
           title: "バックアップコードが作られました"
       second_factor:
         title: "2段階認証"
-        enable: "2段階認証を有効にする"
         confirm_password_description: "続行するにはパスワードを入力してください"
         name: "名前"
         label: "コード"
