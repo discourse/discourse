@@ -721,7 +721,7 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
 
       # Simply mark all these uploads as secure if login_required because no anons will be able to access them
       if SiteSetting.login_required?
-        mark_all_as_secure_login_required(uploads_to_update)
+        mark_secure_in_loop_because_no_login_required = false
       else
 
         # If NOT login_required, then we have to go for the other slower flow, where in the loop
@@ -741,6 +741,8 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
 
       if !SiteSetting.login_required?
         update_specific_upload_security_no_login_required(upload_ids_to_mark_as_secure, upload_ids_to_mark_as_not_secure)
+      else
+        mark_all_as_secure_login_required(uploads_to_update)
       end
     end
 
