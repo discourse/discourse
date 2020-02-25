@@ -52,8 +52,8 @@ QUnit.module("lib:pretty-text/upload-short-url", {
     });
 
     fixture().html(
-      imageSrcs.map(src => `<img data-orig-src="${src.url}">`).join("") +
-        attachmentSrcs.map(src => `<a data-orig-href="${src.url}">`).join("")
+      imageSrcs.map(src => `<img data-orig-src="${src.short_url}"/>`).join("") +
+        attachmentSrcs.map(src => `<a data-orig-href="${src.short_url}">big enterprise contract.pdf</a>`).join("")
     );
   },
 
@@ -104,4 +104,24 @@ QUnit.test("resolveAllShortUrls", async assert => {
     url: "/uploads/default/original/3X/c/b/5.mp3",
     short_path: "/uploads/short-url/e.mp3"
   });
+});
+
+QUnit.test("resolveAllShortUrls - href + src replaced correctly", async assert => {
+  await resolveAllShortUrls(ajax);
+
+  let image1 = fixture().find('img').eq(0);
+  let image2 = fixture().find('img').eq(1);
+  let link = fixture().find('a');
+
+  assert.equal(image1.attr('src'), "/uploads/default/original/3X/c/b/1.jpeg");
+  assert.equal(image2.attr('src'), "/uploads/default/original/3X/c/b/2.jpeg");
+  assert.equal(link.attr('href'), "/uploads/short-url/c.pdf");
+});
+
+QUnit.test("resolveAllShortUrls - when secure media is enabled use the attachment full URL", async assert => {
+  Discourse.SiteSettings.secure_media = true;
+  await resolveAllShortUrls(ajax);
+
+  let link = fixture().find('a');
+  assert.equal(link.attr('href'), "/uploads/default/original/3X/c/b/3.pdf");
 });

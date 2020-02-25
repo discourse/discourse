@@ -973,6 +973,58 @@ QUnit.test("images", assert => {
   );
 });
 
+QUnit.test("attachment", assert => {
+  assert.cooked(
+    "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
+    `<p><a class="attachment" href="/404" data-orig-href="upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
+    "It returns the correct attachment link HTML"
+  );
+});
+
+QUnit.test("attachment - mapped url - secure media disabled", assert => {
+  function lookupUploadUrls() {
+    let cache = {};
+    cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
+      short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+      url:
+        "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+      short_path: "/uploads/short-url/blah"
+    };
+    return cache;
+  }
+  assert.cookedOptions(
+    "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
+    {
+      siteSettings: { secure_media: false },
+      lookupUploadUrls: lookupUploadUrls
+    },
+    `<p><a class="attachment" href="/uploads/short-url/blah">test.pdf</a></p>`,
+    "It returns the correct attachment link HTML when the URL is mapped without secure media"
+  );
+});
+
+QUnit.test("attachment - mapped url - secure media enabled", assert => {
+  function lookupUploadUrls() {
+    let cache = {};
+    cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
+      short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+      url:
+        "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+      short_path: "/uploads/short-url/blah"
+    };
+    return cache;
+  }
+  assert.cookedOptions(
+    "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
+    {
+      siteSettings: { secure_media: true },
+      lookupUploadUrls: lookupUploadUrls
+    },
+    `<p><a class="attachment" href="/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
+    "It returns the correct attachment link HTML when the URL is mapped with secure media"
+  );
+});
+
 QUnit.test("video - secure media enabled", assert => {
   assert.cookedOptions(
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",

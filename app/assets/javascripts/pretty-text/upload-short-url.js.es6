@@ -41,8 +41,7 @@ export function resetCache() {
 
 function retrieveCachedUrl($upload, dataAttribute, callback) {
   const cachedUpload = lookupCachedUploadUrl($upload.data(dataAttribute));
-  const url =
-    dataAttribute === "orig-href" ? cachedUpload.short_path : cachedUpload.url;
+  const url = getAttributeBasedUrl(dataAttribute, cachedUpload);
 
   if (url) {
     $upload.removeAttr(`data-${dataAttribute}`);
@@ -50,6 +49,24 @@ function retrieveCachedUrl($upload, dataAttribute, callback) {
       callback(url);
     }
   }
+}
+
+function getAttributeBasedUrl(dataAttribute, cachedUpload) {
+  // non-attachments always use the full URL
+  if (dataAttribute !== "orig-href") {
+    return cachedUpload.url;
+  }
+
+  // attachments should use the full /secure-media-uploads/ URL
+  // in this case for permission checks
+  if (
+    Discourse.SiteSettings.secure_media &&
+    cachedUpload.url.indexOf("secure-media-uploads") > -1
+  ) {
+    return cachedUpload.url;
+  }
+
+  return cachedUpload.short_path;
 }
 
 function _loadCachedShortUrls($uploads) {
