@@ -7,7 +7,10 @@
 <div class="group-members-manage">
   {{#if canManageGroup}}
     {{#if currentUser.admin}}
-      {{group-members-dropdown onChange=(action "groupMembersDropdown")}}
+      {{group-members-dropdown
+        showAddMembersModal=(route-action "showAddMembersModal")
+        showBulkAddModal=(route-action "showBulkAddModal")
+      }}
     {{else}}
       {{d-button
           icon="plus"

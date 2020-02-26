@@ -178,16 +178,16 @@ group :test, :development do
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
   gem 'pry-nav'
-  gem 'byebug', require: ENV['RM_INFO'].nil?
+  gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
   gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
   gem 'parallel_tests'
 end
 
 group :development do
-  gem 'ruby-prof', require: false
+  gem 'ruby-prof', require: false, platform: :mri
   gem 'bullet', require: !!ENV['BULLET']
-  gem 'better_errors'
+  gem 'better_errors', platform: :mri
   gem 'binding_of_caller'
   gem 'yaml-lint'
   gem 'annotate'

@@ -5,7 +5,7 @@
 .create-account {
   &.fixed-modal .modal-inner-container {
     max-width: 350px;
-    max-height: 85vh;
+    max-height: 90vh;
   }
 
   .close {
@@ -143,6 +143,14 @@
 // styles for the
 // create account
 // modal only
+
+#discourse-modal .create-account .modal-body {
+  max-height: 60vh !important;
+  @media screen and (max-height: 575px) {
+    max-height: 50vh !important;
+  }
+}
+
 .create-account .modal-body {
   display: flex;
   flex-direction: column;

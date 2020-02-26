@@ -655,7 +655,7 @@ RSpec.describe Users::OmniauthCallbacksController do
                          username: 'boguslaw',
                          email: new_email }
 
-        updater = EmailUpdater.new(user.guardian, user)
+        updater = EmailUpdater.new(guardian: user.guardian, user: user)
         updater.change_to(new_email)
 
         user.reload

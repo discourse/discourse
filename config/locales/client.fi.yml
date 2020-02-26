@@ -153,6 +153,7 @@ fi:
       banner:
         enabled: "teki tästä bannerin %{when}. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
         disabled: "poisti tämän bannerin %{when}. Sitä ei enää näytetä jokaisen sivun ylälaidassa."
+      forwarded: "välitti yllä olevan sähköpostin"
     topic_admin_menu: "ketjun työkalut"
     wizard_required: "Tervetuloa uuteen Discourseesi! Aloitetaan <a href='%{url}' data-auto-route='true'>ohjattu asennus</a> ✨"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
@@ -1332,6 +1333,8 @@ fi:
       reset: "Uusi salasana"
       complete_username: "Jos käyttäjätunnusta <b>%{username}</b> vastaava tili löytyy, saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
       complete_email: "Jos sähköpostiosoitetta <b>%{email}</b> vastaava tili löytyy, saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
+      complete_username_found: "Käyttäjätunnusta <b>%{username}</b> vastaava tili löytyi. Saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
+      complete_email_found: "Sähköpostiosoitetta <b>%{email}</b> vastaava tili löytyi. Saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
       complete_username_not_found: "Käyttäjänimeä <b>%{username}</b> ei ole rekisteröity"
       complete_email_not_found: "Sähköpostiosoitetta <b>%{email}</b> vastaavaa tiliä ei ole"
       help: "Eikö sähköposti saavu? Ensiksi tarkasta roskapostikansiosi.<p>Etkö ole varma sähköpostiosoitteesta? Syötä sähköpostiosoite niin saat tietää onko sillä luotu tunnusta.</p><p>Jos et enää hallitse sähköpostiosoitettasi, ota yhteyttä <a href='%{basePath}/about'>avuliaaseen henkilökuntaamme.</a></p>"
@@ -2417,6 +2420,10 @@ fi:
         name: "Nimi"
         name_placeholder: "Anna kirjanmerkille nimi muistisi virkistämiseksi"
         set_reminder: "Aseta muistutus"
+        actions:
+          delete_bookmark:
+            name: "Poista kirjanmerkki"
+            description: "Poistaa kirjanmerkin profiilistasi ja kumoaa kaikki kirjanmerkkiin liittyvät muistutukset"
     category:
       can: "voivat&hellip; "
       none: "(ei aluetta)"
@@ -2831,15 +2838,6 @@ fi:
           name: Muut
         posting:
           name: Kirjoittaminen
-    google_search: |
-      <h3>Etsi Googlella</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Kaikki tunnisteet"
       other_tags: "Muut tunnisteet"
@@ -4219,8 +4217,6 @@ fi:
           description: Myönnä sama ansiomerkki useille käyttäjille samalla kertaa.
           no_badge_selected: Aloita valitsemalla ansiomerkki.
           perform: "Myönnä ansiomerkki käyttäjille"
-          upload_csv: Lataa CSV sähköpostiosoitteista
-          aborted: "Lataa CSV, jossa on käyttäjien sähköpostiosoitteet"
           success: CSV tuli perille ja käyttäjät saavat ansiomerkkinsä pian.
           replace_owners: Poista ansiomerkki aiemmilta omistajilta
       emoji:

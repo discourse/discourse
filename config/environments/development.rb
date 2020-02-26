@@ -39,11 +39,13 @@ Discourse::Application.configure do
 
   config.log_level = ENV['DISCOURSE_DEV_LOG_LEVEL'] if ENV['DISCOURSE_DEV_LOG_LEVEL']
 
-  BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
+  if defined?(BetterErrors)
+    BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
-  if defined?(Unicorn) && ENV["UNICORN_WORKERS"].to_i != 1
-    # BetterErrors doesn't work with multiple unicorn workers. Disable it to avoid confusion
-    Rails.configuration.middleware.delete BetterErrors::Middleware
+    if defined?(Unicorn) && ENV["UNICORN_WORKERS"].to_i != 1
+      # BetterErrors doesn't work with multiple unicorn workers. Disable it to avoid confusion
+      Rails.configuration.middleware.delete BetterErrors::Middleware
+    end
   end
 
   config.load_mini_profiler = true
@@ -57,7 +59,9 @@ Discourse::Application.configure do
   config.middleware.insert 1, Middleware::MissingAvatars
 
   config.enable_anon_caching = false
-  require 'rbtrace'
+  if RUBY_ENGINE == "ruby"
+    require 'rbtrace'
+  end
 
   if emails = GlobalSetting.developer_emails
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)

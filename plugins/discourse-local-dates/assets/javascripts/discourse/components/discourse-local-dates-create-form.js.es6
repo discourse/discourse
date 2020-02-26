@@ -4,7 +4,7 @@ import Component from "@ember/component";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
-import computed from "ember-addons/ember-computed-decorators";
+import computed from "discourse-common/utils/decorators";
 import { cookAsync } from "discourse/lib/text";
 import discourseDebounce from "discourse/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";

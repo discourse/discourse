@@ -1126,6 +1126,27 @@ describe PostsController do
         end
       end
 
+      context "when topic_id is set" do
+        fab!(:topic) { Fabricate(:topic) }
+
+        it "errors when creating a private post" do
+          user_2 = Fabricate(:user)
+
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            archetype: 'private_message',
+            title: "this is some post",
+            target_recipients: user_2.username,
+            topic_id: topic.id
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["errors"]).to include(
+            I18n.t("create_pm_on_existing_topic")
+          )
+        end
+      end
+
       context "errors" do
         it "does not succeed" do
           post "/posts.json", params: { raw: 'test' }

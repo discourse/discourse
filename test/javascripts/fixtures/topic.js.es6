@@ -3852,6 +3852,49 @@ export default {
     destination_category_id: 3
   },
   "/t/12/1.json": {
+    suggested_topics: [
+      {
+        id: 8,
+        title: "This is a new and awesome topic!",
+        fancy_title: "This is a new and awesome topic!",
+        slug: "this-is-a-new-and-awesome-topic",
+        posts_count: 3,
+        reply_count: 0,
+        highest_post_number: 5,
+        image_url: null,
+        created_at: "2015-08-13T05:17:00.000Z",
+        last_posted_at: "2015-08-13T10:14:34.799Z",
+        bumped: true,
+        bumped_at: "2015-08-13T10:14:34.799Z",
+        unseen: false,
+        last_read_post_number: 5,
+        unread: 0,
+        new_posts: 0,
+        pinned: false,
+        unpinned: null,
+        visible: true,
+        closed: false,
+        archived: false,
+        notification_level: 2,
+        bookmarked: false,
+        liked: false,
+        archetype: "regular",
+        like_count: 0,
+        views: 2,
+        category_id: 1,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
+      }
+    ],
     post_stream: {
       posts: [
         {

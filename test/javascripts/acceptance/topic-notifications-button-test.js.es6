@@ -30,4 +30,29 @@ QUnit.test("Updating topic notification level", async assert => {
     "Watching",
     "it should display the right notification level"
   );
+
+  const timelineNotificationOptions = selectKit(
+    ".topic-timeline .widget-component-connector .topic-notifications-options"
+  );
+
+  assert.equal(
+    timelineNotificationOptions.header().value(),
+    "3",
+    "it should display the right notification level"
+  );
+
+  await timelineNotificationOptions.expand();
+  await timelineNotificationOptions.selectRowByValue("0");
+
+  assert.equal(
+    timelineNotificationOptions.header().value(),
+    "0",
+    "it should display the right notification level"
+  );
+
+  assert.equal(
+    notificationOptions.header().label(),
+    "Muted",
+    "it should display the right notification level"
+  );
 });

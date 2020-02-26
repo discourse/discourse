@@ -66,15 +66,7 @@ export default ComboBoxComponent.extend({
 
   search(filter) {
     if (filter) {
-      let content = this.content;
-
-      if (this.selectKit.options.scopedCategoryId) {
-        content = this.categoriesByScope(
-          this.selectKit.options.scopedCategoryId
-        );
-      }
-
-      return content.filter(item => {
+      return this.content.filter(item => {
         const category = Category.findById(this.getValue(item));
         const categoryName = this.getName(item);
 
@@ -93,8 +85,12 @@ export default ComboBoxComponent.extend({
     }
   },
 
-  content: computed("selectKit.options.scopedCategoryId", function() {
-    return this.categoriesByScope(this.selectKit.options.scopedCategoryId);
+  content: computed("selectKit.{filter,options.scopedCategoryId}", function() {
+    if (!this.selectKit.filter && this.selectKit.options.scopedCategoryId) {
+      return this.categoriesByScope(this.selectKit.options.scopedCategoryId);
+    } else {
+      return this.categoriesByScope();
+    }
   }),
 
   categoriesByScope(scopedCategoryId = null) {

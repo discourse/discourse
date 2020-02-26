@@ -1767,17 +1767,17 @@ sv:
           likes: Jag gillade
           posted: Jag postade i
           created: Mina skapade
-          watching: Jag tittar
-          tracking: Jag bevakar
+          watching: Jag bevakar
+          tracking: Jag följer
           private: Bland mina meddelanden
           bookmarks: Som jag har bokmärkt
           first: är den första posten
           pinned: är pinnade
           unpinned: är inte pinnade
           seen: Som jag har läst
-          unseen: Jag har inte läst
+          unseen: Jag inte har läst
           wiki: är wiki
-          images: inkludera bild(er)
+          images: inkluderar bild(er)
           all_tags: Alla ovanstående taggar
         statuses:
           label: Där ämnen
@@ -1840,8 +1840,8 @@ sv:
         category: "Det finns inga ämnen i {{category}}."
         top: "Det finns inga toppämnen."
         educate:
-          new: '<p>Dina nya ämnen hamnar här.</p><p>Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator om de skapades de senaste 2 dagarna.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra det.</p>'
-          unread: '<p>Dina olästa ämnen hamnar här.</p><p>Standard är att inlägg anses olästa och kommer att visa antal olästa inlägg <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läste ämnet i mer än 4 minuter</li></ul><p>Eller om du explicit har markerat ämnet som Följd eller Bevakad via notifieringspanelen längst ned i varje ämne.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra det.</p>'
+          new: '<p>Dina nya ämnen hamnar här.</p><p>Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator om de skapades de senaste 2 dagarna.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
+          unread: '<p>Dina olästa ämnen hamnar här.</p><p>Standard är att inlägg anses olästa och kommer att visa antal olästa inlägg <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läste ämnet i mer än 4 minuter</li></ul><p>Eller om du explicit har markerat ämnet som Följd eller Bevakad via notifieringspanelen längst ned i varje ämne.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -2631,9 +2631,9 @@ sv:
     posts_long: "det finns {{number}} inlägg i detta ämne"
     posts_likes_MF: |
       Detta ämne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med ett högt förhållande mellan gilla och inlägg}
-      med {med ett väldigt högt förhållande mellan gilla och inlägg}
-      high {med ett extremt högt förhållande mellan gilla och inlägg}
+      low {med ett högt förhållande mellan gillningar och inlägg}
+      med {med ett väldigt högt förhållande mellan gillningar och inlägg}
+      high {med ett extremt högt förhållande mellan gillningar och inlägg}
       other {}}
     original_post: "Originalinlägg"
     views: "Visningar"
@@ -2710,7 +2710,7 @@ sv:
         help: "senaste ämnena i kategorin {{categoryName}}"
       top:
         title: "Topp"
-        help: "de mest aktiva ämnena det senaste året, månaden, veckan och dagen"
+        help: "de mest aktiva ämnena det senaste året, månaden, veckan eller dagen"
         all:
           title: "All tid"
         yearly:
@@ -2840,15 +2840,6 @@ sv:
           name: Övrigt
         posting:
           name: Publicera inlägg
-    google_search: |
-      <h3>Sök med Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
@@ -4228,8 +4219,8 @@ sv:
           description: Tilldela samma utmärkelse för flera användare samtidigt.
           no_badge_selected: Vänligen välj en utmärkelse för att börja.
           perform: "Tilldela utmärkelse till användare"
-          upload_csv: Ladda upp en CSV med användarmail
-          aborted: Vänligen ladda upp en CSV som innehåller användarmail
+          upload_csv: Ladda upp en CSV med antingen användarmail eller användarnamn
+          aborted: Vänligen ladda upp en CSV som innehåller antingen användares e-post eller användarnamn
           success: Din CSV mottogs och användare kommer att få sin utmärkelse inom kort.
           replace_owners: Ta bort utmärkelsen från tidigare mottagare
       emoji:
