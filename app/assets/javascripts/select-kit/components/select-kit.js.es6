@@ -6,7 +6,7 @@ import { get } from "@ember/object";
 import UtilsMixin from "select-kit/mixins/utils";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
 import Mixin from "@ember/object/mixin";
-import { isEmpty, isNone } from "@ember/utils";
+import { isPresent, isEmpty, isNone } from "@ember/utils";
 import {
   next,
   debounce,
@@ -268,7 +268,8 @@ export default Component.extend(
       limitMatches: null,
       placement: "bottom-start",
       filterComponent: "select-kit/select-kit-filter",
-      selectedNameComponent: "selected-name"
+      selectedNameComponent: "selected-name",
+      castInteger: false
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -317,7 +318,7 @@ export default Component.extend(
     validateSelect() {
       this.clearErrors();
 
-      const selection = Ember.makeArray(this.value);
+      const selection = makeArray(this.value);
 
       const maximum = this.selectKit.options.maximum;
       if (maximum && selection.length >= maximum) {
@@ -421,8 +422,8 @@ export default Component.extend(
         }
 
         if (this.singleSelect) {
-          value = Ember.isPresent(value.firstObject) ? value.firstObject : null;
-          items = Ember.isPresent(items.firstObject) ? items.firstObject : null;
+          value = isPresent(value.firstObject) ? value.firstObject : null;
+          items = isPresent(items.firstObject) ? items.firstObject : null;
         }
 
         this._boundaryActionHandler("onChange", value, items);
@@ -703,7 +704,7 @@ export default Component.extend(
     },
 
     select(value, item) {
-      if (!Ember.isPresent(value)) {
+      if (!isPresent(value)) {
         if (!this.validateSelect(this.selectKit.highlighted)) {
           return;
         }
@@ -961,7 +962,8 @@ export default Component.extend(
         maximum: "options.maximum",
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
-        i18nPrefix: "options.i18nPrefix"
+        i18nPrefix: "options.i18nPrefix",
+        castInteger: "options.castInteger"
       };
 
       Object.keys(migrations).forEach(from => {

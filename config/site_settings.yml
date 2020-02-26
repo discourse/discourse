@@ -592,6 +592,8 @@ users:
   user_selected_primary_groups:
     default: false
     client: true
+  max_notifications_per_user:
+    default: 10000
 
 groups:
   enable_group_directory:
@@ -1477,6 +1479,10 @@ spam:
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level: 0
   auto_silence_first_post_regex: ""
+  high_trust_flaggers_auto_hide_posts: true
+  cooldown_hours_until_reflag: 
+    default: 24
+    min: 0
 
   reviewable_claiming:
     client: true

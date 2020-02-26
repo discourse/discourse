@@ -1046,13 +1046,13 @@ describe Post do
       end
 
       describe 'when user can not mention a group' do
-        it "should not create the mention" do
+        it "should not create the mention with the notify class" do
           post = Fabricate(:post, raw: "hello @#{group.name}")
           post.trigger_post_process
           post.reload
 
           expect(post.cooked).to eq(
-            %Q|<p>hello <span class="mention">@#{group.name}</span></p>|
+            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
           )
         end
       end
@@ -1068,7 +1068,7 @@ describe Post do
           post.reload
 
           expect(post.cooked).to eq(
-            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+            %Q|<p>hello <a class="mention-group notify" href="/groups/#{group.name}">@#{group.name}</a></p>|
           )
         end
       end
@@ -1085,7 +1085,7 @@ describe Post do
           post.reload
 
           expect(post.cooked).to eq(
-            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+            %Q|<p>hello <a class="mention-group notify" href="/groups/#{group.name}">@#{group.name}</a></p>|
           )
         end
       end
@@ -1376,6 +1376,16 @@ describe Post do
           expect(image_upload.access_control_post_id).to eq(post.id)
           expect(video_upload.access_control_post_id).not_to eq(post.id)
         end
+
+        context "for custom emoji" do
+          before do
+            CustomEmoji.create(name: "meme", upload: image_upload)
+          end
+          it "never sets an access control post because they should not be secure" do
+            post.link_post_uploads
+            expect(image_upload.reload.access_control_post_id).to eq(nil)
+          end
+        end
       end
     end
 
@@ -1430,13 +1440,15 @@ describe Post do
 
       it "marks attachments as secure when relevant setting is enabled" do
         SiteSetting.prevent_anons_from_downloading_files = true
-        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
+        SiteSetting.secure_media = true
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user, category: private_category))
         post.link_post_uploads
         post.update_uploads_secure_status
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
-          [image_upload.id, false]
+          [image_upload.id, true]
         )
       end
 

@@ -1,7 +1,5 @@
-import Ember from "ember";
+import { computed, get } from "@ember/object";
 import extractValue from "./extract-value";
-
-const { computed, get } = Ember;
 
 export default function handleDescriptor(target, key, desc, params = []) {
   return {

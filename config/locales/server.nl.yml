@@ -289,6 +289,7 @@ nl:
   pm_reached_recipients_limit: "Sorry, u kunt niet meer dan %{recipients_limit} ontvangers in een bericht hebben."
   removed_direct_reply_full_quotes: "Citaat van hele voorgaande bericht is automatisch verwijderd."
   secure_upload_not_allowed_in_public_topic: "Sorry, de volgende beveiligde upload(s) kan/kunnen niet in een publiek topic wordt gebruikt: %{upload_filenames}."
+  create_pm_on_existing_topic: "Sorry, u kunt geen PM maken bij een bestaand topic."
   just_posted_that: "lijkt te veel op wat u onlangs hebt geplaatst"
   invalid_characters: "bevat ongeldige tekens"
   is_invalid: "lijkt onduidelijk, is het een volledige zin?"
@@ -1645,13 +1646,13 @@ nl:
     desktop_category_page_style: "Visuele stijl voor de /categories-pagina."
     category_colors: "Een lijst van hexadecimale kleurwaarden die voor categorieën zijn toegestaan."
     category_style: "Visuele stijl voor categoriebadges."
-    max_image_size_kb: "De maximale grootte van te uploaden afbeeldingen in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy."
+    max_image_size_kb: "De maximale grootte van te uploaden afbeeldingen in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy. Afbeeldingen die groter zijn dan deze waarde en kleiner dan client_max_body_size worden bij het uploaden verkleind."
     max_attachment_size_kb: "De maximale grootte van te uploaden bijlagen in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy."
     authorized_extensions: "Een lijst van toegestane bestandsextensies voor uploaden (gebruik '*' voor alle bestandstypen)"
     authorized_extensions_for_staff: "Een lijst van toegestane bestandsextensies voor uploaden voor stafleden, naast de lijst gedefinieerd in de website-instelling `authorized_extensions` (gebruik '*' voor alle bestandstypen)"
     theme_authorized_extensions: "Een lijst van toegestane bestandsextensies voor thema-uploads (gebruik '*' voor alle bestandstypen)"
     max_similar_results: "Hoeveel vergelijkbare topics om boven de editor te tonen bij het opstellen van een nieuw topic. Vergelijking is gebaseerd op titel en inhoud."
-    max_image_megapixels: "Maximale aantal toegestane megapixels voor een afbeelding."
+    max_image_megapixels: "Maximale aantal toegestane megapixels voor een afbeelding. Afbeeldingen met een groter aantal megapixels worden geweigerd."
     title_prettify: "Veelvoorkomende fouten in titels voorkomen, waaronder alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
     title_remove_extraneous_space: "Voorloopspaties voor de eindinterpunctie verwijderen."
     automatic_topic_heat_values: 'Automatisch de instellingen ''topic views heat'' en ''topic post like heat'' bijwerken op basis van websiteactiviteit.'
@@ -1691,6 +1692,8 @@ nl:
     reviewable_claiming: "Dient beoordeelbare inhoud te worden opgeëist voordat er een handeling op kan worden uitgevoerd?"
     reviewable_default_topics: "Beoordeelbare inhoud standaard gegroepeerd op topic tonen"
     reviewable_default_visibility: "Geen beoordeelbare items tonen, tenzij ze aan deze prioriteit voldoen"
+    high_trust_flaggers_auto_hide_posts: "Berichten van nieuwe gebruikers worden automatisch verborgen nadat ze door een TL3+-gebruiker als spam zijn gemarkeerd"
+    cooldown_hours_until_reflag: "De tijd dat gebruikers moeten wachten voordat ze een bericht opnieuw kunnen markeren"
     reply_by_email_enabled: "Antwoorden op topics via e-mail inschakelen."
     reply_by_email_address: "Sjabloon voor adres voor inkomende e-mail bij antwoorden per e-mail, bijvoorbeeld: %%{reply_key}@reply.example.com of replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lijst van alternatieve sjablonen voor adressen voor inkomende e-mail bij antwoorden per e-mail. Voorbeeld: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1786,6 +1789,7 @@ nl:
     ignored_users_message_gap_days: "Wachttijd voordat moderators opnieuw worden ingelicht over een gebruiker die door veel andere wordt genegeerd."
     clean_up_inactive_users_after_days: "Aantal dagen voordat een inactieve gebruiker (vertrouwensniveau 0 zonder berichten) wordt verwijderd. Stel 0 in om opschonen uit te schakelen."
     user_selected_primary_groups: "Gebruikers mogen hun eigen primaire groep instellen"
+    max_notifications_per_user: "Maximale aantal meldingen per gebruiker. Als dit aantal wordt overschreden, worden oude meldingen verwijderd. Wekelijks afgedwongen. Stel dit in op 0 om uit te schakelen."
     user_website_domains_whitelist: "Website van gebruiker wordt op deze domeinen gecontroleerd. Door pipes gescheiden lijst."
     allow_profile_backgrounds: "Gebruikers mogen profielachtergronden uploaden."
     sequential_replies_threshold: "Aantal berichten dat een gebruiker achter elkaar in één topic moet plaatsen voordat deze aan te veel opeenvolgende reacties wordt herinnerd."
@@ -2151,7 +2155,7 @@ nl:
   reviewables_reminder:
     subject_template:
       one: "%{count} item moet worden beoordeeld"
-      other: "%{count} items moeten beoordeeld worden"
+      other: "%{count} items moeten worden beoordeeld"
   unsubscribe_mailer:
     title: "Mailer Uitschrijven"
     subject_template: "Bevestig dat u geen e-mailupdates van %{site_title} meer wilt ontvangen"
@@ -2835,6 +2839,7 @@ nl:
       revoked: Ingetrokken
       restored: Teruggezet
   reviewables:
+    already_handled: "Bedankt, maar we hebben dat bericht al beoordeeld en vastgesteld dat het niet opnieuw hoeft te worden gemarkeerd."
     priorities:
       low: "Laag"
       medium: "Gemiddeld"

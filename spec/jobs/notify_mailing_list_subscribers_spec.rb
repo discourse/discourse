@@ -7,9 +7,14 @@ describe Jobs::NotifyMailingListSubscribers do
   fab!(:mailing_list_user) { Fabricate(:user) }
 
   before { mailing_list_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1) }
+  before do
+    SiteSetting.tagging_enabled = true
+  end
 
+  fab!(:tag) { Fabricate(:tag) }
+  fab!(:topic) { Fabricate(:topic, tags: [tag]) }
   fab!(:user) { Fabricate(:user) }
-  fab!(:post) { Fabricate(:post, user: user) }
+  fab!(:post) { Fabricate(:post, topic: topic, user: user) }
 
   shared_examples "no emails" do
     it "doesn't send any emails" do
@@ -124,6 +129,11 @@ describe Jobs::NotifyMailingListSubscribers do
 
       context "from a muted category" do
         before { CategoryUser.create(user: mailing_list_user, category: post.topic.category, notification_level: CategoryUser.notification_levels[:muted]) }
+        include_examples "no emails"
+      end
+
+      context "from a muted tag" do
+        before { TagUser.create(user: mailing_list_user, tag: tag, notification_level: TagUser.notification_levels[:muted]) }
         include_examples "no emails"
       end
 

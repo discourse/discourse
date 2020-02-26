@@ -165,9 +165,11 @@ describe PostAlerter do
   end
 
   context 'quotes' do
+    let(:category) { Fabricate(:category) }
+    let(:topic) { Fabricate(:topic, category: category) }
 
     it 'does not notify for muted users' do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
       MutedUser.create!(user_id: evil_trout.id, muted_user_id: post.user_id)
 
       expect {
@@ -176,7 +178,7 @@ describe PostAlerter do
     end
 
     it 'does not notify for ignored users' do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
       IgnoredUser.create!(user_id: evil_trout.id, ignored_user_id: post.user_id)
 
       expect {
@@ -184,9 +186,27 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
     end
 
-    it 'does not collapse quote notifications' do
-      topic = Fabricate(:topic)
+    it 'does not notify for users with new reply notification' do
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
+      notification = Notification.create!(topic: post.topic,
+                                          post_number: post.post_number,
+                                          read: false,
+                                          notification_type: Notification.types[:replied],
+                                          user: evil_trout,
+                                          data: { topic_title: "test topic" }.to_json
+                                         )
 
+      expect {
+        PostAlerter.post_created(post)
+      }.to change(evil_trout.notifications, :count).by(0)
+
+      notification.destroy
+      expect {
+        PostAlerter.post_created(post)
+      }.to change(evil_trout.notifications, :count).by(1)
+    end
+
+    it 'does not collapse quote notifications' do
       expect {
         2.times do
           create_post_with_alerts(

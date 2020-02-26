@@ -2,12 +2,14 @@
   <label for="category-allowed-tags">{{i18n 'category.tags_allowed_tags'}}</label>
   {{tag-chooser
     id="category-allowed-tags"
-    filterPlaceholder="category.tags_placeholder"
     tags=category.allowed_tags
     everyTag=true
     excludeSynonyms=true
     unlimitedTagCount=true
     onChange=(action (mut category.allowed_tags))
+    options=(hash
+      filterPlaceholder="category.tags_placeholder"
+    )
   }}
 </section>
 
@@ -45,8 +47,10 @@
     {{tag-group-chooser
       id="category-required-tag-group"
       tagGroups=category.required_tag_groups
-      maximum=1
-      filterPlaceholder="category.tag_group_selector_placeholder"
+      options=(hash
+        maximum=1
+        filterPlaceholder="category.tag_group_selector_placeholder"
+      )
     }}
   </section>
 </section>

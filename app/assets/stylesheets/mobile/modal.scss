@@ -15,15 +15,21 @@
   width: 100%;
 }
 
-.modal.fade {
-  transition: opacity 0.3s linear, top 0.3s ease-out;
-  top: -25%;
-}
-.modal.fade.in {
-  top: 50%;
-}
-.modal-body {
-  padding: 10px;
+.modal {
+  &.fade {
+    transition: opacity 0.3s linear, top 0.3s ease-out;
+    top: -25%;
+  }
+  &.fade.in {
+    top: 50%;
+  }
+  .modal-body {
+    padding: 0.667em;
+    > * {
+      // adding box-sizing: border-box; to .modal-body causes iOS dropdown issues
+      box-sizing: border-box;
+    }
+  }
 }
 
 // we need a little extra room on mobile for the
@@ -46,6 +52,7 @@
 #choosing-topic {
   p {
     margin-top: 0;
+    padding-bottom: 0;
   }
 
   input[type="radio"] {
@@ -109,4 +116,8 @@
     max-height: 90vh;
     overflow: auto;
   }
+}
+
+.modal .modal-body.reorder-categories {
+  max-height: calc(100vh - 220px);
 }
