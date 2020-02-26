@@ -69,7 +69,7 @@ export function avatarImg(options, getURL) {
 
   let title = "";
   if (options.title) {
-    let escaped = escapeExpression(options.title || "");
+    const escaped = escapeExpression(options.title || "");
     title = ` title='${escaped}' aria-label='${escaped}'`;
   }
 
