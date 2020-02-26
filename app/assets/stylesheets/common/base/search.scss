@@ -226,6 +226,8 @@
     color: $tertiary-high;
   }
   .search-link {
+    display:flex;
+
     .topic-title {
       font-size: $font-up-2;
       line-height: $line-height-medium;
