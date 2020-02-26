@@ -1004,7 +1004,14 @@ es:
       yaxis: "Número de colaboradores nuevos"
       description: "Número de usuarios que han publicado su primer mensaje durante este periodo."
     trust_level_growth:
+      title: "Crecimiento de nivel de confianza"
+      xaxis:
+        tl1_reached: "NC1 alcanzado"
+        tl2_reached: "NC2 alcanzado"
+        tl3_reached: "NC3 alcanzado"
+        tl4_reached: "NC4 alcanzado"
       yaxis: "Día"
+      description: "Número de usuarios que aumentaron su nivel de confianza durante este período."
     consolidated_page_views:
       title: "Vistas de página consolidadas"
       xaxis:
@@ -1348,6 +1355,7 @@ es:
     onebox_domains_blacklist: "Una lista de dominios que nunca se mostrarán en formato onebox"
     inline_onebox_domains_whitelist: "Lista de dominios que se transformarán en formato onebox en miniatura si son enlazados sin un título"
     enable_inline_onebox_on_all_domains: "Ignorar el ajuste del sitio inline_onebox_domain_whitelist y permitir inline onebox en todos los dominios."
+    force_custom_user_agent_hosts: "Hosts que se utilizará para el agente usuario personalizado de onebox en todas las solicitudes. (Especialmente útil para hosts que limitan el acceso por usuario agente)."
     max_oneboxes_per_post: "Número máximo de oneboxes en una publicación."
     logo: "La imagen del logotipo en la parte superior izquierda de tu sitio. Utiliza una imagen rectangular ancha con una altura de 120 y una relación de aspecto superior a 3:1. Si se deja en blanco, se mostrará el texto del título del sitio."
     logo_small: "La pequeña imagen del logotipo en la parte superior izquierda de tu sitio al desplazarse hacia abajo. Utiliza un cuadrado de 120 x 120. Si se deja en blanco, se mostrará un glifo local."
@@ -1848,6 +1856,7 @@ es:
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios correos electrónicos de resumen por defecto."
     default_include_tl0_in_digests: "Incluir publicaciones de usuarios nuevos en los correos electrónicos de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
+    default_email_level: "Establecer nivel por defecto de las notificaciones por correo electrónico para los temas regulares."
     default_email_messages_level: "Establecer el nivel por defecto de notificaciones por correo electrónico cuando alguien envía un mensaje a un usuario."
     default_email_mailing_list_mode: "Enviar por defecto un correo electrónico por cada publicación nueva."
     default_email_mailing_list_mode_frequency: "Los usuarios que activen el modo lista de correo recibirán correos con esta frecuencia por defecto."
@@ -2063,7 +2072,7 @@ es:
     security_key_support_missing_error: "Tu dispositivo o navegador actual no soporta el uso de claves de seguridad. Por favor, utiliza un método diferente."
     security_key_invalid: "Se produjo un error al validar la clave de seguridad."
     not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para iniciar sesión."
-    incorrect_username_email_or_password: "Nombre de usuario, dirección de correo electrónico o contraseña incorrecta"
+    incorrect_username_email_or_password: "Nombre de usuario, correo electrónico o contraseña incorrecta"
     incorrect_password: "Contraseña incorrecta"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
     active: "Tu cuenta está activa y lista para usar."
@@ -2257,6 +2266,45 @@ es:
   test_mailer:
     title: "Correo electrónico de prueba"
     subject_template: "[%{email_prefix}] Prueba de envío de correo electrónico"
+    text_body_template: |
+      Este es un correo electrónico de prueba de
+
+      [**%{base_url}**][0]
+
+      El correcto envío de los correos electrónicos es complicado. Estas son algunas cosas importantes que debes revisar primero:
+
+      *Asegúrate* de establecer la `notification email` de: dirección correctamente en la configuración de tu sitio. **El dominio especificado en el campo «de» en los correos electrónicos que envías es el dominio que servirá para validar tu correo electrónico**.
+
+      - Es importante que sepas ver la fuente primaria de tu cliente de correo de modo que puedas examinar los encabezados de los correos electrónicos en busca de pistas significativas. En Gmail, esta es la opción «mostrar original» en el menú desplegable en la esquina superior derecha de los correos.
+
+      - *IMPORTANTE** ¿Tu ISP tiene una registro DNS inverso para asociar el nombre de los dominios y las direcciones IP desde las que envías los correos? [Prueba tu registro inverso PTR][2] aquí. Si tu ISP no ingresa el registro indicador de DNS inverso correcto, es muy poco probable que tus correos se envíen.
+
+      - ¿El [registro DKIM][3] de tu dominio es correcto? Esto mejorará considerablemente la capacidad de envío de tus correos electrónicos. [Prueba tu registro DKIM][7] aquí.
+
+      - Si ejecutas tu propio servidor, asegúrate que las direcciones IP de tu servidor de correos [no están en ningúna lista negra de correos electrónicos][4]. También verifica que en definitiva está enviando un hostname totalmente cualificado que resuelva en DNS en su mensaje HALO. Si no, esto causará que tu correo sea rechazado por muchos servicios de correo electrónico.
+
+      - Recomendamos ampliamente que **envíes un correo electrónico de prueba a [mail-tester.com][mt]** para verificar que todo lo anteriormente descrito funciona correctamente.
+
+      (La forma *fácil* es crear una cuenta en [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], los cuales tienen planes de envío de correo de bajo costo y funcionarán bien para comunidades pequeñas. No obstante, de todos modos tendrás que establecer los registros SPF y DKMI en tu DNS.
+
+      ¡Esperamos que hayas recibido este correo electrónico de prueba correctamente!
+
+      Buena suerte,
+
+      Tus amigos de [Discourse](https://www.discourse.org)
+
+      [0]:%{base_url}
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: https://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Correo electrónico de nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
@@ -4131,6 +4179,7 @@ es:
       revoked: Revocada
       restored: Restaurada
   reviewables:
+    already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita reportarse de nuevo."
     priorities:
       low: "Bajo"
       medium: "Medio"
