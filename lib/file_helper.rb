@@ -133,7 +133,7 @@ class FileHelper
   end
 
   def self.supported_images
-    @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico}
+    @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico webp}
   end
 
   def self.supported_audio

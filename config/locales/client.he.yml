@@ -1436,6 +1436,8 @@ he:
       reset: "איפוס ססמה"
       complete_username: "אם קיים חשבון שמתאים לשם המשתמש <b>%{username}</b>, תוך זמן קצר אמורה להגיע אליך הודעה בדוא״ל עם הנחיות לאיפוס הססמה שלך."
       complete_email: "אם החשבון מתאים לכתובת <b>%{email}</b>, תוך זמן קצר אמורה להגיע אליך הודעה בדוא״ל עם הנחיות לאיפוס הססמה שלך."
+      complete_username_found: "מצאנו חשבון שתואם לשם המשתמש <b>%{username}</b>. תוך זמן קצר אמורה להגיע לדוא״ל שלך הודעה עם הנחיות כיצד לאפס את הססמה שלך."
+      complete_email_found: "מצאנו חשבון שתואם לכתובת <b>%{email}</b>. תוך זמן קצר אמורה להגיע לדוא״ל שלך הודעה עם הנחיות כיצד לאפס את הססמה שלך."
       complete_username_not_found: "שום חשבון אינו תואם לשם המשתמש <b>%{username}</b>"
       complete_email_not_found: "שום חשבון אינו תואם ל <b>%{email}</b>"
       help: "ההודעה אינה מגיעה אליך לתיבת הדוא״ל? נא לבדוק את תיקיית הזבל/ספאם קודם.<p>לא ברור לך באיזו כתובת דוא״ל השתמשת? נא להקליד כתובת דוא״ל ואנו ניידע אותך אם היא קיימת כאן.</p><p>אם כבר אין לך גישה לכתובת הדוא״ל של החשבון שלך, נא ליצור קשר עם <a href='%{basePath}/about'>הסגל המועיל שלנו.</a></p>"
@@ -3061,15 +3063,6 @@ he:
           name: אחר
         posting:
           name: מפרסמים
-    google_search: |
-      <h3>חפשו באמצעות גוגל</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">גוגל</button>
-      </form>
-      </p>
     tagging:
       all_tags: "כל התגיות"
       other_tags: "תגיות אחרות"
@@ -4483,8 +4476,8 @@ he:
           description: להעניק את אותו העיטור למגוון משתמשים בו זמנית.
           no_badge_selected: נא לבחור עיטור כדי להתחיל.
           perform: "להעניק עיטור למשתמשים"
-          upload_csv: להעלות CSV עם כתובות דוא״ל של משתמשים
-          aborted: נא להעלות קובץ CSV שמכיל כתובות דוא״ל של משתמשים
+          upload_csv: להעלות CSV עם כתובות דוא״ל או שמות משתמשים
+          aborted: נא להעלות קובץ CSV שמכיל או כתובות דוא״ל או שמות משתמשים
           success: ה־CSV שלך התקבל והמשתמשים יקבלו את העיטור שלהם בעוד רגע קט.
           replace_owners: הסרת העיטור מהבעלים הקודמים
       emoji:

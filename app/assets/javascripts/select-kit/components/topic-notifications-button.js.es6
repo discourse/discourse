@@ -5,6 +5,7 @@ export default Component.extend({
   classNames: ["topic-notifications-button"],
   appendReason: true,
   showFullTitle: true,
+  placement: "bottom-start",
 
   didInsertElement() {
     this._super(...arguments);

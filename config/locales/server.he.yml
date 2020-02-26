@@ -319,6 +319,7 @@ he:
   pm_reached_recipients_limit: "להודעה לא יכולים להיות למעלה מ־%{recipients_limit} נמענים, עמך הסליחה."
   removed_direct_reply_full_quotes: "הוסר ציטוט של כל הפוסט הקודם אוטומטית."
   secure_upload_not_allowed_in_public_topic: "לא ניתן להשתמש בהעלאות המאובטחות הבאות בנושא ציבורי: %{upload_filenames}, עמך הסליחה."
+  create_pm_on_existing_topic: "אין לך אפשרות ליצור הודעה פרטית על נושא קיים, עמך הסליחה."
   just_posted_that: "דומה מדי למה שפרסמת לאחרונה"
   invalid_characters: "מכיל תווים לא תקניים"
   is_invalid: "נראה לא ברור, האם זה משפט שלם?"
@@ -1715,13 +1716,13 @@ he:
     desktop_category_page_style: "סגנון ויזואלי לדף /categories."
     category_colors: "רשימה של ערכי צבעים הקסדצימליים מותרים לסימון קטגוריות."
     category_style: "סגנון ויזואלי עבור עיטורי קטגוריות."
-    max_image_size_kb: "גודל קובץ מקסימלי להעלאה בקילו-בתים (kB). ערך זה חייב להיות מוגדר גם ב-nginx (client_max_body_size) / apache או בפרוקסי."
+    max_image_size_kb: "גודל ההעלאה המרבי בקילובתים. יש להגדיר זאת ב־nginx‏ (client_max_body_size) / apache או גם למתווך. תמונות שחורגות מהגודל הזה וקטנות מההגדרה client_max_body_size יערכו כך שגודלן יתאים להעלאה."
     max_attachment_size_kb: "הגודל המקסימלי בקילו-בתים (kBs) של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב-nginx (client_max_body_size) / apache או בפרוקסי."
     authorized_extensions: "רשימה של סיומות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
     authorized_extensions_for_staff: "רשימת סיומות קבצים שמותר לחברי סגל להעלות בנוסף לרשימה שמוגדרת תחת הגדרת האתר `authorized_extensions` (‚*’ כדי לקבל את כל סוגי הקבצים)"
     theme_authorized_extensions: "רשימת סיומות קבצים שמורשות עבור העלאת תמות (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
     max_similar_results: "כמה נושאים דומים להציג מעל לעורך כאשר מחברים נושא חדש. ההשוואה מבוססת על הכותרת וגוף הפוסט."
-    max_image_megapixels: "מספר מקסימלי מותר של מגה-פיקסלים לתמונה."
+    max_image_megapixels: "מספר המגה פיקסלים המרבי שמותר בתמונה. תמונות עם מגה פיקסלים מעבר לכמות זו תידחנה."
     title_prettify: "מניעת טעויות נפוצות בכותרת, בכללן טעויות עם אותיות גדולות באנגלית, מספר ! ו ?, נקודה מיותרת בסוף, וכד׳"
     title_remove_extraneous_space: "הסרת רווחים לפני ואחרי סימני פיסוק."
     automatic_topic_heat_values: 'לעדכן אוטומטית את הגדרות „חום צפיות הנושאים” ואת „חום הלייקים של פוסט הנושא” בהתאם לפעילות האתר.'
@@ -1761,6 +1762,8 @@ he:
     reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
     reviewable_default_topics: "הצגת תוכן שמיועד לסקירה בקיבוץ לפי נושא כבררת מחדל"
     reviewable_default_visibility: "לא להציג פריטים שמיועדים לסקירה אלמלא הם תואמים את העדיפות הזו"
+    high_trust_flaggers_auto_hide_posts: "פוסטים של משתמש חדש מוסתרים אוטומטים לאחר שסומנו כספאם על ידי משתמש בדרגת אמון 3 ומעלה"
+    cooldown_hours_until_reflag: "כמה זמן יהיה על משתמשים לחכות לפני שיוכלו לסמן פוסט כספאם פעם נוספת"
     reply_by_email_enabled: "הפעלת תגובה לנושאים דרך דוא״ל."
     reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1856,6 +1859,7 @@ he:
     ignored_users_message_gap_days: "כמה זמן להמתין בטרם שליחת הודעה נוספת למפקחים בנוגע למשתמש שזכה לחסימות מצד משתמשים רבים."
     clean_up_inactive_users_after_days: "מספר הימים בטרם הסרת משתמש בלתי פעיל (דרגת אמון 0 ללא פוסטים). כדי להשבית את הפינוי יש להגדיר ל־0."
     user_selected_primary_groups: "לאפשר למשתמשים להגדיר את הקבוצה העיקרית של עצמם"
+    max_notifications_per_user: "כמות ההתראות המרבית למשתמש, אם המשתמש חרג מהמספר הזה, התראות ישנות תימחקנה. נאכף כל שבוע. 0 להשבתה"
     user_website_domains_whitelist: "אתרי משתמשים יאומתו עם מתחמים אלו. רשימה מופרדת על ידי קווים-אנכיים."
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
     sequential_replies_threshold: "מספר הפוסטים שעל משתמש לפרסם אחד-לאחר-השני בנושא לפני שמזכירים לו שהוא משאיר יותר מידי תגובות ברצף."
@@ -4144,6 +4148,7 @@ he:
       revoked: נשל
       restored: שוחזר
   reviewables:
+    already_handled: "תודה לך, כבר בדקנו את הפוסט הזה והחלטנו שאין צורך לסמן אותו בדגל פעם נוספת."
     priorities:
       low: "נמוכה"
       medium: "בינונית"

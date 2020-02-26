@@ -47,6 +47,18 @@ RSpec.describe SecondFactorManager do
         "otpauth://totp/#{SiteSetting.title}:#{user.email}?secret=#{user_second_factor_totp.data}&issuer=#{SiteSetting.title}"
       )
     end
+    it 'should handle a colon in the site title' do
+      SiteSetting.title = 'Spaceballs: The Discourse'
+      expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
+        "otpauth://totp/Spaceballs%20The%20Discourse:#{user.email}?secret=#{user_second_factor_totp.data}&issuer=Spaceballs+The+Discourse"
+      )
+    end
+    it 'should handle a two words before a colon in the title' do
+      SiteSetting.title = 'Our Spaceballs: The Discourse'
+      expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
+        "otpauth://totp/Our%20Spaceballs%20The%20Discourse:#{user.email}?secret=#{user_second_factor_totp.data}&issuer=Our+Spaceballs+The+Discourse"
+      )
+    end
   end
 
   describe '#authenticate_totp' do

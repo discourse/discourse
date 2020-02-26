@@ -1440,13 +1440,15 @@ describe Post do
 
       it "marks attachments as secure when relevant setting is enabled" do
         SiteSetting.prevent_anons_from_downloading_files = true
-        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
+        SiteSetting.secure_media = true
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user, category: private_category))
         post.link_post_uploads
         post.update_uploads_secure_status
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
-          [image_upload.id, false]
+          [image_upload.id, true]
         )
       end
 
