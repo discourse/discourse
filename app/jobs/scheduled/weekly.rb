@@ -14,6 +14,7 @@ module Jobs
       UserAuthToken.cleanup!
       Upload.reset_unknown_extensions!
       Email::Cleaner.delete_rejected!
+      Notification.purge_old!
     end
   end
 end

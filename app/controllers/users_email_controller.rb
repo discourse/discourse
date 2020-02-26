@@ -35,7 +35,7 @@ class UsersEmailController < ApplicationController
     RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    updater = EmailUpdater.new(guardian, user)
+    updater = EmailUpdater.new(guardian: guardian, user: user, initiating_user: current_user)
     updater.change_to(params[:email])
 
     if updater.errors.present?
@@ -60,7 +60,7 @@ class UsersEmailController < ApplicationController
 
     if !@error
       # this is needed becase the form posts this field as JSON and it can be a
-      # hash when authenticatong security key.
+      # hash when authenticating security key.
       if params[:second_factor_method].to_i == UserSecondFactor.methods[:security_key]
         begin
           params[:second_factor_token] = JSON.parse(params[:second_factor_token])

@@ -97,17 +97,32 @@ export default ComboBoxComponent.extend(TagsMixin, {
     const shortcuts = [];
 
     if (this.tagId !== NONE_TAG_ID) {
-      shortcuts.push(NO_TAG_ID);
+      shortcuts.push({
+        id: NO_TAG_ID,
+        name: this.noTagsLabel
+      });
     }
 
     if (this.tagId) {
-      shortcuts.push(ALL_TAGS_ID);
+      shortcuts.push({ id: ALL_TAGS_ID, name: this.allTagsLabel });
     }
 
     return shortcuts;
   }),
 
-  topTags: readOnly("site.top_tags.[]"),
+  topTags: computed(
+    "firstCategory",
+    "secondCategory",
+    "site.category_top_tags.[]",
+    "site.top_tags.[]",
+    function() {
+      if (this.currentCategory && this.site.category_top_tags) {
+        return this.site.category_top_tags;
+      }
+
+      return this.site.top_tags;
+    }
+  ),
 
   content: computed("topTags.[]", "shortcuts.[]", function() {
     if (this.sortTagsAlphabetically && this.topTags) {
@@ -126,7 +141,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
       return this.searchTags("/tags/filter/search", data, this._transformJson);
     } else {
-      return (this.content || []).map(tag => this.defaultItem(tag, tag));
+      return (this.content || []).map(tag => {
+        if (tag.id && tag.name) {
+          return tag;
+        }
+        return this.defaultItem(tag, tag);
+      });
     }
   },
 

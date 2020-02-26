@@ -39,6 +39,20 @@ function _fetchVoters(data) {
   });
 }
 
+function checkUserGroups(user, poll) {
+  const pollGroups =
+    poll && poll.groups && poll.groups.split(",").map(g => g.toLowerCase());
+
+  if (!pollGroups) {
+    return true;
+  }
+
+  const userGroups =
+    user && user.groups && user.groups.map(g => g.name.toLowerCase());
+
+  return userGroups && pollGroups.some(g => userGroups.includes(g));
+}
+
 createWidget("discourse-poll-option", {
   tagName: "li",
 
@@ -335,19 +349,7 @@ createWidget("discourse-poll-container", {
     } else if (options) {
       const contents = [];
 
-      const pollGroups =
-        poll.groups && poll.groups.split(",").map(g => g.toLowerCase());
-
-      const userGroups =
-        this.currentUser &&
-        this.currentUser.groups &&
-        this.currentUser.groups.map(g => g.name.toLowerCase());
-
-      if (
-        pollGroups &&
-        userGroups &&
-        !pollGroups.some(g => userGroups.includes(g))
-      ) {
+      if (!checkUserGroups(this.currentUser, poll)) {
         contents.push(
           h(
             "div.alert.alert-danger",
@@ -1012,6 +1014,7 @@ export default createWidget("discourse-poll", {
 
     if (this.isClosed()) return;
     if (!this.currentUser) return this.showLogin();
+    if (!checkUserGroups(this.currentUser, this.attrs.poll)) return;
 
     const { vote } = attrs;
     if (!this.isMultiple()) {

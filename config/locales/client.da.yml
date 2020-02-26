@@ -2751,15 +2751,6 @@ da:
           name: Andet
         posting:
           name: Sender
-    google_search: |
-      <h3>Søg med Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Alle tags"
       other_tags: "Andre tags"

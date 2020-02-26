@@ -5,12 +5,17 @@
         <img src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
       </td>
       <td>
-        <%- if show_username_on_post(post) %>
-        <a class="username" href="<%=Discourse.base_url%>/u/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a>
-        <% end %>
-        <%- if show_name_on_post(post) %>
-          <a class="user-name" href="<%=Discourse.base_url%>/u/<%= post.user.username_lower%>" target="_blank"><%= post.user.name %></a>
-        <% end %>
+        <%- if SiteSetting.prioritize_username_in_ux %>
+          <a class="username username-link" href="<%=Discourse.base_url%>/u/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a>
+          <%- if show_name_on_post(post) %>
+            <span class='user-name username-title'><%= post.user.name %></span>
+          <% end %>
+        <%- else %>
+          <a class="username username-link" href="<%=Discourse.base_url%>/u/<%= post.user.username_lower%>" target="_blank"><%= post.user.name %></a>
+          <%- if show_username_on_post(post) %>
+            <span class='username username-title'><%= post.user.username %></span>
+          <% end %>
+        <%- end %>
         <%- if post.user.title.present? %>
           <span class='user-title'><%= post.user.title %></span>
         <% end %>

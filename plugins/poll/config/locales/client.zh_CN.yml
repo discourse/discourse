@@ -16,6 +16,8 @@ zh_CN:
       public:
         title: "投票为<strong>公开</strong>。"
       results:
+        groups:
+          title: "你需要成为 %{groups} 的一员才能投票。"
         vote:
           title: "结果将显示在<strong>投票</strong>上。"
         closed:
@@ -68,6 +70,7 @@ zh_CN:
         title: 创建投票
         insert: 插入投票
         help:
+          options_count: 至少输入1个选项
           invalid_values: 最小值必须小于最大值。
           min_step_value: 最小步长为1
         poll_type:
@@ -81,6 +84,8 @@ zh_CN:
           vote: 投票
           closed: 关闭时
           staff: 仅管理人员
+        poll_groups:
+          label: 允许的群组
         poll_chart_type:
           label: 图表类型
         poll_config:

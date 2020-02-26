@@ -2839,15 +2839,6 @@ nl:
           name: Anders
         posting:
           name: Schrijven
-    google_search: |
-      <h3>Zoeken met Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Alle tags"
       other_tags: "Andere tags"
@@ -4227,8 +4218,8 @@ nl:
           description: Dezelfde badge aan meerdere gebruikers tegelijk toekennen.
           no_badge_selected: Selecteer een badge om te beginnen.
           perform: "Badge aan gebruikers toekennen"
-          upload_csv: Een CSV met gebruikers-e-mailadressen uploaden
-          aborted: Upload een CSV dat gebruikers-e-mailadressen bevat
+          upload_csv: Een CSV met e-mailadressen of gebruikersnamen uploaden
+          aborted: Upload een CSV dat e-mailadressen of gebruikersnamen bevat
           success: Uw CSV is ontvangen en gebruikers ontvangen binnenkort hun badge.
           replace_owners: De badge van vorige eigenaren verwijderen
       emoji:

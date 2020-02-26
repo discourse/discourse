@@ -208,7 +208,9 @@ module DiscourseNarrativeBot
       end
 
       if @data[:topic_id]
-        opts = opts.merge(topic_id: @data[:topic_id])
+        opts = opts
+          .merge(topic_id: @data[:topic_id])
+          .except(:title, :target_usernames, :archetype)
       end
 
       post = reply_to(@post, raw, opts)

@@ -69,7 +69,7 @@ if Sidekiq.server?
   Rails.application.config.after_initialize do
     scheduler_hostname = ENV["UNICORN_SCHEDULER_HOSTNAME"]
 
-    if !scheduler_hostname || scheduler_hostname.split(',').include?(`hostname`.strip)
+    if !scheduler_hostname || scheduler_hostname.split(',').include?(Discourse.os_hostname)
       MiniScheduler.start(workers: GlobalSetting.mini_scheduler_workers)
     end
   end

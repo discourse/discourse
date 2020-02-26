@@ -26,6 +26,7 @@ describe Jobs::UpdatePrivateUploadsAcl do
         SiteSetting.prevent_anons_from_downloading_files = true
         SiteSetting::Upload.stubs(:enable_s3_uploads).returns(true)
         Discourse.stubs(:store).returns(stub(external?: false))
+        SiteSetting.stubs(:secure_media?).returns(true)
       end
 
       it "changes the upload to secure" do

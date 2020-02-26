@@ -6,7 +6,7 @@ pre-commit:
       run: bundle exec rubocop {staged_files}
     eslint:
       glob: "*.{js,es6}"
-      exclude: "vendor/*"
+      exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
       run: yarn eslint --ext .es6 -f compact {staged_files}
     ember-template-lint:
       run: yarn run ember-template-lint app
