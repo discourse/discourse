@@ -1014,7 +1014,7 @@ export default Component.extend({
       );
 
       // Short upload urls need resolution
-      resolveAllShortUrls(ajax);
+      resolveAllShortUrls(ajax, this.siteSettings);
 
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(

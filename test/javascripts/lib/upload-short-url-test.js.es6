@@ -77,7 +77,7 @@ QUnit.test("resolveAllShortUrls", async assert => {
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
   assert.deepEqual(lookup, {});
 
-  await resolveAllShortUrls(ajax);
+  await resolveAllShortUrls(ajax, { secure_media: false });
 
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
 
@@ -119,7 +119,7 @@ QUnit.test(
   "resolveAllShortUrls - href + src replaced correctly",
   async assert => {
     stubUrls();
-    await resolveAllShortUrls(ajax);
+    await resolveAllShortUrls(ajax, { secure_media: false });
 
     let image1 = fixture()
       .find("img")
@@ -149,8 +149,7 @@ QUnit.test(
       ],
       null
     );
-    Discourse.SiteSettings.secure_media = true;
-    await resolveAllShortUrls(ajax);
+    await resolveAllShortUrls(ajax, { secure_media: true });
 
     let link = fixture().find("a");
     assert.equal(
