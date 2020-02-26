@@ -755,7 +755,6 @@ QUnit.test("triggerRecoveredPost", async assert => {
   };
 
   pretender.get("/posts/4", () => {
-    // eslint-disable-line no-undef
     return response({ id: 4, post_number: 4 });
   });
 
