@@ -414,4 +414,26 @@ describe Notification do
       end
     end
   end
+
+  describe "purge_old!" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:notification1) { Fabricate(:notification, user: user) }
+    fab!(:notification2) { Fabricate(:notification, user: user) }
+    fab!(:notification3) { Fabricate(:notification, user: user) }
+    fab!(:notification4) { Fabricate(:notification, user: user) }
+
+    it "does nothing if set to 0" do
+      SiteSetting.max_notifications_per_user = 0
+      Notification.purge_old!
+
+      expect(Notification.where(user_id: user.id).count).to eq(4)
+    end
+
+    it "correctly limits" do
+      SiteSetting.max_notifications_per_user = 2
+      Notification.purge_old!
+
+      expect(Notification.where(user_id: user.id).pluck(:id)).to contain_exactly(notification4.id, notification3.id)
+    end
+  end
 end

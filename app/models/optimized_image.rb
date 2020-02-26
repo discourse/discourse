@@ -9,7 +9,7 @@ class OptimizedImage < ActiveRecord::Base
   URL_REGEX ||= /(\/optimized\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
 
   def self.lock(upload_id, width, height)
-    @hostname ||= `hostname`.strip rescue "unknown"
+    @hostname ||= Discourse.os_hostname
     # note, the extra lock here ensures we only optimize one image per machine on webs
     # this can very easily lead to runaway CPU so slowing it down is beneficial and it is hijacked
     #

@@ -2830,15 +2830,6 @@ tr_TR:
           name: Diğer
         posting:
           name: Gönderiliyor
-    google_search: |
-      <h3>Google ile Ara</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Tüm Etiketler"
       other_tags: "Diğer Etiketler"
@@ -4218,8 +4209,6 @@ tr_TR:
           description: Aynı rozeti aynı anda birçok kullanıcıya verin.
           no_badge_selected: Başlamak için lütfen bir rütbe seçin.
           perform: "Kullanıcılara Ödül Rozeti"
-          upload_csv: Kullanıcı e-postaları içeren bir CSV yükleyin
-          aborted: Lütfen kullanıcı e-postaları içeren bir CSV yükleyin
           success: CSV&#39;niz alındı ve kullanıcılar kısa süre içinde rozetlerini alacaklar.
           replace_owners: Rozeti önceki sahiplerden kaldır
       emoji:

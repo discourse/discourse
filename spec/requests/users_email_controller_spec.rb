@@ -26,7 +26,7 @@ describe UsersEmailController do
     end
 
     it 'does not change email if accounts mismatch' do
-      updater = EmailUpdater.new(user.guardian, user)
+      updater = EmailUpdater.new(guardian: user.guardian, user: user)
       updater.change_to('new.n.cool@example.com')
 
       old_email = user.email
@@ -42,7 +42,7 @@ describe UsersEmailController do
     end
 
     context "with a valid user" do
-      let(:updater) { EmailUpdater.new(user.guardian, user) }
+      let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
 
       before do
         sign_in(user)
@@ -221,7 +221,7 @@ describe UsersEmailController do
     it 'bans change when accounts do not match' do
 
       sign_in(user)
-      updater = EmailUpdater.new(moderator.guardian, moderator)
+      updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
       updater.change_to('new.n.cool@example.com')
 
       get "/u/confirm-old-email/#{moderator.email_tokens.last.token}"
@@ -235,7 +235,7 @@ describe UsersEmailController do
       it 'confirms with a correct token' do
         # NOTE: only moderators need to confirm both old and new
         sign_in(moderator)
-        updater = EmailUpdater.new(moderator.guardian, moderator)
+        updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
         updater.change_to('new.n.cool@example.com')
 
         get "/u/confirm-old-email/#{moderator.email_tokens.last.token}"

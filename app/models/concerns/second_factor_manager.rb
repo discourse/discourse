@@ -20,7 +20,7 @@ module SecondFactorManager
 
   def get_totp_object(data)
     require_rotp
-    ROTP::TOTP.new(data, issuer: SiteSetting.title)
+    ROTP::TOTP.new(data, issuer: SiteSetting.title.gsub(":", ""))
   end
 
   def totp_provisioning_uri(data)
