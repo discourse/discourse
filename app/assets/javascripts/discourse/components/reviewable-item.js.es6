@@ -28,7 +28,7 @@ export default Component.extend({
     "reviewable.removed_topic_id"
   )
   topicId(topic, topicId, removedTopicId) {
-    return topic.id || topicId || removedTopicId;
+    return (topic && topic.id) || topicId || removedTopicId;
   },
 
   @discourseComputed("siteSettings.reviewable_claiming", "topicId")
