@@ -25,7 +25,7 @@ module Jobs
           receiver.process!
           incoming_email = receiver.incoming_email
         rescue Email::Receiver::ProcessingError => e
-          Rails.logger.warn("[IMAP] Could not process email: #{email.inspect}")
+          Rails.logger.warn("[IMAP] Could not process email with Message-ID = #{receiver.message_id}")
           return
         end
       else
@@ -35,7 +35,7 @@ module Jobs
         )
 
         if incoming_email.blank?
-          Rails.logger.warn("[IMAP] Could not find old email (#{args[:uid_validity]}, #{email['UID']}).")
+          Rails.logger.warn("[IMAP] Could not find old email (UIDVALIDITY = #{args[:uid_validity]}, UID = #{email['UID']})")
           return
         end
       end

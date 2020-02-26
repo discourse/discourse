@@ -38,7 +38,7 @@ module Imap
       @provider.disconnect!
     end
 
-    def process(idle = false)
+    def process(idle: false)
       # IMAP server -> Discourse (download): discovers updates to old emails
       # (synced emails) and fetches new emails.
       @status = @provider.open_mailbox(@group.imap_mailbox_name)
@@ -47,17 +47,21 @@ module Imap
         # If UID validity changes, the whole mailbox must be synchronized (all
         # emails are considered new and will be associated to existent topics
         # in Email::Reciever by matching Message-Ids).
-        Rails.logger.warn("[IMAP] UIDVALIDITY does not match, invalidating IMAP cache and resync emails for #{@group.name} (#{@group.id}) / #{@group.imap_mailbox_name}.")
+        Rails.logger.warn("[IMAP] UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for group #{@group.name} and mailbox #{@group.imap_mailbox_name}")
         @group.imap_last_uid = 0
+      end
+
+      if idle && !can_idle?
+        Rails.logger.warn("[IMAP] IMAP server for group #{@group.name} cannot IDLE")
+        idle = false
       end
 
       if idle
         raise 'IMAP IDLE is disabled' if !SiteSetting.enable_imap_idle
 
-        if !@provider.can?('IDLE')
-          Rails.logger.warn("[IMAP] IMAP server for #{@group.name} (#{@group.id}) does not support IDLE.")
-          return
-        end
+        # Thread goes into sleep and it is better to return any connection
+        # back to the pool.
+        ActiveRecord::Base.connection_handler.clear_active_connections!
 
         last_response_name = nil
         @provider.imap.idle do |resp|
@@ -68,7 +72,7 @@ module Imap
         end
 
         old_uids = []
-        new_uids = @provider.imap.uid_search('NOT SEEN').filter { |uid| uid > @group.imap_last_uid }
+        new_uids = @provider.uids(from: @group.imap_last_uid + 1) # seen+1 .. inf
       else
         # Fetching UIDs of old (already imported into Discourse, but might need
         # update) and new (not downloaded yet) emails.
@@ -81,16 +85,16 @@ module Imap
         end
       end
 
-      Rails.logger.debug("[IMAP] Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails.")
-      all_new_count = new_uids.size
+      Rails.logger.debug("[IMAP] Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
+      all_new_uids_size = new_uids.size
 
       import_mode = @import_limit > -1 && new_uids.size > @import_limit
       old_uids = old_uids.sample(@old_emails_limit).sort! if @old_emails_limit > 0
-      new_uids = new_uids[0..@new_emails_limit] if @new_emails_limit > 0
+      new_uids = new_uids[0..@new_emails_limit - 1] if @new_emails_limit > 0
 
       if old_uids.present?
-        Rails.logger.debug("[IMAP] Syncing #{old_uids.size} randomly-selected old emails.")
-        emails = @provider.emails(@group.imap_mailbox_name, old_uids, ['UID', 'FLAGS', 'LABELS'])
+        Rails.logger.debug("[IMAP] Syncing #{old_uids.size} randomly-selected old emails")
+        emails = @provider.emails(old_uids, ['UID', 'FLAGS', 'LABELS'], mailbox: @group.imap_mailbox_name)
         emails.each do |email|
           Jobs.enqueue(:sync_imap_email,
             group_id: @group.id,
@@ -102,8 +106,8 @@ module Imap
       end
 
       if new_uids.present?
-        Rails.logger.debug("[IMAP] Syncing #{new_uids.size} new emails (oldest first).")
-        emails = @provider.emails(@group.imap_mailbox_name, new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'])
+        Rails.logger.debug("[IMAP] Syncing #{new_uids.size} new emails (oldest first)")
+        emails = @provider.emails(new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'], mailbox: @group.imap_mailbox_name)
         emails.each do |email|
           # Synchronously process emails because the order of emails matter
           # (for example replies must be processed after the original email
@@ -119,7 +123,7 @@ module Imap
             receiver.process!
             update_topic(email, receiver.incoming_email, mailbox_name: @group.imap_mailbox_name)
           rescue Email::Receiver::ProcessingError => e
-            Rails.logger.warn("[IMAP] Could not process (#{@status[:uid_validity]}, #{email['UID']}): #{e.message}")
+            Rails.logger.warn("[IMAP] Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}")
           end
         end
       end
@@ -129,18 +133,21 @@ module Imap
       @group.save!
 
       # Discourse -> IMAP server (upload): syncs updated flags and labels.
-      if !idle && SiteSetting.enable_imap_write
+      if SiteSetting.enable_imap_write
         to_sync = IncomingEmail.where(imap_sync: true)
         if to_sync.size > 0
           @provider.open_mailbox(@group.imap_mailbox_name, write: true)
           to_sync.each do |incoming_email|
-            Rails.logger.debug("[IMAP] Updating email for #{@group.name} (#{@group.id}) and incoming email #{incoming_email.id}.")
+            Rails.logger.debug("[IMAP] Updating email for #{@group.name} and incoming email ID = #{incoming_email.id}")
             update_email(@group.imap_mailbox_name, incoming_email)
           end
         end
       end
 
-      all_new_count - new_uids.size
+      {
+        idle: idle,
+        remaining: all_new_uids_size - new_uids.size
+      }
     end
 
     def update_topic(email, incoming_email, opts = {})
@@ -208,7 +215,8 @@ module Imap
       flags = email['FLAGS']
       topic = incoming_email.topic
 
-      # TODO: delete email if topic no longer exists
+      # TODO: Delete remote email if topic no longer exists
+      # new_flags << Net::IMAP::DELETED if !incoming_email.topic
       return if !topic
 
       # Sync topic status and labels with email flags and labels.

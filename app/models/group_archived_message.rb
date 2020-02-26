@@ -41,7 +41,7 @@ class GroupArchivedMessage < ActiveRecord::Base
 
   def self.set_imap_sync(topic_id)
     IncomingEmail.joins(:post)
-      .where('imap_uid IS NOT NULL')
+      .where.not(imap_uid: nil)
       .where(topic_id: topic_id, posts: { post_number: 1 })
       .update_all(imap_sync: true)
   end

@@ -758,8 +758,8 @@ class Group < ActiveRecord::Base
                  self.email_username.blank? ||
                  self.email_password.blank?
 
-    Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes, race_condition_ttl: 1.minute) do
-      Rails.logger.info("[IMAP] Refreshing mailboxes for group #{self.name} (#{self.id}).")
+    Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
+      Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
 
       begin
         @imap = Net::IMAP.new(self.imap_server, self.imap_port, self.imap_ssl)
