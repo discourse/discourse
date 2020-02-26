@@ -485,16 +485,22 @@
       height: 95%;
       border: none;
       border-top: 1px solid $primary-low;
-      padding-top: 10px;
+      padding: 10px;
+    }
+    .incoming-email-html-part {
+      width: calc(100% - 36px);
+      padding: 10px 4px 4px 4px;
+    }
+    @media screen and (max-width: 746px) {
+      .incoming-email-html-part {
+        width: calc(100% - 10px);
+      }
     }
     textarea {
       font-family: monospace;
       resize: none;
       border-radius: 0;
       box-shadow: none;
-    }
-    .incoming-email-html-part {
-      padding: 10px 4px 4px 4px;
     }
   }
 }
