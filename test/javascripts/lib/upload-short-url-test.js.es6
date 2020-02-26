@@ -48,7 +48,6 @@ QUnit.module("lib:pretty-text/upload-short-url", {
     ];
 
     pretender.post("/uploads/lookup-urls", () => {
-      //eslint-disable-line
       return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
     });
 
