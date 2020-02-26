@@ -503,7 +503,7 @@ class Topic < ActiveRecord::Base
     TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
     DiscourseEvent.trigger(:topic_status_updated, self, status, enabled)
 
-    if private_message? && ["closed", "autoclosed"].include?(status.to_s) && enabled
+    if enabled && private_message? && status.to_s["closed"]
       group_ids = user.groups.pluck(:id)
       if group_ids.present?
         allowed_group_ids = self.allowed_groups
