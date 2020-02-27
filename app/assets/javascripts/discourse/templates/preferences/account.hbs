@@ -215,7 +215,7 @@
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
 {{#if canSaveUser}}
-  {{save-btn disabled=model.isSaving save=save saved=saved saveButtonText=saveButtonText}}
+  {{#save-controls model=model action=(action "save") saved=saved}}{{/save-controls}}
 {{/if}}
 
 
