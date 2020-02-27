@@ -502,6 +502,17 @@ class Topic < ActiveRecord::Base
   def update_status(status, enabled, user, opts = {})
     TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
     DiscourseEvent.trigger(:topic_status_updated, self, status, enabled)
+
+    if enabled && private_message? && status.to_s["closed"]
+      group_ids = user.groups.pluck(:id)
+      if group_ids.present?
+        allowed_group_ids = self.allowed_groups
+          .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
+        allowed_group_ids.each do |id|
+          GroupArchivedMessage.archive!(id, self)
+        end
+      end
+    end
   end
 
   # Atomically creates the next post number
