@@ -36,7 +36,7 @@
 
         {{#if canBulkSelect}}
           {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
-          {{bulk-select-button selected=selected action=(action "search")}}
+          {{bulk-select-button selected=selected category=category action=(action "search")}}
         {{/if}}
 
         {{#if bulkSelectEnabled}}
@@ -211,6 +211,7 @@
         {{search-advanced-options
           searchTerm=searchTerm
           isExpanded=true
+          category=category
         }}
 
         {{d-button
