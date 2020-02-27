@@ -145,19 +145,26 @@ describe PostCreator do
           _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
-        # 2 for topic, one to notify of new topic another for tracking state
-        expect(messages.map { |m| m.channel }.sort).to eq([ "/new",
-                                                     "/u/#{admin.username}",
-                                                     "/u/#{admin.username}",
-                                                     "/unread/#{admin.id}",
-                                                     "/unread/#{admin.id}",
-                                                     "/latest",
-                                                     "/latest",
-                                                     "/topic/#{created_post.topic_id}",
-                                                     "/topic/#{created_post.topic_id}"
-                                                   ].sort)
-        admin_ids = [Group[:admins].id]
+        messages.filter! { |m| m.channel != "/distributed_hash" }
 
+        channels = messages.map { |m| m.channel }.sort
+
+        # 2 for topic, one to notify of new topic another for tracking state
+        expect(channels).to eq(
+          [
+            "/new",
+            "/u/#{admin.username}",
+            "/u/#{admin.username}",
+            "/unread/#{admin.id}",
+            "/unread/#{admin.id}",
+            "/latest",
+            "/latest",
+            "/topic/#{created_post.topic_id}",
+            "/topic/#{created_post.topic_id}"
+          ].sort
+        )
+
+        admin_ids = [Group[:admins].id]
         expect(messages.any? { |m| m.group_ids != admin_ids && m.user_ids != [admin.id] }).to eq(false)
       end
 
