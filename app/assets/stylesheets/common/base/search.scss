@@ -226,8 +226,6 @@
     color: $tertiary-high;
   }
   .search-link {
-    display: flex;
-
     .topic-title {
       font-size: $font-up-2;
       line-height: $line-height-medium;
@@ -239,16 +237,6 @@
       color: $primary-medium;
       span {
         line-height: 1;
-      }
-    }
-    .pm-indicator {
-      display: inline-block;
-      font-size: 1.3em;
-      line-height: $line-height-medium;
-      color: $primary-medium;
-      .d-icon {
-        height: 0.76em;
-        width: 0.75em;
       }
     }
   }
