@@ -8,6 +8,7 @@ export default Component.extend({
   buttonDisabled: or("model.isSaving", "saveDisabled"),
 
   didInsertElement() {
+    this._super(...arguments);
     this.set("saved", false);
   },
 
