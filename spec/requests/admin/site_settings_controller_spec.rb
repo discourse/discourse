@@ -111,7 +111,7 @@ describe Admin::SiteSettingsController do
           }
 
           expect(CategoryUser.where(category_id: category_ids.first, notification_level: watching).count).to eq(0)
-          expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(User.count - 1)
+          expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(User.real.count - 1)
         end
 
         it 'should not update existing users user preference' do
@@ -149,7 +149,7 @@ describe Admin::SiteSettingsController do
           }
 
           expect(TagUser.where(tag_id: tags.first.id, notification_level: watching).count).to eq(0)
-          expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(User.count - 1)
+          expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(User.real.count - 1)
         end
 
         it 'should not update existing users user preference' do
@@ -174,7 +174,7 @@ describe Admin::SiteSettingsController do
             default_categories_watching: category_id
           }
 
-          expect(JSON.parse(response.body)["user_count"]).to eq(User.count)
+          expect(JSON.parse(response.body)["user_count"]).to eq(User.real.count)
 
           CategoryUser.create!(category_id: category_id, notification_level: tracking, user: user)
 
@@ -182,9 +182,26 @@ describe Admin::SiteSettingsController do
             default_categories_watching: category_id
           }
 
-          expect(JSON.parse(response.body)["user_count"]).to eq(User.count - 1)
+          expect(JSON.parse(response.body)["user_count"]).to eq(User.real.count - 1)
+        end
 
-          SiteSetting.setting(:default_categories_watching, "")
+        it "should return 0 if large number of notifications are expected" do
+          category_id = Fabricate(:category, posts_day: 2001).id
+
+          put "/admin/site_settings/default_categories_watching/user_count.json", params: {
+            default_categories_watching: category_id
+          }
+
+          user_count = User.real.count
+          expect(JSON.parse(response.body)["user_count"]).to eq(user_count)
+
+          (5 - user_count).times { Fabricate(:user) }
+
+          put "/admin/site_settings/default_categories_watching/user_count.json", params: {
+            default_categories_watching: category_id
+          }
+
+          expect(JSON.parse(response.body)["user_count"]).to eq(0)
         end
 
         it 'should return correct user count for default tags change' do
@@ -194,7 +211,7 @@ describe Admin::SiteSettingsController do
             default_tags_watching: tag.name
           }
 
-          expect(JSON.parse(response.body)["user_count"]).to eq(User.count)
+          expect(JSON.parse(response.body)["user_count"]).to eq(User.real.count)
 
           TagUser.create!(tag_id: tag.id, notification_level: tracking, user: user)
 
@@ -202,9 +219,7 @@ describe Admin::SiteSettingsController do
             default_tags_watching: tag.name
           }
 
-          expect(JSON.parse(response.body)["user_count"]).to eq(User.count - 1)
-
-          SiteSetting.setting(:default_tags_watching, "")
+          expect(JSON.parse(response.body)["user_count"]).to eq(User.real.count - 1)
         end
       end
 

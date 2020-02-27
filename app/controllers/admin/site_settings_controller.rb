@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::SiteSettingsController < Admin::AdminController
+  MAX_NOTIFICATION_COUNT = 10000
+
   rescue_from Discourse::InvalidParameters do |e|
     render_json_error e.message, status: 422
   end
@@ -63,7 +65,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         (new_category_ids - previous_category_ids).each do |category_id|
           skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
 
-          User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          User.real.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
             category_users = []
             users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
             CategoryUser.insert_all!(category_users)
@@ -90,7 +92,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         (new_tag_ids - previous_tag_ids).each do |tag_id|
           skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
 
-          User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          User.real.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
             tag_users = []
             users.each { |user| tag_users << { tag_id: tag_id, user_id: user.id, notification_level: notification_level, created_at: now, updated_at: now } }
             TagUser.insert_all!(tag_users)
@@ -123,27 +125,36 @@ class Admin::SiteSettingsController < Admin::AdminController
     elsif id.start_with?("default_categories_")
       previous_category_ids = previous_value.split("|")
       new_category_ids = new_value.split("|")
+      notification_count = 0
+      notification_count_column = nil
 
       case id
       when "default_categories_watching"
         notification_level = NotificationLevels.all[:watching]
+        notification_count_column = "posts_day"
       when "default_categories_tracking"
         notification_level = NotificationLevels.all[:tracking]
       when "default_categories_muted"
         notification_level = NotificationLevels.all[:muted]
       when "default_categories_watching_first_post"
         notification_level = NotificationLevels.all[:watching_first_post]
+        notification_count_column = "topics_day"
       end
 
-      user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)
-      user_ids += User
+      users = User.real
         .joins("CROSS JOIN categories c")
         .joins("LEFT JOIN category_users cu ON users.id = cu.user_id AND c.id = cu.category_id")
         .where("c.id IN (?) AND cu.notification_level IS NULL", new_category_ids - previous_category_ids)
-        .distinct
-        .pluck("users.id")
 
-      json[:user_count] = user_ids.uniq.count
+      notification_count += users.sum("c.#{notification_count_column}") if notification_count_column.present?
+
+      if notification_count > MAX_NOTIFICATION_COUNT
+        json[:user_count] = 0
+      else
+        user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)
+        user_ids += users.distinct.pluck("users.id")
+        json[:user_count] = user_ids.uniq.count
+      end
     elsif id.start_with?("default_tags_")
       previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
       new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
@@ -160,7 +171,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       end
 
       user_ids = TagUser.where(tag_id: previous_tag_ids - new_tag_ids, notification_level: notification_level).distinct.pluck(:user_id)
-      user_ids += User
+      user_ids += User.real
         .joins("CROSS JOIN tags t")
         .joins("LEFT JOIN tag_users tu ON users.id = tu.user_id AND t.id = tu.tag_id")
         .where("t.id IN (?) AND tu.notification_level IS NULL", new_tag_ids - previous_tag_ids)
