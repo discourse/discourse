@@ -6,7 +6,7 @@ export default Component.extend({
   className: "",
   classNameBindings: ["html:iframed-html", "className"],
   sandbox: "allow-same-origin",
-  attributeBindings: ['sandbox:sandbox'],
+  attributeBindings: ["sandbox:sandbox"],
 
   didRender() {
     this._super(...arguments);
@@ -16,4 +16,3 @@ export default Component.extend({
     iframeDoc.close();
   }
 });
-
