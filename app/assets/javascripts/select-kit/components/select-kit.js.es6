@@ -382,13 +382,12 @@ export default Component.extend(
       );
 
       if (input) {
-        this.selectKit.set("isLoading", true);
         debounce(this, this._debouncedInput, event.target.value, 200);
       }
     },
 
     _debouncedInput(filter) {
-      this.selectKit.set("filter", filter);
+      this.selectKit.setProperties({ filter, isLoading: true });
       this._searchPromise = this._searchWrapper(filter);
     },
 
