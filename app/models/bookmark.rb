@@ -10,6 +10,24 @@ class Bookmark < ActiveRecord::Base
     if: -> { reminder_type.present? && reminder_type != Bookmark.reminder_types[:at_desktop] }
   }
 
+  validate :unique_per_post_for_user
+  validate :ensure_sane_reminder_at_time
+
+  def unique_per_post_for_user
+    return if !Bookmark.exists?(user_id: user_id, post_id: post_id)
+    self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked_post"))
+  end
+
+  def ensure_sane_reminder_at_time
+    return if reminder_at.blank?
+    if reminder_at < Time.now.utc
+      self.errors.add(:base, I18n.t("bookmarks.errors.cannot_set_past_reminder"))
+    end
+    if reminder_at > (Time.now.utc + 10.years)
+      self.errors.add(:base, I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"))
+    end
+  end
+
   def self.reminder_types
     @reminder_type = Enum.new(
       at_desktop: 0,
