@@ -2072,6 +2072,10 @@ RSpec.describe TopicsController do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
+    after do
+      Discourse.redis.flushall
+    end
+
     it 'returns first post of the topic' do
       # we need one for suggested
       create_post
