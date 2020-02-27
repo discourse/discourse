@@ -95,7 +95,7 @@ module Jobs
               escaped_src = Regexp.escape(original_src)
 
               replace_raw = ->(match, match_src, replacement, _index) {
-                if src.include?(match_src)
+                if remove_scheme(src) == remove_scheme(match_src)
 
                   replacement =
                     if replacement.include?(InlineUploads::PLACEHOLDER)
