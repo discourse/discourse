@@ -26,6 +26,14 @@ zh_CN:
         该徽章授予给完成交互式高级用户教程的你。你已经掌握了讨论的高级工具——本徽章就是你的证明！
   discourse_narrative_bot:
     bio: "你好，我不是真人，而是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`@%{discobot_username}`** 与我交互。"
+    tl2_promotion_message:
+      subject_template: "恭喜！你的信任等级提升了！"
+      text_body_template: |
+        现在你已经晋升了了，是时候学习一些高级特性了!
+
+        用 `@%{discobot_username} %{reset_trigger}` 来回复这条信息，了解更多你能做的事情。
+
+        我们邀请你继续参与社区活动——我们喜欢有你在身边。
     timeout:
       message: |-
         你好， @%{username}。好久没见到你了，一切可好？
@@ -275,11 +283,11 @@ zh_CN:
 
           试试在这个主题中搜索关键词“capy&#8203;bara”
         hidden_message: |-
-          你怎么错过这个 capybara 哒？ :wink:
+          你怎么错过了这只水豚？ :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          注意到你回到主题开头了么？**带 `%{search_answer}` 这个 emoji 回复** 来喂养这只可怜又饥饿的 capabara，你会自动跳转到结尾。
+          注意到你回到主题开头了么？**使用颜文字`%{search_answer}`回复**来给这只可怜又饥饿水豚投食吧，之后你就会自动回到底部。
         reply: |-
           你找到啦 :tada:
 

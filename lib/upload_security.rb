@@ -21,8 +21,9 @@ class UploadSecurity
   end
 
   def should_be_secure?
+    return false if !SiteSetting.secure_media?
     return false if uploading_in_public_context?
-    secure_attachment? || secure_media?
+    (secure_attachment? || supported_media?) && uploading_in_secure_context?
   end
 
   private
@@ -37,10 +38,6 @@ class UploadSecurity
 
   def secure_attachment?
     !supported_media? && SiteSetting.prevent_anons_from_downloading_files
-  end
-
-  def secure_media?
-    SiteSetting.secure_media? && supported_media? && uploading_in_secure_context?
   end
 
   def uploading_in_secure_context?

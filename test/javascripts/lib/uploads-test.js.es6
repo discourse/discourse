@@ -123,7 +123,7 @@ QUnit.test("allows valid uploads to go through", assert => {
 });
 
 QUnit.test("isImage", assert => {
-  ["png", "jpg", "jpeg", "gif", "ico"].forEach(extension => {
+  ["png", "webp", "jpg", "jpeg", "gif", "ico"].forEach(extension => {
     var image = "image." + extension;
     assert.ok(isImage(image), image + " is recognized as an image");
     assert.ok(

@@ -194,7 +194,7 @@ export function authorizesOneOrMoreImageExtensions(staff) {
 }
 
 export function isImage(path) {
-  return /\.(png|jpe?g|gif|svg|ico)$/i.test(path);
+  return /\.(png|webp|jpe?g|gif|svg|ico)$/i.test(path);
 }
 
 export function isVideo(path) {

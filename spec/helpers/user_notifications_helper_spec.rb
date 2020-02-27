@@ -28,6 +28,22 @@ describe UserNotificationsHelper do
       HTML
     end
 
+    let(:image_paragraph) do
+      '<p><img src="//localhost:3000/uploads/b9.png" width="300" height="300"></p>'
+    end
+
+    let(:lightbox_image) do
+      <<~HTML
+        <p><div class="lightbox-wrapper"><a class="lightbox" href="//localhost:3000/uploads/default/original/1X/123456.jpeg" data-download-href="//localhost:3000/uploads/default/123456" title="giant-meteor-2020"><img src="//localhost:3000/uploads/default/original/1X/123456.jpeg" alt="giant-meteor-2020" data-base62-sha1="3jcR88161od6Uthq1ixWKJh2ejp" width="517" height="152" data-small-upload="//localhost:3000/uploads/default/optimized/1X/123456_2_10x10.png"><div class="meta">
+        <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">giant-meteor-2020</span><span class="informations">851×251 44 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+        </div></a></div></p>
+      HTML
+    end
+
+    let(:expected_lightbox_image) do
+      '<div class="lightbox-wrapper"><a class="lightbox" href="//localhost:3000/uploads/default/original/1X/123456.jpeg" data-download-href="//localhost:3000/uploads/default/123456" title="giant-meteor-2020"><img src="//localhost:3000/uploads/default/original/1X/123456.jpeg" alt="giant-meteor-2020" data-base62-sha1="3jcR88161od6Uthq1ixWKJh2ejp" width="517" height="152" data-small-upload="//localhost:3000/uploads/default/optimized/1X/123456_2_10x10.png"></a></div>'
+    end
+
     it "can return the first paragraph" do
       SiteSetting.digest_min_excerpt_length = 50
       expect(helper.email_excerpt(cooked)).to eq(paragraphs[0])
@@ -71,7 +87,7 @@ describe UserNotificationsHelper do
     end
 
     it "defaults to content after post quote (image w/ no text)" do
-      image_paragraph = '<p><img src="//localhost:3000/uploads/b9.png" width="300" height="300"></p>'
+
       cooked = <<~HTML
         #{post_quote}
         #{image_paragraph}
@@ -86,6 +102,23 @@ describe UserNotificationsHelper do
         #{aside_onebox}
       HTML
       expect(helper.email_excerpt(cooked)).to eq(aside_onebox)
+    end
+
+    it "defaults to content after post quote (lightbox image w/ no text)" do
+      cooked = <<~HTML
+        #{post_quote}
+        #{lightbox_image}
+      HTML
+      expect(helper.email_excerpt(cooked)).to eq(expected_lightbox_image)
+    end
+
+    it "handles when there's only an image" do
+      image_paragraph
+      expect(helper.email_excerpt("#{image_paragraph}")).to eq(image_paragraph)
+    end
+
+    it "handles when there's only a lightboxed image" do
+      expect(helper.email_excerpt("#{lightbox_image}")).to eq(expected_lightbox_image)
     end
   end
 

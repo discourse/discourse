@@ -7,6 +7,7 @@
 
 id:
   site_settings:
+    discourse_narrative_bot_enabled: "Aktifkan Bot Narasi Discourse (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Matikan kiriman selamat datang dari Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nama Pengguna yang diabaikan oleh Discourse Narrative Bot"
     discourse_narrative_bot_disable_public_replies: "Matikan balasan publik oleh Discourse Narrative Bot"
@@ -25,6 +26,14 @@ id:
         Lencana ini diberikan atas keberhasilan menyelesaikan panduan interaktif pengguna anggota forum lanjutan. Anda telah ahli menggunakan fasilitas lanjutan dalam diskusi — sekarang Anda telah bersertifikat penuh menjadi anggota forum.
   discourse_narrative_bot:
     bio: "Salam, saya bukan manusia asli. Saya adalah robot yang akan memandu Anda menggunakan forum ini. Untuk berkomunikasi dengan saya, kirimi saya pesan atau panggil **`@%{discobot_username}`** dimana saja."
+    tl2_promotion_message:
+      subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
+      text_body_template: |
+        Sekarang setelah Anda dipromosikan, saatnya untuk belajar tentang beberapa fitur lanjutan!
+
+        Balas pesan ini dengan `@ %{discobot_username} %{reset_trigger}` untuk mencari tahu lebih lanjut tentang apa yang dapat Anda lakukan.
+
+        Kami mengundang Anda untuk terus terlibat - kami menikmati kehadiran Anda.
     timeout:
       message: |-
         Salam @%{username}, hanya ingin menyapa karena saya tidak melihat Anda beberapa waktu.
@@ -52,6 +61,7 @@ id:
         quote: "Setiap kesulitan ada kemudahan"
         author: "Albert Einstein"
       '2':
+        quote: "Kebebasan tidak layak dimiliki jika tidak berkonotasi kebebasan untuk berbuat salah."
         author: "Mahatma Gandhi"
       '3':
         quote: "Jangan menangis karena sudah selesai, tersenyumlah karena itu telah terjadi."
@@ -123,7 +133,11 @@ id:
 
           Sementara ini, saya akan mendampingi Anda.
     new_user_narrative:
+      reset_trigger: "tutorial"
+      title: "Sertifikat penyelesaian tutorial pengguna baru"
       cert_title: "Tercatat telah berhasil menyelesaikan panduan pengguna baru."
+      hello:
+        title: "Salam!"
       images:
         reply: |-
           Gambar yang menarik – Saya telah menekan tombol :heart: supaya Anda tahu kalau saya menghargainya :heart_eyes:
@@ -196,6 +210,7 @@ id:
       certificate:
         alt: "Sertifikat Pencapaian"
     advanced_user_narrative:
+      reset_trigger: "tutorial lanjutan"
       cert_title: "Tercatat telah berhasil menyelesaikan panduan pengguna lanjutan."
       title: ":arrow_up: Fasilitas pengguna lanjutan"
       edit:

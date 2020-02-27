@@ -90,6 +90,19 @@ describe Jobs::EmitWebHookEvent do
         end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
       end
 
+      it 'retries at most 5 times' do
+        Jobs.run_immediately!
+
+        expect(Jobs::EmitWebHookEvent::MAX_RETRY_COUNT + 1).to eq(5)
+
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT
+          )
+        end.to change { WebHookEvent.count }.by(Jobs::EmitWebHookEvent::MAX_RETRY_COUNT + 1)
+      end
+
       it 'does not retry for more than maximum allowed times' do
         expect do
           subject.execute(
