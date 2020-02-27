@@ -1114,6 +1114,14 @@ describe Topic do
     context 'closed' do
       let(:status) { 'closed' }
       it_should_behave_like 'a status that closes a topic'
+
+      it 'should archive group message' do
+        group = Fabricate(:group)
+        group.add(@user)
+        topic = Fabricate(:private_message_topic, allowed_groups: [group])
+
+        expect { topic.update_status(status, true, @user) }.to change(topic.group_archived_messages, :count).by(1)
+      end
     end
 
     context 'autoclosed' do
