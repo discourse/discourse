@@ -14,7 +14,8 @@ class Bookmark < ActiveRecord::Base
   validate :ensure_sane_reminder_at_time
 
   def unique_per_post_for_user
-    return if !Bookmark.exists?(user_id: user_id, post_id: post_id)
+    existing_bookmark = Bookmark.find_by(user_id: user_id, post_id: post_id)
+    return if existing_bookmark.blank? || existing_bookmark.id == id
     self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked_post"))
   end
 
@@ -45,15 +46,16 @@ end
 #
 # Table name: bookmarks
 #
-#  id            :bigint           not null, primary key
-#  user_id       :bigint           not null
-#  topic_id      :bigint           not null
-#  post_id       :bigint           not null
-#  name          :string
-#  reminder_type :integer
-#  reminder_at   :datetime
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                    :bigint           not null, primary key
+#  user_id               :bigint           not null
+#  topic_id              :bigint           not null
+#  post_id               :bigint           not null
+#  name                  :string
+#  reminder_type         :integer
+#  reminder_at           :datetime
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  reminder_last_sent_at :datetime
 #
 # Indexes
 #

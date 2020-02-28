@@ -37,11 +37,22 @@ class BookmarkManager
     raise Discourse::NotFound if bookmark.blank?
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
 
-    if reminder_scheduled?(id)
-      Jobs.cancel_scheduled_job(:bookmark_reminder, bookmark_id: id)
-    end
+    cancel_reminder(bookmark) if reminder_scheduled?(bookmark.id)
 
     bookmark.destroy
+  end
+
+  def destroy_for_topic(topic)
+    topic_bookmarks = Bookmark.where(user_id: @user.id, topic_id: topic.id)
+
+    Bookmark.transaction do
+      topic_bookmarks.each do |bookmark|
+        raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
+        bookmark.destroy
+
+        cancel_reminder(bookmark) if reminder_scheduled?(bookmark.id)
+      end
+    end
   end
 
   def reminder_scheduled?(id)
@@ -56,5 +67,9 @@ class BookmarkManager
 
   def needs_reminder?(bookmark)
     bookmark.reminder_at.present? && bookmark.reminder_type != Bookmark.reminder_types[:at_desktop]
+  end
+
+  def cancel_reminder(bookmark)
+    Jobs.cancel_scheduled_job(:bookmark_reminder, bookmark_id: bookmark.id)
   end
 end

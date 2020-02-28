@@ -115,4 +115,15 @@ RSpec.describe BookmarkManager do
       end
     end
   end
+
+  describe ".destroy_for_topic" do
+    let!(:topic) { Fabricate(:topic) }
+    let(:bookmark1) { Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user) }
+    let(:bookmark2) { Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user) }
+
+    it "destroys all bookmarks for the topic for the specified user" do
+      subject.destroy_for_topic(topic)
+      expect(Bookmark.where(user: user, topic: topic).length).to eq(0)
+    end
+  end
 end

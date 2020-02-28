@@ -487,7 +487,7 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id].to_i)
 
     if SiteSetting.enable_bookmarks_with_reminders?
-      Bookmark.where(user_id: current_user.id, topic_id: topic.id).destroy_all
+      BookmarkManager.new(current_user).destroy_for_topic(topic)
     else
       PostAction.joins(:post)
         .where(user_id: current_user.id)
