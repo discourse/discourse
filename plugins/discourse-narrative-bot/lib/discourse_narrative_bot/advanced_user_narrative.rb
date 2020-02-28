@@ -82,7 +82,7 @@ module DiscourseNarrativeBot
       },
 
       tutorial_poll: {
-        prerequisite: Proc.new { SiteSetting.poll_enabled },
+        prerequisite: Proc.new { SiteSetting.poll_enabled && @user.has_trust_level?(SiteSetting.poll_minimum_trust_level_to_create) },
         next_state: :tutorial_details,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
         reply: {
