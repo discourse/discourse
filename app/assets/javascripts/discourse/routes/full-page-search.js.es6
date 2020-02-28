@@ -17,6 +17,7 @@ export default DiscourseRoute.extend({
     context: {},
     skip_context: {}
   },
+  category: null,
 
   titleToken() {
     return I18n.t("search.results_page", {

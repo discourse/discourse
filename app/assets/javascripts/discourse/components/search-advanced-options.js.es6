@@ -219,6 +219,11 @@ export default Component.extend({
     }
   },
 
+  setCategory(category) {
+    this.set("searchedTerms.category", category);
+    this.set("category", category);
+  },
+
   setSearchedTermValueForCategory() {
     const match = this.filterBlocks(REGEXP_CATEGORY_PREFIX);
     if (match.length !== 0) {
@@ -235,21 +240,21 @@ export default Component.extend({
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         )
-          this.set("searchedTerms.category", userInput);
+          this.setCategory(userInput);
       } else if (isNaN(subcategories)) {
         const userInput = Category.findSingleBySlug(subcategories[0]);
         if (
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         )
-          this.set("searchedTerms.category", userInput);
+          this.setCategory(userInput);
       } else {
         const userInput = Category.findById(subcategories[0]);
         if (
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         )
-          this.set("searchedTerms.category", userInput);
+          this.setCategory(userInput);
       }
     } else this.set("searchedTerms.category", "");
   },
