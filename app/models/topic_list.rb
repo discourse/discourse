@@ -67,7 +67,7 @@ class TopicList
 
   def preload_key
     if @category
-      "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+      "topic_list_#{@category.url.sub(/^\//, '')}/#{@category.id}/l/#{@filter}"
     else
       "topic_list_#{@filter}"
     end
