@@ -125,5 +125,12 @@ RSpec.describe BookmarkManager do
       subject.destroy_for_topic(topic)
       expect(Bookmark.where(user: user, topic: topic).length).to eq(0)
     end
+
+    it "does not destroy any other user's topic bookmarks" do
+      user2 = Fabricate(:user)
+      Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user2)
+      subject.destroy_for_topic(topic)
+      expect(Bookmark.where(user: user2, topic: topic).length).to eq(1)
+    end
   end
 end
