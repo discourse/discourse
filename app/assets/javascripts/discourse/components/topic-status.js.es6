@@ -44,6 +44,17 @@ export default Component.extend({
       : this._reset("warning");
   },
 
+  @discourseComputed(
+    "showPrivateMessageIcon",
+    "topic.isPrivateMessage",
+    "topic.is_warning"
+  )
+  topicPrivateMessage(showPrivateMessageIcon, privateMessage, warning) {
+    return showPrivateMessageIcon && privateMessage && !warning
+      ? this._set("privateMessage", "envelope", "personal_message")
+      : this._reset("privateMessage");
+  },
+
   @discourseComputed("topic.pinned")
   topicPinned(pinned) {
     return pinned

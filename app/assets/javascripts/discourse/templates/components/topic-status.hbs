@@ -7,8 +7,11 @@
 {{~#if archivedIcon~}}
   <span class='topic-status' title={{archivedTitle}}>{{archivedIcon}}</span>
 {{~/if~}}
+{{~#if topicPrivateMessage~}}
+  <span class='topic-status' title={{privateMessageTitle}}>{{privateMessageIcon}}</span>
+{{~/if~}}
 {{~#if topicWarning~}}
-  <span class='topic-status' title={{warningTitle}}>{{warningIcon}}</span>
+  <span class='topic-status topic-status-warning' title={{warningTitle}}>{{warningIcon}}</span>
 {{~/if~}}
 {{~#if topicPinned~}}
   {{~#if canAct~}}

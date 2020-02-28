@@ -1441,7 +1441,9 @@ class Topic < ActiveRecord::Base
     Topic.transaction do
       rate_limit_topic_invitation(invited_by)
       topic_allowed_users.create!(user_id: target_user.id) unless topic_allowed_users.exists?(user_id: target_user.id)
-      add_small_action(invited_by, "invited_user", target_user.username)
+
+      user_in_allowed_group = (user.group_ids & topic_allowed_groups.map(&:group_id)).present?
+      add_small_action(invited_by, "invited_user", target_user.username) if !user_in_allowed_group
 
       create_invite_notification!(
         target_user,
