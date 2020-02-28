@@ -105,7 +105,7 @@
       e.preventDefault();
 
       if (!$el.hasClass('lazyYT-video-loaded') && $thumb.hasClass('lazyYT-image-loaded')) {
-        $el.html('<iframe src="//www.youtube.com/embed/' + id + '?autoplay=1&' + youtube_parameters + '" frameborder="0" allowfullscreen></iframe>')
+        $el.html('<iframe src="//www.youtube-nocookie.com/embed/' + id + '?autoplay=1&' + youtube_parameters + '" frameborder="0" allowfullscreen></iframe>')
         .addClass('lazyYT-video-loaded');
       }
 
