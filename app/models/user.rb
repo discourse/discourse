@@ -1207,7 +1207,7 @@ class User < ActiveRecord::Base
     self.user_emails.secondary.pluck(:email)
   end
 
-  RECENT_TIME_READ_THRESHOLD = 60.days
+  RECENT_TIME_READ_THRESHOLD ||= 60.days
 
   def self.preload_recent_time_read(users)
     times = UserVisit.where(user_id: users.map(&:id))
