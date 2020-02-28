@@ -475,7 +475,7 @@ class User < ActiveRecord::Base
     @unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
-    @user_fields = nil
+    @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
     super
@@ -1098,7 +1098,10 @@ class User < ActiveRecord::Base
       field_ids = (@all_user_field_ids ||= UserField.pluck(:id))
     end
 
-    {}.tap do |hash|
+    @user_fields_cache ||= {}
+
+    # Memoize based on requested fields
+    @user_fields_cache[field_ids.join(':')] ||= {}.tap do |hash|
       field_ids.each do |fid|
         # The hash keys are strings for backwards compatibility
         hash[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
