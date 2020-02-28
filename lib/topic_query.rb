@@ -675,20 +675,11 @@ class TopicQuery
       if options[:no_subcategories]
         result = result.where('categories.id = ?', category_id)
       else
-        sql = <<~SQL
-            categories.id IN (
-              WITH RECURSIVE subcategories AS (
-                SELECT :category_id id, 1 depth
-                UNION
-                SELECT categories.id, (subcategories.depth + 1) depth
-                FROM categories
-                JOIN subcategories ON subcategories.id = categories.parent_category_id
-                WHERE subcategories.depth < :max_category_nesting
-            )
-              SELECT subcategories.id FROM subcategories
-            ) AND (categories.id = :category_id OR topics.id != categories.topic_id)
-          SQL
-        result = result.where(sql, category_id: category_id, max_category_nesting: SiteSetting.max_category_nesting)
+        result = result.where(
+          "categories.id IN (:subcategory_ids) AND (categories.id = :category_id OR topics.id != categories.topic_id)",
+          category_id: category_id,
+          subcategory_ids: Category.subcategory_ids(category_id)
+        )
       end
       result = result.references(:categories)
 

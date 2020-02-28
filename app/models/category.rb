@@ -73,6 +73,7 @@ class Category < ActiveRecord::Base
   after_save :publish_discourse_stylesheet
   after_save :publish_category
   after_save :reset_topic_ids_cache
+  after_save :clear_subcategory_ids_cache
   after_save :clear_url_cache
   after_save :index_search
   after_save :update_reviewables
@@ -150,6 +151,49 @@ class Category < ActiveRecord::Base
 
   def reset_topic_ids_cache
     Category.reset_topic_ids_cache
+  end
+
+  @@subcategory_ids_cache = DistributedCache.new('subcategory_ids_cache')
+
+  def self.subcategory_ids(parent_category_id)
+    @@subcategory_ids_cache[parent_category_id] || reset_subcategory_ids_cache[parent_category_id]
+  end
+
+  def self.reset_subcategory_ids_cache
+    @@subcategory_ids_cache.clear
+    subcategory_ids = {}
+
+    Category.pluck(:id, :parent_category_id).each do |id, parent_id|
+      subcategory_ids[id] = Set.new
+      subcategory_ids[id] << id
+
+      if parent_id.present?
+        subcategory_ids[parent_id] ||= Set.new
+        subcategory_ids[parent_id] << id
+      end
+    end
+
+    (SiteSetting.max_category_nesting - 1).times do
+      subcategory_ids.each do |parent_id, children_ids|
+        children_ids.dup.each do |child_id|
+          children_ids.merge(subcategory_ids[child_id])
+        end
+      end
+    end
+
+    subcategory_ids.each do |parent_id, children_ids|
+      @@subcategory_ids_cache[parent_id] = subcategory_ids[parent_id] = children_ids.to_a
+    end
+
+    subcategory_ids
+  end
+
+  def self.clear_subcategory_ids_cache
+    @@subcategory_ids_cache.clear
+  end
+
+  def clear_subcategory_ids_cache
+    Category.clear_subcategory_ids_cache
   end
 
   def self.scoped_to_permissions(guardian, permission_types)

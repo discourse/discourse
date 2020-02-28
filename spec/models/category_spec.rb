@@ -95,6 +95,23 @@ describe Category do
     end
   end
 
+  describe "subcategory_ids_cache" do
+    it 'works' do
+      category = Fabricate(:category)
+      expect(Category.subcategory_ids(category.id)).to contain_exactly(category.id)
+
+      subcategory1 = Fabricate(:category, parent_category_id: category.id)
+      expect(Category.subcategory_ids(category.id)).to contain_exactly(category.id, subcategory1.id)
+
+      subcategory2 = Fabricate(:category, parent_category_id: category.id)
+      expect(Category.subcategory_ids(category.id)).to contain_exactly(category.id, subcategory1.id, subcategory2.id)
+
+      SiteSetting.max_category_nesting = 3
+      subsubcategory = Fabricate(:category, parent_category_id: subcategory1.id)
+      expect(Category.subcategory_ids(category.id)).to contain_exactly(category.id, subcategory1.id, subcategory2.id, subsubcategory.id)
+    end
+  end
+
   describe "topic_create_allowed and post_create_allowed" do
     fab!(:group) { Fabricate(:group) }
 
