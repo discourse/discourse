@@ -970,3 +970,12 @@ if (!String.prototype.startsWith) {
   return ES6;
 });
 /* eslint-enable */
+
+// Polyfill Promise - used by popper.js
+window.addEventListener(
+  "load",
+  function() {
+    window.Promise = require("rsvp").Promise;
+  },
+  false
+);
