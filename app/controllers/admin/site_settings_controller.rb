@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::SiteSettingsController < Admin::AdminController
-  MAX_NOTIFICATION_COUNT = 10000
+  MAX_NOTIFICATION_COUNT ||= 10000
 
   rescue_from Discourse::InvalidParameters do |e|
     render_json_error e.message, status: 422
