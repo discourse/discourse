@@ -2861,6 +2861,7 @@ en:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
       personal_message:
         title: "This topic is a personal message"
+        help: "This topic is a personal message"
     posts: "Posts"
     posts_long: "there are {{number}} posts in this topic"
 

@@ -43,6 +43,7 @@ export default Component.extend(UtilsMixin, {
   actions: {
     onInput(event) {
       this.selectKit.onInput(event);
+      return true;
     },
 
     onKeydown(event) {
