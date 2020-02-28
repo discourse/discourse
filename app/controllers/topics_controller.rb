@@ -548,10 +548,12 @@ class TopicsController < ApplicationController
     first_post = topic.ordered_posts.first
 
     if SiteSetting.enable_bookmarks_with_reminders?
-      if Bookmark.exists?(user: current_user, post: first_post)
-        return render_json_error(I18n.t("bookmark.topic_already_bookmarked"), status: 403)
+      bookmark_manager = BookmarkManager.new(current_user)
+      bookmark_manager.create(post_id: first_post.id)
+
+      if bookmark_manager.errors
+        return render_json_error(bookmark_manager.errors.full_messages, status: 400)
       end
-      Bookmark.create(user: current_user, post: first_post, topic: topic)
     else
       result = PostActionCreator.create(current_user, first_post, :bookmark)
       return render_json_error(result) if result.failed?
