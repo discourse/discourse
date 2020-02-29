@@ -19,12 +19,6 @@ class TopicQuery
         int.call(x) && x.to_i.between?(0, PG_MAX_INT)
       end
 
-      array_int_or_int = lambda do |x|
-        int.call(x) || (
-          Array === x && x.length > 0 && x.all?(&int)
-        )
-      end
-
       {
         max_posts: zero_up_to_max_int,
         min_posts: zero_up_to_max_int,
