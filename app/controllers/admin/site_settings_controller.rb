@@ -137,11 +137,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         notification_count_column = "topics_day"
       end
 
-      users = User.real
-        .joins("CROSS JOIN categories c")
-        .joins("LEFT JOIN category_users cu ON users.id = cu.user_id AND c.id = cu.category_id")
-        .where("c.id IN (?) AND cu.notification_level IS NULL", new_category_ids - previous_category_ids)
-
+      users = users_without_category_notification(new_category_ids - previous_category_ids)
       notification_count += users.sum("c.#{notification_count_column}") if notification_count_column.present?
 
       if notification_count > MAX_NOTIFICATION_COUNT
