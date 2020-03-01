@@ -63,9 +63,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         CategoryUser.where(category_id: (previous_category_ids - new_category_ids), notification_level: notification_level).delete_all
 
         (new_category_ids - previous_category_ids).each do |category_id|
-          skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
-
-          User.real.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          users_without_category_notification([category_id]).select(:id).find_in_batches do |users|
             category_users = []
             users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
             CategoryUser.insert_all!(category_users)
@@ -90,9 +88,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         TagUser.where(tag_id: (previous_tag_ids - new_tag_ids), notification_level: notification_level).delete_all
 
         (new_tag_ids - previous_tag_ids).each do |tag_id|
-          skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
-
-          User.real.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          users_without_tag_notification([tag_id]).select(:id).find_in_batches do |users|
             tag_users = []
             users.each { |user| tag_users << { tag_id: tag_id, user_id: user.id, notification_level: notification_level, created_at: now, updated_at: now } }
             TagUser.insert_all!(tag_users)
@@ -215,6 +211,20 @@ class Admin::SiteSettingsController < Admin::AdminController
     if SiteSetting.hidden_settings.include?(id.to_sym)
       raise Discourse::InvalidParameters, "You are not allowed to change hidden settings"
     end
+  end
+
+  def users_without_category_notification(category_ids)
+    User.real
+      .joins("CROSS JOIN categories c")
+      .joins("LEFT JOIN category_users cu ON users.id = cu.user_id AND c.id = cu.category_id")
+      .where("c.id IN (?) AND cu.notification_level IS NULL", category_ids)
+  end
+
+  def users_without_tag_notification(tag_ids)
+    User.real
+      .joins("CROSS JOIN tags t")
+      .joins("LEFT JOIN tag_users tu ON users.id = tu.user_id AND t.id = tu.tag_id")
+      .where("t.id IN (?) AND tu.notification_level IS NULL", tag_ids)
   end
 
 end
