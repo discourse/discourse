@@ -66,9 +66,12 @@ export function avatarImg(options, getURL) {
 
   const classes =
     "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
-  const title = options.title
-    ? " title='" + escapeExpression(options.title || "") + "'"
-    : "";
+
+  let title = "";
+  if (options.title) {
+    const escaped = escapeExpression(options.title || "");
+    title = ` title='${escaped}' aria-label='${escaped}'`;
+  }
 
   return (
     "<img alt='' width='" +
