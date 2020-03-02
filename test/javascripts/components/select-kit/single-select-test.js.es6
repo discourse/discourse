@@ -238,3 +238,22 @@ componentTest("selected value can be 0", {
     assert.equal(this.subject.header().value(), 0);
   }
 });
+
+componentTest("prevents propagating click event on header", {
+  template:
+    "{{#d-button icon='times' action=onClick}}{{single-select value=value content=content}}{{/d-button}}",
+
+  beforeEach() {
+    this.setProperties({
+      onClick: () => this.set("value", "foo"),
+      content: DEFAULT_CONTENT,
+      value: DEFAULT_VALUE
+    });
+  },
+
+  async test(assert) {
+    assert.equal(this.value, DEFAULT_VALUE);
+    await this.subject.expand();
+    assert.equal(this.value, DEFAULT_VALUE);
+  }
+});

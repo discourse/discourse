@@ -23,7 +23,8 @@ module BackupRestore
       factory: BackupRestore::Factory.new(
         user_id: user_id,
         client_id: opts[:client_id]
-      )
+      ),
+      disable_emails: opts.fetch(:disable_emails, true)
     )
 
     start! restorer

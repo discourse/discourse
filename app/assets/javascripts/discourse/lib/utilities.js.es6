@@ -367,10 +367,8 @@ export function areCookiesEnabled() {
 }
 
 export function isiOSPWA() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches &&
-    navigator.userAgent.match(/(iPad|iPhone|iPod)/g)
-  );
+  const caps = Discourse.__container__.lookup("capabilities:main");
+  return window.matchMedia("(display-mode: standalone)").matches && caps.isIOS;
 }
 
 export function isAppWebview() {
