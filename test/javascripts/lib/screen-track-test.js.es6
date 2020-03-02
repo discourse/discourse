@@ -1,6 +1,7 @@
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import Session from "discourse/models/session";
 import ScreenTrack from "discourse/lib/screen-track";
+import pretender from "helpers/create-pretender";
 
 let clock;
 
@@ -18,8 +19,7 @@ QUnit.module("lib:screen-track", {
 QUnit.skip("Correctly flushes posts as needed", assert => {
   const timings = [];
 
-  // prettier-ignore
-  server.post("/topics/timings", t => { //eslint-disable-line
+  pretender.post("/topics/timings", t => {
     timings.push(t);
     return [200, {}, ""];
   });
