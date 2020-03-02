@@ -368,10 +368,7 @@ export function areCookiesEnabled() {
 
 export function isiOSPWA() {
   const caps = Discourse.__container__.lookup("capabilities:main");
-  return (
-    window.matchMedia("(display-mode: standalone)").matches &&
-    caps.isIOS
-  );
+  return window.matchMedia("(display-mode: standalone)").matches && caps.isIOS;
 }
 
 export function isAppWebview() {
