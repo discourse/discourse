@@ -186,7 +186,7 @@ describe Admin::SiteSettingsController do
         end
 
         it "should return 0 if large number of notifications are expected" do
-          category_id = Fabricate(:category, posts_day: 2001).id
+          category_id = Fabricate(:category, posts_month: 70000).id
 
           put "/admin/site_settings/default_categories_watching/user_count.json", params: {
             default_categories_watching: category_id

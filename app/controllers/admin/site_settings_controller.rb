@@ -109,6 +109,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     raise_access_hidden_setting(id)
     previous_value = SiteSetting.send(id) || ""
     json = {}
+    no_of_days = ((Time.now - 1.month.ago) / (24 * 60 * 60)).ceil
 
     if (user_option = user_options[id.to_sym]).present?
       if user_option == "text_size_key"
@@ -127,18 +128,20 @@ class Admin::SiteSettingsController < Admin::AdminController
       case id
       when "default_categories_watching"
         notification_level = NotificationLevels.all[:watching]
-        notification_count_column = "posts_day"
+        notification_count_column = "posts_month"
       when "default_categories_tracking"
         notification_level = NotificationLevels.all[:tracking]
       when "default_categories_muted"
         notification_level = NotificationLevels.all[:muted]
       when "default_categories_watching_first_post"
         notification_level = NotificationLevels.all[:watching_first_post]
-        notification_count_column = "topics_day"
+        notification_count_column = "topics_month"
       end
 
       users = users_without_category_notification(new_category_ids - previous_category_ids)
-      notification_count += users.sum("c.#{notification_count_column}") if notification_count_column.present?
+      if notification_count_column.present?
+        notification_count = users.group("c.id").pluck("c.#{notification_count_column} * COUNT(users.id)").sum / no_of_days
+      end
 
       if notification_count > MAX_NOTIFICATION_COUNT
         json[:user_count] = 0
@@ -150,27 +153,44 @@ class Admin::SiteSettingsController < Admin::AdminController
     elsif id.start_with?("default_tags_")
       previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
       new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
+      notification_type = nil
+      notification_count = 0
 
       case id
       when "default_tags_watching"
         notification_level = TagUser.notification_levels[:watching]
+        notification_type = :posts
       when "default_tags_tracking"
         notification_level = TagUser.notification_levels[:tracking]
       when "default_tags_muted"
         notification_level = TagUser.notification_levels[:muted]
       when "default_tags_watching_first_post"
         notification_level = TagUser.notification_levels[:watching_first_post]
+        notification_type = :topics
       end
 
-      user_ids = TagUser.where(tag_id: previous_tag_ids - new_tag_ids, notification_level: notification_level).distinct.pluck(:user_id)
-      user_ids += User.real
-        .joins("CROSS JOIN tags t")
-        .joins("LEFT JOIN tag_users tu ON users.id = tu.user_id AND t.id = tu.tag_id")
-        .where("t.id IN (?) AND tu.notification_level IS NULL", new_tag_ids - previous_tag_ids)
-        .distinct
-        .pluck("users.id")
+      if notification_type.present?
+        Tag.where(id: new_tag_ids - previous_tag_ids).each do |tag|
+          user_count = users_without_tag_notification([tag.id]).count
 
-      json[:user_count] = user_ids.uniq.count
+          if notification_type == :topics
+            notification_count += tag.topics.created_since(1.month.ago).count * user_count
+          else
+            notification_count += tag.topics.joins(:posts).where("posts.created_at > ?", 1.month.ago).count * user_count
+          end
+        end
+
+        notification_count /= no_of_days
+      end
+
+      if notification_count > MAX_NOTIFICATION_COUNT
+        json[:user_count] = 0
+      else
+        user_ids = TagUser.where(tag_id: previous_tag_ids - new_tag_ids, notification_level: notification_level).distinct.pluck(:user_id)
+        user_ids += users_without_tag_notification(new_tag_ids - previous_tag_ids).distinct.pluck("users.id")
+
+        json[:user_count] = user_ids.uniq.count
+      end
     end
 
     render json: json
