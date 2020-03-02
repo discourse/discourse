@@ -97,10 +97,19 @@ RSpec.describe UploadSecurity do
 
     context "when the access control post has_secure_media?" do
       before do
-        upload.update(access_control_post: post_in_secure_context)
+        upload.update(access_control_post_id: post_in_secure_context.id)
       end
       it "returns true" do
         expect(subject.should_be_secure?).to eq(true)
+      end
+
+      context "when the post is deleted" do
+        before do
+          post_in_secure_context.trash!
+        end
+        it "still determines whether the post has secure media; returns true" do
+          expect(subject.should_be_secure?).to eq(true)
+        end
       end
     end
 
