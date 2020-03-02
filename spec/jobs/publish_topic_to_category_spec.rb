@@ -84,4 +84,22 @@ RSpec.describe Jobs::PublishTopicToCategory do
       expect(message.data[:refresh_stream]).to be_present
     end
   end
+
+  describe 'when new category has a default auto-close' do
+    before do
+      another_category.update!(auto_close_hours: 5)
+    end
+
+    it 'should apply the auto-close timer upon publishing' do
+      topic
+
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+
+      topic.reload
+      topic_timer = topic.public_topic_timer
+      expect(topic.category).to eq(another_category)
+      expect(topic_timer.status_type).to eq(TopicTimer.types[:close])
+      expect(topic_timer.execute_at).to be_within(1.second).of(5.hours.from_now)
+    end
+  end
 end
