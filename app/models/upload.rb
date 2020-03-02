@@ -14,6 +14,12 @@ class Upload < ActiveRecord::Base
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
 
+  # when we access this post we don't care if the post
+  # is deleted
+  def access_control_post
+    Post.unscoped { super }
+  end
+
   has_many :post_uploads, dependent: :destroy
   has_many :posts, through: :post_uploads
 
