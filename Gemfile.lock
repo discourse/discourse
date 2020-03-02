@@ -252,7 +252,7 @@ GEM
     parallel (1.19.1)
     parallel_tests (2.31.0)
       parallel
-    parser (2.7.0.2)
+    parser (2.7.0.4)
       ast (~> 2.4.0)
     pg (1.2.2)
     progress (3.5.2)
@@ -339,7 +339,7 @@ GEM
       rspec-support (~> 3.8)
     rspec-support (3.9.2)
     rtlit (0.0.5)
-    rubocop (0.80.0)
+    rubocop (0.80.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.7.0.1)
