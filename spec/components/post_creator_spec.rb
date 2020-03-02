@@ -319,7 +319,7 @@ describe PostCreator do
         first_post = creator.create
         topic = first_post.topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(first_post.created_at)
+        expect(topic.last_posted_at).to eq_time(first_post.created_at)
         expect(topic.last_post_user_id).to eq(first_post.user_id)
         expect(topic.word_count).to eq(4)
       end
@@ -358,8 +358,8 @@ describe PostCreator do
           topic.reload
 
           topic_status_update = TopicTimer.last
-          expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
-          expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
+          expect(topic_status_update.execute_at).to eq_time(12.hours.from_now)
+          expect(topic_status_update.created_at).to eq_time(Time.zone.now)
         end
 
         describe "topic's auto close based on last post" do
@@ -491,7 +491,6 @@ describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it 'whispers do not mess up the public view' do
-
       # turns out this can fail on leap years if we don't do this
       freeze_time DateTime.parse('2010-01-01 12:00')
 
@@ -545,7 +544,7 @@ describe PostCreator do
       expect(topic.reply_count).to eq(0)
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
-      expect(topic.last_posted_at).to be_within(1.seconds).of(first.created_at)
+      expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.last_post_user_id).to eq(first.user_id)
       expect(topic.word_count).to eq(5)
 
@@ -691,7 +690,7 @@ describe PostCreator do
         post = creator.create
         topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_posted_at).to eq_time(post.created_at)
         expect(topic.last_post_user_id).to eq(post.user_id)
         expect(topic.word_count).to eq(6)
       end
@@ -702,7 +701,7 @@ describe PostCreator do
         post = creator.create
         topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_posted_at).to eq_time(post.created_at)
         expect(topic.last_post_user_id).to eq(post.user_id)
         expect(topic.word_count).to eq(6)
       end
@@ -951,24 +950,22 @@ describe PostCreator do
   end
 
   context 'setting created_at' do
-    created_at = 1.week.ago
-    let(:topic) do
-      PostCreator.create(user,
-                         raw: 'This is very interesting test post content',
-                         title: 'This is a very interesting test post title',
-                         created_at: created_at)
-    end
-
-    let(:post) do
-      PostCreator.create(user,
-                         raw: 'This is very interesting test post content',
-                         topic_id: Topic.last,
-                         created_at: created_at)
-    end
-
     it 'acts correctly' do
-      expect(topic.created_at).to be_within(10.seconds).of(created_at)
-      expect(post.created_at).to be_within(10.seconds).of(created_at)
+      freeze_time
+
+      topic = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        title: 'This is a very interesting test post title',
+        created_at: 1.week.ago
+      )
+      post = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        topic_id: Topic.last,
+        created_at: 1.week.ago
+      )
+
+      expect(topic.created_at).to eq_time(1.week.ago)
+      expect(post.created_at).to eq_time(1.week.ago)
     end
   end
 

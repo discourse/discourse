@@ -192,18 +192,19 @@ describe Jobs::UserEmail do
   end
 
   context "email_log" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post, created_at: 30.seconds.ago) }
 
     before do
       SiteSetting.editing_grace_period = 0
-      post
     end
 
     it "creates an email log when the mail is sent (via Email::Sender)" do
+      freeze_time
+      Topic.last.update(created_at: 1.minute.ago)
       last_emailed_at = user.last_emailed_at
 
       expect do
-        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id,)
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
       end.to change { EmailLog.count }.by(1)
 
       email_log = EmailLog.last

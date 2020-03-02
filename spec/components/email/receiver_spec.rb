@@ -656,8 +656,9 @@ describe Email::Receiver do
     end
 
     it "ensures posts aren't dated in the future" do
+      freeze_time
       expect { process(:from_the_future) }.to change { topic.posts.count }
-      expect(topic.posts.last.created_at).to be_within(1.minute).of(DateTime.now)
+      expect(topic.posts.last.created_at).to eq_time(Time.zone.now)
     end
 
     it "accepts emails with wrong reply key if the system knows about the forwarded email" do

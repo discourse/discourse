@@ -145,6 +145,7 @@ describe PostActionCreator do
         before { reviewable.perform(admin, :ignore) }
 
         it "fails because the post was recently reviewed" do
+          freeze_time 10.seconds.from_now
           result = PostActionCreator.create(user, post, :inappropriate)
 
           expect(result.success?).to eq(false)
