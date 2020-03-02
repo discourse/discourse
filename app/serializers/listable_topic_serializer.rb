@@ -9,6 +9,7 @@ class ListableTopicSerializer < BasicTopicSerializer
              :last_posted_at,
              :bumped,
              :bumped_at,
+             :archetype,
              :unseen,
              :last_read_post_number,
              :unread,

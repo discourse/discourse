@@ -36,7 +36,7 @@
 
         {{#if canBulkSelect}}
           {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
-          {{bulk-select-button selected=selected action=(action "search")}}
+          {{bulk-select-button selected=selected category=category action=(action "search")}}
         {{/if}}
 
         {{#if bulkSelectEnabled}}
@@ -85,7 +85,8 @@
                   {{/if}}
 
                   <a class='search-link' href='{{unbound result.url}}' {{action "logClick" result.topic_id}}>
-                    {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+                    {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
+                    <span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
                   </a>
 
                   <div class='search-category'>
@@ -210,6 +211,7 @@
         {{search-advanced-options
           searchTerm=searchTerm
           isExpanded=true
+          category=category
         }}
 
         {{d-button

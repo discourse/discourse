@@ -475,7 +475,7 @@ class User < ActiveRecord::Base
     @unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
-    @user_fields = nil
+    @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
     super
@@ -1093,16 +1093,20 @@ class User < ActiveRecord::Base
 
   USER_FIELD_PREFIX ||= "user_field_"
 
-  def user_fields
-    return @user_fields if @user_fields
-    user_field_ids = UserField.pluck(:id)
-    if user_field_ids.present?
-      @user_fields = {}
-      user_field_ids.each do |fid|
-        @user_fields[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
+  def user_fields(field_ids = nil)
+    if field_ids.nil?
+      field_ids = (@all_user_field_ids ||= UserField.pluck(:id))
+    end
+
+    @user_fields_cache ||= {}
+
+    # Memoize based on requested fields
+    @user_fields_cache[field_ids.join(':')] ||= {}.tap do |hash|
+      field_ids.each do |fid|
+        # The hash keys are strings for backwards compatibility
+        hash[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
       end
     end
-    @user_fields
   end
 
   def number_of_deleted_posts

@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import ColorSchemeColor from "admin/models/color-scheme-color";
 import EmberObject from "@ember/object";
 
-const ColorScheme = EmberObject.extend(Ember.Copyable, {
+const ColorScheme = EmberObject.extend({
   init() {
     this._super(...arguments);
 

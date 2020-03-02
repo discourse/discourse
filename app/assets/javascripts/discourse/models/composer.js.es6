@@ -912,7 +912,7 @@ const Composer = RestModel.extend({
   },
 
   createPost(opts) {
-    if (this.action === CREATE_TOPIC) {
+    if (CREATE_TOPIC === this.action || PRIVATE_MESSAGE === this.action) {
       this.set("topic", null);
     }
 

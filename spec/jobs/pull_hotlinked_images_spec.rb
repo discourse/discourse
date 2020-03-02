@@ -83,6 +83,17 @@ describe Jobs::PullHotlinkedImages do
       RAW
     end
 
+    it 'replaces correct image URL' do
+      url = image_url.sub("/2e/Longcat1.png", '')
+      post = Fabricate(:post, raw: "[Images](#{url})\n![](#{image_url})")
+
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
+
+      expect(post.reload.raw).to eq("[Images](#{url})\n![](#{Upload.last.short_url})")
+    end
+
     it 'replaces images without protocol' do
       url = image_url.sub(/^https?\:/, '')
       post = Fabricate(:post, raw: "<img alt='test' src='#{url}'>")

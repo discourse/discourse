@@ -217,6 +217,9 @@
   padding: 6px;
   font-size: $font-down-1;
   min-height: 20px;
+  .d-icon {
+    max-height: 0.87em;
+  }
 }
 
 // Large

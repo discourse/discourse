@@ -7,6 +7,6 @@ export default DiscourseRoute.extend({
   },
 
   model(params) {
-    return ajax(`/session/email-login/${params.token}`);
+    return ajax(`/session/email-login/${params.token}.json`);
   }
 });

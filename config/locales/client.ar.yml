@@ -2490,15 +2490,6 @@ ar:
           name: أخرى
         posting:
           name: النشر
-    google_search: |
-      <h3>ابحث باستخدام غوغل</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">غوغل</button>
-      </form>
-      </p>
     tagging:
       all_tags: "كل الأوسمة"
       selector_all_tags: "كل الأوسمة"

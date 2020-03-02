@@ -2515,15 +2515,6 @@ zh_TW:
           name: 其它
         posting:
           name: 發文
-    google_search: |
-      <h3>用 Google 搜索</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "所有標籤"
       other_tags: "其他標籤"

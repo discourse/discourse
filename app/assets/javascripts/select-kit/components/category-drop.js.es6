@@ -155,18 +155,16 @@ export default ComboBoxComponent.extend({
   },
 
   actions: {
-    onChange(value) {
+    onChange(categoryId) {
       let categoryURL;
 
-      if (value === ALL_CATEGORIES_ID) {
+      if (categoryId === ALL_CATEGORIES_ID) {
         categoryURL = this.allCategoriesUrl;
-      } else if (value === NO_CATEGORIES_ID) {
+      } else if (categoryId === NO_CATEGORIES_ID) {
         categoryURL = this.noCategoriesUrl;
       } else {
-        const categoryId = parseInt(value, 10);
-        const category = Category.findById(categoryId);
-        const slug = Discourse.Category.slugFor(category);
-        categoryURL = `/c/${slug}`;
+        const category = Category.findById(parseInt(categoryId, 10));
+        categoryURL = category.url;
       }
 
       DiscourseURL.routeToUrl(categoryURL);

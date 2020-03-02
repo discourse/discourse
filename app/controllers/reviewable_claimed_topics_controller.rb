@@ -4,7 +4,7 @@ class ReviewableClaimedTopicsController < ApplicationController
   requires_login
 
   def create
-    topic = Topic.find_by(id: params[:reviewable_claimed_topic][:topic_id])
+    topic = Topic.with_deleted.find_by(id: params[:reviewable_claimed_topic][:topic_id])
     guardian.ensure_can_claim_reviewable_topic!(topic)
 
     begin
@@ -22,7 +22,7 @@ class ReviewableClaimedTopicsController < ApplicationController
   end
 
   def destroy
-    topic = Topic.find_by(id: params[:id])
+    topic = Topic.with_deleted.find_by(id: params[:id])
     raise Discourse::NotFound if topic.blank?
 
     guardian.ensure_can_claim_reviewable_topic!(topic)
