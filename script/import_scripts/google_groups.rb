@@ -158,12 +158,11 @@ def login
   get("https://google.com/404")
 
   add_cookies(
-    "accounts.google.com",
     "myaccount.google.com",
     "google.com"
   )
 
-  get("https://accounts.google.com/servicelogin")
+  get("https://myaccount.google.com/?utm_source=sign_in_no_continue")
 
   begin
     wait_for_url { |url| url.start_with?("https://myaccount.google.com") }
