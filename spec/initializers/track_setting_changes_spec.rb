@@ -14,7 +14,7 @@ describe 'Setting changes' do
       expect(user_pending_approval.reload.approved?).to eq(false)
     end
 
-    it 'approves a users with no associated reviewables' do
+    it 'approves a user with no associated reviewables' do
       non_approved_user = Fabricate(:user, approved: false)
 
       SiteSetting.must_approve_users = true
