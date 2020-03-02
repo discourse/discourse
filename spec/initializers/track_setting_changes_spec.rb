@@ -6,7 +6,7 @@ describe 'Setting changes' do
   describe '#must_approve_users' do
     before { SiteSetting.must_approve_users = false }
 
-    it 'does not approve a users with an associated reviewables' do
+    it 'does not approve a user with associated reviewables' do
       user_pending_approval = Fabricate(:reviewable_user).target
 
       SiteSetting.must_approve_users = true
