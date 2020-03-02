@@ -446,7 +446,7 @@ QUnit.test("storePost", assert => {
   assert.equal(stored, postWithoutId, "it returns the same post back");
 });
 
-QUnit.test("identity map", assert => {
+QUnit.test("identity map", async assert => {
   const postStream = buildStream(1234);
   const store = postStream.store;
 
@@ -465,34 +465,29 @@ QUnit.test("identity map", assert => {
   assert.blank(postStream.findLoadedPost(4), "it can't find uncached posts");
 
   // Find posts by ids uses the identity map
-  return postStream.findPostsByIds([1, 2, 3]).then(result => {
-    assert.equal(result.length, 3);
-    assert.equal(result.objectAt(0), p1);
-    assert.equal(result.objectAt(1).get("post_number"), 2);
-    assert.equal(result.objectAt(2), p3);
-  });
+  const result = await postStream.findPostsByIds([1, 2, 3]);
+  assert.equal(result.length, 3);
+  assert.equal(result.objectAt(0), p1);
+  assert.equal(result.objectAt(1).get("post_number"), 2);
+  assert.equal(result.objectAt(2), p3);
 });
 
-QUnit.test("loadIntoIdentityMap with no data", assert => {
-  return buildStream(1234)
-    .loadIntoIdentityMap([])
-    .then(result => {
-      assert.equal(result.length, 0, "requesting no posts produces no posts");
-    });
+QUnit.test("loadIntoIdentityMap with no data", async assert => {
+  const result = await buildStream(1234).loadIntoIdentityMap([]);
+  assert.equal(result.length, 0, "requesting no posts produces no posts");
 });
 
-QUnit.test("loadIntoIdentityMap with post ids", assert => {
+QUnit.test("loadIntoIdentityMap with post ids", async assert => {
   const postStream = buildStream(1234);
+  await postStream.loadIntoIdentityMap([10]);
 
-  return postStream.loadIntoIdentityMap([10]).then(function() {
-    assert.present(
-      postStream.findLoadedPost(10),
-      "it adds the returned post to the store"
-    );
-  });
+  assert.present(
+    postStream.findLoadedPost(10),
+    "it adds the returned post to the store"
+  );
 });
 
-QUnit.test("appendMore for megatopic", assert => {
+QUnit.test("appendMore for megatopic", async assert => {
   const postStream = buildStream(1234);
   const store = createStore();
   const post = store.createRecord("post", { id: 1, post_number: 1 });
@@ -502,21 +497,20 @@ QUnit.test("appendMore for megatopic", assert => {
     posts: [post]
   });
 
-  return postStream.appendMore().then(() => {
-    assert.present(
-      postStream.findLoadedPost(2),
-      "it adds the returned post to the store"
-    );
+  await postStream.appendMore();
+  assert.present(
+    postStream.findLoadedPost(2),
+    "it adds the returned post to the store"
+  );
 
-    assert.equal(
-      postStream.get("posts").length,
-      6,
-      "it adds the right posts into the stream"
-    );
-  });
+  assert.equal(
+    postStream.get("posts").length,
+    6,
+    "it adds the right posts into the stream"
+  );
 });
 
-QUnit.test("prependMore for megatopic", assert => {
+QUnit.test("prependMore for megatopic", async assert => {
   const postStream = buildStream(1234);
   const store = createStore();
   const post = store.createRecord("post", { id: 6, post_number: 6 });
@@ -526,18 +520,17 @@ QUnit.test("prependMore for megatopic", assert => {
     posts: [post]
   });
 
-  return postStream.prependMore().then(() => {
-    assert.present(
-      postStream.findLoadedPost(5),
-      "it adds the returned post to the store"
-    );
+  await postStream.prependMore();
+  assert.present(
+    postStream.findLoadedPost(5),
+    "it adds the returned post to the store"
+  );
 
-    assert.equal(
-      postStream.get("posts").length,
-      6,
-      "it adds the right posts into the stream"
-    );
-  });
+  assert.equal(
+    postStream.get("posts").length,
+    6,
+    "it adds the right posts into the stream"
+  );
 });
 
 QUnit.test("staging and undoing a new post", assert => {
@@ -865,7 +858,7 @@ QUnit.test("triggerNewPostInStream for ignored posts", async assert => {
   );
 });
 
-QUnit.test("postsWithPlaceholders", assert => {
+QUnit.test("postsWithPlaceholders", async assert => {
   const postStream = buildStream(4964, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const postsWithPlaceholders = postStream.get("postsWithPlaceholders");
   const store = postStream.store;
@@ -903,16 +896,15 @@ QUnit.test("postsWithPlaceholders", assert => {
   assert.ok(postsWithPlaceholders.objectAt(3) !== p4);
   assert.ok(testProxy.objectAt(3) !== p4);
 
-  return promise.then(() => {
-    assert.equal(postsWithPlaceholders.objectAt(3), p4);
-    assert.equal(
-      postsWithPlaceholders.get("length"),
-      8,
-      "have a larger placeholder window when loaded"
-    );
-    assert.equal(testProxy.get("length"), 8);
-    assert.equal(testProxy.objectAt(3), p4);
-  });
+  await promise;
+  assert.equal(postsWithPlaceholders.objectAt(3), p4);
+  assert.equal(
+    postsWithPlaceholders.get("length"),
+    8,
+    "have a larger placeholder window when loaded"
+  );
+  assert.equal(testProxy.get("length"), 8);
+  assert.equal(testProxy.objectAt(3), p4);
 });
 
 QUnit.test("filteredPostsCount", assert => {

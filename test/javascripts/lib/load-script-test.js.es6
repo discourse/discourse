@@ -12,11 +12,10 @@ QUnit.skip(
 
     const src = "/javascripts/ace/ace.js";
 
-    await loadScript(src).then(() => {
-      assert.ok(
-        typeof window.ace !== "undefined",
-        "callbacks should only be executed after the script has fully loaded"
-      );
-    });
+    await loadScript(src);
+    assert.ok(
+      typeof window.ace !== "undefined",
+      "callbacks should only be executed after the script has fully loaded"
+    );
   }
 );
