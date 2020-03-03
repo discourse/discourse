@@ -5,7 +5,7 @@ export default Component.extend({
   classNames: ["tap-tile"],
   classNameBindings: ["active"],
   click() {
-    this.onSelect(this.tileId);
+    this.onChange(this.tileId);
   },
 
   active: propertyEqual("activeTile", "tileId")

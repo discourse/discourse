@@ -22,8 +22,7 @@ RSpec.describe BookmarkManager do
     end
 
     context "when a reminder time + type is provided" do
-      it "saves the values correctly and enqueues a reminder job" do
-        Jobs.expects(:enqueue_at).with(reminder_at, :bookmark_reminder, has_key(:bookmark_id))
+      it "saves the values correctly" do
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         bookmark = Bookmark.find_by(user: user)
 
@@ -36,12 +35,12 @@ RSpec.describe BookmarkManager do
       let(:reminder_type) { 'at_desktop' }
       let(:reminder_at) { nil }
 
-      it "does not enqueue the job; this is a special case which needs client-side logic" do
+      it "this is a special case which needs client-side logic" do
         Jobs.expects(:enqueue_at).never
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         bookmark = Bookmark.find_by(user: user)
 
-        expect(bookmark.reminder_at).to eq(reminder_at)
+        expect(bookmark.reminder_at).to eq(nil)
         expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:at_desktop])
       end
     end
@@ -103,17 +102,6 @@ RSpec.describe BookmarkManager do
         expect { subject.destroy(9999) }.to raise_error(Discourse::NotFound)
       end
     end
-
-    context "if the bookmark is scheduled with a reminder in sidekiq" do
-      before do
-        # this returns an array of Sidekiq::SortedEntry normally
-        Jobs.stubs(:scheduled_for).returns([true])
-      end
-      it "cancells the reminder job" do
-        Jobs.expects(:cancel_scheduled_job).with(:bookmark_reminder, bookmark_id: bookmark.id)
-        subject.destroy(bookmark.id)
-      end
-    end
   end
 
   describe ".destroy_for_topic" do
@@ -131,6 +119,49 @@ RSpec.describe BookmarkManager do
       Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user2)
       subject.destroy_for_topic(topic)
       expect(Bookmark.where(user: user2, topic: topic).length).to eq(1)
+    end
+  end
+
+  describe ".send_reminder_notification" do
+    let(:bookmark) { Fabricate(:bookmark, user: user) }
+    it "clears the reminder_at and sets the reminder_last_sent_at" do
+      expect(bookmark.reminder_last_sent_at).to eq(nil)
+      described_class.send_reminder_notification(bookmark.id)
+      bookmark.reload
+      expect(bookmark.reminder_at).to eq(nil)
+      expect(bookmark.reminder_last_sent_at).not_to eq(nil)
+    end
+
+    it "creates a notification for the reminder" do
+      described_class.send_reminder_notification(bookmark.id)
+      notif = notifications_for_user.last
+      expect(notif.post_number).to eq(bookmark.post.post_number)
+    end
+
+    context "when the bookmark does no longer exist" do
+      before do
+        bookmark.destroy
+      end
+      it "does not error, and does not create a notification" do
+        described_class.send_reminder_notification(bookmark.id)
+        expect(notifications_for_user.any?).to eq(false)
+      end
+    end
+
+    context "if the post has been deleted" do
+      before do
+        bookmark.post.trash!
+      end
+      it "does not error, and does not create a notification, and clears the reminder" do
+        described_class.send_reminder_notification(bookmark.id)
+        bookmark.reload
+        expect(bookmark.reminder_at).to eq(nil)
+        expect(notifications_for_user.any?).to eq(false)
+      end
+    end
+
+    def notifications_for_user
+      Notification.where(notification_type: Notification.types[:bookmark_reminder], user_id: bookmark.user.id)
     end
   end
 end
