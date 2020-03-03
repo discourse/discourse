@@ -9,6 +9,11 @@ export function lookupCachedUploadUrl(shortUrl) {
 const MISSING = "missing";
 
 export function lookupUncachedUploadUrls(urls, ajax) {
+  urls = _.compact(urls);
+  if (urls.length === 0) {
+    return;
+  }
+
   return ajax("/uploads/lookup-urls", {
     method: "POST",
     data: { short_urls: urls }
@@ -106,7 +111,7 @@ function _loadCachedShortUrls($uploads) {
 }
 
 function _loadShortUrls($uploads, ajax) {
-  const urls = $uploads.toArray().map(upload => {
+  let urls = $uploads.toArray().map(upload => {
     const $upload = $(upload);
     return $upload.data("orig-src") || $upload.data("orig-href");
   });
