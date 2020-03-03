@@ -35,8 +35,7 @@ RSpec.describe BookmarkManager do
       let(:reminder_type) { 'at_desktop' }
       let(:reminder_at) { nil }
 
-      it "this is a special case which needs client-side logic" do
-        Jobs.expects(:enqueue_at).never
+      it "this is a special case which needs client-side logic and has no reminder_at datetime" do
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         bookmark = Bookmark.find_by(user: user)
 
