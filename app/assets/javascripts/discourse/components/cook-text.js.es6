@@ -16,7 +16,7 @@ const CookText = Component.extend({
       next(() =>
         window
           .requireModule("pretty-text/upload-short-url")
-          .resolveAllShortUrls(ajax)
+          .resolveAllShortUrls(ajax, this.siteSettings)
       );
     });
   }
