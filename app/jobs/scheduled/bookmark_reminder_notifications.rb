@@ -13,13 +13,9 @@ module Jobs
     def execute(args = nil)
       return if !SiteSetting.enable_bookmarks_with_reminders?
 
-      where_clause = <<-SQL
-        reminder_at IS NOT NULL AND reminder_type != :at_desktop
-        AND reminder_at <= :now
-      SQL
-      bookmarks = Bookmark.where(
-        where_clause, at_desktop: Bookmark.reminder_types[:at_desktop], now: Time.now.utc
-      ).includes(:user).order('reminder_at ASC')
+      bookmarks = Bookmark.pending_reminders
+        .where.not(reminder_type: Bookmark.reminder_types[:at_desktop])
+        .includes(:user).order('reminder_at ASC')
 
       bookmarks.limit(MAX_REMINDER_NOTIFICATIONS_PER_RUN).each do |bookmark|
         BookmarkReminderNotificationHandler.send_notification(bookmark)

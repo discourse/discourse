@@ -29,6 +29,14 @@ class Bookmark < ActiveRecord::Base
     end
   end
 
+  scope :pending_reminders, ->(before_time = Time.now.utc) do
+    where("reminder_at IS NOT NULL AND reminder_at <= :before_time", before_time: before_time)
+  end
+
+  scope :pending_reminders_for_user, ->(user) do
+    pending_reminders.where(user: user)
+  end
+
   def self.reminder_types
     @reminder_type = Enum.new(
       at_desktop: 0,
