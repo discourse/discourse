@@ -1012,6 +1012,32 @@ QUnit.test("video", assert => {
   );
 });
 
+QUnit.test("video - mapped url - secure media enabled", assert => {
+  function lookupUploadUrls() {
+    let cache = {};
+    cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4"] = {
+      short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4",
+      url: "/secure-media-uploads/original/3X/c/b/test.mp4",
+      short_path: "/uploads/short-url/blah"
+    };
+    return cache;
+  }
+  assert.cookedOptions(
+    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
+    {
+      siteSettings: { secure_media: true },
+      lookupUploadUrls: lookupUploadUrls
+    },
+    `<p><div class="video-container">
+    <video width="100%" height="100%" preload="none" controls>
+      <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
+      <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
+    </video>
+  </div></p>`,
+    "It returns the correct video HTML when the URL is mapped with secure media, removing data-orig-src"
+  );
+});
+
 QUnit.test("audio", assert => {
   assert.cooked(
     "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
@@ -1020,6 +1046,30 @@ QUnit.test("audio", assert => {
     <a href="/404">/404</a>
   </audio></p>`,
     "It returns the correct audio player HTML"
+  );
+});
+
+QUnit.test("audio - mapped url - secure media enabled", assert => {
+  function lookupUploadUrls() {
+    let cache = {};
+    cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3"] = {
+      short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3",
+      url: "/secure-media-uploads/original/3X/c/b/test.mp3",
+      short_path: "/uploads/short-url/blah"
+    };
+    return cache;
+  }
+  assert.cookedOptions(
+    "![baby shark|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
+    {
+      siteSettings: { secure_media: true },
+      lookupUploadUrls: lookupUploadUrls
+    },
+    `<p><audio preload="none" controls>
+    <source src="/secure-media-uploads/original/3X/c/b/test.mp3">
+    <a href="/secure-media-uploads/original/3X/c/b/test.mp3">/secure-media-uploads/original/3X/c/b/test.mp3</a>
+  </audio></p>`,
+    "It returns the correct audio HTML when the URL is mapped with secure media, removing data-orig-src"
   );
 });
 
