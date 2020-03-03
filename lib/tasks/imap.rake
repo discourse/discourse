@@ -11,15 +11,15 @@ task "imap:sync" => :environment do
       puts "Syncing emails for group #{group.name} (#{group.id})...\n"
       imap_sync = Imap::Sync.for_group(group,
         import_limit: 0,
-        old_emails_limit: 500,
-        new_emails_limit: 200
+        old_emails_limit: 1000,
+        new_emails_limit: 250
       )
 
       begin
         loop do
           status = imap_sync.process
-          print "#{status.remaining}... "
-          break if status.remaining == 0
+          print "#{status[:remaining]}... "
+          break if status[:remaining] == 0
         end
 
         puts "DONE!\n"

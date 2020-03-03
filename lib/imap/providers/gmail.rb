@@ -9,10 +9,10 @@ module Imap
         @imap ||= super.tap { |imap| apply_gmail_patch(imap) }
       end
 
-      def emails(mailbox_name, uids, fields)
+      def emails(uids, fields, opts = {})
         fields[fields.index('LABELS')] = X_GM_LABELS
 
-        emails = super(mailbox_name, uids, fields)
+        emails = super(uids, fields, opts)
 
         emails.each do |email|
           email['LABELS'] = Array(email['LABELS'])
@@ -22,7 +22,7 @@ module Imap
             email['LABELS'].flatten!
           end
 
-          email['LABELS'] << '\\Inbox' if mailbox_name == 'INBOX'
+          email['LABELS'] << '\\Inbox' if opts[:mailbox] == 'INBOX'
 
           email['LABELS'].uniq!
         end
@@ -64,6 +64,7 @@ module Imap
 
           # Modified version of the original `msg_att` from here:
           # https://github.com/ruby/ruby/blob/1cc8ff001da217d0e98d13fe61fbc9f5547ef722/lib/net/imap.rb#L2346
+          # rubocop:disable Style/RedundantReturn
           def msg_att(n)
             match(T_LPAR)
             attr = {}
@@ -136,7 +137,7 @@ module Imap
             end
             return name, result
           end
-
+          # rubocop:enable Style/RedundantReturn
         end
       end
     end

@@ -38,9 +38,15 @@ module Imap
       @provider.disconnect!
     end
 
+    def can_idle?
+      SiteSetting.enable_imap_idle && @provider.can?('IDLE')
+    end
+
     def process(idle: false)
       # IMAP server -> Discourse (download): discovers updates to old emails
       # (synced emails) and fetches new emails.
+
+      # TODO: Use `Net::IMAP.encode_utf7(@group.imap_mailbox_name)`?
       @status = @provider.open_mailbox(@group.imap_mailbox_name)
 
       if @status[:uid_validity] != @group.imap_uid_validity
@@ -63,10 +69,8 @@ module Imap
         # back to the pool.
         ActiveRecord::Base.connection_handler.clear_active_connections!
 
-        last_response_name = nil
         @provider.imap.idle do |resp|
           if resp.kind_of?(Net::IMAP::UntaggedResponse) && resp.name == 'EXISTS'
-            last_response_name = resp.name
             @provider.imap.idle_done
           end
         end
@@ -144,10 +148,7 @@ module Imap
         end
       end
 
-      {
-        idle: idle,
-        remaining: all_new_uids_size - new_uids.size
-      }
+      { remaining: all_new_uids_size - new_uids.size }
     end
 
     def update_topic(email, incoming_email, opts = {})
@@ -208,7 +209,7 @@ module Imap
     def update_email(mailbox_name, incoming_email)
       return if !SiteSetting.tagging_enabled || !SiteSetting.allow_staff_to_tag_pms
       return if incoming_email&.post&.post_number != 1 || !incoming_email.imap_sync
-      return unless email = @provider.emails(mailbox_name, incoming_email.imap_uid, ['FLAGS', 'LABELS']).first
+      return unless email = @provider.emails(incoming_email.imap_uid, ['FLAGS', 'LABELS'], mailbox: mailbox_name).first
       incoming_email.update(imap_sync: false)
 
       labels = email['LABELS']
@@ -222,6 +223,7 @@ module Imap
       # Sync topic status and labels with email flags and labels.
       tags = topic.tags.pluck(:name)
       new_flags = tags.map { |tag| @provider.tag_to_flag(tag) }.reject(&:blank?)
+      # new_flags << Net::IMAP::DELETED if !incoming_email.topic
       new_labels = tags.map { |tag| @provider.tag_to_label(tag) }.reject(&:blank?)
       new_labels << '\\Inbox' if topic.group_archived_messages.length == 0
       @provider.store(incoming_email.imap_uid, 'FLAGS', flags, new_flags)

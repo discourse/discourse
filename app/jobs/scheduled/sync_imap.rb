@@ -3,14 +3,14 @@
 require_dependency 'imap/sync'
 
 module Jobs
-  class SyncImapIdle < ::Jobs::Scheduled
-    LOCK_KEY ||= 'sync_imap_idle'
+  class SyncImap < ::Jobs::Scheduled
+    LOCK_KEY ||= 'sync_imap'
 
     every 30.seconds
-    queue :imap_idle
+    queue :imap
 
     def execute(args)
-      return if !SiteSetting.enable_imap || !SiteSetting.enable_imap_idle || !Discourse.redis.set(LOCK_KEY, 1, ex: 60.seconds, nx: true)
+      return if !SiteSetting.enable_imap || !Discourse.redis.set(LOCK_KEY, 1, ex: 60.seconds, nx: true)
 
       @running = true
       @sync_data = {}
@@ -20,7 +20,6 @@ module Jobs
       trap('TERM') { kill_threads }
       trap('HUP')  { kill_threads }
 
-      # Ensure there is always one thread for each synced group mailbox.
       while @running
         Discourse.redis.set(LOCK_KEY, 1, ex: 60.seconds)
         groups = Group.where.not(imap_mailbox_name: '').map { |group| [group.id, group] }.to_h
@@ -31,9 +30,9 @@ module Jobs
             next true if groups[group_id] && data[:thread]&.alive?
 
             if !groups[group_id]
-              Rails.logger.info("[IMAP] Killing thread for #{groups[group_id].name} (#{group_id}) because group's mailbox is no longer synced.")
+              Rails.logger.info("[IMAP] Killing thread for group #{groups[group_id].name} because mailbox is no longer synced")
             else
-              Rails.logger.warn("[IMAP] Thread for #{groups[group_id].name} (#{group_id}) is dead.")
+              Rails.logger.warn("[IMAP] Thread for group #{groups[group_id].name} is dead")
             end
 
             data[:thread].kill
@@ -46,7 +45,7 @@ module Jobs
           # Spawn new threads for groups that are now synchronized.
           groups.each do |id, group|
             if !@sync_data[id]
-              Rails.logger.info("[IMAP] Starting IMAP IDLE thread for #{group.name} (#{group.id}) / #{group.imap_mailbox_name}.")
+              Rails.logger.info("[IMAP] Starting thread for group #{group.name} and mailbox #{group.imap_mailbox_name}")
               @sync_data[id] = { thread: start_thread(group) }
             end
           end
@@ -56,7 +55,7 @@ module Jobs
         # connection back to the pool.
         ActiveRecord::Base.connection_handler.clear_active_connections!
 
-        sleep 5
+        sleep 30
       end
 
       @sync_lock.synchronize { kill_threads }
@@ -66,9 +65,24 @@ module Jobs
       Thread.new do
         obj = Imap::Sync.for_group(group)
         @sync_lock.synchronize { @sync_data[group.id][:obj] = obj }
+
+        status = nil
+        idle = false
+
         while @running && group.reload.imap_mailbox_name.present? do
-          obj.process(idle: true)
+          status = obj.process(idle: idle)
+
+          idle = obj.can_idle? && status[:remaining] == 0
+
+          if !idle && status[:remaining] == 0
+            # Thread goes into sleep for a bit so it is better to return any
+            # connection back to the pool.
+            ActiveRecord::Base.connection_handler.clear_active_connections!
+
+            sleep SiteSetting.imap_polling_period_mins.minutes
+          end
         end
+
         obj.disconnect!
       end
     end

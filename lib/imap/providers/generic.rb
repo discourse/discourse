@@ -21,7 +21,6 @@ module Imap
 
       def connect!
         imap.login(@username, @password)
-        @capabilities = imap.responses['CAPABILITY'][-1]
       end
 
       def disconnect!
@@ -30,6 +29,7 @@ module Imap
       end
 
       def can?(capability)
+        @capabilities ||= imap.responses['CAPABILITY'][-1] || imap.capability
         @capabilities.include?(capability)
       end
 
@@ -72,7 +72,7 @@ module Imap
         }
       end
 
-      def emails(mailbox_name, uids, fields)
+      def emails(uids, fields, opts = {})
         imap.uid_fetch(uids, fields).map do |email|
           attributes = {}
 
