@@ -1,4 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
+import pretender from "helpers/create-pretender";
 
 acceptance("Admin - Emails", { loggedIn: true });
 
@@ -16,15 +17,14 @@ Hello, this is a test!
 This part should be elided.`.trim();
 
 QUnit.test("shows selected and elided text", async assert => {
-  // prettier-ignore
-  server.post("/admin/email/advanced-test", () => { // eslint-disable-line no-undef
+  pretender.post("/admin/email/advanced-test", () => {
     return [
       200,
       { "Content-Type": "application/json" },
       {
         format: 1,
         text: "Hello, this is a test!",
-        elided: "---\n\nThis part should be elided.",
+        elided: "---\n\nThis part should be elided."
       }
     ];
   });

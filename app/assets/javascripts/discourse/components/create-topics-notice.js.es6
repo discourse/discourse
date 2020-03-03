@@ -68,21 +68,21 @@ export default Component.extend({
     "topicTrackingState.incomingCount"
   )
   message() {
-    var msg = null;
+    let msg = null;
 
     if (
       this.publicTopicCount < this.requiredTopics &&
       this.publicPostCount < this.requiredPosts
     ) {
-      msg = "too_few_topics_and_posts_notice";
+      msg = "too_few_topics_and_posts_notice_MF";
     } else if (this.publicTopicCount < this.requiredTopics) {
-      msg = "too_few_topics_notice";
+      msg = "too_few_topics_notice_MF";
     } else {
-      msg = "too_few_posts_notice";
+      msg = "too_few_posts_notice_MF";
     }
 
     return new Handlebars.SafeString(
-      I18n.t(msg, {
+      I18n.messageFormat(msg, {
         requiredTopics: this.requiredTopics,
         requiredPosts: this.requiredPosts,
         currentTopics: this.publicTopicCount,

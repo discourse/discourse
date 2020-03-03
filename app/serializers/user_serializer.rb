@@ -270,4 +270,16 @@ class UserSerializer < UserCardSerializer
     object.profile_background_upload&.url
   end
 
+  private
+
+  def custom_field_keys
+    fields = super
+
+    if scope.can_edit?(object)
+      fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a
+    end
+
+    fields
+  end
+
 end

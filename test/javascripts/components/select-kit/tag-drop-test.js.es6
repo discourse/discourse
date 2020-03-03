@@ -2,6 +2,7 @@ import componentTest from "helpers/component-test";
 import { testSelectKitModule } from "./select-kit-test-helper";
 import Site from "discourse/models/site";
 import { set } from "@ember/object";
+import pretender from "helpers/create-pretender";
 
 testSelectKitModule("tag-drop", {
   beforeEach() {
@@ -12,19 +13,14 @@ testSelectKitModule("tag-drop", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    // prettier-ignore
-    server.get("/tags/filter/search", (params) => { //eslint-disable-line
+    pretender.get("/tags/filter/search", params => {
       if (params.queryParams.q === "rég") {
         return response({
-          "results": [
-            { "id": "régis", "text": "régis", "count": 2, "pm_count": 0 }
-          ]
+          results: [{ id: "régis", text: "régis", count: 2, pm_count: 0 }]
         });
-      }else if (params.queryParams.q === "dav") {
+      } else if (params.queryParams.q === "dav") {
         return response({
-          "results": [
-            { "id": "David", "text": "David", "count": 2, "pm_count": 0 }
-          ]
+          results: [{ id: "David", text: "David", count: 2, pm_count: 0 }]
         });
       }
     });

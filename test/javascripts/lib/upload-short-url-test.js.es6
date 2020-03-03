@@ -5,6 +5,7 @@ import {
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { fixture } from "helpers/qunit-helpers";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:pretty-text/upload-short-url", {
   beforeEach() {
@@ -22,6 +23,11 @@ QUnit.module("lib:pretty-text/upload-short-url", {
         short_url: "upload://b.jpeg",
         url: "/uploads/default/original/3X/c/b/2.jpeg",
         short_path: "/uploads/short-url/b.jpeg"
+      },
+      {
+        short_url: "upload://z.jpeg",
+        url: "/uploads/default/original/3X/c/b/9.jpeg",
+        short_path: "/uploads/short-url/z.jpeg"
       }
     ];
 
@@ -46,14 +52,14 @@ QUnit.module("lib:pretty-text/upload-short-url", {
       }
     ];
 
-    // prettier-ignore
-    server.post("/uploads/lookup-urls", () => { //eslint-disable-line
+    pretender.post("/uploads/lookup-urls", () => {
       return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
     });
 
     fixture().html(
       imageSrcs.map(src => `<img data-orig-src="${src.url}">`).join("") +
-        attachmentSrcs.map(src => `<a data-orig-href="${src.url}">`).join("")
+        attachmentSrcs.map(src => `<a data-orig-href="${src.url}">`).join("") +
+        `<div class="scoped-area"><img data-orig-src="${imageSrcs[2].url}"></div>`
     );
   },
 
@@ -104,4 +110,24 @@ QUnit.test("resolveAllShortUrls", async assert => {
     url: "/uploads/default/original/3X/c/b/5.mp3",
     short_path: "/uploads/short-url/e.mp3"
   });
+});
+
+QUnit.test("resolveAllShortUrls - scoped", async assert => {
+  let lookup;
+  await resolveAllShortUrls(ajax, ".scoped-area");
+
+  lookup = lookupCachedUploadUrl("upload://z.jpeg");
+
+  assert.deepEqual(lookup, {
+    url: "/uploads/default/original/3X/c/b/9.jpeg",
+    short_path: "/uploads/short-url/z.jpeg"
+  });
+
+  // do this because the pretender caches ALL the urls, not
+  // just the ones being looked up (like the normal behaviour)
+  resetCache();
+  await resolveAllShortUrls(ajax, ".scoped-area");
+
+  lookup = lookupCachedUploadUrl("upload://a.jpeg");
+  assert.deepEqual(lookup, {});
 });

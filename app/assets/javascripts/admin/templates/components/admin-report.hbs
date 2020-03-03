@@ -23,9 +23,15 @@
             </a>
 
             {{#if model.description}}
-              <span class="info" data-tooltip="{{model.description}}">
-                {{d-icon "question-circle"}}
-              </span>
+              {{#if model.description_link}}
+                <a target="_blank" rel="noopener" href="{{model.description_link}}" class="info" data-tooltip="{{model.description}}">
+                  {{d-icon "question-circle"}}
+                </a>
+              {{else}}
+                <span class="info" data-tooltip="{{model.description}}">
+                  {{d-icon "question-circle"}}
+                </span>
+              {{/if}}
             {{/if}}
           </li>
           {{/unless}}

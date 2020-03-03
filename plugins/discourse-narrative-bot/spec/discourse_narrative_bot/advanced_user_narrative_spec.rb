@@ -606,6 +606,19 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         )
       end
 
+      it 'allows new users to create polls' do
+        user.update(trust_level: 0)
+
+        post = PostCreator.create(user, topic_id: topic.id, raw: <<~RAW)
+          [poll type=regular]
+          * foo
+          * bar
+          [/poll]
+        RAW
+
+        expect(post.errors[:base].size).to eq(0)
+      end
+
       describe 'when post is not in the right topic' do
         it 'should not do anything' do
           other_post

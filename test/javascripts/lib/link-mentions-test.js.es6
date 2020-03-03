@@ -3,12 +3,12 @@ import {
   linkSeenMentions
 } from "discourse/lib/link-mentions";
 import { Promise } from "rsvp";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:link-mentions");
 
 QUnit.test("linkSeenMentions replaces users and groups", async assert => {
-  /* global server */
-  server.get("/u/is_local_username", () => [
+  pretender.get("/u/is_local_username", () => [
     200,
     { "Content-Type": "application/json" },
     {
