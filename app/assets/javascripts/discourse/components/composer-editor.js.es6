@@ -1014,7 +1014,7 @@ export default Component.extend({
       );
 
       // Short upload urls need resolution
-      resolveAllShortUrls(ajax);
+      resolveAllShortUrls(ajax, ".d-editor-preview-wrapper");
 
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(
