@@ -578,7 +578,7 @@ describe UploadsController do
         expect(result[0]["short_path"]).to eq(upload.short_path)
       end
 
-      it 'does not return secure urls for non-media uploads' do
+      it 'returns secure urls for non-media uploads' do
         upload.update!(original_filename: "not-an-image.pdf", extension: "pdf")
         sign_in(user)
 
@@ -586,7 +586,7 @@ describe UploadsController do
         expect(response.status).to eq(200)
 
         result = JSON.parse(response.body)
-        expect(result[0]["url"]).not_to match("/secure-media-uploads")
+        expect(result[0]["url"]).to match("/secure-media-uploads")
         expect(result[0]["short_path"]).to eq(upload.short_path)
       end
     end
