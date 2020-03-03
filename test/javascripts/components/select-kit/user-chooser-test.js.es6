@@ -1,5 +1,6 @@
 import componentTest from "helpers/component-test";
 import { testSelectKitModule } from "./select-kit-test-helper";
+import pretender from "helpers/create-pretender";
 
 testSelectKitModule("user-chooser");
 
@@ -42,9 +43,8 @@ componentTest("can add a username", {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    // prettier-ignore
-    server.get("/u/search/users", () => { //eslint-disable-line
-      return response({users:[{username: "maja", name: "Maja"}]});
+    pretender.get("/u/search/users", () => {
+      return response({ users: [{ username: "maja", name: "Maja" }] });
     });
   },
 

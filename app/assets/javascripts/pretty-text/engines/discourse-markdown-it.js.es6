@@ -145,9 +145,10 @@ function videoHTML(token, opts) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const preloadType = opts.secureMedia ? "none" : "metadata";
+  const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
   return `<div class="video-container">
     <video width="100%" height="100%" preload="${preloadType}" controls>
-      <source src="${src}" data-orig-src="${origSrc}">
+      <source src="${src}" ${dataOrigSrcAttr}>
       <a href="${src}">${src}</a>
     </video>
   </div>`;
@@ -157,8 +158,9 @@ function audioHTML(token, opts) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const preloadType = opts.secureMedia ? "none" : "metadata";
+  const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
   return `<audio preload="${preloadType}" controls>
-    <source src="${src}" data-orig-src="${origSrc}">
+    <source src="${src}" ${dataOrigSrcAttr}>
     <a href="${src}">${src}</a>
   </audio>`;
 }

@@ -459,7 +459,7 @@ QUnit.test("computed labels", assert => {
   const computedUsernameLabel = usernameLabel.compute(row);
   assert.equal(
     computedUsernameLabel.formatedValue,
-    "<a href='/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+    "<a href='/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
   );
   assert.equal(computedUsernameLabel.value, "joffrey");
 
@@ -542,6 +542,6 @@ QUnit.test("computed labels", assert => {
   const userLink = computedLabels[0].compute(row).formatedValue;
   assert.equal(
     userLink,
-    "<a href='/forum/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+    "<a href='/forum/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/forum/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
   );
 });

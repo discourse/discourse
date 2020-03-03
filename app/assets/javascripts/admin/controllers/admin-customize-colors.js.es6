@@ -26,7 +26,7 @@ export default Controller.extend({
   actions: {
     newColorSchemeWithBase(baseKey) {
       const base = this.baseColorSchemes.findBy("base_scheme_id", baseKey);
-      const newColorScheme = Ember.copy(base, true);
+      const newColorScheme = base.copy();
       newColorScheme.setProperties({
         name: I18n.t("admin.customize.colors.new_name"),
         base_scheme_id: base.get("base_scheme_id")

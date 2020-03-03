@@ -18,43 +18,42 @@ QUnit.test("munging", assert => {
   assert.equal(g.get("inverse"), 0.6, "it runs `munge` on `create`");
 });
 
-QUnit.test("update", assert => {
+QUnit.test("update", async assert => {
   const store = createStore();
-  return store.find("widget", 123).then(function(widget) {
-    assert.equal(widget.get("name"), "Trout Lure");
-    assert.ok(!widget.get("isSaving"), "it is not saving");
+  const widget = await store.find("widget", 123);
+  assert.equal(widget.get("name"), "Trout Lure");
+  assert.ok(!widget.get("isSaving"), "it is not saving");
 
-    const promise = widget.update({ name: "new name" });
-    assert.ok(widget.get("isSaving"), "it is saving");
+  const promise = widget.update({ name: "new name" });
+  assert.ok(widget.get("isSaving"), "it is saving");
 
-    promise.then(function(result) {
-      assert.ok(!widget.get("isSaving"), "it is no longer saving");
-      assert.equal(widget.get("name"), "new name");
+  const result = await promise;
+  assert.ok(!widget.get("isSaving"), "it is no longer saving");
+  assert.equal(widget.get("name"), "new name");
 
-      assert.ok(result.target, "it has a reference to the record");
-      assert.equal(result.target.name, widget.get("name"));
-    });
-  });
+  assert.ok(result.target, "it has a reference to the record");
+  assert.equal(result.target.name, widget.get("name"));
 });
 
-QUnit.test("updating simultaneously", assert => {
+QUnit.test("updating simultaneously", async assert => {
   assert.expect(2);
 
   const store = createStore();
-  return store.find("widget", 123).then(function(widget) {
-    const firstPromise = widget.update({ name: "new name" });
-    const secondPromise = widget.update({ name: "new name" });
-    firstPromise.then(function() {
-      assert.ok(true, "the first promise succeeeds");
-    });
+  const widget = await store.find("widget", 123);
 
-    secondPromise.catch(function() {
-      assert.ok(true, "the second promise fails");
-    });
+  const firstPromise = widget.update({ name: "new name" });
+  const secondPromise = widget.update({ name: "new name" });
+
+  firstPromise.then(function() {
+    assert.ok(true, "the first promise succeeeds");
+  });
+
+  secondPromise.catch(function() {
+    assert.ok(true, "the second promise fails");
   });
 });
 
-QUnit.test("save new", assert => {
+QUnit.test("save new", async assert => {
   const store = createStore();
   const widget = store.createRecord("widget");
 
@@ -65,16 +64,15 @@ QUnit.test("save new", assert => {
   const promise = widget.save({ name: "Evil Widget" });
   assert.ok(widget.get("isSaving"), "it is not saving");
 
-  return promise.then(function(result) {
-    assert.ok(!widget.get("isSaving"), "it is no longer saving");
-    assert.ok(widget.get("id"), "it has an id");
-    assert.ok(widget.get("name"), "Evil Widget");
-    assert.ok(widget.get("isCreated"), "it is created");
-    assert.ok(!widget.get("isNew"), "it is no longer new");
+  const result = await promise;
+  assert.ok(!widget.get("isSaving"), "it is no longer saving");
+  assert.ok(widget.get("id"), "it has an id");
+  assert.ok(widget.get("name"), "Evil Widget");
+  assert.ok(widget.get("isCreated"), "it is created");
+  assert.ok(!widget.get("isNew"), "it is no longer new");
 
-    assert.ok(result.target, "it has a reference to the record");
-    assert.equal(result.target.name, widget.get("name"));
-  });
+  assert.ok(result.target, "it has a reference to the record");
+  assert.equal(result.target.name, widget.get("name"));
 });
 
 QUnit.test("creating simultaneously", assert => {

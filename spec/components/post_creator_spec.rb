@@ -485,7 +485,8 @@ describe PostCreator do
 
     it 'whispers do not mess up the public view' do
 
-      freeze_time
+      # turns out this can fail on leap years if we don't do this
+      freeze_time DateTime.parse('2010-01-01 12:00')
 
       first = PostCreator.new(
         user,
@@ -1414,7 +1415,7 @@ describe PostCreator do
     end
 
     it "links post uploads" do
-      public_post = PostCreator.create(
+      _public_post = PostCreator.create(
         user,
         topic_id: public_topic.id,
         raw: "A public post with an image.\n![](#{image_upload.short_path})"

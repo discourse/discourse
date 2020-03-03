@@ -55,8 +55,12 @@ class Admin::BadgesController < Admin::AdminController
       csv.rewind
 
       csv.each_line do |email_line|
-        batch.concat CSV.parse_line(email_line)
-        line_number += 1
+        line = CSV.parse_line(email_line).first
+
+        if line.present?
+          batch << line
+          line_number += 1
+        end
 
         # Split the emails in batches of 200 elements.
         full_batch = csv.lineno % (BadgeGranter::MAX_ITEMS_FOR_DELTA * batch_number) == 0

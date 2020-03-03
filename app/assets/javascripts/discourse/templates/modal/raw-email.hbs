@@ -37,9 +37,7 @@
     {{/if}}
 
     {{#if showHtmlPart}}
-      <div class="incoming-email-html-part">
-        {{{htmlPart}}}
-      </div>
+      {{iframed-html html=htmlPart className="incoming-email-html-part"}}
     {{/if}}
   </div>
 {{/d-modal-body}}

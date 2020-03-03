@@ -5,6 +5,7 @@ import {
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { fixture } from "helpers/qunit-helpers";
+import pretender from "helpers/create-pretender";
 
 function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
   const response = object => {
@@ -21,6 +22,11 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
         short_url: "upload://b.jpeg",
         url: "/uploads/default/original/3X/c/b/2.jpeg",
         short_path: "/uploads/short-url/b.jpeg"
+      },
+      {
+        short_url: "upload://z.jpeg",
+        url: "/uploads/default/original/3X/c/b/9.jpeg",
+        short_path: "/uploads/short-url/z.jpeg"
       }
     ];
   }
@@ -50,7 +56,7 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
     ];
   }
   // prettier-ignore
-  server.post("/uploads/lookup-urls", () => { //eslint-disable-line
+  pretender.post("/uploads/lookup-urls", () => { //eslint-disable-line
     return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
   });
 
@@ -61,7 +67,8 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
           src =>
             `<a data-orig-href="${src.short_url}">big enterprise contract.pdf</a>`
         )
-        .join("")
+        .join("") +
+      `<div class="scoped-area"><img data-orig-src="${imageSrcs[2].url}"></div>`
   );
 }
 QUnit.module("lib:pretty-text/upload-short-url", {
@@ -158,3 +165,24 @@ QUnit.test(
     );
   }
 );
+
+QUnit.test("resolveAllShortUrls - scoped", async assert => {
+  stubUrls();
+  let lookup;
+  await resolveAllShortUrls(ajax, ".scoped-area");
+
+  lookup = lookupCachedUploadUrl("upload://z.jpeg");
+
+  assert.deepEqual(lookup, {
+    url: "/uploads/default/original/3X/c/b/9.jpeg",
+    short_path: "/uploads/short-url/z.jpeg"
+  });
+
+  // do this because the pretender caches ALL the urls, not
+  // just the ones being looked up (like the normal behaviour)
+  resetCache();
+  await resolveAllShortUrls(ajax, ".scoped-area");
+
+  lookup = lookupCachedUploadUrl("upload://a.jpeg");
+  assert.deepEqual(lookup, {});
+});
