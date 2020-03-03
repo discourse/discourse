@@ -1,7 +1,7 @@
 import { run } from "@ember/runloop";
 import { next } from "@ember/runloop";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { avatarAtts } from "discourse/widgets/actions-summary";
+import { avatarAttrs } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
@@ -421,13 +421,13 @@ export default createWidget("post-menu", {
   buildKey: attrs => `post-menu-${attrs.id}`,
 
   attachButton(name) {
-    let buttonAtts = buildButton(name, this);
-    if (buttonAtts) {
-      let button = this.attach(this.settings.buttonType, buttonAtts);
-      if (buttonAtts.before) {
-        let before = this.attachButton(buttonAtts.before);
+    let buttonAttrs = buildButton(name, this);
+    if (buttonAttrs) {
+      let button = this.attach(this.settings.buttonType, buttonAttrs);
+      if (buttonAttrs.before) {
+        let before = this.attachButton(buttonAttrs.before);
         return h("div.double-button", [before, button]);
-      } else if (buttonAtts.addContainer) {
+      } else if (buttonAttrs.addContainer) {
         return h("div.double-button", [button]);
       }
 
@@ -517,12 +517,12 @@ export default createWidget("post-menu", {
 
     Object.values(_extraButtons).forEach(builder => {
       if (builder) {
-        const buttonAtts = builder(attrs, this.state, this.siteSettings);
-        if (buttonAtts) {
-          const { position, beforeButton, afterButton } = buttonAtts;
-          delete buttonAtts.position;
+        const buttonAttrs = builder(attrs, this.state, this.siteSettings);
+        if (buttonAttrs) {
+          const { position, beforeButton, afterButton } = buttonAttrs;
+          delete buttonAttrs.position;
 
-          let button = this.attach(this.settings.buttonType, buttonAtts);
+          let button = this.attach(this.settings.buttonType, buttonAttrs);
 
           const content = [];
           if (beforeButton) {
@@ -694,7 +694,7 @@ export default createWidget("post-menu", {
         post_action_type_id: LIKE_ACTION
       })
       .then(users => {
-        state.likedUsers = users.map(avatarAtts);
+        state.likedUsers = users.map(avatarAttrs);
         state.total = users.totalRows;
       });
   },
@@ -703,7 +703,7 @@ export default createWidget("post-menu", {
     const { attrs, state } = this;
 
     return this.store.find("post-reader", { id: attrs.id }).then(users => {
-      state.readers = users.map(avatarAtts);
+      state.readers = users.map(avatarAttrs);
       state.totalReaders = users.totalRows;
     });
   },

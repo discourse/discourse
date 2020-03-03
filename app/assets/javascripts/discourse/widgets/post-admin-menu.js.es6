@@ -23,18 +23,18 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
   }
 
   if (!attrs.isWhisper && currentUser.staff) {
-    const buttonAtts = {
+    const buttonAttrs = {
       action: "togglePostType",
       icon: "shield-alt",
       className: "btn-default toggle-post-type"
     };
 
     if (attrs.isModeratorAction) {
-      buttonAtts.label = "post.controls.revert_to_regular";
+      buttonAttrs.label = "post.controls.revert_to_regular";
     } else {
-      buttonAtts.label = "post.controls.convert_to_moderator";
+      buttonAttrs.label = "post.controls.convert_to_moderator";
     }
-    contents.push(buttonAtts);
+    contents.push(buttonAttrs);
   }
 
   if (currentUser.staff) {

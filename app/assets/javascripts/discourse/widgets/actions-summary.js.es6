@@ -4,7 +4,7 @@ import { h } from "virtual-dom";
 import { userPath } from "discourse/lib/url";
 import hbs from "discourse/widgets/hbs-compiler";
 
-export function avatarAtts(user) {
+export function avatarAttrs(user) {
   return {
     template: user.avatar_template,
     username: user.username,
@@ -16,25 +16,25 @@ export function avatarAtts(user) {
 createWidget("small-user-list", {
   tagName: "div.clearfix",
 
-  buildClasses(atts) {
-    return atts.listClassName;
+  buildClasses(attrs) {
+    return attrs.listClassName;
   },
 
-  html(atts) {
-    let users = atts.users;
+  html(attrs) {
+    let users = attrs.users;
     if (users) {
       const currentUser = this.currentUser;
       if (
-        atts.addSelf &&
+        attrs.addSelf &&
         !users.some(u => u.username === currentUser.username)
       ) {
-        users = users.concat(avatarAtts(currentUser));
+        users = users.concat(avatarAttrs(currentUser));
       }
 
       let description = null;
 
-      if (atts.description) {
-        description = I18n.t(atts.description, { count: atts.count });
+      if (attrs.description) {
+        description = I18n.t(attrs.description, { count: attrs.count });
       }
 
       // oddly post_url is on the user
