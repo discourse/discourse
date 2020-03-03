@@ -11,6 +11,8 @@ module Jobs
     every 5.minutes
 
     def execute(args = nil)
+      return if !SiteSetting.enable_bookmarks_with_reminders?
+
       where_clause = <<-SQL
         reminder_at IS NOT NULL AND reminder_type != :at_desktop
         AND reminder_at <= :now
