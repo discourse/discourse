@@ -204,7 +204,7 @@ GEM
     multipart-post (2.1.1)
     mustache (1.1.1)
     nio4r (2.5.2)
-    nokogiri (1.10.8)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
