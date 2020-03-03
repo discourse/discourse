@@ -85,21 +85,21 @@ export default createWidget("quick-access-panel", {
     return limit;
   },
 
-  refreshNotifications(state) {
-    if (state.loading) {
+  refreshNotifications() {
+    if (this.state.loading) {
       return;
     }
 
     if (this.getItems().length === 0) {
-      state.loading = true;
+      this.state.loading = true;
     }
 
     this.findNewItems()
       .then(newItems => this.setItems(newItems))
       .catch(() => this.setItems([]))
       .finally(() => {
-        state.loading = false;
-        state.loaded = true;
+        this.state.loading = false;
+        this.state.loaded = true;
         this.newItemsLoaded();
         this.sendWidgetAction("itemsLoaded", {
           hasUnread: this.hasUnread(),
@@ -109,12 +109,12 @@ export default createWidget("quick-access-panel", {
       });
   },
 
-  html(attrs, state) {
-    if (!state.loaded) {
-      this.refreshNotifications(state);
+  html() {
+    if (!this.state.loaded) {
+      this.refreshNotifications();
     }
 
-    if (state.loading) {
+    if (this.state.loading) {
       return [h("div.spinner-container", h("div.spinner"))];
     }
 
