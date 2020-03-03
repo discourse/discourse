@@ -1372,9 +1372,22 @@ en:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
-    too_few_topics_and_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics}</strong> topics and <strong>%{currentPosts}</strong> posts. Visitors need more to read and reply to – we recommend at least <strong>%{requiredTopics}</strong> topics and <strong>%{requiredPosts}</strong> posts. Only staff can see this message."
-    too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics}</strong> topics. Visitors need more to read and reply to – we recommend at least <strong>%{requiredTopics}</strong> topics. Only staff can see this message."
-    too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentPosts}</strong> posts. Visitors need more to read and reply to – we recommend at least <strong>%{requiredPosts}</strong> posts. Only staff can see this message."
+    too_few_topics_and_posts_notice_MF: >-
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">start the discussion!</a>
+      There {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}} and
+      {currentPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}. Visitors need more to
+      read and reply to – we recommend at least {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}}
+      and {requiredPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}. Only staff can see this message.
+    too_few_topics_notice_MF: >-
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">start the discussion!</a>
+      There {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}}. Visitors need more to
+      read and reply to – we recommend at least {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}}.
+      Only staff can see this message.
+    too_few_posts_notice_MF: >-
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">start the discussion!</a>
+      There {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}. Visitors need more to
+      read and reply to – we recommend at least {requiredPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}.
+      Only staff can see this message.
     logs_error_rate_notice:
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> reached site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."

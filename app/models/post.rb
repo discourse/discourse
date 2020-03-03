@@ -918,8 +918,8 @@ class Post < ActiveRecord::Base
       if SiteSetting.secure_media?
         Upload.where(
           id: upload_ids, access_control_post_id: nil
-        ).where.not(
-          id: CustomEmoji.pluck(:upload_id)
+        ).where(
+          'id NOT IN (SELECT upload_id FROM custom_emojis)'
         ).update_all(
           access_control_post_id: self.id
         )

@@ -3,14 +3,6 @@ import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Composer and uncategorized is not allowed", {
   loggedIn: true,
-  pretend(server, helper) {
-    server.get("/draft.json", () => {
-      return helper.response({
-        draft: null,
-        draft_sequence: 42
-      });
-    });
-  },
   settings: {
     enable_whispers: true,
     allow_uncategorized_topics: false

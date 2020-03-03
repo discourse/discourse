@@ -476,9 +476,19 @@ span.highlighted {
   }
 }
 
-.popup-menu {
+.popup-menu,
+#topic-footer-buttons .popup-menu {
   h3 {
     margin-bottom: 0;
+  }
+
+  ul div li {
+    border-bottom: 0.25em solid transparent;
+    border-top: 0.25em solid transparent;
+
+    button.btn {
+      margin-bottom: 0;
+    }
   }
 }
 

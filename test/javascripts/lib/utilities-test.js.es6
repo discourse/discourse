@@ -89,7 +89,7 @@ QUnit.test("avatarImg", assert => {
       size: "tiny",
       title: "evilest trout"
     }),
-    "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout'>",
+    "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout' aria-label='evilest trout'>",
     "it adds a title if supplied"
   );
 
