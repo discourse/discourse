@@ -5,7 +5,7 @@ class InviteSerializer < ApplicationSerializer
   attributes :email, :updated_at, :redeemed_at, :expired, :user
 
   def include_email?
-    !object.redeemed?
+    options[:show_emails] && !object.redeemed?
   end
 
   def expired
