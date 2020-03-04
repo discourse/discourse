@@ -48,10 +48,8 @@ class PostActionCreator
     @meta_post = nil
   end
 
-  def perform
-    result = CreateResult.new
-
-    unless guardian.post_can_act?(
+  def post_can_act?
+    guardian.post_can_act?(
       @post,
       @post_action_name,
       opts: {
@@ -59,6 +57,12 @@ class PostActionCreator
         taken_actions: PostAction.counts_for([@post].compact, @created_by)[@post&.id]
       }
     )
+  end
+
+  def perform
+    result = CreateResult.new
+
+    unless post_can_act?
       result.forbidden = true
       result.add_error(I18n.t("invalid_access"))
       return result
