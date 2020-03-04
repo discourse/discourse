@@ -37,6 +37,10 @@ class Bookmark < ActiveRecord::Base
     pending_reminders.where(user: user)
   end
 
+  scope :at_desktop_reminders_for_user, ->(user) do
+    where("reminder_type = :at_desktop AND user_id = :user_id", at_desktop: reminder_types[:at_desktop], user_id: user.id)
+  end
+
   def self.reminder_types
     @reminder_type = Enum.new(
       at_desktop: 0,
