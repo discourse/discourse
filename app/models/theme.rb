@@ -15,7 +15,7 @@ class Theme < ActiveRecord::Base
   has_many :parent_themes, -> { order(:name) }, through: :parent_theme_relation, source: :parent_theme
   has_many :color_schemes
   belongs_to :remote_theme, dependent: :destroy
-  has_one :theme_flag_set, dependent: :destroy
+  has_one :theme_modifier_set, dependent: :destroy
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
   has_one :javascript_cache, dependent: :destroy
@@ -33,8 +33,8 @@ class Theme < ActiveRecord::Base
     changed_schemes << scheme if scheme
   end
 
-  def theme_flag_set
-    super || build_theme_flag_set
+  def theme_modifier_set
+    super || build_theme_modifier_set
   end
 
   after_save do
@@ -47,7 +47,7 @@ class Theme < ActiveRecord::Base
     changed_fields.each(&:save!)
     changed_fields.clear
 
-    theme_flag_set.save!
+    theme_modifier_set.save!
 
     if saved_change_to_name?
       theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!)
@@ -241,12 +241,12 @@ class Theme < ActiveRecord::Base
     (@cache[cache_key] = val || "").html_safe
   end
 
-  def self.lookup_flag(theme_ids, flag_name)
+  def self.lookup_modifier(theme_ids, modifier_name)
     theme_ids = [theme_ids] unless Array === theme_ids
 
     theme_ids = transform_ids(theme_ids)
-    get_set_cache("#{theme_ids.join(",")}:flag:#{flag_name}:#{ThemeField::COMPILER_VERSION}") do
-      ThemeFlagSet.resolve_flag_for_themes(theme_ids, flag_name)
+    get_set_cache("#{theme_ids.join(",")}:modifier:#{modifier_name}:#{ThemeField::COMPILER_VERSION}") do
+      ThemeModifierSet.resolve_modifier_for_themes(theme_ids, modifier_name)
     end
   end
 
@@ -524,10 +524,10 @@ class Theme < ActiveRecord::Base
         end
       end
 
-      meta[:flags] = {}.tap do |hash|
-        ThemeFlagSet::FLAGS.keys.each do |flag|
-          value = self.theme_flag_set.public_send(flag)
-          hash[flag] = value if !value.nil?
+      meta[:modifiers] = {}.tap do |hash|
+        ThemeModifierSet::MODIFIERS.keys.each do |modifier|
+          value = self.theme_modifier_set.public_send(modifier)
+          hash[modifier] = value if !value.nil?
         end
       end
 

@@ -169,7 +169,7 @@ describe ContentSecurityPolicy do
     it 'can be extended by theme flags' do
       policy # call this first to make sure further actions clear the cache
 
-      theme.theme_flag_set.csp_extensions = ["script-src: https://from-theme-flag.script", "worker-src: from-theme-flag.worker"]
+      theme.theme_modifier_set.csp_extensions = ["script-src: https://from-theme-flag.script", "worker-src: from-theme-flag.worker"]
       theme.save!
 
       expect(parse(theme_policy)['script-src']).to include('https://from-theme-flag.script')

@@ -147,7 +147,7 @@ describe SvgSprite do
 
     expect(SvgSprite.all_icons([theme.id])).not_to include("dragon")
 
-    theme.theme_flag_set.svg_icons = ["dragon"]
+    theme.theme_modifier_set.svg_icons = ["dragon"]
     theme.save!
     expect(SvgSprite.all_icons([theme.id])).to include("dragon")
   end

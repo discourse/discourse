@@ -1,12 +1,12 @@
 # frozen_string_literal: true
-class ThemeFlagHelper
+class ThemeModifierHelper
   def initialize(request: nil, theme_ids: nil)
     @theme_ids = theme_ids || request&.env&.[](:resolved_theme_ids)
   end
 
-  ThemeFlagSet::FLAGS.keys.each do |flag|
-    define_method(flag) do
-      Theme.lookup_flag(@theme_ids, flag)
+  ThemeModifierSet::MODIFIERS.keys.each do |modifier|
+    define_method(modifier) do
+      Theme.lookup_modifier(@theme_ids, modifier)
     end
   end
 end

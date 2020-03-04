@@ -38,7 +38,7 @@ describe RemoteTheme do
               "tertiary-low": "#{tertiary_low_color}"
             }
           },
-          "flags": {
+          "modifiers": {
             "serialize_topic_excerpts": true
           }
         }
@@ -88,7 +88,7 @@ describe RemoteTheme do
       expect(remote.theme_version).to eq("1.0")
       expect(remote.minimum_discourse_version).to eq("1.0.0")
 
-      expect(@theme.theme_flag_set.serialize_topic_excerpts).to eq(true)
+      expect(@theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
 
       expect(@theme.theme_fields.length).to eq(9)
 

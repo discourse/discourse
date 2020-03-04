@@ -143,11 +143,11 @@ class RemoteTheme < ActiveRecord::Base
       raise ImportError, I18n.t("themes.import_error.about_json_values", errors: self.errors.full_messages.join(","))
     end
 
-    ThemeFlagSet::FLAGS.keys.each do |flag_name|
-      theme.theme_flag_set.public_send(:"#{flag_name}=", theme_info.dig("flags", flag_name.to_s))
+    ThemeModifierSet::MODIFIERS.keys.each do |modifier_name|
+      theme.theme_modifier_set.public_send(:"#{modifier_name}=", theme_info.dig("modifiers", modifier_name.to_s))
     end
-    if !theme.theme_flag_set.valid?
-      raise ImportError, I18n.t("themes.import_error.flag_values", errors: theme.theme_flag_set.errors.full_messages.join(","))
+    if !theme.theme_modifier_set.valid?
+      raise ImportError, I18n.t("themes.import_error.modifier_values", errors: theme.theme_modifier_set.errors.full_messages.join(","))
     end
 
     importer.all_files.each do |filename|

@@ -48,7 +48,7 @@ class ContentSecurityPolicy
         end
       end
 
-      extensions << build_theme_extension(ThemeFlagHelper.new(theme_ids: theme_ids).csp_extensions)
+      extensions << build_theme_extension(ThemeModifierHelper.new(theme_ids: theme_ids).csp_extensions)
 
       extensions
     end
