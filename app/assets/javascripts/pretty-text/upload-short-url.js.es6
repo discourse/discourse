@@ -44,10 +44,9 @@ export function resetCache() {
   _cache = {};
 }
 
-function retrieveCachedUrl($upload, dataAttribute, callback) {
+function retrieveCachedUrl($upload, siteSettings, dataAttribute, callback) {
   const cachedUpload = lookupCachedUploadUrl($upload.data(dataAttribute));
-  const url =
-    dataAttribute === "orig-href" ? cachedUpload.short_path : cachedUpload.url;
+  const url = getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings);
 
   if (url) {
     $upload.removeAttr(`data-${dataAttribute}`);
@@ -57,12 +56,34 @@ function retrieveCachedUrl($upload, dataAttribute, callback) {
   }
 }
 
-function _loadCachedShortUrls($uploads) {
+function getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings) {
+  if (!cachedUpload.url) {
+    return;
+  }
+
+  // non-attachments always use the full URL
+  if (dataAttribute !== "orig-href") {
+    return cachedUpload.url;
+  }
+
+  // attachments should use the full /secure-media-uploads/ URL
+  // in this case for permission checks
+  if (
+    siteSettings.secure_media &&
+    cachedUpload.url.indexOf("secure-media-uploads") > -1
+  ) {
+    return cachedUpload.url;
+  }
+
+  return cachedUpload.short_path;
+}
+
+function _loadCachedShortUrls($uploads, siteSettings) {
   $uploads.each((_idx, upload) => {
     const $upload = $(upload);
     switch (upload.tagName) {
       case "A":
-        retrieveCachedUrl($upload, "orig-href", url => {
+        retrieveCachedUrl($upload, siteSettings, "orig-href", url => {
           $upload.attr("href", url);
 
           // Replace "|attachment" with class='attachment'
@@ -77,13 +98,13 @@ function _loadCachedShortUrls($uploads) {
 
         break;
       case "IMG":
-        retrieveCachedUrl($upload, "orig-src", url => {
+        retrieveCachedUrl($upload, siteSettings, "orig-src", url => {
           $upload.attr("src", url);
         });
 
         break;
       case "SOURCE": // video/audio tag > source tag
-        retrieveCachedUrl($upload, "orig-src", url => {
+        retrieveCachedUrl($upload, siteSettings, "orig-src", url => {
           $upload.attr("src", url);
 
           if (url.startsWith(`//${window.location.host}`)) {
@@ -110,31 +131,31 @@ function _loadCachedShortUrls($uploads) {
   });
 }
 
-function _loadShortUrls($uploads, ajax) {
+function _loadShortUrls($uploads, ajax, siteSettings) {
   let urls = $uploads.toArray().map(upload => {
     const $upload = $(upload);
     return $upload.data("orig-src") || $upload.data("orig-href");
   });
 
   return lookupUncachedUploadUrls(urls, ajax).then(() =>
-    _loadCachedShortUrls($uploads)
+    _loadCachedShortUrls($uploads, siteSettings)
   );
 }
 
-export function resolveAllShortUrls(ajax, scope = null) {
+export function resolveAllShortUrls(ajax, siteSettings, scope = null) {
   const attributes =
     "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
   let $shortUploadUrls = $(scope || document).find(attributes);
 
   if ($shortUploadUrls.length > 0) {
-    _loadCachedShortUrls($shortUploadUrls);
+    _loadCachedShortUrls($shortUploadUrls, siteSettings);
 
     $shortUploadUrls = $(scope || document).find(attributes);
     if ($shortUploadUrls.length > 0) {
       // this is carefully batched so we can do a leading debounce (trigger right away)
       return debounce(
         null,
-        () => _loadShortUrls($shortUploadUrls, ajax),
+        () => _loadShortUrls($shortUploadUrls, ajax, siteSettings),
         450,
         true
       );
