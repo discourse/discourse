@@ -139,9 +139,6 @@ module FileStore
       # we don't want have migrated state, ensure we run all jobs here
       Jobs.run_immediately!
 
-      log "Checking if #{@current_db} already migrated..."
-      return log "Already migrated #{@current_db}!" if migration_successful?
-
       log "*" * 30 + " DRY RUN " + "*" * 30 if @dry_run
       log "Migrating uploads to S3 for '#{@current_db}'..."
 
