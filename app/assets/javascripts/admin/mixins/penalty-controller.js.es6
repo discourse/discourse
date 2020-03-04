@@ -1,6 +1,7 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Mixin from "@ember/object/mixin";
+import { next } from "@ember/runloop";
 import { Promise } from "rsvp";
 
 export default Mixin.create(ModalFunctionality, {
@@ -11,6 +12,7 @@ export default Mixin.create(ModalFunctionality, {
   user: null,
   postId: null,
   successCallback: null,
+  confirmClose: false,
 
   resetModal() {
     this.setProperties({
@@ -21,8 +23,28 @@ export default Mixin.create(ModalFunctionality, {
       postEdit: null,
       postAction: "delete",
       before: null,
-      successCallback: null
+      successCallback: null,
+      confirmClose: false
     });
+  },
+
+  beforeClose() {
+    // prompt a confirmation if we have unsaved content
+    if (
+      (this.reason && this.reason.length > 1) ||
+      (this.message && this.message.length > 1 && !this.confirmClose)
+    ) {
+      this.send("hideModal");
+      bootbox.confirm(I18n.t("admin.user.confirm_cancel_penalty"), result => {
+        if (result) {
+          this.set("confirmClose", true);
+          this.send("closeModal");
+        } else {
+          next(() => this.send("reopenModal"));
+        }
+      });
+      return false;
+    }
   },
 
   penalize(cb) {
