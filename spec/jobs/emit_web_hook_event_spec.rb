@@ -239,7 +239,7 @@ describe Jobs::EmitWebHookEvent do
       stub_request(:post, post_hook.payload_url)
         .to_return(body: 'OK', status: 200)
 
-      WebHookEventType.all.pluck(:name).each do |name|
+      WebHookEventType.limit(10).pluck(:name).each do |name|
         web_hook_id = Fabricate("#{name}_web_hook").id
 
         expect do
