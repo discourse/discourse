@@ -37,6 +37,7 @@ describe BackupRestore::DatabaseRestorer do
   def expect_db_migrate
     Discourse::Utils.expects(:execute_command).with do |env, command, options|
       env["SKIP_POST_DEPLOYMENT_MIGRATIONS"] == "0" &&
+        env["SKIP_OPTIMIZE_ICONS"] == "1" &&
         command == "rake db:migrate" &&
         options[:chdir] == Rails.root
     end.once
