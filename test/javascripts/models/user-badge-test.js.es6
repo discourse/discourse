@@ -35,26 +35,23 @@ QUnit.test("createFromJson array", assert => {
   );
 });
 
-QUnit.test("findByUsername", assert => {
-  return UserBadge.findByUsername("anne3").then(function(badges) {
-    assert.ok(Array.isArray(badges), "returns an array");
-  });
+QUnit.test("findByUsername", async assert => {
+  const badges = await UserBadge.findByUsername("anne3");
+  assert.ok(Array.isArray(badges), "returns an array");
 });
 
-QUnit.test("findByBadgeId", assert => {
-  return UserBadge.findByBadgeId(880).then(function(badges) {
-    assert.ok(Array.isArray(badges), "returns an array");
-  });
+QUnit.test("findByBadgeId", async assert => {
+  const badges = await UserBadge.findByBadgeId(880);
+  assert.ok(Array.isArray(badges), "returns an array");
 });
 
-QUnit.test("grant", assert => {
-  return UserBadge.grant(1, "username").then(function(userBadge) {
-    assert.ok(!Array.isArray(userBadge), "does not return an array");
-  });
+QUnit.test("grant", async assert => {
+  const userBadge = await UserBadge.grant(1, "username");
+  assert.ok(!Array.isArray(userBadge), "does not return an array");
 });
 
-QUnit.test("revoke", assert => {
+QUnit.test("revoke", async assert => {
   assert.expect(0);
   const userBadge = UserBadge.create({ id: 1 });
-  return userBadge.revoke();
+  await userBadge.revoke();
 });

@@ -2,17 +2,13 @@ import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import Draft from "discourse/models/draft";
+import { Promise } from "rsvp";
 
 acceptance("Composer", {
   loggedIn: true,
-  pretend(server, helper) {
-    server.get("/draft.json", () => {
-      return helper.response({
-        draft: null,
-        draft_sequence: 42
-      });
-    });
-    server.post("/uploads/lookup-urls", () => {
+  pretend(pretenderServer, helper) {
+    pretenderServer.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });
   },
@@ -617,14 +613,6 @@ QUnit.test("Checks for existing draft", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    // prettier-ignore
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-        draft_sequence: 42
-      } ];
-    });
-
     await visit("/t/internationalization-localization/280");
 
     await click(".topic-post:eq(0) button.show-more-actions");
@@ -646,17 +634,16 @@ QUnit.test("Can switch states without abandon popup", async assert => {
 
     const longText = "a".repeat(256);
 
+    sandbox.stub(Draft, "get").returns(
+      Promise.resolve({
+        draft: null,
+        draft_sequence: 0
+      })
+    );
+
     await click(".btn-primary.create.btn");
 
     await fillIn(".d-editor-input", longText);
-
-    // prettier-ignore
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-        draft_sequence: 42
-      } ];
-    });
 
     await click("article#post_3 button.reply");
 
@@ -686,19 +673,20 @@ QUnit.test("Can switch states without abandon popup", async assert => {
   } finally {
     toggleCheckDraftPopup(false);
   }
+  sandbox.restore();
 });
 
 QUnit.test("Loading draft also replaces the recipients", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    // prettier-ignore
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-         "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
-         "draft_sequence":0
-      } ];
-    });
+    sandbox.stub(Draft, "get").returns(
+      Promise.resolve({
+        draft:
+          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"usernames":"codinghorror","composerTime":9159,"typingTime":2500}',
+        draft_sequence: 0
+      })
+    );
 
     await visit("/u/charlie");
     await click("button.compose-pm");

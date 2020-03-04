@@ -1175,6 +1175,7 @@ en:
       labels:
         level: Level
       description: "Number of users grouped by trust level."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Users per Type"
       xaxis: "Type"

@@ -1,3 +1,4 @@
+import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import componentTest from "helpers/component-test";
 import { testSelectKitModule } from "./select-kit-test-helper";
@@ -335,3 +336,22 @@ componentTest(
     }
   }
 );
+
+componentTest("category url", {
+  template: template(),
+
+  beforeEach() {
+    initCategoriesWithParentCategory(this);
+    sandbox.stub(DiscourseURL, "routeTo");
+  },
+
+  async test(assert) {
+    await this.subject.expand();
+    await this.subject.selectRowByValue(26);
+
+    assert.ok(
+      DiscourseURL.routeTo.calledWith("/c/feature/spec/26"),
+      "it builds a correct URL"
+    );
+  }
+});

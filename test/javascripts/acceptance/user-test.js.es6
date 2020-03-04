@@ -1,10 +1,12 @@
 import { acceptance } from "helpers/qunit-helpers";
+import pretender from "helpers/create-pretender";
+import Draft from "discourse/models/draft";
+import { Promise } from "rsvp";
 
 acceptance("User", { loggedIn: true });
 
 QUnit.test("Invalid usernames", async assert => {
-  // prettier-ignore
-  server.get("/u/eviltrout%2F..%2F..%2F.json", () => { // eslint-disable-line no-undef
+  pretender.get("/u/eviltrout%2F..%2F..%2F.json", () => {
     return [400, { "Content-Type": "application/json" }, {}];
   });
 
@@ -67,13 +69,12 @@ QUnit.test("Viewing Summary", async assert => {
 });
 
 QUnit.test("Viewing Drafts", async assert => {
-  // prettier-ignore
-  server.get("/draft.json", () => { // eslint-disable-line no-undef
-    return [ 200, { "Content-Type": "application/json" }, {
-      draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-      draft_sequence: 42
-    } ];
-  });
+  sandbox.stub(Draft, "get").returns(
+    Promise.resolve({
+      draft: null,
+      draft_sequence: 0
+    })
+  );
 
   await visit("/u/eviltrout/activity/drafts");
   assert.ok(exists(".user-stream"), "has drafts stream");
@@ -87,4 +88,5 @@ QUnit.test("Viewing Drafts", async assert => {
     exists(".d-editor-input"),
     "composer is visible after resuming a draft"
   );
+  sandbox.restore();
 });

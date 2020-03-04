@@ -60,7 +60,16 @@ function rule(state) {
           break;
         case "a":
           if (mapped) {
-            token.attrs[srcIndex][1] = mapped.short_path;
+            // when secure media is enabled we want the full /secure-media-uploads/
+            // url to take advantage of access control security
+            if (
+              state.md.options.discourse.limitedSiteSettings.secureMedia &&
+              mapped.url.indexOf("secure-media-uploads") > -1
+            ) {
+              token.attrs[srcIndex][1] = mapped.url;
+            } else {
+              token.attrs[srcIndex][1] = mapped.short_path;
+            }
           } else {
             token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
               "/404"

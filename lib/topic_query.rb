@@ -19,12 +19,6 @@ class TopicQuery
         int.call(x) && x.to_i.between?(0, PG_MAX_INT)
       end
 
-      array_int_or_int = lambda do |x|
-        int.call(x) || (
-          Array === x && x.length > 0 && x.all?(&int)
-        )
-      end
-
       {
         max_posts: zero_up_to_max_int,
         min_posts: zero_up_to_max_int,
@@ -675,20 +669,11 @@ class TopicQuery
       if options[:no_subcategories]
         result = result.where('categories.id = ?', category_id)
       else
-        sql = <<~SQL
-            categories.id IN (
-              WITH RECURSIVE subcategories AS (
-                SELECT :category_id id, 1 depth
-                UNION
-                SELECT categories.id, (subcategories.depth + 1) depth
-                FROM categories
-                JOIN subcategories ON subcategories.id = categories.parent_category_id
-                WHERE subcategories.depth < :max_category_nesting
-            )
-              SELECT subcategories.id FROM subcategories
-            ) AND (categories.id = :category_id OR topics.id != categories.topic_id)
+        result = result.where(<<~SQL, subcategory_ids: subcategory_ids(category_id), category_id: category_id)
+          categories.id in (:subcategory_ids) AND (
+            categories.topic_id <> topics.id OR categories.id = :category_id
+          )
           SQL
-        result = result.where(sql, category_id: category_id, max_category_nesting: SiteSetting.max_category_nesting)
       end
       result = result.references(:categories)
 
@@ -1066,6 +1051,29 @@ class TopicQuery
   end
 
   private
+
+  def subcategory_ids(category_id)
+    @subcategory_ids ||= {}
+    @subcategory_ids[category_id] ||=
+      begin
+        sql = <<~SQL
+            WITH RECURSIVE subcategories AS (
+                SELECT :category_id id, 1 depth
+                UNION
+                SELECT categories.id, (subcategories.depth + 1) depth
+                FROM categories
+                JOIN subcategories ON subcategories.id = categories.parent_category_id
+                WHERE subcategories.depth < :max_category_nesting
+            )
+            SELECT id FROM subcategories
+          SQL
+        DB.query_single(
+          sql,
+          category_id: category_id,
+          max_category_nesting: SiteSetting.max_category_nesting
+        )
+      end
+  end
 
   def sanitize_sql_array(input)
     ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))
