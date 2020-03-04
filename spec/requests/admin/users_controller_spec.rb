@@ -254,9 +254,8 @@ RSpec.describe Admin::UsersController do
       api_key = Fabricate(:api_key, user: user)
 
       put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
-        bookmarked: "true",
-        api_key: api_key.key
-      }
+        bookmarked: "true"
+      }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(200)
 
       put "/admin/users/#{user.id}/suspend.json", params: suspend_params
@@ -755,6 +754,50 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       expect(User.where(id: user_a.id).count).to eq(0)
       expect(User.where(id: user_b.id).count).to eq(0)
+    end
+  end
+
+  describe '#invite_admin' do
+    let(:api_key) { Fabricate(:api_key, user: admin) }
+    let(:headers) do
+      { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: admin.username }
+    end
+
+    it "doesn't work when not via API" do
+      post "/admin/users/invite_admin.json", params: {
+        name: 'Bill', username: 'bill22', email: 'bill@bill.com'
+      }
+
+      expect(response.status).to eq(403)
+    end
+
+    it 'should invite admin' do
+      expect do
+        post "/admin/users/invite_admin.json", params: {
+          name: 'Bill', username: 'bill22', email: 'bill@bill.com'
+        }, headers: headers
+      end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+
+      expect(response.status).to eq(200)
+
+      u = User.find_by_email('bill@bill.com')
+      expect(u.name).to eq("Bill")
+      expect(u.username).to eq("bill22")
+      expect(u.admin).to eq(true)
+      expect(u.active).to eq(true)
+      expect(u.approved).to eq(true)
+    end
+
+    it "doesn't send the email with send_email falsey" do
+      expect do
+        post "/admin/users/invite_admin.json", params: {
+          name: 'Bill', username: 'bill22', email: 'bill@bill.com', send_email: '0'
+        }, headers: headers
+      end.to change { Jobs::CriticalUserEmail.jobs.size }.by(0)
+
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["password_url"]).to be_present
     end
   end
 

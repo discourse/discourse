@@ -286,12 +286,8 @@ class Auth::DefaultCurrentUserProvider
     if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
-      # Check for deprecated api auth
       if !header_api_key?
-        unless is_whitelisted_query_param_auth_route?(request)
-          # Notify admins of deprecated auth method
-          AdminDashboardData.add_problem_message('dashboard.deprecated_api_usage', 1.day)
-        end
+        raise Discourse::InvalidAccess unless is_whitelisted_query_param_auth_route?(request)
       end
 
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
