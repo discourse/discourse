@@ -274,6 +274,8 @@ class UsersController < ApplicationController
   end
 
   def invited
+    guardian.ensure_can_invite_to_forum!
+
     inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
     filter_by = params[:filter]
@@ -290,6 +292,8 @@ class UsersController < ApplicationController
   end
 
   def invited_count
+    guardian.ensure_can_invite_to_forum!
+
     inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
     pending_count = Invite.find_pending_invites_count(inviter)
