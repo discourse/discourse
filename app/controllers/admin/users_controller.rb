@@ -458,41 +458,6 @@ class Admin::UsersController < Admin::AdminController
     render json: { total: AdminUserIndexQuery.new(params).count_users }
   end
 
-  def invite_admin
-    raise Discourse::InvalidAccess.new unless is_api?
-
-    email = params[:email]
-    unless user = User.find_by_email(email)
-      name = params[:name] if params[:name].present?
-      username = params[:username] if params[:username].present?
-
-      user = User.new(email: email)
-      user.password = SecureRandom.hex
-      user.username = UserNameSuggester.suggest(username || name || email)
-      user.name = User.suggest_name(name || username || email)
-    end
-
-    user.active = true
-    user.save!
-    user.grant_admin!
-    user.change_trust_level!(4)
-    user.email_tokens.update_all confirmed: true
-
-    email_token = user.email_tokens.create(email: user.email)
-
-    unless params[:send_email] == '0' || params[:send_email] == 'false'
-      Jobs.enqueue(:critical_user_email,
-                    type: :account_created,
-                    user_id: user.id,
-                    email_token: email_token.token)
-    end
-
-    render json: success_json.merge!(
-      password_url: "#{Discourse.base_url}#{password_reset_token_path(token: email_token.token)}"
-    )
-
-  end
-
   def anonymize
     guardian.ensure_can_anonymize_user!(@user)
     if user = UserAnonymizer.new(@user, current_user).make_anonymous
