@@ -21,6 +21,7 @@ class Plugin::Metadata
     "discourse-cakeday",
     "discourse-canned-replies",
     "discourse-calendar",
+    "discourse-categories-suppressed",
     "discourse-characters-required",
     "discourse-chat-integration",
     "discourse-checklist",
