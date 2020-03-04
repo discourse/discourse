@@ -7,13 +7,12 @@ import { ajax } from "discourse/lib/ajax";
 import { fixture } from "helpers/qunit-helpers";
 import pretender from "helpers/create-pretender";
 
-QUnit.module("lib:pretty-text/upload-short-url", {
-  beforeEach() {
-    const response = object => {
-      return [200, { "Content-Type": "application/json" }, object];
-    };
-
-    const imageSrcs = [
+function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
+  const response = object => {
+    return [200, { "Content-Type": "application/json" }, object];
+  };
+  if (!imageSrcs) {
+    imageSrcs = [
       {
         short_url: "upload://a.jpeg",
         url: "/uploads/default/original/3X/c/b/1.jpeg",
@@ -30,16 +29,20 @@ QUnit.module("lib:pretty-text/upload-short-url", {
         short_path: "/uploads/short-url/z.jpeg"
       }
     ];
+  }
 
-    const attachmentSrcs = [
+  if (!attachmentSrcs) {
+    attachmentSrcs = [
       {
         short_url: "upload://c.pdf",
         url: "/uploads/default/original/3X/c/b/3.pdf",
         short_path: "/uploads/short-url/c.pdf"
       }
     ];
+  }
 
-    const otherMediaSrcs = [
+  if (!otherMediaSrcs) {
+    otherMediaSrcs = [
       {
         short_url: "upload://d.mp4",
         url: "/uploads/default/original/3X/c/b/4.mp4",
@@ -51,30 +54,37 @@ QUnit.module("lib:pretty-text/upload-short-url", {
         short_path: "/uploads/short-url/e.mp3"
       }
     ];
+  }
+  // prettier-ignore
+  pretender.post("/uploads/lookup-urls", () => { //eslint-disable-line
+    return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
+  });
 
-    pretender.post("/uploads/lookup-urls", () => {
-      return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
-    });
-
-    fixture().html(
-      imageSrcs.map(src => `<img data-orig-src="${src.url}">`).join("") +
-        attachmentSrcs.map(src => `<a data-orig-href="${src.url}">`).join("") +
-        `<div class="scoped-area"><img data-orig-src="${imageSrcs[2].url}"></div>`
-    );
-  },
-
+  fixture().html(
+    imageSrcs.map(src => `<img data-orig-src="${src.short_url}"/>`).join("") +
+      attachmentSrcs
+        .map(
+          src =>
+            `<a data-orig-href="${src.short_url}">big enterprise contract.pdf</a>`
+        )
+        .join("") +
+      `<div class="scoped-area"><img data-orig-src="${imageSrcs[2].url}"></div>`
+  );
+}
+QUnit.module("lib:pretty-text/upload-short-url", {
   afterEach() {
     resetCache();
   }
 });
 
 QUnit.test("resolveAllShortUrls", async assert => {
+  stubUrls();
   let lookup;
 
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
   assert.deepEqual(lookup, {});
 
-  await resolveAllShortUrls(ajax);
+  await resolveAllShortUrls(ajax, { secure_media: false });
 
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
 
@@ -112,7 +122,52 @@ QUnit.test("resolveAllShortUrls", async assert => {
   });
 });
 
+QUnit.test(
+  "resolveAllShortUrls - href + src replaced correctly",
+  async assert => {
+    stubUrls();
+    await resolveAllShortUrls(ajax, { secure_media: false });
+
+    let image1 = fixture()
+      .find("img")
+      .eq(0);
+    let image2 = fixture()
+      .find("img")
+      .eq(1);
+    let link = fixture().find("a");
+
+    assert.equal(image1.attr("src"), "/uploads/default/original/3X/c/b/1.jpeg");
+    assert.equal(image2.attr("src"), "/uploads/default/original/3X/c/b/2.jpeg");
+    assert.equal(link.attr("href"), "/uploads/short-url/c.pdf");
+  }
+);
+
+QUnit.test(
+  "resolveAllShortUrls - when secure media is enabled use the attachment full URL",
+  async assert => {
+    stubUrls(
+      null,
+      [
+        {
+          short_url: "upload://c.pdf",
+          url: "/secure-media-uploads/default/original/3X/c/b/3.pdf",
+          short_path: "/uploads/short-url/c.pdf"
+        }
+      ],
+      null
+    );
+    await resolveAllShortUrls(ajax, { secure_media: true });
+
+    let link = fixture().find("a");
+    assert.equal(
+      link.attr("href"),
+      "/secure-media-uploads/default/original/3X/c/b/3.pdf"
+    );
+  }
+);
+
 QUnit.test("resolveAllShortUrls - scoped", async assert => {
+  stubUrls();
   let lookup;
   await resolveAllShortUrls(ajax, ".scoped-area");
 
