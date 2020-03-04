@@ -575,7 +575,7 @@ class Plugin::Instance
       if File.exists?(js_file_path)
         current_contents = File.read(js_file_path)
         if current_contents != contents
-          File.write(js_file_path, contents)
+          File.write(js_file_path, conten)
         end
       else
         write_asset(js_file_path, contents)
