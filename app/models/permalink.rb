@@ -55,16 +55,38 @@ class Permalink < ActiveRecord::Base
 
   end
 
-  def self.normalize_url(url)
+  def self.normalize_basic(url)
     if url
       url = url.strip
       url = url[1..-1] if url[0, 1] == '/'
     end
+    url
+  end
+
+  def self.normalize_url(url)
+    url = Permalink.normalize_basic(url)
 
     normalizations = SiteSetting.permalink_normalizations
 
     @normalizer = Normalizer.new(normalizations) unless @normalizer && @normalizer.source == normalizations
     @normalizer.normalize(url)
+  end
+
+  # Return a pending activerecord relation containing the /go/ permalinks that
+  # could match the given request URL.
+  def self.match_go(raw_url)
+    return Permalink.none if not raw_url
+    return Permalink.none if not raw_url.start_with?('/go/')
+
+    # Query strings are ignored here
+    u_path = raw_url.split('?')[0]
+
+    slash_split = u_path.split('/')[1..-1]
+    candidates = (1 .. (slash_split.length - 1)).map do |i|
+      Permalink.normalize_basic(slash_split[0..i].join('/'))
+    end.reverse
+
+    Permalink.where(url: candidates).order('length(url) desc')
   end
 
   def self.find_by_url(url)
