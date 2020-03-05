@@ -36,7 +36,7 @@ class ContentSecurityPolicy
         if can_use_s3_cdn && s3_cdn
           s3_cdn + dir
         elsif can_use_cdn && cdn
-          cdn + dir
+          cdn + Discourse.base_uri + dir
         else
           base + dir
         end
