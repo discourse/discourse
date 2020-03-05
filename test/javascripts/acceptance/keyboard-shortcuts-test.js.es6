@@ -1,16 +1,16 @@
 import { acceptance } from "helpers/qunit-helpers";
+import pretender from "helpers/create-pretender";
 
 acceptance("Keyboard Shortcuts", { loggedIn: true });
 
 test("go to first suggested topic", async assert => {
-  /* global server */
-  server.get("/t/27331/4.json", () => [
+  pretender.get("/t/27331/4.json", () => [
     200,
     { "Content-Type": "application/json" },
     {}
   ]);
 
-  server.get("/t/27331.json", () => [
+  pretender.get("/t/27331.json", () => [
     200,
     { "Content-Type": "application/json" },
     {}
@@ -20,7 +20,7 @@ test("go to first suggested topic", async assert => {
    * No suggested topics exist.
    */
 
-  server.get("/t/9/last.json", () => [
+  pretender.get("/t/9/last.json", () => [
     200,
     { "Content-Type": "application/json" },
     {}
@@ -44,7 +44,7 @@ test("go to first suggested topic", async assert => {
    * Suggested topic is returned by server.
    */
 
-  server.get("/t/28830/last.json", () => [
+  pretender.get("/t/28830/last.json", () => [
     200,
     { "Content-Type": "application/json" },
     {

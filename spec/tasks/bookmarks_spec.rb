@@ -17,8 +17,14 @@ RSpec.describe "bookmarks tasks" do
     create_post_actions_and_existing_bookmarks
   end
 
+  def invoke_task(args = nil)
+    capture_stdout do
+      Rake::Task['bookmarks:sync_to_table'].invoke(args)
+    end
+  end
+
   it "migrates all PostActions" do
-    Rake::Task['bookmarks:sync_to_table'].invoke
+    invoke_task
 
     expect(Bookmark.all.count).to eq(3)
   end
@@ -26,14 +32,14 @@ RSpec.describe "bookmarks tasks" do
   it "does not create bookmarks that already exist in the bookmarks table for a user" do
     Fabricate(:bookmark, user: user1, post: post1)
 
-    Rake::Task['bookmarks:sync_to_table'].invoke
+    invoke_task
 
     expect(Bookmark.all.count).to eq(3)
     expect(Bookmark.where(post: post1, user: user1).count).to eq(1)
   end
 
   it "respects the sync_limit if provided and stops creating bookmarks at the limit (so this can be run progrssively" do
-    Rake::Task['bookmarks:sync_to_table'].invoke(1)
+    invoke_task(1)
     expect(Bookmark.all.count).to eq(1)
   end
 

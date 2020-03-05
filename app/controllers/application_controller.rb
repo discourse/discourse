@@ -807,7 +807,7 @@ class ApplicationController < ActionController::Base
   end
 
   def add_noindex_header
-    response.headers['X-Robots-Tag'] = 'noindex'
+    response.headers['X-Robots-Tag'] = 'noindex' if request.get?
   end
 
   protected

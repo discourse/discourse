@@ -1584,13 +1584,11 @@ pt_BR:
     desktop_category_page_style: "Estilo visual para a página / categorias."
     category_colors: "Uma lista de valores hexadecimais de cor permitidos para categorias."
     category_style: "Estilo visual para emblemas de categoria."
-    max_image_size_kb: "O tamanho máximo de upload de imagem em kB. Isso precisa ser configurado no nginx (client_max_body_size) / apache ou também proxy."
     max_attachment_size_kb: "O tamanho máximo de upload de arquivos anexos em kB. Isso precisa ser configurado no nginx (client_max_body_size) / apache ou também proxy."
     authorized_extensions: "Uma lista de extensões de arquivo permitidas para upload (use '*' para permitir todos os tipos de arquivos)"
     authorized_extensions_for_staff: "Uma lista de extensões de arquivo permitidas para upload para usuários da equipe, além da lista definida na configuração do site `authorized_extensions`. (use '*' para ativar todos os tipos de arquivo)"
     theme_authorized_extensions: "Uma lista de extensões de arquivo permitidas para uploads de temas (use '*' para ativar todos os tipos de arquivos)"
     max_similar_results: "Quantos tópicos semelhantes exibir acima do editor quando compondo um novo tópico. A comparação é baseada no título e no corpo."
-    max_image_megapixels: "Número máximo de megapixels permitidos em uma imagem."
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     title_remove_extraneous_space: "Remover os espaços em branco iniciais à frente da pontuação final."
     automatic_topic_heat_values: 'Atualizar automaticamente as configurações "visualizações de tópico populares" e "curtidas de postagens de tópicos populares" com base na atividade do site.'

@@ -348,6 +348,23 @@ describe PostsController do
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.insufficient_rights_to_create"))
     end
+
+    it "skips the check in PMs with bots" do
+      user = Fabricate(:user, trust_level: 1)
+      topic = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: user),
+        Fabricate.build(:topic_allowed_user, user: Discourse.system_user)
+      ])
+      Fabricate(:post, topic_id: topic.id, user_id: Discourse::SYSTEM_USER_ID)
+
+      log_in_user(user)
+
+      post :create, params: {
+        topic_id: topic.id, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(::JSON.parse(response.body)["errors"]).to eq(nil)
+    end
   end
 
   describe "regular user with equal trust level" do

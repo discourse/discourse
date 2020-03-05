@@ -40,6 +40,7 @@ class RemoteTheme < ActiveRecord::Base
     theme ||= Theme.new(user_id: user&.id || -1, name: theme_info["name"])
 
     theme.component = theme_info["component"].to_s == "true"
+    theme.child_components = theme_info["components"].presence || []
 
     remote_theme = new
     remote_theme.theme = theme
@@ -63,6 +64,7 @@ class RemoteTheme < ActiveRecord::Base
     theme_info = RemoteTheme.extract_theme_info(importer)
     component = [true, "true"].include?(theme_info["component"])
     theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
+    theme.child_components = theme_info["components"].presence || []
 
     remote_theme = new
     theme.remote_theme = remote_theme

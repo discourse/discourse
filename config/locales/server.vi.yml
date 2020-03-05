@@ -852,7 +852,6 @@ vi:
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
     category_style: "Style trực quan cho phù hiệu danh mục."
-    max_image_size_kb: "Kích cỡ ảnh upload tối đa theo Kb. Thiết lập này phải được cấu hình cả trong nginx (client_max_body_size) / apache hoặc trong proxy."
     max_attachment_size_kb: "Kích thước file tải lên tối đa tính theo kB. đã cấu hình trong nginx (client_max_body_size) / apache hoặc proxy."
     authorized_extensions: "Danh sách định dạng file cho phép tải lên (sử dụng '*' để cho phép tất cả loại tập tin)"
     max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."

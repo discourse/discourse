@@ -13,6 +13,7 @@ export default Component.extend(UtilsMixin, {
       return;
     if (this.eventType !== "click" || event.button !== 0) return;
     this.selectKit.toggle(event);
+    return false;
   },
 
   classNames: ["select-kit-header"],

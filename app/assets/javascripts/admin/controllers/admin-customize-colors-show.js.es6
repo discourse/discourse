@@ -53,7 +53,7 @@ export default Controller.extend({
     },
 
     copy() {
-      var newColorScheme = Ember.copy(this.model, true);
+      const newColorScheme = this.model.copy();
       newColorScheme.set(
         "name",
         I18n.t("admin.customize.colors.copy_name_prefix") +
