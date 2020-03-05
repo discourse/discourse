@@ -36,7 +36,7 @@ class TopicPublisher
       op = @topic.first_post
 
       if op.present?
-        op.revisions.delete_all
+        op.revisions.destroy_all
 
         op.update_columns(
           version: 1,
