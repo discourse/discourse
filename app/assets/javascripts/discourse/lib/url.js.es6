@@ -25,7 +25,7 @@ const SERVER_SIDE_ONLY = [
   /^\/posts\/\d+\/raw/,
   /^\/raw\/\d+/,
   /^\/wizard/,
-  /^\/go\//,  // EXPERIMENTAL: https://meta.discourse.org/t/-/142605
+  /^\/go\//, // EXPERIMENTAL: https://meta.discourse.org/t/-/142605
   /\.rss$/,
   /\.json$/,
   /^\/admin\/upgrade$/,
