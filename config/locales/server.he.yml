@@ -1141,6 +1141,7 @@ he:
       labels:
         level: דרגה
       description: "מספר המשתמשים בקיבוץ לפי דרגת אמון."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "משתמשים לפי סוג"
       xaxis: "סוג"
@@ -3715,7 +3716,7 @@ he:
       name: ברוכים הבאים
       description: קיבלו לייק
       long_description: |
-        עיטור זוה מוענק עם קבלת הלייק הראשון שלך על פוסט. מזל טוב, פרסמת משהו שחבריך לקהילה חשבו שהוא מעניין, מגניב, או שימושי!
+        עיטור זה מוענק עם קבלת הלייק הראשון שלך על פוסט. מזל טוב, פרסמת משהו שחבריך לקהילה חשבו שהוא מעניין, מגניב, או שימושי!
     autobiographer:
       name: אוטוביוגרפים
       description: "פרטי ה<a href=\"%{base_uri}/my/preferences/profile\">פרופיל</a> הושלמו"

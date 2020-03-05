@@ -1053,6 +1053,7 @@ sv:
       labels:
         level: Nivå
       description: "Antalet användare fördelat på förtroendenivå."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Användare per typ"
       xaxis: "Typ"

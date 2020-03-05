@@ -1230,9 +1230,6 @@ ca:
       enabled: "El lloc web és en mode només de lectura. Continueu navegant, però de moment estan desactivades les accions de respondre, 'm'agrada' i altres."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc web es trobi en mode només de lectura."
-    too_few_topics_and_posts_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentTopics}</strong> temes i <strong>%{currentPosts}</strong> publicacions. Els visitants en necessiten més per a llegir i respondre. Recomanem almenys <strong>%{requiredTopics}</strong> temes i <strong>%{requiredPosts}</strong> publicacions. Sols l'equip responsable pot veure aquest missatge."
-    too_few_topics_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentTopics} / </strong> temes. Els visitants en necessiten més per a llegir i respondre. Recomanem almenys <strong>%{requiredTopics}</strong> temes. Sols l'equip responsable pot veure aquest missatge."
-    too_few_posts_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentPosts} </strong> publicacions. Els visitants en necessiten més per a llegir i respondre.  Recomanem almenys <strong>%{requiredPosts}</strong> publicacions. Sols l'equip responsable pot veure aquest missatge."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora} </a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}."
@@ -2562,6 +2559,7 @@ ca:
         help: "Aquest tema no és visible; no es mostrarà en la llista de temes i només és accessible amb un enllaç directe."
       personal_message:
         title: "Aquest tema és un missatge personal"
+        help: "Aquest tema és un missatge personal"
     posts: "Publicacions"
     posts_long: "hi ha {{number}} publicacions a aquest tema"
     posts_likes_MF: |

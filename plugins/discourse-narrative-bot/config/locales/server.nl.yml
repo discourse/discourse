@@ -95,6 +95,11 @@ nl:
       random_mention:
         reply: |-
           Hallo! Zeg `@%{discobot_username} %{help_trigger}` om te ontdekken wat ik kan.
+        tracks: |-
+          Momenteel kan ik de volgende dingen doen:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Start een interactieve handleiding. `{name-of-tutorial}` kan één zijn van: `%{tracks}`.
       do_not_understand:
         first_response: |-
           Hallo, bedankt voor het antwoord!
@@ -103,8 +108,26 @@ nl:
         track_response: U kunt het opnieuw proberen, of als u deze stap wilt overslaan, `%{skip_trigger}` zeggen. Zeg anders `%{reset_trigger}` om opnieuw te beginnen.
     new_user_narrative:
       reset_trigger: "handleiding"
+      title: "Certificaat voor het invullen van een handleiding voor nieuwe gebruikers"
+      cert_title: "Als erkenning voor de succesvolle afronding van de gebruikershandleiding voor nieuwe gebruikers"
       hello:
         title: "Gegroet!"
+      formatting:
+        reply: |-
+          Uitstekend werk! HTML en BBCode werken ook voor de opmaak – om meer te leren, [probeer deze handleiding](http://commonmark.org/help) :nerd:
+        not_found: |-
+          Oh, ik vond geen opmaak in je antwoord. :pencil2:
+
+          Kan je opnieuw proberen? Gebruik de <kbd><b>B</b></kbd> vet of <kbd><i>I</i></kbd> cursief knoppen in de editor als je vast komt te zitten.
+      search:
+        reply: |-
+          Joepie! Je hebt het gevonden :tada:
+
+          - Voor meer gedetailleerde zoekopdrachten gaat u naar de [geavanceerde zoekpagina](%{search_url}).
+
+          - Om naar eender waar in een lange discussie te springen, probeer de tijdslijnbediening aan de rechterzijde (en onderaan, op mobiele aparaten).
+
+          - Indien je een fysiek toetsenbord hebt :keyboard:, druk <kbd>?</kbd> om onze handige snelkoppelingen te bekijken.
     advanced_user_narrative:
       reset_trigger: "geavanceerde handleiding"
       title: ":arrow_up: Geavanceerde gebruikersfuncties"

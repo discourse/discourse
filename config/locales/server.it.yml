@@ -49,6 +49,7 @@ it:
       about_json_values: "about.json contiene valori non validi: %{errors}"
       git: "Errore nella clonazione del repository git, accesso negato o repository non trovato"
       unpack_failed: "Errore estranedo il contenuto del file"
+      file_too_big: "Il file non compresso è troppo grande."
       unknown_file_type: "Il file che hai caricato non sembra essere un tema di Discourse valido."
     errors:
       component_no_user_selectable: "I componenti del tema non possono essere selezionabili dall'utente"
@@ -208,6 +209,7 @@ it:
   email_template_cant_be_modified: "Questo modello di email non può essere modificato."
   invalid_whisper_access: "I Sussurri potrebbero non essere abilitati, oppure non hai il permesso di creare Messaggi Sussurri."
   not_in_group:
+    title_topic: "Devi essere membro di un gruppo per visualizzare questa argomento."
     join_group: "Partecipa al Gruppo"
   reading_time: "Tempo di lettura"
   likes: "Mi piace"
@@ -236,7 +238,9 @@ it:
     replies:
       one: "%{count} risposta"
       other: "%{count} risposte"
+    last_reply: "Ultima risposta"
     created: "Creazione"
+    new_topic: "Inizia un nuovo argomento"
   no_mentions_allowed: "Spiacenti, non puoi menzionare altri utenti."
   too_many_mentions:
     one: "Spiacenti, puoi menzionare al massimo un utente in un messaggio."
@@ -304,6 +308,17 @@ it:
   edit_conflict: "Il messaggio è stato modificato da un altro utente e i tuoi cambiamenti non possono essere salvati."
   revert_version_same: "La versione attuale è la stessa versione che stai cercando di ripristinare."
   excerpt_image: "immagine"
+  bookmarks:
+    errors:
+      already_bookmarked_post: "Non puoi aggiungere più di un segnalibro allo stesso messaggio."
+    reminders:
+      at_desktop: "La prossima volta che sarò al mio desktop"
+      later_today: "Più tardi, oggi <br/> {{date}}"
+      next_business_day: "Il prossimo giorno lavorativo<br/> {{date}}"
+      tomorrow: "Domani <br/> {{date}}"
+      next_week: "La prossima settimana <br/> {{date}}"
+      next_month: "Il prossimo mese <br/> {{date}}"
+      custom: "Data e ora personalizzate"
   groups:
     success:
       bulk_add:
@@ -694,6 +709,9 @@ it:
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
     error_staged: "Si è verificato un errore durante il cambio di indirizzo email. L'indirizzo è già stato usato da un utente temporaneo."
     already_done: "Spiacenti, il collegamento di conferma non è più valido. Hai forse già cambiato email?"
+    confirm: "Conferma"
+    authorizing_new:
+      title: "Conferma il tuo nuovo indirizzo email"
   associated_accounts:
     revoke_failed: "Impossibile revocare il tuo account con %{provider_name}."
     connected: "(connesso)"
@@ -1542,13 +1560,11 @@ it:
     desktop_category_page_style: "Stile visuale per la pagina /categorie."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
     category_style: "Stile grafico dei distintivi relativi alle categorie."
-    max_image_size_kb: "Dimensione massima in kB per caricare immagini degli utenti. Deve essere configurata anche in nginx (client_max_body_size) / apache o nel proxy."
     max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o nel proxy."
     authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
     authorized_extensions_for_staff: "Un elenco di estensioni di file consentite per il caricamento da parte dello staff in aggiunta all'elenco definito nell'impostazione del sito `authorized_extensions`. (usa '*'; per abilitare tutti i tipi di file)"
     theme_authorized_extensions: "Una lista di estensioni dei file permessi per i caricamenti dei temi (usa '*' per abilitare tutti i tipi di file)"
     max_similar_results: "Quanti argomenti simili mostrare sopra l'editor quando si scrive un nuovo argomento. Il paragone viene fatto sul titolo e sul corpo."
-    max_image_megapixels: "Massimo numero di megapixel consentito per un'immagine."
     title_prettify: "Evita refusi ed errori comuni nei titoli, incluso il testo tutto maiuscolo, il primo carattere minuscolo, troppi caratteri ! e ?, puntini aggiuntivi alla fine della parola ecc."
     title_remove_extraneous_space: "Rimuovi gli spazi bianchi davanti alla punteggiatura."
     automatic_topic_heat_values: 'Aggiorna automaticamente le impostazioni "topic views heat" e "topic post like heat" in base all''attività del sito.'
