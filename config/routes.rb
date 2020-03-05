@@ -951,6 +951,7 @@ Discourse::Application.routes.draw do
 
   resources :csp_reports, only: [:create]
 
+  get "/go/*url", to: 'permalinks#go'
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end
 end

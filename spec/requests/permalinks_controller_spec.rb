@@ -48,7 +48,7 @@ describe PermalinksController do
     end
   end
 
-  describe 'show go' do
+  describe 'go' do
     fab!(:go_link) { Fabricate(:permalink, url: 'go/meta', external_url: 'https://meta.discourse.org/') }
     fab!(:go_topic) { Fabricate(:permalink, url: 'go/important', topic_id: topic.id) }
     fab!(:go_tricky) { Fabricate(:permalink, url: 'go/tricky', external_url: 'https://example.com/folder?tricky=true') }
