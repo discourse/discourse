@@ -22,9 +22,18 @@ export default Component.extend({
     return type.dasherize();
   },
 
-  @discourseComputed("siteSettings.reviewable_claiming", "reviewable.topic")
-  claimEnabled(claimMode, topic) {
-    return claimMode !== "disabled" && !!topic;
+  @discourseComputed(
+    "reviewable.topic",
+    "reviewable.topic_id",
+    "reviewable.removed_topic_id"
+  )
+  topicId(topic, topicId, removedTopicId) {
+    return (topic && topic.id) || topicId || removedTopicId;
+  },
+
+  @discourseComputed("siteSettings.reviewable_claiming", "topicId")
+  claimEnabled(claimMode, topicId) {
+    return claimMode !== "disabled" && !!topicId;
   },
 
   @discourseComputed(

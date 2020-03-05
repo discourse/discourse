@@ -2505,15 +2505,6 @@ hy:
           name: Այլ
         posting:
           name: Հրապարակում
-    google_search: |
-      <h3>Որոնում Google-ի միջոցով</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
     tagging:
       all_tags: "Բոլոր Թեգերը"
       other_tags: "Այլ Թեգեր"

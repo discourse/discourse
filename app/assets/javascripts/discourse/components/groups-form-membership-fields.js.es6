@@ -46,9 +46,16 @@ export default Component.extend({
     return allowMembershipRequests || visibility_level > 1;
   },
 
+  emailDomains: computed("model.emailDomains", function() {
+    return this.model.emailDomains.split(this.tokenSeparator).filter(Boolean);
+  }),
+
   actions: {
     onChangeEmailDomainsSetting(value) {
-      this.set("model.emailDomains", value.join(this.tokenSeparator));
+      this.set(
+        "model.automatic_membership_email_domains",
+        value.join(this.tokenSeparator)
+      );
     }
   }
 });

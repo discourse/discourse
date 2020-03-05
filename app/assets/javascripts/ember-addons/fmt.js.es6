@@ -1,11 +1,7 @@
-import Ember from "ember";
-
-const isArray = Ember.isArray;
-
 export default function(str, formats) {
   let cachedFormats = formats;
 
-  if (!isArray(cachedFormats) || arguments.length > 2) {
+  if (!_.isArray(cachedFormats) || arguments.length > 2) {
     cachedFormats = new Array(arguments.length - 1);
 
     for (let i = 1, l = arguments.length; i < l; i++) {

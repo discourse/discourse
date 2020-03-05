@@ -68,7 +68,7 @@ module PrettyText
           sha1, url, extension, original_filename, secure = row
 
           if short_urls = reverse_map[sha1]
-            secure_media = FileHelper.is_supported_media?(original_filename) && SiteSetting.secure_media? && secure
+            secure_media = SiteSetting.secure_media? && secure
 
             short_urls.each do |short_url|
               result[short_url] = {

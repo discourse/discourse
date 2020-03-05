@@ -57,9 +57,6 @@ class UploadSecurity
   # if there is no access control post id and the upload is currently secure, we
   # do not want to make it un-secure to avoid unintentionally exposing it
   def access_control_post_has_secure_media?
-    # if the post is deleted the access_control_post will be blank...
-    # TODO: deal with this in a better way
-    return false if @upload.access_control_post.blank?
     @upload.access_control_post.with_secure_media?
   end
 

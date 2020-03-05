@@ -8,9 +8,14 @@
 
     {{list-setting
       name="automatic_membership"
-      settingValue=model.emailDomains
       class="group-form-automatic-membership-automatic"
+      value=emailDomains
+      choices=emailDomains
+      settingName="name"
+      nameProperty=null
+      valueProperty=null
       onChange=(action "onChangeEmailDomainsSetting")
+      options=(hash allowAny=true)
     }}
 
     <label>
