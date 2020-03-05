@@ -1073,6 +1073,7 @@ vi:
         no_links: "Không có liên kết"
         most_liked_by: "Được thích nhiều nhất bởi"
         most_liked_users: "Like nhiều nhất"
+        no_likes: "Chưa có lượt thích."
         topics: "Chủ đề"
         replies: "Trả lời"
       ip_address:
@@ -1381,6 +1382,7 @@ vi:
         posted: '{{username}} gửi bài trong "{{topic}}" - {{site_title}}'
         linked: '{{username}} liên quan đến bài viết của bạn từ "{{topic}}" - {{site_title}}'
       titles:
+        liked: "lượt thích mới"
         watching_first_post: "chủ đề mới"
     upload_selector:
       title: "Thêm một ảnh"
@@ -1402,7 +1404,7 @@ vi:
       latest_post: "Bài viết mới nhất"
       latest_topic: "Chủ đề mới"
       most_viewed: "Xem nhiều nhất"
-      most_liked: "Like nhiều nhất"
+      most_liked: "Thích nhiều nhất"
       select_all: "Chọn tất cả"
       clear_all: "Xóa tất cả"
       too_short: "Từ khoá tìm kiếm của bạn quá ngắn."
@@ -1797,7 +1799,7 @@ vi:
       controls:
         reply: "bắt đầu soản trả lời cho bài viết này"
         like: "like bài viết này"
-        has_liked: "bạn đã like bài viết này"
+        has_liked: "bạn đã thích bài viết này"
         undo_like: "hủy like"
         edit: "sửa bài viết này"
         edit_action: "Sửa"
@@ -1834,6 +1836,10 @@ vi:
           notify_moderators: "đã thông báo với BQT"
           notify_user: "đã gửi tin nhắn"
           bookmark: "đã đánh dấu bài này"
+          like:
+            other: "thích này"
+          like_capped:
+            other: "và {{count}} người khác thích nầy"
         by_you:
           off_topic: "Bạn đã đánh dấu cái nfay là chủ đề đóng"
           spam: "Bạn đã đánh dấu cái này là rác"

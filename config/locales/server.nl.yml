@@ -1073,6 +1073,7 @@ nl:
       labels:
         level: Niveau
       description: "Aantal gebruikers gegroepeerd op vertrouwensniveau."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Gebruikers per type"
       xaxis: "Type"

@@ -426,7 +426,7 @@ ru:
           title: "Обзорные приоритеты"
       moderation_history: "История модерации"
       view_all: "Посмотреть все"
-      grouped_by_topic: "Сгруппированы по темам"
+      grouped_by_topic: "Сгруппированные по темам"
       none: "Нет элементов для премодерации."
       view_pending: "просмотр в ожидании"
       topic_has_pending:
@@ -1361,9 +1361,12 @@ ru:
       enabled: "Сайт работает в режиме \"только для чтения\". Сейчас вы можете продолжать просматривать сайт, но другие действия будут недоступны. "
       login_disabled: "Вход отключён, пока сайт в режиме «только для чтения»"
       logout_disabled: "Выход отключён, пока сайт в режиме «только для чтения»"
-    too_few_topics_and_posts_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentTopics}</strong> тем и <strong>%{currentPosts}</strong> постов. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере <strong>%{requiredTopics}</strong> тем и <strong>%{requiredPosts}</strong> постов. Только сотрудники могут видеть это сообщение."
-    too_few_topics_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentTopics}</strong> тем. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере <strong>%{requiredTopics}</strong> тем. Только сотрудники могут видеть это сообщение."
-    too_few_posts_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentPosts}</strong> сообщений. Пользователям нужно больше читать и отвечать - мы рекомендуем хотя бы <strong>%{requiredPosts}</strong> сообщений. Только сотрудники могут видеть это сообщение."
+    too_few_topics_and_posts_notice_MF: >-
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
+    too_few_topics_notice_MF: >-
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}}. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}}. Только сотрудники могут видеть это сообщение.
+    too_few_posts_notice_MF: >-
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} или {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} или {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} или {# errors/minute}}</a> достигнут предел настройки сайта {limit, plural, one {# error/minute} или {# errors/minute}}."
@@ -2055,7 +2058,7 @@ ru:
       group_join: "Вам нужно присоединиться к группе `{{name}}` чтобы увидеть эту тему."
       group_request_sent: "Ваш запрос на членство в группе был отправлен. Вам сообщат, когда  будет одобрено."
       unread_indicator: "Никто еще не дочитал до конца этой темы."
-      read_more_MF: "У вас осталось { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитанная</a> } other { <a href='{basePath}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 новая</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новых</a> тем} }, вы также можете {CATEGORY, select, true {посмотреть другие темы в разделе {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "У вас осталось { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитанная</a> } few { <a href='{basePath}/unread'>1 непрочитанные</a> } other { <a href='{basePath}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 новая</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новых</a> тем} }, вы также можете {CATEGORY, select, true {посмотреть другие темы в разделе {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Просмотреть все разделы
       view_latest_topics: посмотреть последние темы
       suggest_create_topic: "Почему бы вам не создать новую тему?"
@@ -2615,7 +2618,7 @@ ru:
       can: "может&hellip; "
       none: "(вне раздела)"
       all: "Все разделы"
-      choose: "разделе&hellip;"
+      choose: "Выберите раздел&hellip;"
       edit: "Изменить"
       edit_dialog_title: "Редактировать: %{categoryName}"
       view: "Просмотр тем по разделам"
@@ -2747,7 +2750,7 @@ ru:
       notify_action: "Сообщение"
       official_warning: "Официальное предупреждение"
       delete_spammer: "Удалить спамера"
-      delete_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {<b>1</b> сообщение} other {<b>#</b> сообщений}} и {TOPICS, plural, one {<b>1</b> тему} other {<b>#</b> темы}} этого пользователя, а так же удалить его учётную запись, добавить его IP-адрес <b>{ip_address}</b> и его почтовый адрес <b>{email}</b> в чёрный список. Вы действительно действительно ваши помыслы чисты и действия не продиктованы гневом?"
+      delete_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {<b>1</b> сообщение} few {<b>#</b> сообщения} other {<b>#</b> сообщений}} и {TOPICS, plural, one {<b>1</b> тему} few {<b>#</b> темы} other {<b>#</b> тем}} этого пользователя, а так же удалить его учётную запись, добавить его IP-адрес <b>{ip_address}</b> и его почтовый адрес <b>{email}</b> в чёрный список. Вы действительно действительно ваши помыслы чисты и действия не продиктованы гневом?"
       yes_delete_spammer: "Да, удалить спамера"
       ip_address_missing: "(не доступно)"
       hidden_email_address: "(скрыто)"
@@ -2822,10 +2825,11 @@ ru:
         help: "Тема исключена из всех списков тем и доступна только по прямой ссылке"
       personal_message:
         title: "Эта тема является личным сообщением"
+        help: "Эта тема является личным сообщением"
     posts: "Сообщ."
     posts_long: "{{number}} сообщений в теме"
     posts_likes_MF: |
-      В этой теме {count, plural, one {1 сообщение} other {# сообщений}} {ratio, select,
+      В этой теме {count, plural, one {1 сообщение} few {# сообщения} other {# сообщений}} {ratio, select,
       low {с высоким рейтингом симпатий}
       med {с очень высоким рейтингом симпатий}
       high {с чрезвычайно высоким рейтингом симпатий}
@@ -4154,10 +4158,10 @@ ru:
         clear_penalty_history:
           title: "Очистить историю штрафов"
           description: "пользователи со штрафами не могут достичь TL3"
-        delete_all_posts_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {1 сообщение} other {# сообщений}} и {TOPICS, plural, one {1 тему} other {# тем}}. Вы уверены?"
+        delete_all_posts_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {1 сообщение} few {# сообщения} other {# сообщений}} и {TOPICS, plural, one {1 тему} few {# темы} other {# тем}}. Вы уверены?"
         silence: "Заблокировать"
         unsilence: "Разблокировать"
-        silenced: "Заброкирован?"
+        silenced: "Заблокирован?"
         moderator: "Модератор?"
         admin: "Администратор?"
         suspended: "Заморожен?"

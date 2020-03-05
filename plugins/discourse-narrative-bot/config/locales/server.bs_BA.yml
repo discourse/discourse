@@ -26,6 +26,14 @@ bs_BA:
         Ovaj bedž je dodjeljen prilikom uspješnog završetka interaktivnog tutorijala za nove korisnike. Postali ste majstor naprednih alata u diskusiji - sada ste potpuno licencirani!
   discourse_narrative_bot:
     bio: "Pozdrav, ja nisam stvarna osoba. Ja sam automatski robot koji će vas naučiti kako da koristite ovaj web sajt. Kako bi komunicirali sa mnom, pošaljite mi poruku ili me spomenite pisajući **`@%{discobot_username}`** bilo gdje."
+    tl2_promotion_message:
+      subject_template: "Čestitamo na povišenju vašeg nivoa povjerenja!"
+      text_body_template: |
+        Sada kada vam je povišen nivo povjerenja, došlo je vrijeme da naučite neke napredne mogućnosti!
+
+        Odgovori na ovu poruku sa `@%{discobot_username} %{reset_trigger}` kako bi saznali nešto više o tome šta je moguće sve raditi.
+
+        Pozivamo vas da se i dalje ovdje uključite  - uživamo što vas imamo ovdje na forumu.
     timeout:
       message: |-
         Hej @%{username}, samo vas provjeravam jer nisam vas čuo neko vrijeme.
@@ -113,6 +121,20 @@ bs_BA:
       random_mention:
         reply: |-
           Pozdrav! Kako bi saznali šta sve mogu raditi, recite `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Trenutno znam kako uraditi sljedeće stvari:
+
+          `@%{discobot_username} %{reset_trigger} {ime-tutorijala}`
+          > Starta interaktivni tutorijal. `{ime-tutorijala}` može biti jedan od `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Možeš se na to osloniti
       do_not_understand:
         first_response: |-
           Hej, hvala za odgovor!
@@ -190,6 +212,12 @@ bs_BA:
       search:
         instructions: |-
           _psst_… Sakrio sam iznenađenje u ovoj temi. Ako ste spremni za izazov, ** odaberite ikonu za pretraživanje ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> gore desno ↗ da ga potražite. Pokušajte tražiti pojam "capy&#8203;bara" u ovoj temi
+        hidden_message: |-
+          Kako ste uspjeli propustiti ovu kapibaru? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Dali ste primjetili da ste sada na početku? Nahranite ovog jadnog gladnog kapibaru tako što će te **odgovoriti sa `%{search_answer}` emoji-em** i bit će te automatski vraćeni na kraj.
         reply: |-
           Yay ste ga pronašli: tada: - Za detaljnije pretrage, pređite na [full search page] (%{search_url}). - Da biste skočili bilo gdje u dugoj diskusiji, pokušajte kontrolirati vremensku liniju teme desno (i na dnu, na mobitelu). - Ako imate fizičku tipkovnicu: pritisnite <kbd>?</kbd> da biste videli naše korisne prečice na tastaturi.
         not_found: |-
