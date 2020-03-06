@@ -206,6 +206,7 @@ componentTest("allowUncategorized (false)", {
   template: template(["allowUncategorized=false"]),
 
   beforeEach() {
+    this.siteSettings.allow_uncategorized_topics = false;
     initCategories(this);
   },
 
