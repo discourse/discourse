@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { observes } from "discourse-common/utils/decorators";
 import { getRegister } from "discourse-common/lib/get-owner";
@@ -44,7 +45,7 @@ function initializePolls(api) {
           if (existing) {
             this._polls[p.name].setProperties(p);
           } else {
-            this._polls[p.name] = Ember.Object.create(p);
+            this._polls[p.name] = EmberObject.create(p);
           }
         });
         this.set("pollsObject", this._polls);
@@ -78,8 +79,8 @@ function initializePolls(api) {
       if (quotedId) {
         const quotedPost = post.quoted[quotedId];
         if (quotedPost) {
-          post = Ember.Object.create(quotedPost);
-          poll = Ember.Object.create(
+          post = EmberObject.create(quotedPost);
+          poll = EmberObject.create(
             quotedPost.polls.find(p => p.name === pollName)
           );
           vote = quotedPost.polls_votes || {};

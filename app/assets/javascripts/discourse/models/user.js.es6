@@ -1,3 +1,4 @@
+import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
 import { gt, equal, or } from "@ember/object/computed";
 import EmberObject, { computed } from "@ember/object";
@@ -884,7 +885,7 @@ User.reopenClass(Singleton, {
       responses.set("count", responses.get("count") + stat.get("count"));
     });
 
-    const result = Ember.A();
+    const result = A();
     result.pushObjects(stats.rejectBy("isResponse"));
 
     let insertAt = 0;

@@ -1,14 +1,14 @@
 /*global Mousetrap:true*/
+import Application from "@ember/application";
+import EmberObject, { computed } from "@ember/object";
 import { buildResolver } from "discourse-common/resolver";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { computed } from "@ember/object";
 import FocusEvent from "discourse-common/mixins/focus-event";
-import EmberObject from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 
 const _pluginCallbacks = [];
 
-const Discourse = Ember.Application.extend(FocusEvent, {
+const Discourse = Application.extend(FocusEvent, {
   rootElement: "#main",
   _docTitle: document.title,
   RAW_TEMPLATES: {},

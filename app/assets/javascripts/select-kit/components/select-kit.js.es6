@@ -1,4 +1,4 @@
-import { computed, default as EmberObject } from "@ember/object";
+import { computed, guidFor, default as EmberObject } from "@ember/object";
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -76,7 +76,7 @@ export default Component.extend(
       this.set(
         "selectKit",
         EmberObject.create({
-          uniqueID: Ember.guidFor(this),
+          uniqueID: guidFor(this),
           valueProperty: this.valueProperty,
           nameProperty: this.nameProperty,
           options: EmberObject.create(),

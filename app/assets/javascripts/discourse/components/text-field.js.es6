@@ -1,7 +1,8 @@
+import { TextField } from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { siteDir, isRTL, isLTR } from "discourse/lib/text-direction";
 
-export default Ember.TextField.extend({
+export default TextField.extend({
   attributeBindings: [
     "autocorrect",
     "autocapitalize",

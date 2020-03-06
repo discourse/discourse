@@ -1,6 +1,7 @@
+import { TextField } from "@ember/component";
 import { on } from "discourse-common/utils/decorators";
 
-export default Ember.TextField.extend({
+export default TextField.extend({
   @on("init")
   _init() {
     // Chrome autocomplete is buggy per:
