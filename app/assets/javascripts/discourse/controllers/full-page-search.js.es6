@@ -1,7 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import {
   translateResults,
@@ -26,8 +25,8 @@ const SortOrders = [
 const PAGE_LIMIT = 10;
 
 export default Controller.extend({
-  application: inject(),
-  composer: inject(),
+  application: controller(),
+  composer: controller(),
   bulkSelectEnabled: null,
 
   loading: false,

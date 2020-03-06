@@ -1,10 +1,9 @@
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
   queryParams: ["order", "asc", "filter", "type"],
   order: null,
   asc: null,

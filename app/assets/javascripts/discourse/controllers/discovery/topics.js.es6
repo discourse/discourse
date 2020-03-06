@@ -1,6 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, not, gt, empty, notEmpty, equal } from "@ember/object/computed";
-import { inject } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
@@ -11,8 +11,8 @@ import TopicList from "discourse/models/topic-list";
 import Topic from "discourse/models/topic";
 
 const controllerOpts = {
-  discovery: inject(),
-  discoveryTopics: inject("discovery/topics"),
+  discovery: controller(),
+  discoveryTopics: controller("discovery/topics"),
 
   period: null,
 
