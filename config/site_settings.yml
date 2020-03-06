@@ -1649,8 +1649,6 @@ backups:
   enable_backups:
     default: true
     client: true
-  readonly_mode_during_backup:
-    default: false
   allow_restore:
     default: false
   backup_location:
