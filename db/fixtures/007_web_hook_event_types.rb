@@ -49,3 +49,13 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::NOTIFICATION
   b.name = "notification"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::SOLVED
+  b.name = "solved"
+end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::ASSIGN
+  b.name = "assign"
+end
