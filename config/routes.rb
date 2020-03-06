@@ -954,6 +954,8 @@ Discourse::Application.routes.draw do
 
   resources :csp_reports, only: [:create]
 
+  get "/permalink-check", to: 'permalinks#check'
+
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end
 end

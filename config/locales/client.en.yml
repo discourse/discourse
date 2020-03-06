@@ -4578,7 +4578,7 @@ en:
 
       permalink:
         title: "Permalinks"
-        description: "Please note this only applies to external sources, links posted on your forum will not be redirected."
+        description: "Redirections to apply for URLs not known by the forum."
         url: "URL"
         topic_id: "Topic ID"
         topic_title: "Topic"
