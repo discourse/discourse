@@ -12,7 +12,8 @@ var define, requirejs;
       jquery: { default: $ },
       "@ember/array": {
         default: Ember.Array,
-        A: Ember.A
+        A: Ember.A,
+        isArray: Ember.isArray
       },
       "@ember/array/proxy": {
         default: Ember.ArrayProxy
@@ -99,10 +100,10 @@ var define, requirejs;
         inject: Ember.inject.service
       },
       "@ember/utils": {
-        isPresent: Ember.isPresent,
         isBlank: Ember.isBlank,
         isEmpty: Ember.isEmpty,
-        isNone: Ember.isNone
+        isNone: Ember.isNone,
+        isPresent: Ember.isPresent
       },
       rsvp: {
         default: Ember.RSVP,

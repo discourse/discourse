@@ -1,3 +1,4 @@
+import { warn } from "@ember/debug";
 import { equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
@@ -24,7 +25,7 @@ const RestModel = EmberObject.extend({
         const payload = this.__munge(res.payload || res.responseJson);
 
         if (payload.success === "OK") {
-          Ember.warn("An update call should return the updated attributes", {
+          warn("An update call should return the updated attributes", {
             id: "discourse.rest-model.update-attributes"
           });
           res = props;

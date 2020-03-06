@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
+import { isBlank, isEmpty } from "@ember/utils";
 import { or, gt } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -153,7 +153,7 @@ const Theme = RestModel.extend({
   @discourseComputed("theme_fields.[]")
   editedFields(fields) {
     return fields.filter(
-      field => !Ember.isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
+      field => !isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
     );
   },
 

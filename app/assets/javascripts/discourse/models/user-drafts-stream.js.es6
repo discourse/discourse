@@ -1,3 +1,4 @@
+import { A } from "@ember/array";
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
@@ -70,7 +71,7 @@ export default RestModel.extend({
           this.set("noContentHelp", result.no_results_help);
         }
         if (result && result.drafts) {
-          const copy = Ember.A();
+          const copy = A();
           result.drafts.forEach(draft => {
             let draftData = JSON.parse(draft.data);
             draft.post_number = draftData.postId || null;

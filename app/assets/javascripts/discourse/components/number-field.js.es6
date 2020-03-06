@@ -1,6 +1,7 @@
+import { TextField } from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.TextField.extend({
+export default TextField.extend({
   classNameBindings: ["invalid"],
 
   @discourseComputed("number")
