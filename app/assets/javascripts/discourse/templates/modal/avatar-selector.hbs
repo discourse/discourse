@@ -14,16 +14,16 @@
     </div>
     <div class="avatar-choice">
       {{radio-button id="gravatar" name="avatar" value="gravatar" selection=selected}}
-      <label class="radio" for="gravatar">{{bound-avatar-template user.gravatar_avatar_template "large"}} <span>{{i18n 'user.change_avatar.gravatar'}} {{user.email}}</span></label>
+      <label class="radio" for="gravatar">{{bound-avatar-template user.gravatar_avatar_template "large"}} <span>{{i18n 'user.change_avatar.gravatar' gravatarName=gravatarName gravatarBaseUrl=gravatarBaseUrl gravatarLoginUrl=gravatarLoginUrl }} {{user.email}}</span></label>
 
       {{d-button action=(action "refreshGravatar")
-                 title="user.change_avatar.refresh_gravatar_title"
+                 translatedTitle=(i18n "user.change_avatar.refresh_gravatar_title" gravatarName=gravatarName)
                  disabled=gravatarRefreshDisabled
                  icon="sync"
                  class="btn-default avatar-selector-refresh-gravatar"}}
 
       {{#if gravatarFailed}}
-        <p class="error">{{i18n 'user.change_avatar.gravatar_failed'}}</p>
+        <p class="error">{{I18n 'user.change_avatar.gravatar_failed' gravatarName=gravatarName}}</p>
       {{/if}}
     </div>
     {{#if allowAvatarUpload}}
