@@ -76,10 +76,10 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @discourseComputed("model.details.can_create_post")
-  embedQuoteButton(canCreatePost) {
+  @discourseComputed("model.details.can_create_post", "composer.visible")
+  embedQuoteButton(canCreatePost, composerOpened) {
     return (
-      canCreatePost &&
+      (canCreatePost || composerOpened) &&
       this.currentUser &&
       this.currentUser.get("enable_quoting")
     );
