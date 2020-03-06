@@ -1337,7 +1337,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(200)
-          expect(topic.reload.bumped_at).to eq(topic.posts.last.created_at)
+          expect(topic.reload.bumped_at).to eq_time(topic.posts.last.created_at)
         end
       end
 

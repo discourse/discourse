@@ -238,7 +238,7 @@ describe PostMover do
 
             p4.reload
             expect(new_topic.last_post_user_id).to eq(p4.user_id)
-            expect(new_topic.last_posted_at).to eq(p4.created_at)
+            expect(new_topic.last_posted_at).to eq_time(p4.created_at)
             expect(new_topic.bumped_at).to eq_time(Time.zone.now)
 
             p2.reload

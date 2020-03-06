@@ -560,7 +560,7 @@ describe PostCreator do
       topic.reload
       expect(topic.highest_post_number).to eq(1)
       expect(topic.posts_count).to eq(1)
-      expect(topic.last_posted_at).to eq(first.created_at)
+      expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.highest_staff_post_number).to eq(3)
     end
   end

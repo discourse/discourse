@@ -138,7 +138,7 @@ describe PostRevisor do
         expect(post.version).to eq(1)
         expect(post.public_version).to eq(1)
         expect(post.revisions.size).to eq(0)
-        expect(post.last_version_at).to eq(first_version_at)
+        expect(post.last_version_at).to eq_time(first_version_at)
         expect(subject.category_changed).to be_blank
       end
 

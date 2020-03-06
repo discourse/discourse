@@ -1695,7 +1695,7 @@ RSpec.describe TopicsController do
       sign_in(user)
       get "/t/#{topic.slug}/#{topic.id}"
       topic_user = TopicUser.where(user: user, topic: topic).first
-      expect(topic_user.last_visited_at).to eq(topic_user.first_visited_at)
+      expect(topic_user.last_visited_at).to eq_time(topic_user.first_visited_at)
     end
 
     context 'consider for a promotion' do
@@ -2656,7 +2656,7 @@ RSpec.describe TopicsController do
           topic_status_update = TopicTimer.last
 
           expect(topic_status_update.topic).to eq(topic)
-          expect(topic_status_update.execute_at).to eq(24.hours.from_now)
+          expect(topic_status_update.execute_at).to eq_time(24.hours.from_now)
           expect(topic_status_update.status_type)
             .to eq(TopicTimer.types[:publish_to_category])
 

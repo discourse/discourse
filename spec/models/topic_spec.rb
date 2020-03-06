@@ -1627,32 +1627,32 @@ describe Topic do
       freeze_time now
 
       topic.set_or_create_timer(TopicTimer.types[:close], 72, by_user: admin)
-      expect(topic.topic_timers.first.execute_at).to eq(3.days.from_now)
+      expect(topic.topic_timers.first.execute_at).to eq_time(3.days.from_now)
     end
 
     it 'can take a number of hours as a string' do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin)
-      expect(topic.topic_timers.first.execute_at).to eq(18.hours.from_now)
+      expect(topic.topic_timers.first.execute_at).to eq_time(18.hours.from_now)
     end
 
     it 'can take a number of hours as a string and can handle based on last post' do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin, based_on_last_post: true)
-      expect(topic.topic_timers.first.execute_at).to eq(18.hours.from_now)
+      expect(topic.topic_timers.first.execute_at).to eq_time(18.hours.from_now)
     end
 
     it "can take a timestamp for a future time" do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', by_user: admin)
-      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 22, 5, 0))
+      expect(topic.topic_timers.first.execute_at).to eq_time(Time.zone.local(2013, 11, 22, 5, 0))
     end
 
     it "sets a validation error when given a timestamp in the past" do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-19 5:00', by_user: admin)
 
-      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 19, 5, 0))
+      expect(topic.topic_timers.first.execute_at).to eq_time(Time.zone.local(2013, 11, 19, 5, 0))
       expect(topic.topic_timers.first.errors[:execute_at]).to be_present
     end
 
@@ -1671,7 +1671,7 @@ describe Topic do
     it "can take a timestamp with timezone" do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-25T01:35:00-08:00', by_user: admin)
-      expect(topic.topic_timers.first.execute_at).to eq(Time.utc(2013, 11, 25, 9, 35))
+      expect(topic.topic_timers.first.execute_at).to eq_time(Time.utc(2013, 11, 25, 9, 35))
     end
 
     it 'sets topic status update user to given user if it is a staff or TL4 user' do
@@ -1715,7 +1715,7 @@ describe Topic do
     it 'updates topic status update execute_at if it was already set to close' do
       freeze_time now
       closing_topic.set_or_create_timer(TopicTimer.types[:close], 48)
-      expect(closing_topic.reload.public_topic_timer.execute_at).to eq(2.days.from_now)
+      expect(closing_topic.reload.public_topic_timer.execute_at).to eq_time(2.days.from_now)
     end
 
     it 'should not delete topic_timer of another status_type' do
@@ -1791,7 +1791,7 @@ describe Topic do
           topic.set_or_create_timer(TopicTimer.types[:reminder], 11, by_user: admin)
         }.to_not change { TopicTimer.count }
         reminder.reload
-        expect(reminder.execute_at).to eq(11.hours.from_now)
+        expect(reminder.execute_at).to eq_time(11.hours.from_now)
       end
     end
   end
@@ -2091,7 +2091,7 @@ describe Topic do
       topic_embed = TopicEmbed.create!(topic_id: topic.id, embed_url: "https://blog.codinghorror.com/password-rules-are-bullshit", post_id: post.id, deleted_at: 1.day.ago)
       topic.recover!
       topic_embed.reload
-      expect(topic_embed.deleted_at).to eq(nil)
+      expect(topic_embed.deleted_at).to be_nil
     end
   end
 
