@@ -198,6 +198,8 @@ class CategoriesController < ApplicationController
     guardian.ensure_can_delete!(@category)
     @category.destroy
 
+    TopicTimer.where(category_id: @category.id).destroy_all
+
     Scheduler::Defer.later "Log staff action delete category" do
       @staff_action_logger.log_category_deletion(@category)
     end
