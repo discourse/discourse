@@ -490,16 +490,22 @@ class CookedPostProcessor
   end
 
   def update_post_image
-    img = extract_images_for_post.first
-    if img.blank?
-      @post.update_column(:image_url, nil) if @post.image_url
-      @post.topic.update_column(:image_url, nil) if @post.topic.image_url && @post.is_first_post?
-      return
+    upload = nil
+    eligible_image_fragments = extract_images_for_post
+
+    # Loop through those fragments until we find one with an upload record
+    @post.each_upload_url(fragments: eligible_image_fragments) do |src, path, sha1|
+      upload = Upload.find_by(sha1: sha1)
+      break if upload
     end
 
-    if img["src"].present?
-      @post.update_column(:image_url, img["src"][0...255]) # post
-      @post.topic.update_column(:image_url, img["src"][0...255]) if @post.is_first_post? # topic
+    if upload.present?
+      @post.update_column(:image_upload_id, upload.id) # post
+      @post.topic.update_column(:image_upload_id, upload.id) if @post.is_first_post? # topic
+    else
+      @post.update_column(:image_upload_id, nil) if @post.image_upload_id
+      @post.topic.update_column(:image_upload_id, nil) if @post.topic.image_upload_id && @post.is_first_post?
+      nil
     end
   end
 

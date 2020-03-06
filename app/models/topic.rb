@@ -138,6 +138,7 @@ class Topic < ActiveRecord::Base
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
+  belongs_to :image_upload, class_name: "Upload"
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
@@ -1466,6 +1467,10 @@ class Topic < ActiveRecord::Base
       .where("groups.public_admission OR groups.allow_membership_requests")
       .order(:allow_membership_requests)
       .first
+  end
+
+  def image_url
+    image_upload&.url
   end
 
   private

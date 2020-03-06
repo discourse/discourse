@@ -51,6 +51,8 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
+  belongs_to :image_upload, class_name: "Upload"
+
   validates_with PostValidator, unless: :skip_validation
 
   after_save :index_search
@@ -1060,6 +1062,10 @@ class Post < ActiveRecord::Base
 
   def owned_uploads_via_access_control
     Upload.where(access_control_post_id: self.id)
+  end
+
+  def image_url
+    image_upload&.url
   end
 
   private
