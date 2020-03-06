@@ -3522,6 +3522,58 @@ describe UsersController do
     end
   end
 
+  describe "#enable_second_factor_totp" do
+    before do
+      sign_in(user)
+    end
+
+    def create_totp
+      stub_secure_session_confirmed
+      post "/users/create_second_factor_totp.json"
+    end
+
+    it "creates a totp for the user successfully" do
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token }
+
+      expect(response.status).to eq(200)
+      expect(user.user_second_factors.count).to eq(1)
+    end
+
+    context "when an incorrect token is provided" do
+      before do
+        create_totp
+        post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: "123456" }
+      end
+      it "shows a helpful error message to the user" do
+        expect(JSON.parse(response.body)['error']).to eq(I18n.t("login.invalid_second_factor_code"))
+      end
+    end
+
+    context "when a name is not provided" do
+      before do
+        create_totp
+        post "/users/enable_second_factor_totp.json", params: { second_factor_token: "123456" }
+      end
+      it "shows a helpful error message to the user" do
+        expect(JSON.parse(response.body)['error']).to eq(I18n.t("login.missing_second_factor_name"))
+      end
+    end
+
+    context "when a token is not provided" do
+      before do
+        create_totp
+        post "/users/enable_second_factor_totp.json", params: { name: "test" }
+      end
+      it "shows a helpful error message to the user" do
+        expect(JSON.parse(response.body)['error']).to eq(I18n.t("login.missing_second_factor_code"))
+      end
+    end
+  end
+
   describe '#update_second_factor' do
     let(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
@@ -3554,7 +3606,7 @@ describe UsersController do
 
         context 'when token is valid' do
           before do
-            ApplicationController.any_instance.stubs(:secure_session).returns("confirmed-password-#{user.id}" => "true")
+            stub_secure_session_confirmed
           end
           it 'should allow second factor for the user to be renamed' do
             put "/users/second_factor.json", params: {
@@ -4062,7 +4114,11 @@ describe UsersController do
 
   def create_second_factor_security_key
     sign_in(user)
-    UsersController.any_instance.stubs(:secure_session_confirmed?).returns(true)
+    stub_secure_session_confirmed
     post "/u/create_second_factor_security_key.json"
+  end
+
+  def stub_secure_session_confirmed
+    UsersController.any_instance.stubs(:secure_session_confirmed?).returns(true)
   end
 end

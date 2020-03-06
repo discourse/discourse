@@ -1211,8 +1211,12 @@ class UsersController < ApplicationController
   end
 
   def enable_second_factor_totp
-    params.require(:second_factor_token)
-    params.require(:name)
+    if params[:second_factor_token].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_code"))
+    end
+    if params[:name].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_name"))
+    end
     auth_token = params[:second_factor_token]
 
     totp_data = secure_session["staged-totp-#{current_user.id}"]
