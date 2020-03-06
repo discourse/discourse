@@ -3,6 +3,7 @@ import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:click-track", {
   beforeEach() {
@@ -55,8 +56,7 @@ QUnit.skip("tracks internal URLs", async assert => {
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   const done = assert.async();
-  /* global server */
-  server.post("/clicks/track", request => {
+  pretender.post("/clicks/track", request => {
     assert.ok(
       request.requestBody,
       "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
@@ -74,8 +74,7 @@ QUnit.skip("does not track elements with no href", async assert => {
 QUnit.skip("does not track attachments", async assert => {
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
-  /* global server */
-  server.post("/clicks/track", () => assert.ok(false));
+  pretender.post("/clicks/track", () => assert.ok(false));
 
   assert.notOk(track(generateClickEventOn(".attachment")));
   assert.ok(
@@ -89,8 +88,7 @@ QUnit.skip("tracks external URLs", async assert => {
   assert.expect(2);
 
   const done = assert.async();
-  /* global server */
-  server.post("/clicks/track", request => {
+  pretender.post("/clicks/track", request => {
     assert.ok(
       request.requestBody,
       "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
@@ -108,8 +106,7 @@ QUnit.skip(
     User.currentProp("external_links_in_new_tab", true);
 
     const done = assert.async();
-    /* global server */
-    server.post("/clicks/track", request => {
+    pretender.post("/clicks/track", request => {
       assert.ok(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"

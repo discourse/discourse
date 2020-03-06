@@ -556,12 +556,29 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
       end
 
-      describe 'when poll is disabled' do
-        before do
+      describe 'when user cannot create polls' do
+        it 'should create the right reply (polls disabled)' do
           SiteSetting.poll_enabled = false
+
+          TopicUser.change(
+            user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:tracking]
+          )
+
+          expected_raw = <<~RAW
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply', base_uri: '')}
+
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.details.instructions', base_uri: '')}
+          RAW
+
+          expect(Post.last.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
         end
 
-        it 'should create the right reply' do
+        it 'should create the right reply (insufficient trust level)' do
+          user.update(trust_level: 0)
+
           TopicUser.change(
             user.id,
             topic.id,
@@ -587,6 +604,19 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           topic_id: topic.id,
           track: described_class.to_s
         )
+      end
+
+      it 'allows new users to create polls' do
+        user.update(trust_level: 0)
+
+        post = PostCreator.create(user, topic_id: topic.id, raw: <<~RAW)
+          [poll type=regular]
+          * foo
+          * bar
+          [/poll]
+        RAW
+
+        expect(post.errors[:base].size).to eq(0)
       end
 
       describe 'when post is not in the right topic' do

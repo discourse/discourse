@@ -41,6 +41,11 @@ registerUnbound("number", (orig, params) => {
   if (n.toString() !== title.toString() && addTitle) {
     result += " title='" + Handlebars.Utils.escapeExpression(title) + "'";
   }
+  if (params.ariaLabel) {
+    const ariaLabel = Handlebars.Utils.escapeExpression(params.ariaLabel);
+    result += ` aria-label='${ariaLabel}'`;
+  }
+
   result += ">" + n + "</span>";
 
   return new safe(result);

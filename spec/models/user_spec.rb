@@ -2220,6 +2220,16 @@ describe User do
     end
   end
 
+  describe "Destroying a user with security key" do
+    let!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user) }
+    fab!(:admin) { Fabricate(:admin) }
+
+    it "removes the security key" do
+      UserDestroyer.new(admin).destroy(user)
+      expect(UserSecurityKey.where(user_id: user.id).count).to eq(0)
+    end
+  end
+
   describe 'Secure identifier for a user which is a string other than the ID used to identify the user in some cases e.g. security keys' do
     describe '#create_or_fetch_secure_identifier' do
       context 'if the user already has a secure identifier' do
@@ -2275,6 +2285,34 @@ describe User do
       user.grant_admin!
 
       expect(user.approved).to eq(true)
+    end
+  end
+
+  describe "#recent_time_read" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+
+    before_all do
+      UserVisit.create(user_id: user.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 10)
+      UserVisit.create(user_id: user.id, visited_at: 2.days.ago, posts_read: 1, mobile: false, time_read: 20)
+      UserVisit.create(user_id: user.id, visited_at: 1.week.ago, posts_read: 1, mobile: false, time_read: 30)
+      UserVisit.create(user_id: user.id, visited_at: 1.year.ago, posts_read: 1, mobile: false, time_read: 40) # Old, should be ignored
+      UserVisit.create(user_id: user2.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 50)
+    end
+
+    it "calculates correctly" do
+      expect(user.recent_time_read).to eq(60)
+      expect(user2.recent_time_read).to eq(50)
+    end
+
+    it "preloads correctly" do
+      User.preload_recent_time_read([user, user2])
+
+      expect(user.instance_variable_get(:@recent_time_read)).to eq(60)
+      expect(user2.instance_variable_get(:@recent_time_read)).to eq(50)
+
+      expect(user.recent_time_read).to eq(60)
+      expect(user2.recent_time_read).to eq(50)
     end
   end
 end

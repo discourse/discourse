@@ -618,6 +618,15 @@ describe Topic do
           expect(Post.last.action_code).to eq("removed_user")
         end
 
+        it 'should not create a small action if user is already invited through a group' do
+          group = Fabricate(:group, users: [user, another_user])
+          expect(topic.invite_group(user, group)).to eq(true)
+
+          expect { topic.invite(user, another_user.username) }
+            .to change { Notification.count }.by(1)
+            .and change { Post.where(post_type: Post.types[:small_action]).count }.by(0)
+        end
+
         context "from a muted user" do
           before { MutedUser.create!(user: another_user, muted_user: user) }
 
@@ -1114,6 +1123,14 @@ describe Topic do
     context 'closed' do
       let(:status) { 'closed' }
       it_should_behave_like 'a status that closes a topic'
+
+      it 'should archive group message' do
+        group = Fabricate(:group)
+        group.add(@user)
+        topic = Fabricate(:private_message_topic, allowed_groups: [group])
+
+        expect { topic.update_status(status, true, @user) }.to change(topic.group_archived_messages, :count).by(1)
+      end
     end
 
     context 'autoclosed' do

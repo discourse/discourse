@@ -4,8 +4,7 @@ import { alias, or, readOnly } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import showModal from "discourse/lib/show-modal";
@@ -27,9 +26,9 @@ const AuthErrors = [
 ];
 
 export default Controller.extend(ModalFunctionality, {
-  createAccount: inject(),
-  forgotPassword: inject(),
-  application: inject(),
+  createAccount: controller(),
+  forgotPassword: controller(),
+  application: controller(),
 
   loggingIn: false,
   loggedIn: false,

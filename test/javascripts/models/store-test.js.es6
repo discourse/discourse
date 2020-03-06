@@ -50,77 +50,68 @@ QUnit.test(
   }
 );
 
-QUnit.test("find", assert => {
+QUnit.test("find", async assert => {
   const store = createStore();
 
-  return store.find("widget", 123).then(function(w) {
-    assert.equal(w.get("name"), "Trout Lure");
-    assert.equal(w.get("id"), 123);
-    assert.ok(!w.get("isNew"), "found records are not new");
-    assert.equal(w.get("extras.hello"), "world", "extra attributes are set");
+  const widget = await store.find("widget", 123);
+  assert.equal(widget.get("name"), "Trout Lure");
+  assert.equal(widget.get("id"), 123);
+  assert.ok(!widget.get("isNew"), "found records are not new");
+  assert.equal(widget.get("extras.hello"), "world", "extra attributes are set");
 
-    // A second find by id returns the same object
-    store.find("widget", 123).then(function(w2) {
-      assert.equal(w, w2);
-      assert.equal(w.get("extras.hello"), "world", "extra attributes are set");
-    });
-  });
+  // A second find by id returns the same object
+  const widget2 = await store.find("widget", 123);
+  assert.equal(widget, widget2);
+  assert.equal(widget.get("extras.hello"), "world", "extra attributes are set");
 });
 
-QUnit.test("find with object id", assert => {
+QUnit.test("find with object id", async assert => {
   const store = createStore();
-  return store.find("widget", { id: 123 }).then(function(w) {
-    assert.equal(w.get("firstObject.name"), "Trout Lure");
-  });
+  const widget = await store.find("widget", { id: 123 });
+  assert.equal(widget.get("firstObject.name"), "Trout Lure");
 });
 
-QUnit.test("find with query param", assert => {
+QUnit.test("find with query param", async assert => {
   const store = createStore();
-  return store.find("widget", { name: "Trout Lure" }).then(function(w) {
-    assert.equal(w.get("firstObject.id"), 123);
-  });
+  const widget = await store.find("widget", { name: "Trout Lure" });
+  assert.equal(widget.get("firstObject.id"), 123);
 });
 
-QUnit.test("findStale with no stale results", assert => {
+QUnit.test("findStale with no stale results", async assert => {
   const store = createStore();
   const stale = store.findStale("widget", { name: "Trout Lure" });
 
   assert.ok(!stale.hasResults, "there are no stale results");
   assert.ok(!stale.results, "results are present");
-  return stale.refresh().then(function(w) {
-    assert.equal(
-      w.get("firstObject.id"),
-      123,
-      "a `refresh()` method provides results for stale"
-    );
-  });
+  const widget = await stale.refresh();
+  assert.equal(
+    widget.get("firstObject.id"),
+    123,
+    "a `refresh()` method provides results for stale"
+  );
 });
 
-QUnit.test("update", assert => {
+QUnit.test("update", async assert => {
   const store = createStore();
-  return store.update("widget", 123, { name: "hello" }).then(function(result) {
-    assert.ok(result);
-  });
+  const result = await store.update("widget", 123, { name: "hello" });
+  assert.ok(result);
 });
 
-QUnit.test("update with a multi world name", function(assert) {
+QUnit.test("update with a multi world name", async assert => {
   const store = createStore();
-  return store
-    .update("cool-thing", 123, { name: "hello" })
-    .then(function(result) {
-      assert.ok(result);
-      assert.equal(result.payload.name, "hello");
-    });
+  const result = await store.update("cool-thing", 123, { name: "hello" });
+  assert.ok(result);
+  assert.equal(result.payload.name, "hello");
 });
 
-QUnit.test("findAll", assert => {
+QUnit.test("findAll", async assert => {
   const store = createStore();
-  return store.findAll("widget").then(function(result) {
-    assert.equal(result.get("length"), 2);
-    const w = result.findBy("id", 124);
-    assert.ok(!w.get("isNew"), "found records are not new");
-    assert.equal(w.get("name"), "Evil Repellant");
-  });
+  const result = await store.findAll("widget");
+  assert.equal(result.get("length"), 2);
+
+  const widget = result.findBy("id", 124);
+  assert.ok(!widget.get("isNew"), "found records are not new");
+  assert.equal(widget.get("name"), "Evil Repellant");
 });
 
 QUnit.test("destroyRecord", function(assert) {
@@ -140,59 +131,57 @@ QUnit.test("destroyRecord when new", function(assert) {
   });
 });
 
-QUnit.test("find embedded", function(assert) {
+QUnit.test("find embedded", async assert => {
   const store = createStore();
-  return store.find("fruit", 1).then(function(f) {
-    assert.ok(f.get("farmer"), "it has the embedded object");
+  const fruit = await store.find("fruit", 1);
+  assert.ok(fruit.get("farmer"), "it has the embedded object");
 
-    const fruitCols = f.get("colors");
-    assert.equal(fruitCols.length, 2);
-    assert.equal(fruitCols[0].get("id"), 1);
-    assert.equal(fruitCols[1].get("id"), 2);
+  const fruitCols = fruit.get("colors");
+  assert.equal(fruitCols.length, 2);
+  assert.equal(fruitCols[0].get("id"), 1);
+  assert.equal(fruitCols[1].get("id"), 2);
 
-    assert.ok(f.get("category"), "categories are found automatically");
-  });
+  assert.ok(fruit.get("category"), "categories are found automatically");
 });
 
 QUnit.test("embedded records can be cleared", async assert => {
   const store = createStore();
-  let f = await store.find("fruit", 4);
-  f.set("farmer", { dummy: "object" });
-  f = await store.find("fruit", 4);
-  assert.ok(!f.get("farmer"));
+  let fruit = await store.find("fruit", 4);
+  fruit.set("farmer", { dummy: "object" });
+
+  fruit = await store.find("fruit", 4);
+  assert.ok(!fruit.get("farmer"));
 });
 
-QUnit.test("meta types", function(assert) {
+QUnit.test("meta types", async assert => {
   const store = createStore();
-  return store.find("barn", 1).then(function(f) {
-    assert.equal(
-      f.get("owner.name"),
-      "Old MacDonald",
-      "it has the embedded farmer"
-    );
-  });
+  const barn = await store.find("barn", 1);
+  assert.equal(
+    barn.get("owner.name"),
+    "Old MacDonald",
+    "it has the embedded farmer"
+  );
 });
 
-QUnit.test("findAll embedded", function(assert) {
+QUnit.test("findAll embedded", async assert => {
   const store = createStore();
-  return store.findAll("fruit").then(function(fruits) {
-    assert.equal(fruits.objectAt(0).get("farmer.name"), "Old MacDonald");
-    assert.equal(
-      fruits.objectAt(0).get("farmer"),
-      fruits.objectAt(1).get("farmer"),
-      "points at the same object"
-    );
-    assert.equal(
-      fruits.get("extras.hello"),
-      "world",
-      "it can supply extra information"
-    );
+  const fruits = await store.findAll("fruit");
+  assert.equal(fruits.objectAt(0).get("farmer.name"), "Old MacDonald");
+  assert.equal(
+    fruits.objectAt(0).get("farmer"),
+    fruits.objectAt(1).get("farmer"),
+    "points at the same object"
+  );
+  assert.equal(
+    fruits.get("extras.hello"),
+    "world",
+    "it can supply extra information"
+  );
 
-    const fruitCols = fruits.objectAt(0).get("colors");
-    assert.equal(fruitCols.length, 2);
-    assert.equal(fruitCols[0].get("id"), 1);
-    assert.equal(fruitCols[1].get("id"), 2);
+  const fruitCols = fruits.objectAt(0).get("colors");
+  assert.equal(fruitCols.length, 2);
+  assert.equal(fruitCols[0].get("id"), 1);
+  assert.equal(fruitCols[1].get("id"), 2);
 
-    assert.equal(fruits.objectAt(2).get("farmer.name"), "Luke Skywalker");
-  });
+  assert.equal(fruits.objectAt(2).get("farmer.name"), "Luke Skywalker");
 });

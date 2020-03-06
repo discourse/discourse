@@ -1,10 +1,9 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 
 // Lists of topics on a user's page.
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
 
   hideCategory: false,
   showPosters: false,

@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import { readOnly } from "@ember/object/computed";
@@ -15,7 +14,7 @@ const Tab = EmberObject.extend({
 });
 
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
   counts: null,
   showing: "members",
   destroying: null,

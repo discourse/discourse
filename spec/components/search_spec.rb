@@ -315,56 +315,53 @@ describe Search do
         TopicAllowedUser.create!(user_id: u2.id, topic_id: private_topic.id)
 
         # private only
-        results = Search.execute('cheese',
-                                type_filter: 'all_topics',
+        results = Search.execute('in:all cheese',
                                 guardian: Guardian.new(u1))
         expect(results.posts.length).to eq(1)
 
         # public only
-        results = Search.execute('eggs',
-                                type_filter: 'all_topics',
+        results = Search.execute('in:all eggs',
                                 guardian: Guardian.new(u1))
         expect(results.posts.length).to eq(1)
 
         # both
-        results = Search.execute('spam',
-                                type_filter: 'all_topics',
+        results = Search.execute('in:all spam',
                                 guardian: Guardian.new(u1))
         expect(results.posts.length).to eq(2)
 
+        # for anon
+        results = Search.execute('in:all spam',
+                                guardian: Guardian.new)
+        expect(results.posts.length).to eq(1)
+
         # nonparticipatory user
-        results = Search.execute('cheese',
-                                type_filter: 'all_topics',
+        results = Search.execute('in:all cheese',
                                 guardian: Guardian.new(u3))
         expect(results.posts.length).to eq(0)
 
-        results = Search.execute('eggs',
-                                type_filter: 'all_topics',
+        results = Search.execute('in:all eggs',
                                 guardian: Guardian.new(u3))
         expect(results.posts.length).to eq(1)
 
-        results = Search.execute('spam',
-                                type_filter: 'all_topics',
+        results = Search.execute('in:all spam',
                                 guardian: Guardian.new(u3))
         expect(results.posts.length).to eq(1)
 
         # Admin doesn't see private topic
-        results = Search.execute('spam',
-                  type_filter: 'all_topics',
+        results = Search.execute('in:all spam',
                   guardian: Guardian.new(u4))
         expect(results.posts.length).to eq(1)
 
         # same keyword for different users
-        results = Search.execute('ham',
-                                type_filter: 'all_topics',
+        results = Search.execute('in:all ham',
                                 guardian: Guardian.new(u1))
         expect(results.posts.length).to eq(2)
-        results = Search.execute('ham',
-                                type_filter: 'all_topics',
+
+        results = Search.execute('in:all ham',
                                 guardian: Guardian.new(u2))
         expect(results.posts.length).to eq(2)
-        results = Search.execute('ham',
-                                type_filter: 'all_topics',
+
+        results = Search.execute('in:all ham',
                                 guardian: Guardian.new(u3))
         expect(results.posts.length).to eq(1)
       end

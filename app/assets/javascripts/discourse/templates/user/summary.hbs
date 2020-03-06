@@ -77,10 +77,11 @@
         <ul>
           {{#each model.links as |link|}}
             <li>
+              {{!-- template-lint-disable  --}}
               <a class='domain'
                  href='{{unbound link.url}}'
                  title='{{unbound link.title}}'
-                 rel='{{unless user.removeNoFollow 'nofollow ugc noopener'}}'
+                 rel='noopener {{unless user.removeNoFollow 'nofollow ugc'}}'
                  target='_blank'>
                 {{shorten-url link.url}}
               </a>

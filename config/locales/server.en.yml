@@ -339,6 +339,7 @@ en:
   pm_reached_recipients_limit: "Sorry, you can't have more than %{recipients_limit} recipients in a message."
   removed_direct_reply_full_quotes: "Automatically removed quote of whole previous post."
   secure_upload_not_allowed_in_public_topic: "Sorry, the following secure upload(s) cannot be used in a public topic: %{upload_filenames}."
+  create_pm_on_existing_topic: "Sorry, you can't create a PM on an existing topic."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
@@ -1174,6 +1175,7 @@ en:
       labels:
         level: Level
       description: "Number of users grouped by trust level."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Users per Type"
       xaxis: "Type"
@@ -1645,7 +1647,6 @@ en:
     discord_secret: "Discord Secret Key"
     discord_trusted_guilds: 'Only allow members of these Discord guilds to login via Discord. Use the numeric ID for the guild. For more information, check the instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">here</a>. Leave blank to allow any guild.'
 
-    readonly_mode_during_backup: "Enable read only mode while taking a backup"
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
@@ -1813,14 +1814,14 @@ en:
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
 
-    max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
+    max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     authorized_extensions_for_staff: "A list of file extensions allowed for upload for staff users in addition to the list defined in the `authorized_extensions` site setting. (use '*' to enable all file types)"
     theme_authorized_extensions: "A list of file extensions allowed for theme uploads (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
 
-    max_image_megapixels: "Maximum number of megapixels allowed for an image."
+    max_image_megapixels: "Maximum number of megapixels allowed for an image. Images with a higher number of megapixels will be rejected."
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     title_remove_extraneous_space: "Remove leading whitespaces in front of the end punctuation."
@@ -1873,6 +1874,8 @@ en:
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
+    high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
+    cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -1991,6 +1994,8 @@ en:
     clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed. To disable clean up set to 0."
 
     user_selected_primary_groups: "Allow users to set their own primary group"
+
+    max_notifications_per_user: "Maximum amount of notifications per user, if this number is exceeded old notifications will be deleted. Enforced weekly. Set to 0 to disable"
 
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
@@ -2375,6 +2380,8 @@ en:
     second_factor_backup_title: "Two Factor Backup Code"
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     invalid_security_key: "Invalid security key."
+    missing_second_factor_name: "Please provide a name."
+    missing_second_factor_code: "Please provide a code."
     second_factor_toggle:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"

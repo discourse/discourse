@@ -1,9 +1,8 @@
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
 
   @observes("model.canLoadMore")
   _showFooter: function() {

@@ -207,6 +207,17 @@ QUnit.test(
   }
 );
 
+QUnit.test("Suggested topics", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  assert.equal(
+    find("#suggested-topics .suggested-topics-title")
+      .text()
+      .trim(),
+    I18n.t("suggested_topics.title")
+  );
+});
+
 QUnit.skip("Deleting a topic", async assert => {
   await visit("/t/internationalization-localization/280");
   await click(".topic-post:eq(0) button.show-more-actions");

@@ -796,7 +796,7 @@ sv:
       allow_private_messages: "Tillåt andra användare att skicka mig personliga meddelanden"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
-      enable_defer: "Aktivera uppskjutning för att markera ämnen som lästa"
+      enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
       change: "ändra"
       featured_topic: "Utvalt Ämne"
       moderator: "{{user}} är en moderator"
@@ -811,10 +811,9 @@ sv:
       email_activity_summary: "Aktivitetssammanfattning"
       mailing_list_mode:
         label: "Utskicksläge"
-        enabled: "Aktivera utskicksläge"
+        enabled: "Aktivera mottagning av e-post för varje nytt inlägg"
         instructions: |
-          Den här inställningen åsidosätter aktivitetssummeringen.<br />
-          Tystade ämnen och kategorier är inte inkluderade i de här e-postmeddelandena.
+          Den här inställningen åsidosätter aktivitetssummeringen.<br />Tystade ämnen och kategorier är inte inkluderade i de här e-postmeddelandena.
         individual: "Skicka ett e-postmeddelande för varje nytt inlägg."
         individual_no_echo: "Jag vill ha ett mail när nya poster publiceras"
         many_per_day: "Skicka ett e-postmeddelande för varje nytt inlägg (ungefär {{dailyEmailEstimate}} per dag)"
@@ -851,7 +850,7 @@ sv:
       ignored_users: "Ignorerade"
       ignored_users_instructions: "Tysta alla inlägg och notifieringar från dessa användare."
       tracked_topics_link: "Visa"
-      automatically_unpin_topics: "Avklistra automatiskt ämnen när jag når botten."
+      automatically_unpin_topics: "Avklistra automatiskt ämnen när jag når botten"
       apps: "Appar"
       revoke_access: "Återkalla åtkomst"
       undo_revoke_access: "Ångra återkallelse av åtkomst"
@@ -1262,9 +1261,12 @@ sv:
       enabled: "Webbplatsen är i skrivskyddat läge. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra interaktioner är inaktiverade för tillfället."
       login_disabled: "Det går inte att logga in medan siten är i skrivskyddat läge."
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge. "
-    too_few_topics_and_posts_notice: "Låt oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>påbörja diskussionen!</a> Det finns <strong>%{currentTopics}</strong> ämnen och <strong>%{currentPosts}</strong> inlägg. Besökare behöver mer att läsa och svara på  – vi rekommenderar åtminstone <strong>%{requiredTopics}</strong> ämnen och <strong>%{requiredPosts}</strong> inlägg. Enbart personal kan se detta meddelande."
-    too_few_topics_notice: "Låt oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>påbörja diskussionen!</a> Det finns <strong>%{currentTopics}</strong> ämnen. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone <strong>%{requiredTopics}</strong> ämnen. Enbart personal kan se detta meddelande."
-    too_few_posts_notice: "Låt oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>påbörja diskussionen!</a> Det finns <strong>%{currentPosts}</strong> inlägg. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone <strong>%{requiredPosts}</strong> inlägg. Enbart personal kan se detta meddelande."
+    too_few_topics_and_posts_notice_MF: >-
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">påbörja diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande. 
+    too_few_topics_notice_MF: >-
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">påbörja diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}}. Besökare behöver mer att läsa och svara på  – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}}. Enbart personal kan se detta meddelande. 
+    too_few_posts_notice_MF: >-
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">påbörja diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> inlägg} other {finns <strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande. 
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other  {# errors/hour}}</a> har uppnått webbplatsinställningarnas gräns på {limit, plural, one {# error/hour} other {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> har uppnått weplatsinställningarnas gräns på {limit, plural, one {# error/minute} other {# errors/minute}}."
@@ -1767,17 +1769,17 @@ sv:
           likes: Jag gillade
           posted: Jag postade i
           created: Mina skapade
-          watching: Jag tittar
-          tracking: Jag bevakar
+          watching: Jag bevakar
+          tracking: Jag följer
           private: Bland mina meddelanden
           bookmarks: Som jag har bokmärkt
           first: är den första posten
           pinned: är pinnade
           unpinned: är inte pinnade
           seen: Som jag har läst
-          unseen: Jag har inte läst
+          unseen: Jag inte har läst
           wiki: är wiki
-          images: inkludera bild(er)
+          images: inkluderar bild(er)
           all_tags: Alla ovanstående taggar
         statuses:
           label: Där ämnen
@@ -1840,8 +1842,8 @@ sv:
         category: "Det finns inga ämnen i {{category}}."
         top: "Det finns inga toppämnen."
         educate:
-          new: '<p>Dina nya ämnen hamnar här.</p><p>Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator om de skapades de senaste 2 dagarna.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra det.</p>'
-          unread: '<p>Dina olästa ämnen hamnar här.</p><p>Standard är att inlägg anses olästa och kommer att visa antal olästa inlägg <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läste ämnet i mer än 4 minuter</li></ul><p>Eller om du explicit har markerat ämnet som Följd eller Bevakad via notifieringspanelen längst ned i varje ämne.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra det.</p>'
+          new: '<p>Dina nya ämnen hamnar här.</p><p>Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator om de skapades de senaste 2 dagarna.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
+          unread: '<p>Dina olästa ämnen hamnar här.</p><p>Standard är att inlägg anses olästa och kommer att visa antal olästa inlägg <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läste ämnet i mer än 4 minuter</li></ul><p>Eller om du explicit har markerat ämnet som Följd eller Bevakad via notifieringspanelen längst ned i varje ämne.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -2627,13 +2629,14 @@ sv:
         help: "Det här ämnet är olistat; det kommer inte visas i ämneslistorna och kan bara nås via en direktlänk"
       personal_message:
         title: "Detta ämne är ett personligt meddelande"
+        help: "Detta ämne är ett personligt meddelande"
     posts: "Inlägg"
     posts_long: "det finns {{number}} inlägg i detta ämne"
     posts_likes_MF: |
       Detta ämne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med ett högt förhållande mellan gilla och inlägg}
-      med {med ett väldigt högt förhållande mellan gilla och inlägg}
-      high {med ett extremt högt förhållande mellan gilla och inlägg}
+      low {med ett högt förhållande mellan gillningar och inlägg}
+      med {med ett väldigt högt förhållande mellan gillningar och inlägg}
+      high {med ett extremt högt förhållande mellan gillningar och inlägg}
       other {}}
     original_post: "Originalinlägg"
     views: "Visningar"
@@ -2710,7 +2713,7 @@ sv:
         help: "senaste ämnena i kategorin {{categoryName}}"
       top:
         title: "Topp"
-        help: "de mest aktiva ämnena det senaste året, månaden, veckan och dagen"
+        help: "de mest aktiva ämnena det senaste året, månaden, veckan eller dagen"
         all:
           title: "All tid"
         yearly:
@@ -2840,15 +2843,6 @@ sv:
           name: Övrigt
         posting:
           name: Publicera inlägg
-    google_search: |
-      <h3>Sök med Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
@@ -4228,8 +4222,8 @@ sv:
           description: Tilldela samma utmärkelse för flera användare samtidigt.
           no_badge_selected: Vänligen välj en utmärkelse för att börja.
           perform: "Tilldela utmärkelse till användare"
-          upload_csv: Ladda upp en CSV med användarmail
-          aborted: Vänligen ladda upp en CSV som innehåller användarmail
+          upload_csv: Ladda upp en CSV med antingen användarmail eller användarnamn
+          aborted: Vänligen ladda upp en CSV som innehåller antingen användares e-post eller användarnamn
           success: Din CSV mottogs och användare kommer att få sin utmärkelse inom kort.
           replace_owners: Ta bort utmärkelsen från tidigare mottagare
       emoji:

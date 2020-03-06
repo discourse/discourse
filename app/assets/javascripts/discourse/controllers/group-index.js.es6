@@ -1,11 +1,11 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { alias } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
 
   queryParams: ["order", "desc", "filter"],
 

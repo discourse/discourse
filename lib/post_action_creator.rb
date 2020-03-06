@@ -48,10 +48,8 @@ class PostActionCreator
     @meta_post = nil
   end
 
-  def perform
-    result = CreateResult.new
-
-    unless guardian.post_can_act?(
+  def post_can_act?
+    guardian.post_can_act?(
       @post,
       @post_action_name,
       opts: {
@@ -59,6 +57,12 @@ class PostActionCreator
         taken_actions: PostAction.counts_for([@post].compact, @created_by)[@post&.id]
       }
     )
+  end
+
+  def perform
+    result = CreateResult.new
+
+    unless post_can_act?
       result.forbidden = true
       result.add_error(I18n.t("invalid_access"))
       return result
@@ -130,7 +134,7 @@ private
     return false if @post_action_type_id == PostActionType.types[:notify_moderators]
     flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id }
     not_edited_since_last_review = @post.last_version_at.blank? || reviewable.updated_at > @post.last_version_at
-    handled_recently = reviewable.updated_at > 24.hours.ago
+    handled_recently = reviewable.updated_at > SiteSetting.cooldown_hours_until_reflag.to_i.hours.ago
 
     !reviewable.pending? && flag_type_already_used && not_edited_since_last_review && handled_recently
   end
@@ -177,9 +181,11 @@ private
 
     # Special case: If you have TL3 and the user is TL0, and the flag is spam,
     # hide it immediately.
-    if @post_action_name == :spam &&
+    if SiteSetting.high_trust_flaggers_auto_hide_posts &&
+        @post_action_name == :spam &&
         @created_by.has_trust_level?(TrustLevel[3]) &&
         @post.user&.trust_level == TrustLevel[0]
+
       @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
       return
     end

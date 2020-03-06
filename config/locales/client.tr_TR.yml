@@ -1258,9 +1258,6 @@ tr_TR:
       enabled: "Bu site salt-okunur modda. Lütfen taramaya devam et, ancak yanıtlama, beğenme ve diğer eylemler şu an için devre dışı durumda. "
       login_disabled: "Site salt-okunur modda iken giriş işlemi devre dışı bırakılır ."
       logout_disabled: "Site salt-okunur modda iken çıkış işlemi yapılamaz."
-    too_few_topics_and_posts_notice: "Haydi <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>tartışma başlasın!</a>Burada <strong>%{currentTopics}</strong> konu ve <strong>%{currentPosts}</strong> gönderi var. Ziyaretçilerin okuması ve yanıtlaması için tavsiye ettiğimiz en az <strong>%{requiredTopics}</strong> konu ve <strong>%{requiredPosts}</strong> gönderi. Bu mesajı yalnızca yetkili görebilir."
-    too_few_topics_notice: "Haydi <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>tartışma başlasın!</a>Burada <strong>%{currentTopics}</strong> konu var. Ziyaretçilerin okuması ve yanıtlaması için tavsiye ettiğimiz en az <strong>%{requiredTopics}</strong> konudur. Bu mesajı yalnızca yetkili görebilir."
-    too_few_posts_notice: "Haydi <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>tartışma başlasın!</a>Burada <strong>%{currentPosts}</strong> gönderi var. Ziyaretçilerin okuması ve yanıtlaması için tavsiye ettiğimiz en az <strong>%{requiredPosts}</strong> gönderidir. Bu iletiyi yalnızca yetkili görebilir."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b>– <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} diğeri {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
       reached_minute_MF: "<b>{relativeAge}</b>– <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat}  {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
@@ -2617,6 +2614,7 @@ tr_TR:
         help: "Bu konu listelenmemiş; konu listelerinde görüntülenmeyecek ve sadece doğrudan bir bağlantı üzerinden erişilebilecek"
       personal_message:
         title: "Bu konu kişisel bir mesajdır"
+        help: "Bu konu kişisel bir mesajdır"
     posts: "Gönderiler"
     posts_long: "bu konuda {{number}} gönderi var"
     posts_likes_MF: |
@@ -2830,15 +2828,6 @@ tr_TR:
           name: Diğer
         posting:
           name: Gönderiliyor
-    google_search: |
-      <h3>Google ile Ara</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Tüm Etiketler"
       other_tags: "Diğer Etiketler"
@@ -4218,8 +4207,6 @@ tr_TR:
           description: Aynı rozeti aynı anda birçok kullanıcıya verin.
           no_badge_selected: Başlamak için lütfen bir rütbe seçin.
           perform: "Kullanıcılara Ödül Rozeti"
-          upload_csv: Kullanıcı e-postaları içeren bir CSV yükleyin
-          aborted: Lütfen kullanıcı e-postaları içeren bir CSV yükleyin
           success: CSV&#39;niz alındı ve kullanıcılar kısa süre içinde rozetlerini alacaklar.
           replace_owners: Rozeti önceki sahiplerden kaldır
       emoji:

@@ -206,7 +206,7 @@
       <ul class='removable-list'>
         {{#each model.uploads as |upload|}}
           <li>
-            <span class='col'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>
+            <span class='col'>${{upload.name}}: <a href={{upload.url}} rel="noopener" target='_blank'>{{upload.filename}}</a></span>
             <span class='col'>
               {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
             </span>
@@ -241,8 +241,8 @@
     </div>
   {{/if}}
 
-  <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn btn-default'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
-  <a class="btn btn-default export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
+  <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" rel="noopener" target='_blank' class='btn btn-default'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
+  <a class="btn btn-default export" rel="noopener" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
   {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
 

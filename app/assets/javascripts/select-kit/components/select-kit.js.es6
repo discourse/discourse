@@ -267,6 +267,7 @@ export default Component.extend(
       closeOnChange: true,
       limitMatches: null,
       placement: "bottom-start",
+      placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       castInteger: false
@@ -382,13 +383,12 @@ export default Component.extend(
       );
 
       if (input) {
-        this.selectKit.set("isLoading", true);
         debounce(this, this._debouncedInput, event.target.value, 200);
       }
     },
 
     _debouncedInput(filter) {
-      this.selectKit.set("filter", filter);
+      this.selectKit.setProperties({ filter, isLoading: true });
       this._searchPromise = this._searchWrapper(filter);
     },
 
@@ -815,10 +815,15 @@ export default Component.extend(
           popper.style.width = `${anchor.offsetWidth}px`;
         }
 
+        let placementStrategy = this.selectKit.options.placementStrategy;
+        if (!placementStrategy) {
+          placementStrategy = this.inModal ? "fixed" : "absolute";
+        }
+
         /* global Popper:true */
         this.popper = Popper.createPopper(anchor, popper, {
           eventsEnabled: false,
-          strategy: inModal ? "fixed" : "absolute",
+          strategy: placementStrategy,
           placement: this.selectKit.options.placement,
           modifiers: [
             {

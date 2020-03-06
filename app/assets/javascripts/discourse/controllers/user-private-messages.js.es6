@@ -1,14 +1,13 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, equal, and } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import Topic from "discourse/models/topic";
 
 export default Controller.extend({
+  userTopicsList: controller("user-topics-list"),
+  user: controller(),
   router: service(),
-  userTopicsList: inject("user-topics-list"),
-  user: inject(),
 
   pmView: false,
   viewingSelf: alias("user.viewingSelf"),

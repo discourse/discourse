@@ -1,5 +1,4 @@
 import { next } from "@ember/runloop";
-import deprecated from "discourse-common/lib/deprecated";
 import { setOwner, getOwner } from "@ember/application";
 
 export default class Connector {
@@ -16,44 +15,18 @@ export default class Connector {
     next(() => {
       const mounted = widget._findView();
 
-      if (opts.templateName) {
-        deprecated(
-          `Using a 'templateName' for a connector is deprecated. Use 'component' instead [${opts.templateName}]`
-        );
-      }
-
-      const container = getOwner ? getOwner(mounted) : mounted.container;
-
-      let view;
-
       if (opts.component) {
         const connector = widget.register.lookupFactory(
           "component:connector-container"
         );
-        view = connector.create({
+
+        const view = connector.create({
           layoutName: `components/${opts.component}`,
           model: widget.findAncestorModel()
         });
-      }
 
-      if (opts.templateName) {
-        let context;
-        if (opts.context === "model") {
-          const model = widget.findAncestorModel();
-          context = model;
-        }
+        setOwner(view, getOwner(mounted));
 
-        view = Ember.View.create({
-          container: container || widget.register,
-          templateName: opts.templateName,
-          context
-        });
-      }
-
-      if (view) {
-        if (setOwner) {
-          setOwner(view, getOwner(mounted));
-        }
         mounted._connected.push(view);
         view.renderer.appendTo(view, $elem[0]);
       }

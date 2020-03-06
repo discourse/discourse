@@ -18,6 +18,8 @@ const DiscourseLocation = EmberObject.extend({
     this._super(...arguments);
 
     this.set("location", this.location || window.location);
+
+    this.initState();
   },
 
   /**
