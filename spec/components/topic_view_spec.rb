@@ -249,20 +249,6 @@ describe TopicView do
       end
     end
 
-    describe "#get_canonical_path with embed_set_canonical_url true" do
-      fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
-      let(:path) { "/1234" }
-
-      before do
-        SiteSetting.embed_set_canonical_url = true
-        TopicView.any_instance.stubs(:find_topic).with(1234).returns(topic_embed.topic)
-      end
-
-      it "returns the topic_embeds URL if embed_set_canonical_url is true" do
-        expect(TopicView.new(1234, user).canonical_path).to eql(topic_embed.embed_url)
-      end
-    end
-
     describe "#next_page" do
       let!(:post) { Fabricate(:post, topic: topic, user: user) }
       let!(:post2) { Fabricate(:post, topic: topic, user: user) }
