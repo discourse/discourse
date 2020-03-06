@@ -1261,9 +1261,6 @@ es:
       enabled: "Este sitio está en modo de solo lectura. Puedes continuar navegando pero algunas acciones como responder o dar me gusta no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro se encuentre en modo de solo lectura."
       logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de solo lectura."
-    too_few_topics_and_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>¡Comencemos la discusión!</a> Hay <strong>%{currentTopics}</strong> temas y <strong>%{currentPosts}</strong> publicaciones. Los visitantes necesitan más cosas para leer y responder. Recomendamos al menos <strong>%{requiredTopics}</strong> temas y <strong>%{requiredPosts}</strong> publicaciones. Solo el staff puede ver este mensaje."
-    too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>¡Comencemos la discusión!</a> Hay <strong>%{currentTopics}</strong> temas. Los visitantes necesitan más cosas para leer y responder. Recomendamos al menos <strong>%{requiredTopics}</strong> temas. Solo el staff puede ver este mensaje."
-    too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>¡Comencemos la discusión!</a> Hay <strong>%{currentPosts}</strong> publicaciones. Los visitantes necesitan más cosas para leer y responder. Recomendamos al menos <strong>%{requiredPosts}</strong> publicaciones. Solo el staff puede ver este mensaje."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hour} otros {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/minute} otros {# errors/minute}}."
@@ -2626,6 +2623,7 @@ es:
         help: "Este tema es invisible. No se mostrará en la lista de temas y solo se le puede acceder mediante un enlace directo"
       personal_message:
         title: "Este tema es un mensaje personal"
+        help: "Este tema es un mensaje personal"
     posts: "Publicaciones"
     posts_long: "Hay {{number}} publicaciones en este tema"
     posts_likes_MF: |
@@ -4218,8 +4216,8 @@ es:
           description: Concede la misma medalla a muchos usuarios a la vez.
           no_badge_selected: "Por favor, selecciona una medalla para empezar."
           perform: "Conceder medalla a los usuarios"
-          upload_csv: Sube un archivo CSV con correos electrónicos o nombres de usuario.
-          aborted: Sube un archivo CSV que contenga correos electrónicos o nombres de usuario.
+          upload_csv: Sube un archivo CSV con correos electrónicos o nombres de usuario
+          aborted: "Por favor, sube un archivo CSV que contenga correos electrónicos o nombres de usuario"
           success: Se recibió el CSV y los usuarios recibirán la medalla dentro de poco.
           replace_owners: Quitar medalla de los anteriores portadores
       emoji:

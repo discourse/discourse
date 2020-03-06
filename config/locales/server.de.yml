@@ -1625,13 +1625,11 @@ de:
     desktop_category_page_style: "Visueller Stil für die /categories Seite"
     category_colors: "Liste hexadezimaler Farbwerte, die als Kategoriefarben erlaubt sind."
     category_style: "Visueller Stil für Kategorie-Abzeichen."
-    max_image_size_kb: "Maximale Größe eines hochgeladenen Bilds in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
     max_attachment_size_kb: "Maximale Größe hochgeladener Dateianhänge in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
     authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Dateien ('*' um alle Dateiendungen zu erlauben)"
     authorized_extensions_for_staff: "Eine Liste von erlaubten Dateiendungen für den Upload von Dateien durch Team-Benutzer, zusätzlich zu der in der Seiteninstellung `authorized_extensions` definierten Liste. (Der Wert „*“ erlaubt alle Dateitypen.)"
     theme_authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Themes (verwende '*', um alle Dateitypen zu erlauben)"
     max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird an Hand des Titels und Inhalts bestimmt."
-    max_image_megapixels: "Maximale erlaubte Auflösung für Bilder (in Megapixeln)."
     title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
     title_remove_extraneous_space: "Entferne führende Leerzeichen vor dem Ende-Zeichen."
     automatic_topic_heat_values: 'Update die "Themenansicht-Erhitzung" und "Themenbeitrags ''Gefällt mir'' Erhitzung" Einstellungen automatisch basierend auf der Seiten-Aktivität.'
@@ -1856,7 +1854,7 @@ de:
     default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
     default_categories_watching_first_post: "Liste von Kategorien, in denen der erste Beiträge in jedem neuen Thema automatisch beobachtet wird."
-    mute_all_categories_by_default: "Setze die Standard E-Mail Benachrichtigungs-Stufe für alle Kategorien auf stummgeschaltet. Benötigt die Zustimmung der Benutzer, damit sie in \"neueste\" und Kategorien-Seiten erscheinen. Um den Standard für anonyme Benutzer anzupassen, müssem 'default_categories_' Einstellungen gesetzt werden."
+    mute_all_categories_by_default: "Setze die Standard E-Mail Benachrichtigungs-Stufe für alle Kategorien auf stummgeschaltet. Benötigt die Zustimmung der Benutzer, damit sie in \"neueste\" und Kategorien-Seiten erscheinen. Um den Standard für anonyme Benutzer anzupassen, müssen 'default_categories_' Einstellungen gesetzt werden."
     default_tags_watching: "Liste der Tags, die standardmäßig beobachtet werden."
     default_tags_tracking: "Liste der Tags, die standardmäßig verfolgt werden."
     default_tags_muted: "Liste der Tags, die standardmäßig stummgeschaltet werden."
@@ -3036,9 +3034,19 @@ de:
     confirm_new_email:
       title: "E-Mail-Adresse bestätigen (an neue)"
       subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
+      text_body_template: |
+        Bestätige bitte deine neue E-Mail Adresse für %{site_name} durch einen Klick auf den folgenden Link:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "E-Mail-Adresse bestätigen (an alte)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
+      text_body_template: |
+        Bevor wir die E-Mail Adresse ändern können, benötigen wir deine Bestätigung, dass du den aktuellen E-Mail Account kontrollierst. Sobald du das getan hast, schicken wir dir eine Anfrage, die neue E-Mail Adresse zu bestätigen.
+
+        Bestätige deine aktuelle E-Mail Adresse für %{site_name}, indem du auf den folgenden Link klickst:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"

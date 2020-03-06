@@ -77,7 +77,7 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
 
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
-  if !Discourse.skip_post_deployment_migrations?
+  if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
     puts
     print "Optimizing site icons... "
     SiteIconManager.ensure_optimized!
