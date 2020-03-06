@@ -157,11 +157,22 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
     // Close the current modal, and destroy its state.
     closeModal() {
-      this.render("hide-modal", { into: "modal", outlet: "modalBody" });
-
       const route = getOwner(this).lookup("route:application");
       let modalController = route.controllerFor("modal");
       const controllerName = modalController.get("name");
+
+      if (controllerName) {
+        const controller = getOwner(this).lookup(
+          `controller:${controllerName}`
+        );
+        if (controller && controller.beforeClose) {
+          if (false === controller.beforeClose()) {
+            return;
+          }
+        }
+      }
+
+      this.render("hide-modal", { into: "modal", outlet: "modalBody" });
 
       if (controllerName) {
         const controller = getOwner(this).lookup(

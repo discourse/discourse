@@ -31,13 +31,16 @@ export default Component.extend({
 
   @on("didInsertElement")
   setUp() {
-    $("html").on("keydown.discourse-modal", e => {
-      if (e.which === 27 && this.dismissable) {
-        next(() => $(".modal-header button.modal-close").click());
-      }
+    $("html").on("keyup.discourse-modal", e => {
+      //only respond to events when the modal is visible
+      if ($("#discourse-modal:visible").length > 0) {
+        if (e.which === 27 && this.dismissable) {
+          next(() => $(".modal-header button.modal-close").click());
+        }
 
-      if (e.which === 13 && this.triggerClickOnEnter(e)) {
-        next(() => $(".modal-footer .btn-primary").click());
+        if (e.which === 13 && this.triggerClickOnEnter(e)) {
+          next(() => $(".modal-footer .btn-primary").click());
+        }
       }
     });
 
@@ -46,7 +49,7 @@ export default Component.extend({
 
   @on("willDestroyElement")
   cleanUp() {
-    $("html").off("keydown.discourse-modal");
+    $("html").off("keyup.discourse-modal");
     this.appEvents.off("modal:body-shown", this, "_modalBodyShown");
   },
 
