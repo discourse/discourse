@@ -7,7 +7,7 @@
     </thead>
     <tbody>
     {{#each categoriesOrdered as |cat|}}
-      <tr data-category-id="{{cat.id}}">
+      <tr data-category-id={{cat.id}}>
         <td>
           <div class={{concat 'reorder-categories-depth-' cat.depth}}>
             {{category-badge cat allowUncategorized="true"}}

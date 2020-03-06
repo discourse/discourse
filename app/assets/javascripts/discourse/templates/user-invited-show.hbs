@@ -74,9 +74,9 @@
                       <td>{{number invite.user.posts_read_count}}</td>
                       <td>{{{format-duration invite.user.time_read}}}</td>
                       <td>
-                        <span title="{{i18n 'user.invited.days_visited'}}">{{{unbound invite.user.days_visited}}}</span>
+                        <span title={{i18n 'user.invited.days_visited'}}>{{{unbound invite.user.days_visited}}}</span>
                           /
-                        <span title="{{i18n 'user.invited.account_age_days'}}">{{{unbound invite.user.days_since_created}}}</span>
+                        <span title={{i18n 'user.invited.account_age_days'}}>{{{unbound invite.user.days_since_created}}}</span>
                       </td>
                     {{/if}}
                   {{else}}
