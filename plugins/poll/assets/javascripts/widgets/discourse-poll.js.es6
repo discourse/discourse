@@ -454,7 +454,9 @@ createWidget("discourse-poll-info", {
 
 function transformUserFieldToLabel(fieldName) {
   let transformed = fieldName.split("_").filter(Boolean);
-  transformed[0] = classify(transformed[0]);
+  if (transformed.length > 1) {
+    transformed[0] = classify(transformed[0]);
+  }
   return transformed.join(" ");
 }
 
