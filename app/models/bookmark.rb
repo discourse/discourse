@@ -68,11 +68,13 @@ end
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  reminder_last_sent_at :datetime
+#  reminder_set_at       :datetime
 #
 # Indexes
 #
 #  index_bookmarks_on_post_id              (post_id)
 #  index_bookmarks_on_reminder_at          (reminder_at)
+#  index_bookmarks_on_reminder_set_at      (reminder_set_at)
 #  index_bookmarks_on_reminder_type        (reminder_type)
 #  index_bookmarks_on_topic_id             (topic_id)
 #  index_bookmarks_on_user_id              (user_id)
