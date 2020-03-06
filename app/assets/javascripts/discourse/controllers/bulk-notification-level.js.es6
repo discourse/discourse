@@ -1,12 +1,11 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { empty } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 // Support for changing the notification level of various topics
 export default Controller.extend({
-  topicBulkActions: inject(),
+  topicBulkActions: controller(),
   notificationLevelId: null,
 
   @discourseComputed

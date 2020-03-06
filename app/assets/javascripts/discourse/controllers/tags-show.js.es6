@@ -1,6 +1,5 @@
 import { alias } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import NavItem from "discourse/models/nav-item";
@@ -8,7 +7,7 @@ import FilterModeMixin from "discourse/mixins/filter-mode";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
-  application: inject(),
+  application: controller(),
 
   tag: null,
   additionalTags: null,

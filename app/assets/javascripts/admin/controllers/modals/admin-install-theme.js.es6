@@ -1,6 +1,5 @@
 import { equal, match, alias } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -12,12 +11,13 @@ import { set } from "@ember/object";
 const MIN_NAME_LENGTH = 4;
 
 export default Controller.extend(ModalFunctionality, {
+  adminCustomizeThemes: controller(),
+  themesController: controller("adminCustomizeThemes"),
   popular: equal("selection", "popular"),
   local: equal("selection", "local"),
   remote: equal("selection", "remote"),
   create: equal("selection", "create"),
   selection: "popular",
-  adminCustomizeThemes: inject(),
   loading: false,
   keyGenUrl: "/admin/themes/generate_key_pair",
   importUrl: "/admin/themes/import",
@@ -27,7 +27,6 @@ export default Controller.extend(ModalFunctionality, {
   uploadUrl: null,
   urlPlaceholder: "https://github.com/discourse/sample_theme",
   advancedVisible: false,
-  themesController: inject("adminCustomizeThemes"),
   selectedType: alias("themesController.currentTab"),
   component: equal("selectedType", COMPONENTS),
 

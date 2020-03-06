@@ -1,16 +1,15 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
+  adminWatchedWords: controller(),
   actionNameKey: null,
-  adminWatchedWords: inject(),
   showWordsList: or(
     "adminWatchedWords.filtered",
     "adminWatchedWords.showWords"

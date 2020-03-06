@@ -3,8 +3,7 @@ import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
@@ -39,8 +38,8 @@ export function registerCustomPostMessageCallback(type, callback) {
 }
 
 export default Controller.extend(bufferedProperty("model"), {
-  composer: inject(),
-  application: inject(),
+  composer: controller(),
+  application: controller(),
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
@@ -696,10 +695,10 @@ export default Controller.extend(bufferedProperty("model"), {
 
     jumpToPostPrompt() {
       const topic = this.model;
-      const controller = showModal("jump-to-post", {
+      const modal = showModal("jump-to-post", {
         modalClass: "jump-to-post-modal"
       });
-      controller.setProperties({
+      modal.setProperties({
         topic,
         postNumber: null,
         jumpToIndex: index => this.send("jumpToIndex", index),
@@ -840,8 +839,8 @@ export default Controller.extend(bufferedProperty("model"), {
 
     addNotice(post) {
       return new Promise(function(resolve, reject) {
-        const controller = showModal("add-post-notice");
-        controller.setProperties({ post, resolve, reject });
+        const modal = showModal("add-post-notice");
+        modal.setProperties({ post, resolve, reject });
       });
     },
 

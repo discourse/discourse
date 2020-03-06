@@ -1,12 +1,11 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
 
   showLoginButton: equal("model.path", "login"),
 
