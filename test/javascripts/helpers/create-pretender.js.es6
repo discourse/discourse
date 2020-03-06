@@ -267,12 +267,11 @@ export function applyDefaultHandlers(pretender) {
   pretender.put("/t/:id/recover", success);
   pretender.put("/t/:id/publish", success);
 
-  pretender.get("/404-body", () => {
-    return [
-      200,
-      { "Content-Type": "text/html" },
-      "<div class='page-not-found'>not found</div>"
-    ];
+  pretender.get("/permalink-check.json", () => {
+    return response({
+      found: false,
+      html: "<div class='page-not-found'>not found</div>"
+    });
   });
 
   pretender.delete("/draft.json", success);
