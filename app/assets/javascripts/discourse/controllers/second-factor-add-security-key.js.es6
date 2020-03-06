@@ -38,7 +38,7 @@ export default Controller.extend(ModalFunctionality, {
             id: response.rp_id,
             name: response.rp_name
           },
-          supported_algoriths: response.supported_algoriths,
+          supported_algorithms: response.supported_algorithms,
           user_secure_id: response.user_secure_id,
           existing_active_credential_ids:
             response.existing_active_credential_ids
@@ -71,7 +71,7 @@ export default Controller.extend(ModalFunctionality, {
           displayName: this.model.username_lower,
           name: this.model.username_lower
         },
-        pubKeyCredParams: this.supported_algoriths.map(alg => {
+        pubKeyCredParams: this.supported_algorithms.map(alg => {
           return { type: "public-key", alg: alg };
         }),
         excludeCredentials: this.existing_active_credential_ids.map(
