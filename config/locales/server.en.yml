@@ -2381,6 +2381,8 @@ en:
     second_factor_backup_title: "Two Factor Backup Code"
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     invalid_security_key: "Invalid security key."
+    missing_second_factor_name: "Please provide a name."
+    missing_second_factor_code: "Please provide a code."
     second_factor_toggle:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"
