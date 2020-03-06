@@ -3052,6 +3052,34 @@ describe UsersController do
     end
   end
 
+  describe "#cards" do
+    fab!(:user) { Discourse.system_user }
+    fab!(:user2) { Fabricate(:user) }
+
+    it "returns success" do
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response.status).to eq(200)
+      parsed = JSON.parse(response.body)["users"]
+
+      expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
+    end
+
+    it "should redirect to login page for anonymous user when profiles are hidden" do
+      SiteSetting.hide_user_profiles_from_public = true
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response).to redirect_to '/login'
+    end
+
+    it "does not include hidden profiles" do
+      user2.user_option.update(hide_profile_and_presence: true)
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response.status).to eq(200)
+      parsed = JSON.parse(response.body)["users"]
+
+      expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username)
+    end
+  end
+
   describe '#badges' do
     it "renders fine by default" do
       get "/u/#{user.username}/badges"

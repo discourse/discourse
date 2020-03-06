@@ -536,8 +536,12 @@ const User = RestModel.extend({
     const user = this;
 
     return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
-      const useCardRoute = options && options.forCard;
+      if (options && options.existingRequest) {
+        // Existing ajax request has been passed, use it
+        return options.existingRequest;
+      }
 
+      const useCardRoute = options && options.forCard;
       if (options) delete options.forCard;
 
       const path = useCardRoute
