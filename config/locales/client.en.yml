@@ -1023,6 +1023,7 @@ en:
           title: "Token-Based Authenticators"
           add: "New Authenticator"
           default_name: "My Authenticator"
+          name_and_code_required_error: "You must provide a name and the code from your authenticator app."
         security_key:
           register: "Register"
           title: "Security Keys"
@@ -1033,6 +1034,7 @@ en:
           edit: "Edit Security Key"
           edit_description: "Security Key Name"
           delete: "Delete"
+          name_required_error: "You must provide a name for your security key."
 
       change_about:
         title: "Change About Me"
