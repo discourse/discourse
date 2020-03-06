@@ -274,6 +274,8 @@ class UsersController < ApplicationController
   end
 
   def invited
+    guardian.ensure_can_invite_to_forum!
+
     inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
     filter_by = params[:filter]
@@ -284,12 +286,19 @@ class UsersController < ApplicationController
       Invite.find_redeemed_invites_from(inviter, offset)
     end
 
-    invites = invites.filter_by(params[:search])
-    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer),
+    show_emails = guardian.can_see_invite_emails?(inviter)
+    if params[:search].present?
+      filter_sql = '(LOWER(users.username) LIKE :filter)'
+      filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
+      invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
+    end
+    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer, show_emails: show_emails),
                      can_see_invite_details: guardian.can_see_invite_details?(inviter)
   end
 
   def invited_count
+    guardian.ensure_can_invite_to_forum!
+
     inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
     pending_count = Invite.find_pending_invites_count(inviter)
@@ -1202,8 +1211,12 @@ class UsersController < ApplicationController
   end
 
   def enable_second_factor_totp
-    params.require(:second_factor_token)
-    params.require(:name)
+    if params[:second_factor_token].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_code"))
+    end
+    if params[:name].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_name"))
+    end
     auth_token = params[:second_factor_token]
 
     totp_data = secure_session["staged-totp-#{current_user.id}"]

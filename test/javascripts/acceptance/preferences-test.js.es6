@@ -20,6 +20,16 @@ acceptance("User Preferences", {
       });
     });
 
+    server.post("/u/create_second_factor_security_key.json", () => {
+      return helper.response({
+        challenge:
+          "a6d393d12654c130b2273e68ca25ca232d1d7f4c2464c2610fb8710a89d4",
+        rp_id: "localhost",
+        rp_name: "Discourse",
+        supported_algoriths: [-7, -257]
+      });
+    });
+
     server.post("/u/enable_second_factor_totp.json", () => {
       return helper.response({ error: "invalid token" });
     });
@@ -211,7 +221,7 @@ QUnit.test("connected accounts", async assert => {
     .indexOf("Connect") > -1;
 });
 
-QUnit.test("second factor", async assert => {
+QUnit.test("second factor totp", async assert => {
   await visit("/u/eviltrout/preferences/second-factor");
 
   assert.ok(exists("#password"), "it has a password input");
@@ -223,14 +233,36 @@ QUnit.test("second factor", async assert => {
   await click(".new-totp");
   assert.ok(exists("#test-qr"), "shows qr code");
 
-  await fillIn("#second-factor-token", "111111");
   await click(".add-totp");
 
   assert.ok(
     find(".alert-error")
       .html()
-      .indexOf("invalid token") > -1,
-    "shows server validation error message"
+      .indexOf("provide a name and the code") > -1,
+    "shows name/token missing error message"
+  );
+});
+
+QUnit.test("second factor security keys", async assert => {
+  await visit("/u/eviltrout/preferences/second-factor");
+
+  assert.ok(exists("#password"), "it has a password input");
+
+  await fillIn("#password", "secrets");
+  await click(".user-preferences .btn-primary");
+  assert.notOk(exists("#password"), "it hides the password input");
+
+  await click(".new-security-key");
+  assert.ok(exists("#security-key-name"), "shows security key name input");
+
+  fillIn("#security-key-name", "");
+  await click(".add-security-key");
+
+  assert.ok(
+    find(".alert-error")
+      .html()
+      .indexOf("provide a name") > -1,
+    "shows name missing error message"
   );
 });
 

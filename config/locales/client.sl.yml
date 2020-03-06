@@ -2631,6 +2631,7 @@ sl:
         help: "Ta tema je izločena; ne bo se prikazovala na seznamih tem in se jo lahko dostopa samo preko neposredne povezave."
       personal_message:
         title: "Ta tema je zasebno sporočilo"
+        help: "Ta tema je zasebno sporočilo"
     posts: "Prispevki"
     posts_long: "{{number}} prispevkov v tej temi"
     posts_likes_MF: |

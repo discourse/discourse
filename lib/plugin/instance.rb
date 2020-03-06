@@ -543,12 +543,11 @@ class Plugin::Instance
 
       Discourse::Utils.execute_command('mkdir', '-p', target)
       target << name.gsub(/\s/, "_")
-      # TODO a cleaner way of registering and unregistering
-      Discourse::Utils.execute_command('rm', '-f', target)
-      Discourse::Utils.execute_command('ln', '-s', public_data, target)
+
+      Discourse::Utils.atomic_ln_s(public_data, target)
     end
 
-    ensure_directory(Plugin::Instance.js_path)
+    ensure_directory(js_file_path)
 
     contents = []
     handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
@@ -558,12 +557,15 @@ class Plugin::Instance
       contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
     end
 
-    File.delete(js_file_path) if js_asset_exists?
-
     if contents.present?
       contents.insert(0, "<%")
       contents << "%>"
-      write_asset(js_file_path, contents.join("\n"))
+      Discourse::Utils.atomic_write_file(js_file_path, contents.join("\n"))
+    else
+      begin
+        File.delete(js_file_path)
+      rescue Errno::ENOENT
+      end
     end
   end
 

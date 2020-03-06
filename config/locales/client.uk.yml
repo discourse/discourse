@@ -1361,9 +1361,6 @@ uk:
       enabled: "Сайт працює в режимі \"тільки для читання\". Зараз ви можете продовжувати переглядати сайт, але інші дії будуть недоступні. "
       login_disabled: "Вхід вимкнено, поки сайт перебуває в режимі лише для читання."
       logout_disabled: "Вихід відключений, поки сайт в режимі «тільки для читання»"
-    too_few_topics_and_posts_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>почнемо обговорення!</a> Есть <strong>%{currentTopics}</strong> тем та <strong>%{currentPosts}</strong> постів. Користувачі повинні більше читати та відповідати - ми рекомендуємо, принаймні <strong>%{requiredTopics}</strong> тем та <strong>%{requiredPosts}</strong> постів. Тільки співробітники можуть бачити це повідомлення."
-    too_few_topics_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>почнемо обговорення!</a> Есть <strong>%{currentTopics}</strong> тем. Користувачі повинні більше читати та відповідати - ми рекомендуємо, принаймні <strong>%{requiredTopics}</strong> тем. Тільки співробітники можуть бачити це повідомлення."
-    too_few_posts_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>почнемо обговорення!</a> Есть <strong>%{currentPosts}</strong> постов. Користувачам потрібно більше читати та відповідати - ми рекомендуємо хоча б <strong>%{requiredPosts}</strong> постів. Тільки співробітники можуть бачити це повідомлення."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} або {# errors/hour}}</a> досягнуто максимально дозволене значення {limit, plural, one {# error/hour} або {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} або {# errors/minute}}</a> досягнуто максимально дозволене значення {limit, plural, one {# error/minute} або {# errors/minute}}."
@@ -2822,6 +2819,7 @@ uk:
         help: "Тема виключена з усіх списків тем та доступна тільки за прямим посиланням"
       personal_message:
         title: "Ця тема є особистим повідомленням"
+        help: "Ця тема є особистим повідомленням"
     posts: "Дописи"
     posts_long: "тема містить {{number}} дописів"
     posts_likes_MF: |

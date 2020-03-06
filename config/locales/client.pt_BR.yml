@@ -1257,9 +1257,6 @@ pt_BR:
       enabled: "Este site está em modo de somente leitura. Por favor, continue a navegar, mas respostas, curtidas e outras ações estão desabilitadas por enquanto."
       login_disabled: "O login é desabilitado enquanto o site está em modo de somente leitura."
       logout_disabled: "O logout é desabilitado enquanto o site está em modo de somente leitura."
-    too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>iniciar a discussão!</a> Há <strong>%{currentTopics}</strong> tópicos e <strong>%{currentPosts}</strong> postagens. Os visitantes precisam de mais informações para ler e responder - nós recomendamos pelo menos <strong>%{requiredTopics}</strong> tópicos e <strong>%{requiredPosts}</strong> posts. Somente funcionários podem ver esta mensagem."
-    too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>iniciar a discussão!</a> Há <strong>%{currentTopics}</strong> tópicos. Os visitantes precisam de mais informações para ler e responder - nós recomendamos pelo menos <strong>%{requiredTopics}</strong> tópicos. Somente funcionários podem ver esta mensagem."
-    too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>inicar a discussão!</a> Há <strong>%{currentPosts}</strong> postagens. Os visitantes precisam de mais informações para ler e responder - nós recomendamos pelo menos <strong>%{requiredPosts}</strong> postagens. Somente funcionários podem ver esta mensagem."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
@@ -2613,6 +2610,7 @@ pt_BR:
         help: "Este tópico não está listado; ele não será exibido em listas de tópicos e só pode ser acessado por meio de um link direto"
       personal_message:
         title: "Este tópico é uma mensagem pessoal"
+        help: "Este tópico é uma mensagem pessoal"
     posts: "Postagens"
     posts_long: "há {{number}} mensagens neste tópico"
     posts_likes_MF: |

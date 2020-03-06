@@ -1261,9 +1261,12 @@ nl:
       enabled: "Deze website bevindt zich in alleen-lezenmodus. U kunt doorgaan met browsen, maar berichten beantwoorden, likes geven en andere acties zijn momenteel uitgeschakeld."
       login_disabled: "Aanmelden is uitgeschakeld zolang de website zich in alleen-lezenmodus bevindt."
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in alleen-lezenmodus bevindt."
-    too_few_topics_and_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentTopics}</strong> topics en <strong>%{currentPosts}</strong> berichten. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens <strong>%{requiredTopics}</strong> topics en <strong>%{requiredPosts}</strong> berichten wordt aanbevolen. Alleen stafleden kunnen dit bericht zien."
-    too_few_topics_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentTopics}</strong> topics. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens <strong>%{requiredTopics}</strong> topics wordt aanbevolen. Alleen stafleden kunnen dit bericht zien."
-    too_few_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentPosts}</strong> berichten. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens <strong>%{requiredPosts}</strong> berichten wordt aanbevolen. Alleen stafleden kunnen dit bericht zien."
+    too_few_topics_and_posts_notice_MF: >-
+      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">de discussie starten!</a> Er {currentTopics, plural, one {is <strong>#</strong> topic} other {zijn <strong>#</strong> topics}} en {currentPosts, plural, one {<strong>#</strong> bericht} other {<strong>#</strong> berichten}}. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}} en {requiredPosts, plural, one {<strong>#</strong> bericht} other {<strong>#</strong> berichten}} wordt aanbevolen. Alleen stafleden kunnen dit bericht zien.
+    too_few_topics_notice_MF: >-
+      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">de discussie starten!</a> Er {currentTopics, plural, one {is <strong>#</strong> topic} other {zijn <strong>#</strong> topics}}. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}} wordt aanbevolen. Alleen stafleden kunnen dit bericht zien.
+    too_few_posts_notice_MF: >-
+      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">de discussie starten!</a> Er {currentPosts, plural, one {is <strong>#</strong> bericht} other {zijn <strong>#</strong> berichten}}. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens {requiredPosts, plural, one {<strong>#</strong> bericht} other {<strong>#</strong> berichten}} wordt aanbevolen. Alleen stafleden kunnen dit bericht zien.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
@@ -2626,6 +2629,7 @@ nl:
         help: "Dit topic is niet zichtbaar; het verschijnt niet in topiclijsten en kan alleen via een rechtstreekse koppeling worden benaderd"
       personal_message:
         title: "Dit topic is een persoonlijk bericht"
+        help: "Dit topic is een persoonlijk bericht"
     posts: "Berichten"
     posts_long: "er zijn {{number}} berichten in dit topic"
     posts_likes_MF: |

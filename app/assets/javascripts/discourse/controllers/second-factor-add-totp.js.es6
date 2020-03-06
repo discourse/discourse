@@ -45,7 +45,13 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     enableSecondFactor() {
-      if (!this.secondFactorToken) return;
+      if (!this.secondFactorToken || !this.secondFactorName) {
+        this.set(
+          "errorMessage",
+          I18n.t("user.second_factor.totp.name_and_code_required_error")
+        );
+        return;
+      }
       this.set("loading", true);
 
       this.model

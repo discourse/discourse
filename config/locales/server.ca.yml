@@ -1608,13 +1608,11 @@ ca:
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
     category_colors: "Llista de valors de color hexadecimal permesos per a categories."
     category_style: "Estil visual per a insígnies de categoria."
-    max_image_size_kb: "Mida màxima de càrrega d'imatge en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
     max_attachment_size_kb: "Mida màxima de càrrega de fitxers adjunts en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
     authorized_extensions: "Llista d'extensions de fitxer permeses per a carregar (feu servir '*' per a habilitar tota mena de fitxers)"
     authorized_extensions_for_staff: "Llista d'extensions permeses als usuaris de l'equip responsable en carregar fitxers a més de la llista definida en el paràmetre `authorized_extensions` de la configuració. (Feu servir \"*\" per a habilitar tots els tipus de fitxers.)"
     theme_authorized_extensions: "Llista d'extensions de fitxers permeses per a càrregues d'aparences (utilitzeu '*' per a permetre tots els tipus de fitxers)"
     max_similar_results: "Quants temes semblants es mostren per damunt de l'editor quan es redacta un tema nou. La comparació es basa en el títol i el cos."
-    max_image_megapixels: "Nombre màxim de megapíxels permesos en una imatge."
     title_prettify: "Evita errades tipogràfiques freqüents en el títol, incloent-hi tot en majúscula, primer caràcter en minúscula, exclamacions i interrogants múltiples, punts extres al final, etc."
     title_remove_extraneous_space: "Elimina els espais blancs de davant de la puntuació final."
     automatic_topic_heat_values: 'Actualitza automàticament els paràmetres de "topic views heat" i "topic post like heat" basant-se en l''activitat del lloc web. '

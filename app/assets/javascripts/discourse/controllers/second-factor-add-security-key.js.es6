@@ -53,6 +53,13 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     registerSecurityKey() {
+      if (!this.securityKeyName) {
+        this.set(
+          "errorMessage",
+          I18n.t("user.second_factor.security_key.name_required_error")
+        );
+        return;
+      }
       const publicKeyCredentialCreationOptions = {
         challenge: Uint8Array.from(this.challenge, c => c.charCodeAt(0)),
         rp: {
