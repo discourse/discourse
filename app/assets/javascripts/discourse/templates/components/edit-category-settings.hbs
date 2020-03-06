@@ -39,6 +39,9 @@
       content=searchPrioritiesOptions
       value=category.search_priority
       onChange=(action (mut category.search_priority))
+      options=(hash
+        placementStrategy="absolute"
+      )
     }}
     </div>
   </section>
@@ -148,7 +151,15 @@
       {{i18n "category.default_view"}}
     </label>
     <div class="controls">
-      {{combo-box valueProperty="value" id="category-default-view" content=availableViews value=category.default_view}}
+      {{combo-box
+        valueProperty="value"
+        id="category-default-view"
+        content=availableViews
+        value=category.default_view
+        options=(hash
+          placementStrategy="absolute"
+        )
+      }}
     </div>
   </section>
 
@@ -157,7 +168,15 @@
       {{i18n "category.default_top_period"}}
     </label>
     <div class="controls">
-      {{combo-box valueProperty="value" id="category-default-period" content=availableTopPeriods value=category.default_top_period}}
+      {{combo-box
+        valueProperty="value"
+        id="category-default-period"
+        content=availableTopPeriods
+        value=category.default_top_period
+        options=(hash
+          placementStrategy="absolute"
+        )
+      }}
     </div>
   </section>
 
@@ -168,7 +187,16 @@
     <div class="controls">
     {{combo-box valueProperty="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
     {{#unless isDefaultSortOrder}}
-      {{combo-box castBoolean=true valueProperty="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+      {{combo-box
+        castBoolean=true
+        valueProperty="value"
+        content=sortAscendingOptions
+        value=category.sort_ascending
+        none="category.sort_options.default"
+        options=(hash
+          placementStrategy="absolute"
+        )
+      }}
     {{/unless}}
       </div>
   </section>
@@ -187,7 +215,15 @@
         <label for="subcategory-list-style">
           {{i18n "category.subcategory_list_style"}}
         </label>
-              {{combo-box valueProperty="value" id="subcategory-list-style" content=availableSubcategoryListStyles value=category.subcategory_list_style}}
+        {{combo-box
+          valueProperty="value"
+          id="subcategory-list-style"
+          content=availableSubcategoryListStyles
+          value=category.subcategory_list_style
+          options=(hash
+            placementStrategy="absolute"
+          )
+        }}
       </section>
     {{/if}}
 
