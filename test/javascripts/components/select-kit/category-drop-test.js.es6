@@ -186,10 +186,11 @@ componentTest("hideParentCategory (true)", {
   }
 });
 
-componentTest("allowUncategorized (default: true)", {
+componentTest("allow_uncategorized_topics (true)", {
   template: template(),
 
   beforeEach() {
+    this.siteSettings.allow_uncategorized_topics = true;
     initCategories(this);
   },
 
@@ -202,8 +203,8 @@ componentTest("allowUncategorized (default: true)", {
   }
 });
 
-componentTest("allowUncategorized (false)", {
-  template: template(["allowUncategorized=false"]),
+componentTest("allow_uncategorized_topics (false)", {
+  template: template(),
 
   beforeEach() {
     this.siteSettings.allow_uncategorized_topics = false;
