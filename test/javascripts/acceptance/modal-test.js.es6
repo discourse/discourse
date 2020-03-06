@@ -28,7 +28,7 @@ QUnit.test("modal", async function(assert) {
   await click(".login-button");
   assert.ok(find(".d-modal:visible").length === 1, "modal should reappear");
 
-  await keyEvent("#main-outlet", "keydown", 27);
+  await keyEvent("#main-outlet", "keyup", 27);
   assert.ok(
     find(".d-modal:visible").length === 0,
     "ESC should close the modal"
@@ -47,7 +47,7 @@ QUnit.test("modal", async function(assert) {
     find(".d-modal:visible").length === 1,
     "modal should not disappear when you click outside"
   );
-  await keyEvent("#main-outlet", "keydown", 27);
+  await keyEvent("#main-outlet", "keyup", 27);
   assert.ok(
     find(".d-modal:visible").length === 1,
     "ESC should not close the modal"
@@ -61,7 +61,7 @@ QUnit.test("modal-keyboard-events", async function(assert) {
 
   await click(".toggle-admin-menu");
   await click(".topic-admin-status-update button");
-  await keyEvent(".d-modal", "keydown", 13);
+  await keyEvent(".d-modal", "keyup", 13);
 
   assert.ok(
     find("#modal-alert:visible").length === 1,
@@ -72,7 +72,7 @@ QUnit.test("modal-keyboard-events", async function(assert) {
     "hitting Enter does not dismiss modal due to alert error"
   );
 
-  await keyEvent("#main-outlet", "keydown", 27);
+  await keyEvent("#main-outlet", "keyup", 27);
   assert.ok(
     find(".d-modal:visible").length === 0,
     "ESC should close the modal"
@@ -82,7 +82,7 @@ QUnit.test("modal-keyboard-events", async function(assert) {
 
   await click(".d-editor-button-bar .btn.link");
 
-  await keyEvent(".d-modal", "keydown", 13);
+  await keyEvent(".d-modal", "keyup", 13);
   assert.ok(
     find(".d-modal:visible").length === 0,
     "modal should disappear on hitting Enter"
