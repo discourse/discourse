@@ -599,8 +599,8 @@ pre {
 kbd {
   border-radius: 3px;
   box-shadow: shadow("kbd");
-  background: dark-light-choose(#fafafa, #333);
-  border: 1px solid dark-light-choose(#ccc, #555);
+  background: dark-light-choose(#fafafa, #303030);
+  border: 1px solid dark-light-choose(#d0d0d0, #505050);
   border-bottom: none;
 
   color: $primary;
