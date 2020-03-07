@@ -3935,6 +3935,20 @@ describe UsersController do
         expect(user.user_auth_tokens.first.id).to eq(ids[1])
       end
 
+      it 'checks if token exists' do
+        ids = user.user_auth_tokens.order(:created_at).pluck(:id)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: ids[0] }
+
+        expect(response.status).to eq(200)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: ids[0] }
+
+        expect(response.status).to eq(400)
+      end
+
       it 'does not let user log out of current session' do
         token = UserAuthToken.generate!(user_id: user.id)
         env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
