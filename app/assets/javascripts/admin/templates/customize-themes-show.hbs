@@ -63,16 +63,16 @@
 
     {{#if model.remote_theme.remote_url}}
       {{#if sourceIsHttp}}
-        <a class="remote-url" href="{{model.remote_theme.remote_url}}">{{i18n "admin.customize.theme.source_url"}}{{d-icon "link"}}</a>
+        <a class="remote-url" href={{model.remote_theme.remote_url}}>{{i18n "admin.customize.theme.source_url"}}{{d-icon "link"}}</a>
       {{else}}
         <div class="remote-url"><code>{{model.remote_theme.remote_url}}</code></div>
       {{/if}}
     {{/if}}
     {{#if model.remote_theme.about_url}}
-      <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}}{{d-icon "link"}}</a>
+      <a class="url about-url" href={{model.remote_theme.about_url}}>{{i18n "admin.customize.theme.about_theme"}}{{d-icon "link"}}</a>
     {{/if}}
     {{#if model.remote_theme.license_url}}
-      <a class="url license-url" href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}}{{d-icon "link"}}</a>
+      <a class="url license-url" href={{model.remote_theme.license_url}}>{{i18n "admin.customize.theme.license"}}{{d-icon "link"}}</a>
     {{/if}}
 
     {{#if model.description}}
@@ -109,7 +109,7 @@
             {{#if model.remote_theme.commits_behind}}
               {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
               {{#if model.remote_theme.github_diff_link}}
-                <a href="{{model.remote_theme.github_diff_link}}">
+                <a href={{model.remote_theme.github_diff_link}}>
                   {{i18n 'admin.customize.theme.compare_commits'}}
                 </a>
               {{/if}}
@@ -241,7 +241,7 @@
     </div>
   {{/if}}
 
-  <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" rel="noopener" target='_blank' class='btn btn-default'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
+  <a href={{previewUrl}} title={{i18n 'admin.customize.explain_preview'}} rel="noopener" target='_blank' class='btn btn-default'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
   <a class="btn btn-default export" rel="noopener" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
   {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}

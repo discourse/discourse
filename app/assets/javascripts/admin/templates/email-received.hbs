@@ -42,7 +42,7 @@
           </td>
           <td>
             {{#if email.post_url}}
-              <a href="{{email.post_url}}">{{email.subject}}</a>
+              <a href={{email.post_url}}>{{email.subject}}</a>
             {{else}}
               {{email.subject}}
             {{/if}}

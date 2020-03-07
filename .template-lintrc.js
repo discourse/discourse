@@ -7,6 +7,7 @@ module.exports = {
     "table-groups": true,
     "style-concatenation": true,
     "no-invalid-interactive": true,
-    "link-rel-noopener": true
+    "link-rel-noopener": true,
+    "no-unnecessary-concat": true
   }
 };

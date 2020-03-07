@@ -40,7 +40,7 @@
         {{#each model as |user|}}
           <tr class="user {{user.selected}} {{unless user.active 'not-activated'}}">
             <td class="username">
-              <a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">
+              <a href={{unbound user.path}} data-user-card={{unbound user.username}}>
                 {{avatar user imageSize="small"}}
               </a>
               {{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}

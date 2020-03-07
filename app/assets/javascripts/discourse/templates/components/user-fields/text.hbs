@@ -1,4 +1,4 @@
-<label class="control-label" for="{{concat 'user-' elementId}}">{{{field.name}}} {{#if field.required}}<span class='required'>*</span>{{/if}}
+<label class="control-label" for={{concat 'user-' elementId}}>{{{field.name}}} {{#if field.required}}<span class='required'>*</span>{{/if}}
 </label>
 <div class='controls'>
   {{input id=(concat 'user-' elementId) value=value maxlength=site.user_field_max_length}}
