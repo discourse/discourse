@@ -75,12 +75,12 @@
     {{#user-summary-section title="top_links" class="links-section pull-left"}}
       {{#if model.links.length}}
         <ul>
+          {{!-- template-lint-disable --}}
           {{#each model.links as |link|}}
             <li>
-              {{!-- template-lint-disable  --}}
               <a class='domain'
-                 href='{{unbound link.url}}'
-                 title='{{unbound link.title}}'
+                 href={{unbound link.url}}
+                 title={{unbound link.title}}
                  rel='noopener {{unless user.removeNoFollow 'nofollow ugc'}}'
                  target='_blank'>
                 {{shorten-url link.url}}
