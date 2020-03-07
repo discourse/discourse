@@ -25,7 +25,7 @@
           {{#if user.profile_hidden}}
             <span class="card-huge-avatar">{{bound-avatar user "huge"}}</span>
           {{else}}
-            <a href="{{user.path}}" {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
+            <a href={{user.path}} {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
           {{/if}}
           {{#if user.primary_group_name}}
             {{avatar-flair
@@ -43,7 +43,7 @@
                 {{if nameFirst user.name (format-username username)}}
               </span>
             {{else}}
-              <a href="{{user.path}}" {{action "showUser" user}} class='user-profile-link'>
+              <a href={{user.path}} {{action "showUser" user}} class='user-profile-link'>
                 <span class="name-username-wrapper">
                   {{if nameFirst user.name (format-username username)}}
                 </span>

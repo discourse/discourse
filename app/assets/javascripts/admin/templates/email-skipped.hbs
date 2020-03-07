@@ -33,7 +33,7 @@
           <td>{{l.email_type}}</td>
           <td>
             {{#if l.post_url}}
-              <a href="{{l.post_url}}">{{l.skipped_reason}}</a>
+              <a href={{l.post_url}}>{{l.skipped_reason}}</a>
             {{else}}
               {{l.skipped_reason}}
             {{/if}}

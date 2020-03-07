@@ -55,7 +55,7 @@
             </td>
             <td class='reason'>
               {{#if userBadge.postUrl}}
-              <a href="{{unbound userBadge.postUrl}}">{{userBadge.topic_title}}</a>
+              <a href={{unbound userBadge.postUrl}}>{{userBadge.topic_title}}</a>
               {{/if}}
             </td>
             <td>{{age-with-tooltip userBadge.granted_at}}</td>

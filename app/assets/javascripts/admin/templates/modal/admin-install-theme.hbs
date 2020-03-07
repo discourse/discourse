@@ -11,7 +11,7 @@
         {{#each themes as |theme|}}
           <div class="popular-theme-item">
             <div class="popular-theme-name">
-              <a href="{{theme.meta_url}}" rel="noopener" target="_blank">
+              <a href={{theme.meta_url}} rel="noopener" target="_blank">
                 {{#if theme.component}}
                   {{d-icon 'puzzle-piece' title='admin.customize.theme.component'}}
                 {{/if}}
@@ -33,7 +33,7 @@
                   action=(action "installThemeFromList" theme.value)}}
 
                 {{#if theme.preview}}
-                  <a href="{{theme.preview}}" rel="noopener" target="_blank">{{d-icon "desktop"}} {{I18n "admin.customize.theme.preview"}}</a>
+                  <a href={{theme.preview}} rel="noopener" target="_blank">{{d-icon "desktop"}} {{I18n "admin.customize.theme.preview"}}</a>
                 {{/if}}
               {{/if}}
             </div>

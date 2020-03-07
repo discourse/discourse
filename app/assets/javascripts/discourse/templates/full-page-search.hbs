@@ -73,7 +73,7 @@
           {{#each model.posts as |result|}}
             <div class='fps-result'>
               <div class='author'>
-                <a href={{result.userPath}} data-user-card="{{unbound result.username}}">
+                <a href={{result.userPath}} data-user-card={{unbound result.username}}>
                   {{avatar result imageSize="large"}}
                 </a>
               </div>
@@ -84,7 +84,7 @@
                     {{track-selected selectedList=selected selectedId=result.topic}}
                   {{/if}}
 
-                  <a class='search-link' href='{{unbound result.url}}' {{action "logClick" result.topic_id}}>
+                  <a class='search-link' href={{unbound result.url}} {{action "logClick" result.topic_id}}>
                     {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
                     <span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
                   </a>

@@ -26,10 +26,10 @@
                 <div class="topic-excerpt">
                   {{{t.excerpt}}}
                   {{#if t.excerptTruncated}}
-                    {{#unless t.canClearPin}}<a href="{{unbound t.url}}">{{i18n 'read_more'}}</a>{{/unless}}
+                    {{#unless t.canClearPin}}<a href={{unbound t.url}}>{{i18n 'read_more'}}</a>{{/unless}}
                   {{/if}}
                   {{#if t.canClearPin}}
-                    <a href {{action "clearPin" t}} title="{{i18n 'topic.clear_pin.help'}}">{{i18n 'topic.clear_pin.title'}}</a>
+                    <a href {{action "clearPin" t}} title={{i18n 'topic.clear_pin.help'}}>{{i18n 'topic.clear_pin.title'}}</a>
                   {{/if}}
                 </div>
               {{/if}}
@@ -42,7 +42,7 @@
               {{discourse-tags t mode="list" tagsForUser=tagsForUser}}
               <div class="pull-right">
                 {{raw "list/activity-column" topic=t tagName="div" class="num activity last"}}
-                <a href="{{t.lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date t.bumped_at}}}'>{{t.last_poster_username}}</a>
+                <a href={{t.lastPostUrl}} title='{{i18n 'last_post'}}: {{{raw-date t.bumped_at}}}'>{{t.last_poster_username}}</a>
               </div>
               {{#unless hideCategory}}
                 <div class='category'>
