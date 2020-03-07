@@ -46,8 +46,11 @@
     }
 
     span {
+      background: #f2f2f2;
+      border-radius: 3px;
       display: inline-flex;
       margin: 0 3px;
+      padding: 1px 0 5px;
     }
 
     span:first-child {

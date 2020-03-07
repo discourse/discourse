@@ -18,19 +18,24 @@ function buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter) {
 
   if (allKeys.length === 1) {
     return wrapInSpan(allKeys[0]);
-  }
-
-  const context = { shortcut1: allKeys[0], shortcut2: allKeys[1] };
-  let result = "";
-  if (shortcutsDelimiter === "or") {
-    result = I18n.t(`${KEY}.shortcut_delimiter_or`, context);
+  } else if (shortcutsDelimiter === "or") {
+    return I18n.t(`${KEY}.shortcut_delimiter_or`, {
+      shortcut1: wrapInSpan(allKeys[0]),
+      shortcut2: wrapInSpan(allKeys[1])
+    });
   } else if (shortcutsDelimiter === "slash") {
-    result = I18n.t(`${KEY}.shortcut_delimiter_slash`, context);
+    return I18n.t(`${KEY}.shortcut_delimiter_slash`, {
+      shortcut1: wrapInSpan(allKeys[0]),
+      shortcut2: wrapInSpan(allKeys[1])
+    });
   } else if (shortcutsDelimiter === "space") {
-    result = I18n.t(`${KEY}.shortcut_delimiter_space`, context);
+    return wrapInSpan(
+      I18n.t(`${KEY}.shortcut_delimiter_space`, {
+        shortcut1: allKeys[0],
+        shortcut2: allKeys[1]
+      })
+    );
   }
-
-  return wrapInSpan(result);
 }
 
 function wrapInSpan(shortcut) {
