@@ -589,6 +589,10 @@ users:
     default: 730
     min: 0
     max: 3650
+  clean_up_unused_staged_users_after_days:
+    default: 365
+    min: 0
+    max: 3650
   user_selected_primary_groups:
     default: false
     client: true
