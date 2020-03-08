@@ -1197,7 +1197,7 @@ class UsersController < ApplicationController
       challenge: challenge_session.challenge,
       rp_id: challenge_session.rp_id,
       rp_name: challenge_session.rp_name,
-      supported_algoriths: ::Webauthn::SUPPORTED_ALGORITHMS,
+      supported_algorithms: ::Webauthn::SUPPORTED_ALGORITHMS,
       user_secure_id: current_user.create_or_fetch_secure_identifier,
       existing_active_credential_ids: current_user.second_factor_security_key_credential_ids
     )

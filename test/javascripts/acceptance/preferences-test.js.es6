@@ -26,7 +26,7 @@ acceptance("User Preferences", {
           "a6d393d12654c130b2273e68ca25ca232d1d7f4c2464c2610fb8710a89d4",
         rp_id: "localhost",
         rp_name: "Discourse",
-        supported_algoriths: [-7, -257]
+        supported_algorithms: [-7, -257]
       });
     });
 

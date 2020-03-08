@@ -3770,7 +3770,7 @@ describe UsersController do
       expect(response_parsed["user_secure_id"]).to eq(
         user.reload.create_or_fetch_secure_identifier
       )
-      expect(response_parsed["supported_algoriths"]).to eq(
+      expect(response_parsed["supported_algorithms"]).to eq(
         ::Webauthn::SUPPORTED_ALGORITHMS
       )
     end
