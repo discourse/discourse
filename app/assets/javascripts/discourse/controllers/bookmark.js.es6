@@ -122,7 +122,7 @@ export default Controller.extend(ModalFunctionality, {
 
     return ajax("/bookmarks", { type: "POST", data }).then(() => {
       if (this.afterSave) {
-        this.afterSave(reminderAtISO);
+        this.afterSave(reminderAtISO, this.selectedReminderType);
       }
     });
   },
