@@ -862,7 +862,7 @@ posting:
     default: 0
     enum: "TrustLevelSetting"
   approve_suspect_users:
-    default: false
+    default: true
   approve_unless_staged:
     default: false
   notify_about_queued_posts_after:
