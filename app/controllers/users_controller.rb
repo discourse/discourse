@@ -1362,7 +1362,10 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     topic = Topic.find(params[:topic_id].to_i)
 
-    raise Discourse::InvalidAccess.new unless topic && guardian.can_feature_topic?(user, topic)
+    if !guardian.can_feature_topic?(user, topic)
+      return render_json_error(I18n.t('activerecord.errors.models.user_profile.attributes.featured_topic_id.invalid'), 403)
+    end
+
     user.user_profile.update(featured_topic_id: topic.id)
     render json: success_json
   end
