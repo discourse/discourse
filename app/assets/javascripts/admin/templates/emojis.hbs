@@ -18,7 +18,7 @@
         <tbody>
           {{#each sortedEmojis as |e|}}
             <tr>
-              <th><img class="emoji emoji-custom" src={{unbound e.url}} title={{unbound e.name}}></th>
+              <th><img class="emoji emoji-custom" src={{e.url}} title={{e.name}}></th>
               <th>:{{e.name}}:</th>
               <th>
                 {{d-button

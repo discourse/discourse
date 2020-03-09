@@ -10,6 +10,7 @@ module.exports = {
     "link-rel-noopener": true,
     "no-unnecessary-concat": true,
     "no-unused-block-params": true,
+    "no-unbound": true,
     "simple-unless": true
   }
 };
