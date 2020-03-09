@@ -58,7 +58,28 @@
 
   <div class="body">
     <div class="main">
-      {{#unless showError}}
+      {{#if showError}}
+        {{#if showTimeoutError}}
+          <div class="alert alert-error report-alert timeout">
+            {{d-icon "exclamation-triangle"}}
+            <span>{{i18n "admin.dashboard.timeout_error"}}</span>
+          </div>
+        {{/if}}
+
+        {{#if showExceptionError}}
+          <div class="alert alert-error report-alert exception">
+            {{d-icon "exclamation-triangle"}}
+            <span>{{i18n "admin.dashboard.exception_error"}}</span>
+          </div>
+        {{/if}}
+
+        {{#if showNotFoundError}}
+          <div class="alert alert-error report-alert not-found">
+            {{d-icon "exclamation-triangle"}}
+            <span>{{i18n "admin.dashboard.not_found_error"}}</span>
+          </div>
+        {{/if}}
+      {{else}}
         {{#if hasData}}
           {{#if currentMode}}
             {{component modeComponent model=model options=options}}
@@ -91,28 +112,7 @@
             </div>
           {{/if}}
         {{/if}}
-      {{else}}
-        {{#if showTimeoutError}}
-          <div class="alert alert-error report-alert timeout">
-            {{d-icon "exclamation-triangle"}}
-            <span>{{i18n "admin.dashboard.timeout_error"}}</span>
-          </div>
-        {{/if}}
-
-        {{#if showExceptionError}}
-          <div class="alert alert-error report-alert exception">
-            {{d-icon "exclamation-triangle"}}
-            <span>{{i18n "admin.dashboard.exception_error"}}</span>
-          </div>
-        {{/if}}
-
-        {{#if showNotFoundError}}
-          <div class="alert alert-error report-alert not-found">
-            {{d-icon "exclamation-triangle"}}
-            <span>{{i18n "admin.dashboard.not_found_error"}}</span>
-          </div>
-        {{/if}}
-      {{/unless}}
+      {{/if}}
     </div>
 
     {{#if showFilteringUI}}

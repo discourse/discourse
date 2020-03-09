@@ -9,6 +9,7 @@ module.exports = {
     "no-invalid-interactive": true,
     "link-rel-noopener": true,
     "no-unnecessary-concat": true,
-    "no-unused-block-params": true
+    "no-unused-block-params": true,
+    "simple-unless": true
   }
 };
