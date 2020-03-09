@@ -52,7 +52,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
 
     context "when there are no pending bookmark at desktop reminders" do
       it "does nothing" do
-        BrowserDetection.expects(:device).never
+        DistributedMutex.expects(:synchronize).never
         send_reminder
       end
     end
