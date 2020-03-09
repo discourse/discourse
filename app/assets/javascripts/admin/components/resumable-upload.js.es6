@@ -1,5 +1,4 @@
-import { schedule } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { later, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed, { on } from "discourse-common/utils/decorators";

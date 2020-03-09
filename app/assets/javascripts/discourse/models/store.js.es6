@@ -1,10 +1,9 @@
-import EmberObject from "@ember/object";
+import EmberObject, { set } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
-import { set } from "@ember/object";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 

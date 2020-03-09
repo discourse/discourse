@@ -1,8 +1,5 @@
 import { alias } from "@ember/object/computed";
-import { throttle } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { later, schedule, scheduleOnce, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
