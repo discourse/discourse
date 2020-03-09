@@ -1,3 +1,4 @@
+import EmberArray from "@ember/array";
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -5,7 +6,7 @@ export function Placeholder(viewName) {
   this.viewName = viewName;
 }
 
-export default EmberObject.extend(Ember.Array, {
+export default EmberObject.extend(EmberArray, {
   posts: null,
   _appendingIds: null,
 

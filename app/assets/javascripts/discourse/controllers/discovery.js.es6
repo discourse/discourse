@@ -1,14 +1,13 @@
 import { alias, not } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
-  discoveryTopics: inject("discovery/topics"),
-  navigationCategory: inject("navigation/category"),
-  application: inject(),
+  discoveryTopics: controller("discovery/topics"),
+  navigationCategory: controller("navigation/category"),
+  application: controller(),
 
   loading: false,
 

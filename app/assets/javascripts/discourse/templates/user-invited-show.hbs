@@ -17,7 +17,7 @@
               {{d-button icon="plus" action=(route-action "showInvite") label="user.invited.create"}}
               {{#if canBulkInvite}}
                 {{csv-uploader uploading=uploading}}
-                <a href="https://meta.discourse.org/t/sending-bulk-user-invites/16468" target="_blank" style="color:black;">{{d-icon "question-circle"}}</a>
+                <a href="https://meta.discourse.org/t/sending-bulk-user-invites/16468" rel="noopener" target="_blank" style="color:black;">{{d-icon "question-circle"}}</a>
               {{/if}}
               {{#if showBulkActionButtons}}
                 {{#if rescindedAll}}
@@ -74,9 +74,9 @@
                       <td>{{number invite.user.posts_read_count}}</td>
                       <td>{{{format-duration invite.user.time_read}}}</td>
                       <td>
-                        <span title="{{i18n 'user.invited.days_visited'}}">{{{unbound invite.user.days_visited}}}</span>
+                        <span title={{i18n 'user.invited.days_visited'}}>{{{unbound invite.user.days_visited}}}</span>
                           /
-                        <span title="{{i18n 'user.invited.account_age_days'}}">{{{unbound invite.user.days_since_created}}}</span>
+                        <span title={{i18n 'user.invited.account_age_days'}}>{{{unbound invite.user.days_since_created}}}</span>
                       </td>
                     {{/if}}
                   {{else}}

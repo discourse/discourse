@@ -65,7 +65,7 @@
                     {{#link-to 'adminUser' item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
                     <a href {{action "filterByStaffUser" item.acting_user}}>{{item.acting_user.username}}</a>
                   {{else}}
-                    <span class="deleted-user" title="{{i18n 'admin.user.deleted'}}">
+                    <span class="deleted-user" title={{i18n 'admin.user.deleted'}}>
                       {{d-icon "far-trash-alt"}}
                     </span>
                   {{/if}}

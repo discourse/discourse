@@ -138,7 +138,7 @@
                                        disableSubmit=disableSubmit}}
 
               {{#if site.mobileView}}
-                <a href {{action "cancel"}} class='cancel' tabindex="6" title="{{i18n 'cancel'}}">
+                <a href {{action "cancel"}} class='cancel' tabindex="6" title={{i18n 'cancel'}}>
                   {{#if canEdit}}
                     {{d-icon "times"}}
                   {{else}}
@@ -171,11 +171,11 @@
                   {{/if}}
                 </div>
               {{/if}}
-              <div id='draft-status' class="{{if isUploading 'hidden'}}">
+              <div id='draft-status' class={{if isUploading 'hidden'}}>
                 {{#if model.draftSaving}}<div class="spinner small"></div>{{/if}}
                 {{#if model.draftSaved}}{{d-icon 'check' class='save-animation'}}{{/if}}
                 {{#if model.draftStatus}}
-                  <span title="{{model.draftStatus}}">
+                  <span title={{model.draftStatus}}>
                     {{#if model.draftConflictUser}}
                       {{avatar model.draftConflictUser imageSize="small"}} {{d-icon 'user-edit'}}
                     {{else}}
@@ -196,7 +196,7 @@
                   </a>
                 {{/if}}
 
-                <a href class="btn btn-default no-text mobile-preview" title="{{i18n 'composer.show_preview'}}" {{action "togglePreview"}}>
+                <a href class="btn btn-default no-text mobile-preview" title={{i18n 'composer.show_preview'}} {{action "togglePreview"}}>
                   {{d-icon "desktop"}}
                 </a>
 
@@ -213,7 +213,7 @@
       {{else}}
         <div class='saving-text'>
           {{#if model.createdPost}}
-            {{i18n 'composer.saved'}} <a class='permalink' href="{{unbound createdPost.url}}" {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
+            {{i18n 'composer.saved'}} <a class='permalink' href={{unbound createdPost.url}} {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
           {{else}}
             {{i18n 'composer.saving'}} {{loading-spinner size="small"}}
           {{/if}}

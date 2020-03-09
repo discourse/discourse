@@ -1,10 +1,9 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 
 export default Controller.extend({
+  adminSiteSettings: controller(),
   categoryNameKey: null,
-  adminSiteSettings: inject(),
 
   @discourseComputed("adminSiteSettings.visibleSiteSettings", "categoryNameKey")
   category(categories, nameKey) {

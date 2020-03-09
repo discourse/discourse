@@ -1,10 +1,11 @@
+import ArrayProxy from "@ember/array/proxy";
 import PreloadStore from "preload-store";
 import { ajax } from "discourse/lib/ajax";
 import Topic from "discourse/models/topic";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 
-const CategoryList = Ember.ArrayProxy.extend({
+const CategoryList = ArrayProxy.extend({
   init() {
     this.set("content", []);
     this._super(...arguments);

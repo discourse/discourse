@@ -1,6 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
-import { inject } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
 import { dasherize } from "@ember/string";
 
@@ -12,7 +12,7 @@ const subcategoryStyleComponentNames = {
 };
 
 export default DiscoveryController.extend({
-  discovery: inject(),
+  discovery: controller(),
 
   // this makes sure the composer isn't scoping to a specific category
   category: null,

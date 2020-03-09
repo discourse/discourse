@@ -8,7 +8,7 @@
         <h3>{{dash-if-empty versionCheck.installed_version}}</h3>
         {{#if versionCheck.gitLink}}
           <div class="sha-link">
-            (<a href={{versionCheck.gitLink}} target="_blank">{{versionCheck.shortSha}}</a>)
+            (<a href={{versionCheck.gitLink}} rel="noopener" target="_blank">{{versionCheck.shortSha}}</a>)
           </div>
         {{/if}}
       </div>

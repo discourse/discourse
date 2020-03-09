@@ -1,6 +1,7 @@
+import Application from "@ember/application";
 import { buildResolver } from "discourse-common/resolver";
 
-export default Ember.Application.extend({
+export default Application.extend({
   rootElement: "#wizard-main",
   Resolver: buildResolver("wizard"),
 

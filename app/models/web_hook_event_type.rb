@@ -11,6 +11,8 @@ class WebHookEventType < ActiveRecord::Base
   QUEUED_POST = 8
   REVIEWABLE = 9
   NOTIFICATION = 10
+  SOLVED = 11
+  ASSIGN = 12
 
   has_and_belongs_to_many :web_hooks
 

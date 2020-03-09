@@ -18,17 +18,17 @@
 
           {{#unless showNotFoundError}}
           <li class="item report">
-            <a href="{{model.reportUrl}}" class="report-url">
+            <a href={{model.reportUrl}} class="report-url">
               {{model.title}}
             </a>
 
             {{#if model.description}}
               {{#if model.description_link}}
-                <a target="_blank" rel="noopener" href="{{model.description_link}}" class="info" data-tooltip="{{model.description}}">
+                <a target="_blank" rel="noopener" href={{model.description_link}} class="info" data-tooltip={{model.description}}>
                   {{d-icon "question-circle"}}
                 </a>
               {{else}}
-                <span class="info" data-tooltip="{{model.description}}">
+                <span class="info" data-tooltip={{model.description}}>
                   {{d-icon "question-circle"}}
                 </span>
               {{/if}}
@@ -40,7 +40,7 @@
 
       {{#if shouldDisplayTrend}}
         <div class="trend {{model.trend}}">
-          <span class="value" title="{{model.trendTitle}}">
+          <span class="value" title={{model.trendTitle}}>
             {{#if model.average}}
               {{number model.currentAverage}}{{#if model.percent}}%{{/if}}
             {{else}}
@@ -77,7 +77,7 @@
             <div class="alert alert-info report-alert no-data">
               {{d-icon "chart-pie"}}
               {{#if model.reportUrl}}
-                <a href="{{model.reportUrl}}" class="report-url">
+                <a href={{model.reportUrl}} class="report-url">
                   <span>
                     {{#if model.title}}
                       {{model.title}} —

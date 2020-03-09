@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import { A } from "@ember/array";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { observes } from "discourse-common/utils/decorators";
@@ -7,7 +8,7 @@ export default Controller.extend(ModalFunctionality, {
   @observes("model")
   modelChanged() {
     const model = this.model;
-    const copy = Ember.A();
+    const copy = A();
     const store = this.store;
 
     if (model) {

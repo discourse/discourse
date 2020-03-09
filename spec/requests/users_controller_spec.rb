@@ -3052,6 +3052,34 @@ describe UsersController do
     end
   end
 
+  describe "#cards" do
+    fab!(:user) { Discourse.system_user }
+    fab!(:user2) { Fabricate(:user) }
+
+    it "returns success" do
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response.status).to eq(200)
+      parsed = JSON.parse(response.body)["users"]
+
+      expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
+    end
+
+    it "should redirect to login page for anonymous user when profiles are hidden" do
+      SiteSetting.hide_user_profiles_from_public = true
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response).to redirect_to '/login'
+    end
+
+    it "does not include hidden profiles" do
+      user2.user_option.update(hide_profile_and_presence: true)
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response.status).to eq(200)
+      parsed = JSON.parse(response.body)["users"]
+
+      expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username)
+    end
+  end
+
   describe '#badges' do
     it "renders fine by default" do
       get "/u/#{user.username}/badges"
@@ -3742,7 +3770,7 @@ describe UsersController do
       expect(response_parsed["user_secure_id"]).to eq(
         user.reload.create_or_fetch_secure_identifier
       )
-      expect(response_parsed["supported_algoriths"]).to eq(
+      expect(response_parsed["supported_algorithms"]).to eq(
         ::Webauthn::SUPPORTED_ALGORITHMS
       )
     end
@@ -3905,6 +3933,20 @@ describe UsersController do
         user.user_auth_tokens.reload
         expect(user.user_auth_tokens.count).to eq(1)
         expect(user.user_auth_tokens.first.id).to eq(ids[1])
+      end
+
+      it 'checks if token exists' do
+        ids = user.user_auth_tokens.order(:created_at).pluck(:id)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: ids[0] }
+
+        expect(response.status).to eq(200)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: ids[0] }
+
+        expect(response.status).to eq(400)
       end
 
       it 'does not let user log out of current session' do

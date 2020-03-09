@@ -29,6 +29,9 @@
         value=selectedGroup
         valueProperty=null
         nameProperty=null
+        options=(hash
+          placementStrategy="absolute"
+        )
       }}
       {{combo-box
         class="permission-selector"
@@ -36,6 +39,9 @@
         content=category.availablePermissions
         onChange=(action "onSelectPermission")
         value=selectedPermission
+        options=(hash
+          placementStrategy="absolute"
+        )
       }}
       {{d-button
         action=(action "addPermission" selectedGroup selectedPermission)

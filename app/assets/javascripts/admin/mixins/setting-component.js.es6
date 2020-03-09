@@ -1,3 +1,4 @@
+import { warn } from "@ember/debug";
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, oneWay } from "@ember/object/computed";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
@@ -137,7 +138,7 @@ export default Mixin.create({
   }),
 
   _save() {
-    Ember.warn("You should define a `_save` method", {
+    warn("You should define a `_save` method", {
       id: "discourse.setting-component.missing-save"
     });
     return Promise.resolve();

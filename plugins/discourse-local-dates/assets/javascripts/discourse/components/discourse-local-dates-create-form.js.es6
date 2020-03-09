@@ -1,13 +1,15 @@
+import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import { notEmpty } from "@ember/object/computed";
+import { Promise } from "rsvp";
 /* global Pikaday:true */
 import { propertyNotEqual } from "discourse/lib/computed";
 import loadScript from "discourse/lib/load-script";
-import computed from "discourse-common/utils/decorators";
+import computed, { observes } from "discourse-common/utils/decorators";
 import { cookAsync } from "discourse/lib/text";
 import discourseDebounce from "discourse/lib/debounce";
-import { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   timeFormat: "HH:mm:ss",
@@ -24,9 +26,9 @@ export default Component.extend({
   isValid: true,
   timezone: null,
   fromSelected: null,
-  fromFilled: Ember.computed.notEmpty("date"),
+  fromFilled: notEmpty("date"),
   toSelected: null,
-  toFilled: Ember.computed.notEmpty("toDate"),
+  toFilled: notEmpty("toDate"),
 
   init() {
     this._super(...arguments);
@@ -113,7 +115,7 @@ export default Component.extend({
       format = "LL";
     }
 
-    return Ember.Object.create({
+    return EmberObject.create({
       date: dateTime.format(this.dateFormat),
       time,
       dateTime,
@@ -146,7 +148,7 @@ export default Component.extend({
       format = "LL";
     }
 
-    return Ember.Object.create({
+    return EmberObject.create({
       date: dateTime.format(this.dateFormat),
       time,
       dateTime,
@@ -157,7 +159,7 @@ export default Component.extend({
 
   @computed("recurring", "timezones", "timezone", "format")
   options(recurring, timezones, timezone, format) {
-    return Ember.Object.create({
+    return EmberObject.create({
       recurring,
       timezones,
       timezone,
@@ -171,7 +173,7 @@ export default Component.extend({
     "options.{recurring,timezones,timezone,format}"
   )
   computedConfig(fromConfig, toConfig, options) {
-    return Ember.Object.create({
+    return EmberObject.create({
       from: fromConfig,
       to: toConfig,
       options
@@ -372,7 +374,7 @@ export default Component.extend({
   },
 
   _setupPicker() {
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       loadScript("/javascripts/pikaday.js").then(() => {
         const options = {
           field: this.$(`.fake-input`)[0],

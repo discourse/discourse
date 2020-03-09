@@ -186,15 +186,17 @@ class ThemeJavascriptCompiler
     raise CompileError.new e.instance_variable_get(:@error) # e.message contains the entire template, which could be very long
   end
 
+  def raw_template_name(name)
+    name = name.sub(/\.(raw|hbr)$/, '')
+    name.inspect
+  end
+
   def append_raw_template(name, hbs_template)
-    name = name.sub(/\.raw$/, '')
-    name = name.sub(/\.hbr$/, '.hbs')
-    name = name.inspect
     compiled = RawTemplatePrecompiler.new(@theme_id).compile(hbs_template)
     @content << <<~JS
       (function() {
         if ('Discourse' in window) {
-          Discourse.RAW_TEMPLATES[#{name}] = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
+          Discourse.RAW_TEMPLATES[#{raw_template_name(name)}] = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
         }
       })();
     JS

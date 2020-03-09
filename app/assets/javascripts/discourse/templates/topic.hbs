@@ -48,7 +48,7 @@
               {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times"}}
 
               {{#if canRemoveTopicFeaturedLink}}
-                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title="{{i18n "composer.remove_featured_link"}}">
+                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title={{i18n "composer.remove_featured_link"}}>
                   {{d-icon "times-circle"}}
                   {{featuredLinkDomain}}
                 </a>
@@ -57,7 +57,7 @@
           </div>
 
         {{else}}
-          <h1 data-topic-id="{{unbound model.id}}">
+          <h1 data-topic-id={{unbound model.id}}>
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
                 {{private-message-glyph
@@ -73,13 +73,13 @@
 
             {{#if model.details.loaded}}
               {{topic-status topic=model}}
-              <a href="{{unbound model.url}}" {{action "jumpTop"}} class="fancy-title">
+              <a href={{unbound model.url}} {{action "jumpTop"}} class="fancy-title">
                 {{{model.fancyTitle}}}
               </a>
             {{/if}}
 
             {{#if model.details.can_edit}}
-              <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{d-icon "pencil-alt"}}</a>
+              <a href {{action "editTopic"}} class="edit-topic" title={{i18n "edit"}}>{{d-icon "pencil-alt"}}</a>
             {{/if}}
           </h1>
 
@@ -170,7 +170,7 @@
       {{/topic-navigation}}
 
       <div class="row">
-        <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
+        <section class="topic-area" id="topic" data-topic-id={{unbound model.id}}>
 
           <div class="posts-wrapper">
             {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
