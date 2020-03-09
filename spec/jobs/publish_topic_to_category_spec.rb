@@ -61,14 +61,12 @@ RSpec.describe Jobs::PublishTopicToCategory do
   end
 
   describe 'when topic is a private message' do
-    before do
+    it 'should publish the topic to the new category' do
       freeze_time 1.hour.ago do
         expect { topic.convert_to_private_message(Discourse.system_user) }
           .to change { topic.private_message? }.to(true)
       end
-    end
 
-    it 'should publish the topic to the new category' do
       now = freeze_time
 
       message = MessageBus.track_publish do
@@ -90,11 +88,10 @@ RSpec.describe Jobs::PublishTopicToCategory do
   end
 
   describe 'when new category has a default auto-close' do
-    before do
-      another_category.update!(auto_close_hours: 5)
-    end
-
     it 'should apply the auto-close timer upon publishing' do
+      freeze_time
+
+      another_category.update!(auto_close_hours: 5)
       topic
 
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
@@ -103,7 +100,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
       topic_timer = topic.public_topic_timer
       expect(topic.category).to eq(another_category)
       expect(topic_timer.status_type).to eq(TopicTimer.types[:close])
-      expect(topic_timer.execute_at).to be_within(1.second).of(5.hours.from_now)
+      expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
     end
   end
 end
