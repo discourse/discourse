@@ -202,6 +202,9 @@ export default Controller.extend({
     );
   },
   sourceIsHttp: match("model.remote_theme.remote_url", /^http(s)?:\/\//),
+  githubLink() {
+    return model.remote_theme_url + "/tree/master"
+  },
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);
