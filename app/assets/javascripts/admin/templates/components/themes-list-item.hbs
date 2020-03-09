@@ -7,7 +7,9 @@
     </span>
 
     <span class="icons">
-      {{#unless theme.selected}}
+      {{#if theme.selected}}
+        {{d-icon "caret-right"}}
+      {{else}}
         {{#if theme.default}}
           {{d-icon "check" class="default-indicator" title="admin.customize.theme.default_theme_tooltip"}}
         {{/if}}
@@ -20,9 +22,7 @@
         {{#unless theme.enabled}}
           {{d-icon "ban" class="light-grey-icon" title="admin.customize.theme.disabled_component_tooltip"}}
         {{/unless}}
-      {{else}}
-        {{d-icon "caret-right"}}
-      {{/unless}}
+      {{/if}}
     </span>
   </div>
 
