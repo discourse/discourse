@@ -67,7 +67,9 @@
 
     {{plugin-outlet name="full-page-search-below-search-info" args=(hash search=searchTerm)}}
 
-    {{#unless searching}}
+    {{#if searching}}
+      {{loading-spinner size="medium"}}
+    {{else}}
       <div class="search-results">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
           {{#each model.posts as |result|}}
@@ -172,9 +174,7 @@
           {{/conditional-loading-spinner}}
         {{/load-more}}
       </div>
-    {{else}}
-      {{loading-spinner size="medium"}}
-    {{/unless}}
+    {{/if}}
   </div>
 
   <div class="search-advanced-sidebar">
