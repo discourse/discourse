@@ -748,6 +748,7 @@ class UsersController < ApplicationController
     end
 
     json = success_json
+    json[:hide_taken] = SiteSetting.hide_email_address_taken
     json[:user_found] = user_presence unless SiteSetting.hide_email_address_taken
     render json: json
   rescue RateLimiter::LimitExceeded
