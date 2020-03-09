@@ -2,7 +2,7 @@
   <h3>{{formattedName}}</h3>
   <div class='controls'>
     <label class='radio'>
-      <input type='radio' id="radio_{{unbound flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'>
+      <input type='radio' id="radio_{{flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'>
 
       <div class='flag-action-type-details'>
         <span class='description'>{{{flag.description}}}</span>
@@ -20,7 +20,7 @@
 {{else}}
   <div class="controls {{flag.name_key}}">
     <label class='radio'>
-      <input type='radio' id="radio_{{unbound flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'>
+      <input type='radio' id="radio_{{flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'>
       <div class='flag-action-type-details'>
         <strong>{{formattedName}}</strong>
         {{#if showDescription}}

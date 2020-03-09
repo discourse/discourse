@@ -59,7 +59,7 @@
           <div class="controls">{{i18n "admin.users.not_verified"}}</div>
         {{/unless}}
         {{#if model.email}}
-          <a href="mailto:{{unbound model.email}}">{{model.email}}</a>
+          <a href="mailto:{{model.email}}">{{model.email}}</a>
         {{else}}
           {{d-button
             class="btn-default"
@@ -79,7 +79,7 @@
           {{#if model.secondary_emails}}
             <ul>
               {{#each model.secondary_emails as |email| }}
-                <li><a href="mailto:{{unbound email}}">{{email}}</a></li>
+                <li><a href="mailto:{{email}}">{{email}}</a></li>
               {{/each}}
             </ul>
           {{else}}

@@ -213,7 +213,7 @@
       {{else}}
         <div class='saving-text'>
           {{#if model.createdPost}}
-            {{i18n 'composer.saved'}} <a class='permalink' href={{unbound createdPost.url}} {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
+            {{i18n 'composer.saved'}} <a class='permalink' href={{createdPost.url}} {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
           {{else}}
             {{i18n 'composer.saving'}} {{loading-spinner size="small"}}
           {{/if}}

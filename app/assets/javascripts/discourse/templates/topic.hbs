@@ -57,7 +57,7 @@
           </div>
 
         {{else}}
-          <h1 data-topic-id={{unbound model.id}}>
+          <h1 data-topic-id={{model.id}}>
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
                 {{private-message-glyph
@@ -73,7 +73,7 @@
 
             {{#if model.details.loaded}}
               {{topic-status topic=model}}
-              <a href={{unbound model.url}} {{action "jumpTop"}} class="fancy-title">
+              <a href={{model.url}} {{action "jumpTop"}} class="fancy-title">
                 {{{model.fancyTitle}}}
               </a>
             {{/if}}
@@ -170,7 +170,7 @@
       {{/topic-navigation}}
 
       <div class="row">
-        <section class="topic-area" id="topic" data-topic-id={{unbound model.id}}>
+        <section class="topic-area" id="topic" data-topic-id={{model.id}}>
 
           <div class="posts-wrapper">
             {{conditional-loading-spinner condition=model.postStream.loadingAbove}}

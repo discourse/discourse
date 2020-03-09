@@ -1,5 +1,5 @@
 {{#each categories as |c|}}
-  <div class='category category-box category-box-{{unbound c.slug}}' style={{border-color c.color}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}}
+  <div class='category category-box category-box-{{c.slug}}' style={{border-color c.color}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}}
    data-url={{c.url}}>
     <div class='category-box-inner'>
       <div class="category-logo">
