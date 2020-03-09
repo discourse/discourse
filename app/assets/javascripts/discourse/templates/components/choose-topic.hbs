@@ -11,7 +11,7 @@
     {{#each topics as |t|}}
       <div class='controls existing-topic'>
         <label class='radio'>
-          <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>
+          <input type='radio' id="choose-topic-{{t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>
           {{raw "topic-status" topic=t}}
           <span class="topic-title">
             {{t.title}}
