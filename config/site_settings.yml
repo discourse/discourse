@@ -942,7 +942,9 @@ email:
     default: false
     client: true
   apply_custom_styles_to_digest: true
-  email_accent_bg_color: "#2F70AC"
+  email_accent_bg_color:
+    type: color
+    default: "#2F70AC"
   email_accent_fg_color: "#FFFFFF"
   email_link_color: "#006699"
   show_topic_featured_link_in_digest: false
@@ -1480,7 +1482,7 @@ spam:
   auto_silence_fast_typers_max_trust_level: 0
   auto_silence_first_post_regex: ""
   high_trust_flaggers_auto_hide_posts: true
-  cooldown_hours_until_reflag: 
+  cooldown_hours_until_reflag:
     default: 24
     min: 0
 
