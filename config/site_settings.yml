@@ -880,6 +880,7 @@ posting:
       - code-fences
   embed_any_origin: false
   embed_topics_list: false
+  embed_set_canonical_url: false
   embed_truncate:
     default: true
   embed_support_markdown:
