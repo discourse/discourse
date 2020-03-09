@@ -1036,7 +1036,6 @@ pt:
     desktop_category_page_style: "Estilo visual para a página de categorias."
     category_colors: "Lista de valores hexadecimais das cores permitidas nas categorias."
     category_style: "Estilo visível para distintivos de categorias."
-    max_image_size_kb: "Tamanho máximo da imagem carregada em kB. Este deverá ser configurado em nginx (client_max_body_size) / apache ou também proxy."
     max_attachment_size_kb: "Tamanho máximo dos anexos carregados em kB. Este deverá ser configurado em nginx (client_max_body_size) / apache ou também proxy."
     authorized_extensions: "Lista de extensões permitidas para carregamento (utilizar '*' para ativar todos os tipos de ficheiros)"
     max_similar_results: "Quantos tópicos semelhantes a serem exibidos acima do editor ao compor um novo tópico. A comparação é baseada no título e no corpo."

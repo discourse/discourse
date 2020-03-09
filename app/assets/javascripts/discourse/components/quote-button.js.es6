@@ -3,6 +3,12 @@ import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
 import { selectedText, selectedElement } from "discourse/lib/utilities";
 
+function getQuoteTitle(element) {
+  const titleEl = element.querySelector(".title");
+  if (!titleEl) return;
+  return titleEl.textContent.trim().replace(/:$/, "");
+}
+
 export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
@@ -55,12 +61,7 @@ export default Component.extend({
       element = element.parentElement
     ) {
       if (element.tagName === "ASIDE" && element.classList.contains("quote")) {
-        opts.username =
-          element.dataset.username ||
-          element
-            .querySelector(".title")
-            .textContent.trim()
-            .replace(/:$/, "");
+        opts.username = element.dataset.username || getQuoteTitle(element);
         opts.post = element.dataset.post;
         opts.topic = element.dataset.topic;
       }

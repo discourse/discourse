@@ -176,7 +176,7 @@ class Search
       @search_context = @guardian.user
     end
 
-    if @search_all_topics
+    if @search_all_topics && @guardian.user
       @opts[:type_filter] = "all_topics"
     end
 

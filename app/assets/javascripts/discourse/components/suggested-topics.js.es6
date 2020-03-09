@@ -1,9 +1,8 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { get } from "@ember/object";
+import { computed, get } from "@ember/object";
 import Component from "@ember/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Site from "discourse/models/site";
-import { computed } from "@ember/object";
 
 export default Component.extend({
   elementId: "suggested-topics",

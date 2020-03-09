@@ -943,7 +943,6 @@ sk:
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
     category_style: "Vizuálny štýl pre odznaky za kategórie."
-    max_image_size_kb: "Mmaximálna veľkosť vloženého obrázku v kB. Rovnako musí byť nastavená v nginx (client_max_body_size) / apache alebo na proxy."
     max_attachment_size_kb: "Mmaximálna veľkosť vloženej prílohy v kB. Rovnako musí byť nastavená v nginx (client_max_body_size) / apache alebo na proxy."
     authorized_extensions: "Zoznam povolených príloh súborov ktoré je umožnené vkladať (použite '*' na vkladanie súborov všetkých typov)"
     max_similar_results: "Koľko podobných tém sa má zobraziť nad editorom ak vytvára novú tému. Porovnanie je založené na nadpise a tele správy."

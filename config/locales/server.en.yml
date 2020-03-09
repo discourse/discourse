@@ -546,6 +546,10 @@ en:
               same_as_password: "is the same as your password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "This topic cannot be featured on your profile."
         user_email:
           attributes:
             user_id:
@@ -1647,7 +1651,6 @@ en:
     discord_secret: "Discord Secret Key"
     discord_trusted_guilds: 'Only allow members of these Discord guilds to login via Discord. Use the numeric ID for the guild. For more information, check the instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">here</a>. Leave blank to allow any guild.'
 
-    readonly_mode_during_backup: "Enable read only mode while taking a backup"
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
@@ -1993,6 +1996,7 @@ en:
     ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
 
     clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed. To disable clean up set to 0."
+    clean_up_unused_staged_users_after_days: "Number of days before an unused staged user (without any posts) is removed. To disable clean up set to 0."
 
     user_selected_primary_groups: "Allow users to set their own primary group"
 
@@ -2057,6 +2061,7 @@ en:
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
     embed_topics_list: "Support HTML embedding of topics lists"
+    embed_set_canonical_url: "Set the canonical URL for embeded topics to the embeded content's URL."
     embed_truncate: "Truncate the embedded posts."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
@@ -2381,6 +2386,8 @@ en:
     second_factor_backup_title: "Two Factor Backup Code"
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     invalid_security_key: "Invalid security key."
+    missing_second_factor_name: "Please provide a name."
+    missing_second_factor_code: "Please provide a code."
     second_factor_toggle:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"

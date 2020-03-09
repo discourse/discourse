@@ -1,3 +1,4 @@
+import { warn } from "@ember/debug";
 import {
   displayErrorForUpload,
   validateUploadedFiles
@@ -11,7 +12,7 @@ export default Mixin.create({
   uploadProgress: 0,
 
   uploadDone() {
-    Ember.warn("You should implement `uploadDone`", {
+    warn("You should implement `uploadDone`", {
       id: "discourse.upload.missing-upload-done"
     });
   },

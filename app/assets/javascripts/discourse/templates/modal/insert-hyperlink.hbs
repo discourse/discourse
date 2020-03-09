@@ -14,9 +14,9 @@
           {{#each searchResults as |result|}}
             <a
               class="search-link"
-              href="{{result.url}}"
+              href={{result.url}}
               onclick={{action "linkClick"}}
-              data-title="{{result.title}}">
+              data-title={{result.title}}>
               {{topic-status topic=result disableActions=true}}
               {{replace-emoji result.fancy_title}}
               <div class="search-category">

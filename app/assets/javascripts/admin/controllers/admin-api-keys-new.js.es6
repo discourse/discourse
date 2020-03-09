@@ -1,5 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import { isBlank } from "@ember/utils";
 import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
@@ -15,8 +16,8 @@ export default Controller.extend({
 
   @discourseComputed("model.description", "model.username", "userMode")
   saveDisabled(description, username, userMode) {
-    if (Ember.isBlank(description)) return true;
-    if (userMode === "single" && Ember.isBlank(username)) return true;
+    if (isBlank(description)) return true;
+    if (userMode === "single" && isBlank(username)) return true;
     return false;
   },
 

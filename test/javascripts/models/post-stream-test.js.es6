@@ -1,3 +1,4 @@
+import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
 import User from "discourse/models/user";
@@ -863,7 +864,7 @@ QUnit.test("postsWithPlaceholders", async assert => {
   const postsWithPlaceholders = postStream.get("postsWithPlaceholders");
   const store = postStream.store;
 
-  const testProxy = Ember.ArrayProxy.create({ content: postsWithPlaceholders });
+  const testProxy = ArrayProxy.create({ content: postsWithPlaceholders });
 
   const p1 = store.createRecord("post", { id: 1, post_number: 1 });
   const p2 = store.createRecord("post", { id: 2, post_number: 2 });

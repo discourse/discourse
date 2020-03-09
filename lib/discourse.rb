@@ -45,6 +45,39 @@ module Discourse
       logs.join("\n".freeze)
     end
 
+    def self.atomic_write_file(destination, contents)
+      begin
+        return if File.read(destination) == contents
+      rescue Errno::ENOENT
+      end
+
+      FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
+      temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
+
+      File.open(temp_destination, "w") do |fd|
+        fd.write(contents)
+        fd.fsync()
+      end
+
+      File.rename(temp_destination, destination)
+
+      nil
+    end
+
+    def self.atomic_ln_s(source, destination)
+      begin
+        return if File.readlink(destination) == source
+      rescue Errno::ENOENT, Errno::EINVAL
+      end
+
+      FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
+      temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
+      execute_command('ln', '-s', source, temp_destination)
+      File.rename(temp_destination, destination)
+
+      nil
+    end
+
     private
 
     class CommandRunner

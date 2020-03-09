@@ -25,7 +25,7 @@
             <a {{action "toggleShowAdvanced"}}
                 class='no-text'
                 href
-                title="{{i18n (concat "admin.customize.theme." (if showAdvanced "hide_advanced" "show_advanced"))}}"
+                title={{i18n (concat "admin.customize.theme." (if showAdvanced "hide_advanced" "show_advanced"))}}
             >
                 {{d-icon (if showAdvanced "angle-double-left" "angle-double-right")}}
             </a>

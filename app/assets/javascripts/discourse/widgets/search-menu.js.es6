@@ -1,6 +1,5 @@
 import { get } from "@ember/object";
-import { debounce } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { debounce, later } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
 import { createWidget } from "discourse/widgets/widget";
