@@ -1,4 +1,4 @@
-import { computed, default as EmberObject } from "@ember/object";
+import { computed, guidFor, default as EmberObject } from "@ember/object";
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -76,7 +76,7 @@ export default Component.extend(
       this.set(
         "selectKit",
         EmberObject.create({
-          uniqueID: Ember.guidFor(this),
+          uniqueID: guidFor(this),
           valueProperty: this.valueProperty,
           nameProperty: this.nameProperty,
           options: EmberObject.create(),
@@ -267,6 +267,7 @@ export default Component.extend(
       closeOnChange: true,
       limitMatches: null,
       placement: "bottom-start",
+      placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       castInteger: false
@@ -814,10 +815,15 @@ export default Component.extend(
           popper.style.width = `${anchor.offsetWidth}px`;
         }
 
+        let placementStrategy = this.selectKit.options.placementStrategy;
+        if (!placementStrategy) {
+          placementStrategy = this.inModal ? "fixed" : "absolute";
+        }
+
         /* global Popper:true */
         this.popper = Popper.createPopper(anchor, popper, {
           eventsEnabled: false,
-          strategy: inModal ? "fixed" : "absolute",
+          strategy: placementStrategy,
           placement: this.selectKit.options.placement,
           modifiers: [
             {

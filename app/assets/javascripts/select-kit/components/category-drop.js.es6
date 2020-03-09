@@ -28,7 +28,6 @@ export default ComboBoxComponent.extend({
     subCategory: false,
     clearable: false,
     hideParentCategory: "hideParentCategory",
-    allowUncategorized: true,
     countSubcategories: false,
     autoInsertNoneItem: false,
     displayCategoryDescription: "displayCategoryDescription",
@@ -96,7 +95,7 @@ export default ComboBoxComponent.extend({
       content.title = category.title;
       content.label = categoryBadgeHTML(category, {
         link: false,
-        allowUncategorized: this.selectKit.options.allowUncategorized,
+        allowUncategorized: true,
         hideParent: true
       }).htmlSafe();
     }
@@ -155,18 +154,16 @@ export default ComboBoxComponent.extend({
   },
 
   actions: {
-    onChange(value) {
+    onChange(categoryId) {
       let categoryURL;
 
-      if (value === ALL_CATEGORIES_ID) {
+      if (categoryId === ALL_CATEGORIES_ID) {
         categoryURL = this.allCategoriesUrl;
-      } else if (value === NO_CATEGORIES_ID) {
+      } else if (categoryId === NO_CATEGORIES_ID) {
         categoryURL = this.noCategoriesUrl;
       } else {
-        const categoryId = parseInt(value, 10);
-        const category = Category.findById(categoryId);
-        const slug = Discourse.Category.slugFor(category);
-        categoryURL = `/c/${slug}`;
+        const category = Category.findById(parseInt(categoryId, 10));
+        categoryURL = category.url;
       }
 
       DiscourseURL.routeToUrl(categoryURL);
@@ -176,10 +173,7 @@ export default ComboBoxComponent.extend({
   },
 
   _filterUncategorized(content) {
-    if (
-      !this.siteSettings.allow_uncategorized_topics ||
-      !this.selectKit.options.allowUncategorized
-    ) {
+    if (!this.siteSettings.allow_uncategorized_topics) {
       content = content.filter(
         c => c.id !== this.site.uncategorized_category_id
       );

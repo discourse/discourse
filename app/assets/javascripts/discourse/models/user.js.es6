@@ -1,3 +1,4 @@
+import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
 import { gt, equal, or } from "@ember/object/computed";
 import EmberObject, { computed } from "@ember/object";
@@ -536,8 +537,12 @@ const User = RestModel.extend({
     const user = this;
 
     return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
-      const useCardRoute = options && options.forCard;
+      if (options && options.existingRequest) {
+        // Existing ajax request has been passed, use it
+        return options.existingRequest;
+      }
 
+      const useCardRoute = options && options.forCard;
       if (options) delete options.forCard;
 
       const path = useCardRoute
@@ -880,7 +885,7 @@ User.reopenClass(Singleton, {
       responses.set("count", responses.get("count") + stat.get("count"));
     });
 
-    const result = Ember.A();
+    const result = A();
     result.pushObjects(stats.rejectBy("isResponse"));
 
     let insertAt = 0;

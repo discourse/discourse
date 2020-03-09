@@ -1211,9 +1211,6 @@ zh_CN:
       enabled: "站点正处于只读模式。你可以继续浏览，但是回复、赞和其他操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
       logout_disabled: "站点在只读模式下无法登出。"
-    too_few_topics_and_posts_notice: "让我们<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论吧！</a>现有<strong>%{currentTopics}</strong>个主题何<strong>%{currentPosts}</strong>个回帖。用户需要更多阅读与回复 —— 我们推荐至少<strong>%{requiredTopics}</strong>个主题和<strong>%{requiredPosts}</strong>个帖子。此消息仅管理人员可见。"
-    too_few_topics_notice: "让我们<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论</a>吧！现在有<strong>%{currentTopics}</strong>个主题。 用户需要进行更多阅读与回复 – 我们推荐至少<strong>%{requiredTopics}</strong> 个主题。 此消息仅管理员可见。"
-    too_few_posts_notice: "让我们<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论</a>吧！现在有<strong>%{currentPosts}</strong>个主题。 用户需要进行更多的阅读或回复 – 我们推荐至少<strong>%{requiredPosts}</strong> 个主题。 此消息仅管理人员可见。"
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>达到了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
       reached_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经达到站点设置限制 {limit, plural, one {# error/minute} other {# errors/minute}}。"
@@ -2528,6 +2525,7 @@ zh_CN:
         help: "本主题被设置为不显示在主题列表中，只能通过链接来访问"
       personal_message:
         title: "此主题是一条私信"
+        help: "此主题是一条私信"
     posts: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
     posts_likes_MF: |

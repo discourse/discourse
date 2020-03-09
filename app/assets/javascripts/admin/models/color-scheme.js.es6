@@ -1,10 +1,12 @@
+import { A } from "@ember/array";
+import ArrayProxy from "@ember/array/proxy";
 import discourseComputed from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import ColorSchemeColor from "admin/models/color-scheme-color";
 import EmberObject from "@ember/object";
 
-const ColorScheme = EmberObject.extend(Ember.Copyable, {
+const ColorScheme = EmberObject.extend({
   init() {
     this._super(...arguments);
 
@@ -33,7 +35,7 @@ const ColorScheme = EmberObject.extend(Ember.Copyable, {
     const newScheme = ColorScheme.create({
       name: this.name,
       can_edit: true,
-      colors: Ember.A()
+      colors: A()
     });
     this.colors.forEach(c => {
       newScheme.colors.pushObject(
@@ -111,7 +113,7 @@ const ColorScheme = EmberObject.extend(Ember.Copyable, {
   }
 });
 
-const ColorSchemes = Ember.ArrayProxy.extend({});
+const ColorSchemes = ArrayProxy.extend({});
 
 ColorScheme.reopenClass({
   findAll() {

@@ -1,6 +1,6 @@
 <div class="user-image">
   <div class="user-image-inner">
-    <a href="{{unbound userPath}}" data-user-card="{{unbound user.username}}">{{avatar user imageSize="large"}}</a>
+    <a href={{userPath}} data-user-card={{user.username}}>{{avatar user imageSize="large"}}</a>
     {{#if user.primary_group_name}}
       {{avatar-flair
         flairURL=user.primary_group_flair_url
@@ -13,10 +13,10 @@
 
 <div class="user-detail">
   <div class='name-line'>
-    <span class="username"><a href="{{unbound userPath}}" data-user-card="{{unbound user.username}}">{{format-username user.username}}</a></span>
-    <span class="name">{{unbound name}}</span>
+    <span class="username"><a href={{userPath}} data-user-card={{user.username}}>{{format-username user.username}}</a></span>
+    <span class="name">{{name}}</span>
   </div>
-  <div class="title">{{unbound user.title}}</div>
+  <div class="title">{{user.title}}</div>
 
   {{#if hasBlock}}
     <div class='details'>

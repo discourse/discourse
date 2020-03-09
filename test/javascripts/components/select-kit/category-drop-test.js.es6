@@ -1,3 +1,4 @@
+import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import componentTest from "helpers/component-test";
 import { testSelectKitModule } from "./select-kit-test-helper";
@@ -186,10 +187,11 @@ componentTest("hideParentCategory (true)", {
   }
 });
 
-componentTest("allowUncategorized (default: true)", {
+componentTest("allow_uncategorized_topics (true)", {
   template: template(),
 
   beforeEach() {
+    this.siteSettings.allow_uncategorized_topics = true;
     initCategories(this);
   },
 
@@ -202,10 +204,11 @@ componentTest("allowUncategorized (default: true)", {
   }
 });
 
-componentTest("allowUncategorized (false)", {
-  template: template(["allowUncategorized=false"]),
+componentTest("allow_uncategorized_topics (false)", {
+  template: template(),
 
   beforeEach() {
+    this.siteSettings.allow_uncategorized_topics = false;
     initCategories(this);
   },
 
@@ -335,3 +338,22 @@ componentTest(
     }
   }
 );
+
+componentTest("category url", {
+  template: template(),
+
+  beforeEach() {
+    initCategoriesWithParentCategory(this);
+    sandbox.stub(DiscourseURL, "routeTo");
+  },
+
+  async test(assert) {
+    await this.subject.expand();
+    await this.subject.selectRowByValue(26);
+
+    assert.ok(
+      DiscourseURL.routeTo.calledWith("/c/feature/spec/26"),
+      "it builds a correct URL"
+    );
+  }
+});

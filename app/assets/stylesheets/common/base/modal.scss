@@ -457,6 +457,32 @@
   }
 }
 
+.edit-category-tab-tags {
+  .select-kit {
+    &.tag-chooser {
+      width: 100%;
+
+      .select-kit-filter,
+      .filter-input {
+        display: flex;
+        flex: 1 0 250px;
+      }
+
+      .mobile-view & {
+        .no-content,
+        .is-loading,
+        &.select-kit.is-expanded .select-kit-collection {
+          width: 95%;
+        }
+      }
+    }
+  }
+}
+
+#category-min-tags-from-group {
+  min-height: 36px;
+}
+
 .incoming-email-modal {
   .btn {
     transition: none;

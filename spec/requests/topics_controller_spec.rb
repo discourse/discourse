@@ -3072,6 +3072,22 @@ RSpec.describe TopicsController do
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
       end
 
+      context "canonical_url" do
+        fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
+        let(:user_agent) { "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" }
+
+        it "set to topic.url when embed_set_canonical_url is false" do
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          expect(response.body).to include('<link rel="canonical" href="' + topic_embed.topic.url)
+        end
+
+        it "set to topic_embed.embed_url when embed_set_canonical_url is true" do
+          SiteSetting.embed_set_canonical_url = true
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          expect(response.body).to include('<link rel="canonical" href="' + topic_embed.embed_url)
+        end
+      end
+
       context "wayback machine" do
         it "renders crawler layout" do
           get topic.url, env: { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "HTTP_VIA" => "HTTP/1.0 web.archive.org (Wayback Save Page)" }

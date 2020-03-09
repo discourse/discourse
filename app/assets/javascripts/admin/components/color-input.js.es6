@@ -1,5 +1,6 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import { computed, action } from "@ember/object";
 import loadScript, { loadCSS } from "discourse/lib/load-script";
 import { observes } from "discourse-common/utils/decorators";
 
@@ -13,28 +14,45 @@ import { observes } from "discourse-common/utils/decorators";
 export default Component.extend({
   classNames: ["color-picker"],
 
+  onlyHex: true,
+
+  styleSelection: true,
+
+  maxlength: computed("onlyHex", function() {
+    return this.onlyHex ? 6 : null;
+  }),
+
+  @action
+  onHexInput(color) {
+    this.attrs.onChangeColor &&
+      this.attrs.onChangeColor((color || "").replace(/^#/, ""));
+  },
+
   @observes("hexValue", "brightnessValue", "valid")
   hexValueChanged: function() {
-    var hex = this.hexValue;
+    const hex = this.hexValue;
     let text = this.element.querySelector("input.hex-input");
 
+    this.attrs.onChangeColor && this.attrs.onChangeColor(hex);
+
     if (this.valid) {
-      text.setAttribute(
-        "style",
-        "color: " +
-          (this.brightnessValue > 125 ? "black" : "white") +
-          "; background-color: #" +
-          hex +
-          ";"
-      );
+      this.styleSelection &&
+        text.setAttribute(
+          "style",
+          "color: " +
+            (this.brightnessValue > 125 ? "black" : "white") +
+            "; background-color: #" +
+            hex +
+            ";"
+        );
 
       if (this.pickerLoaded) {
         $(this.element.querySelector(".picker")).spectrum({
-          color: "#" + this.hexValue
+          color: "#" + hex
         });
       }
     } else {
-      text.setAttribute("style", "");
+      this.styleSelection && text.setAttribute("style", "");
     }
   },
 
@@ -51,8 +69,6 @@ export default Component.extend({
         });
       });
     });
-    schedule("afterRender", () => {
-      this.hexValueChanged();
-    });
+    schedule("afterRender", () => this.hexValueChanged());
   }
 });

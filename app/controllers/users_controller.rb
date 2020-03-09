@@ -99,6 +99,30 @@ class UsersController < ApplicationController
     show(for_card: true)
   end
 
+  def cards
+    return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
+
+    user_ids = params.require(:user_ids).split(",").map(&:to_i)
+    raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
+
+    users = User.where(id: user_ids).includes(:user_option,
+                                              :user_stat,
+                                              :default_featured_user_badges,
+                                              :user_profile,
+                                              :card_background_upload,
+                                              :primary_group,
+                                              :primary_email
+                                            )
+
+    users = users.filter { |u| guardian.can_see_profile?(u) }
+
+    preload_fields = User.whitelisted_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    User.preload_custom_fields(users, preload_fields)
+    User.preload_recent_time_read(users)
+
+    render json: users, each_serializer: UserCardSerializer
+  end
+
   def badges
     raise Discourse::NotFound unless SiteSetting.enable_badges?
     show
@@ -274,6 +298,8 @@ class UsersController < ApplicationController
   end
 
   def invited
+    guardian.ensure_can_invite_to_forum!
+
     inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
     filter_by = params[:filter]
@@ -284,12 +310,19 @@ class UsersController < ApplicationController
       Invite.find_redeemed_invites_from(inviter, offset)
     end
 
-    invites = invites.filter_by(params[:search])
-    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer),
+    show_emails = guardian.can_see_invite_emails?(inviter)
+    if params[:search].present?
+      filter_sql = '(LOWER(users.username) LIKE :filter)'
+      filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
+      invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
+    end
+    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer, show_emails: show_emails),
                      can_see_invite_details: guardian.can_see_invite_details?(inviter)
   end
 
   def invited_count
+    guardian.ensure_can_invite_to_forum!
+
     inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
     pending_count = Invite.find_pending_invites_count(inviter)
@@ -1164,7 +1197,7 @@ class UsersController < ApplicationController
       challenge: challenge_session.challenge,
       rp_id: challenge_session.rp_id,
       rp_name: challenge_session.rp_name,
-      supported_algoriths: ::Webauthn::SUPPORTED_ALGORITHMS,
+      supported_algorithms: ::Webauthn::SUPPORTED_ALGORITHMS,
       user_secure_id: current_user.create_or_fetch_secure_identifier,
       existing_active_credential_ids: current_user.second_factor_security_key_credential_ids
     )
@@ -1202,8 +1235,12 @@ class UsersController < ApplicationController
   end
 
   def enable_second_factor_totp
-    params.require(:second_factor_token)
-    params.require(:name)
+    if params[:second_factor_token].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_code"))
+    end
+    if params[:name].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_name"))
+    end
     auth_token = params[:second_factor_token]
 
     totp_data = secure_session["staged-totp-#{current_user.id}"]
@@ -1310,7 +1347,7 @@ class UsersController < ApplicationController
     if params[:token_id]
       token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
       # The user should not be able to revoke the auth token of current session.
-      raise Discourse::InvalidParameters.new(:token_id) if guardian.auth_token == token.auth_token
+      raise Discourse::InvalidParameters.new(:token_id) if !token || guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]

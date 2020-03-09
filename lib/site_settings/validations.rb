@@ -143,6 +143,8 @@ module SiteSettings::Validations
 
   def validate_s3_upload_bucket(new_val)
     validate_bucket_setting("s3_upload_bucket", new_val, SiteSetting.s3_backup_bucket)
+
+    validate_error(:s3_upload_bucket_is_required, setting_name: 's3_upload_bucket') if new_val.blank? && SiteSetting.enable_s3_uploads?
   end
 
   def validate_s3_backup_bucket(new_val)

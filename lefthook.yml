@@ -4,6 +4,10 @@ pre-commit:
     rubocop:
       glob: "*.rb"
       run: bundle exec rubocop {staged_files}
+    prettier:
+      glob: "*.{js,es6}"
+      exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
+      run: yarn prettier --list-different {staged_files}
     eslint:
       glob: "*.{js,es6}"
       exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"

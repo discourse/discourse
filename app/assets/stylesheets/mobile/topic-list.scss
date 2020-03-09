@@ -345,15 +345,6 @@ tr.category-topic-link {
     }
   }
 
-  .topic-list > tbody > tr {
-    &:nth-child(odd) {
-      background-color: $secondary;
-    }
-    &:nth-child(even) {
-      background-color: $secondary;
-    }
-  }
-
   th .badge-category {
     margin: 0;
   }

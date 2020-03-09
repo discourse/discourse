@@ -1,8 +1,7 @@
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 
 export default Controller.extend({
-  tagGroups: inject(),
+  tagGroups: controller(),
 
   actions: {
     onDestroy() {

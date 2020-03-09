@@ -1,3 +1,4 @@
+import { A } from "@ember/array";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -104,7 +105,7 @@ export default RestModel.extend({
           this.set("noContentHelp", result.no_results_help);
         }
         if (result && result.user_actions) {
-          const copy = Ember.A();
+          const copy = A();
           result.user_actions.forEach(action => {
             action.title = emojiUnescape(
               Handlebars.Utils.escapeExpression(action.title)

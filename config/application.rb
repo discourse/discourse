@@ -35,6 +35,9 @@ unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
   require_relative '../lib/custom_setting_providers'
 end
 GlobalSetting.load_defaults
+if GlobalSetting.try(:cdn_url).present? && GlobalSetting.cdn_url !~ /^https?:\/\//
+  STDERR.puts "WARNING: Your CDN URL does not begin with a protocol like `https://` - this is probably not going to work"
+end
 
 if ENV['SKIP_DB_AND_REDIS'] == '1'
   GlobalSetting.skip_db = true

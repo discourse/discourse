@@ -1633,13 +1633,11 @@ tr_TR:
     desktop_category_page_style: "/categories sayfasının görsel biçimi."
     category_colors: "Kategoriler için izin verilen onaltılı renk değerlerinin listesi"
     category_style: "Kategori rozetleri için görsel biçim."
-    max_image_size_kb: "Yüklenebilecek resmin KB cinsinden en fazla büyüklüğü. Bu nginx (client_max_body_size) / apache veya proxyde de ayarlanmalı."
     max_attachment_size_kb: "Yüklenebilecek dosyaların KB cinsinden en fazla büyüklüğü. Bu nginx (client_max_body_size) / apache veya proxyde de ayarlanmalı."
     authorized_extensions: "Yüklenebilecek dosya uzantılarının listesi (tüm dosya türlerini etkinleştirmek için '*' kullanın)"
     authorized_extensions_for_staff: "`Yetkili_uzanımlar` site ayarında tanımlanan listeye ek olarak yetkili kullanıcılar için yüklenmeye izin verilen dosya uzantılarının listesi. (tüm dosya türlerini etkinleştirmek için '*' kullanın)"
     theme_authorized_extensions: "Tema yüklemeleri için izin verilen dosya uzantılarının listesi (tüm dosya türlerini etkinleştirmek için '*' kullanın)"
     max_similar_results: "Yeni bir konu oluştururken, düzenleyicinin üzerinde gösterilecek benzer konuların sayısı. Karşılaştırmalar başlık ve içerik üzerinden yapılır."
-    max_image_megapixels: "Bir görüntü için izin verilen maksimum megapiksel sayısı."
     title_prettify: "Tümü büyük harf, ilk karakteri küçük harf, çoklu ! ve ?, sonda ekstra . kullanımı gibi, sık yapılan yazım hatalarını önle."
     title_remove_extraneous_space: "Noktalama işaretlerinin önündeki ön boşlukları kaldırın."
     automatic_topic_heat_values: 'Site etkinliğine dayalı olarak "En çok görüntülenen konular" ve "En popüler konu gönderileri" ayarlarını otomatik olarak güncelleyin.'

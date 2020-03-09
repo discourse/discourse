@@ -35,7 +35,7 @@
   <p class='excerpt'>{{actionDescription}}</p>
 {{/if}}
 
-<p class='excerpt' data-topic-id="{{item.topic_id}}" data-post-id="{{item.post_id}}" data-user-id="{{item.user_id}}">
+<p class='excerpt' data-topic-id={{item.topic_id}} data-post-id={{item.post_id}} data-user-id={{item.user_id}}>
   {{~#if item.expandedExcerpt}}
     {{~{item.expandedExcerpt}~}}
   {{else}}

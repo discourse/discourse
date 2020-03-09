@@ -2,6 +2,8 @@
 
 class Theme < ActiveRecord::Base
 
+  attr_accessor :child_components
+
   @cache = DistributedCache.new('theme')
 
   belongs_to :user
@@ -59,6 +61,17 @@ class Theme < ActiveRecord::Base
     clear_cached_settings!
     ColorScheme.hex_cache.clear
     notify_theme_change(with_scheme: notify_with_scheme)
+  end
+
+  after_create do
+    if !component? && child_components.present?
+      child_components.each do |url|
+        url = ThemeStore::GitImporter.new(url.strip).url
+        theme = RemoteTheme.find_by(remote_url: url)&.theme
+        theme ||= RemoteTheme.import_theme(url, user)
+        child_themes << theme
+      end
+    end
   end
 
   def update_javascript_cache!

@@ -47,7 +47,7 @@
       {{/unless}}
     </div>
   </div>
-  <div id="revisions" data-post-id="{{model.post_id}}" class={{hiddenClasses}}>
+  <div id="revisions" data-post-id={{model.post_id}} class={{hiddenClasses}}>
     {{#if model.title_changes}}
       <div class="row">
         <h2>{{{titleDiff}}}</h2>
@@ -109,7 +109,7 @@
     <div id="revision-controls">
       {{d-button class="btn-default" action=(action "loadFirstVersion") icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
       {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
-      <div id="revision-numbers" class="{{unless displayRevisions 'invisible'}}">
+      <div id="revision-numbers" class={{unless displayRevisions 'invisible'}}>
         {{#conditional-loading-spinner condition=loading size="small"}}
           {{{revisionsText}}}
         {{/conditional-loading-spinner}}

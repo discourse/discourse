@@ -1,4 +1,6 @@
+import EmberObject from "@ember/object";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
+
 moduleForWidget("discourse-poll-standard-results");
 
 const template = `{{mount-widget
@@ -11,7 +13,7 @@ widgetTest("options in descending order", {
   beforeEach() {
     this.set(
       "poll",
-      Ember.Object.create({
+      EmberObject.create({
         options: [{ votes: 5 }, { votes: 4 }],
         voters: 9
       })
@@ -30,7 +32,7 @@ widgetTest("options in ascending order", {
   beforeEach() {
     this.set(
       "poll",
-      Ember.Object.create({
+      EmberObject.create({
         options: [{ votes: 4 }, { votes: 5 }],
         voters: 9
       })
@@ -50,7 +52,7 @@ widgetTest("multiple options in descending order", {
     this.set("isMultiple", true);
     this.set(
       "poll",
-      Ember.Object.create({
+      EmberObject.create({
         type: "multiple",
         options: [
           { votes: 5, html: "a" },

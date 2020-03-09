@@ -1260,9 +1260,6 @@ fi:
       enabled: "Sivusto on vain luku -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on toistaiseksi poissa käytöstä."
       login_disabled: "Et voi kirjautua sisään, kun sivusto on vain luku -tilassa."
       logout_disabled: "Et voi kirjautua ulos, kun sivusto on vain luku -tilassa."
-    too_few_topics_and_posts_notice: "Laitetaanpa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics}</strong> ketjua ja <strong>%{currentPosts}</strong> viestiä. Uusia kävijöitä varten tarvitaan lisää keskusteluita, joita voivat lukea ja joihin vastata. Suosittelemme vähintään <strong>%{requiredTopics}</strong> ketjua ja <strong>%{requiredPosts}</strong> viestiä. Vain henkilökunta näkee tämän viestin."
-    too_few_topics_notice: "Laitetaanpa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics}</strong> ketjua. Uusia kävijöitä varten tarvitaan lisää keskusteluita, joita voivat lukea ja joihin vastata. Suosittelemme vähintään <strong>%{requiredTopics}</strong> ketjua. Vain henkilökunta näkee tämän viestin."
-    too_few_posts_notice: "Laitetaanpa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts}</strong> viestiä. Uusia kävijöitä varten tarvitaan lisää keskusteluita, joita voivat lukea ja joihin vastata. Suosittelemme vähintään <strong>%{requiredPosts}</strong> viestiä. Vain henkilökunta näkee tämän viestin."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> saavutti sivustoasetuskynnyksen {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> saavutti sivustoasetuskynnyksen {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}."
@@ -2625,6 +2622,7 @@ fi:
         help: "Tämä ketju on poistettu listauksista; sitä ei näytetä ketjulistauksissa vaan siihen pääsee vain suoran linkin kautta"
       personal_message:
         title: "Tämä ketju on yksityiskeskustelu"
+        help: "Tämä ketju on yksityiskeskustelu"
     posts: "Viestejä"
     posts_long: "tässä ketjussa on {{number}} viestiä"
     posts_likes_MF: |

@@ -117,7 +117,7 @@
                   </td>
               </tr>
             {{else}}
-              <tr class="{{dasherize authProvider.method.name}}">
+              <tr class={{dasherize authProvider.method.name}}>
                 <td>{{authProvider.method.prettyName}}</td>
                   <td colspan=2>
                     {{#if authProvider.method.can_connect}}

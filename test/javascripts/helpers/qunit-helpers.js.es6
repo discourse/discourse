@@ -1,5 +1,4 @@
 import { isEmpty } from "@ember/utils";
-import { run } from "@ember/runloop";
 import { later } from "@ember/runloop";
 /* global QUnit, resetSite */
 
@@ -154,16 +153,6 @@ export function controllerFor(controller, model) {
     controller.set("model", model);
   }
   return controller;
-}
-
-export function asyncTestDiscourse(text, func) {
-  QUnit.test(text, function(assert) {
-    const done = assert.async();
-    run(() => {
-      func.call(this, assert);
-      done();
-    });
-  });
 }
 
 export function fixture(selector) {

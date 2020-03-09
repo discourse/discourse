@@ -21,6 +21,8 @@ const Report = EmberObject.extend({
   average: false,
   percent: false,
   higher_is_better: true,
+  description_link: null,
+  description: null,
 
   @discourseComputed("type", "start_date", "end_date")
   reportUrl(type, start_date, end_date) {
