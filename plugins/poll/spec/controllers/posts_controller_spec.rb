@@ -11,7 +11,6 @@ describe PostsController do
   end
 
   describe "polls" do
-
     it "works" do
       post :create, params: {
         title: title, raw: "[poll]\n- A\n- B\n[/poll]"
@@ -39,7 +38,7 @@ describe PostsController do
     it "schedules auto-close job" do
       freeze_time
       name = "auto_close"
-      close_date = 1.month.from_now
+      close_date = 1.month.from_now.round
 
       expect do
         post :create, params: {
