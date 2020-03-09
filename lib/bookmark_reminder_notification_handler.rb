@@ -54,9 +54,9 @@ class BookmarkReminderNotificationHandler
   def self.send_at_desktop_reminder(user:, request_user_agent:)
     return if !SiteSetting.enable_bookmarks_with_reminders
 
-    return if !user_has_pending_at_desktop_reminders?(user)
-
     return if MobileDetection.mobile_device?(BrowserDetection.device(request_user_agent).to_s)
+
+    return if !user_has_pending_at_desktop_reminders?(user)
 
     DistributedMutex.synchronize("sending_at_desktop_bookmark_reminders_user_#{user.id}") do
       Bookmark.at_desktop_reminders_for_user(user).each do |bookmark|
