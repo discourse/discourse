@@ -111,6 +111,25 @@ RSpec.describe BookmarkManager do
         expect { subject.destroy(9999) }.to raise_error(Discourse::NotFound)
       end
     end
+
+    context "if the user has pending at desktop reminders for another bookmark" do
+      before do
+        Fabricate(:bookmark, user: user, post: Fabricate(:post), reminder_type: Bookmark.reminder_types[:at_desktop])
+        BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(user)
+      end
+      it "does not clear the at bookmark redis key" do
+        subject.destroy(bookmark.id)
+        expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(user)).to eq(true)
+      end
+    end
+
+    context "if the user has pending at desktop reminders for another bookmark" do
+      it "does clear the at bookmark redis key" do
+        BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(user)
+        subject.destroy(bookmark.id)
+        expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(user)).to eq(false)
+      end
+    end
   end
 
   describe ".destroy_for_topic" do
@@ -129,6 +148,26 @@ RSpec.describe BookmarkManager do
       subject.destroy_for_topic(topic)
       expect(Bookmark.where(user: user2, topic: topic).length).to eq(1)
     end
+
+    context "if the user has pending at desktop reminders for another bookmark" do
+      before do
+        Fabricate(:bookmark, user: user, post: Fabricate(:post), reminder_type: Bookmark.reminder_types[:at_desktop])
+        BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(user)
+      end
+      it "does not clear the at bookmark redis key" do
+        subject.destroy_for_topic(topic)
+        expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(user)).to eq(true)
+      end
+    end
+
+    context "if the user has pending at desktop reminders for another bookmark" do
+      it "does clear the at bookmark redis key" do
+        BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(user)
+        subject.destroy_for_topic(topic)
+        expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(user)).to eq(false)
+      end
+    end
+
   end
 
   describe ".send_reminder_notification" do

@@ -36,6 +36,7 @@ class BookmarkManager
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
 
     bookmark.destroy
+    clear_at_desktop_cache_if_required
   end
 
   def destroy_for_topic(topic)
@@ -47,6 +48,8 @@ class BookmarkManager
         bookmark.destroy
       end
     end
+
+    clear_at_desktop_cache_if_required
   end
 
   def self.send_reminder_notification(id)
@@ -58,5 +61,14 @@ class BookmarkManager
 
   def topic_id_for_post(post_id)
     Post.select(:topic_id).find(post_id).topic_id
+  end
+
+  def clear_at_desktop_cache_if_required
+    return if user_has_any_pending_at_desktop_reminders?
+    Discourse.redis.del(BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_KEY_PREFIX + @user.id.to_s)
+  end
+
+  def user_has_any_pending_at_desktop_reminders?
+    Bookmark.at_desktop_reminders_for_user(@user).any?
   end
 end
