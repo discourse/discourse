@@ -20,11 +20,6 @@ module Jobs
       bookmarks.limit(MAX_REMINDER_NOTIFICATIONS_PER_RUN).each do |bookmark|
         BookmarkReminderNotificationHandler.send_notification(bookmark)
       end
-
-      remaining_reminders = bookmarks.count
-      if remaining_reminders.positive?
-        Rails.logger.warn("Too many bookmarks to send reminders for. #{remaining_reminders} additional bookmark reminder(s) will be sent in the next run.")
-      end
     end
   end
 end

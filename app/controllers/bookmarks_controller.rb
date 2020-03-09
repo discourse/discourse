@@ -14,7 +14,10 @@ class BookmarksController < ApplicationController
       reminder_at: params[:reminder_at]
     )
 
-    return render json: success_json if bookmark_manager.errors.empty?
+    if bookmark_manager.errors.empty?
+      return render json: success_json
+    end
+
     render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
   end
 

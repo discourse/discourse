@@ -5,7 +5,6 @@ class BookmarkReminderNotificationHandler
     return if bookmark.blank?
     Bookmark.transaction do
       if bookmark.post.blank?
-        Rails.logger.warn("The post for bookmark_id #{bookmark.id} has been deleted, clearing reminder.")
         return clear_reminder(bookmark)
       end
 

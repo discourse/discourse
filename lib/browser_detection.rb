@@ -48,14 +48,6 @@ module BrowserDetection
     end
   end
 
-  def self.mobile_device?(device)
-    %i[android ipad iphone ipod mobile].include?(device.to_sym)
-  end
-
-  def self.desktop_device?(device)
-    !mobile_device?(device.to_sym)
-  end
-
   def self.os(user_agent)
     case user_agent
     when /Android/i
