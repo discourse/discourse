@@ -1,7 +1,7 @@
 import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
 import { gt, equal, or } from "@ember/object/computed";
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { computed, getProperties } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -22,7 +22,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
-import { getProperties } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 

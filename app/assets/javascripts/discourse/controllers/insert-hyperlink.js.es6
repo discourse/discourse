@@ -1,7 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { debounce } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { cancel, debounce, scheduleOnce } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { searchForTerm } from "discourse/lib/search";

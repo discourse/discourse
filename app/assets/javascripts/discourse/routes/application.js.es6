@@ -1,5 +1,4 @@
-import { once } from "@ember/runloop";
-import { next } from "@ember/runloop";
+import { next, once } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";

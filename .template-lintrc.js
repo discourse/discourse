@@ -8,6 +8,9 @@ module.exports = {
     "style-concatenation": true,
     "no-invalid-interactive": true,
     "link-rel-noopener": true,
-    "no-unnecessary-concat": true
+    "no-unnecessary-concat": true,
+    "no-unused-block-params": true,
+    "no-unbound": true,
+    "simple-unless": true
   }
 };

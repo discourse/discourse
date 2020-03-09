@@ -950,22 +950,48 @@ describe PostCreator do
   end
 
   context 'setting created_at' do
-    it 'acts correctly' do
+    it 'supports Time instances' do
       freeze_time
 
-      topic = PostCreator.create(user,
+      post1 = PostCreator.create(user,
         raw: 'This is very interesting test post content',
         title: 'This is a very interesting test post title',
         created_at: 1.week.ago
       )
-      post = PostCreator.create(user,
+      topic = post1.topic
+
+      post2 = PostCreator.create(user,
         raw: 'This is very interesting test post content',
-        topic_id: Topic.last,
+        topic_id: topic,
         created_at: 1.week.ago
       )
 
+      expect(post1.created_at).to eq_time(1.week.ago)
+      expect(post2.created_at).to eq_time(1.week.ago)
       expect(topic.created_at).to eq_time(1.week.ago)
-      expect(post.created_at).to eq_time(1.week.ago)
+    end
+
+    it 'supports strings' do
+      freeze_time
+
+      time = Time.zone.parse('2019-09-02')
+
+      post1 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        title: 'This is a very interesting test post title',
+        created_at: '2019-09-02'
+      )
+      topic = post1.topic
+
+      post2 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        topic_id: topic,
+        created_at: '2019-09-02 00:00:00 UTC'
+      )
+
+      expect(post1.created_at).to eq_time(time)
+      expect(post2.created_at).to eq_time(time)
+      expect(topic.created_at).to eq_time(time)
     end
   end
 

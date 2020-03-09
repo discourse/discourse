@@ -1,7 +1,7 @@
 {{#d-modal-body id="keyboard-shortcuts-help"}}
-  <div class="row">
-    <div>
-      <h4>{{i18n 'keyboard_shortcuts_help.jump_to.title'}}</h4>
+  <div class="column">
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.jump_to.title"}}</h4>
       <ul>
         <li>{{{shortcuts.jump_to.home}}}</li>
         <li>{{{shortcuts.jump_to.latest}}}</li>
@@ -16,7 +16,9 @@
         {{/if}}
         <li>{{{shortcuts.jump_to.drafts}}}</li>
       </ul>
-      <h4>{{i18n 'keyboard_shortcuts_help.navigation.title'}}</h4>
+    </section>
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.navigation.title"}}</h4>
       <ul>
         <li>{{{shortcuts.navigation.back}}}</li>
         <li>{{{shortcuts.navigation.jump}}}</li>
@@ -25,9 +27,11 @@
         <li>{{{shortcuts.navigation.next_prev}}}</li>
         <li>{{{shortcuts.navigation.go_to_unread_post}}}</li>
       </ul>
-    </div>
-    <div>
-      <h4>{{i18n 'keyboard_shortcuts_help.application.title'}}</h4>
+    </section>
+  </div>
+  <div class="column">
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.application.title"}}</h4>
       <ul>
         <li>{{{shortcuts.application.hamburger_menu}}}</li>
         <li>{{{shortcuts.application.user_profile_menu}}}</li>
@@ -38,7 +42,9 @@
         <li>{{{shortcuts.application.dismiss_topics}}}</li>
         <li>{{{shortcuts.application.log_out}}}</li>
       </ul>
-      <h4>{{i18n 'keyboard_shortcuts_help.composing.title'}}</h4>
+    </section>
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.composing.title"}}</h4>
       <ul>
         <li>{{{shortcuts.composing.return}}}</li>
         <li>{{{shortcuts.composing.fullscreen}}}</li>
@@ -48,9 +54,11 @@
         <li>{{{shortcuts.actions.reply_post}}}</li>
         <li>{{{shortcuts.actions.quote_post}}}</li>
       </ul>
-    </div>
-    <div>
-      <h4>{{i18n 'keyboard_shortcuts_help.actions.title'}}</h4>
+    </section>
+  </div>
+  <div class="column">
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.actions.title"}}</h4>
       <ul>
         <li>{{{shortcuts.actions.bookmark_topic}}}</li>
         <li>{{{shortcuts.actions.pin_unpin_topic}}}</li>
@@ -69,6 +77,6 @@
         <li>{{{shortcuts.actions.print}}}</li>
         <li>{{{shortcuts.actions.topic_admin_actions}}}</li>
       </ul>
-    </div>
+    </section>
   </div>
 {{/d-modal-body}}

@@ -1,8 +1,6 @@
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import { cancel } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { cancel, later, scheduleOnce } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";

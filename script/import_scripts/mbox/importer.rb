@@ -30,6 +30,8 @@ module ImportScripts::Mbox
       if @settings.index_only
         @skip_updates = true
       else
+        SiteSetting.tagging_enabled = true if @settings.tags.present?
+
         import_categories
         import_users
         import_posts
@@ -142,9 +144,13 @@ module ImportScripts::Mbox
     end
 
     def map_first_post(row)
+      subject = row['subject']
+      tags = remove_tags!(subject)
+
       mapped = map_post(row)
       mapped[:category] = category_id_from_imported_category_id(row['category'])
-      mapped[:title] = row['subject'].strip[0...255]
+      mapped[:title] = subject.strip[0...255]
+      mapped[:tags] = tags if tags.present?
       mapped
     end
 
@@ -159,6 +165,37 @@ module ImportScripts::Mbox
       mapped = map_post(row)
       mapped[:topic_id] = parent[:topic_id]
       mapped
+    end
+
+    def remove_tags!(subject)
+      tag_names = []
+      remove_prefixes!(subject)
+
+      loop do
+        old_length = subject.length
+
+        @settings.tags.each do |tag|
+          if subject.sub!(tag[:regex], "") && tag[:name].present?
+            tag_names << tag[:name]
+          end
+        end
+
+        remove_prefixes!(subject) if subject.length != old_length
+        break if subject.length == old_length
+      end
+
+      tag_names.uniq
+    end
+
+    def remove_prefixes!(subject)
+      # There could be multiple prefixes...
+      loop do
+        if subject.sub!(@settings.subject_prefix_regex, "")
+          subject.strip!
+        else
+          break
+        end
+      end
     end
 
     def create_incoming_email(post, row)

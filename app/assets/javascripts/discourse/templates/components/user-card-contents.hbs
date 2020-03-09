@@ -52,13 +52,13 @@
             {{/if}}
           </h1>
           {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser" user)) tagName=''}}
-          {{#unless nameFirst}}
+          {{#if nameFirst}}
+            <h2 class='username'>{{username}}</h2>
+          {{else}}
             {{#if user.name}}
               <h2 class='full-name'>{{user.name}}</h2>
             {{/if}}
-          {{else}}
-            <h2 class='username'>{{username}}</h2>
-          {{/unless}}
+          {{/if}}
           {{#if user.title}}
             <h2>{{user.title}}</h2>
           {{/if}}

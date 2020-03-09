@@ -2,7 +2,7 @@
   <thead>
     <tr>
       {{#if model.computedLabels}}
-        {{#each model.computedLabels as |label index|}}
+        {{#each model.computedLabels as |label|}}
           {{admin-report-table-header
             showSortingUI=showSortingUI
             currentSortDirection=sortDirection

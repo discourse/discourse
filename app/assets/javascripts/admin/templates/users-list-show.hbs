@@ -40,16 +40,16 @@
         {{#each model as |user|}}
           <tr class="user {{user.selected}} {{unless user.active 'not-activated'}}">
             <td class="username">
-              <a href={{unbound user.path}} data-user-card={{unbound user.username}}>
+              <a href={{user.path}} data-user-card={{user.username}}>
                 {{avatar user imageSize="small"}}
               </a>
-              {{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}
+              {{#link-to 'adminUser' user}}{{user.username}}{{/link-to}}
               {{#if user.staged}}
                 {{d-icon "far-envelope" title="user.staged" }}
               {{/if}}
             </td>
             <td class='email'>
-              {{~unbound user.email~}}
+              {{~user.email~}}
             </td>
             <td class="last-emailed">
               <div class="label">{{i18n 'admin.users.last_emailed'}}</div>
