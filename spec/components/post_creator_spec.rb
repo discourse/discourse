@@ -944,24 +944,48 @@ describe PostCreator do
   end
 
   context 'setting created_at' do
-    created_at = 1.week.ago
-    let(:topic) do
-      PostCreator.create(user,
-                         raw: 'This is very interesting test post content',
-                         title: 'This is a very interesting test post title',
-                         created_at: created_at)
+    it 'supports Time instances' do
+      freeze_time
+
+      post1 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        title: 'This is a very interesting test post title',
+        created_at: 1.week.ago
+      )
+      topic = post1.topic
+
+      post2 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        topic_id: topic,
+        created_at: 1.week.ago
+      )
+
+      expect(post1.created_at).to be_within(1.second).of(1.week.ago)
+      expect(post2.created_at).to be_within(1.second).of(1.week.ago)
+      expect(topic.created_at).to be_within(1.second).of(1.week.ago)
     end
 
-    let(:post) do
-      PostCreator.create(user,
-                         raw: 'This is very interesting test post content',
-                         topic_id: Topic.last,
-                         created_at: created_at)
-    end
+    it 'supports strings' do
+      freeze_time
 
-    it 'acts correctly' do
-      expect(topic.created_at).to be_within(10.seconds).of(created_at)
-      expect(post.created_at).to be_within(10.seconds).of(created_at)
+      time = Time.zone.parse('2019-09-02')
+
+      post1 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        title: 'This is a very interesting test post title',
+        created_at: '2019-09-02'
+      )
+      topic = post1.topic
+
+      post2 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        topic_id: topic,
+        created_at: '2019-09-02 00:00:00 UTC'
+      )
+
+      expect(post1.created_at).to be_within(1.second).of(time)
+      expect(post2.created_at).to be_within(1.second).of(time)
+      expect(topic.created_at).to be_within(1.second).of(time)
     end
   end
 
