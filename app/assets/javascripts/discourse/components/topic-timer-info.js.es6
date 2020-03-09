@@ -1,6 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { cancel } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { cancel, later } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";

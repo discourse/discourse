@@ -1,7 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";

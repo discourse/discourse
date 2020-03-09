@@ -1,8 +1,7 @@
-import { computed } from "@ember/object";
+import { computed, get } from "@ember/object";
 import Component from "@ember/component";
 import { makeArray } from "discourse-common/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
-import { get } from "@ember/object";
 
 export default Component.extend(UtilsMixin, {
   layoutName: "select-kit/templates/components/selected-name",

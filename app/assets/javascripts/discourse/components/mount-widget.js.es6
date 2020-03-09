@@ -1,5 +1,4 @@
-import { cancel } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { cancel, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { diff, patch } from "virtual-dom";
 import { WidgetClickHook } from "discourse/widgets/hooks";

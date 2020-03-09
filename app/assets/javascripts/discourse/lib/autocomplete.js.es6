@@ -1,5 +1,4 @@
-import { cancel } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { cancel, later } from "@ember/runloop";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { setCaretPosition, caretPosition } from "discourse/lib/utilities";
 import Site from "discourse/models/site";

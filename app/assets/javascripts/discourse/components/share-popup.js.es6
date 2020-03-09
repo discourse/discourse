@@ -1,6 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { bind } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { bind, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";

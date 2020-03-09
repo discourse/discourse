@@ -1,7 +1,5 @@
 import { alias, match } from "@ember/object/computed";
-import { throttle } from "@ember/runloop";
-import { next } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
+import { next, schedule, throttle } from "@ember/runloop";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";

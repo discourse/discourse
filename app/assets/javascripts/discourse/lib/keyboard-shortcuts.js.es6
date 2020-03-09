@@ -1,5 +1,4 @@
-import { run } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { later, run } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";

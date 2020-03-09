@@ -1,6 +1,4 @@
-import { once } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
+import { cancel, debounce, once } from "@ember/runloop";
 import Component from "@ember/component";
 import { equal, gt } from "@ember/object/computed";
 import { Promise } from "rsvp";

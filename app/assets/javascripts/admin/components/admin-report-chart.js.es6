@@ -1,6 +1,5 @@
 import { makeArray } from "discourse-common/lib/helpers";
-import { debounce } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
+import { debounce, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
