@@ -296,8 +296,12 @@ export default Controller.extend(ModalFunctionality, {
               "error"
             );
           } else {
+            let postfix = data.hide_taken ? "" : "_found";
             this.flash(
-              I18n.t(`${key}_found`, { email: loginName, username: loginName })
+              I18n.t(`${key}${postfix}`, {
+                email: loginName,
+                username: loginName
+              })
             );
           }
         })
