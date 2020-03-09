@@ -1,5 +1,4 @@
-import { debounce } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
+import { cancel, debounce } from "@ember/runloop";
 import Component from "@ember/component";
 import { gt } from "@ember/object/computed";
 import computed, { on } from "discourse-common/utils/decorators";

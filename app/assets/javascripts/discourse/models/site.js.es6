@@ -1,8 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { get } from "@ember/object";
+import EmberObject, { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { alias, sort } from "@ember/object/computed";
-import EmberObject from "@ember/object";
 import Archetype from "discourse/models/archetype";
 import PostActionType from "discourse/models/post-action-type";
 import Singleton from "discourse/mixins/singleton";

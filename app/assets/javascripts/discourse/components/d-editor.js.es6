@@ -1,8 +1,4 @@
-import { next } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { debounce, later, next, schedule, scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 /*global Mousetrap:true */

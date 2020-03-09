@@ -1,8 +1,7 @@
 import { bind, cancel } from "@ember/runloop";
 import Component from "@ember/component";
 import LogsNotice from "discourse/services/logs-notice";
-import EmberObject from "@ember/object";
-import { computed } from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 
 const _pluginNotices = [];
 
