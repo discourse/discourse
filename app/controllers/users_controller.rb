@@ -1380,24 +1380,8 @@ class UsersController < ApplicationController
   end
 
   def bookmarks
-    # params[:username]
-    #
-    # post_number
-    # topic_id
-    # topic_title
-    # bookmark_name
-    # bookmark_id
-    # bookmark_reminder_at
-    # bookmark_reminder_type
-    # bookmark_created_at
-    # post_excerpt
-    # topic_categories
-    # topic_tags
-    # topic_status
-    # topic_last_activity
-    # is_PM?
     user = fetch_user_from_params
-    bookmarks = Bookmark.where(user: user).joins('INNER JOIN topics ON topics.id = bookmarks.topic_id').joins('INNER JOIN posts ON posts.id = bookmarks.post_id').select('bookmarks.id, bookmarks.name AS bookmark_name, bookmarks.reminder_at AS bookmark_reminder_at, bookmarks.created_at, bookmarks.post_id, bookmarks.topic_id, posts.post_number AS bookmark_post_number, topics.title, topics.closed AS topic_closed, topics.archived AS topic_archived, CASE WHEN coalesce(posts.deleted_at, topics.deleted_at) IS NULL THEN false ELSE true END deleted, posts.hidden, topics.category_id, topics.archetype, topics.highest_post_number, topics.bumped_at, posts.raw, posts.cooked').order('created_at DESC')
+    bookmarks = BookmarkQuery.new(user).list_all
 
     if bookmarks.empty?
       render json: {

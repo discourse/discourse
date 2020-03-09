@@ -154,7 +154,7 @@ $tag-color: $primary-medium;
 }
 
 .topic-list-item {
-  .discourse-tags, .bookmark-reminder {
+  .discourse-tags {
     display: inline-flex;
     font-weight: normal;
     font-size: $font-down-1;
