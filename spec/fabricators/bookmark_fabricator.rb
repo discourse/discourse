@@ -7,6 +7,7 @@ Fabricator(:bookmark) do
   name "This looked interesting"
   reminder_type { Bookmark.reminder_types[:tomorrow] }
   reminder_at { (Time.now.utc + 1.day).iso8601 }
+  reminder_set_at { Time.now.utc }
 end
 
 Fabricator(:bookmark_next_business_day_reminder, from: :bookmark) do
@@ -21,4 +22,5 @@ Fabricator(:bookmark_next_business_day_reminder, from: :bookmark) do
     end
     date.iso8601
   end
+  reminder_set_at { Time.now.utc }
 end

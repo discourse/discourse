@@ -16,7 +16,8 @@ class BookmarkManager
       post_id: post_id,
       name: name,
       reminder_type: reminder_type,
-      reminder_at: reminder_at
+      reminder_at: reminder_at,
+      reminder_set_at: Time.now.utc
     )
 
     if bookmark.errors.any?
@@ -24,6 +25,7 @@ class BookmarkManager
       return
     end
 
+    BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(@user)
     bookmark
   end
 

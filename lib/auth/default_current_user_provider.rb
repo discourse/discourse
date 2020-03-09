@@ -123,9 +123,9 @@ class Auth::DefaultCurrentUserProvider
         u.update_ip_address!(request.ip)
       end
 
-      Scheduler::Defer.later "Sending Desktop Bookmark Reminders" do
-        BookmarkReminderNotificationHandler.send_at_desktop_reminder(user: u, request: @request)
-      end
+      BookmarkReminderNotificationHandler.defer_at_desktop_reminder(
+        user: u, request_user_agent: @request.user_agent
+      )
     end
 
     @env[CURRENT_USER_KEY] = current_user

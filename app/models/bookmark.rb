@@ -33,6 +33,10 @@ class Bookmark < ActiveRecord::Base
     where("reminder_at IS NOT NULL AND reminder_at <= :before_time", before_time: before_time)
   end
 
+  scope :pending_at_desktop_reminders, ->(before_time = Time.now.utc) do
+    where("reminder_at IS NULL AND reminder_type = :at_desktop", at_desktop: reminder_types[:at_desktop])
+  end
+
   scope :pending_reminders_for_user, ->(user) do
     pending_reminders.where(user: user)
   end

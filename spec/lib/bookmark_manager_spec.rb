@@ -27,6 +27,7 @@ RSpec.describe BookmarkManager do
         bookmark = Bookmark.find_by(user: user)
 
         expect(bookmark.reminder_at).to eq(reminder_at)
+        expect(bookmark.reminder_set_at).not_to eq(nil)
         expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:tomorrow])
       end
     end
@@ -35,12 +36,21 @@ RSpec.describe BookmarkManager do
       let(:reminder_type) { 'at_desktop' }
       let(:reminder_at) { nil }
 
-      it "this is a special case which needs client-side logic and has no reminder_at datetime" do
+      def create_bookmark
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+      end
+
+      it "this is a special case which needs client-side logic and has no reminder_at datetime" do
+        create_bookmark
         bookmark = Bookmark.find_by(user: user)
 
         expect(bookmark.reminder_at).to eq(nil)
         expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:at_desktop])
+      end
+
+      it "sets a redis key for the user so we know they have a pending at_desktop reminder" do
+        create_bookmark
+        expect(Discourse.redis.get("pending_at_desktop_bookmark_reminder_user_#{user.id}")).not_to eq(nil)
       end
     end
 

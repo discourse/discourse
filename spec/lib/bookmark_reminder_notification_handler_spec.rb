@@ -5,23 +5,17 @@ require 'rails_helper'
 RSpec.describe BookmarkReminderNotificationHandler do
   subject { described_class }
 
-  FakeRequest = Struct.new(:user_agent)
-
   fab!(:user) { Fabricate(:user) }
-  let(:request) { FakeRequest.new(user_agent) }
-  let(:last_used_key) { "last_used_device_user_#{user.id}" }
 
   before do
     SiteSetting.enable_bookmarks_with_reminders = true
-    Discourse.redis.del(last_used_key)
   end
 
   context "when the user agent is for mobile" do
     let(:user_agent) { "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1" }
-    it "does not attempt to send any reminders but still sets last used device" do
+    it "does not attempt to send any reminders" do
       DistributedMutex.expects(:synchronize).never
       send_reminder
-      expect(last_used_device).to eq("iphone")
     end
   end
 
@@ -32,39 +26,34 @@ RSpec.describe BookmarkReminderNotificationHandler do
         :bookmark,
         user: user,
         reminder_type: Bookmark.reminder_types[:at_desktop],
-        reminder_at: nil
+        reminder_at: nil,
+        reminder_set_at: Time.now.utc
       )
     end
 
-    context "if the last used device is also desktop (does not have to be same desktop)" do
+    context "when there are pending bookmark at desktop reminders" do
       before do
-        set_last_used_device("linux")
+        described_class.cache_pending_at_desktop_reminder(user)
       end
 
-      it "does not attempt to set any reminders but still sets last used device" do
-        DistributedMutex.expects(:synchronize).never
+      it "deletes the key in redis" do
         send_reminder
-        expect(last_used_device).to eq("windows")
-      end
-    end
-
-    context "if the last used device is a mobile device" do
-      before do
-        set_last_used_device("iphone")
+        expect(described_class.user_has_pending_at_desktop_reminders?(user)).to eq(false)
       end
 
-      it "sends the notification to the user" do
+      it "sends a notification to the user and clears the reminder_at" do
         send_reminder
         expect(Notification.where(user: user, notification_type: Notification.types[:bookmark_reminder]).count).to eq(1)
         expect(reminder.reload.reminder_type).to eq(nil)
+        expect(reminder.reload.reminder_last_sent_at).not_to eq(nil)
+        expect(reminder.reload.reminder_set_at).to eq(nil)
       end
     end
 
-    context "if there is no last used device" do
-      it "sends the notification to the user" do
+    context "when there are no pending bookmark at desktop reminders" do
+      it "does nothing" do
+        BrowserDetection.expects(:device).never
         send_reminder
-        expect(Notification.where(user: user, notification_type: Notification.types[:bookmark_reminder]).count).to eq(1)
-        expect(reminder.reload.reminder_type).to eq(nil)
       end
     end
 
@@ -81,14 +70,6 @@ RSpec.describe BookmarkReminderNotificationHandler do
   end
 
   def send_reminder
-    subject.send_at_desktop_reminder(user: user, request: request)
-  end
-
-  def last_used_device
-    Discourse.redis.get(last_used_key)
-  end
-
-  def set_last_used_device(device)
-    Discourse.redis.set(last_used_key, device)
+    subject.send_at_desktop_reminder(user: user, request_user_agent: user_agent)
   end
 end
