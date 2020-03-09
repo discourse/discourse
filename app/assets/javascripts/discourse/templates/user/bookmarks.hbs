@@ -4,9 +4,9 @@
   {{#conditional-loading-spinner condition=model.loading}}
   <table class="topic-list">
     <thead>
-      <th>Topic</th>
-      <th>Bookmarked</th>
-      <th>Activity</th>
+      <th>{{i18n "topic.title"}}</th>
+      <th>{{i18n "post.bookmarks.created"}}</th>
+      <th>{{i18n "activity"}}</th>
       <th>&nbsp;</th>
     </thead>
     <tbody>
@@ -31,7 +31,7 @@
             <a class="title" href="/t/{{bookmark.topic_id}}/{{bookmark.bookmark_post_number}}">{{bookmark.title}}</a>
           </span>
           {{#if bookmark.excerpt}}
-            <p class="post-excerpt">{{bookmark.excerpt}}</p>
+          <p class="post-excerpt">{{~{bookmark.excerpt}~}}</p>
           {{/if}}
           <div class="link-bottom-line">
             {{category-link bookmark.category}}
