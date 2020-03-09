@@ -2057,6 +2057,7 @@ en:
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
     embed_topics_list: "Support HTML embedding of topics lists"
+    embed_set_canonical_url: "Set the canonical URL for embeded topics to the embeded content's URL."
     embed_truncate: "Truncate the embedded posts."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
