@@ -10,8 +10,6 @@ export default DiscourseRoute.extend({
     exclude_usernames: { refreshModel: true }
   },
 
-  refreshQueryWithoutTransition: true,
-
   titleToken() {
     return I18n.t("directory.title");
   },
