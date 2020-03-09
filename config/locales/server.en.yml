@@ -546,6 +546,10 @@ en:
               same_as_password: "is the same as your password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "This topic cannot be featured on your profile."
         user_email:
           attributes:
             user_id:
