@@ -1,10 +1,10 @@
 <aside class='quote' data-post="{{post_number}}" data-topic="{{topic_id}}">
   <div class='title'>
     <div class='quote-controls'></div>
-    {{{avatar}}}
-    <a href="{{original_url}}">{{{title}}}</a> {{{category_html}}}
+    {{html-safe avatar}}
+    <a href="{{original_url}}">{{html-safe title}}</a> {{html-safe category_html}}
   </div>
   <blockquote>
-    {{{quote}}}
+    {{html-safe quote}}
   </blockquote>
 </aside>
