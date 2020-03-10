@@ -19,4 +19,22 @@ RSpec.describe ForumsController do
     end
   end
 
+  describe "during shutdown" do
+    before(:each) do
+      $shutdown = true
+    end
+    after(:each) do
+      $shutdown = nil
+    end
+
+    it "returns a 500 response" do
+      get "/srv/status"
+      expect(response.status).to eq(500)
+    end
+    it "returns a 200 response when given shutdown_ok" do
+      get "/srv/status?shutdown_ok=1"
+      expect(response.status).to eq(200)
+    end
+  end
+
 end

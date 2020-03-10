@@ -637,7 +637,7 @@ export function applyDefaultHandlers(pretender) {
     return response(200, store);
   });
 
-  pretender.get("/admin/users/list/suspect.json", () => {
+  pretender.get("/admin/users/list/new.json", () => {
     return response(200, [
       {
         id: 2,

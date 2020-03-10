@@ -7,8 +7,13 @@ module Jobs
     def execute(_args)
       return unless SiteSetting.approve_suspect_users
 
-      users = AdminUserIndexQuery.new
-        .suspect_users
+      users = User
+        .activated
+        .human_users
+        .joins(:user_profile, :user_stat)
+        .where("users.created_at <= ?", 1.day.ago)
+        .where("LENGTH(COALESCE(user_profiles.bio_raw, user_profiles.website, '')) > 0")
+        .where("user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1")
         .joins("LEFT OUTER JOIN reviewables r ON r.target_id = users.id AND r.target_type = 'User'")
         .where('r.id IS NULL')
         .limit(10)

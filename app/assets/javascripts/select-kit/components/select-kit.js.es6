@@ -816,7 +816,7 @@ export default Component.extend(
 
         let placementStrategy = this.selectKit.options.placementStrategy;
         if (!placementStrategy) {
-          placementStrategy = this.inModal ? "fixed" : "absolute";
+          placementStrategy = inModal ? "fixed" : "absolute";
         }
 
         /* global Popper:true */

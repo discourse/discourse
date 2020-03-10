@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 describe TopicCreator do
-
   fab!(:user)      { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin)     { Fabricate(:admin) }
@@ -235,6 +234,35 @@ describe TopicCreator do
             TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)
           end.to raise_error(ActiveRecord::Rollback)
         end
+      end
+    end
+
+    context 'setting timestamps' do
+      it 'supports Time instances' do
+        freeze_time
+
+        topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(
+          created_at: 1.week.ago,
+          pinned_at: 3.days.ago
+        ))
+
+        expect(topic.created_at).to be_within(1.second).of(1.week.ago)
+        expect(topic.pinned_at).to be_within(1.second).of(3.days.ago)
+      end
+
+      it 'supports strings' do
+        freeze_time
+
+        time1 = Time.zone.parse('2019-09-02')
+        time2 = Time.zone.parse('2020-03-10 15:17')
+
+        topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(
+          created_at: '2019-09-02',
+          pinned_at: '2020-03-10 15:17'
+        ))
+
+        expect(topic.created_at).to be_within(1.second).of(time1)
+        expect(topic.pinned_at).to be_within(1.second).of(time2)
       end
     end
   end
