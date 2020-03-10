@@ -1,7 +1,7 @@
-{{#if model.noContent}}
-  <div class='alert alert-info'>{{ model.noResultsHelp }}</div>
+{{#if noContent}}
+  <div class='alert alert-info'>{{ noResultsHelp }}</div>
 {{else}}
-  {{#conditional-loading-spinner condition=model.loading}}
+  {{#conditional-loading-spinner condition=loading}}
   <table class="topic-list">
     <thead>
       <th>{{i18n "topic.title"}}</th>
@@ -10,7 +10,7 @@
       <th>&nbsp;</th>
     </thead>
     <tbody>
-    {{#each model.content as |bookmark|}}
+    {{#each content as |bookmark|}}
       <tr class="topic-list-item bookmark-list-item">
         <td class="main-link">
           <span class="link-top-line">

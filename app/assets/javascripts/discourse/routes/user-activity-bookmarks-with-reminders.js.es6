@@ -11,16 +11,13 @@ export default DiscourseRoute.extend({
     return this.modelFor("user").get("bookmarks");
   },
 
-  afterModel(model) {
-    return model.loadItems();
-  },
-
   renderTemplate() {
     this.render("user_bookmarks");
   },
 
   setupController(controller, model) {
     controller.set("model", model);
+    controller.loadItems();
   },
 
   actions: {

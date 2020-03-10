@@ -10,7 +10,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 const Bookmark = RestModel.extend({
   newBookmark: none("id"),
-  loaded: false,
 
   @computed
   get url() {
@@ -82,11 +81,6 @@ const Bookmark = RestModel.extend({
     return newTags;
   },
 
-  @discourseComputed("loaded", "content.[]")
-  noContent(loaded, content) {
-    return loaded && content.length === 0;
-  },
-
   @discourseComputed("category_id")
   category(categoryId) {
     return Category.findById(categoryId);
@@ -101,32 +95,7 @@ const Bookmark = RestModel.extend({
   },
 
   loadItems() {
-    // do something here if user is not provided...
-    this.setProperties({
-      content: [],
-      loading: true
-    });
-
-    return ajax(`/u/${this.user.username}/bookmarks.json`, { cache: "false" })
-      .then(response => {
-        if (response && response.no_results_help) {
-          this.set("noResultsHelp", response.no_results_help);
-        }
-
-        if (response && response.bookmarks) {
-          let bookmarks = [];
-          response.bookmarks.forEach(bookmark => {
-            bookmarks.push(Bookmark.create(bookmark));
-          });
-          this.content.pushObjects(bookmarks);
-        }
-      })
-      .finally(() =>
-        this.setProperties({
-          loaded: true,
-          loading: false
-        })
-      );
+    return ajax(`/u/${this.user.username}/bookmarks.json`, { cache: "false" });
   }
 });
 
