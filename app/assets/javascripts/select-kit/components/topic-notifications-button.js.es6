@@ -28,11 +28,14 @@ export default Component.extend({
   },
 
   _changeTopicNotificationLevel(level) {
-    const topicSectionNode = level.event.target.querySelector("#topic");
-    if (topicSectionNode && topicSectionNode.dataset.topicId) {
-      const topicId = parseInt(topicSectionNode.dataset.topicId, 10);
-      if (topicId && topicId !== this.topic.id) {
-        return;
+    // this change is coming from a keyboard event
+    if (level.event) {
+      const topicSectionNode = level.event.target.querySelector("#topic");
+      if (topicSectionNode && topicSectionNode.dataset.topicId) {
+        const topicId = parseInt(topicSectionNode.dataset.topicId, 10);
+        if (topicId && topicId !== this.topic.id) {
+          return;
+        }
       }
     }
 
