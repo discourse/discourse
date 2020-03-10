@@ -145,19 +145,26 @@ describe PostCreator do
           _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
-        # 2 for topic, one to notify of new topic another for tracking state
-        expect(messages.map { |m| m.channel }.sort).to eq([ "/new",
-                                                     "/u/#{admin.username}",
-                                                     "/u/#{admin.username}",
-                                                     "/unread/#{admin.id}",
-                                                     "/unread/#{admin.id}",
-                                                     "/latest",
-                                                     "/latest",
-                                                     "/topic/#{created_post.topic_id}",
-                                                     "/topic/#{created_post.topic_id}"
-                                                   ].sort)
-        admin_ids = [Group[:admins].id]
+        messages.filter! { |m| m.channel != "/distributed_hash" }
 
+        channels = messages.map { |m| m.channel }.sort
+
+        # 2 for topic, one to notify of new topic another for tracking state
+        expect(channels).to eq(
+          [
+            "/new",
+            "/u/#{admin.username}",
+            "/u/#{admin.username}",
+            "/unread/#{admin.id}",
+            "/unread/#{admin.id}",
+            "/latest",
+            "/latest",
+            "/topic/#{created_post.topic_id}",
+            "/topic/#{created_post.topic_id}"
+          ].sort
+        )
+
+        admin_ids = [Group[:admins].id]
         expect(messages.any? { |m| m.group_ids != admin_ids && m.user_ids != [admin.id] }).to eq(false)
       end
 
@@ -312,7 +319,7 @@ describe PostCreator do
         first_post = creator.create
         topic = first_post.topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(first_post.created_at)
+        expect(topic.last_posted_at).to eq_time(first_post.created_at)
         expect(topic.last_post_user_id).to eq(first_post.user_id)
         expect(topic.word_count).to eq(4)
       end
@@ -351,8 +358,8 @@ describe PostCreator do
           topic.reload
 
           topic_status_update = TopicTimer.last
-          expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
-          expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
+          expect(topic_status_update.execute_at).to eq_time(12.hours.from_now)
+          expect(topic_status_update.created_at).to eq_time(Time.zone.now)
         end
 
         describe "topic's auto close based on last post" do
@@ -484,7 +491,6 @@ describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it 'whispers do not mess up the public view' do
-
       # turns out this can fail on leap years if we don't do this
       freeze_time DateTime.parse('2010-01-01 12:00')
 
@@ -538,7 +544,7 @@ describe PostCreator do
       expect(topic.reply_count).to eq(0)
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
-      expect(topic.last_posted_at).to be_within(1.seconds).of(first.created_at)
+      expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.last_post_user_id).to eq(first.user_id)
       expect(topic.word_count).to eq(5)
 
@@ -554,7 +560,7 @@ describe PostCreator do
       topic.reload
       expect(topic.highest_post_number).to eq(1)
       expect(topic.posts_count).to eq(1)
-      expect(topic.last_posted_at).to eq(first.created_at)
+      expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.highest_staff_post_number).to eq(3)
     end
   end
@@ -684,7 +690,7 @@ describe PostCreator do
         post = creator.create
         topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_posted_at).to eq_time(post.created_at)
         expect(topic.last_post_user_id).to eq(post.user_id)
         expect(topic.word_count).to eq(6)
       end
@@ -695,7 +701,7 @@ describe PostCreator do
         post = creator.create
         topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_posted_at).to eq_time(post.created_at)
         expect(topic.last_post_user_id).to eq(post.user_id)
         expect(topic.word_count).to eq(6)
       end
@@ -960,9 +966,9 @@ describe PostCreator do
         created_at: 1.week.ago
       )
 
-      expect(post1.created_at).to be_within(1.second).of(1.week.ago)
-      expect(post2.created_at).to be_within(1.second).of(1.week.ago)
-      expect(topic.created_at).to be_within(1.second).of(1.week.ago)
+      expect(post1.created_at).to eq_time(1.week.ago)
+      expect(post2.created_at).to eq_time(1.week.ago)
+      expect(topic.created_at).to eq_time(1.week.ago)
     end
 
     it 'supports strings' do
@@ -983,9 +989,9 @@ describe PostCreator do
         created_at: '2019-09-02 00:00:00 UTC'
       )
 
-      expect(post1.created_at).to be_within(1.second).of(time)
-      expect(post2.created_at).to be_within(1.second).of(time)
-      expect(topic.created_at).to be_within(1.second).of(time)
+      expect(post1.created_at).to eq_time(time)
+      expect(post2.created_at).to eq_time(time)
+      expect(topic.created_at).to eq_time(time)
     end
   end
 

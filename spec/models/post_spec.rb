@@ -1132,7 +1132,7 @@ describe Post do
       SiteSetting.newuser_spam_host_threshold = 1
       SiteSetting.newuser_max_links = 3
       user = Fabricate(:user, staged: true, trust_level: 0)
-      user.created_at = 1.day.ago
+      user.created_at = 2.days.ago
       user.unstage
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)
@@ -1224,7 +1224,7 @@ describe Post do
       baked = post.baked_at
       Post.rebake_old(100)
       post.reload
-      expect(post.baked_at).to eq(baked)
+      expect(post.baked_at).to eq_time(baked)
     end
 
     it "will rate limit globally" do
@@ -1475,10 +1475,7 @@ describe Post do
     end
 
     def updates_topic_updated_at
-
-      freeze_time 1.day.from_now
-      time = Time.now
-
+      time = freeze_time 1.day.from_now
       result = yield
 
       topic.reload

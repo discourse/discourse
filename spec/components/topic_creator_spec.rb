@@ -246,8 +246,8 @@ describe TopicCreator do
           pinned_at: 3.days.ago
         ))
 
-        expect(topic.created_at).to be_within(1.second).of(1.week.ago)
-        expect(topic.pinned_at).to be_within(1.second).of(3.days.ago)
+        expect(topic.created_at).to eq_time(1.week.ago)
+        expect(topic.pinned_at).to eq_time(3.days.ago)
       end
 
       it 'supports strings' do
@@ -261,8 +261,8 @@ describe TopicCreator do
           pinned_at: '2020-03-10 15:17'
         ))
 
-        expect(topic.created_at).to be_within(1.second).of(time1)
-        expect(topic.pinned_at).to be_within(1.second).of(time2)
+        expect(topic.created_at).to eq_time(time1)
+        expect(topic.pinned_at).to eq_time(time2)
       end
     end
   end
