@@ -49,7 +49,7 @@
 
       <div class='search-info'>
         <div class='result-count'>
-          {{html-safe resultCountLabel}}
+          {{{resultCountLabel}}}
         </div>
         <div class='sort-by'>
           <span class='desc'>
@@ -88,7 +88,7 @@
 
                   <a class='search-link' href={{result.url}} {{action "logClick" result.topic_id}}>
                     {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
-                    <span class='topic-title'>{{#highlight-text highlight=q}}{{html-safe result.topic.fancyTitle}}{{/highlight-text}}</span>
+                    <span class='topic-title'>{{#highlight-text highlight=q}}{{{result.topic.fancyTitle}}}{{/highlight-text}}</span>
                   </a>
 
                   <div class='search-category'>
@@ -113,7 +113,7 @@
 
                   {{#if result.blurb}}
                     {{#highlight-text highlight=highlightQuery}}
-                      {{html-safe result.blurb}}
+                      {{{result.blurb}}}
                     {{/highlight-text}}
                   {{/if}}
                 </div>

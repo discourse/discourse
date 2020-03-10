@@ -100,7 +100,7 @@
             {{#if showFeaturedTopic}}
               <h3 class="featured-topic">
                 <span>{{i18n 'user.featured_topic'}}</span>
-                {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}{{html-safe model.featured_topic.fancy_title}}{{/link-to}}
+                {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}{{{model.featured_topic.fancy_title}}}{{/link-to}}
               </h3>
             {{/if}}
 
@@ -137,7 +137,7 @@
                 </div>
               {{/if}}
               {{#if isNotSuspendedOrIsStaff}}
-                {{html-safe model.bio_cooked}}
+                {{{model.bio_cooked}}}
               {{/if}}
             </div>
 

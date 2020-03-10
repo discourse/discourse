@@ -10,12 +10,12 @@
     <div class="col-form">
       {{#if successMessage}}
         <br><br>
-        <div class='alert alert-info'><p>{{html-safe successMessage}}</p></div>
+        <div class='alert alert-info'><p>{{{successMessage}}}</p></div>
       {{else}}
         <p>{{i18n 'invites.invited_by'}}</p>
         <p>{{user-info user=invitedBy}}</p>
 
-        <p>{{html-safe yourEmailMessage}}
+        <p>{{{yourEmailMessage}}}
         {{#if externalAuthsEnabled}}
              {{i18n 'invites.social_login_available'}}
         {{/if}}

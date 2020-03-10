@@ -46,7 +46,7 @@
   <div class='reviewable-actions'>
     {{#if claimEnabled}}
       <div class='claimed-actions'>
-        <span class='help'>{{html-safe claimHelp}}</span>
+        <span class='help'>{{{claimHelp}}}</span>
         {{reviewable-claimed-topic topicId=topicId claimedBy=reviewable.claimed_by}}
       </div>
     {{/if}}

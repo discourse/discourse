@@ -132,7 +132,7 @@
     <div class="field">{{i18n "user.avatar.title"}}</div>
     <div class="value">{{avatar model imageSize="large"}}</div>
     <div class="controls">
-      {{i18n "admin.user.visit_profile" url=preferencesPath}}
+      {{{i18n "admin.user.visit_profile" url=preferencesPath}}}
     </div>
   </div>
 
@@ -509,7 +509,7 @@
     <h1>{{i18n "admin.groups.title"}}</h1>
       <div class="display-row">
         <div class="field">{{i18n "admin.groups.automatic"}}</div>
-        <div class="value">{{html-safe automaticGroups}}</div>
+        <div class="value">{{{automaticGroups}}}</div>
       </div>
       <div class="display-row">
         <div class="field">{{i18n "admin.groups.custom"}}</div>
@@ -616,11 +616,11 @@
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.time_read"}}</div>
-    <div class="value">{{format-duration model.time_read}}</div>
+    <div class="value">{{{format-duration model.time_read}}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "user.invited.days_visited"}}</div>
-    <div class="value">{{html-safe model.days_visited}}</div>
+    <div class="value">{{{model.days_visited}}}</div>
   </div>
 </section>
 

@@ -32,7 +32,7 @@
     {{#if tagInfo.synonyms}}
       <div class="synonyms-list">
         <h3>{{i18n "tagging.synonyms"}}</h3>
-        <div>{{i18n "tagging.synonyms_description" base_tag_name=tagInfo.name}}</div>
+        <div>{{{i18n "tagging.synonyms_description" base_tag_name=tagInfo.name}}}</div>
         <div class="tag-list">
           {{#each tagInfo.synonyms as |tag|}}
             <div class='tag-box'>

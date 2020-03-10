@@ -72,11 +72,11 @@
                       <td>{{format-date invite.user.last_seen_at}}</td>
                       <td>{{number invite.user.topics_entered}}</td>
                       <td>{{number invite.user.posts_read_count}}</td>
-                      <td>{{format-duration invite.user.time_read}}</td>
+                      <td>{{{format-duration invite.user.time_read}}}</td>
                       <td>
-                        <span title={{i18n 'user.invited.days_visited'}}>{{html-safe invite.user.days_visited}}</span>
+                        <span title={{i18n 'user.invited.days_visited'}}>{{{invite.user.days_visited}}}</span>
                           /
-                        <span title={{i18n 'user.invited.account_age_days'}}>{{html-safe invite.user.days_since_created}}</span>
+                        <span title={{i18n 'user.invited.account_age_days'}}>{{{invite.user.days_since_created}}}</span>
                       </td>
                     {{/if}}
                   {{else}}
@@ -109,7 +109,7 @@
         {{else}}
           <div class="user-invite-none">
             {{#if canBulkInvite}}
-              {{i18n 'user.invited.bulk_invite.none'}}
+              {{{i18n 'user.invited.bulk_invite.none'}}}
             {{else}}
               {{i18n 'user.invited.none'}}
             {{/if}}

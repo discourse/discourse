@@ -24,7 +24,7 @@
               {{/if}}
               {{#if t.hasExcerpt}}
                 <div class="topic-excerpt">
-                  {{html-safe t.excerpt}}
+                  {{{t.excerpt}}}
                   {{#if t.excerptTruncated}}
                     {{#unless t.canClearPin}}<a href={{t.url}}>{{i18n 'read_more'}}</a>{{/unless}}
                   {{/if}}
@@ -42,7 +42,7 @@
               {{discourse-tags t mode="list" tagsForUser=tagsForUser}}
               <div class="pull-right">
                 {{raw "list/activity-column" topic=t tagName="div" class="num activity last"}}
-                <a href={{t.lastPostUrl}} title='{{i18n 'last_post'}}: {{raw-date t.bumped_at}}'>{{t.last_poster_username}}</a>
+                <a href={{t.lastPostUrl}} title='{{i18n 'last_post'}}: {{{raw-date t.bumped_at}}}'>{{t.last_poster_username}}</a>
               </div>
               {{#unless hideCategory}}
                 <div class='category'>

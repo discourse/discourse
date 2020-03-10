@@ -2,7 +2,7 @@
   {{#watch-read action=(action "markFaqRead") path=model.path}}
     <div class='contents clearfix body-page'>
       {{plugin-outlet name="above-static"}}
-      {{html-safe model.html}}
+      {{{model.html}}}
 
       {{#if showSignupButton}}
         {{d-button action=(route-action "showCreateAccount") class="btn-primary sign-up-button" label="sign_up"}}
