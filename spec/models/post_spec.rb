@@ -1528,6 +1528,9 @@ describe Post do
       upload2 = Fabricate(:upload)
       upload3 = Fabricate(:video_upload)
       upload4 = Fabricate(:upload)
+      upload5 = Fabricate(:upload)
+      upload6 = Fabricate(:video_upload)
+      upload7 = Fabricate(:upload, extension: "vtt")
 
       set_cdn_url "https://awesome.com/somepath"
 
@@ -1542,6 +1545,11 @@ describe Post do
       ![](http://example.com/external.png)
 
       #{Discourse.base_url}#{upload3.short_path}
+
+      <video poster="#{Discourse.base_url}#{upload5.url}">
+        <source src="#{Discourse.base_url}#{upload6.url}" type="video/mp4" />
+        <track src="#{Discourse.base_url}#{upload7.url}" label="English" kind="subtitles" srclang="en" default />
+      </video>
       RAW
 
       urls = []
@@ -1556,14 +1564,20 @@ describe Post do
         "#{GlobalSetting.cdn_url}#{upload1.url}",
         "#{GlobalSetting.cdn_url}#{upload4.url}",
         "#{Discourse.base_url}#{upload2.url}",
-        "#{Discourse.base_url}#{upload3.short_path}"
+        "#{Discourse.base_url}#{upload3.short_path}",
+        "#{Discourse.base_url}#{upload5.url}",
+        "#{Discourse.base_url}#{upload6.url}",
+        "#{Discourse.base_url}#{upload7.url}"
       )
 
       expect(paths).to contain_exactly(
         upload1.url,
         upload4.url,
         upload2.url,
-        nil
+        nil,
+        upload5.url,
+        upload6.url,
+        upload7.url
       )
     end
 
