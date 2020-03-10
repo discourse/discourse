@@ -8,7 +8,7 @@
   <div class='stream-topic-details'>
       <div class='stream-topic-title'>
         <span class='title'>
-          <a href={{postUrl}}>{{{post.topic.fancyTitle}}}</a>
+          <a href={{postUrl}}>{{html-safe post.topic.fancyTitle}}</a>
         </span>
       </div>
       <div class="group-post-category">{{category-link post.category}}</div>
@@ -24,8 +24,8 @@
 
 <div class='excerpt'>
   {{#if post.expandedExcerpt}}
-    {{{post.expandedExcerpt}}}
+    {{html-safe post.expandedExcerpt}}
   {{else}}
-    {{{post.excerpt}}}
+    {{html-safe post.excerpt}}
   {{/if}}
 </div>

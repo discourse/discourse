@@ -88,7 +88,7 @@
               <td class="col value created-at">{{age-with-tooltip item.created_at}}</td>
               <td class="col value details">
                 <div>
-                  {{{item.formattedDetails}}}
+                  {{html-safe item.formattedDetails}}
                   {{#if item.useCustomModalForDetails}}
                     <a href {{action "showCustomDetailsModal" item}}>{{d-icon "info-circle"}} {{i18n 'admin.logs.staff_actions.show'}}</a>
                   {{/if}}
