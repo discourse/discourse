@@ -2,10 +2,9 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { alias, gte, or } from "@ember/object/computed";
 import { action, computed } from "@ember/object";
 import Controller from "@ember/controller";
-import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Controller.extend(PreferencesTabController, {
+export default Controller.extend({
   ignoredUsernames: alias("model.ignored_usernames"),
   userIsMemberOrAbove: gte("model.trust_level", 2),
   ignoredEnabled: or("userIsMemberOrAbove", "model.staff"),
