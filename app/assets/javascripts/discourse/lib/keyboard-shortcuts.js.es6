@@ -3,6 +3,7 @@ import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";
 import { ajax } from "discourse/lib/ajax";
+import { throttle } from "@ember/runloop";
 
 const bindings = {
   "!": { postAction: "showFlags" },
@@ -298,34 +299,26 @@ export default {
   },
 
   setTrackingToMuted(event) {
-    this.appEvents.trigger("topic-notifications-button:changed", {
-      type: "notification",
-      id: 0,
-      event
-    });
+    throttle(this, "_setTracking", { id: 0, event }, 250, true);
   },
 
   setTrackingToRegular(event) {
-    this.appEvents.trigger("topic-notifications-button:changed", {
-      type: "notification",
-      id: 1,
-      event
-    });
+    throttle(this, "_setTracking", { id: 1, event }, 250, true);
   },
 
   setTrackingToTracking(event) {
-    this.appEvents.trigger("topic-notifications-button:changed", {
-      type: "notification",
-      id: 2,
-      event
-    });
+    throttle(this, "_setTracking", { id: 2, event }, 250, true);
   },
 
   setTrackingToWatching(event) {
+    throttle(this, "_setTracking", { id: 3, event }, 250, true);
+  },
+
+  _setTracking(params) {
     this.appEvents.trigger("topic-notifications-button:changed", {
       type: "notification",
-      id: 3,
-      event
+      id: params.id,
+      event: params.event
     });
   },
 

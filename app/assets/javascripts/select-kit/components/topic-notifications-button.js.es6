@@ -28,6 +28,17 @@ export default Component.extend({
   },
 
   _changeTopicNotificationLevel(level) {
+    // this change is coming from a keyboard event
+    if (level.event) {
+      const topicSectionNode = level.event.target.querySelector("#topic");
+      if (topicSectionNode && topicSectionNode.dataset.topicId) {
+        const topicId = parseInt(topicSectionNode.dataset.topicId, 10);
+        if (topicId && topicId !== this.topic.id) {
+          return;
+        }
+      }
+    }
+
     if (level.id !== this.notificationLevel) {
       this.topic.details.updateNotifications(level.id);
     }
