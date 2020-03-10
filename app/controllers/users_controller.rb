@@ -1381,7 +1381,7 @@ class UsersController < ApplicationController
 
   def bookmarks
     user = fetch_user_from_params
-    bookmarks = BookmarkQuery.new(user).list_all
+    bookmarks = BookmarkQuery.new(user, params).list_all
 
     if bookmarks.empty?
       render json: {
