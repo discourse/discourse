@@ -24,7 +24,7 @@
         </div>
 
         <div class='description'>
-          {{text-overflow class="overflow" text=c.description_excerpt}}
+          {{{text-overflow class="overflow" text=c.description_excerpt}}}
         </div>
         {{#if c.isGrandParent}}
           {{#each c.subcategories as |subcategory|}}

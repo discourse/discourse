@@ -1,6 +1,5 @@
 import { computed } from "@ember/object";
 import addonFmt from "ember-addons/fmt";
-import { htmlSafe as htmlSafeTemplateHelper } from "@ember/template";
 
 /**
   Returns whether two properties are equal to each other.
@@ -55,21 +54,6 @@ export function i18n(...args) {
   const format = args.pop();
   return computed(...args, function() {
     return I18n.t(addonFmt(format, ...args.map(a => this.get(a))));
-  });
-}
-/**
-  Returns htmlSafe version of a string.
-
-  @method htmlSafe
-  @params {String} properties* to htmlify
-  @return {Function} discourseComputedProperty function
-**/
-export function htmlSafe(...args) {
-  return computed(...args, {
-    get() {
-      const path = args.pop();
-      return htmlSafeTemplateHelper(this.get(path));
-    }
   });
 }
 

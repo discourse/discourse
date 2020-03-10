@@ -21,7 +21,7 @@
           &mdash; {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
         {{/if}}
         {{#if model.category_id_changes}}
-          &mdash; {{html-safe previousCategory}} &rarr; {{html-safe currentCategory}}
+          &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
         {{/if}}
       {{/unless}}
     </div>
@@ -50,7 +50,7 @@
   <div id="revisions" data-post-id={{model.post_id}} class={{hiddenClasses}}>
     {{#if model.title_changes}}
       <div class="row">
-        <h2>{{html-safe titleDiff}}</h2>
+        <h2>{{{titleDiff}}}</h2>
       </div>
     {{/if}}
     {{#if site.mobileView}}
@@ -72,7 +72,7 @@
       {{/if}}
       {{#if model.category_id_changes}}
         <div class="row">
-          {{html-safe previousCategory}} &rarr; {{html-safe currentCategory}}
+          {{{previousCategory}}} &rarr; {{{currentCategory}}}
         </div>
       {{/if}}
     {{/if}}
@@ -100,7 +100,7 @@
     {{plugin-outlet name="post-revisions" args=(hash model=model)}}
 
     {{#links-redirect class="row"}}
-      {{html-safe bodyDiff}}
+      {{{bodyDiff}}}
     {{/links-redirect}}
   </div>
 {{/d-modal-body}}
@@ -111,7 +111,7 @@
       {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
       <div id="revision-numbers" class={{unless displayRevisions 'invisible'}}>
         {{#conditional-loading-spinner condition=loading size="small"}}
-          {{html-safe revisionsText}}
+          {{{revisionsText}}}
         {{/conditional-loading-spinner}}
       </div>
       {{d-button class="btn-default" action=(action "loadNextVersion") icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}

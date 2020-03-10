@@ -204,7 +204,7 @@
                   {{d-button action=(action "togglePreview") class="hide-preview" label="composer.hide_preview"}}
                 {{/if}}
               {{else}}
-                <a href {{action "togglePreview"}} class='toggle-preview'>{{html-safe toggleText}}</a>
+                <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
               {{/if}}
 
           </div>
@@ -221,7 +221,7 @@
 
         <div class='draft-text'>
           {{#if model.topic}}
-            {{d-icon "share"}} {{html-safe draftTitle}}
+            {{d-icon "share"}} {{{draftTitle}}}
           {{else}}
             {{i18n "composer.saved_draft"}}
           {{/if}}

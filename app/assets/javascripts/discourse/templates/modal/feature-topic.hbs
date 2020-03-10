@@ -6,9 +6,9 @@
           <p>
             {{#conditional-loading-spinner size="small" condition=loading}}
               {{#if pinnedGloballyCount}}
-                {{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}
+                {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
               {{else}}
-                {{i18n "topic.feature_topic.not_pinned_globally"}}
+                {{{i18n "topic.feature_topic.not_pinned_globally"}}}
               {{/if}}
             {{/conditional-loading-spinner}}
           </p>
@@ -16,12 +16,12 @@
         {{else}}
           <p>
             {{#conditional-loading-spinner size="small" condition=loading}}
-              {{html-safe alreadyPinnedMessage}}
+              {{{alreadyPinnedMessage}}}
             {{/conditional-loading-spinner}}
           </p>
           <p>{{i18n "topic.feature_topic.pin_note"}}</p>
         {{/if}}
-        <p>{{html-safe unPinMessage}}</p>
+        <p>{{{unPinMessage}}}</p>
         <p>{{d-button action=(action "unpin") icon="thumbtack" label="topic.feature.unpin" class="btn-primary"}}</p>
       </div>
     </div>
@@ -30,7 +30,7 @@
       <div class="desc">
         <p>
           {{#conditional-loading-spinner size="small" condition=loading}}
-            {{html-safe alreadyPinnedMessage}}
+            {{{alreadyPinnedMessage}}}
           {{/conditional-loading-spinner}}
         </p>
         <p>
@@ -38,7 +38,7 @@
         </p>
         {{#if site.isMobileDevice}}
           <p>
-            {{html-safe pinMessage}}
+            {{{pinMessage}}}
           </p>
           <p class="with-validation">
             {{future-date-input
@@ -52,7 +52,7 @@
           </p>
         {{else}}
           <p class="with-validation">
-            {{html-safe pinMessage}}
+            {{{pinMessage}}}
             {{d-icon "far-clock"}}
             {{future-date-input
               class="pin-until"
@@ -74,9 +74,9 @@
         <p>
           {{#conditional-loading-spinner size="small" condition=loading}}
             {{#if pinnedGloballyCount}}
-              {{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}
+              {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
             {{else}}
-              {{i18n "topic.feature_topic.not_pinned_globally"}}
+              {{{i18n "topic.feature_topic.not_pinned_globally"}}}
             {{/if}}
           {{/conditional-loading-spinner}}
         </p>
@@ -123,9 +123,9 @@
         <p>
           {{#conditional-loading-spinner size="small" condition=loading}}
             {{#if bannerCount}}
-              {{i18n "topic.feature_topic.banner_exists"}}
+              {{{i18n "topic.feature_topic.banner_exists"}}}
             {{else}}
-              {{i18n "topic.feature_topic.no_banner_exists"}}
+              {{{i18n "topic.feature_topic.no_banner_exists"}}}
             {{/if}}
           {{/conditional-loading-spinner}}
         </p>

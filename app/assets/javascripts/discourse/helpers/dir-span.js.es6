@@ -1,6 +1,5 @@
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
-import { htmlSafe } from "@ember/template";
 
 function setDir(text) {
   let content = text ? text : "";
@@ -12,5 +11,5 @@ function setDir(text) {
 }
 
 export default registerUnbound("dir-span", function(str) {
-  return htmlSafe(setDir(str));
+  return new Handlebars.SafeString(setDir(str));
 });
