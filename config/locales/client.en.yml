@@ -4141,7 +4141,6 @@ en:
           staff: "Staff"
           suspended: "Suspended"
           silenced: "Silenced"
-          suspect: "Suspect"
           staged: "Staged"
         approved: "Approved?"
         titles:
@@ -4158,7 +4157,6 @@ en:
           moderators: "Moderators"
           silenced: "Silenced Users"
           suspended: "Suspended Users"
-          suspect: "Suspect Users"
           staged: "Staged Users"
         not_verified: "Not verified"
         check_email:
