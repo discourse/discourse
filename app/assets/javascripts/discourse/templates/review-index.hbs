@@ -17,16 +17,36 @@
   </div>
 
   <div class='reviewable-filters'>
-    <div class='reviewable-filter'>
-      <label class='filter-label'>{{i18n "review.filters.status"}}</label>
-      {{combo-box
-        value=filterStatus
-        content=statuses
-        onChange=(action (mut filterStatus))
-      }}
+    <div class='reviewable-filter quick-filters'>
+      {{i18n "review.filters.quick"}}
+      <div>
+        {{d-button
+          label="review.filters.reset"
+          icon="times"
+          class="btn-default"
+          disabled=disableFilterReset
+          action=(action "resetFilters")}}
+
+        {{plugin-outlet name="review-quick-filters" args=(hash model=model)}}
+
+        {{d-button
+          label="review.filters.resolved"
+          class="btn-default"
+          action=(action "setFilters")
+          actionParam=(hash sort_order="created_at" status="reviewed")}}
+      </div>
     </div>
 
     {{#if filtersExpanded}}
+
+      <div class='reviewable-filter'>
+        <label class='filter-label'>{{i18n "review.filters.status"}}</label>
+        {{combo-box
+          value=filterStatus
+          content=statuses
+          onChange=(action (mut filterStatus))
+        }}
+      </div>
 
       {{plugin-outlet name="above-review-filters" args=(hash model=model additionalFilters=additionalFilters)}}
 

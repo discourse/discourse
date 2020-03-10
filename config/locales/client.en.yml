@@ -492,7 +492,10 @@ en:
           title: "Type"
           all: "(all types)"
         minimum_score: "Minimum Score:"
+        quick: "Quick Filters"
         refresh: "Refresh"
+        reset: "Reset"
+        resolved: "Reviewed"
         status: "Status"
         category: "Category"
         orders:

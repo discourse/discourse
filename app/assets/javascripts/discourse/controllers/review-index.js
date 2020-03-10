@@ -1,5 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
+import { not } from "@ember/object/computed";
 
 export default Controller.extend({
   queryParams: [
@@ -85,6 +86,44 @@ export default Controller.extend({
     return filtersExpanded ? "chevron-up" : "chevron-down";
   },
 
+  @discourseComputed(
+    "type",
+    "priority",
+    "status",
+    "category_id",
+    "username",
+    "from_date",
+    "to_date",
+    "sort_order",
+    "additional_filters"
+  )
+  anyFilters(
+    type,
+    priority,
+    status,
+    category_id,
+    username,
+    from_date,
+    to_date,
+    sort_order,
+    additional_filters
+  ) {
+    return (
+      type != null ||
+      priority !== "low" ||
+      status !== "pending" ||
+      category_id !== null ||
+      username !== "" ||
+      from_date !== null ||
+      to_date !== null ||
+      sort_order !== "priority" ||
+      (additional_filters !== null &&
+        Object.keys(additional_filters).length !== 0)
+    );
+  },
+
+  disableFilterReset: not("anyFilters"),
+
   setRange(range) {
     if (range.from) {
       this.set("from", new Date(range.from).toISOString().split("T")[0]);
@@ -124,6 +163,27 @@ export default Controller.extend({
         additional_filters: JSON.stringify(this.additionalFilters)
       });
 
+      this.send("refreshRoute");
+    },
+
+    resetFilters() {
+      this.setProperties({
+        type: null,
+        priority: "low",
+        status: "pending",
+        category_id: null,
+        username: "",
+        from_date: null,
+        to_date: null,
+        sort_order: "priority",
+        additional_filters: null
+      });
+
+      this.send("refreshRoute");
+    },
+
+    setFilters(newFilters) {
+      this.setProperties(newFilters);
       this.send("refreshRoute");
     },
 
