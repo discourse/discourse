@@ -29,8 +29,8 @@ export default Component.extend({
 
   _changeTopicNotificationLevel(level) {
     const topicSectionNode = level.event.target.querySelector("#topic");
-    if (topicSectionNode && topicSectionNode.dataset.topicID) {
-      const topicId = parseInt(topicSectionNode.dataset.topicID, 10);
+    if (topicSectionNode && topicSectionNode.dataset.topicId) {
+      const topicId = parseInt(topicSectionNode.dataset.topicId, 10);
       if (topicId && topicId !== this.topic.id) {
         return;
       }
