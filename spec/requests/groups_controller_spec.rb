@@ -1192,6 +1192,11 @@ describe GroupsController do
         expect(response.status).to eq(400)
       end
 
+      it "raises an error when removing a valid user but is not a member of that group" do
+        delete "/groups/#{group.id}/members.json", params: { user_id: -1 }
+        expect(response.status).to eq(400)
+      end
+
       context "is able to remove a member" do
         it "removes by id" do
           expect do
@@ -1314,12 +1319,10 @@ describe GroupsController do
           end
 
           it "only removes users in that group" do
-            expect do
-              delete "/groups/#{group1.id}/members.json",
-                params: { usernames: [user.username, user2.username].join(",") }
-            end.to change { group1.users.count }.by(-1)
+            delete "/groups/#{group1.id}/members.json",
+              params: { usernames: [user.username, user2.username].join(",") }
 
-            expect(response.status).to eq(200)
+            expect(response.status).to eq(400)
           end
         end
       end
