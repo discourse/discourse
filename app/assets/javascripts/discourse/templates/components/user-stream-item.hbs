@@ -36,11 +36,13 @@
 {{/if}}
 
 <p class='excerpt' data-topic-id={{item.topic_id}} data-post-id={{item.post_id}} data-user-id={{item.user_id}}>
+  {{!-- template-lint-disable no-triple-curlies --}}
   {{~#if item.expandedExcerpt}}
     {{~{item.expandedExcerpt}~}}
   {{else}}
     {{~{item.excerpt}~}}
   {{/if~}}
+  {{!-- template-lint-enable no-triple-curlies --}}
 </p>
 
 {{#each item.children as |child|}}
