@@ -112,7 +112,7 @@
       {{#if contactInfo}}
         <section class='about contact'>
             <h3>{{d-icon "far-envelope"}} {{i18n 'about.contact'}}</h3>
-            <p>{{{contactInfo}}}</p>
+            <p>{{html-safe contactInfo}}</p>
         </section>
       {{/if}}
 

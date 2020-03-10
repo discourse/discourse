@@ -5,7 +5,8 @@ import {
   propertyNotEqual,
   fmt,
   i18n,
-  url
+  url,
+  htmlSafe
 } from "discourse/lib/computed";
 
 QUnit.module("lib:computed", {
@@ -153,4 +154,13 @@ QUnit.test("url", assert => {
     "/prefixed/u/eviltrout",
     "it supports urls with a prefix"
   );
+});
+
+QUnit.test("htmlSafe", assert => {
+  const cookies = "<p>cookies and <b>biscuits</b></p>";
+  const t = EmberObject.extend({
+    desc: htmlSafe("cookies")
+  }).create({ cookies });
+
+  assert.equal(t.get("desc").string, cookies);
 });

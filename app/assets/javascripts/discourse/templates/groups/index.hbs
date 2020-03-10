@@ -51,7 +51,7 @@
                     </span>
                   </div>
 
-                  <div class="group-description">{{{group.bio_excerpt}}}</div>
+                  <div class="group-description">{{html-safe group.bio_excerpt}}</div>
 
                   <div class="group-membership">
                     {{#group-membership-button tagName='' model=group showLogin=(route-action "showLogin")}}
