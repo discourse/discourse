@@ -99,7 +99,7 @@ describe DistributedMutex do
       }.to raise_error(Discourse::ReadOnly)
 
       expect(done).to eq(false)
-      expect(Time.now - start).to be < (1.second)
+      expect(Time.now - start).to be <= 1.second
     end
   end
 

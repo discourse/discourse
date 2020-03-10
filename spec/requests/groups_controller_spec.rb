@@ -1367,7 +1367,7 @@ describe GroupsController do
 
           expect(response.status).to eq(200)
 
-          result = JSON.parse(response.body)["logs"].last
+          result = JSON.parse(response.body)["logs"].find { |entry| entry["subject"] == "public_exit" }
 
           expect(result["action"]).to eq(GroupHistory.actions[1].to_s)
           expect(result["subject"]).to eq('public_exit')

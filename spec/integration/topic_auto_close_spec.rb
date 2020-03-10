@@ -41,7 +41,7 @@ describe Topic do
           topic_status_update = TopicTimer.last
 
           expect(topic_status_update.topic).to eq(topic)
-          expect(topic.public_topic_timer.execute_at).to be_within_one_second_of(2.hours.from_now)
+          expect(topic.public_topic_timer.execute_at).to eq_time(2.hours.from_now)
 
           args = job_klass.jobs.last['args'].first
 
@@ -59,7 +59,7 @@ describe Topic do
             topic_status_update = TopicTimer.last
 
             expect(topic_status_update.topic).to eq(staff_topic)
-            expect(topic_status_update.execute_at).to be_within_one_second_of(2.hours.from_now)
+            expect(topic_status_update.execute_at).to eq_time(2.hours.from_now)
             expect(topic_status_update.user).to eq(admin)
 
             args = job_klass.jobs.last['args'].first
@@ -70,14 +70,12 @@ describe Topic do
 
           context 'topic is closed manually' do
             it 'should remove the schedule to auto-close the topic' do
-              freeze_time
-
               topic_timer_id = staff_topic.public_topic_timer.id
 
               staff_topic.update_status('closed', true, admin)
 
               expect(TopicTimer.with_deleted.find(topic_timer_id).deleted_at)
-                .to be_within(1.second).of(Time.zone.now)
+                .to eq_time(Time.zone.now)
             end
           end
         end
@@ -92,7 +90,7 @@ describe Topic do
             topic_status_update = TopicTimer.last
 
             expect(topic_status_update.topic).to eq(regular_user_topic)
-            expect(topic_status_update.execute_at).to be_within_one_second_of(2.hours.from_now)
+            expect(topic_status_update.execute_at).to eq_time(2.hours.from_now)
             expect(topic_status_update.user).to eq(Discourse.system_user)
 
             args = job_klass.jobs.last['args'].first
