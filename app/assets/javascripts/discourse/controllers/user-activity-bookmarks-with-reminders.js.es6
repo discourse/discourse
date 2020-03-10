@@ -48,7 +48,7 @@ export default Controller.extend({
 
   actions: {
     removeBookmark(bookmark) {
-      return bookmark.destroy().then(() => this.model.loadItems());
+      return bookmark.destroy().then(() => this.loadItems());
     }
   }
 });
