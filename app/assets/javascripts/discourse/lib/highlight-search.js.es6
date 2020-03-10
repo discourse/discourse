@@ -1,4 +1,5 @@
 import { PHRASE_MATCH_REGEXP_PATTERN } from "discourse/lib/concerns/search-constants";
+import highlightHTML from "discourse/lib/highlight-html";
 
 export const CLASS_NAME = "search-highlight";
 
@@ -11,8 +12,10 @@ export default function($elem, term, opts = {}) {
     );
 
     words = words.map(w => w.replace(/^"(.*)"$/, "$1"));
-    const highlightOpts = { wordsOnly: true };
+    const highlightOpts = { wholeWord: true };
     if (!opts.defaultClassName) highlightOpts.className = CLASS_NAME;
-    $elem.highlight(words, highlightOpts);
+    for (let i = 0; i <= $elem.length; i++) {
+      highlightHTML($elem[0], words, highlightOpts);
+    }
   }
 }
