@@ -44,7 +44,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
         bookmark.post_number || bookmark.bookmark_post_number
       ),
       content: bookmark.title,
-      username: this.currentUser.username
+      username: bookmark.username
     });
   },
 

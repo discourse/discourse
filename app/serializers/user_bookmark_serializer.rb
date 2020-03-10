@@ -22,7 +22,8 @@ class UserBookmarkSerializer < ApplicationSerializer
              :archetype,
              :highest_post_number,
              :bumped_at,
-             :slug
+             :slug,
+             :username
 
   def closed
     object.topic_closed
