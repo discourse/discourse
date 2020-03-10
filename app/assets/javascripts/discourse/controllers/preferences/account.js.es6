@@ -3,7 +3,6 @@ import Controller from "@ember/controller";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import discourseComputed from "discourse-common/utils/decorators";
-import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
@@ -15,7 +14,7 @@ import logout from "discourse/lib/logout";
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
-export default Controller.extend(CanCheckEmails, PreferencesTabController, {
+export default Controller.extend(CanCheckEmails, {
   init() {
     this._super(...arguments);
 

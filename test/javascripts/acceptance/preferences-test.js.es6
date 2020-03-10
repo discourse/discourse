@@ -77,10 +77,10 @@ QUnit.test("update some fields", async assert => {
   assert.ok(exists(".user-preferences"), "it shows the preferences");
 
   const savePreferences = async () => {
-    assert.ok(!exists(".saved-user"), "it hasn't been saved yet");
-    await click(".save-user");
-    assert.ok(exists(".saved-user"), "it displays the saved message");
-    find(".saved-user").remove();
+    assert.ok(!exists(".saved"), "it hasn't been saved yet");
+    await click(".save-changes");
+    assert.ok(exists(".saved"), "it displays the saved message");
+    find(".saved").remove();
   };
 
   fillIn(".pref-name input[type=text]", "Jon Snow");
@@ -124,10 +124,10 @@ QUnit.test("font size change", async assert => {
   $.removeCookie("text_size");
 
   const savePreferences = async () => {
-    assert.ok(!exists(".saved-user"), "it hasn't been saved yet");
-    await click(".save-user");
-    assert.ok(exists(".saved-user"), "it displays the saved message");
-    find(".saved-user").remove();
+    assert.ok(!exists(".saved"), "it hasn't been saved yet");
+    await click(".save-changes");
+    assert.ok(exists(".saved"), "it displays the saved message");
+    find(".saved").remove();
   };
 
   await visit("/u/eviltrout/preferences/interface");

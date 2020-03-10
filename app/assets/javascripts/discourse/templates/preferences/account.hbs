@@ -215,11 +215,7 @@
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
 {{#if canSaveUser}}
-  <div class="control-group save-button">
-    <div class="controls">
-      {{partial 'user/preferences/save-button'}}
-    </div>
-  </div>
+  {{save-controls model=model action=(action "save") saved=saved}}
 {{/if}}
 
 
