@@ -16,7 +16,10 @@ export default DiscourseRoute.extend(OpenComposer, {
     // the new bookmark list is radically different to this topic-based one,
     // including being able to show links to multiple posts to the same topic
     // and being based on a different model. better to just redirect
-    if (this.siteSettings.enable_bookmarks_with_reminders) {
+    if (
+      this.siteSettings.enable_bookmarks_with_reminders &&
+      transition.intent.url === "/bookmarks"
+    ) {
       this.transitionTo(
         "userActivity.bookmarksWithReminders",
         this.currentUser
