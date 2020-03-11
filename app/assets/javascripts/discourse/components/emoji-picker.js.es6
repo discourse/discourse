@@ -9,8 +9,7 @@ import {
   emojiSearch
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
-import {
-  default as ENV,
+import ENV, {
   INPUT_DELAY
 } from "discourse-common/config/environment";
 
