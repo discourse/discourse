@@ -12,7 +12,7 @@
         <div class="problem-messages">
           <ul>
             {{#each problems as |problem|}}
-              <li>{{{problem}}}</li>
+              <li>{{html-safe problem}}</li>
             {{/each}}
           </ul>
         </div>

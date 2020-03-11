@@ -8,7 +8,7 @@
   {{/if}}
 
   {{#if step.description}}
-    <p class='wizard-step-description'>{{{step.description}}}</p>
+    <p class='wizard-step-description'>{{html-safe step.description}}</p>
   {{/if}}
 
   {{#wizard-step-form step=step}}
