@@ -96,12 +96,13 @@ module Email
       if topic_id.present? && post_id.present?
         post = Post.find_by(id: post_id, topic_id: topic_id)
 
-        # guards against deleted posts
-        return skip(SkippedEmailLog.reason_types[:sender_post_deleted]) unless post
-
-        add_attachments(post)
+        # guards against deleted posts and topics
+        return skip(SkippedEmailLog.reason_types[:sender_post_deleted]) if post.blank?
 
         topic = post.topic
+        return skip(SkippedEmailLog.reason_types[:sender_topic_deleted]) if topic.blank?
+
+        add_attachments(post)
         first_post = topic.ordered_posts.first
 
         topic_message_id = first_post.incoming_email&.message_id.present? ?
