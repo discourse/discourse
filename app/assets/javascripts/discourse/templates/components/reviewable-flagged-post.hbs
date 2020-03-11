@@ -17,7 +17,7 @@
       {{#if reviewable.blank_post}}
         <p>{{i18n "review.deleted_post"}}</p>
       {{else}}
-        {{{reviewable.cooked}}}
+        {{html-safe reviewable.cooked}}
       {{/if}}
     </div>
     {{plugin-outlet name="after-reviewable-flagged-post-body" args=(hash model=reviewable)}}

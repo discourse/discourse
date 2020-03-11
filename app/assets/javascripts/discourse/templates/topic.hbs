@@ -74,7 +74,7 @@
             {{#if model.details.loaded}}
               {{topic-status topic=model}}
               <a href={{model.url}} {{action "jumpTop"}} class="fancy-title">
-                {{{model.fancyTitle}}}
+                {{html-safe model.fancyTitle}}
               </a>
             {{/if}}
 
@@ -264,7 +264,7 @@
               {{#if model.queued_posts_count}}
                 <div class="has-pending-posts">
                   <div>
-                    {{{i18n "review.topic_has_pending" count=model.queued_posts_count}}}
+                    {{i18n "review.topic_has_pending" count=model.queued_posts_count}}
                   </div>
 
                   {{#link-to 'review' (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
@@ -351,7 +351,7 @@
     <div class="container">
       {{#conditional-loading-spinner condition=noErrorYet}}
         {{#if model.errorHtml}}
-          <div class="not-found">{{{model.errorHtml}}}</div>
+          <div class="not-found">{{html-safe model.errorHtml}}</div>
         {{else}}
           <div class="topic-error">
             <div>{{model.errorMessage}}</div>
