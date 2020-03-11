@@ -9,9 +9,7 @@ import {
   emojiSearch
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
-import ENV, {
-  INPUT_DELAY
-} from "discourse-common/config/environment";
+import ENV, { INPUT_DELAY } from "discourse-common/config/environment";
 
 const { run } = Ember;
 
