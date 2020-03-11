@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { debounce } from "@ember/runloop";
 import Controller from "@ember/controller";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 const { get } = Ember;
 
@@ -23,7 +24,7 @@ export default Controller.extend({
 
   actions: {
     filterReports(filter) {
-      debounce(this, this._performFiltering, filter, 250);
+      debounce(this, this._performFiltering, filter, INPUT_DELAY);
     }
   },
 

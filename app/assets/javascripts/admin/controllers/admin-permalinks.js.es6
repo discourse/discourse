@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import Permalink from "admin/models/permalink";
 import { observes } from "discourse-common/utils/decorators";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
   loading: false,
@@ -13,7 +14,7 @@ export default Controller.extend({
       this.set("model", result);
       this.set("loading", false);
     });
-  }, 250),
+  }, INPUT_DELAY),
 
   actions: {
     recordAdded(arg) {
