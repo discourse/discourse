@@ -44,7 +44,7 @@ describe Jobs::PullHotlinkedImages do
 
       freeze_time 1.week.from_now
       Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      expect(orig).to be_within(1.second).of(post.reload.updated_at)
+      expect(orig).to eq_time(post.reload.updated_at)
     end
 
     it 'replaces images' do

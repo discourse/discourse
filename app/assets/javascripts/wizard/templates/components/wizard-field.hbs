@@ -2,7 +2,7 @@
   <span class='label-value'>{{field.label}}</span>
 
   {{#if field.description}}
-    <div class='field-description'>{{{field.description}}}</div>
+    <div class='field-description'>{{html-safe field.description}}</div>
   {{/if}}
 </label>
 
@@ -11,5 +11,5 @@
 </div>
 
 {{#if field.errorDescription}}
-  <div class='field-error-description'>{{{field.errorDescription}}}</div>
+  <div class='field-error-description'>{{html-safe field.errorDescription}}</div>
 {{/if}}

@@ -119,21 +119,19 @@ describe BadgeGranter do
   describe 'grant' do
 
     it 'allows overriding of granted_at does not notify old bronze' do
+      freeze_time
       badge = Badge.create!(name: 'a badge', badge_type_id: BadgeType::Bronze)
+      user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
 
-      time = 1.year.ago
-
-      user_badge = BadgeGranter.grant(badge, user, created_at: time)
-
-      expect(user_badge.granted_at).to eq(time)
+      expect(user_badge.granted_at).to eq_time(1.year.ago)
       expect(Notification.where(user_id: user.id).count).to eq(0)
     end
 
     it "doesn't grant disabled badges" do
+      freeze_time
       badge = Fabricate(:badge, badge_type_id: BadgeType::Bronze, enabled: false)
-      time = 1.year.ago
 
-      user_badge = BadgeGranter.grant(badge, user, created_at: time)
+      user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
       expect(user_badge).to eq(nil)
     end
 
@@ -147,11 +145,10 @@ describe BadgeGranter do
     end
 
     it 'sets granted_at' do
-      time = 1.day.ago
-      freeze_time time
-
+      day_ago = freeze_time 1.day.ago
       user_badge = BadgeGranter.grant(badge, user)
-      expect(user_badge.granted_at).to be_within(1.second).of(time)
+
+      expect(user_badge.granted_at).to eq_time(day_ago)
     end
 
     it 'sets granted_by if the option is present' do
@@ -228,7 +225,6 @@ describe BadgeGranter do
   describe 'revoke_all' do
     it 'deletes every user_badge record associated with that badge' do
       described_class.grant(badge, user)
-
       described_class.revoke_all(badge)
 
       expect(UserBadge.exists?(badge: badge, user: user)).to eq(false)

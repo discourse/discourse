@@ -1,3 +1,4 @@
+// discourse-skip-module
 (function() {
   var ps = require("preload-store").default;
   var preloadedDataElement = document.getElementById("data-preloaded");
@@ -55,6 +56,7 @@
     Discourse.S3BaseUrl = setupData.s3BaseUrl;
   }
 
+  // eslint-disable-next-line
   Ember.RSVP.configure("onerror", function(e) {
     // Ignore TransitionAborted exceptions that bubble up
     if (e && e.message === "TransitionAborted") {

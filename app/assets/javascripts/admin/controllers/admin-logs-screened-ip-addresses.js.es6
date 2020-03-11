@@ -4,6 +4,7 @@ import { outputExportResult } from "discourse/lib/export-result";
 import { exportEntity } from "discourse/lib/export-csv";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 import { observes } from "discourse-common/utils/decorators";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
   loading: false,
@@ -16,7 +17,7 @@ export default Controller.extend({
     ScreenedIpAddress.findAll(this.filter).then(result => {
       this.setProperties({ model: result, loading: false });
     });
-  }, 250),
+  }, INPUT_DELAY),
 
   actions: {
     allow(record) {

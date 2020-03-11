@@ -548,7 +548,7 @@ createWidget("post-article", {
       rows.push(
         h(
           "div.row",
-          h("section.embedded-posts.top.topic-body.offset2", [
+          h("section.embedded-posts.top.topic-body", [
             this.attach("button", {
               title: "post.collapse",
               icon: "chevron-down",

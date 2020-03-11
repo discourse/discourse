@@ -165,6 +165,21 @@ describe ContentSecurityPolicy do
       expect(parse(theme_policy)['script-src']).to_not include('https://from-theme.net')
       expect(parse(theme_policy)['worker-src']).to_not include('from-theme.com')
     end
+
+    it 'can be extended by theme flags' do
+      policy # call this first to make sure further actions clear the cache
+
+      theme.theme_modifier_set.csp_extensions = ["script-src: https://from-theme-flag.script", "worker-src: from-theme-flag.worker"]
+      theme.save!
+
+      expect(parse(theme_policy)['script-src']).to include('https://from-theme-flag.script')
+      expect(parse(theme_policy)['worker-src']).to include('from-theme-flag.worker')
+
+      theme.destroy!
+
+      expect(parse(theme_policy)['script-src']).to_not include('https://from-theme-flag.script')
+      expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
+    end
   end
 
   it 'can be extended by site setting' do

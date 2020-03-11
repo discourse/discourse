@@ -863,7 +863,6 @@ describe User do
   end
 
   describe "previous_visit_at" do
-
     let(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
@@ -889,36 +888,36 @@ describe User do
       # second visit
       user.update_last_seen!(second_visit_date)
       user.reload
-      expect(user.previous_visit_at).to be_within_one_second_of(first_visit_date)
+      expect(user.previous_visit_at).to eq_time(first_visit_date)
 
       # third visit
       user.update_last_seen!(third_visit_date)
       user.reload
-      expect(user.previous_visit_at).to be_within_one_second_of(second_visit_date)
+      expect(user.previous_visit_at).to eq_time(second_visit_date)
     end
 
   end
 
   describe "update_last_seen!" do
-    let (:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
 
     it "should update the last seen value" do
       expect(user.last_seen_at).to eq nil
       user.update_last_seen!(first_visit_date)
-      expect(user.reload.last_seen_at).to be_within_one_second_of(first_visit_date)
+      expect(user.reload.last_seen_at).to eq_time(first_visit_date)
     end
 
     it "should update the first seen value if it doesn't exist" do
       user.update_last_seen!(first_visit_date)
-      expect(user.reload.first_seen_at).to be_within_one_second_of(first_visit_date)
+      expect(user.reload.first_seen_at).to eq_time(first_visit_date)
     end
 
     it "should not update the first seen value if it doesn't exist" do
       user.update_last_seen!(first_visit_date)
       user.update_last_seen!(second_visit_date)
-      expect(user.reload.first_seen_at).to be_within_one_second_of(first_visit_date)
+      expect(user.reload.first_seen_at).to eq_time(first_visit_date)
     end
   end
 
@@ -976,58 +975,51 @@ describe User do
     end
 
     describe 'with no previous values' do
-      let!(:date) { Time.zone.now }
-
-      before do
-        freeze_time date
-        user.update_last_seen!
-      end
-
       after do
         Discourse.redis.flushall
       end
 
       it "updates last_seen_at" do
-        expect(user.last_seen_at).to be_within_one_second_of(date)
+        date = freeze_time
+        user.update_last_seen!
+
+        expect(user.last_seen_at).to eq_time(date)
       end
 
       it "should have 0 for days_visited" do
+        user.update_last_seen!
         user.reload
+
         expect(user.user_stat.days_visited).to eq(1)
       end
 
       it "should log a user_visit with the date" do
-        expect(user.user_visits.first.visited_at).to eq(date.to_date)
+        date = freeze_time
+        user.update_last_seen!
+
+        expect(user.user_visits.first.visited_at).to eq_time(date.to_date)
       end
 
       context "called twice" do
-
-        before do
-          freeze_time date
+        it "doesn't increase days_visited twice" do
+          freeze_time
           user.update_last_seen!
           user.update_last_seen!
           user.reload
-        end
 
-        it "doesn't increase days_visited twice" do
           expect(user.user_stat.days_visited).to eq(1)
         end
-
       end
 
       describe "after 3 days" do
-        let!(:future_date) { 3.days.from_now }
-
-        before do
-          freeze_time future_date
-          user.update_last_seen!
-        end
-
         it "should log a second visited_at record when we log an update later" do
+          user.update_last_seen!
+          future_date = freeze_time(3.days.from_now)
+          user.update_last_seen!
+
           expect(user.user_visits.count).to eq(2)
         end
       end
-
     end
   end
 

@@ -120,9 +120,6 @@ gem 'sanitize'
 gem 'sidekiq'
 gem 'mini_scheduler'
 
-# for sidekiq web
-gem 'tilt', require: false
-
 gem 'execjs', require: false
 gem 'mini_racer'
 

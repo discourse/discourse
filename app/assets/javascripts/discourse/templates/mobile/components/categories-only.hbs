@@ -13,7 +13,7 @@
             {{#if c.description_excerpt}}
               <tr class="category-description">
                 <td colspan="3">
-                  {{{c.description_excerpt}}}
+                  {{html-safe c.description_excerpt}}
                 </td>
               </tr>
             {{/if}}
