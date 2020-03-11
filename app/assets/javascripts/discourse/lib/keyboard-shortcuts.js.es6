@@ -5,7 +5,7 @@ import { minimumOffset } from "discourse/lib/offset-calculator";
 import { ajax } from "discourse/lib/ajax";
 import { throttle } from "@ember/runloop";
 
-const defaultBindings = {
+export let bindings = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
@@ -78,12 +78,6 @@ const defaultBindings = {
     click: "#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top"
   }, // dismiss new/posts
   "x t": { click: "#dismiss-topics,#dismiss-topics-top" } // dismiss topics
-};
-
-export const bindings = defaultBindings;
-
-export const resetBindings = () => {
-  exports.bindings = defaultBindings;
 };
 
 const animationDuration = 100;
