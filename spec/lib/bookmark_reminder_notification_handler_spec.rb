@@ -27,7 +27,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
         user: user,
         reminder_type: Bookmark.reminder_types[:at_desktop],
         reminder_at: nil,
-        reminder_set_at: Time.now.utc
+        reminder_set_at: Time.zone.now
       )
     end
 

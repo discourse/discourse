@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Jobs::BookmarkReminderNotifications do
   subject { described_class.new }
 
-  let(:five_minutes_ago) { Time.now.utc - 5.minutes }
+  let(:five_minutes_ago) { Time.zone.now - 5.minutes }
   let(:bookmark1) { Fabricate(:bookmark) }
   let(:bookmark2) { Fabricate(:bookmark) }
   let(:bookmark3) { Fabricate(:bookmark) }
@@ -40,7 +40,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   end
 
   it "will not send a reminder for a bookmark in the future" do
-    bookmark4 = Fabricate(:bookmark, reminder_at: Time.now.utc + 1.day)
+    bookmark4 = Fabricate(:bookmark, reminder_at: Time.zone.now + 1.day)
     BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark1)
     BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark2)
     BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark3)
@@ -92,7 +92,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   end
 
   context "when this is the 6th run (so every half hour) of this job we need to ensure consistency of at_desktop reminders" do
-    let(:set_at) { Time.now.utc }
+    let(:set_at) { Time.zone.now }
     let!(:bookmark) do
       Fabricate(
         :bookmark,
@@ -103,7 +103,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     end
     before do
       Discourse.redis.set(Jobs::BookmarkReminderNotifications::JOB_RUN_NUMBER_KEY, 6)
-      bookmark.user.update(last_seen_at: Time.now.utc - 1.minute)
+      bookmark.user.update(last_seen_at: Time.zone.now - 1.minute)
     end
     context "when an at_desktop reminder is not pending in redis for a user who should have one" do
       it "puts the pending reminder into redis" do
@@ -114,7 +114,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
 
       context "if the user has not been seen in the past 24 hours" do
         before do
-          bookmark.user.update(last_seen_at: Time.now.utc - 25.hours)
+          bookmark.user.update(last_seen_at: Time.zone.now - 25.hours)
         end
         it "does not put the pending reminder into redis" do
           subject.execute
@@ -123,7 +123,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
       end
 
       context "if the at_desktop reminder is expired (set over PENDING_AT_DESKTOP_EXPIRY_DAYS days ago)" do
-        let(:set_at) { Time.now.utc - (BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_EXPIRY_DAYS + 1).days }
+        let(:set_at) { Time.zone.now - (BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_EXPIRY_DAYS + 1).days }
         it "does not put the pending reminder into redis, and clears the reminder type/time" do
           expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(bookmark.user)).to eq(false)
           subject.execute

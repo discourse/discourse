@@ -21,7 +21,7 @@ describe BookmarksController do
         post "/bookmarks.json", params: {
           post_id: bookmark_post.id,
           reminder_type: "tomorrow",
-          reminder_at: (Time.now.utc + 1.day).iso8601
+          reminder_at: (Time.zone.now + 1.day).iso8601
         }
 
         expect(response.status).to eq(400)
