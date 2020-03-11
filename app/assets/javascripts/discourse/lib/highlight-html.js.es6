@@ -1,6 +1,6 @@
 function highlight(node, pattern, nodeName, className) {
   if (
-    ![1, 3].includes(node.nodeType) ||
+    ![Node.ELEMENT_NODE, Node.TEXT_NODE].includes(node.nodeType) ||
     ["SCRIPT", "STYLE"].includes(node.tagName) ||
     (node.tagName === nodeName && node.className === className)
   ) {
