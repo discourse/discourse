@@ -1,14 +1,9 @@
 import { inject as service } from "@ember/service";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import {
-  default as DiscourseURL,
-  userPath,
-  groupPath
-} from "discourse/lib/url";
+import Controller, { inject as controller } from "@ember/controller";
+import DiscourseURL, { userPath, groupPath } from "discourse/lib/url";
 
 export default Controller.extend({
-  topic: inject(),
+  topic: controller(),
   router: service(),
 
   actions: {

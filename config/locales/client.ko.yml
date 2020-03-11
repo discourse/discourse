@@ -73,18 +73,22 @@ ko:
         date_year: "'YY MMM D"
       medium_with_ago:
         x_minutes:
-          other: "%{count}분전"
+          other: "%{count}분 전"
         x_hours:
-          other: "%{count}시간전"
+          other: "%{count}시간 전"
         x_days:
-          other: "%{count}일전"
+          other: "%{count}일 전"
+        x_months:
+          other: "%{count}달 전"
+        x_years:
+          other: "%{count}년 전"
       later:
         x_days:
-          other: "%{count}일후"
+          other: "%{count}일 후"
         x_months:
-          other: "%{count}달후"
+          other: "%{count}달 후"
         x_years:
-          other: "%{count}년후"
+          other: "%{count}년 후"
       previous_month: "지난 달"
       next_month: "다음 달"
       placeholder: 날짜
@@ -132,6 +136,7 @@ ko:
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
     themes:
       default_description: "기본값"
+      broken_theme_alert: "사이트의 테마 혹은 컴포넌트 (%{theme}) 오류로 정상적으로 작동하지 않을 수 있습니다. %{path}에서 비활성화 해주세요."
     s3:
       regions:
         ap_northeast_1: "아시아 태평양 (토쿄)"
@@ -451,7 +456,6 @@ ko:
       leave: "나가기"
       request: "요청"
       message: "메시지"
-      allow_membership_requests: "사용자가 그룹 소유자에게 가입신청을 할 수 있도록 허용합니다"
       membership_request_template: "가입 요청을 전송할 때 사용자에게 표시할 커스텀 템플릿"
       membership_request:
         submit: "요청 보내기"
@@ -1056,8 +1060,6 @@ ko:
       reset: "암호 재설정"
       complete_username: "자신의 아이디가 <b>%{username}</b>이라면, 곧 비밀번호 초기화 방법과 관련된 안내 메일을 받게 됩니다."
       complete_email: "만약 계정이 <b>%{email}</b>과 일치한다면, 비밀번호를 재설정하는 방법에 대한 이메일을 곧 받게 됩니다."
-      complete_username_found: "<b>%{username}</b>과 일치하는 계정을 찾았습니다. 비밀번호를 초기화하는 방법이 담긴 메일을 발송하였으니 확인하여 주십시요."
-      complete_email_found: "<b>%{email}</b>과 일치하는 계정을 찾았습니다. 비밀번호를 초기화하는 방법이 담긴 메일을 발송하였으니 확인하여 주십시요."
       complete_username_not_found: "<b>%{username}</b>과 일치하는 계정이 없습니다."
       complete_email_not_found: "<b>%{email}</b>과 일치하는 계정이 없습니다."
       help: "이메일을 못받으셨나요? 일단 스팸 폴더부터 체크해보세요.<p>어떤 이메일 주소를 입력했는지 확실치 않나요? 이메일 주소를 여기에 입력하시면 기록이 있는지 봐드리겠습니다.</p><p>만약 더 이상 그 이메일 주소로 접근할 수 없다면, <a href='%{basePath}/about'>친절한 운영진</a>에게 도움을 요청하세요.</p>"
@@ -1207,7 +1209,6 @@ ko:
       view_new_post: "새로운 글을 볼 수 있습니다."
       saving: "저장 중..."
       saved: "저장 완료!"
-      saved_draft: "작성중인 글이 있습니다. 계속 작성하려면 여기를 클릭하세요."
       uploading: "업로딩 중..."
       show_preview: "미리보기를 보여줍니다 &laquo;"
       hide_preview: "&laquo; 미리보기를 숨기기"
@@ -2222,23 +2223,6 @@ ko:
           name: 기타
         posting:
           name: 포스팅
-    google_search: |2
-
-      <h3>Google로 검색하기</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "모든 태그"
       other_tags: "기타 태그"

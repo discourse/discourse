@@ -265,6 +265,36 @@ describe ApplicationHelper do
     end
   end
 
+  describe "client_side_setup_data" do
+    context "when Rails.env.development? is true" do
+      before do
+        Rails.env.stubs(:development?).returns(true)
+      end
+
+      it "returns the correct service worker url" do
+        expect(helper.client_side_setup_data[:service_worker_url]).to eq("service-worker.js")
+      end
+
+      it "returns the svg_icon_list in the setup data" do
+        expect(helper.client_side_setup_data[:svg_icon_list]).not_to eq(nil)
+      end
+
+      it "does not return debug_preloaded_app_data without the env var" do
+        expect(helper.client_side_setup_data.key?(:debug_preloaded_app_data)).to eq(false)
+      end
+
+      context "if the DEBUG_PRELOADED_APP_DATA env var is provided" do
+        before do
+          ENV['DEBUG_PRELOADED_APP_DATA'] = 'true'
+        end
+
+        it "returns that key as true" do
+          expect(helper.client_side_setup_data[:debug_preloaded_app_data]).to eq(true)
+        end
+      end
+    end
+  end
+
   describe 'crawlable_meta_data' do
     context "opengraph image" do
       it 'returns the correct image' do

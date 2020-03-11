@@ -99,6 +99,7 @@
       align-items: center;
       .d-icon {
         margin-left: 5px;
+        margin-right: 0;
       }
     }
     .drop {
@@ -235,6 +236,7 @@
   }
 
   tbody {
+    border-top: none;
     .category {
       border-left: 6px solid;
     }
@@ -340,15 +342,6 @@ tr.category-topic-link {
     border-bottom: none;
     td {
       padding-top: 15px;
-    }
-  }
-
-  .topic-list > tbody > tr {
-    &:nth-child(odd) {
-      background-color: $secondary;
-    }
-    &:nth-child(even) {
-      background-color: $secondary;
     }
   }
 

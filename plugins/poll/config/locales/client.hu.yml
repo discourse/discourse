@@ -48,7 +48,6 @@ hu:
         title: Szavazás felépítése
         insert: Szavazás beillesztése
         help:
-          options_count: Legalább 2 opciót adj meg
           invalid_values: A minimum értéknek alacsonyabbnak kell lennie a maximum értéknél.
           min_step_value: A lépés minimális értéke 1
         poll_type:

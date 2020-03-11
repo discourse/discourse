@@ -2,8 +2,7 @@ import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import WatchedWord from "admin/models/watched-word";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   on,
   observes
 } from "discourse-common/utils/decorators";

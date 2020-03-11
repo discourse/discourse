@@ -70,6 +70,7 @@ class PostMover
     update_statistics
     update_user_actions
     update_last_post_stats
+    update_upload_security_status
 
     if moving_all_posts
       @original_topic.update_status('closed', true, @user)
@@ -250,7 +251,7 @@ class PostMover
       FROM (
         SELECT r.post_id, mp.new_topic_id, COUNT(1) AS moved_reply_count
         FROM moved_posts mp
-               JOIN post_replies r ON (mp.old_post_id = r.reply_id)
+               JOIN post_replies r ON (mp.old_post_id = r.reply_post_id)
         GROUP BY r.post_id, mp.new_topic_id
       ) x
       WHERE x.post_id = p.id AND x.new_topic_id <> p.topic_id
@@ -275,16 +276,16 @@ class PostMover
       SET post_id = mp.new_post_id
       FROM moved_posts mp
       WHERE mp.old_post_id <> mp.new_post_id AND pr.post_id = mp.old_post_id AND
-        EXISTS (SELECT 1 FROM moved_posts mr WHERE mr.new_post_id = pr.reply_id)
+        EXISTS (SELECT 1 FROM moved_posts mr WHERE mr.new_post_id = pr.reply_post_id)
     SQL
   end
 
   def delete_post_replies
     DB.exec <<~SQL
-      DELETE
-      FROM post_replies pr USING moved_posts mp, posts p, posts r
-      WHERE (pr.reply_id = mp.old_post_id OR pr.post_id = mp.old_post_id) AND
-        p.id = pr.post_id AND r.id = pr.reply_id AND p.topic_id <> r.topic_id
+      DELETE FROM post_replies pr USING moved_posts mp
+      WHERE (SELECT topic_id FROM posts WHERE id = pr.post_id) <>
+            (SELECT topic_id FROM posts WHERE id = pr.reply_post_id)
+        AND (pr.reply_post_id = mp.old_post_id OR pr.post_id = mp.old_post_id)
     SQL
   end
 
@@ -494,6 +495,12 @@ class PostMover
       attrs[:bumped_at] = Time.now
       attrs[:updated_at] = Time.now
       destination_topic.update_columns(attrs)
+    end
+  end
+
+  def update_upload_security_status
+    DB.after_commit do
+      Jobs.enqueue(:update_topic_upload_security, topic_id: @destination_topic.id)
     end
   end
 

@@ -128,10 +128,13 @@ class Plugin::Instance
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def replace_flags(settings: ::FlagSettings.new)
-    yield settings
+    next_flag_id = ReviewableScore.types.values.max + 1
+
+    yield(settings, next_flag_id)
 
     reloadable_patch do |plugin|
       ::PostActionType.replace_flag_settings(settings)
+      ::ReviewableScore.reload_types
     end
   end
 
@@ -494,10 +497,12 @@ class Plugin::Instance
       root_path = "#{File.dirname(@path)}/assets/javascripts"
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
+      DiscoursePluginRegistry.register_glob(root_path, 'hbr')
 
       admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
       DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
+      DiscoursePluginRegistry.register_glob(admin_path, 'hbr', admin: true)
     end
 
     self.instance_eval File.read(path), path
@@ -538,12 +543,11 @@ class Plugin::Instance
 
       Discourse::Utils.execute_command('mkdir', '-p', target)
       target << name.gsub(/\s/, "_")
-      # TODO a cleaner way of registering and unregistering
-      Discourse::Utils.execute_command('rm', '-f', target)
-      Discourse::Utils.execute_command('ln', '-s', public_data, target)
+
+      Discourse::Utils.atomic_ln_s(public_data, target)
     end
 
-    ensure_directory(Plugin::Instance.js_path)
+    ensure_directory(js_file_path)
 
     contents = []
     handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
@@ -553,12 +557,15 @@ class Plugin::Instance
       contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
     end
 
-    File.delete(js_file_path) if js_asset_exists?
-
     if contents.present?
       contents.insert(0, "<%")
       contents << "%>"
-      write_asset(js_file_path, contents.join("\n"))
+      Discourse::Utils.atomic_write_file(js_file_path, contents.join("\n"))
+    else
+      begin
+        File.delete(js_file_path)
+      rescue Errno::ENOENT
+      end
     end
   end
 
@@ -640,7 +647,7 @@ class Plugin::Instance
       Dir.glob("#{root_path}/**/*") do |f|
         if File.directory?(f)
           yield [f, true]
-        elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs")
+        elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs") || f.to_s.ends_with?(".hbr")
           yield [f, false]
         end
       end

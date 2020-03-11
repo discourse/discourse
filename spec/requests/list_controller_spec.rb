@@ -300,6 +300,7 @@ RSpec.describe ListController do
       get "/latest.rss"
       expect(response.status).to eq(200)
       expect(response.media_type).to eq('application/rss+xml')
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
     it 'renders links correctly with subfolder' do
@@ -349,7 +350,7 @@ RSpec.describe ListController do
 
       context 'with a link that includes an id' do
         it "succeeds" do
-          get "/c/#{category.id}-#{category.slug}/l/latest"
+          get "/c/#{category.id}-category/l/latest"
           expect(response.status).to eq(200)
         end
       end

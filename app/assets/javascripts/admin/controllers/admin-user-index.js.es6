@@ -6,7 +6,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { htmlSafe } from "@ember/template";
 
@@ -278,7 +278,7 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     resetCustomGroups() {
-      this.set("customGroupIdsBuffer", null);
+      this.set("customGroupIdsBuffer", this.model.customGroups.mapBy("id"));
     },
 
     savePrimaryGroup() {

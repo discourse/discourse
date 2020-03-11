@@ -1,3 +1,4 @@
+import { warn } from "@ember/debug";
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, oneWay } from "@ember/object/computed";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
@@ -21,7 +22,8 @@ const CUSTOM_TYPES = [
   "secret_list",
   "upload",
   "group_list",
-  "tag_list"
+  "tag_list",
+  "color"
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
@@ -137,7 +139,7 @@ export default Mixin.create({
   }),
 
   _save() {
-    Ember.warn("You should define a `_save` method", {
+    warn("You should define a `_save` method", {
       id: "discourse.setting-component.missing-save"
     });
     return Promise.resolve();
@@ -246,6 +248,7 @@ export default Mixin.create({
           .uniq()
           .join("|")
       );
+      return false;
     }
   }
 });

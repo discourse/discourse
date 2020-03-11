@@ -144,7 +144,7 @@ class Tag < ActiveRecord::Base
   end
 
   def full_url
-    "#{Discourse.base_url}/tags/#{self.name}"
+    "#{Discourse.base_url}/tag/#{self.name}"
   end
 
   def index_search

@@ -14,15 +14,18 @@
       {{d-icon "d-muted" class="icon"}}
       <span>{{i18n 'user.muted_users'}}</span>
     </label>
-    {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
+    {{user-chooser
+      value=mutedUsernames
+      onChange=(action "onChangeMutedUsernames")
+      options=(hash
+        excludeCurrentUser=true
+      )
+    }}
   </div>
   <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
 </div>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
-<div class="control-group save-button">
-  <div class="controls">
-    {{partial 'user/preferences/save-button'}}
-  </div>
-</div>
+
+{{#save-controls model=model action=(action "save") saved=saved}}{{/save-controls}}

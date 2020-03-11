@@ -30,8 +30,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
 }
 
 // shared styles for user and group cards
-#user-card,
-#group-card {
+.user-card,
+.group-card {
   width: $card_width;
   box-shadow: shadow("card");
   color: $primary;
@@ -137,7 +137,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
 }
 
 // styles for user cards only
-#user-card {
+.user-card {
   // avatar - names - controls
   .first-row {
     display: flex;
@@ -243,7 +243,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
 }
 
 // styles for group cards only
-#group-card {
+.group-card {
   // avatar - names and controls
   .first-row {
     display: flex;
@@ -253,6 +253,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     .avatar-flair {
       display: flex;
       background-size: contain;
+      background-repeat: no-repeat;
       width: $avatar_width;
       height: $avatar_width;
       color: $primary;

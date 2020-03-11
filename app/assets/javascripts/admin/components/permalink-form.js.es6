@@ -1,6 +1,6 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import Permalink from "admin/models/permalink";
 
@@ -18,6 +18,19 @@ export default Component.extend({
       { id: "category_id", name: I18n.t("admin.permalink.category_id") },
       { id: "external_url", name: I18n.t("admin.permalink.external_url") }
     ];
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    schedule("afterRender", () => {
+      $(this.element.querySelector(".external-url")).keydown(e => {
+        // enter key
+        if (e.keyCode === 13) {
+          this.send("submit");
+        }
+      });
+    });
   },
 
   focusPermalink() {
@@ -64,19 +77,10 @@ export default Component.extend({
             }
           );
       }
+    },
+
+    onChangePermalinkType(type) {
+      this.set("permalinkType", type);
     }
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    schedule("afterRender", () => {
-      $(this.element.querySelector(".external-url")).keydown(e => {
-        // enter key
-        if (e.keyCode === 13) {
-          this.send("submit");
-        }
-      });
-    });
   }
 });

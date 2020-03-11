@@ -101,7 +101,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @in_quote = true
       end
 
-      if attributes['class'].include?('quote')
+      if attributes['class']&.include?('quote')
         if @keep_quotes || (@keep_onebox_body && attributes['data-topic'].present?)
           @in_quote = false
         end
@@ -122,11 +122,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @excerpt = +""
         @current_length = 0
         @start_excerpt = true
-      end
-      # Preserve spoilers
-      if attributes.include?(["class", "spoiler"])
-        include_tag("span", attributes)
-        @in_spoiler = true
       end
 
     when "details"

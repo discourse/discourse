@@ -160,7 +160,6 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post.topic,
                      skip_validations: user.staged?,
@@ -170,7 +169,7 @@ module Email
 
         destinations.each do |destination|
           begin
-            return process_destination(destination, user, body, elided, hidden_reason_id)
+            return process_destination(destination, user, body, elided)
           rescue => e
             first_exception ||= e
           end
@@ -193,17 +192,6 @@ module Email
 
         raise BadDestinationAddress
       end
-    end
-
-    def hidden_reason_id
-      @hidden_reason_id ||=
-        if is_spam?
-          Post.hidden_reasons[:email_spam_header_found]
-        elsif !sent_to_mailinglist_mirror? && auth_res_action == :hide
-          Post.hidden_reasons[:email_authentication_result_header]
-        else
-          nil
-        end
     end
 
     def log_and_validate_user(user)
@@ -242,7 +230,6 @@ module Email
           create_reply(user: @from_user,
                        raw: body,
                        elided: elided,
-                       hidden_reason_id: hidden_reason_id,
                        post: post,
                        topic: topic,
                        skip_validations: true,
@@ -279,11 +266,7 @@ module Email
         user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
         user.user_stat.save!
 
-        if user.active && range === SiteSetting.bounce_score_threshold_deactivate
-          user.update!(active: false)
-          reason = I18n.t("user.deactivated", email: user.email)
-          StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
-        elsif range === SiteSetting.bounce_score_threshold
+        if range === SiteSetting.bounce_score_threshold
           # NOTE: we check bounce_score before sending emails
           # So log we revoked the email...
           reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
@@ -667,7 +650,7 @@ module Email
       nil
     end
 
-    def process_destination(destination, user, body, elided, hidden_reason_id)
+    def process_destination(destination, user, body, elided)
       return if SiteSetting.forwarded_emails_behaviour != "hide" &&
                 has_been_forwarded? &&
                 process_forwarded_email(destination, user)
@@ -679,7 +662,7 @@ module Email
         user ||= stage_from_user
 
         group = destination[:obj]
-        create_group_post(group, user, body, elided, hidden_reason_id)
+        create_group_post(group, user, body, elided)
 
       when :category
         category = destination[:obj]
@@ -693,7 +676,6 @@ module Email
         create_topic(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      title: subject,
                      category: category.id,
                      skip_validations: user.staged?)
@@ -713,7 +695,6 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post&.topic,
                      skip_validations: user.staged?,
@@ -721,7 +702,7 @@ module Email
       end
     end
 
-    def create_group_post(group, user, body, elided, hidden_reason_id)
+    def create_group_post(group, user, body, elided)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
@@ -739,7 +720,6 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post.topic,
                      skip_validations: true)
@@ -749,7 +729,6 @@ module Email
         create_topic(user: user,
                      raw: body,
                      elided: elided,
-                     hidden_reason_id: hidden_reason_id,
                      title: subject,
                      archetype: Archetype.private_message,
                      target_group_names: [group.name],
@@ -865,7 +844,7 @@ module Email
                                           embedded_user: lambda { find_or_create_user(email, display_name) })
       return false unless post
 
-      if post&.topic
+      if post.topic
         # mark post as seen for the forwarder
         PostTiming.record_timing(user_id: user.id, topic_id: post.topic_id, post_number: post.post_number, msecs: 5000)
 
@@ -880,6 +859,8 @@ module Email
                        topic: post.topic,
                        post_type: post_type,
                        skip_validations: user.staged?)
+        else
+          post.topic.add_small_action(user, "forwarded")
         end
       end
 
@@ -1065,7 +1046,7 @@ module Email
           # create the upload for the user
           opts = { for_group_message: options[:is_group_message] }
           upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
-          if upload&.valid?
+          if upload.errors.empty?
             # try to inline images
             if attachment.content_type&.start_with?("image/")
               if raw[attachment.url]
@@ -1135,6 +1116,10 @@ module Email
       if sent_to_mailinglist_mirror?
         options[:skip_validations] = true
         options[:skip_guardian] = true
+      else
+        options[:email_spam] = is_spam?
+        options[:first_post_checks] = true if is_spam?
+        options[:email_auth_res_action] = auth_res_action
       end
 
       user = options.delete(:user)

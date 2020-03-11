@@ -1,5 +1,4 @@
 /*global document, sinon, QUnit, Logster */
-
 //= require env
 //= require jquery.debug
 //= require jquery.ui.widget
@@ -33,6 +32,7 @@
 
 //= require helpers/assertions
 
+//= require break_string
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
 //= require_tree ./lib
@@ -76,7 +76,7 @@ if (window.Logster) {
   window.Logster = { enabled: false };
 }
 
-var pretender = require("helpers/create-pretender", null, null, false),
+var createPretender = require("helpers/create-pretender", null, null, false),
   fixtures = require("fixtures/site-fixtures", null, null, false).default,
   flushMap = require("discourse/models/store", null, null, false).flushMap,
   ScrollingDOMMethods = require("discourse/mixins/scrolling", null, null, false)
@@ -101,13 +101,32 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
-  server = pretender.default();
+  server = createPretender.default;
+  createPretender.applyDefaultHandlers(server);
+  server.handlers = []
+
+  server.prepareBody = function(body) {
+    if (body && typeof body === "object") {
+      return JSON.stringify(body);
+    }
+    return body;
+  };
+
+  server.unhandledRequest = function(verb, path) {
+    const error =
+      "Unhandled request in test environment: " + path + " (" + verb + ")";
+    window.console.error(error);
+    throw error;
+  };
+
+  server.checkPassthrough = request =>
+    request.requestHeaders["Discourse-Script"];
 
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
-      parsePostData: pretender.parsePostData,
-      response: pretender.response,
-      success: pretender.success
+      parsePostData: createPretender.parsePostData,
+      response: createPretender.response,
+      success: createPretender.success
     };
 
     applyPretender(
@@ -152,10 +171,6 @@ QUnit.testDone(function() {
   $(".modal-backdrop").remove();
   flushMap();
 
-  server.shutdown();
-
-  window.server = null;
-
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
@@ -164,7 +179,9 @@ QUnit.testDone(function() {
   Object.keys(events).forEach(function(eventKey) {
     var event = events[eventKey];
     event.forEach(function(listener) {
-      appEvents.off(eventKey, listener.target, listener.fn);
+      if (appEvents.has(eventKey)) {
+        appEvents.off(eventKey, listener.target, listener.fn);
+      }
     });
   });
 

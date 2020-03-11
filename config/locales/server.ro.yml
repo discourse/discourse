@@ -598,6 +598,8 @@ ro:
       xaxis: "Zi"
     new_contributors:
       xaxis: "Zi"
+    trust_level_growth:
+      yaxis: "Zi"
     consolidated_page_views:
       yaxis: "Zi"
       labels:
@@ -928,7 +930,6 @@ ro:
     max_topic_invitations_per_day: "Numărul maxim de invitații la subiect pe care un utilizator le poate trimite pe zi."
     alert_admins_if_errors_per_minute: "Numărul de erori pe minut la care să se declanșeze o alerta admin. Valoarea 0 dezactivează această funcționalitate. NOTĂ: necesită restart."
     alert_admins_if_errors_per_hour: "Numărul de erori pe oră la care să se declanșeze o alertă admin. Valoarea 0 dezactivează această funcționalitate. NOTĂ: necesită restart."
-    categories_topics: "Numărul de subiecte care să fie afișat în pagina /categories ."
     suggested_topics: "Numărul de subiecte sugerate în partea de jos a unui subiect."
     limit_suggested_to_category: "Arată doar subiectele din aceeași categorie, în subiecte sugerate."
     suggested_topics_max_days_old: "Subiectele sugerate nu trebuie să fie mai vechi de n zile."
@@ -992,7 +993,6 @@ ro:
     desktop_category_page_style: "Stil vizual pentru pagina /categories ."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
     category_style: "Stil vizual pentru categoria ecusoane."
-    max_image_size_kb: "Mărimea maximă a unei imagini încărcate în kB. Aceasta trebuie configurată în nginx (client_max_body_size) / apache sau proxy."
     max_attachment_size_kb: "Mărimea maximă a unui atașament de fișiere încărcate în Kb. Aceasta trebuie configurata în nginx (client_max_body_size) / apache sau proxy."
     authorized_extensions: "O listă de extensii de fișiere permise la încărcare (folosiți '*' pentru activarea tuturor tipurilor de fișiere)"
     max_similar_results: "Câte subiecte similare vor fi afișate deasupra editorului atunci când se compune un subiect nou. Comparația se face după titlu și pe conținut."
@@ -1044,7 +1044,6 @@ ro:
     soft_bounce_score: "Rata de ricoșeu adăugată unui utilizator atunci când se produce un ricoșeu temporar."
     hard_bounce_score: "Rata de ricoșeu adăugată unui utilizator atunci când se produce un ricoșeu permanent."
     bounce_score_threshold: "Rata maximă de ricoșeu înainte să nu îi mai trimitem emailuri utilizatorului."
-    bounce_score_threshold_deactivate: "Rata maximă de ricoșeu înainte să dezactivăm utilizatorul."
     reset_bounce_score_after_days: "Resetează automat rata de ricoșeu după X zile."
     attachment_content_type_blacklist: "Lista cuvintelor cheie folosite pentru filtrarea atașamentelor în funcție de tipul de conținut."
     attachment_filename_blacklist: "Lista cuvintelor cheie folosite la filtrarea atașamentelor în funcție de numele fișierului."
@@ -1595,7 +1594,6 @@ ro:
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
       click_here: "click aici"
-      from: "%{site_name} rezumat"
       preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
     forgot_password:
       title: "Parolă uitată"
@@ -1659,6 +1657,7 @@ ro:
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Nu"
+    rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi, te rugăm să încerci din nou mâine."
   static_topic_first_reply: |
     Editează prima postare în acest subiect pentru a schimba conținutul paginii %{page_name}.
   guidelines_topic:
@@ -1868,14 +1867,8 @@ ro:
         Acest ecuson se acordă când primești cel puțin câte 5 aprecieri în 300 de postări diferite. Wow! Comunitatea îți admiră contribuțiile frecvente și de înaltă calitate.
     out_of_love:
       name: Toată stima
-      description: Ai folosit 50 de aprecieri într-o zi
-      long_description: |
-        Acest ecuson se acordă atunci când îți folosești toate cele 50 de aprecieri zilnice. Faptul că îți amintești să îți rezervi un pic de timp pentru a aprecia postările de care te-ai bucurat și pe are le-ai prețuit încurajează colegii tăi de comunitate să creeze pe viitor discuții și mai interesante.
     higher_love:
       name: Înaltă stimă
-      description: Ai folosit de 5 ori 50 de aprecieri pe zi
-      long_description: |
-        Acest ecuson se acordă când îți folosești de 5 ori toate cele 50 de aprecieri zilnice. Îți mulțumim că îți aloci timp zilnic pentru a încuraja cele mai bune conversații.
     crazy_in_love:
       name: Maximă stimă
       description: Ai folosit de 20 de ori 50 de aprecieri pe zi

@@ -1,12 +1,7 @@
-import { throttle } from "@ember/runloop";
-import { next } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { debounce, later, next, scheduleOnce, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
@@ -181,7 +176,7 @@ export default Component.extend({
       term,
       topicId,
       categoryId,
-      includeMentionableGroups: true
+      includeGroups: true
     });
   },
 
@@ -543,7 +538,10 @@ export default Component.extend({
   },
 
   _loadInlineOneboxes(inline) {
-    applyInlineOneboxes(inline, ajax);
+    applyInlineOneboxes(inline, ajax, {
+      categoryId: this.get("composer.category.id"),
+      topicId: this.get("composer.topic.id")
+    });
   },
 
   _loadOneboxes(oneboxes) {
@@ -672,9 +670,9 @@ export default Component.extend({
         return;
       }
 
-      const { canUpload, canPasteHtml } = clipboardData(e, true);
+      const { canUpload, canPasteHtml, types } = clipboardData(e, true);
 
-      if (!canUpload || canPasteHtml) {
+      if (!canUpload || canPasteHtml || types.includes("text/plain")) {
         e.preventDefault();
       }
     });
@@ -788,19 +786,18 @@ export default Component.extend({
   },
 
   _registerImageScaleButtonClick($preview) {
-    // original string `![image|690x220, 50%](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
-    // group 1 `image`
+    // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+    // group 1 `image|foo=bar`
     // group 2 `690x220`
     // group 3 `, 50%`
-    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png'
-    // group 4 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
+    // group 4 '|bar=baz'
+    // group 5 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
 
     // Notes:
     // Group 3 is optional. group 4 can match images with or without a markdown title.
     // All matches are whitespace tolerant as long it's still valid markdown.
     // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
-    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?\]\((upload:\/\/.*?)\)(?!(.*`))/g;
-
+    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
     $preview.off("click", ".scale-btn").on("click", ".scale-btn", e => {
       const index = parseInt(
         $(e.target)
@@ -822,7 +819,7 @@ export default Component.extend({
 
         const replacement = match.replace(
           imageScaleRegex,
-          `![$1|$2, ${scale}%]($4)`
+          `![$1|$2, ${scale}%$4]($5)`
         );
 
         this.appEvents.trigger(
@@ -1013,7 +1010,7 @@ export default Component.extend({
       );
 
       // Short upload urls need resolution
-      resolveAllShortUrls(ajax);
+      resolveAllShortUrls(ajax, this.siteSettings, ".d-editor-preview-wrapper");
 
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(

@@ -1,10 +1,7 @@
-import { debounce } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
+import { cancel, debounce } from "@ember/runloop";
 import Component from "@ember/component";
-import {
-  default as computed,
-  on
-} from "ember-addons/ember-computed-decorators";
+import { gt } from "@ember/object/computed";
+import computed, { on } from "discourse-common/utils/decorators";
 import {
   keepAliveDuration,
   bufferTime
@@ -15,6 +12,8 @@ const MB_GET_LAST_MESSAGE = -2;
 export default Component.extend({
   topicId: null,
   presenceUsers: null,
+
+  shouldDisplay: gt("users.length", 0),
 
   clear() {
     if (!this.isDestroyed) this.set("presenceUsers", []);
@@ -56,7 +55,5 @@ export default Component.extend({
       user =>
         user.id !== currentUser.id && !ignoredUsers.includes(user.username)
     );
-  },
-
-  shouldDisplay: Ember.computed.gt("users.length", 0)
+  }
 });

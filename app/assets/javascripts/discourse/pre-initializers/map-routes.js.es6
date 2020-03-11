@@ -1,3 +1,4 @@
+import Application from "@ember/application";
 import { mapRoutes } from "discourse/mapping-router";
 
 export default {
@@ -10,8 +11,9 @@ export default {
 
     // HACK to fix: https://github.com/emberjs/ember.js/issues/10310
     const originalBuildInstance =
-      originalBuildInstance || Ember.Application.prototype.buildInstance;
-    Ember.Application.prototype.buildInstance = function() {
+      originalBuildInstance || Application.prototype.buildInstance;
+
+    Application.prototype.buildInstance = function() {
       this.buildRegistry();
       return originalBuildInstance.apply(this);
     };

@@ -9,7 +9,7 @@
 
   <form>
     {{date-picker-past
-      value=(unbound date)
+      value=(readonly date)
       containerId="date-container"
       onSelect=(action (mut date))}}
 

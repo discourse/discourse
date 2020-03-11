@@ -1,11 +1,8 @@
 import { isEmpty } from "@ember/utils";
 import { alias, gte, and, gt, not, or } from "@ember/object/computed";
-import EmberObject from "@ember/object";
+import EmberObject, { set } from "@ember/object";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import User from "discourse/models/user";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
@@ -13,11 +10,11 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { set } from "@ember/object";
 import { getOwner } from "@ember/application";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
+  classNames: "user-card",
   triggeringLinkClass: "mention",
   classNameBindings: [
     "visible:show",
@@ -42,7 +39,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showDelete: and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: not("user.isBasic"),
   hasLocationOrWebsite: or("user.location", "user.website_name"),
-  isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_cooked"),
+  isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_excerpt"),
   showCheckEmail: and("user.staged", "canCheckEmails"),
 
   user: null,
@@ -143,8 +140,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     this._positionCard($target);
     this.setProperties({ visible: true, loading: true });
 
-    const args = { stats: false };
-    args.include_post_count_for = this.get("topic.id");
+    const args = {
+      forCard: this.siteSettings.enable_new_user_card_route,
+      include_post_count_for: this.get("topic.id")
+    };
+
     User.findByUsername(username, args)
       .then(user => {
         if (user.topic_post_count) {

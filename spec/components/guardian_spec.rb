@@ -1159,7 +1159,7 @@ describe Guardian do
           PostDestroyer.new(moderator, topic.first_post).destroy
           topic.first_post.user.destroy!
 
-          expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_falsey
+          expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_truthy
         end
       end
     end
@@ -1199,7 +1199,7 @@ describe Guardian do
             PostDestroyer.new(moderator, post).destroy
             post.user.destroy!
 
-            expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_falsey
+            expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
           end
         end
       end
@@ -1360,6 +1360,13 @@ describe Guardian do
       it 'returns false as a TL4 user if trusted_users_can_edit_others is true' do
         SiteSetting.trusted_users_can_edit_others = false
         expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
+      end
+
+      it 'returns false when trying to edit a topic with no trust' do
+        SiteSetting.min_trust_to_edit_post = 2
+        post.user.trust_level = 1
+
+        expect(Guardian.new(topic.user).can_edit?(topic)).to be_falsey
       end
 
       it 'returns false when trying to edit a post with no trust' do

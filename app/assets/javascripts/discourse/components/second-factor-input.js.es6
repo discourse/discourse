@@ -19,6 +19,6 @@ export default Component.extend({
   @discourseComputed("secondFactorMethod")
   maxlength(secondFactorMethod) {
     if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) return "6";
-    if (secondFactorMethod === SECOND_FACTOR_METHODS.BACKUP_CODE) return "16";
+    if (secondFactorMethod === SECOND_FACTOR_METHODS.BACKUP_CODE) return "32";
   }
 });

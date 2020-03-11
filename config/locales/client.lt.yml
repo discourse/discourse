@@ -1042,8 +1042,6 @@ lt:
       reset: "Keisti slaptažodį"
       complete_username: "Jei paskyra sutampa su vartotojo vardu <b>%{username}</b>, turėtum gauti el.laišką su slaptažodžio keitimo instrukcijomis."
       complete_email: "Jei paskyra sutampa su <b>%{email}</b>, turėtum gauti el.laišką su slaptažodžio keitimo instrukcijomis."
-      complete_username_found: "Radome paskyrą, kuri sutampa su vartotojo vardu <b>%{username}</b>, turėtum gauti el.laišką su slaptažodžio keitimo instrukcijomis."
-      complete_email_found: "Radome paskyrą, kuri sutampa su <b>%{email}</b>, turėtum gauti el.laišką su slaptažodžio keitimo instrukcijomis."
       complete_username_not_found: "Jokia paskyra nesutampa su vartotojo vardu <b>%{username}</b>"
       complete_email_not_found: "Jokia paskyra nesutampa su <b>%{email}</b>"
       button_ok: "GERAI"
@@ -1185,7 +1183,6 @@ lt:
       view_new_post: "Peržiūrėksavo naują įrašą."
       saving: "Saugoma..."
       saved: "Išsaugota!"
-      saved_draft: "Įrašo juodraštis nebaigtas. Paspausk, kad pabaigtum."
       uploading: "Įkeliama..."
       show_preview: "rodyti peržiūrą &raquo;"
       hide_preview: "&laquo; slėpti peržiūrą"
@@ -2238,15 +2235,6 @@ lt:
           name: Kita
         posting:
           name: Publikuojama
-    google_search: |
-      <h3>Ieškoti per Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
     tagging:
       all_tags: "Visos žymos"
       other_tags: "Kitos žymos"

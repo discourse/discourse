@@ -264,6 +264,11 @@ da:
       remove: "Fjern bogmærke"
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
       save: "Gem"
+      reminders:
+        tomorrow: "I morgen <br/>{{date}}"
+        next_week: "Næste uge <br/>{{date}}"
+        next_month: "Næste måned <br/>{{date}}"
+        custom: "Valgfri dato og tid"
     drafts:
       resume: "Genoptag"
       remove: "Fjern"
@@ -307,8 +312,14 @@ da:
       edit: "Rediger dette banner >>"
     choose_topic:
       none_found: "Ingen emner fundet."
+      title:
+        search: "Søg efter et emne"
+        placeholder: "indtast emnets titel, url eller id her"
     choose_message:
       none_found: "Ingen beskeder fundet."
+      title:
+        search: "Søg efter en besked"
+        placeholder: "indtaste beskeds titel, url eller id her"
     review:
       order_by: "Filtrér efter"
       in_reply_to: "som svar til"
@@ -556,7 +567,7 @@ da:
       leave: "Forlad"
       request: "Forespørgsel"
       message: "Besked"
-      allow_membership_requests: "Tillad at brugere sender medlemsanmodninger til gruppeejere"
+      confirm_leave: "Er du sikker på, at du vil forlade gruppen?"
       membership_request_template: "Brugerdefineret skabelon, der skal vises til brugere, når der sendes en medlemskabsanmodning"
       membership_request:
         submit: "Send forespørgsel"
@@ -735,6 +746,9 @@ da:
       activity_stream: "Aktivitet"
       preferences: "Indstillinger"
       feature_topic_on_profile:
+        open_search: "Vælg et nyt emne"
+        title: "Vælg et emne"
+        search_label: "Søg efter emne via titel"
         save: "Gem"
         clear:
           title: "Ryd"
@@ -913,6 +927,9 @@ da:
           add: "Ny autentifikator"
           default_name: "Min autentifikator"
         security_key:
+          register: "Registrer"
+          title: "Sikkerhedsnøgler"
+          add: "Registrer sikkerhedsnøgle"
           delete: "Slet"
       change_about:
         title: "Skift “Om mig”"
@@ -1287,8 +1304,6 @@ da:
       reset: "Nulstil adgangskode"
       complete_username: "Hvis en konto matcher brugernavnet <b>%{username}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
       complete_email: "Hvis en konto matcher <b>%{email}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
-      complete_username_found: "Vi fandt en konto der svarer til brugernavnet <b>%{username}</b>, du burde i løbet af kort tid modtage en e-mail med instruktioner om hvordan du nulstiller din adgangskode."
-      complete_email_found: "Vi har fundet en konto der svarer til <b>%{email}</b>, du burde i løbet af kort tid modtage en e-mail med instruktioner om hvordan du nulstiller din adgangskode."
       complete_username_not_found: "Ingen kontoer passer til brugernavnet <b>%{username}</b>"
       complete_email_not_found: "Ingen kontoer svarer til <b>%{email}</b>"
       help: "Email ikke modtaget? Sørg for først at checke din spam-mappe. <p> Ikke sikker på, hvilken emailadresse du brugte? Indtast en emailadresse, så fortæller vi dig, om den findes her. </p><p> Hvis du ikke længere har adgang til emailadressen på din konto, skal du kontakte <a href='%{basePath}/about'>vores hjælpsomme hjælperteam.</a> </p>"
@@ -1497,7 +1512,6 @@ da:
       view_new_post: "Se dit nye indlæg."
       saving: "Gemmer."
       saved: "Gemt!"
-      saved_draft: "Kladde i gang. Vælg for at fortsætte med den."
       uploading: "Uploader…"
       show_preview: "forhåndsvisning &raquo;"
       hide_preview: "&laquo; skjul forhåndsvisning"
@@ -2177,7 +2191,7 @@ da:
         other: "se {{count}} udeladte indlæg "
       notice:
         new_user: "Dette er første gang {{user}} har sendt - lad os byde dem velkommen til vores fællesskab!"
-        returning_user: "Det er et stykke tid, siden vi har set {{user}} - deres sidste indlæg var {{time}}."
+        returning_user: "Det er et stykke tid siden vi har set {{user}} - deres sidste indlæg var {{time}}."
       unread: "Indlæg er ulæst"
       has_replies:
         one: "{{count}} svar"
@@ -2525,6 +2539,7 @@ da:
         help: "Dette emne er ulistet; det vil ikke blive vist i listen over emner og kan kun tilgås med et direkte link"
       personal_message:
         title: "Dette emne er en privat besked"
+        help: "Dette emne er en privat besked"
     posts: "Indlæg"
     posts_long: "{{number}} indlæg i dette emne"
     posts_likes_MF: |
@@ -2737,15 +2752,6 @@ da:
           name: Andet
         posting:
           name: Sender
-    google_search: |
-      <h3>Søg med Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Alle tags"
       other_tags: "Andre tags"

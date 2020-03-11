@@ -1,4 +1,4 @@
-import { default as WhiteLister } from "pretty-text/white-lister";
+import WhiteLister from "pretty-text/white-lister";
 import { sanitize } from "pretty-text/sanitizer";
 import guid from "pretty-text/guid";
 
@@ -139,14 +139,52 @@ export function extractDataAttribute(str) {
   return [key, value];
 }
 
+// videoHTML and audioHTML follow the same HTML syntax
+// as oneboxer.rb when dealing with these formats
+function videoHTML(token, opts) {
+  const src = token.attrGet("src");
+  const origSrc = token.attrGet("data-orig-src");
+  const preloadType = opts.secureMedia ? "none" : "metadata";
+  const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
+  return `<div class="video-container">
+    <video width="100%" height="100%" preload="${preloadType}" controls>
+      <source src="${src}" ${dataOrigSrcAttr}>
+      <a href="${src}">${src}</a>
+    </video>
+  </div>`;
+}
+
+function audioHTML(token, opts) {
+  const src = token.attrGet("src");
+  const origSrc = token.attrGet("data-orig-src");
+  const preloadType = opts.secureMedia ? "none" : "metadata";
+  const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
+  return `<audio preload="${preloadType}" controls>
+    <source src="${src}" ${dataOrigSrcAttr}>
+    <a href="${src}">${src}</a>
+  </audio>`;
+}
+
 const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
-function renderImage(tokens, idx, options, env, slf) {
+function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
-
   const split = alt.split("|");
   const altSplit = [];
 
+  // markdown-it supports returning HTML instead of continuing to render the current token
+  // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
+  // handles |video and |audio alt transformations for image tags
+  const mediaOpts = {
+    secureMedia: options.discourse.limitedSiteSettings.secureMedia
+  };
+  if (split[1] === "video") {
+    return videoHTML(token, mediaOpts);
+  } else if (split[1] === "audio") {
+    return audioHTML(token, mediaOpts);
+  }
+
+  // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
   for (let i = 0, match, data; i < split.length; ++i) {
     if ((match = split[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
       let width = match[1];
@@ -194,8 +232,11 @@ function renderImage(tokens, idx, options, env, slf) {
   return slf.renderToken(tokens, idx, options);
 }
 
-function setupImageDimensions(md) {
-  md.renderer.rules.image = renderImage;
+// we have taken over the ![]() syntax in markdown to
+// be able to render a video or audio URL as well as the
+// image using |video and |audio in the text inside []
+function setupImageAndPlayableMediaRenderer(md) {
+  md.renderer.rules.image = renderImageOrPlayableMedia;
 }
 
 function renderAttachment(tokens, idx, options, env, slf) {
@@ -299,6 +340,10 @@ export function setup(opts, siteSettings, state) {
   opts.discourse = copy;
   getOptions.f = () => opts.discourse;
 
+  opts.discourse.limitedSiteSettings = {
+    secureMedia: siteSettings.secure_media
+  };
+
   opts.engine = window.markdownit({
     discourse: opts.discourse,
     html: true,
@@ -319,7 +364,7 @@ export function setup(opts, siteSettings, state) {
 
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
-  setupImageDimensions(opts.engine);
+  setupImageAndPlayableMediaRenderer(opts.engine);
   setupAttachments(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);

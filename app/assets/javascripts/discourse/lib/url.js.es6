@@ -1,7 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -25,6 +24,7 @@ const SERVER_SIDE_ONLY = [
   /^\/posts\/\d+\/raw/,
   /^\/raw\/\d+/,
   /^\/wizard/,
+  /^\/go\//, // EXPERIMENTAL: https://meta.discourse.org/t/-/142605
   /\.rss$/,
   /\.json$/,
   /^\/admin\/upgrade$/,
@@ -103,11 +103,14 @@ const DiscourseURL = EmberObject.extend({
         let holderHeight = $holder.height();
         let windowHeight = $(window).height() - offsetCalculator();
 
-        // scroll to the bottom of the post and stop any further action if the
-        // post is yuge, otherwise just jump to the top of the post
-        // using the lock & holder method
+        // scroll to the bottom of the post and if the post is yuge we go back up the
+        // timeline by a small % of the post height so we can see the bottom of the text.
+        //
+        // otherwise just jump to the top of the post using the lock & holder method.
         if (holderHeight > windowHeight) {
-          $(window).scrollTop($holder.offset().top + holderHeight);
+          $(window).scrollTop(
+            $holder.offset().top + (holderHeight - holderHeight / 10)
+          );
           _transitioning = false;
           return;
         }
@@ -287,6 +290,10 @@ const DiscourseURL = EmberObject.extend({
     }
 
     return this.handleURL(path, opts);
+  },
+
+  routeToUrl(url, opts = {}) {
+    this.routeTo(Discourse.getURL(url), opts);
   },
 
   rewrite(regexp, replacement, opts) {

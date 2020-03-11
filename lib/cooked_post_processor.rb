@@ -23,7 +23,8 @@ class CookedPostProcessor
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
 
-    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
+    cooked = post.cook(post.raw, @cooking_options)
+    @doc = Nokogiri::HTML::fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
@@ -55,7 +56,7 @@ class CookedPostProcessor
   end
 
   def grant_badges
-    return unless Guardian.new.can_see?(@post)
+    return if @post.user.blank? || !Guardian.new.can_see?(@post)
 
     BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
     BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
@@ -215,7 +216,9 @@ class CookedPostProcessor
     # minus emojis
     @doc.css("img.emoji") -
     # minus images inside quotes
-    @doc.css(".quote img")
+    @doc.css(".quote img") -
+    # minus onebox site icons
+    @doc.css("img.site-icon")
   end
 
   def oneboxed_images
@@ -277,14 +280,17 @@ class CookedPostProcessor
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
 
-    if url&.start_with?("/secure-media-uploads/")
-      absolute_url = Discourse.store.signed_url_for_path(url.sub("/secure-media-uploads/", ""))
-    end
-
     return unless absolute_url
 
     # FastImage fails when there's no scheme
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
+
+    # we can't direct FastImage to our secure-media-uploads url because it bounces
+    # anonymous requests with a 404 error
+    if url && Upload.secure_media_url?(url)
+      absolute_url = Upload.signed_url_from_secure_media_url(absolute_url)
+    end
+
     return unless is_valid_image_url?(absolute_url)
 
     # we can *always* crawl our own images
@@ -327,7 +333,13 @@ class CookedPostProcessor
       img["height"] = height
     end
 
-    if upload = Upload.get_from_url(src)
+    # if the upload already exists and is attached to a different post,
+    # or the original_sha1 is missing meaning it was created before secure
+    # media was enabled. we want to re-thumbnail and re-optimize in this case
+    # to avoid using uploads linked to many other posts
+    upload = Upload.consider_for_reuse(Upload.get_from_url(src), @post)
+
+    if upload.present?
       upload.create_thumbnail!(width, height, crop: crop)
 
       each_responsive_ratio do |ratio|
@@ -348,7 +360,9 @@ class CookedPostProcessor
       add_lightbox!(img, original_width, original_height, upload, cropped: crop)
     end
 
-    optimize_image!(img, upload, cropped: crop) if upload
+    if upload.present?
+      optimize_image!(img, upload, cropped: crop)
+    end
   end
 
   def loading_image(upload)
@@ -476,7 +490,11 @@ class CookedPostProcessor
 
   def update_post_image
     img = extract_images_for_post.first
-    return if img.blank?
+    if img.blank?
+      @post.update_column(:image_url, nil) if @post.image_url
+      @post.topic.update_column(:image_url, nil) if @post.topic.image_url && @post.is_first_post?
+      return
+    end
 
     if img["src"].present?
       @post.update_column(:image_url, img["src"][0...255]) # post
@@ -539,7 +557,10 @@ class CookedPostProcessor
 
       upload_id = downloaded_images[src]
       upload = Upload.find_by_id(upload_id) if upload_id
-      img["src"] = upload.url if upload.present?
+
+      if upload.present?
+        img["src"] = UrlHelper.cook_url(upload.url, secure: @post.with_secure_media?)
+      end
 
       # make sure we grab dimensions for oneboxed images
       # and wrap in a div
@@ -664,7 +685,7 @@ class CookedPostProcessor
   end
 
   def available_disk_space
-    100 - `df -P #{Rails.root}/public/uploads | tail -1 | tr -s ' ' | cut -d ' ' -f 5`.to_i
+    100 - DiskSpace.percent_free("#{Rails.root}/public/uploads")
   end
 
   def dirty?
@@ -689,7 +710,9 @@ class CookedPostProcessor
   def process_inline_onebox(element)
     inline_onebox = InlineOneboxer.lookup(
       element.attributes["href"].value,
-      invalidate: !!@opts[:invalidate_oneboxes]
+      invalidate: !!@opts[:invalidate_oneboxes],
+      user_id: @post&.user_id,
+      category_id: @post&.topic&.category_id
     )
 
     if title = inline_onebox&.dig(:title)

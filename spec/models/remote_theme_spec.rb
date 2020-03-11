@@ -11,6 +11,7 @@ describe RemoteTheme do
       `cd #{repo_dir} && git init . `
       `cd #{repo_dir} && git config user.email 'someone@cool.com'`
       `cd #{repo_dir} && git config user.name 'The Cool One'`
+      `cd #{repo_dir} && git config commit.gpgsign 'false'`
       files.each do |name, data|
         FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
         File.write("#{repo_dir}/#{name}", data)
@@ -102,7 +103,7 @@ describe RemoteTheme do
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)
 
-      expect(remote.remote_updated_at).to eq(time)
+      expect(remote.remote_updated_at).to eq_time(time)
 
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.name).to eq("Amazing")
@@ -149,7 +150,7 @@ describe RemoteTheme do
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(32)
 
-      expect(remote.remote_updated_at).to eq(time)
+      expect(remote.remote_updated_at).to eq_time(time)
       expect(remote.about_url).to eq("https://newsite.com/about")
 
       # It should be able to remove old colors as well

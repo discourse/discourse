@@ -10,9 +10,12 @@ export default {
 
     if (isSupported) {
       const caps = Discourse.__container__.lookup("capabilities:main");
-      const isApple = caps.isSafari || caps.isIOS || caps.isIpadOS;
+      const isAppleBrowser =
+        caps.isSafari ||
+        (caps.isIOS &&
+          !window.matchMedia("(display-mode: standalone)").matches);
 
-      if (Discourse.ServiceWorkerURL && !isApple) {
+      if (Discourse.ServiceWorkerURL && !isAppleBrowser) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
           for (let registration of registrations) {
             if (

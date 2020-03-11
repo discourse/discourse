@@ -11,7 +11,6 @@ describe PostsController do
   end
 
   describe "polls" do
-
     it "works" do
       post :create, params: {
         title: title, raw: "[poll]\n- A\n- B\n[/poll]"
@@ -39,7 +38,7 @@ describe PostsController do
     it "schedules auto-close job" do
       freeze_time
       name = "auto_close"
-      close_date = 1.month.from_now
+      close_date = 1.month.from_now.round
 
       expect do
         post :create, params: {
@@ -53,7 +52,7 @@ describe PostsController do
       json = ::JSON.parse(response.body)
       post_id = json["id"]
 
-      expect(Poll.find_by(post_id: post_id).close_at).to be_within_one_second_of(1.month.from_now)
+      expect(Poll.find_by(post_id: post_id).close_at).to eq_time(close_date)
 
       job = Jobs::ClosePoll.jobs.first
       job_args = job["args"].first
@@ -72,14 +71,14 @@ describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_different_options"))
     end
 
-    it "should have at least 2 options" do
+    it "should have at least 1 options" do
       post :create, params: {
-        title: title, raw: "[poll]\n- A\n[/poll]"
+        title: title, raw: "[poll]\n[/poll]"
       }, format: :json
 
       expect(response).not_to be_successful
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_at_least_2_options"))
+      expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_at_least_1_option"))
     end
 
     it "should have at most 'SiteSetting.poll_maximum_options' options" do
@@ -267,14 +266,14 @@ describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_different_options", name: "foo"))
     end
 
-    it "should have at least 2 options" do
+    it "should have at least 1 option" do
       post :create, params: {
-        title: title, raw: "[poll name='foo']\n- A\n[/poll]"
+        title: title, raw: "[poll name='foo']\n[/poll]"
       }, format: :json
 
       expect(response).not_to be_successful
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_at_least_2_options", name: "foo"))
+      expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_at_least_1_option", name: "foo"))
     end
 
   end
@@ -347,6 +346,23 @@ describe PostsController do
       expect(response).not_to be_successful
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.insufficient_rights_to_create"))
+    end
+
+    it "skips the check in PMs with bots" do
+      user = Fabricate(:user, trust_level: 1)
+      topic = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: user),
+        Fabricate.build(:topic_allowed_user, user: Discourse.system_user)
+      ])
+      Fabricate(:post, topic_id: topic.id, user_id: Discourse::SYSTEM_USER_ID)
+
+      log_in_user(user)
+
+      post :create, params: {
+        topic_id: topic.id, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(::JSON.parse(response.body)["errors"]).to eq(nil)
     end
   end
 

@@ -104,7 +104,7 @@ class PostCreator
       if names.length > max_allowed_message_recipients
         errors.add(
           :base,
-          I18n.t(:max_pm_recepients, recipients_limit: max_allowed_message_recipients)
+          I18n.t(:max_pm_recipients, recipients_limit: max_allowed_message_recipients)
         )
 
         return false
@@ -136,6 +136,12 @@ class PostCreator
       return false unless skip_validations? || validate_child(topic_creator)
     else
       @topic = Topic.find_by(id: @opts[:topic_id])
+
+      if @topic.present? && @opts[:archetype] == Archetype.private_message
+        errors.add(:base, I18n.t(:create_pm_on_existing_topic))
+        return false
+      end
+
       unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
         errors.add(:base, I18n.t(:topic_not_found))
         return false
@@ -177,7 +183,7 @@ class PostCreator
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
-        link_post_uploads
+        @post.link_post_uploads
         update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
@@ -372,14 +378,6 @@ class PostCreator
     rollback_from_errors!(embed) unless embed.save
   end
 
-  def link_post_uploads
-    disallowed_uploads = @post.link_post_uploads
-    if disallowed_uploads.is_a? Array
-      @post.errors.add(:base, I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: disallowed_uploads.join(", ")))
-      rollback_from_errors!(@post)
-    end
-  end
-
   def update_uploads_secure_status
     if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
       @post.update_uploads_secure_status
@@ -496,7 +494,12 @@ class PostCreator
     end
 
     post.extract_quoted_post_numbers
-    post.created_at = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
+
+    post.created_at = if @opts[:created_at].is_a?(Time)
+      @opts[:created_at]
+    elsif @opts[:created_at].present?
+      Time.zone.parse(@opts[:created_at].to_s)
+    end
 
     if fields = @opts[:custom_fields]
       post.custom_fields = fields

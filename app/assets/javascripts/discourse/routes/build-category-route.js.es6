@@ -9,7 +9,6 @@ import PermissionType from "discourse/models/permission-type";
 import CategoryList from "discourse/models/category-list";
 import Category from "discourse/models/category";
 import { Promise, all } from "rsvp";
-import { isNone } from "@ember/utils";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -51,6 +50,20 @@ export default (filterArg, params) => {
         modelParams.category_slug_path_with_id
       );
 
+      if (!category) {
+        const parts = modelParams.category_slug_path_with_id.split("/");
+        if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
+          parts.pop();
+        }
+
+        return Category.reloadBySlugPath(parts.join("/")).then(result => {
+          const record = this.store.createRecord("category", result.category);
+          record.setupGroupsAndPermissions();
+          this.site.updateCategory(record);
+          return { category: record };
+        });
+      }
+
       if (category) {
         return { category };
       }
@@ -88,10 +101,8 @@ export default (filterArg, params) => {
 
     _createSubcategoryList(category) {
       this._categoryList = null;
-      if (
-        isNone(category.get("parentCategory")) &&
-        category.get("show_subcategory_list")
-      ) {
+
+      if (category.isParent && category.show_subcategory_list) {
         return CategoryList.listForParent(this.store, category).then(
           list => (this._categoryList = list)
         );

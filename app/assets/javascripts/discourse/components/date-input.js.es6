@@ -2,10 +2,7 @@ import { next } from "@ember/runloop";
 import Component from "@ember/component";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["d-date-input"],
@@ -35,8 +32,9 @@ export default Component.extend({
   didUpdateAttrs() {
     this._super(...arguments);
 
-    if (this._picker) {
-      this._picker.setDate(this.date, true);
+    if (this._picker && typeof date === "string") {
+      const [year, month, day] = this.date.split("-").map(x => parseInt(x, 10));
+      this._picker.setDate(new Date(year, month - 1, day), true);
     }
   },
 
@@ -87,7 +85,7 @@ export default Component.extend({
     this._picker && this._picker.hide();
 
     if (this.onChange) {
-      this.onChange(moment(value).toDate());
+      this.onChange(value);
     }
   },
 
@@ -106,5 +104,11 @@ export default Component.extend({
 
   _opts() {
     return null;
+  },
+
+  actions: {
+    onInput(event) {
+      this._picker && this._picker.setDate(event.target.value, true);
+    }
   }
 });

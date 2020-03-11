@@ -6,9 +6,17 @@
       {{i18n 'admin.groups.manage.membership.automatic_membership_email_domains'}}
     </label>
 
-    {{list-setting name="automatic_membership"
-        settingValue=model.emailDomains
-        class="group-form-automatic-membership-automatic"}}
+    {{list-setting
+      name="automatic_membership"
+      class="group-form-automatic-membership-automatic"
+      value=emailDomains
+      choices=emailDomains
+      settingName="name"
+      nameProperty=null
+      valueProperty=null
+      onChange=(action "onChangeEmailDomainsSetting")
+      options=(hash allowAny=true)
+    }}
 
     <label>
       {{input type="checkbox"
@@ -26,12 +34,14 @@
     <label class="control-label">{{i18n "admin.groups.manage.membership.effects"}}</label>
     <label for="grant_trust_level">{{i18n 'admin.groups.manage.membership.trust_levels_title'}}</label>
 
-    {{combo-box name="grant_trust_level"
-        valueAttribute="value"
-        value=model.grant_trust_level
-        content=trustLevelOptions
-        class="groups-form-grant-trust-level"}}
-
+    {{combo-box
+      name="grant_trust_level"
+      valueProperty="value"
+      value=groupTrustLevel
+      content=trustLevelOptions
+      class="groups-form-grant-trust-level"
+      onChange=(action (mut model.grant_trust_level))
+    }}
     <label>
       {{input type="checkbox"
           checked=model.primary_group

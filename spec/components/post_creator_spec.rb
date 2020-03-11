@@ -145,19 +145,26 @@ describe PostCreator do
           _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
-        # 2 for topic, one to notify of new topic another for tracking state
-        expect(messages.map { |m| m.channel }.sort).to eq([ "/new",
-                                                     "/u/#{admin.username}",
-                                                     "/u/#{admin.username}",
-                                                     "/unread/#{admin.id}",
-                                                     "/unread/#{admin.id}",
-                                                     "/latest",
-                                                     "/latest",
-                                                     "/topic/#{created_post.topic_id}",
-                                                     "/topic/#{created_post.topic_id}"
-                                                   ].sort)
-        admin_ids = [Group[:admins].id]
+        messages.filter! { |m| m.channel != "/distributed_hash" }
 
+        channels = messages.map { |m| m.channel }.sort
+
+        # 2 for topic, one to notify of new topic another for tracking state
+        expect(channels).to eq(
+          [
+            "/new",
+            "/u/#{admin.username}",
+            "/u/#{admin.username}",
+            "/unread/#{admin.id}",
+            "/unread/#{admin.id}",
+            "/latest",
+            "/latest",
+            "/topic/#{created_post.topic_id}",
+            "/topic/#{created_post.topic_id}"
+          ].sort
+        )
+
+        admin_ids = [Group[:admins].id]
         expect(messages.any? { |m| m.group_ids != admin_ids && m.user_ids != [admin.id] }).to eq(false)
       end
 
@@ -217,6 +224,7 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
@@ -226,6 +234,7 @@ describe PostCreator do
         Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
+        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
         creator.opts[:image_sizes] = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
         creator.create
@@ -310,7 +319,7 @@ describe PostCreator do
         first_post = creator.create
         topic = first_post.topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(first_post.created_at)
+        expect(topic.last_posted_at).to eq_time(first_post.created_at)
         expect(topic.last_post_user_id).to eq(first_post.user_id)
         expect(topic.word_count).to eq(4)
       end
@@ -349,8 +358,8 @@ describe PostCreator do
           topic.reload
 
           topic_status_update = TopicTimer.last
-          expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
-          expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
+          expect(topic_status_update.execute_at).to eq_time(12.hours.from_now)
+          expect(topic_status_update.created_at).to eq_time(Time.zone.now)
         end
 
         describe "topic's auto close based on last post" do
@@ -482,8 +491,8 @@ describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it 'whispers do not mess up the public view' do
-
-      freeze_time
+      # turns out this can fail on leap years if we don't do this
+      freeze_time DateTime.parse('2010-01-01 12:00')
 
       first = PostCreator.new(
         user,
@@ -535,7 +544,7 @@ describe PostCreator do
       expect(topic.reply_count).to eq(0)
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
-      expect(topic.last_posted_at).to be_within(1.seconds).of(first.created_at)
+      expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.last_post_user_id).to eq(first.user_id)
       expect(topic.word_count).to eq(5)
 
@@ -551,7 +560,7 @@ describe PostCreator do
       topic.reload
       expect(topic.highest_post_number).to eq(1)
       expect(topic.posts_count).to eq(1)
-      expect(topic.last_posted_at).to eq(first.created_at)
+      expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.highest_staff_post_number).to eq(3)
     end
   end
@@ -681,7 +690,7 @@ describe PostCreator do
         post = creator.create
         topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_posted_at).to eq_time(post.created_at)
         expect(topic.last_post_user_id).to eq(post.user_id)
         expect(topic.word_count).to eq(6)
       end
@@ -692,7 +701,7 @@ describe PostCreator do
         post = creator.create
         topic.reload
 
-        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_posted_at).to eq_time(post.created_at)
         expect(topic.last_post_user_id).to eq(post.user_id)
         expect(topic.word_count).to eq(6)
       end
@@ -941,24 +950,48 @@ describe PostCreator do
   end
 
   context 'setting created_at' do
-    created_at = 1.week.ago
-    let(:topic) do
-      PostCreator.create(user,
-                         raw: 'This is very interesting test post content',
-                         title: 'This is a very interesting test post title',
-                         created_at: created_at)
+    it 'supports Time instances' do
+      freeze_time
+
+      post1 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        title: 'This is a very interesting test post title',
+        created_at: 1.week.ago
+      )
+      topic = post1.topic
+
+      post2 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        topic_id: topic,
+        created_at: 1.week.ago
+      )
+
+      expect(post1.created_at).to eq_time(1.week.ago)
+      expect(post2.created_at).to eq_time(1.week.ago)
+      expect(topic.created_at).to eq_time(1.week.ago)
     end
 
-    let(:post) do
-      PostCreator.create(user,
-                         raw: 'This is very interesting test post content',
-                         topic_id: Topic.last,
-                         created_at: created_at)
-    end
+    it 'supports strings' do
+      freeze_time
 
-    it 'acts correctly' do
-      expect(topic.created_at).to be_within(10.seconds).of(created_at)
-      expect(post.created_at).to be_within(10.seconds).of(created_at)
+      time = Time.zone.parse('2019-09-02')
+
+      post1 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        title: 'This is a very interesting test post title',
+        created_at: '2019-09-02'
+      )
+      topic = post1.topic
+
+      post2 = PostCreator.create(user,
+        raw: 'This is very interesting test post content',
+        topic_id: topic,
+        created_at: '2019-09-02 00:00:00 UTC'
+      )
+
+      expect(post1.created_at).to eq_time(time)
+      expect(post2.created_at).to eq_time(time)
+      expect(topic.created_at).to eq_time(time)
     end
   end
 
@@ -1411,53 +1444,12 @@ describe PostCreator do
       )
     end
 
-    it "does not allow a secure image to be used in a public topic" do
-      public_post = PostCreator.create(
+    it "links post uploads" do
+      _public_post = PostCreator.create(
         user,
         topic_id: public_topic.id,
         raw: "A public post with an image.\n![](#{image_upload.short_path})"
       )
-
-      expect(public_post.errors.count).to be(1)
-      expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: image_upload.original_filename))
-
-      # secure upload CAN be used in another PM
-      pm = PostCreator.create(
-        user,
-        title: 'this is another private message',
-        raw: "with an upload: \n![](#{image_upload.short_path})",
-        archetype: Archetype.private_message,
-        target_usernames: [user2.username].join(',')
-      )
-
-      expect(pm.errors).to be_blank
     end
-
-    it "does not allow a secure video to be used in a public topic" do
-      video_upload = Fabricate(:upload_s3, extension: 'mp4', original_filename: "video.mp4", secure: true)
-
-      public_post = PostCreator.create(
-        user,
-        topic_id: public_topic.id,
-        raw: "A public post with a video onebox:\n#{video_upload.url}"
-      )
-
-      expect(public_post.errors.count).to be(1)
-      expect(public_post.errors.full_messages).to include(I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: video_upload.original_filename))
-    end
-
-    it "allows an existing upload to be used again in nonPM topics in login_required sites" do
-      SiteSetting.login_required = true
-
-      public_post = PostCreator.create(
-        user,
-        topic_id: public_topic.id,
-        raw: "Reusing this image on a public topic in a login_required site:\n![](#{image_upload.short_path})"
-      )
-
-      expect(public_post.errors.count).to be(0)
-    end
-
   end
-
 end

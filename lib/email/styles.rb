@@ -203,9 +203,10 @@ module Email
 
       style('.previous-discussion', 'font-size: 17px; color: #444; margin-bottom:10px;')
       style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
-      style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#{SiteSetting.email_link_color};text-decoration:none;font-weight:bold")
-      style('.user-title', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #999;")
-      style('.user-name', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #{SiteSetting.email_link_color};font-weight:normal;")
+      style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;font-weight:bold")
+      style('.username-link', "color:#{SiteSetting.email_link_color};")
+      style('.username-title', "color:#777;margin-left:5px;")
+      style('.user-title', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:5px;color: #999;")
       style('.post-wrapper', "margin-bottom:25px;")
       style('.user-avatar', 'vertical-align:top;width:55px;')
       style('.user-avatar img', nil, width: '45', height: '45')
@@ -288,15 +289,14 @@ module Email
 
     def replace_secure_media_urls
       @fragment.css('[href]').each do |a|
-        if a['href'][/secure-media-uploads/]
+        if Upload.secure_media_url?(a['href'])
           a.add_next_sibling "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
           a.remove
         end
       end
 
-      @fragment.search('img').each do |img|
-        next unless img['src']
-        if img['src'][/secure-media-uploads/]
+      @fragment.search('img[src]').each do |img|
+        if Upload.secure_media_url?(img['src'])
           img.add_next_sibling "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
           img.remove
         end

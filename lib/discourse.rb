@@ -45,6 +45,39 @@ module Discourse
       logs.join("\n".freeze)
     end
 
+    def self.atomic_write_file(destination, contents)
+      begin
+        return if File.read(destination) == contents
+      rescue Errno::ENOENT
+      end
+
+      FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
+      temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
+
+      File.open(temp_destination, "w") do |fd|
+        fd.write(contents)
+        fd.fsync()
+      end
+
+      File.rename(temp_destination, destination)
+
+      nil
+    end
+
+    def self.atomic_ln_s(source, destination)
+      begin
+        return if File.readlink(destination) == source
+      rescue Errno::ENOENT, Errno::EINVAL
+      end
+
+      FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
+      temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
+      execute_command('ln', '-s', source, temp_destination)
+      File.rename(temp_destination, destination)
+
+      nil
+    end
+
     private
 
     class CommandRunner
@@ -194,6 +227,7 @@ module Discourse
         STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
       end
     end
+    DiscourseEvent.trigger(:after_plugin_activation)
   end
 
   def self.disabled_plugin_names
@@ -309,6 +343,24 @@ module Discourse
         Cache.new
       end
     end
+  end
+
+  # hostname of the server, operating system level
+  # called os_hostname so we do no confuse it with current_hostname
+  def self.os_hostname
+    @os_hostname ||=
+      begin
+        require 'socket'
+        Socket.gethostname
+      rescue => e
+        warn_exception(e, message: 'Socket.gethostname is not working')
+        begin
+          `hostname`.strip
+        rescue => e
+          warn_exception(e, message: 'hostname command is not working')
+          'unknown_host'
+        end
+      end
   end
 
   # Get the current base URL for the current site

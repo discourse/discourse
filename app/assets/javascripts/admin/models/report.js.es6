@@ -21,11 +21,8 @@ const Report = EmberObject.extend({
   average: false,
   percent: false,
   higher_is_better: true,
-
-  @discourseComputed("modes")
-  isTable(modes) {
-    return modes.some(mode => mode === "table");
-  },
+  description_link: null,
+  description: null,
 
   @discourseComputed("type", "start_date", "end_date")
   reportUrl(type, start_date, end_date) {

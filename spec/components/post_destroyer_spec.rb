@@ -180,6 +180,15 @@ describe PostDestroyer do
       expect(post_action).to be_present
     end
 
+    it "works with topics and posts with no user" do
+      post = Fabricate(:post)
+      UserDestroyer.new(Discourse.system_user).destroy(post.user, delete_posts: true)
+
+      expect { PostDestroyer.new(Fabricate(:admin), post.reload).recover }
+        .to change { post.reload.user_id }.to(Discourse.system_user.id)
+        .and change { post.topic.user_id }.to(Discourse.system_user.id)
+    end
+
     describe "post_count recovery" do
       before do
         post
@@ -639,7 +648,7 @@ describe PostDestroyer do
     describe 'with a reply' do
 
       fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
-      let!(:post_reply) { PostReply.create(post_id: post.id, reply_id: reply.id) }
+      let!(:post_reply) { PostReply.create(post_id: post.id, reply_post_id: reply.id) }
 
       it 'changes the post count of the topic' do
         post.reload

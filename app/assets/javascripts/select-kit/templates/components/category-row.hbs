@@ -1,26 +1,16 @@
 {{#if category}}
+  <div class="category-status">
     {{#if hasParentCategory}}
-      <div class="category-status">
-        {{#unless hideParentCategory}}
-          {{badgeForParentCategory}}
-        {{/unless}}
-        {{badgeForCategory}}
-        <span class="topic-count" aria-label={{i18n "category_row.topic_count" count=topicCount}}>
-          &times; {{topicCount}}
-        </span>
-      </div>
-    {{else}}
-      <div class="category-status">
-        {{badgeForCategory}}
-        <span class="topic-count" aria-label={{i18n "category_row.topic_count" count=topicCount}}>
-          &times; {{topicCount}}
-        </span>
-      </div>
+      {{#unless hideParentCategory}}
+        {{badgeForParentCategory}}
+      {{/unless}}
     {{/if}}
+    {{badgeForCategory}}
+  </div>
 
-    {{#if shouldDisplayDescription}}
-      <div class="category-desc">{{{dir-span description}}}</div>
-    {{/if}}
+  {{#if shouldDisplayDescription}}
+    <div class="category-desc">{{dir-span description}}</div>
+  {{/if}}
 {{else}}
-  {{{label}}}
+  {{html-safe label}}
 {{/if}}

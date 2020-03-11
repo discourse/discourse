@@ -1,13 +1,12 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(GrantBadgeController, {
-  adminUser: inject(),
+  adminUser: controller(),
   user: alias("adminUser.model"),
   userBadges: alias("model"),
   allBadges: alias("badges"),

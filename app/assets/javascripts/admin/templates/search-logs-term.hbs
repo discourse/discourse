@@ -1,6 +1,11 @@
 <div class="admin-title">
-  {{period-chooser period=period}}
-  {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
+  {{period-chooser period=period onChange=(action (mut period))}}
+  {{combo-box
+    content=searchTypeOptions
+    value=searchType
+    class="search-logs-filter"
+    onChange=(action (mut searchType))
+  }}
 </div>
 
 <h2>
@@ -18,15 +23,15 @@
   {{#each model.search_result.posts as |result|}}
     <div class='fps-result'>
       <div class='author'>
-        <a href={{result.userPath}} data-user-card="{{unbound result.username}}">
+        <a href={{result.userPath}} data-user-card={{result.username}}>
           {{avatar result imageSize="large"}}
         </a>
       </div>
 
       <div class='fps-topic'>
         <div class='topic'>
-          <a class='search-link' href='{{unbound result.url}}'>
-            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=term}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+          <a class='search-link' href={{result.url}}>
+            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=term}}{{html-safe result.topic.fancyTitle}}{{/highlight-text}}</span>
           </a>
 
           <div class='search-category'>
@@ -50,7 +55,7 @@
 
           {{#if result.blurb}}
             {{#highlight-text highlight=term}}
-              {{{unbound result.blurb}}}
+              {{html-safe result.blurb}}
             {{/highlight-text}}
           {{/if}}
         </div>

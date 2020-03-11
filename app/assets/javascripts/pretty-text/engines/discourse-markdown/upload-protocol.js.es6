@@ -44,16 +44,32 @@ function rule(state) {
             token.attrs[srcIndex][1] = mapped.url;
             token.attrs.push(["data-base62-sha1", mapped.base62_sha1]);
           } else {
-            token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
-              "/images/transparent.png"
-            );
+            // no point putting a transparent .png for audio/video
+            if (token.content.match(/\|video|\|audio/)) {
+              token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
+                "/404"
+              );
+            } else {
+              token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
+                "/images/transparent.png"
+              );
+            }
 
             token.attrs.push(["data-orig-src", origSrc]);
           }
           break;
         case "a":
           if (mapped) {
-            token.attrs[srcIndex][1] = mapped.short_path;
+            // when secure media is enabled we want the full /secure-media-uploads/
+            // url to take advantage of access control security
+            if (
+              state.md.options.discourse.limitedSiteSettings.secureMedia &&
+              mapped.url.indexOf("secure-media-uploads") > -1
+            ) {
+              token.attrs[srcIndex][1] = mapped.url;
+            } else {
+              token.attrs[srcIndex][1] = mapped.short_path;
+            }
           } else {
             token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
               "/404"

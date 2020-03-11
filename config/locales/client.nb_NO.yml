@@ -456,7 +456,6 @@ nb_NO:
       leave: "Forlat"
       request: "Forespørsel"
       message: "Melding"
-      allow_membership_requests: "Tillat brukere å sende forespørsler om medlemskap av gruppen til eiere"
       membership_request_template: "Egendefinert mal å vise brukere når du sender en medlemskapsforespørsel."
       membership_request:
         submit: "Send inn forespørsel"
@@ -1090,8 +1089,6 @@ nb_NO:
       reset: "Nullstill passord"
       complete_username: "Hvis en konto med brukernavn <b>%{username}</b> finnes vil du motta en e-post om kort tid med instruksjoner om hvordan du kan nullstille passordet."
       complete_email: "Hvis en konto med e-postadressen <b>%{email}</b> eksisterer i systemet vil du om kort tid motta en e-post med instruksjoner om hvordan du kan nullstille passordet."
-      complete_username_found: "Vi fant en konto med brukernavn <b>%{username}</b>. Du mottar om litt en e-post med instruksjoner for hovrdan du nullstiller passordet."
-      complete_email_found: "Vi fant en konto med e-postadressen <b>%{email}</b>. Du mottar om litt en e-post med instruksjoner for hvordan du nullstiller passordet."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
       help: "Fikk du ikke e-posten? Sjekk søppelposten din først.<p>Er du ikke sikker på hvilken e-postadresse du brukte. Skriv inn adressen her og vi vil fortelle deg om den finnes her.</p><p>Hvis du ikke lenger har tilgang til e-postadressen på kontoen din, kontakt <a href='%{basePath}/about'>vår hjelpfulle stab.</a></p>"
@@ -1273,7 +1270,6 @@ nb_NO:
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer"
       saved: "Lagret!"
-      saved_draft: "Innleggsutkast. Velg for å fortsette."
       uploading: "Laster opp…"
       show_preview: "forhåndsvis &raquo;"
       hide_preview: "&laquo; skjul forhåndsvisning"
@@ -2397,15 +2393,6 @@ nb_NO:
           name: Annet
         posting:
           name: Publisering
-    google_search: |
-      <h3>Søk med Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Alle stikkord"
       other_tags: "Andre stikkord"

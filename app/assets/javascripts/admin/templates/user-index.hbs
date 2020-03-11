@@ -59,7 +59,7 @@
           <div class="controls">{{i18n "admin.users.not_verified"}}</div>
         {{/unless}}
         {{#if model.email}}
-          <a href="mailto:{{unbound model.email}}">{{model.email}}</a>
+          <a href="mailto:{{model.email}}">{{model.email}}</a>
         {{else}}
           {{d-button
             class="btn-default"
@@ -79,7 +79,7 @@
           {{#if model.secondary_emails}}
             <ul>
               {{#each model.secondary_emails as |email| }}
-                <li><a href="mailto:{{unbound email}}">{{email}}</a></li>
+                <li><a href="mailto:{{email}}">{{email}}</a></li>
               {{/each}}
             </ul>
           {{else}}
@@ -97,7 +97,7 @@
     </div>
 
     <div class="display-row bounce-score">
-      <div class="field"><a href="{{model.bounceLink}}">{{i18n "admin.user.bounce_score"}}</a></div>
+      <div class="field"><a href={{model.bounceLink}}>{{i18n "admin.user.bounce_score"}}</a></div>
       <div class="value">{{model.bounceScore}}</div>
       <div class="controls">
         {{#if model.canResetBounceScore}}
@@ -132,7 +132,7 @@
     <div class="field">{{i18n "user.avatar.title"}}</div>
     <div class="value">{{avatar model imageSize="large"}}</div>
     <div class="controls">
-      {{{i18n "admin.user.visit_profile" url=preferencesPath}}}
+      {{i18n "admin.user.visit_profile" url=preferencesPath}}
     </div>
   </div>
 
@@ -298,7 +298,7 @@
       </div>
       <div class="controls">
         {{d-button href="/admin/api/keys" label="admin.api.manage_keys"}}
-        
+
       </div>
     </div>
   {{/if}}
@@ -350,8 +350,9 @@
     <div class="value">
       {{combo-box
         content=site.trustLevels
-        value=model.trust_level
         nameProperty="detailedName"
+        value=model.trustLevel.id
+        onChange=(action (mut model.trust_level))
       }}
 
       {{#if model.dirty}}
@@ -508,15 +509,16 @@
     <h1>{{i18n "admin.groups.title"}}</h1>
       <div class="display-row">
         <div class="field">{{i18n "admin.groups.automatic"}}</div>
-        <div class="value">{{{automaticGroups}}}</div>
+        <div class="value">{{html-safe automaticGroups}}</div>
       </div>
       <div class="display-row">
         <div class="field">{{i18n "admin.groups.custom"}}</div>
         <div class="value">
           {{admin-group-selector
-            selected=model.customGroups
-            available=availableGroups
-            buffer=customGroupIdsBuffer}}
+            content=availableGroups
+            value=customGroupIdsBuffer
+            onChange=(action (mut customGroupIdsBuffer))
+          }}
         </div>
         {{#if customGroupsDirty}}
           <div class="controls">
@@ -532,7 +534,9 @@
             {{combo-box
               content=model.customGroups
               value=model.primary_group_id
-              none="admin.groups.no_primary"}}
+              none="admin.groups.no_primary"
+              onChange=(action (mut model.primary_group_id))
+            }}
           </div>
           {{#if primaryGroupDirty}}
             <div class="controls">
@@ -612,11 +616,11 @@
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.time_read"}}</div>
-    <div class="value">{{{format-duration model.time_read}}}</div>
+    <div class="value">{{format-duration model.time_read}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "user.invited.days_visited"}}</div>
-    <div class="value">{{{model.days_visited}}}</div>
+    <div class="value">{{html-safe model.days_visited}}</div>
   </div>
 </section>
 

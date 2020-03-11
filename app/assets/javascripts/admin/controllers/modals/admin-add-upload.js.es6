@@ -1,13 +1,9 @@
 import { isEmpty } from "@ember/utils";
 import { and, not } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
@@ -57,7 +53,7 @@ const SCSS_VARIABLE_NAMES = [
 ];
 
 export default Controller.extend(ModalFunctionality, {
-  adminCustomizeThemesShow: inject(),
+  adminCustomizeThemesShow: controller(),
 
   uploadUrl: "/admin/themes/upload_asset",
 

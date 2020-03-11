@@ -1,11 +1,7 @@
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { setDefaultHomepage } from "discourse/lib/utilities";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
   listThemes,
   previewTheme,
@@ -17,6 +13,7 @@ import {
   isiPad,
   iOSWithVisualViewport
 } from "discourse/lib/utilities";
+import { computed } from "@ember/object";
 
 const USER_HOMES = {
   1: "latest",
@@ -29,7 +26,7 @@ const USER_HOMES = {
 const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
-export default Controller.extend(PreferencesTabController, {
+export default Controller.extend({
   @discourseComputed("makeThemeDefault")
   saveAttrNames(makeDefault) {
     let attrs = [
@@ -78,6 +75,17 @@ export default Controller.extend(PreferencesTabController, {
       return { name: I18n.t(`user.text_size.${value}`), value };
     });
   },
+
+  homepageId: computed(
+    "model.user_option.homepage_id",
+    "userSelectableHome.[]",
+    function() {
+      return (
+        this.model.user_option.homepage_id ||
+        this.userSelectableHome.firstObject.value
+      );
+    }
+  ),
 
   @discourseComputed
   titleCountModes() {
@@ -198,6 +206,8 @@ export default Controller.extend(PreferencesTabController, {
 
       // Force refresh when leaving this screen
       Discourse.set("assetVersion", "forceRefresh");
+
+      this.set("textSize", newSize);
     }
   }
 });

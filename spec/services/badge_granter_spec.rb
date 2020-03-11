@@ -119,21 +119,19 @@ describe BadgeGranter do
   describe 'grant' do
 
     it 'allows overriding of granted_at does not notify old bronze' do
+      freeze_time
       badge = Badge.create!(name: 'a badge', badge_type_id: BadgeType::Bronze)
+      user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
 
-      time = 1.year.ago
-
-      user_badge = BadgeGranter.grant(badge, user, created_at: time)
-
-      expect(user_badge.granted_at).to eq(time)
+      expect(user_badge.granted_at).to eq_time(1.year.ago)
       expect(Notification.where(user_id: user.id).count).to eq(0)
     end
 
     it "doesn't grant disabled badges" do
+      freeze_time
       badge = Fabricate(:badge, badge_type_id: BadgeType::Bronze, enabled: false)
-      time = 1.year.ago
 
-      user_badge = BadgeGranter.grant(badge, user, created_at: time)
+      user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
       expect(user_badge).to eq(nil)
     end
 
@@ -147,11 +145,10 @@ describe BadgeGranter do
     end
 
     it 'sets granted_at' do
-      time = 1.day.ago
-      freeze_time time
-
+      day_ago = freeze_time 1.day.ago
       user_badge = BadgeGranter.grant(badge, user)
-      expect(user_badge.granted_at).to be_within(1.second).of(time)
+
+      expect(user_badge.granted_at).to eq_time(day_ago)
     end
 
     it 'sets granted_by if the option is present' do
@@ -222,6 +219,38 @@ describe BadgeGranter do
       after do
         TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name))
       end
+    end
+  end
+
+  describe 'revoke_all' do
+    it 'deletes every user_badge record associated with that badge' do
+      described_class.grant(badge, user)
+      described_class.revoke_all(badge)
+
+      expect(UserBadge.exists?(badge: badge, user: user)).to eq(false)
+    end
+
+    it 'removes titles' do
+      another_title = 'another title'
+      described_class.grant(badge, user)
+      user.update!(title: badge.name)
+      user2 = Fabricate(:user, title: another_title)
+
+      described_class.revoke_all(badge)
+
+      expect(user.reload.title).to be_nil
+      expect(user2.reload.title).to eq(another_title)
+    end
+
+    it 'removes custom badge titles' do
+      custom_badge_title = 'this is a badge title'
+      TranslationOverride.create!(translation_key: badge.translation_key, value: custom_badge_title, locale: 'en_US')
+      described_class.grant(badge, user)
+      user.update!(title: custom_badge_title)
+
+      described_class.revoke_all(badge)
+
+      expect(user.reload.title).to be_nil
     end
   end
 
@@ -322,4 +351,20 @@ describe BadgeGranter do
     end
   end
 
+  context 'notification locales' do
+    it 'is using default locales when user locales are not set' do
+      SiteSetting.allow_user_locale = true
+      expect(BadgeGranter.notification_locale('')).to eq(SiteSetting.default_locale)
+    end
+
+    it 'is using default locales when user locales are set but is not allowed' do
+      SiteSetting.allow_user_locale = false
+      expect(BadgeGranter.notification_locale('pl_PL')).to eq(SiteSetting.default_locale)
+    end
+
+    it 'is using user locales when set and allowed' do
+      SiteSetting.allow_user_locale = true
+      expect(BadgeGranter.notification_locale('pl_PL')).to eq('pl_PL')
+    end
+  end
 end

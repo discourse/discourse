@@ -17,6 +17,8 @@ export default Component.extend({
       { id: "regular", label: I18n.t("wizard.invites.roles.regular") }
     ]);
 
+    this.set("inviteRole", this.get("roles.0.id"));
+
     this.updateField();
   },
 

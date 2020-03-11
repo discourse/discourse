@@ -194,11 +194,14 @@ el:
     every_hour: "κάθε ώρα"
     daily: "καθημερινά"
     weekly: "κάθε εβδομάδα"
+    every_month: "κάθε μήνα"
     max_of_count: "μέγιστο {{count}}"
     alternation: "ή"
     character_count:
       one: "{{count}} χαρακτήρα"
       other: "{{count}} χαρακτήρες"
+    related_messages:
+      title: "Σχετικά Μηνύματα"
     suggested_topics:
       title: "Προτεινόμενα Νήματα"
       pm_title: "Προτεινόμενα Μηνύματα"
@@ -258,6 +261,7 @@ el:
         total: "Σύνολο"
       delete: "Σβήσιμο"
       settings:
+        saved: "Αποθηκεύτηκε! "
         save_changes: "Αποθήκευση Αλλαγών"
         title: "Ρυθμίσεις"
       topic: "Νήμα:"
@@ -266,6 +270,7 @@ el:
         username: "Όνομα Χρήστη"
         email: "Διεύθυνση Email"
         name: "Όνομα"
+        fields: "Πεδία"
       topics:
         topic: "Νήμα"
         details: "λεπτομέρειες"
@@ -282,8 +287,14 @@ el:
       statuses:
         pending:
           title: "Εκκρεμή"
+        approved:
+          title: "Εγκρίθηκε "
         rejected:
           title: "Απορρίφθηκε"
+        ignored:
+          title: "Αγνοήθηκε "
+        deleted:
+          title: "Διαγράφηκε"
       types:
         reviewable_user:
           title: "Χρήστης"
@@ -371,7 +382,6 @@ el:
       add: "Προσθήκη"
       request: "Αίτημα"
       message: "Μήνυμα"
-      allow_membership_requests: "Επιτρέψτε στα μέλη να στέλνουν αιτήματα συμμετοχής στους ιδιοκτήτες ομάδων"
       membership_request_template: "Προσαρμοσμένο πρότυπο που θα εμφανίζεται στους χρήστες όταν αποστέλλεται αίτημα συμμετοχής"
       membership_request:
         submit: "Αποστολή Αιτήματος"
@@ -501,6 +511,7 @@ el:
       user_notifications:
         ignore_duration_username: "Όνομα Χρήστη"
         ignore_duration_save: "Αγνόηση"
+        ignore_option: "Αγνοήθηκε "
         mute_option: "Σίγαση"
         normal_option: "Φυσιολογικά"
       activity_stream: "Δραστηριότητα"
@@ -578,6 +589,7 @@ el:
       users: "Χρήστες"
       muted_users: "Σε σίγαση"
       muted_users_instructions: "Αποσιώπησε όλες τις ειδοποιήσεις από αυτούς τους χρήστες."
+      ignored_users: "Αγνοήθηκε "
       tracked_topics_link: "Δείξε"
       automatically_unpin_topics: "Τα νήματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος."
       apps: "Εφαρμογές"
@@ -725,6 +737,7 @@ el:
         every_hour: "ωριαία"
         daily: "καθημερινά"
         weekly: "εβδομαδιαία"
+        every_month: "κάθε μήνα"
       email_level:
         title: "Στείλε μου ένα email όταν κάποιος παραθέσει ανάρτησή μου, απαντήσει σε ανάρτησή μου, αναφέρει το @username μου ή με προσκαλεί σε ένα νήμα."
         always: "πάντα"
@@ -941,6 +954,7 @@ el:
     trust_level: "Επίπεδο Εμπιστοσύνης"
     search_hint: "όνομα χρήστη, email ή IP διεύθυνση"
     create_account:
+      disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='{{privacy_link}}'>πολιτική ιδιωτικότητας</a> και με τους <a href='{{tos_link}}'>όρους χρήσης</a>."
       title: "Δημιουργία Λογαριασμού"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
     forgot_password:
@@ -950,8 +964,6 @@ el:
       reset: "Επαναφορά Κωδικού Πρόσβασης"
       complete_username: "Αν βρεθεί λογαριασμός με το όνομα χρήστη <b>%{username}</b>, σύντομα θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
       complete_email: "Αν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>, σε λίγο θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
-      complete_username_found: "Βρήκαμε έναν λογαριασμό με το όνομα χρήστη <b>%{username}</b>. Σύντομα θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
-      complete_email_found: "Βρήκαμε έναν λογαριασμό με τη διεύθυνση <b>%{email}</b>. Σε λίγο θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
       complete_username_not_found: "Δεν υπάρχει λογαριασμός με το όνομα χρήστη <b>%{username}</b>"
       complete_email_not_found: "Δεν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>"
       help: "Δεν λαμβάνετε το email; Ελέγξτε αρχικά τον φάκελο spam.<p>Δεν γνωρίζετε ποια διεύθυνση email χρησιμοποιήσατε; Πείτε μας την διεύθυνση που θεωρείτε πιο πιθανή και θα σας πούμε αν υπάρχει στο σύστημα.</p><p>Αν δεν έχετε πλέον πρόσβαση στην διεύθυνση email του λογαριασμού σας, παρακαλούμε επικοινωνήστε<a href='%{basePath}/about'>με την ομάδα διαχείρισης.</a></p>"
@@ -1096,7 +1108,6 @@ el:
       view_new_post: "Δες τη νέα σου ανάρτηση."
       saving: "Αποθηκεύεται"
       saved: "Αποθηκεύτηκε!"
-      saved_draft: "Η ανάρτηση είναι σε φάση επεξεργασίας. Πάτα εδώ για να συνεχίσεις."
       uploading: "Ανεβαίνει..."
       show_preview: "εμφάνιση προεπισκόπησης &raquo;"
       hide_preview: "&laquo; απόκρυψη προεπισκόπησης"
@@ -2123,23 +2134,6 @@ el:
           name: Άλλο
         posting:
           name: Αναρτάται
-    google_search: |2
-
-      <h3>Αναζήτηση στο Google</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "Όλες οι Ετικέτες"
       selector_all_tags: "όλες οι ετικέτες"

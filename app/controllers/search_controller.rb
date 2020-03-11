@@ -2,9 +2,9 @@
 
 class SearchController < ApplicationController
 
-  skip_before_action :check_xhr, only: :show
-
   before_action :cancel_overloaded_search, only: [:query]
+  skip_before_action :check_xhr, only: :show
+  after_action :add_noindex_header
 
   def self.valid_context_types
     %w{user topic category private_messages tag}

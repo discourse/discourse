@@ -6,7 +6,7 @@ export function replaceTagRenderer(fn) {
   _renderer = fn;
 }
 
-function defaultRenderTag(tag, params) {
+export function defaultRenderTag(tag, params) {
   params = params || {};
   const visibleName = Handlebars.Utils.escapeExpression(tag);
   tag = visibleName.toLowerCase();
@@ -20,7 +20,7 @@ function defaultRenderTag(tag, params) {
         : User.current().username;
       path = `/u/${username}/messages/tags/${tag}`;
     } else {
-      path = `/tags/${tag}`;
+      path = `/tag/${tag}`;
     }
   }
   const href = path ? ` href='${Discourse.getURL(path)}' ` : "";

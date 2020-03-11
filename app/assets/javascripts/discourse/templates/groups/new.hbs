@@ -1,7 +1,7 @@
 {{#d-section pageClass="groups-new"}}
   <h1>{{i18n "admin.groups.new.title"}}</h1>
 
-  <hr/>
+  <hr>
 
   <form class="groups-form form-vertical">
     {{#groups-form-profile-fields model=model disableSave=saving}}
@@ -28,10 +28,12 @@
     {{groups-form-interaction-fields model=model}}
 
     <div class='control-group buttons'>
-      {{d-button action=(action "save")
-          disabled=saving
-          class='btn btn-primary group-form-save'
-          label="admin.groups.new.create"}}
+      {{d-button
+        action=(action "save")
+        type="submit"
+        disabled=saving
+        class='btn btn-primary group-form-save'
+        label="admin.groups.new.create"}}
 
       {{#link-to "groups"}}
         {{i18n 'cancel'}}

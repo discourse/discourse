@@ -42,13 +42,13 @@
             {{#if item.editing}}
               {{text-field value=item.ip_address autofocus="autofocus"}}
             {{else}}
-              <span {{action "edit" item}}>
+              <a href {{action "edit" item}} class="inline-editable-field">
                 {{#if item.isRange}}
                   <strong>{{item.ip_address}}</strong>
                 {{else}}
                   {{item.ip_address}}
                 {{/if}}
-              </span>
+              </a>
             {{/if}}
           </td>
           <td class="col action">
@@ -76,7 +76,14 @@
             {{/if}}
           </td>
           <td class="col actions">
-            {{#unless item.editing}}
+            {{#if item.editing}}
+              {{d-button
+                class="btn-default"
+                action=(action "save")
+                actionParam=item
+                label="admin.logs.save"}}
+              <a href {{action "cancel" item}}>{{i18n "cancel"}}</a>
+            {{else}}
               {{d-button
                 class="btn-default btn-danger"
                 action=(action "destroy")
@@ -102,14 +109,7 @@
                   icon="ban"
                   label="admin.logs.screened_ips.actions.block"}}
               {{/if}}
-            {{else}}
-              {{d-button
-                class="btn-default"
-                action=(action "save")
-                actionParam=item
-                label="admin.logs.save"}}
-              <a {{action "cancel" item}}>{{i18n "cancel"}}</a>
-            {{/unless}}
+            {{/if}}
           </td>
         </tr>
       {{/each}}

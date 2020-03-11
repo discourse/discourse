@@ -236,7 +236,7 @@ describe PostsController do
 
       describe "can delete replies" do
         before do
-          PostReply.create(post_id: post1.id, reply_id: post2.id)
+          PostReply.create(post_id: post1.id, reply_post_id: post2.id)
         end
 
         it "deletes the post and the reply to it" do
@@ -415,12 +415,14 @@ describe PostsController do
       end
 
       it "won't update bump date if post is a whisper" do
+        created_at = freeze_time 1.day.ago
         post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
 
+        unfreeze_time
         put "/posts/#{post.id}.json", params: update_params
-        expect(response.status).to eq(200)
 
-        expect(post.topic.reload.bumped_at).to be < post.created_at
+        expect(response.status).to eq(200)
+        expect(post.topic.reload.bumped_at).to eq_time(created_at)
       end
     end
 
@@ -939,7 +941,7 @@ describe PostsController do
         post "/posts.json", params: {
           raw: 'I can haz a test',
           title: 'I loves my test',
-          target_usernames: group.name,
+          target_recipients: group.name,
           archetype: Archetype.private_message
         }
 
@@ -951,7 +953,7 @@ describe PostsController do
         post "/posts.json", params: {
           raw: 'I can haz a test',
           title: 'I loves my test',
-          target_usernames: group.name,
+          target_recipients: group.name,
           archetype: Archetype.private_message
         }
 
@@ -1097,7 +1099,7 @@ describe PostsController do
           raw: 'this is the test content',
           archetype: 'private_message',
           title: "this is some post",
-          target_usernames: "#{user_2.username},#{user_3.username}"
+          target_recipients: "#{user_2.username},#{user_3.username}"
         }
 
         expect(response.status).to eq(200)
@@ -1108,6 +1110,43 @@ describe PostsController do
         expect(new_post.user).to eq(user)
         expect(new_topic.private_message?).to eq(true)
         expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3)
+      end
+
+      context "when target_recipients not provided" do
+        it "errors when creating a private post" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            archetype: 'private_message',
+            title: "this is some post",
+            target_recipients: ""
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["errors"]).to include(
+            I18n.t("activerecord.errors.models.topic.attributes.base.no_user_selected")
+          )
+        end
+      end
+
+      context "when topic_id is set" do
+        fab!(:topic) { Fabricate(:topic) }
+
+        it "errors when creating a private post" do
+          user_2 = Fabricate(:user)
+
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            archetype: 'private_message',
+            title: "this is some post",
+            target_recipients: user_2.username,
+            topic_id: topic.id
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["errors"]).to include(
+            I18n.t("create_pm_on_existing_topic")
+          )
+        end
       end
 
       context "errors" do
@@ -1224,7 +1263,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: true
           }
 
@@ -1241,7 +1280,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: false
           }
 
@@ -1261,7 +1300,7 @@ describe PostsController do
             raw: 'this is the test content',
             archetype: 'private_message',
             title: "this is some post",
-            target_usernames: user_2.username,
+            target_recipients: user_2.username,
             is_warning: true
           }
 
@@ -1277,10 +1316,10 @@ describe PostsController do
 
     context "topic bump" do
       shared_examples "it works" do
-        let(:original_bumped_at) { 1.day.ago }
-        let!(:topic) { Fabricate(:topic, bumped_at: original_bumped_at) }
-
         it "should be able to skip topic bumping" do
+          original_bumped_at = 1.day.ago
+          topic = Fabricate(:topic, bumped_at: original_bumped_at)
+
           post "/posts.json", params: {
             raw: 'this is the test content',
             topic_id: topic.id,
@@ -1288,7 +1327,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(200)
-          expect(topic.reload.bumped_at).to be_within_one_second_of(original_bumped_at)
+          expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
         end
 
         it "should be able to post with topic bumping" do
@@ -1298,7 +1337,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(200)
-          expect(topic.reload.bumped_at).to eq(topic.posts.last.created_at)
+          expect(topic.reload.bumped_at).to eq_time(topic.posts.last.created_at)
         end
       end
 

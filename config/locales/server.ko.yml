@@ -183,7 +183,7 @@ ko:
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에 토픽이 닫혔거나 지워진 건 아닐까요?"
   not_accepting_pms: "죄송합니다. %{username} 님이 당분간 메시지를 받지 않습니다."
-  max_pm_recepients: "죄송합니다. 최대 %{recipients_limit} 명의 수신자에게만 메시지를 보낼 수 있습니다."
+  max_pm_recipients: "죄송합니다. 최대 %{recipients_limit} 명의 수신자에게만 메시지를 보낼 수 있습니다."
   removed_direct_reply_full_quotes: "이전 전체 게시물의 인용을 자동으로 제거했습니다."
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
@@ -682,6 +682,8 @@ ko:
     new_contributors:
       title: "새로운 기여자들"
       xaxis: "일"
+    trust_level_growth:
+      yaxis: "일"
     consolidated_page_views:
       xaxis:
         page_view_anon: "익명 사용자"
@@ -1045,7 +1047,6 @@ ko:
     max_logins_per_ip_per_minute: "1분 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
-    categories_topics: "/categories 페이지에서 표시할 토픽의 수"
     suggested_topics: "글타래 아랫부분에 몇개의 글타래를 제안하여 보여준다."
     limit_suggested_to_category: "제안된 글타래는 현재의 카테고리에 있는 글타래 중에서만 보여준다."
     suggested_topics_max_days_old: "설정된 일수 이상의 토픽은 추천하지 않음"
@@ -1111,12 +1112,10 @@ ko:
     desktop_category_page_style: "/categories 페이지의 비주얼 스타일"
     category_colors: "허용된 카테고리에 사용될 hexadecimal 색상 값의 리스트"
     category_style: "카테고리 뱃지 시각 스타일"
-    max_image_size_kb: "최대 이미지 업로드 사이즈(kB). 이 설정은 꼭 nginx / apache와 proxy에도 적용해야 합니다."
     max_attachment_size_kb: "최대 첨부파일 업로드 사이즈(kB). 이 설정은 꼭 nginx / apache와 proxy에도 적용해야 합니다."
     authorized_extensions: "파일 업로드에 허용되는 확장자 리스트 ('*'을 사용하면 모든 타입의 파일이 가능합니다.)"
     theme_authorized_extensions: "테마 업로드에 허용되는 확장자 목록('*'를 입력하면 모든 확장자 허용)"
     max_similar_results: "새로운 글타래를 작성할 때, 에디터 위에 보여줄 비슷한 글타래들의 개수. 제목과 본문을 바탕으로 비교합니다."
-    max_image_megapixels: "이미지의 최대 메가픽셀수"
     title_prettify: "일반적인 제목의 오타 및 오류를 수정해준다. 모두 대문자로 쓰거나, 첫자가 소문자이거나(영문), 복수의 !, ? 혹은 마침표(.)가 중복으로 들어간 것 등"
     topic_views_heat_low: "글타래가 연하게 하이라이트 되기 위한 조회수"
     topic_views_heat_medium: "글타래가 적당하게 하이라이트 되기 위한 조회수"
@@ -1166,7 +1165,6 @@ ko:
     soft_bounce_score: "임시 반송이 일어났을 때 사용자에게 반송 스코어 추가."
     hard_bounce_score: "영구 반송이 일어났을 때 사용자에게 반송 스코어 추가."
     bounce_score_threshold: "사용자에게 메일을 보낼 최대 반송 스코어."
-    bounce_score_threshold_deactivate: "사용자를 비활성화 할 최대 반송 스코어."
     reset_bounce_score_after_days: "X 일 이후 반송 스코어 자동 초기화."
     attachment_content_type_blacklist: "콘텐츠 타입을 기준으로 첨부를 차단할 키워드 블랙리스트."
     attachment_filename_blacklist: "파일 이름을 기준으로 첨부를 차단할 키워드 블랙리스트."
@@ -1623,6 +1621,7 @@ ko:
   csv_export:
     boolean_yes: "네"
     boolean_no: "아니오"
+    rate_limit_error: "게시글은 하루에 한번만 다운로드할 수 있습니다. 내일 다시 시도해보세요."
   static_topic_first_reply: |2
 
     이 글타래인 %{page_name} 페이지의 첫글 수정.
@@ -1761,16 +1760,8 @@ ko:
         이 배지는 300개의 포스트를 올려서 적어도 5개의 좋아요를 받았을 때 수여됩니다. 와우! 우리 커뮤니티는 당신의 꾸준하고 질높은 기여를 숭배합니다.
     out_of_love:
       name: 사랑꾼
-      description: 하루에 좋아요 50개를 보냈습니다
-      long_description: |2
-
-        이 배지는 하루에 50개의 좋아요를 사용했을 때 수여됩니다. 잠시 시간을 내서 당신이 좋아하는 포스트에 좋아요를 남기면 동료 사용자가 앞으로 더 훌륭한 토론을 하는 것에 힘을 보태줍니다.
     higher_love:
       name: 박애주의자
-      description: 5번이나 좋아요 50개를 보냈습니다
-      long_description: |2
-
-        이 배지는 50개의 좋아요를 사용한 날이 5일 이상일 때 수여됩니다. 매일 훌륭한 대화를 응원해주셔서 감사합니다!
     crazy_in_love:
       name: 사랑밖에 모르는 바보
       description: 20번이나 좋아요 50개를 보냈습니다

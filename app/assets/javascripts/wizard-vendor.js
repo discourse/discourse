@@ -4,3 +4,4 @@
 //= require sweetalert.js
 //= require virtual-dom
 //= require virtual-dom-amd
+//= require popper

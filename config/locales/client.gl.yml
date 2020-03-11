@@ -775,8 +775,6 @@ gl:
       reset: "Restabelecer contrasinal"
       complete_username: "Se unha conta corresponde ao nome de usuario <b>%{username}</b>, deberas recibir en breve un correo-e coas instrucións sobre como restabelecer o teu contrasinal."
       complete_email: "Se unha conta coincide con <b>%{email}</b>, deberías recibir en breve un correo-e con instrucións sobre como restabelecer o teu contrasinal."
-      complete_username_found: "Atopamos unha conta co mesmo nome de usuario <b>%{username}</b>, deberas recibir en breve un correo-e coas instrucións sobre como restabelecer o teu contrasinal."
-      complete_email_found: "Atopamos unha conta que coincide con <b>%{email}</b>, deberas recibir en breve unha mensaxe coas instrucións sobre como restabelecer o contrasinal."
       complete_username_not_found: "Ningunha conta coincide co nome do usuario <b>%{username}</b>"
       complete_email_not_found: "Ningunha conta coincide co <b>%{email}</b>"
       button_ok: "De acordo"
@@ -874,7 +872,6 @@ gl:
       view_new_post: "Ver a nova publicación."
       saving: "Gardando"
       saved: "Gardado!"
-      saved_draft: "A publicación do borrador está en proceso. Selecciona continuar."
       uploading: "Enviando..."
       show_preview: "amosar visualización &raquo;"
       hide_preview: "&laquo; ocultar previsualización"
@@ -1646,15 +1643,6 @@ gl:
           name: Outro
         posting:
           name: Publicación
-    google_search: |
-      <h3>Buscar no Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
     tagging:
       add_synonyms: "Engadir"
       cancel_delete_unused: "Cancelar"

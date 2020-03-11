@@ -15,11 +15,11 @@ class DistributedMemoizer
     unless result = redis.get(redis_key)
       redis_lock_key = self.redis_lock_key(key)
 
-      start = Time.new
+      start = Time.now
       got_lock = false
 
       begin
-        while Time.new < start + MAX_WAIT && !got_lock
+        while Time.now < start + MAX_WAIT && !got_lock
           LOCK.synchronize do
             got_lock = get_lock(redis, redis_lock_key)
           end

@@ -75,15 +75,13 @@ describe TopicQuery do
   end
 
   context "prioritize_pinned_topics" do
-
     it "does the pagination correctly" do
-
       num_topics = 15
       per_page = 3
 
       topics = []
       (num_topics - 1).downto(0).each do |i|
-        topics[i] = Fabricate(:topic)
+        topics[i] = freeze_time(i.seconds.ago) { Fabricate(:topic) }
       end
 
       topic_query = TopicQuery.new(user)
@@ -99,7 +97,6 @@ describe TopicQuery do
         page: 1)
       ).to eq(topics[per_page...num_topics])
     end
-
   end
 
   context 'bookmarks' do
@@ -145,7 +142,7 @@ describe TopicQuery do
 
       list = TopicQuery.new(moderator, category: diff_category.slug).list_latest
       expect(list.topics.size).to eq(1)
-      expect(list.preload_key).to eq("topic_list_c/different-category/l/latest")
+      expect(list.preload_key).to eq("topic_list_c/different-category/#{diff_category.id}/l/latest")
 
       # Defaults to no category filter when slug does not exist
       expect(TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size).to eq(2)
@@ -153,6 +150,7 @@ describe TopicQuery do
 
     context 'subcategories' do
       let!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+      let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
 
       it "works with subcategories" do
         expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
@@ -160,6 +158,23 @@ describe TopicQuery do
         expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
       end
 
+      it "works with subsubcategories" do
+        SiteSetting.max_category_nesting = 3
+
+        Fabricate(:topic, category: category)
+        Fabricate(:topic, category: subcategory)
+        Fabricate(:topic, category: subsubcategory)
+
+        SiteSetting.max_category_nesting = 2
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(3)
+        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
+        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        SiteSetting.max_category_nesting = 3
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(4)
+        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
+        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+      end
     end
   end
 
@@ -908,7 +923,7 @@ describe TopicQuery do
           let!(:user) { group_user }
 
           it 'should return the group topics' do
-            expect(suggested_topics).to eq([private_group_topic.id, private_message.id])
+            expect(suggested_topics).to match_array([private_group_topic.id, private_message.id])
           end
         end
 

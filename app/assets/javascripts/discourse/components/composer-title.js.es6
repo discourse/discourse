@@ -1,12 +1,7 @@
 import { alias, or } from "@ember/object/computed";
-import { next } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
+import { debounce, next, schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";

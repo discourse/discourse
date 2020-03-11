@@ -59,7 +59,6 @@ pt:
         title: Criar Sondagem
         insert: Inserir Sondagem
         help:
-          options_count: Insira pelo menos 2 opções
           invalid_values: O valor mínimo deve ser menor que o valor máximo.
           min_step_value: O valor mínimo é 1
         poll_type:

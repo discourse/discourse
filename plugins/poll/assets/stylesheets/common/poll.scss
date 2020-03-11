@@ -67,7 +67,9 @@ div.poll {
   }
 
   .poll-voters:not(:empty) {
+    min-height: 30px;
     margin-bottom: 0.25em;
+
     li {
       display: inline;
     }
@@ -76,6 +78,10 @@ div.poll {
   .poll-voters-toggle-expand {
     width: 100%;
     text-align: center;
+
+    .spinner {
+      margin-top: 0.25em;
+    }
   }
 
   .results {
@@ -117,6 +123,23 @@ div.poll {
       display: inline-block;
       width: 3.25em;
       margin-right: 0.25em;
+    }
+  }
+
+  .pie-chart-legends {
+    text-align: center;
+    margin: 10px 0;
+
+    .legend {
+      display: inline-block;
+      margin: 4px 0 4px 14px;
+
+      .swatch {
+        display: inline-block;
+        width: 24px;
+        height: 12px;
+        margin-right: 4px;
+      }
     }
   }
 

@@ -876,8 +876,6 @@ sq:
       reset: "Rivendos fjalëkalimin"
       complete_username: "Nëse në faqe ka një llogari me emër përdoruesi <b>%{username}</b> ju do të merrni një email me udhëzimet sesi mund të rikuperoni fjalëkalimin."
       complete_email: "Në në faqe ka një llogari me adresë emaili <b>%{email}</b> ju do të merrni një email me udhëzimet mbi rivendosjen e fjalëkalimit."
-      complete_username_found: "Gjetëm një llogari që i përket emrit të përdoruesit <b>%{email}</b>, një email me udhëzime sesi të rivendosni fjalëkalimin duhet t'ju vijë së shpejti."
-      complete_email_found: "Gjetëm një llogari që i përket <b>%{email}</b>, një email me udhëzime sesi të rivendosni fjalëkalimin duhet t'ju vijë së shpejti."
       complete_username_not_found: "Nuk ka llogari me emër përdoruesi <b>%{username}</b>"
       complete_email_not_found: "Nuk ka llogari për <b>%{email}</b>"
       button_ok: "OK"
@@ -999,7 +997,6 @@ sq:
       view_new_post: "Shikoni postimin tuaj të ri."
       saving: "Duke e ruajtur"
       saved: "U ruajt!"
-      saved_draft: "Keni një postim në shkrim e sipër. Kikoni për të vazhduar. "
       uploading: "Duke ngarkuar..."
       show_preview: "tregoni panelin e parashikimit &raquo;"
       hide_preview: "&laquo; fshiheni panelin e parashikimit"
@@ -1859,15 +1856,6 @@ sq:
           name: Tjetër
         posting:
           name: Postimet
-    google_search: |
-      <h3>Kërko me Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Të gjitha etiketat"
       selector_all_tags: "të gjitha etiketat"

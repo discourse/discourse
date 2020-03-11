@@ -148,6 +148,9 @@ bg:
       visible:
         enabled: "добавена в списъка %{when}"
         disabled: "премахната от списъка %{when}"
+      forwarded: "препрати горния имейл"
+    topic_admin_menu: "действия по темата"
+    wizard_required: "Добре дошли във вашия нов Discourse! Нека започнем с <a href='%{url}' data-auto-route='true'>съветника за настройка</a> ✨"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
     bootstrap_mode_enabled: "За да помогнем със стартирането на вашия нов сайт по-лесно поставихме сайта в \"стартиращо режим\". Всички нови потребители ще получат ниво на доверие 1 и ще имат активирани дневни известия за активноста във форума. Този режим ще бъде автоматично спрян когато бройката регистрирани потребители стигне %{min_users} ."
     themes:
@@ -256,8 +259,17 @@ bg:
       not_bookmarked: "добавете тази публикация в Отметки"
       remove: "Премахнете отметката"
       save: "Запази"
+      reminders:
+        later_today: "По-късно днес <br/>{{date}}"
+        next_business_day: "Следващият работен ден <br/>{{date}}"
+        tomorrow: "Утре <br/>{{date}}"
+        next_week: "Следващата седмица <br/>{{date}}"
+        next_month: "Следващият месец <br/>{{date}}"
     drafts:
+      resume: "Продължи"
       remove: "Премахване"
+      new_topic: "Проект на нова тема"
+      topic_reply: "Проект на отговор"
       abandon:
         yes_value: "Да, напусни"
         no_value: "Не, запази"
@@ -287,38 +299,89 @@ bg:
       edit: "Редактирай този банер >>"
     choose_topic:
       none_found: "Няма нови теми."
+      title:
+        search: "Търсене на тема"
+    choose_message:
+      none_found: "Не са намерени съобщения."
+      title:
+        search: "Търси съобщения"
     review:
       order_by: "Подреди по"
+      in_reply_to: "в отговор на"
       explain:
+        formula: "Формула"
         total: "Общо"
+      awaiting_approval: "Очаква одобрение"
       delete: "Изтрий"
       settings:
         save_changes: "Запази промените"
         title: "Настройки"
+      view_all: "Виж всички"
+      grouped_by_topic: "Групирани по тема"
+      title: "Преглед"
       topic: "Тема:"
       filtered_user: "Потребител"
+      show_all_topics: "покажи всички теми"
       user:
+        bio: "Биография"
+        website: "Уебсайт"
         username: "Потребителско име"
         email: "Имейл"
         name: "Име"
+        fields: "Полета"
+      user_percentage:
+        agreed:
+          one: "{{count}}% са съгласни"
+          other: "{{count}}% са съгласни"
+        disagreed:
+          one: "{{count}}% не са съгласни"
+          other: "{{count}}% не са съгласни"
+        ignored:
+          one: "{{count}}% игнорира"
+          other: "{{count}}% са без отношение"
       topics:
         topic: "Тема"
+        reviewable_count: "Брой"
+        details: "детайли"
+        unique_users:
+          one: "%{count} потребител"
+          other: "{{count}} потребители"
+      replies:
+        one: "%{count} отговор"
+        other: "{{count}} отговора"
       edit: "Редактирай"
       save: "Запази"
       cancel: "Отмени"
       filters:
+        all_categories: "(всички категории)"
         type:
           title: "Тип"
+          all: "(всички видове)"
         refresh: "Опресни"
+        status: "Статус"
         category: "Категория"
+        orders:
+          priority: "Приоритет"
+          priority_asc: "Приоритет (по обратен ред)"
+          created_at: "Създадено на"
+          created_at_asc: "Създадено на (по обратен ред)"
+        priority:
+          medium: "Среден"
+          high: "Висок"
       scores:
+        score: "Точки"
         date: "Дата"
         type: "Тип"
+        status: "Статус"
       statuses:
         pending:
           title: "Чакащи"
+        approved:
+          title: "Одобрена"
         rejected:
           title: "Отхвърлени"
+        deleted:
+          title: "Изтрита"
       types:
         reviewable_user:
           title: "Потребител"
@@ -434,6 +497,11 @@ bg:
       members:
         title: "Членове"
         filter_placeholder: "Потребителско име"
+        remove_member: "Премахни Потребител"
+        remove_member_description: "Премахни <b>%{username}</b> от тази група"
+        make_owner: "Направи Собственик"
+        remove_owner: "Премахни като Собственик"
+        remove_owner_description: "Премахни <b>%{username}</b> като собственик на тази група"
         owner: "Собественик"
       topics: "Теми"
       posts: "Публикации"
@@ -519,6 +587,7 @@ bg:
       topics_entered: "добавени теми"
       post_count: "# публикации"
       confirm_delete_other_accounts: "Сигурни ли сте, че искате да изтриете тези профили?"
+      copied: "копирано"
     user_fields:
       none: "(изберете опция)"
     user:
@@ -962,8 +1031,6 @@ bg:
       reset: "Смяна на паролата"
       complete_username: "Ако профилът съвпада с потребителското име <b>%{username}</b>, трябва да получите имейл с инструкции, как да си смените паролата. "
       complete_email: "Ако профилът съвпада с <b>%{email}</b>, трябва да получите имейл с инструкции, как да си смените паролата. "
-      complete_username_found: "Намерихме профил който съвпада с потребителското име <b>%{username}</b>, трябва да получите имейл с инструкции как да смените паролата."
-      complete_email_found: "Намерихме профил който съвпада с <b>%{email}</b>, трябва да получите имейл с инструкции как да смените паролата."
       complete_username_not_found: "Няма профил, който да съвпада с потребителскоto име <b>%{username}</b>"
       complete_email_not_found: "Няма акаунт който да съвпада с <b>%{email}</b>"
       button_ok: "Ок"
@@ -1076,7 +1143,6 @@ bg:
       view_new_post: "Вижте публикацията."
       saving: "Запаметяване"
       saved: "Запазено!"
-      saved_draft: "Публикацията е налична като чернова. Изберете, за да продължите."
       uploading: "Качва се..."
       show_preview: "покажи прегледa &raquo;"
       hide_preview: "&laquo; скрий прегледa"
@@ -1682,6 +1748,7 @@ bg:
       search_priority:
         options:
           normal: "Нормален"
+          high: "Висок"
       sort_options:
         likes: "Харесвания"
         views: "Преглеждания"
@@ -1933,22 +2000,6 @@ bg:
           name: Други
         posting:
           name: Публикуване
-    google_search: |
-      <h3>Търсене с Google</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "Всички тагове"
       other_tags: "Други тагове"

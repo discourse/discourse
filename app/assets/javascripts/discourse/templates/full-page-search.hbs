@@ -36,39 +36,46 @@
 
         {{#if canBulkSelect}}
           {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
-          {{bulk-select-button selected=selected action=(action "search")}}
+          {{bulk-select-button selected=selected category=category action=(action "search")}}
         {{/if}}
 
         {{#if bulkSelectEnabled}}
           <div class='fps-select'>
-            <a {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
-            <a {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
+            <a href {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
+            <a href {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
           </div>
         {{/if}}
       </div>
 
       <div class='search-info'>
         <div class='result-count'>
-          {{{resultCountLabel}}}
+          {{html-safe resultCountLabel}}
         </div>
         <div class='sort-by'>
           <span class='desc'>
             {{i18n "search.sort_by"}}
           </span>
-          {{combo-box value=sortOrder content=sortOrders castInteger=true}}
+          {{combo-box
+            value=sortOrder
+            content=sortOrders
+            castInteger=true
+            onChange=(action (mut sortOrder))
+          }}
         </div>
       </div>
     {{/if}}
 
     {{plugin-outlet name="full-page-search-below-search-info" args=(hash search=searchTerm)}}
 
-    {{#unless searching}}
+    {{#if searching}}
+      {{loading-spinner size="medium"}}
+    {{else}}
       <div class="search-results">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
           {{#each model.posts as |result|}}
             <div class='fps-result'>
               <div class='author'>
-                <a href={{result.userPath}} data-user-card="{{unbound result.username}}">
+                <a href={{result.userPath}} data-user-card={{result.username}}>
                   {{avatar result imageSize="large"}}
                 </a>
               </div>
@@ -79,8 +86,9 @@
                     {{track-selected selectedList=selected selectedId=result.topic}}
                   {{/if}}
 
-                  <a class='search-link' href='{{unbound result.url}}' {{action "logClick" result.topic_id}}>
-                    {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+                  <a class='search-link' href={{result.url}} {{action "logClick" result.topic_id}}>
+                    {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
+                    <span class='topic-title'>{{#highlight-text highlight=q}}{{html-safe result.topic.fancyTitle}}{{/highlight-text}}</span>
                   </a>
 
                   <div class='search-category'>
@@ -105,7 +113,7 @@
 
                   {{#if result.blurb}}
                     {{#highlight-text highlight=highlightQuery}}
-                      {{{unbound result.blurb}}}
+                      {{html-safe result.blurb}}
                     {{/highlight-text}}
                   {{/if}}
                 </div>
@@ -166,9 +174,7 @@
           {{/conditional-loading-spinner}}
         {{/load-more}}
       </div>
-    {{else}}
-      {{loading-spinner size="medium"}}
-    {{/unless}}
+    {{/if}}
   </div>
 
   <div class="search-advanced-sidebar">
@@ -194,12 +200,19 @@
     {{#if site.mobileView}}
       {{#if expanded}}
         <div class="search-advanced-filters">
-          {{search-advanced-options searchTerm=searchTerm isExpanded=expanded}}
+          {{search-advanced-options
+            searchTerm=searchTerm
+            isExpanded=expanded
+          }}
         </div>
       {{/if}}
     {{else}}
       <div class="search-advanced-filters">
-        {{search-advanced-options searchTerm=searchTerm isExpanded=true}}
+        {{search-advanced-options
+          searchTerm=searchTerm
+          isExpanded=true
+          category=category
+        }}
 
         {{d-button
           label="submit"

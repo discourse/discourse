@@ -1,5 +1,7 @@
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
+import EmberObject from "@ember/object";
+import pretender from "helpers/create-pretender";
 
 moduleForComponent("badge-title", { integration: true });
 
@@ -10,10 +12,10 @@ componentTest("badge title", {
   beforeEach() {
     this.set("subject", selectKit());
     this.set("selectableUserBadges", [
-      Ember.Object.create({
+      EmberObject.create({
         badge: { name: "(none)" }
       }),
-      Ember.Object.create({
+      EmberObject.create({
         id: 42,
         badge_id: 102,
         badge: { name: "Test" }
@@ -22,8 +24,7 @@ componentTest("badge title", {
   },
 
   async test(assert) {
-    /* global server */
-    server.put("/u/eviltrout/preferences/badge_title", () => [
+    pretender.put("/u/eviltrout/preferences/badge_title", () => [
       200,
       { "Content-Type": "application/json" },
       {}

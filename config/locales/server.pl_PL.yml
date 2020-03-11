@@ -287,7 +287,7 @@ pl_PL:
   user_is_suspended: "Zawieszeni użytkownicy nie mogą wysyłać wiadomości."
   topic_not_found: "Coś poszło nie tak. Być może temat został zamknięty lub usunięty w międzyczasie?"
   not_accepting_pms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
-  max_pm_recepients: "Przepraszam, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
+  max_pm_recipients: "Przepraszam, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
   pm_reached_recipients_limit: "Przepraszamy, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
   removed_direct_reply_full_quotes: "Automatycznie usunięto cytowanie całości poprzedzającego wpisu."
   just_posted_that: "jest zbyt podobne do tego co umieściłeś niedawno"
@@ -985,6 +985,8 @@ pl_PL:
       title: "Nowi współtwórcy"
       xaxis: "Dzień"
       yaxis: "Liczba nowych współtwórców"
+    trust_level_growth:
+      yaxis: "Dzień"
     consolidated_page_views:
       title: "Skonsolidowane odsłony"
       xaxis:
@@ -1372,7 +1374,6 @@ pl_PL:
     max_post_deletions_per_day: "Maksymalna liczba wpisów, które użytkownik może usunąć jednego dnia."
     alert_admins_if_errors_per_minute: "Liczba błędów na minutę do zaalarmowania admina. Wartość 0 wyłącza tę funkcjonalność. UWAGA: wymaga restartu."
     alert_admins_if_errors_per_hour: "Liczba błędów na godzinę do zaalarmowania admina. Wartość 0 wyłącza tę funkcjonalność. UWAGA: wymaga restartu."
-    categories_topics: "Liczba wątków do wyświetlenia na stronie /categories."
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
     suggested_topics_max_days_old: "Sugerowane tematy nie powinny być starsze niż n dni."
@@ -1449,12 +1450,10 @@ pl_PL:
     desktop_category_page_style: "Styl wizualny dla strony kategorii."
     category_colors: "Lista kolorów w formacie hex do użycia w etykietach kategorii."
     category_style: "Styl etykiet kategorii"
-    max_image_size_kb: "Maksymalny rozmiar wgrywanego pliku graficznego w kB. Należy to także skonfigurować dla serwera nginx (client_max_body_size) / Apache lub dla proxy."
     max_attachment_size_kb: "Maksymalny rozmiar załącznika w kB. Należy to także skonfigurować dla serwera nginx (client_max_body_size) / Apache lub dla proxy."
     authorized_extensions: "Lista dozwolonych rozszerzeń plików (gwiazdka \"*\" oznacza wszystkie typy plików)"
     theme_authorized_extensions: "Lista dozwolonych rozszerzeń plików dla przesyłania szablonów (gwiazdka \"*\" oznacza wszystkie typy plików)"
     max_similar_results: "Liczba podobnych wątków, jaka zostanie wyświetlona nad oknem edytora podczas tworzenia nowego wątku. Wątki są porównywane na podstawie tytułów i treści."
-    max_image_megapixels: "Maksymalna rozdzielczość pliku graficznego w megapikselach."
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     topic_views_heat_low: "Po tylu wyświetleniach liczba wyświetleń zostanie lekko wyróżniona."
     topic_views_heat_medium: "Po tylu wyświetleniach liczba wyświetleń zostanie wyróżniona."
@@ -1504,7 +1503,6 @@ pl_PL:
     soft_bounce_score: "Wynik odrzucania dodany do użytkownika, gdy ma miejsce tymczasowe odrzucanie."
     hard_bounce_score: "Wynik odrzucania dodany do użytkownika, gdy ma miejsce stałe odrzucanie."
     bounce_score_threshold: "Maksymalny wynik odrzucania przed końcem wysyłania emaili do użytkownika."
-    bounce_score_threshold_deactivate: "Maksymalny wynik odrzucania przed dezaktywacją użytkownika."
     reset_bounce_score_after_days: "Automatyczne resetuj licznik odrzucania po X dniach."
     attachment_content_type_blacklist: "Lista słów kluczowych do blokowania załączników w oparciu o typ zawartości."
     attachment_filename_blacklist: "Lista słów kluczowych do blokowania załączników w oparciu o nazwę pliku."
@@ -1761,7 +1759,6 @@ pl_PL:
     second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
     second_factor_backup_title: "Kod zapasowy weryfikacji dwuskładnikowej"
     second_factor_toggle:
-      totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
       backup_code: "Zamiast tego użyj kodu zapasowego"
   admin:
     email:
@@ -2314,7 +2311,6 @@ pl_PL:
       subject_template: "[%{email_prefix}] Podsumowanie"
       your_email_settings: "twoje ustawienia e‐mail"
       click_here: "kliknij tutaj"
-      from: "%{site_name} podsumowanie"
       preheader: "Podsumowanie aktywności od Twojej ostatniej wizyty w dniu %{last_seen_at}"
     forgot_password:
       title: "Zapomniane hasło"
@@ -2341,13 +2337,6 @@ pl_PL:
     admin_login:
       title: "Logowanie administratora. "
       subject_template: "[%{site_name}] Login"
-      text_body_template: |
-        Ktoś próbował się zalogować na twoje konto [%{site_name}](%{base_url}).
-
-        Jeśli to nie byłeś ty, możesz po prostu zignorować tą wiadomość.
-
-        Naciśnij następujący link, aby się zalogować:
-        %{base_url}/u/admin-login/%{email_token}
     account_created:
       title: "Utworzono Konto"
       subject_template: "[%{site_name}] Twoje Nowe Konto"
@@ -2452,6 +2441,7 @@ pl_PL:
   csv_export:
     boolean_yes: "Tak"
     boolean_no: "Nie"
+    rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
   static_topic_first_reply: |
     Edytuj pierwszy post w tym temacie by zmienić zawartość strony %{page_name}.
   guidelines_topic:
@@ -2779,14 +2769,8 @@ pl_PL:
         Ta odznaka jest przyznawana, gdy otrzymasz przynajmniej 5 polubień na 300 różnych postach. Wow! Społeczność docenia twój częsty i wysokiej jakości wkład w konwersacje.
     out_of_love:
       name: Z miłości
-      description: Użyto 50 polubień w dzień
-      long_description: |
-        Ta odznaka jest przyznawana, gdy wykorzystasz wszystkie 50 polubień danego dnia. Warto zatrzymać się na chwilę i polubić posty, które przypadły ci do gusty i docenić zaangażowanie innych członków społeczności. Tak aby tworzyć coraz lepsze dyskusje w przyszłości.
     higher_love:
       name: Wyższa miłość
-      description: Użyto 50 polubień w dzień 5 razy
-      long_description: |
-        Ta odznaka jest przyznawana, gdy wykorzystasz wszystkie 5 polubień w 5 dni. Dziękujemy, że przyczyniasz się do rozwoju jak najlepszych konwersacji każdego dnia!
     crazy_in_love:
       name: Szaleńczo zakochany
       description: Użyto 50 polubień w dzień 20 razy
@@ -2899,9 +2883,9 @@ pl_PL:
               open:
                 label: "Użytkownicy mogą rejestrować się samodzielnie."
               invite_only:
-                label: "Użytkownicy mogą rejestrować się samodzielnie, ale muszą zostać zaakceptowani przez zespół."
-              must_approve:
                 label: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub członków zespołu, zanim będą mogli się zarejestrować."
+              must_approve:
+                label: "Użytkownicy mogą rejestrować się samodzielnie, ale muszą zostać zaakceptowani przez zespół."
       contact:
         title: "Dane kontaktowe"
         fields:

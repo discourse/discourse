@@ -9,7 +9,11 @@
 
 <div class="control-group pref-timezone">
   <label class="control-label">{{i18n 'user.timezone'}}</label>
-  {{timezone-input value=model.user_option.timezone onSelect=(action (mut model.user_option.timezone)) class="input-xxlarge"}}
+  {{timezone-input
+    value=model.user_option.timezone
+    onChange=(action (mut model.user_option.timezone))
+    class="input-xxlarge"
+  }}
 </div>
 
 <div class="control-group pref-location">
@@ -62,13 +66,13 @@
     <label class="control-label">{{i18n 'user.featured_topic'}}</label>
     {{#if model.featured_topic}}
       <label class="featured-topic-link">
-      {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}{{{model.featured_topic.fancy_title}}}{{/link-to}}
+      {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}{{html-safe model.featured_topic.fancy_title}}{{/link-to}}
       </label>
     {{/if}}
 
     <div>
       {{d-button action=(action "showFeaturedTopicModal")
-        class="btn-primary feature-topic-on-profile-btn"
+        class="btn-default feature-topic-on-profile-btn"
         label="user.feature_topic_on_profile.open_search"}}
       {{#if model.featured_topic}}
         {{d-button action=(action "clearFeaturedTopicFromProfile")
@@ -87,12 +91,8 @@
 
 {{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}
 
-<br/>
+<br>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
-<div class="control-group save-button">
-  <div class="controls">
-    {{partial 'user/preferences/save-button'}}
-  </div>
-</div>
+{{save-controls model=model action=(action "save") saved=saved}}

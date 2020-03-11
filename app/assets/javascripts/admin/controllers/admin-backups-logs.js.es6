@@ -1,8 +1,8 @@
 import { alias } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
+
 export default Controller.extend({
-  adminBackups: inject(),
+  adminBackups: controller(),
   status: alias("adminBackups.model"),
 
   init() {

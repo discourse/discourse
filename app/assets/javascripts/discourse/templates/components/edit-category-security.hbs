@@ -11,7 +11,7 @@
       {{#each category.permissions as |p|}}
         <li>
           <span class="name"><span class="badge-group">{{p.group_name}}</span></span>
-          {{{i18n "category.can"}}}
+          {{i18n "category.can"}}
           <span class="permission">{{p.permission.description}}</span>
           {{#if editingPermissions}}
             <a class="remove-permission" href {{action "removePermission" p}}>{{d-icon "times-circle"}}</a>
@@ -22,18 +22,27 @@
   {{/unless}}
   {{#if editingPermissions}}
     {{#if category.availableGroups}}
-      {{combo-box class="available-groups"
-                  allowInitialValueMutation=true
-                  allowContentReplacement=true
-                  content=category.availableGroups
-                  onSelect=(action "onDropdownChange")
-                  value=selectedGroup}}
-      {{combo-box allowInitialValueMutation=true
-                  class="permission-selector"
-                  nameProperty="description"
-                  content=category.availablePermissions
-                  onSelect=(action "onDropdownChange")
-                  value=selectedPermission}}
+      {{combo-box
+        class="available-groups"
+        content=category.availableGroups
+        onChange=(action "onSelectGroup")
+        value=selectedGroup
+        valueProperty=null
+        nameProperty=null
+        options=(hash
+          placementStrategy="absolute"
+        )
+      }}
+      {{combo-box
+        class="permission-selector"
+        nameProperty="description"
+        content=category.availablePermissions
+        onChange=(action "onSelectPermission")
+        value=selectedPermission
+        options=(hash
+          placementStrategy="absolute"
+        )
+      }}
       {{d-button
         action=(action "addPermission" selectedGroup selectedPermission)
         class="btn-primary add-permission"

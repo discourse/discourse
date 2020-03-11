@@ -1,6 +1,5 @@
-import { get } from "@ember/object";
+import EmberObject, { get } from "@ember/object";
 import { not, notEmpty, equal, and, or } from "@ember/object/computed";
-import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { flushMap } from "discourse/models/store";
 import RestModel from "discourse/models/rest";
@@ -13,8 +12,7 @@ import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
 import { userPath } from "discourse/lib/url";
-import {
-  default as discourseComputed,
+import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
@@ -403,6 +401,9 @@ const Topic = RestModel.extend({
           this.toggleProperty("bookmarked");
           if (bookmark && firstPost) {
             firstPost.set("bookmarked", true);
+            if (this.siteSettings.enable_bookmarks_with_reminders) {
+              firstPost.set("bookmarked_with_reminder", true);
+            }
             return [firstPost.id];
           }
           if (!bookmark && posts) {
@@ -410,7 +411,14 @@ const Topic = RestModel.extend({
             posts.forEach(post => {
               if (post.get("bookmarked")) {
                 post.set("bookmarked", false);
-                updated.push(post.get("id"));
+                updated.push(post.id);
+              }
+              if (
+                this.siteSettings.enable_bookmarks_with_reminders &&
+                post.get("bookmarked_with_reminder")
+              ) {
+                post.set("bookmarked_with_reminder", false);
+                updated.push(post.id);
               }
             });
             return updated;
@@ -425,7 +433,9 @@ const Topic = RestModel.extend({
     const unbookmarkedPosts = [];
     if (!bookmark && posts) {
       posts.forEach(
-        post => post.get("bookmarked") && unbookmarkedPosts.push(post)
+        post =>
+          (post.get("bookmarked") || post.get("bookmarked_with_reminder")) &&
+          unbookmarkedPosts.push(post)
       );
     }
 
@@ -467,16 +477,19 @@ const Topic = RestModel.extend({
 
   // Delete this topic
   destroy(deleted_by) {
-    this.setProperties({
-      deleted_at: new Date(),
-      deleted_by: deleted_by,
-      "details.can_delete": false,
-      "details.can_recover": true
-    });
     return ajax(`/t/${this.id}`, {
       data: { context: window.location.pathname },
       type: "DELETE"
-    });
+    })
+      .then(() => {
+        this.setProperties({
+          deleted_at: new Date(),
+          deleted_by: deleted_by,
+          "details.can_delete": false,
+          "details.can_recover": true
+        });
+      })
+      .catch(popupAjaxError);
   },
 
   // Recover this topic if deleted

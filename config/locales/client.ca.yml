@@ -367,6 +367,7 @@ ca:
       deleted_post: "(publicació suprimida)"
       deleted_user: "(usuari suprimit)"
       user:
+        bio: "Biografia"
         username: "Nom d'usuari"
         email: "Correu electrònic"
         name: "Nom"
@@ -558,7 +559,6 @@ ca:
       leave: "Abandona"
       request: "Sol·licita"
       message: "Missatge"
-      allow_membership_requests: "Permet als usuaris d'enviar sol·licituds d'afiliació als propietaris del grup"
       membership_request_template: "Plantilla personalitzada que es mostra als usuaris quan envien una sol·licitud d'afiliació"
       membership_request:
         submit: "Envia sol·licitud"
@@ -1230,9 +1230,6 @@ ca:
       enabled: "El lloc web és en mode només de lectura. Continueu navegant, però de moment estan desactivades les accions de respondre, 'm'agrada' i altres."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc web es trobi en mode només de lectura."
-    too_few_topics_and_posts_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentTopics}</strong> temes i <strong>%{currentPosts}</strong> publicacions. Els visitants en necessiten més per a llegir i respondre. Recomanem almenys <strong>%{requiredTopics}</strong> temes i <strong>%{requiredPosts}</strong> publicacions. Sols l'equip responsable pot veure aquest missatge."
-    too_few_topics_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentTopics} / </strong> temes. Els visitants en necessiten més per a llegir i respondre. Recomanem almenys <strong>%{requiredTopics}</strong> temes. Sols l'equip responsable pot veure aquest missatge."
-    too_few_posts_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentPosts} </strong> publicacions. Els visitants en necessiten més per a llegir i respondre.  Recomanem almenys <strong>%{requiredPosts}</strong> publicacions. Sols l'equip responsable pot veure aquest missatge."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora} </a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}."
@@ -1303,8 +1300,6 @@ ca:
       reset: "Restableix la contrasenya"
       complete_username: "Si hi ha algun compte que correspongui a l'usuari <b>%{username}</b>, hauríeu de rebre aviat un correu amb instruccions per a restablir la contrasenya."
       complete_email: "Si hi ha algun compte que correspon a l'adreça <b>%{email}</b>, hauríeu de rebre aviat un correu amb instruccions per a restablir la contrasenya."
-      complete_username_found: "Hem trobat un compte corresponent al nom d'usuari <b>%{username}</b>. Hauríeu de rebre ben aviat un correu amb instruccions per a restablir la contrasenya."
-      complete_email_found: "Hem trobat el compte corresponent a l'adreça <b>%{email}</b>. Hauríeu de rebre aviat un correu amb instruccions per a restablir la contrasenya."
       complete_username_not_found: "No hi ha cap compte que coincideixi amb el nom d'usuari <b>%{username}</b>"
       complete_email_not_found: "Cap compte no coincideix amb <b>%{email}</b>"
       help: "No arriba el correu? Comproveu primer la carpeta de correu brossa. <p>No esteu segur de quina adreça heu fet servir? Introduïu una adreça i us farem saber si existeix.</p> <p>Si ja no teniu accés a l'adreça del vostre compte, poseu-vos en contacte amb <a href='%{basePath}/about'>el nostre equip responsable</a></p>."
@@ -1526,7 +1521,6 @@ ca:
       view_new_post: "Mostra la nova publicació."
       saving: "Desant"
       saved: "Desat!"
-      saved_draft: "Esborrany de publicació en progrés. Seleccioneu-lo per a continuar."
       uploading: "Carregant..."
       show_preview: "mostra la previsualització &raquo; "
       hide_preview: "&laquo; amaga la previsualització"
@@ -2565,6 +2559,7 @@ ca:
         help: "Aquest tema no és visible; no es mostrarà en la llista de temes i només és accessible amb un enllaç directe."
       personal_message:
         title: "Aquest tema és un missatge personal"
+        help: "Aquest tema és un missatge personal"
     posts: "Publicacions"
     posts_long: "hi ha {{number}} publicacions a aquest tema"
     posts_likes_MF: |
@@ -2777,15 +2772,6 @@ ca:
           name: Altres
         posting:
           name: Publicant
-    google_search: |
-      <h3>Cerca amb Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Totes les etiquetes"
       other_tags: "Altres etiquetes"

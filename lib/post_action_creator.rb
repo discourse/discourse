@@ -48,10 +48,8 @@ class PostActionCreator
     @meta_post = nil
   end
 
-  def perform
-    result = CreateResult.new
-
-    unless guardian.post_can_act?(
+  def post_can_act?
+    guardian.post_can_act?(
       @post,
       @post_action_name,
       opts: {
@@ -59,12 +57,25 @@ class PostActionCreator
         taken_actions: PostAction.counts_for([@post].compact, @created_by)[@post&.id]
       }
     )
+  end
+
+  def perform
+    result = CreateResult.new
+
+    unless post_can_act?
       result.forbidden = true
       result.add_error(I18n.t("invalid_access"))
       return result
     end
 
     PostAction.limit_action!(@created_by, @post, @post_action_type_id)
+
+    reviewable = Reviewable.includes(:reviewable_scores).find_by(target: @post)
+
+    if reviewable && flagging_post? && cannot_flag_again?(reviewable)
+      result.add_error(I18n.t("reviewables.already_handled"))
+      return result
+    end
 
     # create meta topic / post if needed
     if @message.present? && [:notify_moderators, :notify_user, :spam].include?(@post_action_name)
@@ -115,6 +126,19 @@ class PostActionCreator
 
 private
 
+  def flagging_post?
+    PostActionType.notify_flag_type_ids.include?(@post_action_type_id)
+  end
+
+  def cannot_flag_again?(reviewable)
+    return false if @post_action_type_id == PostActionType.types[:notify_moderators]
+    flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id }
+    not_edited_since_last_review = @post.last_version_at.blank? || reviewable.updated_at > @post.last_version_at
+    handled_recently = reviewable.updated_at > SiteSetting.cooldown_hours_until_reflag.to_i.hours.ago
+
+    !reviewable.pending? && flag_type_already_used && not_edited_since_last_review && handled_recently
+  end
+
   def notify_subscribers
     if self.class.notify_types.include?(@post_action_name)
       @post.publish_change_to_clients! :acted
@@ -157,9 +181,11 @@ private
 
     # Special case: If you have TL3 and the user is TL0, and the flag is spam,
     # hide it immediately.
-    if @post_action_name == :spam &&
+    if SiteSetting.high_trust_flaggers_auto_hide_posts &&
+        @post_action_name == :spam &&
         @created_by.has_trust_level?(TrustLevel[3]) &&
         @post.user&.trust_level == TrustLevel[0]
+
       @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
       return
     end
@@ -261,7 +287,7 @@ private
   end
 
   def create_reviewable(result)
-    return unless PostActionType.notify_flag_type_ids.include?(@post_action_type_id)
+    return unless flagging_post?
     return if @post.user_id.to_i < 0
 
     result.reviewable = ReviewableFlaggedPost.needs_review!(

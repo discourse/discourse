@@ -10,15 +10,32 @@ var define, requirejs;
   if (typeof Ember !== "undefined") {
     EMBER_MODULES = {
       jquery: { default: $ },
-      "@ember/component": { default: Ember.Component },
+      "@ember/array": {
+        default: Ember.Array,
+        A: Ember.A,
+        isArray: Ember.isArray
+      },
+      "@ember/array/proxy": {
+        default: Ember.ArrayProxy
+      },
+      "@ember/component": {
+        default: Ember.Component,
+        TextArea: Ember.TextArea,
+        TextField: Ember.TextField
+      },
       "@ember/controller": {
         default: Ember.Controller,
         inject: Ember.inject.controller
       },
+      "@ember/debug": {
+        warn: Ember.warn
+      },
       "@ember/object": {
+        action: Ember._action,
         default: Ember.Object,
         get: Ember.get,
         getProperties: Ember.getProperties,
+        guidFor: Ember.guidFor,
         set: Ember.set,
         setProperties: Ember.setProperties,
         computed: Ember.computed,
@@ -60,8 +77,12 @@ var define, requirejs;
       },
       "@ember/object/mixin": { default: Ember.Mixin },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
-      "@ember/object/evented": { on: Ember.on },
+      "@ember/object/evented": {
+        default: Ember.Evented,
+        on: Ember.on
+      },
       "@ember/routing/route": { default: Ember.Route },
+      "@ember/routing/router": { default: Ember.Router },
       "@ember/runloop": {
         bind: Ember.run.bind,
         cancel: Ember.run.cancel,
@@ -79,8 +100,10 @@ var define, requirejs;
         inject: Ember.inject.service
       },
       "@ember/utils": {
+        isBlank: Ember.isBlank,
         isEmpty: Ember.isEmpty,
-        isNone: Ember.isNone
+        isNone: Ember.isNone,
+        isPresent: Ember.isPresent
       },
       rsvp: {
         default: Ember.RSVP,
@@ -99,6 +122,7 @@ var define, requirejs;
         htmlSafe: Ember.String.htmlSafe
       },
       "@ember/application": {
+        default: Ember.Application,
         setOwner: Ember.setOwner,
         getOwner: Ember.getOwner
       },
@@ -107,6 +131,9 @@ var define, requirejs;
       },
       "@ember/error": {
         default: Ember.error
+      },
+      "@ember/object/internals": {
+        guidFor: Ember.guidFor
       }
     };
   }

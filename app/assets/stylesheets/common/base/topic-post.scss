@@ -597,13 +597,11 @@ pre {
 }
 
 kbd {
-  background-color: $secondary;
-  border: 1px solid $primary-low;
   border-radius: 3px;
   box-shadow: shadow("kbd");
-  background: dark-light-choose(#fafafa, #333);
-  border: 1px solid dark-light-choose(#ccc, #555);
-  border-bottom: medium none dark-light-choose(#fff, #000);
+  background: dark-light-choose(#fafafa, #303030);
+  border: 1px solid dark-light-choose(#d0d0d0, #505050);
+  border-bottom: none;
 
   color: $primary;
   display: inline-block;
@@ -758,14 +756,34 @@ blockquote > *:last-child {
   }
 }
 
-a.mention,
-a.mention-group {
-  padding: 2px 4px;
-  color: dark-light-choose($primary-high, $secondary-low);
-  background: $primary-low;
-  border-radius: 8px;
+a.mention {
   font-weight: bold;
   font-size: 0.93em;
+  color: $primary;
+  color: dark-light-choose($primary-high, $secondary-low);
+  padding: 2px 4px;
+  background: $primary-low;
+  border-radius: 8px;
+}
+
+span.mention {
+  font-weight: bold;
+  font-size: 0.93em;
+  color: $primary;
+}
+
+a.mention-group {
+  font-weight: bold;
+  font-size: 0.93em;
+  color: $primary;
+
+  &.notify,
+  .small-action-desc & {
+    color: dark-light-choose($primary-high, $secondary-low);
+    padding: 2px 4px;
+    background: $primary-low;
+    border-radius: 8px;
+  }
 }
 
 .popup-menu {
@@ -826,12 +844,14 @@ a.mention-group {
   }
 }
 
-.broken-image,
-.large-image {
+.broken-image {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
   font-size: $font-up-5;
-  padding: 16px;
+
+  .d-icon {
+    margin: 16px;
+  }
 }
 
 /* below standard tablet portrait ----------- */

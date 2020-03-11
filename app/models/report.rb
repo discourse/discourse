@@ -99,12 +99,15 @@ class Report
 
   def as_json(options = nil)
     description = I18n.t("reports.#{type}.description", default: "")
+    description_link = I18n.t("reports.#{type}.description_link", default: "")
+
     {
       type: type,
       title: I18n.t("reports.#{type}.title", default: nil),
       xaxis: I18n.t("reports.#{type}.xaxis", default: nil),
       yaxis: I18n.t("reports.#{type}.yaxis", default: nil),
       description: description.presence ? description : nil,
+      description_link: description_link.presence ? description_link : nil,
       data: data,
       start_date: start_date&.iso8601,
       end_date: end_date&.iso8601,
@@ -380,3 +383,4 @@ require_relative "reports/time_to_first_response"
 require_relative "reports/topics_with_no_response"
 require_relative "reports/emails"
 require_relative "reports/web_crawlers"
+require_relative "reports/trust_level_growth"

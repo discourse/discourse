@@ -436,7 +436,6 @@ pt:
       leave: "Sair"
       request: "Pedir"
       message: "Mensagem"
-      allow_membership_requests: "Permitir que os utilizadores enviem pedidos de adesão aos donos do grupo"
       membership_request_template: "Template personalizado para mostrar aos utilizadores quando for enviado um pedido de adesão"
       membership_request:
         submit: "Submeter Pedido"
@@ -1121,8 +1120,6 @@ pt:
       reset: "Repor Palavra-passe"
       complete_username: "Se uma conta corresponder ao nome de utilizador <b>%{username}</b>, deverá receber em pouco tempo uma mensagem com as instruções para repor a sua palavra-passe."
       complete_email: "Se uma conta corresponder com<b>%{email}</b>, deverá receber em pouco tempo uma mensagem com as instruções para repor a sua palavra-passe."
-      complete_username_found: "Nós encontrámos uma conta que corresponde ao nome de utilizador <b>%{username}</b>, deverá receber em pouco tempo uma mensagem com as instruções para repor a sua palavra-passe."
-      complete_email_found: "Nós encontrámos uma conta que corresponde com <b>%{email}</b>, deverá receber em breve uma mensagem com as instruções para repor a sua palavra-passe."
       complete_username_not_found: "Nenhuma conta correspondente com o nome de utilizador <b>%{username}</b>"
       complete_email_not_found: "Nenhuma conta correspondente com <b>%{email}</b>"
       help: "A mensagem não chega? Certifique-se de que verifica primeiro a sua pasta de spam.<p>Não tem a certeza de qual o endereço de e-mail que utilizou? Digite um endereço de e-mail e nós iremos dizer-lhe se ele existe aqui.</p><p>Se já não tiver acesso ao endereço de e-mail da sua conta, por favor, contacte <a href='%{basePath}/about'>a nossa equipa de apoio.</a></p>"
@@ -1317,7 +1314,6 @@ pt:
       view_new_post: "Ver a sua nova publicação."
       saving: "A Guardar"
       saved: "Guardado!"
-      saved_draft: "Rascunho da publicação em progresso. Selecione para continuar."
       uploading: "A enviar…"
       show_preview: "mostrar pré-visualização &raquo;"
       hide_preview: "&laquo; ocultar pré-visualização"
@@ -2395,23 +2391,6 @@ pt:
           name: Outros
         posting:
           name: A publicar
-    google_search: |2
-
-      <h3>Pesquisar com o Google</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "Todas as Etiquetas"
       selector_all_tags: "todas as etiquetas"

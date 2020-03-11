@@ -1,0 +1,11 @@
+{{#each tags as |tag|}}
+  {{#d-button
+    translatedTitle=tag.value
+    icon="times"
+    action=(action "deselectTag")
+    actionParam=tag.value
+    class=tag.classNames
+  }}
+    {{discourse-tag tag.value noHref=true}}
+  {{/d-button}}
+{{/each}}

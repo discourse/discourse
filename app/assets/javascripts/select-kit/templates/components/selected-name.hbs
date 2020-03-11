@@ -1,0 +1,26 @@
+{{#if selectKit.options.showFullTitle}}
+  {{#if item.icon}}
+    {{d-icon item.icon}}
+  {{/if}}
+
+  <span class="name">
+    {{label}}
+  </span>
+
+  {{#if selectKit.options.clearOnClick}}
+    {{d-icon "times"}}
+  {{else}}
+    {{#if shouldDisplayClearableButton}}
+      {{d-button
+        class="btn-clear"
+        icon="times"
+        action=selectKit.deselect
+        actionParam=item
+      }}
+    {{/if}}
+  {{/if}}
+{{else}}
+  {{#if item.icon}}
+    {{d-icon item.icon}}
+  {{/if}}
+{{/if}}

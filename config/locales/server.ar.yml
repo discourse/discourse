@@ -33,7 +33,7 @@ ar:
   submit: "أرسل"
   purge_reason: "حُذف آليًّا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
-  anonymous: "متخفي"
+  anonymous: "مجهول"
   remove_posts_deleted_by_author: "حذفها الكاتب"
   themes:
     other_error: "حصل خطأ عند تحديث الواجهة"
@@ -238,6 +238,9 @@ ar:
   too_late_to_edit: "هذا المنشور أُنشأ منذ فترة طويلة جدًّا، لم يعد ممكناً تعديلة او حذفة."
   revert_version_same: "ألاصدار الحالي يتطابق مع نفس ألاصدار الذي تحاول استرجاعه ."
   excerpt_image: "صورة"
+  bookmarks:
+    reminders:
+      at_desktop: "في المرة القادمة سأكون عند مكتبي"
   groups:
     errors:
       can_not_modify_automatic: "لا يمكنك تعديل مجموعة تم انشائها تلقائيا"
@@ -720,6 +723,8 @@ ar:
       xaxis: "اليوم"
     new_contributors:
       xaxis: "اليوم"
+    trust_level_growth:
+      yaxis: "اليوم"
     consolidated_page_views:
       yaxis: "اليوم"
       labels:
@@ -1030,7 +1035,6 @@ ar:
     max_invites_per_day: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم."
     max_topic_invitations_per_day: "أقصى عدد لدعوات الموضوع التي يمكن للعضو إرسالها باليوم."
     alert_admins_if_errors_per_minute: "عدد الأخطاء في الدقيقة الواحدة لكى يرسل تنبيه للمدير. قيمة 0 تعطل هذه الميزة. ملاحظة: تتطلب إعادة تشغيل."
-    categories_topics: "عدد الموضوعات التي تظهر في صفحة الأقسام."
     suggested_topics: "عدد الموضوعات المقترحة التي تظهر في أسفل الموضوع."
     limit_suggested_to_category: "أظهر فقط الموضوعات من القسم الحالي في الموضوعات المقترحة."
     suggested_topics_max_days_old: "الموضوعات المقترحة لا يجب ان تكون اقدم من هذا العدد من الايام."
@@ -1082,7 +1086,6 @@ ar:
     desktop_category_page_style: "أسلوب العرض لصفحة الأقسام."
     category_colors: "قائمة الألوان المسموحة لتمييز الأقسام بترميز الhexadecimal."
     category_style: "أسلوب العرض لشارة القسم."
-    max_image_size_kb: "الحجم الاقص لتحميل صوره بالكيلو بايت.هذا يجب ضبطه في nginx (client_max_body_size) /اباتشي او البروكسي"
     max_attachment_size_kb: "أقصى حجم لتحميل المرفقات الملفات بالكيلوبايت. وهذا يجب أن يتم تكوينه في nginx (client_max_body_size) / أباتشي أو الوكيل. "
     authorized_extensions: "قائمة بالملفات المسموح رفعها (أستخدم '*' للسماح لجميع الأنواع)"
     max_similar_results: "عدد المواضيع المشابهة لتُعرض فوق المحرّر عند إنشاء موضوع جديد. المقارنة تعتمد عنوان الموضوع ومتنه."
@@ -1504,6 +1507,7 @@ ar:
   csv_export:
     boolean_yes: "نعم"
     boolean_no: "لا"
+    rate_limit_error: "يمكن تنزيل المنشورات مرة واحدة يوميا فقط. رجاء أعد المحاولة غدًا."
   static_topic_first_reply: |
     تعديل محتويات المنشور الاول في هذا الموضوع %{page_name} page.
   guidelines_topic:
@@ -1714,14 +1718,8 @@ ar:
         تُمنح هذة الشارة عندما تتلقي علي الأقل 5 اعجابات علي 300 منشور مختلف. المجتمع يعشق منشوراتك البناءة في المناقشات.
     out_of_love:
       name: مُحب
-      description: نشرت 50 اعجابا في يوم
-      long_description: |
-        تُمنح هذة الشارة عندما تقوم بعمل 50 اعجاب في يوم واحد. تذكر ان الإعجاب بالمنشورات المفيدة يشجع رفاقك بالمجتمع علي الاستمرار في اثراء المجتمع بالنقاشات البناءة.
     higher_love:
       name: مُحب كبير
-      description: نشرت 50 اعجابا يوميا لمده خمس ايام
-      long_description: |
-        تُمنح هذة الشارة عندما تقوم بعمل 50 اعجاب يوميا لمدة خمس ايام. شكرا لاستثمارك بعض الوقت في تشجيع رفاقك بالمجتمع.
     crazy_in_love:
       name: مُحب مجنون
       description: نشرت 50 اعجابا يوميا لمدة 20 يوم

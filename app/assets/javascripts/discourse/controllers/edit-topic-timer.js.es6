@@ -1,10 +1,9 @@
-import EmberObject from "@ember/object";
+import EmberObject, { setProperties } from "@ember/object";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { setProperties } from "@ember/object";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const OPEN_STATUS_TYPE = "open";
@@ -100,13 +99,19 @@ export default Controller.extend(ModalFunctionality, {
           });
         }
       })
-      .catch(error => {
-        popupAjaxError(error);
-      })
+      .catch(popupAjaxError)
       .finally(() => this.set("loading", false));
   },
 
   actions: {
+    onChangeStatusType(value) {
+      this.set("topicTimer.status_type", value);
+    },
+
+    onChangeUpdateTime(value) {
+      this.set("topicTimer.updateTime", value);
+    },
+
     saveTimer() {
       if (!this.get("topicTimer.updateTime")) {
         this.flash(

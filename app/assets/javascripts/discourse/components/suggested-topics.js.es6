@@ -1,25 +1,21 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { get } from "@ember/object";
+import { computed, get } from "@ember/object";
 import Component from "@ember/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import Site from "discourse/models/site";
 
 export default Component.extend({
   elementId: "suggested-topics",
   classNames: ["suggested-topics"],
 
-  @discourseComputed("topic")
-  suggestedTitle(topic) {
-    const href = this.currentUser && this.currentUser.pmPath(topic);
-    return topic.get("isPrivateMessage") && href
-      ? `<a href="${href}" aria-label="${I18n.t(
-          "user.messages.inbox"
-        )}>${iconHTML("envelope", {
-          class: "private-message-glyph"
-        })}</a><span>${I18n.t("suggested_topics.pm_title")}</span>`
-      : I18n.t("suggested_topics.title");
-  },
+  suggestedTitleLabel: computed("topic", function() {
+    const href = this.currentUser && this.currentUser.pmPath(this.topic);
+    if (this.topic.get("isPrivateMessage") && href) {
+      return "suggested_topics.pm_title";
+    } else {
+      return "suggested_topics.title";
+    }
+  }),
 
   @discourseComputed("topic", "topicTrackingState.messageCount")
   browseMoreMessage(topic) {

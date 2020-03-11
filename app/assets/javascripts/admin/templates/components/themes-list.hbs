@@ -1,10 +1,17 @@
 <div class="themes-list-header">
-  <div {{action "changeView" THEMES}} class="themes-tab tab {{if themesTabActive 'active' ''}}">
-    {{I18n "admin.customize.theme.title"}}
-  </div><div {{action "changeView" COMPONENTS}} class="components-tab tab {{if componentsTabActive 'active' ''}}">
-    {{d-icon "puzzle-piece"}}
-    {{I18n "admin.customize.theme.components"}}
-  </div>
+  {{d-button
+    action=(action "changeView")
+    actionParam=THEMES
+    class=(concat "themes-tab " "tab " (if themesTabActive 'btn-danger active' ''))
+    label="admin.customize.theme.title"
+  }}
+  {{d-button
+    action=(action "changeView")
+    actionParam=COMPONENTS
+    class=(concat "components-tab " "tab " (if componentsTabActive 'btn-danger active' ''))
+    label="admin.customize.theme.components"
+    icon="puzzle-piece"
+  }}
 </div>
 
 <div class="themes-list-container">
@@ -18,9 +25,9 @@
         <div class="themes-list-item inactive-indicator">
           <span class="empty">
             {{#if themesTabActive}}
-              {{I18n "admin.customize.theme.inactive_themes"}}
+              {{i18n "admin.customize.theme.inactive_themes"}}
             {{else}}
-              {{I18n "admin.customize.theme.inactive_components"}}
+              {{i18n "admin.customize.theme.inactive_components"}}
             {{/if}}
           </span>
         </div>
@@ -34,7 +41,7 @@
     {{/if}}
   {{else}}
     <div class="themes-list-item">
-      <span class="empty">{{I18n "admin.customize.theme.empty"}}</span>
+      <span class="empty">{{i18n "admin.customize.theme.empty"}}</span>
     </div>
   {{/if}}
 

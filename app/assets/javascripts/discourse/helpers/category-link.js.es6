@@ -25,7 +25,9 @@ function categoryStripe(color, classes) {
     @param {String}  [opts.url] The url that we want the category badge to link to.
     @param {Boolean} [opts.allowUncategorized] If false, returns an empty string for the uncategorized category.
     @param {Boolean} [opts.link] If false, the category badge will not be a link.
-    @param {Boolean} [opts.hideParaent] If true, parent category will be hidden in the badge.
+    @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
+    @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
+    @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
 **/
 export function categoryBadgeHTML(category, opts) {
   opts = opts || {};
@@ -37,6 +39,13 @@ export function categoryBadgeHTML(category, opts) {
       Discourse.SiteSettings.suppress_uncategorized_badge)
   )
     return "";
+
+  const depth = (opts.depth || 1) + 1;
+  if (opts.recursive && depth <= Discourse.SiteSettings.max_category_nesting) {
+    const parentCategory = Category.findById(category.parent_category_id);
+    opts.depth = depth;
+    return categoryBadgeHTML(parentCategory, opts) + _renderer(category, opts);
+  }
 
   return _renderer(category, opts);
 }
@@ -66,6 +75,9 @@ export function categoryLinkHTML(category, options) {
     if (options.categoryStyle) {
       categoryOptions.categoryStyle = options.categoryStyle;
     }
+    if (options.recursive) {
+      categoryOptions.recursive = true;
+    }
   }
   return new Handlebars.SafeString(
     categoryBadgeHTML(category, categoryOptions)
@@ -73,6 +85,13 @@ export function categoryLinkHTML(category, options) {
 }
 
 registerUnbound("category-link", categoryLinkHTML);
+
+function buildTopicCount(count) {
+  return `<span class="topic-count" aria-label="${I18n.t(
+    "category_row.topic_count",
+    { count }
+  )}">&times; ${count}</span>`;
+}
 
 function defaultCategoryLinkRenderer(category, opts) {
   let descriptionText = get(category, "description_text");
@@ -139,10 +158,19 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
   html += "</span>";
 
+  if (opts.topicCount && categoryStyle !== "box") {
+    html += buildTopicCount(opts.topicCount);
+  }
+
   if (href) {
     href = ` href="${href}" `;
   }
 
   extraClasses = categoryStyle ? categoryStyle + extraClasses : extraClasses;
-  return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>`;
+
+  let afterBadgeWrapper = "";
+  if (opts.topicCount && categoryStyle === "box") {
+    afterBadgeWrapper += buildTopicCount(opts.topicCount);
+  }
+  return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }

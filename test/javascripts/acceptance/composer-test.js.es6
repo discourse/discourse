@@ -2,17 +2,13 @@ import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import Draft from "discourse/models/draft";
+import { Promise } from "rsvp";
 
 acceptance("Composer", {
   loggedIn: true,
-  pretend(server, helper) {
-    server.get("/draft.json", () => {
-      return helper.response({
-        draft: null,
-        draft_sequence: 42
-      });
-    });
-    server.post("/uploads/lookup-urls", () => {
+  pretend(pretenderServer, helper) {
+    pretenderServer.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });
   },
@@ -447,6 +443,8 @@ QUnit.test("Composer can toggle whispers", async assert => {
 
   await click(".toggle-fullscreen");
 
+  await menu.expand();
+
   assert.ok(
     menu.rowByValue("toggleWhisper").exists(),
     "whisper toggling is still present when going fullscreen"
@@ -615,14 +613,6 @@ QUnit.test("Checks for existing draft", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    // prettier-ignore
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-        draft_sequence: 42
-      } ];
-    });
-
     await visit("/t/internationalization-localization/280");
 
     await click(".topic-post:eq(0) button.show-more-actions");
@@ -638,29 +628,28 @@ QUnit.test("Checks for existing draft", async assert => {
 
 QUnit.test("Can switch states without abandon popup", async assert => {
   try {
-    const composerActions = selectKit(".composer-actions");
     toggleCheckDraftPopup(true);
 
     await visit("/t/internationalization-localization/280");
 
     const longText = "a".repeat(256);
 
+    sandbox.stub(Draft, "get").returns(
+      Promise.resolve({
+        draft: null,
+        draft_sequence: 0
+      })
+    );
+
     await click(".btn-primary.create.btn");
 
     await fillIn(".d-editor-input", longText);
 
-    // prettier-ignore
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-        draft_sequence: 42
-      } ];
-    });
-
     await click("article#post_3 button.reply");
 
+    const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
-    await composerActions.selectRowByValue("reply_to_topic");
+    await composerActions.selectRowByValue("reply_as_private_message");
 
     assert.equal(
       find(".modal-body").text(),
@@ -668,9 +657,10 @@ QUnit.test("Can switch states without abandon popup", async assert => {
       "abandon popup shouldn't come"
     );
 
-    assert.equal(
-      find(".d-editor-input").val(),
-      longText,
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .includes(longText),
       "entered text should still be there"
     );
 
@@ -683,19 +673,20 @@ QUnit.test("Can switch states without abandon popup", async assert => {
   } finally {
     toggleCheckDraftPopup(false);
   }
+  sandbox.restore();
 });
 
 QUnit.test("Loading draft also replaces the recipients", async assert => {
   try {
     toggleCheckDraftPopup(true);
 
-    // prettier-ignore
-    server.get("/draft.json", () => { // eslint-disable-line no-undef
-      return [ 200, { "Content-Type": "application/json" }, {
-         "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
-         "draft_sequence":0
-      } ];
-    });
+    sandbox.stub(Draft, "get").returns(
+      Promise.resolve({
+        draft:
+          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"usernames":"codinghorror","composerTime":9159,"typingTime":2500}',
+        draft_sequence: 0
+      })
+    );
 
     await visit("/u/charlie");
     await click("button.compose-pm");
@@ -763,13 +754,15 @@ QUnit.test("Image resizing buttons", async assert => {
     // 10 Image with markdown title - should work
     `![image|690x220](upload://test.png "image title")`,
     // 11 bbcode - should not work
-    "[img]http://example.com/image.jpg[/img]"
+    "[img]http://example.com/image.jpg[/img]",
+    // 12 Image with data attributes
+    "![test|foo=bar|690x313,50%|bar=baz](upload://test.png)"
   ];
 
   await fillIn(".d-editor-input", uploads.join("\n"));
 
   assert.ok(
-    find(".button-wrapper").length === 9,
+    find(".button-wrapper").length === 10,
     "it adds correct amount of scaling button groups"
   );
 
@@ -814,6 +807,13 @@ QUnit.test("Image resizing buttons", async assert => {
   uploads[10] = `![image|690x220, 75%](upload://test.png "image title")`;
   await click(
     find(".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']")
+  );
+  assertImageResized(assert, uploads);
+
+  // Keep data attributes
+  uploads[12] = `![test|foo=bar|690x313, 75%|bar=baz](upload://test.png)`;
+  await click(
+    find(".button-wrapper[data-image-index='9'] .scale-btn[data-scale='75']")
   );
   assertImageResized(assert, uploads);
 

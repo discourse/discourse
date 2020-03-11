@@ -1,9 +1,11 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
+import pretender from "helpers/create-pretender";
 
 acceptance("Admin - User Index", {
   loggedIn: true,
-  pretend(server, helper) {
-    server.get("/groups/search.json", () => {
+  pretend(pretenderServer, helper) {
+    pretenderServer.get("/groups/search.json", () => {
       return helper.response([
         {
           id: 42,
@@ -34,8 +36,7 @@ acceptance("Admin - User Index", {
 });
 
 QUnit.test("can edit username", async assert => {
-  /* global server */
-  server.put("/users/sam/preferences/username", () => [
+  pretender.put("/users/sam/preferences/username", () => [
     200,
     { "Content-Type": "application/json" },
     { id: 2, username: "new-sam" }
@@ -84,15 +85,10 @@ QUnit.test("will clear unsaved groups when switching user", async assert => {
     "the name should be correct"
   );
 
-  await fillIn(".admin-group-selector .filter-input", "Macdonald");
-  await click(".admin-group-selector .filter-input");
-  await keyEvent(".admin-group-selector .filter-input", "keydown", 13);
-
-  assert.equal(
-    find('.admin-group-selector span[title="Macdonald"]').length,
-    1,
-    "group should be set"
-  );
+  const groupSelector = selectKit(".admin-group-selector");
+  await groupSelector.expand();
+  await groupSelector.selectRowByValue(42);
+  assert.equal(groupSelector.header().value(), 42, "group should be set");
 
   await visit("/admin/users/1/eviltrout");
 

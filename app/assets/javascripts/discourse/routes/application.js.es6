@@ -1,5 +1,4 @@
-import { once } from "@ember/runloop";
-import { next } from "@ember/runloop";
+import { next, once } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
@@ -157,11 +156,22 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
     // Close the current modal, and destroy its state.
     closeModal() {
-      this.render("hide-modal", { into: "modal", outlet: "modalBody" });
-
       const route = getOwner(this).lookup("route:application");
       let modalController = route.controllerFor("modal");
       const controllerName = modalController.get("name");
+
+      if (controllerName) {
+        const controller = getOwner(this).lookup(
+          `controller:${controllerName}`
+        );
+        if (controller && controller.beforeClose) {
+          if (false === controller.beforeClose()) {
+            return;
+          }
+        }
+      }
+
+      this.render("hide-modal", { into: "modal", outlet: "modalBody" });
 
       if (controllerName) {
         const controller = getOwner(this).lookup(

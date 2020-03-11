@@ -207,6 +207,25 @@ QUnit.test(
   }
 );
 
+QUnit.test("Suggested topics", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  assert.equal(
+    find("#suggested-topics .suggested-topics-title")
+      .text()
+      .trim(),
+    I18n.t("suggested_topics.title")
+  );
+});
+
+QUnit.skip("Deleting a topic", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".topic-post:eq(0) button.show-more-actions");
+  await click(".widget-button.delete");
+
+  assert.ok(exists(".widget-button.recover"), "it shows the recover button");
+});
+
 acceptance("Topic featured links", {
   loggedIn: true,
   settings: {
@@ -306,4 +325,36 @@ QUnit.test("View Hidden Replies", async assert => {
   await click(".gap");
 
   assert.equal(find(".gap").length, 0, "it hides gap");
+});
+
+QUnit.test("Quoting a quote keeps the original poster name", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  const selection = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents($("#post_5 blockquote")[0]);
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  await click(".quote-button");
+
+  assert.ok(
+    find(".d-editor-input")
+      .val()
+      .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+  );
+});
+
+acceptance("Topic + Post Bookmarks with Reminders", {
+  loggedIn: true,
+  settings: {
+    enable_bookmarks_with_reminders: true
+  }
+});
+
+QUnit.test("Bookmarks Modal", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".topic-post:first-child button.show-more-actions");
+  await click(".topic-post:first-child button.bookmark");
+  assert.ok(exists("#bookmark-reminder-modal"), "it shows the bookmark modal");
 });

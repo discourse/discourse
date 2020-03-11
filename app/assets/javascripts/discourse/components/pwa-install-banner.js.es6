@@ -1,9 +1,6 @@
 import { bind } from "@ember/runloop";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 

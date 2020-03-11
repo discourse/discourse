@@ -1,7 +1,9 @@
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import { isBlank } from "@ember/utils";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   userModes: [
     { id: "all", name: I18n.t("admin.api.all_users") },
     { id: "single", name: I18n.t("admin.api.single_user") }
@@ -14,8 +16,8 @@ export default Ember.Controller.extend({
 
   @discourseComputed("model.description", "model.username", "userMode")
   saveDisabled(description, username, userMode) {
-    if (Ember.isBlank(description)) return true;
-    if (userMode === "single" && Ember.isBlank(username)) return true;
+    if (isBlank(description)) return true;
+    if (userMode === "single" && isBlank(username)) return true;
     return false;
   },
 

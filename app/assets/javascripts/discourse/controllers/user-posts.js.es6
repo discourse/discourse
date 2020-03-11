@@ -1,9 +1,11 @@
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-export default Controller.extend({
-  application: inject(),
+import Controller, { inject as controller } from "@ember/controller";
+import { observes } from "discourse-common/utils/decorators";
 
+export default Controller.extend({
+  application: controller(),
+
+  @observes("model.canLoadMore")
   _showFooter: function() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
-  }.observes("model.canLoadMore")
+  }
 });

@@ -135,8 +135,7 @@ basic:
     default: false
   categories_topics:
     default: 20
-    min: 5
-    max: 2000
+    validator: "CategoriesTopicsValidator"
   suggested_topics:
     client: true
     default: 5
@@ -590,9 +589,15 @@ users:
     default: 730
     min: 0
     max: 3650
+  clean_up_unused_staged_users_after_days:
+    default: 365
+    min: 0
+    max: 3650
   user_selected_primary_groups:
     default: false
     client: true
+  max_notifications_per_user:
+    default: 10000
 
 groups:
   enable_group_directory:
@@ -856,6 +861,8 @@ posting:
   approve_new_topics_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+  approve_suspect_users:
+    default: true
   approve_unless_staged:
     default: false
   notify_about_queued_posts_after:
@@ -873,6 +880,7 @@ posting:
       - code-fences
   embed_any_origin: false
   embed_topics_list: false
+  embed_set_canonical_url: false
   embed_truncate:
     default: true
   embed_support_markdown:
@@ -939,7 +947,9 @@ email:
     default: false
     client: true
   apply_custom_styles_to_digest: true
-  email_accent_bg_color: "#2F70AC"
+  email_accent_bg_color:
+    type: color
+    default: "#2F70AC"
   email_accent_fg_color: "#FFFFFF"
   email_link_color: "#006699"
   show_topic_featured_link_in_digest: false
@@ -1030,7 +1040,6 @@ email:
     client: true
     default: 4
     min: 1
-  bounce_score_threshold_deactivate: 30
   bounce_score_erode_on_send:
     default: 0.1
     hidden: true
@@ -1174,6 +1183,9 @@ files:
     default: true
   enable_s3_inventory:
     default: false
+  s3_configure_inventory_policy:
+    default: true
+    hidden: true
   allow_profile_backgrounds:
     client: true
     default: true
@@ -1410,6 +1422,7 @@ security:
     max: 2000
   allow_embedding_site_in_an_iframe:
     default: false
+    hidden: true
 
 onebox:
   enable_flash_video_onebox: false
@@ -1432,7 +1445,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: false
-
+  force_custom_user_agent_hosts:
+    default: "http://codepen.io"
+    type: list
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -1471,6 +1486,10 @@ spam:
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level: 0
   auto_silence_first_post_regex: ""
+  high_trust_flaggers_auto_hide_posts: true
+  cooldown_hours_until_reflag:
+    default: 24
+    min: 0
 
   reviewable_claiming:
     client: true
@@ -1637,8 +1656,6 @@ backups:
   enable_backups:
     default: true
     client: true
-  readonly_mode_during_backup:
-    default: false
   allow_restore:
     default: false
   backup_location:
@@ -1971,6 +1988,11 @@ uncategorized:
 
   overridden_robots_txt:
     default: ""
+    hidden: true
+
+  enable_new_user_card_route:
+    default: false
+    client: true
     hidden: true
 
 user_preferences:

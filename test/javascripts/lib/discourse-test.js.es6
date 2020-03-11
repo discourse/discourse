@@ -10,6 +10,18 @@ QUnit.test("getURL on subfolder install", assert => {
     "/forum/u/neil",
     "relative url has subfolder"
   );
+
+  assert.equal(
+    Discourse.getURL("/svg-sprite/forum.example.com/svg-sprite.js"),
+    "/forum/svg-sprite/forum.example.com/svg-sprite.js",
+    "works when the url has the prefix in the middle"
+  );
+
+  assert.equal(
+    Discourse.getURL("/forum/t/123"),
+    "/forum/t/123",
+    "does not prefix if the URL is already prefixed"
+  );
 });
 
 QUnit.test("getURLWithCDN on subfolder install with S3", assert => {

@@ -14,9 +14,12 @@
 
     <div>
       <label for='content-type'>{{i18n 'admin.web_hooks.content_type'}}</label>
-      {{combo-box content=contentTypes
-                  name="content-type"
-                  value=model.content_type}}
+      {{combo-box
+        content=contentTypes
+        name="content-type"
+        value=model.content_type
+        onChange=(action (mut model.content_type))
+      }}
     </div>
 
     <div>
@@ -48,7 +51,10 @@
     <div class='filters'>
       <div class="filter">
         <label>{{d-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.categories_filter'}}</label>
-        {{category-selector categories=model.categories}}
+        {{category-selector
+          categories=model.categories
+          onChange=(action (mut model.categories))
+        }}
         <div class="instructions">{{i18n 'admin.web_hooks.categories_filter_instructions'}}</div>
       </div>
       {{#if showTagsFilter}}

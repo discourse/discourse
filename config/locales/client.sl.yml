@@ -567,7 +567,6 @@ sl:
       leave: "Zapusti"
       request: "Zahteva"
       message: "Sporočilo"
-      allow_membership_requests: "Dovoli uporabnikom, da zaprosijo za članstvo pri skrbniku skupine"
       membership_request_template: "Predloga za prikaz uporabnikom, ko zaprosijo za članstvo"
       membership_request:
         submit: "Zaprosi za članstvo"
@@ -1306,8 +1305,6 @@ sl:
       reset: "Zamenjaj geslo"
       complete_username: "Če obstaja račun za uporabniško ime <b>%{username}</b>, boste kmalu prejeli e-sporočilo z navodili za zamenjavo gesla."
       complete_email: "Če račun ustreza <b>%{email}</b>, boste v kratkem prejeli e-sporočilo z navodili za zamenjavo gesla."
-      complete_username_found: "Račun z uporabniškim imenom <b>%{username}</b>obstaja. V kratkem bi morali prejeti e-sporočilo z navodili za zamenjavo gesla."
-      complete_email_found: "Račun z e-naslovom <b>%{email}</b>obstaja. V kratkem bi morali prejeti e-sporočilo z navodili za zamenjavo gesla."
       complete_username_not_found: "Račun z uporabniškim imenom <b>%{username}</b> ne obstaja."
       complete_email_not_found: "Račun z e-naslovom <b>%{email}</b>ne obstaja."
       help: "Ali e-pošta ne prihaja? Najprej preverite mapo z neželeno pošto.<p>Ne veste kateri e-naslov ste uporabili? Vpišite e-naslov in povedali vam bomo če obstaja pri nas.</p><p>Če nimate več dostopa do e-naslova vašega računa kontaktirajte <a href='%{basePath}/about'>našo ekipo.</a></p>"
@@ -1523,7 +1520,6 @@ sl:
       view_new_post: "Oglej si tvoj nov prispevek "
       saving: "Shranjujem"
       saved: "Shranjeno!"
-      saved_draft: "Osnutek prispevka v pripravi. Izberi za nadaljevanje."
       uploading: "Nalagam..."
       show_preview: "prikaži predogled &raquo;"
       hide_preview: "&laquo; skrij predogled"
@@ -2635,6 +2631,7 @@ sl:
         help: "Ta tema je izločena; ne bo se prikazovala na seznamih tem in se jo lahko dostopa samo preko neposredne povezave."
       personal_message:
         title: "Ta tema je zasebno sporočilo"
+        help: "Ta tema je zasebno sporočilo"
     posts: "Prispevki"
     posts_long: "{{number}} prispevkov v tej temi"
     posts_likes_MF: |
@@ -2875,15 +2872,6 @@ sl:
           name: Druge
         posting:
           name: Prispevki
-    google_search: |
-      <h3>Išči z Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
     tagging:
       all_tags: "Vse oznake"
       other_tags: "Druge oznake"

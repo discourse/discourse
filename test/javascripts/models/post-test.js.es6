@@ -80,20 +80,20 @@ QUnit.test("destroy by staff", assert => {
   );
 });
 
-QUnit.test("destroy by non-staff", assert => {
-  var originalCooked = "this is the original cooked value",
-    user = User.create({ username: "evil trout" }),
-    post = buildPost({ user: user, cooked: originalCooked });
+QUnit.test("destroy by non-staff", async assert => {
+  const originalCooked = "this is the original cooked value";
+  const user = User.create({ username: "evil trout" });
+  const post = buildPost({ user: user, cooked: originalCooked });
 
-  return post.destroy(user).then(() => {
-    assert.ok(
-      !post.get("can_delete"),
-      "the post can't be deleted again in this session"
-    );
-    assert.ok(
-      post.get("cooked") !== originalCooked,
-      "the cooked content changed"
-    );
-    assert.equal(post.get("version"), 2, "the version number increased");
-  });
+  await post.destroy(user);
+
+  assert.ok(
+    !post.get("can_delete"),
+    "the post can't be deleted again in this session"
+  );
+  assert.ok(
+    post.get("cooked") !== originalCooked,
+    "the cooked content changed"
+  );
+  assert.equal(post.get("version"), 2, "the version number increased");
 });

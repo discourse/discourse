@@ -1,7 +1,7 @@
 <div class='setting-label'>
-   <h3>{{unbound settingName}}</h3>
+   <h3>{{settingName}}</h3>
    {{#if defaultIsAvailable}}
-     <a onClick={{action 'setDefaultValues'}}>{{setting.setDefaultValuesLabel}}</a>
+     <a href onClick={{action 'setDefaultValues'}}>{{setting.setDefaultValuesLabel}}</a>
    {{/if}}
 </div>
 <div class="setting-value">

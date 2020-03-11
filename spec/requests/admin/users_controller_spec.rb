@@ -347,8 +347,9 @@ RSpec.describe Admin::UsersController do
 
   describe '#remove_group' do
     it "also clears the user's primary group" do
-      g = Fabricate(:group)
-      u = Fabricate(:user, primary_group: g)
+      u = Fabricate(:user)
+      g = Fabricate(:group, users: [u])
+      u.update!(primary_group_id: g.id)
       delete "/admin/users/#{u.id}/groups/#{g.id}.json"
 
       expect(response.status).to eq(200)
@@ -754,50 +755,6 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       expect(User.where(id: user_a.id).count).to eq(0)
       expect(User.where(id: user_b.id).count).to eq(0)
-    end
-  end
-
-  describe '#invite_admin' do
-    let(:api_key) { Fabricate(:api_key, user: admin) }
-    let(:api_params) do
-      { api_key: api_key.key, api_username: admin.username }
-    end
-
-    it "doesn't work when not via API" do
-      post "/admin/users/invite_admin.json", params: {
-        name: 'Bill', username: 'bill22', email: 'bill@bill.com'
-      }
-
-      expect(response.status).to eq(403)
-    end
-
-    it 'should invite admin' do
-      expect do
-        post "/admin/users/invite_admin.json", params: api_params.merge(
-          name: 'Bill', username: 'bill22', email: 'bill@bill.com'
-        )
-      end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
-
-      expect(response.status).to eq(200)
-
-      u = User.find_by_email('bill@bill.com')
-      expect(u.name).to eq("Bill")
-      expect(u.username).to eq("bill22")
-      expect(u.admin).to eq(true)
-      expect(u.active).to eq(true)
-      expect(u.approved).to eq(true)
-    end
-
-    it "doesn't send the email with send_email falsey" do
-      expect do
-        post "/admin/users/invite_admin.json", params: api_params.merge(
-          name: 'Bill', username: 'bill22', email: 'bill@bill.com', send_email: '0'
-        )
-      end.to change { Jobs::CriticalUserEmail.jobs.size }.by(0)
-
-      expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
-      expect(json["password_url"]).to be_present
     end
   end
 

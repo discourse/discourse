@@ -573,6 +573,7 @@ function warnIfMissing(id) {
   if (
     typeof Discourse !== "undefined" &&
     Discourse.Environment === "development" &&
+    !Discourse.disableMissingIconWarning &&
     Discourse.SvgIconList &&
     Discourse.SvgIconList.indexOf(id) === -1
   ) {
@@ -636,6 +637,12 @@ registerIconRenderer({
       html = `<span class="svg-icon-title" title='${I18n.t(
         params.title
       ).replace(/'/g, "&#39;")}'>${html}</span>`;
+    }
+    if (params.translatedtitle) {
+      html = `<span class="svg-icon-title" title='${params.translatedtitle.replace(
+        /'/g,
+        "&#39;"
+      )}'>${html}</span>`;
     }
     return html;
   },

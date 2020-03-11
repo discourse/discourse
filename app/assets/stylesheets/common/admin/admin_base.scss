@@ -244,7 +244,7 @@ $mobile-breakpoint: 700px;
       width: 100%;
       max-width: 800px;
     }
-    .save-messages,
+    .save-button,
     .title {
       margin-bottom: 1em;
     }
@@ -423,9 +423,6 @@ $mobile-breakpoint: 700px;
   }
   .controls {
     @include clearfix;
-    .save-messages {
-      margin-top: 1em;
-    }
   }
 }
 
@@ -954,6 +951,11 @@ table#user-badges {
 .inline-edit label {
   display: inline-block;
   margin-right: 20px;
+}
+
+a.inline-editable-field {
+  color: $primary;
+  cursor: pointer;
 }
 
 // Styles for subtabs in admin

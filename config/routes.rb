@@ -18,6 +18,7 @@ Discourse::Application.routes.draw do
   post "webhooks/mailgun"  => "webhooks#mailgun"
   post "webhooks/mailjet"  => "webhooks#mailjet"
   post "webhooks/mandrill" => "webhooks#mandrill"
+  post "webhooks/postmark" => "webhooks#postmark"
   post "webhooks/sendgrid" => "webhooks#sendgrid"
   post "webhooks/sparkpost" => "webhooks#sparkpost"
 
@@ -139,7 +140,6 @@ Discourse::Application.routes.draw do
     get 'users/:id/:username/tl3_requirements' => 'users#show'
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
-    post "users/invite_admin" => "users#invite_admin", constraints: AdminConstraint.new
 
     resources :impersonate, constraints: AdminConstraint.new
 
@@ -295,6 +295,8 @@ Discourse::Application.routes.draw do
 
     resources :badges, constraints: AdminConstraint.new do
       collection do
+        get "/award/:badge_id" => "badges#award"
+        post "/award/:badge_id" => "badges#mass_award"
         get "types" => "badges#badge_types"
         post "badge_groupings" => "badges#save_badge_groupings"
         post "preview" => "badges#preview"
@@ -346,7 +348,6 @@ Discourse::Application.routes.draw do
   get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   post "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   get "composer_messages" => "composer_messages#index"
-  post "composer/parse_html" => "composer#parse_html"
 
   resources :static
   post "login" => "static#enter"
@@ -365,6 +366,8 @@ Discourse::Application.routes.draw do
   get "my/*path", to: 'users#my_redirect'
   get "user_preferences" => "users#user_preferences_redirect"
   get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
+
+  get "user-cards" => "users#cards", format: :json
 
   %w{users u}.each_with_index do |root_path, index|
     get "#{root_path}" => "users#index", constraints: { format: 'html' }
@@ -393,8 +396,6 @@ Discourse::Application.routes.draw do
     post "#{root_path}/email-login" => "users#email_login"
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"
-    get "#{root_path}/admin-login/:token" => "users#admin_login"
-    put "#{root_path}/admin-login/:token" => "users#admin_login"
     post "#{root_path}/toggle-anon" => "users#toggle_anon"
     post "#{root_path}/read-faq" => "users#read_faq"
     get "#{root_path}/search/users" => "users#search_users"
@@ -403,9 +404,9 @@ Discourse::Application.routes.draw do
 
     get "#{root_path}/account-created/resent" => "users#account_created"
     get "#{root_path}/account-created/edit-email" => "users#account_created"
-    get({ "#{root_path}/password-reset/:token" => "users#password_reset" }.merge(index == 1 ? { as: :password_reset_token } : {}))
+    get({ "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(index == 1 ? { as: :password_reset_token } : {}))
     get "#{root_path}/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
-    put "#{root_path}/password-reset/:token" => "users#password_reset"
+    put "#{root_path}/password-reset/:token" => "users#password_reset_update"
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
 
@@ -478,6 +479,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
     put "#{root_path}/:username/feature-topic" => "users#feature_topic", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/clear-featured-topic" => "users#clear_featured_topic", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/card.json" => "users#show_card", format: :json, constraints: { username: RouteFormat.username }
   end
 
   get "user-badges/:username.json" => "user_badges#username", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -491,6 +493,7 @@ Discourse::Application.routes.draw do
 
   get "svg-sprite/:hostname/svg-:theme_ids-:version.js" => "svg_sprite#show", constraints: { hostname: /[\w\.-]+/, version: /\h{40}/, theme_ids: /([0-9]+(,[0-9]+)*)?/, format: :js }
   get "svg-sprite/search/:keyword" => "svg_sprite#search", format: false, constraints: { keyword: /[-a-z0-9\s\%]+/ }
+  get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search", defaults: { format: :json }
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", constraints: { hostname: /[\w\.-]+/, format: :js }
 
@@ -596,7 +599,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :bookmarks, only: %i[create]
+  resources :bookmarks, only: %i[create destroy]
 
   resources :notifications, except: :show do
     collection do
@@ -847,7 +850,7 @@ Discourse::Application.routes.draw do
 
   scope '/tag/:tag_id' do
     constraints format: :json do
-      get '/' => 'tags#show'
+      get '/' => 'tags#show', as: 'tag_show'
       get '/info' => 'tags#info'
       get '/notifications' => 'tags#notifications'
       put '/notifications' => 'tags#update_notifications'
@@ -857,7 +860,7 @@ Discourse::Application.routes.draw do
       delete '/synonyms/:synonym_id' => 'tags#destroy_synonym'
 
       Discourse.filters.each do |filter|
-        get "/l/#{filter}" => "tags#show_#{filter}"
+        get "/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
       end
     end
 
@@ -897,7 +900,7 @@ Discourse::Application.routes.draw do
     # legacy routes
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       get '/:tag_id.rss' => 'tags#tag_feed'
-      get '/:tag_id' => 'tags#show', as: 'tag_show'
+      get '/:tag_id' => 'tags#show'
       get '/:tag_id/info' => 'tags#info'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'
@@ -907,7 +910,7 @@ Discourse::Application.routes.draw do
       delete '/:tag_id/synonyms/:synonym_id' => 'tags#destroy_synonym'
 
       Discourse.filters.each do |filter|
-        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
+        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}"
       end
     end
   end

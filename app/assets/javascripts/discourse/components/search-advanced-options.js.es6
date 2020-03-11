@@ -1,5 +1,4 @@
-import { debounce } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { debounce, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -219,6 +218,11 @@ export default Component.extend({
     }
   },
 
+  setCategory(category) {
+    this.set("searchedTerms.category", category);
+    this.set("category", category);
+  },
+
   setSearchedTermValueForCategory() {
     const match = this.filterBlocks(REGEXP_CATEGORY_PREFIX);
     if (match.length !== 0) {
@@ -235,21 +239,21 @@ export default Component.extend({
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         )
-          this.set("searchedTerms.category", userInput);
+          this.setCategory(userInput);
       } else if (isNaN(subcategories)) {
         const userInput = Category.findSingleBySlug(subcategories[0]);
         if (
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         )
-          this.set("searchedTerms.category", userInput);
+          this.setCategory(userInput);
       } else {
         const userInput = Category.findById(subcategories[0]);
         if (
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         )
-          this.set("searchedTerms.category", userInput);
+          this.setCategory(userInput);
       }
     } else this.set("searchedTerms.category", "");
   },
@@ -553,7 +557,6 @@ export default Component.extend({
     }
   },
 
-  @observes("searchedTerms.time.when", "searchedTerms.time.days")
   updateSearchTermForPostTime() {
     const match = this.filterBlocks(REGEXP_POST_TIME_PREFIX);
     const timeDaysFilter = this.get("searchedTerms.time.days");
@@ -603,5 +606,28 @@ export default Component.extend({
 
   badgeFinder(term) {
     return Badge.findAll({ search: term });
+  },
+
+  actions: {
+    onChangeWhenTime(time) {
+      if (time) {
+        this.set("searchedTerms.time.when", time);
+        this.updateSearchTermForPostTime();
+      }
+    },
+    onChangeWhenDate(date) {
+      if (date) {
+        this.set("searchedTerms.time.days", moment(date).format("YYYY-MM-DD"));
+        this.updateSearchTermForPostTime();
+      }
+    },
+
+    onChangeCategory(categoryId) {
+      if (categoryId) {
+        this.set("searchedTerms.category", Category.findById(categoryId));
+      } else {
+        this.set("searchedTerms.category", null);
+      }
+    }
   }
 });

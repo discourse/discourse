@@ -4,14 +4,12 @@ import {
   autoUpdatingRelativeAge,
   number
 } from "discourse/lib/formatter";
+import { htmlSafe } from "@ember/template";
 
-const safe = Handlebars.SafeString;
+registerUnbound("raw-date", dt => htmlSafe(longDate(new Date(dt))));
 
-registerUnbound("raw-date", dt => longDate(new Date(dt)));
-
-registerUnbound(
-  "age-with-tooltip",
-  dt => new safe(autoUpdatingRelativeAge(new Date(dt), { title: true }))
+registerUnbound("age-with-tooltip", dt =>
+  htmlSafe(autoUpdatingRelativeAge(new Date(dt), { title: true }))
 );
 
 registerUnbound("number", (orig, params) => {
@@ -41,7 +39,12 @@ registerUnbound("number", (orig, params) => {
   if (n.toString() !== title.toString() && addTitle) {
     result += " title='" + Handlebars.Utils.escapeExpression(title) + "'";
   }
+  if (params.ariaLabel) {
+    const ariaLabel = Handlebars.Utils.escapeExpression(params.ariaLabel);
+    result += ` aria-label='${ariaLabel}'`;
+  }
+
   result += ">" + n + "</span>";
 
-  return new safe(result);
+  return htmlSafe(result);
 });

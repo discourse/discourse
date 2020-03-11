@@ -39,8 +39,11 @@ QUnit.test("Settings", async assert => {
 
   assert.ok(find(".reviewable-score-type").length, "has a list of bonuses");
 
-  await fillIn(".reviewable-score-type:eq(0) .field input ", "0.5");
+  const field = selectKit(".reviewable-score-type:eq(0) .field .combo-box");
+  await field.expand();
+  await field.selectRowByValue("5");
   await click(".save-settings");
+
   assert.ok(find(".reviewable-settings .saved").length, "it saved");
 });
 
@@ -124,7 +127,7 @@ QUnit.test("Editing a reviewable", async assert => {
   let tags = selectKit(`${topic} .payload-tags .mini-tag-chooser`);
   await tags.expand();
   await tags.fillInFilter("monkey");
-  await tags.keyboard("enter");
+  await tags.selectRowByValue("monkey");
 
   await fillIn(".editable-field.payload-raw textarea", "new raw contents");
   await click(`${topic} .reviewable-action.save-edit`);

@@ -29,7 +29,16 @@ describe Jobs::InvalidateInactiveAdmins do
         expect(not_seen_admin.reload.email_tokens.where(confirmed: true).exists?).to eq(false)
       end
 
-      it 'makes the user as not active' do
+      it 'makes the user as not active and logs the action' do
+        subject
+        expect(not_seen_admin.reload.active).to eq(false)
+
+        log = UserHistory.last
+        expect(log.target_user_id).to eq(not_seen_admin.id)
+        expect(log.action).to eq(UserHistory.actions[:deactivate_user])
+      end
+
+      it 'adds a staff log' do
         subject
         expect(not_seen_admin.reload.active).to eq(false)
       end

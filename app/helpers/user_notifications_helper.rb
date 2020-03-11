@@ -27,8 +27,8 @@ module UserNotificationsHelper
     logo_url
   end
 
-  def html_site_link(color)
-    "<a href='#{Discourse.base_url}' style='color: ##{color}'>#{@site_name}</a>"
+  def html_site_link
+    "<a href='#{Discourse.base_url}'>#{@site_name}</a>"
   end
 
   def first_paragraphs_from(html)
@@ -49,7 +49,7 @@ module UserNotificationsHelper
 
     # If there is no first paragaph with text, return the first paragraph with
     # something else (an image) or div (a onebox).
-    doc.css('body > p, body > div').first
+    doc.css('body > p:not(:empty), body > div:not(:empty), body > p > div.lightbox-wrapper img').first
   end
 
   def email_excerpt(html_arg, post = nil)
@@ -62,7 +62,6 @@ module UserNotificationsHelper
   end
 
   def show_username_on_post(post)
-    return true if SiteSetting.prioritize_username_in_ux
     return true unless SiteSetting.enable_names?
     return true unless SiteSetting.display_name_on_posts?
     return true unless post.user.name.present?
@@ -71,8 +70,6 @@ module UserNotificationsHelper
   end
 
   def show_name_on_post(post)
-    return true unless SiteSetting.prioritize_username_in_ux
-
     SiteSetting.enable_names? &&
       SiteSetting.display_name_on_posts? &&
       post.user.name.present? &&

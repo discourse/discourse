@@ -1,7 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import {
   translateResults,
@@ -9,10 +8,7 @@ import {
   getSearchKey,
   isValidSearchTerm
 } from "discourse/lib/search";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { escapeExpression } from "discourse/lib/utilities";
 import { setTransient } from "discourse/lib/page-tracker";
@@ -29,8 +25,8 @@ const SortOrders = [
 const PAGE_LIMIT = 10;
 
 export default Controller.extend({
-  application: inject(),
-  composer: inject(),
+  application: controller(),
+  composer: controller(),
   bulkSelectEnabled: null,
 
   loading: false,

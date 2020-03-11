@@ -1,13 +1,13 @@
-import { throttle } from "@ember/runloop";
-import { run } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
-import Component from "@ember/component";
 import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+  run,
+  cancel,
+  scheduleOnce,
+  later,
+  debounce,
+  throttle
+} from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Composer from "discourse/models/composer";
 import afterTransition from "discourse/lib/after-transition";
 import positioningWorkaround from "discourse/lib/safari-hacks";
@@ -70,9 +70,13 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      const h = $("#reply-control").height() || 0;
-      this.movePanels(h);
+      debounce(this, this.debounceMove, 300);
     });
+  },
+
+  debounceMove() {
+    const h = $("#reply-control:not(.saving)").height() || 0;
+    this.movePanels(h);
   },
 
   keyUp() {

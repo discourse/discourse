@@ -99,6 +99,29 @@ describe PostActionCreator do
       expect(score.reviewed_at).to be_blank
     end
 
+    describe "Auto hide spam flagged posts" do
+      before do
+        user.trust_level = TrustLevel[3]
+        post.user.trust_level = TrustLevel[0]
+      end
+
+      it "hides the post when the flagger is a TL3 user and the poster is a TL0 user" do
+        SiteSetting.high_trust_flaggers_auto_hide_posts = true
+
+        result = PostActionCreator.create(user, post, :spam)
+
+        expect(post.hidden?).to eq(true)
+      end
+
+      it 'does not hide the post if the setting is disabled' do
+        SiteSetting.high_trust_flaggers_auto_hide_posts = false
+
+        result = PostActionCreator.create(user, post, :spam)
+
+        expect(post.hidden?).to eq(false)
+      end
+    end
+
     context "existing reviewable" do
       let!(:reviewable) {
         PostActionCreator.create(Fabricate(:user), post, :inappropriate).reviewable
@@ -114,6 +137,39 @@ describe PostActionCreator do
         expect(score).to be_present
         expect(score.reviewed_by).to be_blank
         expect(score.reviewed_at).to be_blank
+      end
+
+      describe "When the post was already reviewed by staff" do
+        fab!(:admin) { Fabricate(:admin) }
+
+        before { reviewable.perform(admin, :ignore) }
+
+        it "fails because the post was recently reviewed" do
+          freeze_time 10.seconds.from_now
+          result = PostActionCreator.create(user, post, :inappropriate)
+
+          expect(result.success?).to eq(false)
+        end
+
+        it "succesfully flags the post if it was reviewed more than 24 hours ago" do
+          reviewable.update!(updated_at: 25.hours.ago)
+          post.last_version_at = 30.hours.ago
+
+          result = PostActionCreator.create(user, post, :inappropriate)
+
+          expect(result.success?).to eq(true)
+          expect(result.reviewable).to be_present
+        end
+
+        it "succesfully flags the post if it was edited after being reviewed" do
+          reviewable.update!(updated_at: 10.minutes.ago)
+          post.last_version_at = 1.minute.ago
+
+          result = PostActionCreator.create(user, post, :inappropriate)
+
+          expect(result.success?).to eq(true)
+          expect(result.reviewable).to be_present
+        end
       end
     end
   end

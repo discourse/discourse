@@ -1021,8 +1021,6 @@ et:
       reset: "Uuenda parool"
       complete_username: "Kui konto omaniku kasutajanimi on <b>%{username}</b>, peaksid varsti saama meili koos parooli uuendamise juhistega."
       complete_email: "Kui konto omaniku meiliaadress on <b>%{email}</b>, peaksid varsti saama meili koos parooli uuendamise juhistega."
-      complete_username_found: "Leidsime konto, mille omaniku kasutajanimi on <b>%{username}</b> - peaksid varsti saama meili koos parooli uuendamise juhistega."
-      complete_email_found: "Leidsime konto, mille omaniku meiliaadress on <b>%{email}</b>, peaksid varsti saama meili koos parooli uuendamise juhistega."
       complete_username_not_found: "Kasutajanimele <b>%{username}</b> ei vasta ükski konto"
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
       button_ok: "OK"
@@ -1179,7 +1177,6 @@ et:
       view_new_post: "Vaata oma uut postitust."
       saving: "Salvestan"
       saved: "Salvestatud!"
-      saved_draft: "Postituse mustand on pooleli. Jätkamiseks vali."
       uploading: "Laen üles..."
       show_preview: "näita eelvaadet &raquo;"
       hide_preview: "&laquo; peida eelvaade"
@@ -2193,15 +2190,6 @@ et:
           name: Muu
         posting:
           name: Postitan
-    google_search: |
-      <h3>Otsi Google abil</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Kõik sildid"
       other_tags: "Muud sildid"

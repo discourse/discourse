@@ -1,4 +1,6 @@
+import { computed } from "@ember/object";
 import addonFmt from "ember-addons/fmt";
+import { htmlSafe as htmlSafeTemplateHelper } from "@ember/template";
 
 /**
   Returns whether two properties are equal to each other.
@@ -10,7 +12,7 @@ import addonFmt from "ember-addons/fmt";
 **/
 
 export function propertyEqual(p1, p2) {
-  return Ember.computed(p1, p2, function() {
+  return computed(p1, p2, function() {
     return this.get(p1) === this.get(p2);
   });
 }
@@ -24,19 +26,19 @@ export function propertyEqual(p1, p2) {
   @return {Function} discourseComputedProperty function
 **/
 export function propertyNotEqual(p1, p2) {
-  return Ember.computed(p1, p2, function() {
+  return computed(p1, p2, function() {
     return this.get(p1) !== this.get(p2);
   });
 }
 
 export function propertyGreaterThan(p1, p2) {
-  return Ember.computed(p1, p2, function() {
+  return computed(p1, p2, function() {
     return this.get(p1) > this.get(p2);
   });
 }
 
 export function propertyLessThan(p1, p2) {
-  return Ember.computed(p1, p2, function() {
+  return computed(p1, p2, function() {
     return this.get(p1) < this.get(p2);
   });
 }
@@ -51,8 +53,23 @@ export function propertyLessThan(p1, p2) {
 **/
 export function i18n(...args) {
   const format = args.pop();
-  return Ember.computed(...args, function() {
+  return computed(...args, function() {
     return I18n.t(addonFmt(format, ...args.map(a => this.get(a))));
+  });
+}
+/**
+  Returns htmlSafe version of a string.
+
+  @method htmlSafe
+  @params {String} properties* to htmlify
+  @return {Function} discourseComputedProperty function
+**/
+export function htmlSafe(...args) {
+  return computed(...args, {
+    get() {
+      const path = args.pop();
+      return htmlSafeTemplateHelper(this.get(path));
+    }
   });
 }
 
@@ -67,7 +84,7 @@ export function i18n(...args) {
 **/
 export function fmt(...args) {
   const format = args.pop();
-  return Ember.computed(...args, function() {
+  return computed(...args, function() {
     return addonFmt(format, ...args.map(a => this.get(a)));
   });
 }
@@ -83,7 +100,7 @@ export function fmt(...args) {
 **/
 export function url(...args) {
   const format = args.pop();
-  return Ember.computed(...args, function() {
+  return computed(...args, function() {
     return Discourse.getURL(addonFmt(format, ...args.map(a => this.get(a))));
   });
 }
@@ -99,7 +116,7 @@ export function url(...args) {
 export function endWith() {
   const args = Array.prototype.slice.call(arguments, 0);
   const substring = args.pop();
-  return Ember.computed(...args, function() {
+  return computed(...args, function() {
     return args
       .map(a => this.get(a))
       .every(s => {
@@ -118,7 +135,7 @@ export function endWith() {
   @param {String} name of site setting
 **/
 export function setting(name) {
-  return Ember.computed(function() {
+  return computed(function() {
     return Discourse.SiteSettings[name];
   });
 }

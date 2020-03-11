@@ -1,4 +1,6 @@
-export default Ember.ArrayProxy.extend({
+import ArrayProxy from "@ember/array/proxy";
+
+export default ArrayProxy.extend({
   render(topic, renderIcon) {
     const renderIconIf = (conditionProp, name, key) => {
       if (!topic.get(conditionProp)) {

@@ -408,7 +408,6 @@ lv:
       add: "Pievienot"
       request: "Pieprasījums"
       message: "Ziņa"
-      allow_membership_requests: "Ļauj lietotājiem sūtīt dalības pieprasījumus grupu īpašniekiem"
       membership: "Piederība"
       name: "Vārds"
       group_name: "Grupas nosaukums"
@@ -984,8 +983,6 @@ lv:
       reset: "Atjaunot paroli"
       complete_username: "Ja konts atbildīs lietotājvārdam <b>%{username}</b>, jūs drīz saņemsiet e-pastu ar paroles atjaunošanas instrukcijām."
       complete_email: "Ja konts atbildīs<b>%{email}</b>, Jūs drīz saņemsiet e-pastu ar paroles atjaunošanas instrukcijām."
-      complete_username_found: "Mēs atradām kontu, kas atbilst lietotājvārdam <b>%{username}</b>. Jūs drīz saņemsiet e-pastu ar paroles atjaunošanas instrukcijām."
-      complete_email_found: "Mēs atradām kontu, kas atbilst <b>%{email}</b>. Jūs drīz saņemsiet e-pastu ar paroles atjaunošanas instrukcijām."
       complete_username_not_found: "Neviens konts neatbilst lietotājvārdam <b>%{username}</b>"
       complete_email_not_found: "Neviens konts neatbilst <b>%{email}</b>"
       help: "Nesaņēmāt e-pastu? Pārbaudiet savu surogātpasta mapi. <p>Neesat drošs par to, kuru e-pasta adresi izmantojāt? Ievadiet e-pasta adresi, un mēs paziņosim, ja tā ir izmantota.</p> <p>Ja jums vairs nav piekļuves sava konta e-pasta adresei, lūdzu, sazinieties <a href='%{basePath}/about'>ar mūsu izpalīdzīgajiem darbiniekiem.</a></p>"
@@ -1133,7 +1130,6 @@ lv:
       view_new_post: "Apskatīt jūsu jauno ierakstu."
       saving: "Saglabā"
       saved: "Saglabāts!"
-      saved_draft: "Ieraksta melnraksts. Spiediet šeit, lai turpinātu."
       uploading: "Augšuplādē..."
       show_preview: "rādīt priekšskatījumu &raquo;"
       hide_preview: "&laquo; slēpt priekšskatījumu"
@@ -2133,15 +2129,6 @@ lv:
           name: Citi
         posting:
           name: Ieraksti
-    google_search: |
-      <h3>Meklēt ar Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Visi tagi"
       selector_all_tags: "visi tagi"

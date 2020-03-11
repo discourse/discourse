@@ -191,10 +191,10 @@ class TagsController < ::ApplicationController
     discourse_expires_in 1.minute
 
     tag_id = params[:tag_id]
-    @link = "#{Discourse.base_url}/tags/#{tag_id}"
+    @link = "#{Discourse.base_url}/tag/#{tag_id}"
     @description = I18n.t("rss_by_tag", tag: tag_id)
     @title = "#{SiteSetting.title} - #{@description}"
-    @atom_link = "#{Discourse.base_url}/tags/#{tag_id}.rss"
+    @atom_link = "#{Discourse.base_url}/tag/#{tag_id}.rss"
 
     query = TopicQuery.new(current_user, tags: [tag_id])
     latest_results = query.latest_results
@@ -364,7 +364,7 @@ class TagsController < ::ApplicationController
         end
 
         # Legacy paths
-        if @filter_on_category.nil? && parts.last =~ /\A\d+-/
+        if @filter_on_category.nil? && parts.last =~ /\A\d+-category/
           @filter_on_category = Category.find_by_id(parts.last.to_i)
         end
       end

@@ -138,7 +138,7 @@ describe PostRevisor do
         expect(post.version).to eq(1)
         expect(post.public_version).to eq(1)
         expect(post.revisions.size).to eq(0)
-        expect(post.last_version_at).to eq(first_version_at)
+        expect(post.last_version_at).to eq_time(first_version_at)
         expect(subject.category_changed).to be_blank
       end
 
@@ -208,6 +208,20 @@ describe PostRevisor do
         expect(post.revisions.count).to eq(1)
       end
 
+      it "resets the edit_reason attribute in post model" do
+        freeze_time
+        SiteSetting.editing_grace_period = 5
+        post = Fabricate(:post, raw: 'hello world')
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world123456789', edit_reason: 'this is my reason' }, revised_at: post.updated_at + 1.second)
+        post.reload
+        expect(post.edit_reason).to eq('this is my reason')
+
+        revisor.revise!(post.user, { raw: 'hello world4321' }, revised_at: post.updated_at + 7.seconds)
+        post.reload
+        expect(post.edit_reason).not_to be_present
+      end
+
       it "does not create a new version if an edit reason is provided and its the same as the current edit reason" do
         post = Fabricate(:post, raw: 'hello world', edit_reason: 'this is my reason')
         revisor = PostRevisor.new(post)
@@ -224,6 +238,18 @@ describe PostRevisor do
         post.reload
         revisor.revise!(post.user, { raw: 'hello some other thing' }, revised_at: post.updated_at + 1.second)
         expect(post.revisions.first.modifications[:edit_reason]).to eq([nil, 'this is my reason'])
+      end
+    end
+
+    describe 'hidden post' do
+      it "correctly stores the modification value" do
+        post.update(hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world' }, revised_at: post.updated_at + 11.minutes)
+        expect(post.revisions.first.modifications.symbolize_keys).to eq(
+          cooked: ["<p>Hello world</p>", "<p>hello world</p>"],
+          raw: ["Hello world", "hello world"]
+        )
       end
     end
 

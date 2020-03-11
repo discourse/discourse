@@ -1,14 +1,11 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { alias } from "@ember/object/computed";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
 
   queryParams: ["order", "desc", "filter"],
 
@@ -87,6 +84,20 @@ export default Controller.extend({
 
     toggleActions() {
       this.toggleProperty("showActions");
+    },
+
+    actOnGroup(member, actionId) {
+      switch (actionId) {
+        case "removeMember":
+          this.send("removeMember", member);
+          break;
+        case "makeOwner":
+          this.send("makeOwner", member.username);
+          break;
+        case "removeOwner":
+          this.send("removeOwner", member);
+          break;
+      }
     },
 
     removeMember(user) {

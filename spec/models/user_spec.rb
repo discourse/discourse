@@ -65,6 +65,11 @@ describe User do
         expect(user.errors.full_messages.first)
           .to include(user_error_message(:name, :same_as_password))
       end
+
+      it "doesn't raise an error if the name is longer than the max password length" do
+        user.name = 'x' * (User.max_password_length + 1)
+        expect(user).to be_valid
+      end
     end
 
     describe 'emails' do
@@ -858,7 +863,6 @@ describe User do
   end
 
   describe "previous_visit_at" do
-
     let(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
@@ -884,36 +888,36 @@ describe User do
       # second visit
       user.update_last_seen!(second_visit_date)
       user.reload
-      expect(user.previous_visit_at).to be_within_one_second_of(first_visit_date)
+      expect(user.previous_visit_at).to eq_time(first_visit_date)
 
       # third visit
       user.update_last_seen!(third_visit_date)
       user.reload
-      expect(user.previous_visit_at).to be_within_one_second_of(second_visit_date)
+      expect(user.previous_visit_at).to eq_time(second_visit_date)
     end
 
   end
 
   describe "update_last_seen!" do
-    let (:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
 
     it "should update the last seen value" do
       expect(user.last_seen_at).to eq nil
       user.update_last_seen!(first_visit_date)
-      expect(user.reload.last_seen_at).to be_within_one_second_of(first_visit_date)
+      expect(user.reload.last_seen_at).to eq_time(first_visit_date)
     end
 
     it "should update the first seen value if it doesn't exist" do
       user.update_last_seen!(first_visit_date)
-      expect(user.reload.first_seen_at).to be_within_one_second_of(first_visit_date)
+      expect(user.reload.first_seen_at).to eq_time(first_visit_date)
     end
 
     it "should not update the first seen value if it doesn't exist" do
       user.update_last_seen!(first_visit_date)
       user.update_last_seen!(second_visit_date)
-      expect(user.reload.first_seen_at).to be_within_one_second_of(first_visit_date)
+      expect(user.reload.first_seen_at).to eq_time(first_visit_date)
     end
   end
 
@@ -971,58 +975,51 @@ describe User do
     end
 
     describe 'with no previous values' do
-      let!(:date) { Time.zone.now }
-
-      before do
-        freeze_time date
-        user.update_last_seen!
-      end
-
       after do
         Discourse.redis.flushall
       end
 
       it "updates last_seen_at" do
-        expect(user.last_seen_at).to be_within_one_second_of(date)
+        date = freeze_time
+        user.update_last_seen!
+
+        expect(user.last_seen_at).to eq_time(date)
       end
 
       it "should have 0 for days_visited" do
+        user.update_last_seen!
         user.reload
+
         expect(user.user_stat.days_visited).to eq(1)
       end
 
       it "should log a user_visit with the date" do
-        expect(user.user_visits.first.visited_at).to eq(date.to_date)
+        date = freeze_time
+        user.update_last_seen!
+
+        expect(user.user_visits.first.visited_at).to eq_time(date.to_date)
       end
 
       context "called twice" do
-
-        before do
-          freeze_time date
+        it "doesn't increase days_visited twice" do
+          freeze_time
           user.update_last_seen!
           user.update_last_seen!
           user.reload
-        end
 
-        it "doesn't increase days_visited twice" do
           expect(user.user_stat.days_visited).to eq(1)
         end
-
       end
 
       describe "after 3 days" do
-        let!(:future_date) { 3.days.from_now }
-
-        before do
-          freeze_time future_date
-          user.update_last_seen!
-        end
-
         it "should log a second visited_at record when we log an update later" do
+          user.update_last_seen!
+          future_date = freeze_time(3.days.from_now)
+          user.update_last_seen!
+
           expect(user.user_visits.count).to eq(2)
         end
       end
-
     end
   end
 
@@ -1706,15 +1703,12 @@ describe User do
 
   describe "#featured_user_badges" do
     fab!(:user) { Fabricate(:user) }
-    let!(:user_badge_tl1) { UserBadge.create(badge_id: 1, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
-    let!(:user_badge_tl2) { UserBadge.create(badge_id: 2, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    let!(:user_badge_tl1) { UserBadge.create(badge_id: Badge::BasicUser, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    let!(:user_badge_tl2) { UserBadge.create(badge_id: Badge::Member, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    let!(:user_badge_like) { UserBadge.create(badge_id: Badge::FirstLike, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
-    it 'should display highest trust level badge first' do
-      expect(user.featured_user_badges[0].badge_id).to eq(2)
-    end
-
-    it 'should display only 1 trust level badge' do
-      expect(user.featured_user_badges.length).to eq(1)
+    it 'should display badges in the correct order' do
+      expect(user.featured_user_badges.map(&:badge_id)).to eq([Badge::Member, Badge::FirstLike, Badge::BasicUser])
     end
   end
 
@@ -2218,6 +2212,16 @@ describe User do
     end
   end
 
+  describe "Destroying a user with security key" do
+    let!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user) }
+    fab!(:admin) { Fabricate(:admin) }
+
+    it "removes the security key" do
+      UserDestroyer.new(admin).destroy(user)
+      expect(UserSecurityKey.where(user_id: user.id).count).to eq(0)
+    end
+  end
+
   describe 'Secure identifier for a user which is a string other than the ID used to identify the user in some cases e.g. security keys' do
     describe '#create_or_fetch_secure_identifier' do
       context 'if the user already has a secure identifier' do
@@ -2273,6 +2277,34 @@ describe User do
       user.grant_admin!
 
       expect(user.approved).to eq(true)
+    end
+  end
+
+  describe "#recent_time_read" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+
+    before_all do
+      UserVisit.create(user_id: user.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 10)
+      UserVisit.create(user_id: user.id, visited_at: 2.days.ago, posts_read: 1, mobile: false, time_read: 20)
+      UserVisit.create(user_id: user.id, visited_at: 1.week.ago, posts_read: 1, mobile: false, time_read: 30)
+      UserVisit.create(user_id: user.id, visited_at: 1.year.ago, posts_read: 1, mobile: false, time_read: 40) # Old, should be ignored
+      UserVisit.create(user_id: user2.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 50)
+    end
+
+    it "calculates correctly" do
+      expect(user.recent_time_read).to eq(60)
+      expect(user2.recent_time_read).to eq(50)
+    end
+
+    it "preloads correctly" do
+      User.preload_recent_time_read([user, user2])
+
+      expect(user.instance_variable_get(:@recent_time_read)).to eq(60)
+      expect(user2.instance_variable_get(:@recent_time_read)).to eq(50)
+
+      expect(user.recent_time_read).to eq(60)
+      expect(user2.recent_time_read).to eq(50)
     end
   end
 end

@@ -1,10 +1,9 @@
-import { isEmpty } from "@ember/utils";
+import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { scheduleOnce } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
@@ -15,10 +14,7 @@ import Topic from "discourse/models/topic";
 import discourseDebounce from "discourse/lib/debounce";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
@@ -42,8 +38,8 @@ export function registerCustomPostMessageCallback(type, callback) {
 }
 
 export default Controller.extend(bufferedProperty("model"), {
-  composer: inject(),
-  application: inject(),
+  composer: controller(),
+  application: controller(),
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
@@ -80,10 +76,10 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @discourseComputed("model.details.can_create_post")
-  embedQuoteButton(canCreatePost) {
+  @discourseComputed("model.details.can_create_post", "composer.visible")
+  embedQuoteButton(canCreatePost, composerOpened) {
     return (
-      canCreatePost &&
+      (canCreatePost || composerOpened) &&
       this.currentUser &&
       this.currentUser.get("enable_quoting")
     );
@@ -245,12 +241,12 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   actions: {
-    topicCategoryChanged(selection) {
-      this.set("buffered.category_id", selection.value);
+    topicCategoryChanged(categoryId) {
+      this.set("buffered.category_id", categoryId);
     },
 
-    topicTagsChanged({ target }) {
-      this.set("buffered.tags", target.value);
+    topicTagsChanged(value) {
+      this.set("buffered.tags", value);
     },
 
     deletePending(pending) {
@@ -269,7 +265,7 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showFeatureTopic");
     },
 
-    selectText(postId, buffer) {
+    selectText(postId, buffer, opts) {
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
         ? Promise.resolve(loadedPost)
@@ -278,7 +274,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return promise.then(post => {
         const composer = this.composer;
         const viewOpen = composer.get("model.viewOpen");
-        const quotedText = Quote.build(post, buffer);
+        const quotedText = Quote.build(post, buffer, opts);
 
         // If we can't create a post, delegate to reply as new topic
         if (!viewOpen && !this.get("model.details.can_create_post")) {
@@ -699,10 +695,10 @@ export default Controller.extend(bufferedProperty("model"), {
 
     jumpToPostPrompt() {
       const topic = this.model;
-      const controller = showModal("jump-to-post", {
+      const modal = showModal("jump-to-post", {
         modalClass: "jump-to-post-modal"
       });
-      controller.setProperties({
+      modal.setProperties({
         topic,
         postNumber: null,
         jumpToIndex: index => this.send("jumpToIndex", index),
@@ -727,6 +723,10 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpEnd() {
+      this.appEvents.trigger(
+        "topic:jump-to-post",
+        this.get("model.highest_post_number")
+      );
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
         jumpEnd: true
       });
@@ -839,8 +839,8 @@ export default Controller.extend(bufferedProperty("model"), {
 
     addNotice(post) {
       return new Promise(function(resolve, reject) {
-        const controller = showModal("add-post-notice");
-        controller.setProperties({ post, resolve, reject });
+        const modal = showModal("add-post-notice");
+        modal.setProperties({ post, resolve, reject });
       });
     },
 
@@ -1298,7 +1298,7 @@ export default Controller.extend(bufferedProperty("model"), {
       data => {
         const topic = this.model;
 
-        if (Ember.isPresent(data.notification_level_change)) {
+        if (isPresent(data.notification_level_change)) {
           topic.set(
             "details.notification_level",
             data.notification_level_change

@@ -132,6 +132,21 @@
         margin: 0 auto s(2);
         max-width: 700px;
         text-align: center;
+
+        ol {
+          margin-left: 25px;
+        }
+
+        ul,
+        ol {
+          display: inline-block;
+          padding-left: 0;
+          text-align: left;
+        }
+      }
+
+      .public-user-fields .public-user-field {
+        text-align: center;
       }
     }
 

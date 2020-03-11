@@ -259,7 +259,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     tags.each do |tag|
       post = tag.post
       Post.transaction do
-        post.raw = convert_quotes(post.raw)
+        post.raw = convert_bbcode(post.raw)
         post.rebake!
         post.save
         tag.destroy!
@@ -320,8 +320,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
     end
     body.gsub!(XListPattern) do |s|
       r = +"\n[ul]"
-      s.lines.each { |l| r << '[li]' << l.strip.sub(/^\[x\]\s*/, '') << '[/li]' }
-      r << "[/ul]\n"
+      s.lines.each { |l| "#{r}[li]#{l.strip.sub(/^\[x\]\s*/, '')}[/li]" }
+      "#{r}[/ul]\n"
     end
 
     if attachments.present?
@@ -336,16 +336,16 @@ class ImportScripts::Smf2 < ImportScripts::Base
         end
       end
       if use_count.keys.length < attachments.select(&:present?).length
-        body << "\n\n---"
+        body = "#{body}\n\n---"
         attachments.each_with_index do |upload, num|
           if upload.present? && use_count[num] == (0)
-            body << ("\n\n" + get_upload_markdown(upload))
+            "#{body}\n\n#{get_upload_markdown(upload)}"
           end
         end
       end
     end
 
-    opts[:ignore_quotes] ? body : convert_quotes(body)
+    opts[:ignore_quotes] ? body : convert_bbcode(body)
   end
 
   def get_upload_markdown(upload)
@@ -357,16 +357,87 @@ class ImportScripts::Smf2 < ImportScripts::Base
       inner = $~[:inner].strip
       params = parse_tag_params($~[:params])
       if params['author'].present?
-        quote = +"[quote=\"#{params['author']}"
+        quote = +"\n[quote=\"#{params['author']}"
         if QuoteParamsPattern =~ params['link']
           tl = topic_lookup_from_imported_post_id($~[:msg].to_i)
-          quote << ", post:#{tl[:post_number]}, topic:#{tl[:topic_id]}" if tl
+          quote = "#{quote} post:#{tl[:post_number]}, topic:#{tl[:topic_id]}" if tl
         end
-        quote << "\"]#{convert_quotes(inner)}[/quote]"
+        quote = "#{quote}\"]\n#{convert_quotes(inner)}\n[/quote]"
       else
         "<blockquote>#{convert_quotes(inner)}</blockquote>"
       end
     end
+  end
+
+  def convert_bbcode(raw)
+    return "" if raw.blank?
+
+    raw = convert_quotes(raw)
+
+    # [acronym]
+    raw.gsub!(/\[acronym=([^\]]+)\](.*?)\[\/acronym\]/im) { %{<abbr title="#{$1}">#{$2}</abbr>} }
+
+    # [br]
+    raw.gsub!(/\[br\]/i, "\n")
+    raw.gsub!(/<br\s*\/?>/i, "\n")
+    # [hr]
+    raw.gsub!(/\[hr\]/i, "<hr/>")
+
+    # [sub]
+    raw.gsub!(/\[sub\](.*?)\[\/sub\]/im) { "<sub>#{$1}</sub>" }
+    # [sup]
+    raw.gsub!(/\[sup\](.*?)\[\/sup\]/im) { "<sup>#{$1}</sup>" }
+
+    # [html]
+    raw.gsub!(/\[html\]/i, "\n```html\n")
+    raw.gsub!(/\[\/html\]/i, "\n```\n")
+
+    # [php]
+    raw.gsub!(/\[php\]/i, "\n```php\n")
+    raw.gsub!(/\[\/php\]/i, "\n```\n")
+
+    # [code]
+    raw.gsub!(/\[\/?code\]/i, "\n```\n")
+
+    # [pre]
+    raw.gsub!(/\[\/?pre\]/i, "\n```\n")
+
+    # [tt]
+    raw.gsub!(/\[\/?tt\]/i, "`")
+
+    # [ftp]
+    raw.gsub!(/\[ftp/i, "[url")
+    raw.gsub!(/\[\/ftp\]/i, "[/url]")
+
+    # [me]
+    raw.gsub!(/\[me=([^\]]*)\](.*?)\[\/me\]/im) { "_\\* #{$1} #{$2}_" }
+
+    # [ul]
+    raw.gsub!(/\[ul\]/i, "")
+    raw.gsub!(/\[\/ul\]/i, "")
+
+    # [li]
+    raw.gsub!(/\[li\](.*?)\[\/li\]/im) { "- #{$1}" }
+
+    # puts [img] on their own line
+    raw.gsub!(/\[img[^\]]*\](.*?)\[\/img\]/im) { "\n#{$1}\n" }
+
+    # puts [youtube] on their own line
+    raw.gsub!(/\[youtube\](.*?)\[\/youtube\]/im) { "\n#{$1}\n" }
+
+    IGNORED_BBCODE.each { |code| raw.gsub!(/\[#{code}[^\]]*\](.*?)\[\/#{code}\]/im, '\1') }
+
+    # ensure [/quote] are on their own line
+    raw.gsub!(/\s*\[\/quote\]\s*/im, "\n[/quote]\n")
+
+    # remove tapatalk mess
+    raw.gsub!(/Sent from .+? using \[url=.*?\].+?\[\/url\]/i, "")
+    raw.gsub!(/Sent from .+? using .+?\z/i, "")
+
+    # clean URLs
+    raw.gsub!(/\[url=(.+?)\]\1\[\/url\]/i, '\1')
+
+    raw
   end
 
   def extract_quoted_message_ids(body)
@@ -375,7 +446,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         params = parse_tag_params(params)
         if params.has_key?("link")
           match = QuoteParamsPattern.match(params["link"])
-          quoted << match[:msg].to_i if match
+          quoted = "#{quoted}#{match[:msg].to_i}" if match
         end
       end
     end
@@ -499,7 +570,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     def parser
       @parser ||= OptionParser.new(nil, 12) do |o|
         o.banner = "Usage:\t#{File.basename($0)} <SMFROOT> [options]\n"
-        o.banner << "\t#{File.basename($0)} -d <DATABASE> [options]"
+        o.banner = "${o.banner}\t#{File.basename($0)} -d <DATABASE> [options]"
         o.on('-h HOST', :REQUIRED, "MySQL server hostname [\"#{self.host}\"]") { |s| self.host = s }
         o.on('-u USER', :REQUIRED, "MySQL username [\"#{self.username}\"]") { |s| self.username = s }
         o.on('-p [PASS]', :OPTIONAL, 'MySQL password. Without argument, reads password from STDIN.') { |s| self.password = s || :ask }

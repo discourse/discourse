@@ -7,7 +7,9 @@
     </span>
 
     <span class="icons">
-      {{#unless theme.selected}}
+      {{#if theme.selected}}
+        {{d-icon "caret-right"}}
+      {{else}}
         {{#if theme.default}}
           {{d-icon "check" class="default-indicator" title="admin.customize.theme.default_theme_tooltip"}}
         {{/if}}
@@ -20,24 +22,22 @@
         {{#unless theme.enabled}}
           {{d-icon "ban" class="light-grey-icon" title="admin.customize.theme.disabled_component_tooltip"}}
         {{/unless}}
-      {{else}}
-        {{d-icon "caret-right"}}
-      {{/unless}}
+      {{/if}}
     </span>
   </div>
 
   {{#if displayComponents}}
     <div class="components-list">
-      <span class="components">{{{childrenString}}}</span>
+      <span class="components">{{html-safe childrenString}}</span>
 
       {{#if displayHasMore}}
-        <span {{action "toggleChildrenExpanded"}} class="others-count">
+        <a href {{action "toggleChildrenExpanded"}} class="others-count">
           {{#if childrenExpanded}}
-            {{I18n "admin.customize.theme.collapse"}}
+            {{i18n "admin.customize.theme.collapse"}}
           {{else}}
-            {{I18n "admin.customize.theme.and_x_more" count=moreCount}}
+            {{i18n "admin.customize.theme.and_x_more" count=moreCount}}
           {{/if}}
-        </span>
+        </a>
       {{/if}}
     </div>
   {{/if}}

@@ -1,14 +1,13 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { extractDomainFromUrl } from "discourse/lib/utilities";
 import EmberObject from "@ember/object";
 
 export default Controller.extend({
-  adminWebHooks: inject(),
+  adminWebHooks: controller(),
   eventTypes: alias("adminWebHooks.eventTypes"),
   defaultEventTypes: alias("adminWebHooks.defaultEventTypes"),
   contentTypes: alias("adminWebHooks.contentTypes"),

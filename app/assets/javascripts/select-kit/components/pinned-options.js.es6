@@ -1,58 +1,59 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { on } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { computed, action } from "@ember/object";
+
+const UNPINNED = "unpinned";
+const PINNED = "pinned";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["pinned-options"],
-  classNames: "pinned-options",
-  allowInitialValueMutation: false,
+  classNames: ["pinned-options"],
 
-  autoHighlight() {},
-
-  computeHeaderContent() {
-    let content = this._super(...arguments);
+  modifySelection(content) {
     const pinnedGlobally = this.get("topic.pinned_globally");
-    const pinned = this.computedValue;
+    const pinned = this.value;
     const globally = pinnedGlobally ? "_globally" : "";
-    const state = pinned ? `pinned${globally}` : "unpinned";
+    const state = pinned ? `pinned${globally}` : UNPINNED;
     const title = I18n.t(`topic_statuses.${state}.title`);
 
-    content.label = `${title}${iconHTML("caret-down")}`.htmlSafe();
+    content.label = `<span>${title}</span>${iconHTML("caret-down")}`.htmlSafe();
     content.title = title;
     content.name = state;
-    content.icon = `thumbtack${state === "unpinned" ? " unpinned" : ""}`;
+    content.icon = `thumbtack${state === UNPINNED ? " unpinned" : ""}`;
     return content;
   },
 
-  @on("init")
-  _setContent() {
-    const globally = this.get("topic.pinned_globally") ? "_globally" : "";
+  content: computed(function() {
+    const globally = this.topic.pinned_globally ? "_globally" : "";
 
-    this.set("content", [
+    return [
       {
-        id: "pinned",
-        name: I18n.t("topic_statuses.pinned" + globally + ".title"),
-        description: I18n.t("topic_statuses.pinned" + globally + ".help"),
+        id: PINNED,
+        name: I18n.t(`topic_statuses.pinned${globally}.title`),
+        description: this.site.mobileView
+          ? null
+          : I18n.t(`topic_statuses.pinned${globally}.help`),
         icon: "thumbtack"
       },
       {
-        id: "unpinned",
+        id: UNPINNED,
         name: I18n.t("topic_statuses.unpinned.title"),
         icon: "thumbtack unpinned",
-        description: I18n.t("topic_statuses.unpinned.help")
+        description: this.site.mobileView
+          ? null
+          : I18n.t("topic_statuses.unpinned.help")
       }
-    ]);
-  },
+    ];
+  }),
 
-  actions: {
-    onSelect() {
-      const topic = this.topic;
+  @action
+  onChange(value) {
+    const topic = this.topic;
 
-      if (this.computedValue === "unpinned") {
-        topic.clearPin();
-      } else {
-        topic.rePin();
-      }
+    if (value === UNPINNED) {
+      return topic.clearPin();
+    } else {
+      return topic.rePin();
     }
   }
 });

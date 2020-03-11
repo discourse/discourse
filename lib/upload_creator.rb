@@ -63,22 +63,31 @@ class UploadCreator
         image_type = @image_info.type.to_s
       end
 
-      # compute the sha of the file
+      # compute the sha of the file and generate a unique hash
+      # which is only used for secure uploads
       sha1 = Upload.generate_digest(@file)
+      unique_hash = SecureRandom.hex(20) if SiteSetting.secure_media
 
-      # do we already have that upload?
-      @upload = Upload.find_by(sha1: sha1)
+      # we do not check for duplicate uploads if secure media is
+      # enabled because we use a unique access hash to differentiate
+      # between uploads instead of the sha1, and to get around various
+      # access/permission issues for uploads
+      if !SiteSetting.secure_media
 
-      # make sure the previous upload has not failed
-      if @upload && @upload.url.blank?
-        @upload.destroy
-        @upload = nil
-      end
+        # do we already have that upload?
+        @upload = Upload.find_by(sha1: sha1)
 
-      # return the previous upload if any
-      if @upload
-        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
-        return @upload
+        # make sure the previous upload has not failed
+        if @upload && @upload.url.blank?
+          @upload.destroy
+          @upload = nil
+        end
+
+        # return the previous upload if any
+        if @upload
+          UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+          return @upload
+        end
       end
 
       fixed_original_filename = nil
@@ -101,7 +110,8 @@ class UploadCreator
       @upload.user_id           = user_id
       @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize          = filesize
-      @upload.sha1              = sha1
+      @upload.sha1              = SiteSetting.secure_media? ? unique_hash : sha1
+      @upload.original_sha1     = SiteSetting.secure_media? ? sha1 : nil
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
       @upload.extension         = image_type || File.extname(@filename)[1..10]
@@ -117,13 +127,7 @@ class UploadCreator
       @upload.for_export          = true if @opts[:for_export]
       @upload.for_site_setting    = true if @opts[:for_site_setting]
       @upload.for_gravatar        = true if @opts[:for_gravatar]
-
-      if !FileHelper.is_supported_media?(@filename) &&
-        !@upload.for_theme &&
-        !@upload.for_site_setting &&
-        SiteSetting.prevent_anons_from_downloading_files
-        @upload.secure = true
-      end
+      @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
 
       return @upload unless @upload.save
 

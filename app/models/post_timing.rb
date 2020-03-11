@@ -31,12 +31,14 @@ class PostTiming < ActiveRecord::Base
   end
 
   def self.record_new_timing(args)
-    DB.exec("INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
+    row_count = DB.exec("INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
               SELECT :topic_id, :user_id, :post_number, :msecs
               ON CONFLICT DO NOTHING",
             args)
+
     # concurrency is hard, we are not running serialized so this can possibly
     # still happen, if it happens we just don't care, its an invalid record anyway
+    return if row_count == 0
     Post.where(['topic_id = :topic_id and post_number = :post_number', args]).update_all 'reads = reads + 1'
     UserStat.where(user_id: args[:user_id]).update_all 'posts_read_count = posts_read_count + 1'
   end

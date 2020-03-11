@@ -5,9 +5,9 @@
       <h1>{{i18n 'admin.badges.badge_intro.title'}}</h1>
       <div class="external-resources">
         {{#each badgeIntroLinks as |link|}}
-          <a href={{link.href}} class="external-link" target="_blank">
+          <a href={{link.href}} class="external-link" target="_blank" rel="noopener">
             {{d-icon link.icon}}
-            <span>{{I18n link.text}}</span>
+            <span>{{i18n link.text}}</span>
           </a>
         {{/each}}
       </div>

@@ -485,7 +485,6 @@ zh_TW:
       leave: "離開"
       request: "請求"
       message: "訊息"
-      allow_membership_requests: "允許使用者向群組擁有者傳送加入要求？"
       membership_request_template: "自定當使用者傳送加入要求時顯示的樣板"
       membership_request:
         submit: "送出請求"
@@ -1171,8 +1170,6 @@ zh_TW:
       reset: "重設密碼"
       complete_username: "如果有帳號符合你輸入的使用者名稱 <b>%{username}</b>，你應該很快就會收到重設密碼的電子郵件。"
       complete_email: "如果有帳號符合你輸入的電子郵件地址 <b>%{email}</b>，你應該很快就會收到重設密碼的電子郵件。"
-      complete_username_found: "我們發現有個帳號跟你所提供的使用者名稱 <b>%{username}</b> 相符，你應該很快就會收到重設密碼的電子郵件。"
-      complete_email_found: "我們發現有個帳號跟 <b>%{email}</b> 相符，你應該很快就會收到重設密碼的電子郵件。"
       complete_username_not_found: "沒有帳號使用 <b>%{username}</b> 這個使用者名稱"
       complete_email_not_found: "沒有帳號使用 <b>%{email}</b>"
       help: "沒收到信嗎？ 請先檢查您的垃圾信件匣。<p>不確定您使用的是哪個信箱嗎？ 輸入查看該信箱是否已註冊。</p><p>如果您已經無法登入您帳號所使用的信箱，請與<a href='%{basePath}/about'>管理員</a>聯繫。</p>"
@@ -1370,7 +1367,6 @@ zh_TW:
       view_new_post: "檢視你的新貼文。"
       saving: "正在儲存"
       saved: "儲存完畢!"
-      saved_draft: "草稿待完成，點擊繼續。"
       uploading: "正在上傳..."
       show_preview: "顯示預覽 &raquo;"
       hide_preview: "&laquo; 隱藏預覽"
@@ -2519,15 +2515,6 @@ zh_TW:
           name: 其它
         posting:
           name: 發文
-    google_search: |
-      <h3>用 Google 搜索</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "所有標籤"
       other_tags: "其他標籤"

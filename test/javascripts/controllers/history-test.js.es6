@@ -1,6 +1,6 @@
 moduleFor("controller:history");
 
-QUnit.test("displayEdit", function(assert) {
+QUnit.test("displayEdit", async function(assert) {
   const HistoryController = this.subject();
 
   HistoryController.setProperties({
@@ -82,8 +82,8 @@ QUnit.test("displayEdit", function(assert) {
     }
   });
 
-  HistoryController.bodyDiffChanged().then(() => {
-    const output = HistoryController.get("bodyDiff");
-    assert.equal(output, expectedOutput, "it keeps safe HTML");
-  });
+  await HistoryController.bodyDiffChanged();
+
+  const output = HistoryController.get("bodyDiff");
+  assert.equal(output, expectedOutput, "it keeps safe HTML");
 });

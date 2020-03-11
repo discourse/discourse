@@ -5,12 +5,15 @@
         {{#each group.buttons as |b|}}
           {{#if b.popupMenu}}
             {{toolbar-popup-menu-options
-              onSelect=onPopupMenuAction
+              content=popupMenuOptions
+              onChange=onPopupMenuAction
               onExpand=(action b.action b)
-              title=b.title
-              headerIcon=b.icon
               class=b.className
-              content=popupMenuOptions}}
+              options=(hash
+                popupTitle=b.title
+                icon=b.icon
+              )
+            }}
           {{else}}
             {{d-button
               action=b.action
@@ -43,8 +46,8 @@
   </div>
 
   <div class="d-editor-preview-wrapper {{if forcePreview 'force-preview'}}">
-    <div class="d-editor-preview">{{{preview}}}</div>
-    {{plugin-outlet name="editor-preview" classNames="d-editor-plugin"}}
+    <div class="d-editor-preview">{{html-safe preview}}</div>
+    {{plugin-outlet name="editor-preview" classNames="d-editor-plugin" args=outletArgs}}
   </div>
 </div>
 

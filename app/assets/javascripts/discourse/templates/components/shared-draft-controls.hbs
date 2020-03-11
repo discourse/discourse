@@ -2,13 +2,14 @@
   {{#if publishing}}
     {{i18n "shared_drafts.publishing"}}
   {{else}}
-    {{{i18n "shared_drafts.notice" category=topic.category.name}}}
+    {{i18n "shared_drafts.notice" category=topic.category.name}}
 
     <div class='publish-field'>
       <label>{{i18n "shared_drafts.destination_category"}}</label>
       {{category-chooser
         value=topic.destination_category_id
-        onChooseCategory=(action "updateDestinationCategory")}}
+        onChange=(action "updateDestinationCategory")
+      }}
     </div>
 
     <div class='publish-field'>

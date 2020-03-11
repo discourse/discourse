@@ -1,10 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { equal, and, empty } from "@ember/object/computed";
 import Component from "@ember/component";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 
@@ -48,9 +45,10 @@ export default Component.extend({
     const dateTime = moment(`${this.date}${time}`);
 
     if (dateTime.isValid()) {
-      this.set("input", dateTime.format(FORMAT));
+      this.attrs.onChangeInput &&
+        this.attrs.onChangeInput(dateTime.format(FORMAT));
     } else {
-      this.set("input", null);
+      this.attrs.onChangeInput && this.attrs.onChangeInput(null);
     }
   },
 
@@ -112,7 +110,10 @@ export default Component.extend({
     }
 
     if (isCustom) {
-      return date || time;
+      if (date) {
+        return moment(`${date}${time ? " " + time : ""}`).isAfter(moment());
+      }
+      return time;
     } else {
       return input;
     }

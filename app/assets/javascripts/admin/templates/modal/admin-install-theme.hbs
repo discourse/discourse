@@ -11,7 +11,7 @@
         {{#each themes as |theme|}}
           <div class="popular-theme-item">
             <div class="popular-theme-name">
-              <a href="{{theme.meta_url}}" target="_blank">
+              <a href={{theme.meta_url}} rel="noopener" target="_blank">
                 {{#if theme.component}}
                   {{d-icon 'puzzle-piece' title='admin.customize.theme.component'}}
                 {{/if}}
@@ -24,7 +24,7 @@
 
             <div class="popular-theme-buttons">
               {{#if theme.installed}}
-                <span>{{I18n "admin.customize.theme.installed"}}</span>
+                <span>{{i18n "admin.customize.theme.installed"}}</span>
               {{else}}
                 {{d-button class='btn-small'
                   label="admin.customize.theme.install"
@@ -33,7 +33,7 @@
                   action=(action "installThemeFromList" theme.value)}}
 
                 {{#if theme.preview}}
-                  <a href="{{theme.preview}}" target="_blank">{{d-icon "desktop"}} {{I18n "admin.customize.theme.preview"}}</a>
+                  <a href={{theme.preview}} rel="noopener" target="_blank">{{d-icon "desktop"}} {{i18n "admin.customize.theme.preview"}}</a>
                 {{/if}}
               {{/if}}
             </div>
@@ -85,11 +85,16 @@
 
     {{#if create}}
       <div class="inputs">
-        <div class="label">{{I18n "admin.customize.theme.create_name"}}</div>
+        <div class="label">{{i18n "admin.customize.theme.create_name"}}</div>
         {{input value=name placeholder=placeholder}}
 
-        <div class="label">{{I18n "admin.customize.theme.create_type"}}</div>
-        {{combo-box valueAttribute="value" content=createTypes value=selectedType}}
+        <div class="label">{{i18n "admin.customize.theme.create_type"}}</div>
+        {{combo-box
+          valueProperty="value"
+          content=createTypes
+          value=selectedType
+          onChange=(action (mut selectedType))
+        }}
       </div>
     {{/if}}
   </div>

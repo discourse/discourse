@@ -340,8 +340,8 @@ module PrettyText
     doc = Nokogiri::HTML.fragment(html)
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
+    strip_oneboxed_media(doc)
     html = doc.to_html
-
     ExcerptParser.get_excerpt(html, max_length, options)
   end
 
@@ -374,6 +374,11 @@ module PrettyText
     doc.css(".lightbox-wrapper .meta").remove
   end
 
+  def self.strip_oneboxed_media(doc)
+    doc.css("audio").remove
+    doc.css(".video-onebox,video").remove
+  end
+
   def self.convert_vimeo_iframes(doc)
     doc.css("iframe[src*='player.vimeo.com']").each do |iframe|
       if iframe["data-original-href"].present?
@@ -388,7 +393,7 @@ module PrettyText
 
   def self.strip_secure_media(doc)
     doc.css("a[href]").each do |a|
-      if a["href"].include?("/secure-media-uploads/") && FileHelper.is_supported_media?(a["href"])
+      if Upload.secure_media_url?(a["href"])
         target = %w(video audio).include?(a&.parent&.parent&.name) ? a.parent.parent : a
         target.replace "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
       end
@@ -435,6 +440,7 @@ module PrettyText
 
   USER_TYPE ||= 'user'
   GROUP_TYPE ||= 'group'
+  GROUP_MENTIONABLE_TYPE ||= 'group-mentionable'
 
   def self.add_mentions(doc, user_id: nil)
     elements = doc.css("span.mention")
@@ -442,7 +448,7 @@ module PrettyText
 
     mentions = lookup_mentions(names, user_id: user_id)
 
-    doc.css("span.mention").each do |element|
+    elements.each do |element|
       name = element.text[1..-1]
       name.downcase!
 
@@ -456,6 +462,9 @@ module PrettyText
         case type
         when USER_TYPE
           element['href'] = "#{Discourse::base_uri}/u/#{name}"
+        when GROUP_MENTIONABLE_TYPE
+          element['class'] = 'mention-group notify'
+          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
           element['href'] = "#{Discourse::base_uri}/groups/#{name}"
@@ -481,8 +490,16 @@ module PrettyText
         :group_type AS type,
         lower(name) AS name
       FROM groups
-      WHERE lower(name) IN (:names) AND (#{Group.mentionable_sql_clause})
     )
+    UNION
+    (
+      SELECT
+        :group_mentionable_type AS type,
+        lower(name) AS name
+      FROM groups
+      WHERE lower(name) IN (:names) AND (#{Group.mentionable_sql_clause(include_public: false)})
+    )
+    ORDER BY type
     SQL
 
     user = User.find_by(id: user_id)
@@ -492,6 +509,7 @@ module PrettyText
       names: names,
       user_type: USER_TYPE,
       group_type: GROUP_TYPE,
+      group_mentionable_type: GROUP_MENTIONABLE_TYPE,
       levels: Group.alias_levels(user),
       user_id: user_id
     )

@@ -27,6 +27,7 @@ class UserDestroyer
 
     optional_transaction(open_transaction: opts[:transaction]) do
 
+      UserSecurityKey.where(user_id: user.id).delete_all
       Draft.where(user_id: user.id).delete_all
       Reviewable.where(created_by_id: user.id).delete_all
 

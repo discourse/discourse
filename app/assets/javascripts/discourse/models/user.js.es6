@@ -1,6 +1,7 @@
+import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
 import { gt, equal, or } from "@ember/object/computed";
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { computed, getProperties } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -8,10 +9,7 @@ import UserStream from "discourse/models/user-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import Singleton from "discourse/mixins/singleton";
 import { longDate } from "discourse/lib/formatter";
-import {
-  default as discourseComputed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import UserActionStat from "discourse/models/user-action-stat";
@@ -24,7 +22,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
-import { getProperties } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 
@@ -539,7 +536,19 @@ const User = RestModel.extend({
     const user = this;
 
     return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
-      return ajax(userPath(`${user.get("username")}.json`), { data: options });
+      if (options && options.existingRequest) {
+        // Existing ajax request has been passed, use it
+        return options.existingRequest;
+      }
+
+      const useCardRoute = options && options.forCard;
+      if (options) delete options.forCard;
+
+      const path = useCardRoute
+        ? `${user.get("username")}/card.json`
+        : `${user.get("username")}.json`;
+
+      return ajax(userPath(path), { data: options });
     }).then(json => {
       if (!isEmpty(json.user.stats)) {
         json.user.stats = User.groupStats(
@@ -875,7 +884,7 @@ User.reopenClass(Singleton, {
       responses.set("count", responses.get("count") + stat.get("count"));
     });
 
-    const result = Ember.A();
+    const result = A();
     result.pushObjects(stats.rejectBy("isResponse"));
 
     let insertAt = 0;

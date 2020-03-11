@@ -27,6 +27,7 @@ it:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
@@ -56,7 +57,7 @@ it:
           other: "%{count}m"
         about_x_hours:
           one: "%{count}ora"
-          other: "%{count}ore"
+          other: "%{count} ore"
         x_days:
           one: "%{count}giorno"
           other: "%{count}giorni"
@@ -77,7 +78,7 @@ it:
       medium:
         x_minutes:
           one: "%{count} min"
-          other: "%{count}min"
+          other: "%{count} min"
         x_hours:
           one: "%{count} ora"
           other: "%{count} ore"
@@ -88,10 +89,10 @@ it:
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto fa"
-          other: "%{count}minuti fa"
+          other: "%{count} minuti fa"
         x_hours:
           one: "%{count} ora fa"
-          other: "%{count}ore fa"
+          other: "%{count} ore fa"
         x_days:
           one: "%{count} giorno fa"
           other: "%{count}giorni fa"
@@ -107,7 +108,7 @@ it:
           other: "%{count}giorni dopo"
         x_months:
           one: "%{count} mese dopo"
-          other: "%{count}mesi dopo"
+          other: "%{count} mesi dopo"
         x_years:
           one: "%{count} anno dopo"
           other: "%{count}anni dopo"
@@ -152,6 +153,8 @@ it:
       banner:
         enabled: "lo ha reso un annuncio il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente. "
         disabled: "ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
+      forwarded: "inoltrato l&#39;e-mail qui sopra"
+    topic_admin_menu: "azioni argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via email."
     bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello di esperienza 1 e riceveranno il riepilogo quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users}utenti iscritti."
@@ -261,9 +264,19 @@ it:
     bookmarks:
       created: "hai inserito questo messaggio nei segnalibri"
       not_bookmarked: "aggiungi ai segnalibri"
+      created_with_reminder: "hai aggiunto questo messaggio ai segnalibri con un promemoria il%{date}"
       remove: "Rimuovi Segnalibro"
       confirm_clear: "Sei certo di voler rimuovere tutti i segnalibri da questo argomento?"
       save: "Salva"
+      no_timezone: 'Non hai ancora impostato un fuso orario. Non sarai in grado di impostare promemoria. Creane uno <a href="%{basePath}/my/preferences/profile">nel tuo profilo</a> .'
+      reminders:
+        at_desktop: "La prossima volta che sarò al mio desktop"
+        later_today: "Più tardi, oggi <br/> {{date}}"
+        next_business_day: "Il prossimo giorno lavorativo <br/> {{date}}"
+        tomorrow: "Domani <br/> {{date}}"
+        next_week: "La prossima settimana <br/> {{date}}"
+        next_month: "Il prossimo mese <br/> {{date}}"
+        custom: "Data e ora personalizzate"
     drafts:
       resume: "Riprendi"
       remove: "Rimuovi"
@@ -309,8 +322,14 @@ it:
       install_banner: "Vuoi <a href>installare %{title} su questo dispositivo?</a>"
     choose_topic:
       none_found: "Nessun argomento trovato."
+      title:
+        search: "Cerca un argomento"
+        placeholder: "digita qui il titolo dell&#39;argomento, l&#39;URL o l&#39;id"
     choose_message:
       none_found: "Nessun messaggio trovato."
+      title:
+        search: "Cerca un messaggio"
+        placeholder: "digita qui il titolo del messaggio, l&#39;URL o l&#39;id"
     review:
       order_by: "Ordina per"
       in_reply_to: "in risposta a"
@@ -347,7 +366,7 @@ it:
       delete: "Elimina"
       settings:
         saved: "Salvato"
-        save_changes: "Salva Modifiche"
+        save_changes: "Salva le modifiche"
         title: "Impostazioni"
         priorities:
           title: "Priorità Revisionabili"
@@ -367,6 +386,8 @@ it:
       deleted_post: "(messaggio eliminato)"
       deleted_user: "(utente eliminato)"
       user:
+        bio: "Biografia"
+        website: "Sito web"
         username: "Nome utente"
         email: "Email"
         name: "Nome"
@@ -558,7 +579,8 @@ it:
       leave: "Abbandona"
       request: "Richiesta"
       message: "Messaggio"
-      allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
+      confirm_leave: "Sei sicuro di voler abbandonare questo gruppo?"
+      allow_membership_requests: "Consenti agli utenti di inviare richieste di ammissione ai proprietari dei gruppi (richiede un gruppo visibile pubblicamente)"
       membership_request_template: "Modello personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
       membership_request:
         submit: "Invia Richiesta"
@@ -737,9 +759,13 @@ it:
       activity_stream: "Attività"
       preferences: "Opzioni"
       feature_topic_on_profile:
+        open_search: "Seleziona un nuovo argomento"
+        title: "Seleziona un argomento"
+        search_label: "Cerca argomento per titolo"
         save: "Salva"
         clear:
           title: "Pulisci"
+          warning: "Sei sicuro di voler cancellare l&#39;argomento in primo piano?"
       profile_hidden: "Il profilo pubblico di questo utente è nascosto."
       expand_profile: "Espandi"
       collapse_profile: "Raggruppa"
@@ -772,6 +798,7 @@ it:
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
       enable_defer: "Abilita il rinvio per contrassegnare gli argomenti come non letti"
       change: "cambia"
+      featured_topic: "Argomento in primo piano"
       moderator: "{{user}} è un moderatore"
       admin: "{{user}} è un amministratore"
       moderator_tooltip: "Questo utente è un moderatore"
@@ -795,7 +822,7 @@ it:
         warning: "Modalità Mailing List attiva. Le impostazioni per la notifica via email verranno ignorate."
       tag_settings: "Etichette"
       watched_tags: "Osservate"
-      watched_tags_instructions: "Osserverai automaticamente tutti gli argomenti con queste etichette. Verrai notificato di tutti i nuovi messaggi e argomenti, e accanto all'argomento apparirà anche un conteggio dei nuovi messaggi."
+      watched_tags_instructions: "Osserverai automaticamente tutti gli argomenti con questi tag. Verrai notificato di tutti i nuovi messaggi e argomenti, e accanto all'argomento apparirà anche un conteggio dei nuovi messaggi."
       tracked_tags: "Seguite"
       tracked_tags_instructions: "Seguirai automaticamente tutti gli argomenti con queste etichette. Accanto all'argomento apparirà il conteggio dei nuovi messaggi."
       muted_tags: "Silenziati"
@@ -809,8 +836,8 @@ it:
       watched_first_post_tags: "Osservando Primo Messaggio"
       watched_first_post_tags_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento con queste etichette."
       muted_categories: "Silenziate"
-      muted_categories_instructions: "Non riceverai notifiche relative a nuovi Argomenti in queste Categorie, e non appariranno nella pagina delle Categorie o dei Recenti."
-      muted_categories_instructions_dont_hide: "Non riceverai alcuna notifica per i nuovi Argomenti creati in questa categoria."
+      muted_categories_instructions: "Non riceverai notifiche riguardanti i contenuti di queste categorie, e non appariranno nelle pagine delle Categorie o dei Recenti."
+      muted_categories_instructions_dont_hide: "Non riceverai alcuna notifica riguardante nuovi argomenti in queste categorie."
       no_category_access: "Come moderatore hai accesso limitato alla categoria, il salvataggio è disabilitato."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
@@ -929,7 +956,7 @@ it:
         error: "Si è verificato un errore durante la modifica del valore."
       change_username:
         title: "Cambia Utente"
-        confirm: "Sei assolutamente certo di voler cambiare il tuo nome utente?"
+        confirm: "Sei sicuro di voler davvero cambiare il tuo nome utente?"
         taken: "Spiacenti, questo nome utente è già riservato."
         invalid: "Nome utente non valido: usa solo lettere e cifre"
       change_email:
@@ -955,6 +982,9 @@ it:
       change_card_background:
         title: "Sfondo Scheda Utente"
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
+      change_featured_topic:
+        title: "Argomento in primo piano"
+        instructions: "Un collegamento a questo argomento sarà sulla tua scheda utente e profilo."
       email:
         title: "Email"
         primary: "Email principale"
@@ -1090,6 +1120,7 @@ it:
         search: "digita per cercare inviti..."
         title: "Inviti"
         user: "Utente Invitato"
+        sent: "Ultimo inviato"
         none: "Nessun invito da visualizzare."
         truncated:
           one: "Mostro il primo invito."
@@ -1300,8 +1331,6 @@ it:
       reset: "Azzera Password"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con le istruzioni per ripristinare la tua password."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
-      complete_username_found: "C'è un account che corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
-      complete_email_found: "C'è un account che corrisponde alla email <b>%{email}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
       complete_username_not_found: "Nessun account corrisponde al nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account corrisponde alla email <b>%{email}</b>"
       help: "Le email non arrivano? Per prima cosa assicurati di controllare la cartella spam.<p>Non sei sicuro di quale indirizzo email hai usato? Inserisci un indirizzo email e ti faremo sapere se esiste.</p><p>Se non hai più accesso all'indirizzo email del tuo account, per favore contatta <a href='%{basePath}/about'>il nostro staff.</a></p>"
@@ -1521,7 +1550,6 @@ it:
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio"
       saved: "Salvato!"
-      saved_draft: "Hai un messaggio in bozza in sospeso. Seleziona per riprendere la modifica."
       uploading: "In caricamento..."
       show_preview: "visualizza anteprima &raquo;"
       hide_preview: "&laquo; nascondi anteprima"
@@ -2562,6 +2590,7 @@ it:
         help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
       personal_message:
         title: "Questo Argomento è un Messaggio Personale"
+        help: "Questo Argomento è un Messaggio Personale"
     posts: "Messaggi"
     posts_long: "ci sono {{number}} messaggi in questo argomento"
     posts_likes_MF: |
@@ -2768,15 +2797,6 @@ it:
           name: Altri
         posting:
           name: Pubblicazione
-    google_search: |
-      <h3>Cerca con Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Etichette"
       other_tags: "Altre Etichette"

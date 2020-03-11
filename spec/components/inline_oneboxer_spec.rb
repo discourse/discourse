@@ -30,14 +30,19 @@ describe InlineOneboxer do
     end
 
     it "puts an entry in the cache" do
-      expect(InlineOneboxer.cache_lookup(topic.url)).to be_blank
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      url = "https://example.com/random-url"
+      stub_request(:get, url).to_return(status: 200, body: "<html><head><title>a blog</title></head></html>")
 
-      result = InlineOneboxer.lookup(topic.url)
+      InlineOneboxer.purge(url)
+      expect(InlineOneboxer.cache_lookup(url)).to be_blank
+
+      result = InlineOneboxer.lookup(url)
       expect(result).to be_present
 
-      cached = InlineOneboxer.cache_lookup(topic.url)
-      expect(cached[:url]).to eq(topic.url)
-      expect(cached[:title]).to eq(topic.title)
+      cached = InlineOneboxer.cache_lookup(url)
+      expect(cached[:url]).to eq(url)
+      expect(cached[:title]).to eq('a blog')
     end
 
     it "puts an entry in the cache for failed onebox" do
@@ -57,6 +62,39 @@ describe InlineOneboxer do
   end
 
   context ".lookup" do
+    let(:category) { Fabricate(:private_category, group: Group[:staff]) }
+    let(:category2) { Fabricate(:private_category, group: Group[:staff]) }
+
+    let(:admin) { Fabricate(:admin) }
+
+    it "can lookup private topics if in same category" do
+      topic = Fabricate(:topic, category: category)
+      topic1 = Fabricate(:topic, category: category)
+      topic2 = Fabricate(:topic, category: category2)
+
+      # Link to `topic` from new topic (same category)
+      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: category.id, skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq(topic.url)
+      expect(onebox[:title]).to eq(topic.title)
+
+      # Link to `topic` from `topic`
+      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic.category_id, topic_id: topic.id, skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq(topic.url)
+      expect(onebox[:title]).to eq(topic.title)
+
+      # Link to `topic` from `topic1` (same category)
+      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic1.category_id, topic_id: topic1.id, skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq(topic.url)
+      expect(onebox[:title]).to eq(topic.title)
+
+      # Link to `topic` from `topic2` (different category)
+      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic2.category_id, topic_id: topic2.id, skip_cache: true)
+      expect(onebox).to be_blank
+    end
+
     it "can lookup one link at a time" do
       topic = Fabricate(:topic)
       onebox = InlineOneboxer.lookup(topic.url, skip_cache: true)

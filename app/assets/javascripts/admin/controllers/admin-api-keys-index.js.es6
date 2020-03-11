@@ -1,6 +1,7 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Controller from "@ember/controller";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   actions: {
     revokeKey(key) {
       key.revoke().catch(popupAjaxError);

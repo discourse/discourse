@@ -3,7 +3,7 @@
 module DiscoursePoll
   class PollsUpdater
 
-    POLL_ATTRIBUTES ||= %w{close_at max min results status step type visibility}
+    POLL_ATTRIBUTES ||= %w{close_at max min results status step type visibility groups}
 
     def self.update(post, polls)
       ::Poll.transaction do
@@ -38,6 +38,7 @@ module DiscoursePoll
           attributes["visibility"] = new_poll["public"] == "true" ? "everyone" : "secret"
           attributes["close_at"] = Time.zone.parse(new_poll["close"]) rescue nil
           attributes["status"] = old_poll["status"]
+          attributes["groups"] = new_poll["groups"]
           poll = ::Poll.new(attributes)
 
           if is_different?(old_poll, poll, new_poll_options)

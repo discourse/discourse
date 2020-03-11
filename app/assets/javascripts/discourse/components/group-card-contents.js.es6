@@ -1,7 +1,7 @@
 import { alias, match, gt, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { groupPath } from "discourse/lib/url";
@@ -12,7 +12,7 @@ const maxMembersToDisplay = 10;
 export default Component.extend(CardContentsBase, CleansUp, {
   elementId: "group-card",
   triggeringLinkClass: "mention-group",
-  classNames: ["no-bg"],
+  classNames: ["no-bg", "group-card"],
   classNameBindings: [
     "visible:show",
     "showBadges",

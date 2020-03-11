@@ -30,7 +30,7 @@ module PostGuardian
     return false unless (can_see_post.nil? && can_see_post?(post)) || can_see_post
 
     # no warnings except for staff
-    return false if (action_key == :notify_user && !is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true')
+    return false if action_key == :notify_user && (post.user.blank? || (!is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true'))
 
     taken = opts[:taken_actions].try(:keys).to_a
     is_flag = PostActionType.notify_flag_types[action_key]
@@ -71,7 +71,7 @@ module PostGuardian
       not(post.trashed?) &&
 
       # don't like your own stuff
-      not(action_key == :like && is_my_own?(post))
+      not(action_key == :like && (post.user.blank? || is_my_own?(post)))
     end
 
     !!result
@@ -187,7 +187,7 @@ module PostGuardian
   # Recovery Method
   def can_recover_post?(post)
     if is_staff?
-      post.deleted_at && post.user
+      !!post.deleted_at
     else
       is_my_own?(post) && post.user_deleted && !post.deleted_at
     end

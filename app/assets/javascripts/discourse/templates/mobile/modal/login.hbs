@@ -1,4 +1,5 @@
 {{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
+  {{plugin-outlet name="login-before-modal-body" tagName=""}}
   {{#d-modal-body title="login.title" class=modalBodyClasses}}
     {{#if showLoginButtons}}
       {{login-buttons
@@ -12,28 +13,30 @@
       <form id='login-form' method='post'>
         <div id="credentials" class={{credentialsClass}}>
           <table>
-            <tr>
-              <td>
-                <label for='login-account-name'>{{i18n 'login.username'}}</label>
-              </td>
-              <td>
-                {{text-field value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for='login-account-password'>{{i18n 'login.password'}}</label>
-              </td>
-              <td>
-                {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>
-                <a id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>
+                  <label for='login-account-name'>{{i18n 'login.username'}}</label>
+                </td>
+                <td>
+                  {{text-field value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label for='login-account-password'>{{i18n 'login.password'}}</label>
+                </td>
+                <td>
+                  {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
         {{#second-factor-form
@@ -78,6 +81,8 @@
       {{/if}}
     {{/if}}
   </div>
+
+  {{plugin-outlet name="login-after-modal-footer" tagName=""}}
 
   <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 {{/login-modal}}

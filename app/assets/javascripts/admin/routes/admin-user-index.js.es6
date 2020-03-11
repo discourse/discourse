@@ -19,7 +19,7 @@ export default DiscourseRoute.extend({
     controller.setProperties({
       originalPrimaryGroupId: model.primary_group_id,
       availableGroups: this._availableGroups,
-      customGroupIdsBuffer: null,
+      customGroupIdsBuffer: model.customGroups.mapBy("id"),
       model
     });
   }

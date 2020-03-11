@@ -21,9 +21,9 @@
         <div class='clearfix'></div>
       </div>
       {{#if hasIncoming}}
-        <div class='alert alert-info clickable' tabindex="0" {{action "showInserted"}}>
+        <a href class='alert alert-info clickable' tabindex="0" {{action "showInserted"}}>
           {{count-i18n key="admin.web_hooks.events.incoming" count=incomingCount}}
-        </div>
+        </a>
       {{/if}}
       <ul>
         {{#each model as |webHookEvent|}}

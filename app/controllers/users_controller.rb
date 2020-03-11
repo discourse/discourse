@@ -14,7 +14,7 @@ class UsersController < ApplicationController
   ]
 
   skip_before_action :check_xhr, only: [
-    :show, :badges, :password_reset, :update, :account_created,
+    :show, :badges, :password_reset_show, :password_reset_update, :update, :account_created,
     :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
     :feature_topic, :clear_featured_topic
@@ -40,16 +40,19 @@ class UsersController < ApplicationController
                                                             :perform_account_activation,
                                                             :send_activation_email,
                                                             :update_activation_email,
-                                                            :password_reset,
+                                                            :password_reset_show,
+                                                            :password_reset_update,
                                                             :confirm_email_token,
                                                             :email_login,
                                                             :admin_login,
                                                             :confirm_admin]
 
+  after_action :add_noindex_header, only: [:show]
+
   def index
   end
 
-  def show
+  def show(for_card: false)
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
@@ -58,7 +61,8 @@ class UsersController < ApplicationController
 
     user_serializer = nil
     if guardian.can_see_profile?(@user)
-      user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+      serializer_class = for_card ? UserCardSerializer : UserSerializer
+      user_serializer = serializer_class.new(@user, scope: guardian, root: 'user')
 
       topic_id = params[:include_post_count_for].to_i
       if topic_id != 0
@@ -71,8 +75,6 @@ class UsersController < ApplicationController
     if !params[:skip_track_visit] && (@user != current_user)
       track_visit_to_user_profile
     end
-
-    response.headers['X-Robots-Tag'] = 'noindex'
 
     # This is a hack to get around a Rails issue where values with periods aren't handled correctly
     # when used as part of a route.
@@ -91,6 +93,34 @@ class UsersController < ApplicationController
         render_json_dump(user_serializer)
       end
     end
+  end
+
+  def show_card
+    show(for_card: true)
+  end
+
+  def cards
+    return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
+
+    user_ids = params.require(:user_ids).split(",").map(&:to_i)
+    raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
+
+    users = User.where(id: user_ids).includes(:user_option,
+                                              :user_stat,
+                                              :default_featured_user_badges,
+                                              :user_profile,
+                                              :card_background_upload,
+                                              :primary_group,
+                                              :primary_email
+                                            )
+
+    users = users.filter { |u| guardian.can_see_profile?(u) }
+
+    preload_fields = User.whitelisted_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    User.preload_custom_fields(users, preload_fields)
+    User.preload_recent_time_read(users)
+
+    render json: users, each_serializer: UserCardSerializer
   end
 
   def badges
@@ -268,6 +298,8 @@ class UsersController < ApplicationController
   end
 
   def invited
+    guardian.ensure_can_invite_to_forum!
+
     inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
     filter_by = params[:filter]
@@ -278,12 +310,19 @@ class UsersController < ApplicationController
       Invite.find_redeemed_invites_from(inviter, offset)
     end
 
-    invites = invites.filter_by(params[:search])
-    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer),
+    show_emails = guardian.can_see_invite_emails?(inviter)
+    if params[:search].present?
+      filter_sql = '(LOWER(users.username) LIKE :filter)'
+      filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
+      invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
+    end
+    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer, show_emails: show_emails),
                      can_see_invite_details: guardian.can_see_invite_details?(inviter)
   end
 
   def invited_count
+    guardian.ensure_can_invite_to_forum!
+
     inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
     pending_count = Invite.find_pending_invites_count(inviter)
@@ -294,13 +333,15 @@ class UsersController < ApplicationController
   end
 
   def is_local_username
-    usernames = params[:usernames]
-    usernames = [params[:username]] if usernames.blank?
+    usernames = params[:usernames] if params[:usernames].present?
+    usernames = [params[:username]] if params[:username].present?
+
+    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array)
 
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =
       if current_user
-        Group.mentionable(current_user)
+        Group.mentionable(current_user, include_public: false)
           .where(name: usernames)
           .pluck(:name, :user_count)
           .map do |name, user_count|
@@ -504,68 +545,79 @@ class UsersController < ApplicationController
     }
   end
 
-  def password_reset
+  def password_reset_show
     expires_now
-
     token = params[:token]
+    password_reset_find_user(token, committing_change: false)
 
-    if EmailToken.valid_token_format?(token)
-      @user = if request.put?
-        EmailToken.confirm(token)
-      else
-        EmailToken.confirmable(token)&.user
-      end
-
-      if @user
-        secure_session["password-#{token}"] = @user.id
-      else
-        user_id = secure_session["password-#{token}"].to_i
-        @user = User.find(user_id) if user_id > 0
-      end
+    if !@error
+      security_params = {
+        is_developer: UsernameCheckerService.is_developer?(@user.email),
+        admin: @user.admin?,
+        second_factor_required: @user.totp_enabled?,
+        security_key_required: @user.security_keys_enabled?,
+        backup_enabled: @user.backup_codes_enabled?,
+        multiple_second_factor_methods: @user.has_multiple_second_factor_methods?
+      }
     end
 
-    second_factor_token = params[:second_factor_token]
-    second_factor_method = params[:second_factor_method].to_i
-    security_key_credential = params[:security_key_credential]
+    respond_to do |format|
+      format.html do
+        return render 'password_reset', layout: 'no_ember' if @error
 
-    if second_factor_token.present? && UserSecondFactor.methods[second_factor_method]
+        Webauthn.stage_challenge(@user, secure_session)
+        store_preloaded(
+          "password_reset",
+          MultiJson.dump(security_params.merge(Webauthn.allowed_credentials(@user, secure_session)))
+        )
+
+        render 'password_reset'
+      end
+
+      format.json do
+        return render json: { message: @error } if @error
+
+        Webauthn.stage_challenge(@user, secure_session)
+        render json: security_params.merge(Webauthn.allowed_credentials(@user, secure_session))
+      end
+    end
+  end
+
+  def password_reset_update
+    expires_now
+    token = params[:token]
+    password_reset_find_user(token, committing_change: true)
+
+    if params[:second_factor_token].present?
       RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-      second_factor_authenticated = @user&.authenticate_second_factor(second_factor_token, second_factor_method)
-    elsif security_key_credential.present?
-      security_key_authenticated = ::Webauthn::SecurityKeyAuthenticationService.new(
-        @user,
-        security_key_credential,
-        challenge: Webauthn.challenge(@user, secure_session),
-        rp_id: Webauthn.rp_id(@user, secure_session),
-        origin: Discourse.base_url
-      ).authenticate_security_key
     end
 
-    second_factor_totp_disabled = !@user&.totp_enabled?
-    if second_factor_authenticated || second_factor_totp_disabled || security_key_authenticated
-      secure_session["second-factor-#{token}"] = "true"
-    end
+    # no point doing anything else if we can't even find
+    # a user from the token
+    if @user
 
-    security_key_disabled = !@user&.security_keys_enabled?
-    if security_key_authenticated || security_key_disabled
-      secure_session["security-key-#{token}"] = "true"
-    end
+      if !secure_session["second-factor-#{token}"]
+        second_factor_authentication_result = @user.authenticate_second_factor(params, secure_session)
+        if !second_factor_authentication_result.ok
+          user_error_key = second_factor_authentication_result.reason == "invalid_security_key" ? :user_second_factors : :security_keys
+          @user.errors.add(user_error_key, :invalid)
+          @error = second_factor_authentication_result.error
+        else
 
-    valid_second_factor = secure_session["second-factor-#{token}"] == "true"
-    valid_security_key = secure_session["security-key-#{token}"] == "true"
+          # this must be set because the first call we authenticate e.g. TOTP, and we do
+          # not want to re-authenticate on the second call to change the password as this
+          # will cause a TOTP error saying the code has already been used
+          secure_session["second-factor-#{token}"] = true
+        end
+      end
 
-    if !@user
-      @error = I18n.t('password_reset.no_token')
-    elsif request.put?
-      if !valid_second_factor
-        @user.errors.add(:user_second_factors, :invalid)
-        @error = I18n.t('login.invalid_second_factor_code')
-      elsif !valid_security_key
-        @user.errors.add(:security_keys, :invalid)
-        @error = I18n.t('login.invalid_security_key')
-      elsif @invalid_password = params[:password].blank? || params[:password].size > User.max_password_length
+      if @invalid_password = params[:password].blank? || params[:password].size > User.max_password_length
         @user.errors.add(:password, :invalid)
-      else
+      end
+
+      # if we have run into no errors then the user is a-ok to
+      # change the password
+      if @user.errors.empty?
         @user.password = params[:password]
         @user.password_required!
         @user.user_auth_tokens.destroy_all
@@ -585,69 +637,45 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if @error
-          render layout: 'no_ember'
-        else
-          Webauthn.stage_challenge(@user, secure_session)
-          store_preloaded(
-            "password_reset",
-            MultiJson.dump(
-              {
-                is_developer: UsernameCheckerService.is_developer?(@user.email),
-                admin: @user.admin?,
-                second_factor_required: !valid_second_factor,
-                security_key_required: !valid_security_key,
-                backup_enabled: @user.backup_codes_enabled?
-              }.merge(Webauthn.allowed_credentials(@user, secure_session))
-            )
-          )
-        end
+        return render 'password_reset', layout: 'no_ember' if @error
 
-        return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
+        Webauthn.stage_challenge(@user, secure_session)
+
+        security_params = {
+          is_developer: UsernameCheckerService.is_developer?(@user.email),
+          admin: @user.admin?,
+          second_factor_required: @user.totp_enabled?,
+          security_key_required: @user.security_keys_enabled?,
+          backup_enabled: @user.backup_codes_enabled?,
+          multiple_second_factor_methods: @user.has_multiple_second_factor_methods?
+        }.merge(Webauthn.allowed_credentials(@user, secure_session))
+
+        store_preloaded("password_reset", MultiJson.dump(security_params))
+
+        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+
+        render 'password_reset'
       end
 
       format.json do
-        if request.put?
-          if @error || @user&.errors&.any?
-            render json: {
-              success: false,
-              message: @error,
-              errors: @user&.errors&.to_hash,
-              is_developer: UsernameCheckerService.is_developer?(@user&.email),
-              admin: @user&.admin?
-            }
-          else
-            render json: {
-              success: true,
-              message: @success,
-              requires_approval: !Guardian.new(@user).can_access_forum?,
-              redirect_to: Wizard.user_requires_completion?(@user) ? wizard_path : nil
-            }
-          end
+        if @error || @user&.errors&.any?
+          render json: {
+            success: false,
+            message: @error,
+            errors: @user&.errors&.to_hash,
+            is_developer: UsernameCheckerService.is_developer?(@user&.email),
+            admin: @user&.admin?
+          }
         else
-          if @error || @user&.errors&.any?
-            render json: {
-              message: @error,
-              errors: @user&.errors&.to_hash
-            }
-          else
-            Webauthn.stage_challenge(@user, secure_session) if !valid_security_key && !security_key_credential.present?
-            render json: {
-              is_developer: UsernameCheckerService.is_developer?(@user.email),
-              admin: @user.admin?,
-              second_factor_required: !valid_second_factor,
-              security_key_required: !valid_security_key,
-              backup_enabled: @user.backup_codes_enabled?
-            }.merge(Webauthn.allowed_credentials(@user, secure_session))
-          end
+          render json: {
+            success: true,
+            message: @success,
+            requires_approval: !Guardian.new(@user).can_access_forum?,
+            redirect_to: Wizard.user_requires_completion?(@user) ? wizard_path : nil
+          }
         end
       end
     end
-  rescue ::Webauthn::SecurityKeyError => err
-    render json: {
-      message: err.message,
-      errors: [err.message]
-    }
   end
 
   def confirm_email_token
@@ -684,88 +712,11 @@ class UsersController < ApplicationController
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
       end
-    elsif (token = params[:token]).present?
-      valid_token = EmailToken.valid_token_format?(token)
-
-      if valid_token
-        if params[:second_factor_token].present?
-          RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        end
-
-        email_token_user = EmailToken.confirmable(token)&.user
-        totp_enabled = email_token_user&.totp_enabled?
-        security_keys_enabled = email_token_user&.security_keys_enabled?
-        second_factor_token = params[:second_factor_token]
-        second_factor_method = params[:second_factor_method].to_i
-        confirm_email = false
-        @security_key_required = security_keys_enabled
-
-        if security_keys_enabled && params[:security_key_credential].blank?
-          Webauthn.stage_challenge(email_token_user, secure_session)
-          challenge_and_credentials = Webauthn.allowed_credentials(email_token_user, secure_session)
-          @security_key_challenge = challenge_and_credentials[:challenge]
-          @security_key_allowed_credential_ids = challenge_and_credentials[:allowed_credential_ids].join(",")
-        end
-
-        if security_keys_enabled && params[:security_key_credential].present?
-          credential = JSON.parse(params[:security_key_credential]).with_indifferent_access
-
-          confirm_email = ::Webauthn::SecurityKeyAuthenticationService.new(
-            email_token_user,
-            credential,
-            challenge: Webauthn.challenge(email_token_user, secure_session),
-            rp_id: Webauthn.rp_id(email_token_user, secure_session),
-            origin: Discourse.base_url
-          ).authenticate_security_key
-          @message = I18n.t('login.security_key_invalid') if !confirm_email
-        elsif security_keys_enabled && second_factor_token.blank?
-          confirm_email = false
-          @message = I18n.t("login.second_factor_title")
-          if totp_enabled
-            @second_factor_required = true
-            @backup_codes_enabled = true
-          end
-        else
-          confirm_email =
-            if totp_enabled
-              @second_factor_required = true
-              @backup_codes_enabled = true
-              @message = I18n.t("login.second_factor_title")
-
-              if second_factor_token.present?
-                if email_token_user.authenticate_second_factor(second_factor_token, second_factor_method)
-                  true
-                else
-                  @error = I18n.t("login.invalid_second_factor_code")
-                  false
-                end
-              end
-            else
-              true
-            end
-        end
-
-        if confirm_email
-          @user = EmailToken.confirm(token)
-
-          if @user && @user.admin?
-            log_on_user(@user)
-            return redirect_to path("/")
-          else
-            @message = I18n.t("admin_login.errors.unknown_email_address")
-          end
-        end
-      else
-        @message = I18n.t("admin_login.errors.invalid_token")
-      end
     end
 
     render layout: 'no_ember'
   rescue RateLimiter::LimitExceeded
     @message = I18n.t("rate_limiter.slow_down")
-    render layout: 'no_ember'
-  rescue ::Webauthn::SecurityKeyError => err
-    @message = err.message
     render layout: 'no_ember'
   end
 
@@ -797,6 +748,7 @@ class UsersController < ApplicationController
     end
 
     json = success_json
+    json[:hide_taken] = SiteSetting.hide_email_address_taken
     json[:user_found] = user_presence unless SiteSetting.hide_email_address_taken
     render json: json
   rescue RateLimiter::LimitExceeded
@@ -983,22 +935,21 @@ class UsersController < ApplicationController
 
     groups =
       if current_user
-        if params[:include_mentionable_groups] == 'true'
+        if params[:include_groups] == 'true'
+          Group.visible_groups(current_user)
+        elsif params[:include_mentionable_groups] == 'true'
           Group.mentionable(current_user)
         elsif params[:include_messageable_groups] == 'true'
           Group.messageable(current_user)
         end
       end
 
-    include_groups = params[:include_groups] == "true"
-
     # blank term is only handy for in-topic search of users after @
     # we do not want group results ever if term is blank
-    include_groups = groups = nil if term.blank?
+    groups = nil if term.blank?
 
-    if include_groups || groups
+    if groups
       groups = Group.search_groups(term, groups: groups)
-      groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
       groups = groups.order('groups.name asc')
 
       to_render[:groups] = groups.map do |m|
@@ -1247,7 +1198,7 @@ class UsersController < ApplicationController
       challenge: challenge_session.challenge,
       rp_id: challenge_session.rp_id,
       rp_name: challenge_session.rp_name,
-      supported_algoriths: ::Webauthn::SUPPORTED_ALGORITHMS,
+      supported_algorithms: ::Webauthn::SUPPORTED_ALGORITHMS,
       user_secure_id: current_user.create_or_fetch_secure_identifier,
       existing_active_credential_ids: current_user.second_factor_security_key_credential_ids
     )
@@ -1285,8 +1236,12 @@ class UsersController < ApplicationController
   end
 
   def enable_second_factor_totp
-    params.require(:second_factor_token)
-    params.require(:name)
+    if params[:second_factor_token].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_code"))
+    end
+    if params[:name].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_name"))
+    end
     auth_token = params[:second_factor_token]
 
     totp_data = secure_session["staged-totp-#{current_user.id}"]
@@ -1393,7 +1348,7 @@ class UsersController < ApplicationController
     if params[:token_id]
       token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
       # The user should not be able to revoke the auth token of current session.
-      raise Discourse::InvalidParameters.new(:token_id) if guardian.auth_token == token.auth_token
+      raise Discourse::InvalidParameters.new(:token_id) if !token || guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
@@ -1408,7 +1363,10 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     topic = Topic.find(params[:topic_id].to_i)
 
-    raise Discourse::InvalidAccess.new unless topic && guardian.can_feature_topic?(user, topic)
+    if !guardian.can_feature_topic?(user, topic)
+      return render_json_error(I18n.t('activerecord.errors.models.user_profile.attributes.featured_topic_id.invalid'), 403)
+    end
+
     user.user_profile.update(featured_topic_id: topic.id)
     render json: success_json
   end
@@ -1434,6 +1392,20 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def password_reset_find_user(token, committing_change:)
+    if EmailToken.valid_token_format?(token)
+      @user = committing_change ? EmailToken.confirm(token) : EmailToken.confirmable(token)&.user
+      if @user
+        secure_session["password-#{token}"] = @user.id
+      else
+        user_id = secure_session["password-#{token}"].to_i
+        @user = User.find(user_id) if user_id > 0
+      end
+    end
+
+    @error = I18n.t('password_reset.no_token') if !@user
+  end
 
   def respond_to_suspicious_request
     if suspicious?(params)

@@ -3,14 +3,6 @@ import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Composer and uncategorized is not allowed", {
   loggedIn: true,
-  pretend(server, helper) {
-    server.get("/draft.json", () => {
-      return helper.response({
-        draft: null,
-        draft_sequence: 42
-      });
-    });
-  },
   settings: {
     enable_whispers: true,
     allow_uncategorized_topics: false
@@ -48,7 +40,7 @@ QUnit.test("Disable body until category is selected", async assert => {
 
   await fillIn(".d-editor-input", "Now I can type stuff");
   await categoryChooser.expand();
-  await categoryChooser.selectRowByValue("__none__");
+  await categoryChooser.selectRowByIndex(0);
 
   assert.ok(
     find(".d-editor-textarea-wrapper.disabled").length === 0,

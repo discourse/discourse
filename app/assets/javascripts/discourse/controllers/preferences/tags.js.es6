@@ -1,9 +1,8 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
-import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Controller.extend(PreferencesTabController, {
+export default Controller.extend({
   init() {
     this._super(...arguments);
 

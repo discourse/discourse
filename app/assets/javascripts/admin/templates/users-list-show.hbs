@@ -40,24 +40,24 @@
         {{#each model as |user|}}
           <tr class="user {{user.selected}} {{unless user.active 'not-activated'}}">
             <td class="username">
-              <a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">
+              <a href={{user.path}} data-user-card={{user.username}}>
                 {{avatar user imageSize="small"}}
               </a>
-              {{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}
+              {{#link-to 'adminUser' user}}{{user.username}}{{/link-to}}
               {{#if user.staged}}
                 {{d-icon "far-envelope" title="user.staged" }}
               {{/if}}
             </td>
             <td class='email'>
-              {{~unbound user.email~}}
+              {{~user.email~}}
             </td>
             <td class="last-emailed">
               <div class="label">{{i18n 'admin.users.last_emailed'}}</div>
-              <div>{{{format-duration user.last_emailed_age}}}</div>
+              <div>{{format-duration user.last_emailed_age}}</div>
             </td>
             <td class="last-seen">
               <div class="label">{{i18n 'last_seen'}}</div>
-              <div>{{{format-duration user.last_seen_age}}}</div>
+              <div>{{format-duration user.last_seen_age}}</div>
             </td>
             <td class="topics-entered">
               <div class="label">{{i18n 'admin.user.topics_entered'}}</div>
@@ -69,12 +69,12 @@
             </td>
             <td class="time-read">
               <div class="label">{{i18n 'admin.user.time_read'}}</div>
-              <div>{{{format-duration user.time_read}}}</div>
+              <div>{{format-duration user.time_read}}</div>
             </td>
 
             <td class="created">
               <div class="label">{{i18n 'created'}}</div>
-              <div>{{{format-duration user.created_at_age}}}</div>
+              <div>{{format-duration user.created_at_age}}</div>
             </td>
 
             {{#if siteSettings.must_approve_users}}

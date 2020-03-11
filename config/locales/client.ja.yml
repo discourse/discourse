@@ -482,7 +482,6 @@ ja:
       leave: "脱退"
       request: "リクエスト"
       message: "メッセージ"
-      allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
       membership_request_template: "メンバーシップリクエスト送信時に表示するカスタムテンプレート"
       membership_request:
         submit: "リクエストを送信"
@@ -1136,8 +1135,6 @@ ja:
       reset: "パスワードをリセット"
       complete_username: "<b>%{username}</b>,アカウントにパスワード再設定メールを送りました。"
       complete_email: "<b>%{email}</b>宛にパスワード再設定メールを送信しました。"
-      complete_username_found: "<b>%{username}</b>,アカウントにパスワード再設定メールを送りました。"
-      complete_email_found: "<b>%{email}</b>宛にパスワード再設定メールを送信しました。"
       complete_username_not_found: " <b>%{username}</b>は見つかりませんでした"
       complete_email_not_found: "<b>%{email}</b>で登録したアカウントがありません。"
       button_ok: "OK"
@@ -1306,7 +1303,6 @@ ja:
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
       saved: "保存しました!"
-      saved_draft: "編集中の投稿があります。ここをクリックすると編集に戻ります。"
       uploading: "アップロード中..."
       show_preview: "プレビューを表示する &raquo;"
       hide_preview: "&laquo; プレビューを隠す"
@@ -2282,15 +2278,6 @@ ja:
           name: その他
         posting:
           name: 投稿
-    google_search: |
-      <h3>Googleで検索</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "全てのタグ"
       other_tags: "他のタグ"

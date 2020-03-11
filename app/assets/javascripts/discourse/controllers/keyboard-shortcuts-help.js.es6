@@ -14,23 +14,22 @@ const PLUS = I18n.t(`${KEY}.shortcut_key_delimiter_plus`);
 function buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
     .reject(keys => keys.length === 0)
-    .map(keys => keys.map(k => `<kbd>${k}</kbd>`).join(keysDelimiter));
+    .map(keys => keys.map(k => `<kbd>${k}</kbd>`).join(keysDelimiter))
+    .map(keys => (shortcutsDelimiter !== "space" ? wrapInSpan(keys) : keys));
+
+  const [shortcut1, shortcut2] = allKeys;
 
   if (allKeys.length === 1) {
-    return wrapInSpan(allKeys[0]);
-  }
-
-  const context = { shortcut1: allKeys[0], shortcut2: allKeys[1] };
-  let result = "";
-  if (shortcutsDelimiter === "or") {
-    result = I18n.t(`${KEY}.shortcut_delimiter_or`, context);
+    return shortcut1;
+  } else if (shortcutsDelimiter === "or") {
+    return I18n.t(`${KEY}.shortcut_delimiter_or`, { shortcut1, shortcut2 });
   } else if (shortcutsDelimiter === "slash") {
-    result = I18n.t(`${KEY}.shortcut_delimiter_slash`, context);
+    return I18n.t(`${KEY}.shortcut_delimiter_slash`, { shortcut1, shortcut2 });
   } else if (shortcutsDelimiter === "space") {
-    result = I18n.t(`${KEY}.shortcut_delimiter_space`, context);
+    return wrapInSpan(
+      I18n.t(`${KEY}.shortcut_delimiter_space`, { shortcut1, shortcut2 })
+    );
   }
-
-  return wrapInSpan(result);
 }
 
 function wrapInSpan(shortcut) {
@@ -51,6 +50,7 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.set("modal.modalClass", "keyboard-shortcuts-modal");
   },
+
   shortcuts: {
     jump_to: {
       home: buildShortcut("jump_to.home", { keys1: ["g", "h"] }),

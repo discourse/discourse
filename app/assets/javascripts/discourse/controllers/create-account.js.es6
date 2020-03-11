@@ -1,12 +1,12 @@
+import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
 import { notEmpty, or, not } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
-import {
-  default as discourseComputed,
+import discourseComputed, {
+  observes,
   on
 } from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
@@ -26,13 +26,13 @@ export default Controller.extend(
   NameValidation,
   UserFieldsValidation,
   {
-    login: inject(),
+    login: controller(),
 
     complete: false,
     accountChallenge: 0,
     accountHoneypot: 0,
     formSubmitted: false,
-    rejectedEmails: Ember.A([]),
+    rejectedEmails: A(),
     prefilledUsername: null,
     userFields: null,
     isDeveloper: false,
@@ -69,13 +69,13 @@ export default Controller.extend(
       "formSubmitted"
     )
     submitDisabled() {
-      if (!this.get("emailValidation.failed") && !this.passwordRequired)
-        return false; // 3rd party auth
       if (this.formSubmitted) return true;
       if (this.get("nameValidation.failed")) return true;
       if (this.get("emailValidation.failed")) return true;
-      if (this.get("usernameValidation.failed")) return true;
-      if (this.get("passwordValidation.failed")) return true;
+      if (this.get("usernameValidation.failed") && this.usernameRequired)
+        return true;
+      if (this.get("passwordValidation.failed") && this.passwordRequired)
+        return true;
       if (this.get("userFieldsValidation.failed")) return true;
 
       return false;
@@ -171,6 +171,7 @@ export default Controller.extend(
         : providerName;
     },
 
+    @observes("emailValidation", "accountEmail")
     prefillUsername: function() {
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
@@ -189,7 +190,7 @@ export default Controller.extend(
         // then look for a registered username that matches the email.
         this.fetchExistingUsername();
       }
-    }.observes("emailValidation", "accountEmail"),
+    },
 
     // Determines whether at least one login button is enabled
     @discourseComputed

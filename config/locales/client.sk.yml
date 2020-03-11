@@ -466,7 +466,6 @@ sk:
       leave: "Opustiť"
       request: "Požiadavka"
       message: "Správa"
-      allow_membership_requests: "Používatelia môžu posielať žiadosti o členstvo vlastníkom skupiny"
       membership_request_template: "Vlastná šablóna, ktorá sa zobrazí používateľom pri posielaní žiadosti o členstvo"
       membership_request:
         submit: "Odošli požiadavku"
@@ -1112,8 +1111,6 @@ sk:
       reset: "Obnoviť heslo"
       complete_username: "Ak je účet priradený k používateľskému menu <b>%{username}</b>, čoskoro dostanete e-mail s pokynmi, ako si obnoviť svoje heslo."
       complete_email: "Ak je účet priradený k <b>%{email}</b>, čoskoro dostanete e-mail s pokynmi, ako si obnoviť svoje heslo."
-      complete_username_found: "Našli sme účet priradený k používateľskému menu <b>%{username}</b>, čoskoro dostanete e-mail s pokynmi, ako si obnoviť svoje heslo."
-      complete_email_found: "Našli sme účet priradený k <b>%{email}</b>, čoskoro dostanete e-mail s pokynmi, ako si obnoviť svoje heslo."
       complete_username_not_found: "Žiadny účet nemá priradené používateľské meno <b>%{username}</b>"
       complete_email_not_found: "Žiadny účet nie je s e-mailom <b>%{email}</b>"
       button_ok: "OK"
@@ -1240,7 +1237,6 @@ sk:
       view_new_post: "Zobraziť nový príspevok."
       saving: "Ukladanie"
       saved: "Uložené!"
-      saved_draft: "Návrh príspevku rozpracovaný. Vyberte na obnovenie."
       uploading: "Upload prebieha..."
       show_preview: "zobraziť náhľad &raquo;"
       hide_preview: "&raquo; skryť náhľad"
@@ -2199,15 +2195,6 @@ sk:
           name: Ostatné
         posting:
           name: Prispievanie
-    google_search: |
-      <h3>Vyhľadávať pomocou Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
     tagging:
       all_tags: "Všetky štítky"
       selector_all_tags: "všetky štítky"

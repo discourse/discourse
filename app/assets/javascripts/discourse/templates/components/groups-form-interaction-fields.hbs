@@ -3,12 +3,15 @@
     <label class="control-label">{{i18n 'admin.groups.manage.interaction.visibility'}}</label>
     <label for="visiblity">{{i18n 'admin.groups.manage.interaction.visibility_levels.title'}}</label>
 
-    {{combo-box name="alias"
-        valueAttribute="value"
-        value=model.visibility_level
-        content=visibilityLevelOptions
-        castInteger=true
-        class="groups-form-visibility-level"}}
+    {{combo-box
+      name="alias"
+      valueProperty="value"
+      value=model.visibility_level
+      content=visibilityLevelOptions
+      castInteger=true
+      class="groups-form-visibility-level"
+      onChange=(action (mut model.visibility_level))
+    }}
 
     <div class="control-instructions">
       {{i18n 'admin.groups.manage.interaction.visibility_levels.description'}}
@@ -19,7 +22,7 @@
     <label for="visiblity">{{i18n 'admin.groups.manage.interaction.members_visibility_levels.title'}}</label>
 
     {{combo-box name="alias"
-        valueAttribute="value"
+        valueProperty="value"
         value=model.members_visibility_level
         content=visibilityLevelOptions
         castInteger=true
@@ -35,21 +38,27 @@
   <label class="control-label">{{i18n 'groups.manage.interaction.posting'}}</label>
   <label for="alias">{{i18n 'groups.alias_levels.mentionable'}}</label>
 
-  {{combo-box name="alias"
-      valueAttribute="value"
-      value=model.mentionable_level
-      content=aliasLevelOptions
-      class="groups-form-mentionable-level"}}
+  {{combo-box
+    name="alias"
+    valueProperty="value"
+    value=model.mentionable_level
+    content=aliasLevelOptions
+    class="groups-form-mentionable-level"
+    onChange=(action (mut model.mentionable_level))
+  }}
 </div>
 
 <div class="control-group">
   <label for="alias">{{i18n 'groups.alias_levels.messageable'}}</label>
 
-  {{combo-box name="alias"
-      valueAttribute="value"
-      value=model.messageable_level
-      content=aliasLevelOptions
-      class="groups-form-messageable-level"}}
+  {{combo-box
+    name="alias"
+    valueProperty="value"
+    value=model.messageable_level
+    content=aliasLevelOptions
+    class="groups-form-messageable-level"
+    onChange=(action (mut model.messageable_level))
+  }}
 </div>
 
 <div class="control-group">
@@ -81,7 +90,12 @@
 <div class="control-group">
   <label>{{i18n 'groups.notification_level'}}</label>
 
-  {{notifications-button i18nPrefix='groups.notifications'
-      value=model.default_notification_level
-      class="groups-form-default-notification-level"}}
+  {{notifications-button
+    value=model.default_notification_level
+    class="groups-form-default-notification-level"
+    options=(hash
+      none="select_kit.default_header_text"
+      i18nPrefix="groups.notifications"
+    )
+  }}
 </div>

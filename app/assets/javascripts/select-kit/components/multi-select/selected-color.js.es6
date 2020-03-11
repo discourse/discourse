@@ -1,8 +1,8 @@
-import SelectedNameComponent from "select-kit/components/multi-select/selected-name";
+import SelectedNameComponent from "select-kit/components/selected-name";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default SelectedNameComponent.extend({
-  classNames: "selected-color",
+  classNames: ["select-kit-selected-color"],
 
   @discourseComputed("name")
   footerContent(name) {

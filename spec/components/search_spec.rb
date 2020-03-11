@@ -294,6 +294,78 @@ describe Search do
         expect(results.posts.size).to eq(0)
       end
     end
+
+    context 'all topics' do
+
+      let!(:u1) { Fabricate(:user, username: 'fred', name: 'bob jones', email: 'foo+1@bar.baz') }
+      let!(:u2) { Fabricate(:user, username: 'bob', name: 'fred jones', email: 'foo+2@bar.baz') }
+      let!(:u3) { Fabricate(:user, username: 'jones', name: 'bob fred', email: 'foo+3@bar.baz') }
+      let!(:u4) { Fabricate(:user, username: 'alice', name: 'bob fred', email: 'foo+4@bar.baz', admin: true) }
+
+      let!(:public_topic) { Fabricate(:topic, user: u1) }
+      let!(:public_post1) { Fabricate(:post, topic: public_topic, raw: "what do you want for breakfast?  ham and eggs?", user: u1) }
+      let!(:public_post2) { Fabricate(:post, topic: public_topic, raw: "ham and spam", user: u2) }
+
+      let!(:private_topic) { Fabricate(:topic, user: u1, category_id: nil, archetype: 'private_message') }
+      let!(:private_post1) { Fabricate(:post, topic: private_topic, raw: "what do you want for lunch?  ham and cheese?", user: u1) }
+      let!(:private_post2) { Fabricate(:post, topic: private_topic, raw: "cheese and spam", user: u2) }
+
+      it 'finds private messages' do
+        TopicAllowedUser.create!(user_id: u1.id, topic_id: private_topic.id)
+        TopicAllowedUser.create!(user_id: u2.id, topic_id: private_topic.id)
+
+        # private only
+        results = Search.execute('in:all cheese',
+                                guardian: Guardian.new(u1))
+        expect(results.posts.length).to eq(1)
+
+        # public only
+        results = Search.execute('in:all eggs',
+                                guardian: Guardian.new(u1))
+        expect(results.posts.length).to eq(1)
+
+        # both
+        results = Search.execute('in:all spam',
+                                guardian: Guardian.new(u1))
+        expect(results.posts.length).to eq(2)
+
+        # for anon
+        results = Search.execute('in:all spam',
+                                guardian: Guardian.new)
+        expect(results.posts.length).to eq(1)
+
+        # nonparticipatory user
+        results = Search.execute('in:all cheese',
+                                guardian: Guardian.new(u3))
+        expect(results.posts.length).to eq(0)
+
+        results = Search.execute('in:all eggs',
+                                guardian: Guardian.new(u3))
+        expect(results.posts.length).to eq(1)
+
+        results = Search.execute('in:all spam',
+                                guardian: Guardian.new(u3))
+        expect(results.posts.length).to eq(1)
+
+        # Admin doesn't see private topic
+        results = Search.execute('in:all spam',
+                  guardian: Guardian.new(u4))
+        expect(results.posts.length).to eq(1)
+
+        # same keyword for different users
+        results = Search.execute('in:all ham',
+                                guardian: Guardian.new(u1))
+        expect(results.posts.length).to eq(2)
+
+        results = Search.execute('in:all ham',
+                                guardian: Guardian.new(u2))
+        expect(results.posts.length).to eq(2)
+
+        results = Search.execute('in:all ham',
+                                guardian: Guardian.new(u3))
+        expect(results.posts.length).to eq(1)
+      end
+    end
   end
 
   context 'topics' do
@@ -302,9 +374,9 @@ describe Search do
 
     context 'search within topic' do
 
-      def new_post(raw, topic = nil)
+      def new_post(raw, topic = nil, created_at: nil)
         topic ||= Fabricate(:topic)
-        Fabricate(:post, topic: topic, topic_id: topic.id, user: topic.user, raw: raw)
+        Fabricate(:post, topic: topic, topic_id: topic.id, user: topic.user, raw: raw, created_at: created_at)
       end
 
       it 'works in Chinese' do
@@ -319,13 +391,13 @@ describe Search do
         topic = Fabricate(:topic)
         topic2 = Fabricate(:topic)
 
-        new_post('this is the other post I am posting', topic2)
-        new_post('this is my fifth post I am posting', topic2)
+        new_post('this is the other post I am posting', topic2, created_at: 6.minutes.ago)
+        new_post('this is my fifth post I am posting', topic2, created_at: 5.minutes.ago)
 
-        post1 = new_post('this is the other post I am posting', topic)
-        post2 = new_post('this is my first post I am posting', topic)
-        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds with more stuff bla bla', topic)
-        post4 = new_post('this is my fourth post I am posting', topic)
+        post1 = new_post('this is the other post I am posting', topic, created_at: 4.minutes.ago)
+        post2 = new_post('this is my first post I am posting', topic, created_at: 3.minutes.ago)
+        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds with more stuff bla bla', topic, created_at: 2.minutes.ago)
+        post4 = new_post('this is my fourth post I am posting', topic, created_at: 1.minute.ago)
 
         # update posts_count
         topic.reload
@@ -609,8 +681,8 @@ describe Search do
 
       it "should return posts in the right order" do
         raw = "The pure genuine evian"
-        post = Fabricate(:post, topic: category.topic, raw: raw)
-        post2 = Fabricate(:post, topic: category2.topic, raw: raw)
+        post = freeze_time(10.seconds.from_now) { Fabricate(:post, topic: category.topic, raw: raw) }
+        post2 = freeze_time(20.seconds.from_now) { Fabricate(:post, topic: category2.topic, raw: raw) }
 
         search = Search.execute(raw)
 
@@ -1044,12 +1116,20 @@ describe Search do
 
       expect(Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length).to eq(2)
 
-      expect(Search.execute('test in:created', guardian: Guardian.new(topic.user)).posts.length).to eq(1)
+      in_created = Search.execute('test in:created', guardian: Guardian.new(topic.user)).posts
+      created_by_user = Search.execute("test created:@#{topic.user.username}", guardian: Guardian.new(topic.user)).posts
+      expect(in_created.length).to eq(1)
+      expect(created_by_user.length).to eq(1)
+      expect(in_created).to eq(created_by_user)
+
+      expect(Search.execute("test created:@#{second_topic.user.username}", guardian: Guardian.new(topic.user)).posts.length).to eq(1)
+
+      new_user = Fabricate(:user)
+      expect(Search.execute("test created:@#{new_user.username}", guardian: Guardian.new(topic.user)).posts.length).to eq(0)
 
       TopicUser.change(topic.user.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
       expect(Search.execute('test in:watching', guardian: Guardian.new(topic.user)).posts.length).to eq(0)
       expect(Search.execute('test in:tracking', guardian: Guardian.new(topic.user)).posts.length).to eq(1)
-
     end
 
     it 'can find posts with images' do
@@ -1065,9 +1145,8 @@ describe Search do
 
     it 'can find by latest' do
       topic1 = Fabricate(:topic, title: 'I do not like that Sam I am')
-      post1 = Fabricate(:post, topic: topic1)
-
-      post2 = Fabricate(:post, raw: 'that Sam I am, that Sam I am')
+      post1 = Fabricate(:post, topic: topic1, created_at: 10.minutes.ago)
+      post2 = Fabricate(:post, raw: 'that Sam I am, that Sam I am', created_at: 5.minutes.ago)
 
       expect(Search.execute('sam').posts.map(&:id)).to eq([post1.id, post2.id])
       expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
@@ -1252,8 +1331,8 @@ describe Search do
         cat1 = Fabricate(:category_with_definition, name: 'food')
         topic6 = Fabricate(:topic, tags: [tag1, tag2], category: cat1)
         topic7 = Fabricate(:topic, tags: [tag1, tag2, tag3], category: cat1)
-        post7 = Fabricate(:post, topic: topic6, raw: "Wakey, wakey, eggs and bakey.", like_count: 5)
-        post8 = Fabricate(:post, topic: topic7, raw: "Bakey, bakey, eggs to makey.", like_count: 2)
+        post7 = Fabricate(:post, topic: topic6, raw: "Wakey, wakey, eggs and bakey.", like_count: 5, created_at: 2.minutes.ago)
+        post8 = Fabricate(:post, topic: topic7, raw: "Bakey, bakey, eggs to makey.", like_count: 2, created_at: 1.minute.ago)
 
         expect(Search.execute('bakey tags:lunch order:latest').posts.map(&:id))
           .to eq([post8.id, post7.id])

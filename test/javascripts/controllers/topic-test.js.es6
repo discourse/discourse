@@ -4,6 +4,8 @@ import Topic from "discourse/models/topic";
 import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import User from "discourse/models/user";
+import { Promise } from "rsvp";
+import pretender from "helpers/create-pretender";
 
 moduleFor("controller:topic", "controller:topic", {
   needs: [
@@ -521,8 +523,7 @@ QUnit.test("topVisibleChanged", function(assert) {
 QUnit.test(
   "deletePost - no modal is shown if post does not have replies",
   function(assert) {
-    /* global server */
-    server.get("/posts/2/reply-ids.json", () => {
+    pretender.get("/posts/2/reply-ids.json", () => {
       return [200, { "Content-Type": "application/json" }, []];
     });
 
@@ -534,7 +535,7 @@ QUnit.test(
       reply_count: 3,
       destroy: () => {
         destroyed = true;
-        return Ember.RSVP.Promise.resolve();
+        return Promise.resolve();
       }
     });
 

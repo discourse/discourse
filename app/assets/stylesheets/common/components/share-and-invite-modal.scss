@@ -2,6 +2,11 @@
   .modal-body {
     max-width: 475px;
     min-width: 320px;
+    padding: 0;
+  }
+
+  .modal-panel {
+    padding: 0.667em;
   }
 
   .modal-header {
@@ -84,6 +89,13 @@
 
     .email-or-username-input {
       width: 100%;
+    }
+
+    .invite-user-input-wrapper {
+      display: flex;
+      div.ac-wrap {
+        flex: 1;
+      }
     }
   }
 

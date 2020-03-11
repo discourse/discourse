@@ -7,6 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.11.2",
+    "@popperjs/core": "v2.0.6",
     "ace-builds": "1.4.2",
     "bootbox": "3.2.0",
     "bootstrap": "v3.4.1",
@@ -42,7 +43,9 @@
     "@arkweid/lefthook": "^0.6.3",
     "chrome-launcher": "^0.12.0",
     "chrome-remote-interface": "^0.25",
+    "ember-template-lint": "^1.13.2",
     "eslint-config-discourse": "1.1.0",
+    "eslint-plugin-discourse-ember": "0.0.3",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
     "puppeteer": "1.20",

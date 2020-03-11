@@ -1,10 +1,9 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Controller, { inject as controller } from "@ember/controller";
 
 // Lists of topics on a user's page.
 export default Controller.extend({
-  application: inject(),
+  application: controller(),
 
   hideCategory: false,
   showPosters: false,
@@ -22,9 +21,10 @@ export default Controller.extend({
     this.session.set("topicListScrollPosition", $(window).scrollTop());
   },
 
+  @observes("model.canLoadMore")
   _showFooter: function() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
-  }.observes("model.canLoadMore"),
+  },
 
   @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {

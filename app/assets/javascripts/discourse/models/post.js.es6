@@ -1,8 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { computed, get } from "@ember/object";
+import EmberObject, { computed, get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { equal, and, or, not } from "@ember/object/computed";
-import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -353,14 +352,20 @@ const Post = RestModel.extend({
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         },
         afterSave: reminderAtISO => {
-          this.set("bookmark_reminder_at", reminderAtISO);
+          this.setProperties({
+            "topic.bookmarked": true,
+            bookmark_reminder_at: reminderAtISO
+          });
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         }
       });
     } else {
       this.set("bookmark_reminder_at", null);
       return Post.destroyBookmark(this.id)
-        .then(() => this.appEvents.trigger("page:bookmark-post-toggled", this))
+        .then(result => {
+          this.set("topic.bookmarked", result.topic_bookmarked);
+          this.appEvents.trigger("page:bookmark-post-toggled", this);
+        })
         .catch(error => {
           this.toggleProperty("bookmarked_with_reminder");
           throw new Error(error);

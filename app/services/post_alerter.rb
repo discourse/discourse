@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostAlerter
+  USER_BATCH_SIZE = 100
+
   def self.post_created(post, opts = {})
     PostAlerter.new(opts).after_save_post(post, true)
     post
@@ -140,7 +142,7 @@ class PostAlerter
     users = User.where(id: user_ids)
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each do |user|
+    each_user_in_batches(users) do |user|
       create_notification(user, Notification.types[:watching_first_post], post)
     end
   end
@@ -248,8 +250,8 @@ class PostAlerter
     # TODO decide if it makes sense to also publish a desktop notification
   end
 
-  def should_notify_edit?(notification, opts)
-    notification.data_hash["display_username"] != opts[:display_username]
+  def should_notify_edit?(notification, post, opts)
+    notification.data_hash["display_username"] != (opts[:display_username].presence || post.user.username)
   end
 
   def should_notify_like?(user, notification)
@@ -258,9 +260,10 @@ class PostAlerter
     false
   end
 
-  def should_notify_previous?(user, notification, opts)
+  def should_notify_previous?(user, post, notification, opts)
+    return false unless notification
     case notification.notification_type
-    when Notification.types[:edited] then should_notify_edit?(notification, opts)
+    when Notification.types[:edited] then should_notify_edit?(notification, post, opts)
     when Notification.types[:liked]  then should_notify_like?(user, notification)
     else false
     end
@@ -278,6 +281,7 @@ class PostAlerter
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
     return if user.blank? || user.bot?
+    return if (topic = post.topic).blank?
 
     is_liked = type == Notification.types[:liked]
     return if is_liked && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
@@ -285,7 +289,7 @@ class PostAlerter
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
 
-    return if user.staged? && post.topic.category&.mailinglist_mirror?
+    return if user.staged? && topic.category&.mailinglist_mirror?
 
     notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
 
@@ -303,7 +307,7 @@ class PostAlerter
 
     # skip if muted on the topic
     return if TopicUser.where(
-      topic: post.topic,
+      topic: topic,
       user: user,
       notification_level: TopicUser.notification_levels[:muted]
     ).exists?
@@ -327,7 +331,7 @@ class PostAlerter
     # Don't notify the same user about the same type of notification on the same post
     existing_notification_of_same_type = existing_notifications.find { |n| n.notification_type == type }
 
-    return if existing_notification_of_same_type && !should_notify_previous?(user, existing_notification_of_same_type, opts)
+    return if existing_notifications.present? && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
 
     notification_data = {}
 
@@ -349,7 +353,7 @@ class PostAlerter
     collapsed = false
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
-      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, post.topic)
+      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, topic)
       collapsed = true
     end
 
@@ -357,8 +361,8 @@ class PostAlerter
     original_username = opts[:display_username].presence || post.username
 
     if collapsed
-      post = first_unread_post(user, post.topic) || post
-      count = unread_count(user, post.topic)
+      post = first_unread_post(user, topic) || post
+      count = unread_count(user, topic)
       if count > 1
         I18n.with_locale(user.effective_locale) do
           opts[:display_username] = I18n.t('embed.replies', count: count)
@@ -368,9 +372,9 @@ class PostAlerter
 
     UserActionManager.notification_created(original_post, user, type, opts[:acting_user_id])
 
-    topic_title = post.topic.title
+    topic_title = topic.title
     # when sending a private message email, keep the original title
-    if post.topic.private_message? && modifications = post.revisions.map(&:modifications)
+    if topic.private_message? && modifications = post.revisions.map(&:modifications)
       if first_title_modification = modifications.find { |m| m.has_key?("title") }
         topic_title = first_title_modification["title"][0]
       end
@@ -509,7 +513,7 @@ class PostAlerter
 
   def notify_users(users, type, post, opts = {})
     users = [users] unless users.is_a?(Array)
-    users = users.reject { |u| u.staged? } if post.topic&.private_message?
+    users.reject!(&:staged?) if post.topic&.private_message?
 
     warn_if_not_sidekiq
 
@@ -607,13 +611,25 @@ class PostAlerter
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
-    notify.pluck(:id).each do |user_id|
-      user = User.find_by(id: user_id)
-      create_notification(user, Notification.types[:posted], post)
+
+    already_seen_user_ids = Set.new TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
+
+    each_user_in_batches(notify) do |user|
+      notification_type = already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
+      create_notification(user, notification_type, post)
     end
   end
 
   def warn_if_not_sidekiq
     Rails.logger.warn("PostAlerter.#{caller_locations(1, 1)[0].label} was called outside of sidekiq") unless Sidekiq.server?
+  end
+
+  private
+
+  def each_user_in_batches(users)
+    # This is race-condition-safe, unlike #find_in_batches
+    users.pluck(:id).each_slice(USER_BATCH_SIZE) do |user_ids_batch|
+      User.where(id: user_ids_batch).each { |user| yield(user) }
+    end
   end
 end

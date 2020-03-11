@@ -130,6 +130,10 @@ module Helpers
 
   def capture_stdout
     old_stdout = $stdout
+    if ENV['RAILS_ENABLE_TEST_STDOUT']
+      yield
+      return
+    end
     io = StringIO.new
     $stdout = io
     yield
@@ -146,5 +150,10 @@ module Helpers
     before_next_spec do
       ActionController::Base.config.relative_url_root = old_root
     end
+  end
+
+  class StubbedJob
+    def initialize; end
+    def perform(args); end
   end
 end

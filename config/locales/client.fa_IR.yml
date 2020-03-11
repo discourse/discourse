@@ -27,6 +27,7 @@ fa_IR:
         millions: "{{number}} میلیون"
     dates:
       time: "h:mm a"
+      time_short_day: "h:mm a"
       timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
@@ -152,6 +153,8 @@ fa_IR:
       banner:
         enabled: "این در %{when} یک بنر شد، تا زمانی که کاربر آن را ببندد بالای صفحه خواهد ماند."
         disabled: "این بنر در %{when} حذف شده. و دیگر در بالای صفحات نمایش داده نمی‌شود."
+      forwarded: "ایمیل بالا را ارسال کرد"
+    topic_admin_menu: "اقدامات موضوع"
     wizard_required: "به دیسکورس خوش آمدید! برای شروع نصب <a href='%{url}' data-auto-route='true'>کلیک کنید</a> ✨"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     bootstrap_mode_enabled: "برای راه‌اندازی راحت‌تر سایت جدید، حالت خود‌راه‌انداز فعال شده. به تمام کاربران سطح اعتماد 1 اعطا می‌شود و ایمیل خلاصه روزانه به صورت پیشفرض برای ایشان فعال می‌شود. این امکان بصورت خودکار وقتی تعداد کاربران از %{min_users} بیشتر شود، غیر فعال خواهد شد."
@@ -261,9 +264,19 @@ fa_IR:
     bookmarks:
       created: "شما این نوشته را نشانک زده‌اید"
       not_bookmarked: "این نوشته را نشانک بزنید"
+      created_with_reminder: "شما بر روی این پست نشانک همراه با یادآوری گذاشته اید در %{date}"
       remove: "پاک کردن نشانک"
       confirm_clear: "آیا مطمئنید می‌خواهید همه‌ی نشانک‌های خود را از این موضوع پاک کنید؟"
       save: "ذخیره"
+      no_timezone: 'شما هنوز منطقه زمانی مشخص نکرده اید. شما قادر به تنظیم کردن یادآوری نیستید. یکی را در <a href="%{basePath}/my/preferences/profile"> پروفایل تان </a> تنظیم کنید.'
+      reminders:
+        at_desktop: "بار آینده من پشت میزم هستم"
+        later_today: "امروز کمی بعد <br/>{{date}}"
+        next_business_day: "روز کاری آینده <br/>{{date}}"
+        tomorrow: "فردا <br/>{{date}}"
+        next_week: "هفته ی آینده <br/>{{date}}"
+        next_month: "ماه آینده <br/>{{date}}"
+        custom: "درج تاریخ و ساعت"
     drafts:
       resume: "از سر گیری"
       remove: "پاک کردن"
@@ -309,19 +322,37 @@ fa_IR:
       install_banner: "ایامایل هستید تا <a href>، %{title} را بر‌روی دستگاه شما نصب کند؟</a>"
     choose_topic:
       none_found: "موضوعی یافت نشد."
+      title:
+        search: "جستجوی یک موضوع"
+        placeholder: "جستجوی بر اساس عنوان، لینک و یا آیدی"
     choose_message:
       none_found: "پیامی پیدا نشد"
+      title:
+        search: "جستجو برای یک پیام"
+        placeholder: "عنوان پیام، لینک و یا آیدی آن را اینجا وارد کنید"
     review:
       order_by: "به ترتیب"
       in_reply_to: "در پاسخ به"
       explain:
         why: "توضیح دهید که چرا این مورد در صف پایان یافت"
+        title: "امتیازدهی قابل تجدید نظر"
         formula: "فرمول"
+        subtotal: "جمع جزء"
         total: "مجموع"
+        min_score_visibility: "حداقل امتیاز برای دیده شدن"
+        score_to_hide: "امتیاز برای پنهان کردن پست"
+        take_action_bonus:
+          name: "اقدام كرد"
+          title: "زمانی که یکی از کارمندان انتخاب می کند که اقدام کند، پرچم یک امتیاز می دهد."
         user_accuracy_bonus:
           name: "دقت کاربر"
+          title: "کاربرانی که پرچم آن ها به طور گروهی پذیرفته شده است، یک امتیاز دریافت می کنند."
         trust_level_bonus:
           name: "سطح اعتماد"
+          title: "موارد قابل بررسی که توسط کاربرانی با میزان اعتماد بیشتر ایجاد شده اند، اولویت بالاتری دارند."
+        type_bonus:
+          name: "امتیاز را وارد کنید"
+          title: "موارد قابل بررسی خاص می توانند کارمندان دارای امتیاز شوند تا اولویت آن ها را بیشتر کند."
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
         required: "شما قبل از بازنگری موارد باید آن‌ها را درخواست دهید ."
@@ -355,6 +386,8 @@ fa_IR:
       deleted_post: "(نوشته حذف شده)"
       deleted_user: "(کاربر حذف شده)"
       user:
+        bio: "بیوگرافی"
+        website: "وبسایت"
         username: "نام‌کاربری"
         email: "ایمیل"
         name: "نام"
@@ -546,7 +579,8 @@ fa_IR:
       leave: "ترک کردن"
       request: "درخواست"
       message: "پیام"
-      allow_membership_requests: "اجازه ارسال درخواست عضویت در گروه به کاربران"
+      confirm_leave: "آیا از ترک این گروه مطمئن هستید؟"
+      allow_membership_requests: "به کاربرها اجازه ی ارسال درخواست عضویت به صاحبان گروه را بدهید\n(گروه باید برای عموم قابل دیدن باشد)"
       membership_request_template: "الگوی سفارشی برای نمایش به کاربران هنگام ارسال درخواست عضویت"
       membership_request:
         submit: "ارسال درخواست"
@@ -725,14 +759,19 @@ fa_IR:
       activity_stream: "فعالیت"
       preferences: "تنظیمات"
       feature_topic_on_profile:
+        open_search: "انتخاب یک موضوع نو"
+        title: "انتخاب یک موضوع"
+        search_label: "جستجوی یک موضوع بر اساس عنوان"
         save: "ذخیره"
         clear:
           title: "واضح"
+          warning: "آیا از پاکسازی موضوع برجسته ی خود مطمئن هستید؟"
       profile_hidden: "صفحه نمایه این کاربر مخفی است"
       expand_profile: "باز کردن"
       collapse_profile: "جمع کردن"
       bookmarks: "نشانک‌ها"
       bio: "درباره من"
+      timezone: "منطقه ی زمانی"
       invited_by: "دعوت شده توسط"
       trust_level: "سطح اعتماد"
       notifications: "آگاه‌سازی‌ها"
@@ -759,6 +798,7 @@ fa_IR:
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
       enable_defer: "تاخیر را برای علامت زدن مباحث به عنوان خوانده نشده فعال کن"
       change: "تغییر"
+      featured_topic: "مبحث برجسته"
       moderator: "{{user}} یک مدیر است"
       admin: "{{user}} یک مدیر ارشد است"
       moderator_tooltip: "این کاربر یک مدیر است"
@@ -866,6 +906,7 @@ fa_IR:
         copied_to_clipboard: "کپی شد"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
         remaining_codes: "شما <strong>{{count}}</strong>کد پشتیبان باقی مانده دارید."
+        use: "از کد پشتیبان استفاده کنید"
         enable_prerequisites: "شما باید قبل از ساخت کد‌های پشتیبانی یک تایید هویت دوعاملی اصلی را فعال کنید "
         codes:
           title: "کد پشتیبان تولید شد"
@@ -873,6 +914,7 @@ fa_IR:
       second_factor:
         title: "احراز هویت دو مرحله ای"
         enable: "مدیریت تایید هوییت دوعاملی"
+        forgot_password: "فراموشی گذرواژه؟"
         confirm_password_description: "لطفا رمز عبور خود را تایید کنید تا ادامه دهیم."
         name: "نام"
         label: "کد"
@@ -886,6 +928,7 @@ fa_IR:
         extended_description: |
           احراز هویت دو عامله امنیت بیشتری به حساب کاربری شما میدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
         oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
+        use: "از اپلیکیشن احراز هویت استفاده کنید"
         enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
         disable: "غیرفعال"
         disable_title: "غیر فعال کردن تایید دوعاملی"
@@ -934,6 +977,8 @@ fa_IR:
       change_card_background:
         title: "پس زمینه کارت کابر"
         instructions: "تصاویر پس زمینه در مرکز قرار خواهند گرفت و عرض پیشفرض آن 590 پیکسل است"
+      change_featured_topic:
+        title: "مبحث برجسته"
       email:
         title: "ایمیل"
         primary: "آدرس ایمیل اصلی"
@@ -1279,8 +1324,6 @@ fa_IR:
       reset: "باز‌یابی رمز‌عبور"
       complete_username: "اگر حساب کاربری شما با نام کاربری <b>%{username}</b> همخوانی داشته باشد، بزودی یک ایمیل با دستورالعمل بازیابی رمز دریافت می‌کنید."
       complete_email: "اگر حساب کاربری شما با نام کاربری <b>%{email}</b>همخوانی داشته باشد، بزودی یک ایمیل با دستورالعمل بازیابی رمز دریافت می‌کنید."
-      complete_username_found: "ما حساب کاربری که با نام کاربری <b>%{username}</b> همخوانی دارد را پیدا کردیم، بزودی یک ایمیل با دستورالعمل بازیابی رمز دریافت می‌کنید."
-      complete_email_found: "ما حساب کاربری که با ایمیل <b>%{email}</b>همخوانی دارد را پیدا کردیم، بزودی یک ایمیل با دستورالعمل بازیابی رمز دریافت می‌کنید."
       complete_username_not_found: "هیچ حساب کاربری که با <b>%{username}</b> همخوانی داشته باشد پیدا نشد"
       complete_email_not_found: "هیچ حساب کاربری که <b>%{email}</b> همخوانی داشته باشد پیدا نشد"
       help: "رایانامه دریافت نکرده‌اید؟ ابتدا پوشهٔ اسپم را بررسی کنید.<p>مطمئن نیستید از کدام آدرس رایانامه استفاده کرده‌اید؟ یک آدرس رایانامه وارد کنید تا درصورت موجود بودن به شما بگوییم.</p><p>اگر به آدرس رایانامهٔ حساب کاربری خود دسترسی ندارید با <a href='%{basePath}/about'>کارکنان ما</a> تماس بگیرید.</p> "
@@ -1489,7 +1532,6 @@ fa_IR:
       view_new_post: "نوشته جدیدتان را ببینید."
       saving: "در‌حال ذخیره"
       saved: "ذخیره شد!"
-      saved_draft: "در حال حاضر پیشنویس وجود دارد. برای از سر گیری انتخاب نمایید."
       uploading: "بارگذاری..."
       show_preview: "نشان دادن پیش‌نمایش &laquo;"
       hide_preview: "&raquo; پنهان کردن پیش‌نمایش"
@@ -2479,6 +2521,7 @@ fa_IR:
         help: "این موضوع از فهرست خارج شد؛ و در فهرست موضوعات نمایش داده نخواهد شد، و فقط از طریق لینک مستقیم در دسترس خواهد بود. "
       personal_message:
         title: "این تاپیک یک پیام‌خصوصی است"
+        help: "این تاپیک یک پیام‌خصوصی است"
     posts: "نوشته‌ها"
     posts_long: "این موضوع {{number}} نوشته دارد"
     posts_likes_MF: |
@@ -2685,15 +2728,6 @@ fa_IR:
           name: دیگر
         posting:
           name: در حال نوشتن
-    google_search: |
-      <h3>جستجو با گوگل</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">گوگل</button>
-      </form>
-      </p>
     tagging:
       all_tags: "تمام برچسب‌ها"
       other_tags: "برچسب‌های دیگر"

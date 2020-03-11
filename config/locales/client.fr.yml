@@ -27,8 +27,7 @@ fr:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_short_day: "dddd [à] HH:MM"
-      month_day_time: "[Le] D MMMM [à] HH:MM"
+      time_short_day: "ddd [à] HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "DD MMM H:mm"
       long_no_year_no_time: "D MMM"
@@ -154,6 +153,8 @@ fr:
       banner:
         enabled: "a mis à la une %{when}. Il sera affiché en haut de chaque page jusqu’à ce qu'il soit ignoré par un utilisateur."
         disabled: "a supprimé de la une %{when}. Il ne sera plus affiché en haut de chaque page."
+      forwarded: "a transmis le courriel ci-dessus"
+    topic_admin_menu: "actions du sujet"
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouvel utilisateur sera accordé le niveau de confiance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque %{min_users} utilisateurs auront rejoints le site."
@@ -267,7 +268,7 @@ fr:
       remove: "Retirer le signet"
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
       save: "Sauvegarder"
-      no_timezone: "Vous n&#39;avez pas encore défini de fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href=\"%{basePath}/my/preferences/profile\">dans votre profil</a>."
+      no_timezone: 'Vous n&#39;avez pas encore défini de fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       reminders:
         at_desktop: "La prochaine fois je suis à mon bureau"
         later_today: "Plus tard dans la journée<br/>{{date}}"
@@ -385,6 +386,8 @@ fr:
       deleted_post: "(message supprimé)"
       deleted_user: "(utilisateur supprimé)"
       user:
+        bio: "Biographie"
+        website: "Site web"
         username: "Pseudo"
         email: "Courriel"
         name: "Nom"
@@ -576,7 +579,8 @@ fr:
       leave: "Quitter"
       request: "Requête"
       message: "Message"
-      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe"
+      confirm_leave: "Êtes-vous sûr(e) de vouloir quitter ce groupe ?"
+      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe (nécessite que le groupe soit visible publiquement)"
       membership_request_template: "Modèle personnalisé à afficher aux utilisateurs lors de l'envoi d'une demande d'adhésion"
       membership_request:
         submit: "Soumettre la demande"
@@ -755,9 +759,13 @@ fr:
       activity_stream: "Activité"
       preferences: "Préférences"
       feature_topic_on_profile:
+        open_search: "Sélectionnez un nouveau sujet"
+        title: "Sélectionnez un sujet"
+        search_label: "Rechercher des sujet grâce au titre"
         save: "Sauvegarder"
         clear:
           title: "Vider"
+          warning: "Êtes-vous sûr de vouloir effacer ce sujet à la une ?"
       profile_hidden: "Le profil public de cet usagé est caché."
       expand_profile: "Développer"
       collapse_profile: "Réduire"
@@ -977,6 +985,7 @@ fr:
         instructions: "Les images d'arrière-plan seront centrées avec une largeur par défaut de 590 pixels."
       change_featured_topic:
         title: "Sujet à la une"
+        instructions: "Un lien vers ce sujet sera ajouté sur votre carte d'utilisateur et votre profil."
       email:
         title: "Courriel"
         primary: "Adresse courriel principale"
@@ -1112,6 +1121,7 @@ fr:
         search: "commencer à saisir pour rechercher vos invitations…"
         title: "Invitations"
         user: "Utilisateurs"
+        sent: "Derniers envoyés"
         none: "Il n'y a pas d'invitations en attente à afficher."
         truncated:
           one: "Afficher la première invitation."
@@ -1252,9 +1262,6 @@ fr:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "La connexion est désactivée quand le site est en lecture seule."
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
-    too_few_topics_and_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentTopics}</strong> sujets et <strong>%{currentPosts}</strong> messages. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredTopics}</strong> sujets et <strong>%{requiredPosts}</strong> messages sont recommandés. Seul le personnel peut voir ce message."
-    too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentTopics}</strong> sujets. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredTopics}</strong> sujets sont recommandés. Seul le personnel peut voir ce message."
-    too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentPosts}</strong> messages. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredPosts}</strong> messages sont recommandés. Seul le personnel peut voir ce message."
     logs_error_rate_notice:
       reached_hour_MF: "{relativeAge} – {rate, plural, one {# erreur/heure} other {# erreurs/heure}} arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
       reached_minute_MF: "{relativeAge} – {rate, plural, one {# erreur/minute} other {# erreurs/minute}} arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
@@ -1325,8 +1332,8 @@ fr:
       reset: "Réinitialiser votre mot de passe"
       complete_username: "Si un compte correspond au pseudo <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
       complete_email: "Si un compte correspond à l'adresse de courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
-      complete_username_found: "Nous avons trouvé un compte correspond au pseudo <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
-      complete_email_found: "Nous avons trouvé un compte correspond au courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
+      complete_username_found: "Nous avons trouvé un compte correspondant au pseudo <b>%{username}</b>. Vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
+      complete_email_found: "Nous avons trouvé un compte correspondant au courriel <b>%{email}</b>. Vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
       complete_username_not_found: "Aucun compte ne correspond au pseudo <b>%{username}</b>"
       complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
       help: "Le courriel n'est pas arrivé ? Pensez bien à vérifier dans votre dossier de spam.<p>Vous n'êtes pas sûr de l'adresse électronique que vous avez utilisée ? Saisissez ici une adresse électronique, et nous vous dirons si elle existe ici.</p><p>Si vous n'avez plus accès à l'adresse électronique de votre compte, merci de contacter <a href='%{basePath}/about'>nos responsables serviables.</a></p>"
@@ -1459,6 +1466,7 @@ fr:
       min_content_not_reached:
         one: "Séléctionner au moins {{count}} élément."
         other: "Séléctionner au moins {{count}} éléments."
+      invalid_selection_length: "La sélection doit faire au minimum {{count}} caractères ."
     date_time_picker:
       from: From
       to: À
@@ -1548,7 +1556,7 @@ fr:
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
       saved: "Sauvegardé !"
-      saved_draft: "Vous avez un message brouillon en cours. Sélectionner cette barre pour reprendre son édition."
+      saved_draft: "Brouillon de message en cours. Appuyer pour reprendre."
       uploading: "Envoi en cours…"
       show_preview: "afficher la prévisualisation &raquo;"
       hide_preview: "&laquo; cacher la prévisualisation"
@@ -1754,6 +1762,7 @@ fr:
           title: Seuls les titres correspondent
           likes: que j'ai aimé
           posted: auxquels j'ai participé
+          created: J'ai créer
           watching: que je surveille
           tracking: que je suis
           private: qui sont dans mes messages directs
@@ -1770,6 +1779,7 @@ fr:
           label: Dont les sujets
           open: sont ouverts
           closed: sont fermés
+          public: sont publiques
           archived: sont archivés
           noreplies: n'ont aucune réponse
           single_user: contiennent un unique utilisateur
@@ -2342,9 +2352,18 @@ fr:
           notify_moderators: "signalé aux modérateurs"
           notify_user: "a envoyé un message"
           bookmark: "signet ajouté"
+          like:
+            one: "a aimé ceci"
+            other: "ont aimé ceci"
+          read:
+            one: "a lu ceci"
+            other: "ont lu ceci"
           like_capped:
             one: "et {{count}} autre a aimé ça"
             other: "et {{count}} autres ont aimé ça"
+          read_capped:
+            one: "et {{count}} autre a lu ceci"
+            other: "et {{count}} autres ont lu ceci"
         by_you:
           off_topic: "Vous l'avez signalé comme étant hors-sujet"
           spam: "Vous l'avez signalé comme étant du spam"
@@ -2399,6 +2418,9 @@ fr:
         name: "Nom"
         name_placeholder: "Nommez le signet pour alléger votre mémoire"
         set_reminder: "Ajouter un rappel"
+        actions:
+          delete_bookmark:
+            name: "Supprimer le signet"
     category:
       can: "peut&hellip; "
       none: "(aucune catégorie)"
@@ -2600,6 +2622,7 @@ fr:
         help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
       personal_message:
         title: "Ce sujet est un message personnel"
+        help: "Ce sujet est un message personnel"
     posts: "Messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
     posts_likes_MF: |2
@@ -2785,6 +2808,7 @@ fr:
         mark_watching: "%{shortcut} Surveiller le sujet"
         print: "%{shortcut} Imprimer le sujet"
         defer: "%{shortcut} Reporter le sujet"
+        topic_admin_actions: "%{shortcut} Ouvrir les actions d'administration sur ce sujet"
     badges:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
@@ -2817,23 +2841,6 @@ fr:
           name: Autre
         posting:
           name: Contribution
-    google_search: |2
-
-      <h3>Rechercher avec Google</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">Google</button>
-
-      </form>
-
-      </p>
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
@@ -2844,6 +2851,7 @@ fr:
       choose_for_topic: "étiquettes optionnelles"
       info: "Information"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
+      category_restricted: "Cette étiquette est limitée à des catégories dont vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
       synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -4204,6 +4212,12 @@ fr:
           title: "Choisir un badge existant ou en créer un nouveau pour commencer"
           what_are_badges_title: "Qu'est-ce que les badges ?"
           badge_query_examples_title: "Exemple de requête de badge"
+        mass_award:
+          title: Accorder en Masse
+          description: Accorder le même badge à plusieurs utilisateurs à la fois.
+          no_badge_selected: Merci de sélectionner un badge pour commencer.
+          perform: "Accorder un Badge aux Utilisateurs"
+          success: Votre CSV a été envoyé et les utilisateurs recevront leur badge rapidement.
       emoji:
         title: "Emoji"
         help: "Ajouter un nouvel emoji qui sera disponible pour tout le monde. (Conseil : glisser-déposer plusieurs fichiers en même temps)"

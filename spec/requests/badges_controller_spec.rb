@@ -16,7 +16,7 @@ describe BadgesController do
 
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      expect(parsed["badges"].length).to eq(Badge.count)
+      expect(parsed["badges"].length).to eq(Badge.enabled.count)
     end
   end
 

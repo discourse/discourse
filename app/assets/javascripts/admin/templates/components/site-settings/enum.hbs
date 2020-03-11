@@ -1,4 +1,19 @@
-{{combo-box castInteger=true valueAttribute="value" content=setting.validValues value=value none=setting.allowsNone}}
+{{combo-box
+  content=setting.validValues
+  value=value
+  onChange=(action (mut value))
+  valueProperty=setting.computedValueProperty
+  nameProperty=setting.computedNameProperty
+  options=(hash
+    castInteger=true
+    allowAny=setting.allowsNone
+  )
+}}
+
 {{preview}}
+
 {{setting-validation-message message=validationMessage}}
-<div class='desc'>{{{unbound setting.description}}}</div>
+
+<div class='desc'>
+  {{html-safe setting.description}}
+</div>

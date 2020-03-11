@@ -1,8 +1,8 @@
 import { alias, sort } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
+
 export default Controller.extend({
-  user: inject(),
+  user: controller(),
   username: alias("user.model.username_lower"),
   sortedBadges: sort("model", "badgeSortOrder"),
 

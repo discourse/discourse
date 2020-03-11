@@ -1,5 +1,6 @@
+import { run } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
-const { debounce } = Ember.run;
+const { debounce } = run;
 
 let _queue = [];
 let _processing = 0;

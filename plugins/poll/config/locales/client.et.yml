@@ -52,7 +52,6 @@ et:
         title: Koosta hääletus
         insert: Sisesta hääletus
         help:
-          options_count: Sisesta vähemalt 2 valikut
           min_step_value: Sammu minimaalne väärtus on 1
         poll_type:
           label: Tüüp

@@ -91,6 +91,7 @@ class PostDestroyer
       user_recovered
     end
     topic = Topic.with_deleted.find @post.topic_id
+    topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !topic.user_id
     topic.recover!(@user) if @post.is_first_post?
     topic.update_statistics
     UserActionManager.post_created(@post)
@@ -103,6 +104,7 @@ class PostDestroyer
   end
 
   def staff_recovered
+    @post.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@post.user_id
     @post.recover!
 
     mark_topic_changed
@@ -274,6 +276,8 @@ class PostDestroyer
   end
 
   def notify_deletion(reviewable)
+    return if @post.user.blank?
+
     allowed_user = @user.human? && @user.staff?
     return unless allowed_user && rs = reviewable.reviewable_scores.order('created_at DESC').first
 
@@ -307,10 +311,10 @@ class PostDestroyer
   end
 
   def remove_associated_replies
-    post_ids = PostReply.where(reply_id: @post.id).pluck(:post_id)
+    post_ids = PostReply.where(reply_post_id: @post.id).pluck(:post_id)
 
     if post_ids.present?
-      PostReply.where(reply_id: @post.id).delete_all
+      PostReply.where(reply_post_id: @post.id).delete_all
       Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
     end
   end

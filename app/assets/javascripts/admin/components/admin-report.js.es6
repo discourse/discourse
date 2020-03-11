@@ -8,7 +8,7 @@ import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { isNumeric } from "discourse/lib/utilities";
-import { SCHEMA_VERSION, default as Report } from "admin/models/report";
+import Report, { SCHEMA_VERSION } from "admin/models/report";
 import ENV from "discourse-common/config/environment";
 
 const TABLE_OPTIONS = {
@@ -124,7 +124,7 @@ export default Component.extend({
 
   @discourseComputed("currentMode")
   modeComponent(currentMode) {
-    return `admin-report-${currentMode}`;
+    return `admin-report-${currentMode.replace(/_/g, "-")}`;
   },
 
   @discourseComputed("startDate")

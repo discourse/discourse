@@ -4,6 +4,20 @@ img.emoji {
   vertical-align: middle;
 }
 
+img.emoji.only-emoji {
+  width: 32px;
+  height: 32px;
+  margin: 0.5em 0;
+}
+
+.md-table,
+.poll {
+  img.emoji.only-emoji {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 small img.emoji,
 sub img.emoji,
 sup img.emoji {

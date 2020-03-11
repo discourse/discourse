@@ -9,13 +9,13 @@
 
     <div class="col-form">
       {{#if successMessage}}
-        <br/><br/>
-        <div class='alert alert-info'><p>{{{successMessage}}}</p></div>
+        <br><br>
+        <div class='alert alert-info'><p>{{html-safe successMessage}}</p></div>
       {{else}}
         <p>{{i18n 'invites.invited_by'}}</p>
         <p>{{user-info user=invitedBy}}</p>
 
-        <p>{{{yourEmailMessage}}}
+        <p>{{html-safe yourEmailMessage}}
         {{#if externalAuthsEnabled}}
              {{i18n 'invites.social_login_available'}}
         {{/if}}
@@ -59,11 +59,12 @@
           {{d-button
             class="btn-primary"
             action=(action "submit")
+            type="submit"
             disabled=submitDisabled
             label="invites.accept_invite"}}
 
           {{#if errorMessage}}
-            <br/><br/>
+            <br><br>
             <div class='alert alert-error'>{{errorMessage}}</div>
           {{/if}}
         </form>

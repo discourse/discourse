@@ -18,6 +18,8 @@ es:
       public:
         title: "Los votos son <strong>públicos</strong>."
       results:
+        groups:
+          title: "Necesitas ser parte del grupo %{groups} para votar en esta encuesta."
         vote:
           title: "Los resultados se mostrarán cuando <strong>votes</strong>."
         closed:
@@ -50,7 +52,7 @@ es:
         label: "Mostrar desglose"
       ungroup-results:
         title: "Combinar todos los votos"
-        label: "Esconder desglose"
+        label: "Ocultar desglose"
       export-results:
         title: "Exportar los resultados de la encuesta"
         label: "Exportar"
@@ -68,12 +70,12 @@ es:
       error_while_toggling_status: "Lo sentimos, se produjo un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, se produjo un error al emitir tus votos."
       error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."
-      error_while_exporting_results: "Lo sentimos, hubo un error al exportar los resultados de la encuesta."
+      error_while_exporting_results: "Lo sentimos, ha habido un error al exportar los resultados de la encuesta."
       ui_builder:
         title: Crear encuesta
         insert: Insertar encuesta
         help:
-          options_count: Ingresar al menos 2 opciones
+          options_count: Ingresa al menos 1 opción
           invalid_values: El valor mínimo debe ser menor que el valor máximo.
           min_step_value: El valor mínimo es 1
         poll_type:
@@ -87,6 +89,8 @@ es:
           vote: En votación
           closed: Cuando esté cerrada
           staff: Solo staff
+        poll_groups:
+          label: Grupos permitidos
         poll_chart_type:
           label: Tipo de gráfico
         poll_config:

@@ -46,11 +46,13 @@ function updateFound($mentions, usernames) {
       const username = usernames[i];
       if (found[username.toLowerCase()]) {
         replaceSpan($e, username, { cannot_see: cannotSee[username] });
-      } else if (foundGroups[username]) {
+      } else if (mentionableGroups[username]) {
         replaceSpan($e, username, {
           group: true,
           mentionable: mentionableGroups[username]
         });
+      } else if (foundGroups[username]) {
+        replaceSpan($e, username, { group: true });
       } else if (checked[username]) {
         $e.addClass("mention-tested");
       }

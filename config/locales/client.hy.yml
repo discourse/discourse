@@ -448,7 +448,6 @@ hy:
       leave: "Լքել"
       request: "Հարցում"
       message: "Հաղորդագրություն"
-      allow_membership_requests: "Թույլ տալ օգտատերերին ուղարկել անդամակցության հարցումներ խմբի սեփականատերերին"
       membership_request_template: "Մասնավոր ձևանմուշ, որը կցուցադրվի օգտատերերին՝ անդամակցության հարցում ուղարկելիս"
       membership_request:
         submit: "Ուղարկել Հարցում"
@@ -1134,8 +1133,6 @@ hy:
       reset: "Վերականգնել Գաղտնաբառը"
       complete_username: "Եթե որևէ հաշիվ համընկնում է <b>%{username}</b> օգտանվանը, ապա Դուք շուտով կստանաք Ձեր գաղտնաբառի վերականգման հրահանգներով էլ. նամակ:"
       complete_email: "Եթե որևէ հաշիվ համընկնում է <b>%{email}</b> էլ. հասցեին, ապա Դուք շուտով կստանաք Ձեր գաղտնաբառի վերականգման հրահանգներով էլ. նամակ:"
-      complete_username_found: "Մենք գտել ենք <b>%{username}</b> օգտանվանը համապատասխանող հաշիվ, Դուք շուտով կստանաք Ձեր գաղտնաբառի վերականգման հրահանգներով էլ. նամակ:"
-      complete_email_found: "Մենք գտել ենք <b>%{email}</b> էլ. հասցեին համապատասխանող հաշիվ, Դուք շուտով կստանաք Ձեր գաղտնաբառի վերականգման հրահանգներով էլ. նամակ:"
       complete_username_not_found: "Ոչ մի հաշիվ չի համընկնում <b>%{username}</b> օգտանվանը"
       complete_email_not_found: "Ոչ մի հաշիվ չի համընկնում <b>%{email}</b> էլ. հասցեին"
       help: "Էլ. նամակը չի՞ եկել: Համոզվեք՝ առաջին հերթին ստուգելով Սպամ թղթապանակը: <p>Համոզված չեք, թե ո՞ր էլ. հասցեն եք օգտագործել. խնդրում ենք մուտքագրել այն այստեղ և մենք կստուգենք, թե արդյոք այն առկա է համակարգում:</p><p>Եթե Ձեր հաշվի էլ. հասցեն այլևս հասանելի չէ Ձեզ, խնդրում ենք կապ հաստատել <a href='%{basePath}/about'>մեր օգնության անձնակազմի հետ:</a></p>"
@@ -1335,7 +1332,6 @@ hy:
       view_new_post: "Դիտել Ձեր նոր գրառումը:"
       saving: "Պահպանվում է"
       saved: "Պահված է!"
-      saved_draft: "Գրառման սևագիրն ընթացքի մեջ է: Ընտրեք՝ վերսկսելու համար:"
       uploading: "Վերբեռնվում է..."
       show_preview: "ցուցադրել նախադիտումը &raquo;"
       hide_preview: "&laquo; թաքցնել նախադիտումը"
@@ -2509,15 +2505,6 @@ hy:
           name: Այլ
         posting:
           name: Հրապարակում
-    google_search: |
-      <h3>Որոնում Google-ի միջոցով</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
     tagging:
       all_tags: "Բոլոր Թեգերը"
       other_tags: "Այլ Թեգեր"

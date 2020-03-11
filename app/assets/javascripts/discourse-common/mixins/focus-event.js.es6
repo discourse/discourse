@@ -1,7 +1,8 @@
 import { bind } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
+import Mixin from "@ember/object/mixin";
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   ready() {
     this._super(...arguments);
 

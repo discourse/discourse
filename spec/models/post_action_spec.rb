@@ -695,7 +695,7 @@ describe PostAction do
       end
 
       it "will automatically pause a topic due to large community flagging" do
-        skip "heisentest"
+        freeze_time
 
         # reaching `num_flaggers_to_close_topic` isn't enough
         [flagger1, flagger2].each do |flagger|
@@ -729,7 +729,7 @@ describe PostAction do
         topic_status_update = TopicTimer.last
 
         expect(topic_status_update.topic).to eq(topic)
-        expect(topic_status_update.execute_at).to be_within(1.second).of(1.hour.from_now)
+        expect(topic_status_update.execute_at).to eq_time(1.hour.from_now)
         expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
       end
 
@@ -772,7 +772,7 @@ describe PostAction do
         Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
 
         expect(topic.reload.closed).to eq(true)
-        expect(timer.reload.execute_at).to eq(1.hour.from_now)
+        expect(timer.reload.execute_at).to eq_time(1.hour.from_now)
 
         freeze_time timer.execute_at
         SiteSetting.num_flaggers_to_close_topic = 10

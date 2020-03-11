@@ -1,11 +1,11 @@
 // shared styles for user and group cards
-#user-card,
-#group-card {
+.user-card,
+.group-card {
   position: absolute;
   z-index: z("usercard");
   &.fixed {
     position: fixed;
-    z-index: z("composer", "content") + 1;
+    z-index: z("header") + 1;
   }
   &.docked-card {
     z-index: z("header") + 1;
@@ -35,7 +35,7 @@
 }
 
 // styles for user cards only
-#user-card {
+.user-card {
   // badges
   .badge-section {
     .user-badge {

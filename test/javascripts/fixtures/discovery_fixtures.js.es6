@@ -3756,7 +3756,7 @@ export default {
       ]
     }
   },
-  "/tags/important/l/latest.json": {
+  "/tag/important/l/latest.json": {
     users: [{ id: 1, username: "sam", avatar_template: "/images/avatar.png" }],
     primary_groups: [],
     topic_list: {

@@ -2,21 +2,29 @@
   <div class="control-group">
     <label>{{displayLabel}}</label>
     {{future-date-input-selector
-        minimumResultsForSearch=-1
-        statusType=statusType
-        value=selection
-        input=input
-        includeDateTime=includeDateTime
-        includeWeekend=includeWeekend
-        includeFarFuture=includeFarFuture
-        includeMidFuture=includeMidFuture
-        clearable=clearable
-        none="topic.auto_update_input.none"}}
+      minimumResultsForSearch=-1
+      statusType=statusType
+      value=(readonly selection)
+      input=(readonly input)
+      includeDateTime=includeDateTime
+      includeWeekend=includeWeekend
+      includeFarFuture=includeFarFuture
+      includeMidFuture=includeMidFuture
+      clearable=clearable
+      none="topic.auto_update_input.none"
+      onChangeInput=onChangeInput
+      onChange=(action (mut selection))
+    }}
   </div>
 
   {{#if displayDateAndTimePicker}}
     <div class="control-group">
-      {{d-icon "calendar-alt"}} {{date-picker-future value=date defaultDate=date}}
+      {{d-icon "calendar-alt"}}
+      {{date-picker-future
+        value=date
+        defaultDate=date
+        onSelect=(action (mut date))
+      }}
     </div>
 
     <div class="control-group">
@@ -44,11 +52,12 @@
   {{#if showTopicStatusInfo}}
     <div class="alert alert-info">
       {{topic-timer-info
-          statusType=statusType
-          executeAt=executeAt
-          basedOnLastPost=basedOnLastPost
-          duration=duration
-          categoryId=categoryId}}
+        statusType=statusType
+        executeAt=executeAt
+        basedOnLastPost=basedOnLastPost
+        duration=duration
+        categoryId=categoryId
+      }}
     </div>
   {{/if}}
 </div>

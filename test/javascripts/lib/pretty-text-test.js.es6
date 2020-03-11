@@ -1,6 +1,6 @@
 import Quote from "discourse/lib/quote";
 import Post from "discourse/models/post";
-import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
+import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/context/inline-onebox-css-classes";
 import {
@@ -395,7 +395,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     '[quote="eviltrout, post: 1"]\na quote\n\nsecond line\n\nthird line\n[/quote]',
     { topicId: 2 },
-    `<aside class=\"quote no-group\" data-post=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -411,7 +411,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     '[quote="bob, post:1"]\nmy quote\n[/quote]',
     { topicId: 2, lookupAvatar: function() {} },
-    `<aside class=\"quote no-group\" data-post=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"bob\" data-post=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  bob:</div>
@@ -440,7 +440,7 @@ QUnit.test("Quotes", assert => {
   assert.cookedOptions(
     `[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`,
     { lookupPrimaryUserGroupByPostNumber: () => "aUserGroup" },
-    `<aside class="quote group-aUserGroup" data-post="1" data-topic="1">
+    `<aside class="quote group-aUserGroup" data-username="bob" data-post="1" data-topic="1">
 <div class="title">
 <div class="quote-controls"></div>
  bob:</div>
@@ -973,6 +973,158 @@ QUnit.test("images", assert => {
   );
 });
 
+QUnit.test("attachment", assert => {
+  assert.cooked(
+    "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
+    `<p><a class="attachment" href="/404" data-orig-href="upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
+    "It returns the correct attachment link HTML"
+  );
+});
+
+QUnit.test("attachment - mapped url - secure media disabled", assert => {
+  function lookupUploadUrls() {
+    let cache = {};
+    cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
+      short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+      url:
+        "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+      short_path: "/uploads/short-url/blah"
+    };
+    return cache;
+  }
+  assert.cookedOptions(
+    "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
+    {
+      siteSettings: { secure_media: false },
+      lookupUploadUrls: lookupUploadUrls
+    },
+    `<p><a class="attachment" href="/uploads/short-url/blah">test.pdf</a></p>`,
+    "It returns the correct attachment link HTML when the URL is mapped without secure media"
+  );
+});
+
+QUnit.test("attachment - mapped url - secure media enabled", assert => {
+  function lookupUploadUrls() {
+    let cache = {};
+    cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
+      short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+      url:
+        "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+      short_path: "/uploads/short-url/blah"
+    };
+    return cache;
+  }
+  assert.cookedOptions(
+    "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
+    {
+      siteSettings: { secure_media: true },
+      lookupUploadUrls: lookupUploadUrls
+    },
+    `<p><a class="attachment" href="/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
+    "It returns the correct attachment link HTML when the URL is mapped with secure media"
+  );
+});
+
+QUnit.test("video - secure media enabled", assert => {
+  assert.cookedOptions(
+    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
+    { siteSettings: { secure_media: true } },
+    `<p><div class="video-container">
+    <video width="100%" height="100%" preload="none" controls>
+      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
+      <a href="/404">/404</a>
+    </video>
+  </div></p>`,
+    "It returns the correct video player HTML"
+  );
+});
+
+QUnit.test("audio - secure media enabled", assert => {
+  assert.cookedOptions(
+    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
+    { siteSettings: { secure_media: true } },
+    `<p><audio preload="none" controls>
+    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
+    <a href="/404">/404</a>
+  </audio></p>`,
+    "It returns the correct audio player HTML"
+  );
+});
+
+QUnit.test("video", assert => {
+  assert.cooked(
+    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
+    `<p><div class="video-container">
+    <video width="100%" height="100%" preload="metadata" controls>
+      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
+      <a href="/404">/404</a>
+    </video>
+  </div></p>`,
+    "It returns the correct video player HTML"
+  );
+});
+
+QUnit.test("video - mapped url - secure media enabled", assert => {
+  function lookupUploadUrls() {
+    let cache = {};
+    cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4"] = {
+      short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4",
+      url: "/secure-media-uploads/original/3X/c/b/test.mp4",
+      short_path: "/uploads/short-url/blah"
+    };
+    return cache;
+  }
+  assert.cookedOptions(
+    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
+    {
+      siteSettings: { secure_media: true },
+      lookupUploadUrls: lookupUploadUrls
+    },
+    `<p><div class="video-container">
+    <video width="100%" height="100%" preload="none" controls>
+      <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
+      <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
+    </video>
+  </div></p>`,
+    "It returns the correct video HTML when the URL is mapped with secure media, removing data-orig-src"
+  );
+});
+
+QUnit.test("audio", assert => {
+  assert.cooked(
+    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
+    `<p><audio preload="metadata" controls>
+    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
+    <a href="/404">/404</a>
+  </audio></p>`,
+    "It returns the correct audio player HTML"
+  );
+});
+
+QUnit.test("audio - mapped url - secure media enabled", assert => {
+  function lookupUploadUrls() {
+    let cache = {};
+    cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3"] = {
+      short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3",
+      url: "/secure-media-uploads/original/3X/c/b/test.mp3",
+      short_path: "/uploads/short-url/blah"
+    };
+    return cache;
+  }
+  assert.cookedOptions(
+    "![baby shark|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
+    {
+      siteSettings: { secure_media: true },
+      lookupUploadUrls: lookupUploadUrls
+    },
+    `<p><audio preload="none" controls>
+    <source src="/secure-media-uploads/original/3X/c/b/test.mp3">
+    <a href="/secure-media-uploads/original/3X/c/b/test.mp3">/secure-media-uploads/original/3X/c/b/test.mp3</a>
+  </audio></p>`,
+    "It returns the correct audio HTML when the URL is mapped with secure media, removing data-orig-src"
+  );
+});
+
 QUnit.test("censoring", assert => {
   assert.cookedOptions(
     "Pleased to meet you, but pleeeease call me later, xyz123",
@@ -1190,7 +1342,7 @@ QUnit.test("quotes", assert => {
 QUnit.test("quote formatting", assert => {
   assert.cooked(
     '[quote="EvilTrout, post:123, topic:456, full:true"]\n[sam]\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
+    `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  EvilTrout:</div>
@@ -1203,7 +1355,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="eviltrout, post:1, topic:1"]\nabc\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -1216,7 +1368,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="eviltrout, post:1, topic:1"]\nabc\n[/quote]\nhello',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"eviltrout\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -1230,12 +1382,12 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     '[quote="Alice, post:1, topic:1"]\n[quote="Bob, post:2, topic:1"]\n[/quote]\n[/quote]',
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<aside class=\"quote no-group\" data-post=\"2\" data-topic=\"1\">
+<aside class=\"quote no-group\" data-username=\"Bob\" data-post=\"2\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Bob:</div>
@@ -1249,7 +1401,7 @@ QUnit.test("quote formatting", assert => {
   assert.cooked(
     '[quote="Alice, post:1, topic:1"]\n[quote="Bob, post:2, topic:1"]\n[/quote]',
     `<p>[quote=&quot;Alice, post:1, topic:1&quot;]</p>
-<aside class=\"quote no-group\" data-post=\"2\" data-topic=\"1\">
+<aside class=\"quote no-group\" data-username=\"Bob\" data-post=\"2\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Bob:</div>
@@ -1261,7 +1413,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked(
     "[quote=\"Alice, post:1, topic:1\"]\n```javascript\nvar foo ='foo';\nvar bar = 'bar';\n```\n[/quote]",
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
@@ -1276,7 +1428,7 @@ var bar = 'bar';
 
   assert.cooked(
     "[quote=\"Alice, post:1, topic:1\"]\n\n```javascript\nvar foo ='foo';\nvar bar = 'bar';\n```\n[/quote]",
-    `<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
+    `<aside class=\"quote no-group\" data-username=\"Alice\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
@@ -1296,7 +1448,7 @@ QUnit.test("quotes with trailing formatting", assert => {
   );
   assert.equal(
     result,
-    `<aside class=\"quote no-group\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
+    `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  EvilTrout:</div>
@@ -1333,15 +1485,15 @@ QUnit.test("enable/disable features", assert => {
 QUnit.test("emoji", assert => {
   assert.cooked(
     ":smile:",
-    `<p><img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`
+    `<p><img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
   );
   assert.cooked(
     ":(",
-    `<p><img src="/images/emoji/emoji_one/frowning.png?v=${v}" title=":frowning:" class="emoji" alt=":frowning:"></p>`
+    `<p><img src="/images/emoji/emoji_one/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:"></p>`
   );
   assert.cooked(
     "8-)",
-    `<p><img src="/images/emoji/emoji_one/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>`
+    `<p><img src="/images/emoji/emoji_one/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:"></p>`
   );
 });
 
@@ -1363,7 +1515,7 @@ QUnit.test("emoji - emojiSet", assert => {
   assert.cookedOptions(
     ":smile:",
     { siteSettings: { emoji_set: "twitter" } },
-    `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`
+    `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
   );
 });
 

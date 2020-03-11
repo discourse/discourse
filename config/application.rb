@@ -35,6 +35,9 @@ unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
   require_relative '../lib/custom_setting_providers'
 end
 GlobalSetting.load_defaults
+if GlobalSetting.try(:cdn_url).present? && GlobalSetting.cdn_url !~ /^https?:\/\//
+  STDERR.puts "WARNING: Your CDN URL does not begin with a protocol like `https://` - this is probably not going to work"
+end
 
 if ENV['SKIP_DB_AND_REDIS'] == '1'
   GlobalSetting.skip_db = true
@@ -151,8 +154,8 @@ module Discourse
       wizard-start.js
       locales/i18n.js
       discourse/lib/webauthn.js
-      admin-login/admin-login.js
-      admin-login/admin-login.no-module.js
+      confirm-new-email/confirm-new-email.js
+      confirm-new-email/confirm-new-email.no-module.js
       onpopstate-handler.js
       embed-application.js
     }
@@ -169,7 +172,7 @@ module Discourse
     initializer :fix_sprockets_loose_file_searcher, after: :set_default_precompile do |app|
       app.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
       start_path = ::Rails.root.join("app/assets").to_s
-      exclude = ['.es6', '.hbs', '.js', '.css', '']
+      exclude = ['.es6', '.hbs', '.hbr', '.js', '.css', '']
       app.config.assets.precompile << lambda do |logical_path, filename|
         filename.start_with?(start_path) &&
         !exclude.include?(File.extname(logical_path))
@@ -238,6 +241,8 @@ module Discourse
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
     config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
+    Sprockets.register_mime_type 'text/x-handlebars', extensions: ['.hbr']
+    Sprockets.register_transformer 'text/x-handlebars', 'application/javascript', Ember::Handlebars::Template
 
     require 'discourse_redis'
     require 'logster/redis_store'
@@ -298,9 +303,6 @@ module Discourse
       require_dependency 'post_action_type'
       # Ensure that Discourse event triggers for web hooks are loaded
       require_dependency 'web_hook'
-
-      # So open id logs somewhere sane
-      OpenID::Util.logger = Rails.logger
 
       # Load plugins
       plugin_initialization_guard do

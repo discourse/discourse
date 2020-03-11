@@ -1,14 +1,13 @@
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
-import { default as discourseComputed } from "discourse-common/utils/decorators";
-import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 
-export default Controller.extend(PreferencesTabController, {
+export default Controller.extend({
   init() {
     this._super(...arguments);
 
@@ -93,6 +92,12 @@ export default Controller.extend(PreferencesTabController, {
       return model
         .save(this.saveAttrNames)
         .then(() => {
+          // update the timezone in memory so we can use the new
+          // one if we change routes without reloading the user
+          if (this.currentUser.id === this.model.id) {
+            this.currentUser.timezone = this.model.user_option.timezone;
+          }
+
           cookAsync(model.get("bio_raw"))
             .then(() => {
               model.set("bio_cooked");

@@ -37,6 +37,7 @@ class Post < ActiveRecord::Base
   has_many :uploads, through: :post_uploads
 
   has_one :post_stat
+  has_many :bookmarks
 
   has_one :incoming_email
 
@@ -307,7 +308,7 @@ class Post < ActiveRecord::Base
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
-          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/secure-media-uploads")
+          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/#{Upload::SECURE_MEDIA_ROUTE}")
         end
       end
     end
@@ -505,8 +506,9 @@ class Post < ActiveRecord::Base
   end
 
   def with_secure_media?
-    return false unless SiteSetting.secure_media?
-    topic&.private_message? || SiteSetting.login_required?
+    return false if !SiteSetting.secure_media?
+    SiteSetting.login_required? || \
+      (topic.present? && (topic.private_message? || topic.category&.read_restricted))
   end
 
   def hide!(post_action_type_id, reason = nil)
@@ -712,7 +714,7 @@ class Post < ActiveRecord::Base
       self.cooked = cook(raw, topic_id: topic_id)
     end
 
-    self.baked_at = Time.new
+    self.baked_at = Time.zone.now
     self.baked_version = BAKED_VERSION
   end
 
@@ -816,24 +818,27 @@ class Post < ActiveRecord::Base
       WITH RECURSIVE breadcrumb(id, level) AS (
         SELECT :post_id, 0
         UNION
-        SELECT reply_id, level + 1
+        SELECT reply_post_id, level + 1
         FROM post_replies AS r
+          JOIN posts AS p ON p.id = reply_post_id
           JOIN breadcrumb AS b ON (r.post_id = b.id)
-        WHERE r.post_id <> r.reply_id
-              AND b.level < :max_reply_level
+        WHERE r.post_id <> r.reply_post_id
+          AND b.level < :max_reply_level
+          AND p.topic_id = :topic_id
       ), breadcrumb_with_count AS (
           SELECT
             id,
             level,
             COUNT(*) AS count
           FROM post_replies AS r
-            JOIN breadcrumb AS b ON (r.reply_id = b.id)
-          WHERE r.reply_id <> r.post_id
+            JOIN breadcrumb AS b ON (r.reply_post_id = b.id)
+          WHERE r.reply_post_id <> r.post_id
           GROUP BY id, level
       )
-      SELECT id, level
+      SELECT id, MIN(level) AS level
       FROM breadcrumb_with_count
       /*where*/
+      GROUP BY id
       ORDER BY id
     SQL
 
@@ -843,7 +848,7 @@ class Post < ActiveRecord::Base
     # for example it skips a post when it contains 2 quotes (which are replies) from different posts
     builder.where("count = 1") if only_replies_to_single_post
 
-    replies = builder.query_hash(post_id: id, max_reply_level: MAX_REPLY_LEVEL)
+    replies = builder.query_hash(post_id: id, max_reply_level: MAX_REPLY_LEVEL, topic_id: topic_id)
     replies.each { |r| r.symbolize_keys! }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set
@@ -899,20 +904,25 @@ class Post < ActiveRecord::Base
     end
 
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
-
-    disallowed_uploads = []
-    if SiteSetting.secure_media? && !self.with_secure_media?
-      disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
+    post_uploads = upload_ids.map do |upload_id|
+      { post_id: self.id, upload_id: upload_id }
     end
-    return disallowed_uploads if disallowed_uploads.count > 0
-
-    values = upload_ids.map! { |upload_id| "(#{self.id},#{upload_id})" }.join(",")
 
     PostUpload.transaction do
       PostUpload.where(post_id: self.id).delete_all
 
-      if values.size > 0
-        DB.exec("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
+      if post_uploads.size > 0
+        PostUpload.insert_all(post_uploads)
+      end
+
+      if SiteSetting.secure_media?
+        Upload.where(
+          id: upload_ids, access_control_post_id: nil
+        ).where(
+          'id NOT IN (SELECT upload_id FROM custom_emojis)'
+        ).update_all(
+          access_control_post_id: self.id
+        )
       end
     end
   end
@@ -939,8 +949,9 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
 
-    links = fragments.css("a/@href", "img/@src").map do |media|
+    links = selectors.map do |media|
       src = media.value
       next if src.blank?
 
@@ -1042,6 +1053,10 @@ class Post < ActiveRecord::Base
     { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
+  def owned_uploads_via_access_control
+    Upload.where(access_control_post_id: self.id)
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1061,14 +1076,13 @@ class Post < ActiveRecord::Base
 
   def create_reply_relationship_with(post)
     return if post.nil? || self.deleted_at.present?
-    post_reply = post.post_replies.new(reply_id: id)
+    post_reply = post.post_replies.new(reply_post_id: id)
     if post_reply.save
       if Topic.visible_post_types.include?(self.post_type)
         Post.where(id: post.id).update_all ['reply_count = reply_count + 1']
       end
     end
   end
-
 end
 
 # == Schema Information

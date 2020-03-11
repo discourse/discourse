@@ -8,9 +8,13 @@ export default TextField.extend({
   autocorrect: false,
   autocapitalize: false,
   name: "user-selector",
+  canReceiveUpdates: false,
+  single: false,
+  fullWidthWrap: false,
 
   init() {
-    this._super();
+    this._super(...arguments);
+
     this._paste = e => {
       let pastedText = "";
       if (window.clipboardData && window.clipboardData.getData) {
@@ -28,9 +32,10 @@ export default TextField.extend({
     };
   },
 
-  @observes("usernames")
-  _update() {
-    if (this.canReceiveUpdates === "true") {
+  didUpdateAttrs() {
+    this._super(...arguments);
+
+    if (this.canReceiveUpdates) {
       this._createAutocompleteInstance({ updateData: true });
     }
   },
@@ -62,14 +67,15 @@ export default TextField.extend({
       allowEmails = bool("allowEmails"),
       fullWidthWrap = bool("fullWidthWrap");
 
-    const excludedUsernames = () => {
+    const allExcludedUsernames = () => {
       // hack works around some issues with allowAny eventing
-      const usernames = single ? [] : selected;
+      let usernames = single ? [] : selected;
 
       if (currentUser && excludeCurrentUser) {
-        return usernames.concat([currentUser.username]);
+        usernames.concat([currentUser.username]);
       }
-      return usernames;
+
+      return usernames.concat(this.excludedUsernames || []);
     };
 
     this.element.addEventListener("paste", this._paste);
@@ -90,7 +96,7 @@ export default TextField.extend({
           return userSearch({
             term,
             topicId: userSelectorComponent.topicId,
-            exclude: excludedUsernames(),
+            exclude: allExcludedUsernames(),
             includeGroups,
             allowedUsers,
             includeMentionableGroups,
@@ -107,7 +113,7 @@ export default TextField.extend({
             }
             return v.username || v.name;
           } else {
-            const excludes = excludedUsernames();
+            const excludes = allExcludedUsernames();
             return v.usernames.filter(item => excludes.indexOf(item) === -1);
           }
         },
@@ -158,12 +164,16 @@ export default TextField.extend({
 
     (text || "").split(/[, \n]+/).forEach(val => {
       val = val.replace(/^@+/, "").trim();
-      if (val.length > 0) {
+      if (
+        val.length > 0 &&
+        (!this.excludedUsernames || !this.excludedUsernames.includes(val))
+      ) {
         usernames.push(val);
       }
     });
     this.set("usernames", usernames.uniq().join(","));
-    if (this.canReceiveUpdates !== "true") {
+
+    if (!this.canReceiveUpdates) {
       this._createAutocompleteInstance({ updateData: true });
     }
   },

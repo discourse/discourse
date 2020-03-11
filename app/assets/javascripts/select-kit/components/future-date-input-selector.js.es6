@@ -1,3 +1,4 @@
+import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import ComboBoxComponent from "select-kit/components/combo-box";
@@ -191,31 +192,20 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   classNames: ["future-date-input-selector"],
   isCustom: equal("value", "pick_date_and_time"),
   isBasedOnLastPost: equal("value", "set_based_on_last_post"),
-  rowComponent: "future-date-input-selector/future-date-input-selector-row",
-  headerComponent:
-    "future-date-input-selector/future-date-input-selector-header",
 
-  computeHeaderContent() {
-    let content = this._super(...arguments);
-    content.datetime = this._computeDatetimeForValue(this.computedValue);
-    content.name = this.get("selection.name") || content.name;
-    content.hasSelection = this.hasSelection;
-    content.icons = this._computeIconsForValue(this.computedValue);
-    return content;
+  selectKitOptions: {
+    autoInsertNoneItem: false,
+    headerComponent:
+      "future-date-input-selector/future-date-input-selector-header"
   },
 
-  computeContentItem(contentItem, name) {
-    let computedContentItem = this._super(contentItem, name);
-    computedContentItem.datetime = this._computeDatetimeForValue(
-      contentItem.id
-    );
-    computedContentItem.icons = this._computeIconsForValue(contentItem.id);
-    return computedContentItem;
+  modifyComponentForRow() {
+    return "future-date-input-selector/future-date-input-selector-row";
   },
 
-  computeContent() {
-    let now = moment();
-    let opts = {
+  content: computed(function() {
+    const now = moment();
+    const opts = {
       now,
       day: now.day(),
       includeWeekend: this.includeWeekend,
@@ -229,23 +219,24 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
     return TIMEFRAMES.filter(tf => tf.enabled(opts)).map(tf => {
       return {
         id: tf.id,
-        name: I18n.t(`topic.auto_update_input.${tf.id}`)
+        name: I18n.t(`topic.auto_update_input.${tf.id}`),
+        datetime: this._computeDatetimeForValue(tf.id),
+        icons: this._computeIconsForValue(tf.id)
       };
     });
-  },
+  }),
 
-  mutateValue(value) {
-    if (value === "pick_date_and_time" || this.isBasedOnLastPost) {
-      this.set("value", value);
-    } else {
-      let input = null;
-      const { time } = this._updateAt(value);
-
-      if (time && !isEmpty(value)) {
-        input = time.locale("en").format(FORMAT);
+  actions: {
+    onChange(value) {
+      if (value !== "pick_date_and_time" || !this.isBasedOnLastPost) {
+        const { time } = this._updateAt(value);
+        if (time && !isEmpty(value)) {
+          this.attrs.onChangeInput &&
+            this.attrs.onChangeInput(time.locale("en").format(FORMAT));
+        }
       }
 
-      this.setProperties({ input, value });
+      this.attrs.onChange && this.attrs.onChange(value);
     }
   }
 });

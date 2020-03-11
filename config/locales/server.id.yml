@@ -27,11 +27,28 @@ id:
   loading: "Memuat"
   sign_up: "Mendaftar"
   log_in: "Log In"
+  submit: "Kirimkan"
   purge_reason: "Secara otomatis dihapus sebagai akun yang ditinggalkan, dinon-aktifkan."
   disable_remote_images_download_reason: "Unduh gambar jarak jauh dimatikan karena ruang penyimpanan di server tidak cukup."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Dihapus oleh penulis"
   on_another_topic: "Di topik lain"
+  themes:
+    other_error: "Terjadi masalah saat memperbarui tema"
+    compile_error:
+      unrecognized_extension: "Ekstensi file tidak dikenal: %{extension}"
+    import_error:
+      generic: Terjadi kesalahan saat mengimpor tema itu
+      about_json: "Kesalahan Impor: about.json tidak ada, atau tidak valid"
+      unpack_failed: "Gagal membongkar berkas"
+      file_too_big: "Berkas yang tidak dikompresi terlalu besar."
+    settings_errors:
+      number_value_not_valid_min_max: "Itu harus antara %{min} dan %{max}."
+      number_value_not_valid_min: "Itu harus lebih besar dari atau sama dengan %{min}."
+      number_value_not_valid_max: "Itu harus lebih kecil dari atau sama dengan %{max}."
+      string_value_not_valid: "Panjang nilai baru tidak berada dalam rentang yang diizinkan."
+      string_value_not_valid_min_max: "Panjangnya harus antara %{min} dan %{max} karakter."
+      string_value_not_valid_min: "Panjangnya minimal %{min} karakter."
   emails:
     incoming:
       default_subject: "Topik ini membutuhkan judul"
@@ -152,6 +169,15 @@ id:
     group_mentions: "Mention terkini dari %{group_name}"
     user_topics: "Topik terakhir oleh @%{username}"
   excerpt_image: "gambar"
+  bookmarks:
+    reminders:
+      at_desktop: "Lain kali saat saya di depan komputer"
+      later_today: "Nanti <br/> {{date}}"
+      next_business_day: "Hari kerja berikutnya <br/> {{date}}"
+      tomorrow: "Besok <br/> {{date}}"
+      next_week: "Minggu depan <br/> {{date}}"
+      next_month: "Bulan depan <br/> {{date}}"
+      custom: "Tanggal dan waktu tersuai"
   groups:
     errors:
       can_not_modify_automatic: "Anda tidak bisa mengubah grup otomatis."
@@ -323,6 +349,8 @@ id:
       every_hour: "per jam"
       daily: "harian"
       weekly: "mingguan"
+      every_month: "setiap bulan"
+      every_six_months: "setiap enam bulan"
   user_api_key:
     title: "Izinkan akses aplikasi"
     authorize: "Izinkan"
@@ -333,16 +361,22 @@ id:
   reports:
     default:
       labels:
+        count: Menghitung
         day: Hari
     post_edits:
       labels:
+        edited_at: Tanggal
         edit_reason: Alasan
     user_flagging_ratio:
       labels:
         user: Pengguna
+        score: Skor
     moderators_activity:
       labels:
         moderator: Moderator
+    flags_status:
+      labels:
+        flag: Tipe
     visits:
       title: "Kunjungan Pengguna"
       xaxis: "Haru"
@@ -351,6 +385,8 @@ id:
       xaxis: "Hari"
     new_contributors:
       xaxis: "Hari"
+    trust_level_growth:
+      yaxis: "Hari"
     consolidated_page_views:
       yaxis: "Hari"
       labels:
@@ -386,7 +422,10 @@ id:
       xaxis: "Level Kepercayaan"
       yaxis: "Jumlah Pengguna"
     users_by_type:
+      xaxis: "Tipe"
       yaxis: "Jumlah Pengguna"
+      labels:
+        type: Tipe
       xaxis_labels:
         admin: Admin
         moderator: Moderator
@@ -568,11 +607,17 @@ id:
       name: Tautan
     famous_link:
       name: Tautan terkenal
+  tags:
+    title: "Label"
+  finish_installation:
+    resend_email:
+      title: "Kirim Ulang Email Aktivasi"
   wizard:
     step:
       forum_title:
         title: "Nama"
       privacy:
+        title: "Mengakses"
         fields:
           privacy:
             choices:
@@ -584,11 +629,31 @@ id:
         title: "Organisasi"
       colors:
         title: "Tema"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "Hanya Kategori"
+              categories_with_featured_topics:
+                label: "Kategori dengan Topik Unggulan"
+              categories_and_latest_topics:
+                label: "Kategori dan Topik Terbaru"
+              categories_and_top_topics:
+                label: "Kategori dan Topik Teratas"
   joined: "Joined"
   reviewables:
+    priorities:
+      medium: "Sedang"
+      high: "Tinggi"
+    sensitivity:
+      medium: "Sedang"
+      high: "Tinggi"
     actions:
       delete_single:
         title: "Hapus"
+      ignore:
+        title: "Abaikan"
       approve:
         title: "Terima"
       reject_user:

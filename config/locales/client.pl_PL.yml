@@ -421,6 +421,7 @@ pl_PL:
       deleted_post: "(wpis usunięty)"
       deleted_user: "(użytkownik usunięty)"
       user:
+        bio: "Biografia"
         username: "Nazwa użytkownika"
         email: "Email"
         name: "Imię"
@@ -623,7 +624,6 @@ pl_PL:
       leave: "Opuść"
       request: "Wniosek"
       message: "Wiadomość"
-      allow_membership_requests: "Zezwól użytkownikom na wysyłanie zaproszeń do właścicieli grupy."
       membership_request_template: "Wyświetl niestandardowy szablon użytkownikom, w momencie wysyłania wniosku o członkostwo."
       membership_request:
         submit: "Złóż wniosek"
@@ -1304,9 +1304,6 @@ pl_PL:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, lajkowanie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
-    too_few_topics_and_posts_notice: "Rozpocznijmy <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dyskusję!</a> Istnieje <strong>%{currentTopics}</strong> tematów i <strong>%{currentPosts}</strong> postów. Goście muszą więcej czytać i odpowiadać - zalecamy przynajmniej <strong>%{requiredTopics}</strong> tematów i <strong>%{requiredPosts}</strong> posty. Tylko pracownicy mogą zobaczyć tę wiadomość."
-    too_few_topics_notice: "Zacznijmy <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dyskusję!</a> Jest <strong>%{currentTopics}</strong> tematów. Odwiedzający potrzebują więcej do przeczytania i odpowiedzi - zalecamy co najmniej <strong>%{requiredTopics}</strong> tematów. Tylko pracownicy mogą zobaczyć tę wiadomość."
-    too_few_posts_notice: "Zacznijmy <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dyskusję!</a> Jest <strong>%{currentPosts}</strong> postów. Odwiedzający potrzebują więcej, aby przeczytać i odpowiedzieć - zalecamy co najmniej <strong>%{requiredPosts}</strong> postów. Tylko pracownicy mogą zobaczyć tę wiadomość."
     learn_more: "dowiedz się więcej…"
     all_time: "łącznie"
     all_time_desc: "łącznie utworzonych tematów"
@@ -1374,8 +1371,6 @@ pl_PL:
       reset: "Resetuj hasło"
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
-      complete_username_found: "Znaleziono konto o nazwie <b>%{username}</b>, wkrótce otrzymasz email z instrukcjami opisującymi reset hasła."
-      complete_email_found: "Znaleziono konto przypisane do adresu <b>%{email}</b>, wkrótce otrzymasz email z instrukcjami opisującymi reset hasła."
       complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
       complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
       help: "Email nie dotarł? Upewnij się najpierw czy sprawdziłeś folder spam.<p>Nie jesteś pewny jaki email został użyty? Wprowadz adres tutaj, a dowiemy się czy taki istnieje.</p><p>Jeśli nie masz już dostępu do adresu email zapisanego na twoim koncie, skontaktuj się z <a href='%{basePath}/about'>naszym pomocnym zespołem.</a></p>"
@@ -1586,7 +1581,6 @@ pl_PL:
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisywanie"
       saved: "Zapisano!"
-      saved_draft: "Posiadasz zachowany szkic wpisu. Kliknij tu aby wznowić jego edycję."
       uploading: "Wczytuję…"
       show_preview: "pokaż podgląd &raquo;"
       hide_preview: "&laquo; schowaj podgląd"
@@ -1877,7 +1871,7 @@ pl_PL:
         other: "{{count}} postów w temacie"
       create: "Nowy temat"
       create_long: "Utwórz nowy temat"
-      open_draft: "Utwórz szkic"
+      open_draft: "Otwórz szkic"
       private_message: "Napisz wiadomość"
       archive_message:
         help: "Przenieś wiadomość do archiwum"
@@ -2879,15 +2873,6 @@ pl_PL:
           name: Inne
         posting:
           name: Pisanie
-    google_search: |
-      <h3>Szukaj z Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
@@ -3360,7 +3345,7 @@ pl_PL:
           screened_ip: "Eksportuj listę monitorowanych IP do formatu CSV."
           screened_url: "Eksportuj listę monitorowanych URLi do formatu CSV."
       export_json:
-        button_text: "Eksport"
+        button_text: "Eksportuj"
       invite:
         button_text: "Wyślij zaproszenia"
         button_title: "Wysyłanie zaproszeń"
@@ -3372,7 +3357,7 @@ pl_PL:
         save: "Zapisz"
         new: "Nowy"
         new_style: "Nowy styl"
-        install: "zainstalować"
+        install: "Zainstaluj"
         delete: "Usuń"
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         color: "Kolor"
@@ -3426,7 +3411,7 @@ pl_PL:
           color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
           custom_sections: "Spersonalizowane sekcje:"
           theme_components: "Komponenty motywu"
-          convert: "Konwertować"
+          convert: "Konwertuj"
           convert_component_alert: "Czy na pewno chcesz konwertować ten składnik na motyw? Zostanie usunięty jako składnik z %{relatives}."
           convert_component_tooltip: "Konwertuj ten składnik na motyw"
           convert_theme_alert: "Czy na pewno chcesz konwertować ten motyw na składnik. Zostanie usunięty jako rodzic z %{relatives}."
@@ -3464,7 +3449,7 @@ pl_PL:
           is_private: "Motyw jest w prywatnym repozytorium git"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
-          install: "zainstalować"
+          install: "Zainstaluj"
           installed: "Zainstalowana"
           install_popular: "Popularne"
           install_upload: "Z twojego urządzenia"

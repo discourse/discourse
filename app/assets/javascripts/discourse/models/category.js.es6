@@ -66,6 +66,11 @@ const Category = RestModel.extend({
   },
 
   @discourseComputed("subcategories")
+  isParent(subcategories) {
+    return subcategories && subcategories.length > 0;
+  },
+
+  @discourseComputed("subcategories")
   isGrandParent(subcategories) {
     return (
       subcategories &&
@@ -78,6 +83,15 @@ const Category = RestModel.extend({
   @discourseComputed("notification_level")
   isMuted(notificationLevel) {
     return notificationLevel === NotificationLevels.MUTED;
+  },
+
+  @discourseComputed("notification_level")
+  notificationLevelString(notificationLevel) {
+    // Get the key from the value
+    const notificationLevelString = Object.keys(NotificationLevels).find(
+      key => NotificationLevels[key] === notificationLevel
+    );
+    if (notificationLevelString) return notificationLevelString.toLowerCase();
   },
 
   @discourseComputed("name")
@@ -115,15 +129,14 @@ const Category = RestModel.extend({
     return topicCount > (this.num_featured_topics || 2);
   },
 
-  @discourseComputed("topic_count", "subcategories")
-  totalTopicCount(topicCount, subcats) {
-    let count = topicCount;
-    if (subcats) {
-      subcats.forEach(s => {
-        count += s.get("topic_count");
+  @discourseComputed("topic_count", "subcategories.[]")
+  totalTopicCount(topicCount, subcategories) {
+    if (subcategories) {
+      subcategories.forEach(subcategory => {
+        topicCount += subcategory.topic_count;
       });
     }
-    return count;
+    return topicCount;
   },
 
   save() {
@@ -334,7 +347,7 @@ Category.reopenClass({
   },
 
   findBySlugPathWithID(slugPathWithID) {
-    let parts = slugPathWithID.split("/");
+    let parts = slugPathWithID.split("/").filter(Boolean);
     // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
     if (Discourse.SiteSettings.slug_generation_method === "encoded") {
       parts = parts.map(urlPart => decodeURI(urlPart));
@@ -351,7 +364,7 @@ Category.reopenClass({
       if (
         !category &&
         parts.length > 0 &&
-        parts[parts.length - 1].match(/^\d+-/)
+        parts[parts.length - 1].match(/^\d+-category/)
       ) {
         const id = parseInt(parts.pop(), 10);
 
@@ -408,6 +421,10 @@ Category.reopenClass({
     return parentSlug
       ? ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`)
       : ajax(`/c/${slug}/find_by_slug.json`);
+  },
+
+  reloadBySlugPath(slugPath) {
+    return ajax(`/c/${slugPath}/find_by_slug.json`);
   },
 
   search(term, opts) {

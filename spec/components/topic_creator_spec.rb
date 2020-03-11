@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 describe TopicCreator do
-
   fab!(:user)      { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin)     { Fabricate(:admin) }
@@ -34,6 +33,18 @@ describe TopicCreator do
 
       it "should be possible for a moderator to create a topic" do
         expect(TopicCreator.create(moderator, Guardian.new(moderator), valid_attrs)).to be_valid
+      end
+
+      it "supports both meta_data and custom_fields" do
+        opts = valid_attrs.merge(
+          meta_data: { import_topic_id: "foo" },
+          custom_fields: { import_id: "bar" }
+        )
+
+        topic = TopicCreator.create(admin, Guardian.new(admin), opts)
+
+        expect(topic.custom_fields["import_topic_id"]).to eq("foo")
+        expect(topic.custom_fields["import_id"]).to eq("bar")
       end
 
       context 'regular user' do
@@ -223,6 +234,35 @@ describe TopicCreator do
             TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)
           end.to raise_error(ActiveRecord::Rollback)
         end
+      end
+    end
+
+    context 'setting timestamps' do
+      it 'supports Time instances' do
+        freeze_time
+
+        topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(
+          created_at: 1.week.ago,
+          pinned_at: 3.days.ago
+        ))
+
+        expect(topic.created_at).to eq_time(1.week.ago)
+        expect(topic.pinned_at).to eq_time(3.days.ago)
+      end
+
+      it 'supports strings' do
+        freeze_time
+
+        time1 = Time.zone.parse('2019-09-02')
+        time2 = Time.zone.parse('2020-03-10 15:17')
+
+        topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(
+          created_at: '2019-09-02',
+          pinned_at: '2020-03-10 15:17'
+        ))
+
+        expect(topic.created_at).to eq_time(time1)
+        expect(topic.pinned_at).to eq_time(time2)
       end
     end
   end

@@ -9,7 +9,7 @@ module Webauthn
     # the steps followed here. Memoized methods are called in their
     # place in the step flow to make the process clearer.
     def authenticate_security_key
-      return false if @params.blank?
+      return false if @params.blank? || (!@params.is_a?(Hash) && !@params.is_a?(ActionController::Parameters))
 
       # 3. Identify the user being authenticated and verify that this user is the
       #    owner of the public key credential source credentialSource identified by credential.id:

@@ -1,8 +1,5 @@
 import Controller from "@ember/controller";
-import {
-  default as computed,
-  observes
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 
 export const BAR_CHART_TYPE = "bar";
@@ -22,12 +19,15 @@ export default Controller.extend({
     { name: PIE_CHART_TYPE.capitalize(), value: PIE_CHART_TYPE }
   ],
 
+  pollType: null,
+  pollResult: null,
+
   init() {
     this._super(...arguments);
     this._setupPoll();
   },
 
-  @computed("regularPollType", "numberPollType", "multiplePollType")
+  @discourseComputed("regularPollType", "numberPollType", "multiplePollType")
   pollTypes(regularPollType, numberPollType, multiplePollType) {
     return [
       {
@@ -45,12 +45,12 @@ export default Controller.extend({
     ];
   },
 
-  @computed("chartType", "pollType", "numberPollType")
+  @discourseComputed("chartType", "pollType", "numberPollType")
   isPie(chartType, pollType, numberPollType) {
     return pollType !== numberPollType && chartType === PIE_CHART_TYPE;
   },
 
-  @computed(
+  @discourseComputed(
     "alwaysPollResult",
     "votePollResult",
     "closedPollResult",
@@ -76,7 +76,7 @@ export default Controller.extend({
         value: closedPollResult
       }
     ];
-    if (this.currentUser.staff) {
+    if (this.get("currentUser.staff")) {
       options.push({
         name: I18n.t("poll.ui_builder.poll_result.staff"),
         value: staffPollResult
@@ -85,27 +85,39 @@ export default Controller.extend({
     return options;
   },
 
-  @computed("pollType", "regularPollType")
+  @discourseComputed("site.groups")
+  siteGroups(groups) {
+    return groups
+      .map(g => {
+        // prevents group "everyone" to be listed
+        if (g.id !== 0) {
+          return { name: g.name, value: g.name };
+        }
+      })
+      .filter(Boolean);
+  },
+
+  @discourseComputed("pollType", "regularPollType")
   isRegular(pollType, regularPollType) {
     return pollType === regularPollType;
   },
 
-  @computed("pollType", "pollOptionsCount", "multiplePollType")
+  @discourseComputed("pollType", "pollOptionsCount", "multiplePollType")
   isMultiple(pollType, count, multiplePollType) {
     return pollType === multiplePollType && count > 0;
   },
 
-  @computed("pollType", "numberPollType")
+  @discourseComputed("pollType", "numberPollType")
   isNumber(pollType, numberPollType) {
     return pollType === numberPollType;
   },
 
-  @computed("isRegular")
+  @discourseComputed("isRegular")
   showMinMax(isRegular) {
     return !isRegular;
   },
 
-  @computed("pollOptions")
+  @discourseComputed("pollOptions")
   pollOptionsCount(pollOptions) {
     if (pollOptions.length === 0) return 0;
 
@@ -118,7 +130,7 @@ export default Controller.extend({
     return length;
   },
 
-  @observes("isMultiple", "isNumber", "pollOptionsCount")
+  @observes("pollType", "pollOptionsCount")
   _setPollMax() {
     const isMultiple = this.isMultiple;
     const isNumber = this.isNumber;
@@ -131,7 +143,7 @@ export default Controller.extend({
     }
   },
 
-  @computed("isRegular", "isMultiple", "isNumber", "pollOptionsCount")
+  @discourseComputed("isRegular", "isMultiple", "isNumber", "pollOptionsCount")
   pollMinOptions(isRegular, isMultiple, isNumber, count) {
     if (isRegular) return;
 
@@ -145,7 +157,7 @@ export default Controller.extend({
     }
   },
 
-  @computed(
+  @discourseComputed(
     "isRegular",
     "isMultiple",
     "isNumber",
@@ -171,13 +183,13 @@ export default Controller.extend({
     }
   },
 
-  @computed("isNumber", "pollMax")
+  @discourseComputed("isNumber", "pollMax")
   pollStepOptions(isNumber, pollMax) {
     if (!isNumber) return;
     return this._comboboxOptions(1, (parseInt(pollMax, 10) || 1) + 1);
   },
 
-  @computed(
+  @discourseComputed(
     "isNumber",
     "showMinMax",
     "pollType",
@@ -187,6 +199,7 @@ export default Controller.extend({
     "pollMin",
     "pollMax",
     "pollStep",
+    "pollGroups",
     "autoClose",
     "chartType",
     "date",
@@ -202,6 +215,7 @@ export default Controller.extend({
     pollMin,
     pollMax,
     pollStep,
+    pollGroups,
     autoClose,
     chartType,
     date,
@@ -231,6 +245,7 @@ export default Controller.extend({
     if (publicPoll) pollHeader += ` public=true`;
     if (chartType && pollType !== "number")
       pollHeader += ` chartType=${chartType}`;
+    if (pollGroups) pollHeader += ` groups=${pollGroups}`;
     if (autoClose) {
       let closeDate = moment(
         date + " " + time,
@@ -252,7 +267,7 @@ export default Controller.extend({
     return output;
   },
 
-  @computed(
+  @discourseComputed(
     "pollOptionsCount",
     "isRegular",
     "isMultiple",
@@ -262,13 +277,13 @@ export default Controller.extend({
   )
   disableInsert(count, isRegular, isMultiple, isNumber, pollMin, pollMax) {
     return (
-      (isRegular && count < 2) ||
+      (isRegular && count < 1) ||
       (isMultiple && count < pollMin && pollMin >= pollMax) ||
-      (isNumber ? false : count < 2)
+      (isNumber ? false : count < 1)
     );
   },
 
-  @computed("pollMin", "pollMax")
+  @discourseComputed("pollMin", "pollMax")
   minMaxValueValidation(pollMin, pollMax) {
     let options = { ok: true };
 
@@ -282,7 +297,7 @@ export default Controller.extend({
     return EmberObject.create(options);
   },
 
-  @computed("pollStep")
+  @discourseComputed("pollStep")
   minStepValueValidation(pollStep) {
     let options = { ok: true };
 
@@ -296,7 +311,7 @@ export default Controller.extend({
     return EmberObject.create(options);
   },
 
-  @computed("disableInsert")
+  @discourseComputed("disableInsert")
   minNumOfOptionsValidation(disableInsert) {
     let options = { ok: true };
 
@@ -318,7 +333,7 @@ export default Controller.extend({
 
   _setupPoll() {
     this.setProperties({
-      pollType: null,
+      pollType: this.get("pollTypes.firstObject.value"),
       publicPoll: false,
       pollOptions: "",
       pollMin: 1,
@@ -326,6 +341,7 @@ export default Controller.extend({
       pollStep: 1,
       autoClose: false,
       chartType: BAR_CHART_TYPE,
+      pollGroups: null,
       date: moment()
         .add(1, "day")
         .format("YYYY-MM-DD"),

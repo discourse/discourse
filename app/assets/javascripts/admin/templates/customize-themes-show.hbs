@@ -3,9 +3,13 @@
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
       {{d-button action=(action "finishedEditingName") class="btn-primary submit-edit" icon="check"}}
-      {{d-button action=(action "cancelEditingName") class="btn-default cancel-edit" icon="times"}}
+      {{d-button action=(action "cancelEditingName") class="cancel-edit" icon="times"}}
     {{else}}
-      {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil-alt"}}</a>
+      <span>{{model.name}}</span>
+      {{d-button
+        action=(action "startEditingName")
+        icon="pencil-alt"
+      }}
     {{/if}}
   </div>
 
@@ -59,16 +63,16 @@
 
     {{#if model.remote_theme.remote_url}}
       {{#if sourceIsHttp}}
-        <a class="remote-url" href="{{githubLink}}">{{i18n "admin.customize.theme.source_url"}}{{d-icon "link"}}</a>
+        <a class="remote-url" href="{{githubZink}}">{{i18n "admin.customize.theme.source_url"}}{{d-icon "link"}}</a>
       {{else}}
         <div class="remote-url"><code>{{model.remote_theme.remote_url}}</code></div>
       {{/if}}
     {{/if}}
     {{#if model.remote_theme.about_url}}
-      <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}}{{d-icon "link"}}</a>
+      <a class="url about-url" href={{model.remote_theme.about_url}}>{{i18n "admin.customize.theme.about_theme"}}{{d-icon "link"}}</a>
     {{/if}}
     {{#if model.remote_theme.license_url}}
-      <a class="url license-url" href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}}{{d-icon "link"}}</a>
+      <a class="url license-url" href={{model.remote_theme.license_url}}>{{i18n "admin.customize.theme.license"}}{{d-icon "link"}}</a>
     {{/if}}
 
     {{#if model.description}}
@@ -85,7 +89,7 @@
 
         {{#if showRemoteError}}
           <div class="error-message">
-            {{d-icon "exclamation-triangle"}} {{I18n "admin.customize.theme.repo_unreachable"}}
+            {{d-icon "exclamation-triangle"}} {{i18n "admin.customize.theme.repo_unreachable"}}
           </div>
           <div class="raw-error">
             <code>{{model.remoteError}}</code>
@@ -105,7 +109,7 @@
             {{#if model.remote_theme.commits_behind}}
               {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
               {{#if model.remote_theme.github_diff_link}}
-                <a href="{{model.remote_theme.github_diff_link}}">
+                <a href={{model.remote_theme.github_diff_link}}>
                   {{i18n 'admin.customize.theme.compare_commits'}}
                 </a>
               {{/if}}
@@ -202,7 +206,7 @@
       <ul class='removable-list'>
         {{#each model.uploads as |upload|}}
           <li>
-            <span class='col'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>
+            <span class='col'>${{upload.name}}: <a href={{upload.url}} rel="noopener" target='_blank'>{{upload.filename}}</a></span>
             <span class='col'>
               {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
             </span>
@@ -237,8 +241,8 @@
     </div>
   {{/if}}
 
-  <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn btn-default'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
-  <a class="btn btn-default export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
+  <a href={{previewUrl}} title={{i18n 'admin.customize.explain_preview'}} rel="noopener" target='_blank' class='btn btn-default'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
+  <a class="btn btn-default export" rel="noopener" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
   {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
 
@@ -255,8 +259,8 @@
         action=(action "enableComponent")
         icon="check"
         label="admin.customize.theme.enable"}}
-      {{/if}}
     {{/if}}
+  {{/if}}
 
-    {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash-alt" class="btn-danger"}}
+  {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash-alt" class="btn-danger"}}
 </div>

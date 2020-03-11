@@ -406,7 +406,6 @@ sw:
       leave: "Ondoka"
       request: "Ombi"
       message: "Ujumbe"
-      allow_membership_requests: "Waruhusu watumiaji waombe uanachama kwa wamiliki wa vikundi."
       membership_request_template: "Muundo wa kuonyesha watumiaji wakati wa maombi ya uanachama."
       membership_request:
         submit: "Wasilisha Ombi"
@@ -1026,8 +1025,6 @@ sw:
       reset: "Weka upya nywila yako"
       complete_username: "Kama akaunti inalingana na jina la mtumiaji <b> %{username} </b>, utapokea barua pepe yenye mwelezo wa jinsi ya kuweka upya nywila yako hivi punde."
       complete_email: "Kama akaunti inalingana <b>%{email}</b>,utapokea barua pepe yenye mwelezo wa jinsi ya kuweka upya nywila yako hivi punde."
-      complete_username_found: "Tumepata akaunti inayolingana na jina la mtumiaji <b>%{username}</b>, utapokea barua pepe yenye mwelekezo wa jinsa ya kuweka upya nywila yako hivi punde."
-      complete_email_found: "Tumegundua akaunti inayolingana na <b>%{email}</b>,utapokea barua pepe yenye maelezo ya jinsi ya kuweka upya nywila yako hivi punde."
       complete_username_not_found: "hakuna akaunti inayowiana na mtumiaji %{username}"
       complete_email_not_found: "Hakuna akaunti inawiana %{email}"
       help: "Barua pepe haijafika? Hakikisha kuangalia folda la barua taka. <p>Hauna uhakika barua pepe uliyotumia? Andika barua pepe yako na tutakujulisha kama ipo kwetu.</p><p>Kama hauwezi kufikia barua pepe ya akaunti yako, tafadhali wasiliana na <a href='%{basePath}/about'>wasaidizi wetu.</a></p>"
@@ -1210,7 +1207,6 @@ sw:
       view_new_post: "Angalia chapisho lako jipya"
       saving: "Inahifadhiwa"
       saved: "Imehifadhiwa!"
-      saved_draft: "Posti rasimu ipo katika mwendelezo. Chagua kuendelea"
       uploading: "Inapakia..."
       show_preview: "Onyesha hakikisho &raquo;"
       hide_preview: "&laquo; ficha hakikisho"
@@ -2224,15 +2220,6 @@ sw:
           name: Nyingine
         posting:
           name: Kuchapisha
-    google_search: |
-      <h3>Tafuta kutumia Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
     tagging:
       all_tags: "Lebo Zote"
       other_tags: "Lebo Zingine"

@@ -230,22 +230,6 @@ describe Email::Receiver do
 
       expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
     end
-
-    it "automatically deactive users once they reach the 'bounce_score_threshold_deactivate' threshold" do
-      expect(user.active).to eq(true)
-
-      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold_deactivate - 1
-      user.user_stat.save!
-
-      expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
-
-      user.reload
-      email_log.reload
-
-      expect(email_log.bounced).to eq(true)
-      expect(user.active).to eq(false)
-    end
-
   end
 
   context "reply" do
@@ -613,6 +597,14 @@ describe Email::Receiver do
       MD
     end
 
+    it "works with removed attachments" do
+      SiteSetting.authorized_extensions = "jpg"
+
+      expect { process(:removed_attachments) }.to change { topic.posts.count }
+      post = topic.posts.last
+      expect(post.uploads).to be_empty
+    end
+
     it "supports eml attachments" do
       SiteSetting.authorized_extensions = "eml"
       expect { process(:attached_eml_file) }.to change { topic.posts.count }
@@ -664,8 +656,11 @@ describe Email::Receiver do
     end
 
     it "ensures posts aren't dated in the future" do
+      # PostCreator doesn't provide sub-second accuracy for created_at
+      now = freeze_time Time.zone.now.round
+
       expect { process(:from_the_future) }.to change { topic.posts.count }
-      expect(topic.posts.last.created_at).to be_within(1.minute).of(DateTime.now)
+      expect(topic.posts.last.created_at).to eq_time(now)
     end
 
     it "accepts emails with wrong reply key if the system knows about the forwarded email" do
@@ -896,6 +891,18 @@ describe Email::Receiver do
         expect { process(:forwarded_email_3) }.to change(Topic, :count)
       end
 
+      it "adds a small action post to explain who forwarded the email when the sender didn't write anything" do
+        expect { process(:forwarded_email_4) }.to change(Topic, :count)
+
+        forwarded_post, last_post = *Post.last(2)
+
+        expect(forwarded_post.user.email).to eq("some@one.com")
+        expect(forwarded_post.raw).to match(/XoXo/)
+
+        expect(last_post.user.email).to eq("ba@bar.com")
+        expect(last_post.post_type).to eq(Post.types[:small_action])
+        expect(last_post.action_code).to eq("forwarded")
+      end
     end
 
     context "with forwarded emails behaviour set to quote" do
@@ -979,59 +986,33 @@ describe Email::Receiver do
     it "creates hidden topic for X-Spam-Flag" do
       SiteSetting.email_in_spam_header = 'X-Spam-Flag'
 
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:spam_x_spam_flag) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(false)
-
-      post = Post.last
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).not_to eq(nil)
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
+      expect(user.reload.silenced?).to be(true)
     end
 
     it "creates hidden topic for X-Spam-Status" do
       SiteSetting.email_in_spam_header = 'X-Spam-Status'
 
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:spam_x_spam_status) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(false)
-
-      post = Post.last
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).not_to eq(nil)
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
+      expect(user.reload.silenced?).to be(true)
     end
 
     it "creates hidden topic for X-SES-Spam-Verdict" do
       SiteSetting.email_in_spam_header = 'X-SES-Spam-Verdict'
 
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:spam_x_ses_spam_verdict) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(false)
-
-      post = Post.last
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).not_to eq(nil)
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
+      expect(user.reload.silenced?).to be(true)
     end
 
     it "creates hidden topic for failed Authentication-Results header" do
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:dmarc_fail) }.to change { Topic.count }.by(1) # Topic created
+      SiteSetting.email_in_authserv_id = 'example.com'
 
-      topic = Topic.last
-      expect(topic.visible).to eq(false)
-
-      post = Post.last
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).not_to eq(nil)
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_authentication_result_header])
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
+      expect(user.reload.silenced?).to be(false)
     end
 
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
