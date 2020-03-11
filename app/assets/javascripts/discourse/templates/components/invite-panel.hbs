@@ -1,6 +1,6 @@
 {{#if inviteModel.error}}
   <div class="alert alert-error">
-    {{{errorMessage}}}
+    {{html-safe errorMessage}}
   </div>
 {{/if}}
 
@@ -10,7 +10,7 @@
       {{generated-invite-link link=inviteModel.inviteLink email=emailOrUsername}}
     {{else}}
       <div class="success-message">
-        {{{successMessage}}}
+        {{html-safe successMessage}}
       </div>
     {{/if}}
   {{else}}

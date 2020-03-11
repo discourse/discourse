@@ -3,6 +3,6 @@
     {{#if showUsername}}
       {{#link-to 'user' post.user class="username"}}@{{post.user.username}}{{/link-to}}
     {{/if}}
-    {{{post.excerpt}}}
+    {{html-safe post.excerpt}}
   </div>
 {{/if}}

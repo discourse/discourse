@@ -1,7 +1,7 @@
 {{#d-modal-body title="user.auth_tokens.was_this_you"}}
   <div>
     <p>{{i18n 'user.auth_tokens.was_this_you_description'}}</p>
-    <p>{{{i18n 'user.second_factor.extended_description'}}}</p>
+    <p>{{i18n 'user.second_factor.extended_description'}}</p>
   </div>
 
   <div>
@@ -21,9 +21,9 @@
       </h3>
 
       {{#if expanded}}
-        <blockquote>{{{latest_post.cooked}}}</blockquote>
+        <blockquote>{{html-safe latest_post.cooked}}</blockquote>
       {{else}}
-        <blockquote>{{{latest_post.excerpt}}}</blockquote>
+        <blockquote>{{html-safe latest_post.excerpt}}</blockquote>
       {{/if}}
     </div>
   {{/if}}

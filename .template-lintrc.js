@@ -11,6 +11,7 @@ module.exports = {
     "no-unnecessary-concat": true,
     "no-unused-block-params": true,
     "no-unbound": true,
-    "simple-unless": true
+    "simple-unless": true,
+    "no-triple-curlies": true
   }
 };

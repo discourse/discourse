@@ -28,14 +28,14 @@
 
   {{#if displayComponents}}
     <div class="components-list">
-      <span class="components">{{{childrenString}}}</span>
+      <span class="components">{{html-safe childrenString}}</span>
 
       {{#if displayHasMore}}
         <a href {{action "toggleChildrenExpanded"}} class="others-count">
           {{#if childrenExpanded}}
-            {{I18n "admin.customize.theme.collapse"}}
+            {{i18n "admin.customize.theme.collapse"}}
           {{else}}
-            {{I18n "admin.customize.theme.and_x_more" count=moreCount}}
+            {{i18n "admin.customize.theme.and_x_more" count=moreCount}}
           {{/if}}
         </a>
       {{/if}}
