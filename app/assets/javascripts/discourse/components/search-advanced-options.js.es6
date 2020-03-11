@@ -1,11 +1,11 @@
-import { debounce } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { debounce, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
 import Badge from "discourse/models/badge";
 import Category from "discourse/models/category";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -83,7 +83,7 @@ export default Component.extend({
   @observes("searchTerm")
   _updateOptions() {
     this._update();
-    debounce(this, this._update, 250);
+    debounce(this, this._update, INPUT_DELAY);
   },
 
   _init() {

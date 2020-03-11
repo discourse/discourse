@@ -1,5 +1,4 @@
-import { run } from "@ember/runloop";
-import { next } from "@ember/runloop";
+import { next, run } from "@ember/runloop";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { avatarAtts } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";

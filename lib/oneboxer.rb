@@ -261,7 +261,7 @@ module Oneboxer
         quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")
+      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.mustache")
       Mustache.render(template, args)
     end
   end
@@ -287,7 +287,7 @@ module Oneboxer
         original_url: url
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.hbs")
+      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.mustache")
       Mustache.render(template, args)
     else
       nil

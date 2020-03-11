@@ -1,4 +1,4 @@
-import EmberObject from "@ember/object";
+import EmberObject, { set } from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   init as initDesktopNotifications,
@@ -11,7 +11,6 @@ import {
   unsubscribe as unsubscribePushNotifications,
   isPushNotificationsEnabled
 } from "discourse/lib/push-notifications";
-import { set } from "@ember/object";
 import ENV from "discourse-common/config/environment";
 
 export default {

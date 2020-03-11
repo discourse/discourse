@@ -57,7 +57,7 @@
           </div>
 
         {{else}}
-          <h1 data-topic-id={{unbound model.id}}>
+          <h1 data-topic-id={{model.id}}>
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
                 {{private-message-glyph
@@ -73,8 +73,8 @@
 
             {{#if model.details.loaded}}
               {{topic-status topic=model}}
-              <a href={{unbound model.url}} {{action "jumpTop"}} class="fancy-title">
-                {{{model.fancyTitle}}}
+              <a href={{model.url}} {{action "jumpTop"}} class="fancy-title">
+                {{html-safe model.fancyTitle}}
               </a>
             {{/if}}
 
@@ -91,7 +91,20 @@
 
     <div class="container posts">
       <div class='selected-posts {{unless multiSelect 'hidden'}}'>
-        {{partial "selected-posts"}}
+        {{selected-posts
+          selectedPostsCount=selectedPostsCount
+          canSelectAll=canSelectAll
+          canDeselectAll=canDeselectAll
+          canDeleteSelected=canDeleteSelected
+          canMergeTopic=canMergeTopic
+          canChangeOwner=canChangeOwner
+          canMergePosts=canMergePosts
+          toggleMultiSelect=(action "toggleMultiSelect")
+          mergePosts=(action "mergePosts")
+          deleteSelected=(action "deleteSelected")
+          deselectAll=(action "deselectAll")
+          selectAll=(action "selectAll")
+        }}
       </div>
 
       {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
@@ -170,7 +183,7 @@
       {{/topic-navigation}}
 
       <div class="row">
-        <section class="topic-area" id="topic" data-topic-id={{unbound model.id}}>
+        <section class="topic-area" id="topic" data-topic-id={{model.id}}>
 
           <div class="posts-wrapper">
             {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
@@ -264,7 +277,7 @@
               {{#if model.queued_posts_count}}
                 <div class="has-pending-posts">
                   <div>
-                    {{{i18n "review.topic_has_pending" count=model.queued_posts_count}}}
+                    {{i18n "review.topic_has_pending" count=model.queued_posts_count}}
                   </div>
 
                   {{#link-to 'review' (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
@@ -327,7 +340,20 @@
 
               {{#if showSelectedPostsAtBottom}}
                 <div class='selected-posts {{unless multiSelect 'hidden'}}'>
-                  {{partial "selected-posts"}}
+                  {{selected-posts
+                    selectedPostsCount=selectedPostsCount
+                    canSelectAll=canSelectAll
+                    canDeselectAll=canDeselectAll
+                    canDeleteSelected=canDeleteSelected
+                    canMergeTopic=canMergeTopic
+                    canChangeOwner=canChangeOwner
+                    canMergePosts=canMergePosts
+                    toggleMultiSelect=(action "toggleMultiSelect")
+                    mergePosts=(action "mergePosts")
+                    deleteSelected=(action "deleteSelected")
+                    deselectAll=(action "deselectAll")
+                    selectAll=(action "selectAll")
+                  }}
                 </div>
               {{/if}}
 
@@ -351,7 +377,7 @@
     <div class="container">
       {{#conditional-loading-spinner condition=noErrorYet}}
         {{#if model.errorHtml}}
-          <div class="not-found">{{{model.errorHtml}}}</div>
+          <div class="not-found">{{html-safe model.errorHtml}}</div>
         {{else}}
           <div class="topic-error">
             <div>{{model.errorMessage}}</div>

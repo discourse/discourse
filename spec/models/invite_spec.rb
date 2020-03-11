@@ -125,13 +125,14 @@ describe Invite do
           end
 
           it 'updates timestamp of existing invite' do
+            freeze_time
             invite.update!(created_at: 10.days.ago)
 
             resend_invite = Invite.invite_by_email(
               'iceking@adventuretime.ooo', inviter, topic
             )
 
-            expect(resend_invite.created_at).to be_within(1.minute).of(Time.zone.now)
+            expect(resend_invite.created_at).to eq_time(Time.zone.now)
           end
 
           it 'returns a new invite if the other has expired' do

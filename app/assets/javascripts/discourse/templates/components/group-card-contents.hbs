@@ -43,7 +43,7 @@
 
     {{#if group.bio_cooked}}
       <div class="card-row second-row">
-        <div class='bio'>{{{group.bio_cooked}}}</div>
+        <div class='bio'>{{html-safe group.bio_cooked}}</div>
       </div>
     {{/if}}
 

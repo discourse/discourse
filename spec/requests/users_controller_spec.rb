@@ -3455,7 +3455,6 @@ describe UsersController do
 
       it 'should return the right response' do
         post "/u/email-login.json", params: { login: user.email }
-
         expect(response.status).to eq(404)
       end
     end
@@ -3465,7 +3464,9 @@ describe UsersController do
         post "/u/email-login.json", params: { login: '@random' }
 
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)['user_found']).to eq(false)
+        json = JSON.parse(response.body)
+        expect(json['user_found']).to eq(false)
+        expect(json['hide_taken']).to eq(false)
         expect(Jobs::CriticalUserEmail.jobs).to eq([])
       end
     end
@@ -3476,7 +3477,9 @@ describe UsersController do
         post "/u/email-login.json", params: { login: user.email }
 
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body).has_key?('user_found')).to eq(false)
+        json = JSON.parse(response.body)
+        expect(json.has_key?('user_found')).to eq(false)
+        expect(json['hide_taken']).to eq(true)
       end
     end
 

@@ -1,5 +1,4 @@
-import { get } from "@ember/object";
-import EmberObject from "@ember/object";
+import EmberObject, { get } from "@ember/object";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default EmberObject.extend({

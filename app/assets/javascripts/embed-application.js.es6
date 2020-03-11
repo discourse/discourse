@@ -1,3 +1,4 @@
+// discourse-skip-module
 (function() {
   const referer = document.getElementById("data-embedded").dataset.referer;
 

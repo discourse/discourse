@@ -1,10 +1,9 @@
-import { get } from "@ember/object";
+import EmberObject, { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import PreloadStore from "preload-store";
 import Category from "discourse/models/category";
-import EmberObject from "@ember/object";
 import User from "discourse/models/user";
 
 function isNew(topic) {

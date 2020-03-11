@@ -1,5 +1,4 @@
-import { schedule } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { on, observes } from "discourse-common/utils/decorators";
 import LoadMore from "discourse/mixins/load-more";

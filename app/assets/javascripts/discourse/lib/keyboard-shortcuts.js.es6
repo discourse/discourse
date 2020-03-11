@@ -1,11 +1,12 @@
-import { run } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { later, run } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";
 import { ajax } from "discourse/lib/ajax";
+import { throttle } from "@ember/runloop";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
-const bindings = {
+export let bindings = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
@@ -299,34 +300,26 @@ export default {
   },
 
   setTrackingToMuted(event) {
-    this.appEvents.trigger("topic-notifications-button:changed", {
-      type: "notification",
-      id: 0,
-      event
-    });
+    throttle(this, "_setTracking", { id: 0, event }, INPUT_DELAY, true);
   },
 
   setTrackingToRegular(event) {
-    this.appEvents.trigger("topic-notifications-button:changed", {
-      type: "notification",
-      id: 1,
-      event
-    });
+    throttle(this, "_setTracking", { id: 1, event }, INPUT_DELAY, true);
   },
 
   setTrackingToTracking(event) {
-    this.appEvents.trigger("topic-notifications-button:changed", {
-      type: "notification",
-      id: 2,
-      event
-    });
+    throttle(this, "_setTracking", { id: 2, event }, INPUT_DELAY, true);
   },
 
   setTrackingToWatching(event) {
+    throttle(this, "_setTracking", { id: 3, event }, INPUT_DELAY, true);
+  },
+
+  _setTracking(params) {
     this.appEvents.trigger("topic-notifications-button:changed", {
       type: "notification",
-      id: 3,
-      event
+      id: params.id,
+      event: params.event
     });
   },
 
@@ -413,14 +406,16 @@ export default {
   },
 
   _globalBindToFunction(func, binding) {
-    if (typeof this[func] === "function") {
+    let funcToBind = typeof func === "function" ? func : this[func];
+    if (typeof funcToBind === "function") {
       this.keyTrapper.bindGlobal(binding, this[func].bind(this));
     }
   },
 
   _bindToFunction(func, binding) {
-    if (typeof this[func] === "function") {
-      this.keyTrapper.bind(binding, this[func].bind(this));
+    let funcToBind = typeof func === "function" ? func : this[func];
+    if (typeof funcToBind === "function") {
+      this.keyTrapper.bind(binding, funcToBind.bind(this));
     }
   },
 

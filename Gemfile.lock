@@ -45,20 +45,20 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.272.0)
-    aws-sdk-core (3.89.1)
+    aws-partitions (1.281.0)
+    aws-sdk-core (3.91.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.29.0)
+    aws-sdk-kms (1.30.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.60.2)
+    aws-sdk-s3 (1.61.0)
       aws-sdk-core (~> 3, >= 3.83.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
-    aws-sdk-sns (1.21.0)
+    aws-sdk-sns (1.22.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.1.1)
@@ -408,7 +408,7 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.13.0)
-    webmock (3.8.2)
+    webmock (3.8.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -539,7 +539,6 @@ DEPENDENCIES
   stackprof
   test-prof
   thor
-  tilt
   uglifier
   unf
   unicorn

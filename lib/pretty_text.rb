@@ -29,13 +29,10 @@ module PrettyText
     filename = find_file(root_path, part_name)
     if filename
       source = File.read("#{root_path}#{filename}")
+      source = ERB.new(source).result(binding) if filename =~ /\.erb$/
 
-      if filename =~ /\.erb$/
-        source = ERB.new(source).result(binding)
-      end
-
-      template = Tilt::ES6ModuleTranspilerTemplate.new {}
-      transpiled = template.module_transpile(source, "#{Rails.root}/app/assets/javascripts/", part_name)
+      transpiler = DiscourseJsProcessor::Transpiler.new
+      transpiled = transpiler.perform(source, "#{Rails.root}/app/assets/javascripts/", part_name)
       ctx.eval(transpiled)
     else
       # Look for vendored stuff

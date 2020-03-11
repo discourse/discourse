@@ -26,7 +26,7 @@
       <hr>
 
       <div class='group-bio'>
-        <p>{{{model.bio_cooked}}}</p>
+        <p>{{html-safe model.bio_cooked}}</p>
       </div>
     {{/if}}
 

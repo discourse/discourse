@@ -17,6 +17,9 @@ module ImportScripts::Mbox
     attr_reader :staged
     attr_reader :index_only
     attr_reader :group_messages_by_subject
+    attr_reader :subject_prefix_regex
+    attr_reader :automatically_remove_list_name_prefix
+    attr_reader :tags
 
     def initialize(yaml)
       @data_dir = yaml['data_dir']
@@ -27,6 +30,22 @@ module ImportScripts::Mbox
       @staged = yaml['staged']
       @index_only = yaml['index_only']
       @group_messages_by_subject = yaml['group_messages_by_subject']
+
+      unless yaml['remove_subject_prefixes'].empty?
+        prefix_regexes = yaml['remove_subject_prefixes'].map { |p| Regexp.new(p) }
+        @subject_prefix_regex = /^#{Regexp.union(prefix_regexes).source}/i
+      end
+
+      @automatically_remove_list_name_prefix = yaml['automatically_remove_list_name_prefix']
+
+      @tags = []
+      yaml['tags'].each do |tag_name, value|
+        prefixes = Regexp.union(value).source
+        @tags << {
+          regex: /^(?:(?:\[(?:#{prefixes})\])|(?:\((?:#{prefixes})\)))\s*/i,
+          name: tag_name
+        }
+      end
     end
   end
 end

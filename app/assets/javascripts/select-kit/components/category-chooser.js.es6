@@ -54,7 +54,7 @@ export default ComboBoxComponent.extend({
         "label",
         categoryBadgeHTML(category, {
           link: false,
-          hideParent: !!category.parent_category_id,
+          hideParent: category ? !!category.parent_category_id : true,
           allowUncategorized: true,
           recursive: true
         }).htmlSafe()

@@ -34,7 +34,7 @@
                    label="category.delete"}}
 
         <div class="cannot_delete_reason {{if hiddenTooltip "hidden" ""}}">
-          {{{model.cannot_delete_reason}}}
+          {{html-safe model.cannot_delete_reason}}
         </div>
       </div>
     {{/if}}

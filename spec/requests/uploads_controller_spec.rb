@@ -386,6 +386,7 @@ describe UploadsController do
         end
 
         it "redirects to the signed_url_for_path" do
+          freeze_time
           get upload.short_path
 
           expect(response).to redirect_to(Discourse.store.signed_url_for_path(Discourse.store.get_path_for_upload(upload)))

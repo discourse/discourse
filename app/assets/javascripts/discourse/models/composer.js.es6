@@ -1,9 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { reads, equal, not, or, and } from "@ember/object/computed";
-import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import EmberObject, { set } from "@ember/object";
+import { cancel, later, next, throttle } from "@ember/runloop";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import { throwAjaxError } from "discourse/lib/ajax-error";
@@ -19,9 +17,7 @@ import {
   emailValid
 } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
-import { throttle } from "@ember/runloop";
 import { Promise } from "rsvp";
-import { set } from "@ember/object";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";

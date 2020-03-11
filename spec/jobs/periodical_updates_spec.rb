@@ -33,6 +33,6 @@ describe Jobs::PeriodicalUpdates do
     # does not rebake
     Jobs::PeriodicalUpdates.new.execute
     post.reload
-    expect(post.baked_at).to eq(baked)
+    expect(post.baked_at).to eq_time(baked)
   end
 end

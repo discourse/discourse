@@ -1,8 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import { computed } from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { alias, and, equal } from "@ember/object/computed";
-import EmberObject from "@ember/object";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";

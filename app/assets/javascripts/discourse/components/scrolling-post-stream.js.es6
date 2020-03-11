@@ -1,6 +1,4 @@
-import { next } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { debounce, next, scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import MountWidget from "discourse/components/mount-widget";
 import { cloak, uncloak } from "discourse/widgets/post-stream";

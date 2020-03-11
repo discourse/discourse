@@ -145,6 +145,13 @@ class RemoteTheme < ActiveRecord::Base
       raise ImportError, I18n.t("themes.import_error.about_json_values", errors: self.errors.full_messages.join(","))
     end
 
+    ThemeModifierSet::MODIFIERS.keys.each do |modifier_name|
+      theme.theme_modifier_set.public_send(:"#{modifier_name}=", theme_info.dig("modifiers", modifier_name.to_s))
+    end
+    if !theme.theme_modifier_set.valid?
+      raise ImportError, I18n.t("themes.import_error.modifier_values", errors: theme.theme_modifier_set.errors.full_messages.join(","))
+    end
+
     importer.all_files.each do |filename|
       next unless opts = ThemeField.opts_from_file_path(filename)
       value = importer[filename]

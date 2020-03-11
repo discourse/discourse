@@ -86,7 +86,7 @@ describe UserStat do
       UserStat.ensure_consistency!
 
       post.user.user_stat.reload
-      expect(post.user.user_stat.first_unread_at).to eq_time(Time.now)
+      expect(post.user.user_stat.first_unread_at).to eq_time(Time.zone.now)
     end
   end
 

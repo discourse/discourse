@@ -113,6 +113,10 @@ class TopicView
   end
 
   def canonical_path
+    if SiteSetting.embed_set_canonical_url
+      topic_embed = topic.topic_embed
+      return topic_embed.embed_url if topic_embed
+    end
     path = relative_url.dup
     path <<
       if @page > 1

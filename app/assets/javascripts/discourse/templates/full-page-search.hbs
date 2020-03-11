@@ -49,7 +49,7 @@
 
       <div class='search-info'>
         <div class='result-count'>
-          {{{resultCountLabel}}}
+          {{html-safe resultCountLabel}}
         </div>
         <div class='sort-by'>
           <span class='desc'>
@@ -67,13 +67,15 @@
 
     {{plugin-outlet name="full-page-search-below-search-info" args=(hash search=searchTerm)}}
 
-    {{#unless searching}}
+    {{#if searching}}
+      {{loading-spinner size="medium"}}
+    {{else}}
       <div class="search-results">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
           {{#each model.posts as |result|}}
             <div class='fps-result'>
               <div class='author'>
-                <a href={{result.userPath}} data-user-card={{unbound result.username}}>
+                <a href={{result.userPath}} data-user-card={{result.username}}>
                   {{avatar result imageSize="large"}}
                 </a>
               </div>
@@ -84,9 +86,9 @@
                     {{track-selected selectedList=selected selectedId=result.topic}}
                   {{/if}}
 
-                  <a class='search-link' href={{unbound result.url}} {{action "logClick" result.topic_id}}>
+                  <a class='search-link' href={{result.url}} {{action "logClick" result.topic_id}}>
                     {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
-                    <span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+                    <span class='topic-title'>{{#highlight-text highlight=q}}{{html-safe result.topic.fancyTitle}}{{/highlight-text}}</span>
                   </a>
 
                   <div class='search-category'>
@@ -111,7 +113,7 @@
 
                   {{#if result.blurb}}
                     {{#highlight-text highlight=highlightQuery}}
-                      {{{unbound result.blurb}}}
+                      {{html-safe result.blurb}}
                     {{/highlight-text}}
                   {{/if}}
                 </div>
@@ -172,9 +174,7 @@
           {{/conditional-loading-spinner}}
         {{/load-more}}
       </div>
-    {{else}}
-      {{loading-spinner size="medium"}}
-    {{/unless}}
+    {{/if}}
   </div>
 
   <div class="search-advanced-sidebar">

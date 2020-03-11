@@ -204,7 +204,7 @@
                   {{d-button action=(action "togglePreview") class="hide-preview" label="composer.hide_preview"}}
                 {{/if}}
               {{else}}
-                <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
+                <a href {{action "togglePreview"}} class='toggle-preview'>{{html-safe toggleText}}</a>
               {{/if}}
 
           </div>
@@ -213,7 +213,7 @@
       {{else}}
         <div class='saving-text'>
           {{#if model.createdPost}}
-            {{i18n 'composer.saved'}} <a class='permalink' href={{unbound createdPost.url}} {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
+            {{i18n 'composer.saved'}} <a class='permalink' href={{createdPost.url}} {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
           {{else}}
             {{i18n 'composer.saving'}} {{loading-spinner size="small"}}
           {{/if}}
@@ -221,7 +221,7 @@
 
         <div class='draft-text'>
           {{#if model.topic}}
-            {{d-icon "share"}} {{{draftTitle}}}
+            {{d-icon "share"}} {{html-safe draftTitle}}
           {{else}}
             {{i18n "composer.saved_draft"}}
           {{/if}}

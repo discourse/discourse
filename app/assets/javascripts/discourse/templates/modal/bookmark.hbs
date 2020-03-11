@@ -38,7 +38,7 @@
           <!-- {{tap-tile icon="calendar-alt" text=(I18n "bookmarks.reminders.custom") tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}} -->
         {{/tap-tile-grid}}
       {{else}}
-        <div class="alert alert-info">{{{i18n "bookmarks.no_timezone" basePath=basePath }}}</div>
+        <div class="alert alert-info">{{i18n "bookmarks.no_timezone" basePath=basePath }}</div>
       {{/if}}
     </div>
     {{/if}}

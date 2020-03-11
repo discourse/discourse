@@ -1,8 +1,4 @@
-import { throttle } from "@ember/runloop";
-import { next } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
-import { later } from "@ember/runloop";
+import { debounce, later, next, scheduleOnce, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import discourseComputed, {

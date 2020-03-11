@@ -1,6 +1,5 @@
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
@@ -27,7 +26,7 @@ const USER_HOMES = {
 const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
-export default Controller.extend(PreferencesTabController, {
+export default Controller.extend({
   @discourseComputed("makeThemeDefault")
   saveAttrNames(makeDefault) {
     let attrs = [

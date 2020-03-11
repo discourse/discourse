@@ -83,6 +83,7 @@ en:
       generic: An error occured while importing that theme
       about_json: "Import Error: about.json does not exist, or is invalid"
       about_json_values: "about.json contains invalid values: %{errors}"
+      flag_values: "about.json flags contain invalid values: %{errors}"
       git: "Error cloning git repository, access is denied or repository is not found"
       unpack_failed: "Failed to unpack file"
       file_too_big: "The uncompressed file is too big."
@@ -548,6 +549,10 @@ en:
               same_as_password: "is the same as your password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "This topic cannot be featured on your profile."
         user_email:
           attributes:
             user_id:
@@ -1994,6 +1999,7 @@ en:
     ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
 
     clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed. To disable clean up set to 0."
+    clean_up_unused_staged_users_after_days: "Number of days before an unused staged user (without any posts) is removed. To disable clean up set to 0."
 
     user_selected_primary_groups: "Allow users to set their own primary group"
 
@@ -2058,6 +2064,7 @@ en:
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
     embed_topics_list: "Support HTML embedding of topics lists"
+    embed_set_canonical_url: "Set the canonical URL for embeded topics to the embeded content's URL."
     embed_truncate: "Truncate the embedded posts."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
