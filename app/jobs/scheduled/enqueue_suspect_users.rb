@@ -6,10 +6,12 @@ module Jobs
 
     def execute(_args)
       return unless SiteSetting.approve_suspect_users
+      return if SiteSetting.must_approve_users
 
       users = User
         .activated
         .human_users
+        .where(approved: false)
         .joins(:user_profile, :user_stat)
         .where("users.created_at <= ?", 1.day.ago)
         .where("LENGTH(COALESCE(user_profiles.bio_raw, user_profiles.website, '')) > 0")
