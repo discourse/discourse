@@ -78,7 +78,7 @@ class Draft < ActiveRecord::Base
         # around 2 controller actions calling for draft creation at the exact same time
         # to avoid complex locking and a distributed mutex, since this is so rare, simply add a single retry
         if retry_not_unique
-          set(user, key, sequence, data, owenr, retry_not_unique: false)
+          set(user, key, sequence, data, owner, retry_not_unique: false)
         else
           raise e
         end
