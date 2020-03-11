@@ -848,7 +848,7 @@ class PluginApi {
    *
    * Example:
    *
-   * // read /discourse/lib/sharing.js.es6 for options
+   * // read discourse/lib/sharing for options
    * api.addSharingSource(options)
    *
    */

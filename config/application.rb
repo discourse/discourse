@@ -76,7 +76,6 @@ module Discourse
     # confused here if we load the deps without `lib` it thinks
     # discourse.rb is under the discourse folder incorrectly
     require_dependency 'lib/discourse'
-    require_dependency 'lib/es6_module_transpiler/rails'
     require_dependency 'lib/js_locale_helper'
 
     # tiny file needed by site settings
@@ -155,7 +154,7 @@ module Discourse
       locales/i18n.js
       discourse/lib/webauthn.js
       confirm-new-email/confirm-new-email.js
-      confirm-new-email/confirm-new-email.no-module.js
+      confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
     }
@@ -243,6 +242,11 @@ module Discourse
     config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
     Sprockets.register_mime_type 'text/x-handlebars', extensions: ['.hbr']
     Sprockets.register_transformer 'text/x-handlebars', 'application/javascript', Ember::Handlebars::Template
+
+    require 'discourse_js_processor'
+
+    Sprockets.register_mime_type 'application/javascript', extensions: ['.js', '.es6', '.js.es6'], charset: :unicode
+    Sprockets.register_postprocessor 'application/javascript', DiscourseJsProcessor
 
     require 'discourse_redis'
     require 'logster/redis_store'

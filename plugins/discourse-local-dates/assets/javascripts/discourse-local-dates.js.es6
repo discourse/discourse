@@ -1,3 +1,4 @@
+// discourse-skip-module
 (function($) {
   const DATE_TEMPLATE = `
     <span>
