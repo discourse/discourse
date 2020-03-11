@@ -12,6 +12,7 @@ module.exports = {
     "no-unused-block-params": true,
     "no-unbound": true,
     "simple-unless": true,
-    "no-triple-curlies": true
+    "no-triple-curlies": true,
+    "no-partial": true
   }
 };
