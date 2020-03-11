@@ -264,7 +264,7 @@ const Topic = RestModel.extend({
   // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
     let url = this.url;
-    if (postNumber && postNumber > 0) {
+    if (postNumber > 0) {
       url += `/${postNumber}`;
     }
     return url;

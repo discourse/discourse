@@ -36,7 +36,7 @@ const Bookmark = RestModel.extend({
   // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
     let url = Discourse.getURL(`/t/${this.topic_id}`);
-    if (postNumber && postNumber > 0) {
+    if (postNumber > 0) {
       url += `/${postNumber}`;
     }
     return url;
@@ -109,7 +109,7 @@ const Bookmark = RestModel.extend({
     return Category.findById(categoryId);
   },
 
-  @discourseComputed("bookmark_reminder_at")
+  @discourseComputed("reminder_at")
   formattedReminder(bookmarkReminderAt) {
     const currentUser = PreloadStore.get("currentUser");
     return moment

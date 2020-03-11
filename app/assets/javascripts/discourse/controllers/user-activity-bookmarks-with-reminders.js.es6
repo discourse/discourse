@@ -18,7 +18,7 @@ export default Controller.extend({
       noResultsHelp: null
     });
 
-    this.model
+    return this.model
       .loadItems()
       .then(response => {
         if (response && response.no_results_help) {
@@ -41,7 +41,7 @@ export default Controller.extend({
       );
   },
 
-  @discourseComputed("loaded", "content.[]")
+  @discourseComputed("loaded", "content.length")
   noContent(loaded, content) {
     return loaded && content.length === 0;
   },

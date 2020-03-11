@@ -49,7 +49,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   },
 
   icon(bookmark) {
-    if (bookmark.bookmark_reminder_at) {
+    if (bookmark.reminder_at) {
       return "discourse-bookmark-clock";
     }
     return ICON;

@@ -11,8 +11,8 @@ class UserBookmarkSerializer < ApplicationSerializer
              :topic_id,
              :linked_post_number,
              :post_id,
-             :bookmark_name,
-             :bookmark_reminder_at,
+             :name,
+             :reminder_at,
              :title,
              :deleted,
              :hidden,
@@ -31,5 +31,61 @@ class UserBookmarkSerializer < ApplicationSerializer
 
   def archived
     object.topic_archived
+  end
+
+  def linked_post_number
+    object.post.post_number
+  end
+
+  def title
+    object.topic.title
+  end
+
+  def deleted
+    object.topic.deleted_at.present? || object.post.deleted_at.present?
+  end
+
+  def hidden
+    object.post.hidden
+  end
+
+  def category_id
+    object.topic.category_id
+  end
+
+  def archetype
+    object.topic.archetype
+  end
+
+  def archived
+    object.topic.archived
+  end
+
+  def closed
+    object.topic.closed
+  end
+
+  def highest_post_number
+    object.topic.highest_post_number
+  end
+
+  def bumped_at
+    object.topic.bumped_at
+  end
+
+  def raw
+    object.post.raw
+  end
+
+  def cooked
+    object.post.cooked
+  end
+
+  def slug
+    object.topic.slug
+  end
+
+  def username
+    object.post.user.username
   end
 end

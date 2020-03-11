@@ -15,12 +15,12 @@
         <td class="main-link">
           <span class="link-top-line">
             <div class="bookmark-metadata">
-              {{#if bookmark.bookmark_name}}
+              {{#if bookmark.name}}
                 <span class="bookmark-metadata-item">
-                  {{d-icon "info-circle"}}{{bookmark.bookmark_name}}
+                  {{d-icon "info-circle"}}{{bookmark.name}}
                 </span>
               {{/if}}
-              {{#if bookmark.bookmark_reminder_at}}
+              {{#if bookmark.reminder_at}}
                 <span class="bookmark-metadata-item">
                   {{d-icon "far-clock"}}{{bookmark.formattedReminder}}
                 </span>

@@ -1,5 +1,6 @@
 import { computed } from "@ember/object";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { action } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bookmark-actions-dropdown"],
@@ -23,11 +24,10 @@ export default DropdownSelectBoxComponent.extend({
     ];
   }),
 
-  actions: {
-    onChange(action) {
-      if (action === "remove") {
-        this.removeBookmark(this.bookmark);
-      }
+  @action
+  onChange(selectedAction) {
+    if (selectedAction === "remove") {
+      this.removeBookmark(this.bookmark);
     }
   }
 });
