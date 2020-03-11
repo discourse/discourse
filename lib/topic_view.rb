@@ -351,7 +351,7 @@ class TopicView
 
   def has_bookmarks?
     return false if @user.blank?
-    @topic.bookmarks.where(user_id: @user.id).any?
+    @topic.bookmarks.exists?(user_id: @user.id)
   end
 
   MAX_PARTICIPANTS = 24

@@ -27,15 +27,13 @@ export default DiscourseRoute.extend(OpenComposer, {
       );
     }
 
-    const user = User;
-
     if (
       (url === "/" || url === "/latest" || url === "/categories") &&
       transition.targetName.indexOf("discovery.top") === -1 &&
-      user.currentProp("should_be_redirected_to_top")
+      User.currentProp("should_be_redirected_to_top")
     ) {
-      user.currentProp("should_be_redirected_to_top", false);
-      const period = user.currentProp("redirected_to_top.period") || "all";
+      User.currentProp("should_be_redirected_to_top", false);
+      const period = User.currentProp("redirected_to_top.period") || "all";
       this.replaceWith(`discovery.top${period.capitalize()}`);
     }
   },

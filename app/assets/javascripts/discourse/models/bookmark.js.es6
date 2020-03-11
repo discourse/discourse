@@ -65,7 +65,7 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("tags")
   visibleListTags(tags) {
-    if (!tags || !Discourse.SiteSettings.suppress_overlapping_tags_in_list) {
+    if (!tags || !this.siteSettings.suppress_overlapping_tags_in_list) {
       return tags;
     }
 

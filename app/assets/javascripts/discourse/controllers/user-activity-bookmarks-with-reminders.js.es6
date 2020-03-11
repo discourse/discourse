@@ -7,7 +7,7 @@ export default Controller.extend({
   application: inject(),
   user: inject(),
 
-  content: [],
+  content: null,
   loading: false,
   noResultsHelp: null,
 

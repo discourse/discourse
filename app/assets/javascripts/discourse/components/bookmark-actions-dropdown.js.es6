@@ -25,10 +25,8 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onChange(action) {
-      switch (action) {
-        case "remove":
-          this.removeBookmark(this.bookmark);
-          break;
+      if (action === "remove") {
+        this.removeBookmark(this.bookmark);
       }
     }
   }
