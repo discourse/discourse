@@ -2420,6 +2420,9 @@ en:
         instructions:
           one: "Please choose a new owner for the post by <b>@{{old_user}}</b>"
           other: "Please choose a new owner for the {{count}} posts by <b>@{{old_user}}</b>"
+        instructions_without_old_user:
+          one: "Please choose a new owner for the post"
+          other: "Please choose a new owner for the {{count}} posts"
 
       change_timestamp:
         title: "Change Timestamp..."

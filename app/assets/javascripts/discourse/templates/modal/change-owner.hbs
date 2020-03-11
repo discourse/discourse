@@ -1,6 +1,8 @@
 {{#d-modal-body class='change-ownership'}}
   <span>
-    {{i18n 'topic.change_owner.instructions' count=selectedPostsCount old_user=selectedPostsUsername}}
+    {{i18n (if selectedPostsUsername 'topic.change_owner.instructions' 'topic.change_owner.instructions_without_old_user')
+           count=selectedPostsCount
+           old_user=selectedPostsUsername}}
   </span>
 
   <form>
