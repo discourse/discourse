@@ -229,12 +229,10 @@ class PluginApi {
     }
   }
 
-  addKeyboardShortcut(shortcut, callback) {
-    shortcut = shortcut.trim().replace(/\s/g, "");
-    const functionName = `pluginBinding${shortcut}`;
-    KeyboardShortcuts[functionName] = callback;
+  addKeyboardShortcut(shortcut, callback, opts = {}) {
+    shortcut = shortcut.trim().replace(/\s/g, ""); // Strip all whitespace
     let newBinding = {};
-    newBinding[shortcut] = { handler: functionName, anonymous: true };
+    newBinding[shortcut] = Object.assign({ handler: callback }, opts);
     Object.assign(bindings, newBinding);
     KeyboardShortcuts.bindEvents(Mousetrap, this.container);
   }

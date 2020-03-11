@@ -405,14 +405,16 @@ export default {
   },
 
   _globalBindToFunction(func, binding) {
-    if (typeof this[func] === "function") {
+    let funcToBind = typeof func === "function" ? func : this[func];
+    if (typeof funcToBind === "function") {
       this.keyTrapper.bindGlobal(binding, this[func].bind(this));
     }
   },
 
   _bindToFunction(func, binding) {
-    if (typeof this[func] === "function") {
-      this.keyTrapper.bind(binding, this[func].bind(this));
+    let funcToBind = typeof func === "function" ? func : this[func];
+    if (typeof funcToBind === "function") {
+      this.keyTrapper.bind(binding, funcToBind.bind(this));
     }
   },
 
