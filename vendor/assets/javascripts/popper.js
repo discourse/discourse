@@ -1,5 +1,5 @@
 /**
- * @popperjs/core v2.0.5 - MIT License
+ * @popperjs/core v2.0.6 - MIT License
  */
 
 (function (global, factory) {
@@ -208,7 +208,7 @@
   function getTrueOffsetParent(element) {
     var offsetParent;
 
-    if (!isHTMLElement(element) || !(offsetParent = element.offsetParent) || // https://github.com/popperjs/popper.js/issues/837
+    if (!isHTMLElement(element) || !(offsetParent = element.offsetParent) || // https://github.com/popperjs/popper-core/issues/837
     isFirefox() && getComputedStyle(offsetParent).position === 'fixed') {
       return null;
     }
@@ -427,7 +427,22 @@
     return placement.split('-')[0];
   }
 
-  var INVALID_ELEMENT_ERROR = 'Popper: Invalid reference or popper argument provided to Popper, they must be either a valid DOM element, virtual element, or a jQuery-wrapped DOM element.';
+  function mergeByName(modifiers) {
+    var merged = modifiers.reduce(function (merged, current) {
+      var existing = merged[current.name];
+      merged[current.name] = existing ? Object.assign({}, existing, {}, current, {
+        options: Object.assign({}, existing.options, {}, current.options),
+        data: Object.assign({}, existing.data, {}, current.data)
+      }) : current;
+      return merged;
+    }, {}); // IE11 does not support Object.values
+
+    return Object.keys(merged).map(function (key) {
+      return merged[key];
+    });
+  }
+
+  var INVALID_ELEMENT_ERROR = 'Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.';
   var INFINITE_LOOP_ERROR = 'Popper: An infinite loop in the modifiers cycle has been detected! The cycle has been interrupted to prevent a browser crash.';
   var DEFAULT_OPTIONS = {
     placement: 'bottom',
@@ -485,29 +500,23 @@
           }; // Orders the modifiers based on their dependencies and `phase`
           // properties
 
-          var orderedModifiers = orderModifiers([].concat(state.options.modifiers.filter(function (modifier) {
-            return !defaultModifiers.find(function (_ref) {
-              var name = _ref.name;
-              return name === modifier.name;
-            });
-          }), defaultModifiers.map(function (defaultModifier) {
-            return Object.assign({}, defaultModifier, {}, state.options.modifiers.find(function (_ref2) {
-              var name = _ref2.name;
-              return name === defaultModifier.name;
-            }));
-          }))); // Validate the provided modifiers so that the consumer will get warned
+          var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers, state.options.modifiers))); // Strip out disabled modifiers
+
+          state.orderedModifiers = orderedModifiers.filter(function (m) {
+            return m.enabled;
+          }); // Validate the provided modifiers so that the consumer will get warned
           // if one of the modifiers is invalid for any reason
 
           {
-            var modifiers = uniqueBy([].concat(orderedModifiers, state.options.modifiers), function (_ref3) {
-              var name = _ref3.name;
+            var modifiers = uniqueBy([].concat(orderedModifiers, state.options.modifiers), function (_ref) {
+              var name = _ref.name;
               return name;
             });
             validateModifiers(modifiers);
 
             if (getBasePlacement(state.options.placement) === auto) {
-              var flipModifier = orderedModifiers.find(function (_ref4) {
-                var name = _ref4.name;
+              var flipModifier = state.orderedModifiers.find(function (_ref2) {
+                var name = _ref2.name;
                 return name === 'flip';
               });
 
@@ -529,12 +538,8 @@
             })) {
               console.warn(['Popper: CSS "margin" styles cannot be used to apply padding', 'between the popper and its reference element or boundary.', 'To replicate margin, use the `offset` modifier, as well as', 'the `padding` option in the `preventOverflow` and `flip`', 'modifiers.'].join(' '));
             }
-          } // Strip out disabled modifiers
+          }
 
-
-          state.orderedModifiers = orderedModifiers.filter(function (m) {
-            return m.enabled;
-          });
           runModifierEffects();
           return instance.update();
         },
@@ -647,11 +652,11 @@
       // one.
 
       function runModifierEffects() {
-        state.orderedModifiers.forEach(function (_ref5) {
-          var name = _ref5.name,
-              _ref5$options = _ref5.options,
-              options = _ref5$options === void 0 ? {} : _ref5$options,
-              effect = _ref5.effect;
+        state.orderedModifiers.forEach(function (_ref3) {
+          var name = _ref3.name,
+              _ref3$options = _ref3.options,
+              options = _ref3$options === void 0 ? {} : _ref3$options,
+              effect = _ref3.effect;
 
           if (typeof effect === 'function') {
             var cleanupFn = effect({
@@ -834,7 +839,8 @@
   function roundOffsets(_ref) {
     var x = _ref.x,
         y = _ref.y;
-    var dpr = window.devicePixelRatio || 1;
+    var win = window;
+    var dpr = win.devicePixelRatio || 1;
     return {
       x: Math.round(x * dpr) / dpr || 0,
       y: Math.round(y * dpr) / dpr || 0
@@ -860,6 +866,7 @@
     var hasY = offsets.hasOwnProperty('y');
     var sideX = left;
     var sideY = top;
+    var win = window;
 
     if (adaptive) {
       var offsetParent = getOffsetParent(popper);
@@ -891,7 +898,7 @@
     if (gpuAcceleration) {
       var _Object$assign;
 
-      return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (window.devicePixelRatio || 1) < 2 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
+      return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (win.devicePixelRatio || 1) < 2 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
     }
 
     return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
@@ -906,8 +913,13 @@
         adaptive = _options$adaptive === void 0 ? true : _options$adaptive;
 
     {
-      if (adaptive && parseFloat(getComputedStyle(state.elements.popper).transitionDuration)) {
-        console.warn(['Popper: The "computeStyles" modifier\'s `adaptive` option must be', 'disabled if CSS transitions are applied to the popper element.'].join(' '));
+      var _getComputedStyle = getComputedStyle(state.elements.popper),
+          transitionProperty = _getComputedStyle.transitionProperty;
+
+      if (adaptive && ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
+        return transitionProperty.indexOf(property) >= 0;
+      })) {
+        console.warn(['Popper: Detected CSS transitions on at least one of the following', 'CSS properties: "transform", "top", "right", "bottom", "left".', '\n\n', 'Disable the "computeStyles" modifier\'s `adaptive` option to allow', 'for smooth transitions, or remove these properties from the CSS', 'transition declaration on the popper element if only transitioning', 'opacity or background-color for example.', '\n\n', 'We recommend using the popper element as a wrapper around an inner', 'element that can have any CSS property transitioned for animations.'].join(' '));
       }
     }
 
@@ -977,22 +989,32 @@
   function effect$1(_ref2) {
     var state = _ref2.state;
     var initialStyles = {
-      position: 'absolute',
-      left: '0',
-      top: '0',
-      margin: '0'
+      popper: {
+        position: 'absolute',
+        left: '0',
+        top: '0',
+        margin: '0'
+      },
+      arrow: {
+        position: 'absolute'
+      },
+      reference: {}
     };
-    Object.assign(state.elements.popper.style, initialStyles);
+    Object.assign(state.elements.popper.style, initialStyles.popper);
+
+    if (state.elements.arrow) {
+      Object.assign(state.elements.arrow.style, initialStyles.arrow);
+    }
+
     return function () {
       Object.keys(state.elements).forEach(function (name) {
         var element = state.elements[name];
-        var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? Object.assign({}, state.styles[name]) : initialStyles);
-        var attributes = state.attributes[name] || {}; // Set all values to an empty string to unset them
+        var attributes = state.attributes[name] || {};
+        var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]); // Set all values to an empty string to unset them
 
         var style = styleProperties.reduce(function (style, property) {
-          var _Object$assign;
-
-          return Object.assign({}, style, (_Object$assign = {}, _Object$assign[String(property)] = '', _Object$assign));
+          style[property] = '';
+          return style;
         }, {}); // arrow is optional + virtual elements
 
         if (!isHTMLElement(element) || !getNodeName(element)) {
@@ -1004,7 +1026,7 @@
 
         Object.assign(element.style, style);
         Object.keys(attributes).forEach(function (attribute) {
-          return element.removeAttribute(attribute);
+          element.removeAttribute(attribute);
         });
       });
     };
@@ -1362,17 +1384,15 @@
     var basePlacement = getBasePlacement(preferredPlacement);
     var isBasePlacement = basePlacement === preferredPlacement;
     var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
-    var placements = uniqueBy([preferredPlacement].concat(fallbackPlacements).reduce(function (acc, placement) {
-      return getBasePlacement(placement) === auto ? acc.concat(computeAutoPlacement(state, {
+    var placements = [preferredPlacement].concat(fallbackPlacements).reduce(function (acc, placement) {
+      return acc.concat(getBasePlacement(placement) === auto ? computeAutoPlacement(state, {
         placement: placement,
         boundary: boundary,
         rootBoundary: rootBoundary,
         padding: padding,
         flipVariations: flipVariations
-      })) : acc.concat(placement);
-    }, []), function (placement) {
-      return placement;
-    });
+      }) : placement);
+    }, []);
     var referenceRect = state.rects.reference;
     var popperRect = state.rects.popper;
     var checksMap = new Map();
@@ -1528,14 +1548,14 @@
       // reference is not overflowing as well (e.g. virtual elements with no
       // width or height)
 
-      var arrowLen = within(0, Math.abs(referenceRect[len] - arrowRect[len]), arrowRect[len]);
+      var arrowLen = within(0, referenceRect[len], arrowRect[len]);
       var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - tetherOffsetValue : minLen - arrowLen - arrowPaddingMin - tetherOffsetValue;
       var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + tetherOffsetValue : maxLen + arrowLen + arrowPaddingMax + tetherOffsetValue;
       var offsetModifierValue = state.modifiersData.offset ? state.modifiersData.offset[state.placement][mainAxis] : 0;
-      var tetherMin = state.modifiersData.popperOffsets[mainAxis] + minOffset - offsetModifierValue;
-      var tetherMax = state.modifiersData.popperOffsets[mainAxis] + maxOffset - offsetModifierValue;
+      var tetherMin = popperOffsets[mainAxis] + minOffset - offsetModifierValue;
+      var tetherMax = popperOffsets[mainAxis] + maxOffset - offsetModifierValue;
       var preventedOffset = within(tether ? Math.min(min, tetherMin) : min, offset, tether ? Math.max(max, tetherMax) : max);
-      state.modifiersData.popperOffsets[mainAxis] = preventedOffset;
+      popperOffsets[mainAxis] = preventedOffset;
       data[mainAxis] = preventedOffset - offset;
     }
 
