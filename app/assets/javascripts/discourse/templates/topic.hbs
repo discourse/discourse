@@ -91,7 +91,20 @@
 
     <div class="container posts">
       <div class='selected-posts {{unless multiSelect 'hidden'}}'>
-        {{partial "selected-posts"}}
+        {{selected-posts
+          selectedPostsCount=selectedPostsCount
+          canSelectAll=canSelectAll
+          canDeselectAll=canDeselectAll
+          canDeleteSelected=canDeleteSelected
+          canMergeTopic=canMergeTopic
+          canChangeOwner=canChangeOwner
+          canMergePosts=canMergePosts
+          toggleMultiSelect=(action "toggleMultiSelect")
+          mergePosts=(action "mergePosts")
+          deleteSelected=(action "deleteSelected")
+          deselectAll=(action "deselectAll")
+          selectAll=(action "selectAll")
+        }}
       </div>
 
       {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
@@ -327,7 +340,20 @@
 
               {{#if showSelectedPostsAtBottom}}
                 <div class='selected-posts {{unless multiSelect 'hidden'}}'>
-                  {{partial "selected-posts"}}
+                  {{selected-posts
+                    selectedPostsCount=selectedPostsCount
+                    canSelectAll=canSelectAll
+                    canDeselectAll=canDeselectAll
+                    canDeleteSelected=canDeleteSelected
+                    canMergeTopic=canMergeTopic
+                    canChangeOwner=canChangeOwner
+                    canMergePosts=canMergePosts
+                    toggleMultiSelect=(action "toggleMultiSelect")
+                    mergePosts=(action "mergePosts")
+                    deleteSelected=(action "deleteSelected")
+                    deselectAll=(action "deselectAll")
+                    selectAll=(action "selectAll")
+                  }}
                 </div>
               {{/if}}
 
