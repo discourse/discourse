@@ -4,6 +4,7 @@ import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";
 import { ajax } from "discourse/lib/ajax";
 import { throttle } from "@ember/runloop";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 const bindings = {
   "!": { postAction: "showFlags" },
@@ -299,19 +300,19 @@ export default {
   },
 
   setTrackingToMuted(event) {
-    throttle(this, "_setTracking", { id: 0, event }, 250, true);
+    throttle(this, "_setTracking", { id: 0, event }, INPUT_DELAY, true);
   },
 
   setTrackingToRegular(event) {
-    throttle(this, "_setTracking", { id: 1, event }, 250, true);
+    throttle(this, "_setTracking", { id: 1, event }, INPUT_DELAY, true);
   },
 
   setTrackingToTracking(event) {
-    throttle(this, "_setTracking", { id: 2, event }, 250, true);
+    throttle(this, "_setTracking", { id: 2, event }, INPUT_DELAY, true);
   },
 
   setTrackingToWatching(event) {
-    throttle(this, "_setTracking", { id: 3, event }, 250, true);
+    throttle(this, "_setTracking", { id: 3, event }, INPUT_DELAY, true);
   },
 
   _setTracking(params) {
