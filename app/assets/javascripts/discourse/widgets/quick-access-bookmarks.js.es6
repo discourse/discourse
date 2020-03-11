@@ -41,7 +41,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       href: postUrl(
         bookmark.slug,
         bookmark.topic_id,
-        bookmark.post_number || bookmark.bookmark_post_number
+        bookmark.post_number || bookmark.linked_post_number
       ),
       content: bookmark.title,
       username: bookmark.username

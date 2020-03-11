@@ -1,4 +1,8 @@
 import Category from "discourse/models/category";
+import { isRTL } from "discourse/lib/text-direction";
+import { censor } from "pretty-text/censored-words";
+import { emojiUnescape } from "discourse/lib/text";
+import Site from "discourse/models/site";
 import { longDate } from "discourse/lib/formatter";
 import PreloadStore from "preload-store";
 import { none } from "@ember/object/computed";
@@ -55,7 +59,26 @@ const Bookmark = RestModel.extend({
     const createdAtDate = longDate(createdAt);
     const bumpedAtDate = longDate(bumpedAt);
 
-    return `${firstPost}: ${createdAtDate}\n${lastPost}: ${bumpedAtDate}`;
+    return I18n.messageFormat("topic.bumped_at_title_MF", {
+      FIRST_POST: firstPost,
+      CREATED_AT: createdAtDate,
+      LAST_POST: lastPost,
+      BUMPED_AT: bumpedAtDate
+    });
+  },
+
+  @discourseComputed("title")
+  fancyTitle(title) {
+    let fancyTitle = censor(
+      emojiUnescape(title) || "",
+      Site.currentProp("censored_regexp")
+    );
+
+    if (this.siteSettings.support_mixed_text_direction) {
+      const titleDir = isRTL(title) ? "rtl" : "ltr";
+      return `<span dir="${titleDir}">${fancyTitle}</span>`;
+    }
+    return fancyTitle;
   },
 
   @discourseComputed("created_at")
