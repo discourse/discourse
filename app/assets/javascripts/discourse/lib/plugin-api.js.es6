@@ -1,3 +1,4 @@
+/*global Mousetrap:true*/
 import deprecated from "discourse-common/lib/deprecated";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
@@ -50,6 +51,7 @@ import { addCategorySortCriteria } from "discourse/components/edit-category-sett
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
+import KeyboardShortcuts, { bindings } from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.8.38";
@@ -225,6 +227,16 @@ class PluginApi {
         opts.id
       );
     }
+  }
+
+  addKeyboardShortcut(shortcut, callback) {
+    shortcut = shortcut.trim().replace(/\s/g, "");
+    const functionName = `pluginBinding${shortcut}`;
+    KeyboardShortcuts[functionName] = callback;
+    let newBinding = {};
+    newBinding[shortcut] = { handler: functionName, anonymous: true };
+    Object.assign(bindings, newBinding);
+    KeyboardShortcuts.bindEvents(Mousetrap, this.container);
   }
 
   /**

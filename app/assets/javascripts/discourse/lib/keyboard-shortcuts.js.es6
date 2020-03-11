@@ -5,7 +5,7 @@ import { minimumOffset } from "discourse/lib/offset-calculator";
 import { ajax } from "discourse/lib/ajax";
 import { throttle } from "@ember/runloop";
 
-const bindings = {
+export const bindings = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
