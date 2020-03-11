@@ -5,7 +5,8 @@ class ContentSecurityPolicy
   class Default
     attr_reader :directives
 
-    def initialize
+    def initialize(base_url:)
+      @base_url = base_url
       @directives = {}.tap do |directives|
         directives[:base_uri] = [:none]
         directives[:object_src] = [:none]
@@ -17,7 +18,9 @@ class ContentSecurityPolicy
 
     private
 
-    delegate :base_url, to: :ContentSecurityPolicy
+    def base_url
+      @base_url
+    end
 
     SCRIPT_ASSET_DIRECTORIES = [
       # [dir, can_use_s3_cdn, can_use_cdn]

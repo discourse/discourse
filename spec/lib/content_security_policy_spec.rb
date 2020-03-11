@@ -2,8 +2,6 @@
 require 'rails_helper'
 
 describe ContentSecurityPolicy do
-  before { ContentSecurityPolicy.base_url = nil }
-
   after do
     DiscoursePluginRegistry.reset!
   end
