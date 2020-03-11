@@ -6,9 +6,9 @@ module Jobs
   # Any leftovers will be caught in the next run, because the reminder_at column
   # is set to NULL once a reminder has been sent.
   class BookmarkReminderNotifications < ::Jobs::Scheduled
-    MAX_REMINDER_NOTIFICATIONS_PER_RUN = 300
-    JOB_RUN_NUMBER_KEY = 'jobs_bookmark_reminder_notifications_job_run_num'.freeze
-    AT_DESKTOP_CONSISTENCY_RUN_NUMBER = 6
+    MAX_REMINDER_NOTIFICATIONS_PER_RUN ||= 300
+    JOB_RUN_NUMBER_KEY ||= 'jobs_bookmark_reminder_notifications_job_run_num'.freeze
+    AT_DESKTOP_CONSISTENCY_RUN_NUMBER ||= 6
 
     every 5.minutes
 
@@ -28,7 +28,7 @@ module Jobs
       # at desktop consistency problem should not really happen unless people
       # are setting the "at desktop" reminder, going out for milk, and never coming
       # back
-      current_job_run_number = Discourse.redis.get(JOB_RUN_NUMBER_KEY)&.to_i || 0
+      current_job_run_number = Discourse.redis.get(JOB_RUN_NUMBER_KEY).to_i
       if current_job_run_number == AT_DESKTOP_CONSISTENCY_RUN_NUMBER
         ensure_at_desktop_consistency
       end
@@ -50,19 +50,20 @@ module Jobs
         Bookmark.includes(:user)
           .references(:user)
           .pending_at_desktop_reminders
-          .where('users.last_seen_at >= :one_day_ago', one_day_ago: Time.now.utc - 24.hours)
+          .where('users.last_seen_at >= :one_day_ago', one_day_ago: 1.day.ago.utc)
 
       return if pending_at_desktop_bookmark_reminders.count.zero?
 
-      unique_users = pending_at_desktop_bookmark_reminders.map(&:user).uniq
-      pending_reminders_for_redis_check = unique_users.map do |user|
-        "#{BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_KEY_PREFIX}#{user.id}"
+      unique_users = pending_at_desktop_bookmark_reminders.map(&:user).uniq.map { |u| [u.id, u] }.flatten
+      unique_users = Hash[*unique_users]
+      pending_reminders_for_redis_check = unique_users.keys.map do |user_id|
+        "#{BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_KEY_PREFIX}#{user_id}"
       end
 
       Discourse.redis.mget(pending_reminders_for_redis_check).each.with_index do |value, idx|
         next if value.present?
         user_id = pending_reminders_for_redis_check[idx][/\d+/].to_i
-        user = unique_users.find { |u| u.id == user_id }
+        user = unique_users[user_id]
 
         user_pending_bookmark_reminders = pending_at_desktop_bookmark_reminders.select do |bookmark|
           bookmark.user == user
@@ -74,7 +75,7 @@ module Jobs
 
         next if user_pending_bookmark_reminders.length == user_expired_bookmark_reminders.length
 
-        # only put tell the cache-gods that this user has pending "at desktop" reminders
+        # only tell the cache-gods that this user has pending "at desktop" reminders
         # if they haven't let them all expire before coming back to their desktop
         #
         # the next time they visit the desktop the reminders will be cleared out once
@@ -95,7 +96,7 @@ module Jobs
     end
 
     def expiry_limit_datetime
-      Time.now.utc - BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_EXPIRY_DAYS.days
+      BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_EXPIRY_DAYS.days.ago.utc
     end
   end
 end

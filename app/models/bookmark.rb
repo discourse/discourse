@@ -21,10 +21,10 @@ class Bookmark < ActiveRecord::Base
 
   def ensure_sane_reminder_at_time
     return if reminder_at.blank?
-    if reminder_at < Time.now.utc
+    if reminder_at < Time.zone.now
       self.errors.add(:base, I18n.t("bookmarks.errors.cannot_set_past_reminder"))
     end
-    if reminder_at > (Time.now.utc + 10.years)
+    if reminder_at > 10.years.from_now.utc
       self.errors.add(:base, I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"))
     end
   end

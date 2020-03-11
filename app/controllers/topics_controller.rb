@@ -552,7 +552,7 @@ class TopicsController < ApplicationController
       bookmark_manager.create(post_id: first_post.id)
 
       if bookmark_manager.errors
-        return render_json_error(bookmark_manager.errors.full_messages, status: 400)
+        return render_json_error(bookmark_manager, status: 400)
       end
     else
       result = PostActionCreator.create(current_user, first_post, :bookmark)

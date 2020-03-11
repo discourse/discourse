@@ -17,12 +17,11 @@ class BookmarkManager
       name: name,
       reminder_type: reminder_type,
       reminder_at: reminder_at,
-      reminder_set_at: Time.now.utc
+      reminder_set_at: Time.zone.now
     )
 
     if bookmark.errors.any?
-      add_errors_from(bookmark)
-      return
+      return add_errors_from(bookmark)
     end
 
     BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(@user)
@@ -60,7 +59,7 @@ class BookmarkManager
   private
 
   def topic_id_for_post(post_id)
-    Post.select(:topic_id).find(post_id).topic_id
+    Post.where(id: post_id).pluck_first(:topic_id)
   end
 
   def clear_at_desktop_cache_if_required

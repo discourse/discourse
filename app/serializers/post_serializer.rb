@@ -344,7 +344,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def bookmark_reminder_type
-    Bookmark.reminder_types[post_bookmark&.reminder_type].to_s
+    return if post_bookmark.blank?
+    Bookmark.reminder_types[post_bookmark.reminder_type].to_s
   end
 
   def include_display_username?

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class BookmarkReminderNotificationHandler
-  PENDING_AT_DESKTOP_KEY_PREFIX = 'pending_at_desktop_bookmark_reminder_user_'.freeze
-  PENDING_AT_DESKTOP_EXPIRY_DAYS = 20
+  PENDING_AT_DESKTOP_KEY_PREFIX ||= 'pending_at_desktop_bookmark_reminder_user_'.freeze
+  PENDING_AT_DESKTOP_EXPIRY_DAYS ||= 20
 
   def self.send_notification(bookmark)
     return if bookmark.blank?
@@ -24,7 +24,7 @@ class BookmarkReminderNotificationHandler
     bookmark.update(
       reminder_at: nil,
       reminder_type: nil,
-      reminder_last_sent_at: Time.now.utc,
+      reminder_last_sent_at: Time.zone.now,
       reminder_set_at: nil
     )
   end
@@ -44,7 +44,7 @@ class BookmarkReminderNotificationHandler
   end
 
   def self.user_has_pending_at_desktop_reminders?(user)
-    Discourse.redis.get("#{PENDING_AT_DESKTOP_KEY_PREFIX}#{user.id}").present?
+    Discourse.redis.exists("#{PENDING_AT_DESKTOP_KEY_PREFIX}#{user.id}")
   end
 
   def self.cache_pending_at_desktop_reminder(user)
