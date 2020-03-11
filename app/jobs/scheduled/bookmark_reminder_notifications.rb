@@ -6,11 +6,19 @@ module Jobs
   # Any leftovers will be caught in the next run, because the reminder_at column
   # is set to NULL once a reminder has been sent.
   class BookmarkReminderNotifications < ::Jobs::Scheduled
-    MAX_REMINDER_NOTIFICATIONS_PER_RUN ||= 300
     JOB_RUN_NUMBER_KEY ||= 'jobs_bookmark_reminder_notifications_job_run_num'.freeze
     AT_DESKTOP_CONSISTENCY_RUN_NUMBER ||= 6
 
     every 5.minutes
+
+    def self.max_reminder_notifications_per_run
+      @@max_reminder_notifications_per_run ||= 3
+      @@max_reminder_notifications_per_run
+    end
+
+    def self.max_reminder_notifications_per_run=(max)
+      @@max_reminder_notifications_per_run = max
+    end
 
     def execute(args = nil)
       return if !SiteSetting.enable_bookmarks_with_reminders?
@@ -19,7 +27,7 @@ module Jobs
         .where.not(reminder_type: Bookmark.reminder_types[:at_desktop])
         .includes(:user).order('reminder_at ASC')
 
-      bookmarks.limit(MAX_REMINDER_NOTIFICATIONS_PER_RUN).each do |bookmark|
+      bookmarks.limit(BookmarkReminderNotifications.max_reminder_notifications_per_run).each do |bookmark|
         BookmarkReminderNotificationHandler.send_notification(bookmark)
       end
 

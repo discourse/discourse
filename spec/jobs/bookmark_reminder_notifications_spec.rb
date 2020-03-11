@@ -79,19 +79,14 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     end
   end
 
-  context "when the number of notifications exceed MAX_REMINDER_NOTIFICATIONS_PER_RUN" do
+  context "when the number of notifications exceed max_reminder_notifications_per_run" do
     it "does not send them in the current run, but will send them in the next" do
       begin
-        original_const = Jobs::BookmarkReminderNotifications::MAX_REMINDER_NOTIFICATIONS_PER_RUN
-        Jobs::BookmarkReminderNotifications.send(:remove_const, "MAX_REMINDER_NOTIFICATIONS_PER_RUN")
-        Jobs::BookmarkReminderNotifications.const_set("MAX_REMINDER_NOTIFICATIONS_PER_RUN", 2)
+        Jobs::BookmarkReminderNotifications.max_reminder_notifications_per_run = 2
         subject.execute
         expect(bookmark1.reload.reminder_at).to eq(nil)
         expect(bookmark2.reload.reminder_at).to eq(nil)
         expect(bookmark3.reload.reminder_at).not_to eq(nil)
-      ensure
-        Jobs::BookmarkReminderNotifications.send(:remove_const, "MAX_REMINDER_NOTIFICATIONS_PER_RUN")
-        Jobs::BookmarkReminderNotifications.const_set("MAX_REMINDER_NOTIFICATIONS_PER_RUN", original_const)
       end
     end
   end
