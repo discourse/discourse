@@ -399,6 +399,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       end
     end
 
+    theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
+
     theme_icon_settings
   end
 
