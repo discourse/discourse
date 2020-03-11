@@ -73,7 +73,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     });
   }
 
-  if (currentUser.staff) {
+  if (attrs.user_id && currentUser.staff) {
     if (siteSettings.enable_badges) {
       contents.push({
         icon: "certificate",
