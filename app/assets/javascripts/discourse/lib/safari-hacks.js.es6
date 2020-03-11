@@ -4,6 +4,7 @@ import {
   safariHacksDisabled,
   iOSWithVisualViewport
 } from "discourse/lib/utilities";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 // TODO: remove calcHeight once iOS 13 adoption > 90%
 // In iOS 13 and up we use visualViewport API to calculate height
@@ -136,7 +137,7 @@ function positioningWorkaround($fixedElement) {
     positioningWorkaround.blur(evt);
   };
 
-  var blurred = discourseDebounce(blurredNow, 250);
+  var blurred = discourseDebounce(blurredNow, INPUT_DELAY);
 
   var positioningHack = function(evt) {
     // we need this, otherwise changing focus means we never clear

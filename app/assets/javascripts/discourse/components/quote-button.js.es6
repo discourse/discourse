@@ -2,6 +2,7 @@ import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
 import { selectedText, selectedElement } from "discourse/lib/utilities";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -146,7 +147,7 @@ export default Component.extend({
 
   didInsertElement() {
     const { isWinphone, isAndroid } = this.capabilities;
-    const wait = isWinphone || isAndroid ? 250 : 25;
+    const wait = isWinphone || isAndroid ? INPUT_DELAY : 25;
     const onSelectionChanged = discourseDebounce(
       () => this._selectionChanged(),
       wait

@@ -9,7 +9,10 @@ import {
   emojiSearch
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
-import ENV from "discourse-common/config/environment";
+import {
+  default as ENV,
+  INPUT_DELAY
+} from "discourse-common/config/environment";
 
 const { run } = Ember;
 
@@ -94,7 +97,7 @@ export default Component.extend({
   @observes("filter")
   filterChanged() {
     this.$filter.find(".clear-filter").toggle(!_.isEmpty(this.filter));
-    const filterDelay = this.site.isMobileDevice ? 400 : 250;
+    const filterDelay = this.site.isMobileDevice ? 400 : INPUT_DELAY;
     run.debounce(this, this._filterEmojisList, filterDelay);
   },
 

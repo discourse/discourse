@@ -4,6 +4,7 @@ import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
   filter: null,
@@ -48,7 +49,7 @@ export default Controller.extend({
   filterContent: discourseDebounce(function() {
     this.filterContentNow();
     this.set("filtered", !isEmpty(this.filter));
-  }, 250),
+  }, INPUT_DELAY),
 
   actions: {
     clearFilter() {
