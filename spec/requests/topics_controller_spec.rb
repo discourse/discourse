@@ -2387,7 +2387,7 @@ RSpec.describe TopicsController do
         Bookmark.create(post: post, topic: post.topic, user: user)
 
         put "/t/#{post.topic_id}/bookmark.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(400)
       end
     end
   end

@@ -17,14 +17,14 @@ describe BookmarksController do
         Fabricate(:bookmark, post: bookmark_post, user: bookmark_user)
       end
 
-      it "returns failed JSON with a 422 error" do
+      it "returns failed JSON with a 400 error" do
         post "/bookmarks.json", params: {
           post_id: bookmark_post.id,
           reminder_type: "tomorrow",
-          reminder_at: (Time.now.utc + 1.day).iso8601
+          reminder_at: (Time.zone.now + 1.day).iso8601
         }
 
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(400)
         expect(JSON.parse(response.body)['errors']).to include(
           I18n.t("bookmarks.errors.already_bookmarked_post")
         )

@@ -2212,16 +2212,6 @@ describe User do
     end
   end
 
-  describe "Destroying a user with security key" do
-    let!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user) }
-    fab!(:admin) { Fabricate(:admin) }
-
-    it "removes the security key" do
-      UserDestroyer.new(admin).destroy(user)
-      expect(UserSecurityKey.where(user_id: user.id).count).to eq(0)
-    end
-  end
-
   describe 'Secure identifier for a user which is a string other than the ID used to identify the user in some cases e.g. security keys' do
     describe '#create_or_fetch_secure_identifier' do
       context 'if the user already has a secure identifier' do
