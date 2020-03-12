@@ -68,7 +68,7 @@ class ThemeModifierSet < ActiveRecord::Base
         raise ThemeModifierSetError "Invalid theme modifier column type" if ![:boolean, :string].include?(info.type)
       end
 
-      hash[column_name] = { type: type }
+      hash[column_name.to_sym] = { type: type }
     end
     hash
   end

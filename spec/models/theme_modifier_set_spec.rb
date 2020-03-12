@@ -22,7 +22,7 @@ describe ThemeModifierSet do
     end
 
     it "builds modifiers list from database" do
-      expect(ThemeModifierSet.modifiers).to include(:serialize_topic_excerpts, :csp_extensions)
+      expect(ThemeModifierSet.modifiers.keys).to include(:serialize_topic_excerpts, :csp_extensions)
       expect(ThemeModifierSet.modifiers[:serialize_topic_excerpts][:type]).to eq(:boolean)
       expect(ThemeModifierSet.modifiers[:csp_extensions][:type]).to eq(:string_array)
     end
