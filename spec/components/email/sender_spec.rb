@@ -412,6 +412,16 @@ describe Email::Sender do
       expect(message.attachments.map(&:filename))
         .to contain_exactly(*[small_pdf, csv_file].map(&:original_filename))
     end
+
+    it "structures the email as a multipart/mixed with a multipart/alternative first part" do
+      SiteSetting.email_total_attachment_size_limit_kb = 10_000
+      Email::Sender.new(message, :valid_type).send
+
+      expect(message.content_type).to start_with("multipart/mixed")
+      expect(message.parts.size).to eq(4)
+      expect(message.parts[0].content_type).to start_with("multipart/alternative")
+      expect(message.parts[0].parts.size).to eq(2)
+    end
   end
 
   context 'with a deleted post' do
