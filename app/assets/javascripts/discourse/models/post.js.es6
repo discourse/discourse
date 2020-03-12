@@ -351,16 +351,20 @@ const Post = RestModel.extend({
           this.toggleProperty("bookmarked_with_reminder");
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         },
-        afterSave: reminderAtISO => {
+        afterSave: (reminderAtISO, reminderType) => {
           this.setProperties({
             "topic.bookmarked": true,
-            bookmark_reminder_at: reminderAtISO
+            bookmark_reminder_at: reminderAtISO,
+            bookmark_reminder_type: reminderType
           });
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         }
       });
     } else {
-      this.set("bookmark_reminder_at", null);
+      this.setProperties({
+        bookmark_reminder_at: null,
+        bookmark_reminder_type: null
+      });
       return Post.destroyBookmark(this.id)
         .then(result => {
           this.set("topic.bookmarked", result.topic_bookmarked);
