@@ -349,6 +349,11 @@ class TopicView
     end
   end
 
+  def has_bookmarks?
+    return false if @user.blank?
+    @topic.bookmarks.exists?(user_id: @user.id)
+  end
+
   MAX_PARTICIPANTS = 24
 
   def post_counts_by_user

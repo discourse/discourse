@@ -321,6 +321,8 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
       titleOptions = {
         date: reminderAtDate.format(I18n.t("dates.long_with_year"))
       };
+    } else if (attrs.bookmarkReminderType === "at_desktop") {
+      title = "bookmarks.created_with_at_desktop_reminder";
     } else {
       title = "bookmarks.created";
     }

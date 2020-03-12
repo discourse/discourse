@@ -54,6 +54,14 @@
   }
 }
 
+.topic-list-item {
+  .post-excerpt {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-size: $font-down-2;
+  }
+}
+
 .topic-list-main-link {
   font-size: $font-up-1;
   a.title {

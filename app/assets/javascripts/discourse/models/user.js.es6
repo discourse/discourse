@@ -5,6 +5,7 @@ import EmberObject, { computed, getProperties } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
+import Bookmark from "discourse/models/bookmark";
 import UserStream from "discourse/models/user-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import Singleton from "discourse/mixins/singleton";
@@ -50,6 +51,11 @@ const User = RestModel.extend({
   @discourseComputed()
   stream() {
     return UserStream.create({ user: this });
+  },
+
+  @discourseComputed()
+  bookmarks() {
+    return Bookmark.create({ user: this });
   },
 
   @discourseComputed()
