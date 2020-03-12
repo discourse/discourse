@@ -203,9 +203,14 @@ export default Controller.extend({
     );
   },
   sourceIsHttp: match("model.remote_theme.remote_url", /^http(s)?:\/\//),
-  githubLink() {
-    return model.remote_theme_url + "/tree/master"
+
+  @discourseComputed("model.remote_theme.remote_url", "model.remote_theme.branch")
+  remoteThemeLink(remoteThemeUrl, remoteThemeBranch) {
+    return remoteThemeBranch ?
+      `${remoteThemeUrl.replace(/\.git$/, "")}/tree/${remoteThemeBranch}` :
+      remoteThemeUrl;
   },
+
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);
