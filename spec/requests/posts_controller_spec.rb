@@ -457,6 +457,31 @@ describe PostsController do
     end
   end
 
+  describe "#destroy_bookmark" do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post, topic: post.topic) }
+
+    before do
+      sign_in(user)
+    end
+
+    it "deletes the bookmark" do
+      bookmark_id = bookmark.id
+      delete "/posts/#{post.id}/bookmark.json"
+      expect(Bookmark.find_by(id: bookmark_id)).to eq(nil)
+    end
+
+    context "when the user still has bookmarks in the topic" do
+      before do
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: topic)
+      end
+      it "marks topic_bookmaked as true" do
+        delete "/posts/#{post.id}/bookmark.json"
+        expect(JSON.parse(response.body)['topic_bookmarked']).to eq(true)
+      end
+    end
+  end
+
   describe '#bookmark' do
     include_examples 'action requires login', :put, "/posts/2/bookmark.json"
     let!(:post) { post_by_user }
