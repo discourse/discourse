@@ -13,6 +13,7 @@ module.exports = {
     "no-unbound": true,
     "simple-unless": true,
     "no-triple-curlies": true,
-    "no-partial": true
+    "no-partial": true,
+    "no-html-comments": true
   }
 };
