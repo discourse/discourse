@@ -7,7 +7,7 @@ class BookmarkReminderNotificationHandler
   def self.send_notification(bookmark)
     return if bookmark.blank?
     Bookmark.transaction do
-      if bookmark.post.blank?
+      if bookmark.post.blank? || bookmark.post.deleted_at.present?
         return clear_reminder(bookmark)
       end
 
