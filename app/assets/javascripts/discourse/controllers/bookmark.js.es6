@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -25,6 +26,8 @@ export default Controller.extend(ModalFunctionality, {
   closeWithoutSaving: false,
   isSavingBookmarkManually: false,
   onCloseWithoutSaving: null,
+  customReminderDate: null,
+  customReminderTime: null,
 
   onShow() {
     this.setProperties({
@@ -32,7 +35,9 @@ export default Controller.extend(ModalFunctionality, {
       name: null,
       selectedReminderType: null,
       closeWithoutSaving: false,
-      isSavingBookmarkManually: false
+      isSavingBookmarkManually: false,
+      customReminderDate: null,
+      customReminderTime: null
     });
   },
 
@@ -40,7 +45,7 @@ export default Controller.extend(ModalFunctionality, {
   // clicks the save or cancel button to mimic browser behaviour
   onClose() {
     if (!this.closeWithoutSaving && !this.isSavingBookmarkManually) {
-      this.saveBookmark();
+      this.saveBookmark().catch(e => this.handleSaveError(e));
     }
     if (this.onCloseWithoutSaving && this.closeWithoutSaving) {
       this.onCloseWithoutSaving();
@@ -49,6 +54,11 @@ export default Controller.extend(ModalFunctionality, {
 
   usingMobileDevice: reads("site.mobileView"),
   showBookmarkReminderControls: true,
+
+  @discourseComputed("selectedReminderType")
+  customDateTimeSelected(selectedReminderType) {
+    return selectedReminderType === REMINDER_TYPES.CUSTOM;
+  },
 
   @discourseComputed()
   reminderTypes: () => {
@@ -113,6 +123,11 @@ export default Controller.extend(ModalFunctionality, {
   saveBookmark() {
     const reminderAt = this.reminderAt();
     const reminderAtISO = reminderAt ? reminderAt.toISOString() : null;
+
+    if (!reminderAt) {
+      return Promise.reject(I18n.t("bookmarks.invalid_custom_datetime"));
+    }
+
     const data = {
       reminder_type: this.selectedReminderType,
       reminder_at: reminderAtISO,
@@ -134,8 +149,7 @@ export default Controller.extend(ModalFunctionality, {
 
     switch (this.selectedReminderType) {
       case REMINDER_TYPES.AT_DESKTOP:
-        // TODO: Implement at desktop bookmark reminder functionality
-        return "";
+        return null;
       case REMINDER_TYPES.LATER_TODAY:
         return this.laterToday();
       case REMINDER_TYPES.NEXT_BUSINESS_DAY:
@@ -147,8 +161,18 @@ export default Controller.extend(ModalFunctionality, {
       case REMINDER_TYPES.NEXT_MONTH:
         return this.nextMonth();
       case REMINDER_TYPES.CUSTOM:
-        // TODO: Implement custom bookmark reminder times
-        return "";
+        const customDateTime = moment.tz(
+          this.customReminderDate + " " + this.customReminderTime,
+          this.userTimezone()
+        );
+        if (!customDateTime.isValid()) {
+          this.setProperties({
+            customReminderTime: null,
+            customReminderDate: null
+          });
+          return;
+        }
+        return customDateTime;
     }
   },
 
@@ -200,15 +224,21 @@ export default Controller.extend(ModalFunctionality, {
       : later.add(30, "minutes").startOf("hour");
   },
 
+  handleSaveError(e) {
+    this.isSavingBookmarkManually = false;
+    if (typeof e === "string") {
+      bootbox.alert(e);
+    } else {
+      popupAjaxError(e);
+    }
+  },
+
   actions: {
     saveAndClose() {
       this.isSavingBookmarkManually = true;
       this.saveBookmark()
         .then(() => this.send("closeModal"))
-        .catch(e => {
-          this.isSavingBookmarkManually = false;
-          popupAjaxError(e);
-        });
+        .catch(e => this.handleSaveError(e));
     },
 
     closeWithoutSavingBookmark() {
