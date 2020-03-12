@@ -26,11 +26,11 @@ class UserBookmarkSerializer < ApplicationSerializer
              :username
 
   def closed
-    object.topic_closed
+    object.topic.closed
   end
 
   def archived
-    object.topic_archived
+    object.topic.archived
   end
 
   def linked_post_number
