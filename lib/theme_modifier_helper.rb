@@ -4,7 +4,7 @@ class ThemeModifierHelper
     @theme_ids = theme_ids || request&.env&.[](:resolved_theme_ids)
   end
 
-  ThemeModifierSet::MODIFIERS.keys.each do |modifier|
+  ThemeModifierSet.modifiers.keys.each do |modifier|
     define_method(modifier) do
       Theme.lookup_modifier(@theme_ids, modifier)
     end
