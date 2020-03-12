@@ -17,9 +17,9 @@
   {{else}}
     <p class="grant-count">
       {{#if count}}
-        {{i18n "admin.badges.preview.grant_count" count=count}}
+        {{html-safe (i18n "admin.badges.preview.grant_count" count=count)}}
       {{else}}
-        {{i18n "admin.badges.preview.no_grant_count"}}
+        {{html-safe (i18n "admin.badges.preview.no_grant_count")}}
       {{/if}}
     </p>
 
