@@ -538,7 +538,7 @@ class Theme < ActiveRecord::Base
       end
 
       meta[:modifiers] = {}.tap do |hash|
-        ThemeModifierSet::MODIFIERS.keys.each do |modifier|
+        ThemeModifierSet.modifiers.keys.each do |modifier|
           value = self.theme_modifier_set.public_send(modifier)
           hash[modifier] = value if !value.nil?
         end
