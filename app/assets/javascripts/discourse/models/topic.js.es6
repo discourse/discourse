@@ -136,7 +136,12 @@ const Topic = RestModel.extend({
     const createdAtDate = longDate(createdAt);
     const bumpedAtDate = longDate(bumpedAt);
 
-    return `${firstPost}: ${createdAtDate}\n${lastPost}: ${bumpedAtDate}`;
+    return I18n.messageFormat("topic.bumped_at_title_MF", {
+      FIRST_POST: firstPost,
+      CREATED_AT: createdAtDate,
+      LAST_POST: lastPost,
+      BUMPED_AT: bumpedAtDate
+    });
   },
 
   @discourseComputed("created_at")
@@ -259,7 +264,7 @@ const Topic = RestModel.extend({
   // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
     let url = this.url;
-    if (postNumber && postNumber > 0) {
+    if (postNumber > 0) {
       url += `/${postNumber}`;
     }
     return url;

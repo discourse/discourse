@@ -182,7 +182,11 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def bookmarked
-    object.topic_user&.bookmarked
+    if SiteSetting.enable_bookmarks_with_reminders?
+      object.has_bookmarks?
+    else
+      object.topic_user&.bookmarked
+    end
   end
 
   def topic_timer
