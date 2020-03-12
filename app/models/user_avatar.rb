@@ -20,7 +20,7 @@ class UserAvatar < ActiveRecord::Base
         return if user.blank? || user.primary_email.blank?
 
         email_hash = user_id == Discourse::SYSTEM_USER_ID ? User.email_hash("info@discourse.org") : user.email_hash
-        gravatar_url = "https://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
+        gravatar_url = "https://#{SiteSetting.gravatar_base_url}/avatar/#{email_hash}.png?s=#{max}&d=404"
 
         # follow redirects in case gravatar change rules on us
         tempfile = FileHelper.download(
