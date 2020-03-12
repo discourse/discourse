@@ -307,6 +307,7 @@ en:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
       created_with_reminder: "you've bookmarked this post with a reminder at %{date}"
+      created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
       save: "Save"

@@ -31,7 +31,7 @@
             {{topic-link bookmark}}
           </span>
           {{#if bookmark.excerpt}}
-          <p class="post-excerpt">{{~{bookmark.excerpt}~}}</p>
+          <p class="post-excerpt">{{html-safe bookmark.excerpt}}</p>
           {{/if}}
           <div class="link-bottom-line">
             {{category-link bookmark.category}}
