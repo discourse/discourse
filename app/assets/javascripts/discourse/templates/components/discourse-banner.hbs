@@ -5,7 +5,7 @@
       <div id="banner-content">
         {{html-safe content}}
         {{#if currentUser.staff}}
-          <p><a href={{banner.url}}>{{i18n "banner.edit"}}</a></p>
+          <p><a href={{banner.url}}>{{html-safe (i18n "banner.edit")}}</a></p>
         {{/if}}
       </div>
     </div>

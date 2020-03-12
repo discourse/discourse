@@ -17,7 +17,7 @@
 
     {{#if canSplitTopic}}
       {{#if newMessage}}
-        <p>{{i18n 'topic.move_to_new_message.instructions' count=selectedPostsCount}}</p>
+        <p>{{html-safe (i18n 'topic.move_to_new_message.instructions' count=selectedPostsCount)}}</p>
         <form>
           <label>{{i18n 'topic.move_to_new_message.message_title'}}</label>
           {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
@@ -31,7 +31,7 @@
     {{/if}}
 
     {{#if existingMessage}}
-      <p>{{i18n 'topic.move_to_existing_message.instructions' count=selectedPostsCount}}</p>
+      <p>{{html-safe (i18n 'topic.move_to_existing_message.instructions' count=selectedPostsCount)}}</p>
       <form>
         {{choose-message currentTopicId=model.id selectedTopicId=selectedTopicId}}
 
@@ -64,7 +64,7 @@
     </div>
 
     {{#if existingTopic}}
-      <p>{{i18n 'topic.merge_topic.instructions' count=selectedPostsCount}}</p>
+      <p>{{html-safe (i18n 'topic.merge_topic.instructions' count=selectedPostsCount)}}</p>
       <form>
         {{choose-topic currentTopicId=model.id selectedTopicId=selectedTopicId}}
       </form>
@@ -72,7 +72,7 @@
 
     {{#if canSplitTopic}}
       {{#if newTopic}}
-        <p>{{i18n 'topic.split_topic.instructions' count=selectedPostsCount}}</p>
+        <p>{{html-safe (i18n 'topic.split_topic.instructions' count=selectedPostsCount)}}</p>
         <form>
           <label>{{i18n 'topic.split_topic.topic_name'}}</label>
           {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
@@ -93,7 +93,7 @@
 
     {{#if canSplitTopic}}
       {{#if newMessage}}
-        <p>{{i18n 'topic.move_to_new_message.instructions' count=selectedPostsCount}}</p>
+        <p>{{html-safe (i18n 'topic.move_to_new_message.instructions' count=selectedPostsCount)}}</p>
         <form>
           <label>{{i18n 'topic.move_to_new_message.message_title'}}</label>
           {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}

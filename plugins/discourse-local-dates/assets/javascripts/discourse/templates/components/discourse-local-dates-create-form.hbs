@@ -85,7 +85,7 @@
             <label class="control-label">
               {{i18n "discourse_local_dates.create.form.recurring_title"}}
             </label>
-            <p>{{i18n "discourse_local_dates.create.form.recurring_description"}}</p>
+            <p>{{html-safe (i18n "discourse_local_dates.create.form.recurring_description")}}</p>
             <div class="controls">
               {{combo-box
                 content=recurringOptions

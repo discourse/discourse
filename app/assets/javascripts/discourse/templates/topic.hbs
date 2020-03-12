@@ -277,7 +277,7 @@
               {{#if model.queued_posts_count}}
                 <div class="has-pending-posts">
                   <div>
-                    {{i18n "review.topic_has_pending" count=model.queued_posts_count}}
+                    {{html-safe (i18n "review.topic_has_pending" count=model.queued_posts_count)}}
                   </div>
 
                   {{#link-to 'review' (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}

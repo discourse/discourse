@@ -6,9 +6,9 @@
           <p>
             {{#conditional-loading-spinner size="small" condition=loading}}
               {{#if pinnedGloballyCount}}
-                {{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}
+                {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount)}}
               {{else}}
-                {{i18n "topic.feature_topic.not_pinned_globally"}}
+                {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
               {{/if}}
             {{/conditional-loading-spinner}}
           </p>
@@ -74,9 +74,9 @@
         <p>
           {{#conditional-loading-spinner size="small" condition=loading}}
             {{#if pinnedGloballyCount}}
-              {{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}
+              {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount)}}
             {{else}}
-              {{i18n "topic.feature_topic.not_pinned_globally"}}
+              {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
             {{/if}}
           {{/conditional-loading-spinner}}
         </p>
@@ -123,9 +123,9 @@
         <p>
           {{#conditional-loading-spinner size="small" condition=loading}}
             {{#if bannerCount}}
-              {{i18n "topic.feature_topic.banner_exists"}}
+              {{html-safe (i18n "topic.feature_topic.banner_exists")}}
             {{else}}
-              {{i18n "topic.feature_topic.no_banner_exists"}}
+              {{html-safe (i18n "topic.feature_topic.no_banner_exists")}}
             {{/if}}
           {{/conditional-loading-spinner}}
         </p>
