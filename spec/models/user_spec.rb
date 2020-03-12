@@ -1248,6 +1248,16 @@ describe User do
 
   end
 
+  describe "#custom_gravatar" do
+    before do
+      SiteSetting.gravatar_base_url = "seccdn.libravatar.org"
+    end
+
+    it "returns a gravatar url as set in the settings" do
+      expect(User.gravatar_template("em@il.com")).to eq("//seccdn.libravatar.org/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon")
+    end
+  end
+
   describe "#letter_avatar_color" do
     before do
       SiteSetting.restrict_letter_avatar_colors = "2F70AC|ED207B|AAAAAA|77FF33"

@@ -2185,6 +2185,10 @@ en:
 
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
 
+    gravatar_name: "Name of the Gravatar provider"
+    gravatar_base_url: "Url of the Gravatar provider's API base"
+    gravatar_login_url: "Url relative to gravatar_base_url, which provides the user with the login to the Gravatar service"
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
