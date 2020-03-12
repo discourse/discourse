@@ -7,3 +7,6 @@
 
 # DEV: enforces no self-closing-void-elements
 dafd3c3b47f116c6c1dc56cb18df614c11747733
+
+# Rename many `.js.es6` files to `.js`
+032205e2029cbf82dc8f05b459fb93adf2503c60
