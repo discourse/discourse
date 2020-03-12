@@ -6,12 +6,43 @@ require 'tiny_tds'
 # Import script for Telligent communities
 #
 # It's really hard to find all attachments, but the script tries to do it anyway.
+#
+# You can supply a JSON file if you need to map and ignore categories during the import
+# by providing the path to the file in the `CATEGORY_MAPPING` environment variable.
+# You can also add tags to remapped categories and remap multiple old forums into one
+# category. Here's an example of such a `mapping.json` file:
+#
+# {
+#   "ignored_forum_ids": [41, 360, 378],
+#
+#   "mapping": [
+#     {
+#       "category": ["New Category 1"],
+#       "forums": [
+#         { "id": 348, "tag": "some_tag" },
+#         { "id": 347, "tag": "another_tag" }
+#       ]
+#     },
+#     {
+#       "category": ["New Category 2"],
+#       "forums": [
+#         { "id": 9 }
+#       ]
+#     },
+#     {
+#       "category": ["Nested", "Category"],
+#       "forums": [
+#         { "id": 322 }
+#       ]
+#     }
+#   ]
+# }
 
 class ImportScripts::Telligent < ImportScripts::Base
   BATCH_SIZE ||= 1000
   LOCAL_AVATAR_REGEX ||= /\A~\/.*(?<directory>communityserver-components-(?:selectable)?avatars)\/(?<path>[^\/]+)\/(?<filename>.+)/i
   REMOTE_AVATAR_REGEX ||= /\Ahttps?:\/\//i
-  EMBEDDED_ATTACHMENT_REGEX ||= /<a href="\/cfs-file(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename1>.+)">(?<filename2>.*?)<\/a>/i
+  EMBEDDED_ATTACHMENT_REGEX ||= /<a href="\/cfs-file(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename1>.+?)".*?>(?<filename2>.*?)<\/a>/i
 
   CATEGORY_LINK_NORMALIZATION = '/.*?(f\/\d+)$/\1'
   TOPIC_LINK_NORMALIZATION = '/.*?(f\/\d+\/t\/\d+)$/\1'
@@ -26,12 +57,14 @@ class ImportScripts::Telligent < ImportScripts::Base
       database: ENV["DB_NAME"],
       timeout: 60 # the user query is very slow
     )
+
+    SiteSetting.tagging_enabled = true
   end
 
   def execute
     add_permalink_normalizations
-    import_users
     import_categories
+    import_users
     import_topics
     import_posts
     mark_topics_as_solved
@@ -64,34 +97,29 @@ class ImportScripts::Telligent < ImportScripts::Base
         SELECT *
         FROM (
             SELECT TOP #{BATCH_SIZE}
-                u.UserID,
-                u.Email,
-                u.UserName,
-                u.CreateDate,
-                p.PropertyName,
-                p.PropertyValue
+              u.UserID, u.Email, u.UserName,u.CreateDate, p.PropertyName, p.PropertyValue
             FROM cs_Users u
-                LEFT OUTER JOIN (
-                    SELECT NULL AS UserID, ap.UserId AS MembershipID, x.PropertyName, x.PropertyValue
-                    FROM aspnet_Profile ap
-                             CROSS APPLY dbo.GetProperties(ap.PropertyNames, ap.PropertyValuesString) x
-                    WHERE ap.PropertyNames NOT LIKE '%:-1%' AND
-                        x.PropertyName IN ('bio', 'commonName', 'location', 'webAddress')
-                    UNION
-                    SELECT up.UserID, NULL AS MembershipID, x.PropertyName, CAST(x.PropertyValue AS NVARCHAR) AS PropertyValue
-                    FROM cs_UserProfile up
-                             CROSS APPLY dbo.GetProperties(up.PropertyNames, up.PropertyValues) x
-                    WHERE up.PropertyNames NOT LIKE '%:-1%' AND
+              LEFT OUTER JOIN (
+                SELECT NULL AS UserID, ap.UserId AS MembershipID, x.PropertyName, x.PropertyValue
+                FROM aspnet_Profile ap
+                  CROSS APPLY dbo.GetProperties(ap.PropertyNames, ap.PropertyValuesString) x
+                WHERE ap.PropertyNames NOT LIKE '%:-1%' AND
+                      x.PropertyName IN ('bio', 'commonName', 'location', 'webAddress')
+                UNION
+                SELECT up.UserID, NULL AS MembershipID, x.PropertyName, CAST(x.PropertyValue AS NVARCHAR) AS PropertyValue
+                  FROM cs_UserProfile up
+                    CROSS APPLY dbo.GetProperties(up.PropertyNames, up.PropertyValues) x
+                  WHERE up.PropertyNames NOT LIKE '%:-1%' AND
                         x.PropertyName IN ('avatarUrl', 'BannedUntil', 'UserBanReason')
-                ) p ON p.UserID = u.UserID OR p.MembershipID = u.MembershipID
+              ) p ON p.UserID = u.UserID OR p.MembershipID = u.MembershipID
             WHERE u.UserID > #{last_user_id} AND #{user_conditions}
             ORDER BY u.UserID
         ) x
-            PIVOT (
-              MAX(PropertyValue)
-              FOR PropertyName
-              IN (bio, commonName, location, webAddress, avatarUrl, BannedUntil, UserBanReason)
-            ) Y
+          PIVOT (
+            MAX(PropertyValue)
+            FOR PropertyName
+            IN (bio, commonName, location, webAddress, avatarUrl, BannedUntil, UserBanReason)
+          ) Y
         ORDER BY UserID
       SQL
 
@@ -134,7 +162,7 @@ class ImportScripts::Telligent < ImportScripts::Base
                               match_data[:path].split("-"),
                               match_data[:filename])
 
-      if File.exists?(avatar_path)
+      if File.file?(avatar_path)
         @uploader.create_avatar(user, avatar_path)
       else
         STDERR.puts "Could not find avatar: #{avatar_path}"
@@ -157,12 +185,75 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def import_categories
+    if ENV['CATEGORY_MAPPING']
+      import_mapped_forums_as_categories
+    else
+      import_groups_and_forums_as_categories
+    end
+  end
+
+  def import_mapped_forums_as_categories
+    puts "", "Importing categories..."
+
+    json = JSON.parse(File.read(ENV['CATEGORY_MAPPING']))
+
+    categories = []
+    @forum_ids_to_tags = {}
+    @ignored_forum_ids = json["ignored_forum_ids"]
+
+    json["mapping"].each do |m|
+      parent_id = nil
+      last_index = m["category"].size - 1
+      forum_ids = []
+
+      m["forums"].each do |f|
+        forum_ids << f["id"]
+        @forum_ids_to_tags[f["id"]] = f["tag"] if f["tag"].present?
+      end
+
+      m["category"].each_with_index do |name, index|
+        id = Digest::MD5.hexdigest(name)
+        categories << {
+          id: id,
+          name: name,
+          parent_id: parent_id,
+          forum_ids: index == last_index ? forum_ids : nil
+        }
+        parent_id = id
+      end
+    end
+
+    create_categories(categories) do |c|
+      if category_id = category_id_from_imported_category_id(c[:id])
+        map_forum_ids(category_id, c[:forum_ids])
+        nil
+      else
+        {
+          id: c[:id],
+          name: c[:name],
+          parent_category_id: category_id_from_imported_category_id(c[:parent_id]),
+          post_create_action: proc do |category|
+            map_forum_ids(category.id, c[:forum_ids])
+          end
+        }
+      end
+    end
+  end
+
+  def map_forum_ids(category_id, forum_ids)
+    return if forum_ids.blank?
+
+    forum_ids.each do |id|
+      url = "f/#{id}"
+      Permalink.create(url: url, category_id: category_id) unless Permalink.exists?(url: url)
+      add_category(id, Category.find_by_id(category_id))
+    end
+  end
+
+  def import_groups_and_forums_as_categories
     puts "", "Importing parent categories..."
     parent_categories = query(<<~SQL)
-      SELECT
-        GroupID,
-        Name, HtmlDescription,
-        DateCreated, SortOrder
+      SELECT GroupID, Name, HtmlDescription, DateCreated, SortOrder
       FROM cs_Groups g
       WHERE (SELECT COUNT(1)
              FROM te_Forum_Forums f
@@ -181,10 +272,7 @@ class ImportScripts::Telligent < ImportScripts::Base
 
     puts "", "Importing child categories..."
     child_categories = query(<<~SQL)
-      SELECT
-        ForumId, GroupId,
-        Name, Description,
-        DateCreated, SortOrder
+      SELECT ForumId, GroupId, Name, Description, DateCreated, SortOrder
       FROM te_Forum_Forums
       ORDER BY GroupId, SortOrder, Name
     SQL
@@ -203,7 +291,11 @@ class ImportScripts::Telligent < ImportScripts::Base
           parent_category_id: parent_category_id,
           name: clean_category_name(row["Name"]),
           description: html_to_markdown(row["Description"]),
-          position: row["SortOrder"]
+          position: row["SortOrder"],
+          post_create_action: proc do |category|
+            url = "f/#{row['ForumId']}"
+            Permalink.create(url: url, category_id: category.id) unless Permalink.exists?(url: url)
+          end
         }
       end
     end
@@ -236,19 +328,19 @@ class ImportScripts::Telligent < ImportScripts::Base
     puts "", "Importing topics..."
 
     last_topic_id = -1
-    total_count = count("SELECT COUNT(1) AS count FROM te_Forum_Threads")
+    total_count = count("SELECT COUNT(1) AS count FROM te_Forum_Threads t WHERE #{ignored_forum_sql_condition}")
 
     batches do |offset|
       rows = query(<<~SQL)
         SELECT TOP #{BATCH_SIZE}
-          t.ThreadId, t.ForumId, t.UserId,
+          t.ThreadId, t.ForumId, t.UserId, t.TotalViews,
           t.Subject, t.Body, t.DateCreated, t.IsLocked, t.StickyDate,
-          a.ApplicationTypeId, a.ApplicationId, a.ApplicationContentTypeId, a.ContentId, a.FileName
+          a.ApplicationTypeId, a.ApplicationId, a.ApplicationContentTypeId, a.ContentId, a.FileName, a.IsRemote
         FROM te_Forum_Threads t
           LEFT JOIN te_Attachments a
             ON (a.ApplicationId = t.ForumId AND a.ApplicationTypeId = 0 AND a.ContentId = t.ThreadId AND
                 a.ApplicationContentTypeId = 0)
-        WHERE t.ThreadId > #{last_topic_id}
+        WHERE t.ThreadId > #{last_topic_id} AND #{ignored_forum_sql_condition}
         ORDER BY t.ThreadId
       SQL
 
@@ -262,11 +354,12 @@ class ImportScripts::Telligent < ImportScripts::Base
         post = {
           id: import_topic_id(row["ThreadId"]),
           title: CGI.unescapeHTML(row["Subject"]),
-          raw: raw_with_attachment(row, user_id),
+          raw: raw_with_attachment(row, user_id, :topic),
           category: category_id_from_imported_category_id(row["ForumId"]),
           user_id: user_id,
           created_at: row["DateCreated"],
           closed: row["IsLocked"],
+          views: row["TotalViews"],
           post_create_action: proc do |action_post|
             topic = action_post.topic
             Jobs.enqueue_at(topic.pinned_until, :unpin_topic, topic_id: topic.id) if topic.pinned_until
@@ -289,16 +382,27 @@ class ImportScripts::Telligent < ImportScripts::Base
     "T#{topic_id}"
   end
 
+  def ignored_forum_sql_condition
+    @ignored_forum_sql_condition ||= @ignored_forum_ids.present? \
+      ? "t.ForumId NOT IN (#{@ignored_forum_ids.join(',')})" \
+      : "1 = 1"
+  end
+
   def import_posts
     puts "", "Importing posts..."
 
     last_post_id = -1
-    total_count = count("SELECT COUNT(1) AS count FROM te_Forum_ThreadReplies")
+    total_count = count(<<~SQL)
+      SELECT COUNT(1) AS count
+      FROM te_Forum_ThreadReplies tr
+        JOIN te_Forum_Threads t ON (tr.ThreadId = t.ThreadId)
+      WHERE #{ignored_forum_sql_condition}
+    SQL
 
     batches do |offset|
       rows = query(<<~SQL)
         SELECT TOP #{BATCH_SIZE}
-          tr.ThreadReplyId, tr.ThreadId, tr.UserId, tr.ParentReplyId,
+          tr.ThreadReplyId, tr.ThreadId, tr.UserId, pr.ThreadReplyId AS ParentReplyId,
           tr.Body, tr.ThreadReplyDate,
           CONVERT(BIT,
                   CASE WHEN tr.AnswerVerifiedUtcDate IS NOT NULL AND NOT EXISTS(
@@ -309,13 +413,14 @@ class ImportScripts::Telligent < ImportScripts::Base
                   )
                     THEN 1
                   ELSE 0 END) AS IsFirstVerifiedAnswer,
-          a.ApplicationTypeId, a.ApplicationId, a.ApplicationContentTypeId, a.ContentId, a.FileName
+          a.ApplicationTypeId, a.ApplicationId, a.ApplicationContentTypeId, a.ContentId, a.FileName, a.IsRemote
         FROM te_Forum_ThreadReplies tr
           JOIN te_Forum_Threads t ON (tr.ThreadId = t.ThreadId)
+          LEFT JOIN te_Forum_ThreadReplies pr ON (tr.ParentReplyId = pr.ThreadReplyId AND tr.ParentReplyId < tr.ThreadReplyId AND tr.ThreadId = pr.ThreadId)
           LEFT JOIN te_Attachments a
             ON (a.ApplicationId = t.ForumId AND a.ApplicationTypeId = 0 AND a.ContentId = tr.ThreadReplyId AND
                 a.ApplicationContentTypeId = 1)
-        WHERE tr.ThreadReplyId > #{last_post_id}
+        WHERE tr.ThreadReplyId > #{last_post_id} AND #{ignored_forum_sql_condition}
         ORDER BY tr.ThreadReplyId
       SQL
 
@@ -324,14 +429,14 @@ class ImportScripts::Telligent < ImportScripts::Base
       next if all_records_exist?(:post, rows.map { |row| row["ThreadReplyId"] })
 
       create_posts(rows, total: total_count, offset: offset) do |row|
-        imported_parent_id = row["ParentReplyId"] > 0 ? row["ParentReplyId"] : import_topic_id(row["ThreadId"])
+        imported_parent_id = row["ParentReplyId"]&.nonzero? ? row["ParentReplyId"] : import_topic_id(row["ThreadId"])
         parent_post = topic_lookup_from_imported_post_id(imported_parent_id)
         user_id = user_id_from_imported_user_id(row["UserId"]) || Discourse::SYSTEM_USER_ID
 
         if parent_post
           post = {
             id: row["ThreadReplyId"],
-            raw: raw_with_attachment(row, user_id),
+            raw: raw_with_attachment(row, user_id, :post),
             user_id: user_id,
             topic_id: parent_post[:topic_id],
             created_at: row["ThreadReplyDate"],
@@ -347,12 +452,16 @@ class ImportScripts::Telligent < ImportScripts::Base
     end
   end
 
-  def raw_with_attachment(row, user_id)
+  def raw_with_attachment(row, user_id, type)
     raw, embedded_paths, upload_ids = replace_embedded_attachments(row["Body"], user_id)
     raw = html_to_markdown(raw) || ""
 
     filename = row["FileName"]
     return raw if ENV["FILE_BASE_DIR"].blank? || filename.blank?
+
+    if row["IsRemote"]
+      return "#{raw}\n#{filename}"
+    end
 
     path = File.join(
       ENV["FILE_BASE_DIR"],
@@ -365,14 +474,15 @@ class ImportScripts::Telligent < ImportScripts::Base
     )
 
     unless embedded_paths.include?(path)
-      if File.exists?(path)
+      if File.file?(path)
         upload = @uploader.create_upload(user_id, path, filename)
 
         if upload.present? && upload.persisted? && !upload_ids.include?(upload.id)
           raw = "#{raw}\n#{@uploader.html_for_upload(upload, filename)}"
         end
       else
-        STDERR.puts "Could not find file: #{path}"
+        id = type == :topic ? row['ThreadId'] : row['ThreadReplyId']
+        STDERR.puts "Could not find file for #{type} #{id}: #{path}"
       end
     end
 
@@ -383,10 +493,12 @@ class ImportScripts::Telligent < ImportScripts::Base
     paths = []
     upload_ids = []
 
+    return [raw, paths, upload_ids] if ENV["FILE_BASE_DIR"].blank?
+
     raw = raw.gsub(EMBEDDED_ATTACHMENT_REGEX) do
       filename, path = attachment_path(Regexp.last_match)
 
-      if File.exists?(path)
+      if File.file?(path)
         upload = @uploader.create_upload(user_id, path, filename)
 
         if upload.present? && upload.persisted?
@@ -403,14 +515,21 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def clean_filename(filename)
-    CGI.unescapeHTML(filename)
-      .gsub(/[\x00\/\\:\*\?\"<>\|]/, '_')
-      .gsub(/_(?:2B00|2E00|2D00|5B00|5D00|5F00)/, '')
+    filename = CGI.unescapeHTML(filename)
+    filename.gsub!(/[\x00\/\\:\*\?\"<>\|]/, '_')
+
+    %w|( ) # % - _ [ ] = , ' ~ ! + { } & @ #|.each do |c|
+      number = "#{c.ord.to_s(16).upcase}00"
+      filename.gsub!("_#{number}_", c)
+      filename.gsub!("_#{number}#{number}_", c * 2)
+    end
+
+    filename
   end
 
   def attachment_path(match_data)
     filename, path = join_attachment_path(match_data, filename_index: 2)
-    filename, path = join_attachment_path(match_data, filename_index: 1) unless File.exists?(path)
+    filename, path = join_attachment_path(match_data, filename_index: 1) unless File.file?(path)
     [filename, path]
   end
 
@@ -420,40 +539,55 @@ class ImportScripts::Telligent < ImportScripts::Base
     filename = clean_filename(match_data[:"filename#{filename_index}"])
     base_path = File.join(
       ENV["FILE_BASE_DIR"],
-      match_data[:directory].gsub("-", "."),
-      match_data[:path].split("-")
+      match_data[:directory].gsub("-", ".").downcase,
+      match_data[:path].gsub("+", " ").gsub(/_\h{4}_/, "?").split(/[\.\-]/).map(&:strip)
     )
-
-    path = File.join(base_path, filename)
-    return [filename, path] if File.exists?(path)
 
     original_filename = filename.dup
 
-    filename = filename.gsub("-", " ")
+    filename.gsub!(/[_\- ]/, "?")
     path = File.join(base_path, filename)
-    return [filename, path] if File.exists?(path)
+    paths = Dir.glob(path, File::FNM_CASEFOLD)
+    if (path = paths.first) && paths.size == 1
+      filename = File.basename(path)
+      return [filename, path]
+    end
 
-    filename = filename.gsub("_", "-")
+    filename = original_filename.dup
+    filename.gsub!(/_\h{2}00_/, "?")
+    filename.gsub!(/_\h{2}00\h{2}00_/, "??")
+    filename.gsub!(/_\h{2}00\h{2}00\h{2}00_/, "???")
+    filename.gsub!(/[_\- ]/, "?")
     path = File.join(base_path, filename)
-    return [filename, path] if File.exists?(path)
+    paths = Dir.glob(path, File::FNM_CASEFOLD)
+    if (path = paths.first) && paths.size == 1
+      filename = File.basename(path)
+      return [filename, path]
+    end
+
+    filename = original_filename.dup
+    filename.gsub!(/_\h{4}_/, "?")
+    filename.gsub!(/_\h{4}\h{4}_/, "??")
+    filename.gsub!(/_\h{4}\h{4}\h{4}_/, "???")
+    filename.gsub!(/[_\- ]/, "?")
+    path = File.join(base_path, filename)
+    paths = Dir.glob(path, File::FNM_CASEFOLD)
+    if (path = paths.first) && paths.size == 1
+      filename = File.basename(path)
+      return [filename, path]
+    end
 
     [original_filename, File.join(base_path, original_filename)]
   end
 
-  def mark_topics_as_solved
-    puts "", "Marking topics as solved..."
-
-    DB.exec <<~SQL
-      INSERT INTO topic_custom_fields (name, value, topic_id, created_at, updated_at)
-      SELECT 'accepted_answer_post_id', pcf.post_id, p.topic_id, p.created_at, p.created_at
-        FROM post_custom_fields pcf
-        JOIN posts p ON p.id = pcf.post_id
-       WHERE pcf.name = 'is_accepted_answer' AND pcf.value = 'true'
-    SQL
-  end
-
   def html_to_markdown(html)
-    HtmlToMarkdown.new(html).to_markdown if html.present?
+    return html if html.blank?
+
+    md = HtmlToMarkdown.new(html).to_markdown
+    md.gsub!(/\[quote.*?\]/, "\n" + '\0' + "\n")
+    md.gsub!(/(?<!^)\[\/quote\]/, "\n[/quote]\n")
+    md.strip!
+    md
   end
 
   def add_permalink_normalizations
