@@ -2,7 +2,7 @@
   {{#if publishing}}
     {{i18n "shared_drafts.publishing"}}
   {{else}}
-    {{i18n "shared_drafts.notice" category=topic.category.name}}
+    {{html-safe (i18n "shared_drafts.notice" category=topic.category.name)}}
 
     <div class='publish-field'>
       <label>{{i18n "shared_drafts.destination_category"}}</label>

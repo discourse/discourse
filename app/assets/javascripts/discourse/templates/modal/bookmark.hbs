@@ -50,7 +50,7 @@
         {{/if}}
 
       {{else}}
-        <div class="alert alert-info">{{i18n "bookmarks.no_timezone" basePath=basePath }}</div>
+        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=basePath)}}</div>
       {{/if}}
     </div>
     {{/if}}
