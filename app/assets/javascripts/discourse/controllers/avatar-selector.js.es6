@@ -4,8 +4,13 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { allowsImages } from "discourse/lib/uploads";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { setting } from "discourse/lib/computed";
 
 export default Controller.extend(ModalFunctionality, {
+  gravatarName: setting("gravatar_name"),
+  gravatarBaseUrl: setting("gravatar_base_url"),
+  gravatarLoginUrl: setting("gravatar_login_url"),
+
   @discourseComputed(
     "selected",
     "user.system_avatar_upload_id",

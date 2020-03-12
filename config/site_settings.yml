@@ -598,6 +598,15 @@ users:
     client: true
   max_notifications_per_user:
     default: 10000
+  gravatar_name:
+    default: Gravatar
+    client: true
+  gravatar_base_url:
+    default: www.gravatar.com
+    client: true
+  gravatar_login_url:
+    default: /emails
+    client: true
 
 groups:
   enable_group_directory:

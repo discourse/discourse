@@ -741,7 +741,7 @@ class User < ActiveRecord::Base
   end
 
   def self.gravatar_template(email)
-    "//www.gravatar.com/avatar/#{self.email_hash(email)}.png?s={size}&r=pg&d=identicon"
+    "//#{SiteSetting.gravatar_base_url}/avatar/#{self.email_hash(email)}.png?s={size}&r=pg&d=identicon"
   end
 
   # Don't pass this up to the client - it's meant for server side use
