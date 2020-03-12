@@ -43,7 +43,7 @@ function renderAvatar(user, options) {
       return "";
     }
 
-    let displayName = prioritizeNameInUx(name, this.siteSettings)
+    let displayName = prioritizeNameInUx(name)
       ? name
       : formatUsername(username);
 
