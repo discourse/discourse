@@ -1,6 +1,7 @@
 import { get } from "@ember/object";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { avatarImg, formatUsername } from "discourse/lib/utilities";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 
 let _customAvatarHelpers;
 
@@ -42,7 +43,9 @@ function renderAvatar(user, options) {
       return "";
     }
 
-    let displayName = name || formatUsername(username);
+    let displayName = prioritizeNameInUx(name, this.siteSettings)
+      ? name
+      : formatUsername(username);
 
     let title = options.title;
     if (!title && !options.ignoreTitle) {
