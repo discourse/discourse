@@ -43,7 +43,7 @@ class BookmarkManager
 
     Bookmark.transaction do
       topic_bookmarks.each do |bookmark|
-        raise Discourse::InvalidAccess.new if !Guardian.new(user).can_delete?(bookmark)
+        raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
         bookmark.destroy
       end
     end

@@ -35,8 +35,20 @@
           {{tap-tile icon="far-sun" text=tomorrowFormatted tileId=reminderTypes.TOMORROW activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{tap-tile icon="far-clock" text=nextWeekFormatted tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{tap-tile icon="far-calendar-plus" text=nextMonthFormatted tileId=reminderTypes.NEXT_MONTH activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-          <!-- {{tap-tile icon="calendar-alt" text=(I18n "bookmarks.reminders.custom") tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}} -->
+          {{tap-tile icon="calendar-alt" text=(I18n "bookmarks.reminders.custom") tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}}
         {{/tap-tile-grid}}
+        {{#if customDateTimeSelected}}
+          <div class="control-group">
+            {{d-icon "calendar-alt"}}
+            {{date-picker-future
+              value=customReminderDate
+              onSelect=(action (mut customReminderDate))
+            }}
+            {{d-icon "far-clock"}}
+            {{input placeholder="--:--" type="time" value=customReminderTime}}
+          </div>
+        {{/if}}
+
       {{else}}
         <div class="alert alert-info">{{i18n "bookmarks.no_timezone" basePath=basePath }}</div>
       {{/if}}
