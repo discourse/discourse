@@ -16,7 +16,11 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   },
 
   showAllHref() {
-    return `${this.attrs.path}/activity/bookmarks`;
+    if (this.siteSettings.enable_bookmarks_with_reminders) {
+      return `${this.attrs.path}/activity/bookmarks-with-reminders`;
+    } else {
+      return `${this.attrs.path}/activity/bookmarks`;
+    }
   },
 
   emptyStatePlaceholderItem() {
@@ -24,6 +28,50 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   },
 
   findNewItems() {
+    if (this.siteSettings.enable_bookmarks_with_reminders) {
+      return this.loadBookmarksWithReminders();
+    } else {
+      return this.loadUserActivityBookmarks();
+    }
+  },
+
+  itemHtml(bookmark) {
+    return this.attach("quick-access-item", {
+      icon: this.icon(bookmark),
+      href: postUrl(
+        bookmark.slug,
+        bookmark.topic_id,
+        bookmark.post_number || bookmark.linked_post_number
+      ),
+      content: bookmark.title,
+      username: bookmark.username
+    });
+  },
+
+  icon(bookmark) {
+    if (bookmark.reminder_at) {
+      return "discourse-bookmark-clock";
+    }
+    return ICON;
+  },
+
+  loadBookmarksWithReminders() {
+    return ajax(`/u/${this.currentUser.username}/bookmarks.json`, {
+      cache: "false",
+      data: {
+        limit: this.estimateItemLimit()
+      }
+    }).then(result => {
+      // The empty state help text for bookmarks page is localized on the
+      // server.
+      if (result.no_results_help) {
+        this.state.emptyStatePlaceholderItemText = result.no_results_help;
+      }
+      return result.bookmarks;
+    });
+  },
+
+  loadUserActivityBookmarks() {
     return ajax("/user_actions.json", {
       cache: "false",
       data: {
@@ -37,15 +85,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       // server.
       this.state.emptyStatePlaceholderItemText = no_results_help;
       return user_actions;
-    });
-  },
-
-  itemHtml(bookmark) {
-    return this.attach("quick-access-item", {
-      icon: ICON,
-      href: postUrl(bookmark.slug, bookmark.topic_id, bookmark.post_number),
-      content: bookmark.title,
-      username: bookmark.username
     });
   }
 });

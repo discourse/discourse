@@ -307,6 +307,7 @@ en:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
       created_with_reminder: "you've bookmarked this post with a reminder at %{date}"
+      created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
       save: "Save"
@@ -2116,6 +2117,8 @@ en:
         other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics}
         } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
 
+      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
+
       browse_all_categories: Browse all categories
 
       view_latest_topics: view latest topics
@@ -2667,6 +2670,7 @@ en:
 
       bookmarks:
         create: "Create bookmark"
+        created: "Created"
         name: "Name"
         name_placeholder: "Name the bookmark to help jog your memory"
         set_reminder: "Set a reminder"

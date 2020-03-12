@@ -124,7 +124,7 @@ export default Controller.extend(ModalFunctionality, {
     const reminderAt = this.reminderAt();
     const reminderAtISO = reminderAt ? reminderAt.toISOString() : null;
 
-    if (!reminderAt) {
+    if (!reminderAt && this.selectedReminderType === REMINDER_TYPES.CUSTOM) {
       return Promise.reject(I18n.t("bookmarks.invalid_custom_datetime"));
     }
 
