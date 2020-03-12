@@ -637,7 +637,7 @@ posting:
   max_post_length:
     client: true
     default: 32000
-    max: 99000
+    max: 150000
   topic_featured_link_enabled:
     client: true
     default: true
