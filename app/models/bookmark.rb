@@ -13,6 +13,16 @@ class Bookmark < ActiveRecord::Base
   validate :unique_per_post_for_user
   validate :ensure_sane_reminder_at_time
 
+  # we don't care whether the post or topic is deleted,
+  # they hold important information about the bookmark
+  def post
+    Post.unscoped { super }
+  end
+
+  def topic
+    Topic.unscoped { super }
+  end
+
   def unique_per_post_for_user
     existing_bookmark = Bookmark.find_by(user_id: user_id, post_id: post_id)
     return if existing_bookmark.blank? || existing_bookmark.id == id
