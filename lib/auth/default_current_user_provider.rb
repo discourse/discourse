@@ -118,10 +118,16 @@ class Auth::DefaultCurrentUserProvider
 
     if current_user && should_update_last_seen?
       u = current_user
+      ip = request.ip
+
       Scheduler::Defer.later "Updating Last Seen" do
         u.update_last_seen!
-        u.update_ip_address!(request.ip)
+        u.update_ip_address!(ip)
       end
+
+      BookmarkReminderNotificationHandler.defer_at_desktop_reminder(
+        user: u, request_user_agent: @request.user_agent
+      )
     end
 
     @env[CURRENT_USER_KEY] = current_user

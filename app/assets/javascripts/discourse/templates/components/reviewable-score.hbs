@@ -49,7 +49,7 @@
 {{#if rs.reason}}
   <tr>
     <td colspan='7'>
-      <div class='reviewable-score-reason'>{{{rs.reason}}}</div>
+      <div class='reviewable-score-reason'>{{html-safe rs.reason}}</div>
     </td>
   </tr>
 {{/if}}

@@ -353,6 +353,8 @@ def freeze_time(now = Time.now)
     ensure
       unfreeze_time
     end
+  else
+    time
   end
 end
 

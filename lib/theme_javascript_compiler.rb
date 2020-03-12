@@ -214,8 +214,8 @@ class ThemeJavascriptCompiler
 
   def append_module(script, name, include_variables: true)
     script = "#{theme_variables}#{script}" if include_variables
-    template = Tilt::ES6ModuleTranspilerTemplate.new {}
-    @content << template.module_transpile(script, "", name)
+    transpiler = DiscourseJsProcessor::Transpiler.new
+    @content << transpiler.perform(script, "", name)
   rescue MiniRacer::RuntimeError => ex
     raise CompileError.new ex.message
   end
@@ -237,7 +237,7 @@ class ThemeJavascriptCompiler
   end
 
   def transpile(es6_source, version)
-    template = Tilt::ES6ModuleTranspilerTemplate.new {}
+    transpiler = DiscourseJsProcessor::Transpiler.new(skip_module: true)
     wrapped = <<~PLUGIN_API_JS
       (function() {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
@@ -254,7 +254,7 @@ class ThemeJavascriptCompiler
       })();
     PLUGIN_API_JS
 
-    template.babel_transpile(wrapped)
+    transpiler.perform(wrapped)
   rescue MiniRacer::RuntimeError => ex
     raise CompileError.new ex.message
   end

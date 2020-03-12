@@ -347,8 +347,9 @@ RSpec.describe Admin::UsersController do
 
   describe '#remove_group' do
     it "also clears the user's primary group" do
-      g = Fabricate(:group)
-      u = Fabricate(:user, primary_group: g)
+      u = Fabricate(:user)
+      g = Fabricate(:group, users: [u])
+      u.update!(primary_group_id: g.id)
       delete "/admin/users/#{u.id}/groups/#{g.id}.json"
 
       expect(response.status).to eq(200)

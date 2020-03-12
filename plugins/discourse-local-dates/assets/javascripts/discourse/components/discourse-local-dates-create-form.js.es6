@@ -10,6 +10,7 @@ import loadScript from "discourse/lib/load-script";
 import computed, { observes } from "discourse-common/utils/decorators";
 import { cookAsync } from "discourse/lib/text";
 import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Component.extend({
   timeFormat: "HH:mm:ss",
@@ -66,7 +67,7 @@ export default Component.extend({
         );
       });
     }
-  }, 250),
+  }, INPUT_DELAY),
 
   @computed("date", "toDate", "toTime")
   isRange(date, toDate, toTime) {

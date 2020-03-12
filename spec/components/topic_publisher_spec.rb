@@ -33,8 +33,8 @@ describe TopicPublisher do
           topic.reload
           expect(topic.category).to eq(category)
           expect(topic).to be_visible
-          expect(topic.created_at).to eq(published_at)
-          expect(topic.updated_at).to eq(published_at)
+          expect(topic.created_at).to eq_time(published_at)
+          expect(topic.updated_at).to eq_time(published_at)
           expect(topic.shared_draft).to be_blank
 
           expect(UserHistory.where(
@@ -48,9 +48,9 @@ describe TopicPublisher do
           expect(op.revisions.size).to eq(0)
           expect(op.version).to eq(1)
           expect(op.public_version).to eq(1)
-          expect(op.created_at).to eq(published_at)
-          expect(op.updated_at).to eq(published_at)
-          expect(op.last_version_at).to eq(published_at)
+          expect(op.created_at).to eq_time(published_at)
+          expect(op.updated_at).to eq_time(published_at)
+          expect(op.last_version_at).to eq_time(published_at)
         end
       end
     end

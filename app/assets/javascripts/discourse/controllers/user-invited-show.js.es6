@@ -4,6 +4,7 @@ import Invite from "discourse/models/invite";
 import discourseDebounce from "discourse/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
   user: null,
@@ -30,7 +31,7 @@ export default Controller.extend({
       this.filter,
       this.searchTerm
     ).then(invites => this.set("model", invites));
-  }, 250),
+  }, INPUT_DELAY),
 
   inviteRedeemed: equal("filter", "redeemed"),
 

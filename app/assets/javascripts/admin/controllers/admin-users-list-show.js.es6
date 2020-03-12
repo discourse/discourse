@@ -4,6 +4,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend(CanCheckEmails, {
   model: null,
@@ -32,7 +33,7 @@ export default Controller.extend(CanCheckEmails, {
   @observes("listFilter")
   _filterUsers: discourseDebounce(function() {
     this.resetFilters();
-  }, 250),
+  }, INPUT_DELAY),
 
   resetFilters() {
     this._page = 1;

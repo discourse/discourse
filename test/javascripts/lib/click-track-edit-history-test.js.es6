@@ -22,7 +22,7 @@ QUnit.module("lib:click-track-edit-history", {
        </div>
        <div id="revisions" data-post-id="42" class="">
          <div class="row">
-           <div class="span8">
+           <div>
              <a href="http://www.google.com">google.com</a>
              <a class="lightbox back" href="http://www.google.com">google.com</a>
              <div class="onebox-result">
@@ -34,7 +34,7 @@ QUnit.module("lib:click-track-edit-history", {
              <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
              <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
            </div>
-           <div class="span8 offset1">
+           <div>
              <a href="http://www.google.com">google.com</a>
              <a class="lightbox back" href="http://www.google.com">google.com</a>
              <div class="onebox-result">

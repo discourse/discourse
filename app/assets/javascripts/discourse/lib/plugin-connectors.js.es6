@@ -12,7 +12,7 @@ export function resetExtraClasses() {
 }
 
 // Note: In plugins, define a class by path and it will be wired up automatically
-// eg: discourse/connectors/<OUTLET NAME>/<CONNECTOR NAME>.js.es6
+// eg: discourse/connectors/<OUTLET NAME>/<CONNECTOR NAME>
 export function extraConnectorClass(name, obj) {
   _extraConnectorClasses[name] = obj;
 }

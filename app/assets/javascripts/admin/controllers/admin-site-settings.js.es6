@@ -3,6 +3,7 @@ import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
   filter: null,
@@ -84,7 +85,7 @@ export default Controller.extend({
     } else {
       this.filterContentNow();
     }
-  }, 250),
+  }, INPUT_DELAY),
 
   actions: {
     clearFilter() {

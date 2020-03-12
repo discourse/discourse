@@ -39,5 +39,22 @@ describe Jobs::EnqueueSuspectUsers do
 
       expect(score.reason).to eq('suspect_user')
     end
+
+    it 'only enqueues non-approved users' do
+      suspect_user.update!(approved: true)
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
+    it 'does nothing if must_approve_users is set to true' do
+      SiteSetting.must_approve_users = true
+      suspect_user.update!(approved: false)
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
   end
 end
