@@ -7,9 +7,8 @@ require_relative 'support/settings'
 
 module ImportScripts::Mbox
   class Importer < ImportScripts::Base
-    # @param settings [ImportScripts::Mbox::Settings]
-    def initialize(settings)
-      @settings = settings
+    def initialize(settings_filename)
+      @settings = Settings.load(settings_filename)
       super()
 
       @database = Database.new(@settings.data_dir, @settings.batch_size)
@@ -139,7 +138,10 @@ module ImportScripts::Mbox
         body = receiver.add_attachments(body, user)
       end
 
-      body = "#{body}#{Email::Receiver.elided_html(elided)}" if elided.present?
+      if elided.present? && @settings.show_trimmed_content
+        body = "#{body}#{Email::Receiver.elided_html(elided)}"
+      end
+
       body
     end
 
