@@ -2376,6 +2376,7 @@ RSpec.describe TopicsController do
         post = create_post
         post2 = create_post(topic_id: post.topic_id)
         put "/t/#{post.topic_id}/bookmark.json"
+        expect(response.status).to eq(200)
 
         bookmarks_for_topic = Bookmark.where(topic: post.topic, user: user)
         expect(bookmarks_for_topic.count).to eq(1)
