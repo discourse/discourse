@@ -39,6 +39,10 @@ class Bookmark < ActiveRecord::Base
     end
   end
 
+  def no_reminder?
+    self.reminder_at.blank? && self.reminder_type.blank?
+  end
+
   scope :pending_reminders, ->(before_time = Time.now.utc) do
     where("reminder_at IS NOT NULL AND reminder_at <= :before_time", before_time: before_time)
   end
