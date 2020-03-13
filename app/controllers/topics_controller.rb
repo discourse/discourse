@@ -551,7 +551,7 @@ class TopicsController < ApplicationController
       bookmark_manager = BookmarkManager.new(current_user)
       bookmark_manager.create(post_id: first_post.id)
 
-      if bookmark_manager.errors
+      if bookmark_manager.errors.any?
         return render_json_error(bookmark_manager, status: 400)
       end
     else
