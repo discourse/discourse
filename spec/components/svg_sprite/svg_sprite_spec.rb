@@ -142,7 +142,7 @@ describe SvgSprite do
     expect(SvgSprite.all_icons([parent_theme.id])).to include("dragon")
   end
 
-  it 'includes icons defined in theme flags' do
+  it 'includes icons defined in theme modifiers' do
     theme = Fabricate(:theme)
 
     expect(SvgSprite.all_icons([theme.id])).not_to include("dragon")
