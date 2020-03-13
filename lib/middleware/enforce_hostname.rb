@@ -13,7 +13,12 @@ module Middleware
       # all Rails helpers are guarenteed to use it unconditionally and
       # never generate incorrect links
       env[Rack::Request::HTTP_X_FORWARDED_HOST] = nil
-      env[Rack::HTTP_HOST] = Discourse.current_hostname
+
+      allowed_hostnames = RailsMultisite::ConnectionManagement.current_db_hostnames
+      requested_hostname = env[Rack::HTTP_HOST]
+
+      env[Rack::HTTP_HOST] = allowed_hostnames.find { |h| h == requested_hostname } || Discourse.current_hostname
+
       @app.call(env)
     end
   end

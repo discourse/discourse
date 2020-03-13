@@ -12,7 +12,10 @@ class ContentSecurityPolicy
       _, headers, _ = response = @app.call(env)
 
       return response unless html_response?(headers)
-      base_url = request.host_with_port
+
+      # The EnforceHostname middleware ensures request.host_with_port can be trusted
+      protocol = (SiteSetting.force_https || request.ssl?) ? "https://" : "http://"
+      base_url = protocol + request.host_with_port + Discourse.base_uri
 
       theme_ids = env[:resolved_theme_ids]
 
