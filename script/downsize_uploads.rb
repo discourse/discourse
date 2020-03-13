@@ -108,8 +108,6 @@ def downsize_upload(upload, path, max_image_pixels)
 
   original_upload.reload.destroy! unless new_file
 
-  puts "" if ENV["VERBOSE"]
-
   true
 end
 
@@ -120,6 +118,7 @@ scope = Upload
 puts "Uploads to process: #{scope.count}"
 
 scope.find_each do |upload|
+  puts "\n" if ENV["VERBOSE"]
   print "\rFixed dimensions: %8d        Downsized: %8d (upload id: #{upload.id})".freeze % [dimensions_count, downsized_count]
   puts "\n" if ENV["VERBOSE"]
 
