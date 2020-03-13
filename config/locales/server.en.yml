@@ -3771,6 +3771,7 @@ en:
     sender_body_blank: "body is blank"
     sender_post_deleted: "post has been deleted"
     sender_message_to_invalid: "recipient has invalid email address"
+    sender_topic_deleted: "topic has been deleted"
 
   color_schemes:
     base_theme_name: "Base"
