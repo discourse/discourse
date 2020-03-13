@@ -7,14 +7,14 @@ function highlight(node, pattern, nodeName, className) {
     return 0;
   }
 
-  if (node.nodeType === 1 && node.childNodes) {
+  if (node.nodeType === Node.ELEMENT_NODE && node.childNodes) {
     for (let i = 0; i < node.childNodes.length; i++) {
       i += highlight(node.childNodes[i], pattern, nodeName, className);
     }
     return 0;
   }
 
-  if (node.nodeType === 3) {
+  if (node.nodeType === Node.TEXT_NODE) {
     const match = node.data.match(pattern);
 
     if (!match) {
