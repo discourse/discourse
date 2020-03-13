@@ -231,10 +231,7 @@ export default Component.extend(
       });
 
       if (this.selectKit.isExpanded) {
-        if (this._searchPromise) {
-          cancel(this._searchPromise);
-        }
-        this._searchPromise = this._searchWrapper(this.selectKit.filter);
+        this.triggerSearch();
       }
 
       if (this.computeContent) {
@@ -388,7 +385,7 @@ export default Component.extend(
 
     _debouncedInput(filter) {
       this.selectKit.setProperties({ filter, isLoading: true });
-      this._searchPromise = this._searchWrapper(filter);
+      this.triggerSearch(filter);
     },
 
     _onChangeWrapper(value, items) {
@@ -565,6 +562,15 @@ export default Component.extend(
         });
       }
       return content;
+    },
+
+    triggerSearch(filter) {
+      if (this._searchPromise) {
+        cancel(this._searchPromise);
+      }
+      this._searchPromise = this._searchWrapper(
+        filter || this.selectKit.filter
+      );
     },
 
     _searchWrapper(filter) {
@@ -869,10 +875,7 @@ export default Component.extend(
           this.selectKit.options.filterable || this.selectKit.options.allowAny
       });
 
-      if (this._searchPromise) {
-        cancel(this._searchPromise);
-      }
-      this._searchPromise = this._searchWrapper();
+      this.triggerSearch();
 
       this._safeAfterRender(() => {
         this._focusFilter();
