@@ -4,16 +4,14 @@ class ThemeModifierSet < ActiveRecord::Base
 
   belongs_to :theme
 
-  MODIFIERS ||= {
-    serialize_topic_excerpts: { combine_mode: :any, type: :boolean },
-    csp_extensions: { combine_mode: :flatten, type: :string_array },
-    svg_icons: { combine_mode: :flatten, type: :string_array },
-  }
+  def self.modifiers
+    @modifiers ||= self.load_modifiers
+  end
 
   validate :type_validator
 
   def type_validator
-    MODIFIERS.each do |k, config|
+    ThemeModifierSet.modifiers.each do |k, config|
       value = public_send(k)
       next if value.nil?
 
@@ -39,17 +37,40 @@ class ThemeModifierSet < ActiveRecord::Base
   # Given the ids of multiple active themes / theme components, this function
   # will combine them into a 'resolved' behavior
   def self.resolve_modifier_for_themes(theme_ids, modifier_name)
-    return nil if !(config = MODIFIERS[modifier_name])
+    return nil if !(config = self.modifiers[modifier_name])
 
     all_values = self.where(theme_id: theme_ids).where.not(modifier_name => nil).pluck(modifier_name)
-    case config[:combine_mode]
-    when :any
+    case config[:type]
+    when :boolean
       all_values.any?
-    when :flatten
+    when :string_array
       all_values.flatten(1)
     else
       raise ThemeModifierSetError "Invalid theme modifier combine_mode"
     end
+  end
+
+  private
+
+  # Build the list of modifiers from the DB schema.
+  # This allows plugins to introduce new modifiers by adding columns to the table
+  def self.load_modifiers
+    hash = {}
+    columns_hash.each do |column_name, info|
+      next if ["id", "theme_id"].include?(column_name)
+
+      type = nil
+      if info.type == :string && info.array?
+        type = :string_array
+      elsif info.type == :boolean && !info.array?
+        type = :boolean
+      else
+        raise ThemeModifierSetError "Invalid theme modifier column type" if ![:boolean, :string].include?(info.type)
+      end
+
+      hash[column_name.to_sym] = { type: type }
+    end
+    hash
   end
 end
 

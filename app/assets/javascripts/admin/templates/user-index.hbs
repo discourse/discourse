@@ -132,7 +132,7 @@
     <div class="field">{{i18n "user.avatar.title"}}</div>
     <div class="value">{{avatar model imageSize="large"}}</div>
     <div class="controls">
-      {{i18n "admin.user.visit_profile" url=preferencesPath}}
+      {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
     </div>
   </div>
 

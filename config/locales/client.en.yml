@@ -307,10 +307,12 @@ en:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
       created_with_reminder: "you've bookmarked this post with a reminder at %{date}"
+      created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
       save: "Save"
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
+      invalid_custom_datetime: "The date and time you provided is invalid, please try again."
       reminders:
         at_desktop: "Next time I'm at my desktop"
         later_today: "Later today <br/>{{date}}"
@@ -1055,10 +1057,10 @@ en:
 
       change_avatar:
         title: "Change your profile picture"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
-        gravatar_title: "Change your avatar on Gravatar's website"
-        gravatar_failed: "We could not find a Gravatar with that email address."
-        refresh_gravatar_title: "Refresh your Gravatar"
+        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a>, based on"
+        gravatar_title: "Change your avatar on {{gravatarName}}'s website"
+        gravatar_failed: "We could not find a {{gravatarName}} with that email address."
+        refresh_gravatar_title: "Refresh your {{gravatarName}}"
         letter_based: "System assigned profile picture"
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
@@ -1807,6 +1809,7 @@ en:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1860,6 +1863,7 @@ en:
         posted: "new post"
         moved_post: "post moved"
         linked: "linked"
+        bookmark_reminder: "bookmark reminder"
         granted_badge: "badge granted"
         invited_to_topic: "invited to topic"
         group_mentioned: "group mentioned"
@@ -2112,6 +2116,8 @@ en:
         one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic}
         other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics}
         } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
+
+      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
 
       browse_all_categories: Browse all categories
 
@@ -2664,6 +2670,7 @@ en:
 
       bookmarks:
         create: "Create bookmark"
+        created: "Created"
         name: "Name"
         name_placeholder: "Name the bookmark to help jog your memory"
         set_reminder: "Set a reminder"

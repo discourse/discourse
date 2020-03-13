@@ -78,7 +78,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
       STR
     end
 
-    puts "Testing sending to #{email} using #{smtp[:user_name]}:#{smtp[:password]}@#{smtp[:address]}:#{smtp[:port]}."
+    puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}."
 
     # We would like to do this, but Net::SMTP errors out using starttls
     #Net::SMTP.start(smtp[:address], smtp[:port]) do |s|

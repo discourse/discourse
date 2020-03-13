@@ -122,6 +122,9 @@ export default function() {
           this.route("replies");
           this.route("likesGiven", { path: "likes-given" });
           this.route("bookmarks");
+          this.route("bookmarksWithReminders", {
+            path: "bookmarks-with-reminders"
+          });
           this.route("pending");
           this.route("drafts");
         }
