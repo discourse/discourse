@@ -5,7 +5,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
-import { reads } from "@ember/object/computed";
 
 const START_OF_DAY_HOUR = 8;
 const REMINDER_TYPES = {
@@ -52,8 +51,15 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  usingMobileDevice: reads("site.mobileView"),
   showBookmarkReminderControls: true,
+
+  @discourseComputed()
+  showAtDesktop() {
+    return (
+      this.siteSettings.enable_bookmark_at_desktop_reminders &&
+      this.site.mobileView
+    );
+  },
 
   @discourseComputed("selectedReminderType")
   customDateTimeSelected(selectedReminderType) {
