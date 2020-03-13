@@ -109,7 +109,7 @@
         {{else}}
           <div class="user-invite-none">
             {{#if canBulkInvite}}
-              {{i18n 'user.invited.bulk_invite.none'}}
+              {{html-safe (i18n 'user.invited.bulk_invite.none')}}
             {{else}}
               {{i18n 'user.invited.none'}}
             {{/if}}

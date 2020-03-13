@@ -21,6 +21,7 @@ const REPLACEMENTS = {
   "notification.replied": "reply",
   "notification.posted": "reply",
   "notification.edited": "pencil-alt",
+  "notification.bookmark_reminder": "discourse-bookmark-clock",
   "notification.liked": "heart",
   "notification.liked_2": "heart",
   "notification.liked_many": "heart",

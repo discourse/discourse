@@ -1248,6 +1248,16 @@ describe User do
 
   end
 
+  describe "#custom_gravatar" do
+    before do
+      SiteSetting.gravatar_base_url = "seccdn.libravatar.org"
+    end
+
+    it "returns a gravatar url as set in the settings" do
+      expect(User.gravatar_template("em@il.com")).to eq("//seccdn.libravatar.org/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon")
+    end
+  end
+
   describe "#letter_avatar_color" do
     before do
       SiteSetting.restrict_letter_avatar_colors = "2F70AC|ED207B|AAAAAA|77FF33"
@@ -2209,16 +2219,6 @@ describe User do
 
         expect(user.security_keys.map(&:id)).to eq([enabled_security_key_2fa.id])
       end
-    end
-  end
-
-  describe "Destroying a user with security key" do
-    let!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user) }
-    fab!(:admin) { Fabricate(:admin) }
-
-    it "removes the security key" do
-      UserDestroyer.new(admin).destroy(user)
-      expect(UserSecurityKey.where(user_id: user.id).count).to eq(0)
     end
   end
 

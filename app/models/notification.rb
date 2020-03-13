@@ -103,7 +103,8 @@ class Notification < ActiveRecord::Base
                         post_approved: 20,
                         code_review_commit_approved: 21,
                         membership_request_accepted: 22,
-                        membership_request_consolidated: 23
+                        membership_request_consolidated: 23,
+                        bookmark_reminder: 24
                        )
   end
 

@@ -86,7 +86,7 @@
           <h2>{{i18n "user.second_factor_backup.title"}}</h2>
           {{#if model.second_factor_enabled}}
             {{#if model.second_factor_backup_enabled}}
-              {{i18n 'user.second_factor_backup.manage' count=model.second_factor_remaining_backup_codes}}
+              {{html-safe (i18n 'user.second_factor_backup.manage' count=model.second_factor_remaining_backup_codes)}}
             {{else}}
               {{i18n 'user.second_factor_backup.enable_long'}}
             {{/if}}

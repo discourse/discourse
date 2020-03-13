@@ -43,11 +43,11 @@ export default Component.extend(PanEvents, {
           headerContainer = document.querySelector(".d-header"),
           headerHeight = (headerContainer && headerContainer.offsetHeight) || 0;
 
-        if (timelineContainer && composer) {
+        if (composer) {
           renderTimeline =
             width > MIN_WIDTH_TIMELINE &&
             window.innerHeight - composer.offsetHeight - headerHeight >
-              timelineContainer.offsetHeight;
+              (timelineContainer ? timelineContainer.offsetHeight : 0);
         }
       }
 

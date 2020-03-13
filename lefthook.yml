@@ -8,10 +8,14 @@ pre-commit:
       glob: "*.{js,es6}"
       exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
       run: yarn prettier --list-different {staged_files}
-    eslint:
-      glob: "*.{js,es6}"
+    eslint-es6:
+      glob: "*.es6"
       exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
       run: yarn eslint --ext .es6 -f compact {staged_files}
+    eslint-js:
+      glob: "*.js"
+      exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
+      run: yarn eslint -f compact {staged_files}
     ember-template-lint:
       run: yarn run ember-template-lint app
     yaml-syntax:
@@ -47,8 +51,10 @@ lints:
     prettier:
       glob: "{app/assets/stylesheets/**/*.scss,app/assets/javascripts/**/*.es6,test/javascripts/**/*.es6}"
       run: yarn prettier --list-different {all_files}
-    eslint-assets:
+    eslint-assets-es6:
       run: yarn eslint --ext .es6 app/assets/javascripts
+    eslint-assets-js:
+      run: yarn eslint app/assets/javascripts
     eslint-test:
       run: yarn eslint --ext .es6 test/javascripts
     eslint-plugins-assets:

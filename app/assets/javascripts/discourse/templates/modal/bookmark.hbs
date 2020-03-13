@@ -24,8 +24,8 @@
 
       {{#if userHasTimezoneSet}}
         {{#tap-tile-grid activeTile=selectedReminderType as |grid|}}
-          {{#if usingMobileDevice}}
-            <!-- {{tap-tile icon="desktop" text=(i18n "bookmarks.reminders.at_desktop") tileId=reminderTypes.AT_DESKTOP activeTile=grid.activeTile onChange=(action "selectReminderType")}} -->
+          {{#if showAtDesktop}}
+            {{tap-tile icon="desktop" text=(i18n "bookmarks.reminders.at_desktop") tileId=reminderTypes.AT_DESKTOP activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{/if}}
 
           {{#if showLaterToday}}
@@ -35,17 +35,29 @@
           {{tap-tile icon="far-sun" text=tomorrowFormatted tileId=reminderTypes.TOMORROW activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{tap-tile icon="far-clock" text=nextWeekFormatted tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{tap-tile icon="far-calendar-plus" text=nextMonthFormatted tileId=reminderTypes.NEXT_MONTH activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-          <!-- {{tap-tile icon="calendar-alt" text=(I18n "bookmarks.reminders.custom") tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}} -->
+          {{tap-tile icon="calendar-alt" text=(I18n "bookmarks.reminders.custom") tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}}
         {{/tap-tile-grid}}
+        {{#if customDateTimeSelected}}
+          <div class="control-group">
+            {{d-icon "calendar-alt"}}
+            {{date-picker-future
+              value=customReminderDate
+              onSelect=(action (mut customReminderDate))
+            }}
+            {{d-icon "far-clock"}}
+            {{input placeholder="--:--" type="time" value=customReminderTime}}
+          </div>
+        {{/if}}
+
       {{else}}
-        <div class="alert alert-info">{{i18n "bookmarks.no_timezone" basePath=basePath }}</div>
+        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=basePath)}}</div>
       {{/if}}
     </div>
     {{/if}}
 
     <div class="control-group">
       {{d-button label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
-      {{d-modal-cancel close=(action "closeWithoutSavingBookmark")}}      
+      {{d-modal-cancel close=(action "closeWithoutSavingBookmark")}}
     </div>
   {{/conditional-loading-spinner}}
 {{/d-modal-body}}
