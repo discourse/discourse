@@ -95,6 +95,7 @@ def downsize_upload(upload, path, max_image_pixels)
   original_upload.posts.each do |post|
     post.raw.gsub!(/upload:\/\/#{original_upload.base62_sha1}(\.#{original_upload.extension})?/, upload.short_url)
     post.raw.gsub!(Discourse.store.cdn_url(original_upload.url), Discourse.store.cdn_url(upload.url))
+    post.raw.gsub!(Discourse.store.url_for(original_upload), Discourse.store.url_for(upload))
 
     if post.raw_changed?
       puts "updating post #{post.id}" if ENV["VERBOSE"]
