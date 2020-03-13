@@ -22,7 +22,7 @@ end
 after_initialize do
   # Conditionally load the stylesheet
   register_asset_filter do |type, request|
-    request.env['HTTP_USER_AGENT'] =~ /MSIE|Trident/
+    request.nil? || request.env['HTTP_USER_AGENT'] =~ /MSIE|Trident/
   end
 
   register_anonymous_cache_key(:ie) do
