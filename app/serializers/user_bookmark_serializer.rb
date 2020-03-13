@@ -25,67 +25,75 @@ class UserBookmarkSerializer < ApplicationSerializer
              :slug,
              :username
 
+  def topic
+    @topic ||= object.topic || Topic.unscoped.find(object.topic_id)
+  end
+
+  def post
+    @post ||= object.post || Post.unscoped.find(object.post_id)
+  end
+
   def closed
-    object.topic.closed
+    topic.closed
   end
 
   def archived
-    object.topic.archived
+    topic.archived
   end
 
   def linked_post_number
-    object.post.post_number
+    post.post_number
   end
 
   def title
-    object.topic.title
+    topic.title
   end
 
   def deleted
-    object.topic.deleted_at.present? || object.post.deleted_at.present?
+    topic.deleted_at.present? || post.deleted_at.present?
   end
 
   def hidden
-    object.post.hidden
+    post.hidden
   end
 
   def category_id
-    object.topic.category_id
+    topic.category_id
   end
 
   def archetype
-    object.topic.archetype
+    topic.archetype
   end
 
   def archived
-    object.topic.archived
+    topic.archived
   end
 
   def closed
-    object.topic.closed
+    topic.closed
   end
 
   def highest_post_number
-    object.topic.highest_post_number
+    topic.highest_post_number
   end
 
   def bumped_at
-    object.topic.bumped_at
+    topic.bumped_at
   end
 
   def raw
-    object.post.raw
+    post.raw
   end
 
   def cooked
-    object.post.cooked
+    post.cooked
   end
 
   def slug
-    object.topic.slug
+    topic.slug
   end
 
   def username
-    object.post.user.username
+    post.user.username
   end
 end
