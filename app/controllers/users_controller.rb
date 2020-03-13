@@ -1111,7 +1111,10 @@ class UsersController < ApplicationController
 
     result = {}
 
-    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
+    %W{
+      number_of_deleted_posts number_of_flagged_posts number_of_flags_given
+      number_of_suspensions warnings_received_count number_of_rejected_posts
+    }.each do |info|
       result[info] = @user.public_send(info)
     end
 

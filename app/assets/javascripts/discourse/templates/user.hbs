@@ -16,6 +16,14 @@
             {{/link-to}}
           </div>
         {{/if}}
+        {{#if model.number_of_rejected_posts}}
+          <div>
+            {{#link-to 'review' (query-params username=model.username status='rejected' type='ReviewableQueuedPost')}}
+              <span class="flagged-posts">{{model.number_of_rejected_posts}}</span>{{i18n 'user.staff_counters.rejected_posts'}}
+            {{/link-to}}
+          </div>
+        {{/if}}
+        
         {{#if model.number_of_deleted_posts}}
           <div>
             {{#link-to 'user.deletedPosts' model}}

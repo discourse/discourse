@@ -1522,48 +1522,65 @@ describe User do
     end
   end
 
-  describe "number_of_flags_given" do
-
+  describe 'staff info' do
     fab!(:user) { Fabricate(:user) }
-    fab!(:moderator) { Fabricate(:moderator) }
 
-    it "doesn't count disagreed flags" do
-      post_agreed = Fabricate(:post)
-      PostActionCreator.inappropriate(user, post_agreed).reviewable.perform(moderator, :agree_and_keep)
+    describe "#number_of_flags_given" do
+      fab!(:moderator) { Fabricate(:moderator) }
 
-      post_deferred = Fabricate(:post)
-      PostActionCreator.inappropriate(user, post_deferred).reviewable.perform(moderator, :ignore)
+      it "doesn't count disagreed flags" do
+        post_agreed = Fabricate(:post)
+        PostActionCreator.inappropriate(user, post_agreed).reviewable.perform(moderator, :agree_and_keep)
 
-      post_disagreed = Fabricate(:post)
-      PostActionCreator.inappropriate(user, post_disagreed).reviewable.perform(moderator, :disagree)
+        post_deferred = Fabricate(:post)
+        PostActionCreator.inappropriate(user, post_deferred).reviewable.perform(moderator, :ignore)
 
-      expect(user.number_of_flags_given).to eq(2)
+        post_disagreed = Fabricate(:post)
+        PostActionCreator.inappropriate(user, post_disagreed).reviewable.perform(moderator, :disagree)
+
+        expect(user.number_of_flags_given).to eq(2)
+      end
     end
 
-  end
+    describe "number_of_deleted_posts" do
+      fab!(:moderator) { Fabricate(:moderator) }
 
-  describe "number_of_deleted_posts" do
+      it "counts all the posts" do
+        # at least 1 "unchanged" post
+        Fabricate(:post, user: user)
 
-    fab!(:user) { Fabricate(:user, id: 2) }
-    fab!(:moderator) { Fabricate(:moderator) }
+        post_deleted_by_moderator = Fabricate(:post, user: user)
+        PostDestroyer.new(moderator, post_deleted_by_moderator).destroy
 
-    it "counts all the posts" do
-      # at least 1 "unchanged" post
-      Fabricate(:post, user: user)
+        post_deleted_by_user = Fabricate(:post, user: user, post_number: 2)
+        PostDestroyer.new(user, post_deleted_by_user).destroy
 
-      post_deleted_by_moderator = Fabricate(:post, user: user)
-      PostDestroyer.new(moderator, post_deleted_by_moderator).destroy
+        # fake stub deletion
+        post_deleted_by_user.update_columns(updated_at: 2.days.ago)
+        PostDestroyer.destroy_stubs
 
-      post_deleted_by_user = Fabricate(:post, user: user, post_number: 2)
-      PostDestroyer.new(user, post_deleted_by_user).destroy
-
-      # fake stub deletion
-      post_deleted_by_user.update_columns(updated_at: 2.days.ago)
-      PostDestroyer.destroy_stubs
-
-      expect(user.number_of_deleted_posts).to eq(2)
+        expect(user.number_of_deleted_posts).to eq(2)
+      end
     end
 
+    describe '#number_of_rejected_posts' do
+      it 'counts rejected posts' do
+        post = Fabricate(:post, user: user)
+
+        Fabricate(:reviewable_queued_post, target: post, status: Reviewable.statuses[:rejected])
+
+        expect(user.number_of_rejected_posts).to eq(1)
+      end
+
+      it 'ignore non-rejected posts' do
+        post = Fabricate(:post, user: user)
+
+        Fabricate(:reviewable_queued_post, target: post, status: Reviewable.statuses[:approved])
+
+        expect(user.number_of_rejected_posts).to eq(0)
+
+      end
+    end
   end
 
   describe "new_user?" do
