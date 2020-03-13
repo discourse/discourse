@@ -36,7 +36,8 @@ class DiscourseJsProcessor
     return false unless filename.end_with?(".js") || filename.end_with?(".js.erb")
 
     relative_path = filename.sub(Rails.root.to_s, '').sub(/^\/*/, '')
-    relative_path.start_with?("app/assets/javascripts/discourse/")
+    relative_path.start_with?("app/assets/javascripts/discourse/") ||
+      relative_path.start_with?("app/assets/javascripts/admin/")
   end
 
   def self.skip_module?(data)
