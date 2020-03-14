@@ -118,6 +118,8 @@ def downsize_upload(upload, path, max_image_pixels)
         puts "Could find the upload path in post.raw (post_id: #{post.id})" if ENV["VERBOSE"]
       end
 
+      puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
+
       post.rebake!
     end
   end
