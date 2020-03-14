@@ -86,7 +86,6 @@ def downsize_upload(upload, path, max_image_pixels)
 
   if new_file
     upload.optimized_images.each(&:destroy!)
-    Discourse.store.remove_upload(original_upload)
   else
     begin
       PostUpload.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
@@ -117,7 +116,11 @@ def downsize_upload(upload, path, max_image_pixels)
     post.rebake!
   end
 
-  original_upload.reload.destroy! unless new_file
+  if new_file
+    Discourse.store.remove_upload(original_upload)
+  else
+    original_upload.reload.destroy!
+  end
 
   true
 end
