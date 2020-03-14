@@ -14,6 +14,12 @@ def transform_post(post, upload_before, upload_after)
   post.raw.gsub!(/upload:\/\/#{upload_before.base62_sha1}(\.#{upload_before.extension})?/, upload_after.short_url)
   post.raw.gsub!(Discourse.store.cdn_url(upload_before.url), Discourse.store.cdn_url(upload_after.url))
   post.raw.gsub!(Discourse.store.url_for(upload_before), Discourse.store.url_for(upload_after))
+  post.raw.gsub!("#{Discourse.base_url}#{upload_before.short_path}", "#{Discourse.base_url}#{upload_after.short_path}")
+
+  path = SiteSetting.Upload.s3_upload_bucket.split("/", 2)[1]
+  post.raw.gsub!(/<img src=\"https:\/\/.+\/#{path}\/uploads\/default\/optimized\/.+\/#{upload_before.sha1}_1_(?<width>\d+)x(?<height>\d+).*\" alt=\"(?<alt>.*)\"\/>/) do
+    "![#{$~[:alt]}|#{$~[:width]}x#{$~[:height]}](#{upload_after.short_url})"
+  end
 end
 
 def downsize_upload(upload, path, max_image_pixels)
