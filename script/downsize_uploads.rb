@@ -115,7 +115,7 @@ def downsize_upload(upload, path, max_image_pixels)
           updated_at: Time.zone.now
         )
       else
-        puts "Could find the upload path in post.raw (post_id: #{post.id})" if ENV["VERBOSE"]
+        puts "Could not find the upload path in post #{post.id}" if ENV["VERBOSE"]
       end
 
       puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
