@@ -590,6 +590,18 @@ class ImportScripts::Telligent < ImportScripts::Base
     md
   end
 
+  def mark_topics_as_solved
+    puts "", "Marking topics as solved..."
+
+    DB.exec <<~SQL
+      INSERT INTO topic_custom_fields (name, value, topic_id, created_at, updated_at)
+      SELECT 'accepted_answer_post_id', pcf.post_id, p.topic_id, p.created_at, p.created_at
+        FROM post_custom_fields pcf
+        JOIN posts p ON p.id = pcf.post_id
+       WHERE pcf.name = 'is_accepted_answer' AND pcf.value = 'true'
+    SQL
+  end
+
   def add_permalink_normalizations
     normalizations = SiteSetting.permalink_normalizations
     normalizations = normalizations.blank? ? [] : normalizations.split('|')
