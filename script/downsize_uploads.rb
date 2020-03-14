@@ -145,7 +145,12 @@ scope.find_each do |upload|
   end
 
   if upload.read_attribute(:width) != w || upload.read_attribute(:height) != h || upload.read_attribute(:thumbnail_width) != ww || upload.read_attribute(:thumbnail_height) != hh
-    puts "Correcting the upload dimensions" if ENV["VERBOSE"]
+    if ENV["VERBOSE"]
+      puts "Correcting the upload dimensions"
+      puts "Before: #{upload.read_attribute(:width)}x#{upload.read_attribute(:height)} #{upload.read_attribute(:thumbnail_width)}x#{upload.read_attribute(:thumbnail_height)}"
+      puts "After:  #{w}x#{h} #{ww}x#{hh}"
+    end
+
     dimensions_count += 1
 
     upload.update!(
