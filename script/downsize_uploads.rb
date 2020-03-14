@@ -103,7 +103,7 @@ def downsize_upload(upload, path, max_image_pixels)
     ThemeField.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
   end
 
-  original_upload.posts.each do |post|
+  original_upload.posts.uniq.sort_by(&:id).each do |post|
     DistributedMutex.synchronize("process_post_#{post.id}") do
       transform_post(post, original_upload, upload)
 
