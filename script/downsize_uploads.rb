@@ -10,6 +10,12 @@ puts "", "Downsizing images to no more than #{max_image_pixels} pixels"
 dimensions_count = 0
 downsized_count = 0
 
+def transform_post(post, upload_before, upload_after)
+  post.raw.gsub!(/upload:\/\/#{upload_before.base62_sha1}(\.#{upload_before.extension})?/, upload_after.short_url)
+  post.raw.gsub!(Discourse.store.cdn_url(upload_before.url), Discourse.store.cdn_url(upload_after.url))
+  post.raw.gsub!(Discourse.store.url_for(upload_before), Discourse.store.url_for(upload_after))
+end
+
 def downsize_upload(upload, path, max_image_pixels)
   # Make sure the filesize is up to date
   upload.filesize = File.size(path)
@@ -93,9 +99,7 @@ def downsize_upload(upload, path, max_image_pixels)
   end
 
   original_upload.posts.each do |post|
-    post.raw.gsub!(/upload:\/\/#{original_upload.base62_sha1}(\.#{original_upload.extension})?/, upload.short_url)
-    post.raw.gsub!(Discourse.store.cdn_url(original_upload.url), Discourse.store.cdn_url(upload.url))
-    post.raw.gsub!(Discourse.store.url_for(original_upload), Discourse.store.url_for(upload))
+    transform_post(post, original_upload, upload)
 
     if post.raw_changed?
       puts "updating post #{post.id}" if ENV["VERBOSE"]
