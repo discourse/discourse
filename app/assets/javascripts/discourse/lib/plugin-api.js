@@ -755,7 +755,7 @@ class PluginApi {
    *   displayName: "bugs"
    *   href: "/c/bugs",
    *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
-   *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
+   *   customFilter: (category, args, router) => { return category && category.name !== 'bug' }
    *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; },
    *   before: "top",
    *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
