@@ -104,16 +104,18 @@ def downsize_upload(upload, path, max_image_pixels)
   end
 
   original_upload.posts.each do |post|
-    transform_post(post, original_upload, upload)
+    DistributedMutex.synchronize("process_post_#{post.id}") do
+      transform_post(post, original_upload, upload)
 
-    if post.raw_changed?
-      puts "updating post #{post.id}" if ENV["VERBOSE"]
-      post.save!
-    else
-      puts "Could find the upload path in post.raw (post_id: #{post.id})" if ENV["VERBOSE"]
+      if post.raw_changed?
+        puts "updating post #{post.id}" if ENV["VERBOSE"]
+        post.save!
+      else
+        puts "Could find the upload path in post.raw (post_id: #{post.id})" if ENV["VERBOSE"]
+      end
+
+      post.rebake!
     end
-
-    post.rebake!
   end
 
   if new_file
