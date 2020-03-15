@@ -82,6 +82,33 @@ def downsize_upload(upload, path, max_image_pixels)
     puts "is a new file: #{new_file}"
   end
 
+  any_issues = false
+  posts = original_upload.posts.uniq.sort_by(&:created_at)
+
+  posts.each do |post|
+    transform_post(post, original_upload, upload)
+
+    if post.raw_changed?
+      puts "Updating post #{post.id}" if ENV["VERBOSE"]
+    elsif post.raw.include?("#{Discourse.base_url}/t/")
+      puts "No upload found in post #{post.id}, but it contains a topic link" if ENV["VERBOSE"]
+    else
+      puts "Could not find the upload path in post #{post.id}" if ENV["VERBOSE"]
+      any_issues = true
+    end
+
+    puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
+  end
+
+  if posts.empty?
+    puts "Upload not used in any posts"
+  elsif any_issues == true
+    print "Press any key to continue with the upload"
+    STDIN.beep
+    STDIN.getch
+    puts " k"
+  end
+
   upload.save!
 
   if new_file
@@ -103,24 +130,22 @@ def downsize_upload(upload, path, max_image_pixels)
     ThemeField.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
   end
 
-  original_upload.posts.uniq.sort_by(&:id).each do |post|
+  posts.each do |post|
     DistributedMutex.synchronize("process_post_#{post.id}") do
-      transform_post(post, original_upload, upload)
+      current_post = Post.find(post.id)
+
+      # If the post got outdated, re-apply changes
+      if current_post.updated_at != post.updated_at
+        transform_post(current_post, original_upload, upload)
+        post = current_post
+      end
 
       if post.raw_changed?
-        puts "updating post #{post.id}" if ENV["VERBOSE"]
-
         post.update_columns(
           raw: post.raw,
           updated_at: Time.zone.now
         )
-      elsif post.raw.include?("#{Discourse.base_url}/t/")
-        puts "No upload found in post #{post.id}, but it contains a topic link" if ENV["VERBOSE"]
-      else
-        puts "Could not find the upload path in post #{post.id}" if ENV["VERBOSE"]
       end
-
-      puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
 
       post.rebake!
     end
