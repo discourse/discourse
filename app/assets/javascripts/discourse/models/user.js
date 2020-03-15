@@ -909,17 +909,23 @@ User.reopenClass(Singleton, {
   },
 
   createAccount(attrs) {
+    let data = {
+      name: attrs.accountName,
+      email: attrs.accountEmail,
+      password: attrs.accountPassword,
+      username: attrs.accountUsername,
+      password_confirmation: attrs.accountPasswordConfirm,
+      challenge: attrs.accountChallenge,
+      user_fields: attrs.userFields,
+      timezone: moment.tz.guess()
+    };
+
+    if (attrs.inviteCode) {
+      data.invite_code = attrs.inviteCode;
+    }
+
     return ajax(userPath(), {
-      data: {
-        name: attrs.accountName,
-        email: attrs.accountEmail,
-        password: attrs.accountPassword,
-        username: attrs.accountUsername,
-        password_confirmation: attrs.accountPasswordConfirm,
-        challenge: attrs.accountChallenge,
-        user_fields: attrs.userFields,
-        timezone: moment.tz.guess()
-      },
+      data,
       type: "POST"
     });
   }

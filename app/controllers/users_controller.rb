@@ -410,6 +410,7 @@ class UsersController < ApplicationController
   def create
     params.require(:email)
     params.require(:username)
+    params.require(:invite_code) if SiteSetting.require_invite_code
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -422,6 +423,10 @@ class UsersController < ApplicationController
 
     if params[:email].length > 254 + 1 + 253
       return fail_with("login.email_too_long")
+    end
+
+    if SiteSetting.require_invite_code && SiteSetting.invite_code != params[:invite_code]
+      return fail_with("login.wrong_invite_code")
     end
 
     if clashing_with_existing_route?(params[:username]) || User.reserved_username?(params[:username])
