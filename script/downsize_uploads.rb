@@ -92,10 +92,14 @@ def downsize_upload(upload, path, max_image_pixels)
 
     if post.raw_changed?
       puts "Updating post #{post.id}" if ENV["VERBOSE"]
-    elsif post.raw.include?("#{Discourse.base_url.sub(/^https?:\/\//i, '')}/t/")
-      puts "No upload found in post #{post.id}, but it contains a topic link" if ENV["VERBOSE"]
+    elsif post.cooked.include?(UrlHelper.cook_url(original_upload.url))
+      if post.raw.include?("#{Discourse.base_url.sub(/^https?:\/\//i, '')}/t/")
+        puts "Updating a topic onebox in post #{post.id}" if ENV["VERBOSE"]
+      else
+        puts "Updating an external onebox in post #{post.id}" if ENV["VERBOSE"]
+      end
     else
-      puts "Could not find the upload path in post #{post.id}" if ENV["VERBOSE"]
+      puts "Could not find the upload URL in post #{post.id}" if ENV["VERBOSE"]
       any_issues = true
     end
   end
