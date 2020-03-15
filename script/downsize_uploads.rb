@@ -88,6 +88,8 @@ def downsize_upload(upload, path, max_image_pixels)
   posts.each do |post|
     transform_post(post, original_upload, upload)
 
+    puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
+
     if post.raw_changed?
       puts "Updating post #{post.id}" if ENV["VERBOSE"]
     elsif post.raw.include?("#{Discourse.base_url.sub(/^https?:\/\//i, '')}/t/")
@@ -96,8 +98,6 @@ def downsize_upload(upload, path, max_image_pixels)
       puts "Could not find the upload path in post #{post.id}" if ENV["VERBOSE"]
       any_issues = true
     end
-
-    puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
   end
 
   if posts.empty?
