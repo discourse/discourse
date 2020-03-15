@@ -11,6 +11,7 @@ export const PUBLISH_TO_CATEGORY_STATUS_TYPE = "publish_to_category";
 export const DELETE_STATUS_TYPE = "delete";
 export const REMINDER_TYPE = "reminder";
 export const BUMP_TYPE = "bump";
+export const DELETE_REPLIES_TYPE = "delete_replies";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,
@@ -41,10 +42,16 @@ export default Controller.extend(ModalFunctionality, {
       }
     ];
     if (this.currentUser.get("staff")) {
-      types.push({
-        id: DELETE_STATUS_TYPE,
-        name: I18n.t("topic.auto_delete.title")
-      });
+      types.push(
+        {
+          id: DELETE_STATUS_TYPE,
+          name: I18n.t("topic.auto_delete.title")
+        },
+        {
+          id: DELETE_REPLIES_TYPE,
+          name: I18n.t("topic.auto_delete_replies.title")
+        }
+      );
     }
     return types;
   },
@@ -76,7 +83,8 @@ export default Controller.extend(ModalFunctionality, {
       time,
       this.get("topicTimer.based_on_last_post"),
       statusType,
-      this.get("topicTimer.category_id")
+      this.get("topicTimer.category_id"),
+      this.get("topicTimer.duration")
     )
       .then(result => {
         if (time) {
@@ -84,7 +92,7 @@ export default Controller.extend(ModalFunctionality, {
 
           setProperties(this.topicTimer, {
             execute_at: result.execute_at,
-            duration: result.duration,
+            remaining_hours: result.remaining_hours,
             category_id: result.category_id
           });
 
@@ -108,12 +116,16 @@ export default Controller.extend(ModalFunctionality, {
       this.set("topicTimer.status_type", value);
     },
 
-    onChangeUpdateTime(value) {
-      this.set("topicTimer.updateTime", value);
+    onChangeUpdateTime(time, duration) {
+      this.set("topicTimer.updateTime", time);
+      this.set("topicTimer.duration", duration);
     },
 
     saveTimer() {
-      if (!this.get("topicTimer.updateTime")) {
+      if (
+        !this.get("topicTimer.updateTime") &&
+        !this.get("topicTimer.duration")
+      ) {
         this.flash(
           I18n.t("topic.topic_status_update.time_frame_required"),
           "alert-error"

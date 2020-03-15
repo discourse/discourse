@@ -12,7 +12,8 @@ import {
   DELETE_STATUS_TYPE,
   REMINDER_TYPE,
   CLOSE_STATUS_TYPE,
-  BUMP_TYPE
+  BUMP_TYPE,
+  DELETE_REPLIES_TYPE
 } from "discourse/controllers/edit-topic-timer";
 
 export default Component.extend({
@@ -23,6 +24,7 @@ export default Component.extend({
   autoBump: equal("selection", BUMP_TYPE),
   publishToCategory: equal("selection", PUBLISH_TO_CATEGORY_STATUS_TYPE),
   reminder: equal("selection", REMINDER_TYPE),
+  autoDeleteReplies: equal("selection", DELETE_REPLIES_TYPE),
   showTimeOnly: or("autoOpen", "autoDelete", "reminder", "autoBump"),
 
   @discourseComputed(

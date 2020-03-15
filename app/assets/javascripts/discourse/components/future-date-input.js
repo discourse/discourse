@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { equal, and, empty } from "@ember/object/computed";
+import { equal, and, empty, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
@@ -10,10 +10,13 @@ export default Component.extend({
   date: null,
   time: null,
   includeDateTime: true,
+  duration: null,
+  durationType: "hours",
   isCustom: equal("selection", "pick_date_and_time"),
   isBasedOnLastPost: equal("selection", "set_based_on_last_post"),
   displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
+  displayNumberInput: or("isBasedOnLastPost", "isBasedOnDuration"),
 
   init() {
     this._super(...arguments);
@@ -21,6 +24,8 @@ export default Component.extend({
     if (this.input) {
       if (this.basedOnLastPost) {
         this.set("selection", "set_based_on_last_post");
+      } else if (this.isBasedOnDuration) {
+        this.set("selection", null);
       } else {
         const datetime = moment(this.input);
         this.setProperties({
@@ -46,9 +51,9 @@ export default Component.extend({
 
     if (dateTime.isValid()) {
       this.attrs.onChangeInput &&
-        this.attrs.onChangeInput(dateTime.format(FORMAT));
+        this.attrs.onChangeInput(dateTime.format(FORMAT), null);
     } else {
-      this.attrs.onChangeInput && this.attrs.onChangeInput(null);
+      this.attrs.onChangeInput && this.attrs.onChangeInput(null, null);
     }
   },
 
@@ -57,22 +62,31 @@ export default Component.extend({
     this.set("basedOnLastPost", this.isBasedOnLastPost);
   },
 
-  @discourseComputed("input", "isBasedOnLastPost")
-  duration(input, isBasedOnLastPost) {
-    const now = moment();
+  @observes("executeAt", "duration")
+  _update() {
+    this.attrs.onChangeInput &&
+      this.attrs.onChangeInput(this.executeAt, this.duration);
+  },
 
-    if (isBasedOnLastPost) {
+  @discourseComputed("input", "isBasedOnLastPost", "isBasedOnDuration")
+  duration(input, isBasedOnLastPost, isBasedOnDuration) {
+    if (isBasedOnLastPost || isBasedOnDuration) {
       return parseFloat(input);
     } else {
-      return moment(input) - now;
+      return null;
     }
   },
 
-  @discourseComputed("input", "isBasedOnLastPost")
-  executeAt(input, isBasedOnLastPost) {
-    if (isBasedOnLastPost) {
+  @discourseComputed(
+    "input",
+    "isBasedOnLastPost",
+    "isBasedOnDuration",
+    "durationType"
+  )
+  executeAt(input, isBasedOnLastPost, isBasedOnDuration, durationType) {
+    if (isBasedOnLastPost || isBasedOnDuration) {
       return moment()
-        .add(input, "hours")
+        .add(input, durationType)
         .format(FORMAT);
     } else {
       return input;

@@ -3,7 +3,10 @@ import { cancel, later } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
-import { REMINDER_TYPE } from "discourse/controllers/edit-topic-timer";
+import {
+  REMINDER_TYPE,
+  DELETE_REPLIES_TYPE
+} from "discourse/controllers/edit-topic-timer";
 import ENV from "discourse-common/config/environment";
 
 export default Component.extend({
@@ -28,7 +31,12 @@ export default Component.extend({
   },
 
   renderTopicTimer() {
-    if (!this.executeAt || this.executeAt < moment()) {
+    const isDeleteRepliesType = this.statusType === DELETE_REPLIES_TYPE;
+
+    if (
+      !isDeleteRepliesType &&
+      (!this.executeAt || this.executeAt < moment())
+    ) {
       this.set("showTopicTimer", null);
       return;
     }
@@ -40,7 +48,7 @@ export default Component.extend({
     const statusUpdateAt = moment(this.executeAt);
     const duration = moment.duration(statusUpdateAt - moment());
     const minutesLeft = duration.asMinutes();
-    if (minutesLeft > 0) {
+    if (minutesLeft > 0 || isDeleteRepliesType) {
       let rerenderDelay = 1000;
       if (minutesLeft > 2160) {
         rerenderDelay = 12 * 60 * 60000;
@@ -51,11 +59,15 @@ export default Component.extend({
       } else if (minutesLeft > 2) {
         rerenderDelay = 60000;
       }
-      let autoCloseHours = this.duration || 0;
+      let durationHours = this.duration || 0;
+
+      if (isDeleteRepliesType) {
+        durationHours *= 24;
+      }
 
       let options = {
         timeLeft: duration.humanize(true),
-        duration: moment.duration(autoCloseHours, "hours").humanize()
+        duration: moment.duration(durationHours, "hours").humanize()
       };
 
       const categoryId = this.categoryId;
