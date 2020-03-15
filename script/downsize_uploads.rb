@@ -182,7 +182,18 @@ scope.find_each do |upload|
     next
   end
 
-  w, h = FastImage.size(source, timeout: 15)
+  begin
+    w, h = FastImage.size(source, timeout: 15, raise_on_failure: true)
+  rescue FastImage::ImageFetchFailure
+    puts "Retrying image resizing"
+    w, h = FastImage.size(source, timeout: 15)
+  rescue FastImage::UnknownImageType
+    puts "unknown image type" if ENV["VERBOSE"]
+    next
+  rescue FastImage::SizeNotFound
+    puts "size not found" if ENV["VERBOSE"]
+    next
+  end
 
   if !w || !h
     puts "invalid image dimensions" if ENV["VERBOSE"]
