@@ -1132,6 +1132,10 @@ en:
       password_confirmation:
         title: "Password Again"
 
+      invite_code:
+        title: "Invite Code"
+        instructions: "Account registration requires an invite code"
+
       auth_tokens:
         title: "Recently Used Devices"
         ip: "IP"

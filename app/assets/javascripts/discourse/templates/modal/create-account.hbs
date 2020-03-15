@@ -89,6 +89,17 @@
                 </td>
               </tr>
 
+              {{#if requireInviteCode }}
+                <tr class="invite-code">
+                  <td><label for='invite-code'>{{i18n 'user.invite_code.title'}}</label></td>
+                  <td>
+                    {{input value=inviteCode id="inviteCode"}}
+                  </td>
+
+                  <td><label>{{i18n 'user.invite_code.instructions'}}</label></td>
+                </tr>
+              {{/if}}
+
               {{plugin-outlet name="create-account-after-password"
                               noTags=true
                               args=(hash accountName=accountName
