@@ -650,7 +650,7 @@ class ApplicationController < ActionController::Base
   def check_xhr
     # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
     return if !request.get? && (is_api? || is_user_api?)
-    raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
+    raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
   end
 
   def self.requires_login(arg = {})
