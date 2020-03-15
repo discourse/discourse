@@ -57,7 +57,11 @@ module Stylesheet
         Thread.new do
           begin
             plugins_paths = Dir.glob("#{Rails.root}/plugins/*").map do |file|
-              File.symlink?(file) ? File.readlink(file) : file
+              if File.symlink?(file)
+                File.expand_path(File.readlink(file), "#{Rails.root}/plugins")
+              else
+                file
+              end
             end.compact
 
             listener = Listen.to("#{root}/#{watch}", listener_opts) do |modified, added, _|
