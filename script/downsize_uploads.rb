@@ -83,7 +83,7 @@ def downsize_upload(upload, path, max_image_pixels)
   end
 
   any_issues = false
-  posts = original_upload.posts.uniq.sort_by(&:created_at)
+  posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
 
   posts.each do |post|
     transform_post(post, original_upload, upload)
@@ -136,7 +136,7 @@ def downsize_upload(upload, path, max_image_pixels)
 
   posts.each do |post|
     DistributedMutex.synchronize("process_post_#{post.id}") do
-      current_post = Post.find(post.id)
+      current_post = Post.unscoped.find(post.id)
 
       # If the post got outdated, re-apply changes
       if current_post.updated_at != post.updated_at
