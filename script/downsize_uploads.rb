@@ -34,7 +34,7 @@ def downsize_upload(upload, path, max_image_pixels)
     return
   end
 
-  w, h = FastImage.size(path, timeout: 10, raise_on_failure: true)
+  w, h = FastImage.size(path, timeout: 15, raise_on_failure: true)
 
   if !w || !h
     puts "invalid image dimensions after resizing" if ENV["VERBOSE"]
@@ -182,7 +182,7 @@ scope.find_each do |upload|
     next
   end
 
-  w, h = FastImage.size(source, timeout: 10)
+  w, h = FastImage.size(source, timeout: 15)
 
   if !w || !h
     puts "invalid image dimensions" if ENV["VERBOSE"]
