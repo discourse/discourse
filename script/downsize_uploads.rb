@@ -90,7 +90,7 @@ def downsize_upload(upload, path, max_image_pixels)
 
     if post.raw_changed?
       puts "Updating post #{post.id}" if ENV["VERBOSE"]
-    elsif post.raw.include?("#{Discourse.base_url}/t/")
+    elsif post.raw.include?("#{Discourse.base_url.sub(/^https?:\/\//i, '')}/t/")
       puts "No upload found in post #{post.id}, but it contains a topic link" if ENV["VERBOSE"]
     else
       puts "Could not find the upload path in post #{post.id}" if ENV["VERBOSE"]
