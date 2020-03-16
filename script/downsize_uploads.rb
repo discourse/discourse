@@ -90,8 +90,6 @@ def downsize_upload(upload, path, max_image_pixels)
   posts.each do |post|
     transform_post(post, original_upload, upload)
 
-    puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
-
     if post.raw_changed?
       puts "Updating post #{post.id}" if ENV["VERBOSE"]
     elsif post.cooked.include?(UrlHelper.cook_url(original_upload.url))
@@ -104,6 +102,8 @@ def downsize_upload(upload, path, max_image_pixels)
       puts "Could not find the upload URL in post #{post.id}" if ENV["VERBOSE"]
       any_issues = true
     end
+
+    puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
   end
 
   if posts.empty?
