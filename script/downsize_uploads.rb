@@ -271,6 +271,7 @@ def process_uploads
     downsized_count += 1 if downsize_upload(upload, path)
   end
 
+  STDIN.beep
   puts "", "Done", Time.zone.now
 end
 
