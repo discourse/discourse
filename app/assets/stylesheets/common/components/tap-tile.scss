@@ -7,6 +7,7 @@
   $horizontal-tile-padding: 5px;
 
   .tap-tile {
+    color: $primary-high;
     padding: 10px $horizontal-tile-padding;
     display: flex;
     flex-direction: column;

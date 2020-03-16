@@ -321,6 +321,8 @@ en:
         next_week: "Next week <br/>{{date}}"
         next_month: "Next month <br/>{{date}}"
         custom: "Custom date and time"
+        last_custom: "Last <br/>{{date}}"
+        none: "No reminder needed"
 
     drafts:
       resume: "Resume"
@@ -2676,8 +2678,8 @@ en:
         create: "Create bookmark"
         created: "Created"
         name: "Name"
-        name_placeholder: "Name the bookmark to help jog your memory"
-        set_reminder: "Set a reminder"
+        name_placeholder: "What is this bookmark for?"
+        set_reminder: "Remind me"
         actions:
           delete_bookmark:
             name: "Delete bookmark"
