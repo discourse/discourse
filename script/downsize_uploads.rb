@@ -194,6 +194,10 @@ scope = Upload
   .where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
   .where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", max_image_pixels)
 
+if ENV["WORKER_ID"] && ENV["WORKER_COUNT"]
+  scope = scope.where("id % ? = ?", ENV["WORKER_COUNT"], ENV["WORKER_ID"])
+end
+
 puts "Uploads to process: #{scope.count}"
 
 scope.find_each do |upload|
