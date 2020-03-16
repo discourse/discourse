@@ -14,7 +14,9 @@ const REMINDER_TYPES = {
   TOMORROW: "tomorrow",
   NEXT_WEEK: "next_week",
   NEXT_MONTH: "next_month",
-  CUSTOM: "custom"
+  CUSTOM: "custom",
+  LAST_CUSTOM: "last_custom",
+  NONE: "none"
 };
 
 export default Controller.extend(ModalFunctionality, {
@@ -27,17 +29,42 @@ export default Controller.extend(ModalFunctionality, {
   onCloseWithoutSaving: null,
   customReminderDate: null,
   customReminderTime: null,
+  lastCustomReminderDate: null,
+  lastCustomReminderTime: null,
 
   onShow() {
     this.setProperties({
       errorMessage: null,
       name: null,
-      selectedReminderType: null,
+      selectedReminderType: REMINDER_TYPES.NONE,
       closeWithoutSaving: false,
       isSavingBookmarkManually: false,
       customReminderDate: null,
-      customReminderTime: null
+      customReminderTime: null,
+      lastCustomReminderDate: null,
+      lastCustomReminderTime: null
     });
+
+    this.loadLastUsedCustomReminderDatetime();
+  },
+
+  loadLastUsedCustomReminderDatetime() {
+    let lastTime = localStorage.lastCustomBookmarkReminderTime;
+    let lastDate = localStorage.lastCustomBookmarkReminderDate;
+
+    if (lastTime && lastDate) {
+      let parsed = this.parseCustomDateTime(lastDate, lastTime);
+
+      if (parsed < this.now()) {
+        return;
+      }
+
+      this.setProperties({
+        lastCustomReminderDate: lastDate,
+        lastCustomReminderTime: lastTime,
+        parsedLastCustomReminderDatetime: parsed
+      });
+    }
   },
 
   // we always want to save the bookmark unless the user specifically
@@ -72,8 +99,25 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed()
+  showLastCustom() {
+    return this.lastCustomReminderTime && this.lastCustomReminderDate;
+  },
+
+  @discourseComputed()
   showLaterToday() {
-    return !this.laterToday().isSame(this.tomorrow(), "date");
+    let later = this.laterToday();
+    return !later.isSame(this.tomorrow(), "date") && later.hour() <= 17;
+  },
+
+  @discourseComputed("parsedLastCustomReminderDatetime")
+  lastCustomFormatted(parsedLastCustomReminderDatetime) {
+    return htmlSafe(
+      I18n.t("bookmarks.reminders.last_custom", {
+        date: parsedLastCustomReminderDatetime.format(
+          I18n.t("dates.long_no_year")
+        )
+      })
+    );
   },
 
   @discourseComputed()
@@ -130,12 +174,26 @@ export default Controller.extend(ModalFunctionality, {
     const reminderAt = this.reminderAt();
     const reminderAtISO = reminderAt ? reminderAt.toISOString() : null;
 
-    if (!reminderAt && this.selectedReminderType === REMINDER_TYPES.CUSTOM) {
-      return Promise.reject(I18n.t("bookmarks.invalid_custom_datetime"));
+    if (this.selectedReminderType === REMINDER_TYPES.CUSTOM) {
+      if (!reminderAt) {
+        return Promise.reject(I18n.t("bookmarks.invalid_custom_datetime"));
+      }
+
+      localStorage.lastCustomBookmarkReminderTime = this.customReminderTime;
+      localStorage.lastCustomBookmarkReminderDate = this.customReminderDate;
+    }
+
+    let reminderType;
+    if (this.selectedReminderType === REMINDER_TYPES.NONE) {
+      reminderType = null;
+    } else if (this.selectedReminderType === REMINDER_TYPES.LAST_CUSTOM) {
+      reminderType = REMINDER_TYPES.CUSTOM;
+    } else {
+      reminderType = this.selectedReminderType;
     }
 
     const data = {
-      reminder_type: this.selectedReminderType,
+      reminder_type: reminderType,
       reminder_at: reminderAtISO,
       name: this.name,
       post_id: this.model.postId
@@ -146,6 +204,10 @@ export default Controller.extend(ModalFunctionality, {
         this.afterSave(reminderAtISO, this.selectedReminderType);
       }
     });
+  },
+
+  parseCustomDateTime(date, time) {
+    return moment.tz(date + " " + time, this.userTimezone());
   },
 
   reminderAt() {
@@ -167,9 +229,9 @@ export default Controller.extend(ModalFunctionality, {
       case REMINDER_TYPES.NEXT_MONTH:
         return this.nextMonth();
       case REMINDER_TYPES.CUSTOM:
-        const customDateTime = moment.tz(
-          this.customReminderDate + " " + this.customReminderTime,
-          this.userTimezone()
+        const customDateTime = this.parseCustomDateTime(
+          this.customReminderDate,
+          this.customReminderTime
         );
         if (!customDateTime.isValid()) {
           this.setProperties({
@@ -179,6 +241,8 @@ export default Controller.extend(ModalFunctionality, {
           return;
         }
         return customDateTime;
+      case REMINDER_TYPES.LAST_CUSTOM:
+        return this.parsedLastCustomReminderDatetime;
     }
   },
 
