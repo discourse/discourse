@@ -93,6 +93,8 @@ def downsize_upload(upload, path)
       else
         puts "Updating an external onebox in post #{post.id}" if ENV["VERBOSE"]
       end
+    elsif post.raw.include?(upload.short_url)
+      puts "Already processed"
     else
       puts "Could not find the upload URL in post #{post.id}" if ENV["VERBOSE"]
       any_issues = true
