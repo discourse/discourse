@@ -4700,7 +4700,7 @@ en:
       invite_only: "All new users should be invited. See `invite_only`."
       email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
       email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
-      suspect_user: "This user has a bio/website in their profile, without having read any posts. This can indicate a spam account. See `approve_suspect_users`."
+      suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See `approve_suspect_users`."
 
     actions:
       agree:
