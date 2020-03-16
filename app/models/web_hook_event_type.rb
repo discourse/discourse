@@ -20,7 +20,7 @@ class WebHookEventType < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
-  def self.all_excluding_disabled_plugin_web_hooks
+  def self.active
     ids_to_exclude = []
     ids_to_exclude << SOLVED unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
     ids_to_exclude << ASSIGN unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled

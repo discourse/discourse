@@ -45,18 +45,18 @@ describe WebHook do
     end
 
     it "excludes disabled plugin web_hooks" do
-      web_hook_event_types = WebHookEventType.all_excluding_disabled_plugin_web_hooks.find_by(name: 'solved')
+      web_hook_event_types = WebHookEventType.active.find_by(name: 'solved')
       expect(web_hook_event_types).to eq(nil)
     end
 
     it "includes non-plugin web_hooks" do
-      web_hook_event_types = WebHookEventType.all_excluding_disabled_plugin_web_hooks.where(name: 'topic')
+      web_hook_event_types = WebHookEventType.active.where(name: 'topic')
       expect(web_hook_event_types.count).to eq(1)
     end
 
     it "includes enabled plugin web_hooks" do
       SiteSetting.stubs(:solved_enabled).returns(true)
-      web_hook_event_types = WebHookEventType.all_excluding_disabled_plugin_web_hooks.where(name: 'solved')
+      web_hook_event_types = WebHookEventType.active.where(name: 'solved')
       expect(web_hook_event_types.count).to eq(1)
     end
 
