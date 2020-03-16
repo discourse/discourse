@@ -3,12 +3,7 @@
 require File.expand_path("../../config/environment", __FILE__)
 
 # no less than 1 megapixel
-max_image_pixels = [ARGV[0].to_i, 1_000_000].max
-
-puts "", "Downsizing images to no more than #{max_image_pixels} pixels"
-
-dimensions_count = 0
-downsized_count = 0
+MAX_IMAGE_PIXELS = [ARGV[0].to_i, 1_000_000].max
 
 def transform_post(post, upload_before, upload_after)
   post.raw.gsub!(/upload:\/\/#{upload_before.base62_sha1}(\.#{upload_before.extension})?/i, upload_after.short_url)
@@ -24,11 +19,11 @@ def transform_post(post, upload_before, upload_after)
   post.raw.gsub!(/!\[(.*?)\]\(\/uploads\/.+?\/#{upload_before.sha1}(\.#{upload_before.extension})?\)/i, "![\\1](#{upload_after.short_url})")
 end
 
-def downsize_upload(upload, path, max_image_pixels)
+def downsize_upload(upload, path)
   # Make sure the filesize is up to date
   upload.filesize = File.size(path)
 
-  OptimizedImage.downsize(path, path, "#{max_image_pixels}@", filename: upload.original_filename)
+  OptimizedImage.downsize(path, path, "#{MAX_IMAGE_PIXELS}@", filename: upload.original_filename)
   sha1 = Upload.generate_digest(path)
 
   if sha1 == upload.sha1
@@ -190,83 +185,91 @@ def downsize_upload(upload, path, max_image_pixels)
   true
 end
 
-scope = Upload
-  .where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
-  .where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", max_image_pixels)
+def process_uploads
+  puts "", "Downsizing images to no more than #{MAX_IMAGE_PIXELS} pixels"
 
-if ENV["WORKER_ID"] && ENV["WORKER_COUNT"]
-  scope = scope.where("id % ? = ?", ENV["WORKER_COUNT"], ENV["WORKER_ID"])
-end
+  dimensions_count = 0
+  downsized_count = 0
 
-puts "Uploads to process: #{scope.count}"
+  scope = Upload.where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
+  scope = scope.where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", MAX_IMAGE_PIXELS)
 
-scope.find_each do |upload|
-  puts "\n" if ENV["VERBOSE"]
-  print "\rFixed dimensions: %8d        Downsized: %8d (upload id: #{upload.id})".freeze % [dimensions_count, downsized_count]
-  puts "\n" if ENV["VERBOSE"]
-
-  source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
-
-  unless source
-    puts "no path or URL" if ENV["VERBOSE"]
-    next
+  if ENV["WORKER_ID"] && ENV["WORKER_COUNT"]
+    scope = scope.where("id % ? = ?", ENV["WORKER_COUNT"], ENV["WORKER_ID"])
   end
 
-  begin
-    w, h = FastImage.size(source, timeout: 15, raise_on_failure: true)
-  rescue FastImage::ImageFetchFailure
-    puts "Retrying image resizing"
-    w, h = FastImage.size(source, timeout: 15)
-  rescue FastImage::UnknownImageType
-    puts "unknown image type" if ENV["VERBOSE"]
-    next
-  rescue FastImage::SizeNotFound
-    puts "size not found" if ENV["VERBOSE"]
-    next
-  end
+  puts "Uploads to process: #{scope.count}"
 
-  if !w || !h
-    puts "invalid image dimensions" if ENV["VERBOSE"]
-    next
-  end
+  scope.find_each do |upload|
+    puts "\n" if ENV["VERBOSE"]
+    print "\rFixed dimensions: %8d        Downsized: %8d (upload id: #{upload.id})".freeze % [dimensions_count, downsized_count]
+    puts "\n" if ENV["VERBOSE"]
 
-  ww, hh = ImageSizer.resize(w, h)
+    source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
 
-  if w == 0 || h == 0 || ww == 0 || hh == 0
-    puts "invalid image dimensions" if ENV["VERBOSE"]
-    next
-  end
-
-  if upload.read_attribute(:width) != w || upload.read_attribute(:height) != h || upload.read_attribute(:thumbnail_width) != ww || upload.read_attribute(:thumbnail_height) != hh
-    if ENV["VERBOSE"]
-      puts "Correcting the upload dimensions"
-      puts "Before: #{upload.read_attribute(:width)}x#{upload.read_attribute(:height)} #{upload.read_attribute(:thumbnail_width)}x#{upload.read_attribute(:thumbnail_height)}"
-      puts "After:  #{w}x#{h} #{ww}x#{hh}"
+    unless source
+      puts "no path or URL" if ENV["VERBOSE"]
+      next
     end
 
-    dimensions_count += 1
+    begin
+      w, h = FastImage.size(source, timeout: 15, raise_on_failure: true)
+    rescue FastImage::ImageFetchFailure
+      puts "Retrying image resizing"
+      w, h = FastImage.size(source, timeout: 15)
+    rescue FastImage::UnknownImageType
+      puts "unknown image type" if ENV["VERBOSE"]
+      next
+    rescue FastImage::SizeNotFound
+      puts "size not found" if ENV["VERBOSE"]
+      next
+    end
 
-    upload.update!(
-      width: w,
-      height: h,
-      thumbnail_width: ww,
-      thumbnail_height: hh,
-    )
+    if !w || !h
+      puts "invalid image dimensions" if ENV["VERBOSE"]
+      next
+    end
+
+    ww, hh = ImageSizer.resize(w, h)
+
+    if w == 0 || h == 0 || ww == 0 || hh == 0
+      puts "invalid image dimensions" if ENV["VERBOSE"]
+      next
+    end
+
+    if upload.read_attribute(:width) != w || upload.read_attribute(:height) != h || upload.read_attribute(:thumbnail_width) != ww || upload.read_attribute(:thumbnail_height) != hh
+      if ENV["VERBOSE"]
+        puts "Correcting the upload dimensions"
+        puts "Before: #{upload.read_attribute(:width)}x#{upload.read_attribute(:height)} #{upload.read_attribute(:thumbnail_width)}x#{upload.read_attribute(:thumbnail_height)}"
+        puts "After:  #{w}x#{h} #{ww}x#{hh}"
+      end
+
+      dimensions_count += 1
+
+      upload.update!(
+        width: w,
+        height: h,
+        thumbnail_width: ww,
+        thumbnail_height: hh,
+      )
+    end
+
+    if w * h < MAX_IMAGE_PIXELS
+      puts "image size within allowed range" if ENV["VERBOSE"]
+      next
+    end
+
+    path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
+
+    unless path
+      puts "no image path" if ENV["VERBOSE"]
+      next
+    end
+
+    downsized_count += 1 if downsize_upload(upload, path)
   end
 
-  if w * h < max_image_pixels
-    puts "image size within allowed range" if ENV["VERBOSE"]
-    next
-  end
-
-  path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
-
-  unless path
-    puts "no image path" if ENV["VERBOSE"]
-    next
-  end
-
-  downsized_count += 1 if downsize_upload(upload, path, max_image_pixels)
+  puts "", "Done", Time.zone.now
 end
 
-puts "", "Done", Time.zone.now
+process_uploads
