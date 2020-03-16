@@ -87,7 +87,7 @@ def downsize_upload(upload, path)
 
     if post.raw_changed?
       puts "Updating post #{post.id}" if ENV["VERBOSE"]
-    elsif post.cooked.include?(UrlHelper.cook_url(original_upload.url))
+    elsif post.cooked.include?(original_upload.sha1)
       if post.raw.include?("#{Discourse.base_url.sub(/^https?:\/\//i, '')}/t/")
         puts "Updating a topic onebox in post #{post.id}" if ENV["VERBOSE"]
       else
