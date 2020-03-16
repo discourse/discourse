@@ -256,7 +256,7 @@ gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
 
-# These are not direct dependencies, but we need to restrict 
+# These are not direct dependencies, but we need to restrict
 # versions for compatibility with https://github.com/discourse/discourse-zendesk-plugin
 # These restrictions can be removed once the zendesk_api gem is updated
 # for newer versions of hashie and faraday
