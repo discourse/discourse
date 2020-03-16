@@ -173,6 +173,7 @@ module SvgSprite
     "step-backward",
     "step-forward",
     "stream",
+    "sync-alt",
     "sync",
     "table",
     "tag",
