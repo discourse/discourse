@@ -209,7 +209,7 @@ GEM
     nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
     oauth (0.5.4)
-    oauth2 (1.4.2)
+    oauth2 (1.4.4)
       faraday (>= 0.8, < 2.0)
       jwt (>= 1.0, < 3.0)
       multi_json (~> 1.3)
@@ -547,4 +547,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.1.1
+   2.1.4
