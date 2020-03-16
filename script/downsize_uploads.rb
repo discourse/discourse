@@ -108,7 +108,31 @@ def downsize_upload(upload, path, max_image_pixels)
 
   if posts.empty?
     puts "Upload not used in any posts"
-  elsif any_issues == true
+
+    if User.where(uploaded_avatar_id: original_upload.id).count
+      puts "Used as a User avatar"
+    elsif UserAvatar.where(gravatar_upload_id: original_upload.id).count
+      puts "Used as a UserAvatar gravatar"
+    elsif UserAvatar.where(custom_upload_id: original_upload.id).count
+      puts "Used as a UserAvatar custom upload"
+    elsif UserProfile.where(profile_background_upload_id: original_upload.id).count
+      puts "Used as a UserProfile profile background"
+    elsif UserProfile.where(card_background_upload_id: original_upload.id).count
+      puts "Used as a UserProfile card background"
+    elsif Category.where(uploaded_logo_id: original_upload.id).count
+      puts "Used as a Category logo"
+    elsif Category.where(uploaded_background_id: original_upload.id).count
+      puts "Used as a Category background"
+    elsif CustomEmoji.where(upload_id: original_upload.id).count
+      puts "Used as a CustomEmoji"
+    elsif ThemeField.where(upload_id: original_upload.id).count
+      puts "Used as a ThemeField"
+    else
+      any_issues = true
+    end
+  end
+
+  if any_issues == true
     print "Press any key to continue with the upload"
     STDIN.beep
     STDIN.getch
