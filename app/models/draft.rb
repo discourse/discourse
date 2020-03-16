@@ -7,7 +7,7 @@ class Draft < ActiveRecord::Base
 
   class OutOfSequence < StandardError; end
 
-  def self.set(user, key, sequence, data, owner = nil, retry_not_unique: true)
+  def self.set(user, key, sequence, data, owner = nil)
     if SiteSetting.backup_drafts_to_pm_length > 0 && SiteSetting.backup_drafts_to_pm_length < data.length
       backup_draft(user, key, sequence, data)
     end
@@ -59,30 +59,33 @@ class Draft < ActiveRecord::Base
              , data = :data
              , revisions = revisions + 1
              , owner = :owner
+             , updated_at = CURRENT_TIMESTAMP
          WHERE id = :id
       SQL
 
     elsif sequence != current_sequence
       raise Draft::OutOfSequence
     else
-      begin
-        Draft.create!(
-          user_id: user.id,
-          draft_key: key,
-          data: data,
-          sequence: sequence,
-          owner: owner
-        )
-      rescue ActiveRecord::RecordNotUnique => e
-        # we need this to be fast and with minimal locking, in some cases we can have a race condition
-        # around 2 controller actions calling for draft creation at the exact same time
-        # to avoid complex locking and a distributed mutex, since this is so rare, simply add a single retry
-        if retry_not_unique
-          set(user, key, sequence, data, owner, retry_not_unique: false)
-        else
-          raise e
-        end
-      end
+      opts = {
+        user_id: user.id,
+        draft_key: key,
+        data: data,
+        sequence: sequence,
+        owner: owner
+      }
+
+      DB.exec(<<~SQL, opts)
+        INSERT INTO drafts (user_id, draft_key, data, sequence, owner, created_at, updated_at)
+        VALUES (:user_id, :draft_key, :data, :sequence, :owner, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        ON CONFLICT (user_id, draft_key) DO
+        UPDATE
+        SET
+          sequence = :sequence,
+          data = :data,
+          revisions = drafts.revisions + 1,
+          owner = :owner,
+          updated_at = CURRENT_TIMESTAMP
+      SQL
     end
 
     sequence
