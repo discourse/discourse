@@ -265,4 +265,4 @@ scope.find_each do |upload|
   downsized_count += 1 if downsize_upload(upload, path, max_image_pixels)
 end
 
-puts "", "Done"
+puts "", "Done", Time.zone.now
