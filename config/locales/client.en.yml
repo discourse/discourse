@@ -947,6 +947,7 @@ en:
         deleted_posts: "deleted posts"
         suspensions: "suspensions"
         warnings_received: "warnings"
+        rejected_posts: "rejected posts"
 
       messages:
         all: "All"
