@@ -199,7 +199,8 @@ export default Controller.extend(CanCheckEmails, {
 
     destroy() {
       const postCount = this.get("model.post_count");
-      if (postCount <= 5) {
+      const maxPostCount = this.siteSettings.delete_all_posts_max;
+      if (postCount <= maxPostCount) {
         return this.model.destroy({ deletePosts: true });
       } else {
         return this.model.destroy();

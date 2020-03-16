@@ -45,7 +45,8 @@ const User = RestModel.extend({
 
   @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
-    return canBeDeleted && postCount <= 5;
+    const maxPostCount = Discourse.SiteSettings.delete_all_posts_max;
+    return canBeDeleted && postCount <= maxPostCount;
   },
 
   @discourseComputed()
