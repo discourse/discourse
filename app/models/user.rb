@@ -1125,6 +1125,14 @@ class User < ActiveRecord::Base
       .count
   end
 
+  def number_of_rejected_posts
+    Post.with_deleted
+      .where(user_id: self.id)
+      .joins('INNER JOIN reviewables r ON posts.id = r.target_id')
+      .where(r: { status: Reviewable.statuses[:rejected], type: ReviewableQueuedPost.name })
+      .count
+  end
+
   def number_of_flags_given
     PostAction.where(user_id: self.id)
       .where(disagreed_at: nil)
