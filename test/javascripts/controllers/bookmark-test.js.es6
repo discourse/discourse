@@ -161,8 +161,8 @@ QUnit.test(
 
     BookmarkController.loadLastUsedCustomReminderDatetime();
 
-    assert.equal(BookmarkController.customReminderDate, "2019-12-12");
-    assert.equal(BookmarkController.customReminderTime, "08:00");
+    assert.equal(BookmarkController.lastCustomReminderDate, "2019-12-12");
+    assert.equal(BookmarkController.lastCustomReminderTime, "08:00");
   }
 );
 
@@ -175,7 +175,7 @@ QUnit.test(
 
     BookmarkController.loadLastUsedCustomReminderDatetime();
 
-    assert.equal(BookmarkController.customReminderDate, null);
-    assert.equal(BookmarkController.customReminderTime, null);
+    assert.equal(BookmarkController.lastCustomReminderDate, null);
+    assert.equal(BookmarkController.lastCustomReminderTime, null);
   }
 );
