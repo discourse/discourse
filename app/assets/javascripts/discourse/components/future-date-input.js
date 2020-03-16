@@ -62,31 +62,38 @@ export default Component.extend({
     this.set("basedOnLastPost", this.isBasedOnLastPost);
   },
 
-  @observes("executeAt", "duration")
-  _update() {
+  @observes("duration")
+  _updateDuration() {
     this.attrs.onChangeInput &&
-      this.attrs.onChangeInput(this.executeAt, this.duration);
+      this.attrs.onChangeInput(this.input, parseInt(this.duration, 0));
   },
 
-  @discourseComputed("input", "isBasedOnLastPost", "isBasedOnDuration")
-  duration(input, isBasedOnLastPost, isBasedOnDuration) {
-    if (isBasedOnLastPost || isBasedOnDuration) {
-      return parseFloat(input);
-    } else {
-      return null;
-    }
-  },
+  // @discourseComputed("durationInput", "isBasedOnLastPost", "isBasedOnDuration")
+  // duration(input, isBasedOnLastPost, isBasedOnDuration) {
+  //   if (isBasedOnLastPost || isBasedOnDuration) {
+  //     return parseFloat(input);
+  //   } else {
+  //     return null;
+  //   }
+  // },
 
   @discourseComputed(
     "input",
+    "duration",
     "isBasedOnLastPost",
     "isBasedOnDuration",
     "durationType"
   )
-  executeAt(input, isBasedOnLastPost, isBasedOnDuration, durationType) {
+  executeAt(
+    input,
+    duration,
+    isBasedOnLastPost,
+    isBasedOnDuration,
+    durationType
+  ) {
     if (isBasedOnLastPost || isBasedOnDuration) {
-      return moment()
-        .add(input, durationType)
+      return moment(input)
+        .add(parseInt(duration, 0), durationType)
         .format(FORMAT);
     } else {
       return input;
@@ -106,7 +113,9 @@ export default Component.extend({
     "date",
     "time",
     "willCloseImmediately",
-    "categoryId"
+    "categoryId",
+    "displayNumberInput",
+    "duration"
   )
   showTopicStatusInfo(
     statusType,
@@ -115,7 +124,9 @@ export default Component.extend({
     date,
     time,
     willCloseImmediately,
-    categoryId
+    categoryId,
+    displayNumberInput,
+    duration
   ) {
     if (!statusType || willCloseImmediately) return false;
 
@@ -128,6 +139,8 @@ export default Component.extend({
         return moment(`${date}${time ? " " + time : ""}`).isAfter(moment());
       }
       return time;
+    } else if (displayNumberInput) {
+      return duration;
     } else {
       return input;
     }

@@ -35,6 +35,7 @@ export default Component.extend({
 
     if (
       !isDeleteRepliesType &&
+      !this.basedOnLastPost &&
       (!this.executeAt || this.executeAt < moment())
     ) {
       this.set("showTopicTimer", null);
@@ -48,7 +49,7 @@ export default Component.extend({
     const statusUpdateAt = moment(this.executeAt);
     const duration = moment.duration(statusUpdateAt - moment());
     const minutesLeft = duration.asMinutes();
-    if (minutesLeft > 0 || isDeleteRepliesType) {
+    if (minutesLeft > 0 || isDeleteRepliesType || this.basedOnLastPost) {
       let rerenderDelay = 1000;
       if (minutesLeft > 2160) {
         rerenderDelay = 12 * 60 * 60000;
@@ -59,7 +60,7 @@ export default Component.extend({
       } else if (minutesLeft > 2) {
         rerenderDelay = 60000;
       }
-      let durationHours = this.duration || 0;
+      let durationHours = parseInt(this.duration, 0) || 0;
 
       if (isDeleteRepliesType) {
         durationHours *= 24;

@@ -1153,10 +1153,13 @@ class Topic < ActiveRecord::Base
       if duration > 0
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
         topic_timer.execute_at = last_post_created_at + duration.hours
+        topic_timer.created_at = last_post_created_at
       end
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
       if duration > 0
-        topic_timer.execute_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now) + duration.days
+        first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
+        topic_timer.execute_at = first_reply_created_at + duration.days
+        topic_timer.created_at = first_reply_created_at
       end
     else
       utc = Time.find_zone("UTC")

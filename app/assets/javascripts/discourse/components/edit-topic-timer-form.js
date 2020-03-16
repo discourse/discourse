@@ -1,4 +1,3 @@
-import { isEmpty } from "@ember/utils";
 import { equal, or, readOnly } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
@@ -26,15 +25,26 @@ export default Component.extend({
   reminder: equal("selection", REMINDER_TYPE),
   autoDeleteReplies: equal("selection", DELETE_REPLIES_TYPE),
   showTimeOnly: or("autoOpen", "autoDelete", "reminder", "autoBump"),
-
-  @discourseComputed(
-    "topicTimer.updateTime",
+  showFutureDateInput: or(
+    "showTimeOnly",
     "publishToCategory",
-    "topicTimer.category_id"
-  )
-  saveDisabled(updateTime, publishToCategory, topicTimerCategoryId) {
-    return isEmpty(updateTime) || (publishToCategory && !topicTimerCategoryId);
+    "autoClose",
+    "autoDeleteReplies"
+  ),
+
+  @discourseComputed("autoDeleteReplies")
+  durationType(autoDeleteReplies) {
+    return autoDeleteReplies ? "days" : "hours";
   },
+
+  // @discourseComputed(
+  //   "topicTimer.updateTime",
+  //   "publishToCategory",
+  //   "topicTimer.category_id"
+  // )
+  // saveDisabled(updateTime, publishToCategory, topicTimerCategoryId) {
+  //   return isEmpty(updateTime) || (publishToCategory && !topicTimerCategoryId);
+  // },
 
   @discourseComputed("topic.visible")
   excludeCategoryId(visible) {
@@ -42,8 +52,7 @@ export default Component.extend({
   },
 
   @on("init")
-  @observes("topicTimer", "topicTimer.execute_at", "topicTimer.duration")
-  _setUpdateTime() {
+  _setInput() {
     let time = null;
     const executeAt = this.get("topicTimer.execute_at");
 
@@ -57,7 +66,8 @@ export default Component.extend({
       }
     }
 
-    this.set("topicTimer.updateTime", time);
+    this.set("input", time);
+    return;
   },
 
   @observes("selection")
@@ -81,11 +91,11 @@ export default Component.extend({
         );
       }
     });
-  },
-
-  actions: {
-    onChangeTimerType(value) {
-      this.set("topicTimer.status_type", value);
-    }
   }
+
+  // actions: {
+  //   onChangeTimerType(value) {
+  //     this.set("topicTimer.status_type", value);
+  //   }
+  // }
 });
