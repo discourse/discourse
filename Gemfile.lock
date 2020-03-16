@@ -456,12 +456,14 @@ DEPENDENCIES
   execjs
   fabrication
   fakeweb
+  faraday (< 1.0.0)
   fast_blank
   fast_xor
   fast_xs
   fastimage
   flamegraph
   gc_tracer
+  hashie (< 4.0.0)
   highline (~> 1.7.0)
   htmlentities
   http_accept_language
