@@ -280,7 +280,7 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
-    return if user.blank? || user.bot?
+    return if user.blank? || user.bot? || post.blank?
     return if (topic = post.topic).blank?
 
     is_liked = type == Notification.types[:liked]
