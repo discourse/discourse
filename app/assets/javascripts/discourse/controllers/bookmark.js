@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 
 const START_OF_DAY_HOUR = 8;
+const LATER_TODAY_CUTOFF_HOUR = 17;
 const REMINDER_TYPES = {
   AT_DESKTOP: "at_desktop",
   LATER_TODAY: "later_today",
@@ -106,7 +107,10 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed()
   showLaterToday() {
     let later = this.laterToday();
-    return !later.isSame(this.tomorrow(), "date") && later.hour() <= 17;
+    return (
+      !later.isSame(this.tomorrow(), "date") &&
+      later.hour() <= LATER_TODAY_CUTOFF_HOUR
+    );
   },
 
   @discourseComputed("parsedLastCustomReminderDatetime")
