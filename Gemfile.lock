@@ -268,7 +268,7 @@ GEM
       nio4r (~> 2.0)
     r2 (0.2.7)
     rack (2.0.8)
-    rack-mini-profiler (1.1.6)
+    rack-mini-profiler (2.0.1)
       rack (>= 1.2.0)
     rack-protection (2.0.8.1)
       rack
