@@ -17,6 +17,7 @@ task "bookmarks:sync_to_table", [:sync_limit] => :environment do |_t, args|
     .joins(:post)
     .where(deleted_at: nil)
     .joins('LEFT JOIN bookmarks ON bookmarks.post_id = post_actions.post_id AND bookmarks.user_id = post_actions.user_id')
+    .joins('INNER JOIN topics ON topics.id = posts.topic_id')
     .where('bookmarks.id IS NULL')
 
   # if sync_limit is provided as an argument this will cap
@@ -27,11 +28,13 @@ task "bookmarks:sync_to_table", [:sync_limit] => :environment do |_t, args|
   end
 
   post_action_bookmark_count = post_action_bookmarks.count('post_actions.id')
-  bookmarks_to_create = []
   i = 0
 
-  Bookmark.transaction do
-    post_action_bookmarks.find_each(batch_size: 1000) do |pab|
+  post_action_bookmarks.find_each(batch_size: 2000) do |pab|
+    # clear at start of each batch to only insert X at a time
+    bookmarks_to_create = []
+
+    Bookmark.transaction do
       RakeHelpers.print_status_with_label("Creating post new bookmarks.......", i, post_action_bookmark_count)
       now = Time.zone.now
       bookmarks_to_create << {
@@ -43,16 +46,16 @@ task "bookmarks:sync_to_table", [:sync_limit] => :environment do |_t, args|
       }
 
       i += 1
-    end
 
-    # this will ignore conflicts in the bookmarks table so
-    # if the user already has a post bookmarked in the new way,
-    # then we don't error and keep on truckin'
-    #
-    # we shouldn't have duplicates here at any rate because of
-    # the above LEFT JOIN but best to be safe knowing this
-    # won't blow up
-    Bookmark.insert_all(bookmarks_to_create)
+      # this will ignore conflicts in the bookmarks table so
+      # if the user already has a post bookmarked in the new way,
+      # then we don't error and keep on truckin'
+      #
+      # we shouldn't have duplicates here at any rate because of
+      # the above LEFT JOIN but best to be safe knowing this
+      # won't blow up
+      Bookmark.insert_all(bookmarks_to_create)
+    end
   end
 
   RakeHelpers.print_status_with_label("Bookmark creation complete!            ", i, post_action_bookmark_count)
