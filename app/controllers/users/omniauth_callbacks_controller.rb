@@ -113,8 +113,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
-      user.unstage
-      user.save
+      user.unstage!
 
       if !user.active || !user.email_confirmed?
         user.update!(password: SecureRandom.hex)
