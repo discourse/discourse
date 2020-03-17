@@ -1,3 +1,4 @@
+/*global Mousetrap:true*/
 import Controller from "@ember/controller";
 import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -20,6 +21,20 @@ const REMINDER_TYPES = {
   NONE: "none"
 };
 
+const bindings = {
+  enter: { handler: "saveAndClose" },
+  "l t": { handler: "selectReminderType", args: [REMINDER_TYPES.LATER_TODAY] },
+  "l r": { handler: "selectReminderType", args: [REMINDER_TYPES.LAST_CUSTOM] },
+  "n b d": {
+    handler: "selectReminderType",
+    args: [REMINDER_TYPES.NEXT_BUSINESS_DAY]
+  },
+  "n d": { handler: "selectReminderType", args: [REMINDER_TYPES.TOMORROW] },
+  "n w": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_WEEK] },
+  "n m": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_MONTH] },
+  "c r": { handler: "selectReminderType", args: [REMINDER_TYPES.CUSTOM] }
+};
+
 export default Controller.extend(ModalFunctionality, {
   loading: false,
   errorMessage: null,
@@ -32,6 +47,7 @@ export default Controller.extend(ModalFunctionality, {
   customReminderTime: null,
   lastCustomReminderDate: null,
   lastCustomReminderTime: null,
+  mouseTrap: null,
 
   onShow() {
     this.setProperties({
@@ -46,6 +62,7 @@ export default Controller.extend(ModalFunctionality, {
       lastCustomReminderTime: null
     });
 
+    this.bindKeyboardShortcuts();
     this.loadLastUsedCustomReminderDatetime();
   },
 
@@ -68,9 +85,29 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
+  bindKeyboardShortcuts() {
+    if (!this.mouseTrap) {
+      this.mouseTrap = Mousetrap(
+        document.querySelector("#discourse-modal.bookmark-with-reminder")
+      );
+    }
+
+    Object.keys(bindings).forEach(key => {
+      this.mouseTrap.bind(key, e => {
+        this.send(bindings[key].handler, ...bindings[key].args);
+        e.stopPropagation();
+      });
+    });
+  },
+
+  unbindKeyboardShortcuts() {
+    Object.keys(bindings).forEach(key => this.mouseTrap.unbind(key));
+  },
+
   // we always want to save the bookmark unless the user specifically
   // clicks the save or cancel button to mimic browser behaviour
   onClose() {
+    this.unbindKeyboardShortcuts();
     if (!this.closeWithoutSaving && !this.isSavingBookmarkManually) {
       this.saveBookmark().catch(e => this.handleSaveError(e));
     }
@@ -99,9 +136,9 @@ export default Controller.extend(ModalFunctionality, {
     return REMINDER_TYPES;
   },
 
-  @discourseComputed()
-  showLastCustom() {
-    return this.lastCustomReminderTime && this.lastCustomReminderDate;
+  @discourseComputed("lastCustomReminderTime", "lastCustomReminderDate")
+  showLastCustom(lastCustomReminderTime, lastCustomReminderDate) {
+    return lastCustomReminderTime && lastCustomReminderDate;
   },
 
   @discourseComputed()
