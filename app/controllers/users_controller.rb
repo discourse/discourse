@@ -1397,15 +1397,23 @@ class UsersController < ApplicationController
 
   def bookmarks
     user = fetch_user_from_params
-    bookmarks = BookmarkQuery.new(user, params).list_all
 
-    if bookmarks.empty?
-      render json: {
-        bookmarks: [],
-        no_results_help: I18n.t("user_activity.no_bookmarks.self")
-      }
-    else
-      render_serialized(bookmarks, UserBookmarkSerializer, root: 'bookmarks')
+    respond_to do |format|
+      format.json do
+        bookmarks = BookmarkQuery.new(user, params).list_all
+
+        if bookmarks.empty?
+          render json: {
+            bookmarks: [],
+            no_results_help: I18n.t("user_activity.no_bookmarks.self")
+          }
+        else
+          render_serialized(bookmarks, UserBookmarkSerializer, root: 'bookmarks')
+        end
+      end
+      format.ics do
+        @bookmark_reminders = Bookmark.where(user_id: user.id).where.not(reminder_at: nil).joins(:topic)
+      end
     end
   end
 

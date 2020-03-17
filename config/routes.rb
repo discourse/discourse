@@ -469,7 +469,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/activity" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/activity/:filter" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/badges" => "users#badges", constraints: { username: RouteFormat.username }
-    get "#{root_path}/:username/bookmarks" => "users#bookmarks", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/bookmarks" => "users#bookmarks", constraints: { username: RouteFormat.username, format: /(json|ics)/ }
     get "#{root_path}/:username/notifications" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/notifications/:filter" => "users#show", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username" => "users#destroy", constraints: { username: RouteFormat.username }
