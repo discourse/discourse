@@ -27,7 +27,7 @@ public/tombstone/*
 /bundle/*
 
 config/discourse.pill
-config/discourse.conf
+# config/discourse.conf
 
 # Ignore the default SQLite database and db dumps
 *.sql

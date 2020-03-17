@@ -1,0 +1,10 @@
+{
+  "deploy" : {
+    "env": "production",
+    "rakegoals": [
+        "db:migrate",
+        "assets:precompile"
+    ],
+    "sidekiq": true
+  }
+}
