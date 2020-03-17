@@ -37,14 +37,23 @@ describe Jobs::TruncateUserFlagStats do
     p2 = Fabricate(:post, user: user)
     p3 = Fabricate(:post)
 
+    freeze_time 10.minutes.ago
     r0 = PostActionCreator.spam(user, p0).reviewable
+    freeze_time 1.minute.from_now
     r1 = PostActionCreator.spam(user, p1).reviewable
+    freeze_time 1.minute.from_now
     r2 = PostActionCreator.spam(user, p2).reviewable
+    freeze_time 1.minute.from_now
     r3 = PostActionCreator.spam(user, p3).reviewable
 
+    freeze_time 1.minute.from_now
     PostActionCreator.spam(other_user, p3).reviewable
+    freeze_time 1.minute.from_now
     PostActionCreator.spam(other_user, p2).reviewable
+    freeze_time 1.minute.from_now
     PostActionCreator.spam(other_user, p1).reviewable
+
+    unfreeze_time
 
     r0.perform(Discourse.system_user, :agree_and_keep)
     r1.perform(Discourse.system_user, :disagree)

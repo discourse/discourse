@@ -2,20 +2,22 @@
   <div class='wrapper'>
     <h2>{{i18n 'admin.customize.theme.edit_css_html'}} {{#link-to showRouteName model.id replace=true}}{{model.name}}{{/link-to}}</h2>
 
-    {{admin-theme-editor 
-      theme=model 
-      editRouteName=editRouteName 
+    {{admin-theme-editor
+      theme=model
+      editRouteName=editRouteName
       currentTargetName=currentTargetName
       fieldName=fieldName
       fieldAdded=(action 'fieldAdded')
       maximized=maximized
       onlyOverriddenChanged=(action 'onlyOverriddenChanged')
     }}
-    
+
     <div class='admin-footer'>
       <div class='status-actions'>
         {{#unless model.changed}}
-          <a class='preview-link' href={{previewUrl}} target='_blank' title="{{i18n 'admin.customize.explain_preview'}}">{{i18n 'admin.customize.preview'}}</a>
+          <a class='preview-link' href={{previewUrl}} rel="noopener" target='_blank' title={{i18n 'admin.customize.explain_preview'}}>
+            {{i18n 'admin.customize.preview'}}
+          </a>
         {{/unless}}
       </div>
 

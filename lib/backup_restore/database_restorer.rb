@@ -134,7 +134,11 @@ module BackupRestore
       log "Migrating the database..."
 
       log Discourse::Utils.execute_command(
-        { "SKIP_POST_DEPLOYMENT_MIGRATIONS" => "0" },
+        {
+          "SKIP_POST_DEPLOYMENT_MIGRATIONS" => "0",
+          "SKIP_OPTIMIZE_ICONS" => "1",
+          "DISABLE_TRANSLATION_OVERRIDES" => "1"
+        },
         "rake db:migrate",
         failure_message: "Failed to migrate database.",
         chdir: Rails.root

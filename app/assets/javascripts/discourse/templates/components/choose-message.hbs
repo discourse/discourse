@@ -11,7 +11,7 @@
     {{#each messages as |m|}}
       <div class='controls existing-message'>
         <label class='radio'>
-          <input type='radio' id="choose-message-{{unbound m.id}}" name='choose_message_id' {{action "chooseMessage" m}}>
+          <input type='radio' id="choose-message-{{m.id}}" name='choose_message_id' {{action "chooseMessage" m}}>
           <span class="message-title">
             {{m.title}}
           </span>

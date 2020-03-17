@@ -24,7 +24,8 @@ describe DiscourseUpdates do
 
     context 'a good version check request happened recently' do
       context 'and server is up-to-date' do
-        before { stub_data(Discourse::VERSION::STRING, 0, false, 12.hours.ago) }
+        let(:time) { 12.hours.ago }
+        before { stub_data(Discourse::VERSION::STRING, 0, false, time) }
 
         it 'returns all the version fields' do
           expect(subject.latest_version).to eq(Discourse::VERSION::STRING)
@@ -35,12 +36,13 @@ describe DiscourseUpdates do
         end
 
         it 'returns the timestamp of the last version check' do
-          expect(subject.updated_at).to be_within_one_second_of(12.hours.ago)
+          expect(subject.updated_at).to eq_time(time)
         end
       end
 
       context 'and server is not up-to-date' do
-        before { stub_data('0.9.0', 2, false, 12.hours.ago) }
+        let(:time) { 12.hours.ago }
+        before { stub_data('0.9.0', 2, false, time) }
 
         it 'returns all the version fields' do
           expect(subject.latest_version).to eq('0.9.0')
@@ -50,7 +52,7 @@ describe DiscourseUpdates do
         end
 
         it 'returns the timestamp of the last version check' do
-          expect(subject.updated_at).to be_within_one_second_of(12.hours.ago)
+          expect(subject.updated_at).to eq_time(time)
         end
       end
     end

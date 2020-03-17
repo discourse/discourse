@@ -25,7 +25,7 @@
           {{#if user.profile_hidden}}
             <span class="card-huge-avatar">{{bound-avatar user "huge"}}</span>
           {{else}}
-            <a href="{{user.path}}" {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
+            <a href={{user.path}} {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
           {{/if}}
           {{#if user.primary_group_name}}
             {{avatar-flair
@@ -43,7 +43,7 @@
                 {{if nameFirst user.name (format-username username)}}
               </span>
             {{else}}
-              <a href="{{user.path}}" {{action "showUser" user}} class='user-profile-link'>
+              <a href={{user.path}} {{action "showUser" user}} class='user-profile-link'>
                 <span class="name-username-wrapper">
                   {{if nameFirst user.name (format-username username)}}
                 </span>
@@ -52,13 +52,13 @@
             {{/if}}
           </h1>
           {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser" user)) tagName=''}}
-          {{#unless nameFirst}}
+          {{#if nameFirst}}
+            <h2 class='username'>{{username}}</h2>
+          {{else}}
             {{#if user.name}}
               <h2 class='full-name'>{{user.name}}</h2>
             {{/if}}
-          {{else}}
-            <h2 class='username'>{{username}}</h2>
-          {{/unless}}
+          {{/if}}
           {{#if user.title}}
             <h2>{{user.title}}</h2>
           {{/if}}
@@ -144,7 +144,7 @@
         <div class="card-row">
           <div class="featured-topic">
             <span class="desc">{{i18n 'user.featured_topic'}}</span>
-            {{#link-to "topic" user.featured_topic.slug user.featured_topic.id }}{{{user.featured_topic.fancy_title}}}{{/link-to}}
+            {{#link-to "topic" user.featured_topic.slug user.featured_topic.id }}{{html-safe (replace-emoji user.featured_topic.fancy_title)}}{{/link-to}}
           </div>
         </div>
       {{/if}}
@@ -160,7 +160,8 @@
               <span class='website-name'>
                 {{d-icon "globe"}}
                 {{#if linkWebsite}}
-                  <a href="{{user.website}}" rel={{unless removeNoFollow 'nofollow ugc noopener'}}
+                  {{!-- template-lint-disable  --}}
+                  <a href="{{user.website}}" rel="noopener {{unless removeNoFollow 'nofollow ugc'}}"
                    target="_blank">{{user.website_name}}</a>
                 {{else}}
                   <span title={{user.website}}>{{user.website_name}}</span>

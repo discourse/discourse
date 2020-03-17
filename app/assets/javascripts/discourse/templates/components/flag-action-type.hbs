@@ -2,10 +2,10 @@
   <h3>{{formattedName}}</h3>
   <div class='controls'>
     <label class='radio'>
-      <input type='radio' id="radio_{{unbound flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'>
+      <input type='radio' id="radio_{{flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'>
 
       <div class='flag-action-type-details'>
-        <span class='description'>{{{flag.description}}}</span>
+        <span class='description'>{{html-safe flag.description}}</span>
         {{#if showMessageInput}}
           {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
           <div class="custom-message-length {{customMessageLengthClasses}}">{{customMessageLength}}</div>
@@ -20,11 +20,11 @@
 {{else}}
   <div class="controls {{flag.name_key}}">
     <label class='radio'>
-      <input type='radio' id="radio_{{unbound flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'>
+      <input type='radio' id="radio_{{flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'>
       <div class='flag-action-type-details'>
         <strong>{{formattedName}}</strong>
         {{#if showDescription}}
-          <div class='description'>{{{description}}}</div>
+          <div class='description'>{{html-safe description}}</div>
         {{/if}}
         {{#if showMessageInput}}
           {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}

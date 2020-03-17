@@ -37,6 +37,9 @@ describe RemoteTheme do
               "love": "#{love_color}",
               "tertiary-low": "#{tertiary_low_color}"
             }
+          },
+          "modifiers": {
+            "serialize_topic_excerpts": true
           }
         }
       JSON
@@ -85,6 +88,8 @@ describe RemoteTheme do
       expect(remote.theme_version).to eq("1.0")
       expect(remote.minimum_discourse_version).to eq("1.0.0")
 
+      expect(@theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
+
       expect(@theme.theme_fields.length).to eq(9)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
@@ -103,7 +108,7 @@ describe RemoteTheme do
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)
 
-      expect(remote.remote_updated_at).to eq(time)
+      expect(remote.remote_updated_at).to eq_time(time)
 
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.name).to eq("Amazing")
@@ -150,7 +155,7 @@ describe RemoteTheme do
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(32)
 
-      expect(remote.remote_updated_at).to eq(time)
+      expect(remote.remote_updated_at).to eq_time(time)
       expect(remote.about_url).to eq("https://newsite.com/about")
 
       # It should be able to remove old colors as well

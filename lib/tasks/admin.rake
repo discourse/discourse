@@ -65,8 +65,9 @@ task "admin:create" => :environment do
         else
           password = ask("Password:  ") { |q| q.echo = false }
           password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
-          passwords_match = password == password_confirmation
         end
+
+        passwords_match = password == password_confirmation
 
         say("Passwords don't match, try again...") unless passwords_match
       end while !passwords_match

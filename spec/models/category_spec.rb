@@ -535,15 +535,15 @@ describe Category do
 
   describe 'latest' do
     it 'should be updated correctly' do
-      category = Fabricate(:category_with_definition)
-      post = create_post(category: category.id)
+      category = freeze_time(1.minute.ago) { Fabricate(:category_with_definition) }
+      post = create_post(category: category.id, created_at: 15.seconds.ago)
 
       category.reload
       expect(category.latest_post_id).to eq(post.id)
       expect(category.latest_topic_id).to eq(post.topic_id)
 
-      post2 = create_post(category: category.id)
-      post3 = create_post(topic_id: post.topic_id, category: category.id)
+      post2 = create_post(category: category.id, created_at: 10.seconds.ago)
+      post3 = create_post(topic_id: post.topic_id, category: category.id, created_at: 5.seconds.ago)
 
       category.reload
       expect(category.latest_post_id).to eq(post3.id)
@@ -858,22 +858,18 @@ describe Category do
     end
 
     it 'should correctly automatically bump topics' do
-      freeze_time 1.second.ago
-      category = Fabricate(:category_with_definition)
+      freeze_time
+      category = Fabricate(:category_with_definition, created_at: 1.minute.ago)
       category.clear_auto_bump_cache!
 
-      freeze_time 1.second.from_now
-      post1 = create_post(category: category)
-      freeze_time 1.second.from_now
-      _post2 = create_post(category: category)
-      freeze_time 1.second.from_now
-      _post3 = create_post(category: category)
+      post1 = create_post(category: category, created_at: 15.seconds.ago)
+      _post2 = create_post(category: category, created_at: 10.seconds.ago)
+      _post3 = create_post(category: category, created_at: 5.seconds.ago)
 
       # no limits on post creation or category creation please
       RateLimiter.enable
 
-      time = 1.month.from_now
-      freeze_time time
+      time = freeze_time 1.month.from_now
 
       expect(category.auto_bump_topic!).to eq(false)
       expect(Topic.where(bumped_at: time).count).to eq(0)
@@ -886,8 +882,7 @@ describe Category do
       # our extra bump message
       expect(post1.topic.reload.posts_count).to eq(2)
 
-      time = time + 13.hours
-      freeze_time time
+      time = freeze_time 13.hours.from_now
 
       expect(category.auto_bump_topic!).to eq(true)
       expect(Topic.where(bumped_at: time).count).to eq(1)
@@ -895,8 +890,7 @@ describe Category do
       expect(category.auto_bump_topic!).to eq(false)
       expect(Topic.where(bumped_at: time).count).to eq(1)
 
-      time = 1.month.from_now
-      freeze_time time
+      time = freeze_time 1.month.from_now
 
       category.auto_bump_limiter.clear!
       expect(Category.auto_bump_topic!).to eq(true)
@@ -909,18 +903,16 @@ describe Category do
     end
 
     it 'should not automatically bump topics with a bump scheduled' do
-      freeze_time 1.second.ago
-      category = Fabricate(:category_with_definition)
+      freeze_time
+      category = Fabricate(:category_with_definition, created_at: 1.second.ago)
       category.clear_auto_bump_cache!
 
-      freeze_time 1.second.from_now
       post1 = create_post(category: category)
 
       # no limits on post creation or category creation please
       RateLimiter.enable
 
-      time = 1.month.from_now
-      freeze_time time
+      time = freeze_time 1.month.from_now
 
       expect(category.auto_bump_topic!).to eq(false)
       expect(Topic.where(bumped_at: time).count).to eq(0)

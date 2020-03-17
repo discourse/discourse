@@ -1,5 +1,5 @@
 {{#d-modal-body}}
-  <p>{{{i18n "post.controls.delete_topic_disallowed_modal"}}}</p>
+  <p>{{html-safe (i18n "post.controls.delete_topic_disallowed_modal")}}</p>
 {{/d-modal-body}}
 <div class="modal-footer">
   {{d-button action=(route-action "closeModal") class="btn-primary" label="close"}}

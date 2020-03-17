@@ -331,6 +331,10 @@ class Guardian
     is_me?(user)
   end
 
+  def can_see_invite_emails?(user)
+    is_staff? || is_me?(user)
+  end
+
   def can_invite_to_forum?(groups = nil)
     authenticated? &&
     (SiteSetting.max_invites_per_day.to_i > 0 || is_staff?) &&

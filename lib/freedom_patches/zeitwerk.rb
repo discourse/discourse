@@ -12,7 +12,6 @@ module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
     'postgresql_fallback_adapter' => 'PostgreSQLFallbackHandler',
     'regular' => 'Jobs',
     'scheduled' => 'Jobs',
-    'source_url' => 'SourceURL',
     'topic_query_sql' => 'TopicQuerySQL',
     'version' => 'Discourse',
   }

@@ -130,9 +130,9 @@ before_fork do |server, worker|
 
         def check_sidekiq_heartbeat
           @sidekiq_heartbeat_interval ||= 30.minutes
-          @sidekiq_next_heartbeat_check ||= Time.new.to_i + @sidekiq_heartbeat_interval
+          @sidekiq_next_heartbeat_check ||= Time.now.to_i + @sidekiq_heartbeat_interval
 
-          if @sidekiq_next_heartbeat_check < Time.new.to_i
+          if @sidekiq_next_heartbeat_check < Time.now.to_i
 
             last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
             restart = false
@@ -142,13 +142,13 @@ before_fork do |server, worker|
               restart = true
             end
 
-            if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
+            if last_heartbeat < Time.now.to_i - @sidekiq_heartbeat_interval
               STDERR.puts "Sidekiq heartbeat test failed, restarting"
               Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
 
               restart = true
             end
-            @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
+            @sidekiq_next_heartbeat_check = Time.now.to_i + @sidekiq_heartbeat_interval
 
             if restart
               Demon::Sidekiq.restart

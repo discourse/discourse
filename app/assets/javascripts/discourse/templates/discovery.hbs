@@ -1,5 +1,5 @@
 {{#if errorHtml}}
-  {{{errorHtml}}}
+  {{html-safe errorHtml}}
 {{else}}
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}

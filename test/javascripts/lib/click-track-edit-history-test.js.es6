@@ -2,6 +2,7 @@ import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:click-track-edit-history", {
   beforeEach() {
@@ -21,7 +22,7 @@ QUnit.module("lib:click-track-edit-history", {
        </div>
        <div id="revisions" data-post-id="42" class="">
          <div class="row">
-           <div class="span8">
+           <div>
              <a href="http://www.google.com">google.com</a>
              <a class="lightbox back" href="http://www.google.com">google.com</a>
              <div class="onebox-result">
@@ -33,7 +34,7 @@ QUnit.module("lib:click-track-edit-history", {
              <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
              <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
            </div>
-           <div class="span8 offset1">
+           <div>
              <a href="http://www.google.com">google.com</a>
              <a class="lightbox back" href="http://www.google.com">google.com</a>
              <div class="onebox-result">
@@ -62,8 +63,7 @@ QUnit.skip("tracks internal URLs", async assert => {
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   const done = assert.async();
-  /* global server */
-  server.post("/clicks/track", request => {
+  pretender.post("/clicks/track", request => {
     assert.equal(
       request.requestBody,
       "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
@@ -78,8 +78,7 @@ QUnit.skip("tracks external URLs", async assert => {
   assert.expect(2);
 
   const done = assert.async();
-  /* global server */
-  server.post("/clicks/track", request => {
+  pretender.post("/clicks/track", request => {
     assert.equal(
       request.requestBody,
       "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
@@ -97,8 +96,7 @@ QUnit.skip(
     User.currentProp("external_links_in_new_tab", true);
 
     const done = assert.async();
-    /* global server */
-    server.post("/clicks/track", request => {
+    pretender.post("/clicks/track", request => {
       assert.equal(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"

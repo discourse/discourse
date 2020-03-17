@@ -2,7 +2,7 @@
   <thead>
     <tr>
       {{#if model.computedLabels}}
-        {{#each model.computedLabels as |label index|}}
+        {{#each model.computedLabels as |label|}}
           {{admin-report-table-header
             showSortingUI=showSortingUI
             currentSortDirection=sortDirection
@@ -24,7 +24,7 @@
 
     {{#if showTotalForSample}}
       <tr class="total-row">
-        <td colspan="{{totalsForSample.length}}">
+        <td colspan={{totalsForSample.length}}>
           {{i18n 'admin.dashboard.reports.totals_for_sample'}}
         </td>
       </tr>

@@ -1258,9 +1258,6 @@ tr_TR:
       enabled: "Bu site salt-okunur modda. Lütfen taramaya devam et, ancak yanıtlama, beğenme ve diğer eylemler şu an için devre dışı durumda. "
       login_disabled: "Site salt-okunur modda iken giriş işlemi devre dışı bırakılır ."
       logout_disabled: "Site salt-okunur modda iken çıkış işlemi yapılamaz."
-    too_few_topics_and_posts_notice: "Haydi <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>tartışma başlasın!</a>Burada <strong>%{currentTopics}</strong> konu ve <strong>%{currentPosts}</strong> gönderi var. Ziyaretçilerin okuması ve yanıtlaması için tavsiye ettiğimiz en az <strong>%{requiredTopics}</strong> konu ve <strong>%{requiredPosts}</strong> gönderi. Bu mesajı yalnızca yetkili görebilir."
-    too_few_topics_notice: "Haydi <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>tartışma başlasın!</a>Burada <strong>%{currentTopics}</strong> konu var. Ziyaretçilerin okuması ve yanıtlaması için tavsiye ettiğimiz en az <strong>%{requiredTopics}</strong> konudur. Bu mesajı yalnızca yetkili görebilir."
-    too_few_posts_notice: "Haydi <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>tartışma başlasın!</a>Burada <strong>%{currentPosts}</strong> gönderi var. Ziyaretçilerin okuması ve yanıtlaması için tavsiye ettiğimiz en az <strong>%{requiredPosts}</strong> gönderidir. Bu iletiyi yalnızca yetkili görebilir."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b>– <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} diğeri {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
       reached_minute_MF: "<b>{relativeAge}</b>– <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat}  {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
@@ -2617,6 +2614,7 @@ tr_TR:
         help: "Bu konu listelenmemiş; konu listelerinde görüntülenmeyecek ve sadece doğrudan bir bağlantı üzerinden erişilebilecek"
       personal_message:
         title: "Bu konu kişisel bir mesajdır"
+        help: "Bu konu kişisel bir mesajdır"
     posts: "Gönderiler"
     posts_long: "bu konuda {{number}} gönderi var"
     posts_likes_MF: |

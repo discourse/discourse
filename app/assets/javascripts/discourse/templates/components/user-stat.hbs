@@ -9,5 +9,5 @@
 </span>
 <span class='label'>
   {{#if icon}}{{d-icon icon}}{{/if}}
-  {{{i18n label count=value}}}
+  {{html-safe (i18n label count=value)}}
 </span>

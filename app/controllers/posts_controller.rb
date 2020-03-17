@@ -512,9 +512,13 @@ class PostsController < ApplicationController
     params.require(:post_id)
 
     existing_bookmark = Bookmark.find_by(post_id: params[:post_id], user_id: current_user.id)
-    existing_bookmark.destroy if existing_bookmark.present?
+    topic_bookmarked = false
 
-    topic_bookmarked = Bookmark.exists?(topic_id: existing_bookmark.topic_id, user_id: current_user.id)
+    if existing_bookmark.present?
+      topic_bookmarked = Bookmark.exists?(topic_id: existing_bookmark.topic_id, user_id: current_user.id)
+      existing_bookmark.destroy
+    end
+
     render json: success_json.merge(topic_bookmarked: topic_bookmarked)
   end
 

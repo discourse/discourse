@@ -2539,6 +2539,7 @@ da:
         help: "Dette emne er ulistet; det vil ikke blive vist i listen over emner og kan kun tilgås med et direkte link"
       personal_message:
         title: "Dette emne er en privat besked"
+        help: "Dette emne er en privat besked"
     posts: "Indlæg"
     posts_long: "{{number}} indlæg i dette emne"
     posts_likes_MF: |

@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.11.2",
-    "@popperjs/core": "v2.0.5",
+    "@popperjs/core": "v2.0.6",
     "ace-builds": "1.4.2",
     "bootbox": "3.2.0",
     "bootstrap": "v3.4.1",

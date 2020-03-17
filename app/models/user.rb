@@ -470,7 +470,7 @@ class User < ActiveRecord::Base
     @unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
-    @user_fields = nil
+    @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
     super
@@ -736,7 +736,7 @@ class User < ActiveRecord::Base
   end
 
   def self.gravatar_template(email)
-    "//www.gravatar.com/avatar/#{self.email_hash(email)}.png?s={size}&r=pg&d=identicon"
+    "//#{SiteSetting.gravatar_base_url}/avatar/#{self.email_hash(email)}.png?s={size}&r=pg&d=identicon"
   end
 
   # Don't pass this up to the client - it's meant for server side use
@@ -1088,16 +1088,20 @@ class User < ActiveRecord::Base
 
   USER_FIELD_PREFIX ||= "user_field_"
 
-  def user_fields
-    return @user_fields if @user_fields
-    user_field_ids = UserField.pluck(:id)
-    if user_field_ids.present?
-      @user_fields = {}
-      user_field_ids.each do |fid|
-        @user_fields[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
+  def user_fields(field_ids = nil)
+    if field_ids.nil?
+      field_ids = (@all_user_field_ids ||= UserField.pluck(:id))
+    end
+
+    @user_fields_cache ||= {}
+
+    # Memoize based on requested fields
+    @user_fields_cache[field_ids.join(':')] ||= {}.tap do |hash|
+      field_ids.each do |fid|
+        # The hash keys are strings for backwards compatibility
+        hash[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
       end
     end
-    @user_fields
   end
 
   def number_of_deleted_posts
@@ -1113,6 +1117,14 @@ class User < ActiveRecord::Base
       .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
                              .where(disagreed_at: nil)
                              .select(:post_id))
+      .count
+  end
+
+  def number_of_rejected_posts
+    Post.with_deleted
+      .where(user_id: self.id)
+      .joins('INNER JOIN reviewables r ON posts.id = r.target_id')
+      .where(r: { status: Reviewable.statuses[:rejected], type: ReviewableQueuedPost.name })
       .count
   end
 
@@ -1202,10 +1214,22 @@ class User < ActiveRecord::Base
     self.user_emails.secondary.pluck(:email)
   end
 
+  RECENT_TIME_READ_THRESHOLD ||= 60.days
+
+  def self.preload_recent_time_read(users)
+    times = UserVisit.where(user_id: users.map(&:id))
+      .where('visited_at >= ?', RECENT_TIME_READ_THRESHOLD.ago)
+      .group(:user_id)
+      .sum(:time_read)
+    users.each { |u| u.preload_recent_time_read(times[u.id] || 0) }
+  end
+
+  def preload_recent_time_read(time)
+    @recent_time_read = time
+  end
+
   def recent_time_read
-    self.created_at && self.created_at < 60.days.ago ?
-      self.user_visits.where('visited_at >= ?', 60.days.ago).sum(:time_read) :
-      self.user_stat&.time_read
+    @recent_time_read ||= self.user_visits.where('visited_at >= ?', RECENT_TIME_READ_THRESHOLD.ago).sum(:time_read)
   end
 
   def from_staged?

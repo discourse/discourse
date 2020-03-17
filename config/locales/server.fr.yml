@@ -1617,13 +1617,11 @@ fr:
     desktop_category_page_style: "Style visuel de la page /categories."
     category_colors: "Une liste de couleurs en hexadécimale autorisées pour les catégories."
     category_style: "Style visuel pour les badges de catégorie."
-    max_image_size_kb: "La taille maximale des images en Ko. Doit être configuré dans nginx (client_max_body_size) / apache ou proxy aussi."
     max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. Doit être configurer dans nginx (client_max_body_size) / apache ou proxy aussi."
     authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois sur le serveur (mettre '*' pour autoriser tous les types)"
     authorized_extensions_for_staff: "Une liste des extensions de fichiers autorisées pour le téléchargement pour les responsables en plus de la liste définie dans le paramètre `authorized_extensions'. (utilisez '*' pour activer tous les types de fichiers)"
     theme_authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois de thème (mettre « * » pour autoriser tous les types de fichier)"
     max_similar_results: "Combien de sujets similaires sont afficher lorsqu'un utilisateur est en train de créer un nouveau sujet. La comparaison se base sur le titre et le contenu."
-    max_image_megapixels: "Nombre maximum autorisé de mégapixels pour une image."
     title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
     title_remove_extraneous_space: "Supprimez les espaces devant les signes de ponctuation de fin."
     automatic_topic_heat_values: 'Mettez à jour automatiquement les paramètres "Sujet affiché" et "Sujet similaire" en fonction de l''activité du site.'

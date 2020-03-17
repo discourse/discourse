@@ -993,7 +993,6 @@ ro:
     desktop_category_page_style: "Stil vizual pentru pagina /categories ."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
     category_style: "Stil vizual pentru categoria ecusoane."
-    max_image_size_kb: "Mărimea maximă a unei imagini încărcate în kB. Aceasta trebuie configurată în nginx (client_max_body_size) / apache sau proxy."
     max_attachment_size_kb: "Mărimea maximă a unui atașament de fișiere încărcate în Kb. Aceasta trebuie configurata în nginx (client_max_body_size) / apache sau proxy."
     authorized_extensions: "O listă de extensii de fișiere permise la încărcare (folosiți '*' pentru activarea tuturor tipurilor de fișiere)"
     max_similar_results: "Câte subiecte similare vor fi afișate deasupra editorului atunci când se compune un subiect nou. Comparația se face după titlu și pe conținut."

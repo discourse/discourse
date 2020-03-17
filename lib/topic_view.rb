@@ -113,6 +113,10 @@ class TopicView
   end
 
   def canonical_path
+    if SiteSetting.embed_set_canonical_url
+      topic_embed = topic.topic_embed
+      return topic_embed.embed_url if topic_embed
+    end
     path = relative_url.dup
     path <<
       if @page > 1
@@ -343,6 +347,11 @@ class TopicView
       return nil if @user.blank?
       @topic.topic_users.find_by(user_id: @user.id)
     end
+  end
+
+  def has_bookmarks?
+    return false if @user.blank?
+    @topic.bookmarks.exists?(user_id: @user.id)
   end
 
   MAX_PARTICIPANTS = 24

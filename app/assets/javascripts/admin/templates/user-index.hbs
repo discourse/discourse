@@ -59,7 +59,7 @@
           <div class="controls">{{i18n "admin.users.not_verified"}}</div>
         {{/unless}}
         {{#if model.email}}
-          <a href="mailto:{{unbound model.email}}">{{model.email}}</a>
+          <a href="mailto:{{model.email}}">{{model.email}}</a>
         {{else}}
           {{d-button
             class="btn-default"
@@ -79,7 +79,7 @@
           {{#if model.secondary_emails}}
             <ul>
               {{#each model.secondary_emails as |email| }}
-                <li><a href="mailto:{{unbound email}}">{{email}}</a></li>
+                <li><a href="mailto:{{email}}">{{email}}</a></li>
               {{/each}}
             </ul>
           {{else}}
@@ -97,7 +97,7 @@
     </div>
 
     <div class="display-row bounce-score">
-      <div class="field"><a href="{{model.bounceLink}}">{{i18n "admin.user.bounce_score"}}</a></div>
+      <div class="field"><a href={{model.bounceLink}}>{{i18n "admin.user.bounce_score"}}</a></div>
       <div class="value">{{model.bounceScore}}</div>
       <div class="controls">
         {{#if model.canResetBounceScore}}
@@ -132,7 +132,7 @@
     <div class="field">{{i18n "user.avatar.title"}}</div>
     <div class="value">{{avatar model imageSize="large"}}</div>
     <div class="controls">
-      {{{i18n "admin.user.visit_profile" url=preferencesPath}}}
+      {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
     </div>
   </div>
 
@@ -509,7 +509,7 @@
     <h1>{{i18n "admin.groups.title"}}</h1>
       <div class="display-row">
         <div class="field">{{i18n "admin.groups.automatic"}}</div>
-        <div class="value">{{{automaticGroups}}}</div>
+        <div class="value">{{html-safe automaticGroups}}</div>
       </div>
       <div class="display-row">
         <div class="field">{{i18n "admin.groups.custom"}}</div>
@@ -616,11 +616,11 @@
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.time_read"}}</div>
-    <div class="value">{{{format-duration model.time_read}}}</div>
+    <div class="value">{{format-duration model.time_read}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "user.invited.days_visited"}}</div>
-    <div class="value">{{{model.days_visited}}}</div>
+    <div class="value">{{html-safe model.days_visited}}</div>
   </div>
 </section>
 

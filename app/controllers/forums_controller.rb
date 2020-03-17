@@ -10,7 +10,7 @@ class ForumsController < ActionController::Base
 
   def status
     if $shutdown # rubocop:disable Style/GlobalVars
-      render plain: "shutting down", status: 500
+      render plain: "shutting down", status: (params[:shutdown_ok] ? 200 : 500)
     else
       render plain: "ok"
     end

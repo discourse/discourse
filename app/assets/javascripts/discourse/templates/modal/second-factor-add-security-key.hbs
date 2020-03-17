@@ -10,13 +10,13 @@
 
     <div class="control-group">
       <div class="controls">
-        {{{i18n 'user.second_factor.enable_security_key_description'}}}
+        {{html-safe (i18n 'user.second_factor.enable_security_key_description')}}
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-        {{input value=securityKeyName id='test' placeholder='security key name'}}
+        {{input value=securityKeyName id='security-key-name' placeholder='security key name'}}
       </div>
     </div>
 
@@ -24,7 +24,7 @@
       <div class="controls">
         {{#unless webauthnUnsupported}}
           {{d-button
-            class="btn-primary add-totp"
+            class="btn-primary add-security-key"
             action=(action "registerSecurityKey")
             label="user.second_factor.security_key.register"}}
         {{/unless}}

@@ -415,12 +415,14 @@ describe PostsController do
       end
 
       it "won't update bump date if post is a whisper" do
+        created_at = freeze_time 1.day.ago
         post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
 
+        unfreeze_time
         put "/posts/#{post.id}.json", params: update_params
-        expect(response.status).to eq(200)
 
-        expect(post.topic.reload.bumped_at).to be < post.created_at
+        expect(response.status).to eq(200)
+        expect(post.topic.reload.bumped_at).to eq_time(created_at)
       end
     end
 
@@ -452,6 +454,31 @@ describe PostsController do
 
       expect(response.status).to eq(403)
       expect(post.topic.reload.category_id).not_to eq(category.id)
+    end
+  end
+
+  describe "#destroy_bookmark" do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post, topic: post.topic) }
+
+    before do
+      sign_in(user)
+    end
+
+    it "deletes the bookmark" do
+      bookmark_id = bookmark.id
+      delete "/posts/#{post.id}/bookmark.json"
+      expect(Bookmark.find_by(id: bookmark_id)).to eq(nil)
+    end
+
+    context "when the user still has bookmarks in the topic" do
+      before do
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: topic)
+      end
+      it "marks topic_bookmaked as true" do
+        delete "/posts/#{post.id}/bookmark.json"
+        expect(JSON.parse(response.body)['topic_bookmarked']).to eq(true)
+      end
     end
   end
 
@@ -1314,10 +1341,10 @@ describe PostsController do
 
     context "topic bump" do
       shared_examples "it works" do
-        let(:original_bumped_at) { 1.day.ago }
-        let!(:topic) { Fabricate(:topic, bumped_at: original_bumped_at) }
-
         it "should be able to skip topic bumping" do
+          original_bumped_at = 1.day.ago
+          topic = Fabricate(:topic, bumped_at: original_bumped_at)
+
           post "/posts.json", params: {
             raw: 'this is the test content',
             topic_id: topic.id,
@@ -1325,7 +1352,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(200)
-          expect(topic.reload.bumped_at).to be_within_one_second_of(original_bumped_at)
+          expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
         end
 
         it "should be able to post with topic bumping" do
@@ -1335,7 +1362,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(200)
-          expect(topic.reload.bumped_at).to eq(topic.posts.last.created_at)
+          expect(topic.reload.bumped_at).to eq_time(topic.posts.last.created_at)
         end
       end
 

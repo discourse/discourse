@@ -18,14 +18,20 @@
 
           {{#unless showNotFoundError}}
           <li class="item report">
-            <a href="{{model.reportUrl}}" class="report-url">
+            <a href={{model.reportUrl}} class="report-url">
               {{model.title}}
             </a>
 
             {{#if model.description}}
-              <span class="info" data-tooltip="{{model.description}}">
-                {{d-icon "question-circle"}}
-              </span>
+              {{#if model.description_link}}
+                <a target="_blank" rel="noopener" href={{model.description_link}} class="info" data-tooltip={{model.description}}>
+                  {{d-icon "question-circle"}}
+                </a>
+              {{else}}
+                <span class="info" data-tooltip={{model.description}}>
+                  {{d-icon "question-circle"}}
+                </span>
+              {{/if}}
             {{/if}}
           </li>
           {{/unless}}
@@ -34,7 +40,7 @@
 
       {{#if shouldDisplayTrend}}
         <div class="trend {{model.trend}}">
-          <span class="value" title="{{model.trendTitle}}">
+          <span class="value" title={{model.trendTitle}}>
             {{#if model.average}}
               {{number model.currentAverage}}{{#if model.percent}}%{{/if}}
             {{else}}
@@ -52,40 +58,7 @@
 
   <div class="body">
     <div class="main">
-      {{#unless showError}}
-        {{#if hasData}}
-          {{#if currentMode}}
-            {{component modeComponent model=model options=options}}
-
-            {{#if model.relatedReport}}
-              {{admin-report showFilteringUI=false dataSourceName=model.relatedReport.type}}
-            {{/if}}
-          {{/if}}
-        {{else}}
-          {{#if rateLimitationString}}
-            <div class="alert alert-error report-alert rate-limited">
-              {{d-icon "thermometer-three-quarters"}}
-              <span>{{rateLimitationString}}</span>
-            </div>
-          {{else}}
-            <div class="alert alert-info report-alert no-data">
-              {{d-icon "chart-pie"}}
-              {{#if model.reportUrl}}
-                <a href="{{model.reportUrl}}" class="report-url">
-                  <span>
-                    {{#if model.title}}
-                      {{model.title}} —
-                    {{/if}}
-                    {{i18n "admin.dashboard.reports.no_data"}}
-                  </span>
-                </a>
-              {{else}}
-                <span>{{i18n "admin.dashboard.reports.no_data"}}</span>
-              {{/if}}
-            </div>
-          {{/if}}
-        {{/if}}
-      {{else}}
+      {{#if showError}}
         {{#if showTimeoutError}}
           <div class="alert alert-error report-alert timeout">
             {{d-icon "exclamation-triangle"}}
@@ -106,7 +79,40 @@
             <span>{{i18n "admin.dashboard.not_found_error"}}</span>
           </div>
         {{/if}}
-      {{/unless}}
+      {{else}}
+        {{#if hasData}}
+          {{#if currentMode}}
+            {{component modeComponent model=model options=options}}
+
+            {{#if model.relatedReport}}
+              {{admin-report showFilteringUI=false dataSourceName=model.relatedReport.type}}
+            {{/if}}
+          {{/if}}
+        {{else}}
+          {{#if rateLimitationString}}
+            <div class="alert alert-error report-alert rate-limited">
+              {{d-icon "thermometer-three-quarters"}}
+              <span>{{rateLimitationString}}</span>
+            </div>
+          {{else}}
+            <div class="alert alert-info report-alert no-data">
+              {{d-icon "chart-pie"}}
+              {{#if model.reportUrl}}
+                <a href={{model.reportUrl}} class="report-url">
+                  <span>
+                    {{#if model.title}}
+                      {{model.title}} —
+                    {{/if}}
+                    {{i18n "admin.dashboard.reports.no_data"}}
+                  </span>
+                </a>
+              {{else}}
+                <span>{{i18n "admin.dashboard.reports.no_data"}}</span>
+              {{/if}}
+            </div>
+          {{/if}}
+        {{/if}}
+      {{/if}}
     </div>
 
     {{#if showFilteringUI}}
@@ -193,6 +199,6 @@
 {{/conditional-loading-section}}
 {{else}}
   <div class="alert alert-info">
-    {{{disabledLabel}}}
+    {{html-safe disabledLabel}}
   </div>
 {{/if}}

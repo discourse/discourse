@@ -102,7 +102,9 @@ class UploadsController < ApplicationController
     sha1 = Upload.sha1_from_base62_encoded(params[:base62])
 
     if upload = Upload.find_by(sha1: sha1)
-      return handle_secure_upload_request(upload, Discourse.store.get_path_for_upload(upload)) if upload.secure? && SiteSetting.secure_media?
+      if upload.secure? && SiteSetting.secure_media?
+        return handle_secure_upload_request(upload)
+      end
 
       if Discourse.store.internal?
         send_file_local_upload(upload)
@@ -128,7 +130,6 @@ class UploadsController < ApplicationController
     upload = Upload.find_by(sha1: sha1)
     return render_404 if upload.blank?
 
-    signed_secure_url = Discourse.store.signed_url_for_path(path_with_ext)
     return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_media?
 
     # we don't want to 404 here if secure media gets disabled
@@ -138,12 +139,19 @@ class UploadsController < ApplicationController
     # if the upload is still secure, that means the ACL is probably still
     # private, so we don't want to go to the CDN url just yet otherwise we
     # will get a 403. if the upload is not secure we assume the ACL is public
+    signed_secure_url = Discourse.store.signed_url_for_path(path_with_ext)
     redirect_to upload.secure? ? signed_secure_url : Discourse.store.cdn_url(upload.url)
   end
 
-  def handle_secure_upload_request(upload, path_with_ext)
+  def handle_secure_upload_request(upload, path_with_ext = nil)
     if upload.access_control_post_id.present?
       raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
+    end
+
+    # url_for figures out the full URL, handling multisite DBs,
+    # and will return a presigned URL for the upload
+    if path_with_ext.blank?
+      return redirect_to Discourse.store.url_for(upload)
     end
 
     redirect_to Discourse.store.signed_url_for_path(path_with_ext)

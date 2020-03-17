@@ -45,6 +45,39 @@ module Discourse
       logs.join("\n".freeze)
     end
 
+    def self.atomic_write_file(destination, contents)
+      begin
+        return if File.read(destination) == contents
+      rescue Errno::ENOENT
+      end
+
+      FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
+      temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
+
+      File.open(temp_destination, "w") do |fd|
+        fd.write(contents)
+        fd.fsync()
+      end
+
+      File.rename(temp_destination, destination)
+
+      nil
+    end
+
+    def self.atomic_ln_s(source, destination)
+      begin
+        return if File.readlink(destination) == source
+      rescue Errno::ENOENT, Errno::EINVAL
+      end
+
+      FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
+      temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
+      execute_command('ln', '-s', source, temp_destination)
+      File.rename(temp_destination, destination)
+
+      nil
+    end
+
     private
 
     class CommandRunner
@@ -238,6 +271,10 @@ module Discourse
   def self.find_plugin_css_assets(args)
     plugins = self.find_plugins(args)
 
+    plugins = plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(:css, args[:request]) }
+    end
+
     assets = []
 
     targets = [nil]
@@ -256,9 +293,15 @@ module Discourse
   end
 
   def self.find_plugin_js_assets(args)
-    self.find_plugins(args).find_all do |plugin|
+    plugins = self.find_plugins(args).select do |plugin|
       plugin.js_asset_exists?
-    end.map { |plugin| "plugins/#{plugin.directory_name}" }
+    end
+
+    plugins = plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(:js, args[:request]) }
+    end
+
+    plugins.map { |plugin| "plugins/#{plugin.directory_name}" }
   end
 
   def self.assets_digest
@@ -622,7 +665,7 @@ module Discourse
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
 
-    Tilt::ES6ModuleTranspilerTemplate.reset_context if defined? Tilt::ES6ModuleTranspilerTemplate
+    DiscourseJsProcessor::Transpiler.reset_context if defined? DiscourseJsProcessor::Transpiler
     JsLocaleHelper.reset_context if defined? JsLocaleHelper
     nil
   end

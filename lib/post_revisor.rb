@@ -180,13 +180,13 @@ class PostRevisor
       @fields.has_key?('raw') &&
       @editor.staff? &&
       @editor != Discourse.system_user &&
-      !@post.user.staff?
+      !@post.user&.staff?
     )
       PostLocker.new(@post, @editor).lock
     end
 
     # We log staff edits to posts
-    if @editor.staff? && @editor.id != @post.user.id && @fields.has_key?('raw') && !@opts[:skip_staff_log]
+    if @editor.staff? && @editor.id != @post.user_id && @fields.has_key?('raw') && !@opts[:skip_staff_log]
       StaffActionLogger.new(@editor).log_post_edit(
         @post,
         old_raw: old_raw

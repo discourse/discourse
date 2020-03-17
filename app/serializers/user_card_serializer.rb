@@ -140,8 +140,8 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def user_fields
-    allowed_keys = scope.allowed_user_field_ids(object).map(&:to_s)
-    object.user_fields&.select { |k, v| allowed_keys.include?(k) }
+    allowed_keys = scope.allowed_user_field_ids(object)
+    object.user_fields(allowed_keys)
   end
 
   def include_user_fields?
@@ -149,14 +149,14 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def custom_fields
-    fields = User.whitelisted_user_custom_fields(scope)
-
-    if scope.can_edit?(object)
-      fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a
-    end
+    fields = custom_field_keys
 
     if fields.present?
-      User.custom_fields_for_ids([object.id], fields)[object.id] || {}
+      if object.custom_fields_preloaded?
+        {}.tap { |h| fields.each { |f| h[f] = object.custom_fields[f] } }
+      else
+        User.custom_fields_for_ids([object.id], fields)[object.id] || {}
+      end
     else
       {}
     end
@@ -196,5 +196,12 @@ class UserCardSerializer < BasicUserSerializer
 
   def card_background_upload_url
     object.card_background_upload&.url
+  end
+
+  private
+
+  def custom_field_keys
+    # Can be extended by other serializers
+    User.whitelisted_user_custom_fields(scope)
   end
 end

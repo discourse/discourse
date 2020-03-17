@@ -140,7 +140,6 @@ Discourse::Application.routes.draw do
     get 'users/:id/:username/tl3_requirements' => 'users#show'
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
-    post "users/invite_admin" => "users#invite_admin", constraints: AdminConstraint.new
 
     resources :impersonate, constraints: AdminConstraint.new
 
@@ -368,6 +367,8 @@ Discourse::Application.routes.draw do
   get "user_preferences" => "users#user_preferences_redirect"
   get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
 
+  get "user-cards" => "users#cards", format: :json
+
   %w{users u}.each_with_index do |root_path, index|
     get "#{root_path}" => "users#index", constraints: { format: 'html' }
 
@@ -468,6 +469,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/activity" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/activity/:filter" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/badges" => "users#badges", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/bookmarks" => "users#bookmarks", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/notifications" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/notifications/:filter" => "users#show", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username" => "users#destroy", constraints: { username: RouteFormat.username }

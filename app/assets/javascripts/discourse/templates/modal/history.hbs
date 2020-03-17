@@ -21,7 +21,7 @@
           &mdash; {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
         {{/if}}
         {{#if model.category_id_changes}}
-          &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
+          &mdash; {{html-safe previousCategory}} &rarr; {{html-safe currentCategory}}
         {{/if}}
       {{/unless}}
     </div>
@@ -47,10 +47,10 @@
       {{/unless}}
     </div>
   </div>
-  <div id="revisions" data-post-id="{{model.post_id}}" class={{hiddenClasses}}>
+  <div id="revisions" data-post-id={{model.post_id}} class={{hiddenClasses}}>
     {{#if model.title_changes}}
       <div class="row">
-        <h2>{{{titleDiff}}}</h2>
+        <h2>{{html-safe titleDiff}}</h2>
       </div>
     {{/if}}
     {{#if site.mobileView}}
@@ -72,7 +72,7 @@
       {{/if}}
       {{#if model.category_id_changes}}
         <div class="row">
-          {{{previousCategory}}} &rarr; {{{currentCategory}}}
+          {{html-safe previousCategory}} &rarr; {{html-safe currentCategory}}
         </div>
       {{/if}}
     {{/if}}
@@ -100,7 +100,7 @@
     {{plugin-outlet name="post-revisions" args=(hash model=model)}}
 
     {{#links-redirect class="row"}}
-      {{{bodyDiff}}}
+      {{html-safe bodyDiff}}
     {{/links-redirect}}
   </div>
 {{/d-modal-body}}
@@ -109,9 +109,9 @@
     <div id="revision-controls">
       {{d-button class="btn-default" action=(action "loadFirstVersion") icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
       {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
-      <div id="revision-numbers" class="{{unless displayRevisions 'invisible'}}">
+      <div id="revision-numbers" class={{unless displayRevisions 'invisible'}}>
         {{#conditional-loading-spinner condition=loading size="small"}}
-          {{{revisionsText}}}
+          {{html-safe revisionsText}}
         {{/conditional-loading-spinner}}
       </div>
       {{d-button class="btn-default" action=(action "loadNextVersion") icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}

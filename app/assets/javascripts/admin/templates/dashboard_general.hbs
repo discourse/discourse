@@ -5,7 +5,7 @@
     <div class="period-section">
       <div class="section-title">
         <h2>
-          <a href="{{get-url '/admin/dashboard/reports'}}">
+          <a href={{get-url '/admin/dashboard/reports'}}>
             {{i18n "admin.dashboard.community_health"}}
           </a>
         </h2>
@@ -142,7 +142,7 @@
         filters=trendingSearchFilters
         isEnabled=logSearchQueriesEnabled
         disabledLabel=trendingSearchDisabledLabel}}
-      {{{i18n "admin.dashboard.reports.trending_search.more" basePath=basePath}}}
+      {{html-safe (i18n "admin.dashboard.reports.trending_search.more" basePath=basePath)}}
     </div>
   </div>
 

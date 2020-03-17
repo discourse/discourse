@@ -1262,9 +1262,6 @@ fr:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "La connexion est désactivée quand le site est en lecture seule."
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
-    too_few_topics_and_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentTopics}</strong> sujets et <strong>%{currentPosts}</strong> messages. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredTopics}</strong> sujets et <strong>%{requiredPosts}</strong> messages sont recommandés. Seul le personnel peut voir ce message."
-    too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentTopics}</strong> sujets. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredTopics}</strong> sujets sont recommandés. Seul le personnel peut voir ce message."
-    too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong> / %{currentPosts}</strong> messages. Les visiteurs ont besoin de plus à consulter et répondre – <strong>%{requiredPosts}</strong> messages sont recommandés. Seul le personnel peut voir ce message."
     logs_error_rate_notice:
       reached_hour_MF: "{relativeAge} – {rate, plural, one {# erreur/heure} other {# erreurs/heure}} arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
       reached_minute_MF: "{relativeAge} – {rate, plural, one {# erreur/minute} other {# erreurs/minute}} arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
@@ -2625,6 +2622,7 @@ fr:
         help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
       personal_message:
         title: "Ce sujet est un message personnel"
+        help: "Ce sujet est un message personnel"
     posts: "Messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
     posts_likes_MF: |2

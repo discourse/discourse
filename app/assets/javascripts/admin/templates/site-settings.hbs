@@ -16,7 +16,7 @@
 <div class="admin-nav pull-left">
   <ul class="nav nav-stacked">
     {{#each visibleSiteSettings as |category|}}
-      <li class="{{category.nameKey}}">
+      <li class={{category.nameKey}}>
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
           {{#if category.count}}<span class="count">({{category.count}})</span>{{/if}}

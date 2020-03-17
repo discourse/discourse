@@ -28,7 +28,6 @@ export default ComboBoxComponent.extend({
     subCategory: false,
     clearable: false,
     hideParentCategory: "hideParentCategory",
-    allowUncategorized: true,
     countSubcategories: false,
     autoInsertNoneItem: false,
     displayCategoryDescription: "displayCategoryDescription",
@@ -96,7 +95,7 @@ export default ComboBoxComponent.extend({
       content.title = category.title;
       content.label = categoryBadgeHTML(category, {
         link: false,
-        allowUncategorized: this.selectKit.options.allowUncategorized,
+        allowUncategorized: true,
         hideParent: true
       }).htmlSafe();
     }
@@ -174,10 +173,7 @@ export default ComboBoxComponent.extend({
   },
 
   _filterUncategorized(content) {
-    if (
-      !this.siteSettings.allow_uncategorized_topics ||
-      !this.selectKit.options.allowUncategorized
-    ) {
+    if (!this.siteSettings.allow_uncategorized_topics) {
       content = content.filter(
         c => c.id !== this.site.uncategorized_category_id
       );
