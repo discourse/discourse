@@ -316,3 +316,11 @@
     --max-height: 75px;
   }
 }
+
+.categories-list .category.muted {
+  font-size: $font-down-1;
+  h3,
+  .category-name {
+    color: $primary-medium;
+  }
+}

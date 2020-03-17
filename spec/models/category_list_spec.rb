@@ -220,6 +220,22 @@ describe CategoryList do
         expect(category_ids_admin).to eq([public_cat2.id, public_cat.id])
       end
     end
+
+    context 'some categories are muted' do
+      let!(:cat1) { Fabricate(:category_with_definition) }
+      let!(:muted_cat) { Fabricate(:category_with_definition) }
+      let!(:cat3) { Fabricate(:category_with_definition) }
+
+      before do
+        CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:muted], muted_cat.id)
+      end
+
+      it "returns muted categories at the end of the list" do
+        category_list = CategoryList.new(Guardian.new user).categories.pluck(:id)
+
+        expect(category_list).to eq([SiteSetting.uncategorized_category_id, cat1.id, cat3.id, muted_cat.id])
+      end
+    end
   end
 
 end

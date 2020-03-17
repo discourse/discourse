@@ -23,6 +23,7 @@ class CategoryList
     find_user_data
     sort_unpinned
     trim_results
+    demote_muted
 
     if preloaded_topic_custom_fields.present?
       displayable_topics = @categories.map(&:displayable_topics)
@@ -160,6 +161,12 @@ class CategoryList
         end
       end
     end
+  end
+
+  def demote_muted
+    muted_categories = @categories.select { |category| category.notification_level == 0 }
+    @categories = @categories.reject { |category| category.notification_level == 0 }
+    @categories.concat muted_categories
   end
 
   def trim_results
