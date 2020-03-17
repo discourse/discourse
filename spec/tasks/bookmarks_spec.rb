@@ -43,6 +43,17 @@ RSpec.describe "bookmarks tasks" do
     expect(Bookmark.all.count).to eq(1)
   end
 
+  it "skips post actions where the post topic no longer exists and does not error" do
+    post1.topic.delete
+    post1.reload
+    expect { invoke_task }.not_to raise_error
+  end
+
+  it "skips post actions where the post no longer exists and does not error" do
+    post1.delete
+    expect { invoke_task }.not_to raise_error
+  end
+
   def create_post_actions_and_existing_bookmarks
     Fabricate(:post_action, user: user1, post: post1, post_action_type_id: PostActionType.types[:bookmark])
     Fabricate(:post_action, user: user2, post: post2, post_action_type_id: PostActionType.types[:bookmark])
