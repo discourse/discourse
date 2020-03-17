@@ -1,7 +1,8 @@
 {{#each categories as |c|}}
-  <div class='category category-box category-box-{{c.slug}}' style={{border-color c.color}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}}
+  <div class='category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}}' style={{border-color c.color}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}}
    data-url={{c.url}}>
     <div class='category-box-inner'>
+      {{#unless c.isMuted}}
       <div class="category-logo">
         {{#if c.uploaded_logo.url}}
           {{cdn-img
@@ -11,6 +12,7 @@
               height=c.uploaded_logo.height}}
         {{/if}}
       </div>
+      {{/unless}}
       <div class="category-details">
         <div class='category-box-heading'>
           <a class="parent-box-link" href={{c.url}}>
@@ -23,6 +25,7 @@
           </a>
         </div>
 
+        {{#unless c.isMuted}}
         <div class='description'>
           {{text-overflow class="overflow" text=c.description_excerpt}}
         </div>
@@ -62,6 +65,7 @@
             {{/each}}
           </div>
         {{/if}}
+        {{/unless}}
       </div>
     </div>
   </div>
