@@ -44,6 +44,22 @@ describe WebHook do
       expect(post_hook.payload_url).to eq("https://example.com")
     end
 
+    it "excludes disabled plugin web_hooks" do
+      web_hook_event_types = WebHookEventType.active.find_by(name: 'solved')
+      expect(web_hook_event_types).to eq(nil)
+    end
+
+    it "includes non-plugin web_hooks" do
+      web_hook_event_types = WebHookEventType.active.where(name: 'topic')
+      expect(web_hook_event_types.count).to eq(1)
+    end
+
+    it "includes enabled plugin web_hooks" do
+      SiteSetting.stubs(:solved_enabled).returns(true)
+      web_hook_event_types = WebHookEventType.active.where(name: 'solved')
+      expect(web_hook_event_types.count).to eq(1)
+    end
+
     describe '#active_web_hooks' do
       it "returns unique hooks" do
         post_hook.web_hook_event_types << WebHookEventType.find_by(name: 'topic')
