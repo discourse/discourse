@@ -17,6 +17,7 @@ require "yaml"
 
 DEFAULT_OUTPUT_PATH = "/shared/import/data"
 DEFAULT_COOKIES_TXT = "/shared/import/cookies.txt"
+ABORT_AFTER_SKIPPED_TOPIC_COUNT = 10
 
 def driver
   @driver ||= begin
@@ -77,7 +78,7 @@ def base_url
   end
 end
 
-def crawl_categories
+def crawl_topics
   1.step(nil, 100).each do |start|
     url = "#{base_url}/#{@groupname}[#{start}-#{start + 99}]"
     get(url)
@@ -97,12 +98,24 @@ def crawl_categories
     topic_urls = extract(".subject a[href*='#{@groupname}']") { |a| a["href"].sub("/d/topic/", "/forum/?_escaped_fragment_=topic/") }
     break if topic_urls.size == 0
 
-    topic_urls.each { |topic_url| crawl_topic(topic_url) }
+    topic_urls.each do |topic_url|
+      crawl_topic(topic_url)
+
+      # abort if this in an incremental crawl and there were too many consecutive, skipped topics
+      if @finished && @skipped_topic_count > ABORT_AFTER_SKIPPED_TOPIC_COUNT
+        puts "Skipping all other topics, because this is an incremental crawl.".green
+        return
+      end
+    end
   end
 end
 
 def crawl_topic(url)
-  if @scraped_topic_urls.include?(url)
+  skippable = @scraped_topic_urls.include?(url)
+
+  # Skip this topic if there were already too many consecutive, skipped topics.
+  # Otherwise we have to look if there are new messages in the topic.
+  if skippable && @skipped_topic_count > ABORT_AFTER_SKIPPED_TOPIC_COUNT
     puts "Skipping".green << " #{url}"
     return
   end
@@ -110,13 +123,18 @@ def crawl_topic(url)
   puts "Scraping #{url}"
   get(url)
 
+  messsages_crawled = false
+
   extract(".subject a[href*='#{@groupname}']") do |a|
     [
       a["href"].sub("/d/msg/", "/forum/message/raw?msg="),
       a["title"].empty?
     ]
-  end.each { |msg_url, might_be_deleted| crawl_message(msg_url, might_be_deleted) }
+  end.each do |msg_url, might_be_deleted|
+    messsages_crawled |= crawl_message(msg_url, might_be_deleted)
+  end
 
+  @skipped_topic_count = skippable && messsages_crawled ? 0 : @skipped_topic_count + 1
   @scraped_topic_urls << url
 rescue
   puts "Failed to scrape topic at #{url}".red
@@ -140,7 +158,10 @@ def crawl_message(url, might_be_deleted)
     end
   end
 
+  old_md5 = Digest::MD5.file(filename) if File.exist?(filename)
   File.write(filename, content)
+
+  old_md5 ? old_md5 != Digest::MD5.file(filename) : true
 rescue Selenium::WebDriver::Error::NoSuchElementError
   if might_be_deleted
     puts "Message might be deleted. Skipping #{url}"
@@ -158,12 +179,11 @@ def login
   get("https://google.com/404")
 
   add_cookies(
-    "accounts.google.com",
     "myaccount.google.com",
     "google.com"
   )
 
-  get("https://accounts.google.com/servicelogin")
+  get("https://myaccount.google.com/?utm_source=sign_in_no_continue")
 
   begin
     wait_for_url { |url| url.start_with?("https://myaccount.google.com") }
@@ -202,14 +222,28 @@ end
 def crawl
   start_time = Time.now
   status_filename = File.join(@path, "status.yml")
-  @scraped_topic_urls = File.exists?(status_filename) ? YAML.load_file(status_filename) : Set.new
+
+  if File.exists?(status_filename)
+    yaml = YAML.load_file(status_filename)
+    @finished = yaml[:finished]
+    @scraped_topic_urls = yaml[:urls]
+  else
+    @finished = false
+    @scraped_topic_urls = Set.new
+  end
+
+  @skipped_topic_count = 0
 
   login
 
   begin
-    crawl_categories
+    crawl_topics
+    @finished = true
   ensure
-    File.write(status_filename, @scraped_topic_urls.to_yaml)
+    File.write(status_filename, {
+      finished: @finished,
+      urls: @scraped_topic_urls
+    }.to_yaml)
   end
 
   elapsed = Time.now - start_time

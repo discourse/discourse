@@ -293,6 +293,10 @@ basic:
     client: true
     default: false
     hidden: true
+  enable_bookmark_at_desktop_reminders:
+    client: true
+    default: false
+    hidden: true
   push_notifications_prompt:
     default: true
     client: true
@@ -332,6 +336,7 @@ login:
   must_approve_users:
     client: true
     default: false
+  invite_code: ""
   enable_local_logins:
     client: true
     default: true
@@ -589,11 +594,24 @@ users:
     default: 730
     min: 0
     max: 3650
+  clean_up_unused_staged_users_after_days:
+    default: 365
+    min: 0
+    max: 3650
   user_selected_primary_groups:
     default: false
     client: true
   max_notifications_per_user:
     default: 10000
+  gravatar_name:
+    default: Gravatar
+    client: true
+  gravatar_base_url:
+    default: www.gravatar.com
+    client: true
+  gravatar_login_url:
+    default: /emails
+    client: true
 
 groups:
   enable_group_directory:
@@ -633,7 +651,7 @@ posting:
   max_post_length:
     client: true
     default: 32000
-    max: 99000
+    max: 150000
   topic_featured_link_enabled:
     client: true
     default: true
@@ -858,7 +876,7 @@ posting:
     default: 0
     enum: "TrustLevelSetting"
   approve_suspect_users:
-    default: false
+    default: true
   approve_unless_staged:
     default: false
   notify_about_queued_posts_after:
@@ -876,6 +894,7 @@ posting:
       - code-fences
   embed_any_origin: false
   embed_topics_list: false
+  embed_set_canonical_url: false
   embed_truncate:
     default: true
   embed_support_markdown:
@@ -942,7 +961,9 @@ email:
     default: false
     client: true
   apply_custom_styles_to_digest: true
-  email_accent_bg_color: "#2F70AC"
+  email_accent_bg_color:
+    type: color
+    default: "#2F70AC"
   email_accent_fg_color: "#FFFFFF"
   email_link_color: "#006699"
   show_topic_featured_link_in_digest: false
@@ -1480,7 +1501,7 @@ spam:
   auto_silence_fast_typers_max_trust_level: 0
   auto_silence_first_post_regex: ""
   high_trust_flaggers_auto_hide_posts: true
-  cooldown_hours_until_reflag: 
+  cooldown_hours_until_reflag:
     default: 24
     min: 0
 
@@ -1649,8 +1670,6 @@ backups:
   enable_backups:
     default: true
     client: true
-  readonly_mode_during_backup:
-    default: false
   allow_restore:
     default: false
   backup_location:

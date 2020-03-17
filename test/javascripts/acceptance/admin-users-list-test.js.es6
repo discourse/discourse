@@ -59,7 +59,7 @@ QUnit.test("switching tabs", async assert => {
   const activeUser = "eviltrout";
   const suspectUser = "sam";
   const activeTitle = I18n.t("admin.users.titles.active");
-  const suspectTitle = I18n.t("admin.users.titles.suspect");
+  const suspectTitle = I18n.t("admin.users.titles.new");
 
   await visit("/admin/users/list/active");
 
@@ -70,7 +70,7 @@ QUnit.test("switching tabs", async assert => {
       .includes(activeUser)
   );
 
-  await click('a[href="/admin/users/list/suspect"]');
+  await click('a[href="/admin/users/list/new"]');
 
   assert.equal(find(".admin-title h2").text(), suspectTitle);
   assert.ok(

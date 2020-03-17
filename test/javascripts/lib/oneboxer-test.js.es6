@@ -20,11 +20,6 @@ QUnit.test("load - failed onebox", async assert => {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
 
-  // prettier-ignore
-  server.get("/onebox", () => { //eslint-disable-line
-    return [404, {}, {}];
-  });
-
   await loadOnebox(element);
 
   assert.equal(
@@ -55,11 +50,6 @@ QUnit.test("load - successful onebox", async assert => {
     </aside>
   `;
 
-  // prettier-ignore
-  server.get("/onebox", () => { //eslint-disable-line
-    return [200, {}, html];
-  });
-
   let element = document.createElement("A");
   element.setAttribute("href", "http://somegoodurl.com");
 
@@ -72,7 +62,7 @@ QUnit.test("load - successful onebox", async assert => {
   );
   assert.equal(
     loadOnebox(element),
-    stringToHTML(html).outerHTML,
+    html.trim(),
     "it returns the html from the cache"
   );
 });

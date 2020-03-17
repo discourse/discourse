@@ -9,7 +9,7 @@
   </div>
   {{#if siteSettings.enable_mentions}}
     <div class='instructions'>
-      {{{i18n 'user.username.short_instructions' username=model.username}}}
+      {{html-safe (i18n 'user.username.short_instructions' username=model.username)}}
     </div>
   {{/if}}
 </div>
@@ -117,7 +117,7 @@
                   </td>
               </tr>
             {{else}}
-              <tr class="{{dasherize authProvider.method.name}}">
+              <tr class={{dasherize authProvider.method.name}}>
                 <td>{{authProvider.method.prettyName}}</td>
                   <td colspan=2>
                     {{#if authProvider.method.can_connect}}
@@ -215,11 +215,7 @@
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
 {{#if canSaveUser}}
-  <div class="control-group save-button">
-    <div class="controls">
-      {{partial 'user/preferences/save-button'}}
-    </div>
-  </div>
+  {{save-controls model=model action=(action "save") saved=saved}}
 {{/if}}
 
 

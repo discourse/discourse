@@ -27,15 +27,14 @@ QUnit.test("edit and revert a site text by key", async assert => {
   await visit("/admin/customize/site_texts/site.test");
 
   assert.equal(find(".title h3").text(), "site.test");
-  assert.ok(!exists(".save-messages .saved"));
-  assert.ok(!exists(".save-messages .saved"));
+  assert.ok(!exists(".saved"));
   assert.ok(!exists(".revert-site-text"));
 
   // Change the value
   await fillIn(".site-text-value", "New Test Value");
   await click(".save-changes");
 
-  assert.ok(exists(".save-messages .saved"));
+  assert.ok(exists(".saved"));
   assert.ok(exists(".revert-site-text"));
 
   // Revert the changes
@@ -45,6 +44,6 @@ QUnit.test("edit and revert a site text by key", async assert => {
 
   await click(".bootbox.modal .btn-primary");
 
-  assert.ok(!exists(".save-messages .saved"));
+  assert.ok(!exists(".saved"));
   assert.ok(!exists(".revert-site-text"));
 });

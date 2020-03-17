@@ -714,7 +714,7 @@ class Post < ActiveRecord::Base
       self.cooked = cook(raw, topic_id: topic_id)
     end
 
-    self.baked_at = Time.new
+    self.baked_at = Time.zone.now
     self.baked_version = BAKED_VERSION
   end
 
@@ -918,8 +918,8 @@ class Post < ActiveRecord::Base
       if SiteSetting.secure_media?
         Upload.where(
           id: upload_ids, access_control_post_id: nil
-        ).where.not(
-          id: CustomEmoji.pluck(:upload_id)
+        ).where(
+          'id NOT IN (SELECT upload_id FROM custom_emojis)'
         ).update_all(
           access_control_post_id: self.id
         )
@@ -949,8 +949,9 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
 
-    links = fragments.css("a/@href", "img/@src").map do |media|
+    links = selectors.map do |media|
       src = media.value
       next if src.blank?
 

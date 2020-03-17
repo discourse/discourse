@@ -91,27 +91,6 @@ describe AdminUserIndexQuery do
 
   end
 
-  describe 'with a suspected user' do
-    fab!(:bot) { Fabricate(:active_user, id: -10, created_at: 1.day.ago) }
-    fab!(:regular_user) { Fabricate(:user, created_at: 1.day.ago) }
-    fab!(:user_with_bio) { Fabricate(:active_user, created_at: 1.day.ago) }
-    fab!(:user_with_website) { Fabricate(:user, created_at: 1.day.ago) }
-
-    before do
-      user_with_website.user_profile.website = 'https://example.com'
-      user_with_website.user_profile.save!
-    end
-
-    it 'finds the suspected user' do
-      bot
-      regular_user
-      user_with_bio
-      user_with_website
-      query = AdminUserIndexQuery.new(query: 'suspect')
-      expect(query.find_users).to contain_exactly(user_with_bio, user_with_website)
-    end
-  end
-
   describe "with a pending user" do
 
     fab!(:user) { Fabricate(:user, active: true, approved: false) }

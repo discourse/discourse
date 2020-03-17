@@ -8,11 +8,7 @@ end
 
 module ImportScripts
   module Mbox
-    require_relative 'mbox/support/settings'
-
-    @settings = Settings.load(ARGV[0])
-
     require_relative 'mbox/importer'
-    Importer.new(@settings).perform
+    Importer.new(ARGV[0]).perform
   end
 end

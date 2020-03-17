@@ -101,6 +101,22 @@ describe TagGroup do
       expect_same_tag_names(tag_group.reload.tags, [tag, 'new-tag'])
     end
 
+    it "removes parent tag as group member" do
+      parent = Fabricate(:tag)
+      tag_group.tags = [tag, parent]
+      tag_group.update!(parent_tag: parent)
+      tag_group.reload
+      expect_same_tag_names(tag_group.tags, [tag])
+      expect_same_tag_names([tag_group.parent_tag], [parent])
+    end
+
+    it "removes parent tag as group member when creating the group" do
+      parent = Fabricate(:tag)
+      tg = Fabricate(:tag_group, tags: [tag, parent], parent_tag: parent)
+      expect_same_tag_names(tg.tags, [tag])
+      expect_same_tag_names([tg.parent_tag], [parent])
+    end
+
     context 'with synonyms' do
       fab!(:synonym) { Fabricate(:tag, name: 'synonym', target_tag: tag) }
 

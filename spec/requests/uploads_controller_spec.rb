@@ -386,6 +386,7 @@ describe UploadsController do
         end
 
         it "redirects to the signed_url_for_path" do
+          freeze_time
           get upload.short_path
 
           expect(response).to redirect_to(Discourse.store.signed_url_for_path(Discourse.store.get_path_for_upload(upload)))
@@ -397,8 +398,18 @@ describe UploadsController do
           upload.update(access_control_post: post)
 
           get upload.short_path
-
           expect(response.code).to eq("403")
+        end
+
+        context "when running on a multisite connection" do
+          before do
+            Rails.configuration.multisite = true
+          end
+          it "redirects to the signed_url_for_path with the multisite DB name in the url" do
+            freeze_time
+            get upload.short_path
+            expect(response.body).to include(RailsMultisite::ConnectionManagement.current_db)
+          end
         end
       end
     end
@@ -578,7 +589,7 @@ describe UploadsController do
         expect(result[0]["short_path"]).to eq(upload.short_path)
       end
 
-      it 'does not return secure urls for non-media uploads' do
+      it 'returns secure urls for non-media uploads' do
         upload.update!(original_filename: "not-an-image.pdf", extension: "pdf")
         sign_in(user)
 
@@ -586,7 +597,7 @@ describe UploadsController do
         expect(response.status).to eq(200)
 
         result = JSON.parse(response.body)
-        expect(result[0]["url"]).not_to match("/secure-media-uploads")
+        expect(result[0]["url"]).to match("/secure-media-uploads")
         expect(result[0]["short_path"]).to eq(upload.short_path)
       end
     end

@@ -92,7 +92,7 @@ function isReplacableInlineEmoji(string, index, inlineEmoji) {
 }
 
 export function performEmojiUnescape(string, opts) {
-  if (!string) {
+  if (!string || typeof string !== "string") {
     return;
   }
 

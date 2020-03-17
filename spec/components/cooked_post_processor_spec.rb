@@ -1777,14 +1777,14 @@ describe CookedPostProcessor do
       small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
       reply = Fabricate(:post, topic: topic, raw: raw)
 
-      freeze_time Time.zone.now do
+      freeze_time do
         topic.bumped_at = 1.day.ago
         CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
 
         expect(topic.ordered_posts.pluck(:id))
           .to eq([post.id, hidden.id, small_action.id, reply.id])
 
-        expect(topic.bumped_at).to eq(1.day.ago)
+        expect(topic.bumped_at).to eq_time(1.day.ago)
         expect(reply.raw).to eq("and this is the third reply")
         expect(reply.revisions.count).to eq(1)
         expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])

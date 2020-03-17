@@ -223,7 +223,7 @@ es:
     request_membership: "Solicitar membresía"
     join_group: "Unirse al grupo"
   deleted_topic: "¡Ups! Este tema se ha eliminado y ya no está disponible."
-  delete_topic_failed: "Se produjo un error al borrar el tema. Por favor, contacta al administrador del sitio."
+  delete_topic_failed: "Se ha producido un error al borrar el tema. Por favor, contacta al administrador del sitio."
   reading_time: "Tiempo de lectura"
   likes: "Me gusta"
   too_many_replies:
@@ -1645,13 +1645,11 @@ es:
     desktop_category_page_style: "Estilo visual de la página de /categorías."
     category_colors: "Una lista de valores en hexadecimal de los colores para las categorías."
     category_style: "Estilo visual de las etiquetas de categoría."
-    max_image_size_kb: "El tamaño máximo, en kB, de las imágenes que se pueden subir. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     max_attachment_size_kb: "El tamaño máximo, en kB, de los archivos que se pueden adjuntar. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     authorized_extensions: "Una lista de las extensiones de archivo que se permite subir (usa «*» para habilitar todos los tipos de archivo)"
     authorized_extensions_for_staff: "Una lista de las extensiones de archivo que se le permite subir a miembros del staff sumada a la lista definida en la configuración `authorized_extensions`. (Usa «*» para habilitar todos los tipos)"
     theme_authorized_extensions: "Una lista de las extensiones de archivo que se permite subir (usa «*» para habilitar todos los tipos)"
     max_similar_results: "Cantidad de temas similares que se muestran encima del editor cuando se está creando un nuevo tema. La comparación se basa en el título y el cuerpo del tema."
-    max_image_megapixels: "Número máximo de megapíxeles permitidos en una imagen."
     title_prettify: "Prevenir errores comunes en el título, incluidos los títulos escritos todo mayúsculas, con la primera letra en minúscula, con múltiples signos ! o ?, . adicional al final, etc."
     title_remove_extraneous_space: "Eliminar los espacios en blanco delante de la puntuación final."
     automatic_topic_heat_values: 'Actualizar automáticamente la configuración de «temperatura de vistas del tema» y «temperatura de me gusta de publicaciones del tema» según la actividad del sitio.'

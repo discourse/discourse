@@ -2,9 +2,9 @@
   <label>
     <div class='suspend-reason-label'>
       {{#if siteSettings.hide_suspension_reasons}}
-        {{{i18n 'admin.user.suspend_reason_hidden_label'}}}
+        {{html-safe (i18n 'admin.user.suspend_reason_hidden_label')}}
       {{else}}
-        {{{i18n 'admin.user.suspend_reason_label'}}}
+        {{html-safe (i18n 'admin.user.suspend_reason_label')}}
       {{/if}}
     </div>
   </label>

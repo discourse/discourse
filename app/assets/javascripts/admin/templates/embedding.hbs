@@ -23,7 +23,7 @@
 
 {{#if showSecondary}}
   <div class='embedding-secondary'>
-    <p>{{{i18n "admin.embedding.sample"}}}</p>
+    <p>{{html-safe (i18n "admin.embedding.sample")}}</p>
     {{highlighted-code code=embeddingCode lang="html"}}
   </div>
 

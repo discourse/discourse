@@ -1216,9 +1216,6 @@ ur:
       enabled: "یہ سائٹ صرف پڑھنے کے مَوڈ میں ہے۔ براہِ مہربانی براؤز کرتے رہئیے، لیکن جواب دینا، لائکس دینا، اور دیگر اعمال ابھی کے لئے غیر فعال ہیں۔"
       login_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ اِن غیر فعال رہے گا۔"
       logout_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ آؤٹ غیر فعال رہے گا۔"
-    too_few_topics_and_posts_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentTopics}</strong> ٹاپکس اور <strong>%{currentPosts}</strong> پوسٹس موجود ہیں۔ زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے – ہم کم از کم <strong>%{requiredTopics}</strong> ٹاپکس اور <strong>%{requiredPosts}</strong> پوسٹس کی تجویز دیتے ہیں۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
-    too_few_topics_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentTopics}</strong> ٹاپکس موجود ہیں۔ زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے – ہم کم از کم <strong>%{requiredTopics}</strong> ٹاپکس کی تجویز دیتے ہیں۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
-    too_few_posts_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentPosts}</strong> پوسٹس موجود ہیں۔ زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے – ہم کم از کم <strong>%{requiredPosts}</strong> پوسٹس کی تجویز دیتے ہیں۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
     learn_more: "اورجانیے..."
     all_time: "کُل"
     all_time_desc: "کُل ٹاپک بنائے گئے"
@@ -2526,6 +2523,7 @@ ur:
         help: "یہ ٹاپک غیر کسی فہرست میں نہیں ہے؛ یہ ٹاپکس کی فہرست میں ظاہر نہیں ہو گا، اور صرف ایک براہ راست لنک کے ذریعے اِس تک رسائی ہو سکے گی"
       personal_message:
         title: "یہ ٹاپک ایک ذاتی پیغام ہے"
+        help: "یہ ٹاپک ایک ذاتی پیغام ہے"
     posts: "پوسٹس"
     posts_long: "اِس ٹاپک میں {{number}} پوسٹس ہیں"
     posts_likes_MF: |

@@ -83,23 +83,21 @@ describe UserAuthToken do
   end
 
   it "expires correctly" do
-
+    freeze_time Time.zone.now
     user = Fabricate(:user)
-
     user_token = UserAuthToken.generate!(user_id: user.id,
                                          user_agent: "some user agent 2",
                                          client_ip: "1.1.2.3")
 
     UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
 
-    freeze_time (SiteSetting.maximum_session_age.hours - 1).from_now
+    freeze_time SiteSetting.maximum_session_age.hours.from_now - 1.second
 
     user_token.reload
-
     user_token.rotate!
     UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
 
-    freeze_time (SiteSetting.maximum_session_age.hours - 1).from_now
+    freeze_time SiteSetting.maximum_session_age.hours.from_now - 1.second
 
     still_good = UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
     expect(still_good).not_to eq(nil)
@@ -111,7 +109,7 @@ describe UserAuthToken do
   end
 
   it "can properly rotate tokens" do
-
+    freeze_time 3.days.ago
     user = Fabricate(:user)
 
     user_token = UserAuthToken.generate!(user_id: user.id,
@@ -126,12 +124,14 @@ describe UserAuthToken do
 
     user_token.update_columns(auth_token_seen: true)
 
+    rotation_time = freeze_time 1.day.from_now
+
     rotated = user_token.rotate!(user_agent: "a new user agent", client_ip: "1.1.2.4")
     expect(rotated).to eq(true)
 
     user_token.reload
 
-    expect(user_token.rotated_at).to be_within(5.second).of(Time.zone.now)
+    expect(user_token.rotated_at).to eq_time(rotation_time)
     expect(user_token.client_ip).to eq("1.1.2.4")
     expect(user_token.user_agent).to eq("a new user agent")
     expect(user_token.auth_token_seen).to eq(false)
@@ -139,17 +139,17 @@ describe UserAuthToken do
     expect(user_token.prev_auth_token).to eq(prev_auth_token)
 
     # ability to auth using an old token
-    freeze_time
+    seen_at = freeze_time 1.day.from_now
 
     looked_up = UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
     expect(looked_up.id).to eq(user_token.id)
     expect(looked_up.auth_token_seen).to eq(true)
-    expect(looked_up.seen_at).to be_within(1.second).of(Time.zone.now)
+    expect(looked_up.seen_at).to eq_time(seen_at)
 
     looked_up = UserAuthToken.lookup(unhashed_prev, seen: true)
     expect(looked_up.id).to eq(user_token.id)
 
-    freeze_time(2.minute.from_now)
+    freeze_time 2.minutes.from_now
 
     looked_up = UserAuthToken.lookup(unhashed_prev)
     expect(looked_up).not_to eq(nil)

@@ -253,6 +253,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     .avatar-flair {
       display: flex;
       background-size: contain;
+      background-repeat: no-repeat;
       width: $avatar_width;
       height: $avatar_width;
       color: $primary;

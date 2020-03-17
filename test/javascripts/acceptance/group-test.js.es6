@@ -1,12 +1,13 @@
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
+import pretender from "helpers/create-pretender";
 
 let groupArgs = {
   settings: {
     enable_group_directory: true
   },
-  pretend(server, helper) {
-    server.post("/groups/Macdonald/request_membership", () => {
+  pretend(pretenderServer, helper) {
+    pretenderServer.post("/groups/Macdonald/request_membership", () => {
       return helper.response({
         relative_url: "/t/internationalization-localization/280"
       });
@@ -127,10 +128,12 @@ QUnit.test("User Viewing Group", async assert => {
 QUnit.test(
   "Admin viewing group messages when there are no messages",
   async assert => {
-    // prettier-ignore
-    server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
-      return response({ topic_list: { topics: [] } });
-    });
+    pretender.get(
+      "/topics/private-messages-group/eviltrout/discourse.json",
+      () => {
+        return response({ topic_list: { topics: [] } });
+      }
+    );
 
     await visit("/g/discourse");
     await click(".nav-pills li a[title='Messages']");
@@ -146,87 +149,89 @@ QUnit.test(
 );
 
 QUnit.test("Admin viewing group messages", async assert => {
-  // prettier-ignore
-  server.get("/topics/private-messages-group/eviltrout/discourse.json", () => { // eslint-disable-line no-undef
-    return response({
-      users: [
-        {
-          id: 2,
-          username: "bruce1",
-          avatar_template:
-            "/user_avatar/meta.discourse.org/bruce1/{size}/5245.png"
-        },
-        {
-          id: 3,
-          username: "CodingHorror",
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5245.png"
-        }
-      ],
-      primary_groups: [],
-      topic_list: {
-        can_create_topic: true,
-        draft: null,
-        draft_key: "new_topic",
-        draft_sequence: 0,
-        per_page: 30,
-        topics: [
+  pretender.get(
+    "/topics/private-messages-group/eviltrout/discourse.json",
+    () => {
+      return response({
+        users: [
           {
-            id: 12199,
-            title: "This is a private message 1",
-            fancy_title: "This is a private message 1",
-            slug: "this-is-a-private-message-1",
-            posts_count: 0,
-            reply_count: 0,
-            highest_post_number: 0,
-            image_url: null,
-            created_at: "2018-03-16T03:38:45.583Z",
-            last_posted_at: null,
-            bumped: true,
-            bumped_at: "2018-03-16T03:38:45.583Z",
-            unseen: false,
-            pinned: false,
-            unpinned: null,
-            visible: true,
-            closed: false,
-            archived: false,
-            bookmarked: null,
-            liked: null,
-            views: 0,
-            like_count: 0,
-            has_summary: false,
-            archetype: "private_message",
-            last_poster_username: "bruce1",
-            category_id: null,
-            pinned_globally: false,
-            featured_link: null,
-            posters: [
-              {
-                extras: "latest single",
-                description: "Original Poster, Most Recent Poster",
-                user_id: 2,
-                primary_group_id: null
-              }
-            ],
-            participants: [
-              {
-                extras: "latest",
-                description: null,
-                user_id: 2,
-                primary_group_id: null
-              },
-              {
-                extras: null,
-                description: null,
-                user_id: 3,
-                primary_group_id: null
-              }
-            ]
+            id: 2,
+            username: "bruce1",
+            avatar_template:
+              "/user_avatar/meta.discourse.org/bruce1/{size}/5245.png"
+          },
+          {
+            id: 3,
+            username: "CodingHorror",
+            avatar_template:
+              "/user_avatar/meta.discourse.org/codinghorror/{size}/5245.png"
           }
-        ]
-      }
-    });
-  });
+        ],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 0,
+          per_page: 30,
+          topics: [
+            {
+              id: 12199,
+              title: "This is a private message 1",
+              fancy_title: "This is a private message 1",
+              slug: "this-is-a-private-message-1",
+              posts_count: 0,
+              reply_count: 0,
+              highest_post_number: 0,
+              image_url: null,
+              created_at: "2018-03-16T03:38:45.583Z",
+              last_posted_at: null,
+              bumped: true,
+              bumped_at: "2018-03-16T03:38:45.583Z",
+              unseen: false,
+              pinned: false,
+              unpinned: null,
+              visible: true,
+              closed: false,
+              archived: false,
+              bookmarked: null,
+              liked: null,
+              views: 0,
+              like_count: 0,
+              has_summary: false,
+              archetype: "private_message",
+              last_poster_username: "bruce1",
+              category_id: null,
+              pinned_globally: false,
+              featured_link: null,
+              posters: [
+                {
+                  extras: "latest single",
+                  description: "Original Poster, Most Recent Poster",
+                  user_id: 2,
+                  primary_group_id: null
+                }
+              ],
+              participants: [
+                {
+                  extras: "latest",
+                  description: null,
+                  user_id: 2,
+                  primary_group_id: null
+                },
+                {
+                  extras: null,
+                  description: null,
+                  user_id: 3,
+                  primary_group_id: null
+                }
+              ]
+            }
+          ]
+        }
+      });
+    }
+  );
 
   await visit("/g/discourse");
   await click(".nav-pills li a[title='Messages']");

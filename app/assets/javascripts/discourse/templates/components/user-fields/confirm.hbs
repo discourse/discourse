@@ -1,6 +1,6 @@
 {{#if field.name}}
-  <label class="control-label" for="{{concat 'user-' elementId}}">
-    {{{field.name}}}   {{#if field.required}}<span class='required'>*</span>{{/if}}
+  <label class="control-label" for={{concat 'user-' elementId}}>
+    {{html-safe field.name}}   {{#if field.required}}<span class='required'>*</span>{{/if}}
   </label>
 {{/if}}
 
@@ -8,7 +8,7 @@
   <label class="control-label checkbox-label">
     {{input id=(concat 'user-' elementId) checked=value type="checkbox"}}
     <span>
-      {{{field.description}}}   {{#unless field.name}}{{#if field.required}}<span class='required'>*</span>{{/if}}{{/unless}}
+      {{html-safe field.description}}   {{#unless field.name}}{{#if field.required}}<span class='required'>*</span>{{/if}}{{/unless}}
     </span>
   </label>
 </div>

@@ -27,7 +27,7 @@
     {{/if}}
 
     {{#if loaded}}
-      <div class="control-group">
+      <div class="control-group totp">
         <div class="controls">
           <h2>{{i18n "user.second_factor.totp.title"}}</h2>
           {{d-button action=(action "createTotp")
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div class="control-group">
+      <div class="control-group security-key">
         <div class="controls">
           <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
           {{d-button action=(action "createSecurityKey")
@@ -81,12 +81,12 @@
         </div>
       </div>
 
-      <div class="control-group">
+      <div class="control-group pref-second-factor-backup">
         <div class="controls pref-second-factor-backup">
           <h2>{{i18n "user.second_factor_backup.title"}}</h2>
           {{#if model.second_factor_enabled}}
             {{#if model.second_factor_backup_enabled}}
-              {{{i18n 'user.second_factor_backup.manage' count=model.second_factor_remaining_backup_codes}}}
+              {{html-safe (i18n 'user.second_factor_backup.manage' count=model.second_factor_remaining_backup_codes)}}
             {{else}}
               {{i18n 'user.second_factor_backup.enable_long'}}
             {{/if}}

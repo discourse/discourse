@@ -615,6 +615,21 @@ task "uploads:recover" => :environment do
   end
 end
 
+task "uploads:sync_s3_acls" => :environment do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    unless Discourse.store.external?
+      puts "This task only works for external storage."
+      exit 1
+    end
+
+    puts "CAUTION: This task may take a long time to complete!"
+    puts "-" * 30
+    puts "Uploads marked as secure will get a private ACL, and uploads marked as not secure will get a public ACL."
+    adjust_acls(Upload.find_each(batch_size: 100))
+    puts "", "Upload ACL sync complete!"
+  end
+end
+
 task "uploads:disable_secure_media" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
@@ -628,43 +643,56 @@ task "uploads:disable_secure_media" => :environment do
 
     secure_uploads = Upload.includes(:posts).where(secure: true)
     secure_upload_count = secure_uploads.count
+    uploads_to_adjust_acl_for = []
+    posts_to_rebake = {}
 
     i = 0
     secure_uploads.find_each(batch_size: 20).each do |upload|
-      Upload.transaction do
-        upload.secure = false
+      uploads_to_adjust_acl_for << upload
 
-        RakeHelpers.print_status_with_label("Updating ACL for upload #{upload.id}.......", i, secure_upload_count)
-        Discourse.store.update_upload_ACL(upload)
-
-        RakeHelpers.print_status_with_label("Rebaking posts for upload #{upload.id}.......", i, secure_upload_count)
-        upload.posts.each(&:rebake!)
-        upload.save
-
-        i += 1
+      upload.posts.each do |post|
+        # don't want unnecessary double-ups
+        next if posts_to_rebake.key?(post.id)
+        posts_to_rebake[post.id] = post
       end
+
+      i += 1
     end
 
+    puts "", "Marking #{secure_upload_count} uploads as not secure.", ""
+    secure_uploads.update_all(secure: false)
+
+    adjust_acls(uploads_to_adjust_acl_for)
+    post_rebake_errors = rebake_upload_posts(posts_to_rebake)
+    log_rebake_errors(post_rebake_errors)
+
     RakeHelpers.print_status_with_label("Rebaking and updating complete!            ", i, secure_upload_count)
-    puts ""
   end
 
-  puts "Secure media is now disabled!", ""
+  puts "", "Secure media is now disabled!", ""
+end
+
+# Renamed to uploads:secure_upload_analyse_and_update
+task "uploads:ensure_correct_acl" => :environment do
+  puts "This task has been deprecated, run uploads:secure_upload_analyse_and_update task instead."
+  exit 1
 end
 
 ##
 # Run this task whenever the secure_media or login_required
 # settings are changed for a Discourse instance to update
-# the upload secure flag and S3 upload ACLs.
-task "uploads:ensure_correct_acl" => :environment do
+# the upload secure flag and S3 upload ACLs. Any uploads that
+# have their secure status changed will have all associated posts
+# rebaked.
+task "uploads:secure_upload_analyse_and_update" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
       puts "This task only works for external storage."
       exit 1
     end
 
-    puts "Ensuring correct ACL for uploads in #{db}...", ""
-
+    puts "Analyzing security for uploads in #{db}...", ""
+    upload_ids_to_mark_as_secure, upload_ids_to_mark_as_not_secure, posts_to_rebake, uploads_to_adjust_acl_for = nil
     Upload.transaction do
       mark_secure_in_loop_because_no_login_required = false
 
@@ -677,19 +705,23 @@ task "uploads:ensure_correct_acl" => :environment do
         update_uploads_access_control_post
       end
 
-      # First of all only get relevant uploads (supported media).
-      #
-      # Also only get uploads that are not for a theme or a site setting, so only
-      # get post related uploads.
-      uploads_with_supported_media = Upload.includes(:posts, :access_control_post, :optimized_images).where(
-        "LOWER(original_filename) SIMILAR TO '%\.(jpg|jpeg|png|gif|svg|ico|mp3|ogg|wav|m4a|mov|mp4|webm|ogv)'"
-      ).joins(:post_uploads)
+      # Get all uploads in the database, including optimized images. Both media (images, videos,
+      # etc) along with attachments (pdfs, txt, etc.) must be loaded because all can be marked as
+      # secure based on site settings.
+      uploads_to_update = Upload.includes(:posts, :optimized_images).joins(:post_uploads)
 
-      puts "There are #{uploads_with_supported_media.count} upload(s) with supported media that could be marked secure.", ""
+      # we do this to avoid a heavier post query, and to make sure we only
+      # get unique posts AND include deleted posts (unscoped)
+      unique_access_control_posts = Post.unscoped.select(:id, :topic_id).includes(topic: :category).where(id: uploads_to_update.pluck(:access_control_post_id).uniq)
+      uploads_to_update.each do |upload|
+        upload.access_control_post = unique_access_control_posts.find { |post| post.id == upload.access_control_post_id }
+      end
+
+      puts "There are #{uploads_to_update.count} upload(s) that could be marked secure.", ""
 
       # Simply mark all these uploads as secure if login_required because no anons will be able to access them
       if SiteSetting.login_required?
-        mark_all_as_secure_login_required(uploads_with_supported_media)
+        mark_secure_in_loop_because_no_login_required = false
       else
 
         # If NOT login_required, then we have to go for the other slower flow, where in the loop
@@ -698,24 +730,50 @@ task "uploads:ensure_correct_acl" => :environment do
         puts "Marking posts as secure in the next step because login_required is false."
       end
 
-      puts "", "Determining which of #{uploads_with_supported_media.count} upload posts need to be marked secure and be rebaked.", ""
+      puts "", "Analysing which of #{uploads_to_update.count} uploads need to be marked secure and be rebaked.", ""
 
-      upload_ids_to_mark_as_secure, posts_to_rebake = determine_upload_security_and_posts_to_rebake(
-        uploads_with_supported_media, mark_secure_in_loop_because_no_login_required
+      upload_ids_to_mark_as_secure,
+        upload_ids_to_mark_as_not_secure,
+        posts_to_rebake,
+        uploads_to_adjust_acl_for = determine_upload_security_and_posts_to_rebake(
+        uploads_to_update, mark_secure_in_loop_because_no_login_required
       )
 
-      mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
-
-      post_rebake_errors = rebake_upload_posts(posts_to_rebake)
-      log_rebake_errors(post_rebake_errors)
+      if !SiteSetting.login_required?
+        update_specific_upload_security_no_login_required(upload_ids_to_mark_as_secure, upload_ids_to_mark_as_not_secure)
+      else
+        mark_all_as_secure_login_required(uploads_to_update)
+      end
     end
+
+    # Enqueue rebakes AFTER upload transaction complete, so there is no race condition
+    # between updating the DB and the rebakes occurring.
+    post_rebake_errors = rebake_upload_posts(posts_to_rebake)
+    log_rebake_errors(post_rebake_errors)
+
+    # Also do this AFTER upload transaction complete so we don't end up with any
+    # errors leaving ACLs in a bad state (the ACL sync task can be run to fix any
+    # outliers at any time).
+    adjust_acls(uploads_to_adjust_acl_for)
   end
-  puts "", "Done"
+  puts "", "", "Done!"
 end
 
-def mark_all_as_secure_login_required(uploads_with_supported_media)
-  puts "Marking #{uploads_with_supported_media.count} upload(s) as secure because login_required is true.", ""
-  uploads_with_supported_media.update_all(secure: true)
+def adjust_acls(uploads_to_adjust_acl_for)
+  total_count = uploads_to_adjust_acl_for.respond_to?(:length) ? uploads_to_adjust_acl_for.length : uploads_to_adjust_acl_for.count
+  puts "", "Updating ACL for #{total_count} uploads.", ""
+  i = 0
+  uploads_to_adjust_acl_for.each do |upload|
+    RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, total_count)
+    Discourse.store.update_upload_ACL(upload)
+    i += 1
+  end
+  RakeHelpers.print_status_with_label("Updaing ACLs complete!        ", i, total_count)
+end
+
+def mark_all_as_secure_login_required(uploads_to_update)
+  puts "Marking #{uploads_to_update.count} upload(s) as secure because login_required is true.", ""
+  uploads_to_update.update_all(secure: true)
   puts "Finished marking upload(s) as secure."
 end
 
@@ -727,11 +785,16 @@ def log_rebake_errors(rebake_errors)
   end
 end
 
-def mark_specific_uploads_as_secure_no_login_required(upload_ids_to_mark_as_secure)
-  return if upload_ids_to_mark_as_secure.empty?
-  puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because UploadSecurity determined them to be secure."
-  Upload.where(id: upload_ids_to_mark_as_secure).update_all(secure: true)
-  puts "Finished marking uploads as secure."
+def update_specific_upload_security_no_login_required(upload_ids_to_mark_as_secure, upload_ids_to_mark_as_not_secure)
+  if upload_ids_to_mark_as_secure.any?
+    puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because UploadSecurity determined them to be secure."
+    Upload.where(id: upload_ids_to_mark_as_secure).update_all(secure: true)
+  end
+  if upload_ids_to_mark_as_not_secure.any?
+    puts "Marking #{upload_ids_to_mark_as_not_secure.length} uploads as not secure because UploadSecurity determined them to be not secure."
+    Upload.where(id: upload_ids_to_mark_as_not_secure).update_all(secure: false)
+  end
+  puts "Finished updating upload security."
 end
 
 def update_uploads_access_control_post
@@ -752,12 +815,13 @@ def update_uploads_access_control_post
 end
 
 def rebake_upload_posts(posts_to_rebake)
+  posts_to_rebake = posts_to_rebake.values
   post_rebake_errors = []
   puts "", "Rebaking #{posts_to_rebake.length} posts with affected uploads.", ""
   begin
     i = 0
     posts_to_rebake.each do |post|
-      RakeHelpers.print_status_with_label("Determining which uploads to mark secure and rebake.....", i, posts_to_rebake.length)
+      RakeHelpers.print_status_with_label("Rebaking posts.....", i, posts_to_rebake.length)
       post.rebake!
       i += 1
     end
@@ -770,32 +834,55 @@ def rebake_upload_posts(posts_to_rebake)
   post_rebake_errors
 end
 
-def determine_upload_security_and_posts_to_rebake(uploads_with_supported_media, mark_secure_in_loop_because_no_login_required)
+def determine_upload_security_and_posts_to_rebake(uploads_to_update, mark_secure_in_loop_because_no_login_required)
   upload_ids_to_mark_as_secure = []
-  posts_to_rebake = []
+  upload_ids_to_mark_as_not_secure = []
+  uploads_to_adjust_acl_for = []
+  posts_to_rebake = {}
 
   i = 0
-  uploads_with_supported_media.find_each(batch_size: 50) do |upload_with_supported_media|
-    RakeHelpers.print_status_with_label("Updating ACL for upload.......", i, uploads_with_supported_media.count)
+  uploads_to_update.find_each(batch_size: 50) do |upload_to_update|
 
     # we just need to determine the post security here so the ACL is set to the correct thing,
     # because the update_upload_ACL method uses upload.secure?
-    upload_with_supported_media.secure = UploadSecurity.new(upload_with_supported_media).should_be_secure?
-    Discourse.store.update_upload_ACL(upload_with_supported_media)
+    original_update_secure_status = upload_to_update.secure
+    upload_to_update.secure = UploadSecurity.new(upload_to_update).should_be_secure?
 
-    RakeHelpers.print_status_with_label("Determining which uploads to mark secure and rebake.....", i, uploads_with_supported_media.count)
-    upload_with_supported_media.posts.each { |post| posts_to_rebake << post }
+    # no point changing ACLs or rebaking or doing any such shenanigans
+    # when the secure status hasn't even changed!
+    if original_update_secure_status == upload_to_update.secure
+      i += 1
+      next
+    end
 
-    if mark_secure_in_loop_because_no_login_required && upload_with_supported_media.secure?
-      upload_ids_to_mark_as_secure << upload_with_supported_media.id
+    # we only want to update the acl later once the secure status
+    # has been saved in the DB; otherwise if there is a later failure
+    # we get stuck with an incorrect ACL in S3
+    uploads_to_adjust_acl_for << upload_to_update
+    RakeHelpers.print_status_with_label("Analysing which upload posts to rebake.....", i, uploads_to_update.count)
+    upload_to_update.posts.each do |post|
+      # don't want unnecessary double-ups
+      next if posts_to_rebake.key?(post.id)
+      posts_to_rebake[post.id] = post
+    end
+
+    # some uploads will be marked as not secure here.
+    # we need to address this with upload_ids_to_mark_as_not_secure
+    # e.g. turning off SiteSetting.login_required
+    if mark_secure_in_loop_because_no_login_required
+      if upload_to_update.secure?
+        upload_ids_to_mark_as_secure << upload_to_update.id
+      else
+        upload_ids_to_mark_as_not_secure << upload_to_update.id
+      end
     end
 
     i += 1
   end
-  RakeHelpers.print_status_with_label("Determination complete!            ", i, uploads_with_supported_media.count)
+  RakeHelpers.print_status_with_label("Analysis complete!            ", i, uploads_to_update.count)
   puts ""
 
-  [upload_ids_to_mark_as_secure, posts_to_rebake]
+  [upload_ids_to_mark_as_secure, upload_ids_to_mark_as_not_secure, posts_to_rebake, uploads_to_adjust_acl_for]
 end
 
 def inline_uploads(post)

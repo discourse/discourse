@@ -1,8 +1,7 @@
-import { computed, default as EmberObject } from "@ember/object";
+import EmberObject, { computed, get, guidFor } from "@ember/object";
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
-import { get } from "@ember/object";
 import UtilsMixin from "select-kit/mixins/utils";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
 import Mixin from "@ember/object/mixin";
@@ -76,7 +75,7 @@ export default Component.extend(
       this.set(
         "selectKit",
         EmberObject.create({
-          uniqueID: Ember.guidFor(this),
+          uniqueID: guidFor(this),
           valueProperty: this.valueProperty,
           nameProperty: this.nameProperty,
           options: EmberObject.create(),
@@ -232,10 +231,7 @@ export default Component.extend(
       });
 
       if (this.selectKit.isExpanded) {
-        if (this._searchPromise) {
-          cancel(this._searchPromise);
-        }
-        this._searchPromise = this._searchWrapper(this.selectKit.filter);
+        this.triggerSearch();
       }
 
       if (this.computeContent) {
@@ -267,6 +263,7 @@ export default Component.extend(
       closeOnChange: true,
       limitMatches: null,
       placement: "bottom-start",
+      placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       castInteger: false
@@ -388,7 +385,7 @@ export default Component.extend(
 
     _debouncedInput(filter) {
       this.selectKit.setProperties({ filter, isLoading: true });
-      this._searchPromise = this._searchWrapper(filter);
+      this.triggerSearch(filter);
     },
 
     _onChangeWrapper(value, items) {
@@ -565,6 +562,15 @@ export default Component.extend(
         });
       }
       return content;
+    },
+
+    triggerSearch(filter) {
+      if (this._searchPromise) {
+        cancel(this._searchPromise);
+      }
+      this._searchPromise = this._searchWrapper(
+        filter || this.selectKit.filter
+      );
     },
 
     _searchWrapper(filter) {
@@ -814,10 +820,15 @@ export default Component.extend(
           popper.style.width = `${anchor.offsetWidth}px`;
         }
 
+        let placementStrategy = this.selectKit.options.placementStrategy;
+        if (!placementStrategy) {
+          placementStrategy = inModal ? "fixed" : "absolute";
+        }
+
         /* global Popper:true */
         this.popper = Popper.createPopper(anchor, popper, {
           eventsEnabled: false,
-          strategy: inModal ? "fixed" : "absolute",
+          strategy: placementStrategy,
           placement: this.selectKit.options.placement,
           modifiers: [
             {
@@ -864,10 +875,7 @@ export default Component.extend(
           this.selectKit.options.filterable || this.selectKit.options.allowAny
       });
 
-      if (this._searchPromise) {
-        cancel(this._searchPromise);
-      }
-      this._searchPromise = this._searchWrapper();
+      this.triggerSearch();
 
       this._safeAfterRender(() => {
         this._focusFilter();

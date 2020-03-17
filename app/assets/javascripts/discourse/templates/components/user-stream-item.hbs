@@ -2,7 +2,7 @@
   <a href={{item.userUrl}} data-user-card={{item.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
   <span class='time'>{{format-date item.created_at}}</span>
   {{#if item.draftType}}
-    <span class='draft-type'>{{{item.draftType}}}</span>
+    <span class='draft-type'>{{html-safe item.draftType}}</span>
   {{else}}
     {{expand-post item=item}}
   {{/if}}
@@ -11,9 +11,9 @@
       {{topic-status topic=item disableActions=true}}
       <span class="title">
         {{#if item.postUrl}}
-          <a href={{item.postUrl}}>{{{item.title}}}</a>
+          <a href={{item.postUrl}}>{{html-safe item.title}}</a>
         {{else}}
-          {{{item.title}}}
+          {{html-safe item.title}}
         {{/if}}
       </span>
     </div>
@@ -35,12 +35,14 @@
   <p class='excerpt'>{{actionDescription}}</p>
 {{/if}}
 
-<p class='excerpt' data-topic-id="{{item.topic_id}}" data-post-id="{{item.post_id}}" data-user-id="{{item.user_id}}">
+<p class='excerpt' data-topic-id={{item.topic_id}} data-post-id={{item.post_id}} data-user-id={{item.user_id}}>
+  {{!-- template-lint-disable no-triple-curlies --}}
   {{~#if item.expandedExcerpt}}
     {{~{item.expandedExcerpt}~}}
   {{else}}
     {{~{item.excerpt}~}}
   {{/if~}}
+  {{!-- template-lint-enable --}}
 </p>
 
 {{#each item.children as |child|}}
