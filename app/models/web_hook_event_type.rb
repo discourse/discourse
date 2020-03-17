@@ -19,6 +19,15 @@ class WebHookEventType < ActiveRecord::Base
   default_scope { order('id ASC') }
 
   validates :name, presence: true, uniqueness: true
+
+  def self.active
+    ids_to_exclude = []
+    ids_to_exclude << SOLVED unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
+    ids_to_exclude << ASSIGN unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
+
+    self.where.not(id: ids_to_exclude)
+  end
+
 end
 
 # == Schema Information

@@ -170,6 +170,11 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed()
+  basePath() {
+    return Discourse.BaseUri;
+  },
+
+  @discourseComputed()
   userHasTimezoneSet() {
     return !_.isEmpty(this.userTimezone());
   },
