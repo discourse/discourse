@@ -139,6 +139,14 @@ export function ajax() {
       });
     };
 
+    if (args.method) {
+      args.type = args.method;
+      delete args.method;
+
+      // eslint-disable-next-line no-console
+      console.warn("`method` option is deprecated, use `type` instead");
+    }
+
     // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
     // it will not be parsed as an object.
     if (!args.type) args.type = "GET";
