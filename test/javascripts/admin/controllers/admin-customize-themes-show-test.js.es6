@@ -19,6 +19,7 @@ const remoteTheme = Theme.create({
 });
 
 QUnit.test("can display source url for remote themes", function(assert) {
+  delete remoteTheme["remote_theme"]["branch"];
   const controller = this.subject({
     model: remoteTheme
   });
