@@ -58,15 +58,15 @@
                     icon="envelope"
                     label="user.private_message"}}
                 </li>
-                {{#if canMuteOrIgnoreUser}}
-                  <li>
-                    {{user-notifications-dropdown
+              {{/if}}
+              {{#if canMuteOrIgnoreUser}}
+                <li>
+                  {{user-notifications-dropdown
                       user=model
                       value=userNotificationLevel
                       updateNotificationLevel=(action "updateNotificationLevel")
-                    }}
-                  </li>
-                {{/if}}
+                  }}
+                </li>
               {{/if}}
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
