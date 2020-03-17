@@ -8,6 +8,7 @@ DTSTAMP:<%= bookmark.updated_at.strftime("%Y%m%dT%H%M%SZ") %>
 DTSTART:<%= bookmark.reminder_at.strftime("%Y%m%dT%H%M%SZ") %>
 DTEND:<%= (bookmark.reminder_at + 1.hour).strftime("%Y%m%dT%H%M%SZ") %>
 SUMMARY:<%= bookmark.name.presence || bookmark.topic.title %>
+DESCRIPTION:<%= Discourse.base_url %>/t/-/<%= bookmark.topic_id %>
 URL:<%= Discourse.base_url %>/t/-/<%= bookmark.topic_id %>
 END:VEVENT
 <% end %>
