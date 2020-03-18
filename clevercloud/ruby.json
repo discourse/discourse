@@ -4,6 +4,9 @@
     "rakegoals": [
         "db:migrate",
         "assets:precompile"
+    ],
+    "sidekiq": [
+        "./config/sidekiq.yml"
     ]
   }
 }
