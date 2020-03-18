@@ -1,10 +1,7 @@
-// Don't migrate the database for the moment as there are too many bugs
-// due to the manual import.
 {
   "deploy" : {
     "env": "production",
     "rakegoals": [
-        // "db:migrate",
         "assets:precompile"
     ],
     "sidekiq": [

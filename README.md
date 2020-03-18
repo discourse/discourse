@@ -12,17 +12,55 @@ Discourse is the 100% open source discussion platform built for the next decade 
 
 To learn more about the philosophy and goals of the project, [visit **discourse.org**](https://www.discourse.org).
 
-## Screenshots
+This repository is adapted for Clever Cloud and Mailjet.
 
+## Restore a dump coming from another Discourse
 
-<a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://user-images.githubusercontent.com/1681963/52239245-04ad8280-289c-11e9-9c88-8c173d4a0422.png" width="720px"></a>
-<a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
-<a href="https://discuss.howtogeek.com"><img src="https://user-images.githubusercontent.com/1681963/52239247-04ad8280-289c-11e9-9706-fd66bc0749dc.png" width="720px"></a>
-<a href="https://talk.turtlerockstudios.com/"><img src="https://user-images.githubusercontent.com/1681963/52239249-04ad8280-289c-11e9-9155-f0ccc5decc50.png" width="720px"></a>
+First, generate a dump using the user interface and download it on your computer.
 
-<img src="https://user-images.githubusercontent.com/1681963/52239118-b304f800-289b-11e9-9904-16450680d9ec.jpg" alt="Mobile" width="414">
+Then, delete the actual content (`TRUNCATE`, not `drop table`, as we can't drop a table on Clever Cloud).
+```
+# Delete actual content on DB
 
-Browse [lots more notable Discourse instances](https://www.discourse.org/customers).
+# connect to db
+psql -h host_name -p port -U user_name -d database_name
+
+# truncate
+CREATE OR REPLACE FUNCTION truncate_tables(username IN VARCHAR) RETURNS void AS $$
+DECLARE
+    statements CURSOR FOR
+        SELECT tablename FROM pg_tables
+        WHERE tableowner = username AND schemaname = 'public';
+BEGIN
+    FOR stmt IN statements LOOP
+        EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT truncate_tables('uwto4yzparvoskl4gjtn');
+
+```
+
+Populate the DB with our backup:
+
+```
+tar -zxvf path/to/dump.tar.gz
+
+# unzip
+gzip -d dump.sql.gz
+
+# Send to Clever Cloud addon
+psql -h host_name -p port -U user_name -d database_name -f dump.sql
+
+# Wait...
+
+```
+
+:warning: Make sure email sending is still up! Check the following:
+- in settings, TSL settings must be false to work with Mailjet.
+- contact email must match the one verified in Mailjet.
+- go in the emails section and send a test mail. It should work. 🍾
 
 ## Development
 
