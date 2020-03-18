@@ -67,7 +67,6 @@ export default Component.extend({
     }
 
     this.set("input", time);
-    return;
   },
 
   @observes("selection")

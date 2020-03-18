@@ -17,7 +17,7 @@ module Jobs
         return
       end
 
-      topic.posts.where("posts.post_number > 1").created_since(topic_timer.duration.hours.ago).each do |post|
+      topic.posts.where("posts.post_number > 1").where('posts.created_at < ?', topic_timer.duration.days.ago).each do |post|
         PostDestroyer.new(topic_timer.user, post, context: I18n.t("topic_statuses.auto_deleted_by_timer")).destroy
       end
     end
