@@ -389,6 +389,8 @@ describe PostMover do
 
               Fabricate(:topic_user, opts.merge(
                 notification_level: TopicUser.notification_levels[notification_level],
+                notifications_reason_id: 1,
+                notifications_changed_at: DateTime.now,
                 topic: topic,
                 user: user
               ))
@@ -432,28 +434,31 @@ describe PostMover do
                       last_read_post_number: 4,
                       highest_seen_post_number: 4,
                       last_emailed_post_number: nil,
-                      notification_level: TopicUser.notification_levels[:tracking]
+                      notification_level: TopicUser.notification_levels[:tracking],
                     )
               expect(TopicUser.find_by(topic: topic, user: user1))
                 .to have_attributes(
                       last_read_post_number: 4,
                       highest_seen_post_number: 4,
                       last_emailed_post_number: 3,
-                      notification_level: TopicUser.notification_levels[:tracking]
+                      notification_level: TopicUser.notification_levels[:tracking],
+                      notifications_reason_id: 1
                     )
               expect(TopicUser.find_by(topic: topic, user: user2))
                 .to have_attributes(
                       last_read_post_number: 2,
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
-                      notification_level: TopicUser.notification_levels[:tracking]
+                      notification_level: TopicUser.notification_levels[:tracking],
+                      notifications_reason_id: 1
                     )
               expect(TopicUser.find_by(topic: topic, user: user3))
                 .to have_attributes(
                       last_read_post_number: 1,
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 4,
-                      notification_level: TopicUser.notification_levels[:watching]
+                      notification_level: TopicUser.notification_levels[:watching],
+                      notifications_reason_id: 1
                     )
 
               expect(TopicUser.where(topic_id: new_topic.id).count).to eq(4)
@@ -463,6 +468,7 @@ describe PostMover do
                       highest_seen_post_number: 1,
                       last_emailed_post_number: nil,
                       notification_level: TopicUser.notification_levels[:watching],
+                      notifications_reason_id: 1,
                       posted: true
                     )
               expect(TopicUser.find_by(topic: new_topic, user: user1))
@@ -471,6 +477,8 @@ describe PostMover do
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
                       notification_level: TopicUser.notification_levels[:regular],
+                      notifications_reason_id: nil,
+                      notifications_changed_at: nil,
                       posted: false
                     )
               expect(TopicUser.find_by(topic: new_topic, user: user2))
@@ -479,6 +487,7 @@ describe PostMover do
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
                       notification_level: TopicUser.notification_levels[:tracking],
+                      notifications_reason_id: 1,
                       posted: true
                     )
               expect(TopicUser.find_by(topic: new_topic, user: user3))
@@ -487,6 +496,8 @@ describe PostMover do
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
                       notification_level: TopicUser.notification_levels[:regular],
+                      notifications_reason_id: nil,
+                      notifications_changed_at: nil,
                       posted: false
                     )
             end

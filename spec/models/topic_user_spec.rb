@@ -134,6 +134,13 @@ describe TopicUser do
       expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
     end
 
+    it 'should set to tracking if auto_track_topics is enabled and topic_user already exists' do
+      ensure_topic_user
+      user.user_option.update_column(:auto_track_topics_after_msecs, 0)
+      ensure_topic_user
+      expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:tracking])
+    end
+
     it 'should be set to "regular" notifications, by default on non creators' do
       ensure_topic_user
       expect(TopicUser.get(topic, user).notification_level).to eq(TopicUser.notification_levels[:regular])

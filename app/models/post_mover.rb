@@ -368,8 +368,12 @@ class PostMover
              CASE
                WHEN p.user_id IS NOT NULL THEN tu.notification_level
                ELSE :default_notification_level END      AS notification_level,
-             tu.notifications_changed_at,
-             tu.notifications_reason_id
+             CASE
+               WHEN p.user_id IS NOT NULL THEN tu.notifications_changed_at
+               ELSE null END      AS notifications_changed_at,
+             CASE
+               WHEN p.user_id IS NOT NULL THEN tu.notifications_reason_id
+               ELSE null END      AS notifications_reason_id
       FROM topic_users tu
            JOIN topics t ON (t.id = :new_topic_id)
            LEFT OUTER JOIN

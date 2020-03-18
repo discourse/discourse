@@ -131,6 +131,9 @@ class TopicUser < ActiveRecord::Base
 
         if rows == 0
           create_missing_record(user_id, topic_id, attrs)
+        elsif topic_user = TopicUser.find_by(topic_id: topic_id, user_id: user_id, notifications_reason_id: nil, notifications_changed_at: nil)
+          set_notification_level_attributes(user_id, topic_id, attrs)
+          topic_user.update(attrs)
         end
       end
 
@@ -158,6 +161,17 @@ class TopicUser < ActiveRecord::Base
     def create_missing_record(user_id, topic_id, attrs)
       now = DateTime.now
 
+      set_notification_level_attributes(user_id, topic_id, attrs)
+
+      TopicUser.create!(attrs.merge!(
+        user_id: user_id,
+        topic_id: topic_id,
+        first_visited_at: now,
+        last_visited_at: now
+      ))
+    end
+
+    def set_notification_level_attributes(user_id, topic_id, attrs)
       unless attrs[:notification_level]
         category_notification_level = CategoryUser.where(user_id: user_id)
           .where("category_id IN (SELECT category_id FROM topics WHERE id = :id)", id: topic_id)
@@ -209,6 +223,7 @@ class TopicUser < ActiveRecord::Base
             .pluck(:default_notification_level)
             .first
 
+          attrs[:notifications_changed_at] = DateTime.now
           if group_notification_level.present?
             attrs[:notification_level] = group_notification_level
           else
@@ -219,26 +234,19 @@ class TopicUser < ActiveRecord::Base
           auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
 
           if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
+            attrs[:notifications_changed_at] = DateTime.now
             attrs[:notification_level] ||= notification_levels[:tracking]
           end
         end
       end
 
-      TopicUser.create!(attrs.merge!(
-        user_id: user_id,
-        topic_id: topic_id,
-        first_visited_at: now ,
-        last_visited_at: now
-      ))
     end
 
     def track_visit!(topic_id, user_id)
       now = DateTime.now
       rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
 
-      if rows == 0
-        change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
-      end
+      change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
     end
 
     # Update the last read and the last seen post count, but only if it doesn't exist.
