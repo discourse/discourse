@@ -3,7 +3,8 @@ let BookmarkController;
 
 moduleFor("controller:bookmark", {
   beforeEach() {
-    BookmarkController = this.subject({ currentUser: currentUser() });
+    Discourse.currentUser = currentUser();
+    BookmarkController = this.subject({ currentUser: Discourse.currentUser });
   },
 
   afterEach() {
@@ -12,7 +13,7 @@ moduleFor("controller:bookmark", {
 });
 
 function mockMomentTz(dateString) {
-  let now = moment.tz(dateString, BookmarkController.currentUser.timezone);
+  let now = moment.tz(dateString, BookmarkController.userTimezone);
   sandbox.useFakeTimers(now.valueOf());
 }
 
@@ -177,5 +178,17 @@ QUnit.test(
 
     assert.equal(BookmarkController.lastCustomReminderDate, null);
     assert.equal(BookmarkController.lastCustomReminderTime, null);
+  }
+);
+
+QUnit.test(
+  "userHasTimezoneSet updates true/false based on whether the current user timezone is set globally",
+  function(assert) {
+    Discourse.currentUser.timezone = null;
+    BookmarkController.onShow();
+    assert.equal(BookmarkController.userHasTimezoneSet, false);
+    Discourse.currentUser.timezone = "Australia/Brisbane";
+    BookmarkController.onShow();
+    assert.equal(BookmarkController.userHasTimezoneSet, true);
   }
 );
