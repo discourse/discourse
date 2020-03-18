@@ -68,15 +68,6 @@ export default Component.extend({
       this.attrs.onChangeInput(this.input, parseInt(this.duration, 0));
   },
 
-  // @discourseComputed("durationInput", "isBasedOnLastPost", "isBasedOnDuration")
-  // duration(input, isBasedOnLastPost, isBasedOnDuration) {
-  //   if (isBasedOnLastPost || isBasedOnDuration) {
-  //     return parseFloat(input);
-  //   } else {
-  //     return null;
-  //   }
-  // },
-
   @discourseComputed(
     "input",
     "duration",
@@ -98,6 +89,13 @@ export default Component.extend({
     } else {
       return input;
     }
+  },
+
+  @discourseComputed("durationType")
+  durationLabel(durationType) {
+    `topic.topic_status_update.num_of_${
+      durationType === "hours" ? "hours" : "days"
+    }`;
   },
 
   didReceiveAttrs() {

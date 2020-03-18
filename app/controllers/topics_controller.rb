@@ -458,7 +458,7 @@ class TopicsController < ApplicationController
     if topic.save
       render json: success_json.merge!(
         execute_at: topic_status_update&.execute_at,
-        remaining_hours: topic_status_update&.remaining_hours,
+        duration: topic_status_update&.duration,
         based_on_last_post: topic_status_update&.based_on_last_post,
         closed: topic.closed,
         category_id: topic_status_update&.category_id

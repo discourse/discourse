@@ -92,7 +92,7 @@ export default Controller.extend(ModalFunctionality, {
 
           setProperties(this.topicTimer, {
             execute_at: result.execute_at,
-            remaining_hours: result.remaining_hours,
+            duration: result.duration,
             category_id: result.category_id
           });
 

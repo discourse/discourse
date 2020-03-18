@@ -37,15 +37,6 @@ export default Component.extend({
     return autoDeleteReplies ? "days" : "hours";
   },
 
-  // @discourseComputed(
-  //   "topicTimer.updateTime",
-  //   "publishToCategory",
-  //   "topicTimer.category_id"
-  // )
-  // saveDisabled(updateTime, publishToCategory, topicTimerCategoryId) {
-  //   return isEmpty(updateTime) || (publishToCategory && !topicTimerCategoryId);
-  // },
-
   @discourseComputed("topic.visible")
   excludeCategoryId(visible) {
     if (visible) return this.get("topic.category_id");
@@ -56,9 +47,7 @@ export default Component.extend({
     let time = null;
     const executeAt = this.get("topicTimer.execute_at");
 
-    if (executeAt && this.get("topicTimer.based_on_last_post")) {
-      time = this.get("topicTimer.duration");
-    } else if (executeAt) {
+    if (executeAt) {
       const closeTime = moment(executeAt);
 
       if (closeTime > moment()) {
@@ -91,10 +80,4 @@ export default Component.extend({
       }
     });
   }
-
-  // actions: {
-  //   onChangeTimerType(value) {
-  //     this.set("topicTimer.status_type", value);
-  //   }
-  // }
 });

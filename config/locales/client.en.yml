@@ -2130,7 +2130,8 @@ en:
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
-        duration: "Number of %{durationType}:"
+        num_of_hours: "Number of hours:"
+        num_of_days: "Number of days:"
         remove: "Remove Timer"
         publish_to: "Publish To:"
         when: "When:"

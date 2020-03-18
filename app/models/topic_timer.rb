@@ -74,16 +74,6 @@ class TopicTimer < ActiveRecord::Base
     end
   end
 
-  def remaining_hours
-    if self.status_type == TopicTimer.types[:delete_replies]
-      self.duration
-    elsif (self.execute_at && self.created_at)
-      ((self.execute_at - self.created_at) / 1.hour).round(2)
-    else
-      0
-    end
-  end
-
   def public_type?
     !!self.class.public_types[self.status_type]
   end
