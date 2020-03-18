@@ -436,8 +436,16 @@ class UsersController < ApplicationController
     params[:locale] ||= I18n.locale unless current_user
 
     new_user_params = user_params.except(:timezone)
-    user = User.unstage(new_user_params)
-    user = User.new(new_user_params) if user.nil?
+
+    user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
+
+    if user
+      user.active = false
+      user.unstage!
+    end
+
+    user ||= User.new
+    user.attributes = new_user_params
 
     # Handle API approval
     ReviewableUser.set_approved_fields!(user, current_user) if user.approved?

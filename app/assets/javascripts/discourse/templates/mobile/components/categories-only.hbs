@@ -1,7 +1,7 @@
 {{#if categories}}
   <div class="category-list {{if showTopics 'with-topics'}}">
     {{#each categories as |c|}}
-      <div data-category-id={{c.id}} class='category-list-item category' style={{border-color c.color}}>
+      <div data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} class='category-list-item category {{if c.isMuted "muted"}}' style={{border-color c.color}}>
         <table class='topic-list'>
           <tbody>
             <tr>
@@ -10,6 +10,7 @@
               </th>
             </tr>
 
+            {{#unless c.isMuted}}
             {{#if c.description_excerpt}}
               <tr class="category-description">
                 <td colspan="3">
@@ -57,6 +58,7 @@
                 </td>
               </tr>
             {{/if}}
+            {{/unless}}
           </tbody>
         </table>
         <footer class="clearfix">

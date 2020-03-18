@@ -19,6 +19,10 @@
     font-size: $font-down-2;
     cursor: pointer;
 
+    @media screen and (max-width: 360px) {
+      width: $tile-width - 10;
+    }
+
     &:hover {
       background-color: $tertiary-low;
     }

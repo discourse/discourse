@@ -363,22 +363,17 @@ class User < ActiveRecord::Base
     user
   end
 
-  def unstage
+  def unstage!
     if self.staged
-      self.staged = false
-      self.custom_fields[FROM_STAGED] = true
-      self.notifications.destroy_all
+      ActiveRecord::Base.transaction do
+        self.staged = false
+        self.custom_fields[FROM_STAGED] = true
+        self.notifications.destroy_all
+        save!
+      end
+
       DiscourseEvent.trigger(:user_unstaged, self)
     end
-  end
-
-  def self.unstage(params)
-    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      params.each { |k, v| user.public_send("#{k}=", v) }
-      user.active = false
-      user.unstage
-    end
-    user
   end
 
   def self.suggest_name(string)

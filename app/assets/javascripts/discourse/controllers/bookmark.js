@@ -32,6 +32,7 @@ export default Controller.extend(ModalFunctionality, {
   customReminderTime: null,
   lastCustomReminderDate: null,
   lastCustomReminderTime: null,
+  userTimezone: null,
 
   onShow() {
     this.setProperties({
@@ -43,7 +44,8 @@ export default Controller.extend(ModalFunctionality, {
       customReminderDate: null,
       customReminderTime: null,
       lastCustomReminderDate: null,
-      lastCustomReminderTime: null
+      lastCustomReminderTime: null,
+      userTimezone: this.currentUser.timezone
     });
 
     this.loadLastUsedCustomReminderDatetime();
@@ -174,9 +176,9 @@ export default Controller.extend(ModalFunctionality, {
     return Discourse.BaseUri;
   },
 
-  @discourseComputed()
-  userHasTimezoneSet() {
-    return !_.isEmpty(this.userTimezone());
+  @discourseComputed("userTimezone")
+  userHasTimezoneSet(userTimezone) {
+    return !_.isEmpty(userTimezone);
   },
 
   saveBookmark() {
@@ -216,7 +218,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   parseCustomDateTime(date, time) {
-    return moment.tz(date + " " + time, this.userTimezone());
+    return moment.tz(date + " " + time, this.userTimezone);
   },
 
   reminderAt() {
@@ -288,12 +290,8 @@ export default Controller.extend(ModalFunctionality, {
     return momentDate.hour(START_OF_DAY_HOUR).startOf("hour");
   },
 
-  userTimezone() {
-    return this.currentUser.timezone;
-  },
-
   now() {
-    return moment.tz(this.userTimezone());
+    return moment.tz(this.userTimezone);
   },
 
   laterToday() {

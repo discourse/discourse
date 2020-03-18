@@ -47,7 +47,7 @@ class BasicThemeSerializer < ApplicationSerializer
 end
 
 class RemoteThemeSerializer < ApplicationSerializer
-  attributes :id, :remote_url, :remote_version, :local_version, :commits_behind,
+  attributes :id, :remote_url, :remote_version, :local_version, :commits_behind, :branch,
              :remote_updated_at, :updated_at, :github_diff_link, :last_error_text, :is_git?,
              :license_url, :about_url, :authors, :theme_version, :minimum_discourse_version, :maximum_discourse_version
 

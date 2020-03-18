@@ -1840,44 +1840,29 @@ describe User do
     end
   end
 
-  describe "#unstage" do
-    let!(:staged_user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
-    let(:params) { { email: 'staged@account.com', active: true, username: 'unstaged1', name: 'Foo Bar' } }
+  describe "#unstage!" do
+    let!(:user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
 
     it "correctly unstages a user" do
-      user = User.unstage(params)
-
-      expect(user.id).to eq(staged_user.id)
-      expect(user.username).to eq('unstaged1')
-      expect(user.name).to eq('Foo Bar')
-      expect(user.active).to eq(false)
-      expect(user.email).to eq('staged@account.com')
+      user.unstage!
       expect(user.staged).to eq(false)
     end
 
-    it "returns nil when the user cannot be unstaged" do
-      Fabricate(:coding_horror)
-      expect(User.unstage(email: 'jeff@somewhere.com')).to be_nil
-      expect(User.unstage(email: 'no@account.com')).to be_nil
-    end
-
     it "removes all previous notifications during unstaging" do
-      Fabricate(:notification, user: staged_user)
-      Fabricate(:private_message_notification, user: staged_user)
-      staged_user.reload
+      Fabricate(:notification, user: user)
+      Fabricate(:private_message_notification, user: user)
+      expect(user.total_unread_notifications).to eq(2)
 
-      expect(staged_user.total_unread_notifications).to eq(2)
-      user = User.unstage(params)
+      user.unstage!
+      user.reload
       expect(user.total_unread_notifications).to eq(0)
       expect(user.staged).to eq(false)
     end
 
     it "triggers an event" do
-      unstaged_user = nil
-      event = DiscourseEvent.track_events { unstaged_user = User.unstage(params) }.first
-
+      event = DiscourseEvent.track_events { user.unstage! }.first
       expect(event[:event_name]).to eq(:user_unstaged)
-      expect(event[:params].first).to eq(unstaged_user)
+      expect(event[:params].first).to eq(user)
     end
   end
 

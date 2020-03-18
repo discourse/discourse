@@ -12,8 +12,9 @@
     <tbody aria-labelledby="categories-only-category">
       {{#each categories as |c|}}
         <tr data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.uploaded_logo.url 'has-logo' 'no-logo'}}">
-          <td class="category" style={{border-color c.color}}>
+          <td class="category {{if c.isMuted 'muted'}}" style={{border-color c.color}}>
             {{category-title-link category=c}}
+            {{#unless c.isMuted}}
             {{#if c.description_excerpt}}
               <div class="category-description">
                 {{dir-span c.description_excerpt}}
@@ -67,11 +68,13 @@
                 {{/each}}
               </div>
             {{/if}}
+            {{/unless}}
           </td>
           <td class="topics">
             <div title={{c.statTitle}}>{{html-safe c.stat}}</div>
             {{category-unread category=c tagName="div" class="unread-new"}}
           </td>
+          {{#unless c.isMuted}}
           {{#if showTopics}}
             <td class="latest">
               {{#each c.featuredTopics as |t|}}
@@ -79,6 +82,7 @@
               {{/each}}
             </td>
           {{/if}}
+          {{/unless}}
         </tr>
       {{/each}}
     </tbody>

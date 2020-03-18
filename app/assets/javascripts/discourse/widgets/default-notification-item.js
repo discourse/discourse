@@ -13,6 +13,7 @@ import {
 import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
+import { ajax } from "discourse/lib/ajax";
 
 export const DefaultNotificationItem = createWidget(
   "default-notification-item",
@@ -154,6 +155,17 @@ export const DefaultNotificationItem = createWidget(
           );
         }
       });
+    },
+
+    mouseUp(event) {
+      // dismiss notification on middle click
+      if (event.which === 2 && !this.attrs.read) {
+        this.attrs.set("read", true);
+        ajax("/notifications/mark-read", {
+          method: "PUT",
+          data: this.attrs.id
+        });
+      }
     }
   }
 );
