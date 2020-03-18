@@ -840,6 +840,21 @@ const User = RestModel.extend({
       !secondFactorEnabled &&
       (enforce === "all" || (enforce === "staff" && staff))
     );
+  },
+
+  resolvedTimezone() {
+    if (this.timezone) {
+      return this.timezone;
+    }
+
+    this.set("timezone", moment.tz.guess());
+    ajax(userPath(this.username + ".json"), {
+      type: "PUT",
+      dataType: "json",
+      data: { timezone: this.timezone }
+    });
+
+    return this.timezone;
   }
 });
 

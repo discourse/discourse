@@ -181,14 +181,23 @@ QUnit.test(
   }
 );
 
-QUnit.test(
-  "userHasTimezoneSet updates true/false based on whether the current user timezone is set globally",
-  function(assert) {
-    Discourse.currentUser.timezone = null;
-    BookmarkController.onShow();
-    assert.equal(BookmarkController.userHasTimezoneSet, false);
-    Discourse.currentUser.timezone = "Australia/Brisbane";
-    BookmarkController.onShow();
-    assert.equal(BookmarkController.userHasTimezoneSet, true);
-  }
-);
+QUnit.test("user timezone updates when the modal is shown", function(assert) {
+  Discourse.currentUser.timezone = null;
+  let stub = sandbox.stub(moment.tz, "guess").returns("Europe/Moscow");
+  BookmarkController.onShow();
+  assert.equal(BookmarkController.userHasTimezoneSet, true);
+  assert.equal(
+    BookmarkController.userTimezone,
+    "Europe/Moscow",
+    "the user does not have their timezone set and a timezone is guessed"
+  );
+  Discourse.currentUser.timezone = "Australia/Brisbane";
+  BookmarkController.onShow();
+  assert.equal(BookmarkController.userHasTimezoneSet, true);
+  assert.equal(
+    BookmarkController.userTimezone,
+    "Australia/Brisbane",
+    "the user does their timezone set"
+  );
+  stub.restore();
+});
