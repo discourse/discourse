@@ -93,9 +93,11 @@ export default Component.extend({
 
   @discourseComputed("durationType")
   durationLabel(durationType) {
-    `topic.topic_status_update.num_of_${
-      durationType === "hours" ? "hours" : "days"
-    }`;
+    return I18n.t(
+      `topic.topic_status_update.num_of_${
+        durationType === "hours" ? "hours" : "days"
+      }`
+    );
   },
 
   didReceiveAttrs() {
