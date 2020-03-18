@@ -73,6 +73,10 @@ export default Controller.extend({
       );
     },
 
+    useCurrentTimezone() {
+      this.model.set("user_option.timezone", moment.tz.guess());
+    },
+
     save() {
       this.set("saved", false);
 
