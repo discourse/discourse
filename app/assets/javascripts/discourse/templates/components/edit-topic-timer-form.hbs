@@ -20,13 +20,14 @@
   {{#if showFutureDateInput}}
     <div class="control-group">
       {{future-date-input
-        input=(readonly input)
+        input=(readonly topicTimer.updateTime)
         duration=(readonly topicTimer.duration)
         label="topic.topic_status_update.when"
         statusType=selection
         includeWeekend=true
         basedOnLastPost=topicTimer.based_on_last_post
-        onChangeInput=onChangeUpdateTime
+        onChangeInput=onChangeInput
+        onChangeDuration=onChangeDuration
         categoryId=topicTimer.category_id
         lastPostedAt=model.last_posted_at
         isBasedOnDuration=autoDeleteReplies

@@ -51,9 +51,9 @@ export default Component.extend({
 
     if (dateTime.isValid()) {
       this.attrs.onChangeInput &&
-        this.attrs.onChangeInput(dateTime.format(FORMAT), null);
+        this.attrs.onChangeInput(dateTime.format(FORMAT));
     } else {
-      this.attrs.onChangeInput && this.attrs.onChangeInput(null, null);
+      this.attrs.onChangeInput && this.attrs.onChangeInput(null);
     }
   },
 
@@ -64,8 +64,8 @@ export default Component.extend({
 
   @observes("duration")
   _updateDuration() {
-    this.attrs.onChangeInput &&
-      this.attrs.onChangeInput(this.input, parseInt(this.duration, 0));
+    this.attrs.onChangeDuration &&
+      this.attrs.onChangeDuration(parseInt(this.duration, 0));
   },
 
   @discourseComputed(

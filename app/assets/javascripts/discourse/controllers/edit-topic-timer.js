@@ -116,9 +116,12 @@ export default Controller.extend(ModalFunctionality, {
       this.set("topicTimer.status_type", value);
     },
 
-    onChangeUpdateTime(time, duration) {
-      this.set("topicTimer.updateTime", time);
-      this.set("topicTimer.duration", duration);
+    onChangeInput(value) {
+      this.set("topicTimer.updateTime", value);
+    },
+
+    onChangeDuration(value) {
+      this.set("topicTimer.duration", value);
     },
 
     saveTimer() {
