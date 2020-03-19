@@ -151,7 +151,7 @@ desc 'run all migrations of a plugin'
 namespace 'plugin:migrate' do
   def list_migrations(plugin_name)
     plugin_root = File.join(Rails.root, "plugins", plugin_name)
-    migrations_root = File.join(plugin_root, "db", "migrate", "*.rb")
+    migrations_root = File.join(plugin_root, "db", "{post_migrate,migrate}", "*.rb")
     Dir[migrations_root]
       .map do |migration_filename|
         File.basename(migration_filename)[/(^.*?)_/, 1].to_i
