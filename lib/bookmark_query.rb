@@ -28,7 +28,7 @@ class BookmarkQuery
       .joins('INNER JOIN topics ON topics.id = bookmarks.topic_id')
       .joins('INNER JOIN posts ON posts.id = bookmarks.post_id')
       .joins('INNER JOIN users ON users.id = posts.user_id')
-      .order('created_at DESC')
+      .order('bookmarks.created_at DESC')
 
     if @params[:limit]
       results = results.limit(@params[:limit])
