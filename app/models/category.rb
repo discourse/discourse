@@ -682,10 +682,9 @@ class Category < ActiveRecord::Base
   def url
     url = @@url_cache[self.id]
     unless url
-      url = +"#{Discourse.base_uri}/c"
-      url << "/#{parent_category.slug_for_url}" if parent_category_id
-      url << "/#{slug_for_url}"
-      @@url_cache[self.id] = -url
+      url = "#{Discourse.base_uri}/c/#{slug_path.join('/')}"
+
+      @@url_cache[self.id] = url
     end
 
     url
@@ -708,7 +707,7 @@ class Category < ActiveRecord::Base
   def create_category_permalink
     old_slug = saved_changes.transform_values(&:first)["slug"]
     url = +"#{Discourse.base_uri}/c"
-    url << "/#{parent_category.slug}" if parent_category_id
+    url << "/#{parent_category.slug_path.join('/')}" if parent_category_id
     url << "/#{old_slug}"
     url = Permalink.normalize_url(url)
 
@@ -720,11 +719,7 @@ class Category < ActiveRecord::Base
   end
 
   def delete_category_permalink
-    if self.parent_category
-      permalink = Permalink.find_by_url("c/#{self.parent_category.slug}/#{slug}")
-    else
-      permalink = Permalink.find_by_url("c/#{slug}")
-    end
+    permalink = Permalink.find_by_url("c/#{slug_path.join('/')}")
     permalink.destroy if permalink
   end
 
