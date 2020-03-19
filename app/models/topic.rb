@@ -1132,8 +1132,8 @@ class Topic < ActiveRecord::Base
   #  * by_user: User who is setting the topic's status update.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
-    return delete_topic_timer(status_type, by_user: by_user) if time.blank?
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil)
+    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration.blank?
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
@@ -1143,18 +1143,23 @@ class Topic < ActiveRecord::Base
 
     time_now = Time.zone.now
     topic_timer.based_on_last_post = !based_on_last_post.blank?
+    topic_timer.duration = duration
 
     if status_type == TopicTimer.types[:publish_to_category]
       topic_timer.category = Category.find_by(id: category_id)
     end
 
     if topic_timer.based_on_last_post
-      num_hours = time.to_f
-
-      if num_hours > 0
+      if duration > 0
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
-        topic_timer.execute_at = last_post_created_at + num_hours.hours
+        topic_timer.execute_at = last_post_created_at + duration.hours
         topic_timer.created_at = last_post_created_at
+      end
+    elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
+      if duration > 0
+        first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
+        topic_timer.execute_at = first_reply_created_at + duration.days
+        topic_timer.created_at = first_reply_created_at
       end
     else
       utc = Time.find_zone("UTC")

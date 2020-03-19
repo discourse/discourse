@@ -435,16 +435,19 @@ class TopicsController < ApplicationController
       rescue
         invalid_param(:status_type)
       end
+    based_on_last_post = params[:based_on_last_post]
+    params.require(:duration) if based_on_last_post || TopicTimer.types[:delete_replies] == status_type
 
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
 
     options = {
       by_user: current_user,
-      based_on_last_post: params[:based_on_last_post]
+      based_on_last_post: based_on_last_post
     }
 
     options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
+    options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
     topic_status_update = topic.set_or_create_timer(
       status_type,

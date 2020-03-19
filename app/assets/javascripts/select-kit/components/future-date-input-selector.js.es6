@@ -203,7 +203,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
     return "future-date-input-selector/future-date-input-selector-row";
   },
 
-  content: computed(function() {
+  content: computed("statusType", function() {
     const now = moment();
     const opts = {
       now,

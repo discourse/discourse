@@ -2139,6 +2139,7 @@ en:
         title: "Topic Timer"
         save: "Set Timer"
         num_of_hours: "Number of hours:"
+        num_of_days: "Number of days:"
         remove: "Remove Timer"
         publish_to: "Publish To:"
         when: "When:"
@@ -2181,6 +2182,8 @@ en:
         title: "Auto-Bump Topic"
       reminder:
         title: "Remind Me"
+      auto_delete_replies:
+        title: "Auto-Delete Replies"
 
       status_update_notice:
         auto_open: "This topic will automatically open %{timeLeft}."
@@ -2190,6 +2193,7 @@ en:
         auto_delete: "This topic will be automatically deleted %{timeLeft}."
         auto_bump: "This topic will be automatically bumped %{timeLeft}."
         auto_reminder: "You will be reminded about this topic %{timeLeft}."
+        auto_delete_replies: "Replies on this topic are automatically deleted after %{duration}."
       auto_close_title: "Auto-Close Settings"
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
