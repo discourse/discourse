@@ -157,6 +157,7 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
+      matomo.js
     }
 
     # Precompile all available locales
