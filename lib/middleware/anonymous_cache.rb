@@ -107,7 +107,7 @@ module Middleware
       def cache_key
         return @cache_key if defined?(@cache_key)
 
-        @cache_key = +"ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
+        @cache_key = +"ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
         @cache_key << AnonymousCache.build_cache_key(self)
         @cache_key
       end
