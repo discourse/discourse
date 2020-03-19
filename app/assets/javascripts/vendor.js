@@ -31,4 +31,3 @@
 //= require virtual-dom-amd
 //= require highlight.js
 //= require intersection-observer
-//= require matomo
