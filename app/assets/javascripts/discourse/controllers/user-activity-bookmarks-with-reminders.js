@@ -33,6 +33,9 @@ export default Controller.extend({
           this.content.pushObjects(bookmarks);
         }
       })
+      .catch(() => {
+        this.set("noResultsHelp", I18n.t("bookmarks.list_permission_denied"));
+      })
       .finally(() =>
         this.setProperties({
           loaded: true,
@@ -42,8 +45,8 @@ export default Controller.extend({
   },
 
   @discourseComputed("loaded", "content.length")
-  noContent(loaded, content) {
-    return loaded && content.length === 0;
+  noContent(loaded, contentLength) {
+    return loaded && contentLength === 0;
   },
 
   actions: {

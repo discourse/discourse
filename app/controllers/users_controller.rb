@@ -1397,6 +1397,7 @@ class UsersController < ApplicationController
 
   def bookmarks
     user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
 
     respond_to do |format|
       format.json do
