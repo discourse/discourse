@@ -37,7 +37,8 @@ class DiscourseJsProcessor
 
     relative_path = filename.sub(Rails.root.to_s, '').sub(/^\/*/, '')
     relative_path.start_with?("app/assets/javascripts/discourse/") ||
-      relative_path.start_with?("app/assets/javascripts/admin/")
+      relative_path.start_with?("app/assets/javascripts/admin/") ||
+      relative_path.start_with?("app/assets/javascripts/pretty-text/")
   end
 
   def self.skip_module?(data)
