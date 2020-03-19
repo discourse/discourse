@@ -20,7 +20,7 @@
         <p>{{html-safe (i18n 'topic.move_to_new_message.instructions' count=selectedPostsCount)}}</p>
         <form>
           <label>{{i18n 'topic.move_to_new_message.message_title'}}</label>
-          {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
+          {{text-field value=topicName placeholderKey="composer.title_placeholder" id='split-topic-name'}}
 
           {{#if canTagMessages}}
             <label>{{i18n 'tagging.tags'}}</label>
@@ -75,7 +75,7 @@
         <p>{{html-safe (i18n 'topic.split_topic.instructions' count=selectedPostsCount)}}</p>
         <form>
           <label>{{i18n 'topic.split_topic.topic_name'}}</label>
-          {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
+          {{text-field value=topicName placeholderKey="composer.title_placeholder" id='split-topic-name'}}
 
           <label>{{i18n 'categories.category'}}</label>
           {{category-chooser
@@ -96,7 +96,7 @@
         <p>{{html-safe (i18n 'topic.move_to_new_message.instructions' count=selectedPostsCount)}}</p>
         <form>
           <label>{{i18n 'topic.move_to_new_message.message_title'}}</label>
-          {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
+          {{text-field value=topicName placeholderKey="composer.title_placeholder" id='split-topic-name'}}
 
           {{#if canTagMessages}}
             <label>{{i18n 'tagging.tags'}}</label>
