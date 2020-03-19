@@ -257,10 +257,14 @@ class Topic < ActiveRecord::Base
        self.category.auto_close_hours &&
        !public_topic_timer&.execute_at
 
+      based_on_last_post = self.category.auto_close_based_on_last_post
+      duration = based_on_last_post ? self.category.auto_close_hours : nil
+
       self.set_or_create_timer(
         TopicTimer.types[:close],
         self.category.auto_close_hours,
-        based_on_last_post: self.category.auto_close_based_on_last_post
+        based_on_last_post: based_on_last_post,
+        duration: duration
       )
     end
   end
