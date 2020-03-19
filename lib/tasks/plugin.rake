@@ -146,3 +146,32 @@ task 'plugin:qunit', [:plugin, :timeout] do |t, args|
 
   sh cmd
 end
+
+desc 'run all migrations of a plugin'
+namespace 'plugin:migrate' do
+  def list_migrations(plugin_name)
+    plugin_root = File.join(Rails.root, "plugins", plugin_name)
+    migrations_root = File.join(plugin_root, "db", "{post_migrate,migrate}", "*.rb")
+    Dir[migrations_root]
+      .map do |migration_filename|
+        File.basename(migration_filename)[/(^.*?)_/, 1].to_i
+      end
+      .sort
+  end
+
+  def cmd(operation, migration_number)
+    "rails db:migrate:#{operation} LOAD_PLUGINS=1 VERSION=#{migration_number}"
+  end
+
+  task :down, [:plugin] do |t, args|
+    list_migrations(args[:plugin]).reverse.each do |migration_number|
+      sh cmd(:down, migration_number)
+    end
+  end
+
+  task :up, [:plugin] do |t, args|
+    list_migrations(args[:plugin]).each do |migration_number|
+      sh cmd(:up, migration_number)
+    end
+  end
+end
