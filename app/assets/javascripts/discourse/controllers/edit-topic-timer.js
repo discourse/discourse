@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const OPEN_STATUS_TYPE = "open";
@@ -109,6 +110,21 @@ export default Controller.extend(ModalFunctionality, {
       })
       .catch(popupAjaxError)
       .finally(() => this.set("loading", false));
+  },
+
+  onShow() {
+    let time = null;
+    const executeAt = this.get("topicTimer.execute_at");
+
+    if (executeAt) {
+      const closeTime = moment(executeAt);
+
+      if (closeTime > moment()) {
+        time = closeTime.format(FORMAT);
+      }
+    }
+
+    this.send("onChangeInput", time);
   },
 
   actions: {

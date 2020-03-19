@@ -1,10 +1,7 @@
 import { equal, or, readOnly } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import discourseComputed, {
-  observes,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
   OPEN_STATUS_TYPE,
@@ -40,22 +37,6 @@ export default Component.extend({
   @discourseComputed("topic.visible")
   excludeCategoryId(visible) {
     if (visible) return this.get("topic.category_id");
-  },
-
-  @on("init")
-  _setInput() {
-    let time = null;
-    const executeAt = this.get("topicTimer.execute_at");
-
-    if (executeAt) {
-      const closeTime = moment(executeAt);
-
-      if (closeTime > moment()) {
-        time = closeTime.format("YYYY-MM-DD HH:mm");
-      }
-    }
-
-    this.set("input", time);
   },
 
   @observes("selection")
