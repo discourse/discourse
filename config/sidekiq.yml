@@ -6,3 +6,11 @@ development:
     - [default, 4]
     - [low, 2]
     - [ultra_low]
+
+production:
+  :concurrency: 5
+  :queues:
+    - [critical, 8]
+    - [default, 4]
+    - [low, 2]
+    - [ultra_low]
