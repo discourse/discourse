@@ -255,3 +255,10 @@ end
 gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
+
+# These are not direct dependencies, but we need to restrict
+# versions for compatibility with https://github.com/discourse/discourse-zendesk-plugin
+# These restrictions can be removed once the zendesk_api gem is updated
+# for newer versions of hashie and faraday
+gem 'hashie', '< 4.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/422
+gem 'faraday', '< 1.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/421
