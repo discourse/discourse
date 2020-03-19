@@ -122,8 +122,8 @@
 
   <!-- Matomo -->
   <script type="text/javascript">
-    var idSite = 120;
-    var matomoTrackingApiUrl = '//stats.data.gouv.fr/';
+    var idSite = '120';
+    var matomoTrackingApiUrl = 'https://stats.data.gouv.fr/piwik.php';
 
     var _paq = window._paq || [];
     _paq.push(['setTrackerUrl', matomoTrackingApiUrl]);
@@ -131,5 +131,10 @@
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
   </script>
+
+  <script src="https://stats.data.gouv.fr/matomo.js" async defer></script>
+
+
+
   <!-- End Matomo Code -->
 </html>
