@@ -81,15 +81,17 @@ RSpec.describe "tasks/uploads" do
         end
 
         it "rebakes the posts attached" do
-          post1_baked = post1.baked_at
-          post2_baked = post2.baked_at
-          post3_baked = post3.baked_at
+          freeze_time
+
+          post1.update_columns(baked_at: 1.week.ago)
+          post2.update_columns(baked_at: 1.week.ago)
+          post3.update_columns(baked_at: 1.week.ago)
 
           invoke_task
 
-          expect(post1.reload.baked_at).not_to eq(post1_baked)
-          expect(post2.reload.baked_at).not_to eq(post2_baked)
-          expect(post3.reload.baked_at).not_to eq(post3_baked)
+          expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(post3.reload.baked_at).not_to eq_time(1.week.ago)
         end
 
         context "for an upload that is already secure and does not need to change" do
@@ -100,9 +102,12 @@ RSpec.describe "tasks/uploads" do
           end
 
           it "does not rebake the associated post" do
-            post3_baked = post3.baked_at.to_s
+            freeze_time
+
+            post3.update_columns(baked_at: 1.week.ago)
             invoke_task
-            expect(post3.reload.baked_at.to_s).to eq(post3_baked)
+
+            expect(post3.reload.baked_at).to eq_time(1.week.ago)
           end
 
           it "does not attempt to update the acl" do
@@ -167,11 +172,14 @@ RSpec.describe "tasks/uploads" do
     end
 
     it "rebakes the associated posts" do
-      baked_post1 = post1.baked_at
-      baked_post2 = post2.baked_at
+      freeze_time
+
+      post1.update_columns(baked_at: 1.week.ago)
+      post2.update_columns(baked_at: 1.week.ago)
       invoke_task
-      expect(post1.reload.baked_at).not_to eq(baked_post1)
-      expect(post2.reload.baked_at).not_to eq(baked_post2)
+
+      expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+      expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
     end
 
     it "updates the affected ACLs" do
