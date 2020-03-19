@@ -17,7 +17,8 @@ const REMINDER_TYPES = {
   NEXT_MONTH: "next_month",
   CUSTOM: "custom",
   LAST_CUSTOM: "last_custom",
-  NONE: "none"
+  NONE: "none",
+  START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week"
 };
 
 export default Controller.extend(ModalFunctionality, {
@@ -127,6 +128,17 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed()
+  startNextBusinessWeekFormatted() {
+    return htmlSafe(
+      I18n.t("bookmarks.reminders.start_of_next_business_week", {
+        date: this.nextWeek()
+          .day("Monday")
+          .format(I18n.t("dates.long_no_year"))
+      })
+    );
+  },
+
+  @discourseComputed()
   laterTodayFormatted() {
     return htmlSafe(
       I18n.t("bookmarks.reminders.later_today", {
@@ -140,15 +152,6 @@ export default Controller.extend(ModalFunctionality, {
     return htmlSafe(
       I18n.t("bookmarks.reminders.tomorrow", {
         date: this.tomorrow().format(I18n.t("dates.time_short_day"))
-      })
-    );
-  },
-
-  @discourseComputed()
-  nextBusinessDayFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.next_business_day", {
-        date: this.nextBusinessDay().format(I18n.t("dates.time_short_day"))
       })
     );
   },
@@ -237,6 +240,8 @@ export default Controller.extend(ModalFunctionality, {
         return this.tomorrow();
       case REMINDER_TYPES.NEXT_WEEK:
         return this.nextWeek();
+      case REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK:
+        return this.nextWeek().day("Monday");
       case REMINDER_TYPES.NEXT_MONTH:
         return this.nextMonth();
       case REMINDER_TYPES.CUSTOM:
@@ -267,23 +272,6 @@ export default Controller.extend(ModalFunctionality, {
 
   nextMonth() {
     return this.startOfDay(this.now().add(1, "month"));
-  },
-
-  nextBusinessDay() {
-    const currentDay = this.now().isoWeekday(); // 1=Mon, 7=Sun
-    let next = null;
-
-    // friday
-    if (currentDay === 5) {
-      next = this.now().add(3, "days");
-      // saturday
-    } else if (currentDay === 6) {
-      next = this.now().add(2, "days");
-    } else {
-      next = this.now().add(1, "day");
-    }
-
-    return this.startOfDay(next);
   },
 
   tomorrow() {

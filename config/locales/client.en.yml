@@ -320,6 +320,7 @@ en:
         next_business_day: "Next business day <br/>{{date}}"
         tomorrow: "Tomorrow <br/>{{date}}"
         next_week: "Next week <br/>{{date}}"
+        start_of_next_business_week: "Next Monday <br/>{{date}}"
         next_month: "Next month <br/>{{date}}"
         custom: "Custom date and time"
         last_custom: "Last <br/>{{date}}"

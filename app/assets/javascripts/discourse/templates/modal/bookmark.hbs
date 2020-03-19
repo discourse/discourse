@@ -27,7 +27,7 @@
           {{#if showLaterToday}}
             {{tap-tile icon="far-moon" text=laterTodayFormatted tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{/if}}
-          {{tap-tile icon="briefcase" text=nextBusinessDayFormatted tileId=reminderTypes.NEXT_BUSINESS_DAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+          {{tap-tile icon="briefcase" text=startNextBusinessWeekFormatted tileId=reminderTypes.START_OF_NEXT_BUSINESS_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{tap-tile icon="far-sun" text=tomorrowFormatted tileId=reminderTypes.TOMORROW activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{tap-tile icon="far-clock" text=nextWeekFormatted tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
           {{tap-tile icon="far-calendar-plus" text=nextMonthFormatted tileId=reminderTypes.NEXT_MONTH activeTile=grid.activeTile onChange=(action "selectReminderType")}}

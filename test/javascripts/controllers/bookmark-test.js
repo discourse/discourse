@@ -59,54 +59,6 @@ QUnit.test("nextMonth gets next month correctly", function(assert) {
   );
 });
 
-QUnit.test(
-  "nextBusinessDay gets next business day of monday correctly if today is friday",
-  function(assert) {
-    mockMomentTz("2019-12-13T08:00:00");
-
-    assert.equal(
-      BookmarkController.nextBusinessDay().format("YYYY-MM-DD"),
-      "2019-12-16"
-    );
-  }
-);
-
-QUnit.test(
-  "nextBusinessDay gets next business day of monday correctly if today is saturday",
-  function(assert) {
-    mockMomentTz("2019-12-14T08:00:00");
-
-    assert.equal(
-      BookmarkController.nextBusinessDay().format("YYYY-MM-DD"),
-      "2019-12-16"
-    );
-  }
-);
-
-QUnit.test(
-  "nextBusinessDay gets next business day of monday correctly if today is sunday",
-  function(assert) {
-    mockMomentTz("2019-12-15T08:00:00");
-
-    assert.equal(
-      BookmarkController.nextBusinessDay().format("YYYY-MM-DD"),
-      "2019-12-16"
-    );
-  }
-);
-
-QUnit.test(
-  "nextBusinessDay gets next business day of thursday correctly if today is wednesday",
-  function(assert) {
-    mockMomentTz("2019-12-11T08:00:00");
-
-    assert.equal(
-      BookmarkController.nextBusinessDay().format("YYYY-MM-DD"),
-      "2019-12-12"
-    );
-  }
-);
-
 QUnit.test("tomorrow gets tomorrow correctly", function(assert) {
   mockMomentTz("2019-12-11T08:00:00");
 
