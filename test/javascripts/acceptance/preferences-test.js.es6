@@ -256,14 +256,19 @@ QUnit.test("second factor security keys", async assert => {
   assert.ok(exists("#security-key-name"), "shows security key name input");
 
   fillIn("#security-key-name", "");
-  await click(".add-security-key");
 
-  assert.ok(
-    find(".alert-error")
-      .html()
-      .indexOf("provide a name") > -1,
-    "shows name missing error message"
-  );
+  // The following tests can only run when Webauthn is enabled. This is not
+  // always the case, for example on a browser running on a non-standard port
+  if (typeof PublicKeyCredential !== "undefined") {
+    await click(".add-security-key");
+
+    assert.ok(
+      find(".alert-error")
+        .html()
+        .indexOf("provide a name") > -1,
+      "shows name missing error message"
+    );
+  }
 });
 
 QUnit.test("default avatar selector", async assert => {
