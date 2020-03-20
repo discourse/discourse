@@ -43,7 +43,7 @@ RSpec.describe "tasks/uploads" do
     context "when the store is internal" do
       it "does nothing; this is for external store only" do
         Upload.expects(:transaction).never
-        invoke_task
+        expect { invoke_task }.to raise_error(SystemExit)
       end
     end
 
