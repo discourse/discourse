@@ -73,7 +73,7 @@ describe Imap::Sync do
       expect(topic.user.email).to eq(from)
       expect(topic.tags.pluck(:name)).to eq(%w[seen important test-label])
 
-      post = topic.posts.first
+      post = topic.first_post
       expect(post.raw).to eq('This is an email *body*. :smile:')
 
       incoming_email = post.incoming_email
@@ -130,7 +130,7 @@ describe Imap::Sync do
       provider.stubs(:open_mailbox).returns(uid_validity: 1)
 
       provider.stubs(:uids).with.returns([100])
-      provider.stubs(:emails).with([100], anything, anything).returns(
+      provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
         [
           {
             'UID' => 100,
@@ -165,7 +165,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 100).returns([100])
       provider.stubs(:uids).with(from: 101).returns([200])
-      provider.stubs(:emails).with([100], anything, anything).returns(
+      provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS'], anything).returns(
         [
           {
             'UID' => 100,
@@ -174,7 +174,7 @@ describe Imap::Sync do
           }
         ]
       )
-      provider.stubs(:emails).with([200], anything, anything).returns(
+      provider.stubs(:emails).with([200], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
         [
           {
             'UID' => 200,
@@ -205,7 +205,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 200).returns([100, 200])
       provider.stubs(:uids).with(from: 201).returns([])
-      provider.stubs(:emails).with([100, 200], anything, anything).returns(
+      provider.stubs(:emails).with([100, 200], ['UID', 'FLAGS', 'LABELS'], anything).returns(
         [
           {
             'UID' => 100,
@@ -249,7 +249,7 @@ describe Imap::Sync do
 
       provider.stubs(:open_mailbox).returns(uid_validity: 1)
       provider.stubs(:uids).with.returns([100, 200])
-      provider.stubs(:emails).with([100, 200], anything, anything).returns(
+      provider.stubs(:emails).with([100, 200], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
         [
           {
             'UID' => 100,
@@ -286,12 +286,11 @@ describe Imap::Sync do
         .and change { IncomingEmail.count }.by(2)
 
       imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid)
-      expect(imap_data.first).to eq([1, 100])
-      expect(imap_data.second).to eq([1, 200])
+      expect(imap_data).to contain_exactly([1, 100], [1, 200])
 
       provider.stubs(:open_mailbox).returns(uid_validity: 2)
       provider.stubs(:uids).with.returns([111, 222])
-      provider.stubs(:emails).with([111, 222], anything, anything).returns(
+      provider.stubs(:emails).with([111, 222], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
         [
           {
             'UID' => 111,
@@ -328,8 +327,7 @@ describe Imap::Sync do
         .and change { IncomingEmail.count }.by(0)
 
       imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid)
-      expect(imap_data.first).to eq([2, 111])
-      expect(imap_data.second).to eq([2, 222])
+      expect(imap_data).to contain_exactly([2, 111], [2, 222])
     end
   end
 end
