@@ -69,13 +69,13 @@ module Imap
         # back to the pool.
         ActiveRecord::Base.connection_handler.clear_active_connections!
 
-        @provider.imap.idle do |resp|
+        @provider.imap.idle(SiteSetting.imap_polling_period_mins.minutes.to_i) do |resp|
           if resp.kind_of?(Net::IMAP::UntaggedResponse) && resp.name == 'EXISTS'
             @provider.imap.idle_done
           end
         end
 
-        old_uids = []
+        old_uids = @provider.uids(to: @group.imap_last_uid) # 1 .. seen
         new_uids = @provider.uids(from: @group.imap_last_uid + 1) # seen+1 .. inf
       else
         # Fetching UIDs of old (already imported into Discourse, but might need
