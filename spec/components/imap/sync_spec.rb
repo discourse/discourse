@@ -130,7 +130,7 @@ describe Imap::Sync do
       provider.stubs(:open_mailbox).returns(uid_validity: 1)
 
       provider.stubs(:uids).with.returns([100])
-      provider.stubs(:emails).with(anything, [100], anything).returns(
+      provider.stubs(:emails).with([100], anything, anything).returns(
         [
           {
             'UID' => 100,
@@ -165,7 +165,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 100).returns([100])
       provider.stubs(:uids).with(from: 101).returns([200])
-      provider.stubs(:emails).with(anything, [100], anything).returns(
+      provider.stubs(:emails).with([100], anything, anything).returns(
         [
           {
             'UID' => 100,
@@ -174,7 +174,7 @@ describe Imap::Sync do
           }
         ]
       )
-      provider.stubs(:emails).with(anything, [200], anything).returns(
+      provider.stubs(:emails).with([200], anything, anything).returns(
         [
           {
             'UID' => 200,
@@ -205,7 +205,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 200).returns([100, 200])
       provider.stubs(:uids).with(from: 201).returns([])
-      provider.stubs(:emails).with(anything, [100, 200], anything).returns(
+      provider.stubs(:emails).with([100, 200], anything, anything).returns(
         [
           {
             'UID' => 100,
@@ -249,7 +249,7 @@ describe Imap::Sync do
 
       provider.stubs(:open_mailbox).returns(uid_validity: 1)
       provider.stubs(:uids).with.returns([100, 200])
-      provider.stubs(:emails).with(anything, [100, 200], anything).returns(
+      provider.stubs(:emails).with([100, 200], anything, anything).returns(
         [
           {
             'UID' => 100,
@@ -291,7 +291,7 @@ describe Imap::Sync do
 
       provider.stubs(:open_mailbox).returns(uid_validity: 2)
       provider.stubs(:uids).with.returns([111, 222])
-      provider.stubs(:emails).with(anything, [111, 222], anything).returns(
+      provider.stubs(:emails).with([111, 222], anything, anything).returns(
         [
           {
             'UID' => 111,
