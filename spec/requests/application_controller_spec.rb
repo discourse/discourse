@@ -297,7 +297,7 @@ RSpec.describe ApplicationController do
         permalink = Permalink.create!(url: trashed_topic.relative_url, category_id: category.id)
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
-        expect(response).to redirect_to("/forum/c/#{category.slug}")
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}")
 
         permalink.destroy
         permalink = Permalink.create!(url: trashed_topic.relative_url, post_id: new_topic.posts.last.id)
