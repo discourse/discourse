@@ -23,10 +23,6 @@ module Imap
         password: @group.email_password
       )
 
-      @import_limit = opts[:import_limit] || SiteSetting.imap_batch_import_email
-      @old_emails_limit = opts[:old_emails_limit] || SiteSetting.imap_polling_old_emails
-      @new_emails_limit = opts[:new_emails_limit] || SiteSetting.imap_polling_new_emails
-
       connect! if !opts[:offline]
     end
 
@@ -42,7 +38,11 @@ module Imap
       SiteSetting.enable_imap_idle && @provider.can?('IDLE')
     end
 
-    def process(idle: false)
+    def process(idle: false, import_limit: nil, old_emails_limit: nil, new_emails_limit: nil)
+      import_limit     ||= SiteSetting.imap_batch_import_email
+      old_emails_limit ||= SiteSetting.imap_polling_old_emails
+      new_emails_limit ||= SiteSetting.imap_polling_new_emails
+
       # IMAP server -> Discourse (download): discovers updates to old emails
       # (synced emails) and fetches new emails.
 
@@ -92,20 +92,24 @@ module Imap
       Rails.logger.debug("[IMAP] Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
       all_new_uids_size = new_uids.size
 
-      import_mode = @import_limit > -1 && new_uids.size > @import_limit
-      old_uids = old_uids.sample(@old_emails_limit).sort! if @old_emails_limit > 0
-      new_uids = new_uids[0..@new_emails_limit - 1] if @new_emails_limit > 0
+      import_mode = import_limit > -1 && new_uids.size > import_limit
+      old_uids = old_uids.sample(old_emails_limit).sort! if old_emails_limit > -1
+      new_uids = new_uids[0..new_emails_limit - 1] if new_emails_limit > 0
 
       if old_uids.present?
         Rails.logger.debug("[IMAP] Syncing #{old_uids.size} randomly-selected old emails")
         emails = @provider.emails(old_uids, ['UID', 'FLAGS', 'LABELS'], mailbox: @group.imap_mailbox_name)
         emails.each do |email|
-          Jobs.enqueue(:sync_imap_email,
-            group_id: @group.id,
-            mailbox_name: @group.imap_mailbox_name,
-            uid_validity: @status[:uid_validity],
-            email: email,
+          incoming_email = IncomingEmail.find_by(
+            imap_uid_validity: @status[:uid_validity],
+            imap_uid: email['UID']
           )
+
+          if incoming_email.present?
+            update_topic(email, incoming_email, mailbox_name: @group.imap_mailbox_name)
+          else
+            Rails.logger.warn("[IMAP] Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})")
+          end
         end
       end
 
