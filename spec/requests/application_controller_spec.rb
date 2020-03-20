@@ -84,6 +84,14 @@ RSpec.describe ApplicationController do
         expect(response).to redirect_to("/login")
       end
     end
+
+    it 'contains authentication data when cookies exist' do
+      COOKIE_DATA = "someauthenticationdata"
+      cookies['authentication_data'] = COOKIE_DATA
+      get '/login'
+      expect(response.status).to eq(200)
+      expect(response.body).to include("data-authentication-data=\"#{COOKIE_DATA }\"")
+    end
   end
 
   describe '#redirect_to_second_factor_if_required' do
