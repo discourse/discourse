@@ -78,6 +78,17 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
       expect(r0.pending?).to eq(false)
     end
+
+    it 'sets the reviewable_by_moderator attribute to false when the topic is a PM' do
+      pm_topic = Fabricate(:private_message_topic)
+      post = Fabricate(:post, topic: pm_topic)
+      reviewable = ReviewableFlaggedPost.needs_review!(
+        target: post, topic: pm_topic,
+        created_by: Discourse.system_user, reviewable_by_moderator: true
+      )
+
+      expect(reviewable.reviewable_by_moderator).to eq(false)
+    end
   end
 
   context ".list_for" do

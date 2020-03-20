@@ -37,12 +37,10 @@ class Admin::SiteSettingsController < Admin::AdminController
           new_value = UserOption.title_count_modes[new_value.to_sym]
         end
 
-        UserOption.where(user_option => previous_value).update_all(user_option => new_value)
+        attrs = { user_option => new_value }
+        attrs[:email_digests] = (new_value.to_i != 0) if id == "default_email_digest_frequency"
 
-        if id == "default_email_digest_frequency"
-          disable_digests = new_value == 0
-          UserOption.where(user_option => 0, email_digests: !disable_digests).update_all(email_digests: disable_digests)
-        end
+        UserOption.where(user_option => previous_value).update_all(attrs)
       elsif id.start_with?("default_categories_")
         previous_category_ids = previous_value.split("|")
         new_category_ids = new_value.split("|")
