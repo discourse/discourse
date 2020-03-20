@@ -62,7 +62,7 @@ module PrettyText
   end
 
   def self.create_es6_context
-    ctx = MiniRacer::Context.new(timeout: 15000)
+    ctx = MiniRacer::Context.new(timeout: 25000)
 
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
