@@ -366,7 +366,7 @@ class TopicsController < ApplicationController
 
     if changes.length > 0
       first_post = topic.ordered_posts.first
-      success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
+      success = PostRevisor.new(first_post).revise!(current_user, changes, validate_post: false)
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"

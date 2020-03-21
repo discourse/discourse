@@ -946,6 +946,9 @@ RSpec.describe TopicsController do
       end
 
       describe 'with permission' do
+        fab!(:post_hook) { Fabricate(:post_web_hook) }
+        fab!(:topic_hook) { Fabricate(:topic_web_hook) }
+
         it 'succeeds' do
           put "/t/#{topic.slug}/#{topic.id}.json"
 
@@ -971,6 +974,13 @@ RSpec.describe TopicsController do
 
           topic.reload
           expect(topic.title).to eq('This is a new title for the topic')
+
+          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(2)
+          job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
+
+          expect(job_args["event_name"]).to eq("post_edited")
+          payload = JSON.parse(job_args["payload"])
+          expect(payload["topic_title"]).to eq('This is a new title for the topic')
         end
 
         it "returns errors with invalid titles" do
