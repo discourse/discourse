@@ -49,6 +49,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Release Gem
-        uses: CvX/publish-rubygems-action@34371e3
+        uses: CvX/publish-rubygems-action
         env:
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
