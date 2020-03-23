@@ -41,6 +41,7 @@ export function readOnly(target, name, desc) {
 
 import decoratorAlias from "ember-addons/decorator-alias";
 
+/* eslint-disable */
 export var on = decoratorAlias(Ember.on, "Can not `on` without event names");
 export var observes = decoratorAlias(
   Ember.observer,
