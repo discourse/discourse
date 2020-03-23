@@ -1401,7 +1401,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.json do
-        bookmarks = BookmarkQuery.new(user, params).list_all
+        bookmarks = BookmarkQuery.new(user: user, guardian: guardian, params: params).list_all
 
         if bookmarks.empty?
           render json: {
