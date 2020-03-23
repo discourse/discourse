@@ -23,36 +23,68 @@ class DraftSerializer < ApplicationSerializer
              :archetype,
              :archived
 
+  def cooked
+    object.parsed_data['reply'] || ""
+  end
+
+  def draft_username
+    object.user.username
+  end
+
   def avatar_template
-    User.avatar_template(object.username, object.uploaded_avatar_id)
+    object.user.avatar_template
+  end
+
+  def username
+    object.display_user&.username
+  end
+
+  def username_lower
+    object.display_user&.username_lower
+  end
+
+  def name
+    object.display_user&.name
+  end
+
+  def title
+    object.topic&.title
   end
 
   def slug
-    Slug.for(object.title)
+    object.topic&.slug
   end
 
-  def include_slug?
-    object.title.present?
+  def category_id
+    object.topic&.category_id
   end
 
   def closed
-    object.topic_closed
+    object.topic&.closed
   end
 
   def archived
-    object.topic_archived
+    object.topic&.archived
+  end
+
+  def archetype
+    object&.topic&.archetype
+  end
+
+  def include_slug?
+    object.topic&.title&.present?
   end
 
   def include_closed?
-    object.topic_closed.present?
+    object.topic&.closed&.present?
   end
 
   def include_archived?
-    object.topic_archived.present?
+    object.topic&.archived&.present?
   end
 
   def include_category_id?
-    object.category_id.present?
+    object.topic&.category_id&.present?
   end
 
 end
