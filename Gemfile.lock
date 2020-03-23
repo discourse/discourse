@@ -54,7 +54,7 @@ GEM
     aws-sdk-kms (1.30.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.61.0)
+    aws-sdk-s3 (1.61.1)
       aws-sdk-core (~> 3, >= 3.83.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
@@ -456,12 +456,14 @@ DEPENDENCIES
   execjs
   fabrication
   fakeweb
+  faraday (< 1.0.0)
   fast_blank
   fast_xor
   fast_xs
   fastimage
   flamegraph
   gc_tracer
+  hashie (< 4.0.0)
   highline (~> 1.7.0)
   htmlentities
   http_accept_language

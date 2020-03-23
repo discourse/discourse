@@ -62,7 +62,7 @@ describe Permalink do
 
     it "returns a category url when category_id is set" do
       permalink.category_id = category.id
-      expect(target_url).to eq(category.url)
+      expect(target_url).to eq("#{category.url}/#{category.id}")
     end
 
     it "returns nil when category_id is set but category is not found" do

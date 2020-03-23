@@ -49,7 +49,8 @@ class TopicTimer < ActiveRecord::Base
       publish_to_category: 3,
       delete: 4,
       reminder: 5,
-      bump: 6
+      bump: 6,
+      delete_replies: 7
     )
   end
 
@@ -70,14 +71,6 @@ class TopicTimer < ActiveRecord::Base
         "schedule_auto_#{self.types[topic_timer.status_type]}_job",
         topic_timer.execute_at
       )
-    end
-  end
-
-  def duration
-    if (self.execute_at && self.created_at)
-      ((self.execute_at - self.created_at) / 1.hour).round(2)
-    else
-      0
     end
   end
 
@@ -118,6 +111,14 @@ class TopicTimer < ActiveRecord::Base
 
   def cancel_auto_bump_job
     Jobs.cancel_scheduled_job(:bump_topic, topic_timer_id: id)
+  end
+
+  def cancel_auto_delete_replies_job
+    Jobs.cancel_scheduled_job(:delete_replies, topic_timer_id: id)
+  end
+
+  def schedule_auto_delete_replies_job(time)
+    Jobs.enqueue_at(time, :delete_replies, topic_timer_id: id)
   end
 
   def schedule_auto_bump_job(time)

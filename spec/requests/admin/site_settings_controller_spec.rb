@@ -77,7 +77,16 @@ describe Admin::SiteSettingsController do
           }.to change { UserOption.where(email_in_reply_to: false).count }.by(0)
         end
 
-        it 'should disable email digests in existing user options' do
+        it 'should update `email_digests` column in existing user options' do
+          UserOption.last.update(email_digests: false)
+
+          expect {
+            put "/admin/site_settings/default_email_digest_frequency.json", params: {
+              default_email_digest_frequency: 30,
+              updateExistingUsers: true
+            }
+          }.to change { UserOption.where(email_digests: true).count }.by(1)
+
           expect {
             put "/admin/site_settings/default_email_digest_frequency.json", params: {
               default_email_digest_frequency: 0,

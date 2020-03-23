@@ -1638,7 +1638,7 @@ describe Topic do
 
     it 'can take a number of hours as a string and can handle based on last post' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin, based_on_last_post: true)
+      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration: 18)
       expect(topic.topic_timers.first.execute_at).to eq_time(18.hours.from_now)
     end
 
@@ -1750,7 +1750,7 @@ describe Topic do
       it "should be able to override category's default auto close" do
         Jobs.run_immediately!
 
-        expect(topic.topic_timers.first.duration).to eq(4)
+        expect(topic.topic_timers.first.execute_at).to eq_time(topic.created_at + 4.hours)
 
         topic.set_or_create_timer(TopicTimer.types[:close], 2, by_user: admin)
 

@@ -31,8 +31,19 @@ describe ::DiscoursePoll::Poll do
       option = poll.poll_options.first
 
       expect(poll.can_see_results?(user)).to eq(false)
-      poll.poll_votes.create!(poll_option_id: option.id , user_id: user.id)
+      poll.poll_votes.create!(poll_option_id: option.id, user_id: user.id)
       expect(poll.can_see_results?(user)).to eq(true)
+    end
+
+    it "author can see results when results setting is on_vote" do
+      author = Fabricate(:user)
+      post = Fabricate(:post, user: author, raw: "[poll results=on_vote]\n- A\n- B\n[/poll]")
+      poll = post.polls.first
+      option = poll.poll_options.first
+
+      expect(poll.can_see_results?(author)).to eq(true)
+      poll.poll_votes.create!(poll_option_id: option.id, user_id: author.id)
+      expect(poll.can_see_results?(author)).to eq(true)
     end
 
     it "everyone can see results when results setting is on_vote and poll is closed" do

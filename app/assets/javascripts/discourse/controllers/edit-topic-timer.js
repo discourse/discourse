@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const OPEN_STATUS_TYPE = "open";
@@ -11,6 +12,7 @@ export const PUBLISH_TO_CATEGORY_STATUS_TYPE = "publish_to_category";
 export const DELETE_STATUS_TYPE = "delete";
 export const REMINDER_TYPE = "reminder";
 export const BUMP_TYPE = "bump";
+export const DELETE_REPLIES_TYPE = "delete_replies";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,
@@ -41,10 +43,16 @@ export default Controller.extend(ModalFunctionality, {
       }
     ];
     if (this.currentUser.get("staff")) {
-      types.push({
-        id: DELETE_STATUS_TYPE,
-        name: I18n.t("topic.auto_delete.title")
-      });
+      types.push(
+        {
+          id: DELETE_STATUS_TYPE,
+          name: I18n.t("topic.auto_delete.title")
+        },
+        {
+          id: DELETE_REPLIES_TYPE,
+          name: I18n.t("topic.auto_delete_replies.title")
+        }
+      );
     }
     return types;
   },
@@ -68,7 +76,7 @@ export default Controller.extend(ModalFunctionality, {
     return "true" === isPublic ? publicTopicTimer : privateTopicTimer;
   },
 
-  _setTimer(time, statusType) {
+  _setTimer(time, duration, statusType) {
     this.set("loading", true);
 
     TopicTimer.updateStatus(
@@ -76,10 +84,11 @@ export default Controller.extend(ModalFunctionality, {
       time,
       this.get("topicTimer.based_on_last_post"),
       statusType,
-      this.get("topicTimer.category_id")
+      this.get("topicTimer.category_id"),
+      duration
     )
       .then(result => {
-        if (time) {
+        if (time || duration) {
           this.send("closeModal");
 
           setProperties(this.topicTimer, {
@@ -103,17 +112,39 @@ export default Controller.extend(ModalFunctionality, {
       .finally(() => this.set("loading", false));
   },
 
+  onShow() {
+    let time = null;
+    const executeAt = this.get("topicTimer.execute_at");
+
+    if (executeAt) {
+      const closeTime = moment(executeAt);
+
+      if (closeTime > moment()) {
+        time = closeTime.format(FORMAT);
+      }
+    }
+
+    this.send("onChangeInput", time);
+  },
+
   actions: {
     onChangeStatusType(value) {
       this.set("topicTimer.status_type", value);
     },
 
-    onChangeUpdateTime(value) {
+    onChangeInput(value) {
       this.set("topicTimer.updateTime", value);
     },
 
+    onChangeDuration(value) {
+      this.set("topicTimer.duration", value);
+    },
+
     saveTimer() {
-      if (!this.get("topicTimer.updateTime")) {
+      if (
+        !this.get("topicTimer.updateTime") &&
+        !this.get("topicTimer.duration")
+      ) {
         this.flash(
           I18n.t("topic.topic_status_update.time_frame_required"),
           "alert-error"
@@ -123,12 +154,13 @@ export default Controller.extend(ModalFunctionality, {
 
       this._setTimer(
         this.get("topicTimer.updateTime"),
+        this.get("topicTimer.duration"),
         this.get("topicTimer.status_type")
       );
     },
 
     removeTimer() {
-      this._setTimer(null, this.get("topicTimer.status_type"));
+      this._setTimer(null, null, this.get("topicTimer.status_type"));
     }
   }
 });

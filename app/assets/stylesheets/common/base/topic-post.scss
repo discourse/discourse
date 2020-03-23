@@ -555,6 +555,12 @@ blockquote {
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }
+  .deleted & {
+    // Disable so the deleted background is visible immediately
+    &.highlighted {
+      animation: none;
+    }
+  }
 }
 
 .post-info {
