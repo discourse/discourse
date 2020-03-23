@@ -252,7 +252,6 @@ class UploadCreator
         from,
         to,
         "50%",
-        filename: @filename,
         allow_animation: allow_animation,
         raise_on_error: true
       )
