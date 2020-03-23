@@ -113,7 +113,7 @@ const Bookmark = RestModel.extend({
   formattedReminder(bookmarkReminderAt) {
     const currentUser = PreloadStore.get("currentUser");
     return moment
-      .tz(bookmarkReminderAt, currentUser.timezone || moment.tz.guess())
+      .tz(bookmarkReminderAt, currentUser.resolvedTimezone())
       .format(I18n.t("dates.long_with_year"));
   },
 

@@ -843,22 +843,37 @@ const User = RestModel.extend({
   },
 
   resolvedTimezone() {
-    if (this.timezone) {
-      return this.timezone;
+    if (this._timezone) {
+      return this._timezone;
     }
 
-    this.set("timezone", moment.tz.guess());
+    this.set("_timezone", moment.tz.guess());
     ajax(userPath(this.username + ".json"), {
       type: "PUT",
       dataType: "json",
-      data: { timezone: this.timezone }
+      data: { timezone: this._timezone }
     });
 
-    return this.timezone;
+    return this._timezone;
+  },
+
+  changeTimezone(tz) {
+    this._timezone = tz;
   }
 });
 
 User.reopenClass(Singleton, {
+  munge(json) {
+    // timezone should not be directly accessed, use
+    // resolvedTimezone() and changeTimezone(tz)
+    if (!json._timezone) {
+      json._timezone = json.timezone;
+      delete json.timezone;
+    }
+
+    return json;
+  },
+
   // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username: username });
@@ -867,7 +882,7 @@ User.reopenClass(Singleton, {
 
   // TODO: Use app.register and junk Singleton
   createCurrent() {
-    const userJson = PreloadStore.get("currentUser");
+    let userJson = PreloadStore.get("currentUser");
 
     if (userJson && userJson.primary_group_id) {
       const primaryGroup = userJson.groups.find(
@@ -879,6 +894,7 @@ User.reopenClass(Singleton, {
     }
 
     if (userJson) {
+      userJson = User.munge(userJson);
       const store = Discourse.__container__.lookup("service:store");
       return store.createRecord("user", userJson);
     }

@@ -1,4 +1,4 @@
-import { logIn, updateCurrentUser } from "helpers/qunit-helpers";
+import { logIn } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
 let BookmarkController;
 
@@ -120,7 +120,7 @@ QUnit.test(
   function(assert) {
     let dt = moment.tz(
       "2019-12-11T11:37:16",
-      BookmarkController.currentUser.timezone
+      BookmarkController.currentUser.resolvedTimezone()
     );
 
     assert.equal(
@@ -183,7 +183,7 @@ QUnit.test(
 );
 
 QUnit.test("user timezone updates when the modal is shown", function(assert) {
-  updateCurrentUser({ timezone: null });
+  User.current().changeTimezone(null);
   let stub = sandbox.stub(moment.tz, "guess").returns("Europe/Moscow");
   BookmarkController.onShow();
   assert.equal(BookmarkController.userHasTimezoneSet, true);
@@ -192,7 +192,7 @@ QUnit.test("user timezone updates when the modal is shown", function(assert) {
     "Europe/Moscow",
     "the user does not have their timezone set and a timezone is guessed"
   );
-  updateCurrentUser({ timezone: "Australia/Brisbane" });
+  User.current().changeTimezone("Australia/Brisbane");
   BookmarkController.onShow();
   assert.equal(BookmarkController.userHasTimezoneSet, true);
   assert.equal(
