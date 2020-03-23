@@ -18,17 +18,21 @@ class BookmarkQuery
     end
   end
 
-  def initialize(user, params = {})
+  def initialize(user:, guardian: nil, params: {})
     @user = user
     @params = params
+    @guardian = guardian || Guardian.new(@user)
   end
 
   def list_all
     results = user_bookmarks
-      .joins('INNER JOIN topics ON topics.id = bookmarks.topic_id')
-      .joins('INNER JOIN posts ON posts.id = bookmarks.post_id')
-      .joins('INNER JOIN users ON users.id = posts.user_id')
       .order('bookmarks.created_at DESC')
+
+    topics = Topic.listable_topics.secured(@guardian)
+    pms = Topic.private_messages_for_user(@user)
+    results = results.merge(topics.or(pms))
+
+    results = results.merge(Post.secured(@guardian))
 
     if @params[:limit]
       results = results.limit(@params[:limit])
@@ -42,7 +46,7 @@ class BookmarkQuery
 
     BookmarkQuery.preload(results, self)
 
-    results
+    @guardian.filter_allowed_categories(results)
   end
 
   private
@@ -51,5 +55,7 @@ class BookmarkQuery
     Bookmark.where(user: @user)
       .includes(topic: :tags)
       .includes(post: :user)
+      .references(:topic)
+      .references(:post)
   end
 end

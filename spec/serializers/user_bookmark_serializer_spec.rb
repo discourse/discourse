@@ -6,9 +6,11 @@ RSpec.describe UserBookmarkSerializer do
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: user) }
   let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, post: post, topic: post.topic) }
+  let(:bookmark_list) { BookmarkQuery.new(user: bookmark.user).list_all.to_ary }
 
   it "serializes all properties correctly" do
-    s = serialized
+    s = UserBookmarkSerializer.new(bookmark_list.last)
+
     expect(s.id).to eq(bookmark.id)
     expect(s.created_at).to eq(bookmark.created_at)
     expect(s.topic_id).to eq(bookmark.topic_id)
@@ -34,9 +36,8 @@ RSpec.describe UserBookmarkSerializer do
       bookmark.topic.trash!
       bookmark.reload
     end
-    it "still returns the topic title because the relationship is unscoped" do
-      serialized
-      expect(serialized.title).not_to eq(nil)
+    it "it has nothing to serialize" do
+      expect(bookmark_list).to eq([])
     end
   end
 
@@ -45,17 +46,9 @@ RSpec.describe UserBookmarkSerializer do
       bookmark.post.trash!
       bookmark.reload
     end
-    it "still returns the post number because the relationship is unscoped" do
-      serialized
-      expect(serialized.linked_post_number).not_to eq(nil)
-    end
-    it "still returns the post username" do
-      serialized
-      expect(serialized.username).not_to eq(nil)
+    it "it has nothing to serialize" do
+      expect(bookmark_list).to eq([])
     end
   end
 
-  def serialized
-    described_class.new(BookmarkQuery.new(bookmark.user, {}).list_all.to_ary.last)
-  end
 end
