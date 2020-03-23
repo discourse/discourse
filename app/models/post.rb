@@ -69,15 +69,7 @@ class Post < ActiveRecord::Base
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
 
   scope :private_posts_for_user, ->(user) {
-    where("posts.topic_id IN (SELECT topic_id
-             FROM topic_allowed_users
-             WHERE user_id = :user_id
-             UNION ALL
-             SELECT tg.topic_id
-             FROM topic_allowed_groups tg
-             JOIN group_users gu ON gu.user_id = :user_id AND
-                                      gu.group_id = tg.group_id)",
-                                              user_id: user.id)
+    where("posts.topic_id IN (#{Topic::PRIVATE_MESSAGES_SQL})", user_id: user.id)
   }
 
   scope :by_newest, -> { order('created_at DESC, id DESC') }
