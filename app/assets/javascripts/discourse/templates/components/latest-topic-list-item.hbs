@@ -1,7 +1,14 @@
 <div class='topic-poster'>
-  {{#user-link user=topic.lastPoster}}
-    {{avatar topic.lastPoster imageSize="large"}}
+  {{#user-link user=topic.lastPosterUser}}
+    {{avatar topic.lastPosterUser imageSize="large"}}
   {{/user-link}}
+  {{#if topic.lastPosterGroup}}
+    {{avatar-flair
+      flairURL=topic.lastPosterGroup.flair_url
+      flairBgColor=topic.lastPosterGroup.flair_bg_color
+      flairColor=topic.lastPosterGroup.flair_color
+      groupName=topic.lastPosterGroup.name}}
+  {{/if}}
 </div>
 <div class='main-link'>
   <div class='top-row'>
