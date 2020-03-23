@@ -4,22 +4,28 @@ import { formatUsername } from "discourse/lib/utilities";
 import { normalize } from "discourse/components/user-info";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { computed } from "@ember/object";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export default Component.extend({
   usersTemplates: computed("users.[]", function() {
     return (this.users || []).map(user => {
-      let name = "";
-      if (user.name && normalize(user.username) !== normalize(user.name)) {
-        name = user.name;
+      let name = user.name;
+      let username = user.username;
+      let prioritizeName = prioritizeNameInUx(name, this.siteSettings);
+      let hideName = false;
+      if (normalize(username) === normalize(name)) {
+        hideName = true;
       }
 
       return {
-        username: user.username,
         name,
-        userPath: userPath(user.username),
+        username,
+        userPath: userPath(username),
         avatar: renderAvatar(user, { imageSize: "large" }),
         title: user.title || "",
-        formatedUsername: formatUsername(user.username)
+        formatedUsername: formatUsername(username),
+        prioritizeName,
+        hideName
       };
     });
   })

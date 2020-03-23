@@ -11,10 +11,14 @@
       <div class="name-line">
         <span class="username">
           <a href={{userTemplate.userPath}} data-user-card={{userTemplate.username}}>
-            {{userTemplate.username}}
+            {{#if userTemplate.prioritizeName}}{{userTemplate.name}}{{else}}{{userTemplate.username}}{{/if}}
           </a>
         </span>
-        <span class="name">{{userTemplate.name}}</span>
+        <span class="name">
+          {{#unless userTemplate.hideName}}
+            {{#if userTemplate.prioritizeName}}{{userTemplate.username}}{{else}}{{userTemplate.name}}{{/if}}
+          {{/unless}}
+        </span>
       </div>
       <div class="title">{{userTemplate.title}}</div>
     </div>
