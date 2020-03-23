@@ -455,7 +455,11 @@ export default {
       const offset = minimumOffset();
       $selected = $articles
         .toArray()
-        .find(article => article.getBoundingClientRect().top > offset);
+        .find(article =>
+          direction > 0
+            ? article.getBoundingClientRect().top > offset
+            : article.getBoundingClientRect().bottom > offset
+        );
       if (!$selected) {
         $selected = $articles[$articles.length - 1];
       }
