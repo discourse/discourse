@@ -1,8 +1,9 @@
 import deprecated from "discourse-common/lib/deprecated";
+import { getOwner as emberGetOwner } from "@ember/application";
 
 export function getOwner(obj) {
-  if (Ember.getOwner) {
-    return Ember.getOwner(obj) || Discourse.__container__;
+  if (emberGetOwner) {
+    return emberGetOwner(obj) || Discourse.__container__;
   }
 
   return obj.container;
