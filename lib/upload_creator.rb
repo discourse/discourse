@@ -263,6 +263,8 @@ class UploadCreator
 
       return if filesize >= original_size || pixels == 0 || !should_downsize?
     end
+  rescue
+    @upload.errors.add(:base, I18n.t("upload.optimize_failure_message"))
   end
 
   def is_still_too_big?
