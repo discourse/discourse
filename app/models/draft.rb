@@ -5,6 +5,8 @@ class Draft < ActiveRecord::Base
   NEW_PRIVATE_MESSAGE ||= 'new_private_message'
   EXISTING_TOPIC ||= 'topic_'
 
+  belongs_to :user
+
   class OutOfSequence < StandardError; end
 
   def self.set(user, key, sequence, data, owner = nil)
@@ -137,6 +139,72 @@ class Draft < ActiveRecord::Base
     Draft.where(user_id: user.id, draft_key: key).destroy_all
   end
 
+  def display_user
+    post&.user || topic&.user || user
+  end
+
+  def parsed_data
+    JSON.parse(data)
+  end
+
+  def topic_id
+    if draft_key.starts_with?(EXISTING_TOPIC)
+      draft_key.gsub(EXISTING_TOPIC, "").to_i
+    end
+  end
+
+  def topic_preloaded?
+    !!defined?(@topic)
+  end
+
+  def topic
+    topic_preloaded? ? @topic : @topic = Draft.allowed_draft_topics_for_user(user).find_by(id: topic_id)
+  end
+
+  def preload_topic(topic)
+    @topic = topic
+  end
+
+  def post_id
+    parsed_data["postId"]
+  end
+
+  def post_preloaded?
+    !!defined?(@post)
+  end
+
+  def post
+    post_preloaded? ? @post : @post = Draft.allowed_draft_posts_for_user(user).find_by(id: post_id)
+  end
+
+  def preload_post(post)
+    @post = post
+  end
+
+  def self.preload_data(drafts, user)
+    topic_ids = drafts.map(&:topic_id)
+    post_ids = drafts.map(&:post_id)
+
+    topics = self.allowed_draft_topics_for_user(user).where(id: topic_ids)
+    posts = self.allowed_draft_posts_for_user(user).where(id: post_ids)
+
+    drafts.each do |draft|
+      draft.preload_topic(topics.detect { |t| t.id == draft.topic_id })
+      draft.preload_post(posts.detect { |p| p.id == draft.post_id })
+    end
+  end
+
+  def self.allowed_draft_topics_for_user(user)
+    topics = Topic.listable_topics.secured(Guardian.new(user))
+    pms = Topic.private_messages_for_user(user)
+    topics.or(pms)
+  end
+
+  def self.allowed_draft_posts_for_user(user)
+    # .secured handles whispers, merge handles topic/pm visibility
+    Post.secured(Guardian.new(user)).joins(:topic).merge(self.allowed_draft_topics_for_user(user))
+  end
+
   def self.stream(opts = nil)
     opts ||= {}
 
@@ -144,36 +212,15 @@ class Draft < ActiveRecord::Base
     offset = (opts[:offset] || 0).to_i
     limit = (opts[:limit] || 30).to_i
 
-    # JOIN of topics table based on manipulating draft_key seems imperfect
-    builder = DB.build <<~SQL
-      SELECT
-        d.*, t.title, t.id topic_id, t.archetype,
-        t.category_id, t.closed topic_closed, t.archived topic_archived,
-        pu.username, pu.name, pu.id user_id, pu.uploaded_avatar_id, pu.username_lower,
-        du.username draft_username, NULL as raw, NULL as cooked, NULL as post_number
-      FROM drafts d
-      LEFT JOIN LATERAL json_extract_path_text (d.data::json, 'postId') postId ON TRUE
-      LEFT JOIN posts p ON postId :: BIGINT = p.id
-      LEFT JOIN topics t ON
-        CASE
-            WHEN d.draft_key LIKE '%' || '#{EXISTING_TOPIC}' || '%'
-              THEN CAST(replace(d.draft_key, '#{EXISTING_TOPIC}', '') AS INT)
-            ELSE 0
-        END = t.id
-      JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id, d.user_id)
-      JOIN users du on du.id = #{user_id}
-      /*where*/
-      /*order_by*/
-      /*offset*/
-      /*limit*/
-    SQL
-
-    builder
-      .where('d.user_id = :user_id', user_id: user_id.to_i)
-      .order_by('d.updated_at desc')
+    stream = Draft.where(user_id: user_id)
+      .order(updated_at: :desc)
       .offset(offset)
       .limit(limit)
-      .query
+
+    # Preload posts and topics to avoid N+1 queries
+    Draft.preload_data(stream, opts[:user])
+
+    stream
   end
 
   def self.cleanup!

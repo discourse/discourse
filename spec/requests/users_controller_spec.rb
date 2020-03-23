@@ -4172,6 +4172,11 @@ describe UsersController do
     let!(:bookmark2) { Fabricate(:bookmark, user: user) }
     let!(:bookmark3) { Fabricate(:bookmark) }
 
+    before do
+      TopicUser.change(user.id, bookmark1.topic_id, total_msecs_viewed: 1)
+      TopicUser.change(user.id, bookmark2.topic_id, total_msecs_viewed: 1)
+    end
+
     it "returns a list of serialized bookmarks for the user" do
       sign_in(user)
       get "/u/#{user.username}/bookmarks.json"

@@ -34,4 +34,24 @@ describe DraftsController do
     get "/drafts.json", params: { username: user_b.username }
     expect(response.status).to eq(403)
   end
+
+  it 'does not include topic details when user cannot see topic' do
+    topic = Fabricate(:private_message_topic)
+    topic_user = topic.user
+    other_user = Fabricate(:user)
+    Draft.set(topic_user, "topic_#{topic.id}", 0, '{}')
+    Draft.set(other_user, "topic_#{topic.id}", 0, '{}')
+
+    sign_in(topic_user)
+    get "/drafts.json", params: { username: topic_user.username }
+    expect(response.status).to eq(200)
+    parsed = JSON.parse(response.body)
+    expect(parsed["drafts"].first["title"]).to eq(topic.title)
+
+    sign_in(other_user)
+    get "/drafts.json", params: { username: other_user.username }
+    expect(response.status).to eq(200)
+    parsed = JSON.parse(response.body)
+    expect(parsed["drafts"].first["title"]).to eq(nil)
+  end
 end

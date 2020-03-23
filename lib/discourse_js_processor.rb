@@ -39,7 +39,9 @@ class DiscourseJsProcessor
     relative_path.start_with?("app/assets/javascripts/discourse/") ||
       relative_path.start_with?("app/assets/javascripts/admin/") ||
       relative_path.start_with?("app/assets/javascripts/pretty-text/") ||
-      relative_path.start_with?("app/assets/javascripts/select-kit/")
+      relative_path.start_with?("app/assets/javascripts/select-kit/") ||
+      relative_path.start_with?("app/assets/javascripts/wizard/") ||
+      relative_path.start_with?("app/assets/javascripts/discourse-common/")
   end
 
   def self.skip_module?(data)

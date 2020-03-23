@@ -163,7 +163,7 @@ export const DefaultNotificationItem = createWidget(
         this.attrs.set("read", true);
         ajax("/notifications/mark-read", {
           method: "PUT",
-          data: this.attrs.id
+          data: { id: this.attrs.id }
         });
       }
     }
