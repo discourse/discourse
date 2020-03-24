@@ -614,6 +614,7 @@ en:
         deny: "Deny"
         denied: "denied"
         undone: "request undone"
+        handle: "handle membership request"
       manage:
         title: "Manage"
         name: "Name"

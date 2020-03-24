@@ -552,6 +552,10 @@ blockquote {
   .cooked {
     overflow: hidden;
   }
+  .group-request {
+    border-top: 1px solid $primary-low;
+    padding-top: 0.5em;
+  }
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }
