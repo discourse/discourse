@@ -846,6 +846,7 @@ en:
         clear:
           title: "Clear"
           warning: "Are you sure you want to clear your featured topic?"
+      use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
       collapse_profile: "Collapse"
