@@ -35,6 +35,7 @@ createWidget("search-term", {
     }
 
     const val = this.attrs.value;
+    // remove zero-width chars
     const newVal = e.target.value.replace(/[\u200B-\u200D\uFEFF]/, "");
 
     if (newVal !== val) {
