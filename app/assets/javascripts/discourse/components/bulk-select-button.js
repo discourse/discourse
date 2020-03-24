@@ -4,6 +4,18 @@ import showModal from "discourse/lib/show-modal";
 export default Component.extend({
   classNames: ["bulk-select-container"],
 
+  didInsertElement() {
+    this._super(...arguments);
+
+    let mainOutletPadding =
+      window.getComputedStyle(document.querySelector("#main-outlet"))
+        .paddingTop || 0;
+
+    document.querySelector(
+      ".bulk-select-container"
+    ).style.top = mainOutletPadding;
+  },
+
   actions: {
     showBulkActions() {
       const controller = showModal("topic-bulk-actions", {
