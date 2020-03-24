@@ -439,7 +439,7 @@ class GroupsController < ApplicationController
       raw: params[:reason],
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
-      custom_fields: { requested_group_id: group.id },
+      topic_opts: { custom_fields: { requested_group_id: group.id } },
       skip_validations: true
     ).create!
 
