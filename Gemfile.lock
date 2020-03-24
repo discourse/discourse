@@ -255,7 +255,7 @@ GEM
       parallel
     parser (2.7.0.4)
       ast (~> 2.4.0)
-    pg (1.2.2)
+    pg (1.2.3)
     progress (3.5.2)
     pry (0.12.2)
       coderay (~> 1.1.0)
