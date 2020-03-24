@@ -53,7 +53,12 @@ export default function(node, words, opts = {}) {
   let flag;
 
   if (settings.wholeWord) {
-    pattern = `(?<=[\\s,.:;"']|^)${pattern}(?=[\\s,.:;"']|$)`;
+    const hasUnicode = words.some(word => {
+      return !word.match(new RegExp(`\b${word}\b`));
+    });
+    pattern = hasUnicode
+      ? `(?<=[\\s,.:;"']|^)${pattern}(?=[\\s,.:;"']|$)`
+      : `\b${pattern}\b`;
   }
 
   if (settings.matchCase) {
