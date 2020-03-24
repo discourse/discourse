@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { debounce, later } from "@ember/runloop";
+import { debounce, cancel } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
 import { createWidget } from "discourse/widgets/widget";
@@ -23,28 +23,17 @@ initSearchData();
 // Helps with debouncing and cancelling promises
 const SearchHelper = {
   _activeSearch: null,
-  _cancelSearch: null,
 
   // for cancelling debounced search
   cancel() {
     if (this._activeSearch) {
-      this._activeSearch.abort();
+      cancel(this._activeSearch);
+      this._activeSearch = null;
     }
-
-    this._cancelSearch = true;
-    later(() => (this._cancelSearch = false), 400);
   },
 
   perform(widget) {
-    if (this._cancelSearch) {
-      this._cancelSearch = null;
-      return;
-    }
-
-    if (this._activeSearch) {
-      this._activeSearch.abort();
-      this._activeSearch = null;
-    }
+    this.cancel();
 
     const { term, typeFilter, contextEnabled } = searchData;
     const searchContext = contextEnabled ? widget.searchContext() : null;
@@ -67,11 +56,6 @@ const SearchHelper = {
       this._activeSearch
         .then(content => {
           searchData.noResults = content.resultTypes.length === 0;
-
-          if (content.grouped_search_result) {
-            searchData.term = content.grouped_search_result.term;
-          }
-
           searchData.results = content;
 
           if (searchContext && searchContext.type === "topic") {
