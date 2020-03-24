@@ -847,7 +847,7 @@ const User = RestModel.extend({
       return this._timezone;
     }
 
-    this.set("_timezone", moment.tz.guess());
+    this.changeTimezone(moment.tz.guess());
     ajax(userPath(this.username + ".json"), {
       type: "PUT",
       dataType: "json",
