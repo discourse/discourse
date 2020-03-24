@@ -1,11 +1,11 @@
 // discourse-skip-module
 (function() {
-  var ps = require("preload-store").default;
-  var preloadedDataElement = document.getElementById("data-preloaded");
-  var setupData = document.getElementById("data-discourse-setup").dataset;
+  const ps = require("preload-store").default;
+  const preloadedDataElement = document.getElementById("data-preloaded");
+  const setupData = document.getElementById("data-discourse-setup").dataset;
 
   if (preloadedDataElement) {
-    var preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
+    const preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
 
     Object.keys(preloaded).forEach(function(key) {
       ps.store(key, JSON.parse(preloaded[key]));
@@ -34,7 +34,7 @@
   Discourse.start();
   Discourse.set("assetVersion", setupData.assetVersion);
 
-  let Session = require("discourse/models/session").default;
+  const Session = require("discourse/models/session").default;
   Session.currentProp(
     "disableCustomCSS",
     setupData.disableCustomCss === "true"
