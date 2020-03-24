@@ -90,6 +90,24 @@ RSpec.describe BookmarkManager do
         expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"))
       end
     end
+
+    context "when the post is inaccessable for the user" do
+      before do
+        post.trash!
+      end
+      it "raises an invalid access error" do
+        expect { subject.create(post_id: post.id, name: name) }.to raise_error(Discourse::InvalidAccess)
+      end
+    end
+
+    context "when the topic is inaccessable for the user" do
+      before do
+        post.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
+      end
+      it "raises an invalid access error" do
+        expect { subject.create(post_id: post.id, name: name) }.to raise_error(Discourse::InvalidAccess)
+      end
+    end
   end
 
   describe ".destroy" do

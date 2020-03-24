@@ -1479,7 +1479,7 @@ describe GroupsController do
       body = JSON.parse(response.body)
 
       expect(body['relative_url']).to eq(topic.relative_url)
-      expect(post.custom_fields['requested_group_id'].to_i).to eq(group.id)
+      expect(post.topic.custom_fields['requested_group_id'].to_i).to eq(group.id)
       expect(post.user).to eq(user)
 
       expect(topic.title).to eq(I18n.t('groups.request_membership_pm.title',

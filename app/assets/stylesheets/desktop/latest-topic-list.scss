@@ -21,7 +21,13 @@
   align-items: center;
 
   .topic-poster {
+    position: relative;
     width: 60px;
+    .avatar-flair {
+      position: absolute;
+      bottom: 0;
+      right: 10px;
+    }
   }
   .main-link {
     @extend .topic-list-main-link;

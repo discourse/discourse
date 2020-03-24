@@ -19,8 +19,7 @@ export let bindings = {
   C: { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
-  "ctrl+p": { handler: "printTopic", anonymous: true },
-  "command+p": { handler: "printTopic", anonymous: true },
+  "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
   e: { postAction: "editPost" },
   end: { handler: "goToLastPost", anonymous: true },
@@ -456,7 +455,11 @@ export default {
       const offset = minimumOffset();
       $selected = $articles
         .toArray()
-        .find(article => article.getBoundingClientRect().top > offset);
+        .find(article =>
+          direction > 0
+            ? article.getBoundingClientRect().top > offset
+            : article.getBoundingClientRect().bottom > offset
+        );
       if (!$selected) {
         $selected = $articles[$articles.length - 1];
       }

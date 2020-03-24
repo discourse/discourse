@@ -204,6 +204,7 @@ describe HtmlToMarkdown do
     expect(html_to_markdown("<pre>var foo = 'bar';</pre>")).to eq("```\nvar foo = 'bar';\n```")
     expect(html_to_markdown("<pre><code>var foo = 'bar';</code></pre>")).to eq("```\nvar foo = 'bar';\n```")
     expect(html_to_markdown(%Q{<pre><code class="lang-javascript">var foo = 'bar';</code></pre>})).to eq("```javascript\nvar foo = 'bar';\n```")
+    expect(html_to_markdown("<pre>    function f() {\n        console.log('Hello world!');\n    }</pre>")).to eq("```\n    function f() {\n        console.log('Hello world!');\n    }\n```")
   end
 
   it "supports <pre> inside <blockquote>" do
@@ -220,6 +221,7 @@ describe HtmlToMarkdown do
 
   it "handles <p>" do
     expect(html_to_markdown("<p>1st paragraph</p><p>2nd paragraph</p>")).to eq("1st paragraph\n\n2nd paragraph")
+    expect(html_to_markdown("<body><p>1st paragraph</p>\n    <p>    2nd paragraph\n    2nd paragraph</p>\n<p>3rd paragraph</p></body>")).to eq("1st paragraph\n\n2nd paragraph\n2nd paragraph\n\n3rd paragraph")
   end
 
   it "handles <div>" do

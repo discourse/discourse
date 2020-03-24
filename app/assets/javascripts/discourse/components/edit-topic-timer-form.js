@@ -1,18 +1,15 @@
-import { isEmpty } from "@ember/utils";
 import { equal, or, readOnly } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import discourseComputed, {
-  observes,
-  on
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
   OPEN_STATUS_TYPE,
   DELETE_STATUS_TYPE,
   REMINDER_TYPE,
   CLOSE_STATUS_TYPE,
-  BUMP_TYPE
+  BUMP_TYPE,
+  DELETE_REPLIES_TYPE
 } from "discourse/controllers/edit-topic-timer";
 
 export default Component.extend({
@@ -23,39 +20,23 @@ export default Component.extend({
   autoBump: equal("selection", BUMP_TYPE),
   publishToCategory: equal("selection", PUBLISH_TO_CATEGORY_STATUS_TYPE),
   reminder: equal("selection", REMINDER_TYPE),
+  autoDeleteReplies: equal("selection", DELETE_REPLIES_TYPE),
   showTimeOnly: or("autoOpen", "autoDelete", "reminder", "autoBump"),
-
-  @discourseComputed(
-    "topicTimer.updateTime",
+  showFutureDateInput: or(
+    "showTimeOnly",
     "publishToCategory",
-    "topicTimer.category_id"
-  )
-  saveDisabled(updateTime, publishToCategory, topicTimerCategoryId) {
-    return isEmpty(updateTime) || (publishToCategory && !topicTimerCategoryId);
+    "autoClose",
+    "autoDeleteReplies"
+  ),
+
+  @discourseComputed("autoDeleteReplies")
+  durationType(autoDeleteReplies) {
+    return autoDeleteReplies ? "days" : "hours";
   },
 
   @discourseComputed("topic.visible")
   excludeCategoryId(visible) {
     if (visible) return this.get("topic.category_id");
-  },
-
-  @on("init")
-  @observes("topicTimer", "topicTimer.execute_at", "topicTimer.duration")
-  _setUpdateTime() {
-    let time = null;
-    const executeAt = this.get("topicTimer.execute_at");
-
-    if (executeAt && this.get("topicTimer.based_on_last_post")) {
-      time = this.get("topicTimer.duration");
-    } else if (executeAt) {
-      const closeTime = moment(executeAt);
-
-      if (closeTime > moment()) {
-        time = closeTime.format("YYYY-MM-DD HH:mm");
-      }
-    }
-
-    this.set("topicTimer.updateTime", time);
   },
 
   @observes("selection")
@@ -79,11 +60,5 @@ export default Component.extend({
         );
       }
     });
-  },
-
-  actions: {
-    onChangeTimerType(value) {
-      this.set("topicTimer.status_type", value);
-    }
   }
 });

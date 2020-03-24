@@ -75,11 +75,16 @@ describe Discourse do
       end
     end
 
-    let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true } }
-    let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false } }
+    let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true; p.path = "my-plugin-1" } }
+    let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false; p.path = "my-plugin-1" } }
 
     before { Discourse.plugins.append(plugin1, plugin2) }
     after { Discourse.plugins.clear }
+
+    before do
+      plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
+      plugin_class.any_instance.stubs(:js_asset_exists?).returns(true)
+    end
 
     it 'can find plugins correctly' do
       expect(Discourse.plugins).to contain_exactly(plugin1, plugin2)
@@ -90,6 +95,19 @@ describe Discourse do
       # Include disabled plugins when requested
       expect(Discourse.find_plugins(include_disabled: true)).to contain_exactly(plugin1, plugin2)
     end
+
+    it 'can find plugin assets' do
+      plugin2.enabled = true
+
+      expect(Discourse.find_plugin_css_assets({}).length).to eq(2)
+      expect(Discourse.find_plugin_js_assets({}).length).to eq(2)
+      plugin1.register_asset_filter do |type, request|
+        false
+      end
+      expect(Discourse.find_plugin_css_assets({}).length).to eq(1)
+      expect(Discourse.find_plugin_js_assets({}).length).to eq(1)
+    end
+
   end
 
   context 'authenticators' do

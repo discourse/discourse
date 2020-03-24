@@ -47,7 +47,11 @@ class Poll < ActiveRecord::Base
 
   def can_see_results?(user)
     return !!user&.staff? if staff_only?
-    !!(always? || (on_vote? && has_voted?(user)) || is_closed?)
+    !!(always? || (on_vote? && (is_me?(user) || has_voted?(user))) || is_closed?)
+  end
+
+  def is_me?(user)
+    user && post.user&.id == user&.id
   end
 
   def has_voted?(user)

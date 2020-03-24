@@ -49,6 +49,7 @@ class Plugin::Instance
    :styles,
    :themes,
    :csp_extensions,
+   :asset_filters
  ].each do |att|
     class_eval %Q{
       def #{att}
@@ -411,6 +412,14 @@ class Plugin::Instance
 
   def extend_content_security_policy(extension)
     csp_extensions << extension
+  end
+
+  # Register a block to run when adding css and js assets
+  # Two arguments will be passed: (type, request)
+  # Type is :css or :js. `request` is an instance of Rack::Request
+  # When using this, make sure to consider the effect on AnonymousCache
+  def register_asset_filter(&blk)
+    asset_filters << blk
   end
 
   # @option opts [String] :name

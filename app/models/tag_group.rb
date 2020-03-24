@@ -13,6 +13,7 @@ class TagGroup < ActiveRecord::Base
 
   before_create :init_permissions
   before_save :apply_permissions
+  before_save :remove_parent_from_group
 
   after_commit { DiscourseTagging.clear_cache! }
 
@@ -71,6 +72,10 @@ class TagGroup < ActiveRecord::Base
       end
       @permissions = nil
     end
+  end
+
+  def remove_parent_from_group
+    tags.delete(parent_tag) if tags.include?(parent_tag)
   end
 
   def self.visible(guardian)

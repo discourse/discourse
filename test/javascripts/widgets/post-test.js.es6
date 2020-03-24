@@ -922,3 +922,18 @@ widgetTest("post notice - with name", {
     );
   }
 });
+
+widgetTest("show group request in post", {
+  template: '{{mount-widget widget="post" args=args}}',
+  beforeEach() {
+    this.set("args", {
+      username: "foo",
+      requestedGroupName: "testGroup"
+    });
+  },
+  test(assert) {
+    const link = find(".group-request a");
+    assert.equal(link.text().trim(), I18n.t("groups.requests.handle"));
+    assert.equal(link.attr("href"), "/g/testGroup/requests?filter=foo");
+  }
+});

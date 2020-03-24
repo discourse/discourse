@@ -336,6 +336,7 @@ login:
   must_approve_users:
     client: true
     default: false
+  invite_code: ""
   enable_local_logins:
     client: true
     default: true

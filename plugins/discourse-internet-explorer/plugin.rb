@@ -20,22 +20,9 @@ DiscourseEvent.on(:after_plugin_activation) do ||
 end
 
 after_initialize do
-
-  # Conditionally load the stylesheet. There is unfortunately no easy way to do this via
-  # Plugin API.
-  reloadable_patch do |plugin|
-    ApplicationHelper.module_eval do
-      alias_method :previous_discourse_stylesheet_link_tag, :discourse_stylesheet_link_tag
-      def discourse_stylesheet_link_tag(name, opts = {})
-
-        if name == 'discourse-internet-explorer'
-          return unless SiteSetting.discourse_internet_explorer_enabled?
-          return unless request.env['HTTP_USER_AGENT'] =~ /MSIE|Trident/
-        end
-
-        previous_discourse_stylesheet_link_tag(name, opts)
-      end
-    end
+  # Conditionally load the stylesheet
+  register_asset_filter do |type, request|
+    request.nil? || request.env['HTTP_USER_AGENT'] =~ /MSIE|Trident/
   end
 
   register_anonymous_cache_key(:ie) do

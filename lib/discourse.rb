@@ -271,6 +271,10 @@ module Discourse
   def self.find_plugin_css_assets(args)
     plugins = self.find_plugins(args)
 
+    plugins = plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(:css, args[:request]) }
+    end
+
     assets = []
 
     targets = [nil]
@@ -289,9 +293,15 @@ module Discourse
   end
 
   def self.find_plugin_js_assets(args)
-    self.find_plugins(args).find_all do |plugin|
+    plugins = self.find_plugins(args).select do |plugin|
       plugin.js_asset_exists?
-    end.map { |plugin| "plugins/#{plugin.directory_name}" }
+    end
+
+    plugins = plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(:js, args[:request]) }
+    end
+
+    plugins.map { |plugin| "plugins/#{plugin.directory_name}" }
   end
 
   def self.assets_digest

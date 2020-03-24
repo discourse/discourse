@@ -363,22 +363,17 @@ class User < ActiveRecord::Base
     user
   end
 
-  def unstage
+  def unstage!
     if self.staged
-      self.staged = false
-      self.custom_fields[FROM_STAGED] = true
-      self.notifications.destroy_all
+      ActiveRecord::Base.transaction do
+        self.staged = false
+        self.custom_fields[FROM_STAGED] = true
+        self.notifications.destroy_all
+        save!
+      end
+
       DiscourseEvent.trigger(:user_unstaged, self)
     end
-  end
-
-  def self.unstage(params)
-    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      params.each { |k, v| user.public_send("#{k}=", v) }
-      user.active = false
-      user.unstage
-    end
-    user
   end
 
   def self.suggest_name(string)
@@ -1122,6 +1117,14 @@ class User < ActiveRecord::Base
       .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
                              .where(disagreed_at: nil)
                              .select(:post_id))
+      .count
+  end
+
+  def number_of_rejected_posts
+    Post.with_deleted
+      .where(user_id: self.id)
+      .joins('INNER JOIN reviewables r ON posts.id = r.target_id')
+      .where(r: { status: Reviewable.statuses[:rejected], type: ReviewableQueuedPost.name })
       .count
   end
 

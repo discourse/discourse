@@ -8,12 +8,15 @@ class BookmarkManager
   end
 
   def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil)
+    post = Post.unscoped.includes(:topic).find(post_id)
     reminder_type = Bookmark.reminder_types[reminder_type.to_sym] if reminder_type.present?
+
+    raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_see_post?(post)
 
     bookmark = Bookmark.create(
       user_id: @user.id,
-      topic_id: topic_id_for_post(post_id),
-      post_id: post_id,
+      topic: post.topic,
+      post: post,
       name: name,
       reminder_type: reminder_type,
       reminder_at: reminder_at,
@@ -57,10 +60,6 @@ class BookmarkManager
   end
 
   private
-
-  def topic_id_for_post(post_id)
-    Post.where(id: post_id).pluck_first(:topic_id)
-  end
 
   def clear_at_desktop_cache_if_required
     return if user_has_any_pending_at_desktop_reminders?

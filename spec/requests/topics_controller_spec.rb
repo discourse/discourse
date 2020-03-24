@@ -946,6 +946,9 @@ RSpec.describe TopicsController do
       end
 
       describe 'with permission' do
+        fab!(:post_hook) { Fabricate(:post_web_hook) }
+        fab!(:topic_hook) { Fabricate(:topic_web_hook) }
+
         it 'succeeds' do
           put "/t/#{topic.slug}/#{topic.id}.json"
 
@@ -971,6 +974,13 @@ RSpec.describe TopicsController do
 
           topic.reload
           expect(topic.title).to eq('This is a new title for the topic')
+
+          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(2)
+          job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
+
+          expect(job_args["event_name"]).to eq("post_edited")
+          payload = JSON.parse(job_args["payload"])
+          expect(payload["topic_title"]).to eq('This is a new title for the topic')
         end
 
         it "returns errors with invalid titles" do
@@ -2642,6 +2652,28 @@ RSpec.describe TopicsController do
         expect(json['execute_at']).to eq(nil)
         expect(json['duration']).to eq(nil)
         expect(json['closed']).to eq(topic.closed)
+      end
+
+      it 'should be able to create a topic status update with duration' do
+        post "/t/#{topic.id}/timer.json", params: {
+          duration: 5,
+          status_type: TopicTimer.types[7]
+        }
+
+        expect(response.status).to eq(200)
+
+        topic_status_update = TopicTimer.last
+
+        expect(topic_status_update.topic).to eq(topic)
+        expect(topic_status_update.execute_at).to eq_time(5.days.from_now)
+        expect(topic_status_update.duration).to eq(5)
+
+        json = JSON.parse(response.body)
+
+        expect(DateTime.parse(json['execute_at']))
+          .to eq_time(DateTime.parse(topic_status_update.execute_at.to_s))
+
+        expect(json['duration']).to eq(topic_status_update.duration)
       end
 
       describe 'publishing topic to category in the future' do

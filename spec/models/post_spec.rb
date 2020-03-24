@@ -1123,7 +1123,7 @@ describe Post do
       SiteSetting.newuser_max_links = 3
       user = Fabricate(:user, staged: true, trust_level: 0)
       user.created_at = 1.hour.ago
-      user.unstage
+      user.unstage!
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(true)
     end
@@ -1133,7 +1133,7 @@ describe Post do
       SiteSetting.newuser_max_links = 3
       user = Fabricate(:user, staged: true, trust_level: 0)
       user.created_at = 2.days.ago
-      user.unstage
+      user.unstage!
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)
     end

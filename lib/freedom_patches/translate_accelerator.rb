@@ -21,8 +21,8 @@ module I18n
 
     LRU_CACHE_SIZE = 400
 
-    def init_accelerator!
-      @overrides_enabled = true
+    def init_accelerator!(overrides_enabled: true)
+      @overrides_enabled = overrides_enabled
       execute_reload
     end
 

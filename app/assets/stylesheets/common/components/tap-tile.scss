@@ -7,6 +7,7 @@
   $horizontal-tile-padding: 5px;
 
   .tap-tile {
+    color: $primary-high;
     padding: 10px $horizontal-tile-padding;
     display: flex;
     flex-direction: column;
@@ -17,6 +18,10 @@
     width: $tile-width;
     font-size: $font-down-2;
     cursor: pointer;
+
+    @media screen and (max-width: 360px) {
+      width: $tile-width - 10;
+    }
 
     &:hover {
       background-color: $tertiary-low;

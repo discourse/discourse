@@ -593,8 +593,8 @@ describe UsersController do
         email: @user.email }
     end
 
-    def post_user
-      post "/u.json", params: post_user_params
+    def post_user(extra_params = {})
+      post "/u.json", params: post_user_params.merge(extra_params)
     end
 
     context 'when email params is missing' do
@@ -616,17 +616,27 @@ describe UsersController do
         expect(User.find_by(username: @user.username).locale).to eq('fr')
       end
 
+      it 'requires invite code when specified' do
+        expect(SiteSetting.require_invite_code).to eq(false)
+        SiteSetting.invite_code = "abc"
+        expect(SiteSetting.require_invite_code).to eq(true)
+
+        post_user(invite_code: "abcd")
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(false)
+
+        post_user(invite_code: "abc")
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(true)
+
+      end
+
       context "when timezone is provided as a guess on signup" do
-        let(:post_user_params) do
-          { name: @user.name,
-            username: @user.username,
-            password: "strongpassword",
-            email: @user.email,
-            timezone: "Australia/Brisbane" }
-        end
 
         it "sets the timezone" do
-          post_user
+          post_user(timezone: "Australia/Brisbane")
           expect(response.status).to eq(200)
           expect(User.find_by(username: @user.username).user_option.timezone).to eq("Australia/Brisbane")
         end
@@ -1440,7 +1450,7 @@ describe UsersController do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(inviter)
       invitee = Fabricate(:user)
-      invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+      _invite = Fabricate(:invite, invited_by: inviter, user: invitee)
       get "/u/#{user.username}/invited_count.json"
       expect(response.status).to eq(200)
 
@@ -4154,6 +4164,30 @@ describe UsersController do
       put "/u/#{user.username}/clear-featured-topic.json"
       expect(response.status).to eq(200)
       expect(user.user_profile.featured_topic).to eq nil
+    end
+  end
+
+  describe "#bookmarks" do
+    let!(:bookmark1) { Fabricate(:bookmark, user: user) }
+    let!(:bookmark2) { Fabricate(:bookmark, user: user) }
+    let!(:bookmark3) { Fabricate(:bookmark) }
+
+    before do
+      TopicUser.change(user.id, bookmark1.topic_id, total_msecs_viewed: 1)
+      TopicUser.change(user.id, bookmark2.topic_id, total_msecs_viewed: 1)
+    end
+
+    it "returns a list of serialized bookmarks for the user" do
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+    end
+
+    it "does not show another user's bookmarks" do
+      sign_in(user)
+      get "/u/#{bookmark3.user.username}/bookmarks.json"
+      expect(response.status).to eq(403)
     end
   end
 

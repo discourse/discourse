@@ -28,7 +28,7 @@
     <%= preload_script "vendor" %>
     <%= preload_script "pretty-text-bundle" %>
     <%= preload_script "application" %>
-    <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?).each do |file| %>
+    <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
       <%= preload_script file %>
     <%- end %>
     <%- if staff? %>
@@ -58,8 +58,8 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
-    <%- if !current_user && cookies[:authentication_data] %>
-      <meta id="data-authentication" data-authentication-data="<%= cookies.delete(:authentication_data) %>">
+    <%- if !current_user && (data = cookies.delete(:authentication_data, path: Discourse.base_uri("/"))) %>
+      <meta id="data-authentication" data-authentication-data="<%= data %>">
     <%- end %>
   </head>
 
