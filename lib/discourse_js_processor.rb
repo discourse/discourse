@@ -42,7 +42,12 @@ class DiscourseJsProcessor
       relative_path.start_with?("app/assets/javascripts/select-kit/") ||
       relative_path.start_with?("app/assets/javascripts/wizard/") ||
       relative_path.start_with?("app/assets/javascripts/discourse-common/") ||
-      relative_path.start_with?("app/assets/javascripts/ember-addons/")
+      relative_path.start_with?("app/assets/javascripts/ember-addons/") ||
+      relative_path == "app/assets/javascripts/preload-store.js" ||
+      relative_path == "app/assets/javascripts/preload-application-data.js" ||
+      relative_path == "app/assets/javascripts/wizard-start.js" ||
+      relative_path == "app/assets/javascripts/onpopstate-handler.js" ||
+      relative_path == "app/assets/javascripts/discourse.js"
   end
 
   def self.skip_module?(data)
