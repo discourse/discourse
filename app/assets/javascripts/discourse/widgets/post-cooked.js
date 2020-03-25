@@ -2,11 +2,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
-import highlightSearch from "discourse/lib/highlight-search";
-import {
-  default as highlightHTML,
-  unhighlightHTML
-} from "discourse/lib/highlight-html";
+import highlightText from "discourse/lib/highlight-text";
 
 let _decorators = [];
 
@@ -56,13 +52,13 @@ export default class PostCooked {
 
     if (highlight && highlight.length > 2) {
       if (this._highlighted) {
-        unhighlightHTML($html[0]);
+        $html.unhighlight();
       }
 
-      highlightSearch($html, highlight, { defaultClassName: true });
+      highlightText($html, highlight, { defaultClassName: true });
       this._highlighted = true;
     } else if (this._highlighted) {
-      unhighlightHTML($html[0]);
+      $html.unhighlight();
       this._highlighted = false;
     }
   }
@@ -179,8 +175,10 @@ export default class PostCooked {
           div.html(result.cooked);
           _decorators.forEach(cb => cb(div, this.decoratorHelper));
 
-          highlightHTML(div[0], originalText, {
-            matchCase: true
+          div.highlight(originalText, {
+            caseSensitive: true,
+            element: "span",
+            className: "highlighted"
           });
           $blockQuote.showHtml(div, "fast", finished);
         })

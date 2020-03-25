@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import { on } from "discourse-common/utils/decorators";
-import highlightHTML from "discourse/lib/highlight-html";
 
 export default Component.extend({
   classNames: ["site-text"],
@@ -11,13 +10,11 @@ export default Component.extend({
     const term = this._searchTerm();
 
     if (term) {
-      highlightHTML(
-        this.element.querySelector(".site-text-id, .site-text-value"),
-        term,
-        {
-          className: "text-highlight"
-        }
-      );
+      $(
+        this.element.querySelector(".site-text-id, .site-text-value")
+      ).highlight(term, {
+        className: "text-highlight"
+      });
     }
     $(this.element.querySelector(".site-text-value")).ellipsis();
   },
