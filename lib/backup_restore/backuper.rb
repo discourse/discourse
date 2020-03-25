@@ -34,9 +34,6 @@ module BackupRestore
 
       update_metadata
 
-      ### READ-ONLY / START ###
-      enable_readonly_mode
-
       begin
         pause_sidekiq
         wait_for_sidekiq
@@ -44,9 +41,6 @@ module BackupRestore
       ensure
         unpause_sidekiq
       end
-
-      disable_readonly_mode
-      ### READ-ONLY / END ###
 
       log "Finalizing backup..."
 
@@ -106,7 +100,6 @@ module BackupRestore
         end
 
       @logs = []
-      @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
 
     def listen_for_shutdown_signal
@@ -132,12 +125,6 @@ module BackupRestore
       BackupMetadata.create!(name: "s3_cdn_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil)
       BackupMetadata.create!(name: "db_name", value: RailsMultisite::ConnectionManagement.current_db)
       BackupMetadata.create!(name: "multisite", value: Rails.configuration.multisite)
-    end
-
-    def enable_readonly_mode
-      return if @readonly_mode_was_enabled
-      log "Enabling readonly mode..."
-      Discourse.enable_readonly_mode
     end
 
     def pause_sidekiq
@@ -364,7 +351,6 @@ module BackupRestore
       log "Cleaning stuff up..."
       delete_uploaded_archive
       remove_tar_leftovers
-      disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       refresh_disk_space
     end
@@ -409,14 +395,6 @@ module BackupRestore
       Sidekiq.unpause!
     rescue => ex
       log "Something went wrong while unpausing Sidekiq.", ex
-    end
-
-    def disable_readonly_mode
-      return if @readonly_mode_was_enabled
-      log "Disabling readonly mode..."
-      Discourse.disable_readonly_mode
-    rescue => ex
-      log "Something went wrong while disabling readonly mode.", ex
     end
 
     def mark_backup_as_not_running
