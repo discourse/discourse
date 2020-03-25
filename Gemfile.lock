@@ -405,7 +405,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (1.6.1)
-    unicorn (5.5.3)
+    unicorn (5.5.4)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.13.0)
