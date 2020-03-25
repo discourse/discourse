@@ -43,11 +43,17 @@ class DiscourseJsProcessor
       relative_path.start_with?("app/assets/javascripts/wizard/") ||
       relative_path.start_with?("app/assets/javascripts/discourse-common/") ||
       relative_path.start_with?("app/assets/javascripts/ember-addons/") ||
+      relative_path.start_with?("app/assets/javascripts/confirm-new-email/") ||
       relative_path == "app/assets/javascripts/preload-store.js" ||
       relative_path == "app/assets/javascripts/preload-application-data.js" ||
       relative_path == "app/assets/javascripts/wizard-start.js" ||
       relative_path == "app/assets/javascripts/onpopstate-handler.js" ||
-      relative_path == "app/assets/javascripts/discourse.js"
+      relative_path == "app/assets/javascripts/discourse.js" ||
+      relative_path == "app/assets/javascripts/google-tag-manager.js" ||
+      relative_path == "app/assets/javascripts/google-universal-analytics.js" ||
+      relative_path == "app/assets/javascripts/activate-account.js" ||
+      relative_path == "app/assets/javascripts/auto-redirect.js" ||
+      relative_path == "app/assets/javascripts/embed-application.js"
   end
 
   def self.skip_module?(data)
