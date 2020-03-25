@@ -70,9 +70,9 @@ describe Wizard do
         step.add_field(id: 'another_element', type: 'text')
       end
 
-      Wizard.exclude_step("second")
+      Wizard.exclude_step("random-step123")
 
-      wizard.append_step('second') do |step|
+      wizard.append_step('random-step123') do |step|
         step.add_field(id: 'another_element', type: 'text')
       end
       wizard.append_step('finished')
