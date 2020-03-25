@@ -134,7 +134,7 @@ class ThemeField < ActiveRecord::Base
     filename, extension = name.split(".", 2)
     begin
       case extension
-      when "js.es6", "js"
+      when "js.es6"
         js_compiler.append_module(content, filename)
       when "hbs"
         js_compiler.append_ember_template(filename.sub("discourse/templates/", ""), content)
