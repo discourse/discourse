@@ -66,7 +66,7 @@ RSpec.describe "tasks/uploads" do
           expect(upload3.reload.access_control_post).to eq(post3)
         end
 
-        it "sets the upload in the read restricted topic category to secure" do
+        it "sets the uploads that are media and attachments in the read restricted topic category to secure" do
           post3.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
           invoke_task
           expect(upload2.reload.secure).to eq(true)
