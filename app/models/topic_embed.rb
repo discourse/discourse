@@ -192,7 +192,7 @@ class TopicEmbed < ActiveRecord::Base
       return contents
     end
     prefix = "#{uri.scheme}://#{uri.host}"
-    prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
+    prefix += ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
     fragment = Nokogiri::HTML.fragment("<div>#{contents}</div>")
     fragment.css('a').each do |a|
