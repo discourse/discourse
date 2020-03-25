@@ -3091,6 +3091,10 @@ en:
         print: "%{shortcut} Print topic"
         defer: "%{shortcut} Defer topic"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
+      search_menu:
+        title: "Search Menu"
+        prev_next: "%{shortcut} Move selection up and down"
+        insert_url: "%{shortcut} Insert selection into open composer"
 
     badges:
       earned_n_times:
