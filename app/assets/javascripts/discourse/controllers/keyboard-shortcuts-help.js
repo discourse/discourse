@@ -172,6 +172,16 @@ export default Controller.extend(ModalFunctionality, {
         keys1: [SHIFT, "a"],
         keysDelimiter: PLUS
       })
+    },
+    search_menu: {
+      prev_next: buildShortcut("search_menu.prev_next", {
+        keys1: ["&uarr;"],
+        keys2: ["&darr;"],
+        shortcutsDelimiter: "slash"
+      }),
+      insert_url: buildShortcut("search_menu.insert_url", {
+        keys1: ["a"]
+      })
     }
   }
 });
