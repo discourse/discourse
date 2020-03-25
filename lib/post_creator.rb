@@ -379,9 +379,8 @@ class PostCreator
   end
 
   def update_uploads_secure_status
-    if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
-      @post.update_uploads_secure_status
-    end
+    return if !SiteSetting.secure_media?
+    @post.update_uploads_secure_status
   end
 
   def handle_spam

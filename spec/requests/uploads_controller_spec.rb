@@ -352,7 +352,7 @@ describe UploadsController do
       end
 
       it "returns the right response when anon tries to download a file " \
-         "when prevent_anons_from_downloading_files is true" do
+        "when prevent_anons_from_downloading_files is true" do
 
         delete "/session/#{user.username}.json"
         SiteSetting.prevent_anons_from_downloading_files = true
@@ -386,6 +386,7 @@ describe UploadsController do
         end
 
         it "redirects to the signed_url_for_path" do
+          sign_in(user)
           freeze_time
           get upload.short_path
 
@@ -393,20 +394,13 @@ describe UploadsController do
         end
 
         it "raises invalid access if the user cannot access the upload access control post" do
+          sign_in(user)
           post = Fabricate(:post)
           post.topic.change_category_to_id(Fabricate(:private_category, group: Fabricate(:group)).id)
           upload.update(access_control_post: post)
 
           get upload.short_path
           expect(response.code).to eq("403")
-        end
-
-        context "when running on a multisite connection", type: :multisite do
-          it "redirects to the signed_url_for_path with the multisite DB name in the url" do
-            freeze_time
-            get upload.short_path
-            expect(response.body).to include(RailsMultisite::ConnectionManagement.current_db)
-          end
         end
       end
     end
@@ -430,10 +424,15 @@ describe UploadsController do
 
       def sign_in_and_stub_head
         sign_in(user)
+        stub_head
+      end
+
+      def stub_head
         stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
       end
 
       before do
+        SiteSetting.authorized_extensions = "*"
         SiteSetting.enable_s3_uploads = true
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "fakeid7974664"
@@ -504,6 +503,46 @@ describe UploadsController do
             sign_in_and_stub_head
             get secure_url
             expect(response.status).to eq(403)
+          end
+        end
+      end
+
+      context "when the upload is an attachment file" do
+        before do
+          upload.update(original_filename: 'test.pdf')
+        end
+        it "redirects to the signed_url_for_path" do
+          sign_in_and_stub_head
+          get secure_url
+          expect(response.status).to eq(302)
+          expect(response.redirect_url).to match("Amz-Expires")
+        end
+
+        context "when the user does not have access to the access control post via guardian" do
+          let(:post) { Fabricate(:post) }
+          let!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+          before do
+            post.topic.change_category_to_id(private_category.id)
+            upload.update(access_control_post_id: post.id)
+          end
+
+          it "returns a 403" do
+            sign_in_and_stub_head
+            get secure_url
+            expect(response.status).to eq(403)
+          end
+        end
+
+        context "when the prevent_anons_from_downloading_files setting is enabled and the user is anon" do
+          before do
+            SiteSetting.prevent_anons_from_downloading_files = true
+          end
+          it "returns a 404" do
+            stub_head
+            delete "/session/#{user.username}.json"
+            get secure_url
+            expect(response.status).to eq(404)
           end
         end
       end
