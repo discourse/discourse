@@ -3,7 +3,7 @@
 require "mini_mime"
 
 class UploadsController < ApplicationController
-  requires_login except: [:show, :show_short]
+  requires_login except: [:show, :show_short, :show_secure]
 
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
@@ -130,6 +130,7 @@ class UploadsController < ApplicationController
     upload = Upload.find_by(sha1: sha1)
     return render_404 if upload.blank?
 
+    return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
     return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_media?
 
     # we don't want to 404 here if secure media gets disabled
@@ -146,6 +147,8 @@ class UploadsController < ApplicationController
   def handle_secure_upload_request(upload, path_with_ext = nil)
     if upload.access_control_post_id.present?
       raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
+    else
+      return render_404 if current_user.nil?
     end
 
     # url_for figures out the full URL, handling multisite DBs,
