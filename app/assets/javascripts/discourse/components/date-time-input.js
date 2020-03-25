@@ -7,19 +7,20 @@ export default Component.extend({
   showTime: true,
 
   _hours: computed("date", function() {
-    return this.date && this.showTime ? this.date.getHours() : null;
+    return this.date && this.showTime ? new Date(this.date).getHours() : null;
   }),
 
   _minutes: computed("date", function() {
-    return this.date && this.showTime ? this.date.getMinutes() : null;
+    return this.date && this.showTime ? new Date(this.date).getMinutes() : null;
   }),
 
   actions: {
     onChangeTime(time) {
       if (this.onChange) {
-        const year = this.date.getFullYear();
-        const month = this.date.getMonth();
-        const day = this.date.getDate();
+        const date = new Date(this.date);
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
         this.onChange(new Date(year, month, day, time.hours, time.minutes));
       }
     },
