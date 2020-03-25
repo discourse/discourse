@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe UploadsController do
-  fab!(:user) { Fabricate(:user) }
+  let!(:user) { Fabricate(:user) }
 
   describe "#show_short" do
     describe "s3 store" do
