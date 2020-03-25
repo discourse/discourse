@@ -94,7 +94,7 @@ QUnit.test("Search with context", async assert => {
 
   const highlighted = [];
 
-  find("#post_7 span.highlight-strong").map((_, span) => {
+  find("#post_7 span.highlighted").map((_, span) => {
     highlighted.push(span.innerText);
   });
 

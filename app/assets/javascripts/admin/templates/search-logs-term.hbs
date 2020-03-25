@@ -31,7 +31,7 @@
       <div class='fps-topic'>
         <div class='topic'>
           <a class='search-link' href={{result.url}}>
-            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=term}}{{html-safe result.topic.fancyTitle}}{{/highlight-text}}</span>
+            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-search highlight=term}}{{html-safe result.topic.fancyTitle}}{{/highlight-search}}</span>
           </a>
 
           <div class='search-category'>
@@ -54,9 +54,9 @@
           </span>
 
           {{#if result.blurb}}
-            {{#highlight-text highlight=term}}
+            {{#highlight-search highlight=term}}
               {{html-safe result.blurb}}
-            {{/highlight-text}}
+            {{/highlight-search}}
           {{/if}}
         </div>
       </div>
