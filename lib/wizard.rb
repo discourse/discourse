@@ -5,6 +5,8 @@ class Wizard
   attr_reader :steps, :user
   attr_accessor :max_topics_to_require_completion
 
+  @@excluded_steps = []
+
   def initialize(user)
     @steps = []
     @user = user
@@ -17,6 +19,8 @@ class Wizard
   end
 
   def append_step(step)
+    return if @@excluded_steps.include?(step)
+
     step = create_step(step) if step.is_a?(String)
 
     yield step if block_given?
@@ -34,6 +38,10 @@ class Wizard
       step.previous = last_step
       step.index = last_step.index + 1
     end
+  end
+
+  def self.exclude_step(step)
+    @@excluded_steps << step
   end
 
   def steps_with_fields
