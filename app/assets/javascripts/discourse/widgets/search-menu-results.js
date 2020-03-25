@@ -3,7 +3,7 @@ import { dateNode } from "discourse/helpers/node";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import highlightSearch from "discourse/lib/highlight-search";
+import highlightText from "discourse/lib/highlight-text";
 import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
@@ -15,7 +15,7 @@ class Highlighted extends RawHtml {
   }
 
   decorate($html) {
-    highlightSearch($html, this.term);
+    highlightText($html, this.term);
   }
 }
 

@@ -88,7 +88,7 @@
 
                   <a class='search-link' href={{result.url}} {{action "logClick" result.topic_id}}>
                     {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
-                    <span class='topic-title'>{{#highlight-search highlight=q}}{{html-safe result.topic.fancyTitle}}{{/highlight-search}}</span>
+                    <span class='topic-title'>{{#highlight-text highlight=q}}{{html-safe result.topic.fancyTitle}}{{/highlight-text}}</span>
                   </a>
 
                   <div class='search-category'>
@@ -112,9 +112,9 @@
                   </span>
 
                   {{#if result.blurb}}
-                    {{#highlight-search highlight=highlightQuery}}
+                    {{#highlight-text highlight=highlightQuery}}
                       {{html-safe result.blurb}}
-                    {{/highlight-search}}
+                    {{/highlight-text}}
                   {{/if}}
                 </div>
 

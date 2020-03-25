@@ -1,12 +1,12 @@
 import Component from "@ember/component";
-import highlightSearch from "discourse/lib/highlight-search";
+import highlightText from "discourse/lib/highlight-text";
 
 export default Component.extend({
   tagName: "span",
 
   _highlightOnInsert: function() {
     const term = this.highlight;
-    highlightSearch($(this.element), term);
+    highlightText($(this.element), term);
   }
     .observes("highlight")
     .on("didInsertElement")
