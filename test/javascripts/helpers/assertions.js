@@ -1,4 +1,5 @@
-// discourse-skip-module
+/* exported exists, count, present, blank, containsInstance, not, visible, invisible */
+
 function exists(selector) {
   return count(selector) > 0;
 }
@@ -12,10 +13,8 @@ function visible(selector) {
 }
 
 function invisible(selector) {
-  const $items = find(selector + ":visible");
-  return (
-    $items.length === 0 ||
-    $items.css("opacity") === "0" ||
-    $items.css("visibility") === "hidden"
-  );
+  var $items = find(selector + ":visible");
+  return $items.length === 0 ||
+         $items.css("opacity") === "0" ||
+         $items.css("visibility") === "hidden";
 }
