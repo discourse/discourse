@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import showModal from "discourse/lib/show-modal";
 
@@ -7,13 +8,15 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    let mainOutletPadding =
-      window.getComputedStyle(document.querySelector("#main-outlet"))
-        .paddingTop || 0;
+    schedule("afterRender", () => {
+      let mainOutletPadding =
+        window.getComputedStyle(document.querySelector("#main-outlet"))
+          .paddingTop || 0;
 
-    document.querySelector(
-      ".bulk-select-container"
-    ).style.top = mainOutletPadding;
+      document.querySelector(
+        ".bulk-select-container"
+      ).style.top = mainOutletPadding;
+    });
   },
 
   actions: {
