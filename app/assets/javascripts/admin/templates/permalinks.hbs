@@ -24,19 +24,18 @@
             <td class="col first url">{{pl.url}}</td>
             <td class="col destination">
               {{#if pl.topic_id}}
-                {{i18n 'admin.permalink.topic_title'}}
                 <a href={{pl.topic_url}}>{{pl.topic_title}}</a>
               {{/if}}
               {{#if pl.post_id}}
-                {{i18n 'admin.permalink.post_title'}}
-                <a href={{pl.post_url}}>#{{pl.post_number}} {{pl.post_topic_title}}</a>
+                <a href={{pl.post_url}}>{{pl.post_topic_title}} #{{pl.post_number}}</a>
               {{/if}}
               {{#if pl.category_id}}
-                {{i18n 'admin.permalink.category_title'}}
-                <a href={{pl.category_url}}>{{pl.category_name}}</a>
+                {{category-link pl.category}}
               {{/if}}
               {{#if pl.external_url}}
-                {{i18n 'admin.permalink.external_url'}}
+                {{#if pl.linkIsExternal}}
+                  {{d-icon "external-link-alt"}}
+                {{/if}}
                 <a href={{pl.external_url}}>{{pl.external_url}}</a>
               {{/if}}
             </td>
