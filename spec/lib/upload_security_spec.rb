@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe UploadSecurity do
   let(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   let(:post_in_secure_context) { Fabricate(:post, topic: Fabricate(:topic, category: private_category)) }
-  let(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
   let(:type) { nil }
   let(:opts) { { type: type } }
   subject { described_class.new(upload, opts) }
@@ -144,9 +144,8 @@ RSpec.describe UploadSecurity do
       end
     end
 
-    context "when prevent_anons_from_downloading_files enabled for attachment" do
+    context "for attachments" do
       before do
-        SiteSetting.prevent_anons_from_downloading_files = true
         upload.update(original_filename: 'test.pdf')
       end
 
@@ -169,9 +168,8 @@ RSpec.describe UploadSecurity do
       expect(subject.should_be_secure?).to eq(false)
     end
 
-    context "when prevent_anons_from_downloading_files enabled for attachment" do
+    context "for attachments" do
       before do
-        SiteSetting.prevent_anons_from_downloading_files = true
         upload.update(original_filename: 'test.pdf')
       end
       it "returns false" do
