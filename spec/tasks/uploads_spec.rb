@@ -14,13 +14,14 @@ RSpec.describe "tasks/uploads" do
       [
         multi_post_upload1,
         upload1,
-        upload2
+        upload2,
+        upload3
       ]
     end
     let(:multi_post_upload1) { Fabricate(:upload_s3) }
     let(:upload1) { Fabricate(:upload_s3) }
     let(:upload2) { Fabricate(:upload_s3) }
-    let(:upload3) { Fabricate(:upload_s3, original_filename: 'test.pdf') }
+    let(:upload3) { Fabricate(:upload_s3, original_filename: 'test.pdf', extension: 'pdf') }
 
     let!(:post1) { Fabricate(:post) }
     let!(:post2) { Fabricate(:post) }
@@ -65,12 +66,12 @@ RSpec.describe "tasks/uploads" do
           expect(upload3.reload.access_control_post).to eq(post3)
         end
 
-        it "sets the upload in the read restricted topic category to secure" do
+        it "sets the uploads that are media and attachments in the read restricted topic category to secure" do
           post3.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
           invoke_task
           expect(upload2.reload.secure).to eq(true)
           expect(upload1.reload.secure).to eq(false)
-          expect(upload3.reload.secure).to eq(false)
+          expect(upload3.reload.secure).to eq(true)
         end
 
         it "sets the upload in the PM topic to secure" do
