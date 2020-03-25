@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe UploadsController do
-  let!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   describe '#create' do
     it 'requires you to be logged in' do
@@ -221,7 +221,7 @@ describe UploadsController do
     let(:sha) { Digest::SHA1.hexdigest("discourse") }
 
     context "when using external storage" do
-      let!(:upload) { upload_file("small.pdf", "pdf") }
+      fab!(:upload) { upload_file("small.pdf", "pdf") }
 
       before do
         SiteSetting.enable_s3_uploads = true
@@ -318,7 +318,7 @@ describe UploadsController do
     end
 
     describe "local store" do
-      let!(:image_upload) { upload_file("smallest.png") }
+      fab!(:image_upload) { upload_file("smallest.png") }
 
       it "returns the right response" do
         get image_upload.short_path
@@ -402,22 +402,13 @@ describe UploadsController do
           get upload.short_path
           expect(response.code).to eq("403")
         end
-
-        context "when running on a multisite connection", type: :multisite do
-          it "redirects to the signed_url_for_path with the multisite DB name in the url" do
-            sign_in(user)
-            freeze_time
-            get upload.short_path
-            expect(response.body).to include(RailsMultisite::ConnectionManagement.current_db)
-          end
-        end
       end
     end
   end
 
   describe "#show_secure" do
     describe "local store" do
-      let!(:image_upload) { upload_file("smallest.png") }
+      fab!(:image_upload) { upload_file("smallest.png") }
 
       it "does not return secure media when using local store" do
         secure_url = image_upload.url.sub("/uploads", "/secure-media-uploads")
@@ -649,7 +640,7 @@ describe UploadsController do
   end
 
   describe '#metadata' do
-    let!(:upload) { Fabricate(:upload) }
+    fab!(:upload) { Fabricate(:upload) }
 
     describe 'when url is missing' do
       it 'should return the right response' do
