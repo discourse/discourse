@@ -14,7 +14,7 @@ export default Component.extend({
   actions: {
     unclaim() {
       ajax(`/reviewable_claimed_topics/${this.topicId}`, {
-        method: "DELETE"
+        type: "DELETE"
       }).then(() => {
         this.set("claimedBy", null);
       });

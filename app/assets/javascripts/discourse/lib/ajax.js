@@ -139,6 +139,11 @@ export function ajax() {
       });
     };
 
+    if (args.method) {
+      args.type = args.method;
+      delete args.method;
+    }
+
     // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
     // it will not be parsed as an object.
     if (!args.type) args.type = "GET";

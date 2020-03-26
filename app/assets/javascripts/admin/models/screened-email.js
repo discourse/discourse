@@ -10,7 +10,7 @@ const ScreenedEmail = EmberObject.extend({
 
   clearBlock: function() {
     return ajax("/admin/logs/screened_emails/" + this.id, {
-      method: "DELETE"
+      type: "DELETE"
     });
   }
 });
