@@ -5,6 +5,7 @@ module.exports = {
   rules: {
     "deprecated-render-helper": true,
     "link-rel-noopener": true,
+    "link-href-attributes": true,
     "no-abstract-roles": true,
     "no-args-paths": true,
     "no-attrs-in-components": true,
