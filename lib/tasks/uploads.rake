@@ -712,9 +712,11 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
 
       # we do this to avoid a heavier post query, and to make sure we only
       # get unique posts AND include deleted posts (unscoped)
-      unique_access_control_posts = Post.unscoped.select(:id, :topic_id).includes(topic: :category).where(id: uploads_to_update.pluck(:access_control_post_id).uniq)
-      uploads_to_update.each do |upload|
-        upload.access_control_post = unique_access_control_posts.find { |post| post.id == upload.access_control_post_id }
+      unique_access_control_posts = {}
+      Post.unscoped.select(:id, :topic_id)
+        .includes(topic: :category)
+        .where(id: uploads_to_update.pluck(:access_control_post_id).uniq).find_each do |post|
+        unique_access_control_posts[post.id] = post
       end
 
       puts "There are #{uploads_to_update.count} upload(s) that could be marked secure.", ""
@@ -736,7 +738,7 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
         upload_ids_to_mark_as_not_secure,
         posts_to_rebake,
         uploads_to_adjust_acl_for = determine_upload_security_and_posts_to_rebake(
-        uploads_to_update, mark_secure_in_loop_because_no_login_required
+        uploads_to_update, mark_secure_in_loop_because_no_login_required, unique_access_control_posts
       )
 
       if !SiteSetting.login_required?
@@ -834,14 +836,19 @@ def rebake_upload_posts(posts_to_rebake)
   post_rebake_errors
 end
 
-def determine_upload_security_and_posts_to_rebake(uploads_to_update, mark_secure_in_loop_because_no_login_required)
+def determine_upload_security_and_posts_to_rebake(
+  uploads_to_update, mark_secure_in_loop_because_no_login_required, unique_access_control_posts
+)
   upload_ids_to_mark_as_secure = []
   upload_ids_to_mark_as_not_secure = []
   uploads_to_adjust_acl_for = []
   posts_to_rebake = {}
 
   i = 0
-  uploads_to_update.find_each(batch_size: 50) do |upload_to_update|
+  uploads_to_update.find_each do |upload_to_update|
+
+    # fetch the post out of the already populated map to avoid n1s
+    upload_to_update.access_control_post = unique_access_control_posts[upload_to_update.access_control_post_id]
 
     # we just need to determine the post security here so the ACL is set to the correct thing,
     # because the update_upload_ACL method uses upload.secure?
