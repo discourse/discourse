@@ -25,6 +25,8 @@ class Theme < ActiveRecord::Base
 
   validate :component_validations
 
+  after_create :update_child_components
+
   scope :user_selectable, ->() {
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
   }
@@ -70,7 +72,7 @@ class Theme < ActiveRecord::Base
     notify_theme_change(with_scheme: notify_with_scheme)
   end
 
-  after_create do
+  def update_child_components
     if !component? && child_components.present?
       child_components.each do |url|
         url = ThemeStore::GitImporter.new(url.strip).url
