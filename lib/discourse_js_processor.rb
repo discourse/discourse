@@ -56,8 +56,8 @@ class DiscourseJsProcessor
       embed-application
     ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
 
-    relative_path =~ /^#{js_root}\/[^\/]+\// ||
-      relative_path =~ /^#{test_root}\/[^\/]+\//
+    !!(relative_path =~ /^#{js_root}\/[^\/]+\// ||
+      relative_path =~ /^#{test_root}\/[^\/]+\//)
   end
 
   def self.skip_module?(data)
