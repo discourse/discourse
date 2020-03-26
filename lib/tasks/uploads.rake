@@ -768,7 +768,7 @@ def adjust_acls(uploads_to_adjust_acl_for)
     Discourse.store.update_upload_ACL(upload)
     i += 1
   end
-  RakeHelpers.print_status_with_label("Updaing ACLs complete!        ", i, total_count)
+  RakeHelpers.print_status_with_label("Updating ACLs complete!        ", i, total_count)
 end
 
 def mark_all_as_secure_login_required(uploads_to_update)
