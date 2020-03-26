@@ -286,7 +286,7 @@ RSpec/NamedSubject:
   Enabled: false # To be decided
 
 RSpec/NestedGroups:
-  Enabled: false # TODO
+  Enabled: false # To be decided
 
 RSpec/OverwritingSetup:
   Enabled: true
