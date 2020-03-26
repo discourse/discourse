@@ -178,7 +178,7 @@ RSpec/DescribedClassModuleWrapping:
   Enabled: false # To be decided
 
 RSpec/EmptyExampleGroup:
-  Enabled: false # TODO
+  Enabled: true
 
 RSpec/EmptyLineAfterExample:
   Enabled: false # TODO
