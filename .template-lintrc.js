@@ -16,7 +16,7 @@ module.exports = {
     "no-args-paths": true,
     "no-attrs-in-components": true,
     "no-debugger": true,
-    "no-duplicate-attributes": false,
+    "no-duplicate-attributes": true,
     "no-extra-mut-helper-argument": true,
     "no-html-comments": true,
     "no-index-component-invocation": true,
