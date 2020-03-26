@@ -2,6 +2,8 @@
 import userPresent from "discourse/lib/user-presence";
 import { handleLogoff } from "discourse/lib/ajax";
 
+const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
+
 function ajax(opts) {
   if (opts.complete) {
     const oldComplete = opts.complete;
@@ -31,7 +33,8 @@ export default {
       siteSettings = container.lookup("site-settings:main");
 
     messageBus.alwaysLongPoll = Discourse.Environment === "development";
-    messageBus.shouldLongPollCallback = userPresent;
+    messageBus.shouldLongPollCallback = () =>
+      userPresent(LONG_POLL_AFTER_UNSEEN_TIME);
 
     // we do not want to start anything till document is complete
     messageBus.stop();
