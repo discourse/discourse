@@ -3907,6 +3907,7 @@ en:
         format: "Format"
         html: "html"
         text: "text"
+        html_preview: "Email Content Preview"
         last_seen_user: "Last Seen User:"
         no_result: "No results found for summary."
         reply_key: "Reply Key"
