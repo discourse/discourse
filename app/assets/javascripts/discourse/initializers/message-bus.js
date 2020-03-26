@@ -1,5 +1,5 @@
 // Initialize the message bus to receive messages.
-import pageVisible from "discourse/lib/page-visible";
+import userPresent from "discourse/lib/user-presence";
 import { handleLogoff } from "discourse/lib/ajax";
 
 function ajax(opts) {
@@ -31,6 +31,7 @@ export default {
       siteSettings = container.lookup("site-settings:main");
 
     messageBus.alwaysLongPoll = Discourse.Environment === "development";
+    messageBus.shouldLongPollCallback = userPresent;
 
     // we do not want to start anything till document is complete
     messageBus.stop();
@@ -65,16 +66,16 @@ export default {
         opts.headers["X-Shared-Session-Key"] = $(
           "meta[name=shared_session_key]"
         ).attr("content");
-        if (pageVisible()) {
-          opts.headers["Discourse-Visible"] = "true";
+        if (userPresent()) {
+          opts.headers["Discourse-Present"] = "true";
         }
         return ajax(opts);
       };
     } else {
       messageBus.ajax = function(opts) {
         opts.headers = opts.headers || {};
-        if (pageVisible()) {
-          opts.headers["Discourse-Visible"] = "true";
+        if (userPresent()) {
+          opts.headers["Discourse-Present"] = "true";
         }
         return ajax(opts);
       };

@@ -3,9 +3,14 @@ import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import Route from "@ember/routing/route";
 import deprecated from "discourse-common/lib/deprecated";
+import { seenUser } from "discourse/lib/user-presence";
 
 const DiscourseRoute = Route.extend({
   showFooter: false,
+
+  willTransition() {
+    seenUser();
+  },
 
   // Set to true to refresh a model without a transition if a query param
   // changes
