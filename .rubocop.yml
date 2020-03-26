@@ -337,7 +337,7 @@ RSpec/VerifiedDoubles:
   Enabled: true
 
 RSpec/VoidExpect:
-  Enabled: false # TODO
+  Enabled: true
 
 RSpec/Yield:
   Enabled: true
