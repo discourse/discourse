@@ -31,6 +31,7 @@ module.exports = {
     "no-unnecessary-component-helper": true,
     "no-unused-block-params": true,
     "no-unbound": true,
+    "require-iframe-title": true,
     "self-closing-void-elements": true,
     "simple-unless": true,
     "style-concatenation": true,
