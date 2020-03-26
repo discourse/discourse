@@ -11,7 +11,7 @@
 // Stuff we need to load first
 //= require ./discourse/lib/to-markdown
 //= require ./discourse/lib/utilities
-//= require ./discourse/lib/page-visible
+//= require ./discourse/lib/user-presence
 //= require ./discourse/lib/logout
 //= require ./discourse/mixins/singleton
 //= require ./discourse/models/rest
