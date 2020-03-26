@@ -52,7 +52,7 @@ class DiscourseJsProcessor
       google-tag-manager
       google-universal-analytics
       activate-account
-      auto-redirect.js
+      auto-redirect
       embed-application
     ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
 
