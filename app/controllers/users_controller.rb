@@ -425,7 +425,7 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
-    if SiteSetting.require_invite_code && SiteSetting.invite_code != params[:invite_code]
+    if SiteSetting.require_invite_code && SiteSetting.invite_code.strip.downcase != params[:invite_code].strip.downcase
       return fail_with("login.wrong_invite_code")
     end
 
