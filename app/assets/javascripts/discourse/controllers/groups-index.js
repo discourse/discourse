@@ -1,6 +1,8 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { debounce } from "@ember/runloop";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
   application: controller(),
@@ -9,37 +11,53 @@ export default Controller.extend({
   asc: null,
   filter: "",
   type: null,
+  groups: null,
+  isLoading: false,
 
-  @discourseComputed("model.extras.type_filters")
+  @discourseComputed("groups.extras.type_filters")
   types(typeFilters) {
     const types = [];
 
     if (typeFilters) {
-      typeFilters.forEach(type => {
-        types.push({ id: type, name: I18n.t(`groups.index.${type}_groups`) });
-      });
+      typeFilters.forEach(type =>
+        types.push({ id: type, name: I18n.t(`groups.index.${type}_groups`) })
+      );
     }
 
     return types;
   },
 
-  @observes("filterInput")
-  _setFilter: discourseDebounce(function() {
-    this.set("filter", this.filterInput);
-  }, 500),
+  loadGroups(params) {
+    this.set("isLoading", true);
 
-  @observes("model.canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.get("model.canLoadMore"));
+    this.store
+      .findAll("group", params)
+      .then(groups => {
+        this.set("groups", groups);
+
+        if (groups.canLoadMore) {
+          this.set("application.showFooter", !groups.canLoadMore);
+        }
+      })
+      .finally(() => this.set("isLoading", false));
   },
 
-  actions: {
-    loadMore() {
-      this.model.loadMore();
-    },
+  @action
+  onFilterChanged(filter) {
+    debounce(this, this._debouncedFilter, filter, INPUT_DELAY);
+  },
 
-    new() {
-      this.transitionToRoute("groups.new");
-    }
+  @action
+  loadMore() {
+    this.groups && this.groups.loadMore();
+  },
+
+  @action
+  new() {
+    this.transitionToRoute("groups.new");
+  },
+
+  _debouncedFilter(filter) {
+    this.set("filter", filter);
   }
 });

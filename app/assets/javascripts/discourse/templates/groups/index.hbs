@@ -1,16 +1,21 @@
 {{#d-section pageClass="groups"}}
   <div class="groups-header">
     {{#if currentUser.admin}}
-      {{d-button action=(action "new")
-          class="btn-default groups-header-new pull-right"
-          icon="plus"
-          label="admin.groups.new.title"}}
+      {{d-button
+        action=(action "new")
+        class="btn-default groups-header-new pull-right"
+        icon="plus"
+        label="admin.groups.new.title"
+      }}
     {{/if}}
 
     <div class="groups-header-filters">
-      {{text-field value=filterInput
-          placeholderKey="groups.index.all"
-          class="groups-header-filters-name no-blur"}}
+      {{input
+        value=(readonly filter)
+        placeholderKey="groups.index.all"
+        class="groups-header-filters-name no-blur"
+        input=(action "onFilterChanged" value="target.value")
+      }}
 
       {{combo-box
         value=type
@@ -25,12 +30,12 @@
     </div>
   </div>
 
-  {{#if model}}
-    {{#conditional-loading-spinner condition=model.loading}}
+  {{#if groups}}
+    {{#conditional-loading-spinner condition=isLoading}}
       {{#load-more selector=".groups-boxes .group-box" action=(action "loadMore")}}
         <div class='container'>
           <div class="groups-boxes">
-            {{#each model as |group|}}
+            {{#each groups as |group|}}
               {{#link-to "group.members" group.name class="group-box"}}
                 <div class="group-box-inner">
                   <div class="group-info-wrapper">
@@ -87,7 +92,7 @@
         </div>
       {{/load-more}}
 
-      {{conditional-loading-spinner condition=model.loadingMore}}
+      {{conditional-loading-spinner condition=groups.loadingMore}}
     {{/conditional-loading-spinner}}
   {{else}}
     <p>{{i18n "groups.index.empty"}}</p>
