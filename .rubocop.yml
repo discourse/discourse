@@ -319,7 +319,7 @@ RSpec/ScatteredSetup:
   Enabled: false # TODO
 
 RSpec/SharedContext:
-  Enabled: false # TODO
+  Enabled: true
 
 RSpec/SharedExamples:
   Enabled: true
