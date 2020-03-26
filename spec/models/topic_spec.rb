@@ -1122,7 +1122,7 @@ describe Topic do
 
     context 'closed' do
       let(:status) { 'closed' }
-      it_should_behave_like 'a status that closes a topic'
+      it_behaves_like 'a status that closes a topic'
 
       it 'should archive group message' do
         group = Fabricate(:group)
@@ -1135,7 +1135,7 @@ describe Topic do
 
     context 'autoclosed' do
       let(:status) { 'autoclosed' }
-      it_should_behave_like 'a status that closes a topic'
+      it_behaves_like 'a status that closes a topic'
 
       context 'topic was set to close when it was created' do
         it 'includes the autoclose duration in the moderator post' do

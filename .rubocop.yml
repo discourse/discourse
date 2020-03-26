@@ -247,7 +247,7 @@ RSpec/InvalidPredicateMatcher:
   Enabled: true
 
 RSpec/ItBehavesLike:
-  Enabled: false # TODO
+  Enabled: true
 
 RSpec/IteratedExpectation:
   Enabled: false # To be decided
