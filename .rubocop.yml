@@ -160,7 +160,7 @@ RSpec/ContextMethod:
   Enabled: false # TODO
 
 RSpec/ContextWording:
-  Enabled: false # TODO
+  Enabled: false # To be decided
 
 RSpec/DescribeClass:
   Enabled: false # To be decided
