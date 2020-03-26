@@ -12,7 +12,12 @@ class DirectoryItemsController < ApplicationController
     result = DirectoryItem.where(period_type: period_type).includes(:user)
 
     if params[:group]
-      result = result.includes(user: :groups).where(users: { groups: { name: params[:group] } })
+      group = Group.find_by(name: params[:group])
+      raise Discourse::InvalidParameters.new(:group) if group.blank?
+      guardian.ensure_can_see!(group)
+      guardian.ensure_can_see_group_members!(group)
+
+      result = result.includes(user: :groups).where(users: { groups: { id: group.id } })
     else
       result = result.includes(user: :primary_group)
     end

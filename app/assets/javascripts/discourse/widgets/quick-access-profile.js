@@ -3,6 +3,8 @@ import { createWidgetFrom } from "discourse/widgets/widget";
 import { Promise } from "rsvp";
 
 createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
+  tagName: "div.quick-access-panel.quick-access-profile",
+
   buildKey: () => "quick-access-profile",
 
   hasMore() {

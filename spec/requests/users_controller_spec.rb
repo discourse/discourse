@@ -618,7 +618,7 @@ describe UsersController do
 
       it 'requires invite code when specified' do
         expect(SiteSetting.require_invite_code).to eq(false)
-        SiteSetting.invite_code = "abc"
+        SiteSetting.invite_code = "abc def"
         expect(SiteSetting.require_invite_code).to eq(true)
 
         post_user(invite_code: "abcd")
@@ -626,7 +626,8 @@ describe UsersController do
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
 
-        post_user(invite_code: "abc")
+        # case insensitive and stripped of leading/ending spaces
+        post_user(invite_code: " AbC deF ")
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(true)
@@ -4171,6 +4172,11 @@ describe UsersController do
     let!(:bookmark1) { Fabricate(:bookmark, user: user) }
     let!(:bookmark2) { Fabricate(:bookmark, user: user) }
     let!(:bookmark3) { Fabricate(:bookmark) }
+
+    before do
+      TopicUser.change(user.id, bookmark1.topic_id, total_msecs_viewed: 1)
+      TopicUser.change(user.id, bookmark2.topic_id, total_msecs_viewed: 1)
+    end
 
     it "returns a list of serialized bookmarks for the user" do
       sign_in(user)

@@ -25,7 +25,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
   excludeHasSynonyms: false,
 
   canCreateTag: computed("site.can_create_tag", "allowCreate", function() {
-    return this.allowCreate || this.site.can_create_tag;
+    return this.allowCreate && this.site.can_create_tag;
   }),
 
   maximumTagCount: computed(

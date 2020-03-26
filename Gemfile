@@ -28,6 +28,8 @@ else
   gem 'sprockets-rails'
 end
 
+gem 'json'
+
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # This is a desired upgrade we should get to.
 gem 'sprockets', '3.7.2'

@@ -103,5 +103,20 @@ describe DirectoryItemsController do
       expect(json['directory_items'][0]['user']['username']).to eq(evil_trout.username) | eq(stage_user.username)
       expect(json['directory_items'][1]['user']['username']).to eq(evil_trout.username) | eq(stage_user.username)
     end
+
+    it "checks group permissions" do
+      group.update!(visibility_level: Group.visibility_levels[:members])
+
+      sign_in(evil_trout)
+      get '/directory_items.json', params: { period: 'all', group: group.name }
+      expect(response.status).to eq(200)
+
+      get '/directory_items.json', params: { period: 'all', group: 'not a group' }
+      expect(response.status).to eq(400)
+
+      sign_in(user)
+      get '/directory_items.json', params: { period: 'all', group: group.name }
+      expect(response.status).to eq(403)
+    end
   end
 end

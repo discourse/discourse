@@ -93,6 +93,20 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post).not_to be_hidden
     end
 
+    describe "with reviewable claiming enabled" do
+      fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
+      it "clears the claimed topic on resolve" do
+        SiteSetting.reviewable_claiming = 'required'
+        reviewable.perform(moderator, :agree_and_keep)
+        expect(reviewable).to be_approved
+        expect(score.reload).to be_agreed
+        expect(post).not_to be_hidden
+        expect(ReviewableClaimedTopic.where(topic_id: post.topic.id).exists?).to eq(false)
+        expect(post.topic.reviewables.first.history.where(reviewable_history_type: ReviewableHistory.types[:unclaimed]).size).to eq(1)
+      end
+
+    end
+
     it "agree_and_suspend agrees with the flags and keeps the post" do
       reviewable.perform(moderator, :agree_and_suspend)
       expect(reviewable).to be_approved

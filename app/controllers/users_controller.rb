@@ -425,7 +425,7 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
-    if SiteSetting.require_invite_code && SiteSetting.invite_code != params[:invite_code]
+    if SiteSetting.require_invite_code && SiteSetting.invite_code.strip.downcase != params[:invite_code].strip.downcase
       return fail_with("login.wrong_invite_code")
     end
 
@@ -1401,7 +1401,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.json do
-        bookmarks = BookmarkQuery.new(user, params).list_all
+        bookmarks = BookmarkQuery.new(user: user, guardian: guardian, params: params).list_all
 
         if bookmarks.empty?
           render json: {

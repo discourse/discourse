@@ -427,7 +427,6 @@ en:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
-      handle: "handle membership request"
     view_hidden_topic_request_reason: "I would like to join the group '%{group_name}', so I may access [this topic](%{topic_url})"
 
   education:
@@ -1530,7 +1529,7 @@ en:
     markdown_typographer_quotation_marks: "List of double and single quotes replacement pairs"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
-    invite_code: "User must type this code to be allowed account registration, ignored when empty"
+    invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     maximum_session_age: "User will remain logged in for n hours since last visit"
@@ -2080,7 +2079,7 @@ en:
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
-    secure_media: 'Limits access to media uploads (images, video, audio). If "login required" is enabled, only logged-in users can access media uploads. Otherwise, access will be limited only for media uploads in private messages. Note: S3 uploads must be enabled prior to enabling this setting.'
+    secure_media: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If “login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">the secure media topic on Meta</a> for details.'
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
 
     enable_emoji: "Enable emoji"
@@ -3735,6 +3734,7 @@ en:
     file_missing: "Sorry, you must provide a file to upload."
     empty: "Sorry, but the file you provided is empty."
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
+    optimize_failure_message: "An error occured while optimizing the uploaded image."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:

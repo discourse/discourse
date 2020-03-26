@@ -1,5 +1,7 @@
 import User from "discourse/models/user";
 import Group from "discourse/models/group";
+import * as ajaxlib from "discourse/lib/ajax";
+import pretender from "helpers/create-pretender";
 
 QUnit.module("model:user");
 
@@ -65,4 +67,40 @@ QUnit.test("canMangeGroup", assert => {
     true,
     "a group owner should be able to manage the group"
   );
+});
+
+QUnit.test("resolvedTimezone", assert => {
+  const tz = "Australia/Brisbane";
+  let user = User.create({ timezone: tz, username: "chuck" });
+  let stub = sandbox.stub(moment.tz, "guess").returns("America/Chicago");
+
+  pretender.put("/u/chuck.json", () => {
+    return [200, { "Content-Type": "application/json" }, {}];
+  });
+
+  let spy = sandbox.spy(ajaxlib, "ajax");
+  assert.equal(
+    user.resolvedTimezone(),
+    tz,
+    "if the user already has a timezone return it"
+  );
+  assert.ok(
+    spy.notCalled,
+    "if the user already has a timezone do not call AJAX update"
+  );
+  user = User.create({ username: "chuck" });
+  assert.equal(
+    user.resolvedTimezone(),
+    "America/Chicago",
+    "if the user has no timezone guess it with moment"
+  );
+  assert.ok(
+    spy.calledWith("/u/chuck.json", {
+      type: "PUT",
+      dataType: "json",
+      data: { timezone: "America/Chicago" }
+    }),
+    "if the user has no timezone save it with an AJAX update"
+  );
+  stub.restore();
 });

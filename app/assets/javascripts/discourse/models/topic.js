@@ -63,9 +63,19 @@ const Topic = RestModel.extend({
       const latest = posters.filter(
         p => p.extras && p.extras.indexOf("latest") >= 0
       )[0];
-      user = latest && latest.user;
+      user = latest;
     }
-    return user || this.creator;
+    return user || posters.firstObject;
+  },
+
+  @discourseComputed("lastPoster")
+  lastPosterUser(poster) {
+    return poster.user;
+  },
+
+  @discourseComputed("lastPoster")
+  lastPosterGroup(poster) {
+    return poster.primary_group;
   },
 
   @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")

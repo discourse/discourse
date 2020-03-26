@@ -252,7 +252,6 @@ class UploadCreator
         from,
         to,
         "50%",
-        filename: @filename,
         allow_animation: allow_animation,
         raise_on_error: true
       )
@@ -264,6 +263,8 @@ class UploadCreator
 
       return if filesize >= original_size || pixels == 0 || !should_downsize?
     end
+  rescue
+    @upload.errors.add(:base, I18n.t("upload.optimize_failure_message"))
   end
 
   def is_still_too_big?

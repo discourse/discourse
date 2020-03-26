@@ -72,7 +72,7 @@ export default TextField.extend({
       let usernames = single ? [] : selected;
 
       if (currentUser && excludeCurrentUser) {
-        usernames.concat([currentUser.username]);
+        usernames = usernames.concat([currentUser.username]);
       }
 
       return usernames.concat(this.excludedUsernames || []);

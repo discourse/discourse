@@ -53,7 +53,8 @@ export let bindings = {
       ".topic-list tr.selected a.title",
       ".latest-topic-list .latest-topic-list-item.selected div.main-link a.title",
       ".top-topic-list .latest-topic-list-item.selected div.main-link a.title",
-      ".latest .featured-topic.selected a.title"
+      ".latest .featured-topic.selected a.title",
+      ".search-results .search-link"
     ].join(", "),
     anonymous: true
   }, // open selected topic on latest or categories page
@@ -455,7 +456,11 @@ export default {
       const offset = minimumOffset();
       $selected = $articles
         .toArray()
-        .find(article => article.getBoundingClientRect().top > offset);
+        .find(article =>
+          direction > 0
+            ? article.getBoundingClientRect().top > offset
+            : article.getBoundingClientRect().bottom > offset
+        );
       if (!$selected) {
         $selected = $articles[$articles.length - 1];
       }
@@ -585,6 +590,7 @@ export default {
     const $topicList = $(".topic-list");
     const $postsWrapper = $(".posts-wrapper");
     const $categoriesTopicsList = this.categoriesTopicsList();
+    const $searchResults = $(".search-results");
 
     if ($postsWrapper.length > 0) {
       return $(".posts-wrapper .topic-post, .topic-list tbody tr");
@@ -592,6 +598,8 @@ export default {
       return $topicList.find(".topic-list-item");
     } else if ($categoriesTopicsList.length > 0) {
       return $categoriesTopicsList;
+    } else if ($searchResults.length > 0) {
+      return $searchResults.find(".fps-result");
     }
   },
 

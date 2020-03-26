@@ -614,6 +614,7 @@ en:
         deny: "Deny"
         denied: "denied"
         undone: "request undone"
+        handle: "handle membership request"
       manage:
         title: "Manage"
         name: "Name"
@@ -846,6 +847,7 @@ en:
         clear:
           title: "Clear"
           warning: "Are you sure you want to clear your featured topic?"
+      use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
       collapse_profile: "Collapse"
@@ -3089,6 +3091,10 @@ en:
         print: "%{shortcut} Print topic"
         defer: "%{shortcut} Defer topic"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
+      search_menu:
+        title: "Search Menu"
+        prev_next: "%{shortcut} Move selection up and down"
+        insert_url: "%{shortcut} Insert selection into open composer"
 
     badges:
       earned_n_times:
@@ -4578,7 +4584,7 @@ en:
 
       permalink:
         title: "Permalinks"
-        description: "Please note this only applies to external sources, links posted on your forum will not be redirected."
+        description: "Redirections to apply for URLs not known by the forum."
         url: "URL"
         topic_id: "Topic ID"
         topic_title: "Topic"
@@ -4587,6 +4593,7 @@ en:
         category_id: "Category ID"
         category_title: "Category"
         external_url: "External URL"
+        destination: "Destination"
         delete_confirm: Are you sure you want to delete this permalink?
         form:
           label: "New:"

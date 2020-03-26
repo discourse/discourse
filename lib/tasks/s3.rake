@@ -147,7 +147,6 @@ task 's3:correct_cachecontrol' => :environment do
 
   base_url = Discourse.store.absolute_base_url
 
-  acl = SiteSetting.prevent_anons_from_downloading_files ? 'private' : 'public-read'
   cache_control = 'max-age=31556952, public, immutable'
 
   objects = Upload.pluck(:id, :url).map { |array| array << :upload }
@@ -165,7 +164,7 @@ task 's3:correct_cachecontrol' => :environment do
         object = Discourse.store.s3_helper.object(key)
         object.copy_from(
           copy_source: "#{object.bucket_name}/#{object.key}",
-          acl: acl,
+          acl: "public-read",
           cache_control: cache_control,
           content_type: object.content_type,
           content_disposition: object.content_disposition,

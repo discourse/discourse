@@ -15,33 +15,27 @@
     <table class='admin-logs-table permalinks grid'>
       <thead class="heading-container">
         <th class="col heading first url">{{i18n 'admin.permalink.url'}}</th>
-        <th class="col heading topic">{{i18n 'admin.permalink.topic_title'}}</th>
-        <th class="col heading post">{{i18n 'admin.permalink.post_title'}}</th>
-        <th class="col heading category">{{i18n 'admin.permalink.category_title'}}</th>
-        <th class="col heading external_url">{{i18n 'admin.permalink.external_url'}}</th>
+        <th class="col heading destination">{{i18n 'admin.permalink.destination'}}</th>
         <th class="col heading actions"></th>
       </thead>
       <tbody>
         {{#each model as |pl|}}
           <tr class="admin-list-item">
             <td class="col first url">{{pl.url}}</td>
-            <td class="col topic">
+            <td class="col destination">
               {{#if pl.topic_id}}
                 <a href={{pl.topic_url}}>{{pl.topic_title}}</a>
               {{/if}}
-            </td>
-            <td class="col post">
               {{#if pl.post_id}}
-                <a href={{pl.post_url}}>#{{pl.post_number}} {{pl.post_topic_title}}</a>
+                <a href={{pl.post_url}}>{{pl.post_topic_title}} #{{pl.post_number}}</a>
               {{/if}}
-            </td>
-            <td class="col category">
               {{#if pl.category_id}}
-                <a href={{pl.category_url}}>{{pl.category_name}}</a>
+                {{category-link pl.category}}
               {{/if}}
-            </td>
-            <td class="col external_url">
               {{#if pl.external_url}}
+                {{#if pl.linkIsExternal}}
+                  {{d-icon "external-link-alt"}}
+                {{/if}}
                 <a href={{pl.external_url}}>{{pl.external_url}}</a>
               {{/if}}
             </td>

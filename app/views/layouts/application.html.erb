@@ -58,7 +58,7 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
-    <%- if data = cookies.delete(:authentication_data, path: Discourse.base_uri) && !current_user  %>
+    <%- if !current_user && (data = cookies.delete(:authentication_data, path: Discourse.base_uri("/"))) %>
       <meta id="data-authentication" data-authentication-data="<%= data %>">
     <%- end %>
   </head>

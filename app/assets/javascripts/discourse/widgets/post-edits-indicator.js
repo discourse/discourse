@@ -13,7 +13,7 @@ export function historyHeat(siteSettings, updatedAt) {
   }
 
   // Show heat on age
-  const rightNow = new Date().getTime();
+  const rightNow = Date.now();
   const updatedAtTime = updatedAt.getTime();
 
   if (updatedAtTime > rightNow - mult(siteSettings.history_hours_low)) {

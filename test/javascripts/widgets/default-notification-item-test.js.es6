@@ -32,8 +32,15 @@ widgetTest("sets notification as read on middle click", {
   },
   async test(assert) {
     let requests = 0;
-    pretender.put("/notifications/mark-read", () => {
+    pretender.put("/notifications/mark-read", request => {
       ++requests;
+
+      assert.equal(
+        request.requestBody,
+        `id=${this.args.id}`,
+        "it sets correct request parameters"
+      );
+
       return [200, { "Content-Type": "application/json" }, { success: true }];
     });
 

@@ -1,3 +1,4 @@
+// discourse-skip-module
 /*global document, sinon, Logster, QUnit */
 
 //= require env

@@ -23,17 +23,6 @@ class DraftsController < ApplicationController
     }
 
     stream = Draft.stream(opts)
-    stream.each do |d|
-      parsed_data = JSON.parse(d.data)
-      if parsed_data
-        if parsed_data['reply']
-          d.raw = parsed_data['reply']
-        end
-        if parsed_data['categoryId'].present? && !d.category_id.present?
-          d.category_id = parsed_data['categoryId']
-        end
-      end
-    end
 
     render json: {
       drafts: stream ? serialize_data(stream, DraftSerializer) : [],

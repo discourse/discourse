@@ -83,7 +83,9 @@ class ImportScripts::Base
       max_image_size_kb: 102400,
       authorized_extensions: '*',
       clean_up_inactive_users_after_days: 0,
-      clean_up_unused_staged_users_after_days: 0
+      clean_up_unused_staged_users_after_days: 0,
+      clean_up_uploads: false,
+      clean_orphan_uploads_grace_period_hours: 1800
     }
   end
 

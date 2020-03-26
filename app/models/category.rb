@@ -42,6 +42,7 @@ class Category < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
+  has_many :topic_timers, dependent: :destroy
 
   has_and_belongs_to_many :web_hooks
 

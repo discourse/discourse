@@ -32,9 +32,13 @@ export default Component.extend({
   didUpdateAttrs() {
     this._super(...arguments);
 
-    if (this._picker && typeof date === "string") {
+    if (this._picker && typeof this.date === "string") {
       const [year, month, day] = this.date.split("-").map(x => parseInt(x, 10));
       this._picker.setDate(new Date(year, month - 1, day), true);
+    }
+
+    if (this._picker && !this.date) {
+      this._picker.setDate(null);
     }
   },
 

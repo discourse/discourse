@@ -45,7 +45,7 @@ export default Controller.extend(ModalFunctionality, {
       customReminderTime: null,
       lastCustomReminderDate: null,
       lastCustomReminderTime: null,
-      userTimezone: this.currentUser.timezone
+      userTimezone: this.currentUser.resolvedTimezone()
     });
 
     this.loadLastUsedCustomReminderDatetime();

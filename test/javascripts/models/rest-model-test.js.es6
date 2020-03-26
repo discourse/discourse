@@ -24,10 +24,14 @@ QUnit.test("update", async assert => {
   assert.equal(widget.get("name"), "Trout Lure");
   assert.ok(!widget.get("isSaving"), "it is not saving");
 
+  const spyBeforeUpdate = sandbox.spy(widget, "beforeUpdate");
+  const spyAfterUpdate = sandbox.spy(widget, "afterUpdate");
   const promise = widget.update({ name: "new name" });
   assert.ok(widget.get("isSaving"), "it is saving");
+  assert.ok(spyBeforeUpdate.calledOn(widget));
 
   const result = await promise;
+  assert.ok(spyAfterUpdate.calledOn(widget));
   assert.ok(!widget.get("isSaving"), "it is no longer saving");
   assert.equal(widget.get("name"), "new name");
 
@@ -61,10 +65,14 @@ QUnit.test("save new", async assert => {
   assert.ok(!widget.get("isCreated"), "it is not created");
   assert.ok(!widget.get("isSaving"), "it is not saving");
 
+  const spyBeforeCreate = sandbox.spy(widget, "beforeCreate");
+  const spyAfterCreate = sandbox.spy(widget, "afterCreate");
   const promise = widget.save({ name: "Evil Widget" });
   assert.ok(widget.get("isSaving"), "it is not saving");
+  assert.ok(spyBeforeCreate.calledOn(widget));
 
   const result = await promise;
+  assert.ok(spyAfterCreate.calledOn(widget));
   assert.ok(!widget.get("isSaving"), "it is no longer saving");
   assert.ok(widget.get("id"), "it has an id");
   assert.ok(widget.get("name"), "Evil Widget");

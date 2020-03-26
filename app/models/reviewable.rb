@@ -133,7 +133,7 @@ class Reviewable < ActiveRecord::Base
       target: target,
       topic: topic,
       created_by: created_by,
-      reviewable_by_moderator: reviewable_by_moderator && !(topic&.private_message?),
+      reviewable_by_moderator: reviewable_by_moderator,
       payload: payload,
       potential_spam: potential_spam
     )

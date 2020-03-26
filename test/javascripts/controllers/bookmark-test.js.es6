@@ -1,10 +1,11 @@
-import { currentUser } from "helpers/qunit-helpers";
+import { logIn } from "helpers/qunit-helpers";
+import User from "discourse/models/user";
 let BookmarkController;
 
 moduleFor("controller:bookmark", {
   beforeEach() {
-    Discourse.currentUser = currentUser();
-    BookmarkController = this.subject({ currentUser: Discourse.currentUser });
+    logIn();
+    BookmarkController = this.subject({ currentUser: User.current() });
   },
 
   afterEach() {
@@ -119,7 +120,7 @@ QUnit.test(
   function(assert) {
     let dt = moment.tz(
       "2019-12-11T11:37:16",
-      BookmarkController.currentUser.timezone
+      BookmarkController.currentUser.resolvedTimezone()
     );
 
     assert.equal(
@@ -181,14 +182,23 @@ QUnit.test(
   }
 );
 
-QUnit.test(
-  "userHasTimezoneSet updates true/false based on whether the current user timezone is set globally",
-  function(assert) {
-    Discourse.currentUser.timezone = null;
-    BookmarkController.onShow();
-    assert.equal(BookmarkController.userHasTimezoneSet, false);
-    Discourse.currentUser.timezone = "Australia/Brisbane";
-    BookmarkController.onShow();
-    assert.equal(BookmarkController.userHasTimezoneSet, true);
-  }
-);
+QUnit.test("user timezone updates when the modal is shown", function(assert) {
+  User.current().changeTimezone(null);
+  let stub = sandbox.stub(moment.tz, "guess").returns("Europe/Moscow");
+  BookmarkController.onShow();
+  assert.equal(BookmarkController.userHasTimezoneSet, true);
+  assert.equal(
+    BookmarkController.userTimezone,
+    "Europe/Moscow",
+    "the user does not have their timezone set and a timezone is guessed"
+  );
+  User.current().changeTimezone("Australia/Brisbane");
+  BookmarkController.onShow();
+  assert.equal(BookmarkController.userHasTimezoneSet, true);
+  assert.equal(
+    BookmarkController.userTimezone,
+    "Australia/Brisbane",
+    "the user does their timezone set"
+  );
+  stub.restore();
+});

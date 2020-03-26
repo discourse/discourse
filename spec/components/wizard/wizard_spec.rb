@@ -61,6 +61,26 @@ describe Wizard do
     end
   end
 
+  describe ".exclude_step" do
+    let(:user) { Fabricate.build(:moderator) }
+    let(:wizard) { Wizard.new(user) }
+
+    it 'excludes steps even if they are added via append_step' do
+      wizard.append_step('first') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+
+      Wizard.exclude_step("random-step123")
+
+      wizard.append_step('random-step123') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('finished')
+
+      expect(wizard.steps.map(&:id)).to eq(['first', 'finished'])
+    end
+  end
+
   describe "completed?" do
     let(:user) { Fabricate.build(:moderator) }
     let(:wizard) { Wizard.new(user) }

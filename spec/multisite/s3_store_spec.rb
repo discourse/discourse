@@ -134,7 +134,6 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       SiteSetting.s3_access_key_id = "s3-access-key-id"
       SiteSetting.s3_secret_access_key = "s3-secret-access-key"
       SiteSetting.enable_s3_uploads = true
-      SiteSetting.prevent_anons_from_downloading_files = true
       SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
     end
 
