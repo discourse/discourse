@@ -1172,7 +1172,7 @@ describe Post do
 
       result = post.rebake!
 
-      expect(post.baked_at).not_to eq(first_baked)
+      expect(post.baked_at).not_to eq_time(first_baked)
       expect(post.cooked).to eq(first_cooked)
       expect(result).to eq(true)
     end
