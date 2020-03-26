@@ -37,7 +37,7 @@ module.exports = {
     "no-positive-tabindex": false,
     "no-quoteless-attributes": false,
     "no-shadowed-elements": true,
-    "no-trailing-spaces": false,
+    "no-trailing-spaces": true,
     "no-triple-curlies": true,
     "no-unbound": true,
     "no-unnecessary-concat": true,
