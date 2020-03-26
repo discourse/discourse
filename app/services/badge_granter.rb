@@ -222,13 +222,21 @@ class BadgeGranter
     BadgeGranter.contract_checks!(sql, opts)
 
     # hack to allow for params, otherwise sanitizer will trigger sprintf
-    count_sql = "SELECT COUNT(*) count FROM (#{sql}) q WHERE :backfill = :backfill"
+    count_sql = <<~SQL
+      SELECT COUNT(*) count
+                 FROM (
+                        #{sql}
+                      ) q
+                WHERE :backfill = :backfill
+    SQL
     grant_count = DB.query_single(count_sql, params).first.to_i
 
     grants_sql = if opts[:target_posts]
       <<~SQL
         SELECT u.id, u.username, q.post_id, t.title, q.granted_at
-          FROM (#{sql}) q
+          FROM (
+                 #{sql}
+               ) q
           JOIN users u on u.id = q.user_id
      LEFT JOIN badge_posts p on p.id = q.post_id
      LEFT JOIN topics t on t.id = p.topic_id
@@ -238,7 +246,9 @@ class BadgeGranter
     else
       <<~SQL
         SELECT u.id, u.username, q.granted_at
-         FROM (#{sql}) q
+         FROM (
+                #{sql}
+              ) q
          JOIN users u on u.id = q.user_id
         WHERE :backfill = :backfill
         LIMIT 10
@@ -293,13 +303,15 @@ class BadgeGranter
 
     sql = <<~SQL
       DELETE FROM user_badges
-       WHERE id IN (
-         SELECT ub.id
-           FROM user_badges ub
-      LEFT JOIN (#{badge.query}) q ON q.user_id = ub.user_id
-         #{post_clause}
-         WHERE ub.badge_id = :id AND q.user_id IS NULL
-      )
+        WHERE id IN (
+          SELECT ub.id
+          FROM user_badges ub
+          LEFT JOIN (
+            #{badge.query}
+          ) q ON q.user_id = ub.user_id
+          #{post_clause}
+          WHERE ub.badge_id = :id AND q.user_id IS NULL
+        )
     SQL
 
     DB.exec(
@@ -315,7 +327,9 @@ class BadgeGranter
       WITH w as (
         INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
         SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}
-          FROM (#{badge.query}) q
+          FROM (
+                 #{badge.query}
+               ) q
      LEFT JOIN user_badges ub ON ub.badge_id = :id AND ub.user_id = q.user_id
         #{post_clause}
         /*where*/
