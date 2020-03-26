@@ -174,7 +174,7 @@ describe TopicUploadSecurityManager do
   end
 
   def expect_upload_status_not_to_change
-    Post.any_instance.expects(:rebake!)
+    Post.any_instance.expects(:rebake!).never
     subject.run
     expect(upload.reload.secure?).to eq(true)
     expect(upload2.reload.secure?).to eq(true)
