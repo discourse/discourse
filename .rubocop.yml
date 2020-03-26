@@ -312,9 +312,6 @@ RSpec/RepeatedExampleGroupDescription:
 RSpec/ReturnFromStub:
   Enabled: true
 
-RSpec/ScatteredLet:
-  Enabled: false # TODO
-
 RSpec/ScatteredSetup:
   Enabled: false # TODO
 
