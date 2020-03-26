@@ -710,13 +710,6 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
       # secure based on site settings.
       uploads_to_update = Upload.includes(:posts, :optimized_images).joins(:post_uploads)
 
-      # we do this to avoid a heavier post query, and to make sure we only
-      # get unique posts AND include deleted posts (unscoped)
-      unique_access_control_posts = Post.unscoped.select(:id, :topic_id).includes(topic: :category).where(id: uploads_to_update.pluck(:access_control_post_id).uniq)
-      uploads_to_update.each do |upload|
-        upload.access_control_post = unique_access_control_posts.find { |post| post.id == upload.access_control_post_id }
-      end
-
       puts "There are #{uploads_to_update.count} upload(s) that could be marked secure.", ""
 
       # Simply mark all these uploads as secure if login_required because no anons will be able to access them
@@ -840,8 +833,20 @@ def determine_upload_security_and_posts_to_rebake(uploads_to_update, mark_secure
   uploads_to_adjust_acl_for = []
   posts_to_rebake = {}
 
+  # we do this to avoid a heavier post query, and to make sure we only
+  # get unique posts AND include deleted posts (unscoped)
+  unique_access_control_posts = {}
+  Post.unscoped.select(:id, :topic_id)
+    .includes(topic: :category)
+    .where(id: uploads_to_update.pluck(:access_control_post_id).uniq).find_each do |post|
+    unique_access_control_posts[post.id] = post
+  end
+
   i = 0
-  uploads_to_update.find_each(batch_size: 50) do |upload_to_update|
+  uploads_to_update.find_each do |upload_to_update|
+
+    # fetch the post out of the already populated map to avoid n1s
+    upload_to_update.access_control_post = unique_access_control_posts[upload_to_update.access_control_post_id]
 
     # we just need to determine the post security here so the ACL is set to the correct thing,
     # because the update_upload_ACL method uses upload.secure?
