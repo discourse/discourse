@@ -85,7 +85,7 @@ createWidget("topic-map-summary", {
   html(attrs, state) {
     const contents = [];
     contents.push(
-      h("li", [
+      h("li.created-at", [
         h(
           "h4",
           {
@@ -105,7 +105,7 @@ createWidget("topic-map-summary", {
     );
     contents.push(
       h(
-        "li",
+        "li.last-reply",
         h("a", { attributes: { href: attrs.lastPostUrl } }, [
           h(
             "h4",
@@ -126,7 +126,7 @@ createWidget("topic-map-summary", {
       )
     );
     contents.push(
-      h("li", [
+      h("li.replies", [
         numberNode(attrs.topicReplyCount),
         h(
           "h4",
@@ -140,7 +140,7 @@ createWidget("topic-map-summary", {
       ])
     );
     contents.push(
-      h("li.secondary", [
+      h("li.secondary.views", [
         numberNode(attrs.topicViews, { className: attrs.topicViewsHeat }),
         h(
           "h4",
@@ -154,7 +154,7 @@ createWidget("topic-map-summary", {
 
     if (attrs.participantCount > 0) {
       contents.push(
-        h("li.secondary", [
+        h("li.secondary.users", [
           numberNode(attrs.participantCount),
           h(
             "h4",
@@ -171,7 +171,7 @@ createWidget("topic-map-summary", {
 
     if (attrs.topicLikeCount) {
       contents.push(
-        h("li.secondary", [
+        h("li.secondary.likes", [
           numberNode(attrs.topicLikeCount),
           h(
             "h4",
@@ -188,7 +188,7 @@ createWidget("topic-map-summary", {
 
     if (attrs.topicLinkLength > 0) {
       contents.push(
-        h("li.secondary", [
+        h("li.secondary.links", [
           numberNode(attrs.topicLinkLength),
           h(
             "h4",
