@@ -112,7 +112,7 @@ export default Component.extend({
         return;
       }
 
-      const t0 = new Date().getTime();
+      const t0 = Date.now();
       const args = this.args || this.buildArgs();
       const opts = {
         model: this.model,
@@ -139,7 +139,7 @@ export default Component.extend({
 
       if (this.profileWidget) {
         // eslint-disable-next-line no-console
-        console.log(new Date().getTime() - t0);
+        console.log(Date.now() - t0);
       }
     }
   }

@@ -65,7 +65,7 @@ export default class {
 
   // Reset our timers
   reset() {
-    const now = new Date().getTime();
+    const now = Date.now();
     this._lastTick = now;
     this._lastScrolled = now;
     this._lastFlush = 0;
@@ -79,7 +79,7 @@ export default class {
   }
 
   scrolled() {
-    this._lastScrolled = new Date().getTime();
+    this._lastScrolled = Date.now();
   }
 
   registerAnonCallback(cb) {
@@ -212,7 +212,7 @@ export default class {
   }
 
   tick() {
-    const now = new Date().getTime();
+    const now = Date.now();
 
     // If the user hasn't scrolled the browser in a long time, stop tracking time read
     const sinceScrolled = now - this._lastScrolled;

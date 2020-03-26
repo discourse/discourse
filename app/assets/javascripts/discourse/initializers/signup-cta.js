@@ -38,7 +38,7 @@ export default {
         return; // hidden forever
       }
 
-      const now = new Date().getTime();
+      const now = Date.now();
       const hiddenAt = keyValueStore.getInt("anon-cta-hidden", 0);
       if (hiddenAt > now - PROMPT_HIDE_DURATION) {
         return; // hidden in last 24 hours

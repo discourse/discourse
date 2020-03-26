@@ -61,7 +61,7 @@ export default Mixin.create({
     if (e.type === "pointerup" || e.type === "pointercancel") {
       return oldState;
     }
-    const newTimestamp = new Date().getTime();
+    const newTimestamp = Date.now();
     const timeDiffSeconds = newTimestamp - oldState.timestamp;
     if (timeDiffSeconds === 0) {
       return oldState;
@@ -109,7 +109,7 @@ export default Mixin.create({
       deltaY: 0,
       distance: 0,
       start: true,
-      timestamp: new Date().getTime(),
+      timestamp: Date.now(),
       direction: null
     };
     this.set("_panState", newState);

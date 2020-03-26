@@ -368,7 +368,7 @@ const DiscourseURL = EmberObject.extend({
           const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
           topicController.setProperties({
             "model.currentPost": closest,
-            enteredAt: new Date().getTime().toString()
+            enteredAt: Date.now().toString()
           });
 
           this.appEvents.trigger("post:highlight", closest);

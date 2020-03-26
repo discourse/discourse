@@ -730,7 +730,7 @@ export default createWidget("post", {
     const lastWarnedLikes = kvs.get("lastWarnedLikes");
 
     // only warn once per day
-    const yesterday = new Date().getTime() - 1000 * 60 * 60 * 24;
+    const yesterday = Date.now() - 1000 * 60 * 60 * 24;
     if (lastWarnedLikes && parseInt(lastWarnedLikes, 10) > yesterday) {
       return;
     }
@@ -739,7 +739,7 @@ export default createWidget("post", {
     const threshold = Math.ceil(max * 0.1);
     if (remaining === threshold) {
       bootbox.alert(I18n.t("post.few_likes_left"));
-      kvs.set({ key: "lastWarnedLikes", value: new Date().getTime() });
+      kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
   }
 });
