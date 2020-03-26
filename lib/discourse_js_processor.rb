@@ -50,8 +50,8 @@ class DiscourseJsProcessor
       onpopstate-handler
       discourse
       google-tag-manager
-      google-universal-analytics.js
-      activate-account.js
+      google-universal-analytics
+      activate-account
       auto-redirect.js
       embed-application
     ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
