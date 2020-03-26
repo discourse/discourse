@@ -1,3 +1,5 @@
+// discourse-skip-module
+
 /*global document, sinon, QUnit, Logster */
 //= require env
 //= require jquery.debug
@@ -41,6 +43,9 @@
 //= require_self
 //
 //= require jquery.magnific-popup.min.js
+
+const buildResolver = require("discourse-common/resolver").buildResolver;
+window.setResolver(buildResolver("discourse").create({ namespace: Discourse }));
 
 sinon.config = {
   injectIntoThis: false,
@@ -103,7 +108,7 @@ function resetSite(siteSettings, extras) {
 QUnit.testStart(function(ctx) {
   server = createPretender.default;
   createPretender.applyDefaultHandlers(server);
-  server.handlers = []
+  server.handlers = [];
 
   server.prepareBody = function(body) {
     if (body && typeof body === "object") {

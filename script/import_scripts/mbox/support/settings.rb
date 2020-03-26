@@ -40,8 +40,8 @@ module ImportScripts::Mbox
       @automatically_remove_list_name_prefix = yaml['automatically_remove_list_name_prefix']
       @show_trimmed_content = yaml['show_trimmed_content']
 
+      @tags = []
       if yaml['tags'].present?
-        @tags = []
         yaml['tags'].each do |tag_name, value|
           prefixes = Regexp.union(value).source
           @tags << {
