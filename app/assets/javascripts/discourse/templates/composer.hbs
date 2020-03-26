@@ -191,7 +191,7 @@
 
               {{#if site.mobileView}}
                 {{#if allowUpload}}
-                  <a class="btn btn-default no-text mobile-file-upload {{if isUploading 'hidden'}}">
+                  <a href class="btn btn-default no-text mobile-file-upload {{if isUploading 'hidden'}}">
                     {{d-icon uploadIcon}}
                   </a>
                 {{/if}}
@@ -213,7 +213,7 @@
       {{else}}
         <div class='saving-text'>
           {{#if model.createdPost}}
-            {{i18n 'composer.saved'}} <a class='permalink' href={{createdPost.url}} {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
+            {{i18n 'composer.saved'}} <a href class='permalink' href={{createdPost.url}} {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
           {{else}}
             {{i18n 'composer.saving'}} {{loading-spinner size="small"}}
           {{/if}}
