@@ -6,7 +6,7 @@ RSpec.describe BookmarkManager do
   let(:user) { Fabricate(:user) }
 
   let(:reminder_type) { 'tomorrow' }
-  let(:reminder_at) { (Time.zone.now + 1.day).iso8601 }
+  let(:reminder_at) { 1.day.from_now }
   fab!(:post) { Fabricate(:post) }
   let(:name) { 'Check this out!' }
 
@@ -26,7 +26,7 @@ RSpec.describe BookmarkManager do
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         bookmark = Bookmark.find_by(user: user)
 
-        expect(bookmark.reminder_at).to eq(reminder_at)
+        expect(bookmark.reminder_at).to eq_time(reminder_at)
         expect(bookmark.reminder_set_at).not_to eq(nil)
         expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:tomorrow])
       end
@@ -76,7 +76,8 @@ RSpec.describe BookmarkManager do
     end
 
     context "when the reminder time is in the past" do
-      let(:reminder_at) { (Time.zone.now - 10.days).iso8601 }
+      let(:reminder_at) { 10.days.ago }
+
       it "adds an error to the manager" do
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_past_reminder"))
@@ -84,7 +85,8 @@ RSpec.describe BookmarkManager do
     end
 
     context "when the reminder time is far-flung (> 10 years from now)" do
-      let(:reminder_at) { (Time.zone.now + 11.years).iso8601 }
+      let(:reminder_at) { 11.years.from_now }
+
       it "adds an error to the manager" do
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"))
