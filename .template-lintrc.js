@@ -2,10 +2,14 @@ module.exports = {
   extends: "recommended",
   ignore: ["**/*.raw"],
 
+  // Pending:
+  // "eol-last": "always",
+
   rules: {
     "block-indentation": false,
     "deprecated-render-helper": true,
     "img-alt-attributes": false,
+    "linebreak-style": true,
     "link-rel-noopener": true,
     "link-href-attributes": true,
     "no-abstract-roles": true,
@@ -27,12 +31,14 @@ module.exports = {
     "no-log": true,
     "no-negated-condition": true,
     "no-nested-interactive": true,
+    "no-multiple-empty-lines": false,
     "no-obsolete-elements": true,
     "no-outlet-outside-routes": true,
     "no-partial": true,
     "no-positive-tabindex": false,
     "no-quoteless-attributes": false,
     "no-shadowed-elements": true,
+    "no-trailing-spaces": false,
     "no-triple-curlies": true,
     "no-unbound": true,
     "no-unnecessary-concat": true,
