@@ -30,7 +30,7 @@ module.exports = {
     "no-log": true,
     "no-negated-condition": true,
     "no-nested-interactive": true,
-    "no-multiple-empty-lines": false,
+    "no-multiple-empty-lines": true,
     "no-obsolete-elements": true,
     "no-outlet-outside-routes": true,
     "no-partial": true,
