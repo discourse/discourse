@@ -131,9 +131,6 @@ class TopicUser < ActiveRecord::Base
 
         if rows == 0
           create_missing_record(user_id, topic_id, attrs)
-        elsif topic_user = TopicUser.find_by(topic_id: topic_id, user_id: user_id, notifications_reason_id: nil, notifications_changed_at: nil)
-          set_notification_level_attributes(user_id, topic_id, attrs)
-          topic_user.update(attrs)
         end
       end
 
@@ -171,82 +168,18 @@ class TopicUser < ActiveRecord::Base
       ))
     end
 
-    def set_notification_level_attributes(user_id, topic_id, attrs)
-      unless attrs[:notification_level]
-        category_notification_level = CategoryUser.where(user_id: user_id)
-          .where("category_id IN (SELECT category_id FROM topics WHERE id = :id)", id: topic_id)
-          .where("notification_level IN (:levels)", levels: [CategoryUser.notification_levels[:watching],
-                        CategoryUser.notification_levels[:tracking]])
-          .order("notification_level DESC")
-          .limit(1)
-          .pluck(:notification_level)
-          .first
-
-        tag_notification_level = TagUser.where(user_id: user_id)
-          .where("tag_id IN (SELECT tag_id FROM topic_tags WHERE topic_id = :id)", id: topic_id)
-          .where("notification_level IN (:levels)", levels: [CategoryUser.notification_levels[:watching],
-                        CategoryUser.notification_levels[:tracking]])
-          .order("notification_level DESC")
-          .limit(1)
-          .pluck(:notification_level)
-          .first
-
-        if category_notification_level && !(tag_notification_level && (tag_notification_level > category_notification_level))
-          attrs[:notification_level] = category_notification_level
-          attrs[:notifications_changed_at] = DateTime.now
-          attrs[:notifications_reason_id] = category_notification_level == CategoryUser.notification_levels[:watching] ?
-              TopicUser.notification_reasons[:auto_watch_category] :
-              TopicUser.notification_reasons[:auto_track_category]
-
-        elsif tag_notification_level
-          attrs[:notification_level] = tag_notification_level
-          attrs[:notifications_changed_at] = DateTime.now
-          attrs[:notifications_reason_id] = tag_notification_level == TagUser.notification_levels[:watching] ?
-              TopicUser.notification_reasons[:auto_watch_tag] :
-              TopicUser.notification_reasons[:auto_track_tag]
-        end
-
-      end
-
-      unless attrs[:notification_level]
-        if Topic.private_messages.where(id: topic_id).exists? &&
-           Notification.where(
-             user_id: user_id,
-             topic_id: topic_id,
-             notification_type: Notification.types[:invited_to_private_message]
-           ).exists?
-
-          group_notification_level = Group
-            .joins("LEFT OUTER JOIN group_users gu ON gu.group_id = groups.id AND gu.user_id = #{user_id}")
-            .joins("LEFT OUTER JOIN topic_allowed_groups tag ON tag.topic_id = #{topic_id}")
-            .where("gu.id IS NOT NULL AND tag.id IS NOT NULL")
-            .pluck(:default_notification_level)
-            .first
-
-          attrs[:notifications_changed_at] = DateTime.now
-          if group_notification_level.present?
-            attrs[:notification_level] = group_notification_level
-          else
-            attrs[:notification_level] = notification_levels[:watching]
-          end
-        else
-          auto_track_after = UserOption.where(user_id: user_id).pluck_first(:auto_track_topics_after_msecs)
-          auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
-
-          if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
-            attrs[:notifications_changed_at] = DateTime.now
-            attrs[:notification_level] ||= notification_levels[:tracking]
-          end
-        end
-      end
-
-    end
-
     def track_visit!(topic_id, user_id)
+      topic_user = TopicUser.find_by(topic_id: topic_id, user_id: user_id)
       now = DateTime.now
-      rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
 
-      change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
+      if topic_user
+        attrs = { last_visited_at: now }
+        set_notification_level_attributes(user_id, topic_id, attrs) if !topic_user.notifications_changed_at
+        topic_user.update!(attrs)
+        notification_level_change(user_id, topic_id, attrs[:notification_level], attrs[:notifications_reason_id]) if attrs[:notification_level]
+      else
+        change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
+      end
     end
 
     # Update the last read and the last seen post count, but only if it doesn't exist.
@@ -368,6 +301,77 @@ class TopicUser < ActiveRecord::Base
       end
     end
 
+    private
+
+    def set_notification_level_attributes(user_id, topic_id, attrs)
+      unless attrs[:notification_level]
+        category_notification_level = CategoryUser.where(user_id: user_id)
+          .where("category_id IN (SELECT category_id FROM topics WHERE id = :id)", id: topic_id)
+          .where("notification_level IN (:levels)", levels: [CategoryUser.notification_levels[:watching],
+                                                             CategoryUser.notification_levels[:tracking]])
+          .order("notification_level DESC")
+          .limit(1)
+          .pluck(:notification_level)
+          .first
+
+        tag_notification_level = TagUser.where(user_id: user_id)
+          .where("tag_id IN (SELECT tag_id FROM topic_tags WHERE topic_id = :id)", id: topic_id)
+          .where("notification_level IN (:levels)", levels: [CategoryUser.notification_levels[:watching],
+                                                             CategoryUser.notification_levels[:tracking]])
+          .order("notification_level DESC")
+          .limit(1)
+          .pluck(:notification_level)
+          .first
+
+        if category_notification_level && !(tag_notification_level && (tag_notification_level > category_notification_level))
+          attrs[:notification_level] = category_notification_level
+          attrs[:notifications_changed_at] = DateTime.now
+          attrs[:notifications_reason_id] = category_notification_level == CategoryUser.notification_levels[:watching] ?
+            TopicUser.notification_reasons[:auto_watch_category] :
+            TopicUser.notification_reasons[:auto_track_category]
+
+        elsif tag_notification_level
+          attrs[:notification_level] = tag_notification_level
+          attrs[:notifications_changed_at] = DateTime.now
+          attrs[:notifications_reason_id] = tag_notification_level == TagUser.notification_levels[:watching] ?
+            TopicUser.notification_reasons[:auto_watch_tag] :
+            TopicUser.notification_reasons[:auto_track_tag]
+        end
+
+      end
+
+      unless attrs[:notification_level]
+        if Topic.private_messages.where(id: topic_id).exists? &&
+            Notification.where(
+              user_id: user_id,
+              topic_id: topic_id,
+              notification_type: Notification.types[:invited_to_private_message]
+            ).exists?
+
+          group_notification_level = Group
+            .joins("LEFT OUTER JOIN group_users gu ON gu.group_id = groups.id AND gu.user_id = #{user_id}")
+            .joins("LEFT OUTER JOIN topic_allowed_groups tag ON tag.topic_id = #{topic_id}")
+            .where("gu.id IS NOT NULL AND tag.id IS NOT NULL")
+            .pluck(:default_notification_level)
+            .first
+
+          attrs[:notifications_changed_at] = DateTime.now
+          if group_notification_level.present?
+            attrs[:notification_level] = group_notification_level
+          else
+            attrs[:notification_level] = notification_levels[:watching]
+          end
+        else
+          auto_track_after = UserOption.where(user_id: user_id).pluck_first(:auto_track_topics_after_msecs)
+          auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
+
+          if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
+            attrs[:notifications_changed_at] = DateTime.now
+            attrs[:notification_level] ||= notification_levels[:tracking]
+          end
+        end
+      end
+    end
   end
 
   def self.update_post_action_cache(opts = {})

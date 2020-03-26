@@ -134,13 +134,6 @@ describe TopicUser do
       expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
     end
 
-    it 'should set to tracking if auto_track_topics is enabled and topic_user already exists' do
-      ensure_topic_user
-      user.user_option.update_column(:auto_track_topics_after_msecs, 0)
-      ensure_topic_user
-      expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:tracking])
-    end
-
     it 'should be set to "regular" notifications, by default on non creators' do
       ensure_topic_user
       expect(TopicUser.get(topic, user).notification_level).to eq(TopicUser.notification_levels[:regular])
@@ -203,6 +196,22 @@ describe TopicUser do
       expect(topic_user.last_visited_at.to_i).to eq(Time.zone.now.to_i)
 
     end
+
+    it 'set notification level to tracking if auto_track_topics is enabled' do
+      ensure_topic_user
+      user.user_option.update_column(:auto_track_topics_after_msecs, 0)
+      TopicUser.track_visit!(topic_user.topic_id, topic_user.user_id)
+      expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:tracking])
+    end
+
+    it 'does not set notification level to tracking if notification level was updated by user' do
+      ensure_topic_user
+      user.user_option.update_column(:auto_track_topics_after_msecs, 0)
+      topic_user.update(notifications_changed_at: DateTime.now)
+      TopicUser.track_visit!(topic_user.topic_id, topic_user.user_id)
+      expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:regular])
+    end
+
   end
 
   describe 'read tracking' do
