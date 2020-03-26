@@ -53,7 +53,7 @@ export default DiscourseRoute.extend({
         topicController.setProperties({
           "model.currentPost": closest,
           enteredIndex: topic.postStream.progressIndexOfPost(closestPost),
-          enteredAt: new Date().getTime().toString()
+          enteredAt: Date.now().toString()
         });
 
         this.appEvents.trigger("page:topic-loaded", topic);
