@@ -634,7 +634,7 @@ const Topic = RestModel.extend({
   updateDestinationCategory(categoryId) {
     this.set("destination_category_id", categoryId);
     return ajax(`/t/${this.id}/shared-draft`, {
-      method: "PUT",
+      type: "PUT",
       data: { category_id: categoryId }
     });
   },

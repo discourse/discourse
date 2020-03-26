@@ -3,7 +3,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 function exportEntityByType(type, entity, args) {
   return ajax("/export_csv/export_entity.json", {
-    method: "POST",
+    type: "POST",
     data: { entity, args }
   });
 }

@@ -114,21 +114,18 @@ QUnit.test("findAll", async assert => {
   assert.equal(widget.get("name"), "Evil Repellant");
 });
 
-QUnit.test("destroyRecord", function(assert) {
+QUnit.test("destroyRecord", async assert => {
   const store = createStore();
-  return store.find("widget", 123).then(function(w) {
-    store.destroyRecord("widget", w).then(function(result) {
-      assert.ok(result);
-    });
-  });
+  const widget = await store.find("widget", 123);
+
+  assert.ok(await store.destroyRecord("widget", widget));
 });
 
-QUnit.test("destroyRecord when new", function(assert) {
+QUnit.test("destroyRecord when new", async assert => {
   const store = createStore();
-  const w = store.createRecord("widget", { name: "hello" });
-  store.destroyRecord("widget", w).then(function(result) {
-    assert.ok(result);
-  });
+  const widget = store.createRecord("widget", { name: "hello" });
+
+  assert.ok(await store.destroyRecord("widget", widget));
 });
 
 QUnit.test("find embedded", async assert => {
