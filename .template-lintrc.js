@@ -11,7 +11,6 @@ module.exports = {
     "img-alt-attributes": false,
     "linebreak-style": true,
     "link-rel-noopener": true,
-    "link-href-attributes": true,
     "no-abstract-roles": true,
     "no-args-paths": true,
     "no-attrs-in-components": true,
