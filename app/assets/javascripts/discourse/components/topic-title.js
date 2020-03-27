@@ -19,13 +19,15 @@ export default Component.extend(KeyEnterEscape, {
     this._super(...arguments);
 
     schedule("afterRender", () => {
-      const fancyTitle = this.element.querySelector(".fancy-title");
+      if (this.element && !this.isDestroying && !this.isDestroyed) {
+        const fancyTitle = this.element.querySelector(".fancy-title");
 
-      fancyTitle &&
-        topicTitleDecorators &&
-        topicTitleDecorators.forEach(cb =>
-          cb(this.model, fancyTitle, "topic-title")
-        );
+        fancyTitle &&
+          topicTitleDecorators &&
+          topicTitleDecorators.forEach(cb =>
+            cb(this.model, fancyTitle, "topic-title")
+          );
+      }
     });
   }
 });
