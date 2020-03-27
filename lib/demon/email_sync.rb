@@ -113,7 +113,7 @@ class Demon::EmailSync < ::Demon::Base
               next true if groups[group_id] && data[:thread]&.alive? && !data[:obj]&.disconnected?
 
               if !groups[group_id]
-                puts("[EmailSync] Killing thread for group #{groups[group_id].name} because mailbox is no longer synced")
+                puts("[EmailSync] Killing thread for group (id = #{group_id}) because mailbox is no longer synced")
               else
                 puts("[EmailSync] Thread for group #{groups[group_id].name} is dead")
               end
