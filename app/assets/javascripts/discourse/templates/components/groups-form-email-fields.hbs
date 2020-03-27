@@ -48,13 +48,14 @@
   </div>
 
   <div class="control-group">
-    {{#if model.imap_mailboxes.mailboxes}}
+    {{#if mailboxes}}
       <label for="imap_mailbox_name">{{i18n "groups.manage.email.mailboxes.synchronized"}}</label>
       {{combo-box name="imap_mailbox_name"
                   value=model.imap_mailbox_name
-                  content=model.imap_mailboxes.mailboxes
+                  valueProperty="value"
+                  content=mailboxes
                   none="groups.manage.email.mailboxes.disabled"
-                  allowInitialValueMutation=true}}
+                  onChange=(action (mut model.imap_mailbox_name))}}
     {{else}}
       {{i18n "groups.manage.email.mailboxes.none_found"}}
     {{/if}}
