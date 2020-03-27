@@ -32,6 +32,7 @@ export default Component.extend({
 
     onChangeDate(date) {
       if (this.onChange) {
+        date = new Date(this.date);
         const year = date.getFullYear();
         const month = date.getMonth();
         const day = date.getDate();
