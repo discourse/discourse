@@ -26,7 +26,7 @@ class Demon::EmailSync < ::Demon::Base
         begin
           obj = Imap::Sync.for_group(group)
         rescue Net::IMAP::NoResponseError => e
-          puts("[EmailSync] Invalid credentials for #{group.name}")
+          group.update(imap_last_error: e.message)
           Thread.exit
         end
 

@@ -762,21 +762,23 @@ class Group < ActiveRecord::Base
 
     Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
       Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
+      mailboxes = []
 
       begin
         @imap = Net::IMAP.new(self.imap_server, self.imap_port, self.imap_ssl)
         @imap.login(self.email_username, self.email_password)
 
-        mailboxes = []
         @imap.list('', '*').each do |m|
           next if m.attr.include?(:Noselect)
           mailboxes << m.name
         end
 
-        { mailboxes: mailboxes }
+        update(imap_last_error: nil)
       rescue => ex
-        { error: ex.message, mailboxes: [] }
+        update(imap_last_error: ex.message)
       end
+
+      mailboxes
     end
   end
 

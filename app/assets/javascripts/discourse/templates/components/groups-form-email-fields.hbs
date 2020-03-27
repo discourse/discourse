@@ -3,8 +3,12 @@
     <label class="control-label">{{i18n "groups.manage.email.credentials.title"}}</label>
   </div>
 
-  {{#if model.imap_mailboxes.error}}
-    <div class="alert alert-error">{{model.imap_mailboxes.error}}</div>
+  {{#if model.imap_last_error}}
+    <div class="alert alert-error">{{model.imap_last_error}}</div>
+  {{else}}
+    <div class="alert alert-info">
+      {{i18n "groups.manage.email.status" old_emails=oldEmails total_emails=totalEmails}}
+    </div>
   {{/if}}
 
   <div class="control-group">

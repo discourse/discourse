@@ -23,7 +23,7 @@ module Imap
         password: @group.email_password
       )
 
-      connect! if !opts[:offline]
+      connect!
     end
 
     def connect!
@@ -91,6 +91,11 @@ module Imap
 
       Rails.logger.debug("[IMAP] Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
       all_new_uids_size = new_uids.size
+
+      @group.imap_last_error = nil
+      @group.imap_old_emails = old_uids.size
+      @group.imap_new_emails = new_uids.size
+      @group.save!
 
       import_mode = import_limit > -1 && new_uids.size > import_limit
       old_uids = old_uids.sample(old_emails_limit).sort! if old_emails_limit > -1
