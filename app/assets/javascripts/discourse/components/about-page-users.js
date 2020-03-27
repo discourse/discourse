@@ -13,7 +13,7 @@ export default Component.extend({
       let username = user.username;
       let prioritizeName = prioritizeNameInUx(name, this.siteSettings);
       let hideName = false;
-      if (normalize(username) === normalize(name)) {
+      if (name && normalize(username) === normalize(name)) {
         hideName = true;
       }
 
