@@ -3,7 +3,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { addTopicListItemDecorator } from "discourse/components/topic-list-item";
+import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton } from "discourse/widgets/post-menu";
@@ -1025,16 +1025,16 @@ class PluginApi {
    * For example, to replace the topic title:
    *
    * ```
-   * api.decorateTopicListItem(
-   *   (component, node) => {
-   *     node.querySelector(".raw-topic-link").innerText("my new topic title");
+   * api.decorateTopicTitle(
+   *   (topic, node, topicTitleType) => {
+   *     node.innerText("my new topic title");
    *   }
    * );
    * ```
    *
    **/
-  decorateTopicListItem(callback) {
-    addTopicListItemDecorator(callback);
+  decorateTopicTitle(callback) {
+    addTopicTitleDecorator(callback);
   }
 }
 
