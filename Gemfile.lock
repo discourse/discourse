@@ -350,6 +350,8 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-discourse (2.0.1)
       rubocop (>= 0.69.0)
+    rubocop-rspec (1.38.1)
+      rubocop (>= 0.68.1)
     ruby-prof (1.3.1)
     ruby-progressbar (1.10.1)
     ruby-readability (0.7.0)
@@ -527,6 +529,7 @@ DEPENDENCIES
   rtlit
   rubocop
   rubocop-discourse
+  rubocop-rspec
   ruby-prof
   ruby-readability
   rubyzip
