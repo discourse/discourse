@@ -71,13 +71,15 @@ export default Component.extend({
     }
 
     schedule("afterRender", () => {
-      const rawTopicLink = this.element.querySelector(".raw-topic-link");
+      if (this.element && !this.isDestroying && !this.isDestroyed) {
+        const rawTopicLink = this.element.querySelector(".raw-topic-link");
 
-      rawTopicLink &&
-        topicTitleDecorators &&
-        topicTitleDecorators.forEach(cb =>
-          cb(this.topic, rawTopicLink, "topic-list-item-title")
-        );
+        rawTopicLink &&
+          topicTitleDecorators &&
+          topicTitleDecorators.forEach(cb =>
+            cb(this.topic, rawTopicLink, "topic-list-item-title")
+          );
+      }
     });
   },
 
