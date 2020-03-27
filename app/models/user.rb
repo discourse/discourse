@@ -470,6 +470,8 @@ class User < ActiveRecord::Base
     @unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
+    @unread_bookmarks = nil
+    @unread_high_prios = nil
     @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
@@ -505,11 +507,11 @@ class User < ActiveRecord::Base
   end
 
   def unread_bookmark_reminders
-    @unread_pms ||= unread_notifications_of_types(Notification.types[:bookmark_reminder])
+    @unread_bookmarks ||= unread_notifications_of_types(Notification.types[:bookmark_reminder])
   end
 
   def unread_high_priority_notifications
-    @unread_high_priority_notifications ||= unread_notifications_of_types(*Notification.high_priority_types)
+    @unread_high_prios ||= unread_notifications_of_types(*Notification.high_priority_types)
   end
 
   # PERF: This safeguard is in place to avoid situations where
