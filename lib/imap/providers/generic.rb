@@ -19,6 +19,10 @@ module Imap
         @imap ||= Net::IMAP.new(@server, port: @port, ssl: @ssl, open_timeout: @timeout)
       end
 
+      def disconnected?
+        @imap && @imap.disconnected?
+      end
+
       def connect!
         imap.login(@username, @password)
       end

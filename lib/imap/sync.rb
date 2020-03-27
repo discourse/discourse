@@ -34,11 +34,17 @@ module Imap
       @provider.disconnect!
     end
 
+    def disconnected?
+      @provider.disconnected?
+    end
+
     def can_idle?
       SiteSetting.enable_imap_idle && @provider.can?('IDLE')
     end
 
     def process(idle: false, import_limit: nil, old_emails_limit: nil, new_emails_limit: nil)
+      raise 'disconnected' if disconnected?
+
       import_limit     ||= SiteSetting.imap_batch_import_email
       old_emails_limit ||= SiteSetting.imap_polling_old_emails
       new_emails_limit ||= SiteSetting.imap_polling_new_emails

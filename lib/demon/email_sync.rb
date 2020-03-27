@@ -110,7 +110,7 @@ class Demon::EmailSync < ::Demon::Base
 
             # Kill threads for group's mailbox that are no longer synchronized.
             @sync_data[db].filter! do |group_id, data|
-              next true if groups[group_id] && data[:thread]&.alive?
+              next true if groups[group_id] && data[:thread]&.alive? && !data[:obj]&.disconnected?
 
               if !groups[group_id]
                 puts("[EmailSync] Killing thread for group #{groups[group_id].name} because mailbox is no longer synced")
