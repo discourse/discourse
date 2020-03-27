@@ -7,6 +7,12 @@ import { findRawTemplate } from "discourse/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { on } from "@ember/object/evented";
 
+const _decorators = [];
+
+export function addTopicListItemDecorator(decorator) {
+  _decorators.push(decorator);
+}
+
 export function showEntrance(e) {
   let target = $(e.target);
 
@@ -67,6 +73,10 @@ export default Component.extend({
         }
       });
     }
+
+    schedule("afterRender", () => {
+      _decorators && _decorators.forEach(cb => cb(this, this.element));
+    });
   },
 
   willDestroyElement() {

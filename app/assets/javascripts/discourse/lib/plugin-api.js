@@ -3,6 +3,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { addTopicListItemDecorator } from "discourse/components/topic-list-item";
 import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton } from "discourse/widgets/post-menu";
@@ -54,7 +55,7 @@ import { on } from "@ember/object/evented";
 import KeyboardShortcuts, { bindings } from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.39";
+const PLUGIN_API_VERSION = "0.8.40";
 
 class PluginApi {
   constructor(version, container) {
@@ -1016,6 +1017,25 @@ class PluginApi {
    **/
   decoratePluginOutlet(outletName, callback, opts) {
     addPluginOutletDecorator(outletName, callback, opts || {});
+  }
+
+  /**
+   * Allows to alter topic list item raw template
+   * after compilation and before rendering
+   *
+   * For example, to replace the topic title:
+   *
+   * ```
+   * api.decorateTopicListItem(
+   *   (component, node) => {
+   *     node.querySelector(".raw-topic-link").innerText("my new topic title");
+   *   }
+   * );
+   * ```
+   *
+   **/
+  decorateTopicListItem(callback) {
+    addTopicListItemDecorator(callback);
   }
 }
 
