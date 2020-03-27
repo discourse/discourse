@@ -1020,7 +1020,7 @@ class PluginApi {
   }
 
   /**
-   * Allows to alter topic list item node
+   * Allows altering the topic title in the topic list, and in the topic view
    *
    * For example, to replace the topic title:
    *
