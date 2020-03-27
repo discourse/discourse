@@ -69,6 +69,7 @@ createWidget("header-notifications", {
 
     const unreadPMs = user.get("unread_private_messages");
     if (!!unreadPMs) {
+      // highlight the avatar if the first ever PM is not read
       if (
         !user.get("read_first_notification") &&
         !user.get("enforcedSecondFactor")
@@ -89,15 +90,18 @@ createWidget("header-notifications", {
           );
         }
       }
+    }
 
+    const unreadHighPriority = user.get("unread_high_priority_notifications");
+    if (!!unreadHighPriority) {
       contents.push(
         this.attach("link", {
           action: attrs.action,
-          className: "badge-notification unread-private-messages",
-          rawLabel: unreadPMs,
+          className: "badge-notification unread-high-priority-notifications",
+          rawLabel: unreadHighPriority,
           omitSpan: true,
-          title: "notifications.tooltip.message",
-          titleOptions: { count: unreadPMs }
+          title: "notifications.tooltip.high_priority",
+          titleOptions: { count: unreadHighPriority }
         })
       );
     }
