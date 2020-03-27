@@ -51,10 +51,10 @@
   animation-timing-function: linear;
   background: $primary-very-low;
   background: linear-gradient(
-  to right,
-  $primary-very-low 10%,
-  $primary-low 18%,
-  $primary-very-low 33%
+    to right,
+    $primary-very-low 10%,
+    $primary-low 18%,
+    $primary-very-low 33%
   );
 }
 
@@ -153,8 +153,8 @@ input {
 
   &.invalid {
     background-color: dark-light-choose(
-    $danger-low,
-    scale-color($danger, $lightness: -60%)
+      $danger-low,
+      scale-color($danger, $lightness: -60%)
     );
   }
 
@@ -422,7 +422,8 @@ table {
   align-items: center;
 }
 
-.unread-private-messages, .unread-high-priority-notifications {
+.unread-private-messages,
+.unread-high-priority-notifications {
   color: $secondary;
   background: $success;
 
@@ -438,9 +439,9 @@ table {
   top: -18px;
   right: -18px;
   background-image: radial-gradient(
-  40px at 50% 50%,
-  transparent 95%,
-  $primary 100%
+    40px at 50% 50%,
+    transparent 95%,
+    $primary 100%
   );
   opacity: 0.85;
 }
