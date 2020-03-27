@@ -22,7 +22,7 @@ console = {
 }
 
 JS
-source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js.es6")
+source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
 ctx.eval(source)
 
 js_source = ::JSON.generate(template, quirks_mode: true)
