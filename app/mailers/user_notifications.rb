@@ -219,8 +219,11 @@ class UserNotifications < ActionMailer::Base
       value = user.unread_private_messages
       @counts << { label_key: 'user_notifications.digest.unread_messages', value: value, href: "#{Discourse.base_url}/my/messages" } if value > 0
 
+      value = user.unread_bookmark_reminders
+      @counts << { label_key: 'user_notifications.digest.unread_bookmark_reminders', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
+
       if @counts.size < 3
-        value = user.unread_notifications_of_type(Notification.types[:liked])
+        value = user.unread_notifications_of_types(Notification.types[:liked])
         @counts << { label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
       end
 

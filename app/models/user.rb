@@ -484,24 +484,32 @@ class User < ActiveRecord::Base
     @muted_user_ids ||= muted_users.pluck(:id)
   end
 
-  def unread_notifications_of_type(notification_type)
+  def unread_notifications_of_types(*notification_types)
     # perf critical, much more efficient than AR
     sql = <<~SQL
         SELECT COUNT(*)
           FROM notifications n
      LEFT JOIN topics t ON t.id = n.topic_id
          WHERE t.deleted_at IS NULL
-           AND n.notification_type = :type
+           AND n.notification_type IN (:notification_types)
            AND n.user_id = :user_id
            AND NOT read
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, type: notification_type)[0].to_i
+    DB.query_single(sql, user_id: id, notification_types: notification_types)[0].to_i
   end
 
   def unread_private_messages
-    @unread_pms ||= unread_notifications_of_type(Notification.types[:private_message])
+    @unread_pms ||= unread_notifications_of_types(Notification.types[:private_message])
+  end
+
+  def unread_bookmark_reminders
+    @unread_pms ||= unread_notifications_of_types(Notification.types[:bookmark_reminder])
+  end
+
+  def unread_high_priority_notifications
+    @unread_high_priority_notifications ||= unread_notifications_of_types(*Notification.high_priority_types)
   end
 
   # PERF: This safeguard is in place to avoid situations where
@@ -526,7 +534,7 @@ class User < ActiveRecord::Base
           notifications n
           LEFT JOIN topics t ON t.id = n.topic_id
            WHERE t.deleted_at IS NULL AND
-            n.notification_type <> :pm AND
+            n.notification_type NOT IN (:high_priority_types) AND
             n.user_id = :user_id AND
             n.id > :seen_notification_id AND
             NOT read
@@ -537,7 +545,7 @@ class User < ActiveRecord::Base
       DB.query_single(sql,
         user_id: id,
         seen_notification_id: seen_notification_id,
-        pm: Notification.types[:private_message],
+        high_priority_types: Notification.high_priority_types,
         limit: User.max_unread_notifications
     )[0].to_i
     end
@@ -579,7 +587,7 @@ class User < ActiveRecord::Base
          LEFT JOIN topics t ON n.topic_id = t.id
          WHERE
           t.deleted_at IS NULL AND
-          n.notification_type = :type AND
+          n.notification_type IN (:high_priority_types) AND
           n.user_id = :user_id AND
           NOT read
         ORDER BY n.id DESC
@@ -591,7 +599,7 @@ class User < ActiveRecord::Base
        LEFT JOIN topics t ON n.topic_id = t.id
        WHERE
         t.deleted_at IS NULL AND
-        (n.notification_type <> :type OR read) AND
+        (n.notification_type NOT IN (:high_priority_types) OR read) AND
         n.user_id = :user_id
        ORDER BY n.id DESC
        LIMIT 20
@@ -600,7 +608,7 @@ class User < ActiveRecord::Base
 
     recent = DB.query(sql,
       user_id: id,
-      type: Notification.types[:private_message]
+      high_priority_types: Notification.high_priority_types
     ).map! do |r|
       [r.id, r.read]
     end
@@ -608,6 +616,7 @@ class User < ActiveRecord::Base
     payload = {
       unread_notifications: unread_notifications,
       unread_private_messages: unread_private_messages,
+      unread_high_priority_notifications: unread_high_priority_notifications,
       read_first_notification: read_first_notification?,
       last_notification: json,
       recent: recent,

@@ -30,6 +30,22 @@ Fabricator(:private_message_notification, from: :notification) do
   end
 end
 
+Fabricator(:bookmark_reminder_notification, from: :notification) do
+  notification_type Notification.types[:bookmark_reminder]
+  data do |attrs|
+    post = attrs[:post] || Fabricate(:post, topic: attrs[:topic], user: attrs[:user])
+    {
+      topic_title: attrs[:topic].title,
+      original_post_id: post.id,
+      original_post_type: post.post_type,
+      original_username: post.user.username,
+      revision_number: nil,
+      display_username: post.user.username,
+      bookmark_name: "Check out Mr Freeze's opinion here"
+    }.to_json
+  end
+end
+
 Fabricator(:replied_notification, from: :notification) do
   notification_type Notification.types[:replied]
   data do |attrs|

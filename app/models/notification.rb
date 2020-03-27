@@ -64,10 +64,10 @@ class Notification < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    DB.exec(<<~SQL, Notification.types[:private_message])
+    DB.exec(<<~SQL, high_priority_types: Notification.high_priority_types)
       DELETE
         FROM notifications n
-       WHERE notification_type = ?
+       WHERE notification_type IN (:high_priority_types)
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
@@ -106,6 +106,17 @@ class Notification < ActiveRecord::Base
                         membership_request_consolidated: 23,
                         bookmark_reminder: 24
                        )
+  end
+
+  def self.high_priority_types
+    @high_priority_types ||= [
+      types[:private_message],
+      types[:bookmark_reminder]
+    ]
+  end
+
+  def self.normal_priority_types
+    @normal_priority_types ||= types.reject { |_k, v| high_priority_types.include?(v) }.values
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
@@ -210,14 +221,14 @@ class Notification < ActiveRecord::Base
 
     if notifications.present?
 
-      ids = DB.query_single(<<~SQL, count.to_i)
+      ids = DB.query_single(<<~SQL, high_priority_types: Notification.high_priority_types, limit: count.to_i)
          SELECT n.id FROM notifications n
          WHERE
-           n.notification_type = 6 AND
+           n.notification_type IN (:high_priority_types) AND
            n.user_id = #{user.id.to_i} AND
            NOT read
         ORDER BY n.id ASC
-        LIMIT ?
+        LIMIT :limit
       SQL
 
       if ids.length > 0
@@ -230,9 +241,9 @@ class Notification < ActiveRecord::Base
       end
 
       notifications.uniq(&:id).sort do |x, y|
-        if x.unread_pm? && !y.unread_pm?
+        if x.unread_high_priority? && !y.unread_high_priority?
           -1
-        elsif y.unread_pm? && !x.unread_pm?
+        elsif y.unread_high_priority? && !x.unread_high_priority?
           1
         else
           y.created_at <=> x.created_at
@@ -244,8 +255,8 @@ class Notification < ActiveRecord::Base
 
   end
 
-  def unread_pm?
-    Notification.types[:private_message] == self.notification_type && !read
+  def unread_high_priority?
+    Notification.high_priority_types.include?(self.notification_type) && !read
   end
 
   def post_id
