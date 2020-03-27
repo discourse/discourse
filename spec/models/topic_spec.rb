@@ -1748,6 +1748,7 @@ describe Topic do
       let(:topic) { Fabricate(:topic, category: category) }
 
       it "should be able to override category's default auto close" do
+        freeze_time
         Jobs.run_immediately!
 
         expect(topic.topic_timers.first.execute_at).to eq_time(topic.created_at + 4.hours)
