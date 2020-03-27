@@ -1020,8 +1020,7 @@ class PluginApi {
   }
 
   /**
-   * Allows to alter topic list item raw template
-   * after compilation and before rendering
+   * Allows to alter topic list item node
    *
    * For example, to replace the topic title:
    *
