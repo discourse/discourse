@@ -256,7 +256,26 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         profile_page_url = "#{Discourse.base_url}/u/#{user.username}"
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', profile_page_url: profile_page_url, base_uri: '')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', bookmark_url: "#{profile_page_url}/activity/bookmarks", base_uri: '')}
+
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.instructions', base_uri: '')}
+        RAW
+
+        expect(new_post.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
+      end
+
+      it 'should create the right reply when bookmarks with reminders are enabled' do
+        SiteSetting.enable_bookmarks_with_reminders = true
+        post.update!(user: discobot_user)
+        narrative.expects(:enqueue_timeout_job).with(user)
+
+        narrative.input(:bookmark, user, post: post)
+        new_post = Post.last
+        profile_page_url = "#{Discourse.base_url}/u/#{user.username}"
+
+        expected_raw = <<~RAW
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', bookmark_url: "#{profile_page_url}/activity/bookmarks-with-reminders", base_uri: '')}
 
           #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.instructions', base_uri: '')}
         RAW
