@@ -1022,11 +1022,13 @@ class PluginApi {
   /**
    * Allows altering the topic title in the topic list, and in the topic view
    *
+   * topicTitleType can be `topic-title` or `topic-list-item-title`
+   *
    * For example, to replace the topic title:
    *
    * ```
    * api.decorateTopicTitle(
-   *   (topic, node, topicTitleType) => {
+   *   (topicModel, node, topicTitleType) => {
    *     node.innerText("my new topic title");
    *   }
    * );
