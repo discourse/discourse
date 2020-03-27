@@ -95,6 +95,9 @@ module Imap
         end
       end
 
+      # Sometimes, new_uids contains elements from old_uids.
+      new_uids = new_uids - old_uids
+
       Rails.logger.debug("[IMAP] Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
       all_new_uids_size = new_uids.size
 
