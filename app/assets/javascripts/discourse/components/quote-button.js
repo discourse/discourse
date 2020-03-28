@@ -65,6 +65,7 @@ export default Component.extend({
         opts.username = element.dataset.username || getQuoteTitle(element);
         opts.post = element.dataset.post;
         opts.topic = element.dataset.topic;
+        break;
       }
     }
 
