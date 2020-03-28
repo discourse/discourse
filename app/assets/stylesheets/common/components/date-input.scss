@@ -1,8 +1,10 @@
 .d-date-input {
   display: flex;
   flex: 1;
+  cursor: pointer;
 
   .date-picker {
+    cursor: pointer;
     margin: 0;
     text-align: left;
     width: 100%;
