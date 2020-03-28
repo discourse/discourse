@@ -23,6 +23,7 @@
         <div class="date-time-control from {{if fromSelected 'is-selected'}} {{if fromFilled 'is-filled'}}">
           {{d-icon "calendar-alt"}}
           {{d-button
+            id="from-date-time"
             action=(action "focusFrom")
             translatedLabel=formattedFrom
             class="date-time"}}
