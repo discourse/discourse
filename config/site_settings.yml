@@ -335,6 +335,8 @@ login:
     default: false
   allow_reading_topics:
     default: false
+    client: true
+    refresh: true
   must_approve_users:
     client: true
     default: false
