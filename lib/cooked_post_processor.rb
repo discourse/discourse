@@ -268,6 +268,7 @@ class CookedPostProcessor
         return [size["width"], size["height"]]
       end
     end
+    nil
   end
 
   def add_to_size_cache(url, w, h)
