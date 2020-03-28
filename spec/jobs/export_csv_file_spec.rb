@@ -97,6 +97,23 @@ describe Jobs::ExportCsvFile do
       expect(report.third).to contain_exactly("2010-01-03", "50.0")
     end
 
+    it 'works with filters' do
+      user.user_visits.create!(visited_at: '2010-01-01', posts_read: 42)
+
+      group = Fabricate(:group)
+      user1 = Fabricate(:user)
+      group_user = Fabricate(:group_user, group: group, user: user1)
+      user1.user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
+
+      exporter.instance_variable_get(:@extra)['name'] = 'visits'
+      exporter.instance_variable_get(:@extra)['group_id'] = group.id
+      report = exporter.report_export.to_a
+
+      expect(report.length).to eq(2)
+      expect(report.first).to contain_exactly("Day", "Count")
+      expect(report.second).to contain_exactly("2010-01-03", "1")
+    end
+
     it 'works with single-column reports with default label' do
       user.user_visits.create!(visited_at: '2010-01-01')
       Fabricate(:user).user_visits.create!(visited_at: '2010-01-03')

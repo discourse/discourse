@@ -180,8 +180,13 @@ module Jobs
 
       @extra[:start_date] = @extra[:start_date].to_date.beginning_of_day if @extra[:start_date].is_a?(String)
       @extra[:end_date] = @extra[:end_date].to_date.end_of_day if @extra[:end_date].is_a?(String)
-      @extra[:category_id] = @extra[:category_id].present? ? @extra[:category_id].to_i : nil
-      @extra[:group_id] = @extra[:group_id].present? ? @extra[:group_id].to_i : nil
+      @extra[:filters] = {}
+      if @extra[:category_id].present?
+        @extra[:filters][:category] = @extra[:category_id].to_i
+      end
+      if @extra[:group_id].present?
+        @extra[:filters][:group] = @extra[:group_id].to_i
+      end
 
       report = Report.find(@extra[:name], @extra)
 
