@@ -91,8 +91,6 @@ export default ComboBox.extend(TagsMixin, {
     return this._super(...arguments);
   },
 
-  computeNone: computed(function() {}),
-
   init() {
     this._super(...arguments);
 
