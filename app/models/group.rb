@@ -773,9 +773,9 @@ class Group < ActiveRecord::Base
           mailboxes << m.name
         end
 
-        update(imap_last_error: nil)
+        update_columns(imap_last_error: nil)
       rescue => ex
-        update(imap_last_error: ex.message)
+        update_columns(imap_last_error: ex.message)
       end
 
       mailboxes

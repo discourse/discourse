@@ -99,12 +99,15 @@ module Imap
       new_uids = new_uids - old_uids
 
       Rails.logger.debug("[IMAP] Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
+
+      all_old_uids_size = old_uids.size
       all_new_uids_size = new_uids.size
 
-      @group.imap_last_error = nil
-      @group.imap_old_emails = old_uids.size
-      @group.imap_new_emails = new_uids.size
-      @group.save!
+      @group.update_columns(
+        imap_last_error: nil,
+        imap_old_emails: all_old_uids_size,
+        imap_new_emails: all_new_uids_size
+      )
 
       import_mode = import_limit > -1 && new_uids.size > import_limit
       old_uids = old_uids.sample(old_emails_limit).sort! if old_emails_limit > -1
@@ -129,7 +132,10 @@ module Imap
 
       if new_uids.present?
         Rails.logger.debug("[IMAP] Syncing #{new_uids.size} new emails (oldest first)")
+
         emails = @provider.emails(new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'], mailbox: @group.imap_mailbox_name)
+        processed = 0
+
         emails.each do |email|
           # Synchronously process emails because the order of emails matter
           # (for example replies must be processed after the original email
@@ -147,12 +153,19 @@ module Imap
           rescue Email::Receiver::ProcessingError => e
             Rails.logger.warn("[IMAP] Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}")
           end
+
+          processed += 1
+          @group.update_columns(
+            imap_old_emails: all_old_uids_size + processed,
+            imap_new_emails: all_new_uids_size - processed
+          )
         end
       end
 
-      @group.imap_uid_validity = @status[:uid_validity]
-      @group.imap_last_uid = new_uids.last || 0
-      @group.save!
+      @group.update_columns(
+        imap_uid_validity: @status[:uid_validity],
+        imap_last_uid: new_uids.last || 0
+      )
 
       # Discourse -> IMAP server (upload): syncs updated flags and labels.
       if SiteSetting.enable_imap_write
