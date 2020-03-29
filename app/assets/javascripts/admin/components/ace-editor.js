@@ -57,7 +57,7 @@ export default Component.extend({
     }
     if (this.appEvents) {
       // xxx: don't run during qunit tests
-      this.appEvents.off("ace:resize", this, this.resize);
+      this.appEvents.off("ace:resize", this, "resize");
     }
 
     $(window).off("ace:resize");
@@ -97,9 +97,7 @@ export default Component.extend({
 
         $(window)
           .off("ace:resize")
-          .on("ace:resize", () => {
-            this.appEvents.trigger("ace:resize");
-          });
+          .on("ace:resize", () => this.appEvents.trigger("ace:resize"));
 
         if (this.appEvents) {
           // xxx: don't run during qunit tests
