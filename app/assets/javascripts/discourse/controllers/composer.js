@@ -385,6 +385,9 @@ export default Controller.extend({
     },
 
     cancelled() {
+      this._composerCancelledWithKeyboard = true;
+
+      this.send("cancel");
       this.send("hitEsc");
     },
 
@@ -965,9 +968,12 @@ export default Controller.extend({
         this.send("clearTopicDraft");
       }
 
-      return Draft.clear(key, this.get("model.draftSequence")).then(() =>
-        this.appEvents.trigger("draft:destroyed", key)
-      );
+      // Draft.clear will lose current this in the closure
+      const destroyedDraftModel = this.model;
+      return Draft.clear(key, this.get("model.draftSequence")).then(() => {
+        this.appEvents.trigger("draft:destroyed", key);
+        return destroyedDraftModel;
+      });
     } else {
       return Promise.resolve();
     }
@@ -1014,38 +1020,53 @@ export default Controller.extend({
 
     return new Promise(resolve => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
-          {
-            label: differentDraft
-              ? I18n.t(keyPrefix + ".no_save_draft")
-              : I18n.t(keyPrefix + ".no_value"),
-            callback: () => {
-              // cancel composer without destroying draft on new draft context
-              if (differentDraft) {
-                this.model.clearState();
-                this.close();
-                resolve();
-              }
-            }
-          },
-          {
-            label: I18n.t(keyPrefix + ".yes_value"),
-            class: "btn-danger",
-            callback: result => {
-              if (result) {
-                this.destroyDraft().then(() => {
+        bootbox.dialog(
+          I18n.t(keyPrefix + ".confirm"),
+          [
+            {
+              label: differentDraft
+                ? I18n.t(keyPrefix + ".no_save_draft")
+                : I18n.t(keyPrefix + ".no_value"),
+              callback: () => {
+                // cancel composer without destroying draft on new draft context
+                if (differentDraft) {
                   this.model.clearState();
                   this.close();
                   resolve();
-                });
+                }
+              }
+            },
+            {
+              label: I18n.t(keyPrefix + ".yes_value"),
+              class: "btn-danger",
+              callback: result => {
+                if (result) {
+                  this.destroyDraft().then(destroyedDraftModel => {
+                    destroyedDraftModel.clearState();
+                    this.close();
+                    resolve();
+                  });
+                }
               }
             }
+          ],
+          {
+            onEscape: () => {
+              // prevents escape from composer to be used
+              // to also escape bootbox, 1 esc will show dialog, 2 will cancel
+              if (this._composerCancelledWithKeyboard) {
+                this._composerCancelledWithKeyboard = null;
+                return false;
+              }
+              return true;
+            }
           }
-        ]);
+        );
+        // debugger;
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
-        this.destroyDraft().then(() => {
-          this.model.clearState();
+        this.destroyDraft().then(destroyedDraftModel => {
+          destroyedDraftModel.clearState();
           this.close();
           resolve();
         });
