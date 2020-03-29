@@ -1062,7 +1062,6 @@ export default Controller.extend({
             }
           }
         );
-        // debugger;
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft().then(destroyedDraftModel => {
