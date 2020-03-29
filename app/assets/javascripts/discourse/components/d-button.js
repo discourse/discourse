@@ -1,4 +1,5 @@
 import { notEmpty, empty, equal } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
@@ -11,16 +12,35 @@ export default Component.extend({
 
   type: "button",
 
+  isLoading: computed({
+    set(key, value) {
+      this.set("forceDisabled", value);
+      return value;
+    }
+  }),
+
   tagName: "button",
-  classNameBindings: ["btnLink::btn", "btnLink", "noText", "btnType"],
+  classNameBindings: [
+    "isLoading:is-loading",
+    "btnLink::btn",
+    "btnLink",
+    "noText",
+    "btnType"
+  ],
   attributeBindings: [
     "form",
-    "disabled",
+    "isDisabled:disabled",
     "translatedTitle:title",
     "translatedLabel:aria-label",
     "tabindex",
     "type"
   ],
+
+  isDisabled: computed("disabled", "forceDisabled", function() {
+    return this.forceDisabled || this.disabled;
+  }),
+
+  forceDisabled: false,
 
   btnIcon: notEmpty("icon"),
 

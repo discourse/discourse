@@ -67,6 +67,36 @@
     }
     cursor: not-allowed;
   }
+
+  .loading-container {
+    display: none;
+    margin: 0 6.75px 0 0;
+  }
+
+  &.is-loading {
+    &.btn-text {
+      .d-button-label {
+        font-size: $font-down-2;
+      }
+    }
+    .loading-container {
+      float: left;
+      -webkit-animation: fadein 1s;
+      animation: fadein 1s;
+      display: block;
+      .spinner {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        width: 11px;
+        height: 11px;
+        border-color: $text-color;
+        border-right-color: transparent;
+        border-width: 2px;
+      }
+    }
+  }
 }
 
 .btn.hidden {

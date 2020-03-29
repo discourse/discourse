@@ -1,5 +1,11 @@
 {{#if icon}}
-  {{d-icon icon}}
+  {{#if isLoading}}
+    {{conditional-loading-spinner condition=isLoading}}
+  {{else}}
+    {{d-icon icon}}
+  {{/if}}
+{{else}}
+  {{conditional-loading-spinner condition=isLoading}}
 {{/if}}
 
 {{#if translatedLabel}}
