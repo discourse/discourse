@@ -67,8 +67,8 @@ createWidget("header-notifications", {
       );
     }
 
-    const unreadPMs = user.get("unread_private_messages");
-    if (!!unreadPMs) {
+    const unreadHighPriority = user.get("unread_high_priority_notifications");
+    if (!!unreadHighPriority) {
       // highlight the avatar if the first ever PM is not read
       if (
         !user.get("read_first_notification") &&
@@ -90,10 +90,8 @@ createWidget("header-notifications", {
           );
         }
       }
-    }
 
-    const unreadHighPriority = user.get("unread_high_priority_notifications");
-    if (!!unreadHighPriority) {
+      // add the counter for the unread high priority
       contents.push(
         this.attach("link", {
           action: attrs.action,
