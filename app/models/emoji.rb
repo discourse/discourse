@@ -6,9 +6,11 @@ class Emoji
 
   FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
 
+  DEFAULT_GROUP ||= "default"
+
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable
+  attr_accessor :name, :url, :tonable, :group
 
   def self.all
     Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
@@ -104,15 +106,19 @@ class Emoji
         result << Emoji.new.tap do |e|
           e.name = emoji.name
           e.url = emoji.upload&.url
+          e.group = emoji.group || DEFAULT_GROUP
         end
       end
     end
 
-    Plugin::CustomEmoji.emojis.each do |name, url|
-      result << Emoji.new.tap do |e|
-        e.name = name
-        url = (Discourse.base_uri + url) if url[/^\/[^\/]/]
-        e.url = url
+    Plugin::CustomEmoji.emojis.each do |group, emojis|
+      emojis.each do |name, url|
+        result << Emoji.new.tap do |e|
+          e.name = name
+          url = (Discourse.base_uri + url) if url[/^\/[^\/]/]
+          e.url = url
+          e.group = group || DEFAULT_GROUP
+        end
       end
     end
 

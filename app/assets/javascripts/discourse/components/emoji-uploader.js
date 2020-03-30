@@ -1,23 +1,53 @@
 import { notEmpty, not } from "@ember/object/computed";
+import { action } from "@ember/object";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import UploadMixin from "discourse/mixins/upload";
+
+const DEFAULT_GROUP = "default";
 
 export default Component.extend(UploadMixin, {
   type: "emoji",
   uploadUrl: "/admin/customize/emojis",
   hasName: notEmpty("name"),
+  hasGroup: notEmpty("group"),
   addDisabled: not("hasName"),
+  group: "default",
+  emojiGroups: null,
+  newEmojiGroups: null,
+  tagName: null,
 
-  uploadOptions() {
-    return {
-      sequentialUploads: true
-    };
+  didReceiveAttrs() {
+    this._super(...arguments);
+
+    this.set("newEmojiGroups", this.emojiGroups);
   },
 
-  @discourseComputed("hasName", "name")
-  data(hasName, name) {
-    return hasName ? { name } : {};
+  uploadOptions() {
+    return { sequentialUploads: true };
+  },
+
+  @action
+  createEmojiGroup(group) {
+    this.setProperties({
+      newEmojiGroups: this.emojiGroups.concat([group]).uniq(),
+      group
+    });
+  },
+
+  @discourseComputed("hasName", "name", "hasGroup", "group")
+  data(hasName, name, hasGroup, group) {
+    const payload = {};
+
+    if (hasName) {
+      payload.name = name;
+    }
+
+    if (hasGroup && group !== DEFAULT_GROUP) {
+      payload.group = group;
+    }
+
+    return payload;
   },
 
   validateUploadedFilesOptions() {
@@ -25,7 +55,7 @@ export default Component.extend(UploadMixin, {
   },
 
   uploadDone(upload) {
-    this.set("name", null);
-    this.done(upload);
+    this.done(upload, this.group);
+    this.setProperties({ name: null, group: DEFAULT_GROUP });
   }
 });
