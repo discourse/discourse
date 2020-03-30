@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
-# we want MesageBus in the absolute front
+# we want MesageBus to be close to the front
 # this is important cause the vast majority of web requests go to it
 # this allows us to avoid full middleware crawls each time
-# Pending https://github.com/rails/rails/pull/27936
+#
+# We aren't manipulating the middleware stack directly because of
+# https://github.com/rails/rails/pull/27936
 session_operations = Rails::Configuration::MiddlewareStackProxy.new([
    [:delete, MessageBus::Rack::Middleware],
    [:unshift, MessageBus::Rack::Middleware],
@@ -20,4 +22,15 @@ if Rails.env != 'development' || ENV['TRACK_REQUESTS']
   if GlobalSetting.enable_performance_http_headers
     MethodProfiler.ensure_discourse_instrumentation!
   end
+end
+
+if Rails.configuration.multisite
+  # Multisite needs to be first, because the request tracker and message bus
+  # rely on it
+  session_operations = Rails::Configuration::MiddlewareStackProxy.new([
+     [:delete, RailsMultisite::Middleware],
+     [:unshift, [RailsMultisite::Middleware, RailsMultisite::DiscoursePatches.config]],
+  ])
+
+  Rails.configuration.middleware = Rails.configuration.middleware + session_operations
 end
