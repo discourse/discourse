@@ -22,8 +22,9 @@ export default Component.extend({
     return type.dasherize();
   },
 
-  @discourseComputed("reviewable.topic_id", "reviewable.removed_topic_id")
-  topicId(topicId, removedTopicId) {
+  @discourseComputed("reviewable.topic", "reviewable.removed_topic_id")
+  topicId(topic, removedTopicId) {
+    let topicId = topic ? topic.id : null;
     return topicId || removedTopicId;
   },
 
