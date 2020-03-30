@@ -3,8 +3,14 @@
     <div class='directory'>
       {{plugin-outlet name="users-top" connectorTagName='div' args=(hash model=model)}}
 
-      <div class='clearfix user-controls'>
+      <div class='directory-controls'>
         {{period-chooser period=period onChange=(action (mut period))}}
+        {{#if lastUpdatedAt}}
+          <div class='directory-last-updated'>
+            {{i18n "directory.last_updated"}}
+            {{lastUpdatedAt}}
+          </div>
+        {{/if}}
         {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
       </div>
 

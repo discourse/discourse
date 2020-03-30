@@ -587,6 +587,7 @@ en:
       days_visited_long: "Days Visited"
       posts_read: "Read"
       posts_read_long: "Posts Read"
+      last_updated: "Last Updated:"
       total_rows:
         one: "%{count} user"
         other: "%{count} users"
