@@ -56,7 +56,7 @@ componentTest("link-styled button", {
 });
 
 componentTest("isLoading button", {
-  template: "{{d-button isLoading=isLoading}}",
+  template: "{{d-button icon='times' isLoading=isLoading}}",
 
   beforeEach() {
     this.set("isLoading", true);
@@ -64,7 +64,7 @@ componentTest("isLoading button", {
 
   test(assert) {
     assert.ok(
-      find("button.is-loading .spinner").length,
+      find("button.is-loading .loading-icon").length,
       "it has a spinner showing"
     );
     assert.ok(
@@ -75,7 +75,7 @@ componentTest("isLoading button", {
     this.set("isLoading", false);
 
     assert.notOk(
-      find("button .spinner").length,
+      find("button .loading-icon").length,
       "it doesn't have a spinner showing"
     );
     assert.ok(
