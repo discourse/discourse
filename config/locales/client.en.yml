@@ -1651,7 +1651,6 @@ en:
       objects: Objects
       symbols: Symbols
       flags: Flags
-      custom: Custom emojis
       recent: Recently used
       default_tone: No skin tone
       light_tone: Light skin tone
@@ -1659,6 +1658,7 @@ en:
       medium_tone: Medium skin tone
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
+      default: Custom emojis
 
     shared_drafts:
       title: "Shared Drafts"
@@ -4556,6 +4556,7 @@ en:
         help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
         add: "Add New Emoji"
         name: "Name"
+        group: "Group"
         image: "Image"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
 

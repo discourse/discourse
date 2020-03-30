@@ -1,0 +1,50 @@
+.admin-emojis {
+  #custom_emoji {
+    .select-kit {
+      width: 220px;
+    }
+  }
+}
+
+.emoji-uploader {
+  display: flex;
+  align-items: flex-end;
+
+  input,
+  .select-kit {
+    width: 220px;
+    margin: 0 1em 0 0;
+  }
+
+  .upload-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+.mobile-view {
+  .admin-emojis {
+    .emoji-uploader {
+      flex-direction: column;
+
+      .fields {
+        input,
+        .select-kit {
+          width: 100%;
+        }
+      }
+
+      .upload-container {
+        margin: 1em 0 0 0;
+      }
+    }
+
+    #custom_emoji {
+      .select-kit {
+        display: none;
+      }
+    }
+  }
+}

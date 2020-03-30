@@ -8,6 +8,7 @@ import {
   deleteCachedInlineOnebox
 } from "pretty-text/inline-oneboxer";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
+import { registerEmoji } from "pretty-text/emoji";
 
 QUnit.module("lib:pretty-text");
 
@@ -1516,6 +1517,24 @@ QUnit.test("emoji - emojiSet", assert => {
     ":smile:",
     { siteSettings: { emoji_set: "twitter" } },
     `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
+  );
+});
+
+QUnit.test("emoji - registerEmoji", assert => {
+  registerEmoji("foo", "/foo.png");
+
+  assert.cookedOptions(
+    ":foo:",
+    {},
+    `<p><img src="/foo.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
+  );
+
+  registerEmoji("bar", "/bar.png", "baz");
+
+  assert.cookedOptions(
+    ":bar:",
+    {},
+    `<p><img src="/bar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
   );
 });
 
