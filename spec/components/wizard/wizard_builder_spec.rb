@@ -227,5 +227,16 @@ describe Wizard::Builder do
       expect(wizard.steps.map(&:id).include?("fail-plz")).to eq(false)
       Wizard.clear_plugin_steps
     end
+
+    it 'will put steps outside the index range, just before the last step' do
+      Wizard.add_plugin_step(1000, 'wont-fail') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard = Wizard::Builder.new(moderator).build
+      ordered_steps = wizard.steps.sort_by { |step| step.index }.map(&:id)
+      expect(ordered_steps[ordered_steps.size - 2]).to eq("wont-fail")
+      expect(ordered_steps[ordered_steps.size - 1]).to eq("finished")
+      Wizard.clear_plugin_steps
+    end
   end
 end
