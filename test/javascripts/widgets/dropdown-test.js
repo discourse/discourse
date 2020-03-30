@@ -68,9 +68,15 @@ widgetTest("dropdown id", {
 widgetTest("label", {
   template: TEMPLATE,
 
+  _translations: I18n.translations,
+
   beforeEach() {
     I18n.translations = { en: { js: { foo: "FooBaz" } } };
     this.setProperties(DEFAULT_CONTENT);
+  },
+
+  afterEach() {
+    I18n.translations = this._translations;
   },
 
   test(assert) {
@@ -81,10 +87,16 @@ widgetTest("label", {
 widgetTest("translatedLabel", {
   template: TEMPLATE,
 
+  _translations: I18n.translations,
+
   beforeEach() {
     I18n.translations = { en: { js: { foo: "FooBaz" } } };
     this.setProperties(DEFAULT_CONTENT);
     this.set("translatedLabel", "BazFoo");
+  },
+
+  afterEach() {
+    I18n.translations = this._translations;
   },
 
   test(assert) {
