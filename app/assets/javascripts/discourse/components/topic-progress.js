@@ -34,11 +34,8 @@ export default Component.extend({
     "postStream.filteredPostsCount"
   )
   hideProgress(loaded, currentPost, filteredPostsCount) {
-    return (
-      !loaded ||
-      !currentPost ||
-      (!this.site.mobileView && filteredPostsCount < 2)
-    );
+    const hideOnShortStream = !this.site.mobileView && filteredPostsCount < 2;
+    return !loaded || !currentPost || hideOnShortStream;
   },
 
   @discourseComputed("postStream.filteredPostsCount")
