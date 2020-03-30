@@ -22,10 +22,13 @@ export default Component.extend({
     return type.dasherize();
   },
 
-  @discourseComputed("reviewable.topic", "reviewable.removed_topic_id")
-  topicId(topic, removedTopicId) {
-    let topicId = topic ? topic.id : null;
-    return topicId || removedTopicId;
+  @discourseComputed(
+    "reviewable.topic",
+    "reviewable.topic_id",
+    "reviewable.removed_topic_id"
+  )
+  topicId(topic, topicId, removedTopicId) {
+    return (topic && topic.id) || topicId || removedTopicId;
   },
 
   @discourseComputed("siteSettings.reviewable_claiming", "topicId")
