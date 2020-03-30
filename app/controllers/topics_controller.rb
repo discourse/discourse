@@ -342,6 +342,8 @@ class TopicsController < ApplicationController
             end
           end
 
+          invalid_tags = Tag.where_name(invalid_tags).pluck(:name)
+
           if !invalid_tags.empty?
             if (invalid_tags & DiscourseTagging.hidden_tag_names).present?
               return render_json_error(I18n.t('category.errors.disallowed_tags_generic'))
