@@ -26,8 +26,22 @@ const colors = [
   { id: 3, name: "Yellow" }
 ];
 
+const cats = [
+  {
+    cat_id: 1,
+    name: "souna"
+  }
+];
+
 export default function(helpers) {
   const { response, success, parsePostData } = helpers;
+
+  this.get("/cats", function() {
+    return response({
+      __rest_serializer: "1",
+      cats
+    });
+  });
 
   this.get("/fruits/:id", function(request) {
     const fruit = fruits.find(f => f.id === parseInt(request.params.id, 10));

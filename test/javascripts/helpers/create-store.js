@@ -5,12 +5,21 @@ import TopicListAdapter from "discourse/adapters/topic-list";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import { buildResolver } from "discourse-common/resolver";
 
+const CatAdapter = RestAdapter.extend({
+  primaryKey: "cat_id"
+});
+
 export default function(customLookup = () => {}) {
   const resolver = buildResolver("discourse").create();
 
   return Store.create({
     register: {
       lookup(type) {
+        if (type === "adapter:cat") {
+          this._catAdapter =
+            this._catAdapter || CatAdapter.create({ owner: this });
+          return this._catAdapter;
+        }
         if (type === "adapter:rest") {
           if (!this._restAdapter) {
             this._restAdapter = RestAdapter.create({ owner: this });
