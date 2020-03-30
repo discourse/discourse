@@ -45,13 +45,7 @@ class Notification < ActiveRecord::Base
   end
 
   before_create do
-    if Notification.high_priority_types.include?(self.notification_type)
-      self.priority = Notification.priorities[:high]
-    elsif Notification.normal_priority_types.include?(self.notification_type)
-      self.priority = Notification.priorities[:normal]
-    else
-      self.priority = Notification.priorities[:low]
-    end
+    self.high_priority = Notification.high_priority_types.include?(self.notification_type)
   end
 
   def self.purge_old!
@@ -74,10 +68,10 @@ class Notification < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    DB.exec(<<~SQL, high_priority: Notification.priorities[:high])
+    DB.exec(<<~SQL)
       DELETE
         FROM notifications n
-       WHERE priority = :high_priority
+       WHERE high_priority = TRUE
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
@@ -116,10 +110,6 @@ class Notification < ActiveRecord::Base
                         membership_request_consolidated: 23,
                         bookmark_reminder: 24
                        )
-  end
-
-  def self.priorities
-    @priorities ||= Enum.new(low: 0, normal: 1, high: 2)
   end
 
   def self.high_priority_types
@@ -235,10 +225,10 @@ class Notification < ActiveRecord::Base
 
     if notifications.present?
 
-      ids = DB.query_single(<<~SQL, high_priority: Notification.priorities[:high], limit: count.to_i)
+      ids = DB.query_single(<<~SQL, limit: count.to_i)
          SELECT n.id FROM notifications n
          WHERE
-           n.priority = :high_priority AND
+           n.high_priority = TRUE AND
            n.user_id = #{user.id.to_i} AND
            NOT read
         ORDER BY n.id ASC
@@ -270,7 +260,7 @@ class Notification < ActiveRecord::Base
   end
 
   def unread_high_priority?
-    self.priority == Notification.priorities[:high] && !read
+    self.high_priority? && !read
   end
 
   def post_id

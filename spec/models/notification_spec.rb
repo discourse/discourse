@@ -256,7 +256,9 @@ describe Notification do
 
       expect(user.unread_notifications).to eq(0)
       expect(user.total_unread_notifications).to eq(3)
-      expect(user.unread_private_messages).to eq(1)
+      # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
+      #       to be remonved in 2.5
+      expect(user.unread_private_messages).to eq(2)
       expect(user.unread_high_priority_notifications).to eq(2)
     end
   end
@@ -283,14 +285,14 @@ describe Notification do
       p2 = Fabricate(:post)
 
       Notification.create!(read: false, user_id: p.user_id, topic_id: p.topic_id, post_number: p.post_number, data: '[]',
-                           notification_type: Notification.types[:private_message], priority: Notification.priorities[:high])
+                           notification_type: Notification.types[:private_message])
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
-                           notification_type: Notification.types[:private_message], priority: Notification.priorities[:high])
+                           notification_type: Notification.types[:private_message])
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
-                           notification_type: Notification.types[:bookmark_reminder], priority: Notification.priorities[:high])
+                           notification_type: Notification.types[:bookmark_reminder])
 
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
-                           notification_type: Notification.types[:liked], priority: Notification.priorities[:normal])
+                           notification_type: Notification.types[:liked])
       p2.trash!(p.user)
 
       # we may want to make notification "trashable" but for now we nuke pm notifications from deleted topics/posts
