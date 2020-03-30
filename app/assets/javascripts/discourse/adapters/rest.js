@@ -27,6 +27,8 @@ function rethrow(error) {
 }
 
 export default EmberObject.extend({
+  primaryKey: "id",
+
   storageKey(type, findArgs, options) {
     if (options && options.cacheKey) {
       return options.cacheKey;
@@ -132,7 +134,7 @@ export default EmberObject.extend({
   },
 
   destroyRecord(store, type, record) {
-    return ajax(this.pathFor(store, type, record.get("id")), {
+    return ajax(this.pathFor(store, type, record.get(this.primaryKey)), {
       type: "DELETE"
     });
   }
