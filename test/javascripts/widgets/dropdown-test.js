@@ -184,7 +184,7 @@ widgetTest("content with translatedLabel", {
     this.setProperties(DEFAULT_CONTENT);
   },
 
-  async test(assert) {
+  test(assert) {
     assert.equal(rowById(2).innerText, "FooBar");
   }
 });
@@ -197,7 +197,7 @@ widgetTest("content with label", {
     this.setProperties(DEFAULT_CONTENT);
   },
 
-  async test(assert) {
+  test(assert) {
     assert.equal(rowById(1).innerText, "FooBaz");
   }
 });
@@ -209,7 +209,7 @@ widgetTest("content with icon", {
     this.setProperties(DEFAULT_CONTENT);
   },
 
-  async test(assert) {
+  test(assert) {
     assert.ok(exists(rowById(3).querySelector(".d-icon-times")));
   }
 });
@@ -221,7 +221,7 @@ widgetTest("content with html", {
     this.setProperties(DEFAULT_CONTENT);
   },
 
-  async test(assert) {
+  test(assert) {
     assert.equal(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
   }
 });
@@ -263,7 +263,7 @@ widgetTest("headerClass option", {
     this.set("options", { headerClass: "btn-small and-text" });
   },
 
-  async test(assert) {
+  test(assert) {
     assert.ok(header().classList.contains("widget-dropdown-header"));
     assert.ok(header().classList.contains("btn-small"));
     assert.ok(header().classList.contains("and-text"));
@@ -278,7 +278,7 @@ widgetTest("bodyClass option", {
     this.set("options", { bodyClass: "gigantic and-yet-small" });
   },
 
-  async test(assert) {
+  test(assert) {
     assert.ok(body().classList.contains("widget-dropdown-body"));
     assert.ok(body().classList.contains("gigantic"));
     assert.ok(body().classList.contains("and-yet-small"));
