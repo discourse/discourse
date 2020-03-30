@@ -48,7 +48,7 @@ export default Component.extend({
     loadScript("/javascripts/pikaday.js").then(() => {
       const defaultOptions = {
         field: this.element.querySelector(".date-picker"),
-        container: container || this.element.querySelector(".date-container"),
+        container: container || this.element.querySelector(".picker-container"),
         bound: container === null,
         format: "LL",
         firstDay: 1,

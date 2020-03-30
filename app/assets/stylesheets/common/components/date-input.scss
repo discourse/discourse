@@ -2,6 +2,7 @@
   display: flex;
   flex: 1;
   cursor: pointer;
+  flex-direction: column;
 
   .date-picker {
     cursor: pointer;
