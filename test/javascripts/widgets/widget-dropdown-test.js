@@ -197,7 +197,7 @@ widgetTest("content with translatedLabel", {
   },
 
   test(assert) {
-    assert.equal(rowById(2).innerText, "FooBar");
+    assert.equal(rowById(2).innerText.trim(), "FooBar");
   }
 });
 
@@ -210,7 +210,7 @@ widgetTest("content with label", {
   },
 
   test(assert) {
-    assert.equal(rowById(1).innerText, "FooBaz");
+    assert.equal(rowById(1).innerText.trim(), "FooBaz");
   }
 });
 
