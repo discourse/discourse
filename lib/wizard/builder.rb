@@ -304,6 +304,7 @@ class Wizard
         step.banner = "finished.png"
         step.description_vars = { base_path: Discourse.base_path }
       end
+      @wizard.append_plugin_steps
       @wizard
     end
 
