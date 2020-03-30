@@ -1,6 +1,6 @@
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
-moduleForWidget("dropdown");
+moduleForWidget("widget-dropdown");
 
 const DEFAULT_CONTENT = {
   content: [
@@ -41,7 +41,7 @@ function body() {
 
 const TEMPLATE = `
   {{mount-widget
-    widget="dropdown"
+    widget="widget-dropdown"
     args=(hash
       id="my-dropdown"
       icon=icon
@@ -122,7 +122,7 @@ widgetTest("onChange action", {
   template: `
     <div id="test"></div>
     {{mount-widget
-      widget="dropdown"
+      widget="widget-dropdown"
       args=(hash
         id="my-dropdown"
         label=label

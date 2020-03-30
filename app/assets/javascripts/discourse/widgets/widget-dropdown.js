@@ -3,13 +3,13 @@ import hbs from "discourse/widgets/hbs-compiler";
 
 /*
 
-  dropdown widget
+  widget-dropdown
 
   Usage
   -----
 
   {{attach
-    widget="dropdown"
+    widget="widget-dropdown"
     attrs=(hash
       id=id
       label=label
@@ -50,7 +50,7 @@ import hbs from "discourse/widgets/hbs-compiler";
       - bodyClass: adds css class to the dropdown header
 */
 
-export const DropdownHeaderClass = {
+export const WidgetDropdownHeaderClass = {
   tagName: "button",
 
   transform(attrs) {
@@ -83,9 +83,9 @@ export const DropdownHeaderClass = {
   `
 };
 
-createWidget("dropdown-header", DropdownHeaderClass);
+createWidget("widget-dropdown-header", WidgetDropdownHeaderClass);
 
-export const DropdownItemClass = {
+export const WidgetDropdownItemClass = {
   tagName: "div",
 
   transform(attrs) {
@@ -126,9 +126,9 @@ export const DropdownItemClass = {
   `
 };
 
-createWidget("dropdown-item", DropdownItemClass);
+createWidget("widget-dropdown-item", WidgetDropdownItemClass);
 
-export const DropdownClass = {
+export const WidgetDropdownClass = {
   tagName: "div",
 
   init(attrs) {
@@ -212,7 +212,7 @@ export const DropdownClass = {
   template: hbs`
     {{#if attrs.content}}
       {{attach
-        widget="dropdown-header"
+        widget="widget-dropdown-header"
         attrs=(hash
           icon=attrs.icon
           label=attrs.label
@@ -224,7 +224,7 @@ export const DropdownClass = {
       <div class={{transformed.bodyClass}}>
         {{#each attrs.content as |item|}}
           {{attach
-            widget="dropdown-item"
+            widget="widget-dropdown-item"
             attrs=(hash item=item)
           }}
         {{/each}}
@@ -260,4 +260,4 @@ export const DropdownClass = {
   }
 };
 
-export default createWidget("dropdown", DropdownClass);
+export default createWidget("widget-dropdown", WidgetDropdownClass);
