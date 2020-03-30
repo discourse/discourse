@@ -332,8 +332,7 @@ class PostMover
       old_topic_id: original_topic.id,
       new_topic_id: destination_topic.id,
       old_highest_post_number: destination_topic.highest_post_number,
-      old_highest_staff_post_number: destination_topic.highest_staff_post_number,
-      default_notification_level: NotificationLevels.topic_levels[:regular]
+      old_highest_staff_post_number: destination_topic.highest_staff_post_number
     }
 
     DB.exec(<<~SQL, params)
@@ -365,9 +364,7 @@ class PostMover
              )                                           AS last_emailed_post_number,
              GREATEST(tu.first_visited_at, t.created_at) AS first_visited_at,
              GREATEST(tu.last_visited_at, t.created_at)  AS last_visited_at,
-             CASE
-               WHEN p.user_id IS NOT NULL THEN tu.notification_level
-               ELSE :default_notification_level END      AS notification_level,
+             tu.notification_level,
              tu.notifications_changed_at,
              tu.notifications_reason_id
       FROM topic_users tu
