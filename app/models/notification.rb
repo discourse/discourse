@@ -295,14 +295,17 @@ end
 #  topic_id          :integer
 #  post_number       :integer
 #  post_action_id    :integer
+#  high_priority     :boolean          default(FALSE), not null
 #
 # Indexes
 #
 #  idx_notifications_speedup_unread_count                       (user_id,notification_type) WHERE (NOT read)
 #  index_notifications_on_post_action_id                        (post_action_id)
-#  index_notifications_on_read_or_n_type                        (user_id,id DESC,read,topic_id) UNIQUE WHERE (read OR (notification_type <> 6))
 #  index_notifications_on_topic_id_and_post_number              (topic_id,post_number)
 #  index_notifications_on_user_id_and_created_at                (user_id,created_at)
-#  index_notifications_on_user_id_and_id                        (user_id,id) UNIQUE WHERE ((notification_type = 6) AND (NOT read))
 #  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
+#  index_notifications_read_or_not_high_priority                (user_id,id DESC,read,topic_id) WHERE (read OR (high_priority = false))
+#  index_notifications_unique_unread_high_priority              (user_id,id) UNIQUE WHERE ((NOT read) AND (high_priority = true))
+#  index_notifications_unread_high_priority                     (user_id,high_priority) WHERE ((NOT read) AND (high_priority = true))
+#  index_notifications_unread_normal_priority                   (user_id,high_priority) WHERE ((NOT read) AND (high_priority = false))
 #
