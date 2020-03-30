@@ -46,15 +46,27 @@ describe TopicViewSerializer do
   end
 
   describe '#image_url' do
-    let(:image_url) { 'http://meta.discourse.org/images/welcome/discourse-edit-post-animated.gif' }
+    let(:image_upload) { Fabricate(:image_upload, width: 5000, height: 5000) }
 
     describe 'when a topic has an image' do
-      it 'should return the image url' do
-        topic.update!(image_url: image_url)
+      before { topic.update!(image_upload_id: image_upload.id) }
 
+      it 'should return the image url' do
         json = serialize_topic(topic, user)
 
-        expect(json[:image_url]).to eq(image_url)
+        expect(json[:image_url]).to eq(image_upload.url)
+      end
+
+      it 'should have thumbnails' do
+        Discourse.redis.del(topic.thumbnail_job_redis_key([]))
+        json = nil
+
+        expect do
+          json = serialize_topic(topic, user)
+        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
+
+        # Original + Optimized
+        expect(json[:thumbnails].length).to eq(2)
       end
     end
 

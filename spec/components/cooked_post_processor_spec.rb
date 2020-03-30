@@ -765,16 +765,16 @@ describe CookedPostProcessor do
       end
 
       context "topic image" do
-        let(:post) { Fabricate(:post_with_uploaded_image) }
+        fab!(:post) { Fabricate(:post_with_uploaded_image) }
         let(:cpp) { CookedPostProcessor.new(post) }
 
         it "adds a topic image if there's one in the first post" do
           FastImage.stubs(:size)
-          expect(post.topic.image_url).to eq(nil)
+          expect(post.topic.image_upload_id).to eq(nil)
 
           cpp.post_process
           post.topic.reload
-          expect(post.topic.image_url).to be_present
+          expect(post.topic.image_upload_id).to be_present
         end
 
         it "removes image if post is edited and no longer has an image" do
@@ -782,14 +782,14 @@ describe CookedPostProcessor do
 
           cpp.post_process
           post.topic.reload
-          expect(post.topic.image_url).to be_present
-          expect(post.image_url).to be_present
+          expect(post.topic.image_upload_id).to be_present
+          expect(post.image_upload_id).to be_present
 
           post.update!(raw: "This post no longer has an image.")
           CookedPostProcessor.new(post).post_process
           post.topic.reload
-          expect(post.topic.image_url).not_to be_present
-          expect(post.image_url).not_to be_present
+          expect(post.topic.image_upload_id).not_to be_present
+          expect(post.image_upload_id).not_to be_present
         end
 
         it "won't remove the original image if another post doesn't have an image" do
@@ -798,15 +798,31 @@ describe CookedPostProcessor do
 
           cpp.post_process
           topic.reload
-          expect(topic.image_url).to be_present
-          expect(post.image_url).to be_present
+          expect(topic.image_upload_id).to be_present
+          expect(post.image_upload_id).to be_present
 
           post = Fabricate(:post, topic: topic, raw: "this post doesn't have an image")
           CookedPostProcessor.new(post).post_process
           topic.reload
 
-          expect(post.topic.image_url).to be_present
-          expect(post.image_url).to be_blank
+          expect(post.topic.image_upload_id).to be_present
+          expect(post.image_upload_id).to be_blank
+        end
+
+        it "generates thumbnails correctly" do
+          topic = post.topic
+
+          cpp.post_process
+          topic.reload
+          expect(topic.image_upload_id).to be_present
+          expect(post.image_upload_id).to be_present
+
+          post = Fabricate(:post, topic: topic, raw: "this post doesn't have an image")
+          CookedPostProcessor.new(post).post_process
+          topic.reload
+
+          expect(post.topic.image_upload_id).to be_present
+          expect(post.image_upload_id).to be_blank
         end
       end
 
@@ -816,10 +832,10 @@ describe CookedPostProcessor do
 
         it "adds a post image if there's one in the post" do
           FastImage.stubs(:size)
-          expect(reply.image_url).to eq(nil)
+          expect(reply.image_upload_id).to eq(nil)
           cpp.post_process
           reply.reload
-          expect(reply.image_url).to be_present
+          expect(reply.image_upload_id).to be_present
         end
       end
     end

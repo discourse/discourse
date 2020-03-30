@@ -2,8 +2,8 @@
 
 class AddImageUploadIdToPostsAndTopics < ActiveRecord::Migration[6.0]
   def change
-    add_reference :posts, :image_upload, foreign_key: { to_table: :uploads }
-    add_reference :topics, :image_upload, foreign_key: { to_table: :uploads }
+    add_reference :posts, :image_upload, foreign_key: { to_table: :uploads, on_delete: :nullify }
+    add_reference :topics, :image_upload, foreign_key: { to_table: :uploads, on_delete: :nullify }
 
     # No need to run this on rollback
     reversible { |c| c.up do
@@ -55,5 +55,7 @@ class AddImageUploadIdToPostsAndTopics < ActiveRecord::Migration[6.0]
         WHERE missing_post_images.post_id = posts.id
       SQL
     end }
+
+    add_column :theme_modifier_sets, :topic_thumbnail_sizes, :string, array: true
   end
 end

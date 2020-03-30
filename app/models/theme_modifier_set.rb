@@ -12,7 +12,7 @@ class ThemeModifierSet < ActiveRecord::Base
 
   def type_validator
     ThemeModifierSet.modifiers.each do |k, config|
-      value = public_send(k)
+      value = read_attribute(k)
       next if value.nil?
 
       case config[:type]
@@ -39,7 +39,7 @@ class ThemeModifierSet < ActiveRecord::Base
   def self.resolve_modifier_for_themes(theme_ids, modifier_name)
     return nil if !(config = self.modifiers[modifier_name])
 
-    all_values = self.where(theme_id: theme_ids).where.not(modifier_name => nil).pluck(modifier_name)
+    all_values = self.where(theme_id: theme_ids).where.not(modifier_name => nil).map { |s| s.public_send(modifier_name) }
     case config[:type]
     when :boolean
       all_values.any?
@@ -48,6 +48,26 @@ class ThemeModifierSet < ActiveRecord::Base
     else
       raise ThemeModifierSetError "Invalid theme modifier combine_mode"
     end
+  end
+
+  def topic_thumbnail_sizes
+    array = super
+
+    return if array.nil?
+
+    array.map do |dimension|
+      parts = dimension.split("x")
+      next if parts.length != 2
+      [parts[0].to_i, parts[1].to_i]
+    end.filter(&:present?)
+  end
+
+  def topic_thumbnail_sizes=(val)
+    return super(val) if val.nil?
+    return super(val) if !val.is_a?(Array)
+    return super(val) if !val.all? { |v| v.is_a?(Array) && v.length == 2 }
+
+    super(val.map { |dim| "#{dim[0]}x#{dim[1]}" })
   end
 
   private
@@ -78,11 +98,12 @@ end
 #
 # Table name: theme_modifier_sets
 #
-#  id                       :bigint           not null, primary key
-#  theme_id                 :bigint           not null
-#  serialize_topic_excerpts :boolean
-#  csp_extensions           :string           is an Array
-#  svg_icons                :string           is an Array
+#  id                               :bigint           not null, primary key
+#  theme_id                         :bigint           not null
+#  serialize_topic_excerpts         :boolean
+#  csp_extensions                   :string           is an Array
+#  svg_icons                        :string           is an Array
+#  topic_thumbnail_sizes            :string           is an Array
 #
 # Indexes
 #

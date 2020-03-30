@@ -25,9 +25,19 @@ class ListableTopicSerializer < BasicTopicSerializer
              :bookmarked,
              :liked,
              :unicode_title,
-             :unread_by_group_member
+             :unread_by_group_member,
+             :thumbnails
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
+
+  def image_url
+    object.image_url
+  end
+
+  def thumbnails
+    extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
+    object.thumbnails(generate_async: true, extra_sizes: extra_sizes)
+  end
 
   def include_unicode_title?
     object.title.match?(/:[\w\-+]+:/)

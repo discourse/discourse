@@ -28,6 +28,71 @@ class Topic < ActiveRecord::Base
     400
   end
 
+  def self.share_thumbnail_size
+    [1024, 1024]
+  end
+
+  def self.thumbnail_sizes
+    [ self.share_thumbnail_size ]
+  end
+
+  def thumbnail_job_redis_key(extra_sizes)
+    "generate_topic_thumbnail_enqueue_#{id}_#{extra_sizes.inspect}"
+  end
+
+  def thumbnails(generate_async: false, generate_sync: false, extra_sizes: [])
+    return nil unless original = image_upload
+
+    thumbnail_sizes = Topic.thumbnail_sizes
+    thumbnail_sizes += extra_sizes if extra_sizes.present?
+
+    thumbnail_sizes.sort_by! { |dim| -(dim[0] * dim[1]) } # Put in descending order of size
+
+    thumbnails = []
+    thumbnails << { max_width: nil, max_height: nil, image: original } # Always add original
+
+    thumbnail_missing = false
+
+    thumbnail_sizes.each do |max_width, max_height|
+      next if max_width >= original.width && max_width >= original.height
+      thumbnail = get_thumbnail(max_width, max_height, generate_sync: generate_sync)
+      thumbnail_missing = true if thumbnail.nil?
+      thumbnails << { max_width: max_width, max_height: max_height, image: thumbnail } # Always include data structure, even if nil
+    end
+
+    # There is no efficient way to check whether a job for this topic is already queued in sidekiq
+    # The job is idempotent, but we don't want to overload the queue
+    # so use redis to limit enqueues to once per minute per topic
+    if generate_async && thumbnail_missing && Discourse.redis.set(thumbnail_job_redis_key(extra_sizes), 1, nx: true, ex: 1.minute)
+      Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id, extra_sizes: extra_sizes })
+    end
+
+    thumbnails.map do |thumbnail|
+      image = thumbnail.delete(:image)
+      thumbnail.merge!(url: image.url, width: image.width, height: image.height) if image
+      thumbnail
+    end
+  end
+
+  def get_thumbnail(max_width, max_height, generate_sync: false)
+    return nil unless original = image_upload
+
+    target_width, target_height = ImageSizer.resize(original.width, original.height, { max_width: max_width, max_height: max_height })
+    return nil if target_width >= original.width || target_height >= original.height
+
+    thumbnail = original.optimized_images.detect { |oi| oi.height == target_height && oi.width == target_width }
+
+    if thumbnail.nil? && generate_sync
+      thumbnail = original.get_optimized_image(target_width, target_height, {})
+    end
+
+    thumbnail
+  end
+
+  def image_url
+    get_thumbnail(*Topic.share_thumbnail_size)&.url || image_upload&.url
+  end
+
   def featured_users
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
@@ -139,6 +204,8 @@ class Topic < ActiveRecord::Base
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
   belongs_to :image_upload, class_name: "Upload"
+
+  belongs_to :image_upload, class_name: 'Upload'
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
@@ -1467,10 +1534,6 @@ class Topic < ActiveRecord::Base
       .where("groups.public_admission OR groups.allow_membership_requests")
       .order(:allow_membership_requests)
       .first
-  end
-
-  def image_url
-    image_upload&.url
   end
 
   private

@@ -73,6 +73,7 @@ class TopicViewSerializer < ApplicationSerializer
     :queued_posts_count,
     :show_read_indicator,
     :requested_group_name,
+    :thumbnails
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -283,5 +284,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_published_page?
     SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
+  end
+
+  def thumbnails
+    extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
+    object.topic.thumbnails(generate_async: true, extra_sizes: extra_sizes)
   end
 end

@@ -828,6 +828,8 @@ class TopicQuery
     result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
     result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
+    result = preload_thumbnails(result)
+
     result = TopicQuery.apply_custom_filters(result, self)
 
     @guardian.filter_allowed_categories(result)
@@ -1048,6 +1050,10 @@ class TopicQuery
     end
 
     result.order('topics.bumped_at DESC')
+  end
+
+  def preload_thumbnails(result)
+    result.preload(image_upload: [:optimized_images])
   end
 
   private
