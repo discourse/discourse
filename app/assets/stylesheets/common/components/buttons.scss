@@ -78,29 +78,18 @@
       .d-button-label {
         font-size: $font-down-2;
       }
+
+      &.btn-small {
+        .loading-icon {
+          font-size: $font-down-1;
+          margin-right: 0.2em;
+        }
+      }
     }
-    .loading-container {
-      float: left;
-      -webkit-animation: fadein 1s;
-      animation: fadein 1s;
-      display: block;
-      margin-right: 0;
 
-      + .d-button-label {
-        margin-left: 0.5em;
-      }
-
-      .spinner {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        width: 11px;
-        height: 11px;
-        border-color: $text-color;
-        border-right-color: transparent;
-        border-width: 2px;
-      }
+    .loading-icon {
+      -webkit-animation: rotate-forever 1s infinite linear, fadein 1s;
+      animation: rotate-forever 1s infinite linear, fadein 1s;
     }
   }
 }
