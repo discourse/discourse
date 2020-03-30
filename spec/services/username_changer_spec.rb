@@ -11,12 +11,19 @@ describe UsernameChanger do
     let(:user) { Fabricate(:user) }
 
     context 'success' do
+      let!(:old_username) { user.username }
       let(:new_username) { "#{user.username}1234" }
 
       it 'should change the username' do
-        @result = UsernameChanger.change(user, new_username)
+        event = DiscourseEvent.track_events {
+          @result = UsernameChanger.change(user, new_username)
+        }.last
 
         expect(@result).to eq(true)
+
+        expect(event[:event_name]).to eq(:username_changed)
+        expect(event[:params].first).to eq(old_username)
+        expect(event[:params].second).to eq(new_username)
 
         user.reload
         expect(user.username).to eq(new_username)
