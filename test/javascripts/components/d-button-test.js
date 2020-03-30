@@ -56,7 +56,7 @@ componentTest("link-styled button", {
 });
 
 componentTest("isLoading button", {
-  template: "{{d-button icon='times' isLoading=isLoading}}",
+  template: "{{d-button isLoading=isLoading}}",
 
   beforeEach() {
     this.set("isLoading", true);
