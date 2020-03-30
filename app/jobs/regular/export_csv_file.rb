@@ -7,6 +7,10 @@ module Jobs
   class ExportCsvFile < ::Jobs::Base
     sidekiq_options retry: false
 
+    attr_accessor :extra
+    attr_accessor :current_user
+    attr_accessor :entity
+
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
       user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
       user_list: ['id', 'name', 'username', 'email', 'title', 'created_at', 'last_seen_at', 'last_posted_at', 'last_emailed_at', 'trust_level', 'approved', 'suspended_at', 'suspended_till', 'silenced_till', 'active', 'admin', 'moderator', 'ip_address', 'staged', 'secondary_emails'],
