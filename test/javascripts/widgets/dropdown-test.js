@@ -1,26 +1,17 @@
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
-moduleForWidget("dropdown", {
-  beforeEach() {
-    I18n.translations = { en: { js: { foo: "FooBaz" } } };
+moduleForWidget("dropdown");
 
-    this.setProperties({
-      content: [
-        { id: 1, label: "foo" },
-        { id: 2, translatedLabel: "FooBar" },
-        "separator",
-        { id: 3, translatedLabel: "With icon", icon: "times" },
-        { id: 4, html: "<b>baz</b>" }
-      ],
-      label: "foo"
-    });
-
-    this.on(
-      "onChange",
-      a => (this._element.querySelector("#test").innerText = a.id)
-    );
-  }
-});
+const DEFAULT_CONTENT = {
+  content: [
+    { id: 1, label: "foo" },
+    { id: 2, translatedLabel: "FooBar" },
+    "separator",
+    { id: 3, translatedLabel: "With icon", icon: "times" },
+    { id: 4, html: "<b>baz</b>" }
+  ],
+  label: "foo"
+};
 
 async function clickRowById(id) {
   await click(`#my-dropdown .widget-dropdown-item.item-${id}`);
@@ -49,7 +40,6 @@ function body() {
 }
 
 const TEMPLATE = `
-  <div id="test"></div>
   {{mount-widget
     widget="dropdown"
     args=(hash
@@ -59,13 +49,16 @@ const TEMPLATE = `
       class=class
       translatedLabel=translatedLabel
       content=content
-      onChange=(action "onChange")
       options=options
     )
 }}`;
 
 widgetTest("dropdown id", {
   template: TEMPLATE,
+
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+  },
 
   test(assert) {
     assert.ok(exists("#my-dropdown"));
@@ -74,6 +67,11 @@ widgetTest("dropdown id", {
 
 widgetTest("label", {
   template: TEMPLATE,
+
+  beforeEach() {
+    I18n.translations = { en: { js: { foo: "FooBaz" } } };
+    this.setProperties(DEFAULT_CONTENT);
+  },
 
   test(assert) {
     assert.equal(headerLabel(), "FooBaz");
@@ -84,6 +82,8 @@ widgetTest("translatedLabel", {
   template: TEMPLATE,
 
   beforeEach() {
+    I18n.translations = { en: { js: { foo: "FooBaz" } } };
+    this.setProperties(DEFAULT_CONTENT);
     this.set("translatedLabel", "BazFoo");
   },
 
@@ -95,6 +95,10 @@ widgetTest("translatedLabel", {
 widgetTest("content", {
   template: TEMPLATE,
 
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+  },
+
   test(assert) {
     assert.equal(rowById(1).dataset.id, 1, "it creates rows");
     assert.equal(rowById(2).dataset.id, 2, "it creates rows");
@@ -103,7 +107,27 @@ widgetTest("content", {
 });
 
 widgetTest("onChange action", {
-  template: TEMPLATE,
+  template: `
+    <div id="test"></div>
+    {{mount-widget
+      widget="dropdown"
+      args=(hash
+        id="my-dropdown"
+        label=label
+        content=content
+        onChange=(action "onChange")
+      )
+    }}
+  `,
+
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+
+    this.on(
+      "onChange",
+      item => (this._element.querySelector("#test").innerText = item.id)
+    );
+  },
 
   async test(assert) {
     await clickRowById(2);
@@ -113,6 +137,10 @@ widgetTest("onChange action", {
 
 widgetTest("can be opened and closed", {
   template: TEMPLATE,
+
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+  },
 
   async test(assert) {
     assert.ok(exists("#my-dropdown.closed"));
@@ -127,6 +155,7 @@ widgetTest("icon", {
   template: TEMPLATE,
 
   beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
     this.set("icon", "times");
   },
 
@@ -139,6 +168,7 @@ widgetTest("class", {
   template: TEMPLATE,
 
   beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
     this.set("class", "activated");
   },
 
@@ -150,6 +180,10 @@ widgetTest("class", {
 widgetTest("content with translatedLabel", {
   template: TEMPLATE,
 
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+  },
+
   async test(assert) {
     assert.equal(rowById(2).innerText, "FooBar");
   }
@@ -157,6 +191,11 @@ widgetTest("content with translatedLabel", {
 
 widgetTest("content with label", {
   template: TEMPLATE,
+
+  beforeEach() {
+    I18n.translations = { en: { js: { foo: "FooBaz" } } };
+    this.setProperties(DEFAULT_CONTENT);
+  },
 
   async test(assert) {
     assert.equal(rowById(1).innerText, "FooBaz");
@@ -166,6 +205,10 @@ widgetTest("content with label", {
 widgetTest("content with icon", {
   template: TEMPLATE,
 
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+  },
+
   async test(assert) {
     assert.ok(exists(rowById(3).querySelector(".d-icon-times")));
   }
@@ -174,6 +217,10 @@ widgetTest("content with icon", {
 widgetTest("content with html", {
   template: TEMPLATE,
 
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+  },
+
   async test(assert) {
     assert.equal(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
   }
@@ -181,6 +228,10 @@ widgetTest("content with html", {
 
 widgetTest("separator", {
   template: TEMPLATE,
+
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+  },
 
   test(assert) {
     assert.ok(
@@ -195,7 +246,7 @@ widgetTest("hides widget if no content", {
   template: TEMPLATE,
 
   beforeEach() {
-    this.set("content", null);
+    this.setProperties({ content: null, label: "foo" });
   },
 
   test(assert) {
@@ -208,6 +259,7 @@ widgetTest("headerClass option", {
   template: TEMPLATE,
 
   beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
     this.set("options", { headerClass: "btn-small and-text" });
   },
 
@@ -222,6 +274,7 @@ widgetTest("bodyClass option", {
   template: TEMPLATE,
 
   beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
     this.set("options", { bodyClass: "gigantic and-yet-small" });
   },
 

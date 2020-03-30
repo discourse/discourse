@@ -143,10 +143,6 @@ export const DropdownClass = {
     if (!attrs.label && !attrs.translatedLabel) {
       throw "A widget-dropdown expects at least a `label` or `translatedLabel`";
     }
-
-    if (!attrs.onChange) {
-      throw "A widget-dropdown expects an `onChange` handler.";
-    }
   },
 
   buildKey: attrs => {
