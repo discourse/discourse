@@ -50,8 +50,8 @@ class Wizard
 
       existing_step_at_index = @steps[plugin_step[:index]]
 
-      if plugin_step[:index] <= @steps.count - 1
-        (plugin_step[:index]..(@steps.count - 1)).each do |index|
+      if plugin_step[:index] <= @steps.size - 1
+        (plugin_step[:index]..(@steps.size - 1)).each do |index|
           @steps[index].index = @steps[index].index + 1
         end
         previous_step = @steps[plugin_step[:index] - 1]
@@ -63,6 +63,7 @@ class Wizard
       else
         @steps.last.next = step
         step.previous = @steps.last
+        step.index = @steps.size
       end
 
       @steps << step
