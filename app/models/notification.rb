@@ -44,6 +44,16 @@ class Notification < ActiveRecord::Base
     send_email unless NotificationConsolidator.new(self).consolidate!
   end
 
+  before_create do
+    if Notification.high_priority_types.include?(self.notification_type)
+      self.priority = Notification.priorities[:high]
+    elsif Notification.normal_priority_types.include?(self.notification_type)
+      self.priority = Notification.priorities[:normal]
+    else
+      self.priority = Notification.priorities[:low]
+    end
+  end
+
   def self.purge_old!
     return if SiteSetting.max_notifications_per_user == 0
 
@@ -64,10 +74,10 @@ class Notification < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    DB.exec(<<~SQL, high_priority_types: Notification.high_priority_types)
+    DB.exec(<<~SQL, high_priority: Notification.priorities[:high])
       DELETE
         FROM notifications n
-       WHERE notification_type IN (:high_priority_types)
+       WHERE priority = :high_priority
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
@@ -106,6 +116,10 @@ class Notification < ActiveRecord::Base
                         membership_request_consolidated: 23,
                         bookmark_reminder: 24
                        )
+  end
+
+  def self.priorities
+    @priorities ||= Enum.new(low: 0, normal: 1, high: 2)
   end
 
   def self.high_priority_types
@@ -221,10 +235,10 @@ class Notification < ActiveRecord::Base
 
     if notifications.present?
 
-      ids = DB.query_single(<<~SQL, high_priority_types: Notification.high_priority_types, limit: count.to_i)
+      ids = DB.query_single(<<~SQL, high_priority: Notification.priorities[:high], limit: count.to_i)
          SELECT n.id FROM notifications n
          WHERE
-           n.notification_type IN (:high_priority_types) AND
+           n.priority = :high_priority AND
            n.user_id = #{user.id.to_i} AND
            NOT read
         ORDER BY n.id ASC
@@ -256,7 +270,7 @@ class Notification < ActiveRecord::Base
   end
 
   def unread_high_priority?
-    Notification.high_priority_types.include?(self.notification_type) && !read
+    self.priority == Notification.priorities[:high] && !read
   end
 
   def post_id

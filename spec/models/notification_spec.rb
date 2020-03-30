@@ -283,14 +283,14 @@ describe Notification do
       p2 = Fabricate(:post)
 
       Notification.create!(read: false, user_id: p.user_id, topic_id: p.topic_id, post_number: p.post_number, data: '[]',
-                           notification_type: Notification.types[:private_message])
+                           notification_type: Notification.types[:private_message], priority: Notification.priorities[:high])
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
-                           notification_type: Notification.types[:private_message])
+                           notification_type: Notification.types[:private_message], priority: Notification.priorities[:high])
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
-                           notification_type: Notification.types[:bookmark_reminder])
+                           notification_type: Notification.types[:bookmark_reminder], priority: Notification.priorities[:high])
 
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
-                           notification_type: Notification.types[:liked])
+                           notification_type: Notification.types[:liked], priority: Notification.priorities[:normal])
       p2.trash!(p.user)
 
       # we may want to make notification "trashable" but for now we nuke pm notifications from deleted topics/posts

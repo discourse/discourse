@@ -3,6 +3,7 @@
 Fabricator(:notification) do
   transient :post
   notification_type Notification.types[:mentioned]
+  priority Notification.priorities[:normal]
   user
   topic { |attrs| attrs[:post]&.topic || Fabricate(:topic, user: attrs[:user]) }
   post_number { |attrs| attrs[:post]&.post_number }
@@ -11,12 +12,14 @@ end
 
 Fabricator(:quote_notification, from: :notification) do
   notification_type Notification.types[:quoted]
+  priority Notification.priorities[:normal]
   user
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
 end
 
 Fabricator(:private_message_notification, from: :notification) do
   notification_type Notification.types[:private_message]
+  priority Notification.priorities[:high]
   data do |attrs|
     post = attrs[:post] || Fabricate(:post, topic: attrs[:topic], user: attrs[:user])
     {
@@ -32,6 +35,7 @@ end
 
 Fabricator(:bookmark_reminder_notification, from: :notification) do
   notification_type Notification.types[:bookmark_reminder]
+  priority Notification.priorities[:high]
   data do |attrs|
     post = attrs[:post] || Fabricate(:post, topic: attrs[:topic], user: attrs[:user])
     {
