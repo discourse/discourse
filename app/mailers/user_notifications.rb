@@ -220,7 +220,7 @@ class UserNotifications < ActionMailer::Base
       @counts << { label_key: 'user_notifications.digest.unread_high_priority', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
 
       if @counts.size < 3
-        value = user.unread_notifications_of_types(Notification.types[:liked])
+        value = user.unread_notifications_of_type(Notification.types[:liked])
         @counts << { label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
       end
 
