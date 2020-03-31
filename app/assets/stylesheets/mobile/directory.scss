@@ -6,6 +6,16 @@
     margin-bottom: 0.25em;
   }
 
+  &.users-directory {
+    .filter-name {
+      width: 100%;
+    }
+
+    .directory-last-updated {
+      margin-bottom: 1em;
+    }
+  }
+
   .directory-controls {
     display: block;
   }

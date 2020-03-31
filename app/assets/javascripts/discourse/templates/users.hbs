@@ -1,7 +1,7 @@
 {{#d-section pageClass="users"}}
   {{#load-more selector=".directory tbody tr" action=(action "loadMore")}}
     <div class="container">
-      <div class='directory'>
+      <div class='users-directory directory'>
         {{plugin-outlet name="users-top" connectorTagName='div' args=(hash model=model)}}
         <div class='directory-controls'>
           <div class='period-controls'>
