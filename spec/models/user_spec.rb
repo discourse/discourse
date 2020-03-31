@@ -1779,7 +1779,7 @@ describe User do
   end
 
   describe '#publish_notifications_state' do
-    it 'should publish the right message' do
+    it 'should publish the right message sorted by ID desc' do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
 
@@ -1788,8 +1788,41 @@ describe User do
       end.first
 
       expect(message.data[:recent]).to eq([
-                                            [notification2.id, true], [notification.id, false]
-                                          ])
+        [notification2.id, true], [notification.id, false]
+      ])
+    end
+
+    it 'floats the unread high priority notifications to the top' do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+      notification3 = Fabricate(:notification, user: user, notification_type: Notification.types[:private_message])
+      notification4 = Fabricate(:notification, user: user, notification_type: Notification.types[:bookmark_reminder])
+
+      message = MessageBus.track_publish("/notification/#{user.id}") do
+        user.publish_notifications_state
+      end.first
+
+      expect(message.data[:recent]).to eq([
+        [notification4.id, false], [notification3.id, false],
+        [notification2.id, true], [notification.id, false]
+      ])
+    end
+
+    it "has the correct counts" do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+      notification3 = Fabricate(:notification, user: user, notification_type: Notification.types[:private_message])
+      notification4 = Fabricate(:notification, user: user, notification_type: Notification.types[:bookmark_reminder])
+
+      message = MessageBus.track_publish("/notification/#{user.id}") do
+        user.publish_notifications_state
+      end.first
+
+      expect(message.data[:unread_notifications]).to eq(1)
+      # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
+      #       to be remonved in 2.5
+      expect(message.data[:unread_private_messages]).to eq(2)
+      expect(message.data[:unread_high_priority_notifications]).to eq(2)
     end
   end
 
@@ -1821,6 +1854,7 @@ describe User do
   end
 
   describe "#unread_notifications" do
+    fab!(:user) { Fabricate(:user) }
     before do
       User.max_unread_notifications = 3
     end
@@ -1830,13 +1864,31 @@ describe User do
     end
 
     it "limits to MAX_UNREAD_NOTIFICATIONS" do
-      user = Fabricate(:user)
-
       4.times do
         Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
       end
 
       expect(user.unread_notifications).to eq(3)
+    end
+
+    it "does not include high priority notifications" do
+      Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: Notification.types[:private_message], read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: Notification.types[:bookmark_reminder], read: false, data: '{}')
+
+      expect(user.unread_notifications).to eq(1)
+    end
+  end
+
+  describe "#unread_high_priority_notifications" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "only returns an unread count of PM and bookmark reminder notifications" do
+      Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: Notification.types[:private_message], read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: Notification.types[:bookmark_reminder], read: false, data: '{}')
+
+      expect(user.unread_high_priority_notifications).to eq(2)
     end
   end
 

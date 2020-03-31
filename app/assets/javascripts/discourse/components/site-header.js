@@ -24,7 +24,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   @observes(
     "currentUser.unread_notifications",
-    "currentUser.unread_private_messages",
+    "currentUser.unread_high_priority_notifications",
     "currentUser.reviewable_count"
   )
   notificationsChanged() {
