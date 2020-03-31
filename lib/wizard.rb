@@ -67,6 +67,7 @@ class Wizard
       end
 
       @steps << step
+      @steps = @steps.sort_by(&:index)
     end
   end
 
