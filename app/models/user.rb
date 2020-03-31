@@ -604,7 +604,7 @@ class User < ActiveRecord::Base
          LEFT JOIN topics t ON n.topic_id = t.id
          WHERE
           t.deleted_at IS NULL AND
-          n.high_priority = TRUE AND
+          n.high_priority AND
           n.user_id = :user_id AND
           NOT read
         ORDER BY n.id DESC

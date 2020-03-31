@@ -71,7 +71,7 @@ class Notification < ActiveRecord::Base
     DB.exec(<<~SQL)
       DELETE
         FROM notifications n
-       WHERE high_priority = TRUE
+       WHERE high_priority
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
@@ -306,6 +306,4 @@ end
 #  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
 #  index_notifications_read_or_not_high_priority                (user_id,id DESC,read,topic_id) WHERE (read OR (high_priority = false))
 #  index_notifications_unique_unread_high_priority              (user_id,id) UNIQUE WHERE ((NOT read) AND (high_priority = true))
-#  index_notifications_unread_high_priority                     (user_id,high_priority) WHERE ((NOT read) AND (high_priority = true))
-#  index_notifications_unread_normal_priority                   (user_id,high_priority) WHERE ((NOT read) AND (high_priority = false))
 #

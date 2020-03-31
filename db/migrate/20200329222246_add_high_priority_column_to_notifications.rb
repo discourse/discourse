@@ -20,15 +20,7 @@ class AddHighPriorityColumnToNotifications < ActiveRecord::Migration[6.0]
     SQL
 
     execute <<~SQL
-      CREATE INDEX CONCURRENTLY IF NOT EXISTS index_notifications_unread_normal_priority ON notifications(user_id, high_priority) WHERE NOT read AND high_priority = FALSE;
-    SQL
-
-    execute <<~SQL
       CREATE INDEX CONCURRENTLY IF NOT EXISTS index_notifications_read_or_not_high_priority ON notifications(user_id, id DESC, read, topic_id) WHERE (read OR (high_priority = FALSE));
-    SQL
-
-    execute <<~SQL
-      CREATE INDEX CONCURRENTLY IF NOT EXISTS index_notifications_unread_high_priority ON notifications(user_id, high_priority) WHERE NOT read AND high_priority = TRUE;
     SQL
 
     execute <<~SQL
