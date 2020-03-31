@@ -447,8 +447,11 @@ class UsersController < ApplicationController
     user ||= User.new
     user.attributes = new_user_params
 
-    # Handle API approval
-    ReviewableUser.set_approved_fields!(user, current_user) if user.approved?
+    # Handle API approval and
+    # auto approve users based on auto_approve_email_domains setting
+    if user.approved? || EmailValidator.can_auto_approve_user?(user.email)
+      ReviewableUser.set_approved_fields!(user, current_user)
+    end
 
     # Handle custom fields
     user_fields = UserField.all

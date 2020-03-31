@@ -459,6 +459,9 @@ login:
   email_domains_whitelist:
     default: ""
     type: list
+  auto_approve_email_domains:
+    default: ""
+    type: list
   hide_email_address_taken: false
   log_out_strict: true
   pending_users_reminder_delay:

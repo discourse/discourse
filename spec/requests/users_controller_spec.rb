@@ -583,7 +583,7 @@ describe UsersController do
       UsersController.any_instance.stubs(:honeypot_value).returns(nil)
       UsersController.any_instance.stubs(:challenge_value).returns(nil)
       SiteSetting.allow_new_registrations = true
-      @user = Fabricate.build(:user, password: "strongpassword")
+      @user = Fabricate.build(:user, email: "foobar@example.com", password: "strongpassword")
     end
 
     let(:post_user_params) do
@@ -825,6 +825,22 @@ describe UsersController do
           json = JSON.parse(response.body)
           new_user = User.find(json["user_id"])
           expect(new_user.locale).not_to eq("fr")
+        end
+
+        it "will auto approve user if the user email domain matches auto_approve_email_domains setting" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+          SiteSetting.auto_approve_email_domains = "example.com"
+
+          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+
+          expect(response.status).to eq(200)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+          expect(json['active']).to be_truthy
+          expect(new_user.approved).to be_truthy
+          expect(ReviewableUser.pending.find_by(target: new_user)).to be_blank
         end
       end
     end
