@@ -36,9 +36,7 @@ class Wizard
         end
         before_step.next = step
         @steps.insert(before_step.index + 1, step)
-        ((before_step.index + 2)..(@steps.size - 1)).each do |index|
-          @steps[index].index = @steps[index].index + 1
-        end
+        step.index += 1 while (step = step.next)
         return
       end
     end
