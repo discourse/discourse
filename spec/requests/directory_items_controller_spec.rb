@@ -46,6 +46,7 @@ describe DirectoryItemsController do
       expect(json['directory_items']).to be_present
       expect(json['total_rows_directory_items']).to be_present
       expect(json['load_more_directory_items']).to be_present
+      expect(json['meta']['last_updated_at']).to be_present
 
       expect(json['directory_items'].length).to eq(4)
       expect(json['total_rows_directory_items']).to eq(4)

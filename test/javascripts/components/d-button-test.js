@@ -54,3 +54,49 @@ componentTest("link-styled button", {
     );
   }
 });
+
+componentTest("isLoading button", {
+  template: "{{d-button isLoading=isLoading}}",
+
+  beforeEach() {
+    this.set("isLoading", true);
+  },
+
+  test(assert) {
+    assert.ok(
+      find("button.is-loading .loading-icon").length,
+      "it has a spinner showing"
+    );
+    assert.ok(
+      find("button[disabled]").length,
+      "while loading the button is disabled"
+    );
+
+    this.set("isLoading", false);
+
+    assert.notOk(
+      find("button .loading-icon").length,
+      "it doesn't have a spinner showing"
+    );
+    assert.ok(
+      find("button:not([disabled])").length,
+      "while not loading the button is enabled"
+    );
+  }
+});
+
+componentTest("disabled button", {
+  template: "{{d-button disabled=disabled}}",
+
+  beforeEach() {
+    this.set("disabled", true);
+  },
+
+  test(assert) {
+    assert.ok(find("button[disabled]").length, "the button is disabled");
+
+    this.set("disabled", false);
+
+    assert.ok(find("button:not([disabled])").length, "the button is enabled");
+  }
+});

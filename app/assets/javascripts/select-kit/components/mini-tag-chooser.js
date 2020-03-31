@@ -77,6 +77,20 @@ export default ComboBox.extend(TagsMixin, {
     );
   }),
 
+  modifyNoSelection() {
+    if (this.selectKit.options.minimum) {
+      const minimum = parseInt(this.selectKit.options.minimum, 10);
+      if (minimum > 0) {
+        return this.defaultItem(
+          null,
+          I18n.t("select_kit.min_content_not_reached", { count: minimum })
+        );
+      }
+    }
+
+    return this._super(...arguments);
+  },
+
   init() {
     this._super(...arguments);
 

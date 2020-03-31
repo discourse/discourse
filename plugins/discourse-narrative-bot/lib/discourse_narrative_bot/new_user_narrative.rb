@@ -233,8 +233,14 @@ module DiscourseNarrativeBot
       return unless valid_topic?(@post.topic_id)
       return unless @post.user_id == self.discobot_user.id
 
+      profile_page_url = url_helpers(:user_url, username: @user.username)
+      bookmark_url = if SiteSetting.enable_bookmarks_with_reminders?
+        "#{profile_page_url}/activity/bookmarks-with-reminders"
+      else
+        "#{profile_page_url}/activity/bookmarks"
+      end
       raw = <<~RAW
-        #{I18n.t("#{I18N_KEY}.bookmark.reply", i18n_post_args(profile_page_url: url_helpers(:user_url, username: @user.username)))}
+        #{I18n.t("#{I18N_KEY}.bookmark.reply", i18n_post_args(bookmark_url: bookmark_url))}
 
         #{instance_eval(&@next_instructions)}
       RAW

@@ -5,14 +5,20 @@
     margin-bottom: 0;
   }
 
-  .period-chooser {
-    float: left;
-  }
-  .filter-name {
-    float: right;
-  }
   .spinner {
     clear: both;
+  }
+
+  .directory-controls {
+    display: flex;
+    justify-content: space-between;
+    .filter-name {
+      height: 1em;
+    }
+  }
+  .directory-last-updated {
+    margin-bottom: 0.5em;
+    color: $primary-medium;
   }
 
   table {

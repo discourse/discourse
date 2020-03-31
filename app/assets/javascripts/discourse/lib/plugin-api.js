@@ -3,6 +3,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton } from "discourse/widgets/post-menu";
@@ -54,7 +55,7 @@ import { on } from "@ember/object/evented";
 import KeyboardShortcuts, { bindings } from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.39";
+const PLUGIN_API_VERSION = "0.8.40";
 
 class PluginApi {
   constructor(version, container) {
@@ -1016,6 +1017,26 @@ class PluginApi {
    **/
   decoratePluginOutlet(outletName, callback, opts) {
     addPluginOutletDecorator(outletName, callback, opts || {});
+  }
+
+  /**
+   * Allows altering the topic title in the topic list, and in the topic view
+   *
+   * topicTitleType can be `topic-title` or `topic-list-item-title`
+   *
+   * For example, to replace the topic title:
+   *
+   * ```
+   * api.decorateTopicTitle(
+   *   (topicModel, node, topicTitleType) => {
+   *     node.innerText("my new topic title");
+   *   }
+   * );
+   * ```
+   *
+   **/
+  decorateTopicTitle(callback) {
+    addTopicTitleDecorator(callback);
   }
 }
 

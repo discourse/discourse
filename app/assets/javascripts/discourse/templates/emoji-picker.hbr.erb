@@ -9,10 +9,12 @@
     </div>
   <% end %>
 
-  <% if !Emoji.custom.blank? %>
-    <div class='category-icon'>
-      <button data-tabicon="<%= Emoji.custom.first.name %>" type="button" class="emoji" tabindex="-1" data-section="ungrouped" title="{{i18n 'emoji_picker.custom'}}"></button>
-    </div>
+  <% Emoji.custom.group_by { |emoji| emoji.group }.each do |group, emojis| %>
+    <% if emojis.present? %>
+      <div class='category-icon'>
+        <button data-tabicon="<%= emojis.first.name %>" type="button" class="emoji" tabindex="-1" data-section="custom-<%= group %>" title="{{i18n 'emoji_picker.<%= group %>'}}"></button>
+      </div>
+    <% end %>
   <% end %>
 </div>
 
@@ -49,18 +51,22 @@
       </div>
     <% end %>
 
-    {{#if customEmojis.length}}
-      <div class='section' data-section='ungrouped'>
-        <div class='section-header'>
-          <span class="title">{{i18n 'emoji_picker.custom'}}</span>
+    {{#each customEmojis as |emojis|}}
+      {{#if emojis.length}}
+        <div class='section' data-section='custom-{{emojis.firstObject.group}}'>
+          <div class='section-header'>
+            <span class="title">
+              {{i18n emojis.firstObject.key}}
+            </span>
+          </div>
+          <div class='section-group'>
+            {{#each emojis as |emoji|}}
+              <button style="background-url: url("{{emoji.src}}")" type="button" class="emoji" tabindex="-1" title="{{emoji.code}}"></button>
+            {{/each}}
+          </div>
         </div>
-        <div class='section-group'>
-          {{#each customEmojis as |emoji|}}
-            <button style="background-url: url("{{emoji.src}}")" type="button" class="emoji" tabindex="-1" title="{{emoji.code}}"></button>
-          {{/each}}
-        </div>
-      </div>
-    {{/if}}
+      {{/if}}
+    {{/each}}
   </div>
   <div class='footer'>
     <div class='info'></div>

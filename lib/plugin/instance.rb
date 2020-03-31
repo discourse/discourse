@@ -6,21 +6,29 @@ require_dependency 'plugin/metadata'
 require_dependency 'auth'
 
 class Plugin::CustomEmoji
+  CACHE_KEY ||= "plugin-emoji"
   def self.cache_key
-    @@cache_key ||= "plugin-emoji"
+    @@cache_key ||= CACHE_KEY
   end
 
   def self.emojis
     @@emojis ||= {}
   end
 
-  def self.register(name, url)
-    @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
-    emojis[name] = url
+  def self.clear_cache
+    @@cache_key = CACHE_KEY
+    @@emojis = {}
   end
 
-  def self.unregister(name)
-    emojis.delete(name)
+  def self.register(name, url, group = Emoji::DEFAULT_GROUP)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + name + group)[0..10]
+    new_group = emojis[group] || {}
+    new_group[name] = url
+    emojis[group] = new_group
+  end
+
+  def self.unregister(name, group = Emoji::DEFAULT_GROUP)
+    emojis[group].delete(name)
   end
 
   def self.translations
@@ -471,8 +479,9 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_seed_path_builder(&block)
   end
 
-  def register_emoji(name, url)
-    Plugin::CustomEmoji.register(name, url)
+  def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
+    Plugin::CustomEmoji.register(name, url, group)
+    Emoji.clear_cache
   end
 
   def translate_emoji(from, to)
