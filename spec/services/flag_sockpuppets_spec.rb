@@ -167,7 +167,7 @@ describe SpamRule::FlagSockpuppets do
       flagged_post = Fabricate(
         :reviewable_flagged_post,
         target: another_post, status: Reviewable.statuses[:rejected], target_created_by: another_post.user
-    )
+      )
 
       described_class.new(post2).perform
 
