@@ -20,6 +20,7 @@ export function _clearSnapshots() {
 }
 
 export default DropdownSelectBoxComponent.extend({
+  _seq: 0,
   pluginApiIdentifiers: ["composer-actions"],
   classNames: ["composer-actions"],
 
@@ -27,6 +28,10 @@ export default DropdownSelectBoxComponent.extend({
     icon: "share",
     filterable: false,
     showFullTitle: false
+  },
+
+  contentChanged() {
+    this.set("_seq", this._seq + 1);
   },
 
   didReceiveAttrs() {
@@ -40,6 +45,7 @@ export default DropdownSelectBoxComponent.extend({
     ) {
       _topicSnapshot = this.get("composerModel.topic");
       _postSnapshot = this.get("composerModel.post");
+      this.contentChanged();
     }
 
     // if we hit reply on a different post we want to change postSnapshot
@@ -48,6 +54,7 @@ export default DropdownSelectBoxComponent.extend({
       (!_postSnapshot || this.get("composerModel.post.id") !== _postSnapshot.id)
     ) {
       _postSnapshot = this.get("composerModel.post");
+      this.contentChanged();
     }
 
     if (isEmpty(this.content)) {
@@ -59,7 +66,7 @@ export default DropdownSelectBoxComponent.extend({
     return {};
   },
 
-  content: computed(function() {
+  content: computed("_seq", function() {
     let items = [];
 
     if (
@@ -304,6 +311,7 @@ export default DropdownSelectBoxComponent.extend({
           ),
           this.composerModel
         );
+        this.contentChanged();
       } else {
         // eslint-disable-next-line no-console
         console.error(`No method '${action}' found`);
