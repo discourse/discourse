@@ -22,6 +22,8 @@ class BookmarkQuery
     @user = user
     @params = params
     @guardian = guardian || Guardian.new(@user)
+    @page = @params[:page].to_i
+    @limit = @params[:limit].present? ? @params[:limit].to_i : @params[:per_page]
   end
 
   def list_all
@@ -34,9 +36,11 @@ class BookmarkQuery
 
     results = results.merge(Post.secured(@guardian))
 
-    if @params[:limit]
-      results = results.limit(@params[:limit])
+    if @page.positive?
+      results = results.offset(@page * @params[:per_page])
     end
+
+    results = results.limit(@limit)
 
     if BookmarkQuery.preloaded_custom_fields.any?
       Topic.preload_custom_fields(
