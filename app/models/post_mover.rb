@@ -341,9 +341,13 @@ class PostMover
                               notifications_changed_at, notifications_reason_id)
       SELECT tu.user_id,
              :new_topic_id                               AS topic_id,
-             CASE
-               WHEN p.user_id IS NULL THEN FALSE
-               ELSE TRUE END                             AS posted,
+               EXISTS(
+                 SELECT 1
+                 FROM posts p
+                 WHERE p.topic_id = :new_topic_id
+                   AND p.user_id = tu.user_id
+                 LIMIT 1
+               )                                         AS posted,
              (
                SELECT MAX(lr.new_post_number)
                FROM moved_posts lr
@@ -369,12 +373,6 @@ class PostMover
              tu.notifications_reason_id
       FROM topic_users tu
            JOIN topics t ON (t.id = :new_topic_id)
-           LEFT OUTER JOIN
-           (
-             SELECT DISTINCT user_id
-             FROM posts
-             WHERE topic_id = :new_topic_id
-           ) p ON (p.user_id = tu.user_id)
       WHERE tu.topic_id = :old_topic_id
         AND GREATEST(
                 tu.last_read_post_number,
