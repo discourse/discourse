@@ -6,7 +6,6 @@ class Wizard
   attr_accessor :max_topics_to_require_completion
 
   @@excluded_steps = []
-  @@plugin_steps = []
 
   def initialize(user)
     @steps = []
@@ -19,15 +18,32 @@ class Wizard
     Step.new(step_name)
   end
 
-  def append_step(step)
+  def append_step(step, after: nil)
     return if @@excluded_steps.include?(step)
 
     step = create_step(step) if step.is_a?(String)
-
     yield step if block_given?
 
-    last_step = @steps.last
+    if after
+      before_step = @steps.detect { |s| s.id == after }
 
+      if before_step
+        # increment indices that will be pushed later down the wizard
+        ((before_step.index + 1)..(@steps.size - 1)).each do |index|
+          @steps[index].index = @steps[index].index + 1
+        end
+        step.previous = before_step
+        step.next = before_step.next
+        before_step.next.previous = step
+        step.index = before_step.index + 1
+        before_step.next = step
+        @steps << step
+        @steps = @steps.sort_by(&:index)
+        return
+      end
+    end
+
+    last_step = @steps.last
     @steps << step
 
     # If it's the first step
@@ -39,44 +55,6 @@ class Wizard
       step.previous = last_step
       step.index = last_step.index + 1
     end
-  end
-
-  def append_plugin_steps
-    @@plugin_steps.each do |plugin_step|
-      step = create_step(plugin_step[:step]) if plugin_step[:step].is_a?(String)
-      next if plugin_step[:index] < 1
-
-      plugin_step[:block].call(step)
-
-      existing_step_at_index = @steps[plugin_step[:index]]
-
-      if plugin_step[:index] <= @steps.size - 1
-        (plugin_step[:index]..(@steps.size - 1)).each do |index|
-          @steps[index].index = @steps[index].index + 1
-        end
-        previous_step = @steps[plugin_step[:index] - 1]
-        previous_step.next = step
-        step.previous = previous_step
-        step.next = existing_step_at_index
-        step.index = plugin_step[:index]
-        existing_step_at_index.previous = step
-      else
-        @steps.last.next = step
-        step.previous = @steps.last
-        step.index = @steps.size
-      end
-
-      @steps << step
-      @steps = @steps.sort_by(&:index)
-    end
-  end
-
-  def self.add_plugin_step(index, step, &block)
-    @@plugin_steps << { index: index, step: step, block: block }
-  end
-
-  def self.clear_plugin_steps
-    @@plugin_steps = []
   end
 
   def self.exclude_step(step)

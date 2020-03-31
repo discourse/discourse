@@ -300,7 +300,6 @@ class Wizard
 
       DiscourseEvent.trigger(:build_wizard, @wizard)
 
-      @wizard.append_plugin_steps
       @wizard.append_step('finished') do |step|
         step.banner = "finished.png"
         step.description_vars = { base_path: Discourse.base_path }
