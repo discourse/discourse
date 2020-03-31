@@ -464,7 +464,8 @@ blockquote {
 .user-card-avatar,
 .topic-map .poster,
 .user-profile-avatar,
-.user-image {
+.user-image,
+.latest-topic-list-item {
   .avatar-flair {
     display: flex;
     align-items: center;
@@ -479,7 +480,8 @@ blockquote {
 .topic-avatar .avatar-flair,
 .avatar-flair-preview .avatar-flair,
 .collapsed-info .user-profile-avatar .avatar-flair,
-.user-image .avatar-flair {
+.user-image .avatar-flair,
+.latest-topic-list-item .avatar-flair {
   background-size: 20px 20px;
   width: 20px;
   height: 20px;
