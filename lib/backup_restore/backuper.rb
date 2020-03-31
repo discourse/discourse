@@ -194,6 +194,7 @@ module BackupRestore
       [ password_argument,            # pass the password to pg_dump (if any)
         "pg_dump",                    # the pg_dump command
         "--schema=public",            # only public schema
+        "-T public.pg_*",             # exclude tables and views whose name starts with "pg_"
         "--file='#{@dump_filename}'", # output to the dump.sql file
         "--no-owner",                 # do not output commands to set ownership of objects
         "--no-privileges",            # prevent dumping of access privileges
