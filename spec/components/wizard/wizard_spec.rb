@@ -112,6 +112,20 @@ describe Wizard do
 
       expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "second", "should_be_last"])
     end
+
+    it 'inserts steps at the end' do
+      wizard.append_step('first') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('second') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('last', after: 'second') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+
+      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "second", "last"])
+    end
   end
 
   describe "completed?" do

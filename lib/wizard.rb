@@ -28,17 +28,17 @@ class Wizard
       before_step = @steps.detect { |s| s.id == after }
 
       if before_step
-        # increment indices that will be pushed later down the wizard
-        ((before_step.index + 1)..(@steps.size - 1)).each do |index|
+        step.previous = before_step
+        step.index = before_step.index + 1
+        if before_step.next
+          step.next = before_step.next
+          before_step.next.previous = step
+        end
+        before_step.next = step
+        @steps.insert(before_step.index + 1, step)
+        ((before_step.index + 2)..(@steps.size - 1)).each do |index|
           @steps[index].index = @steps[index].index + 1
         end
-        step.previous = before_step
-        step.next = before_step.next
-        before_step.next.previous = step
-        step.index = before_step.index + 1
-        before_step.next = step
-        @steps << step
-        @steps = @steps.sort_by(&:index)
         return
       end
     end
