@@ -41,10 +41,9 @@
 
             {{#if canManageGroup}}
               {{group-member-dropdown
-                  removeMember=(action "removeMember")
-                  makeOwner=(action "makeOwner")
-                  removeOwner=(action "removeOwner")
-                  member=user}}
+                member=user
+                onChange=(action "actOnGroup" user)
+              }}
             {{/if}}
           {{/user-info}}
         </div>
