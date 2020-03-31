@@ -7,11 +7,6 @@ class DropOldUnreadPmNotificationIndices < ActiveRecord::Migration[6.0]
   end
 
   def down
-    add_index :notifications, [:user_id, :id], unique: true, where: 'notification_type = 6 AND NOT read'
-    execute <<~SQL
-      CREATE UNIQUE INDEX CONCURRENTLY index_notifications_on_read_or_n_type
-      ON notifications(user_id, id DESC, read, topic_id)
-      WHERE read or notification_type <> 6
-    SQL
+    raise ActiveRecord::IrreversibleMigration
   end
 end
