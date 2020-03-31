@@ -623,6 +623,15 @@ export default {
       ) {
         return false;
       }
+
+      // don't open up the composer if there is already a modal open,
+      // so the modal is free to hijack this shortcut and no composer opens
+      // behind it
+      // let $el = $(element);
+      // if (combo === "c" && $el[0].classList.contains("modal-open") || $el.parents('.modal-open').length) {
+      //   return false;
+      // }
+
       return oldStopCallback.call(this, e, element, combo, sequence);
     };
   },

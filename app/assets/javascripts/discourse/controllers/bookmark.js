@@ -24,7 +24,6 @@ const REMINDER_TYPES = {
 const bindings = {
   enter: { handler: "saveAndClose" },
   "l t": { handler: "selectReminderType", args: [REMINDER_TYPES.LATER_TODAY] },
-  "l r": { handler: "selectReminderType", args: [REMINDER_TYPES.LAST_CUSTOM] },
   "n b d": {
     handler: "selectReminderType",
     args: [REMINDER_TYPES.NEXT_BUSINESS_DAY]
@@ -358,6 +357,9 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     selectReminderType(type) {
+      if (type === REMINDER_TYPES.LATER_TODAY && !this.showLaterToday()) {
+        return;
+      }
       this.set("selectedReminderType", type);
     }
   }
