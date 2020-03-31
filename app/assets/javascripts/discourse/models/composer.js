@@ -673,14 +673,16 @@ const Composer = RestModel.extend({
        quote    - If we're opening a reply from a quote, the quote we're making
   */
   open(opts) {
+    let promise = Promise.resolve();
+
     if (!opts) opts = {};
-    this.set("loading", false);
+    this.set("loading", true);
 
     const replyBlank = isEmpty(this.reply);
 
     const composer = this;
     if (!replyBlank && (opts.reply || isEdit(opts.action)) && this.replyDirty) {
-      return;
+      return promise;
     }
 
     if (opts.action === REPLY && isEdit(this.action)) {
@@ -741,11 +743,11 @@ const Composer = RestModel.extend({
     }
 
     if (opts.postId) {
-      this.set("loading", true);
-
-      this.store
-        .find("post", opts.postId)
-        .then(post => composer.setProperties({ post, loading: false }));
+      promise = promise.then(() =>
+        this.store
+          .find("post", opts.postId)
+          .then(post => composer.setProperties({ post }))
+      );
     }
 
     // If we are editing a post, load it.
@@ -759,15 +761,16 @@ const Composer = RestModel.extend({
       }
       this.setProperties(topicProps);
 
-      this.store.find("post", opts.post.id).then(post => {
-        composer.setProperties({
-          reply: post.raw,
-          originalText: post.raw,
-          loading: false
-        });
+      promise = promise.then(() =>
+        this.store.find("post", opts.post.id).then(post => {
+          composer.setProperties({
+            reply: post.raw,
+            originalText: post.raw
+          });
 
-        composer.appEvents.trigger("composer:reply-reloaded", composer);
-      });
+          composer.appEvents.trigger("composer:reply-reloaded", composer);
+        })
+      );
     } else if (opts.action === REPLY && opts.quote) {
       this.setProperties({
         reply: opts.quote,
@@ -785,7 +788,9 @@ const Composer = RestModel.extend({
     }
 
     if (!isEdit(opts.action) || !opts.post) {
-      composer.appEvents.trigger("composer:reply-reloaded", composer);
+      promise = promise.then(() =>
+        composer.appEvents.trigger("composer:reply-reloaded", composer)
+      );
     }
 
     // Ensure additional draft fields are set
@@ -793,7 +798,9 @@ const Composer = RestModel.extend({
       this.set(_add_draft_fields[f], opts[f]);
     });
 
-    return false;
+    return promise.finally(() => {
+      this.set("loading", false);
+    });
   },
 
   // Overwrite to implement custom logic
