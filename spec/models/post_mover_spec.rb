@@ -470,7 +470,7 @@ describe PostMover do
                       last_read_post_number: 2,
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
-                      notification_level: TopicUser.notification_levels[:regular],
+                      notification_level: TopicUser.notification_levels[:tracking],
                       posted: false
                     )
               expect(TopicUser.find_by(topic: new_topic, user: user2))
@@ -486,7 +486,7 @@ describe PostMover do
                       last_read_post_number: 1,
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
-                      notification_level: TopicUser.notification_levels[:regular],
+                      notification_level: TopicUser.notification_levels[:watching],
                       posted: false
                     )
             end
