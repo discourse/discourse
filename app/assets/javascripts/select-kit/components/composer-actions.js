@@ -20,7 +20,7 @@ export function _clearSnapshots() {
 }
 
 export default DropdownSelectBoxComponent.extend({
-  _seq: 0,
+  seq: 0,
   pluginApiIdentifiers: ["composer-actions"],
   classNames: ["composer-actions"],
 
@@ -31,7 +31,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   contentChanged() {
-    this.set("_seq", this._seq + 1);
+    this.set("seq", this.seq + 1);
   },
 
   didReceiveAttrs() {
@@ -62,7 +62,7 @@ export default DropdownSelectBoxComponent.extend({
     return {};
   },
 
-  content: computed("_seq", function() {
+  content: computed("seq", function() {
     let items = [];
 
     if (
