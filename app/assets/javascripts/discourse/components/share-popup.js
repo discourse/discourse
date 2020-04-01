@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { bind, scheduleOnce } from "@ember/runloop";
+import { bind, scheduleOnce, later } from "@ember/runloop";
 import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
@@ -39,7 +39,7 @@ export default Component.extend({
     linkInput.value = this.link;
 
     // Wait for the fade-in transition to finish before selecting the link:
-    window.setTimeout(() => {
+    later(() => {
       linkInput.setSelectionRange(0, this.link.length);
       linkInput.focus();
     }, 200);

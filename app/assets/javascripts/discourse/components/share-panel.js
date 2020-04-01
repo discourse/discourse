@@ -4,6 +4,7 @@ import Component from "@ember/component";
 import { escapeExpression } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
+import { later } from "@ember/runloop";
 
 export default Component.extend({
   tagName: null,
@@ -42,7 +43,7 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    window.setTimeout(() => {
+    later(() => {
       const textArea = this.element.querySelector(".topic-share-url");
       textArea.style.height = textArea.scrollHeight + "px";
       textArea.focus();
