@@ -6,6 +6,7 @@ moduleFor("controller:bookmark", {
   beforeEach() {
     logIn();
     BookmarkController = this.subject({ currentUser: User.current() });
+    BookmarkController.onShow();
   },
 
   afterEach() {
@@ -150,6 +151,27 @@ QUnit.test(
     assert.equal(
       BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
       "2019-12-11 12:00:00"
+    );
+  }
+);
+
+QUnit.test(
+  "reminderAt - custom - defaults to 8:00am if the time is not selected",
+  function(assert) {
+    BookmarkController.customReminderDate = "2028-12-12";
+    BookmarkController.selectedReminderType =
+      BookmarkController.reminderTypes.CUSTOM;
+    const reminderAt = BookmarkController.reminderAt();
+    assert.equal(BookmarkController.customReminderTime, "08:00");
+    assert.equal(
+      reminderAt.toString(),
+      moment
+        .tz(
+          "2028-12-12 08:00",
+          BookmarkController.currentUser.resolvedTimezone()
+        )
+        .toString(),
+      "the custom date and time are parsed correctly with default time"
     );
   }
 );

@@ -240,6 +240,10 @@ export default Controller.extend(ModalFunctionality, {
       case REMINDER_TYPES.NEXT_MONTH:
         return this.nextMonth();
       case REMINDER_TYPES.CUSTOM:
+        this.set(
+          "customReminderTime",
+          this.customReminderTime || `0${START_OF_DAY_HOUR}:00`
+        );
         const customDateTime = this.parseCustomDateTime(
           this.customReminderDate,
           this.customReminderTime
