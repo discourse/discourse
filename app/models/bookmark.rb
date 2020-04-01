@@ -68,7 +68,8 @@ class Bookmark < ActiveRecord::Base
       next_week: 4,
       next_month: 5,
       custom: 6,
-      start_of_next_business_week: 7
+      start_of_next_business_week: 7,
+      later_this_week: 8
     )
   end
 end

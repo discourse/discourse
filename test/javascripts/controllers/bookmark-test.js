@@ -59,6 +59,34 @@ QUnit.test("nextMonth gets next month correctly", function(assert) {
   );
 });
 
+QUnit.test("laterThisWeek gets 2 days from now", function(assert) {
+  mockMomentTz("2019-12-10T08:00:00");
+
+  assert.equal(
+    BookmarkController.laterThisWeek().format("YYYY-MM-DD"),
+    "2019-12-12"
+  );
+});
+
+QUnit.test("laterThisWeek returns null if we are at Thursday already", function(
+  assert
+) {
+  mockMomentTz("2019-12-12T08:00:00");
+
+  assert.equal(BookmarkController.laterThisWeek(), null);
+});
+
+QUnit.test("showLaterThisWeek returns true if < Thursday", function(assert) {
+  mockMomentTz("2019-12-10T08:00:00");
+
+  assert.equal(BookmarkController.showLaterThisWeek, true);
+});
+
+QUnit.test("showLaterThisWeek returns false if > Thursday", function(assert) {
+  mockMomentTz("2019-12-12T08:00:00");
+
+  assert.equal(BookmarkController.showLaterThisWeek, false);
+});
 QUnit.test("tomorrow gets tomorrow correctly", function(assert) {
   mockMomentTz("2019-12-11T08:00:00");
 

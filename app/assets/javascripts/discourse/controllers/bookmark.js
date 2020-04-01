@@ -18,7 +18,8 @@ const REMINDER_TYPES = {
   CUSTOM: "custom",
   LAST_CUSTOM: "last_custom",
   NONE: "none",
-  START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week"
+  START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
+  LATER_THIS_WEEK: "later_this_week"
 };
 
 export default Controller.extend(ModalFunctionality, {
@@ -116,6 +117,11 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @discourseComputed()
+  showLaterThisWeek() {
+    return this.now().day() < 4; // 4 is Thursday
+  },
+
   @discourseComputed("parsedLastCustomReminderDatetime")
   lastCustomFormatted(parsedLastCustomReminderDatetime) {
     return htmlSafe(
@@ -161,6 +167,15 @@ export default Controller.extend(ModalFunctionality, {
     return htmlSafe(
       I18n.t("bookmarks.reminders.next_week", {
         date: this.nextWeek().format(I18n.t("dates.long_no_year"))
+      })
+    );
+  },
+
+  @discourseComputed()
+  laterThisWeekFormatted() {
+    return htmlSafe(
+      I18n.t("bookmarks.reminders.later_this_week", {
+        date: this.laterThisWeek().format(I18n.t("dates.time_short_day"))
       })
     );
   },
@@ -242,6 +257,8 @@ export default Controller.extend(ModalFunctionality, {
         return this.nextWeek();
       case REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK:
         return this.nextWeek().day("Monday");
+      case REMINDER_TYPES.LATER_THIS_WEEK:
+        return this.laterThisWeek();
       case REMINDER_TYPES.NEXT_MONTH:
         return this.nextMonth();
       case REMINDER_TYPES.CUSTOM:
@@ -291,6 +308,13 @@ export default Controller.extend(ModalFunctionality, {
     return later.minutes() < 30
       ? later.minutes(30)
       : later.add(30, "minutes").startOf("hour");
+  },
+
+  laterThisWeek() {
+    if (!this.showLaterThisWeek) {
+      return;
+    }
+    return this.startOfDay(this.now().add(2, "days"));
   },
 
   handleSaveError(e) {
