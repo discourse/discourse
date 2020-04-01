@@ -35,13 +35,14 @@ export default Component.extend({
   },
 
   _focusUrl() {
-    const linkInput = this.element.querySelector("#share-link input");
-    linkInput.value = this.link;
-
     // Wait for the fade-in transition to finish before selecting the link:
     later(() => {
-      linkInput.setSelectionRange(0, this.link.length);
-      linkInput.focus();
+      if (this.element) {
+        const linkInput = this.element.querySelector("#share-link input");
+        linkInput.value = this.link;
+        linkInput.setSelectionRange(0, this.link.length);
+        linkInput.focus();
+      }
     }, 200);
   },
 

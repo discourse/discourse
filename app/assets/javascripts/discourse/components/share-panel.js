@@ -44,10 +44,12 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     later(() => {
-      const textArea = this.element.querySelector(".topic-share-url");
-      textArea.style.height = textArea.scrollHeight + "px";
-      textArea.focus();
-      textArea.setSelectionRange(0, this.shareUrl.length);
+      if (this.element) {
+        const textArea = this.element.querySelector(".topic-share-url");
+        textArea.style.height = textArea.scrollHeight + "px";
+        textArea.focus();
+        textArea.setSelectionRange(0, this.shareUrl.length);
+      }
     }, 200);
   },
 
