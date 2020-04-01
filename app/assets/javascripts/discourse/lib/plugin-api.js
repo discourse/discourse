@@ -1027,11 +1027,9 @@ class PluginApi {
    * For example, to replace the topic title:
    *
    * ```
-   * api.decorateTopicTitle(
-   *   (topicModel, node, topicTitleType) => {
-   *     node.innerText("my new topic title");
-   *   }
-   * );
+   * api.decorateTopicTitle((topicModel, node, topicTitleType) => {
+   *   node.innerText = "my new topic title";
+   * });
    * ```
    *
    **/
