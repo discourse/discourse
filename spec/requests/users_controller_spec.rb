@@ -4198,7 +4198,7 @@ describe UsersController do
       sign_in(user)
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+      expect(JSON.parse(response.body)['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
     end
 
     it "does not show another user's bookmarks" do

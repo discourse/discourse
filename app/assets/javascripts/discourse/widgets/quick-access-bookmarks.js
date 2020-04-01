@@ -62,6 +62,8 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
         limit: this.estimateItemLimit()
       }
     }).then(result => {
+      result = result.user_bookmark_list;
+
       // The empty state help text for bookmarks page is localized on the
       // server.
       if (result.no_results_help) {

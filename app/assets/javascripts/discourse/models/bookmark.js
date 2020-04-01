@@ -117,6 +117,22 @@ const Bookmark = RestModel.extend({
 
   loadItems() {
     return ajax(`/u/${this.user.username}/bookmarks.json`, { cache: "false" });
+  },
+
+  loadMore() {
+    if (!this.more_bookmarks_url) {
+      return Promise.resolve();
+    }
+
+    let moreUrl = this.more_bookmarks_url;
+    if (moreUrl) {
+      let [url, params] = moreUrl.split("?");
+      moreUrl = url;
+      if (params) {
+        moreUrl += "?" + params;
+      }
+    }
+    return ajax({ url: moreUrl });
   }
 });
 
