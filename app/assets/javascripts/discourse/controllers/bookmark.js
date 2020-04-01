@@ -3,7 +3,6 @@ import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 
 const START_OF_DAY_HOUR = 8;
@@ -17,7 +16,9 @@ const REMINDER_TYPES = {
   NEXT_MONTH: "next_month",
   CUSTOM: "custom",
   LAST_CUSTOM: "last_custom",
-  NONE: "none"
+  NONE: "none",
+  START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
+  LATER_THIS_WEEK: "later_this_week"
 };
 
 export default Controller.extend(ModalFunctionality, {
@@ -115,60 +116,48 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @discourseComputed()
+  showLaterThisWeek() {
+    return this.now().day() < 4; // 4 is Thursday
+  },
+
   @discourseComputed("parsedLastCustomReminderDatetime")
   lastCustomFormatted(parsedLastCustomReminderDatetime) {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.last_custom", {
-        date: parsedLastCustomReminderDatetime.format(
-          I18n.t("dates.long_no_year")
-        )
-      })
+    return parsedLastCustomReminderDatetime.format(
+      I18n.t("dates.long_no_year")
     );
+  },
+
+  @discourseComputed()
+  startNextBusinessWeekFormatted() {
+    return this.nextWeek()
+      .day("Monday")
+      .format(I18n.t("dates.long_no_year"));
   },
 
   @discourseComputed()
   laterTodayFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.later_today", {
-        date: this.laterToday().format(I18n.t("dates.time"))
-      })
-    );
+    return this.laterToday().format(I18n.t("dates.time"));
   },
 
   @discourseComputed()
   tomorrowFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.tomorrow", {
-        date: this.tomorrow().format(I18n.t("dates.time_short_day"))
-      })
-    );
-  },
-
-  @discourseComputed()
-  nextBusinessDayFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.next_business_day", {
-        date: this.nextBusinessDay().format(I18n.t("dates.time_short_day"))
-      })
-    );
+    return this.tomorrow().format(I18n.t("dates.time_short_day"));
   },
 
   @discourseComputed()
   nextWeekFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.next_week", {
-        date: this.nextWeek().format(I18n.t("dates.long_no_year"))
-      })
-    );
+    return this.nextWeek().format(I18n.t("dates.long_no_year"));
+  },
+
+  @discourseComputed()
+  laterThisWeekFormatted() {
+    return this.laterThisWeek().format(I18n.t("dates.time_short_day"));
   },
 
   @discourseComputed()
   nextMonthFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.next_month", {
-        date: this.nextMonth().format(I18n.t("dates.long_no_year"))
-      })
-    );
+    return this.nextMonth().format(I18n.t("dates.long_no_year"));
   },
 
   @discourseComputed()
@@ -237,9 +226,17 @@ export default Controller.extend(ModalFunctionality, {
         return this.tomorrow();
       case REMINDER_TYPES.NEXT_WEEK:
         return this.nextWeek();
+      case REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK:
+        return this.nextWeek().day("Monday");
+      case REMINDER_TYPES.LATER_THIS_WEEK:
+        return this.laterThisWeek();
       case REMINDER_TYPES.NEXT_MONTH:
         return this.nextMonth();
       case REMINDER_TYPES.CUSTOM:
+        this.set(
+          "customReminderTime",
+          this.customReminderTime || `0${START_OF_DAY_HOUR}:00`
+        );
         const customDateTime = this.parseCustomDateTime(
           this.customReminderDate,
           this.customReminderTime
@@ -265,23 +262,6 @@ export default Controller.extend(ModalFunctionality, {
     return this.startOfDay(this.now().add(1, "month"));
   },
 
-  nextBusinessDay() {
-    const currentDay = this.now().isoWeekday(); // 1=Mon, 7=Sun
-    let next = null;
-
-    // friday
-    if (currentDay === 5) {
-      next = this.now().add(3, "days");
-      // saturday
-    } else if (currentDay === 6) {
-      next = this.now().add(2, "days");
-    } else {
-      next = this.now().add(1, "day");
-    }
-
-    return this.startOfDay(next);
-  },
-
   tomorrow() {
     return this.startOfDay(this.now().add(1, "day"));
   },
@@ -299,6 +279,13 @@ export default Controller.extend(ModalFunctionality, {
     return later.minutes() < 30
       ? later.minutes(30)
       : later.add(30, "minutes").startOf("hour");
+  },
+
+  laterThisWeek() {
+    if (!this.showLaterThisWeek) {
+      return;
+    }
+    return this.startOfDay(this.now().add(2, "days"));
   },
 
   handleSaveError(e) {

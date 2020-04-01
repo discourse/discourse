@@ -6,6 +6,7 @@ moduleFor("controller:bookmark", {
   beforeEach() {
     logIn();
     BookmarkController = this.subject({ currentUser: User.current() });
+    BookmarkController.onShow();
   },
 
   afterEach() {
@@ -58,54 +59,34 @@ QUnit.test("nextMonth gets next month correctly", function(assert) {
   );
 });
 
-QUnit.test(
-  "nextBusinessDay gets next business day of monday correctly if today is friday",
-  function(assert) {
-    mockMomentTz("2019-12-13T08:00:00");
+QUnit.test("laterThisWeek gets 2 days from now", function(assert) {
+  mockMomentTz("2019-12-10T08:00:00");
 
-    assert.equal(
-      BookmarkController.nextBusinessDay().format("YYYY-MM-DD"),
-      "2019-12-16"
-    );
-  }
-);
+  assert.equal(
+    BookmarkController.laterThisWeek().format("YYYY-MM-DD"),
+    "2019-12-12"
+  );
+});
 
-QUnit.test(
-  "nextBusinessDay gets next business day of monday correctly if today is saturday",
-  function(assert) {
-    mockMomentTz("2019-12-14T08:00:00");
+QUnit.test("laterThisWeek returns null if we are at Thursday already", function(
+  assert
+) {
+  mockMomentTz("2019-12-12T08:00:00");
 
-    assert.equal(
-      BookmarkController.nextBusinessDay().format("YYYY-MM-DD"),
-      "2019-12-16"
-    );
-  }
-);
+  assert.equal(BookmarkController.laterThisWeek(), null);
+});
 
-QUnit.test(
-  "nextBusinessDay gets next business day of monday correctly if today is sunday",
-  function(assert) {
-    mockMomentTz("2019-12-15T08:00:00");
+QUnit.test("showLaterThisWeek returns true if < Thursday", function(assert) {
+  mockMomentTz("2019-12-10T08:00:00");
 
-    assert.equal(
-      BookmarkController.nextBusinessDay().format("YYYY-MM-DD"),
-      "2019-12-16"
-    );
-  }
-);
+  assert.equal(BookmarkController.showLaterThisWeek, true);
+});
 
-QUnit.test(
-  "nextBusinessDay gets next business day of thursday correctly if today is wednesday",
-  function(assert) {
-    mockMomentTz("2019-12-11T08:00:00");
+QUnit.test("showLaterThisWeek returns false if > Thursday", function(assert) {
+  mockMomentTz("2019-12-12T08:00:00");
 
-    assert.equal(
-      BookmarkController.nextBusinessDay().format("YYYY-MM-DD"),
-      "2019-12-12"
-    );
-  }
-);
-
+  assert.equal(BookmarkController.showLaterThisWeek, false);
+});
 QUnit.test("tomorrow gets tomorrow correctly", function(assert) {
   mockMomentTz("2019-12-11T08:00:00");
 
@@ -150,6 +131,27 @@ QUnit.test(
     assert.equal(
       BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
       "2019-12-11 12:00:00"
+    );
+  }
+);
+
+QUnit.test(
+  "reminderAt - custom - defaults to 8:00am if the time is not selected",
+  function(assert) {
+    BookmarkController.customReminderDate = "2028-12-12";
+    BookmarkController.selectedReminderType =
+      BookmarkController.reminderTypes.CUSTOM;
+    const reminderAt = BookmarkController.reminderAt();
+    assert.equal(BookmarkController.customReminderTime, "08:00");
+    assert.equal(
+      reminderAt.toString(),
+      moment
+        .tz(
+          "2028-12-12 08:00",
+          BookmarkController.currentUser.resolvedTimezone()
+        )
+        .toString(),
+      "the custom date and time are parsed correctly with default time"
     );
   }
 );
