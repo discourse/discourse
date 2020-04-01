@@ -17,7 +17,7 @@ export default {
 
     // Strip the HTML from cooked
     const stripped = $("<div/>")
-      .html(post.get("cooked"))
+      .html(post.cooked)
       .text();
 
     // Let's remove any non-word characters as a kind of hash.
