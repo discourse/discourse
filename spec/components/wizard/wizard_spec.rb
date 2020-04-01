@@ -97,6 +97,7 @@ describe Wizard do
       end
 
       expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "actually-second", "second"])
+      expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
     end
 
     it 'inserts steps at the end if the after value does not match an existing step' do
@@ -111,6 +112,7 @@ describe Wizard do
       end
 
       expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "second", "should_be_last"])
+      expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
     end
 
     it 'inserts steps at the end' do
@@ -125,6 +127,7 @@ describe Wizard do
       end
 
       expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "second", "last"])
+      expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
     end
   end
 
