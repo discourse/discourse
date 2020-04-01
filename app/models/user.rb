@@ -233,7 +233,6 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
-  MAX_SELF_DELETE_POST_COUNT ||= 1
   MAX_STAFF_DELETE_POST_COUNT ||= 5
 
   def self.max_password_length
@@ -1286,6 +1285,7 @@ class User < ActiveRecord::Base
 
   def has_more_posts_than?(max_post_count)
     return true if user_stat && (user_stat.topic_count + user_stat.post_count) > max_post_count
+    return true if max_post_count < 0
 
     DB.query_single(<<~SQL, user_id: self.id).first > max_post_count
       SELECT COUNT(1)

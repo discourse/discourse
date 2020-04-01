@@ -303,6 +303,30 @@ describe UserGuardian do
         Fabricate(:post, user: user, topic: topic)
         expect(guardian.can_delete_user?(user)).to eq(false)
       end
+
+      it "isn't allowed when site admin blocked self deletion" do
+        expect(user.first_post_created_at).to be_nil
+
+        SiteSetting.delete_user_self_max_post_count = -1
+        expect(guardian.can_delete_user?(user)).to eq(false)
+      end
+
+      it "correctly respects the delete_user_self_max_post_count setting" do
+        SiteSetting.delete_user_self_max_post_count = 0
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user)
+
+        expect(guardian.can_delete_user?(user)).to eq(false)
+        SiteSetting.delete_user_self_max_post_count = 1
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user)
+
+        expect(guardian.can_delete_user?(user)).to eq(false)
+        SiteSetting.delete_user_self_max_post_count = 2
+        expect(guardian.can_delete_user?(user)).to eq(true)
+      end
     end
 
     context "for moderators" do
