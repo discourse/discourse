@@ -6,11 +6,11 @@ export default Component.extend({
     this._super(...args);
     this.set("field.value", this.field.value || []);
 
-    for (let i = 0; i < this.field.choices.length; i++) {
-      if (this.field.value.includes(this.field.choices[i].id)) {
-        set(this.field.get("choices").objectAt(i), "checked", true);
+    this.field.choices.forEach((choice, index) => {
+      if (this.field.value.includes(choice.id)) {
+        set(this.field.get("choices").objectAt(index), "checked", true);
       }
-    }
+    });
   },
   actions: {
     changed(checkbox) {
