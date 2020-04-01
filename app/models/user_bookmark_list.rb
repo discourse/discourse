@@ -8,7 +8,7 @@ class UserBookmarkList
   attr_reader :bookmarks
   attr_accessor :more_bookmarks_url
 
-  def initialize(user: user, guardian: guardian, params: params)
+  def initialize(user:, guardian:, params:)
     @user = user
     @guardian = guardian
     @params = params.merge(per_page: PER_PAGE)
