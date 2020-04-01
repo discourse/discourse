@@ -4,7 +4,6 @@ import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import Site from "discourse/models/site";
 import { longDate } from "discourse/lib/formatter";
-import PreloadStore from "preload-store";
 import { none } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -109,9 +108,8 @@ const Bookmark = RestModel.extend({
     return Category.findById(categoryId);
   },
 
-  @discourseComputed("reminder_at")
-  formattedReminder(bookmarkReminderAt) {
-    const currentUser = PreloadStore.get("currentUser");
+  @discourseComputed("reminder_at", "currentUser")
+  formattedReminder(bookmarkReminderAt, currentUser) {
     return moment
       .tz(bookmarkReminderAt, currentUser.resolvedTimezone())
       .format(I18n.t("dates.long_with_year"));
@@ -126,6 +124,7 @@ Bookmark.reopenClass({
   create(args) {
     args = args || {};
     args.siteSettings = args.siteSettings || Discourse.SiteSettings;
+    args.currentUser = args.currentUser || Discourse.currentUser;
     return this._super(args);
   }
 });
