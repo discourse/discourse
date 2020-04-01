@@ -28,30 +28,30 @@
 
           {{#if showLaterToday}}
             {{#tap-tile icon="far-moon" tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-              {{i18n "bookmarks.reminders.later_today"}}
+              {{i18n "bookmarks.reminders.later_today"}}<br>
               {{laterTodayFormatted}}
             {{/tap-tile}}
           {{/if}}
           {{#tap-tile icon="far-sun" tileId=reminderTypes.TOMORROW activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-            {{i18n "bookmarks.reminders.tomorrow"}}
+            {{i18n "bookmarks.reminders.tomorrow"}}<br>
             {{tomorrowFormatted}}
           {{/tap-tile}}
           {{#if showLaterThisWeek}}
             {{#tap-tile icon="angle-double-right" tileId=reminderTypes.LATER_THIS_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-              {{i18n "bookmarks.reminders.later_this_week"}}
+              {{i18n "bookmarks.reminders.later_this_week"}}<br>
               {{laterThisWeekFormatted}}
             {{/tap-tile}}
           {{/if}}
           {{#tap-tile icon="briefcase" tileId=reminderTypes.START_OF_NEXT_BUSINESS_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-            {{i18n "bookmarks.reminders.start_of_next_business_week"}}
+            {{i18n "bookmarks.reminders.start_of_next_business_week"}}<br>
             {{startNextBusinessWeekFormatted}}
           {{/tap-tile}}
           {{#tap-tile icon="far-clock" tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-            {{i18n "bookmarks.reminders.next_week"}}
+            {{i18n "bookmarks.reminders.next_week"}}<br>
             {{nextWeekFormatted}}
           {{/tap-tile}}
           {{#tap-tile icon="far-calendar-plus" tileId=reminderTypes.NEXT_MONTH activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-            {{i18n "bookmarks.reminders.next_month"}}
+            {{i18n "bookmarks.reminders.next_month"}}<br>
             {{nextMonthFormatted}}
           {{/tap-tile}}
           {{#tap-tile icon="calendar-alt" tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}}
@@ -59,7 +59,7 @@
           {{/tap-tile}}
           {{#if showLastCustom}}
             {{#tap-tile icon="undo" tileId=reminderTypes.LAST_CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-              {{i18n "bookmarks.reminders.last_custom"}}
+              {{i18n "bookmarks.reminders.last_custom"}}<br>
               {{lastCustomFormatted}}
             {{/tap-tile}}
           {{/if}}
