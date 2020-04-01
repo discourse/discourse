@@ -35,21 +35,11 @@ export default Component.extend({
   },
 
   _focusUrl() {
-    const link = this.link;
-    if (!this.capabilities.touch) {
-      const $linkInput = $("#share-link input");
-      $linkInput.val(link);
+    const $linkInput = $("#share-link input");
+    $linkInput.val(this.link);
 
-      // Wait for the fade-in transition to finish before selecting the link:
-      window.setTimeout(() => $linkInput.select().focus(), 160);
-    } else {
-      const $linkForTouch = $("#share-link .share-for-touch a");
-      $linkForTouch.attr("href", link);
-      $linkForTouch.text(link);
-      const range = window.document.createRange();
-      range.selectNode($linkForTouch[0]);
-      window.getSelection().addRange(range);
-    }
+    // Wait for the fade-in transition to finish before selecting the link:
+    window.setTimeout(() => $linkInput.select().focus(), 200);
   },
 
   _showUrl($target, url) {

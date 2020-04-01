@@ -1,6 +1,5 @@
 import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { escapeExpression } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -44,30 +43,8 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const shareUrl = this.shareUrl;
     const $linkInput = $(this.element.querySelector(".topic-share-url"));
-    const $linkForTouch = $(
-      this.element.querySelector(".topic-share-url-for-touch a")
-    );
-
-    schedule("afterRender", () => {
-      if (!this.capabilities.touch) {
-        $linkForTouch.parent().remove();
-
-        $linkInput
-          .val(shareUrl)
-          .select()
-          .focus();
-      } else {
-        $linkInput.remove();
-
-        $linkForTouch.attr("href", shareUrl).text(shareUrl);
-
-        const range = window.document.createRange();
-        range.selectNode($linkForTouch[0]);
-        window.getSelection().addRange(range);
-      }
-    });
+    window.setTimeout(() => $linkInput.select().focus(), 200);
   },
 
   actions: {

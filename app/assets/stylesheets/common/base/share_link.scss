@@ -15,12 +15,6 @@
   input[type="text"] {
     width: 100%;
   }
-  .share-for-touch .overflow-ellipsis {
-    clear: both;
-  }
-  .share-for-touch {
-    margin: 14px 0;
-  }
 
   .title {
     margin-bottom: s(1);
@@ -108,10 +102,10 @@
   }
 }
 
-.discourse-no-touch #share-link .share-for-touch {
-  display: none;
-}
+// .discourse-no-touch #share-link .share-for-touch {
+//   display: none;
+// }
 
-.discourse-touch #share-link input[type="text"] {
-  display: none;
-}
+// .discourse-touch #share-link input[type="text"] {
+//   display: none;
+// }
