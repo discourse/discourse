@@ -744,9 +744,12 @@ const Composer = RestModel.extend({
 
     if (opts.postId) {
       promise = promise.then(() =>
-        this.store
-          .find("post", opts.postId)
-          .then(post => composer.setProperties({ post }))
+        this.store.find("post", opts.postId).then(post => {
+          composer.set("post", post);
+          if (post) {
+            composer.set("topic", post.topic);
+          }
+        })
       );
     }
 
@@ -765,7 +768,9 @@ const Composer = RestModel.extend({
         this.store.find("post", opts.post.id).then(post => {
           composer.setProperties({
             reply: post.raw,
-            originalText: post.raw
+            originalText: post.raw,
+            post: post,
+            topic: post.topic
           });
 
           composer.appEvents.trigger("composer:reply-reloaded", composer);
