@@ -14,9 +14,26 @@ import ENV, { INPUT_DELAY } from "discourse-common/config/environment";
 const { run } = Ember;
 
 const PER_ROW = 11;
-const customEmojis = _.keys(extendedEmojiList()).map(code => {
-  return { code, src: emojiUrlFor(code) };
-});
+function customEmojis() {
+  const list = extendedEmojiList();
+  const emojis = Object.keys(list)
+    .map(code => {
+      const { group } = list[code];
+      return {
+        code,
+        src: emojiUrlFor(code),
+        group,
+        key: `emoji_picker.${group || "default"}`
+      };
+    })
+    .reduce((acc, curr) => {
+      if (!acc[curr.group]) acc[curr.group] = [];
+      acc[curr.group].push(curr);
+      return acc;
+    }, {});
+
+  return Object.values(emojis);
+}
 
 export default Component.extend({
   automaticPositioning: true,
@@ -35,7 +52,9 @@ export default Component.extend({
   },
 
   show() {
-    const template = findRawTemplate("emoji-picker")({ customEmojis });
+    const template = findRawTemplate("emoji-picker")({
+      customEmojis: customEmojis()
+    });
     this.$picker.html(template);
 
     this.$filter = this.$picker.find(".filter");
@@ -579,7 +598,7 @@ export default Component.extend({
       this.$picker.width() -
       this.$picker.find(".categories-column").width() -
       this.$picker.find(".diversity-picker").width() -
-      32;
+      60;
     this.$picker.find(".info").css("max-width", infoMaxWidth);
   },
 

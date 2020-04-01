@@ -40,7 +40,7 @@ export default Route.extend({
     preview(badge, explain) {
       badge.set("preview_loading", true);
       ajax("/admin/badges/preview.json", {
-        method: "post",
+        type: "POST",
         data: {
           sql: badge.get("query"),
           target_posts: !!badge.get("target_posts"),

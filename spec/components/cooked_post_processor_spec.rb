@@ -416,12 +416,17 @@ describe CookedPostProcessor do
       end
 
       context "with unsized images" do
+        fab!(:upload) { Fabricate(:image_upload, width: 123, height: 456) }
 
-        fab!(:post) { Fabricate(:post_with_unsized_images) }
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}">
+          HTML
+        end
+
         let(:cpp) { CookedPostProcessor.new(post) }
 
         it "adds the width and height to images that don't have them" do
-          FastImage.expects(:size).returns([123, 456])
           cpp.post_process
           expect(cpp.html).to match(/width="123" height="456"/)
           expect(cpp).to be_dirty
@@ -430,6 +435,8 @@ describe CookedPostProcessor do
       end
 
       context "with large images" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -441,13 +448,9 @@ describe CookedPostProcessor do
         before do
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
         end
 
         it "generates overlay information" do
-          OptimizedImage.expects(:resize).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
@@ -468,6 +471,8 @@ describe CookedPostProcessor do
           end
 
           it 'should not add lightbox' do
+            FastImage.expects(:size).returns([1750, 2000])
+
             cpp.post_process
 
             expect(cpp.html).to match_html <<~HTML
@@ -482,6 +487,8 @@ describe CookedPostProcessor do
           end
 
           it 'should not add lightbox' do
+            FastImage.expects(:size).returns([1750, 2000])
+
             cpp.post_process
 
             expect(cpp.html).to match_html <<~HTML
@@ -495,6 +502,8 @@ describe CookedPostProcessor do
             end
 
             it 'should not add lightbox' do
+              FastImage.expects(:size).returns([1750, 2000])
+
               SiteSetting.crawl_images = true
               cpp.post_process
 
@@ -537,8 +546,8 @@ describe CookedPostProcessor do
 
           context "when the upload is attached to the correct post" do
             before do
+              FastImage.expects(:size).returns([1750, 2000])
               OptimizedImage.expects(:resize).returns(true)
-              FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
               Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
               upload.update(secure: true, access_control_post: post)
             end
@@ -568,6 +577,8 @@ describe CookedPostProcessor do
       end
 
       context "with tall images" do
+        fab!(:upload) { Fabricate(:image_upload, width: 860, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -578,10 +589,6 @@ describe CookedPostProcessor do
 
         before do
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([860, 2000])
-          OptimizedImage.expects(:resize).never
-          OptimizedImage.expects(:crop).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "crops the image" do
@@ -594,6 +601,8 @@ describe CookedPostProcessor do
       end
 
       context "with iPhone X screenshots" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1125, height: 2436) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -604,10 +613,6 @@ describe CookedPostProcessor do
 
         before do
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1125, 2436])
-          OptimizedImage.expects(:resize).returns(true)
-          OptimizedImage.expects(:crop).never
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "crops the image" do
@@ -625,6 +630,8 @@ describe CookedPostProcessor do
       end
 
       context "with large images when using subfolders" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="/subfolder#{upload.url}">
@@ -635,13 +642,10 @@ describe CookedPostProcessor do
 
         before do
           set_subfolder "/subfolder"
+          stub_request(:get, "http://#{Discourse.current_hostname}/subfolder#{upload.url}").to_return(status: 200, body: File.new(Discourse.store.path_for(upload)))
 
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
-          OptimizedImage.expects(:resize).returns(true)
-
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "generates overlay information" do
@@ -670,6 +674,8 @@ describe CookedPostProcessor do
       end
 
       context "with title and alt" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" title="WAT" alt="RED">
@@ -681,9 +687,6 @@ describe CookedPostProcessor do
         before do
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
-          OptimizedImage.expects(:resize).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "generates overlay information using image title and ignores alt" do
@@ -701,6 +704,8 @@ describe CookedPostProcessor do
       end
 
       context "with title only" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" title="WAT">
@@ -712,9 +717,6 @@ describe CookedPostProcessor do
         before do
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
-          OptimizedImage.expects(:resize).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "generates overlay information using image title" do
@@ -732,6 +734,8 @@ describe CookedPostProcessor do
       end
 
       context "with alt only" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" alt="RED">
@@ -743,9 +747,6 @@ describe CookedPostProcessor do
         before do
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
-          OptimizedImage.expects(:resize).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "generates overlay information using image alt" do

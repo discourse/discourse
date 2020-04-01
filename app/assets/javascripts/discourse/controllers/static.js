@@ -23,7 +23,7 @@ export default Controller.extend({
     markFaqRead() {
       const currentUser = this.currentUser;
       if (currentUser) {
-        ajax(userPath("read-faq"), { method: "POST" }).then(() => {
+        ajax(userPath("read-faq"), { type: "POST" }).then(() => {
           currentUser.set("read_faq", true);
         });
       }

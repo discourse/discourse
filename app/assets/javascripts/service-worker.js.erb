@@ -7,11 +7,15 @@ workbox.setConfig({
   debug: false
 });
 
+var authUrl = "<%= Discourse.base_path %>/auth/";
+
 var cacheVersion = "1";
 
 // Cache all GET requests, so Discourse can be used while offline
 workbox.routing.registerRoute(
-  new RegExp('.*?'), // Matches all, GET is implicit
+  function(args) {
+    return !(args.url.origin === location.origin && args.url.pathname.startsWith(authUrl));
+  }, // Match all except auth routes
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
     cacheName: "discourse-" + cacheVersion,
     plugins: [

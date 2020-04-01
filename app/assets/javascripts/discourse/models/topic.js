@@ -63,9 +63,19 @@ const Topic = RestModel.extend({
       const latest = posters.filter(
         p => p.extras && p.extras.indexOf("latest") >= 0
       )[0];
-      user = latest && latest.user;
+      user = latest;
     }
-    return user || this.creator;
+    return user || posters.firstObject;
+  },
+
+  @discourseComputed("lastPoster")
+  lastPosterUser(poster) {
+    return poster.user;
+  },
+
+  @discourseComputed("lastPoster")
+  lastPosterGroup(poster) {
+    return poster.primary_group;
   },
 
   @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")
@@ -624,7 +634,7 @@ const Topic = RestModel.extend({
   updateDestinationCategory(categoryId) {
     this.set("destination_category_id", categoryId);
     return ajax(`/t/${this.id}/shared-draft`, {
-      method: "PUT",
+      type: "PUT",
       data: { category_id: categoryId }
     });
   },

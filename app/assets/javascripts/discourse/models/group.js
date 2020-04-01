@@ -103,14 +103,14 @@ const Group = RestModel.extend({
     return ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "DELETE",
       data: { user_id: member.id }
-    }).then(() => this.findMembers());
+    }).then(() => this.findMembers({}, true));
   },
 
   removeMember(member, params) {
     return ajax(`/groups/${this.id}/members.json`, {
       type: "DELETE",
       data: { user_id: member.id }
-    }).then(() => this.findMembers(params));
+    }).then(() => this.findMembers(params, true));
   },
 
   addMembers(usernames, filter) {
@@ -134,7 +134,7 @@ const Group = RestModel.extend({
       if (filter) {
         this._filterMembers(response);
       } else {
-        this.findMembers();
+        this.findMembers({}, true);
       }
     });
   },

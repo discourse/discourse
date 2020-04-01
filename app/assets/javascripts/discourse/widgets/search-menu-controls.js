@@ -35,7 +35,8 @@ createWidget("search-term", {
     }
 
     const val = this.attrs.value;
-    const newVal = $(`#${this.buildId()}`).val();
+    // remove zero-width chars
+    const newVal = e.target.value.replace(/[\u200B-\u200D\uFEFF]/, "");
 
     if (newVal !== val) {
       this.sendWidgetAction("searchTermChanged", newVal);

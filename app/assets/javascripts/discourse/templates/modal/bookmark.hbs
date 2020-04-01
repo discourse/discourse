@@ -38,14 +38,14 @@
           {{tap-tile icon="ban" text=(I18n "bookmarks.reminders.none") tileId=reminderTypes.NONE activeTile=grid.activeTile onChange=(action "selectReminderType")}}
         {{/tap-tile-grid}}
         {{#if customDateTimeSelected}}
-          <div class="control-group">
+          <div class="control-group custom-date-time-wrap">
             {{d-icon "calendar-alt"}}
             {{date-picker-future
               value=customReminderDate
               onSelect=(action (mut customReminderDate))
             }}
             {{d-icon "far-clock"}}
-            {{input placeholder="--:--" type="time" value=customReminderTime}}
+            {{input placeholder="--:--" type="time" class="time-input" value=customReminderTime}}
           </div>
         {{/if}}
 

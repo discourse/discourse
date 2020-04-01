@@ -21,6 +21,20 @@ Fabricator(:upload) do
   extension "png"
 end
 
+Fabricator(:image_upload, from: :upload) do
+  after_create do |upload|
+    file = Tempfile.new(['fabricated', '.png'])
+    `convert -size #{upload.width}x#{upload.height} xc:white "#{file.path}"`
+
+    upload.url = Discourse.store.store_upload(file, upload)
+    upload.sha1 = Upload.generate_digest(file.path)
+
+    WebMock
+      .stub_request(:get, "http://#{Discourse.current_hostname}#{upload.url}")
+      .to_return(status: 200, body: File.new(file.path))
+  end
+end
+
 Fabricator(:video_upload, from: :upload) do
   original_filename "video.mp4"
   width nil

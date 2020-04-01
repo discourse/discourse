@@ -1,10 +1,10 @@
 import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { escapeExpression } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
+import { later } from "@ember/runloop";
 
 export default Component.extend({
   tagName: null,
@@ -43,31 +43,14 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-
-    const shareUrl = this.shareUrl;
-    const $linkInput = $(this.element.querySelector(".topic-share-url"));
-    const $linkForTouch = $(
-      this.element.querySelector(".topic-share-url-for-touch a")
-    );
-
-    schedule("afterRender", () => {
-      if (!this.capabilities.touch) {
-        $linkForTouch.parent().remove();
-
-        $linkInput
-          .val(shareUrl)
-          .select()
-          .focus();
-      } else {
-        $linkInput.remove();
-
-        $linkForTouch.attr("href", shareUrl).text(shareUrl);
-
-        const range = window.document.createRange();
-        range.selectNode($linkForTouch[0]);
-        window.getSelection().addRange(range);
+    later(() => {
+      if (this.element) {
+        const textArea = this.element.querySelector(".topic-share-url");
+        textArea.style.height = textArea.scrollHeight + "px";
+        textArea.focus();
+        textArea.setSelectionRange(0, this.shareUrl.length);
       }
-    });
+    }, 200);
   },
 
   actions: {

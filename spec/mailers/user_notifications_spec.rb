@@ -968,7 +968,7 @@ describe UserNotifications do
   end
 
   # notification emails derived from templates are translated into the user's locale
-  shared_examples "notification derived from template" do
+  shared_context "notification derived from template" do
     let(:user) { Fabricate(:user, locale: locale) }
     let(:mail_type) { mail_type }
     let(:notification) { Fabricate(:notification, user: user) }

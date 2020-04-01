@@ -63,7 +63,7 @@ export default Controller.extend(ModalFunctionality, {
 
       return ajax(
         `/user_avatar/${this.get("user.username")}/refresh_gravatar.json`,
-        { method: "POST" }
+        { type: "POST" }
       )
         .then(result => {
           if (!result.gravatar_upload_id) {

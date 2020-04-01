@@ -34,6 +34,8 @@ module Jobs
       update_revisions
       update_notifications
       update_post_custom_fields
+
+      DiscourseEvent.trigger(:username_changed, @old_username, @new_username)
     end
 
     def update_posts

@@ -6,4 +6,8 @@
     minutes=_minutes
     onChange=(action "onChangeTime")
   }}
+
+  {{#if clearable}}
+    {{d-button icon="times" action=(action "onClear")}}
+  {{/if}}
 {{/if}}

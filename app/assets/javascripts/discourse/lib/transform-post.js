@@ -139,6 +139,10 @@ export default function transformPost(
     }
   }
 
+  if (post.post_number === 1 && topic.requested_group_name) {
+    postAtts.requestedGroupName = topic.requested_group_name;
+  }
+
   const showPMMap =
     topic.archetype === "private_message" && post.post_number === 1;
   if (showPMMap) {

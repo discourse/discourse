@@ -1,7 +1,11 @@
 .bookmark-with-reminder.modal {
+  .modal-inner-container {
+    max-width: 95%;
+  }
   .modal-body {
     max-width: 410px;
-    min-width: 380px;
+    width: 100%;
+    box-sizing: border-box;
 
     .control-label {
       font-weight: 700;
@@ -9,6 +13,28 @@
 
     .ember-text-field.bookmark-name {
       width: 100%;
+    }
+  }
+
+  .custom-date-time-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+
+    .svg-icon {
+      padding: 0 5px;
+    }
+
+    .date-picker-wrapper {
+      flex: 1;
+
+      .date-picker {
+        width: 100%;
+      }
+    }
+
+    .time-input {
+      flex: 1;
     }
   }
 }

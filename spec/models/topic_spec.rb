@@ -1122,7 +1122,7 @@ describe Topic do
 
     context 'closed' do
       let(:status) { 'closed' }
-      it_should_behave_like 'a status that closes a topic'
+      it_behaves_like 'a status that closes a topic'
 
       it 'should archive group message' do
         group = Fabricate(:group)
@@ -1135,7 +1135,7 @@ describe Topic do
 
     context 'autoclosed' do
       let(:status) { 'autoclosed' }
-      it_should_behave_like 'a status that closes a topic'
+      it_behaves_like 'a status that closes a topic'
 
       context 'topic was set to close when it was created' do
         it 'includes the autoclose duration in the moderator post' do
@@ -1638,7 +1638,7 @@ describe Topic do
 
     it 'can take a number of hours as a string and can handle based on last post' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin, based_on_last_post: true)
+      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration: 18)
       expect(topic.topic_timers.first.execute_at).to eq_time(18.hours.from_now)
     end
 
@@ -1748,9 +1748,10 @@ describe Topic do
       let(:topic) { Fabricate(:topic, category: category) }
 
       it "should be able to override category's default auto close" do
+        freeze_time
         Jobs.run_immediately!
 
-        expect(topic.topic_timers.first.duration).to eq(4)
+        expect(topic.topic_timers.first.execute_at).to eq_time(topic.created_at + 4.hours)
 
         topic.set_or_create_timer(TopicTimer.types[:close], 2, by_user: admin)
 

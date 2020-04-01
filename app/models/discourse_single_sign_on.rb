@@ -74,8 +74,7 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     # ensure it's not staged anymore
-    user.unstage
-    user.save
+    user.unstage!
 
     change_external_attributes_and_override(sso_record, user)
 

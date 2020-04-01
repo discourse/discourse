@@ -1,5 +1,5 @@
 import { run } from "@ember/runloop";
-import pageVisible from "discourse/lib/page-visible";
+import userPresent from "discourse/lib/user-presence";
 import logout from "discourse/lib/logout";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
@@ -92,8 +92,8 @@ export function ajax() {
       args.headers["Discourse-Track-View"] = "true";
     }
 
-    if (pageVisible()) {
-      args.headers["Discourse-Visible"] = "true";
+    if (userPresent()) {
+      args.headers["Discourse-Present"] = "true";
     }
 
     args.success = (data, textStatus, xhr) => {
@@ -138,6 +138,11 @@ export function ajax() {
         errorThrown: errorThrown
       });
     };
+
+    if (args.method) {
+      args.type = args.method;
+      delete args.method;
+    }
 
     // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
     // it will not be parsed as an object.

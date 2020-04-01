@@ -5,7 +5,8 @@
 
 .topic-list tr.selected td:first-child,
 .topic-list-item.selected td:first-child,
-.latest-topic-list-item.selected {
+.latest-topic-list-item.selected,
+.search-results .fps-result.selected {
   box-shadow: inset 3px 0 0 $danger; // needs to be inset for Edge
 }
 
@@ -50,7 +51,7 @@
     }
 
     span {
-      background: #f2f2f2;
+      background: $primary-very-low;
       border-radius: 3px;
       display: inline-flex;
       margin: 0 6px;

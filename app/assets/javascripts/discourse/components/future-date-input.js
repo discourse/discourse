@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { equal, and, empty } from "@ember/object/computed";
+import { equal, and, empty, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
@@ -10,10 +10,13 @@ export default Component.extend({
   date: null,
   time: null,
   includeDateTime: true,
+  duration: null,
+  durationType: "hours",
   isCustom: equal("selection", "pick_date_and_time"),
   isBasedOnLastPost: equal("selection", "set_based_on_last_post"),
   displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
+  displayNumberInput: or("isBasedOnLastPost", "isBasedOnDuration"),
 
   init() {
     this._super(...arguments);
@@ -21,6 +24,8 @@ export default Component.extend({
     if (this.input) {
       if (this.basedOnLastPost) {
         this.set("selection", "set_based_on_last_post");
+      } else if (this.isBasedOnDuration) {
+        this.set("selection", null);
       } else {
         const datetime = moment(this.input);
         this.setProperties({
@@ -57,26 +62,42 @@ export default Component.extend({
     this.set("basedOnLastPost", this.isBasedOnLastPost);
   },
 
-  @discourseComputed("input", "isBasedOnLastPost")
-  duration(input, isBasedOnLastPost) {
-    const now = moment();
-
-    if (isBasedOnLastPost) {
-      return parseFloat(input);
-    } else {
-      return moment(input) - now;
-    }
+  @observes("duration")
+  _updateDuration() {
+    this.attrs.onChangeDuration &&
+      this.attrs.onChangeDuration(parseInt(this.duration, 0));
   },
 
-  @discourseComputed("input", "isBasedOnLastPost")
-  executeAt(input, isBasedOnLastPost) {
-    if (isBasedOnLastPost) {
-      return moment()
-        .add(input, "hours")
+  @discourseComputed(
+    "input",
+    "duration",
+    "isBasedOnLastPost",
+    "isBasedOnDuration",
+    "durationType"
+  )
+  executeAt(
+    input,
+    duration,
+    isBasedOnLastPost,
+    isBasedOnDuration,
+    durationType
+  ) {
+    if (isBasedOnLastPost || isBasedOnDuration) {
+      return moment(input)
+        .add(parseInt(duration, 0), durationType)
         .format(FORMAT);
     } else {
       return input;
     }
+  },
+
+  @discourseComputed("durationType")
+  durationLabel(durationType) {
+    return I18n.t(
+      `topic.topic_status_update.num_of_${
+        durationType === "hours" ? "hours" : "days"
+      }`
+    );
   },
 
   didReceiveAttrs() {
@@ -92,7 +113,9 @@ export default Component.extend({
     "date",
     "time",
     "willCloseImmediately",
-    "categoryId"
+    "categoryId",
+    "displayNumberInput",
+    "duration"
   )
   showTopicStatusInfo(
     statusType,
@@ -101,7 +124,9 @@ export default Component.extend({
     date,
     time,
     willCloseImmediately,
-    categoryId
+    categoryId,
+    displayNumberInput,
+    duration
   ) {
     if (!statusType || willCloseImmediately) return false;
 
@@ -114,6 +139,8 @@ export default Component.extend({
         return moment(`${date}${time ? " " + time : ""}`).isAfter(moment());
       }
       return time;
+    } else if (displayNumberInput) {
+      return duration;
     } else {
       return input;
     }

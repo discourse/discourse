@@ -4,7 +4,6 @@ import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import Site from "discourse/models/site";
 import { longDate } from "discourse/lib/formatter";
-import PreloadStore from "preload-store";
 import { none } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -109,16 +108,31 @@ const Bookmark = RestModel.extend({
     return Category.findById(categoryId);
   },
 
-  @discourseComputed("reminder_at")
-  formattedReminder(bookmarkReminderAt) {
-    const currentUser = PreloadStore.get("currentUser");
+  @discourseComputed("reminder_at", "currentUser")
+  formattedReminder(bookmarkReminderAt, currentUser) {
     return moment
-      .tz(bookmarkReminderAt, currentUser.timezone || moment.tz.guess())
+      .tz(bookmarkReminderAt, currentUser.resolvedTimezone())
       .format(I18n.t("dates.long_with_year"));
   },
 
   loadItems() {
     return ajax(`/u/${this.user.username}/bookmarks.json`, { cache: "false" });
+  },
+
+  loadMore() {
+    if (!this.more_bookmarks_url) {
+      return Promise.resolve();
+    }
+
+    let moreUrl = this.more_bookmarks_url;
+    if (moreUrl) {
+      let [url, params] = moreUrl.split("?");
+      moreUrl = url;
+      if (params) {
+        moreUrl += "?" + params;
+      }
+    }
+    return ajax({ url: moreUrl });
   }
 });
 
@@ -126,6 +140,7 @@ Bookmark.reopenClass({
   create(args) {
     args = args || {};
     args.siteSettings = args.siteSettings || Discourse.SiteSettings;
+    args.currentUser = args.currentUser || Discourse.currentUser;
     return this._super(args);
   }
 });

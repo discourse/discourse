@@ -3,13 +3,15 @@
     <h1 class='wizard-step-title'>{{step.title}}</h1>
   {{/if}}
 
-  {{#if bannerImage}}
-    <img src={{bannerImage}} class="wizard-step-banner">
-  {{/if}}
+  <div class={{bannerAndDescriptionClass}}>
+    {{#if bannerImage}}
+      <img src={{bannerImage}} class="wizard-step-banner">
+    {{/if}}
 
-  {{#if step.description}}
-    <p class='wizard-step-description'>{{html-safe step.description}}</p>
-  {{/if}}
+    {{#if step.description}}
+      <p class='wizard-step-description'>{{html-safe step.description}}</p>
+    {{/if}}
+  </div>
 
   {{#wizard-step-form step=step}}
     {{#each step.fields as |field|}}

@@ -167,7 +167,7 @@ class Auth::DefaultCurrentUserProvider
       impersonate: opts[:impersonate])
 
     cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
-    unstage_user(user)
+    user.unstage!
     make_developer_admin(user)
     enable_bootstrap_mode(user)
 
@@ -189,13 +189,6 @@ class Auth::DefaultCurrentUserProvider
     end
 
     hash
-  end
-
-  def unstage_user(user)
-    if user.staged
-      user.unstage
-      user.save
-    end
   end
 
   def make_developer_admin(user)
@@ -258,7 +251,7 @@ class Auth::DefaultCurrentUserProvider
     api = !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
 
     if @request.xhr? || api
-      @env["HTTP_DISCOURSE_VISIBLE".freeze] == "true".freeze
+      @env["HTTP_DISCOURSE_PRESENT"] == "true"
     else
       true
     end

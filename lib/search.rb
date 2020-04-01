@@ -462,20 +462,16 @@ class Search
     next unless category_slug
 
     if subcategory_slug
-      # sub category
-      parent_category_id = Category
-        .where(
-          "lower(slug) = ? AND parent_category_id IS NULL", category_slug.downcase
-        )
-        .pluck(:id)
-        .first
 
-      category_id = Category
-        .where("lower(slug) = ? AND parent_category_id = ?",
-          subcategory_slug.downcase, parent_category_id
-        )
-        .pluck(:id)
-        .first
+      category_id, _ = DB.query_single(<<~SQL, category_slug.downcase, subcategory_slug.downcase)
+        SELECT sub.id
+        FROM categories sub
+        JOIN categories c ON sub.parent_category_id = c.id
+        WHERE LOWER(c.slug)  = ? AND LOWER(sub.slug) = ?
+        ORDER BY c.id
+        LIMIT 1
+      SQL
+
     else
       # main category
       if category_slug[0] == "="

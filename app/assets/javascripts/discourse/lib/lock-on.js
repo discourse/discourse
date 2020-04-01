@@ -49,7 +49,7 @@ export default class LockOn {
   }
 
   lock() {
-    const startedAt = new Date().getTime();
+    const startedAt = Date.now();
     let previousTop = this.elementTop();
     previousTop && $(window).scrollTop(previousTop);
 
@@ -73,7 +73,7 @@ export default class LockOn {
       }
 
       // Stop after a little while
-      if (new Date().getTime() - startedAt > LOCK_DURATION_MS) {
+      if (Date.now() - startedAt > LOCK_DURATION_MS) {
         return this.clearLock(interval);
       }
     }, 50);

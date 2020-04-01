@@ -46,7 +46,7 @@ describe CategoriesController do
     end
 
     it "respects permalinks before redirecting /category paths to /c paths" do
-      perm = Permalink.create!(url: "category/something", category_id: category.id)
+      _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
       get "/category/something"
       expect(response.status).to eq(301)
@@ -218,11 +218,15 @@ describe CategoriesController do
 
       it "deletes the record" do
         sign_in(admin)
+
+        id = Fabricate(:topic_timer, category: category).id
+
         expect do
           delete "/categories/#{category.slug}.json"
         end.to change(Category, :count).by(-1)
         expect(response.status).to eq(200)
         expect(UserHistory.count).to eq(1)
+        expect(TopicTimer.where(id: id).exists?).to eq(false)
       end
     end
   end
@@ -321,7 +325,7 @@ describe CategoriesController do
       end
 
       it "returns 422 if email_in address is already in use for other category" do
-        other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
+        _other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
 
         put "/categories/#{category.id}.json", params: {
           name: "Email",

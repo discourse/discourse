@@ -18,7 +18,7 @@
   }
   z-index: z("composer", "content");
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
-    max-width 250ms ease;
+    max-width 250ms ease, padding-bottom 250ms ease;
   background-color: $secondary;
   box-shadow: shadow("composer");
 
@@ -494,5 +494,11 @@ body.ios-safari-composer-hacks {
     &.open {
       height: calc(var(--composer-vh, 1vh) * 100);
     }
+  }
+}
+
+body:not(.ios-safari-composer-hacks) {
+  #reply-control.open {
+    padding-bottom: var(--composer-ipad-padding);
   }
 }

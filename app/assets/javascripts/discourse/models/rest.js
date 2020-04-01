@@ -9,6 +9,9 @@ const RestModel = EmberObject.extend({
   isSaving: false,
 
   beforeCreate() {},
+  afterCreate() {},
+
+  beforeUpdate() {},
   afterUpdate() {},
 
   update(props) {
@@ -17,6 +20,8 @@ const RestModel = EmberObject.extend({
     }
 
     props = props || this.updateProperties();
+
+    this.beforeUpdate(props);
 
     this.set("isSaving", true);
     return this.store
@@ -65,6 +70,7 @@ const RestModel = EmberObject.extend({
           this.set("__state", "created");
         }
 
+        this.afterCreate(res);
         res.target = this;
         return res;
       })

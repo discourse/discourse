@@ -14,14 +14,10 @@ export default DiscourseRoute.extend({
   },
 
   model(params) {
-    this._params = params;
-    return this.store.findAll("group", params);
+    return params;
   },
 
-  setupController(controller, model) {
-    controller.setProperties({
-      model,
-      filterInput: this._params.filter
-    });
+  setupController(controller, params) {
+    controller.loadGroups(params);
   }
 });

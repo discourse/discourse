@@ -12,7 +12,12 @@ class DirectoryItemsController < ApplicationController
     result = DirectoryItem.where(period_type: period_type).includes(:user)
 
     if params[:group]
-      result = result.includes(user: :groups).where(users: { groups: { name: params[:group] } })
+      group = Group.find_by(name: params[:group])
+      raise Discourse::InvalidParameters.new(:group) if group.blank?
+      guardian.ensure_can_see!(group)
+      guardian.ensure_can_see_group_members!(group)
+
+      result = result.includes(user: :groups).where(users: { groups: { id: group.id } })
     else
       result = result.includes(user: :primary_group)
     end
@@ -74,7 +79,9 @@ class DirectoryItemsController < ApplicationController
 
     end
 
+    last_updated_at = DirectoryItem.last_updated_at(period_type)
     render_json_dump(directory_items: serialize_data(result, DirectoryItemSerializer),
+                     meta: { last_updated_at: last_updated_at },
                      total_rows_directory_items: result_count,
                      load_more_directory_items: directory_items_path(more_params))
   end

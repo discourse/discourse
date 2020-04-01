@@ -462,18 +462,18 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/topic/anything/goes",
                     :method => "POST",
                     "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
-                    "HTTP_DISCOURSE_VISIBLE" => "true"
+                    "HTTP_DISCOURSE_PRESENT" => "true"
           ).should_update_last_seen?).to eq(true)
   end
 
-  it "should not update last seen for ajax calls without Discourse-Visible header" do
+  it "should not update last seen for ajax calls without Discourse-Present header" do
     expect(provider("/topic/anything/goes",
                     :method => "POST",
                     "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest"
           ).should_update_last_seen?).to eq(false)
   end
 
-  it "should update last seen for API calls with Discourse-Visible header" do
+  it "should update last seen for API calls with Discourse-Present header" do
     user = Fabricate(:user)
     api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
     params = { :method => "POST",
@@ -482,7 +482,7 @@ describe Auth::DefaultCurrentUserProvider do
               }
 
     expect(provider("/topic/anything/goes", params).should_update_last_seen?).to eq(false)
-    expect(provider("/topic/anything/goes", params.merge("HTTP_DISCOURSE_VISIBLE" => "true")).should_update_last_seen?).to eq(true)
+    expect(provider("/topic/anything/goes", params.merge("HTTP_DISCOURSE_PRESENT" => "true")).should_update_last_seen?).to eq(true)
   end
 
   it "correctly rotates tokens" do
