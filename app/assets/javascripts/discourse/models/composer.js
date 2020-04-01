@@ -769,11 +769,23 @@ const Composer = RestModel.extend({
           composer.setProperties({
             reply: post.raw,
             originalText: post.raw,
-            post: post,
-            topic: post.topic
+            post: post
           });
 
-          composer.appEvents.trigger("composer:reply-reloaded", composer);
+          promise = Promise.resolve();
+          // edge case ... make a post then edit right away
+          // store does not have topic for the post
+          if (composer.topic && composer.topic.id === post.topic_id) {
+            // nothing to do ... we have the right topic
+          } else {
+            promise = this.store.find("topic", post.topic_id).then(topic => {
+              this.set("topic", topic);
+            });
+          }
+
+          return promise.then(() => {
+            composer.appEvents.trigger("composer:reply-reloaded", composer);
+          });
         })
       );
     } else if (opts.action === REPLY && opts.quote) {
