@@ -39,21 +39,17 @@ export default DropdownSelectBoxComponent.extend({
 
     // if we change topic we want to change both snapshots
     if (
-      this.get("composerModel.topic") &&
-      (!_topicSnapshot ||
-        this.get("composerModel.topic.id") !== _topicSnapshot.id)
+      this.topic &&
+      (!_topicSnapshot || this.topic.id !== _topicSnapshot.id)
     ) {
-      _topicSnapshot = this.get("composerModel.topic");
-      _postSnapshot = this.get("composerModel.post");
+      _topicSnapshot = this.topic;
+      _postSnapshot = this.post;
       this.contentChanged();
     }
 
     // if we hit reply on a different post we want to change postSnapshot
-    if (
-      this.get("composerModel.post") &&
-      (!_postSnapshot || this.get("composerModel.post.id") !== _postSnapshot.id)
-    ) {
-      _postSnapshot = this.get("composerModel.post");
+    if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
+      _postSnapshot = this.post;
       this.contentChanged();
     }
 
