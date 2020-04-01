@@ -1404,15 +1404,18 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.json do
-        bookmarks = BookmarkQuery.new(user: user, guardian: guardian, params: params).list_all
+        bookmark_list = UserBookmarkList.new(user: user, guardian: guardian, params: params)
+        bookmark_list.load
 
-        if bookmarks.empty?
+        if bookmark_list.bookmarks.empty?
           render json: {
             bookmarks: [],
             no_results_help: I18n.t("user_activity.no_bookmarks.self")
           }
         else
-          render_serialized(bookmarks, UserBookmarkSerializer, root: 'bookmarks')
+          page = params[:page].to_i + 1
+          bookmark_list.more_bookmarks_url = "#{Discourse.base_path}/u/#{params[:username]}/bookmarks.json?page=#{page}"
+          render_serialized(bookmark_list, UserBookmarkListSerializer)
         end
       end
       format.ics do
