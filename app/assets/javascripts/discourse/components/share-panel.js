@@ -42,9 +42,12 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-
-    const $linkInput = $(this.element.querySelector(".topic-share-url"));
-    window.setTimeout(() => $linkInput.select().focus(), 200);
+    window.setTimeout(() => {
+      const textArea = this.element.querySelector(".topic-share-url");
+      textArea.style.height = textArea.scrollHeight + "px";
+      textArea.focus();
+      textArea.setSelectionRange(0, this.shareUrl.length);
+    }, 200);
   },
 
   actions: {
