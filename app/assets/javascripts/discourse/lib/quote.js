@@ -32,8 +32,6 @@ export default {
       `topic:${opts.topic || post.topic_id}`
     ];
 
-    opts = opts || {};
-
     if (opts["full"] || sameContent) params.push("full:true");
 
     return `[quote="${params.join(", ")}"]\n${
