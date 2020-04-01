@@ -3,7 +3,6 @@ import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 
 const START_OF_DAY_HOUR = 8;
@@ -124,69 +123,41 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("parsedLastCustomReminderDatetime")
   lastCustomFormatted(parsedLastCustomReminderDatetime) {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.last_custom", {
-        date: parsedLastCustomReminderDatetime.format(
-          I18n.t("dates.long_no_year")
-        )
-      })
+    return parsedLastCustomReminderDatetime.format(
+      I18n.t("dates.long_no_year")
     );
   },
 
   @discourseComputed()
   startNextBusinessWeekFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.start_of_next_business_week", {
-        date: this.nextWeek()
-          .day("Monday")
-          .format(I18n.t("dates.long_no_year"))
-      })
-    );
+    return this.nextWeek()
+      .day("Monday")
+      .format(I18n.t("dates.long_no_year"));
   },
 
   @discourseComputed()
   laterTodayFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.later_today", {
-        date: this.laterToday().format(I18n.t("dates.time"))
-      })
-    );
+    return this.laterToday().format(I18n.t("dates.time"));
   },
 
   @discourseComputed()
   tomorrowFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.tomorrow", {
-        date: this.tomorrow().format(I18n.t("dates.time_short_day"))
-      })
-    );
+    return this.tomorrow().format(I18n.t("dates.time_short_day"));
   },
 
   @discourseComputed()
   nextWeekFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.next_week", {
-        date: this.nextWeek().format(I18n.t("dates.long_no_year"))
-      })
-    );
+    return this.nextWeek().format(I18n.t("dates.long_no_year"));
   },
 
   @discourseComputed()
   laterThisWeekFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.later_this_week", {
-        date: this.laterThisWeek().format(I18n.t("dates.time_short_day"))
-      })
-    );
+    return this.laterThisWeek().format(I18n.t("dates.time_short_day"));
   },
 
   @discourseComputed()
   nextMonthFormatted() {
-    return htmlSafe(
-      I18n.t("bookmarks.reminders.next_month", {
-        date: this.nextMonth().format(I18n.t("dates.long_no_year"))
-      })
-    );
+    return this.nextMonth().format(I18n.t("dates.long_no_year"));
   },
 
   @discourseComputed()
