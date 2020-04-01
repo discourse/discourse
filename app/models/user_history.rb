@@ -103,7 +103,9 @@ class UserHistory < ActiveRecord::Base
       api_key_destroy: 82,
       revoke_title: 83,
       change_title: 84,
-      override_upload_secure_status: 85
+      override_upload_secure_status: 85,
+      page_published: 86,
+      page_unpublished: 87
     )
   end
 
@@ -183,7 +185,9 @@ class UserHistory < ActiveRecord::Base
       :api_key_create,
       :api_key_update,
       :api_key_destroy,
-      :override_upload_secure_status
+      :override_upload_secure_status,
+      :page_published,
+      :page_unpublished
     ]
   end
 
