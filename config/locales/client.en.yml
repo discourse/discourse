@@ -1880,6 +1880,7 @@ en:
         moved_post: "post moved"
         linked: "linked"
         bookmark_reminder: "bookmark reminder"
+        bookmark_reminder_with_name: "bookmark reminder - %{name}"
         granted_badge: "badge granted"
         invited_to_topic: "invited to topic"
         group_mentioned: "group mentioned"
