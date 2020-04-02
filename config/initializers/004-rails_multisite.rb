@@ -26,3 +26,11 @@ module RailsMultisite
     end
   end
 end
+
+if Rails.configuration.multisite
+  Rails.configuration.middleware.swap(
+    RailsMultisite::Middleware,
+    RailsMultisite::Middleware,
+    RailsMultisite::DiscoursePatches.config
+  )
+end
