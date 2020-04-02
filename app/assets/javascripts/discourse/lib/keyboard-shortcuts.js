@@ -84,7 +84,7 @@ export let bindings = {
 const animationDuration = 100;
 
 export default {
-  bindEvents(keyTrapper, container) {
+  init(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
     this.container = container;
     this._stopCallback();
@@ -98,27 +98,42 @@ export default {
     if (!siteSettings.enable_personal_messages) {
       delete bindings["g m"];
     }
+  },
+
+  bindEvents(keyTrapper, container) {
+    this.init(keyTrapper, container);
 
     Object.keys(bindings).forEach(key => {
-      const binding = bindings[key];
-      if (!binding.anonymous && !this.currentUser) {
-        return;
-      }
+      this.bindKey(key);
+    });
+  },
 
-      if (binding.path) {
-        this._bindToPath(binding.path, key);
-      } else if (binding.handler) {
-        if (binding.global) {
-          // global shortcuts will trigger even while focusing on input/textarea
-          this._globalBindToFunction(binding.handler, key);
-        } else {
-          this._bindToFunction(binding.handler, key);
-        }
-      } else if (binding.postAction) {
-        this._bindToSelectedPost(binding.postAction, key);
-      } else if (binding.click) {
-        this._bindToClick(binding.click, key);
+  bindKey(key) {
+    const binding = bindings[key];
+    if (!binding.anonymous && !this.currentUser) {
+      return;
+    }
+
+    if (binding.path) {
+      this._bindToPath(binding.path, key);
+    } else if (binding.handler) {
+      if (binding.global) {
+        // global shortcuts will trigger even while focusing on input/textarea
+        this._globalBindToFunction(binding.handler, key);
+      } else {
+        this._bindToFunction(binding.handler, key);
       }
+    } else if (binding.postAction) {
+      this._bindToSelectedPost(binding.postAction, key);
+    } else if (binding.click) {
+      this._bindToClick(binding.click, key);
+    }
+  },
+
+  rebindCombinationEvents(keyTrapper, container, ...combinations) {
+    this.init(keyTrapper, container);
+    combinations.forEach(combo => {
+      this.bindKey(combo);
     });
   },
 
@@ -631,15 +646,6 @@ export default {
       ) {
         return false;
       }
-
-      // don't open up the composer if there is already a modal open,
-      // so the modal is free to hijack this shortcut and no composer opens
-      // behind it
-      // let $el = $(element);
-      // if (combo === "c" && $el[0].classList.contains("modal-open") || $el.parents('.modal-open').length) {
-      //   return false;
-      // }
-
       return oldStopCallback.call(this, e, element, combo, sequence);
     };
   },

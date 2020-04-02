@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 const KEY = "keyboard_shortcuts_help";
@@ -49,6 +50,11 @@ function buildShortcut(
 export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.set("modal.modalClass", "keyboard-shortcuts-modal");
+  },
+
+  @discourseComputed()
+  showBookmarkShortcuts() {
+    return this.siteSettings.enable_bookmarks_with_reminders;
   },
 
   shortcuts: {
@@ -123,6 +129,41 @@ export default Controller.extend(ModalFunctionality, {
       fullscreen: buildShortcut("composing.fullscreen", {
         keys1: [SHIFT, "F11"],
         keysDelimiter: PLUS
+      })
+    },
+    bookmarks: {
+      enter: buildShortcut("bookmarks.enter", { keys1: [ENTER] }),
+      later_today: buildShortcut("bookmarks.later_today", {
+        keys1: ["l", "t"],
+        shortcutsDelimiter: "space"
+      }),
+      later_this_week: buildShortcut("bookmarks.later_this_week", {
+        keys1: ["l", "w"],
+        shortcutsDelimiter: "space"
+      }),
+      tomorrow: buildShortcut("bookmarks.tomorrow", {
+        keys1: ["n", "d"],
+        shortcutsDelimiter: "space"
+      }),
+      next_week: buildShortcut("bookmarks.next_week", {
+        keys1: ["n", "w"],
+        shortcutsDelimiter: "space"
+      }),
+      next_business_week: buildShortcut("bookmarks.next_business_week", {
+        keys1: ["n", "b", "w"],
+        shortcutsDelimiter: "space"
+      }),
+      next_business_day: buildShortcut("bookmarks.next_business_day", {
+        keys1: ["n", "b", "d"],
+        shortcutsDelimiter: "space"
+      }),
+      custom: buildShortcut("bookmarks.custom", {
+        keys1: ["c", "r"],
+        shortcutsDelimiter: "space"
+      }),
+      none: buildShortcut("bookmarks.none", {
+        keys1: ["n", "r"],
+        shortcutsDelimiter: "space"
       })
     },
     actions: {
