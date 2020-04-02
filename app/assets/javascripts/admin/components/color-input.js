@@ -24,8 +24,7 @@ export default Component.extend({
 
   @action
   onHexInput(color) {
-    this.attrs.onChangeColor &&
-      this.attrs.onChangeColor((color || "").replace(/^#/, ""));
+    this.attrs.onChangeColor && this.attrs.onChangeColor(color || "");
   },
 
   @observes("hexValue", "brightnessValue", "valid")
