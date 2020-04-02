@@ -1,7 +1,7 @@
 {{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
   {{#if top}}
     <div class='top-lists'>
-      {{period-chooser period=period action=(action "changePeriod")}}
+      {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
     </div>
   {{else}}
     {{#if topicTrackingState.hasIncoming}}
