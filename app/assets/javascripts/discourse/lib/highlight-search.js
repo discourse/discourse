@@ -12,7 +12,7 @@ export default function($elem, term, opts = {}) {
     );
 
     words = words.map(w => w.replace(/^"(.*)"$/, "$1"));
-    const highlightOpts = { wholeWord: true };
+    const highlightOpts = {};
     if (!opts.defaultClassName) highlightOpts.className = CLASS_NAME;
     for (let i = 0; i <= $elem.length; i++) {
       highlightHTML($elem[0], words, highlightOpts);

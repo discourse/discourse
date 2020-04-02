@@ -37,7 +37,6 @@ export default function(node, words, opts = {}) {
   let settings = {
     nodeName: "span",
     className: "highlighted",
-    wholeWord: false,
     matchCase: false
   };
 
@@ -49,17 +48,8 @@ export default function(node, words, opts = {}) {
 
   if (!words.length) return node;
 
-  let pattern = `(${words.join("|")})`;
+  const pattern = `(${words.join("|")})`;
   let flag;
-
-  if (settings.wholeWord) {
-    const hasUnicode = words.some(word => {
-      return !word.match(new RegExp(`\b${word}\b`));
-    });
-    pattern = hasUnicode
-      ? `(?<=[\\s,.:;"']|^)${pattern}(?=[\\s,.:;"']|$)`
-      : `\b${pattern}\b`;
-  }
 
   if (settings.matchCase) {
     flag = "i";
