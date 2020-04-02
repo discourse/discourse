@@ -50,6 +50,10 @@ export default Controller.extend(ModalFunctionality, {
     });
 
     this.loadLastUsedCustomReminderDatetime();
+
+    // make sure the input is cleared, otherwise the keyboard shortcut to toggle
+    // bookmark for post ends up in the input
+    setTimeout(() => this.set("name", null));
   },
 
   loadLastUsedCustomReminderDatetime() {
