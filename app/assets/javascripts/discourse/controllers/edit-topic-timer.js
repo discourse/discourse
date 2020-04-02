@@ -76,15 +76,15 @@ export default Controller.extend(ModalFunctionality, {
     return "true" === isPublic ? publicTopicTimer : privateTopicTimer;
   },
 
-  _setTimer(time, duration, statusType) {
+  _setTimer(time, duration, statusType, basedOnLastPost, categoryId) {
     this.set("loading", true);
 
     TopicTimer.updateStatus(
       this.get("model.id"),
       time,
-      this.get("topicTimer.based_on_last_post"),
+      basedOnLastPost,
       statusType,
-      this.get("topicTimer.category_id"),
+      categoryId,
       duration
     )
       .then(result => {
@@ -155,7 +155,9 @@ export default Controller.extend(ModalFunctionality, {
       this._setTimer(
         this.get("topicTimer.updateTime"),
         this.get("topicTimer.duration"),
-        this.get("topicTimer.status_type")
+        this.get("topicTimer.status_type"),
+        this.get("topicTimer.based_on_last_post"),
+        this.get("topicTimer.category_id")
       );
     },
 
