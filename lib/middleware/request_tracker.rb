@@ -51,6 +51,14 @@ class Middleware::RequestTracker
     @app = app
   end
 
+  def self.log_request_on_site(data, host)
+    RailsMultisite::ConnectionManagement.with_hostname(host) do
+      unless Discourse.pg_readonly_mode?
+        log_request(data)
+      end
+    end
+  end
+
   def self.log_request(data)
     status = data[:status]
     track_view = data[:track_view]
@@ -127,6 +135,7 @@ class Middleware::RequestTracker
 
     # we got to skip this on error ... its just logging
     data = self.class.get_data(env, result, info) rescue nil
+    host = RailsMultisite::ConnectionManagement.host(env)
 
     if data
       if result && (headers = result[1])
@@ -137,7 +146,7 @@ class Middleware::RequestTracker
         @@detailed_request_loggers.each { |logger| logger.call(env, data) }
       end
 
-      log_later(data)
+      log_later(data, host)
     end
 
   end
@@ -287,11 +296,10 @@ class Middleware::RequestTracker
     end
   end
 
-  def log_later(data)
-    Scheduler::Defer.later("Track view") do
-      unless Discourse.pg_readonly_mode?
-        self.class.log_request(data)
-      end
+  def log_later(data, host)
+    Scheduler::Defer.later("Track view", _db = nil) do
+      self.class.log_request_on_site(data, host)
     end
   end
+
 end
