@@ -46,7 +46,6 @@ describe ContentSecurityPolicy do
     it 'always has self, logster, sidekiq, and assets' do
       script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include(*%w[
-        'report-sample'
         http://test.localhost/logs/
         http://test.localhost/sidekiq/
         http://test.localhost/mini-profiler-resources/
@@ -59,6 +58,12 @@ describe ContentSecurityPolicy do
         http://test.localhost/theme-javascripts/
         http://test.localhost/svg-sprite/
       ])
+    end
+
+    it 'includes "report-sample" when report collection is enabled' do
+      SiteSetting.content_security_policy_collect_reports = true
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include("'report-sample'")
     end
 
     it 'whitelists Google Analytics and Tag Manager when integrated' do
