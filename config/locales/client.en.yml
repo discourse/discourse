@@ -316,13 +316,15 @@ en:
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       reminders:
         at_desktop: "Next time I'm at my desktop"
-        later_today: "Later today <br/>{{date}}"
-        next_business_day: "Next business day <br/>{{date}}"
-        tomorrow: "Tomorrow <br/>{{date}}"
-        next_week: "Next week <br/>{{date}}"
-        next_month: "Next month <br/>{{date}}"
+        later_today: "Later today"
+        next_business_day: "Next business day"
+        tomorrow: "Tomorrow"
+        next_week: "Next week"
+        later_this_week: "Later this week"
+        start_of_next_business_week: "Next Monday"
+        next_month: "Next month"
         custom: "Custom date and time"
-        last_custom: "Last <br/>{{date}}"
+        last_custom: "Last"
         none: "No reminder needed"
 
     drafts:
