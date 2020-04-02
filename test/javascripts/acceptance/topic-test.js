@@ -346,6 +346,27 @@ QUnit.test("Quoting a quote keeps the original poster name", async assert => {
   );
 });
 
+QUnit.test(
+  "Quoting a quote with the Reply button keeps the original poster name",
+  async assert => {
+    await visit("/t/internationalization-localization/280");
+
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents($("#post_5 blockquote")[0]);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    await click(".reply");
+
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+    );
+  }
+);
+
 acceptance("Topic + Post Bookmarks with Reminders", {
   loggedIn: true,
   settings: {
