@@ -112,6 +112,13 @@ async function runAllTests() {
     await Runtime.evaluate({
       expression: `(${qunit_script})()`
     });
+
+    if (args[0].indexOf("report_requests=1") > -1) {
+      await Runtime.evaluate({
+        expression: "QUnit.config.logAllRequests = true"
+      });
+    }
+
     const timeout = parseInt(args[1] || 300000, 10);
     var start = Date.now();
 
