@@ -165,7 +165,6 @@
   </div>
 {{/if}}
 
-
 {{#if canCheckEmails}}
   <div class="control-group pref-auth-tokens">
     <label class="control-label">{{i18n 'user.auth_tokens.title'}}</label>
@@ -217,7 +216,6 @@
 {{#if canSaveUser}}
   {{save-controls model=model action=(action "save") saved=saved}}
 {{/if}}
-
 
 {{#if model.canDeleteAccount}}
   <div class="control-group delete-account">

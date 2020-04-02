@@ -1,6 +1,7 @@
 import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
 import deprecated from "discourse-common/lib/deprecated";
+import jQuery from "jquery";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -594,7 +595,7 @@ function warnIfDeprecated(oldId, newId) {
       stacktrace: Error().stack
     };
 
-    Ember.$.ajax(`${Discourse.BaseUri}/logs/report_js_error`, {
+    jQuery.ajax(`${Discourse.BaseUri}/logs/report_js_error`, {
       data: errorData,
       type: "POST",
       cache: false

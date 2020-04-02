@@ -92,7 +92,7 @@ export default Controller.extend({
         result => {
           if (result) {
             ajax(`/admin/logs/watched_words/action/${actionKey}.json`, {
-              method: "DELETE"
+              type: "DELETE"
             }).then(() => {
               const action = this.findAction(actionKey);
               if (action) {

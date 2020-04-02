@@ -186,6 +186,10 @@
         padding: 0;
         > div {
           overflow: hidden; // clears the text from wrapping below icons
+          overflow-wrap: anywhere;
+          @supports not (overflow-wrap: anywhere) {
+            word-break: break-word;
+          }
 
           // Truncate items with more than 2 lines.
           display: -webkit-box;

@@ -459,6 +459,9 @@ login:
   email_domains_whitelist:
     default: ""
     type: list
+  auto_approve_email_domains:
+    default: ""
+    type: list
   hide_email_address_taken: false
   log_out_strict: true
   pending_users_reminder_delay:
@@ -539,6 +542,9 @@ users:
     client: true
     default: 15
     min: 1
+  delete_user_self_max_post_count:
+    default: 1
+    min: -1
   redirect_users_to_top_page: true
   prioritize_username_in_ux:
     client: true

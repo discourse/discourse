@@ -55,7 +55,7 @@ describe Jobs::ExportCsvFile do
       post = Fabricate(:post, topic: topic, user: user)
 
       exporter = Jobs::ExportCsvFile.new
-      exporter.instance_variable_set(:@current_user, User.find_by(id: user.id))
+      exporter.current_user = User.find_by(id: user.id)
 
       rows = []
       exporter.user_archive_export { |row| rows << row }
@@ -79,9 +79,9 @@ describe Jobs::ExportCsvFile do
 
     let(:exporter) do
       exporter = Jobs::ExportCsvFile.new
-      exporter.instance_variable_set(:@entity, 'report')
-      exporter.instance_variable_set(:@extra, HashWithIndifferentAccess.new(start_date: '2010-01-01', end_date: '2011-01-01'))
-      exporter.instance_variable_set(:@current_user, User.find_by(id: user.id))
+      exporter.entity = 'report'
+      exporter.extra = HashWithIndifferentAccess.new(start_date: '2010-01-01', end_date: '2011-01-01')
+      exporter.current_user = User.find_by(id: user.id)
       exporter
     end
 
@@ -89,7 +89,7 @@ describe Jobs::ExportCsvFile do
       user.user_visits.create!(visited_at: '2010-01-01', posts_read: 42)
       Fabricate(:user).user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
 
-      exporter.instance_variable_get(:@extra)['name'] = 'dau_by_mau'
+      exporter.extra['name'] = 'dau_by_mau'
       report = exporter.report_export.to_a
 
       expect(report.first).to contain_exactly("Day", "Percent")
@@ -97,11 +97,28 @@ describe Jobs::ExportCsvFile do
       expect(report.third).to contain_exactly("2010-01-03", "50.0")
     end
 
+    it 'works with filters' do
+      user.user_visits.create!(visited_at: '2010-01-01', posts_read: 42)
+
+      group = Fabricate(:group)
+      user1 = Fabricate(:user)
+      group_user = Fabricate(:group_user, group: group, user: user1)
+      user1.user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
+
+      exporter.extra['name'] = 'visits'
+      exporter.extra['group_id'] = group.id
+      report = exporter.report_export.to_a
+
+      expect(report.length).to eq(2)
+      expect(report.first).to contain_exactly("Day", "Count")
+      expect(report.second).to contain_exactly("2010-01-03", "1")
+    end
+
     it 'works with single-column reports with default label' do
       user.user_visits.create!(visited_at: '2010-01-01')
       Fabricate(:user).user_visits.create!(visited_at: '2010-01-03')
 
-      exporter.instance_variable_get(:@extra)['name'] = 'visits'
+      exporter.extra['name'] = 'visits'
       report = exporter.report_export.to_a
 
       expect(report.first).to contain_exactly("Day", "Count")
@@ -113,7 +130,7 @@ describe Jobs::ExportCsvFile do
       DiscourseIpInfo.stubs(:get).with("1.1.1.1").returns(location: "Earth")
       user.user_auth_token_logs.create!(action: "login", client_ip: "1.1.1.1", created_at: '2010-01-01')
 
-      exporter.instance_variable_get(:@extra)['name'] = 'staff_logins'
+      exporter.extra['name'] = 'staff_logins'
       report = exporter.report_export.to_a
 
       expect(report.first).to contain_exactly("User", "Location", "Login at")
@@ -133,7 +150,7 @@ describe Jobs::ExportCsvFile do
       ApplicationRequest.create!(date: '2010-01-02', req_type: 'page_view_crawler', count: 8)
       ApplicationRequest.create!(date: '2010-01-03', req_type: 'page_view_crawler', count: 9)
 
-      exporter.instance_variable_get(:@extra)['name'] = 'consolidated_page_views'
+      exporter.extra['name'] = 'consolidated_page_views'
       report = exporter.report_export.to_a
 
       expect(report[0]).to contain_exactly("Day", "Logged in users", "Anonymous users", "Crawlers")

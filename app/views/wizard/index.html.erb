@@ -9,6 +9,7 @@
     <%= preload_script 'wizard-vendor' %>
     <%= preload_script 'wizard-application' %>
     <%= preload_script_url ExtraLocalesController.url('wizard') %>
+    <%= build_plugin_html 'wizard:head' %>
     <%= csrf_meta_tags %>
 
     <%= render partial: "layouts/head" %>

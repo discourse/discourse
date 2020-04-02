@@ -425,7 +425,7 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
-    if SiteSetting.require_invite_code && SiteSetting.invite_code != params[:invite_code]
+    if SiteSetting.require_invite_code && SiteSetting.invite_code.strip.downcase != params[:invite_code].strip.downcase
       return fail_with("login.wrong_invite_code")
     end
 
@@ -447,8 +447,11 @@ class UsersController < ApplicationController
     user ||= User.new
     user.attributes = new_user_params
 
-    # Handle API approval
-    ReviewableUser.set_approved_fields!(user, current_user) if user.approved?
+    # Handle API approval and
+    # auto approve users based on auto_approve_email_domains setting
+    if user.approved? || EmailValidator.can_auto_approve_user?(user.email)
+      ReviewableUser.set_approved_fields!(user, current_user)
+    end
 
     # Handle custom fields
     user_fields = UserField.all
@@ -1401,15 +1404,18 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.json do
-        bookmarks = BookmarkQuery.new(user: user, guardian: guardian, params: params).list_all
+        bookmark_list = UserBookmarkList.new(user: user, guardian: guardian, params: params)
+        bookmark_list.load
 
-        if bookmarks.empty?
+        if bookmark_list.bookmarks.empty?
           render json: {
             bookmarks: [],
             no_results_help: I18n.t("user_activity.no_bookmarks.self")
           }
         else
-          render_serialized(bookmarks, UserBookmarkSerializer, root: 'bookmarks')
+          page = params[:page].to_i + 1
+          bookmark_list.more_bookmarks_url = "#{Discourse.base_path}/u/#{params[:username]}/bookmarks.json?page=#{page}"
+          render_serialized(bookmark_list, UserBookmarkListSerializer)
         end
       end
       format.ics do

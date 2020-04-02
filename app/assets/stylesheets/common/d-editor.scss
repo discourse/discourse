@@ -187,6 +187,10 @@
   &.site-icon {
     padding-bottom: 0;
   }
+  &.resizable {
+    object-fit: cover;
+    object-position: top;
+  }
 }
 
 .d-editor-preview .image-wrapper {

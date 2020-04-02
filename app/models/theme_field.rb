@@ -60,7 +60,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  BASE_COMPILER_VERSION = 14
+  BASE_COMPILER_VERSION = 15
   DEPENDENT_CONSTANTS = [
     BASE_COMPILER_VERSION,
     Ember::VERSION,

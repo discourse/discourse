@@ -20,6 +20,7 @@ export function _clearSnapshots() {
 }
 
 export default DropdownSelectBoxComponent.extend({
+  seq: 0,
   pluginApiIdentifiers: ["composer-actions"],
   classNames: ["composer-actions"],
 
@@ -29,25 +30,27 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: false
   },
 
+  contentChanged() {
+    this.set("seq", this.seq + 1);
+  },
+
   didReceiveAttrs() {
     this._super(...arguments);
 
     // if we change topic we want to change both snapshots
     if (
-      this.get("composerModel.topic") &&
-      (!_topicSnapshot ||
-        this.get("composerModel.topic.id") !== _topicSnapshot.id)
+      this.topic &&
+      (!_topicSnapshot || this.topic.id !== _topicSnapshot.id)
     ) {
-      _topicSnapshot = this.get("composerModel.topic");
-      _postSnapshot = this.get("composerModel.post");
+      _topicSnapshot = this.topic;
+      _postSnapshot = this.post;
+      this.contentChanged();
     }
 
     // if we hit reply on a different post we want to change postSnapshot
-    if (
-      this.get("composerModel.post") &&
-      (!_postSnapshot || this.get("composerModel.post.id") !== _postSnapshot.id)
-    ) {
-      _postSnapshot = this.get("composerModel.post");
+    if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
+      _postSnapshot = this.post;
+      this.contentChanged();
     }
 
     if (isEmpty(this.content)) {
@@ -59,7 +62,7 @@ export default DropdownSelectBoxComponent.extend({
     return {};
   },
 
-  content: computed(function() {
+  content: computed("seq", function() {
     let items = [];
 
     if (
@@ -304,6 +307,7 @@ export default DropdownSelectBoxComponent.extend({
           ),
           this.composerModel
         );
+        this.contentChanged();
       } else {
         // eslint-disable-next-line no-console
         console.error(`No method '${action}' found`);

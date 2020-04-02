@@ -120,7 +120,7 @@ describe TopicUploadSecurityManager do
         end
 
         it "changes the upload secure status to true and changes the ACL and rebakes the post and sets the access control post" do
-          expect(Post.any_instance.expects(:rebake!).once)
+          Post.any_instance.expects(:rebake!).once
           subject.run
           expect(upload3.reload.secure?).to eq(true)
           expect(upload3.reload.access_control_post).to eq(post4)
@@ -146,7 +146,7 @@ describe TopicUploadSecurityManager do
         end
 
         it "does not change the upload secure status and does not set the access control post" do
-          expect(Post.any_instance.expects(:rebake!).never)
+          Post.any_instance.expects(:rebake!).never
           subject.run
           expect(upload3.reload.secure?).to eq(false)
           expect(upload3.reload.access_control_post).to eq(nil)
@@ -174,14 +174,14 @@ describe TopicUploadSecurityManager do
   end
 
   def expect_upload_status_not_to_change
-    expect(Post.any_instance.expects(:rebake!).never)
+    Post.any_instance.expects(:rebake!).never
     subject.run
     expect(upload.reload.secure?).to eq(true)
     expect(upload2.reload.secure?).to eq(true)
   end
 
   def expect_upload_status_to_change_and_rebake
-    expect(Post.any_instance.expects(:rebake!).twice)
+    Post.any_instance.expects(:rebake!).twice
     subject.run
     expect(upload.reload.secure?).to eq(false)
     expect(upload2.reload.secure?).to eq(false)

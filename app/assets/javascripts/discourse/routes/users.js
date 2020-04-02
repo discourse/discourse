@@ -1,4 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { longDate } from "discourse/lib/formatter";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -22,7 +23,8 @@ export default DiscourseRoute.extend({
         asc: null,
         name: "",
         group: null,
-        exclude_usernames: null
+        exclude_usernames: null,
+        lastUpdatedAt: null
       });
     }
   },
@@ -41,8 +43,10 @@ export default DiscourseRoute.extend({
 
   setupController(controller, model) {
     const params = this._params;
+    const lastUpdatedAt = model.get("resultSetMeta.last_updated_at");
     controller.setProperties({
       model,
+      lastUpdatedAt: lastUpdatedAt ? longDate(lastUpdatedAt) : null,
       period: params.period,
       nameInput: params.name
     });

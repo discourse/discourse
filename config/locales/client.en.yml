@@ -316,13 +316,15 @@ en:
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       reminders:
         at_desktop: "Next time I'm at my desktop"
-        later_today: "Later today <br/>{{date}}"
-        next_business_day: "Next business day <br/>{{date}}"
-        tomorrow: "Tomorrow <br/>{{date}}"
-        next_week: "Next week <br/>{{date}}"
-        next_month: "Next month <br/>{{date}}"
+        later_today: "Later today"
+        next_business_day: "Next business day"
+        tomorrow: "Tomorrow"
+        next_week: "Next week"
+        later_this_week: "Later this week"
+        start_of_next_business_week: "Next Monday"
+        next_month: "Next month"
         custom: "Custom date and time"
-        last_custom: "Last <br/>{{date}}"
+        last_custom: "Last"
         none: "No reminder needed"
 
     drafts:
@@ -587,6 +589,7 @@ en:
       days_visited_long: "Days Visited"
       posts_read: "Read"
       posts_read_long: "Posts Read"
+      last_updated: "Last Updated:"
       total_rows:
         one: "%{count} user"
         other: "%{count} users"
@@ -1651,7 +1654,6 @@ en:
       objects: Objects
       symbols: Symbols
       flags: Flags
-      custom: Custom emojis
       recent: Recently used
       default_tone: No skin tone
       light_tone: Light skin tone
@@ -1659,6 +1661,7 @@ en:
       medium_tone: Medium skin tone
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
+      default: Custom emojis
 
     shared_drafts:
       title: "Shared Drafts"
@@ -1811,6 +1814,9 @@ en:
         message:
           one: "%{count} unread message"
           other: "{{count}} unread messages"
+        high_priority:
+          one: "%{count} unread high priority notification"
+          other: "%{count} unread high priority notificationis"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
@@ -3091,6 +3097,10 @@ en:
         print: "%{shortcut} Print topic"
         defer: "%{shortcut} Defer topic"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
+      search_menu:
+        title: "Search Menu"
+        prev_next: "%{shortcut} Move selection up and down"
+        insert_url: "%{shortcut} Insert selection into open composer"
 
     badges:
       earned_n_times:
@@ -3903,6 +3913,7 @@ en:
         format: "Format"
         html: "html"
         text: "text"
+        html_preview: "Email Content Preview"
         last_seen_user: "Last Seen User:"
         no_result: "No results found for summary."
         reply_key: "Reply Key"
@@ -4551,6 +4562,7 @@ en:
         help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
         add: "Add New Emoji"
         name: "Name"
+        group: "Group"
         image: "Image"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
 
@@ -4589,6 +4601,7 @@ en:
         category_id: "Category ID"
         category_title: "Category"
         external_url: "External URL"
+        destination: "Destination"
         delete_confirm: Are you sure you want to delete this permalink?
         form:
           label: "New:"

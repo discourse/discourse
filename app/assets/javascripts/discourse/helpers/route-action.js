@@ -32,29 +32,32 @@ function getRouteWithAction(router, actionName) {
   return { action, handler };
 }
 
+export function routeAction(actionName, router, ...params) {
+  assert("[ember-route-action-helper] Unable to lookup router", router);
+
+  runInDebug(() => {
+    let { handler } = getRouteWithAction(router, actionName);
+    assert(
+      `[ember-route-action-helper] Unable to find action ${actionName}`,
+      handler
+    );
+  });
+
+  return function(...invocationArgs) {
+    let { action, handler } = getRouteWithAction(router, actionName);
+    let args = params.concat(invocationArgs);
+    return run.join(handler, action, ...args);
+  };
+}
+
 export default Helper.extend({
-  router: computed(function() {
-    return getOwner(this).lookup("router:main");
-  }).readOnly(),
+  router: computed({
+    get() {
+      return getOwner(this).lookup("router:main");
+    }
+  }),
 
   compute([actionName, ...params]) {
-    let router = get(this, "router");
-    assert("[ember-route-action-helper] Unable to lookup router", router);
-
-    runInDebug(() => {
-      let { handler } = getRouteWithAction(router, actionName);
-      assert(
-        `[ember-route-action-helper] Unable to find action ${actionName}`,
-        handler
-      );
-    });
-
-    let routeAction = function(...invocationArgs) {
-      let { action, handler } = getRouteWithAction(router, actionName);
-      let args = params.concat(invocationArgs);
-      return run.join(handler, action, ...args);
-    };
-
-    return routeAction;
+    return routeAction(actionName, get(this, "router"), ...params);
   }
 });

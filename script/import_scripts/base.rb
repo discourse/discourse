@@ -83,7 +83,9 @@ class ImportScripts::Base
       max_image_size_kb: 102400,
       authorized_extensions: '*',
       clean_up_inactive_users_after_days: 0,
-      clean_up_unused_staged_users_after_days: 0
+      clean_up_unused_staged_users_after_days: 0,
+      clean_up_uploads: false,
+      clean_orphan_uploads_grace_period_hours: 1800
     }
   end
 
@@ -217,24 +219,28 @@ class ImportScripts::Base
   def all_records_exist?(type, import_ids)
     return false if import_ids.empty?
 
-    connection = ActiveRecord::Base.connection.raw_connection
-    connection.exec('CREATE TEMP TABLE import_ids(val text PRIMARY KEY)')
+    ActiveRecord::Base.transaction do
+      begin
+        connection = ActiveRecord::Base.connection.raw_connection
+        connection.exec('CREATE TEMP TABLE import_ids(val text PRIMARY KEY)')
 
-    import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
+        import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
 
-    connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
+        connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
 
-    existing = "#{type.to_s.classify}CustomField".constantize
-    existing = existing.where(name: 'import_id')
-      .joins('JOIN import_ids ON val = value')
-      .count
+        existing = "#{type.to_s.classify}CustomField".constantize
+        existing = existing.where(name: 'import_id')
+          .joins('JOIN import_ids ON val = value')
+          .count
 
-    if existing == import_ids.length
-      puts "Skipping #{import_ids.length} already imported #{type}"
-      true
+        if existing == import_ids.length
+          puts "Skipping #{import_ids.length} already imported #{type}"
+          true
+        end
+      ensure
+        connection.exec('DROP TABLE import_ids') unless connection.nil?
+      end
     end
-  ensure
-    connection.exec('DROP TABLE import_ids') unless connection.nil?
   end
 
   def created_user(user)

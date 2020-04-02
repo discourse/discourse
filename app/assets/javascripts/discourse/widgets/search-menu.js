@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { debounce, cancel } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
 import { createWidget } from "discourse/widgets/widget";
@@ -27,7 +27,7 @@ const SearchHelper = {
   // for cancelling debounced search
   cancel() {
     if (this._activeSearch) {
-      cancel(this._activeSearch);
+      this._activeSearch.abort();
       this._activeSearch = null;
     }
   },
@@ -55,21 +55,24 @@ const SearchHelper = {
       });
       this._activeSearch
         .then(content => {
-          searchData.noResults = content.resultTypes.length === 0;
-          searchData.results = content;
+          // we ensure the current search term is the one used
+          // when starting the query
+          if (term === searchData.term) {
+            searchData.noResults = content.resultTypes.length === 0;
+            searchData.results = content;
 
-          if (searchContext && searchContext.type === "topic") {
-            widget.appEvents.trigger("post-stream:refresh", { force: true });
-            searchData.topicId = searchContext.id;
-          } else {
-            searchData.topicId = null;
+            if (searchContext && searchContext.type === "topic") {
+              widget.appEvents.trigger("post-stream:refresh", { force: true });
+              searchData.topicId = searchContext.id;
+            } else {
+              searchData.topicId = null;
+            }
           }
         })
         .catch(popupAjaxError)
         .finally(() => {
           searchData.loading = false;
           widget.scheduleRerender();
-          this._activeSearch = null;
         });
     }
   }

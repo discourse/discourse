@@ -61,6 +61,11 @@ export default Component.extend({
     return getUrl(`/images/wizard/${src}`);
   },
 
+  @discourseComputed("step.id")
+  bannerAndDescriptionClass(id) {
+    return `wizard-banner-and-description wizard-banner-and-description-${id}`;
+  },
+
   @observes("step.id")
   _stepChanged() {
     this.set("saving", false);

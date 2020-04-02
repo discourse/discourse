@@ -1,3 +1,4 @@
+import { withPluginApi } from "discourse/lib/plugin-api";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
@@ -357,4 +358,31 @@ QUnit.test("Bookmarks Modal", async assert => {
   await click(".topic-post:first-child button.show-more-actions");
   await click(".topic-post:first-child button.bookmark");
   assert.ok(exists("#bookmark-reminder-modal"), "it shows the bookmark modal");
+});
+
+acceptance("Topic with title decorated", {
+  loggedIn: true,
+  beforeEach() {
+    withPluginApi("0.8.40", api => {
+      api.decorateTopicTitle((topic, node, topicTitleType) => {
+        node.innerText = `${node.innerText}-${topic.id}-${topicTitleType}`;
+      });
+    });
+  }
+});
+
+QUnit.test("Decorate topic title", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  assert.ok(
+    find(".fancy-title")[0].innerText.endsWith("-280-topic-title"),
+    "it decorates topic title"
+  );
+
+  assert.ok(
+    find(".raw-topic-link:nth-child(1)")[0].innerText.endsWith(
+      "-27331-topic-list-item-title"
+    ),
+    "it decorates topic list item title"
+  );
 });

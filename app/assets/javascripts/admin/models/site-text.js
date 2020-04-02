@@ -5,7 +5,7 @@ const { getProperties } = Ember;
 export default RestModel.extend({
   revert() {
     return ajax(`/admin/customize/site_texts/${this.id}`, {
-      method: "DELETE"
+      type: "DELETE"
     }).then(result => getProperties(result.site_text, "value", "can_revert"));
   }
 });

@@ -12,12 +12,12 @@ RSpec.describe UserBookmarkSerializer do
     s = UserBookmarkSerializer.new(bookmark_list.last)
 
     expect(s.id).to eq(bookmark.id)
-    expect(s.created_at).to eq(bookmark.created_at)
+    expect(s.created_at).to eq_time(bookmark.created_at)
     expect(s.topic_id).to eq(bookmark.topic_id)
     expect(s.linked_post_number).to eq(bookmark.post.post_number)
     expect(s.post_id).to eq(bookmark.post_id)
     expect(s.name).to eq(bookmark.name)
-    expect(s.reminder_at).to eq(bookmark.reminder_at)
+    expect(s.reminder_at).to eq_time(bookmark.reminder_at)
     expect(s.title).to eq(bookmark.topic.title)
     expect(s.deleted).to eq(false)
     expect(s.hidden).to eq(false)
@@ -26,7 +26,7 @@ RSpec.describe UserBookmarkSerializer do
     expect(s.category_id).to eq(bookmark.topic.category_id)
     expect(s.archetype).to eq(bookmark.topic.archetype)
     expect(s.highest_post_number).to eq(1)
-    expect(s.bumped_at.to_s).to eq(bookmark.topic.bumped_at.to_s)
+    expect(s.bumped_at).to eq_time(bookmark.topic.bumped_at)
     expect(s.slug).to eq(bookmark.topic.slug)
     expect(s.username).to eq(bookmark.post.user.username)
   end

@@ -100,13 +100,11 @@ QUnit.test("creating simultaneously", assert => {
   });
 });
 
-QUnit.test("destroyRecord", assert => {
+QUnit.test("destroyRecord", async assert => {
   const store = createStore();
-  return store.find("widget", 123).then(function(widget) {
-    widget.destroyRecord().then(function(result) {
-      assert.ok(result);
-    });
-  });
+  const widget = await store.find("widget", 123);
+
+  assert.ok(await widget.destroyRecord());
 });
 
 QUnit.test("custom api name", async assert => {

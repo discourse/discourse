@@ -180,6 +180,7 @@ group :test, :development do
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
   gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
+  gem "rubocop-rspec", require: false
   gem 'parallel_tests'
 end
 

@@ -42,8 +42,13 @@ class ImportScripts::Telligent < ImportScripts::Base
   BATCH_SIZE ||= 1000
   LOCAL_AVATAR_REGEX ||= /\A~\/.*(?<directory>communityserver-components-(?:selectable)?avatars)\/(?<path>[^\/]+)\/(?<filename>.+)/i
   REMOTE_AVATAR_REGEX ||= /\Ahttps?:\/\//i
-  EMBEDDED_ATTACHMENT_REGEX ||= /<a href="\/cfs-file(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)".*?>.*?<\/a>/i
-  EMBEDDED_VIEW_ATTACHMENT_REGEX ||= /\[View:~\/cfs-file(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)(?:\:[:\d\s]*?)\]/i
+  ATTACHMENT_REGEXES ||= [
+    /<a[^>]*\shref="[^"]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)".*?>.*?<\/a>/i,
+    /<img[^>]*\ssrc="[^"]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)".*?>/i,
+    /\[View:[^\]]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)(?:\:[:\d\s]*?)?\]/i,
+    /\[(?<tag>img|url)\][^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)\[\/\k<tag>\]/i,
+    /\[(?<tag>img|url)=[^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)\][^\[]*?\[\/\k<tag>\]/i
+  ]
   PROPERTY_NAMES_REGEX ||= /(?<name>\w+):S:(?<start>\d+):(?<length>\d+):/
 
   CATEGORY_LINK_NORMALIZATION = '/.*?(f\/\d+)$/\1'
@@ -560,7 +565,7 @@ class ImportScripts::Telligent < ImportScripts::Base
 
     return [raw, paths, upload_ids] if @filestore_root_directory.blank?
 
-    [EMBEDDED_ATTACHMENT_REGEX, EMBEDDED_VIEW_ATTACHMENT_REGEX].each do |regex|
+    ATTACHMENT_REGEXES.each do |regex|
       raw = raw.gsub(regex) do
         match_data = Regexp.last_match
 
@@ -579,6 +584,7 @@ class ImportScripts::Telligent < ImportScripts::Base
         else
           path = File.join(path, match_data[:filename])
           STDERR.puts "Could not find file: #{path}"
+          match_data[0]
         end
       end
     end

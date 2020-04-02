@@ -29,7 +29,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   actions: {
     toggleAnonymous() {
-      ajax(userPath("toggle-anon"), { method: "POST" }).then(() => {
+      ajax(userPath("toggle-anon"), { type: "POST" }).then(() => {
         window.location.reload();
       });
     },

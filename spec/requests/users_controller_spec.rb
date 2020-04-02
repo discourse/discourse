@@ -583,7 +583,7 @@ describe UsersController do
       UsersController.any_instance.stubs(:honeypot_value).returns(nil)
       UsersController.any_instance.stubs(:challenge_value).returns(nil)
       SiteSetting.allow_new_registrations = true
-      @user = Fabricate.build(:user, password: "strongpassword")
+      @user = Fabricate.build(:user, email: "foobar@example.com", password: "strongpassword")
     end
 
     let(:post_user_params) do
@@ -618,7 +618,7 @@ describe UsersController do
 
       it 'requires invite code when specified' do
         expect(SiteSetting.require_invite_code).to eq(false)
-        SiteSetting.invite_code = "abc"
+        SiteSetting.invite_code = "abc def"
         expect(SiteSetting.require_invite_code).to eq(true)
 
         post_user(invite_code: "abcd")
@@ -626,7 +626,8 @@ describe UsersController do
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
 
-        post_user(invite_code: "abc")
+        # case insensitive and stripped of leading/ending spaces
+        post_user(invite_code: " AbC deF ")
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(true)
@@ -824,6 +825,22 @@ describe UsersController do
           json = JSON.parse(response.body)
           new_user = User.find(json["user_id"])
           expect(new_user.locale).not_to eq("fr")
+        end
+
+        it "will auto approve user if the user email domain matches auto_approve_email_domains setting" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+          SiteSetting.auto_approve_email_domains = "example.com"
+
+          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+
+          expect(response.status).to eq(200)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+          expect(json['active']).to be_truthy
+          expect(new_user.approved).to be_truthy
+          expect(ReviewableUser.pending.find_by(target: new_user)).to be_blank
         end
       end
     end
@@ -4181,7 +4198,7 @@ describe UsersController do
       sign_in(user)
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+      expect(JSON.parse(response.body)['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
     end
 
     it "does not show another user's bookmarks" do

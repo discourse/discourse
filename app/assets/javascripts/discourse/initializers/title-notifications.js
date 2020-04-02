@@ -18,7 +18,7 @@ export default {
     if (!user) return; // must be logged in
 
     const notifications =
-      user.unread_notifications + user.unread_private_messages;
+      user.unread_notifications + user.unread_high_priority_notifications;
 
     Discourse.updateNotificationCount(notifications);
   }

@@ -251,7 +251,7 @@ class Auth::DefaultCurrentUserProvider
     api = !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
 
     if @request.xhr? || api
-      @env["HTTP_DISCOURSE_VISIBLE".freeze] == "true".freeze
+      @env["HTTP_DISCOURSE_PRESENT"] == "true"
     else
       true
     end

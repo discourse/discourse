@@ -16,6 +16,7 @@ import { clearRewrites } from "discourse/lib/url";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetDecorators } from "discourse/widgets/widget";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
+import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
@@ -129,6 +130,7 @@ export function acceptance(name, options) {
       resetDecorators();
       resetPostCookedDecorators();
       resetPluginOutletDecorators();
+      resetTopicTitleDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
       Discourse._runInitializer("instanceInitializers", function(

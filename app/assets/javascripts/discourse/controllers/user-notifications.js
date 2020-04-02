@@ -28,7 +28,7 @@ export default Controller.extend({
 
   actions: {
     resetNew() {
-      ajax("/notifications/mark-read", { method: "PUT" }).then(() => {
+      ajax("/notifications/mark-read", { type: "PUT" }).then(() => {
         this.model.forEach(n => n.set("read", true));
       });
     },
