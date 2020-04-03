@@ -291,19 +291,16 @@ module BackupRestore
           log "Failed to download file with upload ID #{upload.id} from S3", ex
         end
 
-        if File.exists?(filename)
-          Discourse::Utils.execute_command(
-            'tar', '--append', '--file', tar_filename, upload_directory,
-            failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1],
-            chdir: @tmp_directory
-          )
-
-          File.delete(filename)
-        end
-
         count += 1
         log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
       end
+
+      log "Appending uploads to archive..."
+      Discourse::Utils.execute_command(
+        'tar', '--append', '--file', tar_filename, upload_directory,
+        failure_message: "Failed to append uploads to archive.", success_status_codes: [0, 1],
+        chdir: @tmp_directory
+      )
 
       log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
     end
