@@ -94,6 +94,11 @@
 
   tbody {
     .category {
+      &.no-category-style {
+        border-color: transparent;
+        border-left: 0px;
+        padding-left: 0px;
+      }
       border-left: 6px solid;
       h3,
       h4 {
