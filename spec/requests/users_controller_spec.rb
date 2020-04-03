@@ -832,7 +832,7 @@ describe UsersController do
           SiteSetting.must_approve_users = true
           SiteSetting.auto_approve_email_domains = "example.com"
 
-          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
 
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
