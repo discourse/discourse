@@ -55,7 +55,8 @@ export default Component.extend({
       }
     }
 
-    let opts = { raw: true };
+    let opts = {};
+
     for (
       let element = selectedElement();
       element && element.tagName !== "ARTICLE";

@@ -504,7 +504,6 @@ export default Controller.extend({
 
         return this.store.find("post", postId).then(post => {
           const quote = Quote.build(post, post.raw, {
-            raw: true,
             full: true
           });
           toolbarEvent.addText(quote);

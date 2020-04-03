@@ -34,8 +34,6 @@ export default {
 
     if (opts["full"] || sameContent) params.push("full:true");
 
-    return `[quote="${params.join(", ")}"]\n${
-      opts["raw"] ? contents : sansQuotes
-    }\n[/quote]\n\n`;
+    return `[quote="${params.join(", ")}"]\n${contents}\n[/quote]\n\n`;
   }
 };
