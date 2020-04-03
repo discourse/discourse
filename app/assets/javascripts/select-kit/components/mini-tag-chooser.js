@@ -188,7 +188,9 @@ export default ComboBox.extend(TagsMixin, {
     const value = makeArray(this.value);
 
     if (event.keyCode === 8) {
-      this._onBackspace(this.value, this.highlightedTag);
+      if (!this.selectKit.filter) {
+        this._onBackspace(this.value, this.highlightedTag);
+      }
     } else if (event.keyCode === 37) {
       if (this.highlightedTag) {
         const index = value.indexOf(this.highlightedTag);
