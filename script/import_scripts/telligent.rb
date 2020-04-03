@@ -50,6 +50,7 @@ class ImportScripts::Telligent < ImportScripts::Base
     /\[(?<tag>img|url)=[^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)\][^\[]*?\[\/\k<tag>\]/i
   ]
   PROPERTY_NAMES_REGEX ||= /(?<name>\w+):S:(?<start>\d+):(?<length>\d+):/
+  INTERNAL_LINK_REGEX ||= /\shref=".*?\/f\/\d+(?:(\/t\/(?<topic_id>\d+))|(?:\/p\/\d+\/(?<post_id>\d+))|(?:\/p\/(?<post_id>\d+)\/reply))\.aspx[^"]*?"/i
 
   CATEGORY_LINK_NORMALIZATION = '/.*?(f\/\d+)$/\1'
   TOPIC_LINK_NORMALIZATION = '/.*?(f\/\d+\/t\/\d+)$/\1'
@@ -109,6 +110,7 @@ class ImportScripts::Telligent < ImportScripts::Base
     import_users
     import_topics
     import_posts
+    import_messages
     mark_topics_as_solved
   end
 
@@ -127,7 +129,12 @@ class ImportScripts::Telligent < ImportScripts::Base
                WHERE t.UserId = u.UserID) OR
         EXISTS(SELECT 1
                FROM te_Forum_ThreadReplies r
-               WHERE r.UserId = u.UserID)
+               WHERE r.UserId = u.UserID) OR
+        EXISTS(SELECT 1
+               FROM cs_Messaging_ConversationParticipants p
+                 JOIN cs_Messaging_ConversationMessages cm ON p.ConversationId = cm.ConversationId
+                 JOIN cs_Messaging_Messages m ON m.MessageId = cm.MessageId
+               WHERE p.ParticipantId = u.UserID)
       )
     SQL
 
@@ -508,6 +515,116 @@ class ImportScripts::Telligent < ImportScripts::Base
     end
   end
 
+  def import_messages
+    puts "", "Importing messages..."
+
+    current_conversation_id = ""
+    current_topic_import_id = ""
+
+    last_conversation_id = ""
+
+    total_count = count(<<~SQL)
+      SELECT COUNT(1) AS count
+      FROM cs_Messaging_Messages m
+        JOIN cs_Messaging_ConversationMessages cm ON m.MessageId = cm.MessageId
+    SQL
+
+    batches do |offset|
+      if last_conversation_id.blank?
+        conditions = ""
+      else
+        conditions = <<~SQL
+          WHERE cm.ConversationId > '#{last_conversation_id}'
+        SQL
+      end
+
+      rows = query(<<~SQL)
+        SELECT TOP #{BATCH_SIZE}
+          cm.ConversationId, m.MessageId, m.AuthorId, m.Subject, m.Body, m.DateCreated,
+          STUFF((SELECT ';' + CONVERT(VARCHAR, p.ParticipantId)
+                 FROM cs_Messaging_ConversationParticipants p
+                 WHERE p.ConversationId = cm.ConversationId
+                 ORDER BY p.ParticipantId
+                 FOR XML PATH('')), 1, 1, '') AS ParticipantIds
+        FROM cs_Messaging_Messages m
+          JOIN cs_Messaging_ConversationMessages cm ON m.MessageId = cm.MessageId
+        #{conditions}
+        ORDER BY cm.ConversationId, m.DateCreated, m.MessageId
+      SQL
+
+      break if rows.blank?
+
+      last_row = rows[-1]
+      last_conversation_id = last_row["ConversationId"]
+      next if all_records_exist?(:post, rows.map { |row| row["MessageId"] })
+
+      create_posts(rows, total: total_count, offset: offset) do |row|
+        user_id = user_id_from_imported_user_id(row["AuthorId"]) || Discourse::SYSTEM_USER_ID
+
+        post = {
+          id: row["MessageId"],
+          raw: raw_with_attachment(row, user_id, :message),
+          user_id: user_id,
+          created_at: row["DateCreated"]
+        }
+
+        if current_conversation_id == row["ConversationId"]
+          parent_post = topic_lookup_from_imported_post_id(current_topic_import_id)
+
+          if parent_post
+            post[:topic_id] = parent_post[:topic_id]
+          else
+            puts "Failed to import message #{row['MessageId']}. Parent was not found."
+            post = nil
+          end
+        else
+          post[:title] = CGI.unescapeHTML(row["Subject"])
+          post[:archetype] = Archetype.private_message
+          post[:target_usernames] = get_recipient_usernames(row)
+
+          if post[:target_usernames].empty?
+            puts "Private message without recipients. Skipping #{row['MessageId']}"
+            post = nil
+          end
+
+          current_topic_import_id = row["MessageId"]
+        end
+
+        current_conversation_id = row["ConversationId"]
+        post
+      end
+    end
+
+    # Mark all imported messages as read
+    DB.exec(<<~SQL)
+      UPDATE topic_users tu
+      SET last_read_post_number = t.highest_post_number,
+          highest_seen_post_number = t.highest_post_number
+      FROM topics t
+        JOIN topic_custom_fields tcf ON t.id = tcf.topic_id
+      WHERE tu.topic_id = t.id
+        AND tu.user_id > 0
+        AND t.archetype = 'private_message'
+        AND tcf.name = 'import_id'
+    SQL
+  end
+
+  def get_recipient_user_ids(participant_ids)
+    return [] if participant_ids.blank?
+
+    user_ids = participant_ids.split(';')
+    user_ids.uniq!
+    user_ids.map!(&:strip)
+  end
+
+  def get_recipient_usernames(row)
+    import_user_ids = get_recipient_user_ids(row["ParticipantIds"])
+
+    import_user_ids.map! do |import_user_id|
+      find_user_by_import_id(import_user_id).try(:username)
+    end.compact
+  end
+
   def index_directory(root_directory)
     Dir.foreach(root_directory) do |directory_name|
       next if directory_name == "." || directory_name == ".."
@@ -524,7 +641,7 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def raw_with_attachment(row, user_id, type)
-    raw, embedded_paths, upload_ids = replace_embedded_attachments(row["Body"], user_id)
+    raw, embedded_paths, upload_ids = replace_embedded_attachments(row, user_id, type)
     raw = html_to_markdown(raw) || ""
 
     filename = row["FileName"]
@@ -551,15 +668,28 @@ class ImportScripts::Telligent < ImportScripts::Base
           raw = "#{raw}\n#{@uploader.html_for_upload(upload, filename)}"
         end
       else
-        id = type == :topic ? row['ThreadId'] : row['ThreadReplyId']
-        STDERR.puts "Could not find file for #{type} #{id}: #{path}"
+        print_file_not_found_error(type, path, row)
       end
     end
 
     raw
   end
 
-  def replace_embedded_attachments(raw, user_id)
+  def print_file_not_found_error(type, path, row)
+    case type
+    when :topic
+      id = row['ThreadId']
+    when :post
+      id = row['ThreadReplyId']
+    when :message
+      id = row['MessageId']
+    end
+
+    STDERR.puts "Could not find file for #{type} #{id}: #{path}"
+  end
+
+  def replace_embedded_attachments(row, user_id, type)
+    raw = row["Body"]
     paths = []
     upload_ids = []
 
@@ -583,7 +713,7 @@ class ImportScripts::Telligent < ImportScripts::Base
           end
         else
           path = File.join(path, match_data[:filename])
-          STDERR.puts "Could not find file: #{path}"
+          print_file_not_found_error(type, path, row)
           match_data[0]
         end
       end
@@ -673,6 +803,8 @@ class ImportScripts::Telligent < ImportScripts::Base
   def html_to_markdown(html)
     return html if html.blank?
 
+    html = fix_internal_links(html)
+
     md = HtmlToMarkdown.new(html).to_markdown
     md.gsub!(/\[quote.*?\]/, "\n" + '\0' + "\n")
     md.gsub!(/(?<!^)\[\/quote\]/, "\n[/quote]\n")
@@ -680,6 +812,21 @@ class ImportScripts::Telligent < ImportScripts::Base
     md.gsub!(/\[View:(http.*?)[:\d\s]*?(?:\]|\z)/i, '\1')
     md.strip!
     md
+  end
+
+  def fix_internal_links(html)
+    html.gsub(INTERNAL_LINK_REGEX) do
+      match_data = Regexp.last_match
+
+      if match_data[:topic_id].present?
+        imported_id = import_topic_id(match_data[:topic_id])
+      else
+        imported_id = match_data[:post_id]
+      end
+
+      post = topic_lookup_from_imported_post_id(imported_id) if imported_id
+      post ? %Q| href="#{Discourse.base_url}#{post[:url]}"| : match_data[0]
+    end
   end
 
   def parse_properties(names, values)
@@ -706,6 +853,11 @@ class ImportScripts::Telligent < ImportScripts::Base
         FROM post_custom_fields pcf
         JOIN posts p ON p.id = pcf.post_id
        WHERE pcf.name = 'is_accepted_answer' AND pcf.value = 'true'
+         AND NOT EXISTS (
+           SELECT 1
+           FROM topic_custom_fields x
+           WHERE x.topic_id = p.topic_id AND x.name = 'accepted_answer_post_id'
+         )
     SQL
   end
 
