@@ -81,8 +81,11 @@ class DirectoryItemsController < ApplicationController
 
     last_updated_at = DirectoryItem.last_updated_at(period_type)
     render_json_dump(directory_items: serialize_data(result, DirectoryItemSerializer),
-                     meta: { last_updated_at: last_updated_at },
-                     total_rows_directory_items: result_count,
-                     load_more_directory_items: directory_items_path(more_params))
+                     meta: {
+                        last_updated_at: last_updated_at,
+                        total_rows_directory_items: result_count,
+                        load_more_directory_items: directory_items_path(more_params)
+                      }
+                    )
   end
 end
