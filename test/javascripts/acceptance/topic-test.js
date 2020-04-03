@@ -328,15 +328,18 @@ QUnit.test("View Hidden Replies", async assert => {
   assert.equal(find(".gap").length, 0, "it hides gap");
 });
 
-QUnit.test("Quoting a quote keeps the original poster name", async assert => {
-  await visit("/t/internationalization-localization/280");
+function selectText(selector) {
+  const range = document.createRange();
+  range.selectNodeContents($(selector)[0]);
 
   const selection = window.getSelection();
-  const range = document.createRange();
-  range.selectNodeContents($("#post_5 blockquote")[0]);
   selection.removeAllRanges();
   selection.addRange(range);
+}
 
+QUnit.test("Quoting a quote keeps the original poster name", async assert => {
+  await visit("/t/internationalization-localization/280");
+  selectText("#post_5 blockquote");
   await click(".quote-button");
 
   assert.ok(
@@ -350,13 +353,7 @@ QUnit.test(
   "Quoting a quote with the Reply button keeps the original poster name",
   async assert => {
     await visit("/t/internationalization-localization/280");
-
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents($("#post_5 blockquote")[0]);
-    selection.removeAllRanges();
-    selection.addRange(range);
-
+    selectText("#post_5 blockquote");
     await click(".reply");
 
     assert.ok(
@@ -371,13 +368,7 @@ QUnit.test(
   "Quoting a quote with replyAsNewTopic keeps the original poster name",
   async assert => {
     await visit("/t/internationalization-localization/280");
-
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents($("#post_5 blockquote")[0]);
-    selection.removeAllRanges();
-    selection.addRange(range);
-
+    selectText("#post_5 blockquote");
     await keyEvent(document, "keypress", "j".charCodeAt(0));
     await keyEvent(document, "keypress", "t".charCodeAt(0));
 
