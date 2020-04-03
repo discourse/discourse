@@ -367,6 +367,28 @@ QUnit.test(
   }
 );
 
+QUnit.test(
+  "Quoting a quote with replyAsNewTopic keeps the original poster name",
+  async assert => {
+    await visit("/t/internationalization-localization/280");
+
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents($("#post_5 blockquote")[0]);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    await keyEvent(document, "keypress", "j".charCodeAt(0));
+    await keyEvent(document, "keypress", "t".charCodeAt(0));
+
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+    );
+  }
+);
+
 acceptance("Topic + Post Bookmarks with Reminders", {
   loggedIn: true,
   settings: {

@@ -972,7 +972,8 @@ export default Controller.extend(bufferedProperty("model"), {
       const composerController = this.composer;
 
       const { quoteState } = this;
-      quotedText = quotedText || Quote.build(post, quoteState.buffer);
+      quotedText =
+        quotedText || Quote.build(post, quoteState.buffer, quoteState.opts);
       quoteState.clear();
 
       var options;
