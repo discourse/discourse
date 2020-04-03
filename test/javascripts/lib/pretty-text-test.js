@@ -1340,6 +1340,28 @@ QUnit.test("quotes", assert => {
   );
 });
 
+QUnit.test("quoting a quote", assert => {
+  const post = Post.create({
+    cooked: new PrettyText(defaultOpts).cook(
+      '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
+    ),
+    username: "eviltrout",
+    post_number: 1,
+    topic_id: 2
+  });
+
+  const quote = Quote.build(
+    post,
+    '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
+  );
+
+  assert.equal(
+    quote,
+    '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
+    "allows quoting a quote"
+  );
+});
+
 QUnit.test("quote formatting", assert => {
   assert.cooked(
     '[quote="EvilTrout, post:123, topic:456, full:true"]\n[sam]\n[/quote]',

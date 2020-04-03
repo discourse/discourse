@@ -10,11 +10,6 @@ export default {
     if (!contents) contents = "";
     if (!opts) opts = {};
 
-    const sansQuotes = contents.replace(this.REGEXP, "").trim();
-    if (sansQuotes.length === 0) {
-      return "";
-    }
-
     // Strip the HTML from cooked
     const stripped = $("<div/>")
       .html(post.cooked)
