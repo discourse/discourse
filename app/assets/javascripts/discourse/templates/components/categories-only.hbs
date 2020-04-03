@@ -12,7 +12,7 @@
     <tbody aria-labelledby="categories-only-category">
       {{#each categories as |c|}}
         <tr data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.uploaded_logo.url 'has-logo' 'no-logo'}}">
-          <td class="category {{if c.isMuted 'muted'}}" style={{border-color c.color}}>
+          <td class="category {{if c.isMuted 'muted'}} {{if noCategoryStyle "no-category-style"}}" style={{unless noCategoryStyle (border-color c.color)}}>
             {{category-title-link category=c}}
             {{#unless c.isMuted}}
             {{#if c.description_excerpt}}
