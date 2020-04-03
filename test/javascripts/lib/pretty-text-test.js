@@ -1,4 +1,4 @@
-import Quote from "discourse/lib/quote";
+import { buildQuote } from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
@@ -1290,7 +1290,7 @@ QUnit.test("quotes", assert => {
   });
 
   function formatQuote(val, expected, text) {
-    assert.equal(Quote.build(post, val), expected, text);
+    assert.equal(buildQuote(post, val), expected, text);
   }
 
   formatQuote(undefined, "", "empty string for undefined content");
@@ -1350,7 +1350,7 @@ QUnit.test("quoting a quote", assert => {
     topic_id: 2
   });
 
-  const quote = Quote.build(
+  const quote = buildQuote(
     post,
     '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
   );

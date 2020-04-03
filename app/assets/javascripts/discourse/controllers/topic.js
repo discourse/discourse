@@ -8,7 +8,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
 import Post from "discourse/models/post";
-import Quote from "discourse/lib/quote";
+import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
 import discourseDebounce from "discourse/lib/debounce";
@@ -274,7 +274,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return promise.then(post => {
         const composer = this.composer;
         const viewOpen = composer.get("model.viewOpen");
-        const quotedText = Quote.build(post, buffer, opts);
+        const quotedText = buildQuote(post, buffer, opts);
 
         // If we can't create a post, delegate to reply as new topic
         if (!viewOpen && !this.get("model.details.can_create_post")) {
@@ -483,7 +483,7 @@ export default Controller.extend(bufferedProperty("model"), {
       }
 
       const quotedPost = postStream.findLoadedPost(quoteState.postId);
-      const quotedText = Quote.build(
+      const quotedText = buildQuote(
         quotedPost,
         quoteState.buffer,
         quoteState.opts
@@ -973,7 +973,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
       const { quoteState } = this;
       quotedText =
-        quotedText || Quote.build(post, quoteState.buffer, quoteState.opts);
+        quotedText || buildQuote(post, quoteState.buffer, quoteState.opts);
       quoteState.clear();
 
       var options;
