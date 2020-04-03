@@ -602,8 +602,11 @@ export default {
         post_count: 146
       }
     ],
-    total_rows_directory_items: 12546,
-    load_more_directory_items:
-      "/directory_items?id=all&order=likes_received&page=1"
+    meta: {
+      last_updated_at: "2020-04-02T02:19:20.000Z",
+      total_rows_directory_items: 12546,
+      load_more_directory_items:
+        "/directory_items?id=all&order=likes_received&page=1"
+    }
   }
 };
