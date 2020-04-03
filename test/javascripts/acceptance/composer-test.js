@@ -683,7 +683,7 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
     sandbox.stub(Draft, "get").returns(
       Promise.resolve({
         draft:
-          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"usernames":"codinghorror","composerTime":9159,"typingTime":2500}',
+          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
         draft_sequence: 0
       })
     );
