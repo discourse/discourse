@@ -167,7 +167,7 @@ class Category < ActiveRecord::Base
       SQL
     DB.query_single(
       sql,
-      category_id: category_id,
+      category_id: category_id.to_i,
       max_category_nesting: SiteSetting.max_category_nesting
     )
   end
