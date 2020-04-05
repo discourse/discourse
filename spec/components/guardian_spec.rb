@@ -2743,7 +2743,7 @@ describe Guardian do
   end
 
   describe '#can_export_entity?' do
-    let(:anonymous_guardian) { Guardian.new() }
+    let(:anonymous_guardian) { Guardian.new }
     let(:user_guardian) { Guardian.new(user) }
     let(:moderator_guardian) { Guardian.new(moderator) }
     let(:admin_guardian) { Guardian.new(admin) }
