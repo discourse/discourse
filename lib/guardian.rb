@@ -319,7 +319,7 @@ class Guardian
   # Support sites that have to approve users
   def can_access_forum?
     return true unless SiteSetting.must_approve_users?
-    return false unless @user
+    return false if anonymous?
 
     # Staff can't lock themselves out of a site
     return true if is_staff?
@@ -442,7 +442,7 @@ class Guardian
   end
 
   def can_export_entity?(entity)
-    return false unless @user
+    return false if anonymous?
     return true if is_admin?
     return entity != 'user_list' if is_moderator?
 
