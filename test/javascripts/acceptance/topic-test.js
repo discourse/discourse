@@ -330,7 +330,8 @@ QUnit.test("View Hidden Replies", async assert => {
 
 function selectText(selector) {
   const range = document.createRange();
-  range.selectNodeContents($(selector)[0]);
+  const node = document.querySelector(selector);
+  range.selectNodeContents(node);
 
   const selection = window.getSelection();
   selection.removeAllRanges();
