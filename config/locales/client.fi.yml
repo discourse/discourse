@@ -29,7 +29,7 @@ fi:
       time: "H:mm"
       time_short_day: "ddd HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMMM[ta] H:mm"
+      long_no_year: "D. MMMM[ta], H:mm"
       long_no_year_no_time: "D. MMMM[ta]"
       full_no_year_no_time: "Do MMMM[ta]"
       long_with_year: "D. MMMM[ta] YYYY H:mm"

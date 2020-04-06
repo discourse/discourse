@@ -28,7 +28,7 @@ gl:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM h:mm a"
+      long_no_year: "D MMM, h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMMM"
       long_with_year: "D MMM, YYYY h:mm a"

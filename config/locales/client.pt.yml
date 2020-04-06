@@ -28,7 +28,7 @@ pt:
     dates:
       time: "hh:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "DD MMM hh:mm"
+      long_no_year: "DD MMM, hh:mm"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "DD MMM YYYY hh:mm"

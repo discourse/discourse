@@ -31,7 +31,7 @@ he:
       time: "h:mm a"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D בMMM ‏HH:mm"
+      long_no_year: "D בMMM, ‏HH:mm"
       long_no_year_no_time: "D בMMM"
       full_no_year_no_time: "Do בMMMM"
       long_with_year: "D בMMM ‏YYYY ‏HH:mm"
