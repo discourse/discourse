@@ -29,7 +29,7 @@ fa_IR:
       time: "h:mm a"
       time_short_day: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
+      long_no_year: "MMM D, h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -271,11 +271,11 @@ fa_IR:
       no_timezone: 'شما هنوز منطقه زمانی مشخص نکرده اید. شما قادر به تنظیم کردن یادآوری نیستید. یکی را در <a href="%{basePath}/my/preferences/profile"> پروفایل تان </a> تنظیم کنید.'
       reminders:
         at_desktop: "بار آینده من پشت میزم هستم"
-        later_today: "امروز کمی بعد <br/>{{date}}"
-        next_business_day: "روز کاری آینده <br/>{{date}}"
-        tomorrow: "فردا <br/>{{date}}"
-        next_week: "هفته ی آینده <br/>{{date}}"
-        next_month: "ماه آینده <br/>{{date}}"
+        later_today: "امروز کمی بعد"
+        next_business_day: "روز کاری آینده"
+        tomorrow: "فردا"
+        next_week: "هفته ی آینده"
+        next_month: "ماه آینده"
         custom: "درج تاریخ و ساعت"
     drafts:
       resume: "از سر گیری"

@@ -154,11 +154,11 @@ bs_BA:
   bookmarks:
     reminders:
       at_desktop: "Sljedeći put sam za svojim desktop kompjuterom"
-      later_today: "Danas, malo kasnije <br/>{{date}}"
-      next_business_day: "Sljedeći radni dan <br/>{{date}}"
-      tomorrow: "Sutradan <br/>{{date}}"
-      next_week: "Sljedeće sedmice <br/>{{date}}"
-      next_month: "Naredni mjesec <br/>{{date}}"
+      later_today: "Danas, malo kasnije"
+      next_business_day: "Sljedeći radni dan"
+      tomorrow: "Sutradan"
+      next_week: "Sljedeće sedmice"
+      next_month: "Naredni mjesec"
       custom: "Ciljano vrijeme i datum"
   groups:
     default_names:

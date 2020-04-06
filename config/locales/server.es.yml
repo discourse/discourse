@@ -331,11 +331,11 @@ es:
       time_must_be_provided: "se debe especificar la hora para todos los recordatorios excepto '%{reminder_type}'"
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
-      later_today: "Más tarde hoy <br/>{{date}}"
-      next_business_day: "El próximo día hábil <br/>{{date}}"
-      tomorrow: "Mañana <br/>{{date}}"
-      next_week: "La próxima semana <br/>{{date}}"
-      next_month: "El mes que viene <br/>{{date}}"
+      later_today: "Más tarde hoy"
+      next_business_day: "El próximo día hábil"
+      tomorrow: "Mañana"
+      next_week: "La próxima semana"
+      next_month: "El mes que viene"
       custom: "Fecha y hora personalizadas"
   groups:
     success:

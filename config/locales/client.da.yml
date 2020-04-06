@@ -28,7 +28,7 @@ da:
     dates:
       time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMM HH:mm"
+      long_no_year: "D. MMM, HH:mm"
       long_no_year_no_time: "D. MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. MMM YYYY HH:mm"
@@ -265,9 +265,9 @@ da:
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
       save: "Gem"
       reminders:
-        tomorrow: "I morgen <br/>{{date}}"
-        next_week: "Næste uge <br/>{{date}}"
-        next_month: "Næste måned <br/>{{date}}"
+        tomorrow: "I morgen"
+        next_week: "Næste uge"
+        next_month: "Næste måned"
         custom: "Valgfri dato og tid"
     drafts:
       resume: "Genoptag"
