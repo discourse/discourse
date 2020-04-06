@@ -2,11 +2,10 @@ export const QUOTE_REGEXP = /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?
 
 // Build the BBCode quote around the selected text
 export function buildQuote(post, contents, opts) {
-  if (!post) {
+  if (!post || !contents) {
     return "";
   }
 
-  if (!contents) contents = "";
   if (!opts) opts = {};
 
   const params = [
