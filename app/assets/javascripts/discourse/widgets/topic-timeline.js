@@ -388,7 +388,8 @@ createWidget("timeline-footer-controls", {
             topic,
             showFullTitle: false,
             appendReason: false,
-            placement: "bottom-end"
+            placement: "bottom-end",
+            mountedAsWidget: true
           },
           ["notificationLevel"]
         )

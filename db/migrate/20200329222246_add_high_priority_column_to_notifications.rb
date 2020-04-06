@@ -23,6 +23,10 @@ class AddHighPriorityColumnToNotifications < ActiveRecord::Migration[6.0]
       SQL
 
       execute <<~SQL
+        UPDATE notifications SET high_priority = FALSE WHERE high_priority IS NULL;
+      SQL
+
+      execute <<~SQL
         ALTER TABLE notifications ALTER COLUMN high_priority SET NOT NULL;
       SQL
     end

@@ -316,11 +316,11 @@ pt_BR:
   bookmarks:
     reminders:
       at_desktop: "Da próxima vez que estiver na minha área de trabalho"
-      later_today: "Hoje mais tarde <br/>{{date}}"
-      next_business_day: "Próximo dia comercial <br/>{{date}}"
-      tomorrow: "Amanhã <br/>{{date}}"
-      next_week: "Próxima semana <br/>{{date}}"
-      next_month: "Próximo mês <br/>{{date}}"
+      later_today: "Hoje mais tarde"
+      next_business_day: "Próximo dia comercial"
+      tomorrow: "Amanhã"
+      next_week: "Próxima semana"
+      next_month: "Próximo mês"
       custom: "Data e hora personalizadas"
   groups:
     success:

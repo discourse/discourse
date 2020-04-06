@@ -18,15 +18,30 @@ class Wizard
     Step.new(step_name)
   end
 
-  def append_step(step)
+  def append_step(step, after: nil)
     return if @@excluded_steps.include?(step)
 
     step = create_step(step) if step.is_a?(String)
-
     yield step if block_given?
 
-    last_step = @steps.last
+    if after
+      before_step = @steps.detect { |s| s.id == after }
 
+      if before_step
+        step.previous = before_step
+        step.index = before_step.index + 1
+        if before_step.next
+          step.next = before_step.next
+          before_step.next.previous = step
+        end
+        before_step.next = step
+        @steps.insert(before_step.index + 1, step)
+        step.index += 1 while (step = step.next)
+        return
+      end
+    end
+
+    last_step = @steps.last
     @steps << step
 
     # If it's the first step

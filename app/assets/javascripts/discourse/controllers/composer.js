@@ -54,7 +54,8 @@ function loadDraft(store, opts) {
       draftKey,
       draftSequence,
       draft: true,
-      composerState: Composer.DRAFT
+      composerState: Composer.DRAFT,
+      topic: opts.topic
     };
 
     serializedFields.forEach(f => {

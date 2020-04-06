@@ -77,8 +77,6 @@ const CLOSED = "closed",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
-    // TODO remove together with 'targetUsername' deprecations
-    usernames: "targetUsernames",
     recipients: "targetRecipients"
   },
   _add_draft_fields = {},
@@ -340,14 +338,6 @@ const Composer = RestModel.extend({
     }
 
     return options;
-  },
-
-  @discourseComputed("targetRecipients")
-  targetUsernames(targetRecipients) {
-    deprecated(
-      "`targetUsernames` is deprecated, use `targetRecipients` instead."
-    );
-    return targetRecipients;
   },
 
   @discourseComputed("targetRecipients")

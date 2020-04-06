@@ -222,11 +222,11 @@ fa_IR:
   bookmarks:
     reminders:
       at_desktop: "بار آینده من پشت میزم هستم"
-      later_today: "امروز کمی بعد <br/>{{date}}"
-      next_business_day: "روز کاری آینده <br/>{{date}}"
-      tomorrow: "فردا <br/>{{date}}"
-      next_week: "هفته ی آینده <br/>{{date}}"
-      next_month: "ماه آینده <br/>{{date}}"
+      later_today: "امروز کمی بعد"
+      next_business_day: "روز کاری آینده"
+      tomorrow: "فردا"
+      next_week: "هفته ی آینده"
+      next_month: "ماه آینده"
       custom: "درج تاریخ و ساعت"
   groups:
     errors:

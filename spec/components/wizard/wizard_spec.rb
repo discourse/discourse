@@ -81,6 +81,56 @@ describe Wizard do
     end
   end
 
+  describe "#append_step with after specified" do
+    let(:user) { Fabricate.build(:moderator) }
+    let(:wizard) { Wizard.new(user) }
+
+    it 'inserts steps after the proper step' do
+      wizard.append_step('first') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('second') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('actually-second', after: 'first') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+
+      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "actually-second", "second"])
+      expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
+    end
+
+    it 'inserts steps at the end if the after value does not match an existing step' do
+      wizard.append_step('first') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('second') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('should_be_last', after: 'abcdefghi') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+
+      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "second", "should_be_last"])
+      expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
+    end
+
+    it 'inserts steps at the end' do
+      wizard.append_step('first') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('second') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+      wizard.append_step('last', after: 'second') do |step|
+        step.add_field(id: 'another_element', type: 'text')
+      end
+
+      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "second", "last"])
+      expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
+    end
+  end
+
   describe "completed?" do
     let(:user) { Fabricate.build(:moderator) }
     let(:wizard) { Wizard.new(user) }

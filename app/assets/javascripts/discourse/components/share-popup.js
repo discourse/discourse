@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { bind, scheduleOnce } from "@ember/runloop";
+import { bind, scheduleOnce, later } from "@ember/runloop";
 import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
@@ -35,21 +35,15 @@ export default Component.extend({
   },
 
   _focusUrl() {
-    const link = this.link;
-    if (!this.capabilities.touch) {
-      const $linkInput = $("#share-link input");
-      $linkInput.val(link);
-
-      // Wait for the fade-in transition to finish before selecting the link:
-      window.setTimeout(() => $linkInput.select().focus(), 160);
-    } else {
-      const $linkForTouch = $("#share-link .share-for-touch a");
-      $linkForTouch.attr("href", link);
-      $linkForTouch.text(link);
-      const range = window.document.createRange();
-      range.selectNode($linkForTouch[0]);
-      window.getSelection().addRange(range);
-    }
+    // Wait for the fade-in transition to finish before selecting the link:
+    later(() => {
+      if (this.element) {
+        const linkInput = this.element.querySelector("#share-link input");
+        linkInput.value = this.link;
+        linkInput.setSelectionRange(0, this.link.length);
+        linkInput.focus();
+      }
+    }, 200);
   },
 
   _showUrl($target, url) {

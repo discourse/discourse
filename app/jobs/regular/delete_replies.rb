@@ -22,7 +22,7 @@ module Jobs
         PostDestroyer.new(topic_timer.user, post, context: I18n.t("topic_statuses.auto_deleted_by_timer")).destroy
       end
 
-      topic_timer.execute_at = (replies.minimum(:created_at) || Time.zone.now) + topic_timer.duration.days.ago
+      topic_timer.execute_at = (replies.minimum(:created_at) || Time.zone.now) + topic_timer.duration.days
       topic_timer.save
     end
 
