@@ -10,21 +10,25 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this.appEvents.on(
-      "topic-notifications-button:changed",
-      this,
-      "_changeTopicNotificationLevel"
-    );
+    if (!this.mountedAsWidget) {
+      this.appEvents.on(
+        "topic-notifications-button:changed",
+        this,
+        "_changeTopicNotificationLevel"
+      );
+    }
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    this.appEvents.off(
-      "topic-notifications-button:changed",
-      this,
-      "_changeTopicNotificationLevel"
-    );
+    if (!this.mountedAsWidget) {
+      this.appEvents.off(
+        "topic-notifications-button:changed",
+        this,
+        "_changeTopicNotificationLevel"
+      );
+    }
   },
 
   _changeTopicNotificationLevel(level) {
