@@ -476,7 +476,7 @@ export default Controller.extend({
     // Import a quote from the post
     importQuote(toolbarEvent) {
       const postStream = this.get("topic.postStream");
-      let postId = this.get("model.post.id");
+      const postId = this.get("model.post.id");
 
       // If there is no current post, use the first post id from the stream
       if (!postId && postStream) {
@@ -486,6 +486,7 @@ export default Controller.extend({
       // If we're editing a post, fetch the reply when importing a quote
       if (this.get("model.editingPost")) {
         const replyToPostNumber = this.get("model.post.reply_to_post_number");
+
         if (replyToPostNumber) {
           const replyPost = postStream.posts.findBy(
             "post_number",
