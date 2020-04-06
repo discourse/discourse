@@ -174,7 +174,7 @@ HTML
   it "correctly handles extra JS fields" do
     theme = Fabricate(:theme)
     js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello from .js.es6');")
-    js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
+    js_2_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
     hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
     raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbr", value: "{{hello-world}}")
     hbr_field = theme.set_field(target: :extra_js, name: "discourse/templates/other_discovery.hbr", value: "{{hello-world}}")
@@ -192,16 +192,6 @@ HTML
         };
         console.log('hello from .js.es6');
       });
-      define("discourse/controllers/discovery-2", ["discourse/lib/ajax"], function () {
-        "use strict";
-
-        var __theme_name__ = "#{theme.name}";
-        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-        var themePrefix = function themePrefix(key) {
-          return "theme_translations.#{theme.id}." + key;
-        };
-        console.log('hello from .js');
-      });
     JS
     expect(js_field.reload.value_baked).to eq(expected_js.strip)
 
@@ -215,6 +205,7 @@ HTML
     expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["discovery"]')
     expect(theme.javascript_cache.content).to include('Discourse.RAW_TEMPLATES["discovery"]')
     expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery"')
+    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery-2"')
     expect(theme.javascript_cache.content).to include("var settings =")
   end
 
