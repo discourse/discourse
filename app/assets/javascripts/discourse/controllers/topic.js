@@ -278,7 +278,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
         // If we can't create a post, delegate to reply as new topic
         if (!viewOpen && !this.get("model.details.can_create_post")) {
-          this.send("replyAsNewTopic", post, quotedText);
+          this.send("replyAsNewTopic", post);
           return;
         }
 
@@ -970,12 +970,11 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    replyAsNewTopic(post, quotedText) {
+    replyAsNewTopic(post) {
       const composerController = this.composer;
-
       const { quoteState } = this;
-      quotedText =
-        quotedText || buildQuote(post, quoteState.buffer, quoteState.opts);
+      const quotedText = buildQuote(post, quoteState.buffer, quoteState.opts);
+
       quoteState.clear();
 
       let options;
