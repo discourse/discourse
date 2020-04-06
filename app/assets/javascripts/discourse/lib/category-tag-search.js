@@ -76,7 +76,7 @@ export function search(term, siteSettings) {
   var numOfCategories = categories.length;
 
   categories = categories.map(category => {
-    return { model: category, text: Category.slugFor(category, SEPARATOR) };
+    return { model: category, text: Category.slugFor(category, SEPARATOR, 2) };
   });
 
   if (numOfCategories !== limit && siteSettings.tagging_enabled) {
