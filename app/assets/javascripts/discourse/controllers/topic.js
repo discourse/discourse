@@ -1001,25 +1001,21 @@ export default Controller.extend(bufferedProperty("model"), {
         };
       }
 
-      composerController
-        .open(options)
-        .then(() => {
-          return isEmpty(quotedText) ? "" : quotedText;
-        })
-        .then(q => {
-          const postUrl = `${location.protocol}//${location.host}${post.get(
-            "url"
-          )}`;
-          const postLink = `[${Handlebars.escapeExpression(
-            this.get("model.title")
-          )}](${postUrl})`;
-          composerController
-            .get("model")
-            .prependText(
-              `${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`,
-              { new_line: true }
-            );
-        });
+      composerController.open(options).then(() => {
+        const postUrl = `${location.protocol}//${location.host}${post.get(
+          "url"
+        )}`;
+        const postLink = `[${Handlebars.escapeExpression(
+          this.get("model.title")
+        )}](${postUrl})`;
+
+        composerController.get("model").prependText(
+          `${I18n.t("post.continue_discussion", {
+            postLink
+          })}\n\n${quotedText}`,
+          { new_line: true }
+        );
+      });
     },
 
     retryLoading() {
