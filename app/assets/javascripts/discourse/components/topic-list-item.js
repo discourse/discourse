@@ -1,9 +1,8 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
-import { findRawTemplate } from "discourse/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { on } from "@ember/object/evented";
 
@@ -39,19 +38,6 @@ export default Component.extend({
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id"],
   "data-topic-id": alias("topic.id"),
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-    this.renderTopicListItem();
-  },
-
-  @observes("topic.pinned")
-  renderTopicListItem() {
-    const template = findRawTemplate("list/topic-list-item");
-    if (template) {
-      this.set("topicListItemContents", template(this).htmlSafe());
-    }
-  },
 
   didInsertElement() {
     this._super(...arguments);
@@ -158,9 +144,8 @@ export default Component.extend({
     return this.get("topic.op_like_count") > 0;
   },
 
-  @discourseComputed
-  expandPinned: function() {
-    const pinned = this.get("topic.pinned");
+  @discourseComputed("topic.pinned")
+  expandPinned: function(pinned) {
     if (!pinned) {
       return false;
     }
@@ -223,7 +208,7 @@ export default Component.extend({
 
   actions: {
     toggleBookmark() {
-      this.topic.toggleBookmark().finally(() => this.renderTopicListItem());
+      this.topic.toggleBookmark();
     }
   },
 
