@@ -265,9 +265,9 @@ da:
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
       save: "Gem"
       reminders:
-        tomorrow: "I morgen <br/>{{date}}"
-        next_week: "Næste uge <br/>{{date}}"
-        next_month: "Næste måned <br/>{{date}}"
+        tomorrow: "I morgen"
+        next_week: "Næste uge"
+        next_month: "Næste måned"
         custom: "Valgfri dato og tid"
     drafts:
       resume: "Genoptag"

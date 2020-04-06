@@ -271,11 +271,11 @@ fi:
       no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se  <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
       reminders:
         at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
-        later_today: "Myöhemmin tänään  <br/>{{date}}"
-        next_business_day: "Seuraavana arkipäivänä <br/>{{date}}"
-        tomorrow: "Huomenna <br/>{{date}}"
-        next_week: "Ensi viikolla <br/>{{date}}"
-        next_month: "Ensi kuussa <br/>{{date}}"
+        later_today: "Myöhemmin tänään "
+        next_business_day: "Seuraavana arkipäivänä"
+        tomorrow: "Huomenna"
+        next_week: "Ensi viikolla"
+        next_month: "Ensi kuussa"
         custom: "Valitse päivämäärä ja kellonaika"
     drafts:
       resume: "Jatka"

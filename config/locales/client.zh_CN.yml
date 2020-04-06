@@ -248,9 +248,9 @@ zh_CN:
       reminders:
         at_desktop: "下次我使用桌面设备时"
         later_today: "今天晚些时候<br/> {{date}}"
-        next_business_day: "下个工作日<br/>{{date}}"
-        tomorrow: "明天<br/>{{date}}"
-        next_week: "下周<br/>{{date}}"
+        next_business_day: "下个工作日"
+        tomorrow: "明天"
+        next_week: "下周"
         next_month: "下个月<br/> {{date}}"
         custom: "自定义日期和时间"
     drafts:
