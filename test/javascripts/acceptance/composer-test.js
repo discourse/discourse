@@ -683,7 +683,7 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
     sandbox.stub(Draft, "get").returns(
       Promise.resolve({
         draft:
-          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"usernames":"codinghorror","composerTime":9159,"typingTime":2500}',
+          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
         draft_sequence: 0
       })
     );
@@ -840,6 +840,10 @@ QUnit.test("can reply to a private message", async assert => {
     submitted = true;
     return [200, { "Content-Type": "application/json" }, {}];
   });
+
+  // a bit messy but we need a fake here cause we issue a route transition
+  // to the new post
+  server.get("/t/34/4.json", () => server.get("/t/34.json"));
 
   await visit("/t/34");
   await click(".topic-post:eq(0) button.reply");

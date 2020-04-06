@@ -29,7 +29,7 @@ pt_BR:
       time: "H:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM H:mm"
+      long_no_year: "D MMM, H:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D de MMMM"
       long_with_year: "D MMM, YYYY H:mm"
@@ -270,11 +270,11 @@ pt_BR:
       no_timezone: 'Você ainda não definiu um fuso horário. VOcê não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
       reminders:
         at_desktop: "Da próxima vez que estiver na minha área de trabalho"
-        later_today: "Hoje mais tarde <br/>{{date}}"
-        next_business_day: "Próximo dia comercial <br/>{{date}}"
-        tomorrow: "Amanhã <br/>{{date}}"
-        next_week: "Próxima semana <br/>{{date}}"
-        next_month: "Próximo mês <br/>{{date}}"
+        later_today: "Hoje mais tarde"
+        next_business_day: "Próximo dia comercial"
+        tomorrow: "Amanhã"
+        next_week: "Próxima semana"
+        next_month: "Próximo mês"
         custom: "Data e hora personalizadas"
     drafts:
       resume: "Resumir"

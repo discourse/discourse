@@ -2743,6 +2743,7 @@ describe Guardian do
   end
 
   describe '#can_export_entity?' do
+    let(:anonymous_guardian) { Guardian.new }
     let(:user_guardian) { Guardian.new(user) }
     let(:moderator_guardian) { Guardian.new(moderator) }
     let(:admin_guardian) { Guardian.new(admin) }
@@ -2757,6 +2758,10 @@ describe Guardian do
       expect(user_guardian.can_export_entity?('staff_action')).to be_falsey
       expect(moderator_guardian.can_export_entity?('staff_action')).to be_truthy
       expect(admin_guardian.can_export_entity?('staff_action')).to be_truthy
+    end
+
+    it 'does not allow anonymous to export' do
+      expect(anonymous_guardian.can_export_entity?('user_archive')).to be_falsey
     end
   end
 

@@ -29,7 +29,7 @@ es:
       time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM HH:mm"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY HH:mm"
@@ -271,11 +271,11 @@ es:
       no_timezone: 'No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes elegir una <a href="%{basePath}/my/preferences/profile">en tu perfil</a>.'
       reminders:
         at_desktop: "La próxima vez que esté en mi ordenador"
-        later_today: "Más tarde hoy <br/>{{date}}"
-        next_business_day: "El próximo día hábil <br/>{{date}}"
-        tomorrow: "Mañana <br/>{{date}}"
-        next_week: "La próxima semana <br/>{{date}}"
-        next_month: "El mes que viene <br/>{{date}}"
+        later_today: "Más tarde hoy"
+        next_business_day: "El próximo día hábil"
+        tomorrow: "Mañana"
+        next_week: "La próxima semana"
+        next_month: "El mes que viene"
         custom: "Fecha y hora personalizadas"
     drafts:
       resume: "Reanudar"

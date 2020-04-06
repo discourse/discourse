@@ -28,7 +28,7 @@ bg:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM h:mm a"
+      long_no_year: "D MMM, h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -260,11 +260,11 @@ bg:
       remove: "Премахнете отметката"
       save: "Запази"
       reminders:
-        later_today: "По-късно днес <br/>{{date}}"
-        next_business_day: "Следващият работен ден <br/>{{date}}"
-        tomorrow: "Утре <br/>{{date}}"
-        next_week: "Следващата седмица <br/>{{date}}"
-        next_month: "Следващият месец <br/>{{date}}"
+        later_today: "По-късно днес"
+        next_business_day: "Следващият работен ден"
+        tomorrow: "Утре"
+        next_week: "Следващата седмица"
+        next_month: "Следващият месец"
     drafts:
       resume: "Продължи"
       remove: "Премахване"
