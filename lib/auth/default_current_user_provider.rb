@@ -317,12 +317,13 @@ class Auth::DefaultCurrentUserProvider
   private
 
   def is_whitelisted_query_param_auth_route?(request)
-    (is_rss_feed?(request) || is_handle_mail?(request))
+    (is_user_feed?(request) || is_handle_mail?(request))
   end
 
-  def is_rss_feed?(request)
+  def is_user_feed?(request)
     return true if request.path.match?(/\/(c|t){1}\/\S*.(rss|json)/) && request.get? # topic or category route
     return true if request.path.match?(/\/(latest|top|categories).(rss|json)/) && request.get? # specific routes with rss
+    return true if request.path.match?(/\/u\/\S*\/bookmarks.(ics|json)/) && request.get? # specific routes with ics
   end
 
   def is_handle_mail?(request)

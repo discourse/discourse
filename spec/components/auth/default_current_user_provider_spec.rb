@@ -233,6 +233,13 @@ describe Auth::DefaultCurrentUserProvider do
       expect(provider(url).current_user.id).to eq(user.id)
     end
 
+    it "allows ics feeds" do
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
+      url = "/u/#{user.username}/bookmarks.ics?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
+      expect(provider(url).current_user.id).to eq(user.id)
+    end
+
     it "allows handle mail route" do
       user = Fabricate(:user)
       api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
