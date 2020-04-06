@@ -1,6 +1,7 @@
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
+import toMarkdown from "discourse/lib/to-markdown";
 import { selectedText, selectedElement } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
@@ -38,11 +39,15 @@ export default Component.extend({
     let firstRange, postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
-
-      if ($(range.startContainer.parentNode).closest(".cooked").length === 0)
-        return;
-
+      const $parent = $(range.startContainer.parentNode);
       const $ancestor = $(range.commonAncestorContainer);
+
+      if (
+        $parent.closest(".cooked").length === 0 &&
+        $ancestor.closest(".cooked").length === 0
+      ) {
+        return;
+      }
 
       firstRange = firstRange || range;
       postId = postId || $ancestor.closest(".boxed, .reply").data("post-id");
@@ -55,10 +60,21 @@ export default Component.extend({
       }
     }
 
-    let opts = {};
+    const _selectedElement = selectedElement();
+    const _selectedText = selectedText();
+
+    const $selectedElement = $(_selectedElement);
+    const cooked =
+      $selectedElement.find(".cooked")[0] ||
+      $(_selectedElement).closest(".cooked")[0];
+    const postBody = toMarkdown(cooked.innerHTML);
+
+    let opts = {
+      full: _selectedText === postBody
+    };
 
     for (
-      let element = selectedElement();
+      let element = _selectedElement;
       element && element.tagName !== "ARTICLE";
       element = element.parentElement
     ) {
@@ -70,7 +86,6 @@ export default Component.extend({
       }
     }
 
-    const _selectedText = selectedText();
     quoteState.selected(postId, _selectedText, opts);
     this.set("visible", quoteState.buffer.length > 0);
 

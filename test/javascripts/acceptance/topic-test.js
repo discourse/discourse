@@ -381,6 +381,21 @@ QUnit.test(
   }
 );
 
+QUnit.test(
+  "Quoting by selecting text can mark the quote as full",
+  async assert => {
+    await visit("/t/internationalization-localization/280");
+    selectText("#post_5 .cooked");
+    await click(".quote-button");
+
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .indexOf('quote="pekka, post:5, topic:280, full:true"') !== -1
+    );
+  }
+);
+
 acceptance("Topic + Post Bookmarks with Reminders", {
   loggedIn: true,
   settings: {
