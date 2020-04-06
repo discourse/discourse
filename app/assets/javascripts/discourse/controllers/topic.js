@@ -265,7 +265,8 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showFeatureTopic");
     },
 
-    selectText(postId, buffer, opts) {
+    selectText() {
+      const { postId, buffer, opts } = this.quoteState;
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
         ? Promise.resolve(loadedPost)
@@ -274,7 +275,6 @@ export default Controller.extend(bufferedProperty("model"), {
       return promise.then(post => {
         const composer = this.composer;
         const viewOpen = composer.get("model.viewOpen");
-        const quotedText = buildQuote(post, buffer, opts);
 
         // If we can't create a post, delegate to reply as new topic
         if (!viewOpen && !this.get("model.details.can_create_post")) {
@@ -300,7 +300,9 @@ export default Controller.extend(bufferedProperty("model"), {
           composerOpts.post = composerPost;
         }
 
+        const quotedText = buildQuote(post, buffer, opts);
         composerOpts.quote = quotedText;
+
         if (composer.get("model.viewOpen")) {
           this.appEvents.trigger("composer:insert-block", quotedText);
         } else if (composer.get("model.viewDraft")) {

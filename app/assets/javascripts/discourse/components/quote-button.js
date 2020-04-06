@@ -202,8 +202,7 @@ export default Component.extend({
   },
 
   click() {
-    const { postId, buffer, opts } = this.quoteState;
-    this.attrs.selectText(postId, buffer, opts).then(() => this._hideButton());
+    this.attrs.selectText().then(() => this._hideButton());
     return false;
   }
 });
