@@ -5,6 +5,9 @@
             class="wizard-checkbox"
             click=(action "changed" value="target")
             checked=c.checked}}
+      {{#if c.icon}}
+        {{d-icon c.icon}}
+      {{/if}}
       {{c.label}}
     </label>
   </div>
