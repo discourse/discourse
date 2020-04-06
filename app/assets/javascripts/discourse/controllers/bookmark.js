@@ -1,4 +1,6 @@
 /*global Mousetrap:true*/
+import { and } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -7,8 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
-// global shortcuts that interfere with these
-// modal shortcuts, they are rebound when the
+// global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
 //
 // c createTopic
@@ -33,7 +34,7 @@ const REMINDER_TYPES = {
   LATER_THIS_WEEK: "later_this_week"
 };
 
-const bindings = {
+const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
   "l t": { handler: "selectReminderType", args: [REMINDER_TYPES.LATER_TODAY] },
   "l w": {
@@ -89,7 +90,7 @@ export default Controller.extend(ModalFunctionality, {
 
     // make sure the input is cleared, otherwise the keyboard shortcut to toggle
     // bookmark for post ends up in the input
-    setTimeout(() => this.set("name", null));
+    next(() => this.set("name", null));
   },
 
   loadLastUsedCustomReminderDatetime() {
@@ -118,30 +119,25 @@ export default Controller.extend(ModalFunctionality, {
       );
     }
 
-    GLOBAL_SHORTCUTS_TO_PAUSE.forEach(combo => Mousetrap.unbind(combo));
-
-    Object.keys(bindings).forEach(key => {
-      this.mouseTrap.bind(key, e => {
-        if (bindings[key].args) {
-          this.send(bindings[key].handler, ...bindings[key].args);
-        } else {
-          this.send(bindings[key].handler);
+    KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
+    KeyboardShortcuts.addBindings(
+      BOOKMARK_BINDINGS,
+      binding => {
+        if (binding.args) {
+          return this.send(binding.handler, ...binding.args);
         }
-        e.stopPropagation();
-      });
-    });
+        this.send(binding.handler);
+      },
+      this.mouseTrap
+    );
   },
 
   unbindKeyboardShortcuts() {
-    Object.keys(bindings).forEach(key => this.mouseTrap.unbind(key));
+    KeyboardShortcuts.unbind(BOOKMARK_BINDINGS, this.mouseTrap);
   },
 
   restoreGlobalShortcuts() {
-    KeyboardShortcuts.rebindCombinationEvents(
-      Mousetrap,
-      Discourse.__container__,
-      ...GLOBAL_SHORTCUTS_TO_PAUSE
-    );
+    KeyboardShortcuts.unpause(...GLOBAL_SHORTCUTS_TO_PAUSE);
   },
 
   // we always want to save the bookmark unless the user specifically
@@ -177,10 +173,7 @@ export default Controller.extend(ModalFunctionality, {
     return REMINDER_TYPES;
   },
 
-  @discourseComputed("lastCustomReminderTime", "lastCustomReminderDate")
-  showLastCustom(lastCustomReminderTime, lastCustomReminderDate) {
-    return lastCustomReminderTime && lastCustomReminderDate;
-  },
+  showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
 
   @discourseComputed()
   showLaterToday() {
@@ -374,10 +367,16 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     saveAndClose() {
+      if (this.saving) {
+        return;
+      }
+
+      this.saving = true;
       this.isSavingBookmarkManually = true;
       this.saveBookmark()
         .then(() => this.send("closeModal"))
-        .catch(e => this.handleSaveError(e));
+        .catch(e => this.handleSaveError(e))
+        .finally(() => (this.saving = false));
     },
 
     closeWithoutSavingBookmark() {

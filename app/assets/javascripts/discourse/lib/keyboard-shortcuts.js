@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { throttle } from "@ember/runloop";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
-export let bindings = {
+export let DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
@@ -96,20 +96,18 @@ export default {
 
     // Disable the shortcut if private messages are disabled
     if (!siteSettings.enable_personal_messages) {
-      delete bindings["g m"];
+      delete DEFAULT_BINDINGS["g m"];
     }
   },
 
-  bindEvents(keyTrapper, container) {
-    this.init(keyTrapper, container);
-
-    Object.keys(bindings).forEach(key => {
+  bindEvents() {
+    Object.keys(DEFAULT_BINDINGS).forEach(key => {
       this.bindKey(key);
     });
   },
 
   bindKey(key) {
-    const binding = bindings[key];
+    const binding = DEFAULT_BINDINGS[key];
     if (!binding.anonymous && !this.currentUser) {
       return;
     }
@@ -130,11 +128,34 @@ export default {
     }
   },
 
-  rebindCombinationEvents(keyTrapper, container, ...combinations) {
-    this.init(keyTrapper, container);
-    combinations.forEach(combo => {
-      this.bindKey(combo);
+  // for cases when you want to disable global keyboard shortcuts
+  // so that you can override them (e.g. inside a modal)
+  pause(combinations) {
+    combinations.forEach(combo => this.keyTrapper.unbind(combo));
+  },
+
+  // restore global shortcuts that you have paused
+  unpause(...combinations) {
+    combinations.forEach(combo => this.bindKey(combo));
+  },
+
+  // add bindings to the key trapper, if none is specified then
+  // the shortcuts will be bound globally.
+  addBindings(newBindings, callback, keyTrapper = this.keyTrapper) {
+    Object.keys(newBindings).forEach(key => {
+      let binding = newBindings[key];
+      keyTrapper.bind(key, event => {
+        // usually the caller that is adding the binding
+        // will want to decide what to do with it when the
+        // event is fired
+        callback(binding, event);
+        event.stopPropagation();
+      });
     });
+  },
+
+  unbind(bindings, keyTrapper = this.keyTrapper) {
+    Object.keys(bindings).forEach(key => keyTrapper.unbind(key));
   },
 
   toggleBookmark() {

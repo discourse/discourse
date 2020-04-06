@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { setting } from "discourse/lib/computed";
 
 const KEY = "keyboard_shortcuts_help";
 
@@ -52,10 +52,7 @@ export default Controller.extend(ModalFunctionality, {
     this.set("modal.modalClass", "keyboard-shortcuts-modal");
   },
 
-  @discourseComputed()
-  showBookmarkShortcuts() {
-    return this.siteSettings.enable_bookmarks_with_reminders;
-  },
+  showBookmarkShortcuts: setting("enable_bookmarks_with_reminders"),
 
   shortcuts: {
     jump_to: {
