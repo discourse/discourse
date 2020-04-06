@@ -1,5 +1,5 @@
 {{#each categories as |c|}}
-  <div data-notification-level={{c.notificationLevelString}} class='category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}}' style={{border-color c.color}}>
+  <div data-notification-level={{c.notificationLevelString}} class='category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}' style={{unless noCategoryStyle (border-color c.color)}}>
     <div class='category-box-inner'>
       <div class='category-box-heading'>
         <a href={{c.url}}>

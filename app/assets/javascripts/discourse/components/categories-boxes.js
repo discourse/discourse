@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
+import { equal } from "@ember/object/computed";
 
 export default Component.extend({
   tagName: "section",
@@ -9,6 +10,7 @@ export default Component.extend({
     "anyLogos:with-logos:no-logos",
     "hasSubcategories:with-subcategories"
   ],
+  noCategoryStyle: equal("siteSettings.category_style", "none"),
 
   @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
