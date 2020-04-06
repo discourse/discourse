@@ -1289,8 +1289,8 @@ QUnit.test("quotes", assert => {
     topic_id: 2
   });
 
-  function formatQuote(val, expected, text) {
-    assert.equal(buildQuote(post, val), expected, text);
+  function formatQuote(val, expected, text, opts) {
+    assert.equal(buildQuote(post, val, opts), expected, text);
   }
 
   formatQuote(undefined, "", "empty string for undefined content");
@@ -1312,12 +1312,13 @@ QUnit.test("quotes", assert => {
   formatQuote(
     "lorem ipsum",
     '[quote="eviltrout, post:1, topic:2, full:true"]\nlorem ipsum\n[/quote]\n\n',
-    "marks quotes as full when the quote is the full message"
+    "marks quotes as full if the `full` option is passed",
+    { full: true }
   );
 
   formatQuote(
     "**lorem** ipsum",
-    '[quote="eviltrout, post:1, topic:2, full:true"]\n**lorem** ipsum\n[/quote]\n\n',
+    '[quote="eviltrout, post:1, topic:2"]\n**lorem** ipsum\n[/quote]\n\n',
     "keeps BBCode formatting"
   );
 
