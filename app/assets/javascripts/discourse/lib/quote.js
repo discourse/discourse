@@ -14,5 +14,5 @@ export function buildQuote(post, contents, opts = {}) {
 
   if (opts.full) params.push("full:true");
 
-  return `[quote="${params.join(", ")}"]\n${contents}\n[/quote]\n\n`;
+  return `[quote="${params.join(", ")}"]\n${contents.trim()}\n[/quote]\n\n`;
 }
