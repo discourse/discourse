@@ -976,7 +976,7 @@ export default Controller.extend(bufferedProperty("model"), {
         quotedText || buildQuote(post, quoteState.buffer, quoteState.opts);
       quoteState.clear();
 
-      var options;
+      let options;
       if (this.get("model.isPrivateMessage")) {
         let users = this.get("model.details.allowed_users");
         let groups = this.get("model.details.allowed_groups");
