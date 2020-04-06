@@ -501,14 +501,14 @@ export default Controller.extend({
 
       if (postId) {
         this.set("model.loading", true);
-        const composer = this;
 
         return this.store.find("post", postId).then(post => {
           const quote = buildQuote(post, post.raw, {
             full: true
           });
+
           toolbarEvent.addText(quote);
-          composer.set("model.loading", false);
+          this.set("model.loading", false);
         });
       }
     },
