@@ -66,7 +66,7 @@ export default Component.extend({
     const $selectedElement = $(_selectedElement);
     const cooked =
       $selectedElement.find(".cooked")[0] ||
-      $(_selectedElement).closest(".cooked")[0];
+      $selectedElement.closest(".cooked")[0];
     const postBody = toMarkdown(cooked.innerHTML);
 
     let opts = {
