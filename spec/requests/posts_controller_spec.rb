@@ -556,10 +556,9 @@ describe PostsController do
 
       # choosing an arbitrarily easy to mock trusted activity
       it 'allows users with api key to bookmark posts' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: api_key.key
-        }
+        put "/posts/#{post.id}/bookmark.json",
+          params: { bookmarked: "true" },
+          headers: { HTTP_API_KEY: api_key.key }
 
         expect(response.status).to eq(200)
         expect(PostAction.where(
@@ -570,21 +569,17 @@ describe PostsController do
       end
 
       it 'raises an error with a user key that does not match an optionally specified username' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: api_key.key,
-          api_username: 'made_up'
-        }
+        put "/posts/#{post.id}/bookmark.json",
+          params: { bookmarked: "true" },
+          headers: { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: 'made_up' }
 
         expect(response.status).to eq(403)
       end
 
       it 'allows users with a master api key to bookmark posts' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: master_key.key,
-          api_username: user.username
-        }
+        put "/posts/#{post.id}/bookmark.json",
+          params: { bookmarked: "true" },
+          headers: { HTTP_API_KEY: master_key.key, HTTP_API_USERNAME: user.username }
 
         expect(response.status).to eq(200)
         expect(PostAction.where(
@@ -595,21 +590,17 @@ describe PostsController do
       end
 
       it 'disallows phonies to bookmark posts' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: SecureRandom.hex(32),
-          api_username: user.username
-        }
+        put "/posts/#{post.id}/bookmark.json",
+          params: { bookmarked: "true" },
+          headers: { HTTP_API_KEY: SecureRandom.hex(32), HTTP_API_USERNAME: user.username }
 
         expect(response.status).to eq(403)
       end
 
       it 'disallows blank api' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: "",
-          api_username: user.username
-        }
+        put "/posts/#{post.id}/bookmark.json",
+          params: { bookmarked: "true" },
+          headers: { HTTP_API_KEY: "", HTTP_API_USERNAME: user.username }
 
         expect(response.status).to eq(403)
       end
@@ -740,24 +731,16 @@ describe PostsController do
 
         master_key = Fabricate(:api_key).key
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          raw: raw,
-          title: title,
-          wpid: 1
-        }
+        post "/posts.json",
+          params: { raw: raw, title: title, wpid: 1 },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         original = response.body
 
-        post "/posts.json", params: {
-          api_username: user.username_lower,
-          api_key: master_key,
-          raw: raw,
-          title: title,
-          wpid: 2
-        }
+        post "/posts.json",
+          params: { raw: raw, title: title, wpid: 2 },
+          headers: { HTTP_API_USERNAME: user.username_lower, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         expect(response.body).to eq(original)
@@ -769,38 +752,24 @@ describe PostsController do
         post_1 = Fabricate(:post)
         master_key = Fabricate(:api_key).key
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          raw: 'this is test reply 1',
-          topic_id: post_1.topic.id,
-          reply_to_post_number: 1
-        }
+        post "/posts.json",
+          params: { raw: 'this is test reply 1', topic_id: post_1.topic.id, reply_to_post_number: 1 },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(1)
         post_1.topic.user.notifications.destroy_all
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          raw: 'this is test reply 2',
-          topic_id: post_1.topic.id,
-          reply_to_post_number: 1,
-          import_mode: true
-        }
+        post "/posts.json",
+          params: { raw: 'this is test reply 2', topic_id: post_1.topic.id, reply_to_post_number: 1, import_mode: true },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(0)
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          raw: 'this is test reply 3',
-          topic_id: post_1.topic.id,
-          reply_to_post_number: 1,
-          import_mode: false
-        }
+        post "/posts.json",
+          params: { raw: 'this is test reply 3', topic_id: post_1.topic.id, reply_to_post_number: 1, import_mode: false },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(1)
@@ -810,14 +779,10 @@ describe PostsController do
         post_1 = Fabricate(:post)
         user_key = ApiKey.create!(user: user).key
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: user_key,
-          raw: 'this is test whisper',
-          topic_id: post_1.topic.id,
-          reply_to_post_number: 1,
-          whisper: true
-        }
+        post "/posts.json",
+          params: { raw: 'this is test whisper', topic_id: post_1.topic.id, reply_to_post_number: 1, whisper: true },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: user_key }
+
         expect(response.status).to eq(403)
       end
 
@@ -825,13 +790,9 @@ describe PostsController do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          title: 'this is a test title',
-          raw: 'this is test body',
-          category: 'invalid'
-        }
+        post "/posts.json",
+          params: { title: 'this is a test title', raw: 'this is test body', category: 'invalid' },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(400)
 

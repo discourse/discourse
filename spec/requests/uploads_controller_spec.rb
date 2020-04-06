@@ -60,7 +60,10 @@ describe UploadsController do
 
         stub_request(:get, url).to_return(status: 200, body: png)
 
-        post "/uploads.json", params: { url: url, type: "avatar", api_key: api_key, api_username: user.username }
+        post "/uploads.json", params: { url: url, type: "avatar" }, headers: {
+          HTTP_API_KEY: api_key,
+          HTTP_API_USERNAME: user.username.downcase
+        }
 
         json = ::JSON.parse(response.body)
 
