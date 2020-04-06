@@ -317,10 +317,10 @@ zh_CN:
       time_must_be_provided: "必须为除“ %{reminder_type}”以外的所有提醒提供时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
-      later_today: "晚于今天的<br/>{{date}}"
-      next_business_day: "下个工作日的<br/>{{date}}"
-      tomorrow: "明天<br/>{{date}}"
-      next_week: "下周<br/>{{date}}"
+      later_today: "晚于今天的"
+      next_business_day: "下个工作日的"
+      tomorrow: "明天"
+      next_week: "下周"
       next_month: "下个月<br/> {{date}}"
       custom: "自定义日期和时间"
   groups:

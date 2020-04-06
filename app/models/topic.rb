@@ -189,11 +189,6 @@ class Topic < ActiveRecord::Base
     where("topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})", condition[1])
   }
 
-  IN_CATEGORY_AND_SUBCATEGORIES_SQL = <<~SQL
-       t.category_id = :category_id
-    OR t.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = :category_id)
-  SQL
-
   scope :in_category_and_subcategories, lambda { |category_id|
     where("topics.category_id = ? OR topics.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = ?)",
         category_id,
@@ -1300,7 +1295,7 @@ class Topic < ActiveRecord::Base
     builder = DB.build(sql)
     builder.where("t.created_at >= :start_date", start_date: opts[:start_date]) if opts[:start_date]
     builder.where("t.created_at < :end_date", end_date: opts[:end_date]) if opts[:end_date]
-    builder.where(IN_CATEGORY_AND_SUBCATEGORIES_SQL, category_id: opts[:category_id]) if opts[:category_id]
+    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(opts[:category_id])) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.where("p.deleted_at IS NULL")
@@ -1339,7 +1334,7 @@ class Topic < ActiveRecord::Base
     builder = DB.build(WITH_NO_RESPONSE_SQL)
     builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
     builder.where("t.created_at < :end_date", end_date: end_date) if end_date
-    builder.where(IN_CATEGORY_AND_SUBCATEGORIES_SQL, category_id: category_id) if category_id
+    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(category_id)) if category_id
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.query_hash
@@ -1359,7 +1354,7 @@ class Topic < ActiveRecord::Base
 
   def self.with_no_response_total(opts = {})
     builder = DB.build(WITH_NO_RESPONSE_TOTAL_SQL)
-    builder.where(IN_CATEGORY_AND_SUBCATEGORIES_SQL, category_id: opts[:category_id]) if opts[:category_id]
+    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(opts[:category_id])) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.query_single.first.to_i

@@ -176,11 +176,11 @@ bg:
   excerpt_image: "изображение"
   bookmarks:
     reminders:
-      later_today: "По-късно днес <br/>{{date}}"
-      next_business_day: "Следващият работен ден <br/>{{date}}"
-      tomorrow: "Утре <br/>{{date}}"
-      next_week: "Следващата седмица <br/>{{date}}"
-      next_month: "Следващият месец <br/>{{date}}"
+      later_today: "По-късно днес"
+      next_business_day: "Следващият работен ден"
+      tomorrow: "Утре"
+      next_week: "Следващата седмица"
+      next_month: "Следващият месец"
   groups:
     errors:
       invalid_domain: "'%{domain}' е невалиден домейн."

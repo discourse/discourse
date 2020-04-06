@@ -29,7 +29,7 @@ fr:
       time: "HH:mm"
       time_short_day: "ddd [à] HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "DD MMM H:mm"
+      long_no_year: "DD MMM, H:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "DD MMM YYYY H:mm"

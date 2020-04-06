@@ -29,7 +29,7 @@ sv:
       time: "h:mm a"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
+      long_no_year: "MMM D, h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM, YYYY h:mm a"
@@ -271,11 +271,11 @@ sv:
       no_timezone: 'Du har ännu inte valt tidszon. Du kommer därför inte kunna sätta påminnelser. Ange en <a href="%{basePath}/my/preferences/profile">i din profil</a>.'
       reminders:
         at_desktop: "Nästa gång är jag vid datorn"
-        later_today: "Senare idag <br/>{{date}}"
-        next_business_day: "Nästa arbetsdag <br/>{{date}}"
-        tomorrow: "Imorgon <br/>{{date}}"
-        next_week: "Nästa vecka <br/>{{date}}"
-        next_month: "Nästa månad <br/>{{date}}"
+        later_today: "Senare idag"
+        next_business_day: "Nästa arbetsdag"
+        tomorrow: "Imorgon"
+        next_week: "Nästa vecka"
+        next_month: "Nästa månad"
         custom: "Anpassa datum och tid"
     drafts:
       resume: "Återuppta"

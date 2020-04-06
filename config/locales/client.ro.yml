@@ -29,7 +29,7 @@ ro:
     dates:
       time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "DD MMM HH:mm"
+      long_no_year: "DD MMM, HH:mm"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM "
       long_with_year: "DD MMM YYYY HH:mm"

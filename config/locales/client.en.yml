@@ -44,7 +44,7 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_no_year: "D MMM HH:mm"
+      long_no_year: "D MMM, HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_no_year_no_time: "D MMM"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
