@@ -1002,19 +1002,14 @@ export default Controller.extend(bufferedProperty("model"), {
       }
 
       composerController.open(options).then(() => {
-        const postUrl = `${location.protocol}//${location.host}${post.get(
-          "url"
-        )}`;
-        const postLink = `[${Handlebars.escapeExpression(
-          this.get("model.title")
-        )}](${postUrl})`;
+        const title = Handlebars.escapeExpression(this.model.title);
+        const postUrl = `${location.protocol}//${location.host}${post.url}`;
+        const postLink = `[${title}](${postUrl})`;
+        const text = `${I18n.t("post.continue_discussion", {
+          postLink
+        })}\n\n${quotedText}`;
 
-        composerController.get("model").prependText(
-          `${I18n.t("post.continue_discussion", {
-            postLink
-          })}\n\n${quotedText}`,
-          { new_line: true }
-        );
+        composerController.model.prependText(text, { new_line: true });
       });
     },
 
