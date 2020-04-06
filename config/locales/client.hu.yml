@@ -28,7 +28,7 @@ hu:
     dates:
       time: "h:mm a"
       timeline_date: "YYYY MMMM"
-      long_no_year: "MMM D h:mm a"
+      long_no_year: "MMM D, h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMM DD"
       long_with_year: "MMM D, YYYY h:mm a"

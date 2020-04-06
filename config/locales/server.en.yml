@@ -391,11 +391,11 @@ en:
 
     reminders:
       at_desktop: "Next time I'm at my desktop"
-      later_today: "Later today <br/>{{date}}"
-      next_business_day: "Next business day <br/>{{date}}"
-      tomorrow: "Tomorrow <br/>{{date}}"
-      next_week: "Next week <br/>{{date}}"
-      next_month: "Next month <br/>{{date}}"
+      later_today: "Later today"
+      next_business_day: "Next business day"
+      tomorrow: "Tomorrow"
+      next_week: "Next week"
+      next_month: "Next month"
       custom: "Custom date and time"
 
   groups:

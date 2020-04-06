@@ -29,7 +29,7 @@ bs_BA:
     dates:
       time: "HH: mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
+      long_no_year: "MMM D, h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -294,11 +294,11 @@ bs_BA:
       no_timezone: 'Još uvijek niste postavili vremensku zonu, tako da nećete biti u mogućnosti koristiti podsjetnike. Postavite vremensku zonu <a href="%{basePath}/my/preferences/profile">na vašem profilu</a>.'
       reminders:
         at_desktop: "Sljedeći put sam za svojim desktop kompjuterom"
-        later_today: "Danas, malo kasnije <br/>{{date}}"
-        next_business_day: "Sljedeći radni dan <br/>{{date}}"
-        tomorrow: "Sutradan <br/>{{date}}"
-        next_week: "Sljedeće sedmice <br/>{{date}}"
-        next_month: "Sljedeći mjesec <br/>{{date}}"
+        later_today: "Danas, malo kasnije"
+        next_business_day: "Sljedeći radni dan"
+        tomorrow: "Sutradan"
+        next_week: "Sljedeće sedmice"
+        next_month: "Sljedeći mjesec"
         custom: "Precizno vrijeme i datum"
     drafts:
       resume: "Nastavi"

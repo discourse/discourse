@@ -331,11 +331,11 @@ de:
       time_must_be_provided: "Zeit muss eingestellt werden für alle Erinnerungen ausser '%{reminder_type}'"
     reminders:
       at_desktop: "Nächstes mal wenn ich an meinem PC bin"
-      later_today: "Im Laufe des Tages <br/>{{date}}"
-      next_business_day: "Nächster Geschäftstag <br/>{{date}}"
-      tomorrow: "Morgen <br/>{{date}}"
-      next_week: "Nächste Woche <br/>{{date}}"
-      next_month: "Nächster Monat <br/>{{date}}"
+      later_today: "Im Laufe des Tages"
+      next_business_day: "Nächster Geschäftstag"
+      tomorrow: "Morgen"
+      next_week: "Nächste Woche"
+      next_month: "Nächster Monat"
       custom: "Eigenes Datum und Zeit"
   groups:
     success:

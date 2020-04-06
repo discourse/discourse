@@ -28,7 +28,7 @@ nb_NO:
     dates:
       time: "LT"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM LT"
+      long_no_year: "D MMM, LT"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D MMM YYYY LT"
