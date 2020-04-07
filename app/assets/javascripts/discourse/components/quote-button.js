@@ -39,13 +39,10 @@ export default Component.extend({
     let firstRange, postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
-      const $parent = $(range.startContainer.parentNode);
+      const $selectionStart = $(range.startContainer);
       const $ancestor = $(range.commonAncestorContainer);
 
-      if (
-        $parent.closest(".cooked").length === 0 &&
-        $ancestor.closest(".cooked").length === 0
-      ) {
+      if ($selectionStart.closest(".cooked").length === 0) {
         return;
       }
 
