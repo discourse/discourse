@@ -1377,7 +1377,8 @@ security:
       - Lax
       - Strict
       - Disabled
-    regex: "^(Lax|Strict|Disabled)$"
+      - None
+    regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   moderators_create_categories: false
