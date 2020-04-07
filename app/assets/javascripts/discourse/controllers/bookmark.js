@@ -1,4 +1,3 @@
-/*global Mousetrap:true*/
 import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
@@ -113,23 +112,13 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   bindKeyboardShortcuts() {
-    if (!this.mouseTrap) {
-      this.mouseTrap = Mousetrap(
-        document.querySelector("#discourse-modal.bookmark-with-reminder")
-      );
-    }
-
     KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
-    KeyboardShortcuts.addBindings(
-      BOOKMARK_BINDINGS,
-      binding => {
-        if (binding.args) {
-          return this.send(binding.handler, ...binding.args);
-        }
-        this.send(binding.handler);
-      },
-      this.mouseTrap
-    );
+    KeyboardShortcuts.addBindings(BOOKMARK_BINDINGS, binding => {
+      if (binding.args) {
+        return this.send(binding.handler, ...binding.args);
+      }
+      this.send(binding.handler);
+    });
   },
 
   unbindKeyboardShortcuts() {

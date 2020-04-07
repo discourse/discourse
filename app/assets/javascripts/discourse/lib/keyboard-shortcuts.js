@@ -141,10 +141,10 @@ export default {
 
   // add bindings to the key trapper, if none is specified then
   // the shortcuts will be bound globally.
-  addBindings(newBindings, callback, keyTrapper = this.keyTrapper) {
+  addBindings(newBindings, callback) {
     Object.keys(newBindings).forEach(key => {
       let binding = newBindings[key];
-      keyTrapper.bind(key, event => {
+      this.keyTrapper.bind(key, event => {
         // usually the caller that is adding the binding
         // will want to decide what to do with it when the
         // event is fired
@@ -154,8 +154,8 @@ export default {
     });
   },
 
-  unbind(bindings, keyTrapper = this.keyTrapper) {
-    Object.keys(bindings).forEach(key => keyTrapper.unbind(key));
+  unbind(bindings) {
+    Object.keys(bindings).forEach(key => this.keyTrapper.unbind(key));
   },
 
   toggleBookmark() {
