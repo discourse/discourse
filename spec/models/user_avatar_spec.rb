@@ -99,10 +99,10 @@ describe UserAvatar do
     describe "404 should be silent, nothing to do really" do
 
       it "does nothing when avatar is 404" do
-
+        SecureRandom.stubs(:urlsafe_base64).returns("5555")
         freeze_time Time.now
 
-        stub_request(:get, "https://www.gravatar.com/avatar/#{avatar.user.email_hash}.png?d=404&s=360").
+        stub_request(:get, "https://www.gravatar.com/avatar/#{avatar.user.email_hash}.png?d=404&reset_cache=5555&s=360").
           to_return(status: 404, body: "", headers: {})
 
         expect do
