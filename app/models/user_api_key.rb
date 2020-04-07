@@ -20,6 +20,28 @@ class UserApiKey < ActiveRecord::Base
 
   belongs_to :user
 
+  scope :active, -> { where(revoked_at: nil) }
+  scope :with_key, ->(key) { where(key_hash: ApiKey.hash_key(key)) }
+
+  after_initialize :generate_key
+
+  def generate_key
+    if !self.key_hash
+      @key ||= SecureRandom.hex
+      self.key = @key
+      self.key_hash = ApiKey.hash_key(@key)
+    end
+  end
+
+  def key
+    raise ApiKey::KeyAccessError.new "API key is only accessible immediately after creation" unless key_available?
+    @key
+  end
+
+  def key_available?
+    @key.present?
+  end
+
   def self.allowed_scopes
     Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))
   end
@@ -88,6 +110,7 @@ end
 #  revoked_at       :datetime
 #  scopes           :text             default([]), not null, is an Array
 #  last_used_at     :datetime         not null
+#  key_hash         :string           not null
 #
 # Indexes
 #
