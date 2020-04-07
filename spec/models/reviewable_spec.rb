@@ -181,10 +181,11 @@ RSpec.describe Reviewable, type: :model do
             SiteSetting.reviewable_default_visibility = :high
             Reviewable.set_priorities(high: 10)
             @queued_post = Fabricate(:reviewable_queued_post, score: 0, target: post)
+            @queued_user = Fabricate(:reviewable_user, score: 0)
           end
 
           it 'includes queued posts when searching for pending reviewables' do
-            expect(Reviewable.list_for(user)).to contain_exactly(@queued_post)
+            expect(Reviewable.list_for(user)).to contain_exactly(@queued_post, @queued_user)
           end
 
           it 'excludes pending queued posts when applying a different status filter' do
