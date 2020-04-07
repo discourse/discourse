@@ -1,4 +1,8 @@
 QUnit.module("lib:emoji-store", {
+  beforeEach() {
+    const store = Discourse.__container__.lookup("service:emoji-store");
+    store.reset();
+  },
   afterEach() {
     const store = Discourse.__container__.lookup("service:emoji-store");
     store.reset();
