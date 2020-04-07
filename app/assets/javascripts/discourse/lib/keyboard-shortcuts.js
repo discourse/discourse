@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { throttle } from "@ember/runloop";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
-export let bindings = {
+export let DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
@@ -84,7 +84,7 @@ export let bindings = {
 const animationDuration = 100;
 
 export default {
-  bindEvents(keyTrapper, container) {
+  init(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
     this.container = container;
     this._stopCallback();
@@ -96,30 +96,70 @@ export default {
 
     // Disable the shortcut if private messages are disabled
     if (!siteSettings.enable_personal_messages) {
-      delete bindings["g m"];
+      delete DEFAULT_BINDINGS["g m"];
+    }
+  },
+
+  bindEvents() {
+    Object.keys(DEFAULT_BINDINGS).forEach(key => {
+      this.bindKey(key);
+    });
+  },
+
+  bindKey(key) {
+    const binding = DEFAULT_BINDINGS[key];
+    if (!binding.anonymous && !this.currentUser) {
+      return;
     }
 
-    Object.keys(bindings).forEach(key => {
-      const binding = bindings[key];
-      if (!binding.anonymous && !this.currentUser) {
-        return;
+    if (binding.path) {
+      this._bindToPath(binding.path, key);
+    } else if (binding.handler) {
+      if (binding.global) {
+        // global shortcuts will trigger even while focusing on input/textarea
+        this._globalBindToFunction(binding.handler, key);
+      } else {
+        this._bindToFunction(binding.handler, key);
       }
+    } else if (binding.postAction) {
+      this._bindToSelectedPost(binding.postAction, key);
+    } else if (binding.click) {
+      this._bindToClick(binding.click, key);
+    }
+  },
 
-      if (binding.path) {
-        this._bindToPath(binding.path, key);
-      } else if (binding.handler) {
-        if (binding.global) {
-          // global shortcuts will trigger even while focusing on input/textarea
-          this._globalBindToFunction(binding.handler, key);
-        } else {
-          this._bindToFunction(binding.handler, key);
-        }
-      } else if (binding.postAction) {
-        this._bindToSelectedPost(binding.postAction, key);
-      } else if (binding.click) {
-        this._bindToClick(binding.click, key);
-      }
+  // for cases when you want to disable global keyboard shortcuts
+  // so that you can override them (e.g. inside a modal)
+  pause(combinations) {
+    combinations.forEach(combo => this.keyTrapper.unbind(combo));
+  },
+
+  // restore global shortcuts that you have paused
+  unpause(...combinations) {
+    combinations.forEach(combo => this.bindKey(combo));
+  },
+
+  // add bindings to the key trapper, if none is specified then
+  // the shortcuts will be bound globally.
+  addBindings(newBindings, callback) {
+    Object.keys(newBindings).forEach(key => {
+      let binding = newBindings[key];
+      this.keyTrapper.bind(key, event => {
+        // usually the caller that is adding the binding
+        // will want to decide what to do with it when the
+        // event is fired
+        callback(binding, event);
+        event.stopPropagation();
+      });
     });
+  },
+
+  // unbinds all the shortcuts in a key binding object e.g.
+  // {
+  //   'c': createTopic
+  // }
+  unbind(bindings) {
+    this.pause(Object.keys(bindings));
   },
 
   toggleBookmark() {

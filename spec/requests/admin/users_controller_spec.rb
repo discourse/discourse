@@ -254,9 +254,8 @@ RSpec.describe Admin::UsersController do
       api_key = Fabricate(:api_key, user: user)
 
       put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
-        bookmarked: "true",
-        api_key: api_key.key
-      }
+        bookmarked: "true"
+      }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(200)
 
       put "/admin/users/#{user.id}/suspend.json", params: suspend_params

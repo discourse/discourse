@@ -9,17 +9,17 @@ module CategoryHashtag
     def query_from_hashtag_slug(category_slug)
       parent_slug, child_slug = category_slug.split(SEPARATOR, 2)
 
-      category = Category.where(slug: parent_slug, parent_category_id: nil)
+      categories = Category.where(slug: parent_slug)
 
       if child_slug
-        Category.where(slug: child_slug, parent_category_id: category.select(:id)).first
+        Category.where(slug: child_slug, parent_category_id: categories.select(:id)).first
       else
-        category.first
+        categories.where(parent_category_id: nil).first
       end
     end
   end
 
   def hashtag_slug
-    full_slug(SEPARATOR)
+    full_slug.split("-").last(2).join(SEPARATOR)
   end
 end
