@@ -154,8 +154,12 @@ export default {
     });
   },
 
+  // unbinds all the shortcuts in a key binding object e.g.
+  // {
+  //   'c': createTopic
+  // }
   unbind(bindings) {
-    Object.keys(bindings).forEach(key => this.keyTrapper.unbind(key));
+    this.pause(Object.keys(bindings));
   },
 
   toggleBookmark() {
