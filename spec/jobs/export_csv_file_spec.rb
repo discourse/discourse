@@ -85,6 +85,14 @@ describe Jobs::ExportCsvFile do
       exporter
     end
 
+    it "does not throw an error when the dates are invalid" do
+      Jobs::ExportCsvFile.new.execute(
+        entity: 'report',
+        user_id: user.id,
+        args: { start_date: 'asdfasdf', end_date: 'not-a-date', name: 'dau_by_mau' }
+      )
+    end
+
     it 'works with single-column reports' do
       user.user_visits.create!(visited_at: '2010-01-01', posts_read: 42)
       Fabricate(:user).user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
