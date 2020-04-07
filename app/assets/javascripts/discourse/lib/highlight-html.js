@@ -40,18 +40,17 @@ export default function(node, words, opts = {}) {
     matchCase: false
   };
 
-  Object.assign(settings, opts);
-  words = typeof words === "string" ? [words] : words;
-  words = words
+  settings = Object.assign({}, settings, opts);
+  words = Ember.makeArray(words)
     .filter(Boolean)
     .map(word => word.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"));
 
   if (!words.length) return node;
 
-  const pattern = `(${words.join("|")})`;
+  const pattern = `(${words.join(" ")})`;
   let flag;
 
-  if (settings.matchCase) {
+  if (!settings.matchCase) {
     flag = "i";
   }
 
@@ -71,7 +70,7 @@ export function unhighlightHTML(opts = {}) {
     className: "highlighted"
   };
 
-  Object.assign(settings, opts);
+  settings = Object.assign({}, settings, opts);
 
   document
     .querySelectorAll(`${settings.nodeName}.${settings.className}`)

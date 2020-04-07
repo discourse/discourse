@@ -10,7 +10,7 @@ QUnit.test("highlighting text", assert => {
     `
   );
 
-  highlightSearch(fixture(), "some text");
+  highlightSearch(fixture()[0], "some text");
 
   const terms = [];
 
@@ -28,11 +28,11 @@ QUnit.test("highlighting text", assert => {
 QUnit.test("highlighting unicode text", assert => {
   fixture().html(
     `
-    <p>This is some தமிழ் and русский text to highlight</p>
+    <p>This is some தமிழ் & русский text to highlight</p>
     `
   );
 
-  highlightSearch(fixture(), "தமிழ் русский");
+  highlightSearch(fixture()[0], "தமிழ் & русский");
 
   const terms = [];
 
@@ -42,7 +42,7 @@ QUnit.test("highlighting unicode text", assert => {
 
   assert.equal(
     terms.join(" "),
-    "தமிழ் русский",
+    "தமிழ் & русский",
     "it should highlight the terms correctly"
   );
 });

@@ -15,7 +15,7 @@ class Highlighted extends RawHtml {
   }
 
   decorate($html) {
-    highlightSearch($html, this.term);
+    highlightSearch($html[0], this.term);
   }
 }
 

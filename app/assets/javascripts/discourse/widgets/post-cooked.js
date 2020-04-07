@@ -59,7 +59,7 @@ export default class PostCooked {
         unhighlightHTML($html[0]);
       }
 
-      highlightSearch($html, highlight, { defaultClassName: true });
+      highlightSearch($html[0], highlight, { defaultClassName: true });
       this._highlighted = true;
     } else if (this._highlighted) {
       unhighlightHTML($html[0]);

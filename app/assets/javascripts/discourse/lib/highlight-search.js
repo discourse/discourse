@@ -3,7 +3,7 @@ import highlightHTML from "discourse/lib/highlight-html";
 
 export const CLASS_NAME = "search-highlight";
 
-export default function($elem, term, opts = {}) {
+export default function(elem, term, opts = {}) {
   if (!_.isEmpty(term)) {
     // special case ignore "l" which is used for magic sorting
     let words = _.reject(
@@ -14,8 +14,6 @@ export default function($elem, term, opts = {}) {
     words = words.map(w => w.replace(/^"(.*)"$/, "$1"));
     const highlightOpts = {};
     if (!opts.defaultClassName) highlightOpts.className = CLASS_NAME;
-    for (let i = 0; i <= $elem.length; i++) {
-      highlightHTML($elem[0], words, highlightOpts);
-    }
+    highlightHTML(elem, words, highlightOpts);
   }
 }
