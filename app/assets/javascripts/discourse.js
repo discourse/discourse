@@ -6,6 +6,10 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import FocusEvent from "discourse-common/mixins/focus-event";
 import deprecated from "discourse-common/lib/deprecated";
 
+if (window.unsupportedBrowser) {
+  throw "Unsupported browser detected";
+}
+
 const _pluginCallbacks = [];
 
 const Discourse = Application.extend(FocusEvent, {

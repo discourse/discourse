@@ -19,6 +19,8 @@
 
     <%= build_plugin_html 'server:before-script-load' %>
 
+    <%= preload_script 'browser-detect' %>
+
     <%= preload_script "locales/#{I18n.locale}" %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
