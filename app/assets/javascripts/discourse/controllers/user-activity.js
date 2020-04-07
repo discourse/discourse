@@ -3,7 +3,6 @@ import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import { observes } from "discourse-common/utils/decorators";
-import { setting } from "discourse/lib/computed";
 
 export default Controller.extend({
   application: controller(),
@@ -12,7 +11,6 @@ export default Controller.extend({
   userActionType: null,
 
   canDownloadPosts: alias("user.viewingSelf"),
-  bookmarksWithRemindersEnabled: setting("enable_bookmarks_with_reminders"),
 
   @observes("userActionType", "model.stream.itemsLoaded")
   _showFooter: function() {

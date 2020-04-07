@@ -2369,10 +2369,7 @@ RSpec.describe TopicsController do
       expect(response).to be_forbidden
     end
 
-    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = true
-      end
+    context "bookmarks with reminders" do
       it "deletes all the bookmarks for the user in the topic" do
         sign_in(user)
         post = create_post
@@ -2404,10 +2401,7 @@ RSpec.describe TopicsController do
       expect(response).to be_forbidden
     end
 
-    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = true
-      end
+    context "bookmarks with reminders" do
       it "should create a new bookmark on the first post of the topic" do
         post = create_post
         post2 = create_post(topic_id: post.topic_id)

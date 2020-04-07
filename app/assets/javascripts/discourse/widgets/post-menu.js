@@ -301,8 +301,8 @@ registerButton("bookmark", attrs => {
   };
 });
 
-registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
-  if (!attrs.canBookmark || !siteSettings.enable_bookmarks_with_reminders) {
+registerButton("bookmarkWithReminder", attrs => {
+  if (!attrs.canBookmark) {
     return;
   }
 
@@ -467,10 +467,7 @@ export default createWidget("post-menu", {
 
     // filter menu items based on site settings
     const orderedButtons = this.menuItems().filter(button => {
-      if (
-        this.siteSettings.enable_bookmarks_with_reminders &&
-        button === "bookmark"
-      ) {
+      if (button === "bookmark") {
         return false;
       }
       return true;

@@ -52,8 +52,6 @@ class BookmarkReminderNotificationHandler
   end
 
   def self.send_at_desktop_reminder(user:, request_user_agent:)
-    return if !SiteSetting.enable_bookmarks_with_reminders
-
     return if MobileDetection.mobile_device?(request_user_agent)
 
     return if !user_has_pending_at_desktop_reminders?(user)

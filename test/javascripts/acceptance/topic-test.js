@@ -347,10 +347,7 @@ QUnit.test("Quoting a quote keeps the original poster name", async assert => {
 });
 
 acceptance("Topic + Post Bookmarks with Reminders", {
-  loggedIn: true,
-  settings: {
-    enable_bookmarks_with_reminders: true
-  }
+  loggedIn: true
 });
 
 QUnit.test("Bookmarks Modal", async assert => {
