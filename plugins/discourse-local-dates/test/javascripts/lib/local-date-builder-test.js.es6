@@ -64,7 +64,7 @@ QUnit.assert.buildsCorrectDate = function(options, expected, message) {
 QUnit.test("date", assert => {
   freezeTime({ date: "2020-03-11" }, () => {
     assert.buildsCorrectDate(
-      { date: "2020-03-22" },
+      { date: "2020-03-22", timezone: PARIS },
       { formated: "March 22, 2020" },
       "it displays the date without time"
     );
@@ -98,7 +98,7 @@ QUnit.test("option[displayedTimezone]", assert => {
 
   freezeTime({}, () => {
     assert.buildsCorrectDate(
-      { displayedTimezone: PARIS },
+      { displayedTimezone: PARIS, timezone: PARIS },
       { formated: "March 22, 2020" },
       "it doesn't display the timezone if the timezone is the same than the date"
     );
@@ -327,7 +327,7 @@ QUnit.test("previews", assert => {
             timezone: "Europe/Paris"
           },
           {
-            formated: "March 22, 2020 → March 23, 2020",
+            formated: "March 23, 2020 → March 23, 2020",
             timezone: "Australia/Sydney"
           }
         ]
@@ -406,11 +406,11 @@ QUnit.test("previews", assert => {
             timezone: "Europe/Paris"
           },
           {
-            formated: "April 7, 2020 → April 8, 2020",
+            formated: "April 7, 2020 → April 7, 2020",
             timezone: "Europe/London"
           },
           {
-            formated: "April 7, 2020 → April 8, 2020",
+            formated: "April 7, 2020 → April 7, 2020",
             timezone: "Africa/Lagos"
           }
         ]

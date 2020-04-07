@@ -113,10 +113,7 @@ export default class LocalDateBuilder {
       previewedTimezones.push({
         timezone,
         formated: this._createDateTimeRange(
-          DateWithZoneHelper.fromDatetime(
-            localDate.datetime.tz(timezone),
-            timezone
-          ),
+          localDate.datetimeWithZone(timezone),
           this.time
         )
       });
@@ -125,7 +122,10 @@ export default class LocalDateBuilder {
     if (!previewedTimezones.length) {
       previewedTimezones.push({
         timezone: "Etc/UTC",
-        formated: this._createDateTimeRange(localDate.tz("Etc/UTC"), this.time)
+        formated: this._createDateTimeRange(
+          localDate.datetimeWithZone("Etc/UTC"),
+          this.time
+        )
       });
     }
 
@@ -237,7 +237,7 @@ export default class LocalDateBuilder {
   }
 
   _formatWithZone(localDate, displayedTimezone, format) {
-    let formated = localDate.datetime.tz(displayedTimezone).format(format);
+    let formated = localDate.datetimeWithZone(displayedTimezone).format(format);
     return `${formated} (${this._zoneWithoutPrefix(displayedTimezone)})`;
   }
 }
