@@ -317,8 +317,12 @@ class UsersController < ApplicationController
       filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
       invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
     end
-    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer, show_emails: show_emails),
-                     can_see_invite_details: guardian.can_see_invite_details?(inviter)
+
+    render json: MultiJson.dump(InvitedSerializer.new(
+      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter),
+      scope: guardian,
+      root: false
+    ))
   end
 
   def invited_count

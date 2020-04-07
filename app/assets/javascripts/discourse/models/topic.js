@@ -397,6 +397,16 @@ const Topic = RestModel.extend({
     }).then(() => this.set("archetype", "regular"));
   },
 
+  afterTopicBookmarked(firstPost) {
+    if (firstPost) {
+      firstPost.set("bookmarked", true);
+      if (this.siteSettings.enable_bookmarks_with_reminders) {
+        firstPost.set("bookmarked_with_reminder", true);
+      }
+      return [firstPost.id];
+    }
+  },
+
   toggleBookmark() {
     if (this.bookmarking) {
       return Promise.resolve();
@@ -408,41 +418,48 @@ const Topic = RestModel.extend({
     const firstPost =
       posts && posts[0] && posts[0].get("post_number") === 1 && posts[0];
     const bookmark = !this.bookmarked;
-    const path = bookmark ? "/bookmark" : "/remove_bookmarks";
 
     const toggleBookmarkOnServer = () => {
-      return ajax(`/t/${this.id}${path}`, { type: "PUT" })
-        .then(() => {
-          this.toggleProperty("bookmarked");
-          if (bookmark && firstPost) {
-            firstPost.set("bookmarked", true);
-            if (this.siteSettings.enable_bookmarks_with_reminders) {
-              firstPost.set("bookmarked_with_reminder", true);
+      if (bookmark) {
+        if (this.siteSettings.enable_bookmarks_with_reminders) {
+          return firstPost.toggleBookmarkWithReminder().then(() => {
+            this.set("bookmarking", false);
+            return this.afterTopicBookmarked(firstPost);
+          });
+        } else {
+          return ajax(`/t/${this.id}/bookmark`, { type: "PUT" })
+            .then(() => {
+              this.toggleProperty("bookmarked");
+              return this.afterTopicBookmarked(firstPost);
+            })
+            .catch(popupAjaxError)
+            .finally(() => this.set("bookmarking", false));
+        }
+      } else {
+        return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" })
+          .then(() => {
+            this.toggleProperty("bookmarked");
+            if (posts) {
+              const updated = [];
+              posts.forEach(post => {
+                if (post.get("bookmarked")) {
+                  post.set("bookmarked", false);
+                  updated.push(post.id);
+                }
+                if (
+                  this.siteSettings.enable_bookmarks_with_reminders &&
+                  post.get("bookmarked_with_reminder")
+                ) {
+                  post.set("bookmarked_with_reminder", false);
+                  updated.push(post.id);
+                }
+              });
+              return updated;
             }
-            return [firstPost.id];
-          }
-          if (!bookmark && posts) {
-            const updated = [];
-            posts.forEach(post => {
-              if (post.get("bookmarked")) {
-                post.set("bookmarked", false);
-                updated.push(post.id);
-              }
-              if (
-                this.siteSettings.enable_bookmarks_with_reminders &&
-                post.get("bookmarked_with_reminder")
-              ) {
-                post.set("bookmarked_with_reminder", false);
-                updated.push(post.id);
-              }
-            });
-            return updated;
-          }
-
-          return [];
-        })
-        .catch(popupAjaxError)
-        .finally(() => this.set("bookmarking", false));
+          })
+          .catch(popupAjaxError)
+          .finally(() => this.set("bookmarking", false));
+      }
     };
 
     const unbookmarkedPosts = [];

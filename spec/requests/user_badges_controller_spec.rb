@@ -123,9 +123,13 @@ describe UserBadgesController do
     it 'grants badges from master api calls' do
       api_key = Fabricate(:api_key)
 
-      post "/user_badges.json", params: {
-        badge_id: badge.id, username: user.username, api_key: api_key.key, api_username: "system"
-      }
+      post "/user_badges.json",
+        params: {
+          badge_id: badge.id, username: user.username
+        },
+        headers: {
+          HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: "system"
+        }
 
       expect(response.status).to eq(200)
       user_badge = UserBadge.find_by(user: user, badge: badge)
