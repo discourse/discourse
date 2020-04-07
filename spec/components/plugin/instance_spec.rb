@@ -544,6 +544,10 @@ describe Plugin::Instance do
       Plugin::CustomEmoji.clear_cache
     end
 
+    after do
+      Plugin::CustomEmoji.clear_cache
+    end
+
     it 'allows to register an emoji' do
       Plugin::Instance.new.register_emoji("foo", "/foo/bar.png")
 

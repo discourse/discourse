@@ -264,14 +264,15 @@ Category.reopenClass({
     return _uncategorized;
   },
 
-  slugFor(category, separator = "/") {
+  slugFor(category, separator = "/", depth = 3) {
     if (!category) return "";
 
     const parentCategory = get(category, "parentCategory");
     let result = "";
 
-    if (parentCategory) {
-      result = Category.slugFor(parentCategory) + separator;
+    if (parentCategory && depth > 1) {
+      result =
+        Category.slugFor(parentCategory, separator, depth - 1) + separator;
     }
 
     const id = get(category, "id"),
