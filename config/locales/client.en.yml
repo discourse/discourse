@@ -44,7 +44,7 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_no_year: "D MMM HH:mm"
+      long_no_year: "D MMM, HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_no_year_no_time: "D MMM"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
@@ -3076,6 +3076,18 @@ en:
         title: "Composing"
         return: "%{shortcut} Return to composer"
         fullscreen: "%{shortcut} Fullscreen composer"
+      bookmarks:
+        title: "Bookmarking"
+        enter: "%{shortcut} Save and close"
+        later_today: "%{shortcut} Later today"
+        later_this_week: "%{shortcut} Later this week"
+        tomorrow: "%{shortcut} Tomorrow"
+        next_week: "%{shortcut} Next week"
+        next_month: "%{shortcut} Next month"
+        next_business_week: "%{shortcut} Start of next week"
+        next_business_day: "%{shortcut} Next business day"
+        custom: "%{shortcut} Custom date and time"
+        none: "%{shortcut} No reminder"
       actions:
         title: "Actions"
         bookmark_topic: "%{shortcut} Toggle bookmark topic"

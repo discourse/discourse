@@ -332,11 +332,11 @@ sv:
       time_must_be_provided: "tid måste tillhandahållas för alla påminnelser utom '%{reminder_type}'"
     reminders:
       at_desktop: "Nästa gång är jag vid datorn"
-      later_today: "Senare idag <br/>{{date}}"
-      next_business_day: "Nästa arbetsdag <br/>{{date}}"
-      tomorrow: "Imorgon <br/>{{date}}"
-      next_week: "Nästa vecka <br/>{{date}}"
-      next_month: "Nästa månad <br/>{{date}}"
+      later_today: "Senare idag"
+      next_business_day: "Nästa arbetsdag"
+      tomorrow: "Imorgon"
+      next_week: "Nästa vecka"
+      next_month: "Nästa månad"
       custom: "Anpassa datum och tid"
   groups:
     success:

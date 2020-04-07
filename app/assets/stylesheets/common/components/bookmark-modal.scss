@@ -1,9 +1,8 @@
 .bookmark-with-reminder.modal {
   .modal-inner-container {
-    max-width: 95%;
+    box-sizing: border-box;
   }
   .modal-body {
-    max-width: 410px;
     width: 100%;
     box-sizing: border-box;
 
@@ -17,24 +16,36 @@
   }
 
   .custom-date-time-wrap {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-
-    .svg-icon {
-      padding: 0 5px;
+    padding: 1em 1em 0.5em;
+    border: 1px solid $primary-low;
+    border-top: none;
+    margin-top: -0.667em;
+    background: $primary-very-low;
+    .d-icon {
+      padding: 0 0.75em 0 0;
+      color: $primary-high;
+      margin-top: -0.5em;
     }
 
-    .date-picker-wrapper {
-      flex: 1;
-
-      .date-picker {
+    .tap-tile-date-input,
+    .tap-tile-time-input {
+      display: flex;
+      align-items: center;
+      input {
         width: 100%;
+        min-width: unset;
       }
     }
 
+    .date-picker,
     .time-input {
-      flex: 1;
+      text-align: left;
+      padding-top: 5px;
+    }
+
+    .time-input,
+    .date-picker-wrapper {
+      flex: 1 1 auto;
     }
   }
 }

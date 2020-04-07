@@ -324,3 +324,19 @@
     color: $primary-medium;
   }
 }
+
+.category-list {
+  tbody {
+    .category {
+      &.no-category-style {
+        border-color: transparent;
+        border-left: 0px;
+        padding-left: 0px;
+      }
+    }
+  }
+}
+
+.category-box.no-category-boxes-style {
+  border-left-width: 2px;
+}
