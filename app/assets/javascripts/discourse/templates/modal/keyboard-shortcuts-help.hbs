@@ -55,6 +55,23 @@
         <li>{{html-safe shortcuts.actions.quote_post}}</li>
       </ul>
     </section>
+    {{#if showBookmarkShortcuts}}
+    <section class="keyboard-shortcuts-bookmark-section">
+      <h4>{{i18n "keyboard_shortcuts_help.bookmarks.title"}}</h4>
+      <ul>
+        <li>{{html-safe shortcuts.bookmarks.enter}}</li>
+        <li>{{html-safe shortcuts.bookmarks.later_today}}</li>
+        <li>{{html-safe shortcuts.bookmarks.later_this_week}}</li>
+        <li>{{html-safe shortcuts.bookmarks.tomorrow}}</li>
+        <li>{{html-safe shortcuts.bookmarks.next_week}}</li>
+        <li>{{html-safe shortcuts.bookmarks.next_month}}</li>
+        <li>{{html-safe shortcuts.bookmarks.next_business_week}}</li>
+        <li>{{html-safe shortcuts.bookmarks.next_business_day}}</li>
+        <li>{{html-safe shortcuts.bookmarks.custom}}</li>
+        <li>{{html-safe shortcuts.bookmarks.none}}</li>
+      </ul>
+    </section>
+    {{/if}}
   </div>
   <div class="column">
     <section>

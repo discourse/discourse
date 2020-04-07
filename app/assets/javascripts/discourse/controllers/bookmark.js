@@ -1,10 +1,22 @@
+import { and } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
+// global shortcuts that interfere with these modal shortcuts, they are rebound when the
+// modal is closed
+//
+// c createTopic
+// r replyToPost
+// l toggle like
+// d deletePost
+// t replyAsNewTopic
+const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "d", "t"];
 const START_OF_DAY_HOUR = 8;
 const LATER_TODAY_CUTOFF_HOUR = 17;
 const REMINDER_TYPES = {
@@ -21,6 +33,28 @@ const REMINDER_TYPES = {
   LATER_THIS_WEEK: "later_this_week"
 };
 
+const BOOKMARK_BINDINGS = {
+  enter: { handler: "saveAndClose" },
+  "l t": { handler: "selectReminderType", args: [REMINDER_TYPES.LATER_TODAY] },
+  "l w": {
+    handler: "selectReminderType",
+    args: [REMINDER_TYPES.LATER_THIS_WEEK]
+  },
+  "n b d": {
+    handler: "selectReminderType",
+    args: [REMINDER_TYPES.NEXT_BUSINESS_DAY]
+  },
+  "n d": { handler: "selectReminderType", args: [REMINDER_TYPES.TOMORROW] },
+  "n w": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_WEEK] },
+  "n b w": {
+    handler: "selectReminderType",
+    args: [REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK]
+  },
+  "n m": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_MONTH] },
+  "c r": { handler: "selectReminderType", args: [REMINDER_TYPES.CUSTOM] },
+  "n r": { handler: "selectReminderType", args: [REMINDER_TYPES.NONE] }
+};
+
 export default Controller.extend(ModalFunctionality, {
   loading: false,
   errorMessage: null,
@@ -33,6 +67,7 @@ export default Controller.extend(ModalFunctionality, {
   customReminderTime: null,
   lastCustomReminderDate: null,
   lastCustomReminderTime: null,
+  mouseTrap: null,
   userTimezone: null,
 
   onShow() {
@@ -49,7 +84,12 @@ export default Controller.extend(ModalFunctionality, {
       userTimezone: this.currentUser.resolvedTimezone()
     });
 
+    this.bindKeyboardShortcuts();
     this.loadLastUsedCustomReminderDatetime();
+
+    // make sure the input is cleared, otherwise the keyboard shortcut to toggle
+    // bookmark for post ends up in the input
+    next(() => this.set("name", null));
   },
 
   loadLastUsedCustomReminderDatetime() {
@@ -71,9 +111,29 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
+  bindKeyboardShortcuts() {
+    KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
+    KeyboardShortcuts.addBindings(BOOKMARK_BINDINGS, binding => {
+      if (binding.args) {
+        return this.send(binding.handler, ...binding.args);
+      }
+      this.send(binding.handler);
+    });
+  },
+
+  unbindKeyboardShortcuts() {
+    KeyboardShortcuts.unbind(BOOKMARK_BINDINGS, this.mouseTrap);
+  },
+
+  restoreGlobalShortcuts() {
+    KeyboardShortcuts.unpause(...GLOBAL_SHORTCUTS_TO_PAUSE);
+  },
+
   // we always want to save the bookmark unless the user specifically
   // clicks the save or cancel button to mimic browser behaviour
   onClose() {
+    this.unbindKeyboardShortcuts();
+    this.restoreGlobalShortcuts();
     if (!this.closeWithoutSaving && !this.isSavingBookmarkManually) {
       this.saveBookmark().catch(e => this.handleSaveError(e));
     }
@@ -102,10 +162,7 @@ export default Controller.extend(ModalFunctionality, {
     return REMINDER_TYPES;
   },
 
-  @discourseComputed()
-  showLastCustom() {
-    return this.lastCustomReminderTime && this.lastCustomReminderDate;
-  },
+  showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
 
   @discourseComputed()
   showLaterToday() {
@@ -299,10 +356,16 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     saveAndClose() {
+      if (this.saving) {
+        return;
+      }
+
+      this.saving = true;
       this.isSavingBookmarkManually = true;
       this.saveBookmark()
         .then(() => this.send("closeModal"))
-        .catch(e => this.handleSaveError(e));
+        .catch(e => this.handleSaveError(e))
+        .finally(() => (this.saving = false));
     },
 
     closeWithoutSavingBookmark() {
@@ -311,6 +374,9 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     selectReminderType(type) {
+      if (type === REMINDER_TYPES.LATER_TODAY && !this.showLaterToday) {
+        return;
+      }
       this.set("selectedReminderType", type);
     }
   }
