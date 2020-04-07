@@ -10,7 +10,7 @@ export default Component.extend({
     "modalStyle",
     "hasPanels"
   ],
-  attributeBindings: ["data-keyboard"],
+  attributeBindings: ["data-keyboard", "aria-modal"],
   dismissable: true,
   title: null,
   subtitle: null,
@@ -28,6 +28,8 @@ export default Component.extend({
 
   // We handle ESC ourselves
   "data-keyboard": "false",
+  // Inform screenreaders of the modal
+  "aria-modal": "true",
 
   @on("didInsertElement")
   setUp() {
