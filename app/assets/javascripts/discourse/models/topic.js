@@ -400,9 +400,7 @@ const Topic = RestModel.extend({
   afterTopicBookmarked(firstPost) {
     if (firstPost) {
       firstPost.set("bookmarked", true);
-      if (this.siteSettings.enable_bookmarks_with_reminders) {
-        firstPost.set("bookmarked_with_reminder", true);
-      }
+      firstPost.set("bookmarked_with_reminder", true);
       return [firstPost.id];
     }
   },
@@ -421,20 +419,10 @@ const Topic = RestModel.extend({
 
     const toggleBookmarkOnServer = () => {
       if (bookmark) {
-        if (this.siteSettings.enable_bookmarks_with_reminders) {
-          return firstPost.toggleBookmarkWithReminder().then(() => {
-            this.set("bookmarking", false);
-            return this.afterTopicBookmarked(firstPost);
-          });
-        } else {
-          return ajax(`/t/${this.id}/bookmark`, { type: "PUT" })
-            .then(() => {
-              this.toggleProperty("bookmarked");
-              return this.afterTopicBookmarked(firstPost);
-            })
-            .catch(popupAjaxError)
-            .finally(() => this.set("bookmarking", false));
-        }
+        return firstPost.toggleBookmarkWithReminder().then(() => {
+          this.set("bookmarking", false);
+          return this.afterTopicBookmarked(firstPost);
+        });
       } else {
         return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" })
           .then(() => {
@@ -446,10 +434,7 @@ const Topic = RestModel.extend({
                   post.set("bookmarked", false);
                   updated.push(post.id);
                 }
-                if (
-                  this.siteSettings.enable_bookmarks_with_reminders &&
-                  post.get("bookmarked_with_reminder")
-                ) {
+                if (post.get("bookmarked_with_reminder")) {
                   post.set("bookmarked_with_reminder", false);
                   updated.push(post.id);
                 }
