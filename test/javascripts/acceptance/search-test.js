@@ -100,7 +100,7 @@ QUnit.test("Search with context", async assert => {
 
   assert.deepEqual(
     highlighted,
-    ["a", "a", "proper", "a"],
+    ["a proper"],
     "it should highlight the post with the search terms correctly"
   );
 
