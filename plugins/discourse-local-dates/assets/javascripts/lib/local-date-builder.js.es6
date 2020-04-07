@@ -12,7 +12,7 @@ export default class LocalDateBuilder {
     this.timezones = Array.from(
       new Set((params.timezones || []).filter(Boolean))
     );
-    this.timezone = params.timezone;
+    this.timezone = params.timezone || "UTC";
     this.calendar =
       typeof params.calendar === "undefined" ? true : params.calendar;
     this.displayedTimezone = params.displayedTimezone;
@@ -32,7 +32,7 @@ export default class LocalDateBuilder {
       displayedTimezone = this.displayedTimezone || this.localTimezone;
     } else {
       displayedTimezone =
-        this.displayedTimezone || this.timezone || this.localTimezone;
+        this.displayedTimezone || this.localTimezone || this.timezone;
     }
 
     let localDate = new DateWithZoneHelper({
@@ -41,7 +41,8 @@ export default class LocalDateBuilder {
       day,
       hour,
       minute,
-      timezone: this.localTimezone
+      timezone: this.timezone,
+      localTimezone: this.localTimezone
     });
 
     if (this.recurring) {
@@ -61,7 +62,6 @@ export default class LocalDateBuilder {
       pastEvent:
         !this.recurring &&
         moment.tz(this.localTimezone).isAfter(localDate.datetime),
-      localDate: localDate.format(),
       formated: this._applyFormatting(localDate, displayedTimezone),
       previews,
       textPreview: this._generateTextPreviews(previews)
@@ -154,9 +154,9 @@ export default class LocalDateBuilder {
     } else {
       const endRange = startRange.add(24, "hours");
       return [
-        startRange.format("LLLL"),
+        startRange.format(this.format || "LLLL"),
         RANGE_SEPARATOR,
-        endRange.format("LLLL")
+        endRange.format(this.format || "LLLL")
       ].join(" ");
     }
   }
@@ -178,13 +178,12 @@ export default class LocalDateBuilder {
     );
 
     if (this.calendar) {
-      const inCalendarRange = localDate.datetime.isBetween(
-        moment.tz(this.localTimezone).subtract(2, "day"),
-        moment
-          .tz(this.localTimezone)
-          .add(1, "day")
-          .endOf("day")
-      );
+      const inCalendarRange = moment
+        .tz(this.localTimezone)
+        .isBetween(
+          localDate.subtract(2, "day").datetime,
+          localDate.add(1, "day").datetime.endOf("day")
+        );
 
       if (inCalendarRange && sameTimezone) {
         return localDate.datetime.calendar(

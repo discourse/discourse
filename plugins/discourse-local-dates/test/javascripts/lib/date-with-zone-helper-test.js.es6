@@ -12,7 +12,8 @@ function buildDateHelper(params = {}) {
     month: params.month || 2,
     hour: params.hour || 10,
     minute: params.minute || 5,
-    timezone: params.timezone
+    timezone: params.timezone,
+    localTimezone: PARIS
   });
 }
 

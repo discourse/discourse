@@ -64,14 +64,14 @@ QUnit.assert.buildsCorrectDate = function(options, expected, message) {
 QUnit.test("date", assert => {
   freezeTime({ date: "2020-03-11" }, () => {
     assert.buildsCorrectDate(
-      {},
+      { date: "2020-03-22" },
       { formated: "March 22, 2020" },
       "it displays the date without time"
     );
 
     assert.buildsCorrectDate(
       { date: "2020-04-11", time: "11:00" },
-      { formated: "April 11, 2020 11:00 AM" },
+      { formated: "April 11, 2020 1:00 PM" },
       "it displays the date with time"
     );
   });
@@ -103,21 +103,30 @@ QUnit.test("option[displayedTimezone]", assert => {
       "it doesn't display the timezone if the timezone is the same than the date"
     );
   });
-});
 
-QUnit.test("options[timezone]", assert => {
   freezeTime({}, () => {
     assert.buildsCorrectDate(
-      { timezone: "Etc/UTC" },
-      { formated: "March 21, 2020 (UTC)" },
+      { timezone: UTC, displayedTimezone: UTC },
+      { formated: "March 22, 2020 (UTC)" },
       "it replaces `Etc/`"
     );
   });
+
   freezeTime({}, () => {
     assert.buildsCorrectDate(
-      { timezone: LOS_ANGELES },
-      { formated: "March 21, 2020 (Los Angeles)" },
+      { timezone: LOS_ANGELES, displayedTimezone: LOS_ANGELES },
+      { formated: "March 22, 2020 (Los Angeles)" },
       "it removes prefix and replaces `_`"
+    );
+  });
+});
+
+QUnit.test("option[timezone]", assert => {
+  freezeTime({}, () => {
+    assert.buildsCorrectDate(
+      { timezone: SYDNEY, displayedTimezone: PARIS },
+      { formated: "March 21, 2020" },
+      "it correctly parses a date with the given timezone context"
     );
   });
 });
@@ -150,7 +159,7 @@ QUnit.test("option[recurring]", assert => {
         displayedTimezone: SYDNEY
       },
       {
-        formated: "April 6, 2020 10:00 AM (Sydney)"
+        formated: "April 6, 2020 12:00 PM (Sydney)"
       },
       "it correctly formats a recurring date spanning over weeks"
     );
@@ -161,7 +170,8 @@ QUnit.test("option[recurring]", assert => {
       {
         date: "2019-11-25",
         time: "11:00",
-        recurring: "1.weeks"
+        recurring: "1.weeks",
+        timezone: PARIS
       },
       {
         formated: "April 13, 2020 11:00 AM"
@@ -175,7 +185,8 @@ QUnit.test("option[recurring]", assert => {
       {
         date: "2020-03-30",
         time: "11:00",
-        recurring: "1.weeks"
+        recurring: "1.weeks",
+        timezone: PARIS
       },
       {
         formated: "Today 11:00 AM"
@@ -189,7 +200,8 @@ QUnit.test("option[recurring]", assert => {
       {
         date: "2020-03-30",
         time: "11:00",
-        recurring: "1.weeks"
+        recurring: "1.weeks",
+        timezone: PARIS
       },
       {
         formated: "April 13, 2020 11:00 AM"
@@ -203,7 +215,8 @@ QUnit.test("option[countown]", assert => {
   freezeTime({ date: "2020-03-21 23:59" }, () => {
     assert.buildsCorrectDate(
       {
-        countdown: true
+        countdown: true,
+        timezone: PARIS
       },
       { formated: "a minute" },
       "it shows the time remaining"
@@ -213,7 +226,8 @@ QUnit.test("option[countown]", assert => {
   freezeTime({ date: "2020-03-22 00:01" }, () => {
     assert.buildsCorrectDate(
       {
-        countdown: true
+        countdown: true,
+        timezone: PARIS
       },
       {
         formated: I18n.t(
@@ -226,53 +240,75 @@ QUnit.test("option[countown]", assert => {
 });
 
 QUnit.test("option[calendar]", assert => {
-  freezeTime({ date: "2020-03-23 23:00", timezone: "Etc/UTC" }, () =>
+  freezeTime({ date: "2020-03-23 23:00" }, () => {
     assert.buildsCorrectDate(
-      {},
-      { formated: "March 22, 2020" },
+      { date: "2020-03-22", time: "23:59", timezone: PARIS },
+      { formated: "Yesterday 11:59 PM" },
       "it drops calendar mode when event date is more than one day before current date"
+    );
+  });
+
+  freezeTime({ date: "2020-03-20 23:59" }, () =>
+    assert.buildsCorrectDate(
+      { date: "2020-03-21", time: "00:00", timezone: PARIS },
+      { formated: "Tomorrow 12:00 AM" }
     )
   );
 
-  freezeTime({ date: "2020-03-20 23:59", timezone: "Etc/UTC" }, () =>
-    assert.buildsCorrectDate({}, { formated: "Tomorrow" })
+  freezeTime({ date: "2020-03-20 23:59" }, () => {
+    assert.buildsCorrectDate(
+      { date: "2020-03-21", time: "23:59", timezone: PARIS },
+      { formated: "Tomorrow 11:59 PM" }
+    );
+  });
+
+  freezeTime({ date: "2020-03-21 00:00" }, () =>
+    assert.buildsCorrectDate(
+      { date: "2020-03-21", time: "23:00", timezone: PARIS },
+      { formated: "Today 11:00 PM" }
+    )
   );
 
-  freezeTime({ date: "2020-03-21 22:59", timezone: "Etc/UTC" }, () =>
-    assert.buildsCorrectDate({}, { formated: "Tomorrow" })
+  freezeTime({ date: "2020-03-22 23:59" }, () =>
+    assert.buildsCorrectDate(
+      { date: "2020-03-21", time: "23:59", timezone: PARIS },
+      { formated: "Yesterday 11:59 PM" }
+    )
   );
 
-  freezeTime({ date: "2020-03-21 23:00", timezone: "Etc/UTC" }, () =>
-    assert.buildsCorrectDate({}, { formated: "Today" })
+  freezeTime({ date: "2020-03-22 23:59" }, () =>
+    assert.buildsCorrectDate(
+      { date: "2020-03-21", time: "23:59", timezone: PARIS },
+      { formated: "Yesterday 11:59 PM" }
+    )
   );
 
-  freezeTime({ date: "2020-03-22 22:59", timezone: "Etc/UTC" }, () =>
-    assert.buildsCorrectDate({}, { formated: "Today" })
+  freezeTime({ date: "2020-03-22 23:59" }, () =>
+    assert.buildsCorrectDate(
+      { calendar: false, date: "2020-03-21", time: "23:59", timezone: PARIS },
+      { formated: "March 21, 2020 11:59 PM" },
+      "it doesn't use calendar when disabled"
+    )
   );
 
-  freezeTime({ date: "2020-03-22 23:00", timezone: "Etc/UTC" }, () =>
-    assert.buildsCorrectDate({}, { formated: "Yesterday" })
-  );
-
-  freezeTime({ date: "2020-03-23 22:59", timezone: "Etc/UTC" }, () =>
-    assert.buildsCorrectDate({}, { formated: "Yesterday" })
-  );
-
-  freezeTime({ date: "2020-03-24 01:00", timezone: "Etc/UTC" }, () =>
-    assert.buildsCorrectDate({}, { formated: "March 22, 2020" })
+  freezeTime({ date: "2020-03-24 01:00" }, () =>
+    assert.buildsCorrectDate(
+      { date: "2020-03-21", timezone: PARIS },
+      { formated: "March 21, 2020" },
+      "it stops formating out of calendar range"
+    )
   );
 });
 
 QUnit.test("previews", assert => {
-  freezeTime({ date: "2020-03-22", timezone: PARIS }, () => {
+  freezeTime({ date: "2020-03-22" }, () => {
     assert.buildsCorrectDate(
-      {},
+      { timezone: PARIS },
       {
         previews: [
           {
             current: true,
-            formated:
-              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
+            formated: "March 22, 2020 → March 23, 2020",
             timezone: "Europe/Paris"
           }
         ]
@@ -282,18 +318,16 @@ QUnit.test("previews", assert => {
 
   freezeTime({ date: "2020-03-22", timezone: PARIS }, () => {
     assert.buildsCorrectDate(
-      { timezones: [SYDNEY] },
+      { timezone: PARIS, timezones: [SYDNEY] },
       {
         previews: [
           {
             current: true,
-            formated:
-              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
+            formated: "March 22, 2020 → March 23, 2020",
             timezone: "Europe/Paris"
           },
           {
-            formated:
-              "Sunday, March 22, 2020 10:00 AM → Monday, March 23, 2020 10:00 AM",
+            formated: "March 22, 2020 → March 23, 2020",
             timezone: "Australia/Sydney"
           }
         ]
@@ -303,13 +337,12 @@ QUnit.test("previews", assert => {
 
   freezeTime({ date: "2020-03-22", timezone: PARIS }, () => {
     assert.buildsCorrectDate(
-      { displayedTimezone: LOS_ANGELES },
+      { timezone: PARIS, displayedTimezone: LOS_ANGELES },
       {
         previews: [
           {
             current: true,
-            formated:
-              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
+            formated: "March 22, 2020 → March 23, 2020",
             timezone: "Europe/Paris"
           }
         ]
@@ -319,13 +352,12 @@ QUnit.test("previews", assert => {
 
   freezeTime({ date: "2020-03-22", timezone: PARIS }, () => {
     assert.buildsCorrectDate(
-      { displayedTimezone: PARIS },
+      { timezone: PARIS, isplayedTimezone: PARIS },
       {
         previews: [
           {
             current: true,
-            formated:
-              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
+            formated: "March 22, 2020 → March 23, 2020",
             timezone: "Europe/Paris"
           }
         ]
@@ -335,13 +367,27 @@ QUnit.test("previews", assert => {
 
   freezeTime({ date: "2020-03-22", timezone: PARIS }, () => {
     assert.buildsCorrectDate(
-      { timezones: [PARIS] },
+      { timezone: PARIS, timezones: [PARIS] },
       {
         previews: [
           {
             current: true,
-            formated:
-              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
+            formated: "March 22, 2020 → March 23, 2020",
+            timezone: "Europe/Paris"
+          }
+        ]
+      }
+    );
+  });
+
+  freezeTime({ date: "2020-03-22", timezone: PARIS }, () => {
+    assert.buildsCorrectDate(
+      { time: "11:34", timezone: PARIS, timezones: [PARIS] },
+      {
+        previews: [
+          {
+            current: true,
+            formated: "March 22, 2020 11:34 AM",
             timezone: "Europe/Paris"
           }
         ]
@@ -351,23 +397,20 @@ QUnit.test("previews", assert => {
 
   freezeTime({ date: "2020-04-06", timezone: PARIS }, () => {
     assert.buildsCorrectDate(
-      { date: "2020-04-07", timezones: [LONDON, LAGOS] },
+      { timezone: PARIS, date: "2020-04-07", timezones: [LONDON, LAGOS] },
       {
         previews: [
           {
             current: true,
-            formated:
-              "Tuesday, April 7, 2020 12:00 AM → Wednesday, April 8, 2020 12:00 AM",
+            formated: "April 7, 2020 → April 8, 2020",
             timezone: "Europe/Paris"
           },
           {
-            formated:
-              "Monday, April 6, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
+            formated: "April 7, 2020 → April 8, 2020",
             timezone: "Europe/London"
           },
           {
-            formated:
-              "Monday, April 6, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
+            formated: "April 7, 2020 → April 8, 2020",
             timezone: "Africa/Lagos"
           }
         ]

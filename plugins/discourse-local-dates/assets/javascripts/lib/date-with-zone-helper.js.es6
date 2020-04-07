@@ -14,6 +14,7 @@ const { getProperties } = Ember;
 export default class DateWithZoneHelper {
   constructor(params = {}) {
     this.timezone = params.timezone || "UTC";
+    this.localTimezone = params.localTimezone || moment.tz.guess();
 
     this.datetime = moment.tz(
       getProperties(params, [
@@ -29,7 +30,7 @@ export default class DateWithZoneHelper {
   }
 
   isDST() {
-    return this.datetime.tz(this.timezone).isDST();
+    return this.datetime.tz(this.localTimezone).isDST();
   }
 
   repetitionsBetweenDates(duration, date) {
@@ -55,10 +56,10 @@ export default class DateWithZoneHelper {
 
   format(format) {
     if (format) {
-      return this.datetime.tz(this.timezone).format(format);
+      return this.datetime.tz(this.localTimezone).format(format);
     }
 
-    return this.datetime.tz(this.timezone).toISOString(true);
+    return this.datetime.tz(this.localTimezone).toISOString(true);
   }
 
   static fromDatetime(datetime, timezone) {
