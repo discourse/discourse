@@ -339,26 +339,30 @@ const Post = RestModel.extend({
   toggleBookmarkWithReminder() {
     this.toggleProperty("bookmarked_with_reminder");
     if (this.bookmarked_with_reminder) {
-      let controller = showModal("bookmark", {
-        model: {
-          postId: this.id
-        },
-        title: "post.bookmarks.create",
-        modalClass: "bookmark-with-reminder"
-      });
-      controller.setProperties({
-        onCloseWithoutSaving: () => {
-          this.toggleProperty("bookmarked_with_reminder");
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
-        },
-        afterSave: (reminderAtISO, reminderType) => {
-          this.setProperties({
-            "topic.bookmarked": true,
-            bookmark_reminder_at: reminderAtISO,
-            bookmark_reminder_type: reminderType
-          });
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
-        }
+      return new Promise(resolve => {
+        let controller = showModal("bookmark", {
+          model: {
+            postId: this.id
+          },
+          title: "post.bookmarks.create",
+          modalClass: "bookmark-with-reminder"
+        });
+        controller.setProperties({
+          onCloseWithoutSaving: () => {
+            this.toggleProperty("bookmarked_with_reminder");
+            this.appEvents.trigger("post-stream:refresh", { id: this.id });
+            resolve();
+          },
+          afterSave: (reminderAtISO, reminderType) => {
+            this.setProperties({
+              "topic.bookmarked": true,
+              bookmark_reminder_at: reminderAtISO,
+              bookmark_reminder_type: reminderType
+            });
+            this.appEvents.trigger("post-stream:refresh", { id: this.id });
+            resolve();
+          }
+        });
       });
     } else {
       this.setProperties({
