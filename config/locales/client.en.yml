@@ -3562,6 +3562,9 @@ en:
         notification_event:
           name: "Notification Event"
           details: "When a user receives a notification in their feed."
+        user_badge_event:
+          name: "Badge Grant Event"
+          details: "When a user receives a badge."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
