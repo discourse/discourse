@@ -192,7 +192,7 @@ GEM
       libv8 (>= 6.9.411)
     mini_scheduler (0.12.2)
       sidekiq
-    mini_sql (0.2.4)
+    mini_sql (0.2.5)
     mini_suffix (0.3.0)
       ffi (~> 1.9)
     minitest (5.14.0)

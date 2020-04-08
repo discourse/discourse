@@ -249,7 +249,7 @@ const DiscourseURL = EmberObject.extend({
           userPath(currentUser.get("username_lower") + "/")
         );
       } else {
-        return redirectTo("/404");
+        return redirectTo("/login-preferences");
       }
     }
 

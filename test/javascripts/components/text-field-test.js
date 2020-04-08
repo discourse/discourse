@@ -44,3 +44,43 @@ componentTest("sets the dir attribute to ltr for English text", {
     assert.equal(find("input").attr("dir"), "ltr");
   }
 });
+
+componentTest("supports onChange", {
+  template: `{{text-field class="tf-test" value=value onChange=changed}}`,
+  beforeEach() {
+    this.called = false;
+    this.newValue = null;
+    this.set("value", "hello");
+    this.set("changed", v => {
+      this.newValue = v;
+      this.called = true;
+    });
+  },
+  async test(assert) {
+    await fillIn(".tf-test", "hello");
+    assert.ok(!this.called);
+    await fillIn(".tf-test", "new text");
+    assert.ok(this.called);
+    assert.equal(this.newValue, "new text");
+  }
+});
+
+componentTest("supports onChangeImmediate", {
+  template: `{{text-field class="tf-test" value=value onChangeImmediate=changed}}`,
+  beforeEach() {
+    this.called = false;
+    this.newValue = null;
+    this.set("value", "old");
+    this.set("changed", v => {
+      this.newValue = v;
+      this.called = true;
+    });
+  },
+  async test(assert) {
+    await fillIn(".tf-test", "old");
+    assert.ok(!this.called);
+    await fillIn(".tf-test", "no longer old");
+    assert.ok(this.called);
+    assert.equal(this.newValue, "no longer old");
+  }
+});

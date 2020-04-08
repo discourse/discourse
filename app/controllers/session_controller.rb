@@ -254,6 +254,10 @@ class SessionController < ApplicationController
 
       render_sso_error(text: text || I18n.t("sso.unknown_error"), status: 500)
 
+    rescue DiscourseSingleSignOn::BlankExternalId
+
+      render_sso_error(text: I18n.t("sso.blank_id_error"), status: 500)
+
     rescue => e
       message = +"Failed to create or lookup user: #{e}."
       message << "  "

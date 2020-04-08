@@ -1975,7 +1975,7 @@ uncategorized:
     hidden: true
 
   pwa_display_browser_regex:
-    default: "iPad|iPhone"
+    default: "a^"
     hidden: true
 
   app_association_android:
