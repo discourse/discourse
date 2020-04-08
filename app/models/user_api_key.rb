@@ -116,5 +116,6 @@ end
 #
 #  index_user_api_keys_on_client_id  (client_id) UNIQUE
 #  index_user_api_keys_on_key        (key) UNIQUE
+#  index_user_api_keys_on_key_hash   (key_hash) UNIQUE
 #  index_user_api_keys_on_user_id    (user_id)
 #

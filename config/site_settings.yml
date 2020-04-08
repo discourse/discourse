@@ -933,6 +933,8 @@ posting:
     enum: "TrustLevelSetting"
   returning_users_days:
     default: 120
+  enable_page_publishing:
+    default: false
 
 email:
   email_time_window_mins:
@@ -1377,7 +1379,8 @@ security:
       - Lax
       - Strict
       - Disabled
-    regex: "^(Lax|Strict|Disabled)$"
+      - None
+    regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   moderators_create_categories: false
