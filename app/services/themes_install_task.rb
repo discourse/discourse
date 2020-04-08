@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
 class ThemesInstallTask
-  def self.install(yml)
+  def self.install(themes)
     counts = { installed: 0, updated: 0, skipped: 0, errors: 0 }
     log = []
-    themes = YAML::load(yml)
-    themes.each do |theme|
-      name = theme[0]
-      val = theme[1]
+    themes.each do |name, val|
       installer = new(val)
 
       if installer.theme_exists?
@@ -50,5 +47,13 @@ class ThemesInstallTask
   def install
     theme = RemoteTheme.import_theme(url, Discourse.system_user, private_key: options["private_key"], branch: options["branch"])
     theme.set_default! if options.fetch("default", false)
+    add_component_to_all_themes(theme) if options.fetch("install_to_all_themes", false) && theme.component
+
+  end
+
+  def add_component_to_all_themes(theme)
+    Theme.where(component: false).each do |parent_theme|
+      parent_theme.add_relative_theme!(:child, theme)
+    end
   end
 end
