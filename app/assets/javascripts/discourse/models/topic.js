@@ -1,4 +1,4 @@
-import EmberObject, { get } from "@ember/object";
+import EmberObject from "@ember/object";
 import { not, notEmpty, equal, and, or } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { flushMap } from "discourse/models/store";
@@ -411,7 +411,7 @@ const Topic = RestModel.extend({
     const postStream = this.postStream;
     let firstPost = postStream.get("posts.firstObject");
 
-    if (firstPost.get("post_number") === 1) {
+    if (firstPost.post_number === 1) {
       return Promise.resolve(firstPost);
     }
 
@@ -432,7 +432,7 @@ const Topic = RestModel.extend({
     }
     this.set("bookmarking", true);
     const bookmark = !this.bookmarked;
-    let posts = get(this.postStream, "posts");
+    let posts = this.postStream.posts;
 
     return this.firstPost().then(firstPost => {
       const toggleBookmarkOnServer = () => {
@@ -458,13 +458,13 @@ const Topic = RestModel.extend({
               if (posts) {
                 const updated = [];
                 posts.forEach(post => {
-                  if (post.get("bookmarked")) {
+                  if (post.bookmarked) {
                     post.set("bookmarked", false);
                     updated.push(post.id);
                   }
                   if (
                     this.siteSettings.enable_bookmarks_with_reminders &&
-                    post.get("bookmarked_with_reminder")
+                    post.bookmarked_with_reminder
                   ) {
                     post.set("bookmarked_with_reminder", false);
                     updated.push(post.id);
@@ -482,7 +482,7 @@ const Topic = RestModel.extend({
       if (!bookmark && posts) {
         posts.forEach(
           post =>
-            (post.get("bookmarked") || post.get("bookmarked_with_reminder")) &&
+            (post.bookmarked || post.bookmarked_with_reminder) &&
             unbookmarkedPosts.push(post)
         );
       }

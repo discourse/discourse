@@ -453,11 +453,9 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     editFirstPost() {
-      this.get("model")
+      this.model
         .firstPost()
-        .then(firstPost => {
-          this.send("editPost", firstPost);
-        });
+        .then(firstPost => this.send("editPost", firstPost));
     },
 
     // Post related methods
