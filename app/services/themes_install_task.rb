@@ -8,6 +8,7 @@ class ThemesInstallTask
       installer = new(val)
 
       if installer.theme_exists?
+        installer.update
         log << "#{name}: is already installed"
         counts[:skipped] += 1
       else
@@ -35,25 +36,30 @@ class ThemesInstallTask
       @url = url_or_options
       @options = {}
     end
+    find_existing
+  end
+
+  def update
+    @theme.update_from_remote
   end
 
   def theme_exists?
-    RemoteTheme
-      .where(remote_url: url)
-      .where(branch: options.fetch("branch", nil))
-      .exists?
+    !@theme.nil?
+  end
+
+  def find_existing
+    @theme = RemoteTheme.find_by(remote_url: url, branch: options.fetch("branch", nil))
   end
 
   def install
-    theme = RemoteTheme.import_theme(url, Discourse.system_user, private_key: options["private_key"], branch: options["branch"])
-    theme.set_default! if options.fetch("default", false)
-    add_component_to_all_themes(theme) if options.fetch("install_to_all_themes", false) && theme.component
-
+    @theme = RemoteTheme.import_theme(url, Discourse.system_user, private_key: options["private_key"], branch: options["branch"])
+    @theme.set_default! if options.fetch("default", false)
+    add_component_to_all_themes if options.fetch("install_to_all_themes", false) && @theme.component
   end
 
-  def add_component_to_all_themes(theme)
+  def add_component_to_all_themes
     Theme.where(component: false).each do |parent_theme|
-      parent_theme.add_relative_theme!(:child, theme)
+      parent_theme.add_relative_theme!(:child, @theme)
     end
   end
 end
