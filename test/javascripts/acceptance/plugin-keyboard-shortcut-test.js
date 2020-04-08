@@ -34,10 +34,7 @@ test("a plugin can add a keyboard shortcut", async assert => {
 });
 
 acceptance("Plugin Keyboard Shortcuts - Anonymous", {
-  loggedIn: false,
-  beforeEach() {
-    initKeyboardShortcuts();
-  }
+  loggedIn: false
 });
 
 test("a plugin can add a keyboard shortcut with an option", async assert => {
