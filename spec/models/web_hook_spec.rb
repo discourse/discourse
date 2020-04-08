@@ -486,5 +486,30 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(reviewable.id)
     end
+
+    it 'should enqueue the right hooks for badge grants' do
+      Fabricate(:user_badge_web_hook)
+      badge = Fabricate(:badge)
+      badge.multiple_grant = true
+      badge.show_posts = true
+      badge.save
+
+      now = Time.now
+      freeze_time now
+
+      BadgeGranter.grant(badge, user, granted_by: admin, post_id: post.id)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      expect(job_args["event_name"]).to eq("user_badge_granted")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["badge_id"]).to eq(badge.id)
+      expect(payload["user_id"]).to eq(user.id)
+      expect(payload["granted_by_id"]).to eq(admin.id)
+      # be_within required because rounding occurs
+      expect(Time.zone.parse(payload["granted_at"]).to_f).to be_within(0.001).of(now.to_f)
+      expect(payload["post_id"]).to eq(post.id)
+
+      # Future work: revoke badge hook
+    end
   end
 end
