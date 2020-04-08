@@ -545,6 +545,13 @@ const Topic = RestModel.extend({
       this.details.updateFromJson(json.details);
 
       keys.removeObjects(["details", "post_stream"]);
+
+      if (json.published_page) {
+        this.set(
+          "publishedPage",
+          this.store.createRecord("published-page", json.published_page)
+        );
+      }
     }
     keys.forEach(key => this.set(key, json[key]));
   },

@@ -2439,6 +2439,19 @@ en:
         action: "merge selected posts"
         error: "There was an error merging the selected posts."
 
+      publish_page:
+        title: "Page Publishing"
+        publish: "Publish"
+        description: "When a topic is published as a page, its URL can be shared and it will displayed with custom styling."
+        slug: "Slug"
+        publish_url: "Your page has been published at:"
+        topic_published: "Your topic has been published at:"
+        preview_url: "Your page will be published at:"
+        invalid_slug: "Sorry, you can't publish this page."
+        unpublish: "Unpublish"
+        unpublished: "Your page has been unpublished and is no longer accessible."
+        publishing_settings: "Publishing Settings"
+
       change_owner:
         title: "Change Owner"
         action: "change ownership"
@@ -2591,6 +2604,7 @@ en:
         convert_to_moderator: "Add Staff Color"
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
+        publish_page: "Page Publishing"
         unhide: "Unhide"
         change_owner: "Change Ownership"
         grant_badge: "Grant Badge"
@@ -4083,6 +4097,8 @@ en:
             api_key_update: "api key update"
             api_key_destroy: "api key destroy"
             override_upload_secure_status: "override upload secure status"
+            page_published: "page published"
+            page_unpublished: "page unpublished"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

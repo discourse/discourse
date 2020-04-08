@@ -485,6 +485,14 @@ class Guardian
       (components - Theme.components_for(parent)).empty?
   end
 
+  def can_publish_page?(topic)
+    return false unless SiteSetting.enable_page_publishing?
+    return false if topic.blank?
+    return false if topic.private_message?
+    return false unless can_see_topic?(topic)
+    is_staff?
+  end
+
   def auth_token
     if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
       UserAuthToken.hash_token(cookie)

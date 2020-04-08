@@ -933,6 +933,8 @@ posting:
     enum: "TrustLevelSetting"
   returning_users_days:
     default: 120
+  enable_page_publishing:
+    default: false
 
 email:
   email_time_window_mins:
