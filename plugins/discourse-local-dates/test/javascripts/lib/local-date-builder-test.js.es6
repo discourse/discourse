@@ -308,7 +308,8 @@ QUnit.test("previews", assert => {
         previews: [
           {
             current: true,
-            formated: "March 22, 2020 → March 23, 2020",
+            formated:
+              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
             timezone: "Paris"
           }
         ]
@@ -323,11 +324,13 @@ QUnit.test("previews", assert => {
         previews: [
           {
             current: true,
-            formated: "March 22, 2020 → March 23, 2020",
+            formated:
+              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
             timezone: "Paris"
           },
           {
-            formated: "March 23, 2020 → March 23, 2020",
+            formated:
+              "Monday, March 23, 2020 10:00 AM → Monday, March 23, 2020 10:00 AM",
             timezone: "Sydney"
           }
         ]
@@ -342,7 +345,8 @@ QUnit.test("previews", assert => {
         previews: [
           {
             current: true,
-            formated: "March 22, 2020 → March 23, 2020",
+            formated:
+              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
             timezone: "Paris"
           }
         ]
@@ -357,7 +361,8 @@ QUnit.test("previews", assert => {
         previews: [
           {
             current: true,
-            formated: "March 22, 2020 → March 23, 2020",
+            formated:
+              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
             timezone: "Paris"
           }
         ]
@@ -372,7 +377,8 @@ QUnit.test("previews", assert => {
         previews: [
           {
             current: true,
-            formated: "March 22, 2020 → March 23, 2020",
+            formated:
+              "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
             timezone: "Paris"
           }
         ]
@@ -402,15 +408,18 @@ QUnit.test("previews", assert => {
         previews: [
           {
             current: true,
-            formated: "April 7, 2020 → April 8, 2020",
+            formated:
+              "Tuesday, April 7, 2020 12:00 AM → Wednesday, April 8, 2020 12:00 AM",
             timezone: "Paris"
           },
           {
-            formated: "April 7, 2020 → April 7, 2020",
+            formated:
+              "Tuesday, April 7, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
             timezone: "London"
           },
           {
-            formated: "April 7, 2020 → April 7, 2020",
+            formated:
+              "Tuesday, April 7, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
             timezone: "Lagos"
           }
         ]
