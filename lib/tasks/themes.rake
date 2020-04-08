@@ -26,26 +26,15 @@ require 'yaml'
 #
 desc "Install themes & theme components"
 task "themes:install" => :environment do |task, args|
-
   theme_args = (STDIN.tty?) ? '' : STDIN.read
   use_json = theme_args == ''
 
-  if use_json
-    begin
-      theme_args = JSON.parse(ARGV.last.gsub('--', ''))
-    rescue
-      puts "Invalid JSON input. \n#{ARGV.last}"
-      exit 1
-    end
-  else
-    begin
-      theme_args = YAML::load(theme_args)
-    rescue
-      puts "Invalid YML: \n#{theme_args}"
-      exit 1
-    end
-  end
-
+  theme_args = begin
+                 use_json ? JSON.parse(ARGV.last.gsub('--', '')) : YAML::load(theme_args)
+               rescue
+                 puts use_json ? "Invalid JSON input. \n#{ARGV.last}" : "Invalid YML: \n#{theme_args}"
+                 exit 1
+               end
 
   log, counts = ThemesInstallTask.install(theme_args)
 
