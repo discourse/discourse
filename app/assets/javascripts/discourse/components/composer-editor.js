@@ -30,7 +30,8 @@ import {
   clipboardData,
   safariHacksDisabled,
   caretPosition,
-  inCodeBlock
+  inCodeBlock,
+  putCursorAtEnd
 } from "discourse/lib/utilities";
 import {
   validateUploadedFiles,
@@ -123,7 +124,7 @@ export default Component.extend({
   @observes("focusTarget")
   setFocus() {
     if (this.focusTarget === "editor") {
-      $(this.element.querySelector("textarea")).putCursorAtEnd();
+      putCursorAtEnd(this.element.querySelector("textarea"));
     }
   },
 
@@ -213,7 +214,7 @@ export default Component.extend({
       !this.get("composer.canEditTitle") &&
       (!this.capabilities.isIOS || safariHacksDisabled())
     ) {
-      $(this.element.querySelector(".d-editor-input")).putCursorAtEnd();
+      putCursorAtEnd(this.element.querySelector(".d-editor-input"));
     }
 
     this._bindUploadTarget();
