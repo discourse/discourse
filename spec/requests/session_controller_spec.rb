@@ -563,9 +563,13 @@ RSpec.describe SessionController do
       sso.external_id = '   '
       sso.username = 'sam'
 
-      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      messages = track_log_messages(level: Logger::WARN) do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      end
 
+      expect(messages.length).to eq(0)
       expect(response.status).to eq(500)
+      expect(response.body).to include(I18n.t('sso.blank_id_error'))
     end
 
     it 'can handle invalid sso external ids due to banned word' do
@@ -1165,12 +1169,9 @@ RSpec.describe SessionController do
         SiteSetting.enable_local_logins_via_email = false
       end
       it 'doesnt matter, logs in correctly' do
-        events = DiscourseEvent.track_events do
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
-        end
-
+        post "/session.json", params: {
+          login: user.username, password: 'myawesomepassword'
+        }
         expect(response.status).to eq(200)
       end
     end
