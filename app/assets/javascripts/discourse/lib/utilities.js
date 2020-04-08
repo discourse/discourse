@@ -444,5 +444,11 @@ export function inCodeBlock(text, pos) {
   return result;
 }
 
+export function putCursorAtEnd(element) {
+  element.focus();
+  const len = element.value.length;
+  element.setSelectionRange(len, len);
+}
+
 // This prevents a mini racer crash
 export default {};
