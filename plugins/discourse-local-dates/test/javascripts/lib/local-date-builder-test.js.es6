@@ -309,7 +309,7 @@ QUnit.test("previews", assert => {
           {
             current: true,
             formated: "March 22, 2020 → March 23, 2020",
-            timezone: "Europe/Paris"
+            timezone: "Paris"
           }
         ]
       }
@@ -324,11 +324,11 @@ QUnit.test("previews", assert => {
           {
             current: true,
             formated: "March 22, 2020 → March 23, 2020",
-            timezone: "Europe/Paris"
+            timezone: "Paris"
           },
           {
             formated: "March 23, 2020 → March 23, 2020",
-            timezone: "Australia/Sydney"
+            timezone: "Sydney"
           }
         ]
       }
@@ -343,7 +343,7 @@ QUnit.test("previews", assert => {
           {
             current: true,
             formated: "March 22, 2020 → March 23, 2020",
-            timezone: "Europe/Paris"
+            timezone: "Paris"
           }
         ]
       }
@@ -358,7 +358,7 @@ QUnit.test("previews", assert => {
           {
             current: true,
             formated: "March 22, 2020 → March 23, 2020",
-            timezone: "Europe/Paris"
+            timezone: "Paris"
           }
         ]
       }
@@ -373,7 +373,7 @@ QUnit.test("previews", assert => {
           {
             current: true,
             formated: "March 22, 2020 → March 23, 2020",
-            timezone: "Europe/Paris"
+            timezone: "Paris"
           }
         ]
       }
@@ -388,7 +388,7 @@ QUnit.test("previews", assert => {
           {
             current: true,
             formated: "March 22, 2020 11:34 AM",
-            timezone: "Europe/Paris"
+            timezone: "Paris"
           }
         ]
       }
@@ -403,15 +403,15 @@ QUnit.test("previews", assert => {
           {
             current: true,
             formated: "April 7, 2020 → April 8, 2020",
-            timezone: "Europe/Paris"
+            timezone: "Paris"
           },
           {
             formated: "April 7, 2020 → April 7, 2020",
-            timezone: "Europe/London"
+            timezone: "London"
           },
           {
             formated: "April 7, 2020 → April 7, 2020",
-            timezone: "Africa/Lagos"
+            timezone: "Lagos"
           }
         ]
       }
