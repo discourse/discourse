@@ -32,7 +32,7 @@ export default class LocalDateBuilder {
       displayedTimezone = this.displayedTimezone || this.localTimezone;
     } else {
       displayedTimezone =
-        this.displayedTimezone || this.localTimezone || this.timezone;
+        this.displayedTimezone || this.timezone || this.localTimezone;
     }
 
     let localDate = new DateWithZoneHelper({

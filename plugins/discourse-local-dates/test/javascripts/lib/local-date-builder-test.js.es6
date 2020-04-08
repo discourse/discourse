@@ -81,7 +81,7 @@ QUnit.test("option[format]", assert => {
   freezeTime({ date: "2020-03-11" }, () => {
     assert.buildsCorrectDate(
       { format: "YYYY" },
-      { formated: "2020" },
+      { formated: "2020 (UTC)" },
       "it uses custom format"
     );
   });
