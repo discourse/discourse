@@ -13,6 +13,7 @@ class WebHookEventType < ActiveRecord::Base
   NOTIFICATION = 10
   SOLVED = 11
   ASSIGN = 12
+  USER_BADGE = 13
 
   has_and_belongs_to_many :web_hooks
 
