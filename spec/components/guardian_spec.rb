@@ -3476,4 +3476,36 @@ describe Guardian do
       expect(guardian.auth_token).to eq(token.auth_token)
     end
   end
+
+  describe "can_publish_page?" do
+    context "when disabled" do
+      it "is false for staff" do
+        expect(Guardian.new(admin).can_publish_page?(topic)).to eq(false)
+      end
+    end
+
+    context "when enabled" do
+      before do
+        SiteSetting.enable_page_publishing = true
+      end
+
+      it "is false for anonymous users" do
+        expect(Guardian.new.can_publish_page?(topic)).to eq(false)
+      end
+
+      it "is false for regular users" do
+        expect(Guardian.new(user).can_publish_page?(topic)).to eq(false)
+      end
+
+      it "is true for staff" do
+        expect(Guardian.new(moderator).can_publish_page?(topic)).to eq(true)
+        expect(Guardian.new(admin).can_publish_page?(topic)).to eq(true)
+      end
+
+      it "is false if the topic is a private message" do
+        post = Fabricate(:private_message_post, user: admin)
+        expect(Guardian.new(admin).can_publish_page?(post.topic)).to eq(false)
+      end
+    end
+  end
 end

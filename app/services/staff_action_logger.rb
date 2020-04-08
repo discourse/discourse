@@ -728,6 +728,22 @@ class StaffActionLogger
     ))
   end
 
+  def log_published_page(topic_id, slug)
+    UserHistory.create!(params.merge(
+      subject: slug,
+      topic_id: topic_id,
+      action: UserHistory.actions[:page_published]
+    ))
+  end
+
+  def log_unpublished_page(topic_id, slug)
+    UserHistory.create!(params.merge(
+      subject: slug,
+      topic_id: topic_id,
+      action: UserHistory.actions[:page_unpublished]
+    ))
+  end
+
   private
 
   def get_changes(changes)

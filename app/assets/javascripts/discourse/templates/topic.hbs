@@ -85,6 +85,25 @@
           {{topic-category topic=model class="topic-category"}}
         {{/if}}
       {{/topic-title}}
+
+      {{#if model.publishedPage}}
+        <div class='published-page'>
+          <div class="details">
+            {{i18n "topic.publish_page.topic_published"}}
+            <div>
+              <a href={{model.publishedPage.url}} target="_blank" rel="noopener">{{model.publishedPage.url}}</a>
+            </div>
+          </div>
+          <div class="controls">
+            {{d-button
+              icon="file"
+              label="topic.publish_page.publishing_settings"
+              action=(route-action "showPagePublish")
+            }}
+          </div>
+        </div>
+      {{/if}}
+
     {{/if}}
 
     <div class="container posts">
@@ -230,7 +249,8 @@
                 selectBelow=(action "selectBelow")
                 fillGapBefore=(action "fillGapBefore")
                 fillGapAfter=(action "fillGapAfter")
-                showInvite=(route-action "showInvite")}}
+                showInvite=(route-action "showInvite")
+                showPagePublish=(route-action "showPagePublish")}}
             {{/unless}}
 
             {{conditional-loading-spinner condition=model.postStream.loadingBelow}}

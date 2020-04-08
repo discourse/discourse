@@ -45,6 +45,12 @@ Discourse::Application.routes.draw do
   get "finish-installation/confirm-email" => "finish_installation#confirm_email"
   put "finish-installation/resend-email" => "finish_installation#resend_email"
 
+  get "pub/check-slug" => "published_pages#check_slug"
+  get "pub/by-topic/:topic_id" => "published_pages#details"
+  put "pub/by-topic/:topic_id" => "published_pages#upsert"
+  delete "pub/by-topic/:topic_id" => "published_pages#destroy"
+  get "pub/:slug" => "published_pages#show"
+
   resources :directory_items
 
   get "site" => "site#site"

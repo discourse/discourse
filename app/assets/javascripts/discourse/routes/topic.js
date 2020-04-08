@@ -89,6 +89,14 @@ const TopicRoute = DiscourseRoute.extend({
       controller.setProperties({ flagTopic: true });
     },
 
+    showPagePublish() {
+      const model = this.modelFor("topic");
+      showModal("publish-page", {
+        model,
+        title: "topic.publish_page.title"
+      });
+    },
+
     showTopicStatusUpdate() {
       const model = this.modelFor("topic");
 

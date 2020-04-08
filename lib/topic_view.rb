@@ -596,6 +596,10 @@ class TopicView
     ReviewableQueuedPost.viewable_by(@user).where(topic_id: @topic.id).pending.count
   end
 
+  def published_page
+    @topic.published_page
+  end
+
   protected
 
   def read_posts_set

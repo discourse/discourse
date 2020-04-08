@@ -295,3 +295,14 @@ a.topic-featured-link {
     }
   }
 }
+
+.published-page {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1em;
+  max-width: calc(
+    #{$topic-body-width} + #{$topic-avatar-width} + #{$topic-body-width-padding *
+      2}
+  );
+  align-items: center;
+}
