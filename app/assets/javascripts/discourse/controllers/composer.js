@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
-import Quote from "discourse/lib/quote";
+import { buildQuote } from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
 import Composer from "discourse/models/composer";
 import discourseComputed, {
@@ -501,15 +501,14 @@ export default Controller.extend({
 
       if (postId) {
         this.set("model.loading", true);
-        const composer = this;
 
         return this.store.find("post", postId).then(post => {
-          const quote = Quote.build(post, post.raw, {
-            raw: true,
+          const quote = buildQuote(post, post.raw, {
             full: true
           });
+
           toolbarEvent.addText(quote);
-          composer.set("model.loading", false);
+          this.set("model.loading", false);
         });
       }
     },
