@@ -154,9 +154,9 @@ export default class LocalDateBuilder {
     } else {
       const endRange = startRange.add(24, "hours");
       return [
-        startRange.format(this.format || "LLLL"),
+        startRange.format("LLLL"),
         RANGE_SEPARATOR,
-        endRange.format(this.format || "LLLL")
+        endRange.format("LLLL")
       ].join(" ");
     }
   }
