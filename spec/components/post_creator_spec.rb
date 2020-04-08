@@ -367,7 +367,8 @@ describe PostCreator do
             Fabricate(:topic_timer,
               based_on_last_post: true,
               execute_at: Time.zone.now - 12.hours,
-              created_at: Time.zone.now - 24.hours
+              created_at: Time.zone.now - 24.hours,
+              duration: 12
             )
           end
 

@@ -19,8 +19,7 @@ export let bindings = {
   C: { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
-  "ctrl+p": { handler: "printTopic", anonymous: true },
-  "command+p": { handler: "printTopic", anonymous: true },
+  "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
   e: { postAction: "editPost" },
   end: { handler: "goToLastPost", anonymous: true },
@@ -54,7 +53,8 @@ export let bindings = {
       ".topic-list tr.selected a.title",
       ".latest-topic-list .latest-topic-list-item.selected div.main-link a.title",
       ".top-topic-list .latest-topic-list-item.selected div.main-link a.title",
-      ".latest .featured-topic.selected a.title"
+      ".latest .featured-topic.selected a.title",
+      ".search-results .search-link"
     ].join(", "),
     anonymous: true
   }, // open selected topic on latest or categories page
@@ -84,7 +84,7 @@ export let bindings = {
 const animationDuration = 100;
 
 export default {
-  bindEvents(keyTrapper, container) {
+  init(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
     this.container = container;
     this._stopCallback();
@@ -98,28 +98,68 @@ export default {
     if (!siteSettings.enable_personal_messages) {
       delete bindings["g m"];
     }
+  },
 
+  bindEvents() {
     Object.keys(bindings).forEach(key => {
-      const binding = bindings[key];
-      if (!binding.anonymous && !this.currentUser) {
-        return;
-      }
-
-      if (binding.path) {
-        this._bindToPath(binding.path, key);
-      } else if (binding.handler) {
-        if (binding.global) {
-          // global shortcuts will trigger even while focusing on input/textarea
-          this._globalBindToFunction(binding.handler, key);
-        } else {
-          this._bindToFunction(binding.handler, key);
-        }
-      } else if (binding.postAction) {
-        this._bindToSelectedPost(binding.postAction, key);
-      } else if (binding.click) {
-        this._bindToClick(binding.click, key);
-      }
+      this.bindKey(key);
     });
+  },
+
+  bindKey(key) {
+    const binding = bindings[key];
+    if (!binding.anonymous && !this.currentUser) {
+      return;
+    }
+
+    if (binding.path) {
+      this._bindToPath(binding.path, key);
+    } else if (binding.handler) {
+      if (binding.global) {
+        // global shortcuts will trigger even while focusing on input/textarea
+        this._globalBindToFunction(binding.handler, key);
+      } else {
+        this._bindToFunction(binding.handler, key);
+      }
+    } else if (binding.postAction) {
+      this._bindToSelectedPost(binding.postAction, key);
+    } else if (binding.click) {
+      this._bindToClick(binding.click, key);
+    }
+  },
+
+  // for cases when you want to disable global keyboard shortcuts
+  // so that you can override them (e.g. inside a modal)
+  pause(combinations) {
+    combinations.forEach(combo => this.keyTrapper.unbind(combo));
+  },
+
+  // restore global shortcuts that you have paused
+  unpause(...combinations) {
+    combinations.forEach(combo => this.bindKey(combo));
+  },
+
+  // add bindings to the key trapper, if none is specified then
+  // the shortcuts will be bound globally.
+  addBindings(newBindings, callback) {
+    Object.keys(newBindings).forEach(key => {
+      let binding = newBindings[key];
+      this.keyTrapper.bind(key, event => {
+        // usually the caller that is adding the binding
+        // will want to decide what to do with it when the
+        // event is fired
+        callback(binding, event);
+        event.stopPropagation();
+      });
+    });
+  },
+
+  // unbinds all the shortcuts in a key binding object e.g.
+  // {
+  //   'c': createTopic
+  // }
+  unbind(combinations) {
+    this.pause(Object.keys(combinations));
   },
 
   toggleBookmark() {
@@ -456,7 +496,11 @@ export default {
       const offset = minimumOffset();
       $selected = $articles
         .toArray()
-        .find(article => article.getBoundingClientRect().top > offset);
+        .find(article =>
+          direction > 0
+            ? article.getBoundingClientRect().top > offset
+            : article.getBoundingClientRect().bottom > offset
+        );
       if (!$selected) {
         $selected = $articles[$articles.length - 1];
       }
@@ -586,6 +630,7 @@ export default {
     const $topicList = $(".topic-list");
     const $postsWrapper = $(".posts-wrapper");
     const $categoriesTopicsList = this.categoriesTopicsList();
+    const $searchResults = $(".search-results");
 
     if ($postsWrapper.length > 0) {
       return $(".posts-wrapper .topic-post, .topic-list tbody tr");
@@ -593,6 +638,8 @@ export default {
       return $topicList.find(".topic-list-item");
     } else if ($categoriesTopicsList.length > 0) {
       return $categoriesTopicsList;
+    } else if ($searchResults.length > 0) {
+      return $searchResults.find(".fps-result");
     }
   },
 

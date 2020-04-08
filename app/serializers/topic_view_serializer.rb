@@ -70,7 +70,8 @@ class TopicViewSerializer < ApplicationSerializer
     :destination_category_id,
     :pm_with_non_human_user,
     :queued_posts_count,
-    :show_read_indicator
+    :show_read_indicator,
+    :requested_group_name
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -254,5 +255,22 @@ class TopicViewSerializer < ApplicationSerializer
 
   def show_read_indicator
     object.show_read_indicator?
+  end
+
+  def requested_group_name
+    if scope&.user
+      group = Group
+        .joins('JOIN group_users ON groups.id = group_users.group_id')
+        .find_by(
+          id: object.topic.custom_fields['requested_group_id'].to_i,
+          group_users: { user_id: scope.user.id, owner: true }
+        )
+
+      group.name if group
+    end
+  end
+
+  def include_requested_group_name?
+    object.personal_message
   end
 end

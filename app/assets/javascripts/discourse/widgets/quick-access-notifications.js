@@ -7,7 +7,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
   emptyStatePlaceholderItemKey: "notifications.empty",
 
   markReadRequest() {
-    return ajax("/notifications/mark-read", { method: "PUT" });
+    return ajax("/notifications/mark-read", { type: "PUT" });
   },
 
   newItemsLoaded() {

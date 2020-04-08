@@ -538,4 +538,34 @@ describe Plugin::Instance do
       expect(Reviewable.types).to match_array(current_list << new_element)
     end
   end
+
+  describe '#register_emoji' do
+    before do
+      Plugin::CustomEmoji.clear_cache
+    end
+
+    after do
+      Plugin::CustomEmoji.clear_cache
+    end
+
+    it 'allows to register an emoji' do
+      Plugin::Instance.new.register_emoji("foo", "/foo/bar.png")
+
+      custom_emoji = Emoji.custom.first
+
+      expect(custom_emoji.name).to eq("foo")
+      expect(custom_emoji.url).to eq("/foo/bar.png")
+      expect(custom_emoji.group).to eq(Emoji::DEFAULT_GROUP)
+    end
+
+    it 'allows to register an emoji with a group' do
+      Plugin::Instance.new.register_emoji("bar", "/baz/bar.png", "baz")
+
+      custom_emoji = Emoji.custom.first
+
+      expect(custom_emoji.name).to eq("bar")
+      expect(custom_emoji.url).to eq("/baz/bar.png")
+      expect(custom_emoji.group).to eq("baz")
+    end
+  end
 end

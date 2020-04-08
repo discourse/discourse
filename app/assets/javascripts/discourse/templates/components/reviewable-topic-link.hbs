@@ -1,6 +1,6 @@
 <div class='post-topic'>
   {{#if reviewable.topic}}
-    {{topic-status topic=reviewable.topic}}
+    {{topic-status topic=reviewable.topic showPrivateMessageIcon=true}}
     <a href={{reviewable.target_url}} class='title-text'>{{reviewable.topic.title}}</a>
     {{category-badge reviewable.category}}
     {{reviewable-tags tags=reviewable.topic_tags tagName=''}}

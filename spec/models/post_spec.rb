@@ -1123,7 +1123,7 @@ describe Post do
       SiteSetting.newuser_max_links = 3
       user = Fabricate(:user, staged: true, trust_level: 0)
       user.created_at = 1.hour.ago
-      user.unstage
+      user.unstage!
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(true)
     end
@@ -1133,7 +1133,7 @@ describe Post do
       SiteSetting.newuser_max_links = 3
       user = Fabricate(:user, staged: true, trust_level: 0)
       user.created_at = 2.days.ago
-      user.unstage
+      user.unstage!
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)
     end
@@ -1172,7 +1172,7 @@ describe Post do
 
       result = post.rebake!
 
-      expect(post.baked_at).not_to eq(first_baked)
+      expect(post.baked_at).not_to eq_time(first_baked)
       expect(post.cooked).to eq(first_cooked)
       expect(result).to eq(true)
     end
@@ -1415,13 +1415,14 @@ describe Post do
         )
       end
 
-      it "marks image uploads as secure in PMs when secure_media is ON" do
+      it "marks image and attachment uploads as secure in PMs when secure_media is ON" do
+        SiteSetting.secure_media = true
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
         post.update_uploads_secure_status
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
-          [attachment_upload.id, false],
+          [attachment_upload.id, true],
           [image_upload.id, true]
         )
       end
@@ -1439,7 +1440,6 @@ describe Post do
       end
 
       it "marks attachments as secure when relevant setting is enabled" do
-        SiteSetting.prevent_anons_from_downloading_files = true
         SiteSetting.secure_media = true
         private_category = Fabricate(:private_category, group: Fabricate(:group))
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user, category: private_category))

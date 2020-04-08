@@ -73,6 +73,10 @@ export default Controller.extend({
       );
     },
 
+    useCurrentTimezone() {
+      this.model.set("user_option.timezone", moment.tz.guess());
+    },
+
     save() {
       this.set("saved", false);
 
@@ -95,7 +99,7 @@ export default Controller.extend({
           // update the timezone in memory so we can use the new
           // one if we change routes without reloading the user
           if (this.currentUser.id === this.model.id) {
-            this.currentUser.timezone = this.model.user_option.timezone;
+            this.currentUser.changeTimezone(this.model.user_option.timezone);
           }
 
           cookAsync(model.get("bio_raw"))

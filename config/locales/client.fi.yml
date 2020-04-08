@@ -29,7 +29,7 @@ fi:
       time: "H:mm"
       time_short_day: "ddd HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMMM[ta] H:mm"
+      long_no_year: "D. MMMM[ta], H:mm"
       long_no_year_no_time: "D. MMMM[ta]"
       full_no_year_no_time: "Do MMMM[ta]"
       long_with_year: "D. MMMM[ta] YYYY H:mm"
@@ -271,11 +271,11 @@ fi:
       no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se  <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
       reminders:
         at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
-        later_today: "Myöhemmin tänään  <br/>{{date}}"
-        next_business_day: "Seuraavana arkipäivänä <br/>{{date}}"
-        tomorrow: "Huomenna <br/>{{date}}"
-        next_week: "Ensi viikolla <br/>{{date}}"
-        next_month: "Ensi kuussa <br/>{{date}}"
+        later_today: "Myöhemmin tänään "
+        next_business_day: "Seuraavana arkipäivänä"
+        tomorrow: "Huomenna"
+        next_week: "Ensi viikolla"
+        next_month: "Ensi kuussa"
         custom: "Valitse päivämäärä ja kellonaika"
     drafts:
       resume: "Jatka"

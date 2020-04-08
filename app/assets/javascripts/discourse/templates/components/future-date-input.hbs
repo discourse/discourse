@@ -1,4 +1,5 @@
 <div class="future-date-input">
+  {{#unless isBasedOnDuration}}
   <div class="control-group">
     <label>{{displayLabel}}</label>
     {{future-date-input-selector
@@ -16,6 +17,7 @@
       onChange=(action (mut selection))
     }}
   </div>
+  {{/unless}}
 
   {{#if displayDateAndTimePicker}}
     <div class="control-group">
@@ -33,11 +35,11 @@
     </div>
   {{/if}}
 
-  {{#if isBasedOnLastPost}}
+  {{#if displayNumberInput}}
     <div class="control-group">
       <label>
-        {{i18n 'topic.topic_status_update.num_of_hours'}}
-        {{text-field value=input type="number"}}
+        {{durationLabel}}
+        {{text-field value=duration type="number"}}
       </label>
     </div>
 

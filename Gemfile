@@ -28,6 +28,8 @@ else
   gem 'sprockets-rails'
 end
 
+gem 'json'
+
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # This is a desired upgrade we should get to.
 gem 'sprockets', '3.7.2'
@@ -178,6 +180,7 @@ group :test, :development do
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
   gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
+  gem "rubocop-rspec", require: false
   gem 'parallel_tests'
 end
 
@@ -205,7 +208,7 @@ gem 'htmlentities', require: false
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
 gem 'flamegraph', require: false
-gem 'rack-mini-profiler', require: false
+gem 'rack-mini-profiler', require: ['enable_rails_patches']
 
 gem 'unicorn', require: false, platform: :mri
 gem 'puma', require: false
@@ -255,3 +258,10 @@ end
 gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
+
+# These are not direct dependencies, but we need to restrict
+# versions for compatibility with https://github.com/discourse/discourse-zendesk-plugin
+# These restrictions can be removed once the zendesk_api gem is updated
+# for newer versions of hashie and faraday
+gem 'hashie', '< 4.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/422
+gem 'faraday', '< 1.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/421

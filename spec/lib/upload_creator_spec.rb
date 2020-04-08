@@ -178,7 +178,6 @@ RSpec.describe UploadCreator do
       before do
         enable_s3_uploads
         SiteSetting.secure_media = true
-        SiteSetting.prevent_anons_from_downloading_files = true
         SiteSetting.authorized_extensions = 'pdf|svg|jpg'
       end
 
@@ -194,15 +193,6 @@ RSpec.describe UploadCreator do
         upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
 
         expect(upload.secure?).to eq(false)
-      end
-
-      it 'should not apply prevent_anons_from_downloading_files to image uploads' do
-        fname = "logo.jpg"
-        upload = UploadCreator.new(file_from_fixtures(fname), fname).create_for(user.id)
-        stored_upload = Upload.last
-
-        expect(stored_upload.original_filename).to eq(fname)
-        expect(stored_upload.secure?).to eq(false)
       end
     end
 
@@ -228,7 +218,6 @@ RSpec.describe UploadCreator do
       end
 
       it 'should return signed URL for secure attachments in S3' do
-        SiteSetting.prevent_anons_from_downloading_files = true
         SiteSetting.authorized_extensions = 'pdf'
         SiteSetting.secure_media = true
 

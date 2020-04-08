@@ -328,10 +328,10 @@ fr:
     reminders:
       at_desktop: "La prochaine fois je suis à mon bureau"
       later_today: "Plus tard dans la journée\n{{date}}"
-      next_business_day: "Prochain jour ouvré<br/>{{date}}"
-      tomorrow: "Demain<br/>{{date}}"
-      next_week: "La semaine prochaine<br/>{{date}}"
-      next_month: "Le mois prochain<br/>{{date}}"
+      next_business_day: "Prochain jour ouvré"
+      tomorrow: "Demain"
+      next_week: "La semaine prochaine"
+      next_month: "Le mois prochain"
       custom: "Date et heure personnalisés"
   groups:
     success:

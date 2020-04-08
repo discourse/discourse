@@ -19,22 +19,23 @@ describe 'invite only' do
         username: 'bob',
         password: 'strongpassword',
         email: 'bob@bob.com',
-        api_key: api_key.key,
-        api_username: admin.username
+      }, headers: {
+        HTTP_API_KEY: api_key.key,
+        HTTP_API_USERNAME: admin.username
       }
 
       user_id = JSON.parse(response.body)["user_id"]
       expect(user_id).to be > 0
 
       # activate and approve
-      put "/admin/users/#{user_id}/activate.json", params: {
-        api_key: api_key.key,
-        api_username: admin.username
+      put "/admin/users/#{user_id}/activate.json", headers: {
+        HTTP_API_KEY: api_key.key,
+        HTTP_API_USERNAME: admin.username
       }
 
-      put "/admin/users/#{user_id}/approve.json", params: {
-        api_key: api_key.key,
-        api_username: admin.username
+      put "/admin/users/#{user_id}/approve.json", headers: {
+        HTTP_API_KEY: api_key.key,
+        HTTP_API_USERNAME: admin.username
       }
 
       u = User.find(user_id)

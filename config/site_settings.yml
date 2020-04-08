@@ -336,6 +336,7 @@ login:
   must_approve_users:
     client: true
     default: false
+  invite_code: ""
   enable_local_logins:
     client: true
     default: true
@@ -458,6 +459,9 @@ login:
   email_domains_whitelist:
     default: ""
     type: list
+  auto_approve_email_domains:
+    default: ""
+    type: list
   hide_email_address_taken: false
   log_out_strict: true
   pending_users_reminder_delay:
@@ -538,6 +542,9 @@ users:
     client: true
     default: 15
     min: 1
+  delete_user_self_max_post_count:
+    default: 1
+    min: -1
   redirect_users_to_top_page: true
   prioritize_username_in_ux:
     client: true
@@ -1370,7 +1377,8 @@ security:
       - Lax
       - Strict
       - Disabled
-    regex: "^(Lax|Strict|Disabled)$"
+      - None
+    regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   moderators_create_categories: false
@@ -1968,7 +1976,7 @@ uncategorized:
     hidden: true
 
   pwa_display_browser_regex:
-    default: "iPad|iPhone"
+    default: "a^"
     hidden: true
 
   app_association_android:

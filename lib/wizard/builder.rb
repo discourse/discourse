@@ -155,7 +155,7 @@ class Wizard
           id: 'theme_previews',
           type: 'component',
           required: !default_theme_override,
-          value: scheme_id
+          value: scheme_id || ColorScheme::LIGHT_THEME_ID
         )
 
         # fix for the case when base_scheme is nil

@@ -2,8 +2,6 @@
 require 'rails_helper'
 
 describe ContentSecurityPolicy do
-  before { ContentSecurityPolicy.base_url = nil }
-
   after do
     DiscoursePluginRegistry.reset!
   end
@@ -48,7 +46,6 @@ describe ContentSecurityPolicy do
     it 'always has self, logster, sidekiq, and assets' do
       script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include(*%w[
-        'report-sample'
         http://test.localhost/logs/
         http://test.localhost/sidekiq/
         http://test.localhost/mini-profiler-resources/
@@ -61,6 +58,12 @@ describe ContentSecurityPolicy do
         http://test.localhost/theme-javascripts/
         http://test.localhost/svg-sprite/
       ])
+    end
+
+    it 'includes "report-sample" when report collection is enabled' do
+      SiteSetting.content_security_policy_collect_reports = true
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include("'report-sample'")
     end
 
     it 'whitelists Google Analytics and Tag Manager when integrated' do
@@ -97,6 +100,35 @@ describe ContentSecurityPolicy do
         https://cdn.com/plugins/
         https://cdn.com/theme-javascripts/
         http://test.localhost/extra-locales/
+      ])
+    end
+
+    it 'adds subfolder to CDN assets' do
+      set_cdn_url('https://cdn.com')
+      set_subfolder('/forum')
+
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include(*%w[
+        https://cdn.com/forum/assets/
+        https://cdn.com/forum/brotli_asset/
+        https://cdn.com/forum/highlight-js/
+        https://cdn.com/forum/javascripts/
+        https://cdn.com/forum/plugins/
+        https://cdn.com/forum/theme-javascripts/
+        http://test.localhost/forum/extra-locales/
+      ])
+
+      global_setting(:s3_cdn_url, 'https://s3-cdn.com')
+
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include(*%w[
+        https://s3-cdn.com/assets/
+        https://s3-cdn.com/brotli_asset/
+        https://cdn.com/forum/highlight-js/
+        https://cdn.com/forum/javascripts/
+        https://cdn.com/forum/plugins/
+        https://cdn.com/forum/theme-javascripts/
+        http://test.localhost/forum/extra-locales/
       ])
     end
   end

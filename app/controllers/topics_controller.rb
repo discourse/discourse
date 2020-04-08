@@ -342,6 +342,8 @@ class TopicsController < ApplicationController
             end
           end
 
+          invalid_tags = Tag.where_name(invalid_tags).pluck(:name)
+
           if !invalid_tags.empty?
             if (invalid_tags & DiscourseTagging.hidden_tag_names).present?
               return render_json_error(I18n.t('category.errors.disallowed_tags_generic'))
@@ -366,7 +368,7 @@ class TopicsController < ApplicationController
 
     if changes.length > 0
       first_post = topic.ordered_posts.first
-      success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
+      success = PostRevisor.new(first_post).revise!(current_user, changes, validate_post: false)
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
@@ -435,16 +437,19 @@ class TopicsController < ApplicationController
       rescue
         invalid_param(:status_type)
       end
+    based_on_last_post = params[:based_on_last_post]
+    params.require(:duration) if based_on_last_post || TopicTimer.types[:delete_replies] == status_type
 
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
 
     options = {
       by_user: current_user,
-      based_on_last_post: params[:based_on_last_post]
+      based_on_last_post: based_on_last_post
     }
 
     options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
+    options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
     topic_status_update = topic.set_or_create_timer(
       status_type,

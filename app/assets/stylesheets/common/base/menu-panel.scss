@@ -7,10 +7,7 @@
   }
 
   .panel-body {
-    position: absolute;
-    top: 3px;
-    bottom: 37px;
-    width: 97%;
+    width: 100%;
   }
 }
 .header-cloak {
@@ -189,6 +186,10 @@
         padding: 0;
         > div {
           overflow: hidden; // clears the text from wrapping below icons
+          overflow-wrap: anywhere;
+          @supports not (overflow-wrap: anywhere) {
+            word-break: break-word;
+          }
 
           // Truncate items with more than 2 lines.
           display: -webkit-box;

@@ -264,7 +264,7 @@ describe Search do
 
       it 'can find all direct PMs of the current user' do
         pm = create_pm(users: [current, participant])
-        pm_2 = create_pm(users: [participant_2, participant])
+        _pm_2 = create_pm(users: [participant_2, participant])
         pm_3 = create_pm(users: [participant, current])
         pm_4 = create_pm(users: [participant_2, current])
         results = Search.execute("in:personal-direct", guardian: Guardian.new(current))
@@ -275,7 +275,7 @@ describe Search do
       it 'can filter direct PMs by @username' do
         pm = create_pm(users: [current, participant])
         pm_2 = create_pm(users: [participant, current])
-        pm_3 = create_pm(users: [participant_2, current])
+        _pm_3 = create_pm(users: [participant_2, current])
         results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
         expect(results.posts.size).to eq(2)
         expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_2.id)
@@ -283,13 +283,13 @@ describe Search do
       end
 
       it "doesn't include PMs that have more than 2 participants" do
-        pm = create_pm(users: [current, participant, participant_2])
+        _pm = create_pm(users: [current, participant, participant_2])
         results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
         expect(results.posts.size).to eq(0)
       end
 
       it "doesn't include PMs that have groups" do
-        pm = create_pm(users: [current, participant], group: group)
+        _pm = create_pm(users: [current, participant], group: group)
         results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
         expect(results.posts.size).to eq(0)
       end
@@ -1088,7 +1088,7 @@ describe Search do
       second_topic = post2.topic
       second_topic.update(category: private_category)
 
-      post3 = Fabricate(:post, raw: "another test!", user: topic.user, topic: second_topic)
+      _post3 = Fabricate(:post, raw: "another test!", user: topic.user, topic: second_topic)
 
       expect(Search.execute('test status:public').posts.length).to eq(1)
       expect(Search.execute('test status:closed').posts.length).to eq(0)
@@ -1240,6 +1240,20 @@ describe Search do
       expect(Search.execute('this is a test #привет').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #hElLo').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #beta').posts.size).to eq(0)
+    end
+
+    it 'supports sub-sub category slugs' do
+
+      SiteSetting.max_category_nesting = 3
+
+      category = Fabricate(:category, name: 'top', slug: 'top')
+      sub = Fabricate(:category, name: 'middle', slug: 'middle', parent_category_id: category.id)
+      leaf = Fabricate(:category, name: 'leaf', slug: 'leaf', parent_category_id: sub.id)
+
+      topic = Fabricate(:topic, created_at: 3.months.ago, category: leaf)
+      _post = Fabricate(:post, raw: 'Sams first post', topic: topic)
+
+      expect(Search.execute('#Middle:leaf first post').posts.size).to eq(1)
     end
 
     it 'correctly handles #symbol when no tag or category match' do
@@ -1555,7 +1569,7 @@ describe Search do
       topic = Fabricate(:topic, title: 'I am testing a tagged search')
       _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
       tag = Fabricate(:tag)
-      topic_tag = Fabricate(:topic_tag, topic: topic, tag: tag)
+      _topic_tag = Fabricate(:topic_tag, topic: topic, tag: tag)
 
       results = Search.execute('in:untagged')
       expect(results.posts.length).to eq(0)

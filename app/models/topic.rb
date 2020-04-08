@@ -152,6 +152,20 @@ class Topic < ActiveRecord::Base
   # Return private message topics
   scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
+  PRIVATE_MESSAGES_SQL = <<~SQL
+    SELECT topic_id
+    FROM topic_allowed_users
+    WHERE user_id = :user_id
+    UNION ALL
+    SELECT tg.topic_id
+    FROM topic_allowed_groups tg
+    JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
+  SQL
+
+  scope :private_messages_for_user, ->(user) {
+    private_messages.where("topics.id IN (#{PRIVATE_MESSAGES_SQL})", user_id: user.id)
+  }
+
   scope :listable_topics, -> { where('topics.archetype <> ?', Archetype.private_message) }
 
   scope :by_newest, -> { order('topics.created_at desc, topics.id desc') }
@@ -174,11 +188,6 @@ class Topic < ActiveRecord::Base
 
     where("topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})", condition[1])
   }
-
-  IN_CATEGORY_AND_SUBCATEGORIES_SQL = <<~SQL
-       t.category_id = :category_id
-    OR t.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = :category_id)
-  SQL
 
   scope :in_category_and_subcategories, lambda { |category_id|
     where("topics.category_id = ? OR topics.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = ?)",
@@ -257,10 +266,14 @@ class Topic < ActiveRecord::Base
        self.category.auto_close_hours &&
        !public_topic_timer&.execute_at
 
+      based_on_last_post = self.category.auto_close_based_on_last_post
+      duration = based_on_last_post ? self.category.auto_close_hours : nil
+
       self.set_or_create_timer(
         TopicTimer.types[:close],
         self.category.auto_close_hours,
-        based_on_last_post: self.category.auto_close_based_on_last_post
+        based_on_last_post: based_on_last_post,
+        duration: duration
       )
     end
   end
@@ -1132,8 +1145,8 @@ class Topic < ActiveRecord::Base
   #  * by_user: User who is setting the topic's status update.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
-    return delete_topic_timer(status_type, by_user: by_user) if time.blank?
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil)
+    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration.blank?
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
@@ -1143,18 +1156,23 @@ class Topic < ActiveRecord::Base
 
     time_now = Time.zone.now
     topic_timer.based_on_last_post = !based_on_last_post.blank?
+    topic_timer.duration = duration
 
     if status_type == TopicTimer.types[:publish_to_category]
       topic_timer.category = Category.find_by(id: category_id)
     end
 
     if topic_timer.based_on_last_post
-      num_hours = time.to_f
-
-      if num_hours > 0
+      if duration > 0
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
-        topic_timer.execute_at = last_post_created_at + num_hours.hours
+        topic_timer.execute_at = last_post_created_at + duration.hours
         topic_timer.created_at = last_post_created_at
+      end
+    elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
+      if duration > 0
+        first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
+        topic_timer.execute_at = first_reply_created_at + duration.days
+        topic_timer.created_at = first_reply_created_at
       end
     else
       utc = Time.find_zone("UTC")
@@ -1277,7 +1295,7 @@ class Topic < ActiveRecord::Base
     builder = DB.build(sql)
     builder.where("t.created_at >= :start_date", start_date: opts[:start_date]) if opts[:start_date]
     builder.where("t.created_at < :end_date", end_date: opts[:end_date]) if opts[:end_date]
-    builder.where(IN_CATEGORY_AND_SUBCATEGORIES_SQL, category_id: opts[:category_id]) if opts[:category_id]
+    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(opts[:category_id])) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.where("p.deleted_at IS NULL")
@@ -1316,7 +1334,7 @@ class Topic < ActiveRecord::Base
     builder = DB.build(WITH_NO_RESPONSE_SQL)
     builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
     builder.where("t.created_at < :end_date", end_date: end_date) if end_date
-    builder.where(IN_CATEGORY_AND_SUBCATEGORIES_SQL, category_id: category_id) if category_id
+    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(category_id)) if category_id
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.query_hash
@@ -1336,7 +1354,7 @@ class Topic < ActiveRecord::Base
 
   def self.with_no_response_total(opts = {})
     builder = DB.build(WITH_NO_RESPONSE_TOTAL_SQL)
-    builder.where(IN_CATEGORY_AND_SUBCATEGORIES_SQL, category_id: opts[:category_id]) if opts[:category_id]
+    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(opts[:category_id])) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.query_single.first.to_i

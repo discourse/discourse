@@ -315,7 +315,7 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
 
     if (attrs.bookmarkReminderAt) {
       let reminderAtDate = moment(attrs.bookmarkReminderAt).tz(
-        Discourse.currentUser.timezone
+        Discourse.currentUser.resolvedTimezone()
       );
       title = "bookmarks.created_with_reminder";
       titleOptions = {

@@ -583,7 +583,7 @@ describe UsersController do
       UsersController.any_instance.stubs(:honeypot_value).returns(nil)
       UsersController.any_instance.stubs(:challenge_value).returns(nil)
       SiteSetting.allow_new_registrations = true
-      @user = Fabricate.build(:user, password: "strongpassword")
+      @user = Fabricate.build(:user, email: "foobar@example.com", password: "strongpassword")
     end
 
     let(:post_user_params) do
@@ -593,8 +593,8 @@ describe UsersController do
         email: @user.email }
     end
 
-    def post_user
-      post "/u.json", params: post_user_params
+    def post_user(extra_params = {})
+      post "/u.json", params: post_user_params.merge(extra_params)
     end
 
     context 'when email params is missing' do
@@ -616,17 +616,28 @@ describe UsersController do
         expect(User.find_by(username: @user.username).locale).to eq('fr')
       end
 
+      it 'requires invite code when specified' do
+        expect(SiteSetting.require_invite_code).to eq(false)
+        SiteSetting.invite_code = "abc def"
+        expect(SiteSetting.require_invite_code).to eq(true)
+
+        post_user(invite_code: "abcd")
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(false)
+
+        # case insensitive and stripped of leading/ending spaces
+        post_user(invite_code: " AbC deF ")
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(true)
+
+      end
+
       context "when timezone is provided as a guess on signup" do
-        let(:post_user_params) do
-          { name: @user.name,
-            username: @user.username,
-            password: "strongpassword",
-            email: @user.email,
-            timezone: "Australia/Brisbane" }
-        end
 
         it "sets the timezone" do
-          post_user
+          post_user(timezone: "Australia/Brisbane")
           expect(response.status).to eq(200)
           expect(User.find_by(username: @user.username).user_option.timezone).to eq("Australia/Brisbane")
         end
@@ -732,7 +743,7 @@ describe UsersController do
 
         it "won't create the user as active with a regular key" do
           post "/u.json",
-            params: post_user_params.merge(active: true, api_key: api_key.key)
+            params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
 
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['active']).to be_falsey
@@ -748,7 +759,7 @@ describe UsersController do
           SiteSetting.must_approve_users = true
 
           #Sidekiq::Client.expects(:enqueue).never
-          post "/u.json", params: post_user_params.merge(approved: true, active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(approved: true, active: true), headers: { HTTP_API_KEY: api_key.key }
 
           expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
           expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
@@ -770,7 +781,7 @@ describe UsersController do
           Jobs.run_immediately!
           SiteSetting.must_approve_users = true
 
-          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
 
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -785,7 +796,7 @@ describe UsersController do
           Jobs.run_immediately!
           SiteSetting.must_approve_users = true
 
-          post "/u.json", params: post_user_params.merge(api_key: api_key.key)
+          post "/u.json", params: post_user_params, headers: { HTTP_API_KEY: api_key.key }
 
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -799,7 +810,7 @@ describe UsersController do
         it "won't create the developer as active" do
           UsernameCheckerService.expects(:is_developer?).returns(true)
 
-          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['active']).to be_falsy
         end
@@ -808,12 +819,28 @@ describe UsersController do
           SiteSetting.allow_user_locale = true
           admin.update!(locale: :fr)
 
-          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
 
           json = JSON.parse(response.body)
           new_user = User.find(json["user_id"])
           expect(new_user.locale).not_to eq("fr")
+        end
+
+        it "will auto approve user if the user email domain matches auto_approve_email_domains setting" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+          SiteSetting.auto_approve_email_domains = "example.com"
+
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
+
+          expect(response.status).to eq(200)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+          expect(json['active']).to be_truthy
+          expect(new_user.approved).to be_truthy
+          expect(ReviewableUser.pending.find_by(target: new_user)).to be_blank
         end
       end
     end
@@ -831,7 +858,7 @@ describe UsersController do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as staged with a regular key" do
-          post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(staged: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
 
           new_user = User.where(username: post_user_params[:username]).first
@@ -844,7 +871,7 @@ describe UsersController do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "creates the user as staged with a regular key" do
-          post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(staged: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
 
           new_user = User.where(username: post_user_params[:username]).first
@@ -853,7 +880,7 @@ describe UsersController do
 
         it "won't create the developer as staged" do
           UsernameCheckerService.expects(:is_developer?).returns(true)
-          post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(staged: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
 
           new_user = User.where(username: post_user_params[:username]).first
@@ -1440,7 +1467,7 @@ describe UsersController do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(inviter)
       invitee = Fabricate(:user)
-      invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+      _invite = Fabricate(:invite, invited_by: inviter, user: invitee)
       get "/u/#{user.username}/invited_count.json"
       expect(response.status).to eq(200)
 
@@ -1823,8 +1850,9 @@ describe UsersController do
                 },
                 user_fields: {
                   user_field.id.to_s => 'user field value'
-                },
-                api_key: api_key.key
+                }
+              }, headers: {
+                HTTP_API_KEY: api_key.key
               }
               expect(response.status).to eq(200)
               u = User.find_by_email('user@mail.com')
@@ -4154,6 +4182,30 @@ describe UsersController do
       put "/u/#{user.username}/clear-featured-topic.json"
       expect(response.status).to eq(200)
       expect(user.user_profile.featured_topic).to eq nil
+    end
+  end
+
+  describe "#bookmarks" do
+    let!(:bookmark1) { Fabricate(:bookmark, user: user) }
+    let!(:bookmark2) { Fabricate(:bookmark, user: user) }
+    let!(:bookmark3) { Fabricate(:bookmark) }
+
+    before do
+      TopicUser.change(user.id, bookmark1.topic_id, total_msecs_viewed: 1)
+      TopicUser.change(user.id, bookmark2.topic_id, total_msecs_viewed: 1)
+    end
+
+    it "returns a list of serialized bookmarks for the user" do
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+    end
+
+    it "does not show another user's bookmarks" do
+      sign_in(user)
+      get "/u/#{bookmark3.user.username}/bookmarks.json"
+      expect(response.status).to eq(403)
     end
   end
 

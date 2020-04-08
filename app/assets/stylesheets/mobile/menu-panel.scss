@@ -15,3 +15,9 @@
     transition: opacity 0.2s ease-out;
   }
 }
+
+.user-menu .quick-access-profile li:not(.show-all) {
+  margin: 0.5em 0 0.75em;
+  padding: 0.75em;
+  border: 1px solid $primary-low;
+}

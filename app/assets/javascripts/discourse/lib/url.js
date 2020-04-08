@@ -24,7 +24,6 @@ const SERVER_SIDE_ONLY = [
   /^\/posts\/\d+\/raw/,
   /^\/raw\/\d+/,
   /^\/wizard/,
-  /^\/go\//, // EXPERIMENTAL: https://meta.discourse.org/t/-/142605
   /\.rss$/,
   /\.json$/,
   /^\/admin\/upgrade$/,
@@ -250,7 +249,7 @@ const DiscourseURL = EmberObject.extend({
           userPath(currentUser.get("username_lower") + "/")
         );
       } else {
-        return redirectTo("/404");
+        return redirectTo("/login-preferences");
       }
     }
 
@@ -369,7 +368,7 @@ const DiscourseURL = EmberObject.extend({
           const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
           topicController.setProperties({
             "model.currentPost": closest,
-            enteredAt: new Date().getTime().toString()
+            enteredAt: Date.now().toString()
           });
 
           this.appEvents.trigger("post:highlight", closest);

@@ -24,6 +24,8 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
   end
 
+  report_requests = ENV['REPORT_REQUESTS'] == "1"
+
   system("yarn install --dev")
 
   # ensure we have this port available
@@ -63,9 +65,11 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
     end
 
-    if options.present?
-      cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
+    if report_requests
+      options['report_requests'] = '1'
     end
+
+    cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
 
     if args[:timeout].present?
       cmd += " #{args[:timeout]}"

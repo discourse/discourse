@@ -79,10 +79,14 @@
 
       .name {
         display: inline-block;
-        .d-icon {
+        > .d-icon {
           margin-left: 0.5em;
           margin-right: 0;
         }
+      }
+
+      > .d-icon {
+        margin-right: 0;
       }
 
       &.select-kit-selected-color {

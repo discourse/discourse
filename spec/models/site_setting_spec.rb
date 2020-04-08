@@ -178,7 +178,7 @@ describe SiteSetting do
         end.to change { @fake_logger.warnings.count }.by(2)
 
         expect do
-          expect(SiteSetting.use_https(warn: false))
+          SiteSetting.use_https(warn: false)
         end.to_not change { @fake_logger.warnings }
 
         SiteSetting.use_https = false

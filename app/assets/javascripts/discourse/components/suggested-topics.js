@@ -5,8 +5,7 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Site from "discourse/models/site";
 
 export default Component.extend({
-  elementId: "suggested-topics",
-  classNames: ["suggested-topics"],
+  tagName: "",
 
   suggestedTitleLabel: computed("topic", function() {
     const href = this.currentUser && this.currentUser.pmPath(this.topic);

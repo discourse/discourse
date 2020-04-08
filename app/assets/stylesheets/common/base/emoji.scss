@@ -45,6 +45,8 @@ sup img.emoji {
   justify-content: space-between;
   border-right: 1px solid $primary-low;
   min-width: 36px;
+  overflow-y: auto;
+  padding: 0.5em;
 }
 
 .emoji-picker .category-icon {

@@ -31,7 +31,7 @@ he:
       time: "h:mm a"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D בMMM ‏HH:mm"
+      long_no_year: "D בMMM, ‏HH:mm"
       long_no_year_no_time: "D בMMM"
       full_no_year_no_time: "Do בMMMM"
       long_with_year: "D בMMM ‏YYYY ‏HH:mm"
@@ -319,11 +319,11 @@ he:
       no_timezone: 'עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href="%{basePath}/my/preferences/profile">בפרופיל שלך</a>.'
       reminders:
         at_desktop: "בשימוש הבא דרך שולחן העבודה"
-        later_today: "המשך היום <br/>{{date}}"
-        next_business_day: "ביום העסקים הבא <br/>{{date}}"
-        tomorrow: "מחר <br/>{{date}}"
-        next_week: "בשבוע הבא <br/>{{date}}"
-        next_month: "בחודש הבא <br/>{{date}}"
+        later_today: "המשך היום"
+        next_business_day: "ביום העסקים הבא"
+        tomorrow: "מחר"
+        next_week: "בשבוע הבא"
+        next_month: "בחודש הבא"
         custom: "תאריך ושעה מותאמים אישית"
     drafts:
       resume: "המשך"

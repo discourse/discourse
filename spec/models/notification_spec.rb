@@ -117,6 +117,24 @@ describe Notification do
       it "increases unread_private_messages" do
         expect { Fabricate(:private_message_notification, user: user); user.reload }.to change(user, :unread_private_messages)
       end
+
+      it "increases unread_high_priority_notifications" do
+        expect { Fabricate(:private_message_notification, user: user); user.reload }.to change(user, :unread_high_priority_notifications)
+      end
+    end
+
+    context 'a bookmark reminder message' do
+      it "doesn't increase unread_notifications" do
+        expect { Fabricate(:bookmark_reminder_notification, user: user); user.reload }.not_to change(user, :unread_notifications)
+      end
+
+      it 'increases total_unread_notifications' do
+        expect { Fabricate(:notification, user: user); user.reload }.to change(user, :total_unread_notifications)
+      end
+
+      it "increases unread_high_priority_notifications" do
+        expect { Fabricate(:bookmark_reminder_notification, user: user); user.reload }.to change(user, :unread_high_priority_notifications)
+      end
     end
 
   end
@@ -219,6 +237,13 @@ describe Notification do
                            data: '{}',
                            notification_type: Notification.types[:private_message])
 
+      Notification.create!(read: false,
+                           user_id: user.id,
+                           topic_id: t.id,
+                           post_number: 1,
+                           data: '{}',
+                           notification_type: Notification.types[:bookmark_reminder])
+
       other = Notification.create!(read: false,
                                    user_id: user.id,
                                    topic_id: t.id,
@@ -230,8 +255,11 @@ describe Notification do
       user.reload
 
       expect(user.unread_notifications).to eq(0)
-      expect(user.total_unread_notifications).to eq(2)
-      expect(user.unread_private_messages).to eq(1)
+      expect(user.total_unread_notifications).to eq(3)
+      # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
+      #       to be remonved in 2.5
+      expect(user.unread_private_messages).to eq(2)
+      expect(user.unread_high_priority_notifications).to eq(2)
     end
   end
 
@@ -248,7 +276,7 @@ describe Notification do
     end
   end
 
-  describe 'ensure consistency' do
+  describe '#ensure_consistency!' do
     it 'deletes notifications if post is missing or deleted' do
 
       NotificationEmailer.disable
@@ -260,6 +288,8 @@ describe Notification do
                            notification_type: Notification.types[:private_message])
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
                            notification_type: Notification.types[:private_message])
+      Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
+                           notification_type: Notification.types[:bookmark_reminder])
 
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
                            notification_type: Notification.types[:liked])
@@ -321,6 +351,10 @@ describe Notification do
       fab(Notification.types[:private_message], false)
     end
 
+    def unread_bookmark_reminder
+      fab(Notification.types[:bookmark_reminder], false)
+    end
+
     def pm
       fab(Notification.types[:private_message], true)
     end
@@ -340,16 +374,17 @@ describe Notification do
       expect(Notification.visible.count).to eq(0)
     end
 
-    it 'orders stuff correctly' do
+    it 'orders stuff by creation descending, bumping unread high priority (pms, bookmark reminders) to top' do
+      # note we expect the final order to read bottom-up for this list of variables,
+      # with unread pm + bookmark reminder at the top of that list
       a = unread_pm
-          regular
+      regular
+      b = unread_bookmark_reminder
       c = pm
       d = regular
 
-      # bumps unread pms to front of list
-
-      notifications = Notification.recent_report(user, 3)
-      expect(notifications.map { |n| n.id }).to eq([a.id, d.id, c.id])
+      notifications = Notification.recent_report(user, 4)
+      expect(notifications.map { |n| n.id }).to eq([b.id, a.id, d.id, c.id])
 
     end
 

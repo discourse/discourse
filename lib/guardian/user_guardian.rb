@@ -62,7 +62,7 @@ module UserGuardian
     return false if user.nil? || user.admin?
     if is_me?(user)
       !SiteSetting.enable_sso &&
-      !user.has_more_posts_than?(User::MAX_SELF_DELETE_POST_COUNT)
+      !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
     else
       is_staff? && (
         user.first_post_created_at.nil? ||

@@ -40,6 +40,7 @@ export default Controller.extend(
     hasAuthOptions: notEmpty("authOptions"),
     canCreateLocal: setting("enable_local_logins"),
     showCreateForm: or("hasAuthOptions", "canCreateLocal"),
+    requireInviteCode: setting("require_invite_code"),
 
     resetForm() {
       // We wrap the fields in a structure so we can assign a value
@@ -66,7 +67,8 @@ export default Controller.extend(
       "usernameValidation.failed",
       "passwordValidation.failed",
       "userFieldsValidation.failed",
-      "formSubmitted"
+      "formSubmitted",
+      "inviteCode"
     )
     submitDisabled() {
       if (this.formSubmitted) return true;
@@ -77,6 +79,8 @@ export default Controller.extend(
       if (this.get("passwordValidation.failed") && this.passwordRequired)
         return true;
       if (this.get("userFieldsValidation.failed")) return true;
+
+      if (this.requireInviteCode && !this.inviteCode) return true;
 
       return false;
     },
@@ -225,7 +229,8 @@ export default Controller.extend(
         "accountEmail",
         "accountPassword",
         "accountUsername",
-        "accountChallenge"
+        "accountChallenge",
+        "inviteCode"
       );
 
       attrs["accountPasswordConfirm"] = this.accountHoneypot;

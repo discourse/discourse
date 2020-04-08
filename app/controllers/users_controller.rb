@@ -317,8 +317,12 @@ class UsersController < ApplicationController
       filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
       invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
     end
-    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer, show_emails: show_emails),
-                     can_see_invite_details: guardian.can_see_invite_details?(inviter)
+
+    render json: MultiJson.dump(InvitedSerializer.new(
+      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter),
+      scope: guardian,
+      root: false
+    ))
   end
 
   def invited_count
@@ -410,6 +414,7 @@ class UsersController < ApplicationController
   def create
     params.require(:email)
     params.require(:username)
+    params.require(:invite_code) if SiteSetting.require_invite_code
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -424,6 +429,10 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
+    if SiteSetting.require_invite_code && SiteSetting.invite_code.strip.downcase != params[:invite_code].strip.downcase
+      return fail_with("login.wrong_invite_code")
+    end
+
     if clashing_with_existing_route?(params[:username]) || User.reserved_username?(params[:username])
       return fail_with("login.reserved_username")
     end
@@ -431,11 +440,22 @@ class UsersController < ApplicationController
     params[:locale] ||= I18n.locale unless current_user
 
     new_user_params = user_params.except(:timezone)
-    user = User.unstage(new_user_params)
-    user = User.new(new_user_params) if user.nil?
 
-    # Handle API approval
-    ReviewableUser.set_approved_fields!(user, current_user) if user.approved?
+    user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
+
+    if user
+      user.active = false
+      user.unstage!
+    end
+
+    user ||= User.new
+    user.attributes = new_user_params
+
+    # Handle API approval and
+    # auto approve users based on auto_approve_email_domains setting
+    if user.approved? || EmailValidator.can_auto_approve_user?(user.email)
+      ReviewableUser.set_approved_fields!(user, current_user)
+    end
 
     # Handle custom fields
     user_fields = UserField.all
@@ -1111,7 +1131,10 @@ class UsersController < ApplicationController
 
     result = {}
 
-    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
+    %W{
+      number_of_deleted_posts number_of_flagged_posts number_of_flags_given
+      number_of_suspensions warnings_received_count number_of_rejected_posts
+    }.each do |info|
       result[info] = @user.public_send(info)
     end
 
@@ -1381,15 +1404,27 @@ class UsersController < ApplicationController
 
   def bookmarks
     user = fetch_user_from_params
-    bookmarks = BookmarkQuery.new(user, params).list_all
+    guardian.ensure_can_edit!(user)
 
-    if bookmarks.empty?
-      render json: {
-        bookmarks: [],
-        no_results_help: I18n.t("user_activity.no_bookmarks.self")
-      }
-    else
-      render_serialized(bookmarks, UserBookmarkSerializer, root: 'bookmarks')
+    respond_to do |format|
+      format.json do
+        bookmark_list = UserBookmarkList.new(user: user, guardian: guardian, params: params)
+        bookmark_list.load
+
+        if bookmark_list.bookmarks.empty?
+          render json: {
+            bookmarks: [],
+            no_results_help: I18n.t("user_activity.no_bookmarks.self")
+          }
+        else
+          page = params[:page].to_i + 1
+          bookmark_list.more_bookmarks_url = "#{Discourse.base_path}/u/#{params[:username]}/bookmarks.json?page=#{page}"
+          render_serialized(bookmark_list, UserBookmarkListSerializer)
+        end
+      end
+      format.ics do
+        @bookmark_reminders = Bookmark.where(user_id: user.id).where.not(reminder_at: nil).joins(:topic)
+      end
     end
   end
 

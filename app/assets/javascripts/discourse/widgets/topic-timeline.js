@@ -388,7 +388,8 @@ createWidget("timeline-footer-controls", {
             topic,
             showFullTitle: false,
             appendReason: false,
-            placement: "bottom-end"
+            placement: "bottom-end",
+            mountedAsWidget: true
           },
           ["notificationLevel"]
         )
@@ -442,7 +443,6 @@ export default createWidget("topic-timeline", {
   html(attrs) {
     const { topic } = attrs;
     const createdAt = new Date(topic.created_at);
-    const stream = attrs.topic.get("postStream.stream");
     const { currentUser } = this;
     const { tagging_enabled, topic_featured_link_enabled } = this.siteSettings;
 
@@ -517,15 +517,6 @@ export default createWidget("topic-timeline", {
     }
 
     result.push(this.attach("timeline-controls", attrs));
-    const streamLength = stream.length;
-
-    if (streamLength !== 0 && streamLength < 3) {
-      const topicHeight = $("#topic").height();
-      const windowHeight = $(window).height();
-      if (topicHeight / windowHeight < 2.0) {
-        return result;
-      }
-    }
 
     const bottomAge = relativeAge(new Date(topic.last_posted_at), {
       addAgo: true,

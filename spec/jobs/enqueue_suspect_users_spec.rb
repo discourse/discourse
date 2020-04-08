@@ -56,5 +56,29 @@ describe Jobs::EnqueueSuspectUsers do
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
     end
+
+    it 'ignores users created more than six months ago' do
+      suspect_user.update!(created_at: 1.year.ago)
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
+    it 'ignores users that were imported from another site' do
+      suspect_user.upsert_custom_fields({ import_id: 'fake_id' })
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
+    it 'enqueues a suspect users with custom fields' do
+      suspect_user.upsert_custom_fields({ field_a: 'value', field_b: 'value' })
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(true)
+    end
   end
 end

@@ -5,7 +5,8 @@ class ContentSecurityPolicy
   class Default
     attr_reader :directives
 
-    def initialize
+    def initialize(base_url:)
+      @base_url = base_url
       @directives = {}.tap do |directives|
         directives[:base_uri] = [:none]
         directives[:object_src] = [:none]
@@ -17,7 +18,9 @@ class ContentSecurityPolicy
 
     private
 
-    delegate :base_url, to: :ContentSecurityPolicy
+    def base_url
+      @base_url
+    end
 
     SCRIPT_ASSET_DIRECTORIES = [
       # [dir, can_use_s3_cdn, can_use_cdn]
@@ -36,7 +39,7 @@ class ContentSecurityPolicy
         if can_use_s3_cdn && s3_cdn
           s3_cdn + dir
         elsif can_use_cdn && cdn
-          cdn + dir
+          cdn + Discourse.base_uri + dir
         else
           base + dir
         end
@@ -45,12 +48,12 @@ class ContentSecurityPolicy
 
     def script_src
       [
-        :report_sample,
         "#{base_url}/logs/",
         "#{base_url}/sidekiq/",
         "#{base_url}/mini-profiler-resources/",
         *script_assets
       ].tap do |sources|
+        sources << :report_sample if SiteSetting.content_security_policy_collect_reports
         sources << :unsafe_eval if Rails.env.development? # TODO remove this once we have proper source maps in dev
         sources << 'https://www.google-analytics.com/analytics.js' if SiteSetting.ga_universal_tracking_code.present?
         sources << 'https://www.googletagmanager.com/gtm.js' if SiteSetting.gtm_container_id.present?

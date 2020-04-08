@@ -47,6 +47,11 @@ describe BadgeGranter do
       expect(result[:grant_count]).to eq(1)
       expect(result[:query_plan]).to be_present
     end
+
+    it 'with badges containing trailing comments do not break generated SQL' do
+      query = Badge.find(1).query + "\n-- a comment"
+      expect(BadgeGranter.preview(query)[:errors]).to be_nil
+    end
   end
 
   describe 'backfill' do
@@ -113,6 +118,12 @@ describe BadgeGranter do
       notification_badge_name = JSON.parse(post.user.notifications.first.data)['badge_name']
 
       expect(notification_badge_name).not_to eq(name_english)
+    end
+
+    it 'with badges containing trailing comments do not break generated SQL' do
+      badge = Fabricate(:badge)
+      badge.query = Badge.find(1).query + "\n-- a comment"
+      expect { BadgeGranter.backfill(badge) }.not_to raise_error
     end
   end
 

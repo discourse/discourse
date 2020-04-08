@@ -44,6 +44,10 @@ class Notification < ActiveRecord::Base
     send_email unless NotificationConsolidator.new(self).consolidate!
   end
 
+  before_create do
+    self.high_priority = Notification.high_priority_types.include?(self.notification_type)
+  end
+
   def self.purge_old!
     return if SiteSetting.max_notifications_per_user == 0
 
@@ -64,10 +68,10 @@ class Notification < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    DB.exec(<<~SQL, Notification.types[:private_message])
+    DB.exec(<<~SQL)
       DELETE
         FROM notifications n
-       WHERE notification_type = ?
+       WHERE high_priority
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
@@ -106,6 +110,17 @@ class Notification < ActiveRecord::Base
                         membership_request_consolidated: 23,
                         bookmark_reminder: 24
                        )
+  end
+
+  def self.high_priority_types
+    @high_priority_types ||= [
+      types[:private_message],
+      types[:bookmark_reminder]
+    ]
+  end
+
+  def self.normal_priority_types
+    @normal_priority_types ||= types.reject { |_k, v| high_priority_types.include?(v) }.values
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
@@ -210,14 +225,14 @@ class Notification < ActiveRecord::Base
 
     if notifications.present?
 
-      ids = DB.query_single(<<~SQL, count.to_i)
+      ids = DB.query_single(<<~SQL, limit: count.to_i)
          SELECT n.id FROM notifications n
          WHERE
-           n.notification_type = 6 AND
+           n.high_priority = TRUE AND
            n.user_id = #{user.id.to_i} AND
            NOT read
         ORDER BY n.id ASC
-        LIMIT ?
+        LIMIT :limit
       SQL
 
       if ids.length > 0
@@ -230,9 +245,9 @@ class Notification < ActiveRecord::Base
       end
 
       notifications.uniq(&:id).sort do |x, y|
-        if x.unread_pm? && !y.unread_pm?
+        if x.unread_high_priority? && !y.unread_high_priority?
           -1
-        elsif y.unread_pm? && !x.unread_pm?
+        elsif y.unread_high_priority? && !x.unread_high_priority?
           1
         else
           y.created_at <=> x.created_at
@@ -244,8 +259,8 @@ class Notification < ActiveRecord::Base
 
   end
 
-  def unread_pm?
-    Notification.types[:private_message] == self.notification_type && !read
+  def unread_high_priority?
+    self.high_priority? && !read
   end
 
   def post_id
@@ -280,14 +295,15 @@ end
 #  topic_id          :integer
 #  post_number       :integer
 #  post_action_id    :integer
+#  high_priority     :boolean          default(FALSE), not null
 #
 # Indexes
 #
 #  idx_notifications_speedup_unread_count                       (user_id,notification_type) WHERE (NOT read)
 #  index_notifications_on_post_action_id                        (post_action_id)
-#  index_notifications_on_read_or_n_type                        (user_id,id DESC,read,topic_id) UNIQUE WHERE (read OR (notification_type <> 6))
 #  index_notifications_on_topic_id_and_post_number              (topic_id,post_number)
 #  index_notifications_on_user_id_and_created_at                (user_id,created_at)
-#  index_notifications_on_user_id_and_id                        (user_id,id) UNIQUE WHERE ((notification_type = 6) AND (NOT read))
 #  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
+#  index_notifications_read_or_not_high_priority                (user_id,id DESC,read,topic_id) WHERE (read OR (high_priority = false))
+#  index_notifications_unique_unread_high_priority              (user_id,id) UNIQUE WHERE ((NOT read) AND (high_priority = true))
 #

@@ -1,18 +1,37 @@
 .directory {
   margin-bottom: 100px;
 
+  &.users-directory {
+    .period-chooser {
+      .selected-name {
+        margin: 0;
+      }
+      .period-chooser-header .caret-icon {
+        margin: 0;
+      }
+    }
+  }
+
   .user-info {
     margin-bottom: 0;
   }
 
-  .period-chooser {
-    float: left;
-  }
-  .filter-name {
-    float: right;
-  }
   .spinner {
     clear: both;
+  }
+
+  .directory-controls {
+    display: flex;
+    justify-content: space-between;
+    .filter-name {
+      height: 1em;
+    }
+  }
+
+  .directory-last-updated {
+    margin-bottom: 0.5em;
+    color: $primary-medium;
+    font-size: $font-down-1;
   }
 
   table {

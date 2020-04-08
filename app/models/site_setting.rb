@@ -173,6 +173,11 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting::Upload
   end
 
+  def self.require_invite_code
+    invite_code.present?
+  end
+  client_settings << :require_invite_code
+
   %i{
     site_logo_url
     site_logo_small_url
