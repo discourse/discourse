@@ -8,7 +8,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
 import Post from "discourse/models/post";
-import Quote from "discourse/lib/quote";
+import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
 import discourseDebounce from "discourse/lib/debounce";
@@ -265,7 +265,8 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showFeatureTopic");
     },
 
-    selectText(postId, buffer, opts) {
+    selectText() {
+      const { postId, buffer, opts } = this.quoteState;
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
         ? Promise.resolve(loadedPost)
@@ -274,11 +275,10 @@ export default Controller.extend(bufferedProperty("model"), {
       return promise.then(post => {
         const composer = this.composer;
         const viewOpen = composer.get("model.viewOpen");
-        const quotedText = Quote.build(post, buffer, opts);
 
         // If we can't create a post, delegate to reply as new topic
         if (!viewOpen && !this.get("model.details.can_create_post")) {
-          this.send("replyAsNewTopic", post, quotedText);
+          this.send("replyAsNewTopic", post);
           return;
         }
 
@@ -300,7 +300,9 @@ export default Controller.extend(bufferedProperty("model"), {
           composerOpts.post = composerPost;
         }
 
+        const quotedText = buildQuote(post, buffer, opts);
         composerOpts.quote = quotedText;
+
         if (composer.get("model.viewOpen")) {
           this.appEvents.trigger("composer:insert-block", quotedText);
         } else if (composer.get("model.viewDraft")) {
@@ -483,7 +485,11 @@ export default Controller.extend(bufferedProperty("model"), {
       }
 
       const quotedPost = postStream.findLoadedPost(quoteState.postId);
-      const quotedText = Quote.build(quotedPost, quoteState.buffer);
+      const quotedText = buildQuote(
+        quotedPost,
+        quoteState.buffer,
+        quoteState.opts
+      );
 
       quoteState.clear();
 
@@ -967,14 +973,14 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    replyAsNewTopic(post, quotedText) {
+    replyAsNewTopic(post) {
       const composerController = this.composer;
-
       const { quoteState } = this;
-      quotedText = quotedText || Quote.build(post, quoteState.buffer);
+      const quotedText = buildQuote(post, quoteState.buffer, quoteState.opts);
+
       quoteState.clear();
 
-      var options;
+      let options;
       if (this.get("model.isPrivateMessage")) {
         let users = this.get("model.details.allowed_users");
         let groups = this.get("model.details.allowed_groups");
@@ -998,25 +1004,16 @@ export default Controller.extend(bufferedProperty("model"), {
         };
       }
 
-      composerController
-        .open(options)
-        .then(() => {
-          return isEmpty(quotedText) ? "" : quotedText;
-        })
-        .then(q => {
-          const postUrl = `${location.protocol}//${location.host}${post.get(
-            "url"
-          )}`;
-          const postLink = `[${Handlebars.escapeExpression(
-            this.get("model.title")
-          )}](${postUrl})`;
-          composerController
-            .get("model")
-            .prependText(
-              `${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`,
-              { new_line: true }
-            );
-        });
+      composerController.open(options).then(() => {
+        const title = Handlebars.escapeExpression(this.model.title);
+        const postUrl = `${location.protocol}//${location.host}${post.url}`;
+        const postLink = `[${title}](${postUrl})`;
+        const text = `${I18n.t("post.continue_discussion", {
+          postLink
+        })}\n\n${quotedText}`;
+
+        composerController.model.prependText(text, { new_line: true });
+      });
     },
 
     retryLoading() {
