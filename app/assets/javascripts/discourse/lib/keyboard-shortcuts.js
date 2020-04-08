@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { throttle } from "@ember/runloop";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
-export let bindings = {
+const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
@@ -96,19 +96,19 @@ export default {
 
     // Disable the shortcut if private messages are disabled
     if (!siteSettings.enable_personal_messages) {
-      delete bindings["g m"];
+      delete DEFAULT_BINDINGS["g m"];
     }
   },
 
   bindEvents() {
-    Object.keys(bindings).forEach(key => {
+    Object.keys(DEFAULT_BINDINGS).forEach(key => {
       this.bindKey(key);
     });
   },
 
   bindKey(key, binding = null) {
     if (!binding) {
-      binding = bindings[key];
+      binding = DEFAULT_BINDINGS[key];
     }
 
     if (!binding.anonymous && !this.currentUser) {
