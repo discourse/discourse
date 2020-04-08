@@ -73,7 +73,7 @@
         <!-- preload-content: -->
         <%= yield %>
         <!-- :preload-content -->
-        <footer>
+        <footer class="noscript-footer-nav">
           <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
             <a href='<%= path "/" %>'><%= t 'home_title' %></a>
             <%= link_to t('js.filters.categories.title'), path("/categories") %>
@@ -85,7 +85,7 @@
       </div>
 
       <footer id='noscript-footer'>
-        <p style="text-align:center;"><%= t 'powered_by_html' %></p>
+        <p><%= t 'powered_by_html' %></p>
       </footer>
     </noscript>
 
