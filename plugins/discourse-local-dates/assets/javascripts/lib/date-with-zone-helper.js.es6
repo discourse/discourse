@@ -1,7 +1,7 @@
 const { getProperties } = Ember;
 
 /*
-  DateWithZoneHelper provides a limited list of helpers
+  DDDateWithZoneHelper provides a limited list of helpers
   to manipulate a moment object with timezones
 
   - add(count unit) adds a COUNT of UNITS to a date
