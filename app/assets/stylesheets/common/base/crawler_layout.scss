@@ -32,9 +32,21 @@ body.crawler {
   }
 
   footer {
-    margin-top: 3em;
-    border-top: 1px solid $primary-low-mid;
+    margin-top: 4em;
   }
+}
+
+.noscript-footer-nav {
+  clear: both;
+  margin-top: 4em;
+  a {
+    margin-right: 0.25em;
+    white-space: nowrap;
+  }
+}
+
+#noscript-footer {
+  padding: 0 10px;
 }
 
 .crawler-topic-title {
