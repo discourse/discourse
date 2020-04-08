@@ -87,7 +87,7 @@ export default class LocalDateBuilder {
     );
 
     previewedTimezones.push({
-      timezone: this.localTimezone,
+      timezone: this._zoneWithoutPrefix(this.localTimezone),
       current: true,
       formated: this._createDateTimeRange(localDate, this.time)
     });
@@ -111,7 +111,7 @@ export default class LocalDateBuilder {
       }
 
       previewedTimezones.push({
-        timezone,
+        timezone: this._zoneWithoutPrefix(timezone),
         formated: this._createDateTimeRange(
           localDate.datetimeWithZone(timezone),
           this.time
@@ -121,7 +121,7 @@ export default class LocalDateBuilder {
 
     if (!previewedTimezones.length) {
       previewedTimezones.push({
-        timezone: "Etc/UTC",
+        timezone: "UTC",
         formated: this._createDateTimeRange(
           localDate.datetimeWithZone("Etc/UTC"),
           this.time
