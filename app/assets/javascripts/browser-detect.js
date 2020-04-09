@@ -1,3 +1,3 @@
-if (!window.WeakMap || !window.Promise) {
+if (!window.WeakMap || !window.WeakSet || !window.Promise) {
   window.unsupportedBrowser = true;
 }
