@@ -6,6 +6,7 @@ class ThemesInstallTask
     log = []
     themes.each do |name, val|
       installer = new(val)
+      next if installer.url.nil?
 
       if installer.theme_exists?
         installer.update
@@ -26,31 +27,28 @@ class ThemesInstallTask
     [log, counts]
   end
 
-  attr_reader :url
+  attr_reader :url, :options
 
   def initialize(url_or_options = nil)
     if url_or_options.is_a?(Hash)
-      @url = url_or_options.fetch("url")
+      url_or_options.deep_symbolize_keys!
+      @url = url_or_options.fetch(:url, nil)
       @options = url_or_options
     else
       @url = url_or_options
       @options = {}
     end
-    find_existing
   end
 
   def theme_exists?
+    @remote_theme = RemoteTheme.find_by(remote_url: @url, branch: @options.fetch(:branch, nil))
+    @theme = @remote_theme&.theme
     @theme.present?
   end
 
-  def find_existing
-    @remote_theme = RemoteTheme.find_by(remote_url: @url, branch: @options.fetch("branch", nil))
-    @theme = @remote_theme&.theme
-  end
-
   def install
-    @theme = RemoteTheme.import_theme(@url, Discourse.system_user, private_key: @options["private_key"], branch: @options["branch"])
-    @theme.set_default! if @options.fetch("default", false)
+    @theme = RemoteTheme.import_theme(@url, Discourse.system_user, private_key: @options[:private_key], branch: @options[:branch])
+    @theme.set_default! if @options.fetch(:default, false)
     add_component_to_all_themes
   end
 
@@ -60,7 +58,7 @@ class ThemesInstallTask
   end
 
   def add_component_to_all_themes
-    return if (!@options.fetch("install_to_all_themes", false) || !@theme.component)
+    return if (!@options.fetch(:add_to_all_themes, false) || !@theme.component)
 
     Theme.where(component: false).each do |parent_theme|
       next if ChildTheme.where(parent_theme_id: parent_theme.id, child_theme_id: @theme.id).exists?

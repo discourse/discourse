@@ -20,7 +20,7 @@ require 'yaml'
 #   branch: "master"
 #   private_key: ""
 #   default: false
-#   install_to_all_themes: false  # only for components - install on every theme
+#   add_to_all_themes: false  # only for components - install on every theme
 #
 # In the first form, only the url is required.
 #
