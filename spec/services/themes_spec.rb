@@ -96,6 +96,7 @@ describe ThemesInstallTask do
 
     after do
       `rm -fr #{theme_repo}`
+      `rm -fr #{component_repo}`
     end
 
     it 'gracefully fails' do
