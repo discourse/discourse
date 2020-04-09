@@ -364,10 +364,9 @@ class Search
     end
   end
 
-  advanced_filter(/^in:(likes|bookmarks)$/) do |posts, match|
+  advanced_filter(/^in:(likes)$/) do |posts, match|
     if @guardian.user
       post_action_type = PostActionType.types[:like] if match == "likes"
-      post_action_type = PostActionType.types[:bookmark] if match == "bookmarks"
 
       posts.where("posts.id IN (
                             SELECT pa.post_id FROM post_actions pa
@@ -375,6 +374,12 @@ class Search
                                   pa.post_action_type_id = #{post_action_type} AND
                                   deleted_at IS NULL
                          )")
+    end
+  end
+
+  advanced_filter(/^in:(bookmarks)$/) do |posts, match|
+    if @guardian.user
+      posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
     end
   end
 
