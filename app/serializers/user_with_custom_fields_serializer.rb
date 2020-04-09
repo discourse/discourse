@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A basic user serializer, with custom fields
-class UserCustomFieldsSerializer < BasicUserSerializer
+class UserWithCustomFieldsSerializer < BasicUserSerializer
   attributes :custom_fields
 
   def custom_fields
