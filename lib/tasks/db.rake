@@ -80,6 +80,10 @@ class StdOutDemux
     (@data[Thread.current] ||= +"") << data
   end
 
+  def close
+    finish_chunk
+  end
+
   def finish_chunk
     data = @data[Thread.current]
     if data
