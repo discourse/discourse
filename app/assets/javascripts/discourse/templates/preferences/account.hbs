@@ -119,7 +119,7 @@
             {{else}}
               <tr class={{dasherize authProvider.method.name}}>
                 <td>{{authProvider.method.prettyName}}</td>
-                  <td colspan=2>
+                  <td colspan="2">
                     {{#if authProvider.method.can_connect}}
                       {{d-button action=(action "connectAccount") actionParam=authProvider.method label="user.associated_accounts.connect" class="btn-default" icon="plug" disabled=disableConnectButtons}}
                     {{else}}

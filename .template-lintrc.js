@@ -35,7 +35,7 @@ module.exports = {
     "no-outlet-outside-routes": true,
     "no-partial": true,
     "no-positive-tabindex": false,
-    "no-quoteless-attributes": false,
+    "no-quoteless-attributes": true,
     "no-shadowed-elements": true,
     "no-trailing-spaces": true,
     "no-triple-curlies": true,
