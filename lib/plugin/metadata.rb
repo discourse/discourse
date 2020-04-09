@@ -78,7 +78,7 @@ class Plugin::Metadata
     "discourse-internet-explorer"
   ])
 
-  FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
+  FIELDS ||= [:name, :about, :version, :authors, :url, :required_version, :transpile_js]
   attr_accessor(*FIELDS)
 
   def self.parse(text)
