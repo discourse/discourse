@@ -113,20 +113,23 @@ export default Controller.extend(ModalFunctionality, {
 
   bindKeyboardShortcuts() {
     KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
-    KeyboardShortcuts.addBindings(BOOKMARK_BINDINGS, binding => {
-      if (binding.args) {
-        return this.send(binding.handler, ...binding.args);
-      }
-      this.send(binding.handler);
+    Object.keys(BOOKMARK_BINDINGS).forEach(shortcut => {
+      KeyboardShortcuts.addShortcut(shortcut, () => {
+        let binding = BOOKMARK_BINDINGS[shortcut];
+        if (binding.args) {
+          return this.send(binding.handler, ...binding.args);
+        }
+        this.send(binding.handler);
+      });
     });
   },
 
   unbindKeyboardShortcuts() {
-    KeyboardShortcuts.unbind(BOOKMARK_BINDINGS, this.mouseTrap);
+    KeyboardShortcuts.unbind(BOOKMARK_BINDINGS);
   },
 
   restoreGlobalShortcuts() {
-    KeyboardShortcuts.unpause(...GLOBAL_SHORTCUTS_TO_PAUSE);
+    KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
   },
 
   // we always want to save the bookmark unless the user specifically

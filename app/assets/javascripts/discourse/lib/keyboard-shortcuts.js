@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { throttle } from "@ember/runloop";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
-export let bindings = {
+const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
@@ -96,18 +96,21 @@ export default {
 
     // Disable the shortcut if private messages are disabled
     if (!siteSettings.enable_personal_messages) {
-      delete bindings["g m"];
+      delete DEFAULT_BINDINGS["g m"];
     }
   },
 
   bindEvents() {
-    Object.keys(bindings).forEach(key => {
+    Object.keys(DEFAULT_BINDINGS).forEach(key => {
       this.bindKey(key);
     });
   },
 
-  bindKey(key) {
-    const binding = bindings[key];
+  bindKey(key, binding = null) {
+    if (!binding) {
+      binding = DEFAULT_BINDINGS[key];
+    }
+
     if (!binding.anonymous && !this.currentUser) {
       return;
     }
@@ -135,23 +138,28 @@ export default {
   },
 
   // restore global shortcuts that you have paused
-  unpause(...combinations) {
+  unpause(combinations) {
     combinations.forEach(combo => this.bindKey(combo));
   },
 
-  // add bindings to the key trapper, if none is specified then
-  // the shortcuts will be bound globally.
-  addBindings(newBindings, callback) {
-    Object.keys(newBindings).forEach(key => {
-      let binding = newBindings[key];
-      this.keyTrapper.bind(key, event => {
-        // usually the caller that is adding the binding
-        // will want to decide what to do with it when the
-        // event is fired
-        callback(binding, event);
-        event.stopPropagation();
-      });
-    });
+  /**
+   * addShortcut(shortcut, callback, opts)
+   *
+   * Used to bind a keyboard shortcut, which will fire the provided
+   * callback when pressed. Valid options are:
+   *
+   * - global     - makes the shortcut work anywhere, including when an input is focused
+   * - anonymous  - makes the shortcut work even if a user is not logged in
+   * - path       - a specific path to limit the shortcut to .e.g /latest
+   * - postAction - binds the shortcut to fire the specified post action when a
+   *                post is selected
+   **/
+  addShortcut(shortcut, callback, opts = {}) {
+    // we trim but leave whitespace between characters, as shortcuts
+    // like `z z` are valid for Mousetrap
+    shortcut = shortcut.trim();
+    let newBinding = Object.assign({ handler: callback }, opts);
+    this.bindKey(shortcut, newBinding);
   },
 
   // unbinds all the shortcuts in a key binding object e.g.
