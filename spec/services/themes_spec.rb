@@ -8,9 +8,6 @@ describe ThemesInstallTask do
     Discourse::Application.load_tasks
   end
 
-  let(:github_repo) { 'https://github.com/example/theme.git' }
-  let(:branch) { 'master' }
-
   describe '.new' do
     def setup_git_repo(files)
       dir = Dir.tmpdir
