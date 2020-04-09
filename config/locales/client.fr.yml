@@ -271,11 +271,11 @@ fr:
       no_timezone: 'Vous n&#39;avez pas encore défini de fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       reminders:
         at_desktop: "La prochaine fois je suis à mon bureau"
-        later_today: "Plus tard dans la journée<br/>{{date}}"
-        next_business_day: "Prochain jour ouvré<br/>{{date}}"
-        tomorrow: "Demain<br/>{{date}}"
-        next_week: "La semaine prochaine<br/>{{date}}"
-        next_month: "Le mois prochain<br/>{{date}}"
+        later_today: "Plus tard dans la journée"
+        next_business_day: "Prochain jour ouvré"
+        tomorrow: "Demain"
+        next_week: "La semaine prochaine"
+        next_month: "Le mois prochain"
         custom: "Date et heure personnalisés"
     drafts:
       resume: "Reprendre"
