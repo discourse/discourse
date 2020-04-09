@@ -59,3 +59,8 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::ASSIGN
   b.name = "assign"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::USER_BADGE
+  b.name = "user_badge"
+end

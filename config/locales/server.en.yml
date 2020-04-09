@@ -2107,6 +2107,7 @@ en:
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
+    enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
@@ -2298,6 +2299,12 @@ en:
 
   change_owner:
     post_revision_text: "Ownership transferred"
+
+  publish_page:
+    slug_errors:
+      blank: "can't be blank"
+      unavailable: "is unavailable"
+      invalid: "contains invalid characters"
 
   topic_statuses:
     autoclosed_message_max_posts:

@@ -6,7 +6,6 @@
 # author: Joffrey Jaffeux
 hide_plugin if self.respond_to?(:hide_plugin)
 
-register_asset 'javascripts/discourse-local-dates.js.es6'
 register_asset 'stylesheets/common/discourse-local-dates.scss'
 register_asset 'moment.js', :vendored_core_pretty_text
 register_asset 'moment-timezone.js', :vendored_core_pretty_text

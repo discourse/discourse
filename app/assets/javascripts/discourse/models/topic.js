@@ -1,4 +1,4 @@
-import EmberObject, { get } from "@ember/object";
+import EmberObject from "@ember/object";
 import { not, notEmpty, equal, and, or } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { flushMap } from "discourse/models/store";
@@ -400,9 +400,30 @@ const Topic = RestModel.extend({
   afterTopicBookmarked(firstPost) {
     if (firstPost) {
       firstPost.set("bookmarked", true);
-      firstPost.set("bookmarked_with_reminder", true);
+      if (this.siteSettings.enable_bookmarks_with_reminders) {
+        firstPost.set("bookmarked_with_reminder", true);
+      }
       return [firstPost.id];
     }
+  },
+
+  firstPost() {
+    const postStream = this.postStream;
+    let firstPost = postStream.get("posts.firstObject");
+
+    if (firstPost.post_number === 1) {
+      return Promise.resolve(firstPost);
+    }
+
+    const postId = postStream.findPostIdForPostNumber(1);
+
+    // try loading from identity map first
+    firstPost = postStream.findLoadedPost(postId);
+    if (firstPost) {
+      return Promise.resolve(firstPost);
+    }
+
+    return this.postStream.loadPost(postId);
   },
 
   toggleBookmark() {
@@ -410,64 +431,75 @@ const Topic = RestModel.extend({
       return Promise.resolve();
     }
     this.set("bookmarking", true);
-
-    const stream = this.postStream;
-    const posts = get(stream, "posts");
-    const firstPost =
-      posts && posts[0] && posts[0].get("post_number") === 1 && posts[0];
     const bookmark = !this.bookmarked;
+    let posts = this.postStream.posts;
 
-    const toggleBookmarkOnServer = () => {
-      if (bookmark) {
-        return firstPost.toggleBookmarkWithReminder().then(() => {
-          this.set("bookmarking", false);
-          return this.afterTopicBookmarked(firstPost);
-        });
-      } else {
-        return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" })
-          .then(() => {
-            this.toggleProperty("bookmarked");
-            if (posts) {
-              const updated = [];
-              posts.forEach(post => {
-                if (post.get("bookmarked")) {
-                  post.set("bookmarked", false);
-                  updated.push(post.id);
-                }
-                if (post.get("bookmarked_with_reminder")) {
-                  post.set("bookmarked_with_reminder", false);
-                  updated.push(post.id);
-                }
-              });
-              return updated;
-            }
-          })
-          .catch(popupAjaxError)
-          .finally(() => this.set("bookmarking", false));
-      }
-    };
+    return this.firstPost().then(firstPost => {
+      const toggleBookmarkOnServer = () => {
+        if (bookmark) {
+          if (this.siteSettings.enable_bookmarks_with_reminders) {
+            return firstPost.toggleBookmarkWithReminder().then(() => {
+              this.set("bookmarking", false);
+              return this.afterTopicBookmarked(firstPost);
+            });
+          } else {
+            return ajax(`/t/${this.id}/bookmark`, { type: "PUT" })
+              .then(() => {
+                this.toggleProperty("bookmarked");
+                return this.afterTopicBookmarked(firstPost);
+              })
+              .catch(popupAjaxError)
+              .finally(() => this.set("bookmarking", false));
+          }
+        } else {
+          return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" })
+            .then(() => {
+              this.toggleProperty("bookmarked");
+              if (posts) {
+                const updated = [];
+                posts.forEach(post => {
+                  if (post.bookmarked) {
+                    post.set("bookmarked", false);
+                    updated.push(post.id);
+                  }
+                  if (
+                    this.siteSettings.enable_bookmarks_with_reminders &&
+                    post.bookmarked_with_reminder
+                  ) {
+                    post.set("bookmarked_with_reminder", false);
+                    updated.push(post.id);
+                  }
+                });
+                return updated;
+              }
+            })
+            .catch(popupAjaxError)
+            .finally(() => this.set("bookmarking", false));
+        }
+      };
 
-    const unbookmarkedPosts = [];
-    if (!bookmark && posts) {
-      posts.forEach(
-        post =>
-          (post.get("bookmarked") || post.get("bookmarked_with_reminder")) &&
-          unbookmarkedPosts.push(post)
-      );
-    }
-
-    return new Promise(resolve => {
-      if (unbookmarkedPosts.length > 1) {
-        bootbox.confirm(
-          I18n.t("bookmarks.confirm_clear"),
-          I18n.t("no_value"),
-          I18n.t("yes_value"),
-          confirmed =>
-            confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
+      const unbookmarkedPosts = [];
+      if (!bookmark && posts) {
+        posts.forEach(
+          post =>
+            (post.bookmarked || post.bookmarked_with_reminder) &&
+            unbookmarkedPosts.push(post)
         );
-      } else {
-        toggleBookmarkOnServer().then(resolve);
       }
+
+      return new Promise(resolve => {
+        if (unbookmarkedPosts.length > 1) {
+          bootbox.confirm(
+            I18n.t("bookmarks.confirm_clear"),
+            I18n.t("no_value"),
+            I18n.t("yes_value"),
+            confirmed =>
+              confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
+          );
+        } else {
+          toggleBookmarkOnServer().then(resolve);
+        }
+      });
     });
   },
 
@@ -530,6 +562,13 @@ const Topic = RestModel.extend({
       this.details.updateFromJson(json.details);
 
       keys.removeObjects(["details", "post_stream"]);
+
+      if (json.published_page) {
+        this.set(
+          "publishedPage",
+          this.store.createRecord("published-page", json.published_page)
+        );
+      }
     }
     keys.forEach(key => this.set(key, json[key]));
   },

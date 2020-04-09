@@ -114,6 +114,7 @@ class Topic < ActiveRecord::Base
 
   has_one :top_topic
   has_one :shared_draft, dependent: :destroy
+  has_one :published_page
 
   belongs_to :user
   belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id
@@ -1423,8 +1424,9 @@ class Topic < ActiveRecord::Base
 
     scores = ReviewableScore.pending
       .joins(:reviewable)
-      .where("reviewables.topic_id = ?", self.id)
-      .pluck("COUNT(DISTINCT reviewable_scores.user_id), COALESCE(SUM(reviewable_scores.score), 0.0)")
+      .where('reviewable_scores.score >= ?', Reviewable.min_score_for_priority)
+      .where('reviewables.topic_id = ?', self.id)
+      .pluck('COUNT(DISTINCT reviewable_scores.user_id), COALESCE(SUM(reviewable_scores.score), 0.0)')
       .first
 
     scores[0] >= SiteSetting.num_flaggers_to_close_topic && scores[1] >= Reviewable.score_to_auto_close_topic

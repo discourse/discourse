@@ -1,4 +1,4 @@
-import Quote from "discourse/lib/quote";
+import { buildQuote } from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
@@ -1289,8 +1289,8 @@ QUnit.test("quotes", assert => {
     topic_id: 2
   });
 
-  function formatQuote(val, expected, text) {
-    assert.equal(Quote.build(post, val), expected, text);
+  function formatQuote(val, expected, text, opts) {
+    assert.equal(buildQuote(post, val, opts), expected, text);
   }
 
   formatQuote(undefined, "", "empty string for undefined content");
@@ -1312,12 +1312,13 @@ QUnit.test("quotes", assert => {
   formatQuote(
     "lorem ipsum",
     '[quote="eviltrout, post:1, topic:2, full:true"]\nlorem ipsum\n[/quote]\n\n',
-    "marks quotes as full when the quote is the full message"
+    "marks quotes as full if the `full` option is passed",
+    { full: true }
   );
 
   formatQuote(
     "**lorem** ipsum",
-    '[quote="eviltrout, post:1, topic:2, full:true"]\n**lorem** ipsum\n[/quote]\n\n',
+    '[quote="eviltrout, post:1, topic:2"]\n**lorem** ipsum\n[/quote]\n\n',
     "keeps BBCode formatting"
   );
 
@@ -1337,6 +1338,28 @@ QUnit.test("quotes", assert => {
     "[quote=,script='a'><script>alert('test');//':a]\n[/quote]",
     '<aside class="quote no-group">\n<blockquote></blockquote>\n</aside>',
     "It will not create a script tag within an attribute"
+  );
+});
+
+QUnit.test("quoting a quote", assert => {
+  const post = Post.create({
+    cooked: new PrettyText(defaultOpts).cook(
+      '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
+    ),
+    username: "eviltrout",
+    post_number: 1,
+    topic_id: 2
+  });
+
+  const quote = buildQuote(
+    post,
+    '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
+  );
+
+  assert.equal(
+    quote,
+    '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
+    "allows quoting a quote"
   );
 });
 

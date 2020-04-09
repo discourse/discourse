@@ -120,6 +120,15 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     }
   }
 
+  if (attrs.canPublishPage) {
+    contents.push({
+      icon: "file",
+      label: "post.controls.publish_page",
+      action: "showPagePublish",
+      className: "btn-default publish-page"
+    });
+  }
+
   if (attrs.canManage) {
     contents.push({
       icon: "cog",

@@ -149,7 +149,7 @@ export function selectedText() {
 export function selectedElement() {
   const selection = window.getSelection();
   if (selection.rangeCount > 0) {
-    return selection.getRangeAt(0).commonAncestorContainer.parentElement;
+    return selection.getRangeAt(0).commonAncestorContainer;
   }
 }
 
@@ -442,6 +442,12 @@ export function inCodeBlock(text, pos) {
   }
 
   return result;
+}
+
+export function putCursorAtEnd(element) {
+  element.focus();
+  const len = element.value.length;
+  element.setSelectionRange(len, len);
 }
 
 // This prevents a mini racer crash
