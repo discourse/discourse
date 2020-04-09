@@ -74,6 +74,7 @@ class Category < ActiveRecord::Base
   after_save :publish_discourse_stylesheet
   after_save :publish_category
   after_save :reset_topic_ids_cache
+  after_save :clear_subcategory_ids
   after_save :clear_url_cache
   after_save :index_search
   after_save :update_reviewables
@@ -153,23 +154,36 @@ class Category < ActiveRecord::Base
     Category.reset_topic_ids_cache
   end
 
+  @@subcategory_ids = DistributedCache.new('subcategory_ids')
+
   def self.subcategory_ids(category_id)
-    sql = <<~SQL
-        WITH RECURSIVE subcategories AS (
-            SELECT :category_id id, 1 depth
-            UNION
-            SELECT categories.id, (subcategories.depth + 1) depth
-            FROM categories
-            JOIN subcategories ON subcategories.id = categories.parent_category_id
-            WHERE subcategories.depth < :max_category_nesting
+    @@subcategory_ids[category_id] ||=
+      begin
+        sql = <<~SQL
+            WITH RECURSIVE subcategories AS (
+                SELECT :category_id id, 1 depth
+                UNION
+                SELECT categories.id, (subcategories.depth + 1) depth
+                FROM categories
+                JOIN subcategories ON subcategories.id = categories.parent_category_id
+                WHERE subcategories.depth < :max_category_nesting
+            )
+            SELECT id FROM subcategories
+          SQL
+        DB.query_single(
+          sql,
+          category_id: category_id,
+          max_category_nesting: SiteSetting.max_category_nesting
         )
-        SELECT id FROM subcategories
-      SQL
-    DB.query_single(
-      sql,
-      category_id: category_id.to_i,
-      max_category_nesting: SiteSetting.max_category_nesting
-    )
+      end
+  end
+
+  def self.clear_subcategory_ids
+    @@subcategory_ids.clear
+  end
+
+  def clear_subcategory_ids
+    Category.clear_subcategory_ids
   end
 
   def self.scoped_to_permissions(guardian, permission_types)
