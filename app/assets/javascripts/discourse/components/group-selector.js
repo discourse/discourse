@@ -35,7 +35,12 @@ export default Component.extend({
       updateData: opts && opts.updateData ? opts.updateData : false,
       onChangeItems: items => {
         selectedGroups = items;
-        this.set("groupNames", items.join(","));
+
+        if (this.onChangeCallback) {
+          this.onChangeCallback(this.groupNames, selectedGroups);
+        } else {
+          this.set("groupNames", items.join(","));
+        }
       },
       transformComplete: g => {
         return g.name;
