@@ -70,6 +70,25 @@ end
 # this ensures we can run migrations concurrently to save huge amounts of time
 Rake::Task['multisite:migrate'].clear
 
+class StdOutDemux
+  def initialize(stdout)
+    @stdout = stdout
+    @data = {}
+  end
+
+  def write(data)
+    (@data[Thread.current] ||= +"") << data
+  end
+
+  def finish_chunk
+    data = @data[Thread.current]
+    if data
+      @stdout.write(data)
+      @data.delete Thread.current
+    end
+  end
+end
+
 task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |_, args|
   if ENV["RAILS_ENV"] != "production"
     raise "Multisite migrate is only supported in production"
@@ -82,6 +101,9 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
 
   queue = Queue.new
   exceptions = Queue.new
+
+  old_stdout = $stdout
+  $stdout = StdOutDemux.new($stdout)
 
   RailsMultisite::ConnectionManagement.each_connection do |db|
     queue << db
@@ -107,11 +129,20 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
             end
           rescue => e
             exceptions << [db, e]
+          ensure
+            begin
+              $stdout.finish_chunk
+            rescue => ex
+              STDERR.puts ex.inspect
+              STDERR.puts ex.backtrace
+            end
           end
         end
       end
     }
   end.each(&:join)
+
+  $stdout = old_stdout
 
   if exceptions.length > 0
     STDERR.puts
