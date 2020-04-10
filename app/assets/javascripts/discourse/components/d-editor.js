@@ -328,7 +328,7 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
   },
 
-  @discourseComputed
+  @discourseComputed("attrs.outletArgs.composer.action")
   toolbar() {
     const toolbar = new Toolbar(
       this.getProperties("site", "siteSettings", "showLink")
