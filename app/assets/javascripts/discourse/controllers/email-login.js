@@ -23,7 +23,10 @@ export default Controller.extend({
 
   actions: {
     finishLogin() {
-      let data = { second_factor_method: this.secondFactorMethod };
+      let data = {
+        second_factor_method: this.secondFactorMethod,
+        timezone: moment.tz.guess()
+      };
       if (this.securityKeyCredential) {
         data.second_factor_token = this.securityKeyCredential;
       } else {

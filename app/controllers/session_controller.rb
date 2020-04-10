@@ -368,6 +368,7 @@ class SessionController < ApplicationController
       elsif payload = login_error_check(user)
         return render json: payload
       else
+        user.update_timezone_if_missing(params[:timezone])
         log_on_user(user)
         return render json: success_json
       end
