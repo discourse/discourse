@@ -117,6 +117,10 @@ module DiscourseNarrativeBot
       }
     }
 
+    def self.badge_name
+      BADGE_NAME
+    end
+
     def self.search_answer
       ':herb:'
     end

@@ -1007,7 +1007,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           )
 
           expect(user.badges.where(
-            name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
+            name: DiscourseNarrativeBot::NewUserNarrative.badge_name).exists?
           ).to eq(true)
         end
       end
