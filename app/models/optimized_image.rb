@@ -236,11 +236,12 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.resize_instructions_animated(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
+    resize_method = opts[:scale_image] ? "scale" : "resize-fit"
 
     %W{
       gifsicle
       --colors=#{opts[:colors] || 256}
-      --resize-fit #{dimensions}
+      --#{resize_method} #{dimensions}
       --optimize=3
       --output #{to}
       #{from}
