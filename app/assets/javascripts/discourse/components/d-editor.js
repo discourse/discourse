@@ -52,7 +52,7 @@ const OP = {
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
-const _createCallbacks = [];
+let _createCallbacks = [];
 
 const isInside = (text, regex) => {
   const matches = text.match(regex);
@@ -211,6 +211,9 @@ class Toolbar {
 
 export function addToolbarCallback(func) {
   _createCallbacks.push(func);
+}
+export function clearToolbarCallbacks() {
+  _createCallbacks = [];
 }
 
 export function onToolbarCreate(func) {
