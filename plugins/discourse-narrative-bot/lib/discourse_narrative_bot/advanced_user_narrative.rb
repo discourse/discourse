@@ -98,6 +98,10 @@ module DiscourseNarrativeBot
       }
     }
 
+    def self.badge_name
+      BADGE_NAME
+    end
+
     def self.reset_trigger
       I18n.t('discourse_narrative_bot.advanced_user_narrative.reset_trigger')
     end
