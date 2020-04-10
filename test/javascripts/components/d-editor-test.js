@@ -1,4 +1,5 @@
 import { next } from "@ember/runloop";
+import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import componentTest from "helpers/component-test";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import formatTextWithSelection from "helpers/d-editor-helper";
@@ -633,6 +634,11 @@ componentTest("emoji", {
     });
     this.set("value", "hello world.");
   },
+
+  afterEach() {
+    clearToolbarCallbacks();
+  },
+
   async test(assert) {
     jumpEnd(find("textarea.d-editor-input")[0]);
     await click("button.emoji");
