@@ -153,8 +153,10 @@
         <div class="card-row">
           <div class="location-and-website">
             {{#if user.location}}
-              <span class='location'>{{d-icon "map-marker-alt"}}
-                <span>{{user.location}}</span></span>
+              <span class='location'>
+                {{d-icon "map-marker-alt"}}
+                <span>{{user.location}}</span>
+              </span>
             {{/if}}
             {{#if user.website_name}}
               <span class='website-name'>

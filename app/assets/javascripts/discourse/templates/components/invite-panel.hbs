@@ -38,12 +38,13 @@
             value=emailOrUsername
             placeholderKey="topic.invite_reply.email_placeholder"}}
         {{/if}}
-          {{#if showContactPicker}}
-            {{d-button
+        {{#if showContactPicker}}
+          {{d-button
             icon="address-book"
             action=(action "searchContact")
-            class="btn-primary open-contact-picker"}}
-          {{/if}}
+            class="btn-primary open-contact-picker"
+          }}
+        {{/if}}
       </div>
     </div>
 

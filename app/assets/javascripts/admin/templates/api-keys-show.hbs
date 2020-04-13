@@ -30,11 +30,11 @@
 
   {{#admin-form-row label="admin.api.user"}}
     {{#if model.user}}
-        {{#link-to "adminUser" model.user}}
-            {{avatar model.user imageSize="small"}} {{model.user.username}}
-        {{/link-to}}
+      {{#link-to "adminUser" model.user}}
+        {{avatar model.user imageSize="small"}} {{model.user.username}}
+      {{/link-to}}
     {{else}}
-        {{i18n "admin.api.all_users"}}
+      {{i18n "admin.api.all_users"}}
     {{/if}}
   {{/admin-form-row}}
 

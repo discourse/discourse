@@ -1,10 +1,10 @@
 {{#if canChangeBio}}
-<div class="control-group pref-bio">
-  <label class="control-label">{{i18n 'user.bio'}}</label>
-  <div class="controls bio-composer input-xxlarge">
-    {{d-editor value=model.bio_raw}}
+  <div class="control-group pref-bio">
+    <label class="control-label">{{i18n 'user.bio'}}</label>
+    <div class="controls bio-composer input-xxlarge">
+      {{d-editor value=model.bio_raw}}
+    </div>
   </div>
-</div>
 {{/if}}
 
 <div class="control-group pref-timezone">
@@ -67,7 +67,9 @@
     <label class="control-label">{{i18n 'user.featured_topic'}}</label>
     {{#if model.featured_topic}}
       <label class="featured-topic-link">
-      {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}{{html-safe (replace-emoji model.featured_topic.fancy_title)}}{{/link-to}}
+        {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}
+          {{html-safe (replace-emoji model.featured_topic.fancy_title)}}
+        {{/link-to}}
       </label>
     {{/if}}
 

@@ -117,31 +117,42 @@
       {{#if model.tl3Requirements.requirements_lost}}
         {{! tl implicitly not locked }}
         {{#if model.tl3Requirements.on_grace_period}}
-          {{d-icon "times"}} {{i18n 'admin.user.tl3_requirements.on_grace_period'}}
-        {{else}} {{! not on grace period }}
-          {{d-icon "times"}} {{i18n 'admin.user.tl3_requirements.does_not_qualify'}}
-                                      {{i18n 'admin.user.tl3_requirements.will_be_demoted'}}
+          {{d-icon "times"}}
+          {{i18n 'admin.user.tl3_requirements.on_grace_period'}}
+        {{else}}
+          {{! not on grace period }}
+          {{d-icon "times"}}
+          {{i18n 'admin.user.tl3_requirements.does_not_qualify'}}
+          {{i18n 'admin.user.tl3_requirements.will_be_demoted'}}
         {{/if}}
-      {{else}} {{! requirements not lost - remains tl3 }}
+      {{else}}
+        {{! requirements not lost - remains tl3 }}
         {{#if model.tl3Requirements.trust_level_locked}}
-          {{d-icon "lock"}} {{i18n 'admin.user.tl3_requirements.locked_will_not_be_demoted'}}
-        {{else}} {{! tl not locked }}
-          {{d-icon "check"}} {{i18n 'admin.user.tl3_requirements.qualifies'}}
+          {{d-icon "lock"}}
+          {{i18n 'admin.user.tl3_requirements.locked_will_not_be_demoted'}}
+        {{else}}
+          {{! tl not locked }}
+          {{d-icon "check"}}
+          {{i18n 'admin.user.tl3_requirements.qualifies'}}
           {{#if model.tl3Requirements.on_grace_period}}
             {{i18n 'admin.user.tl3_requirements.on_grace_period'}}
           {{/if}}
         {{/if}}
       {{/if}}
-    {{else}} {{! is not tl3 }}
+    {{else}}
+      {{! is not tl3 }}
       {{#if model.tl3Requirements.requirements_met}}
         {{! met & not tl3 - will be promoted}}
-        {{d-icon "check"}} {{i18n 'admin.user.tl3_requirements.qualifies'}}
-                                    {{i18n 'admin.user.tl3_requirements.will_be_promoted'}}
-      {{else}} {{! requirements not met - remains regular }}
+        {{d-icon "check"}}
+        {{i18n 'admin.user.tl3_requirements.qualifies'}}
+        {{i18n 'admin.user.tl3_requirements.will_be_promoted'}}
+      {{else}}
+        {{! requirements not met - remains regular }}
         {{#if model.tl3Requirements.trust_level_locked}}
-          {{d-icon "lock"}} {{i18n 'admin.user.tl3_requirements.locked_will_not_be_promoted'}}
+          {{d-icon "lock"}}
+          {{i18n 'admin.user.tl3_requirements.locked_will_not_be_promoted'}}
         {{else}}
-          {{d-icon "times"}} {{i18n 'admin.user.tl3_requirements.does_not_qualify'}}
+          {{d-icon "times"}}
         {{/if}}
       {{/if}}
     {{/if}}

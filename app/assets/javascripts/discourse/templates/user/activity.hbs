@@ -10,34 +10,35 @@
       {{#link-to 'userActivity.replies'}}{{i18n 'user_action_groups.5'}}{{/link-to}}
     </li>
     {{#if user.showDrafts}}
-    <li>
-      {{#link-to 'userActivity.drafts'}}{{i18n 'user_action_groups.15'}}{{/link-to}}
-    </li>
+      <li>
+        {{#link-to 'userActivity.drafts'}}{{i18n 'user_action_groups.15'}}{{/link-to}}
+      </li>
     {{/if}}
     <li>
       {{#link-to 'userActivity.likesGiven'}}{{i18n 'user_action_groups.1'}}{{/link-to}}
     </li>
     {{#if user.showBookmarks}}
       {{#if bookmarksWithRemindersEnabled}}
-      <li>
-        {{#link-to 'userActivity.bookmarksWithReminders'}}{{i18n 'user_action_groups.3'}}{{/link-to}}
-      </li>
+        <li>
+          {{#link-to 'userActivity.bookmarksWithReminders'}}{{i18n 'user_action_groups.3'}}{{/link-to}}
+        </li>
       {{else}}
-      <li>
-        {{#link-to 'userActivity.bookmarks'}}{{i18n 'user_action_groups.3'}}{{/link-to}}
-      </li>
+        <li>
+          {{#link-to 'userActivity.bookmarks'}}{{i18n 'user_action_groups.3'}}{{/link-to}}
+        </li>
       {{/if}}
     {{/if}}
-    {{plugin-outlet name="user-activity-bottom"
-                    connectorTagName='li'
-                    args=(hash model=model)}}
+    {{plugin-outlet
+      name="user-activity-bottom"
+      connectorTagName='li'
+      args=(hash model=model)
+    }}
   {{/mobile-nav}}
-
 {{/d-section}}
 {{#if canDownloadPosts}}
-    <section class='user-additional-controls'>
-      {{d-button action=(action "exportUserArchive") class="btn-default" label="user.download_archive.button_text" icon="download"}}
-    </section>
+  <section class='user-additional-controls'>
+    {{d-button action=(action "exportUserArchive") class="btn-default" label="user.download_archive.button_text" icon="download"}}
+  </section>
 {{/if}}
 <section class='user-content'>
   {{outlet}}

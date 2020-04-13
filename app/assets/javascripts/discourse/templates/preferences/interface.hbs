@@ -1,19 +1,19 @@
 {{#if showThemeSelector}}
-<div class="control-group theme">
-  <label class="control-label">{{i18n 'user.theme'}}</label>
-  <div class="controls">
-    {{combo-box
-      content=userSelectableThemes
-      value=themeId
-      onChange=(action (mut themeId))
-    }}
-  </div>
-  {{#if showThemeSetDefault}}
+  <div class="control-group theme">
+    <label class="control-label">{{i18n 'user.theme'}}</label>
     <div class="controls">
-      {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}
+      {{combo-box
+        content=userSelectableThemes
+        value=themeId
+        onChange=(action (mut themeId))
+      }}
     </div>
-  {{/if}}
-</div>
+    {{#if showThemeSetDefault}}
+      <div class="controls">
+        {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}
+      </div>
+    {{/if}}
+  </div>
 {{/if}}
 
 <div class="control-group text-size">
