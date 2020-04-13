@@ -4620,6 +4620,7 @@ en:
         embed_post_limit: "Maximum number of posts to embed"
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
+        embed_unlisted: "Imported topics will be unlisted until there is a reply."
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
         embed_classname_whitelist: "Allowed CSS class names"

@@ -53,12 +53,18 @@ class TopicEmbed < ActiveRecord::Base
           Post.cook_methods[:raw_html]
         end
 
-        creator = PostCreator.new(user,
-                                  title: title,
-                                  raw: absolutize_urls(url, contents),
-                                  skip_validations: true,
-                                  cook_method: cook_method,
-                                  category: eh.try(:category_id))
+        create_args = {
+          title: title,
+          raw: absolutize_urls(url, contents),
+          skip_validations: true,
+          cook_method: cook_method,
+          category: eh.try(:category_id)
+        }
+        if SiteSetting.embed_unlisted?
+          create_args[:visible] = false
+        end
+
+        creator = PostCreator.new(user, create_args)
         post = creator.create
         if post.present?
           TopicEmbed.create!(topic_id: post.topic_id,
