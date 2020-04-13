@@ -901,12 +901,10 @@ posting:
   embed_any_origin: false
   embed_topics_list: false
   embed_set_canonical_url: false
-  embed_truncate:
-    default: true
-  embed_support_markdown:
-    default: false
-  embed_whitelist_selector:
-    default: ""
+  embed_unlisted: false
+  embed_truncate: true
+  embed_support_markdown: false
+  embed_whitelist_selector: ""
   allowed_href_schemes:
     client: true
     default: ""

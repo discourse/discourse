@@ -127,7 +127,8 @@ class Post < ActiveRecord::Base
                                  flagged_by_tl3_user: 4,
                                  email_spam_header_found: 5,
                                  flagged_by_tl4_user: 6,
-                                 email_authentication_result_header: 7)
+                                 email_authentication_result_header: 7,
+                                 imported_as_unlisted: 8)
   end
 
   def self.types
