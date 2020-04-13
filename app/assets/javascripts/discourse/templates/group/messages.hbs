@@ -1,6 +1,5 @@
-  <section class="user-secondary-navigation">
+<section class="user-secondary-navigation">
   {{#mobile-nav class='messages-nav' desktopClass='nav-stacked action-list' currentPath=router._router.currentPath}}
-
     <li>
       {{#link-to 'group.messages.inbox' model.name}}
         {{i18n 'user.messages.inbox'}}
@@ -14,5 +13,5 @@
   {{/mobile-nav}}
 </section>
 <section class="user-content">
-    {{outlet}}
+  {{outlet}}
 </section>

@@ -32,15 +32,17 @@
 {{/d-section}}
 
 {{#if model}}
-<section class="user-additional-controls">
-    {{d-button title='user.dismiss_notifications_tooltip'
-               class='btn btn-default dismiss-notifications'
-               action=(action "resetNew")
-               label='user.dismiss_notifications'
-               icon='check'
-               disabled=allNotificationsRead}}
-               </section>
-  {{/if}}
+  <section class="user-additional-controls">
+    {{d-button
+      title='user.dismiss_notifications_tooltip'
+      class='btn btn-default dismiss-notifications'
+      action=(action "resetNew")
+      label='user.dismiss_notifications'
+      icon='check'
+      disabled=allNotificationsRead
+    }}
+  </section>
+{{/if}}
 
 <section class='user-content'>
   {{#load-more class="notification-history user-stream" selector=".user-stream .notification" action=(action "loadMore")}}

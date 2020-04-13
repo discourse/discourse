@@ -6,7 +6,7 @@ module.exports = {
   // "eol-last": "always",
 
   rules: {
-    "block-indentation": false,
+    "block-indentation": true,
     "deprecated-render-helper": true,
     "img-alt-attributes": false,
     "linebreak-style": true,

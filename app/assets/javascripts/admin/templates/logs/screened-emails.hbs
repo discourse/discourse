@@ -25,21 +25,21 @@
         <th class="action"></th>
       </thead>
       <tbody>
-      {{#each model as |item|}}
-        <tr class="admin-list-item">
-          <td class="col first email">
-            <div class="overflow-ellipsis" title={{item.email}}>{{item.email}}</div>
-          </td>
-          <td class="action">{{item.actionName}}</td>
-          <td class="match_count"><div class="label">{{i18n 'admin.logs.match_count'}}</div>{{item.match_count}}</td>
-          <td class="last_match_at"><div class="label">{{i18n 'admin.logs.last_match_at'}}</div>{{age-with-tooltip item.last_match_at}}</td>
-          <td class="created_at"><div class="label">{{i18n 'admin.logs.created_at'}}</div>{{age-with-tooltip item.created_at}}</td>
-          <td class="ip_address">{{item.ip_address}}</td>
-          <td class="action">
-            {{d-button action=(action "clearBlock") actionParam=item icon="check" label="admin.logs.screened_emails.actions.allow"}}
-          </td>
-        </tr>
-      {{/each}}
+        {{#each model as |item|}}
+          <tr class="admin-list-item">
+            <td class="col first email">
+              <div class="overflow-ellipsis" title={{item.email}}>{{item.email}}</div>
+            </td>
+            <td class="action">{{item.actionName}}</td>
+            <td class="match_count"><div class="label">{{i18n 'admin.logs.match_count'}}</div>{{item.match_count}}</td>
+            <td class="last_match_at"><div class="label">{{i18n 'admin.logs.last_match_at'}}</div>{{age-with-tooltip item.last_match_at}}</td>
+            <td class="created_at"><div class="label">{{i18n 'admin.logs.created_at'}}</div>{{age-with-tooltip item.created_at}}</td>
+            <td class="ip_address">{{item.ip_address}}</td>
+            <td class="action">
+              {{d-button action=(action "clearBlock") actionParam=item icon="check" label="admin.logs.screened_emails.actions.allow"}}
+            </td>
+          </tr>
+        {{/each}}
       </tbody>
     </table>
 

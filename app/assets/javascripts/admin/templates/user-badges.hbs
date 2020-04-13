@@ -13,26 +13,26 @@
     {{#if noGrantableBadges}}
       <p>{{i18n 'admin.badges.no_badges'}}</p>
     {{else}}
-    <form class="form-horizontal">
-      <div>
-        <label>{{i18n 'admin.badges.badge'}}</label>
-        {{combo-box
-          filterable=true
-          value=selectedBadgeId
-          content=grantableBadges
-          onChange=(action (mut selectedBadgeId))
-        }}
-      </div>
-      <div>
-      <label>{{i18n 'admin.badges.reason'}}</label>
-      {{input type="text" value=badgeReason}}<br><small>{{i18n 'admin.badges.reason_help'}}</small>
-      </div>
-      {{d-button
-        class="btn-primary"
-        action=(action "grantBadge")
-        type="submit"
-        label="admin.badges.grant"}}
-    </form>
+      <form class="form-horizontal">
+        <div>
+          <label>{{i18n 'admin.badges.badge'}}</label>
+          {{combo-box
+            filterable=true
+            value=selectedBadgeId
+            content=grantableBadges
+            onChange=(action (mut selectedBadgeId))
+          }}
+        </div>
+        <div>
+          <label>{{i18n 'admin.badges.reason'}}</label>
+          {{input type="text" value=badgeReason}}<br><small>{{i18n 'admin.badges.reason_help'}}</small>
+        </div>
+        {{d-button
+          class="btn-primary"
+          action=(action "grantBadge")
+          type="submit"
+          label="admin.badges.grant"}}
+      </form>
     {{/if}}
 
     <table id='user-badges'>
@@ -55,7 +55,7 @@
             </td>
             <td class='reason'>
               {{#if userBadge.postUrl}}
-              <a href={{userBadge.postUrl}}>{{userBadge.topic_title}}</a>
+                <a href={{userBadge.postUrl}}>{{userBadge.topic_title}}</a>
               {{/if}}
             </td>
             <td>{{age-with-tooltip userBadge.granted_at}}</td>

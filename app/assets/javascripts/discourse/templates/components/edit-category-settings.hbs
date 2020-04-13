@@ -6,7 +6,7 @@
       <label for="category-position">
         {{i18n 'category.position'}}
       </label>
-            {{text-field value=category.position id="category-position" class="position-input" type="number"}}
+      {{text-field value=category.position id="category-position" class="position-input" type="number"}}
     </section>
   {{/if}}
 
@@ -33,16 +33,16 @@
       {{i18n "category.search_priority.label"}}
     </label>
     <div class="controls">
-    {{combo-box
-      valueProperty="value"
-      id="category-search-priority"
-      content=searchPrioritiesOptions
-      value=category.search_priority
-      onChange=(action (mut category.search_priority))
-      options=(hash
-        placementStrategy="absolute"
-      )
-    }}
+      {{combo-box
+        valueProperty="value"
+        id="category-search-priority"
+        content=searchPrioritiesOptions
+        value=category.search_priority
+        onChange=(action (mut category.search_priority))
+        options=(hash
+          placementStrategy="absolute"
+        )
+      }}
     </div>
   </section>
 
@@ -77,13 +77,10 @@
       {{i18n "category.all_topics_wiki"}}
     </label>
   </section>
-
 </section>
 
 <section>
-
   <h3>{{i18n 'category.settings_sections.moderation'}}</h3>
-
   {{#if siteSettings.enable_category_group_review}}
     <section class="field">
       <label for="reviewable-by-group">
@@ -93,7 +90,8 @@
         groupFinder=groupFinder
         single="true"
         groupNames=category.reviewable_by_group_name
-        placeholderKey="category.review_group_name"}}
+        placeholderKey="category.review_group_name"
+      }}
     </section>
   {{/if}}
 
@@ -139,12 +137,10 @@
     </label>
     {{text-field value=category.custom_fields.num_auto_bump_daily id="category-number-daily-bump" type="number"}}
   </section>
-
 </section>
 
 <section>
-
-  <h3> {{i18n "category.settings_sections.appearance"}}</h3>
+  <h3>{{i18n "category.settings_sections.appearance"}}</h3>
 
   <section class="field default-view-field">
     <label for="category-default-view">
@@ -185,75 +181,73 @@
       {{i18n "category.sort_order"}}
     </label>
     <div class="controls">
-    {{combo-box valueProperty="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
-    {{#unless isDefaultSortOrder}}
-      {{combo-box
-        castBoolean=true
-        valueProperty="value"
-        content=sortAscendingOptions
-        value=category.sort_ascending
-        none="category.sort_options.default"
-        options=(hash
-          placementStrategy="absolute"
-        )
-      }}
-    {{/unless}}
-      </div>
-  </section>
-
-    {{#if isParentCategory}}
-      <section class="field show-subcategory-list-field">
-        <label>
-          {{input type="checkbox" checked=category.show_subcategory_list}}
-          {{i18n "category.show_subcategory_list"}}
-        </label>
-      </section>
-    {{/if}}
-
-    {{#if showSubcategoryListStyle}}
-      <section class="field subcategory-list-style-field">
-        <label for="subcategory-list-style">
-          {{i18n "category.subcategory_list_style"}}
-        </label>
+      {{combo-box valueProperty="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+      {{#unless isDefaultSortOrder}}
         {{combo-box
+          castBoolean=true
           valueProperty="value"
-          id="subcategory-list-style"
-          content=availableSubcategoryListStyles
-          value=category.subcategory_list_style
+          content=sortAscendingOptions
+          value=category.sort_ascending
+          none="category.sort_options.default"
           options=(hash
             placementStrategy="absolute"
           )
         }}
-      </section>
-    {{/if}}
+      {{/unless}}
+    </div>
+  </section>
+  {{#if isParentCategory}}
+    <section class="field show-subcategory-list-field">
+      <label>
+        {{input type="checkbox" checked=category.show_subcategory_list}}
+        {{i18n "category.show_subcategory_list"}}
+      </label>
+    </section>
+  {{/if}}
 
+  {{#if showSubcategoryListStyle}}
+    <section class="field subcategory-list-style-field">
+      <label for="subcategory-list-style">
+        {{i18n "category.subcategory_list_style"}}
+      </label>
+      {{combo-box
+        valueProperty="value"
+        id="subcategory-list-style"
+        content=availableSubcategoryListStyles
+        value=category.subcategory_list_style
+        options=(hash
+          placementStrategy="absolute"
+        )
+      }}
+    </section>
+  {{/if}}
 </section>
 
 <section>
-  <h3> {{i18n "category.settings_sections.email"}}</h3>
+  <h3>{{i18n "category.settings_sections.email"}}</h3>
 
   {{#if emailInEnabled}}
-      <section class='field'>
-        <label for="category-email-in">
-          {{d-icon "far-envelope"}}
-          {{i18n 'category.email_in'}}
-        </label>
-                {{text-field id="category-email-in" class="email-in" value=category.email_in}}
-      </section>
+    <section class='field'>
+      <label for="category-email-in">
+        {{d-icon "far-envelope"}}
+        {{i18n 'category.email_in'}}
+      </label>
+      {{text-field id="category-email-in" class="email-in" value=category.email_in}}
+    </section>
 
-      <section class='field'>
-        <label>
-          {{input type="checkbox" checked=category.email_in_allow_strangers}}
-          {{i18n 'category.email_in_allow_strangers'}}
-        </label>
-      </section>
+    <section class='field'>
+      <label>
+        {{input type="checkbox" checked=category.email_in_allow_strangers}}
+        {{i18n 'category.email_in_allow_strangers'}}
+      </label>
+    </section>
 
-      <section class='field'>
-          <label>
-            {{input type="checkbox" checked=category.mailinglist_mirror}}
-            {{i18n 'category.mailinglist_mirror'}}
-          </label>
-      </section>
+    <section class='field'>
+      <label>
+        {{input type="checkbox" checked=category.mailinglist_mirror}}
+        {{i18n 'category.mailinglist_mirror'}}
+      </label>
+    </section>
 
     {{plugin-outlet name="category-email-in" args=(hash category=category)}}
   {{/if}}
@@ -264,7 +258,6 @@
       <a href={{get-url '/admin/site_settings/category/email'}}>{{i18n 'category.email_in_disabled_click'}}</a>
     </section>
   {{/unless}}
-
 </section>
 
 {{plugin-outlet name="category-custom-settings" args=(hash category=category) connectorTagName="" tagName="section"}}
