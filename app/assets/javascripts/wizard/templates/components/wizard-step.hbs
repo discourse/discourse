@@ -35,7 +35,7 @@
     {{/if}}
 
     {{#if showFinishButton}}
-      <button {{action "exitEarly"}} disabled={{saving}} tabindex="10" class="wizard-btn finish">
+      <button {{action "exitEarly"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn finish">
         {{i18n "wizard.finish"}}
       </button>
     {{/if}}
@@ -45,14 +45,14 @@
     {{/if}}
 
     {{#if showNextButton}}
-      <button {{action "nextStep"}} disabled={{saving}} tabindex="10" class="wizard-btn next primary">
+      <button {{action "nextStep"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn next primary">
         {{i18n "wizard.next"}}
         {{d-icon "chevron-right"}}
       </button>
     {{/if}}
 
     {{#if showDoneButton}}
-      <button {{action "quit"}} disabled={{saving}} tabindex="10" class="wizard-btn done">
+      <button {{action "quit"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn done">
         {{i18n "wizard.done"}}
       </button>
     {{/if}}
