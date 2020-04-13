@@ -1,5 +1,5 @@
-<div class='flagged-post-header'>
-  {{reviewable-topic-link reviewable=reviewable tagName=''}}
+<div class="flagged-post-header">
+  {{reviewable-topic-link reviewable=reviewable tagName=""}}
   {{#if hasEdits}}
     <a href {{action "showEditHistory"}}
       class="has-edits {{historyClass}}"
@@ -9,11 +9,11 @@
   {{/if}}
 </div>
 
-<div class='post-contents-wrapper'>
-  {{reviewable-created-by user=reviewable.target_created_by tagName=''}}
-  <div class='post-contents'>
-    {{reviewable-post-header reviewable=reviewable createdBy=reviewable.target_created_by tagName=''}}
-    <div class='post-body'>
+<div class="post-contents-wrapper">
+  {{reviewable-created-by user=reviewable.target_created_by tagName=""}}
+  <div class="post-contents">
+    {{reviewable-post-header reviewable=reviewable createdBy=reviewable.target_created_by tagName=""}}
+    <div class="post-body">
       {{#if reviewable.blank_post}}
         <p>{{i18n "review.deleted_post"}}</p>
       {{else}}

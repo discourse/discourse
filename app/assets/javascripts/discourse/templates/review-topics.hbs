@@ -1,5 +1,5 @@
 {{#if reviewableTopics}}
-  <table class='reviewable-topics'>
+  <table class="reviewable-topics">
     <thead>
       <th>{{i18n "review.topics.topic"}} </th>
       <th>{{i18n "review.topics.reviewable_count"}}</th>
@@ -8,9 +8,9 @@
     </thead>
     <tbody>
       {{#each reviewableTopics as |rt|}}
-        <tr class='reviewable-topic'>
+        <tr class="reviewable-topic">
           <td class="topic-title">
-            <div class='combined-title'>
+            <div class="combined-title">
               {{topic-status topic=rt}}
               <a href={{rt.relative_url}} rel="noopener" target="_blank">{{replace-emoji rt.fancy_title}}</a>
             </div>

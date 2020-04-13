@@ -2,7 +2,7 @@
   <div id="revision">
     <div id="revision-details">
       {{d-icon "pencil-alt"}}
-      {{#link-to 'user' model.username}}
+      {{#link-to "user" model.username}}
         {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
       {{/link-to}}
       <span class="date">{{bound-date model.created_at}}</span>
@@ -77,7 +77,7 @@
       {{/if}}
     {{/if}}
     {{#if model.tags_changes}}
-      <div class='row'>
+      <div class="row">
         {{i18n "tagging.changed"}}
         {{#each previousTagChanges as |t|}}
           {{discourse-tag t}}
@@ -90,7 +90,7 @@
       </div>
     {{/if}}
     {{#if model.featured_link_changes}}
-      <div class='row'>
+      <div class="row">
         {{model.featured_link_changes.previous}}
         &rarr;
         {{model.featured_link_changes.current}}
@@ -109,7 +109,7 @@
     <div id="revision-controls">
       {{d-button class="btn-default" action=(action "loadFirstVersion") icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
       {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
-      <div id="revision-numbers" class={{unless displayRevisions 'invisible'}}>
+      <div id="revision-numbers" class={{unless displayRevisions "invisible"}}>
         {{#conditional-loading-spinner condition=loading size="small"}}
           {{html-safe revisionsText}}
         {{/conditional-loading-spinner}}

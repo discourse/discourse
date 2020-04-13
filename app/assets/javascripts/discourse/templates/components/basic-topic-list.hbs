@@ -1,7 +1,7 @@
 {{#conditional-loading-spinner condition=loading}}
   {{#if hasIncoming}}
     <div class="show-mores">
-      <a tabindex="0" href {{action showInserted}} class='alert alert-info clickable'>
+      <a tabindex="0" href {{action showInserted}} class="alert alert-info clickable">
         {{count-i18n key="topic_count_" suffix="latest" count=2}}
       </a>
     </div>
@@ -23,8 +23,8 @@
     }}
   {{else}}
     {{#unless loadingMore}}
-      <div class='alert alert-info'>
-        {{i18n 'choose_topic.none_found'}}
+      <div class="alert alert-info">
+        {{i18n "choose_topic.none_found"}}
       </div>
     {{/unless}}
   {{/if}}

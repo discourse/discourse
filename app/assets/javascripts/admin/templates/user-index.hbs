@@ -1,4 +1,4 @@
-<section class="details {{unless model.active 'not-activated'}}">
+<section class="details {{unless model.active "not-activated"}}">
   <div class="user-controls">
     {{#if model.canViewProfile}}
       {{#link-to "user" model class="btn btn-default"}}
@@ -604,7 +604,7 @@
     </div>
     <div class="controls">
       {{#if model.flags_received_count}}
-        {{#link-to 'review' (query-params username=model.username type="ReviewableFlaggedPost" status="all") class="btn"}}
+        {{#link-to "review" (query-params username=model.username type="ReviewableFlaggedPost" status="all") class="btn"}}
           {{i18n "admin.user.show_flags_received"}}
         {{/link-to}}
       {{/if}}

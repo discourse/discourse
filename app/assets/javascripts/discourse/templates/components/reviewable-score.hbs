@@ -1,5 +1,5 @@
-<tr class='reviewable-score'>
-  <td class='user'>
+<tr class="reviewable-score">
+  <td class="user">
     {{#user-link user=rs.user}}
       {{avatar rs.user imageSize="tiny"}}
       {{rs.user.username}}
@@ -22,7 +22,7 @@
       {{d-icon "angle-double-right"}}
     </td>
 
-    <td class='reviewed-by'>
+    <td class="reviewed-by">
       {{#if rs.reviewed_by}}
         {{#user-link user=rs.reviewed_by}}
           {{avatar rs.reviewed_by imageSize="tiny"}}
@@ -48,21 +48,21 @@
 
 {{#if rs.reason}}
   <tr>
-    <td colspan='7'>
-      <div class='reviewable-score-reason'>{{html-safe rs.reason}}</div>
+    <td colspan="7">
+      <div class="reviewable-score-reason">{{html-safe rs.reason}}</div>
     </td>
   </tr>
 {{/if}}
 
 {{#if rs.reviewable_conversation}}
   <tr>
-    <td colspan='7'>
-      <div class='reviewable-conversation'>
+    <td colspan="7">
+      <div class="reviewable-conversation">
         {{#each rs.reviewable_conversation.conversation_posts as |p index|}}
           {{reviewable-conversation-post post=p index=index}}
         {{/each}}
-        <div class='controls'>
-          <a href={{rs.reviewable_conversation.permalink}} class='btn btn-small'>
+        <div class="controls">
+          <a href={{rs.reviewable_conversation.permalink}} class="btn btn-small">
             {{i18n "review.conversation.view_full"}}
           </a>
         </div>

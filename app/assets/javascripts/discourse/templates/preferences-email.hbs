@@ -1,9 +1,9 @@
-<section class='user-preferences solo-preference'>
+<section class="user-preferences solo-preference">
   <form class="form-horizontal">
 
     <div class="control-group">
       <div class="controls">
-        <h3>{{i18n 'user.change_email.title'}}</h3>
+        <h3>{{i18n "user.change_email.title"}}</h3>
       </div>
     </div>
 
@@ -13,9 +13,9 @@
           <div class="instructions">
             <p>
               {{#if model.staff}}
-                {{i18n 'user.change_email.success_staff'}}
+                {{i18n "user.change_email.success_staff"}}
               {{else}}
-                {{i18n 'user.change_email.success'}}
+                {{i18n "user.change_email.success"}}
               {{/if}}
             </p>
           </div>
@@ -25,23 +25,23 @@
       {{#if error}}
         <div class="control-group">
           <div class="controls">
-            <div class='alert alert-error'>{{errorMessage}}</div>
+            <div class="alert alert-error">{{errorMessage}}</div>
           </div>
         </div>
       {{/if}}
 
       <div class="control-group">
-        <label class="control-label">{{i18n 'user.email.title'}}</label>
+        <label class="control-label">{{i18n "user.email.title"}}</label>
         <div class="controls">
           {{text-field value=newEmail id="change-email" classNames="input-xxlarge" autofocus="autofocus"}}
           {{input-tip validation=emailValidation}}
         </div>
         <div class="controls">
-          <div class='instructions'>
+          <div class="instructions">
             {{#if taken}}
-              {{i18n 'user.change_email.taken'}}
+              {{i18n "user.change_email.taken"}}
             {{else}}
-              {{i18n 'user.email.instructions'}}
+              {{i18n "user.email.instructions"}}
             {{/if}}
           </div>
         </div>

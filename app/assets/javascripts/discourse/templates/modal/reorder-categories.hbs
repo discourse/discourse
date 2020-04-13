@@ -9,13 +9,13 @@
       {{#each categoriesOrdered as |cat|}}
         <tr data-category-id={{cat.id}}>
           <td>
-            <div class={{concat 'reorder-categories-depth-' cat.depth}}>
+            <div class={{concat "reorder-categories-depth-" cat.depth}}>
               {{category-badge cat allowUncategorized="true"}}
             </div>
           </td>
 
           <td>
-            {{number-field number=(readonly cat.position) change=(action 'change' cat)}}
+            {{number-field number=(readonly cat.position) change=(action "change" cat)}}
             {{d-button class="btn-default no-text" action=(action "moveUp") actionParam=cat icon="arrow-up"}}
             {{d-button class="btn-default no-text" action=(action "moveDown") actionParam=cat icon="arrow-down"}}
           </td>
