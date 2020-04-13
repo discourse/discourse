@@ -31,7 +31,7 @@
       <tbody>
         {{#each sortedEmojis as |e|}}
           <tr>
-            <th><img class="emoji emoji-custom" src={{e.url}} title={{e.name}}></th>
+            <th><img class="emoji emoji-custom" src={{e.url}} title={{e.name}} alt={{i18n "admin.emoji.alt"}}></th>
             <th>:{{e.name}}:</th>
             <th>{{e.group}}</th>
             <th>
