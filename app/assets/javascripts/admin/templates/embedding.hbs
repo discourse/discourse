@@ -9,9 +9,9 @@
         <th style='width: 10%'>&nbsp;</th>
       </thead>
       <tbody>
-      {{#each embedding.embeddable_hosts as |host|}}
-        {{embeddable-host host=host deleteHost=(action "deleteHost")}}
-      {{/each}}
+        {{#each embedding.embeddable_hosts as |host|}}
+          {{embeddable-host host=host deleteHost=(action "deleteHost")}}
+        {{/each}}
       </tbody>
     </table>
   {{else}}

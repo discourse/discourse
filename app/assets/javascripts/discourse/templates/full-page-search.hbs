@@ -93,7 +93,7 @@
 
                   <div class='search-category'>
                     {{#if result.topic.category.parentCategory}}
-                    {{category-link result.topic.category.parentCategory}}
+                      {{category-link result.topic.category.parentCategory}}
                     {{/if}}
                     {{category-link result.topic.category hideParent=true}}
                     {{#each result.topic.tags as |tag|}}
@@ -107,7 +107,7 @@
                   <span class='date'>
                     {{format-age result.created_at}}
                     {{#if result.blurb}}
-                    -
+                      -
                     {{/if}}
                   </span>
 

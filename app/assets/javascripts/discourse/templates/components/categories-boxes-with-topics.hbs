@@ -4,14 +4,15 @@
       <div class='category-box-heading'>
         <a href={{c.url}}>
           {{#unless c.isMuted}}
-          {{#if c.uploaded_logo.url}}
-            {{cdn-img src=c.uploaded_logo.url
+            {{#if c.uploaded_logo.url}}
+              {{cdn-img
+                src=c.uploaded_logo.url
                 class="logo"
                 width=c.uploaded_logo.width
-                height=c.uploaded_logo.height}}
-          {{/if}}
+                height=c.uploaded_logo.height
+              }}
+            {{/if}}
           {{/unless}}
-
           <h3>
             {{category-title-before category=c}}
             {{#if c.read_restricted}}
@@ -23,15 +24,15 @@
       </div>
 
       {{#unless c.isMuted}}
-      <div class='featured-topics'>
-        {{#if c.topics}}
-          <ul>
-            {{#each c.topics as |topic|}}
-              {{categories-boxes-topic topic=topic}}
-            {{/each}}
-          </ul>
-        {{/if}}
-      </div>
+        <div class='featured-topics'>
+          {{#if c.topics}}
+            <ul>
+              {{#each c.topics as |topic|}}
+                {{categories-boxes-topic topic=topic}}
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div>
       {{/unless}}
     </div>
   </div>

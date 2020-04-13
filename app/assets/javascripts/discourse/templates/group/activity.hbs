@@ -1,4 +1,4 @@
-  <section class="user-secondary-navigation">
+<section class="user-secondary-navigation">
   {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=router._router.currentPath}}
     {{#if model.can_see_members}}
       {{group-activity-filter filter="posts" categoryId=category_id}}
@@ -12,4 +12,4 @@
 </section>
 <section class="user-content">
   {{outlet}}
-  </section>
+</section>
