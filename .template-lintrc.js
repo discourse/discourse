@@ -8,7 +8,7 @@ module.exports = {
   rules: {
     "block-indentation": true,
     "deprecated-render-helper": true,
-    "img-alt-attributes": false,
+    "require-valid-alt-text": false,
     "linebreak-style": true,
     "link-rel-noopener": true,
     "no-abstract-roles": true,
@@ -50,6 +50,7 @@ module.exports = {
     "self-closing-void-elements": true,
     "simple-unless": true,
     "style-concatenation": true,
-    "table-groups": true
+    "table-groups": true,
+    "link-href-attributes": false
   }
 };
