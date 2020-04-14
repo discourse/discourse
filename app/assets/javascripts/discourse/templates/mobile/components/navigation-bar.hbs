@@ -1,11 +1,11 @@
-<li class='navigation-toggle'>
-  <a href {{action "toggleDrop"}} class='toggle-link'>
+<li class="navigation-toggle">
+  <a href {{action "toggleDrop"}} class="toggle-link">
     {{selectedNavItem.displayName}}
     {{d-icon "caret-down"}}
   </a>
 </li>
 {{#if expanded}}
-  <ul class='drop'>
+  <ul class="drop">
     {{#each navItems as |navItem|}}
       {{navigation-item content=navItem filterMode=filterMode category=category}}
     {{/each}}

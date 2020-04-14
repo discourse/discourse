@@ -3,20 +3,20 @@
     {{#if errorMessage}}
       <div class="control-group">
         <div class="controls">
-          <div class='alert alert-error'>{{errorMessage}}</div>
+          <div class="alert alert-error">{{errorMessage}}</div>
         </div>
       </div>
     {{/if}}
 
     <div class="control-group">
       <div class="controls">
-        {{html-safe (i18n 'user.second_factor.enable_security_key_description')}}
+        {{html-safe (i18n "user.second_factor.enable_security_key_description")}}
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-        {{input value=securityKeyName id='security-key-name' placeholder='security key name'}}
+        {{input value=securityKeyName id="security-key-name" placeholder="security key name"}}
       </div>
     </div>
 

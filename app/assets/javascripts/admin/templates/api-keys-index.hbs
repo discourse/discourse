@@ -18,14 +18,14 @@
       {{#each model as |k|}}
         <tr class={{if k.revoked_at "revoked"}}>
           <td class="key">
-            {{#if k.revoked_at}}{{d-icon 'times-circle'}}{{/if}}
+            {{#if k.revoked_at}}{{d-icon "times-circle"}}{{/if}}
             {{k.truncatedKey}}
           </td>
           <td class="key-description">
             {{k.shortDescription}}
           </td>
           <td class="key-user">
-            <div class="label">{{i18n 'admin.api.user'}}</div>
+            <div class="label">{{i18n "admin.api.user"}}</div>
             {{#if k.user}}
               {{#link-to "adminUser" k.user}}
                 {{avatar k.user imageSize="small"}}
@@ -35,11 +35,11 @@
             {{/if}}
           </td>
           <td class="key-created">
-            <div class="label">{{i18n 'admin.api.created'}}</div>
+            <div class="label">{{i18n "admin.api.created"}}</div>
             {{format-date k.created_at}}
           </td>
           <td class="key-last-used">
-            <div class="label">{{i18n 'admin.api.last_used'}}</div>
+            <div class="label">{{i18n "admin.api.last_used"}}</div>
             {{#if k.last_used_at}}
               {{format-date k.last_used_at}}
             {{else}}

@@ -1,6 +1,6 @@
-{{#d-modal-body class='change-ownership'}}
+{{#d-modal-body class="change-ownership"}}
   <span>
-    {{html-safe (i18n (if selectedPostsUsername 'topic.change_owner.instructions' 'topic.change_owner.instructions_without_old_user')
+    {{html-safe (i18n (if selectedPostsUsername "topic.change_owner.instructions" "topic.change_owner.instructions_without_old_user")
         count=selectedPostsCount
         old_user=selectedPostsUsername
       )
