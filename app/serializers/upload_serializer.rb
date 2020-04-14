@@ -11,6 +11,7 @@ class UploadSerializer < ApplicationSerializer
              :thumbnail_height,
              :extension,
              :short_url,
+             :short_path,
              :retain_hours,
              :human_filesize
 
