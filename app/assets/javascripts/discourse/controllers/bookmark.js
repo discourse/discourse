@@ -19,6 +19,7 @@ import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "d", "t"];
 const START_OF_DAY_HOUR = 8;
 const LATER_TODAY_CUTOFF_HOUR = 17;
+const LATER_TODAY_MAX_HOUR = 18;
 const REMINDER_TYPES = {
   AT_DESKTOP: "at_desktop",
   LATER_TODAY: "later_today",
@@ -172,7 +173,7 @@ export default Controller.extend(ModalFunctionality, {
     let later = this.laterToday();
     return (
       !later.isSame(this.tomorrow(), "date") &&
-      later.hour() <= LATER_TODAY_CUTOFF_HOUR
+      this.now().hour() < LATER_TODAY_CUTOFF_HOUR
     );
   },
 
@@ -340,8 +341,11 @@ export default Controller.extend(ModalFunctionality, {
 
   laterToday() {
     let later = this.now().add(3, "hours");
+    if (later.hour() >= LATER_TODAY_MAX_HOUR) {
+      return later.hour(LATER_TODAY_MAX_HOUR).startOf("hour");
+    }
     return later.minutes() < 30
-      ? later.minutes(30)
+      ? later.startOf("hour")
       : later.add(30, "minutes").startOf("hour");
   },
 
