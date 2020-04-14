@@ -40,8 +40,15 @@ class ThemesInstallTask
     end
   end
 
+  def repo_name
+    @url.gsub(Regexp.union('git@github.com:', 'https://github.com/', '.git'), '')
+  end
+
   def theme_exists?
-    @remote_theme = RemoteTheme.find_by(remote_url: @url, branch: @options.fetch(:branch, nil))
+    @remote_theme = RemoteTheme
+      .where("remote_url like ?", "%#{repo_name}%")
+      .where(branch: @options.fetch(:branch, nil))
+      .first
     @theme = @remote_theme&.theme
     @theme.present?
   end
