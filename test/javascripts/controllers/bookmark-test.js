@@ -148,7 +148,7 @@ QUnit.test(
 );
 
 QUnit.test(
-  "laterToday is capped to 6pm. later today at 3pm = 6pm, 4pm = 6pm, 4:59pm = 6pm",
+  "laterToday is capped to 6pm. later today at 3pm = 6pm, 3:30pm = 6pm, 4pm = 6pm, 4:59pm = 6pm",
   function(assert) {
     mockMomentTz("2019-12-11T15:00:00");
 
@@ -156,6 +156,14 @@ QUnit.test(
       BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
       "2019-12-11 18:00:00",
       "3pm should max to 6pm"
+    );
+
+    mockMomentTz("2019-12-11T15:31:00");
+
+    assert.equal(
+      BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
+      "2019-12-11 18:00:00",
+      "3:30pm should max to 6pm"
     );
 
     mockMomentTz("2019-12-11T16:00:00");

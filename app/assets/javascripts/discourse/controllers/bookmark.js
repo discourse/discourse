@@ -337,7 +337,7 @@ export default Controller.extend(ModalFunctionality, {
 
   laterToday() {
     let later = this.now().add(3, "hours");
-    if (later.hour() > LATER_TODAY_MAX_HOUR) {
+    if (later.hour() >= LATER_TODAY_MAX_HOUR) {
       return later.hour(LATER_TODAY_MAX_HOUR).startOf("hour");
     }
     return later.minutes() < 30
