@@ -22,7 +22,7 @@ QUnit.test("emoji picker can be opened/closed", async assert => {
     find(".emoji-picker")
       .html()
       .trim(),
-    "",
+    "<!---->",
     "it opens the picker"
   );
 
@@ -31,7 +31,7 @@ QUnit.test("emoji picker can be opened/closed", async assert => {
     find(".emoji-picker")
       .html()
       .trim(),
-    "",
+    "<!---->",
     "it closes the picker"
   );
 });
