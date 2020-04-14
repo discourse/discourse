@@ -534,10 +534,18 @@ class Reviewable < ActiveRecord::Base
     ReviewableScore.joins(reviewable: :topic).where("reviewables.type = ?", name)
   end
 
-  def self.count_by_date(start_date, end_date, category_id = nil)
-    scores_with_topics
-      .where('reviewable_scores.created_at BETWEEN ? AND ?', start_date, end_date)
-      .where("topics.category_id = COALESCE(?, topics.category_id)", category_id)
+  def self.count_by_date(start_date, end_date, category_id = nil, include_subcategories = false)
+    query = scores_with_topics.where('reviewable_scores.created_at BETWEEN ? AND ?', start_date, end_date)
+
+    if category_id
+      if include_subcategories
+        query = query.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
+      else
+        query = query.where("topics.category_id = ?", category_id)
+      end
+    end
+
+    query
       .group("date(reviewable_scores.created_at)")
       .order('date(reviewable_scores.created_at)')
       .count
