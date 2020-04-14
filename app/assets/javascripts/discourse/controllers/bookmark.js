@@ -78,7 +78,7 @@ export default Controller.extend(ModalFunctionality, {
       closeWithoutSaving: false,
       isSavingBookmarkManually: false,
       customReminderDate: null,
-      customReminderTime: null,
+      customReminderTime: this.defaultCustomReminderTime(),
       lastCustomReminderDate: null,
       lastCustomReminderTime: null,
       userTimezone: this.currentUser.resolvedTimezone()
@@ -270,6 +270,10 @@ export default Controller.extend(ModalFunctionality, {
     return moment.tz(date + " " + time, this.userTimezone);
   },
 
+  defaultCustomReminderTime() {
+    return `0${START_OF_DAY_HOUR}:00`;
+  },
+
   reminderAt() {
     if (!this.selectedReminderType) {
       return;
@@ -295,7 +299,7 @@ export default Controller.extend(ModalFunctionality, {
       case REMINDER_TYPES.CUSTOM:
         this.set(
           "customReminderTime",
-          this.customReminderTime || `0${START_OF_DAY_HOUR}:00`
+          this.customReminderTime || this.defaultCustomReminderTime()
         );
         const customDateTime = this.parseCustomDateTime(
           this.customReminderDate,
