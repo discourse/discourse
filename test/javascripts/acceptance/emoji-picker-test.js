@@ -3,6 +3,10 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 acceptance("EmojiPicker", {
   loggedIn: true,
+  beforeEach() {
+    const store = Discourse.__container__.lookup("service:emoji-store");
+    store.reset();
+  },
   afterEach() {
     const store = Discourse.__container__.lookup("service:emoji-store");
     store.reset();
@@ -18,7 +22,7 @@ QUnit.test("emoji picker can be opened/closed", async assert => {
     find(".emoji-picker")
       .html()
       .trim(),
-    "",
+    "<!---->",
     "it opens the picker"
   );
 
@@ -27,7 +31,7 @@ QUnit.test("emoji picker can be opened/closed", async assert => {
     find(".emoji-picker")
       .html()
       .trim(),
-    "",
+    "<!---->",
     "it closes the picker"
   );
 });

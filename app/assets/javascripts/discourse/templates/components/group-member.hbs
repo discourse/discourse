@@ -3,7 +3,7 @@
 </a>
 <span>{{member.username}}</span>
 {{#unless automatic}}
-  <a href class='remove' {{action "remove"}}>
+  <a href {{action "remove"}} class="remove">
     {{d-icon "times"}}
   </a>
 {{/unless}}

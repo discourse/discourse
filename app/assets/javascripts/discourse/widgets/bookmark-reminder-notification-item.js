@@ -14,6 +14,19 @@ createWidgetFrom(
         description,
         username
       });
+    },
+    notificationTitle(notificationName, data) {
+      if (notificationName) {
+        if (data.bookmark_name) {
+          return I18n.t(`notifications.titles.${notificationName}_with_name`, {
+            name: data.bookmark_name
+          });
+        } else {
+          return I18n.t(`notifications.titles.${notificationName}`);
+        }
+      } else {
+        return "";
+      }
     }
   }
 );

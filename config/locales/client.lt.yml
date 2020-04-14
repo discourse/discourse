@@ -30,7 +30,7 @@ lt:
     dates:
       time: "H:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMMM D H:mm"
+      long_no_year: "MMMM D, H:mm"
       long_no_year_no_time: "MMMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "YYYY MMMM D H:mm"

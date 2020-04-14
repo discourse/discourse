@@ -4,7 +4,7 @@ import { scheduleOnce } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   model: null,
@@ -17,7 +17,6 @@ export default Controller.extend({
     return name ? I18n.t("admin.logs.staff_actions.actions." + name) : null;
   },
 
-  @on("init")
   resetFilters() {
     this.setProperties({
       model: EmberObject.create({ loadingMore: true }),

@@ -293,9 +293,9 @@ da:
   excerpt_image: "billede"
   bookmarks:
     reminders:
-      tomorrow: "I morgen <br/>{{date}}"
-      next_week: "Næste uge <br/>{{date}}"
-      next_month: "Næste måned <br/>{{date}}"
+      tomorrow: "I morgen"
+      next_week: "Næste uge"
+      next_month: "Næste måned"
       custom: "Valgfri dato og tid"
   groups:
     success:

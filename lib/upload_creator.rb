@@ -245,14 +245,16 @@ class UploadCreator
 
       from = @file.path
       to = down_tempfile.path
+      scale = (from =~ /\.GIF$/i) ? "0.5" : "50%"
 
       OptimizedImage.ensure_safe_paths!(from, to)
 
       OptimizedImage.downsize(
         from,
         to,
-        "50%",
+        scale,
         allow_animation: allow_animation,
+        scale_image: true,
         raise_on_error: true
       )
 

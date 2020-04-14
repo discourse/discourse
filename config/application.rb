@@ -135,6 +135,7 @@ module Discourse
       vendor.js
       admin.js
       preload-store.js
+      browser-detect.js
       browser-update.js
       break_string.js
       ember_jquery.js

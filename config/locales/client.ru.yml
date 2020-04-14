@@ -31,7 +31,7 @@ ru:
       time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM HH:mm"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMM"
       long_with_year: "D MMM YYYY, HH:mm"
@@ -319,11 +319,11 @@ ru:
       no_timezone: 'Укажите ваш часовой пояс <a href="%{basePath}/my/preferences/profile">в настройках своей учетной записи</a>, чтобы активировать функцию напоминаний.'
       reminders:
         at_desktop: "При следующем посещении форума"
-        later_today: "На сегодня, но чуть позже <br/>{{date}}"
-        next_business_day: "На следующий рабочий день <br/>{{date}}"
-        tomorrow: "На завтра <br/>{{date}}"
-        next_week: "На следующую неделю <br/>{{date}}"
-        next_month: "На следующий месяц <br/>{{date}}"
+        later_today: "На сегодня, но чуть позже"
+        next_business_day: "На следующий рабочий день"
+        tomorrow: "На завтра"
+        next_week: "На следующую неделю"
+        next_month: "На следующий месяц"
         custom: "Установить дату и время напоминания"
     drafts:
       resume: "Продолжить"

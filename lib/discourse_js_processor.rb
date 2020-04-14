@@ -4,6 +4,10 @@ require 'mini_racer'
 
 class DiscourseJsProcessor
 
+  def self.plugin_transpile_paths
+    @@plugin_transpile_paths ||= Set.new
+  end
+
   def self.call(input)
     root_path = input[:load_path] || ''
     logical_path = (input[:filename] || '').sub(root_path, '').gsub(/\.(js|es6).*$/, '').sub(/^\//, '')
@@ -55,6 +59,8 @@ class DiscourseJsProcessor
       auto-redirect
       embed-application
     ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
+
+    return true if plugin_transpile_paths.any? { |prefix| relative_path.start_with?(prefix) }
 
     !!(relative_path =~ /^#{js_root}\/[^\/]+\// ||
       relative_path =~ /^#{test_root}\/[^\/]+\//)

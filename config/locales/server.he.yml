@@ -362,11 +362,11 @@ he:
       time_must_be_provided: "צריך לציין זמן לכל התזכורות למעט ‚%{reminder_type}’"
     reminders:
       at_desktop: "בשימוש הבא דרך שולחן העבודה"
-      later_today: "המשך היום <br/>{{date}}"
-      next_business_day: "ביום העסקים הבא <br/>{{date}}"
-      tomorrow: "מחר <br/>{{date}}"
-      next_week: "בשבוע הבא <br/>{{date}}"
-      next_month: "בחודש הבא <br/>{{date}}"
+      later_today: "המשך היום"
+      next_business_day: "ביום העסקים הבא"
+      tomorrow: "מחר"
+      next_week: "בשבוע הבא"
+      next_month: "בחודש הבא"
       custom: "תאריך ושעה מותאמים אישית"
   groups:
     success:

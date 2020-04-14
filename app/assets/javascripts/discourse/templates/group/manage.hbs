@@ -1,5 +1,5 @@
-<section class='user-secondary-navigation'>
-  {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=router._router.currentPath}}
+<section class="user-secondary-navigation">
+  {{#mobile-nav class="activity-nav" desktopClass="action-list activity-list nav-stacked" currentPath=router._router.currentPath}}
     {{#each tabs as |tab|}}
       <li>
         {{#link-to tab.route model.name}}
@@ -11,4 +11,4 @@
 </section>
 <section class="user-content">
   {{outlet}}
-  </section>
+</section>

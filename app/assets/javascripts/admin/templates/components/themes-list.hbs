@@ -2,13 +2,13 @@
   {{d-button
     action=(action "changeView")
     actionParam=THEMES
-    class=(concat "themes-tab " "tab " (if themesTabActive 'btn-danger active' ''))
+    class=(concat "themes-tab " "tab " (if themesTabActive "btn-danger active" ""))
     label="admin.customize.theme.title"
   }}
   {{d-button
     action=(action "changeView")
     actionParam=COMPONENTS
-    class=(concat "components-tab " "tab " (if componentsTabActive 'btn-danger active' ''))
+    class=(concat "components-tab " "tab " (if componentsTabActive "btn-danger active" ""))
     label="admin.customize.theme.components"
     icon="puzzle-piece"
   }}

@@ -10,13 +10,13 @@
     {{/if}}
 
     {{#if canLoginLocal}}
-      <form id='login-form' method='post'>
+      <form id="login-form" method="post">
         <div id="credentials" class={{credentialsClass}}>
           <table>
             <tbody>
               <tr>
                 <td>
-                  <label for='login-account-name'>{{i18n 'login.username'}}</label>
+                  <label for="login-account-name">{{i18n "login.username"}}</label>
                 </td>
                 <td>
                   {{text-field value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
@@ -24,7 +24,7 @@
               </tr>
               <tr>
                 <td>
-                  <label for='login-account-password'>{{i18n 'login.password'}}</label>
+                  <label for="login-account-password">{{i18n "login.password"}}</label>
                 </td>
                 <td>
                   {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
@@ -33,7 +33,7 @@
               <tr>
                 <td></td>
                 <td>
-                  <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
+                  <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n "forgot_password.action"}}</a>
                 </td>
               </tr>
             </tbody>
@@ -56,7 +56,7 @@
               action=(action "authenticateSecurityKey")}}
             {{/security-key-form}}
           {{else}}
-            {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+            {{second-factor-input value=secondFactorToken inputId="login-second-factor" secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
           {{/if}}
         {{/second-factor-form}}
       </form>
@@ -84,5 +84,5 @@
 
   {{plugin-outlet name="login-after-modal-footer" tagName=""}}
 
-  <div id='login-alert' class={{alertClass}}>{{alert}}</div>
+  <div class={{alertClass}} id="login-alert">{{alert}}</div>
 {{/login-modal}}

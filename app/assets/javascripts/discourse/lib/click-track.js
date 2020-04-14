@@ -18,6 +18,13 @@ export function isValidLink($link) {
     return false;
   }
 
+  if ($link.closest(".onebox-result, .onebox-body").length) {
+    const $a = $link.closest(".onebox").find("header a");
+    if ($a[0] && $a[0].href === $link[0].href) {
+      return true;
+    }
+  }
+
   return (
     $link.hasClass("track-link") ||
     $link.closest(".hashtag, .badge-category, .onebox-result, .onebox-body")

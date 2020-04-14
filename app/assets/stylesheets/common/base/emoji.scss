@@ -35,6 +35,13 @@ sup img.emoji {
   color: $primary;
   background-color: $secondary;
   border: 1px solid $primary-low;
+
+  img.emoji {
+    // custom emojis might import images of various sizes
+    // we don't want the picker to be difformed
+    width: 20px !important;
+    height: 20px !important;
+  }
 }
 
 .emoji-picker .categories-column {

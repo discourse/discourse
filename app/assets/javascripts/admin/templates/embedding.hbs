@@ -1,17 +1,17 @@
-<div class='embeddable-hosts'>
+<div class="embeddable-hosts">
   {{#if embedding.embeddable_hosts}}
-    <table class='embedding grid'>
+    <table class="embedding grid">
       <thead>
-        <th style='width: 25%'>{{i18n "admin.embedding.host"}}</th>
-        <th style='width: 15%'>{{i18n "admin.embedding.class_name"}}</th>
-        <th style='width: 25%'>{{i18n "admin.embedding.path_whitelist"}}</th>
-        <th style='width: 25%'>{{i18n "admin.embedding.category"}}</th>
-        <th style='width: 10%'>&nbsp;</th>
+        <th style="width: 25%">{{i18n "admin.embedding.host"}}</th>
+        <th style="width: 15%">{{i18n "admin.embedding.class_name"}}</th>
+        <th style="width: 25%">{{i18n "admin.embedding.path_whitelist"}}</th>
+        <th style="width: 25%">{{i18n "admin.embedding.category"}}</th>
+        <th style="width: 10%">&nbsp;</th>
       </thead>
       <tbody>
-      {{#each embedding.embeddable_hosts as |host|}}
-        {{embeddable-host host=host deleteHost=(action "deleteHost")}}
-      {{/each}}
+        {{#each embedding.embeddable_hosts as |host|}}
+          {{embeddable-host host=host deleteHost=(action "deleteHost")}}
+        {{/each}}
       </tbody>
     </table>
   {{else}}
@@ -22,14 +22,14 @@
 </div>
 
 {{#if showSecondary}}
-  <div class='embedding-secondary'>
+  <div class="embedding-secondary">
     <p>{{html-safe (i18n "admin.embedding.sample")}}</p>
     {{highlighted-code code=embeddingCode lang="html"}}
   </div>
 
   <hr>
 
-  <div class='embedding-secondary'>
+  <div class="embedding-secondary">
     <h3>{{i18n "admin.embedding.settings"}}</h3>
 
     {{embedding-setting field="embed_by_username" value=embedding.embed_by_username}}
@@ -38,9 +38,10 @@
                         value=embedding.embed_title_scrubber
                         placeholder="- site.com$"}}
     {{embedding-setting field="embed_truncate" value=embedding.embed_truncate type="checkbox"}}
+    {{embedding-setting field="embed_unlisted" value=embedding.embed_unlisted type="checkbox"}}
   </div>
 
-  <div class='embedding-secondary'>
+  <div class="embedding-secondary">
     <h3>{{i18n "admin.embedding.crawling_settings"}}</h3>
     <p class="description">{{i18n "admin.embedding.crawling_description"}}</p>
 
@@ -57,7 +58,7 @@
                         placeholder="emoji, classname"}}
   </div>
 
-  <div class='embedding-secondary'>
+  <div class="embedding-secondary">
     {{d-button label="admin.embedding.save"
                action=(action "saveChanges")
                class="btn-primary embed-save"

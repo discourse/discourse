@@ -71,11 +71,13 @@ class TopicViewSerializer < ApplicationSerializer
     :pm_with_non_human_user,
     :queued_posts_count,
     :show_read_indicator,
-    :requested_group_name
+    :requested_group_name,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
   has_many :pending_posts, serializer: TopicPendingPostSerializer, root: false, embed: :objects
+
+  has_one :published_page, embed: :objects
 
   def details
     object
@@ -272,5 +274,9 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_requested_group_name?
     object.personal_message
+  end
+
+  def include_published_page?
+    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
   end
 end

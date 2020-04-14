@@ -29,7 +29,7 @@ nl:
       time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM HH:mm"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMMM"
       long_with_year: "D MMM YYYY HH:mm"
@@ -271,11 +271,11 @@ nl:
       no_timezone: 'U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href="%{basePath}/my/preferences/profile">in uw profiel</a>.'
       reminders:
         at_desktop: "De volgende keer vanaf mijn computer"
-        later_today: "Later vandaag <br/>{{date}}"
-        next_business_day: "Volgende werkdag <br/>{{date}}"
-        tomorrow: "Morgen <br/>{{date}}"
-        next_week: "Volgende week <br/>{{date}}"
-        next_month: "Volgende maand <br/>{{date}}"
+        later_today: "Later vandaag"
+        next_business_day: "Volgende werkdag"
+        tomorrow: "Morgen"
+        next_week: "Volgende week"
+        next_month: "Volgende maand"
         custom: "Aangepaste datum en tijd"
     drafts:
       resume: "Hervatten"

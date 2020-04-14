@@ -332,11 +332,11 @@ nl:
       time_must_be_provided: "tijd moet voor alle herinneringen behalve '%{reminder_type}' worden opgegeven"
     reminders:
       at_desktop: "De volgende keer vanaf mijn computer"
-      later_today: "Later vandaag <br/>{{date}}"
-      next_business_day: "Volgende werkdag <br/>{{date}}"
-      tomorrow: "Morgen <br/>{{date}}"
-      next_week: "Volgende week <br/>{{date}}"
-      next_month: "Volgende maand <br/>{{date}}"
+      later_today: "Later vandaag"
+      next_business_day: "Volgende werkdag"
+      tomorrow: "Morgen"
+      next_week: "Volgende week"
+      next_month: "Volgende maand"
       custom: "Aangepaste datum en tijd"
   groups:
     success:

@@ -291,6 +291,10 @@ export class Tag {
         }
 
         if (src) {
+          if (src.match(/^data:image\/([a-zA-Z]*);base64,([^\"]*)$/)) {
+            return "[image]";
+          }
+
           let alt = attr.alt || pAttr.alt || "";
           const width = attr.width || pAttr.width;
           const height = attr.height || pAttr.height;

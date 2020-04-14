@@ -1,4 +1,4 @@
-<div class='names'>
+<div class="names">
   <span class="username">
     {{#if user}}
       {{#user-link user=user}}{{user.username}}{{/user-link}}
@@ -9,4 +9,7 @@
       {{i18n "review.deleted_user"}}
     {{/if}}
   </span>
+  {{plugin-outlet name="after-reviewable-post-user"
+      tagName=""
+      args=(hash user=user)}}
 </div>

@@ -9,6 +9,11 @@ export default DiscourseRoute.extend({
     });
   },
 
+  activate() {
+    let controller = this.controllerFor("admin-logs-staff-action-logs");
+    if (controller.filters === null) controller.resetFilters();
+  },
+
   actions: {
     showDetailsModal(model) {
       showModal("admin-staff-action-log-details", { model, admin: true });

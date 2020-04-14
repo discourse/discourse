@@ -33,7 +33,8 @@ describe Auth::DefaultCurrentUserProvider do
     it "finds a user for a correct per-user api key" do
       user = Fabricate(:user)
       api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
-      good_provider = provider("/?api_key=#{api_key.key}")
+      params = { "HTTP_API_KEY" => api_key.key }
+      good_provider = provider("/", params)
       expect(good_provider.current_user.id).to eq(user.id)
       expect(good_provider.is_api?).to eq(true)
       expect(good_provider.is_user_api?).to eq(false)
@@ -67,20 +68,22 @@ describe Auth::DefaultCurrentUserProvider do
 
     it "raises for a revoked key" do
       user = Fabricate(:user)
-      key = ApiKey.create!
+      api_key = ApiKey.create!
+      params = { "HTTP_API_USERNAME" => user.username.downcase, "HTTP_API_KEY" => api_key.key }
       expect(
-        provider("/?api_key=#{key.key}&api_username=#{user.username.downcase}").current_user.id
+        provider("/", params).current_user.id
       ).to eq(user.id)
 
-      key.reload.update(revoked_at: Time.zone.now, last_used_at: nil)
-      expect(key.reload.last_used_at).to eq(nil)
+      api_key.reload.update(revoked_at: Time.zone.now, last_used_at: nil)
+      expect(api_key.reload.last_used_at).to eq(nil)
+      params = { "HTTP_API_USERNAME" => user.username.downcase, "HTTP_API_KEY" => api_key.key }
 
       expect {
-        provider("/?api_key=#{key.key}&api_username=#{user.username.downcase}").current_user
+        provider("/", params).current_user
       }.to raise_error(Discourse::InvalidAccess)
 
-      key.reload
-      expect(key.last_used_at).to eq(nil)
+      api_key.reload
+      expect(api_key.last_used_at).to eq(nil)
     end
 
     it "raises for a user with a mismatching ip" do
@@ -97,25 +100,35 @@ describe Auth::DefaultCurrentUserProvider do
       freeze_time
 
       user = Fabricate(:user)
-      key = ApiKey.create!(user_id: user.id, created_by_id: -1, allowed_ips: ['100.0.0.0/24'])
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1, allowed_ips: ['100.0.0.0/24'])
+      params = {
+        "HTTP_API_USERNAME" => user.username.downcase,
+        "HTTP_API_KEY" => api_key.key,
+        "REMOTE_ADDR" => "100.0.0.22"
+      }
 
-      found_user = provider("/?api_key=#{key.key}&api_username=#{user.username.downcase}",
-                            "REMOTE_ADDR" => "100.0.0.22").current_user
+      found_user = provider("/", params).current_user
 
       expect(found_user.id).to eq(user.id)
 
-      found_user = provider("/?api_key=#{key.key}&api_username=#{user.username.downcase}",
-                            "HTTP_X_FORWARDED_FOR" => "10.1.1.1, 100.0.0.22").current_user
+      params = {
+        "HTTP_API_USERNAME" => user.username.downcase,
+        "HTTP_API_KEY" => api_key.key,
+        "HTTP_X_FORWARDED_FOR" => "10.1.1.1, 100.0.0.22"
+      }
+
+      found_user = provider("/", params).current_user
       expect(found_user.id).to eq(user.id)
 
-      key.reload
-      expect(key.last_used_at).to eq_time(Time.zone.now)
+      api_key.reload
+      expect(api_key.last_used_at).to eq_time(Time.zone.now)
     end
 
     it "finds a user for a correct system api key" do
       user = Fabricate(:user)
       api_key = ApiKey.create!(created_by_id: -1)
-      expect(provider("/?api_key=#{api_key.key}&api_username=#{user.username.downcase}").current_user.id).to eq(user.id)
+      params = { "HTTP_API_USERNAME" => user.username.downcase, "HTTP_API_KEY" => api_key.key }
+      expect(provider("/", params).current_user.id).to eq(user.id)
     end
 
     it "raises for a mismatched api_key param and header username" do
@@ -130,8 +143,9 @@ describe Auth::DefaultCurrentUserProvider do
     it "finds a user for a correct system api key with external id" do
       user = Fabricate(:user)
       api_key = ApiKey.create!(created_by_id: -1)
+      params = { "HTTP_API_KEY" => api_key.key, "HTTP_API_USER_EXTERNAL_ID" => "abc" }
       SingleSignOnRecord.create(user_id: user.id, external_id: "abc", last_payload: '')
-      expect(provider("/?api_key=#{api_key.key}&api_user_external_id=abc").current_user.id).to eq(user.id)
+      expect(provider("/", params).current_user.id).to eq(user.id)
     end
 
     it "raises for a mismatched api_key param and header external id" do
@@ -147,7 +161,8 @@ describe Auth::DefaultCurrentUserProvider do
     it "finds a user for a correct system api key with id" do
       user = Fabricate(:user)
       api_key = ApiKey.create!(created_by_id: -1)
-      expect(provider("/?api_key=#{api_key.key}&api_user_id=#{user.id}").current_user.id).to eq(user.id)
+      params = { "HTTP_API_USER_ID" => user.id, "HTTP_API_KEY" => api_key.key }
+      expect(provider("/", params).current_user.id).to eq(user.id)
     end
 
     it "raises for a mismatched api_key param and header user id" do
@@ -176,34 +191,78 @@ describe Auth::DefaultCurrentUserProvider do
         user = Fabricate(:user)
         api_key = ApiKey.create!(created_by_id: -1)
         key = api_key.key
+        user_params = { "HTTP_API_KEY" => key, "HTTP_API_USERNAME" => user.username.downcase }
+        system_params = { "HTTP_API_KEY" => key, "HTTP_API_USERNAME" => "system" }
 
-        provider("/?api_key=#{key}&api_username=#{user.username.downcase}").current_user
-        provider("/?api_key=#{key}&api_username=system").current_user
-        provider("/?api_key=#{key}&api_username=#{user.username.downcase}").current_user
+        provider("/", user_params).current_user
+        provider("/", system_params).current_user
+        provider("/", user_params).current_user
 
         expect do
-          provider("/?api_key=#{key}&api_username=system").current_user
+          provider("/", system_params).current_user
         end.to raise_error(RateLimiter::LimitExceeded)
 
         freeze_time 59.seconds.from_now
 
         expect do
-          provider("/?api_key=#{key}&api_username=system").current_user
+          provider("/", system_params).current_user
         end.to raise_error(RateLimiter::LimitExceeded)
 
         freeze_time 2.seconds.from_now
 
         # 1 minute elapsed
-        provider("/?api_key=#{key}&api_username=system").current_user
+        provider("/", system_params).current_user
 
         # should not rake limit a random key
         api_key.destroy
         api_key = ApiKey.create!(created_by_id: -1)
-        provider("/?api_key=#{api_key.key}&api_username=#{user.username.downcase}").current_user
+        user_params = { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => user.username.downcase }
+        provider("/", user_params).current_user
 
       end
     end
 
+  end
+
+  context "whitelisted api auth query param routes" do
+
+    it "allows rss feeds" do
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
+      url = "/latest.rss?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
+      expect(provider(url).current_user.id).to eq(user.id)
+    end
+
+    it "allows ics feeds" do
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
+      url = "/u/#{user.username}/bookmarks.ics?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
+      expect(provider(url).current_user.id).to eq(user.id)
+    end
+
+    it "allows handle mail route" do
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
+      url = "/admin/email/handle_mail?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
+      opts = { method: "POST" }
+      expect(provider(url, opts).current_user.id).to eq(user.id)
+    end
+
+    it "raises errors for non whitlisted routes" do
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
+      url = "/u?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
+      expect {
+        provider(url).current_user
+      }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "still allows header based auth" do
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
+      params = { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => user.username.downcase }
+      expect(provider("/", params).current_user.id).to eq(user.id)
+    end
   end
 
   context "server header api" do
@@ -534,6 +593,43 @@ describe Auth::DefaultCurrentUserProvider do
     expect(token.prev_auth_token).to eq(old_token)
     expect(token.auth_token).not_to eq(unverified_token)
 
+  end
+
+  context "events" do
+    before do
+      @refreshes = 0
+
+      @increase_refreshes = -> (user) { @refreshes += 1 }
+      DiscourseEvent.on(:user_session_refreshed, &@increase_refreshes)
+    end
+
+    after do
+      DiscourseEvent.off(:user_session_refreshed, &@increase_refreshes)
+    end
+
+    it "fires event when updating last seen" do
+      user = Fabricate(:user)
+      @provider = provider('/')
+      cookies = {}
+      @provider.log_on_user(user, {}, cookies)
+      unhashed_token = cookies["_t"][:value]
+      freeze_time 20.minutes.from_now
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      provider2.refresh_session(user, {}, {})
+      expect(@refreshes).to eq(1)
+    end
+
+    it "does not fire an event when last seen does not update" do
+      user = Fabricate(:user)
+      @provider = provider('/')
+      cookies = {}
+      @provider.log_on_user(user, {}, cookies)
+      unhashed_token = cookies["_t"][:value]
+      freeze_time 2.minutes.from_now
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      provider2.refresh_session(user, {}, {})
+      expect(@refreshes).to eq(0)
+    end
   end
 
   context "rate limiting" do

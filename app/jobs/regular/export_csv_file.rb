@@ -182,8 +182,14 @@ module Jobs
     def report_export
       return enum_for(:report_export) unless block_given?
 
-      @extra[:start_date] = @extra[:start_date].to_date.beginning_of_day if @extra[:start_date].is_a?(String)
-      @extra[:end_date] = @extra[:end_date].to_date.end_of_day if @extra[:end_date].is_a?(String)
+      # If dates are invalid consider then `nil`
+      if @extra[:start_date].is_a?(String)
+        @extra[:start_date] = @extra[:start_date].to_date.beginning_of_day rescue nil
+      end
+      if @extra[:end_date].is_a?(String)
+        @extra[:end_date] = @extra[:end_date].to_date.end_of_day rescue nil
+      end
+
       @extra[:filters] = {}
       if @extra[:category_id].present?
         @extra[:filters][:category] = @extra[:category_id].to_i

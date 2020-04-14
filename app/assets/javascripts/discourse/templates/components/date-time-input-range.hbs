@@ -17,7 +17,7 @@
   <div class="alert error">{{error}}</div>
 {{/if}}
 
-<div class="panel from {{if fromPanelActive 'visible'}}">
+<div class="panel from {{if fromPanelActive "visible"}}">
   {{date-time-input
     date=from
     onChange=(action "_onChange" (hash prop="from"))
@@ -25,7 +25,7 @@
   }}
 </div>
 
-<div class="panel to {{if toPanelActive 'visible'}}">
+<div class="panel to {{if toPanelActive "visible"}}">
   {{date-time-input
     date=to
     onChange=(action "_onChange" (hash prop="to"))

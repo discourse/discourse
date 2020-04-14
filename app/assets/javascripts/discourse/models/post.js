@@ -7,7 +7,6 @@ import RestModel from "discourse/models/rest";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ActionSummary from "discourse/models/action-summary";
 import { propertyEqual } from "discourse/lib/computed";
-import Quote from "discourse/lib/quote";
 import { postUrl } from "discourse/lib/utilities";
 import { cookAsync } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
@@ -339,26 +338,30 @@ const Post = RestModel.extend({
   toggleBookmarkWithReminder() {
     this.toggleProperty("bookmarked_with_reminder");
     if (this.bookmarked_with_reminder) {
-      let controller = showModal("bookmark", {
-        model: {
-          postId: this.id
-        },
-        title: "post.bookmarks.create",
-        modalClass: "bookmark-with-reminder"
-      });
-      controller.setProperties({
-        onCloseWithoutSaving: () => {
-          this.toggleProperty("bookmarked_with_reminder");
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
-        },
-        afterSave: (reminderAtISO, reminderType) => {
-          this.setProperties({
-            "topic.bookmarked": true,
-            bookmark_reminder_at: reminderAtISO,
-            bookmark_reminder_type: reminderType
-          });
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
-        }
+      return new Promise(resolve => {
+        let controller = showModal("bookmark", {
+          model: {
+            postId: this.id
+          },
+          title: "post.bookmarks.create",
+          modalClass: "bookmark-with-reminder"
+        });
+        controller.setProperties({
+          onCloseWithoutSaving: () => {
+            this.toggleProperty("bookmarked_with_reminder");
+            resolve({ closedWithoutSaving: true });
+            this.appEvents.trigger("post-stream:refresh", { id: this.id });
+          },
+          afterSave: (reminderAtISO, reminderType) => {
+            this.setProperties({
+              "topic.bookmarked": true,
+              bookmark_reminder_at: reminderAtISO,
+              bookmark_reminder_type: reminderType
+            });
+            resolve({ closedWithoutSaving: false });
+            this.appEvents.trigger("post-stream:refresh", { id: this.id });
+          }
+        });
       });
     } else {
       this.setProperties({
@@ -461,13 +464,6 @@ Post.reopenClass({
   showRevision(postId, version) {
     return ajax(`/posts/${postId}/revisions/${version}/show`, {
       type: "PUT"
-    });
-  },
-
-  loadQuote(postId) {
-    return ajax(`/posts/${postId}.json`).then(result => {
-      const post = Post.create(result);
-      return Quote.build(post, post.raw, { raw: true, full: true });
     });
   },
 

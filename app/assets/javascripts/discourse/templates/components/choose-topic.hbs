@@ -1,17 +1,17 @@
-<label for='choose-topic-title'>{{i18n labelText}}</label>
+<label for="choose-topic-title">{{i18n labelText}}</label>
 
 {{text-field value=topicTitle placeholderKey="choose_topic.title.placeholder" id="choose-topic-title"}}
 
 {{#if loading}}
-  <p>{{i18n 'loading'}}</p>
+  <p>{{i18n "loading"}}</p>
 {{else}}
   {{#if noResults}}
-    <p>{{i18n 'choose_topic.none_found'}}</p>
+    <p>{{i18n "choose_topic.none_found"}}</p>
   {{else}}
     {{#each topics as |t|}}
-      <div class='controls existing-topic'>
-        <label class='radio'>
-          <input type='radio' id="choose-topic-{{t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>
+      <div class="controls existing-topic">
+        <label class="radio">
+          <input id="choose-topic-{{t.id}}" {{action "chooseTopic" t}} type="radio" name="choose_topic_id">
           {{raw "topic-status" topic=t}}
           <span class="topic-title">
             {{t.title}}

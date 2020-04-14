@@ -1,10 +1,12 @@
 import { logIn } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
+import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 let BookmarkController;
 
 moduleFor("controller:bookmark", {
   beforeEach() {
     logIn();
+    KeyboardShortcutInitializer.initialize(Discourse.__container__);
     BookmarkController = this.subject({ currentUser: User.current() });
     BookmarkController.onShow();
   },
@@ -27,8 +29,18 @@ QUnit.test("showLaterToday when later today is tomorrow do not show", function(
   assert.equal(BookmarkController.get("showLaterToday"), false);
 });
 
-QUnit.test("showLaterToday when later today is after 5pm", function(assert) {
-  mockMomentTz("2019-12-11T15:00:00");
+QUnit.test(
+  "showLaterToday when later today is after 5pm but before 6pm",
+  function(assert) {
+    mockMomentTz("2019-12-11T15:00:00");
+    assert.equal(BookmarkController.get("showLaterToday"), true);
+  }
+);
+
+QUnit.test("showLaterToday when now is after the cutoff time (5pm)", function(
+  assert
+) {
+  mockMomentTz("2019-12-11T17:00:00");
   assert.equal(BookmarkController.get("showLaterToday"), false);
 });
 
@@ -112,13 +124,13 @@ QUnit.test(
 );
 
 QUnit.test(
-  "laterToday gets 3 hours from now and if before half-past, it sets the time to half-past",
+  "laterToday gets 3 hours from now and if before half-past, it rounds down",
   function(assert) {
     mockMomentTz("2019-12-11T08:13:00");
 
     assert.equal(
       BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
-      "2019-12-11 11:30:00"
+      "2019-12-11 11:00:00"
     );
   }
 );
@@ -134,6 +146,53 @@ QUnit.test(
     );
   }
 );
+
+QUnit.test(
+  "laterToday is capped to 6pm. later today at 3pm = 6pm, 3:30pm = 6pm, 4pm = 6pm, 4:59pm = 6pm",
+  function(assert) {
+    mockMomentTz("2019-12-11T15:00:00");
+
+    assert.equal(
+      BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
+      "2019-12-11 18:00:00",
+      "3pm should max to 6pm"
+    );
+
+    mockMomentTz("2019-12-11T15:31:00");
+
+    assert.equal(
+      BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
+      "2019-12-11 18:00:00",
+      "3:30pm should max to 6pm"
+    );
+
+    mockMomentTz("2019-12-11T16:00:00");
+
+    assert.equal(
+      BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
+      "2019-12-11 18:00:00",
+      "4pm should max to 6pm"
+    );
+
+    mockMomentTz("2019-12-11T16:59:00");
+
+    assert.equal(
+      BookmarkController.laterToday().format("YYYY-MM-DD HH:mm:ss"),
+      "2019-12-11 18:00:00",
+      "4:59pm should max to 6pm"
+    );
+  }
+);
+
+QUnit.test("showLaterToday returns false if >= 5PM", function(assert) {
+  mockMomentTz("2019-12-11T17:00:01");
+  assert.equal(BookmarkController.showLaterToday, false);
+});
+
+QUnit.test("showLaterToday returns false if >= 5PM", function(assert) {
+  mockMomentTz("2019-12-11T17:00:01");
+  assert.equal(BookmarkController.showLaterToday, false);
+});
 
 QUnit.test(
   "reminderAt - custom - defaults to 8:00am if the time is not selected",
