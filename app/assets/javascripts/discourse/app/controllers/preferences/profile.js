@@ -53,6 +53,11 @@ export default Controller.extend({
     return canChangeLocation;
   },
 
+  @discourseComputed("model.can_change_website")
+  canChangeWebsite(canChangeWebsite) {
+    return canChangeWebsite;
+  },
+
   actions: {
     showFeaturedTopicModal() {
       showModal("feature-topic-on-profile", {
