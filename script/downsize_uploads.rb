@@ -79,7 +79,7 @@ def downsize_upload(upload, path)
     puts "is a new file: #{new_file}"
   end
 
-  any_issues = false
+  success = true
   posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
 
   posts.each do |post|
@@ -97,7 +97,7 @@ def downsize_upload(upload, path)
       puts "Already processed"
     else
       puts "Could not find the upload URL in post #{post.id}" if ENV["VERBOSE"]
-      any_issues = true
+      success = false
     end
 
     puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
@@ -125,11 +125,11 @@ def downsize_upload(upload, path)
     elsif ThemeField.where(upload_id: original_upload.id).count
       puts "Used as a ThemeField"
     else
-      any_issues = true
+      success = false
     end
   end
 
-  if any_issues == true
+  unless success
     print "Press any key to continue with the upload"
     STDIN.beep
     STDIN.getch
