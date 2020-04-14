@@ -459,6 +459,7 @@ login:
   email_domains_whitelist:
     default: ""
     type: list
+  enforce_canonical_emails: false
   auto_approve_email_domains:
     default: ""
     type: list
