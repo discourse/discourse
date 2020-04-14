@@ -438,9 +438,13 @@ const Topic = RestModel.extend({
       const toggleBookmarkOnServer = () => {
         if (bookmark) {
           if (this.siteSettings.enable_bookmarks_with_reminders) {
-            return firstPost.toggleBookmarkWithReminder().then(() => {
+            return firstPost.toggleBookmarkWithReminder().then(response => {
               this.set("bookmarking", false);
-              return this.afterTopicBookmarked(firstPost);
+              if (response.closedWithoutSaving) {
+                this.set("bookmarked", false);
+              } else {
+                return this.afterTopicBookmarked(firstPost);
+              }
             });
           } else {
             return ajax(`/t/${this.id}/bookmark`, { type: "PUT" })
