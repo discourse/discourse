@@ -1,6 +1,7 @@
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
+import toMarkdown from "discourse/lib/to-markdown";
 import { selectedText, selectedElement } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
@@ -38,11 +39,12 @@ export default Component.extend({
     let firstRange, postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
-
-      if ($(range.startContainer.parentNode).closest(".cooked").length === 0)
-        return;
-
+      const $selectionStart = $(range.startContainer);
       const $ancestor = $(range.commonAncestorContainer);
+
+      if ($selectionStart.closest(".cooked").length === 0) {
+        return;
+      }
 
       firstRange = firstRange || range;
       postId = postId || $ancestor.closest(".boxed, .reply").data("post-id");
@@ -55,9 +57,21 @@ export default Component.extend({
       }
     }
 
-    let opts = { raw: true };
+    const _selectedElement = selectedElement();
+    const _selectedText = selectedText();
+
+    const $selectedElement = $(_selectedElement);
+    const cooked =
+      $selectedElement.find(".cooked")[0] ||
+      $selectedElement.closest(".cooked")[0];
+    const postBody = toMarkdown(cooked.innerHTML);
+
+    let opts = {
+      full: _selectedText === postBody
+    };
+
     for (
-      let element = selectedElement();
+      let element = _selectedElement;
       element && element.tagName !== "ARTICLE";
       element = element.parentElement
     ) {
@@ -69,7 +83,6 @@ export default Component.extend({
       }
     }
 
-    const _selectedText = selectedText();
     quoteState.selected(postId, _selectedText, opts);
     this.set("visible", quoteState.buffer.length > 0);
 
@@ -186,8 +199,7 @@ export default Component.extend({
   },
 
   click() {
-    const { postId, buffer, opts } = this.quoteState;
-    this.attrs.selectText(postId, buffer, opts).then(() => this._hideButton());
+    this.attrs.selectText().then(() => this._hideButton());
     return false;
   }
 });

@@ -1381,6 +1381,9 @@ en:
         back: "Go Back"
         again: "Try Again"
         fixed: "Load Page"
+    modal:
+      close: "close"
+      dismiss_error: "Dismiss error"
     close: "Close"
     assets_changed_confirm: "This site was just updated. Refresh now for the latest version?"
     logout: "You were logged out."
@@ -2439,6 +2442,19 @@ en:
         action: "merge selected posts"
         error: "There was an error merging the selected posts."
 
+      publish_page:
+        title: "Page Publishing"
+        publish: "Publish"
+        description: "When a topic is published as a page, its URL can be shared and it will displayed with custom styling."
+        slug: "Slug"
+        publish_url: "Your page has been published at:"
+        topic_published: "Your topic has been published at:"
+        preview_url: "Your page will be published at:"
+        invalid_slug: "Sorry, you can't publish this page."
+        unpublish: "Unpublish"
+        unpublished: "Your page has been unpublished and is no longer accessible."
+        publishing_settings: "Publishing Settings"
+
       change_owner:
         title: "Change Owner"
         action: "change ownership"
@@ -2591,6 +2607,7 @@ en:
         convert_to_moderator: "Add Staff Color"
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
+        publish_page: "Page Publishing"
         unhide: "Unhide"
         change_owner: "Change Ownership"
         grant_badge: "Grant Badge"
@@ -3545,6 +3562,9 @@ en:
         notification_event:
           name: "Notification Event"
           details: "When a user receives a notification in their feed."
+        user_badge_event:
+          name: "Badge Grant Event"
+          details: "When a user receives a badge."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -4083,6 +4103,8 @@ en:
             api_key_update: "api key update"
             api_key_destroy: "api key destroy"
             override_upload_secure_status: "override upload secure status"
+            page_published: "page published"
+            page_unpublished: "page unpublished"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -4598,6 +4620,7 @@ en:
         embed_post_limit: "Maximum number of posts to embed"
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
+        embed_unlisted: "Imported topics will be unlisted until there is a reply."
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
         embed_classname_whitelist: "Allowed CSS class names"

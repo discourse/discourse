@@ -1490,8 +1490,8 @@ en:
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
-    summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
-    summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
+    summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
+    summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summarize This Topic'"
 
@@ -2068,6 +2068,7 @@ en:
     embed_topics_list: "Support HTML embedding of topics lists"
     embed_set_canonical_url: "Set the canonical URL for embeded topics to the embeded content's URL."
     embed_truncate: "Truncate the embedded posts."
+    embed_unlisted: "Imported topics will be unlisted until a user replies."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
@@ -2107,6 +2108,7 @@ en:
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
+    enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
@@ -2298,6 +2300,12 @@ en:
 
   change_owner:
     post_revision_text: "Ownership transferred"
+
+  publish_page:
+    slug_errors:
+      blank: "can't be blank"
+      unavailable: "is unavailable"
+      invalid: "contains invalid characters"
 
   topic_statuses:
     autoclosed_message_max_posts:

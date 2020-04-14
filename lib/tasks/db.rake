@@ -75,13 +75,11 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     Rake::Task['db:_dump'].invoke
   end
 
+  SeedFu.quiet = true
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
   if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
-    puts
-    print "Optimizing site icons... "
     SiteIconManager.ensure_optimized!
-    puts "Done"
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?

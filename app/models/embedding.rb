@@ -10,6 +10,7 @@ class Embedding < OpenStruct
        embed_post_limit
        embed_title_scrubber
        embed_truncate
+       embed_unlisted
        embed_whitelist_selector
        embed_blacklist_selector
        embed_classname_whitelist)

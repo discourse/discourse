@@ -56,9 +56,7 @@
 {{/d-section}}
 
 <section class='user-content'>
-
-<div class="list-actions">
-
+  <div class="list-actions">
     {{#unless site.mobileView}}
       {{#if showToggleBulkSelect}}
         {{d-button
@@ -106,7 +104,6 @@
         onChange=(action "changeGroupNotificationLevel")
       }}
     {{/if}}
-</div>
-
-{{outlet}}
+  </div>
+  {{outlet}}
 </section>

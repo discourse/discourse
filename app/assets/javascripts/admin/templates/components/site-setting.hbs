@@ -1,8 +1,8 @@
 <div class='setting-label'>
-   <h3>{{settingName}}</h3>
-   {{#if defaultIsAvailable}}
-     <a href onClick={{action 'setDefaultValues'}}>{{setting.setDefaultValuesLabel}}</a>
-   {{/if}}
+  <h3>{{settingName}}</h3>
+  {{#if defaultIsAvailable}}
+    <a href onClick={{action 'setDefaultValues'}}>{{setting.setDefaultValuesLabel}}</a>
+  {{/if}}
 </div>
 <div class="setting-value">
   {{component componentName setting=setting value=buffered.value validationMessage=validationMessage preview=preview isSecret=isSecret allowAny=allowAny}}

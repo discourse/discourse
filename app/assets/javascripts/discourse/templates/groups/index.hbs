@@ -61,15 +61,15 @@
                   <div class="group-membership">
                     {{#group-membership-button tagName='' model=group showLogin=(route-action "showLogin")}}
                       {{#if group.is_group_owner}}
-                      <span class="is-group-owner">
-                        {{d-icon "shield-alt"}}
-                        {{i18n "groups.index.is_group_owner"}}
-                      </span>
+                        <span class="is-group-owner">
+                          {{d-icon "shield-alt"}}
+                          {{i18n "groups.index.is_group_owner"}}
+                        </span>
                       {{else if group.is_group_user}}
-                      <span class="is-group-member">
-                        {{d-icon "check"}}
-                        {{i18n "groups.index.is_group_user"}}
-                      </span>
+                        <span class="is-group-member">
+                          {{d-icon "check"}}
+                          {{i18n "groups.index.is_group_user"}}
+                        </span>
                       {{else if group.public_admission}}
                         {{i18n 'groups.index.public'}}
                       {{else if group.isPrivate}}

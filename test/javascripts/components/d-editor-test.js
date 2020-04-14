@@ -1,4 +1,5 @@
 import { next } from "@ember/runloop";
+import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import componentTest from "helpers/component-test";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import formatTextWithSelection from "helpers/d-editor-helper";
@@ -583,7 +584,7 @@ testCase(`list button with line sequence`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 18);
 });
 
-componentTest("clicking the toggle-direction button toggles the direction", {
+componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
   template: "{{d-editor value=value}}",
   beforeEach() {
     this.siteSettings.support_mixed_text_direction = true;
@@ -594,8 +595,21 @@ componentTest("clicking the toggle-direction button toggles the direction", {
     const textarea = find("textarea.d-editor-input");
     await click("button.toggle-direction");
     assert.equal(textarea.attr("dir"), "rtl");
+  }
+});
+
+componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
+  template: "{{d-editor value=value}}",
+  beforeEach() {
+    this.siteSettings.support_mixed_text_direction = true;
+    this.siteSettings.default_locale = "en_US";
+  },
+
+  async test(assert) {
+    const textarea = find("textarea.d-editor-input");
+    textarea.attr("dir", "ltr");
     await click("button.toggle-direction");
-    assert.equal(textarea.attr("dir"), "ltr");
+    assert.equal(textarea.attr("dir"), "rtl");
   }
 });
 
@@ -633,6 +647,11 @@ componentTest("emoji", {
     });
     this.set("value", "hello world.");
   },
+
+  afterEach() {
+    clearToolbarCallbacks();
+  },
+
   async test(assert) {
     jumpEnd(find("textarea.d-editor-input")[0]);
     await click("button.emoji");

@@ -5,7 +5,7 @@ import { cancel, later, next, throttle } from "@ember/runloop";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import { throwAjaxError } from "discourse/lib/ajax-error";
-import Quote from "discourse/lib/quote";
+import { QUOTE_REGEXP } from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
 import discourseComputed, {
   observes,
@@ -517,10 +517,10 @@ const Composer = RestModel.extend({
       return reply.length;
     }
 
-    while (Quote.REGEXP.test(reply)) {
+    while (QUOTE_REGEXP.test(reply)) {
       // make it global so we can strip as many quotes at once
       // keep in mind nested quotes mean we still need a loop here
-      const regex = new RegExp(Quote.REGEXP.source, "img");
+      const regex = new RegExp(QUOTE_REGEXP.source, "img");
       reply = reply.replace(regex, "");
     }
 

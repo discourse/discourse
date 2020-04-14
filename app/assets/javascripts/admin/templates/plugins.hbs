@@ -1,17 +1,17 @@
-  <div class='admin-controls'>
-
+<div class='admin-controls'>
   <div class='controls'>
     {{d-button action=(action "toggleMenu") class="menu-toggle" icon="bars"}}
 
-  {{#if currentUser.admin}}
-    {{d-button label="admin.plugins.change_settings"
-               icon="cog"
-               class="btn-default settings-button"
-               action=(route-action "showSettings")}}
-  {{/if}}
+    {{#if currentUser.admin}}
+      {{d-button
+        label="admin.plugins.change_settings"
+        icon="cog"
+        class="btn-default settings-button"
+        action=(route-action "showSettings")
+      }}
+    {{/if}}
   </div>
-
-  </div>
+</div>
 
 <div class="admin-nav pull-left">
   <ul class="nav nav-stacked">

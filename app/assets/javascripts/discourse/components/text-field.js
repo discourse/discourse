@@ -71,6 +71,27 @@ export default TextField.extend({
     }
   },
 
+  didReceiveAttrs() {
+    this._super(...arguments);
+    this._prevValue = this.value;
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+    if (this._prevValue !== this.value) {
+      if (this.onChangeImmediate) {
+        next(() => this.onChangeImmediate(this.value));
+      }
+      if (this.onChange) {
+        debounce(this, this._debouncedChange, DEBOUNCE_MS);
+      }
+    }
+  },
+
+  _debouncedChange() {
+    next(() => this.onChange(this.value));
+  },
+
   @discourseComputed("placeholderKey")
   placeholder: {
     get() {

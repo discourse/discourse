@@ -74,6 +74,16 @@ end
   end
 end
 
+%i(
+  user_badge_granted
+).each do |event|
+  # user_badge_revoked
+  DiscourseEvent.on(event) do |badge, user_id|
+    ub = UserBadge.find_by(badge: badge, user_id: user_id)
+    WebHook.enqueue_object_hooks(:user_badge, ub, event, UserBadgeSerializer)
+  end
+end
+
 DiscourseEvent.on(:reviewable_created) do |reviewable|
   WebHook.enqueue_object_hooks(:reviewable, reviewable, :reviewable_created, reviewable.serializer)
 end
