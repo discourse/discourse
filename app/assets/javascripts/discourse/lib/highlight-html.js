@@ -1,3 +1,5 @@
+import { makeArray } from "discourse-common/lib/helpers";
+
 function highlight(node, pattern, nodeName, className) {
   if (
     ![Node.ELEMENT_NODE, Node.TEXT_NODE].includes(node.nodeType) ||
@@ -41,7 +43,7 @@ export default function(node, words, opts = {}) {
   };
 
   settings = Object.assign({}, settings, opts);
-  words = Ember.makeArray(words)
+  words = makeArray(words)
     .filter(Boolean)
     .map(word => word.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"));
 
