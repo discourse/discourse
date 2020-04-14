@@ -95,7 +95,8 @@ def downsize_upload(upload, path)
       end
     elsif post.raw.include?(upload.short_url)
       puts "Already processed"
-    else
+    elsif !post.trashed?
+      # Ignore issues with deleted posts
       puts "Could not find the upload URL in post #{post.id}" if ENV["VERBOSE"]
       success = false
     end
