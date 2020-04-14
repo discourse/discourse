@@ -43,7 +43,7 @@ module.exports = {
     "no-unnecessary-concat": true,
     "no-unnecessary-component-helper": true,
     "no-unused-block-params": true,
-    "quotes": false,
+    quotes: "double",
     "require-button-type": false,
     "require-iframe-title": true,
     "require-valid-alt-text": false,

@@ -14,12 +14,12 @@
       <div class="names">
         <span>
           <h1 class={{group.name}}>
-            <a href={{groupPath}} {{action "showGroup" group}} class='group-page-link'>{{group.name}}</a>
+            <a href={{groupPath}} {{action "showGroup" group}} class="group-page-link">{{group.name}}</a>
           </h1>
           {{#if group.full_name}}
-            <h2 class='full-name'>{{group.full_name}}</h2>
+            <h2 class="full-name">{{group.full_name}}</h2>
           {{else}}
-            <h2 class='username'>{{group.name}}</h2>
+            <h2 class="username">{{group.name}}</h2>
           {{/if}}
         </span>
       </div>
@@ -45,7 +45,7 @@
 
     {{#if group.bio_cooked}}
       <div class="card-row second-row">
-        <div class='bio'>{{html-safe group.bio_cooked}}</div>
+        <div class="bio">{{html-safe group.bio_cooked}}</div>
       </div>
     {{/if}}
 
@@ -54,7 +54,7 @@
         <div class="metadata">
           <h3>
             <span class="desc">
-              {{i18n 'groups.user_count'}}
+              {{i18n "groups.user_count"}}
             </span>
             {{group.user_count}}
           </h3>
@@ -73,7 +73,7 @@
       <div class="card-row fourth-row">
         <div class="members metadata">
           {{#each group.members as |user|}}
-            <a href {{action 'showUser' user}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
+            <a href {{action "showUser" user}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
           {{/each}}
           {{#if showMoreMembers}}
             <a href={{groupPath}} {{action "showGroup" group}} class="more-members-link">

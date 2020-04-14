@@ -2,7 +2,7 @@
   {{#conditional-loading-spinner condition=loadingUser}}
 
     {{#if user.canSuspend}}
-      <div class='until-controls'>
+      <div class="until-controls">
         <label>
           {{future-date-input
             class="suspend-until"
@@ -24,7 +24,7 @@
       {{/if}}
 
     {{else}}
-      <div class='cant-suspend'>
+      <div class="cant-suspend">
         {{i18n "admin.user.cant_suspend"}}
       </div>
     {{/if}}

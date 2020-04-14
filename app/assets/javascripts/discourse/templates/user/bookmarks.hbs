@@ -1,5 +1,5 @@
 {{#if noContent}}
-  <div class='alert alert-info'>{{noResultsHelp}}</div>
+  <div class="alert alert-info">{{noResultsHelp}}</div>
 {{else}}
   {{#conditional-loading-spinner condition=loading}}
     {{#load-more selector=".bookmark-list tr" action=(action "loadMore")}}

@@ -1,17 +1,17 @@
 {{#load-more selector=".email-list tr" action=(action "loadMore")}}
-  <table class='table email-list'>
+  <table class="table email-list">
     <thead>
       <tr>
-        <th>{{i18n 'admin.email.time'}}</th>
-        <th>{{i18n 'admin.email.incoming_emails.from_address'}}</th>
-        <th>{{i18n 'admin.email.incoming_emails.to_addresses'}}</th>
-        <th>{{i18n 'admin.email.incoming_emails.subject'}}</th>
+        <th>{{i18n "admin.email.time"}}</th>
+        <th>{{i18n "admin.email.incoming_emails.from_address"}}</th>
+        <th>{{i18n "admin.email.incoming_emails.to_addresses"}}</th>
+        <th>{{i18n "admin.email.incoming_emails.subject"}}</th>
       </tr>
     </thead>
 
     <tbody>
       <tr class="filters">
-        <td>{{i18n 'admin.email.logs.filters.title'}}</td>
+        <td>{{i18n "admin.email.logs.filters.title"}}</td>
         <td>{{text-field value=filter.from placeholderKey="admin.email.incoming_emails.filters.from_placeholder"}}</td>
         <td>{{text-field value=filter.to placeholderKey="admin.email.incoming_emails.filters.to_placeholder"}}</td>
         <td>{{text-field value=filter.subject placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"}}</td>
@@ -23,7 +23,7 @@
           <td class="username">
             <div>
               {{#if email.user}}
-                {{#link-to 'adminUser' email.user}}
+                {{#link-to "adminUser" email.user}}
                   {{avatar email.user imageSize="tiny"}}
                   {{email.from_address}}
                 {{/link-to}}
@@ -49,7 +49,7 @@
           </td>
         </tr>
       {{else}}
-        <tr><td colspan="4">{{i18n 'admin.email.incoming_emails.none'}}</td></tr>
+        <tr><td colspan="4">{{i18n "admin.email.incoming_emails.none"}}</td></tr>
       {{/each}}
     </tbody>
   </table>

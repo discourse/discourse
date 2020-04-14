@@ -34,7 +34,7 @@
             flairColor=user.primary_group_flair_color
             groupName=user.primary_group_name}}
           {{/if}}
-          {{plugin-outlet name="user-card-avatar-flair" args=(hash user=user) tagName='div'}}
+          {{plugin-outlet name="user-card-avatar-flair" args=(hash user=user) tagName="div"}}
         </div>
         <div class="names">
           <h1 class="{{staff}} {{newUser}} {{if nameFirst "full-name" "username"}}">
@@ -43,7 +43,7 @@
                 {{if nameFirst user.name (format-username username)}}
               </span>
             {{else}}
-              <a href={{user.path}} {{action "showUser" user}} class='user-profile-link'>
+              <a href={{user.path}} {{action "showUser" user}} class="user-profile-link">
                 <span class="name-username-wrapper">
                   {{if nameFirst user.name (format-username username)}}
                 </span>
@@ -51,25 +51,25 @@
               </a>
             {{/if}}
           </h1>
-          {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser" user)) tagName=''}}
+          {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser" user)) tagName=""}}
           {{#if nameFirst}}
-            <h2 class='username'>{{username}}</h2>
+            <h2 class="username">{{username}}</h2>
           {{else}}
             {{#if user.name}}
-              <h2 class='full-name'>{{user.name}}</h2>
+              <h2 class="full-name">{{user.name}}</h2>
             {{/if}}
           {{/if}}
           {{#if user.title}}
             <h2>{{user.title}}</h2>
           {{/if}}
           {{#if user.staged}}
-            <h2 class="staged">{{i18n 'user.staged'}}</h2>
+            <h2 class="staged">{{i18n "user.staged"}}</h2>
           {{/if}}
-          {{plugin-outlet name="user-card-post-names" args=(hash user=user) tagName='div'}}
+          {{plugin-outlet name="user-card-post-names" args=(hash user=user) tagName="div"}}
         </div>
         <ul class="usercard-controls">
           {{#if user.can_send_private_message_to_user}}
-            <li class='compose-pm'>
+            <li class="compose-pm">
               {{d-button
               class="btn-primary"
               action=(action "composePM" user post)
@@ -113,7 +113,7 @@
 
       {{#if user.profile_hidden}}
         <div class="card-row second-row">
-          <div class='profile-hidden'>
+          <div class="profile-hidden">
             <span>{{i18n "user.profile_hidden"}}</span>
           </div>
         </div>
@@ -122,19 +122,19 @@
       {{#if isSuspendedOrHasBio}}
         <div class="card-row second-row">
           {{#if user.suspend_reason}}
-            <div class='suspended'>
+            <div class="suspended">
               <div class="suspension-date">
                 {{d-icon "ban"}}
-                {{i18n 'user.suspended_notice' date=user.suspendedTillDate}}
+                {{i18n "user.suspended_notice" date=user.suspendedTillDate}}
               </div>
-              <div class='suspension-reason'>
-                <span class="suspension-reason-title">{{i18n 'user.suspended_reason'}}</span>
+              <div class="suspension-reason">
+                <span class="suspension-reason-title">{{i18n "user.suspended_reason"}}</span>
                 <span class="suspension-reason-description">{{user.suspend_reason}}</span>
               </div>
             </div>
           {{else}}
             {{#if user.bio_excerpt}}
-              <div class='bio'>{{text-overflow class="overflow" text=user.bio_excerpt}}</div>
+              <div class="bio">{{text-overflow class="overflow" text=user.bio_excerpt}}</div>
             {{/if}}
           {{/if}}
         </div>
@@ -143,7 +143,7 @@
       {{#if showFeaturedTopic}}
         <div class="card-row">
           <div class="featured-topic">
-            <span class="desc">{{i18n 'user.featured_topic'}}</span>
+            <span class="desc">{{i18n "user.featured_topic"}}</span>
             {{#link-to "topic" user.featured_topic.slug user.featured_topic.id }}{{html-safe (replace-emoji user.featured_topic.fancy_title)}}{{/link-to}}
           </div>
         </div>
@@ -153,13 +153,13 @@
         <div class="card-row">
           <div class="location-and-website">
             {{#if user.location}}
-              <span class='location'>
+              <span class="location">
                 {{d-icon "map-marker-alt"}}
                 <span>{{user.location}}</span>
               </span>
             {{/if}}
             {{#if user.website_name}}
-              <span class='website-name'>
+              <span class="website-name">
                 {{d-icon "globe"}}
                 {{#if linkWebsite}}
                   {{!-- template-lint-disable  --}}

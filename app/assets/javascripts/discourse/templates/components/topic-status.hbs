@@ -1,32 +1,32 @@
 {{~#if topicClosedArchived~}}
-  <span class='topic-status' title={{closedArchivedTitle}}>{{closedArchivedIcon}}</span>
+  <span title={{closedArchivedTitle}} class="topic-status">{{closedArchivedIcon}}</span>
 {{~/if~}}
 {{~#if closedIcon~}}
-  <span class='topic-status' title={{closedTitle}}>{{closedIcon}}</span>
+  <span title={{closedTitle}} class="topic-status">{{closedIcon}}</span>
 {{~/if~}}
 {{~#if archivedIcon~}}
-  <span class='topic-status' title={{archivedTitle}}>{{archivedIcon}}</span>
+  <span title={{archivedTitle}} class="topic-status">{{archivedIcon}}</span>
 {{~/if~}}
 {{~#if topicPrivateMessage~}}
-  <span class='topic-status' title={{privateMessageTitle}}>{{privateMessageIcon}}</span>
+  <span title={{privateMessageTitle}} class="topic-status">{{privateMessageIcon}}</span>
 {{~/if~}}
 {{~#if topicWarning~}}
-  <span class='topic-status topic-status-warning' title={{warningTitle}}>{{warningIcon}}</span>
+  <span title={{warningTitle}} class="topic-status topic-status-warning">{{warningIcon}}</span>
 {{~/if~}}
 {{~#if topicPinned~}}
   {{~#if canAct~}}
-    <a href="" class='topic-status' title={{pinnedTitle}}>{{pinnedIcon}}</a>
+    <a href="" title={{pinnedTitle}} class="topic-status">{{pinnedIcon}}</a>
   {{~else~}}
-    <span class='topic-status' title={{pinnedTitle}}>{{pinnedIcon}}</span>
+    <span title={{pinnedTitle}} class="topic-status">{{pinnedIcon}}</span>
   {{~/if~}}
 {{~/if~}}
 {{~#if topicUnpinned~}}
   {{~#if canAct~}}
-    <a href="" class='topic-status' title={{unpinnedTitle}}>{{unpinnedIcon}}</a>
+    <a href="" title={{unpinnedTitle}} class="topic-status">{{unpinnedIcon}}</a>
   {{~else~}}
-    <span class='topic-status' title={{unpinnedTitle}}>{{unpinnedIcon}}</span>
+    <span title={{unpinnedTitle}} class="topic-status">{{unpinnedIcon}}</span>
   {{~/if~}}
 {{~/if~}}
 {{~#if topicInvisible~}}
-  <span class='topic-status' title={{invisibleTitle}}>{{invisibleIcon}}</span>
+  <span title={{invisibleTitle}} class="topic-status">{{invisibleIcon}}</span>
 {{~/if~}}

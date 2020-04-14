@@ -1,8 +1,8 @@
-<label class="control-label">{{i18n 'user.users'}}</label>
+<label class="control-label">{{i18n "user.users"}}</label>
 {{#if ignoredEnabled}}
   <div class="control-group user-ignore">
     <div class="controls tracking-controls user-notifications">
-      <label>{{d-icon "far-eye-slash" class="icon"}} {{i18n 'user.ignored_users'}}</label>
+      <label>{{d-icon "far-eye-slash" class="icon"}} {{i18n "user.ignored_users"}}</label>
       {{ignored-user-list model=model items=model.ignored_usernames saving=saved}}
     </div>
   </div>
@@ -12,7 +12,7 @@
   <div class="controls tracking-controls">
     <label>
       {{d-icon "d-muted" class="icon"}}
-      <span>{{i18n 'user.muted_users'}}</span>
+      <span>{{i18n "user.muted_users"}}</span>
     </label>
     {{user-chooser
       value=mutedUsernames
@@ -22,7 +22,7 @@
       )
     }}
   </div>
-  <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
+  <div class="instructions">{{i18n "user.muted_users_instructions"}}</div>
 </div>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}

@@ -3,19 +3,19 @@
     topicId=topicId
     onChangeCallback=(action "triggerResize")
     id="private-message-users"
-    includeMessageableGroups='true'
+    includeMessageableGroups="true"
     placeholderKey="composer.users_placeholder"
     tabindex="1"
     usernames=usernames
     hasGroups=hasGroups
-    allowEmails='true'
+    allowEmails="true"
     autocomplete="discourse"
   }}
 {{else}}
   <a href {{action "toggleSelector"}}>
-    <div class='ac-wrap composer-user-selector-limited'>
+    <div class="ac-wrap composer-user-selector-limited">
       <span>{{limitedUsernames}}</span>
-      <span class='btn btn-primary'>{{hiddenUsersCount}}</span>
+      <span class="btn btn-primary">{{hiddenUsersCount}}</span>
     </div>
   </a>
 {{/if}}
