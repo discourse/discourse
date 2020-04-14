@@ -27,6 +27,7 @@ class WebHookUserSerializer < UserSerializer
     gravatar_avatar_upload_id
     custom_avatar_upload_id
     can_change_bio
+    can_change_location
     user_api_keys
     group_users
     user_auth_tokens

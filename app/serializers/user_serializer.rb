@@ -51,6 +51,7 @@ class UserSerializer < UserCardSerializer
                      :ignored_usernames,
                      :mailing_list_posts_per_day,
                      :can_change_bio,
+                     :can_change_location,
                      :user_api_keys,
                      :user_auth_tokens
 
@@ -106,6 +107,10 @@ class UserSerializer < UserCardSerializer
 
   def can_change_bio
     !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
+  end
+
+  def can_change_location
+    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_location)
   end
 
   def user_api_keys
