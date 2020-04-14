@@ -76,9 +76,9 @@ export function unhighlightHTML(opts = {}) {
 
   document
     .querySelectorAll(`${settings.nodeName}.${settings.className}`)
-    .forEach(e => {
-      const parentNode = e.parentNode;
-      parentNode.replaceChild(e.firstChild, e);
+    .forEach(element => {
+      const parentNode = element.parentNode;
+      parentNode.replaceChild(element.firstChild, element);
       parentNode.normalize();
     });
 }

@@ -52,17 +52,18 @@ export default class PostCooked {
   }
 
   _applySearchHighlight($html) {
+    const html = $html[0];
     const highlight = this.attrs.highlightTerm;
 
     if (highlight && highlight.length > 2) {
       if (this._highlighted) {
-        unhighlightHTML($html[0]);
+        unhighlightHTML(html);
       }
 
-      highlightSearch($html[0], highlight, { defaultClassName: true });
+      highlightSearch(html, highlight, { defaultClassName: true });
       this._highlighted = true;
     } else if (this._highlighted) {
-      unhighlightHTML($html[0]);
+      unhighlightHTML(html);
       this._highlighted = false;
     }
   }
