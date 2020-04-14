@@ -71,6 +71,26 @@ class Report
     available_filters.delete(name)
   end
 
+  def add_category_filter
+    category_id = filters.dig('category')
+    add_filter('category', default: category_id)
+
+    if category_id.present?
+      include_subcategories = filters.dig('include-subcategories')
+      add_filter('include-subcategories', default: include_subcategories)
+    end
+
+    # Cast only happens here because all filters must be strings
+    if category_id.present?
+      category_id = category_id.to_i
+      include_subcategories = !!ActiveRecord::Type::Boolean.new.cast(include_subcategories)
+    else
+      include_subcategories = false
+    end
+
+    [category_id, include_subcategories]
+  end
+
   def self.clear_cache(type = nil)
     pattern = type ? "reports:#{type}:*" : "reports:*"
 
