@@ -141,4 +141,23 @@ describe ThemesInstallTask do
       end
     end
   end
+  describe '#theme_exists?' do
+    it 'can use https or ssh and find the same repo' do
+      remote_theme = RemoteTheme.create!(
+        remote_url: "https://github.com/org/testtheme.git",
+        local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
+        remote_version: "21122230dbfed804067849393c3332083ddd0c07",
+        commits_behind: 2
+      )
+      Fabricate(:theme, remote_theme: remote_theme)
+
+      # https
+      installer = ThemesInstallTask.new({ "url": "https://github.com/org/testtheme" })
+      expect(installer.theme_exists?).to eq(true)
+
+      # ssh
+      installer = ThemesInstallTask.new({ "url": "git@github.com:org/testtheme.git" })
+      expect(installer.theme_exists?).to eq(true)
+    end
+  end
 end
