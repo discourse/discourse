@@ -1,4 +1,5 @@
 import { inject as service } from "@ember/service";
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { on, observes } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -16,23 +17,16 @@ const { run } = Ember;
 const PER_ROW = 11;
 function customEmojis() {
   const list = extendedEmojiList();
-  const emojis = Object.keys(list)
-    .map(code => {
-      const { group } = list[code];
-      return {
-        code,
-        src: emojiUrlFor(code),
-        group,
-        key: `emoji_picker.${group || "default"}`
-      };
-    })
-    .reduce((acc, curr) => {
-      if (!acc[curr.group]) acc[curr.group] = [];
-      acc[curr.group].push(curr);
-      return acc;
-    }, {});
-
-  return Object.values(emojis);
+  const groups = [];
+  Object.keys(list).forEach(code => {
+    const emoji = list[code];
+    groups[emoji.group] = groups[emoji.group] || [];
+    groups[emoji.group].push({
+      code,
+      src: emojiUrlFor(code)
+    });
+  });
+  return groups;
 }
 
 export default Component.extend({
@@ -42,9 +36,8 @@ export default Component.extend({
   close() {
     this._unbindEvents();
 
-    this.$picker
-      .css({ width: "", left: "", bottom: "", display: "none" })
-      .empty();
+    this.$picker &&
+      this.$picker.css({ width: "", left: "", bottom: "", display: "none" });
 
     this.$modal.removeClass("fadeIn");
 
@@ -52,11 +45,6 @@ export default Component.extend({
   },
 
   show() {
-    const template = findRawTemplate("emoji-picker")({
-      customEmojis: customEmojis()
-    });
-    this.$picker.html(template);
-
     this.$filter = this.$picker.find(".filter");
     this.$results = this.$picker.find(".results");
     this.$list = this.$picker.find(".list");
@@ -84,6 +72,7 @@ export default Component.extend({
 
   @on("init")
   _setInitialValues() {
+    this.set("customEmojis", customEmojis());
     this._checkTimeout = null;
     this.scrollPosition = 0;
     this.$visibleSections = [];
@@ -100,14 +89,21 @@ export default Component.extend({
 
   @on("didInsertElement")
   _setup() {
-    this.$picker = $(this.element.querySelector(".emoji-picker"));
-    this.$modal = $(this.element.querySelector(".emoji-picker-modal"));
     this.appEvents.on("emoji-picker:close", this, "_closeEmojiPicker");
   },
 
   @on("didUpdateAttrs")
   _setState() {
-    this.active ? this.show() : this.close();
+    schedule("afterRender", () => {
+      if (!this.element) {
+        return;
+      }
+
+      this.$picker = $(this.element.querySelector(".emoji-picker"));
+      this.$modal = $(this.element.querySelector(".emoji-picker-modal"));
+
+      this.active ? this.show() : this.close();
+    });
   },
 
   @observes("filter")
