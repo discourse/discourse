@@ -213,7 +213,6 @@
 .heatmap-high,
 .heatmap-high a {
   color: #ec7213 !important;
-  font-weight: bold;
 }
 .heatmap-med,
 .heatmap-med a {
@@ -222,6 +221,10 @@
 .heatmap-low,
 .heatmap-low a {
   color: #93704a !important;
+}
+
+.topic-list .heatmap-high {
+  font-weight: bold;
 }
 
 .loading .topic-list {
