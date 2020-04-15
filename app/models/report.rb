@@ -72,11 +72,11 @@ class Report
   end
 
   def add_category_filter
-    category_id = filters.dig('category')
+    category_id = filters.dig(:category)
     add_filter('category', default: category_id)
 
     if category_id.present?
-      include_subcategories = filters.dig('include-subcategories')
+      include_subcategories = filters.dig(:'include-subcategories')
       add_filter('include-subcategories', default: include_subcategories)
     end
 
@@ -305,7 +305,6 @@ class Report
   end
 
   def self.post_action_report(report, post_action_type)
-    category_filter = report.filters.dig(:category)
     category_id, include_subcategories = report.add_category_filter
 
     report.data = []
@@ -316,7 +315,7 @@ class Report
     countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
     if category_id
       if include_subcategories
-        countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(category_id))
+        countable = countable.joins(post: :topic).where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
       else
         countable = countable.joins(post: :topic).where('topics.category_id = ?', category_id)
       end

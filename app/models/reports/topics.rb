@@ -6,14 +6,7 @@ Report.add_report('topics') do |report|
   basic_report_about report, Topic, :listable_count_per_day, report.start_date, report.end_date, category_id, include_subcategories
 
   countable = Topic.listable_topics
-
-  if category_id
-    if include_subcategories
-      countable = countable.in_category_and_subcategories(category_id)
-    else
-      countable = countable.where(category_id: category_id)
-    end
-  end
+  countable = countable.where(category_id: include_subcategories ? Category.subcategory_ids(category_id) : category_id) if category_id
 
   add_counts report, countable, 'topics.created_at'
 end

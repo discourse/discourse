@@ -10,7 +10,7 @@ Report.add_report('posts') do |report|
   countable = Post.public_posts.where(post_type: Post.types[:regular])
   if category_id
     if include_subcategories
-      countable = countable.joins(:topic).merge(Topic.in_category_and_subcategories(category_id))
+      countable = countable.joins(:topic).where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
     else
       countable = countable.joins(:topic).where('topics.category_id = ?', category_id)
     end
