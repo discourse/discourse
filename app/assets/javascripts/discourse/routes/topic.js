@@ -1,6 +1,6 @@
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import { cancel, later, scheduleOnce } from "@ember/runloop";
+import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
@@ -326,9 +326,9 @@ const TopicRoute = DiscourseRoute.extend({
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get("id"), controller);
 
-    scheduleOnce("afterRender", () => {
-      this.appEvents.trigger("header:update-topic", model);
-    });
+    schedule("afterRender", () =>
+      this.appEvents.trigger("header:update-topic", model)
+    );
   }
 });
 

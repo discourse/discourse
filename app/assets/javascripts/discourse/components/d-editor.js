@@ -356,7 +356,7 @@ export default Component.extend({
         return;
       }
       this.set("preview", cooked);
-      scheduleOnce("afterRender", () => {
+      schedule("afterRender", () => {
         if (this._state !== "inDOM") {
           return;
         }
@@ -559,7 +559,7 @@ export default Component.extend({
   },
 
   _selectText(from, length) {
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       const textarea = this.element.querySelector("textarea.d-editor-input");
       const $textarea = $(textarea);
       const oldScrollPos = $textarea.scrollTop();
@@ -898,7 +898,7 @@ export default Component.extend({
   // ensures textarea scroll position is correct
   _focusTextArea() {
     const textarea = this.element.querySelector("textarea.d-editor-input");
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       textarea.blur();
       textarea.focus();
     });
