@@ -105,6 +105,8 @@ function resetSite(siteSettings, extras) {
   Site.resetCurrent(Site.create(siteAttrs));
 }
 
+let baseTransalations = I18n.translations[I18n.locale].js || {};
+
 QUnit.testStart(function(ctx) {
   server = createPretender.default;
   createPretender.applyDefaultHandlers(server);
@@ -201,6 +203,10 @@ QUnit.testDone(function() {
   });
 
   window.MessageBus.unsubscribe("*");
+
+  delete window.server;
+  I18n.translations[I18n.locale].js = baseTransalations;
+  window.Mousetrap.reset();
 });
 
 // Load ES6 tests
