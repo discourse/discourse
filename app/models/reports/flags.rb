@@ -20,7 +20,7 @@ Report.add_report('flags') do |report|
 
   if category_id
     if include_subcategories
-      countable = countable.merge(Topic.in_category_and_subcategories(category_id))
+      countable = countable.where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
     else
       countable = countable.where('topics.category_id = ?', category_id)
     end

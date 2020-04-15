@@ -69,7 +69,7 @@ class PostAction < ActiveRecord::Base
     result = result.where('post_actions.created_at <= ?', opts[:end_date]) if opts[:end_date]
     if opts[:category_id]
       if opts[:include_subcategories]
-        result = result.joins(post: :topic).merge(Topic.in_category_and_subcategories(opts[:category_id]))
+        result = result.joins(post: :topic).where('topics.category_id IN (?)', Category.subcategory_ids(opts[:category_id]))
       else
         result = result.joins(post: :topic).where('topics.category_id = ?', opts[:category_id])
       end

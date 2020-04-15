@@ -93,8 +93,8 @@ class IncomingLinksReport
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
     report.y_titles[:num_users] = I18n.t("reports.#{report.type}.num_users")
 
-    num_clicks = link_count_per_domain(start_date: report.start_date, end_date: report.end_date, category_id: report.category_id, include_subcategories: include_subcategories)
-    num_topics = topic_count_per_domain(num_clicks.keys, category_id: report.category_id, include_subcategories: include_subcategories)
+    num_clicks = link_count_per_domain(start_date: report.start_date, end_date: report.end_date, category_id: report.category_id, include_subcategories: report.include_subcategories)
+    num_topics = topic_count_per_domain(num_clicks.keys, category_id: report.category_id, include_subcategories: report.include_subcategories)
     report.data = []
     num_clicks.each_key do |domain|
       report.data << { domain: domain, num_clicks: num_clicks[domain], num_topics: num_topics[domain] }
@@ -131,11 +131,7 @@ class IncomingLinksReport
     report.data = []
     topics = Topic.select('id, slug, title').where('id in (?)', num_clicks.map { |z| z[0] })
     if report.category_id
-      if report.include_subcategories
-        topics = topics.in_category_and_subcategories(report.category_id)
-      else
-        topics = topics.where(category_id: report.category_id)
-      end
+      topics = topics.where(category_id: report.include_subcategories ? Category.subcategory_ids(report.category_id) : report.category_id)
     end
     num_clicks.each do |topic_id, num_clicks_element|
       topic = topics.find { |t| t.id == topic_id }
@@ -160,7 +156,7 @@ class IncomingLinksReport
 
     if category_id
       if include_subcategories
-        links = links.merge(Topic.in_category_and_subcategories(category_id))
+        links = links.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
       else
         links = links.where("topics.category_id = ?", category_id)
       end
