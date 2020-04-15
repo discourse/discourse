@@ -7,6 +7,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { REMINDER_TYPES } from "discourse/lib/bookmark";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
@@ -20,19 +21,6 @@ const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "d", "t"];
 const START_OF_DAY_HOUR = 8;
 const LATER_TODAY_CUTOFF_HOUR = 17;
 const LATER_TODAY_MAX_HOUR = 18;
-const REMINDER_TYPES = {
-  AT_DESKTOP: "at_desktop",
-  LATER_TODAY: "later_today",
-  NEXT_BUSINESS_DAY: "next_business_day",
-  TOMORROW: "tomorrow",
-  NEXT_WEEK: "next_week",
-  NEXT_MONTH: "next_month",
-  CUSTOM: "custom",
-  LAST_CUSTOM: "last_custom",
-  NONE: "none",
-  START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
-  LATER_THIS_WEEK: "later_this_week"
-};
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
