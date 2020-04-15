@@ -57,6 +57,18 @@ createWidget("topic-header-participant", {
 export default createWidget("header-topic-info", {
   tagName: "div.extra-info-wrapper",
 
+  buildFancyTitleClass() {
+    const baseClass = ["topic-link"];
+    const flatten = array => [].concat.apply([], array);
+    const extraClass = flatten(
+      applyDecorators(this, "fancyTitleClass", this.attrs, this.state)
+    );
+    return baseClass
+      .concat(extraClass)
+      .filter(Boolean)
+      .join(" ");
+  },
+
   html(attrs, state) {
     const topic = attrs.topic;
 
@@ -87,7 +99,7 @@ export default createWidget("header-topic-info", {
       const titleHTML = new RawHtml({ html: `<span>${fancyTitle}</span>` });
       heading.push(
         this.attach("link", {
-          className: "topic-link",
+          className: this.buildFancyTitleClass(),
           action: "jumpToTopPost",
           href,
           attributes: { "data-topic-id": topic.get("id") },
