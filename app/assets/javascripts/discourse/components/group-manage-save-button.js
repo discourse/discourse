@@ -15,6 +15,8 @@ export default Component.extend({
     save() {
       this.set("saving", true);
 
+      alert(this.model.automatic_membership_email_domains);
+
       return this.model
         .save()
         .then(() => {
@@ -22,6 +24,6 @@ export default Component.extend({
         })
         .catch(popupAjaxError)
         .finally(() => this.set("saving", false));
-    }
-  }
+    },
+  },
 });

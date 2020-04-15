@@ -38,14 +38,14 @@ export default {
               internal: true,
               reflection: true,
               title: "Language mirrors",
-              clicks: 3
+              clicks: 3,
             },
             {
               url: "https://meta.discourse.org/t/translation-workflow/6102",
               internal: true,
               reflection: true,
               title: "Translation workflow",
-              clicks: 2
+              clicks: 2,
             },
             {
               url:
@@ -53,7 +53,7 @@ export default {
               internal: true,
               reflection: true,
               title: "Solving XDA-Developer style forums",
-              clicks: 2
+              clicks: 2,
             },
             {
               url:
@@ -62,7 +62,7 @@ export default {
               reflection: true,
               title:
                 "Comrades let's join our efforts on ukrainian and russian translations",
-              clicks: 1
+              clicks: 1,
             },
             {
               url:
@@ -71,15 +71,15 @@ export default {
               reflection: true,
               title:
                 "Bookmark/last read sometimes doesn't go to the end of a topic",
-              clicks: 0
+              clicks: 0,
             },
             {
               url: "https://meta.discourse.org/t/roadplan-for-discourse/2939/5",
               internal: true,
               reflection: true,
               title: "Roadplan for Discourse 2013",
-              clicks: 0
-            }
+              clicks: 0,
+            },
           ],
           read: true,
           user_title: null,
@@ -88,44 +88,44 @@ export default {
               id: 2,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -138,7 +138,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 419,
@@ -174,8 +174,8 @@ export default {
                 "https://github.com/discourse/discourse/blob/master/config/locales/en.yml",
               internal: false,
               reflection: false,
-              clicks: 118
-            }
+              clicks: 118,
+            },
           ],
           read: true,
           user_title: "Great contributor",
@@ -184,44 +184,44 @@ export default {
               id: 2,
               count: 4,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -234,7 +234,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 1060,
@@ -272,7 +272,7 @@ export default {
               reflection: false,
               title:
                 "discourse/config/locales at master · discourse/discourse · GitHub",
-              clicks: 62
+              clicks: 62,
             },
             {
               url:
@@ -280,8 +280,8 @@ export default {
               internal: true,
               reflection: true,
               title: "GitHub OneBox Rendering Issue",
-              clicks: 0
-            }
+              clicks: 0,
+            },
           ],
           read: true,
           user_title: "co-founder",
@@ -290,44 +290,44 @@ export default {
               id: 2,
               count: 4,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: true,
           admin: true,
@@ -340,7 +340,7 @@ export default {
           user_deleted: false,
           edit_reason: "",
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3623,
@@ -376,8 +376,8 @@ export default {
               internal: true,
               reflection: true,
               title: "Hi, support Chinese?",
-              clicks: 0
-            }
+              clicks: 0,
+            },
           ],
           read: true,
           user_title: null,
@@ -386,44 +386,44 @@ export default {
               id: 2,
               count: 7,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -436,7 +436,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3651,
@@ -474,8 +474,8 @@ export default {
               reflection: false,
               title:
                 "internationalization - Why do people use plain english as translation placeholders? - Stack Overflow",
-              clicks: 63
-            }
+              clicks: 63,
+            },
           ],
           read: true,
           user_title: null,
@@ -484,44 +484,44 @@ export default {
               id: 2,
               count: 2,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -534,7 +534,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3654,
@@ -570,66 +570,66 @@ export default {
               internal: false,
               reflection: false,
               title: "SlexAxton/messageformat.js · GitHub",
-              clicks: 46
+              clicks: 46,
             },
             {
               url: "https://github.com/SlexAxton",
               internal: false,
               reflection: false,
               title: "SlexAxton (Alex Sexton) · GitHub",
-              clicks: 10
-            }
+              clicks: 10,
+            },
           ],
           read: true,
           user_title: "co-founder",
           reply_to_user: {
             username: "pekka",
             avatar_template: "/images/avatar.png",
-            uploaded_avatar_id: 5253
+            uploaded_avatar_id: 5253,
           },
           actions_summary: [
             {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: true,
           admin: true,
@@ -642,7 +642,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3655,
@@ -678,8 +678,8 @@ export default {
               internal: false,
               reflection: false,
               title: "WordPress › Development < GlotPress",
-              clicks: 16
-            }
+              clicks: 16,
+            },
           ],
           read: true,
           user_title: null,
@@ -688,44 +688,44 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -738,7 +738,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3658,
@@ -775,59 +775,59 @@ export default {
               internal: true,
               reflection: true,
               title: "What I love about WordPress plugins",
-              clicks: 0
-            }
+              clicks: 0,
+            },
           ],
           read: true,
           user_title: "co-founder",
           reply_to_user: {
             username: "pekka",
             avatar_template: "/images/avatar.png",
-            uploaded_avatar_id: 5253
+            uploaded_avatar_id: 5253,
           },
           actions_summary: [
             {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: true,
           admin: true,
@@ -840,7 +840,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3660,
@@ -877,44 +877,44 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -927,7 +927,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3667,
@@ -962,51 +962,51 @@ export default {
           reply_to_user: {
             username: "pekka",
             avatar_template: "/images/avatar.png",
-            uploaded_avatar_id: 5253
+            uploaded_avatar_id: 5253,
           },
           actions_summary: [
             {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1019,7 +1019,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3673,
@@ -1054,51 +1054,51 @@ export default {
           reply_to_user: {
             username: "tms",
             avatar_template: "/images/avatar.png",
-            uploaded_avatar_id: 40181
+            uploaded_avatar_id: 40181,
           },
           actions_summary: [
             {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: true,
           admin: true,
@@ -1111,7 +1111,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3675,
@@ -1148,44 +1148,44 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1198,7 +1198,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3690,
@@ -1235,44 +1235,44 @@ export default {
               id: 2,
               count: 3,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1285,7 +1285,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3925,
@@ -1321,8 +1321,8 @@ export default {
               internal: false,
               reflection: false,
               title: "Easy localization for Rails apps | Locale",
-              clicks: 69
-            }
+              clicks: 69,
+            },
           ],
           read: true,
           user_title: null,
@@ -1331,44 +1331,44 @@ export default {
               id: 2,
               count: 3,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1381,7 +1381,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3938,
@@ -1418,44 +1418,44 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1468,7 +1468,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3982,
@@ -1505,44 +1505,44 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1555,7 +1555,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3989,
@@ -1592,44 +1592,44 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1642,7 +1642,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 3996,
@@ -1677,51 +1677,51 @@ export default {
           reply_to_user: {
             username: "pekka",
             avatar_template: "/images/avatar.png",
-            uploaded_avatar_id: 5253
+            uploaded_avatar_id: 5253,
           },
           actions_summary: [
             {
               id: 2,
               count: 7,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: true,
           admin: true,
@@ -1734,7 +1734,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 4009,
@@ -1769,51 +1769,51 @@ export default {
           reply_to_user: {
             username: "sam",
             avatar_template: "/images/avatar.png",
-            uploaded_avatar_id: 5243
+            uploaded_avatar_id: 5243,
           },
           actions_summary: [
             {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1826,7 +1826,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 4012,
@@ -1862,8 +1862,8 @@ export default {
               internal: false,
               reflection: false,
               title: "Launchpad Translations",
-              clicks: 13
-            }
+              clicks: 13,
+            },
           ],
           read: true,
           user_title: null,
@@ -1872,44 +1872,44 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true
+              can_act: true,
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -1922,8 +1922,8 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
-        }
+          wiki: false,
+        },
       ],
       stream: [
         398,
@@ -1945,9 +1945,9 @@ export default {
         3989,
         3996,
         4009,
-        4012
+        4012,
       ],
-      gaps: { before: {}, after: { 398: [4012] } }
+      gaps: { before: {}, after: { 398: [4012] } },
     },
     id: 280,
     title: "Internationalization / localization",
@@ -1986,13 +1986,13 @@ export default {
         id: 255,
         username: "uwe_keim",
         uploaded_avatar_id: 5697,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 14091,
         username: "Luciano_Fantuzzi",
         uploaded_avatar_id: 39484,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       participants: [
         {
@@ -2000,176 +2000,176 @@ export default {
           username: "alxndr",
           uploaded_avatar_id: 5619,
           avatar_template: "/images/avatar.png",
-          post_count: 11
+          post_count: 11,
         },
         {
           id: 1,
           username: "sam",
           uploaded_avatar_id: 5243,
           avatar_template: "/images/avatar.png",
-          post_count: 11
+          post_count: 11,
         },
         {
           id: 7,
           username: "pekka",
           uploaded_avatar_id: 5253,
           avatar_template: "/images/avatar.png",
-          post_count: 8
+          post_count: 8,
         },
         {
           id: 461,
           username: "kuba",
           uploaded_avatar_id: 6049,
           avatar_template: "/images/avatar.png",
-          post_count: 7
+          post_count: 7,
         },
         {
           id: 2995,
           username: "tattoo",
           uploaded_avatar_id: null,
           avatar_template: "/images/avatar.png",
-          post_count: 6
+          post_count: 6,
         },
         {
           id: 2540,
           username: "jgourdon",
           uploaded_avatar_id: 9537,
           avatar_template: "/images/avatar.png",
-          post_count: 5
+          post_count: 5,
         },
         {
           id: 1860,
           username: "emk",
           uploaded_avatar_id: 8400,
           avatar_template: "/images/avatar.png",
-          post_count: 4
+          post_count: 4,
         },
         {
           id: 1275,
           username: "dacap",
           uploaded_avatar_id: 7401,
           avatar_template: "/images/avatar.png",
-          post_count: 4
+          post_count: 4,
         },
         {
           id: 19,
           username: "eviltrout",
           uploaded_avatar_id: 5275,
           avatar_template: "/images/avatar.png",
-          post_count: 4
+          post_count: 4,
         },
         {
           id: 5,
           username: "charlie",
           uploaded_avatar_id: 5275,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 3704,
           username: "mojzis",
           uploaded_avatar_id: 31201,
           avatar_template: "/images/avatar.png",
-          post_count: 3
+          post_count: 3,
         },
         {
           id: 3190,
           username: "gururea",
           uploaded_avatar_id: 10663,
           avatar_template: "/images/avatar.png",
-          post_count: 3
+          post_count: 3,
         },
         {
           id: 1895,
           username: "maciek",
           uploaded_avatar_id: 8463,
           avatar_template: "/images/avatar.png",
-          post_count: 3
+          post_count: 3,
         },
         {
           id: 22,
           username: "splattne",
           uploaded_avatar_id: 5280,
           avatar_template: "/images/avatar.png",
-          post_count: 2
+          post_count: 2,
         },
         {
           id: 1979,
           username: "Superuser",
           uploaded_avatar_id: 8604,
           avatar_template: "/images/avatar.png",
-          post_count: 2
+          post_count: 2,
         },
         {
           id: 3818,
           username: "Tudor",
           uploaded_avatar_id: 11675,
           avatar_template: "/images/avatar.png",
-          post_count: 2
+          post_count: 2,
         },
         {
           id: 32,
           username: "codinghorror",
           uploaded_avatar_id: 5297,
           avatar_template: "/images/avatar.png",
-          post_count: 2
+          post_count: 2,
         },
         {
           id: 3620,
           username: "potthast",
           uploaded_avatar_id: 11363,
           avatar_template: "/images/avatar.png",
-          post_count: 2
+          post_count: 2,
         },
         {
           id: 9,
           username: "tms",
           uploaded_avatar_id: 40181,
           avatar_template: "/images/avatar.png",
-          post_count: 2
+          post_count: 2,
         },
         {
           id: 14091,
           username: "Luciano_Fantuzzi",
           uploaded_avatar_id: 39484,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 255,
           username: "uwe_keim",
           uploaded_avatar_id: 5697,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 9006,
           username: "berk",
           uploaded_avatar_id: 19348,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 754,
           username: "danneu",
           uploaded_avatar_id: 6540,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 761,
           username: "marcoceppi",
           uploaded_avatar_id: 6552,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 2753,
           username: "mikl",
           uploaded_avatar_id: 9918,
           avatar_template: "/images/avatar.png",
-          post_count: 1
-        }
+          post_count: 1,
+        },
       ],
       links: [
         {
@@ -2181,7 +2181,7 @@ export default {
           reflection: false,
           clicks: 118,
           user_id: 9,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "http://www.localeapp.com/",
@@ -2191,7 +2191,7 @@ export default {
           reflection: false,
           clicks: 69,
           user_id: 1860,
-          domain: "www.localeapp.com"
+          domain: "www.localeapp.com",
         },
         {
           url:
@@ -2203,7 +2203,7 @@ export default {
           reflection: false,
           clicks: 63,
           user_id: 7,
-          domain: "stackoverflow.com"
+          domain: "stackoverflow.com",
         },
         {
           url:
@@ -2215,7 +2215,7 @@ export default {
           reflection: false,
           clicks: 62,
           user_id: 32,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "https://github.com/SlexAxton/messageformat.js",
@@ -2225,7 +2225,7 @@ export default {
           reflection: false,
           clicks: 46,
           user_id: 1,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url:
@@ -2236,7 +2236,7 @@ export default {
           reflection: false,
           clicks: 25,
           user_id: 1860,
-          domain: "www.localeapp.com"
+          domain: "www.localeapp.com",
         },
         {
           url: "https://translations.launchpad.net/",
@@ -2246,7 +2246,7 @@ export default {
           reflection: false,
           clicks: 23,
           user_id: 761,
-          domain: "translations.launchpad.net"
+          domain: "translations.launchpad.net",
         },
         {
           url: "https://www.transifex.com/",
@@ -2256,7 +2256,7 @@ export default {
           reflection: false,
           clicks: 22,
           user_id: 1979,
-          domain: "www.transifex.com"
+          domain: "www.transifex.com",
         },
         {
           url: "https://github.com/berk/tr8n",
@@ -2266,7 +2266,7 @@ export default {
           reflection: false,
           clicks: 22,
           user_id: 1,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "http://translate.wordpress.org/projects/bbpress/dev",
@@ -2276,7 +2276,7 @@ export default {
           reflection: false,
           clicks: 16,
           user_id: 7,
-          domain: "translate.wordpress.org"
+          domain: "translate.wordpress.org",
         },
         {
           url: "http://weblate.org",
@@ -2286,7 +2286,7 @@ export default {
           reflection: false,
           clicks: 15,
           user_id: 2316,
-          domain: "weblate.org"
+          domain: "weblate.org",
         },
         {
           url:
@@ -2298,7 +2298,7 @@ export default {
           reflection: false,
           clicks: 14,
           user_id: 19,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "https://github.com/discourse/discourse/pull/493",
@@ -2309,7 +2309,7 @@ export default {
           reflection: false,
           clicks: 12,
           user_id: 2753,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "https://github.com/SlexAxton",
@@ -2319,7 +2319,7 @@ export default {
           reflection: false,
           clicks: 10,
           user_id: 1,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url:
@@ -2331,7 +2331,7 @@ export default {
           reflection: false,
           clicks: 9,
           user_id: 3190,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url:
@@ -2343,7 +2343,7 @@ export default {
           reflection: false,
           clicks: 7,
           user_id: 461,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "https://github.com/dacap/discourse/tree/spanish",
@@ -2353,7 +2353,7 @@ export default {
           reflection: false,
           clicks: 7,
           user_id: 1275,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url:
@@ -2365,7 +2365,7 @@ export default {
           reflection: false,
           clicks: 7,
           user_id: 461,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url:
@@ -2377,7 +2377,7 @@ export default {
           reflection: false,
           clicks: 6,
           user_id: 212,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "http://tr8n.github.com/",
@@ -2387,7 +2387,7 @@ export default {
           reflection: false,
           clicks: 6,
           user_id: 212,
-          domain: "tr8n.github.com"
+          domain: "tr8n.github.com",
         },
         {
           url: "http://www.getlocalization.com/",
@@ -2398,7 +2398,7 @@ export default {
           reflection: false,
           clicks: 6,
           user_id: 22,
-          domain: "www.getlocalization.com"
+          domain: "www.getlocalization.com",
         },
         {
           url:
@@ -2409,7 +2409,7 @@ export default {
           reflection: false,
           clicks: 5,
           user_id: 1995,
-          domain: "blog.discourse.org"
+          domain: "blog.discourse.org",
         },
         {
           url:
@@ -2420,7 +2420,7 @@ export default {
           reflection: false,
           clicks: 5,
           user_id: 212,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "http://translate.sourceforge.net/wiki/virtaal/index",
@@ -2430,7 +2430,7 @@ export default {
           reflection: false,
           clicks: 4,
           user_id: 1979,
-          domain: "translate.sourceforge.net"
+          domain: "translate.sourceforge.net",
         },
         {
           url: "https://poeditor.com/",
@@ -2440,7 +2440,7 @@ export default {
           reflection: false,
           clicks: 4,
           user_id: 1979,
-          domain: "poeditor.com"
+          domain: "poeditor.com",
         },
         {
           url: "http://en.lichess.org/@/Hellball",
@@ -2450,7 +2450,7 @@ export default {
           reflection: false,
           clicks: 3,
           user_id: 1979,
-          domain: "en.lichess.org"
+          domain: "en.lichess.org",
         },
         {
           url: "http://en.wikipedia.org/wiki/T%E2%80%93V_distinction",
@@ -2460,7 +2460,7 @@ export default {
           reflection: false,
           clicks: 3,
           user_id: 3620,
-          domain: "en.wikipedia.org"
+          domain: "en.wikipedia.org",
         },
         {
           url:
@@ -2471,7 +2471,7 @@ export default {
           reflection: false,
           clicks: 3,
           user_id: 212,
-          domain: "www.slideshare.net"
+          domain: "www.slideshare.net",
         },
         {
           url: "https://meta.discourse.org/t/language-mirrors/2378/2",
@@ -2481,7 +2481,7 @@ export default {
           reflection: true,
           clicks: 3,
           user_id: 32,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url:
@@ -2493,7 +2493,7 @@ export default {
           reflection: false,
           clicks: 3,
           user_id: 3190,
-          domain: "www.madanalogy.com"
+          domain: "www.madanalogy.com",
         },
         {
           url: "https://github.com/tr8n",
@@ -2503,7 +2503,7 @@ export default {
           reflection: false,
           clicks: 3,
           user_id: 9006,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "http://pootle.locamotion.org/",
@@ -2513,7 +2513,7 @@ export default {
           reflection: false,
           clicks: 2,
           user_id: 3190,
-          domain: "pootle.locamotion.org"
+          domain: "pootle.locamotion.org",
         },
         {
           url: "http://www.youtube.com/watch?v=MqqdzJ98q7s",
@@ -2524,7 +2524,7 @@ export default {
           reflection: false,
           clicks: 2,
           user_id: 212,
-          domain: "www.youtube.com"
+          domain: "www.youtube.com",
         },
         {
           url: "https://meta.discourse.org/t/translation-workflow/6102",
@@ -2534,7 +2534,7 @@ export default {
           reflection: true,
           clicks: 2,
           user_id: 4702,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url:
@@ -2545,7 +2545,7 @@ export default {
           reflection: true,
           clicks: 2,
           user_id: 639,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url: "https://tr8nhub.com",
@@ -2555,7 +2555,7 @@ export default {
           reflection: false,
           clicks: 2,
           user_id: 9006,
-          domain: "tr8nhub.com"
+          domain: "tr8nhub.com",
         },
         {
           url: "https://meta.discourse.org/t/roadplan-for-discourse/2939/3",
@@ -2565,7 +2565,7 @@ export default {
           reflection: true,
           clicks: 1,
           user_id: 2540,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url: "http://sugarjs.com/dates#date_locales",
@@ -2575,7 +2575,7 @@ export default {
           reflection: false,
           clicks: 1,
           user_id: 461,
-          domain: "sugarjs.com"
+          domain: "sugarjs.com",
         },
         {
           url: "http://blog.discourse.org/2013/03/localizing-discourse/",
@@ -2585,7 +2585,7 @@ export default {
           reflection: false,
           clicks: 1,
           user_id: 893,
-          domain: "blog.discourse.org"
+          domain: "blog.discourse.org",
         },
         {
           url:
@@ -2596,7 +2596,7 @@ export default {
           reflection: false,
           clicks: 1,
           user_id: 461,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "http://transifex.com/projects/p/discourse-pt-br/",
@@ -2606,7 +2606,7 @@ export default {
           reflection: false,
           clicks: 1,
           user_id: 893,
-          domain: "transifex.com"
+          domain: "transifex.com",
         },
         {
           url: "https://github.com/discourse/discourse/issues/279",
@@ -2616,7 +2616,7 @@ export default {
           reflection: false,
           clicks: 1,
           user_id: 893,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url:
@@ -2628,7 +2628,7 @@ export default {
           reflection: true,
           clicks: 1,
           user_id: 3417,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url: "https://meta.discourse.org/t/translation-workflow/6102/6",
@@ -2638,7 +2638,7 @@ export default {
           reflection: false,
           clicks: 0,
           user_id: 1995,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url:
@@ -2650,7 +2650,7 @@ export default {
           reflection: true,
           clicks: 0,
           user_id: 3681,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url:
@@ -2662,7 +2662,7 @@ export default {
           reflection: false,
           clicks: 0,
           user_id: 2,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url:
@@ -2673,7 +2673,7 @@ export default {
           reflection: true,
           clicks: 0,
           user_id: 1,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url:
@@ -2684,7 +2684,7 @@ export default {
           reflection: true,
           clicks: 0,
           user_id: 5372,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url:
@@ -2696,7 +2696,7 @@ export default {
           reflection: false,
           clicks: 0,
           user_id: 2,
-          domain: "github.com"
+          domain: "github.com",
         },
         {
           url: "https://meta.discourse.org/t/roadplan-for-discourse/2939/5",
@@ -2706,7 +2706,7 @@ export default {
           reflection: true,
           clicks: 0,
           user_id: 32,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url:
@@ -2717,7 +2717,7 @@ export default {
           reflection: true,
           clicks: 0,
           user_id: 2,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url: "http://guides.rubyonrails.org/i18n.html#the-public-i18n-api",
@@ -2727,7 +2727,7 @@ export default {
           reflection: false,
           clicks: 0,
           user_id: 1895,
-          domain: "guides.rubyonrails.org"
+          domain: "guides.rubyonrails.org",
         },
         {
           url: "https://meta.discourse.org/t/hi-support-chinese/4393/6",
@@ -2737,7 +2737,7 @@ export default {
           reflection: true,
           clicks: 0,
           user_id: 2014,
-          domain: "meta.discourse.org"
+          domain: "meta.discourse.org",
         },
         {
           url:
@@ -2748,8 +2748,8 @@ export default {
           reflection: false,
           clicks: 0,
           user_id: 6626,
-          domain: "meta.discourse.org"
-        }
+          domain: "meta.discourse.org",
+        },
       ],
       notification_level: 2,
       notifications_reason_id: 4,
@@ -2761,7 +2761,7 @@ export default {
       can_invite_to: true,
       can_create_post: true,
       can_reply_as_new_topic: true,
-      can_flag_topic: true
+      can_flag_topic: true,
     },
     highest_post_number: 10,
     last_read_post_number: 10,
@@ -2770,7 +2770,7 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 7, count: 0, hidden: false, can_act: true },
-      { id: 8, count: 0, hidden: false, can_act: true }
+      { id: 8, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
     bookmarked: false,
@@ -2803,7 +2803,7 @@ export default {
         archetype: "regular",
         like_count: 11,
         views: 55,
-        category_id: 1
+        category_id: 1,
       },
       {
         id: 27343,
@@ -2836,7 +2836,7 @@ export default {
         archetype: "regular",
         like_count: 3,
         views: 23,
-        category_id: 9
+        category_id: 9,
       },
       {
         id: 27346,
@@ -2865,7 +2865,7 @@ export default {
         archetype: "regular",
         like_count: 0,
         views: 8,
-        category_id: 2
+        category_id: 2,
       },
       {
         id: 19670,
@@ -2895,7 +2895,7 @@ export default {
         archetype: "regular",
         like_count: 4,
         views: 253,
-        category_id: 2
+        category_id: 2,
       },
       {
         id: 7512,
@@ -2928,7 +2928,7 @@ export default {
         archetype: "regular",
         like_count: 62,
         views: 1877,
-        category_id: 2
+        category_id: 2,
       },
       {
         id: 25480,
@@ -2954,7 +2954,7 @@ export default {
         archetype: "regular",
         like_count: 21,
         views: 185,
-        category_id: 2
+        category_id: 2,
       },
       {
         id: 26576,
@@ -2985,10 +2985,10 @@ export default {
         archetype: "regular",
         like_count: 9,
         views: 87,
-        category_id: 2
-      }
+        category_id: 2,
+      },
     ],
-    tags: null
+    tags: null,
   },
   "/t/28830/1.json": {
     post_stream: {
@@ -3028,8 +3028,8 @@ export default {
               internal: true,
               reflection: false,
               title: "Post reply on different topic no longer works",
-              clicks: 6
-            }
+              clicks: 6,
+            },
           ],
           read: true,
           user_title: "Contributor",
@@ -3040,7 +3040,7 @@ export default {
             { id: 5, count: 0, hidden: true, can_act: false },
             { id: 6, count: 0, hidden: false, can_act: false },
             { id: 7, count: 0, hidden: false, can_act: false },
-            { id: 8, count: 0, hidden: false, can_act: false }
+            { id: 8, count: 0, hidden: false, can_act: false },
           ],
           moderator: false,
           admin: false,
@@ -3053,7 +3053,7 @@ export default {
           user_deleted: false,
           edit_reason: "",
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 118597,
@@ -3092,7 +3092,7 @@ export default {
             { id: 5, count: 0, hidden: true, can_act: false },
             { id: 6, count: 0, hidden: false, can_act: false },
             { id: 7, count: 0, hidden: false, can_act: false },
-            { id: 8, count: 0, hidden: false, can_act: false }
+            { id: 8, count: 0, hidden: false, can_act: false },
           ],
           moderator: false,
           admin: false,
@@ -3105,7 +3105,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 118601,
@@ -3144,7 +3144,7 @@ export default {
             { id: 5, count: 0, hidden: true, can_act: false },
             { id: 6, count: 0, hidden: false, can_act: false },
             { id: 7, count: 0, hidden: false, can_act: false },
-            { id: 8, count: 0, hidden: false, can_act: false }
+            { id: 8, count: 0, hidden: false, can_act: false },
           ],
           moderator: false,
           admin: false,
@@ -3157,7 +3157,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 118606,
@@ -3196,7 +3196,7 @@ export default {
             { id: 5, count: 0, hidden: true, can_act: false },
             { id: 6, count: 0, hidden: false, can_act: false },
             { id: 7, count: 0, hidden: false, can_act: false },
-            { id: 8, count: 0, hidden: false, can_act: false }
+            { id: 8, count: 0, hidden: false, can_act: false },
           ],
           moderator: true,
           admin: true,
@@ -3209,7 +3209,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 118612,
@@ -3248,7 +3248,7 @@ export default {
             { id: 5, count: 0, hidden: true, can_act: false },
             { id: 6, count: 0, hidden: false, can_act: false },
             { id: 7, count: 0, hidden: false, can_act: false },
-            { id: 8, count: 0, hidden: false, can_act: false }
+            { id: 8, count: 0, hidden: false, can_act: false },
           ],
           moderator: false,
           admin: false,
@@ -3261,10 +3261,10 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
-        }
+          wiki: false,
+        },
       ],
-      stream: [118591, 118597, 118601, 118606, 118612]
+      stream: [118591, 118597, 118601, 118606, 118612],
     },
     id: 28830,
     title: "1.3.0beta9: No rate-limit popups",
@@ -3300,13 +3300,13 @@ export default {
         id: 14169,
         username: "RaceProUK",
         uploaded_avatar_id: 40071,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 10886,
         username: "Onyx",
         uploaded_avatar_id: 33015,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       participants: [
         {
@@ -3314,36 +3314,36 @@ export default {
           username: "Yuun",
           uploaded_avatar_id: null,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 10886,
           username: "Onyx",
           uploaded_avatar_id: 33015,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 14169,
           username: "RaceProUK",
           uploaded_avatar_id: 40071,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 6626,
           username: "riking",
           uploaded_avatar_id: 40212,
           avatar_template: "/images/avatar.png",
-          post_count: 1
+          post_count: 1,
         },
         {
           id: 32,
           username: "codinghorror",
           uploaded_avatar_id: 5297,
           avatar_template: "/images/avatar.png",
-          post_count: 1
-        }
+          post_count: 1,
+        },
       ],
       suggested_topics: [
         {
@@ -3371,7 +3371,7 @@ export default {
           archetype: "regular",
           like_count: 3,
           views: 361,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 14213,
@@ -3400,7 +3400,7 @@ export default {
           archetype: "regular",
           like_count: 0,
           views: 156,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 22544,
@@ -3426,7 +3426,7 @@ export default {
           archetype: "regular",
           like_count: 18,
           views: 192,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 27670,
@@ -3452,7 +3452,7 @@ export default {
           archetype: "regular",
           like_count: 1,
           views: 85,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 26628,
@@ -3478,7 +3478,7 @@ export default {
           archetype: "regular",
           like_count: 1,
           views: 247,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 18027,
@@ -3504,7 +3504,7 @@ export default {
           archetype: "regular",
           like_count: 1,
           views: 165,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 17396,
@@ -3531,8 +3531,8 @@ export default {
           archetype: "regular",
           like_count: 7,
           views: 542,
-          category_id: 1
-        }
+          category_id: 1,
+        },
       ],
       links: [
         {
@@ -3544,22 +3544,22 @@ export default {
           reflection: false,
           clicks: 6,
           user_id: 14169,
-          domain: "meta.discourse.org"
-        }
+          domain: "meta.discourse.org",
+        },
       ],
       notification_level: 1,
-      can_flag_topic: false
+      can_flag_topic: false,
     },
     highest_post_number: 5,
     deleted_by: null,
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: false },
       { id: 7, count: 0, hidden: false, can_act: false },
-      { id: 8, count: 0, hidden: false, can_act: false }
+      { id: 8, count: 0, hidden: false, can_act: false },
     ],
     chunk_size: 20,
     bookmarked: null,
-    tags: null
+    tags: null,
   },
   "/t/9/1.json": {
     post_stream: {
@@ -3597,7 +3597,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -3610,7 +3610,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 19,
@@ -3645,7 +3645,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -3658,7 +3658,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 20,
@@ -3693,7 +3693,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -3706,10 +3706,10 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
-        }
+          wiki: false,
+        },
       ],
-      stream: [18, 19, 20]
+      stream: [18, 19, 20],
     },
     id: 9,
     title: "This is a test topic!",
@@ -3748,13 +3748,13 @@ export default {
         id: 1,
         username: "tgxworld",
         uploaded_avatar_id: 9,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 1,
         username: "tgxworld",
         uploaded_avatar_id: 9,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       participants: [
         {
@@ -3762,8 +3762,8 @@ export default {
           username: "tgxworld",
           uploaded_avatar_id: 9,
           avatar_template: "/images/avatar.png",
-          post_count: 3
-        }
+          post_count: 3,
+        },
       ],
       suggested_topics: [
         {
@@ -3794,7 +3794,7 @@ export default {
           archetype: "regular",
           like_count: 0,
           views: 2,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 7,
@@ -3824,8 +3824,8 @@ export default {
           archetype: "regular",
           like_count: 0,
           views: 2,
-          category_id: 1
-        }
+          category_id: 1,
+        },
       ],
       notification_level: 3,
       notifications_reason_id: 1,
@@ -3837,7 +3837,7 @@ export default {
       can_invite_to: true,
       can_create_post: true,
       can_reply_as_new_topic: true,
-      can_flag_topic: true
+      can_flag_topic: true,
     },
     highest_post_number: 3,
     last_read_post_number: 3,
@@ -3846,11 +3846,11 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 7, count: 0, hidden: false, can_act: true },
-      { id: 8, count: 0, hidden: false, can_act: true }
+      { id: 8, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
     bookmarked: false,
-    destination_category_id: 3
+    destination_category_id: 3,
   },
   "/t/12/1.json": {
     suggested_topics: [
@@ -3890,11 +3890,11 @@ export default {
             user: {
               id: 1,
               username: "test",
-              avatar_template: "/images/avatar.png"
-            }
-          }
-        ]
-      }
+              avatar_template: "/images/avatar.png",
+            },
+          },
+        ],
+      },
     ],
     post_stream: {
       posts: [
@@ -3934,7 +3934,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -3948,7 +3948,7 @@ export default {
           edit_reason: null,
           can_view_edit_history: true,
           wiki: false,
-          can_translate: false
+          can_translate: false,
         },
         {
           id: 16,
@@ -3986,7 +3986,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -4002,10 +4002,10 @@ export default {
           wiki: false,
           action_code: "invited_group",
           action_code_who: "Group",
-          can_translate: false
-        }
+          can_translate: false,
+        },
       ],
-      stream: [15, 16]
+      stream: [15, 16],
     },
     timeline_lookup: [[1, 0]],
     id: 12,
@@ -4044,12 +4044,12 @@ export default {
       created_by: {
         id: 1,
         username: "test",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 1,
         username: "test",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       allowed_groups: [
         {
@@ -4060,7 +4060,6 @@ export default {
           alias_level: 99,
           visible: true,
           automatic_membership_email_domains: "",
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -4073,12 +4072,12 @@ export default {
           bio_cooked: null,
           public: false,
           allow_membership_requests: false,
-          full_name: null
-        }
+          full_name: null,
+        },
       ],
       allowed_users: [
         { id: 2, username: "someguy", avatar_template: "/images/avatar.png" },
-        { id: 1, username: "test", avatar_template: "/images/avatar.png" }
+        { id: 1, username: "test", avatar_template: "/images/avatar.png" },
       ],
       participants: [
         {
@@ -4089,8 +4088,8 @@ export default {
           primary_group_name: null,
           primary_group_flair_url: null,
           primary_group_flair_color: null,
-          primary_group_flair_bg_color: null
-        }
+          primary_group_flair_bg_color: null,
+        },
       ],
       suggested_topics: [
         {
@@ -4130,11 +4129,11 @@ export default {
               user: {
                 id: 1,
                 username: "test",
-                avatar_template: "/images/avatar.png"
-              }
-            }
-          ]
-        }
+                avatar_template: "/images/avatar.png",
+              },
+            },
+          ],
+        },
       ],
       notification_level: 3,
       notifications_reason_id: 1,
@@ -4146,7 +4145,7 @@ export default {
       can_invite_to: true,
       can_create_post: true,
       can_reply_as_new_topic: true,
-      can_flag_topic: true
+      can_flag_topic: true,
     },
     highest_post_number: 2,
     last_read_post_number: 2,
@@ -4156,12 +4155,12 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 7, count: 0, hidden: false, can_act: true },
-      { id: 8, count: 0, hidden: false, can_act: true }
+      { id: 8, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
     bookmarked: false,
     message_archived: false,
-    featured_link: null
+    featured_link: null,
   },
   "/t/299/1.json": {
     post_stream: {
@@ -4199,7 +4198,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -4212,7 +4211,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 19,
@@ -4247,7 +4246,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -4260,7 +4259,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 20,
@@ -4295,7 +4294,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -4308,10 +4307,10 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
-        }
+          wiki: false,
+        },
       ],
-      stream: [18, 19, 20]
+      stream: [18, 19, 20],
     },
     id: 299,
     title: "Look at this link",
@@ -4351,13 +4350,13 @@ export default {
         id: 1,
         username: "tgxworld",
         uploaded_avatar_id: 9,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 1,
         username: "tgxworld",
         uploaded_avatar_id: 9,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       participants: [
         {
@@ -4365,8 +4364,8 @@ export default {
           username: "tgxworld",
           uploaded_avatar_id: 9,
           avatar_template: "/images/avatar.png",
-          post_count: 3
-        }
+          post_count: 3,
+        },
       ],
       suggested_topics: [
         {
@@ -4397,7 +4396,7 @@ export default {
           archetype: "regular",
           like_count: 0,
           views: 2,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 7,
@@ -4427,8 +4426,8 @@ export default {
           archetype: "regular",
           like_count: 0,
           views: 2,
-          category_id: 1
-        }
+          category_id: 1,
+        },
       ],
       notification_level: 3,
       notifications_reason_id: 1,
@@ -4440,7 +4439,7 @@ export default {
       can_invite_to: true,
       can_create_post: true,
       can_reply_as_new_topic: true,
-      can_flag_topic: true
+      can_flag_topic: true,
     },
     highest_post_number: 3,
     last_read_post_number: 3,
@@ -4449,10 +4448,10 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 7, count: 0, hidden: false, can_act: true },
-      { id: 8, count: 0, hidden: false, can_act: true }
+      { id: 8, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
-    bookmarked: false
+    bookmarked: false,
   },
   "/t/301/1.json": {
     post_stream: {
@@ -4491,7 +4490,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -4504,7 +4503,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 19,
@@ -4539,7 +4538,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -4552,7 +4551,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 20,
@@ -4587,7 +4586,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -4600,10 +4599,10 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
-        }
+          wiki: false,
+        },
       ],
-      stream: [18, 19, 20]
+      stream: [18, 19, 20],
     },
     id: 299,
     title: "Look at this link",
@@ -4643,13 +4642,13 @@ export default {
         id: 1,
         username: "tgxworld",
         uploaded_avatar_id: 9,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 1,
         username: "tgxworld",
         uploaded_avatar_id: 9,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       participants: [
         {
@@ -4657,8 +4656,8 @@ export default {
           username: "tgxworld",
           uploaded_avatar_id: 9,
           avatar_template: "/images/avatar.png",
-          post_count: 3
-        }
+          post_count: 3,
+        },
       ],
       suggested_topics: [
         {
@@ -4689,7 +4688,7 @@ export default {
           archetype: "regular",
           like_count: 0,
           views: 2,
-          category_id: 1
+          category_id: 1,
         },
         {
           id: 7,
@@ -4719,8 +4718,8 @@ export default {
           archetype: "regular",
           like_count: 0,
           views: 2,
-          category_id: 1
-        }
+          category_id: 1,
+        },
       ],
       notification_level: 3,
       notifications_reason_id: 1,
@@ -4732,7 +4731,7 @@ export default {
       can_invite_to: true,
       can_create_post: true,
       can_reply_as_new_topic: true,
-      can_flag_topic: true
+      can_flag_topic: true,
     },
     highest_post_number: 3,
     last_read_post_number: 3,
@@ -4741,10 +4740,10 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 7, count: 0, hidden: false, can_act: true },
-      { id: 8, count: 0, hidden: false, can_act: true }
+      { id: 8, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
-    bookmarked: false
+    bookmarked: false,
   },
   "/t/34/1.json": {
     post_stream: {
@@ -4784,20 +4783,20 @@ export default {
           actions_summary: [
             {
               id: 3,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: true,
@@ -4809,7 +4808,7 @@ export default {
           user_deleted: false,
           edit_reason: null,
           can_view_edit_history: true,
-          wiki: false
+          wiki: false,
         },
         {
           id: 419,
@@ -4846,20 +4845,20 @@ export default {
           actions_summary: [
             {
               id: 3,
-              can_act: true
+              can_act: true,
             },
             {
               id: 4,
-              can_act: true
+              can_act: true,
             },
             {
               id: 8,
-              can_act: true
+              can_act: true,
             },
             {
               id: 7,
-              can_act: true
-            }
+              can_act: true,
+            },
           ],
           moderator: false,
           admin: false,
@@ -4872,10 +4871,10 @@ export default {
           edit_reason: null,
           can_view_edit_history: true,
           wiki: false,
-          notice_type: "new-user"
-        }
+          notice_type: "new-user",
+        },
       ],
-      stream: [25, 26, 27]
+      stream: [25, 26, 27],
     },
     timeline_lookup: [[1, 0]],
     id: 34,
@@ -4913,13 +4912,13 @@ export default {
         id: 1,
         username: "tim.lange",
         name: null,
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 2,
         username: "vox",
         name: "Tim Lange",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       allowed_groups: [],
       allowed_users: [
@@ -4927,14 +4926,14 @@ export default {
           id: 2,
           username: "vox",
           name: "Tim Lange",
-          avatar_template: "/images/avatar.png"
+          avatar_template: "/images/avatar.png",
         },
         {
           id: 1,
           username: "tim.lange",
           name: null,
-          avatar_template: "/images/avatar.png"
-        }
+          avatar_template: "/images/avatar.png",
+        },
       ],
       participants: [
         {
@@ -4946,7 +4945,7 @@ export default {
           primary_group_name: null,
           primary_group_flair_url: null,
           primary_group_flair_color: null,
-          primary_group_flair_bg_color: null
+          primary_group_flair_bg_color: null,
         },
         {
           id: 2,
@@ -4957,8 +4956,8 @@ export default {
           primary_group_name: null,
           primary_group_flair_url: null,
           primary_group_flair_color: null,
-          primary_group_flair_bg_color: null
-        }
+          primary_group_flair_bg_color: null,
+        },
       ],
       notification_level: 3,
       notifications_reason_id: 1,
@@ -4972,7 +4971,7 @@ export default {
       can_create_post: true,
       can_reply_as_new_topic: true,
       can_flag_topic: true,
-      can_convert_topic: true
+      can_convert_topic: true,
     },
     current_post_number: 1,
     highest_post_number: 3,
@@ -4986,9 +4985,9 @@ export default {
         id: 8,
         count: 0,
         hidden: false,
-        can_act: true
+        can_act: true,
       },
-      { id: 7, count: 0, hidden: false, can_act: true }
+      { id: 7, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
     bookmarked: false,
@@ -4997,6 +4996,6 @@ export default {
     private_topic_timer: null,
     message_bus_last_id: 7,
     participant_count: 2,
-    pm_with_non_human_user: false
-  }
+    pm_with_non_human_user: false,
+  },
 };

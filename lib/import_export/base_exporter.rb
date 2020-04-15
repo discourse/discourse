@@ -9,7 +9,7 @@ module ImportExport
                       :topic_template, :all_topics_wiki, :permissions_params]
 
     GROUP_ATTRS = [ :id, :name, :created_at, :mentionable_level, :messageable_level, :visibility_level,
-                    :automatic_membership_email_domains, :automatic_membership_retroactive,
+                    :automatic_membership_email_domains,
                     :primary_group, :title, :grant_trust_level, :incoming_email]
 
     USER_ATTRS = [:id, :email, :username, :name, :created_at, :trust_level, :active, :last_emailed_at]

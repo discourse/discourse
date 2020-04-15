@@ -656,8 +656,7 @@ describe GroupsController do
           mentionable_level: 2,
           messageable_level: 2,
           default_notification_level: 0,
-          grant_trust_level: 0,
-          automatic_membership_retroactive: false
+          grant_trust_level: 0
         )
 
         expect do
@@ -666,8 +665,7 @@ describe GroupsController do
               mentionable_level: 1,
               messageable_level: 1,
               visibility_level: 1,
-              automatic_membership_email_domains: 'test.org',
-              automatic_membership_retroactive: true,
+              automatic_membership_email_domains: 'test.org'
               title: 'haha',
               primary_group: true,
               grant_trust_level: 1,
@@ -706,7 +704,6 @@ describe GroupsController do
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
         expect(group.automatic_membership_email_domains).to eq(nil)
-        expect(group.automatic_membership_retroactive).to eq(false)
         expect(group.title).to eq('haha')
         expect(group.primary_group).to eq(false)
         expect(group.incoming_email).to eq(nil)
@@ -736,7 +733,6 @@ describe GroupsController do
         group.update!(
           visibility_level: 2,
           members_visibility_level: 2,
-          automatic_membership_retroactive: false,
           grant_trust_level: 0
         )
 
@@ -747,7 +743,6 @@ describe GroupsController do
             incoming_email: 'test@mail.org',
             primary_group: true,
             automatic_membership_email_domains: 'test.org',
-            automatic_membership_retroactive: true,
             grant_trust_level: 2,
             visibility_level: 1,
             members_visibility_level: 3
@@ -764,7 +759,6 @@ describe GroupsController do
         expect(group.visibility_level).to eq(1)
         expect(group.members_visibility_level).to eq(3)
         expect(group.automatic_membership_email_domains).to eq('test.org')
-        expect(group.automatic_membership_retroactive).to eq(true)
         expect(group.grant_trust_level).to eq(2)
 
         expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"])

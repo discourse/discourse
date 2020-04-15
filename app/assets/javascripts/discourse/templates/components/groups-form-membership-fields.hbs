@@ -17,14 +17,6 @@
       onChange=(action "onChangeEmailDomainsSetting")
       options=(hash allowAny=true)
     }}
-
-    <label>
-      {{input type="checkbox"
-          checked=model.automatic_membership_retroactive
-          class="groups-form-automatic-membership-retroactive"}}
-
-      {{i18n "admin.groups.manage.membership.automatic_membership_retroactive"}}
-    </label>
   </div>
 
   {{plugin-outlet name="groups-form-membership-below-automatic"

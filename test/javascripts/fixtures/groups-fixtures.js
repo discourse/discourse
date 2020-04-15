@@ -9,7 +9,6 @@ export default {
         alias_level: 0,
         visible: true,
         automatic_membership_email_domains: "",
-        automatic_membership_retroactive: false,
         primary_group: false,
         title: null,
         grant_trust_level: null,
@@ -21,7 +20,7 @@ export default {
         bio_cooked: null,
         public_admission: true,
         allow_membership_requests: false,
-        full_name: "Awesome Team"
+        full_name: "Awesome Team",
       },
       {
         id: 42,
@@ -31,7 +30,6 @@ export default {
         alias_level: 99,
         visible: true,
         automatic_membership_email_domains: "",
-        automatic_membership_retroactive: false,
         primary_group: false,
         title: null,
         grant_trust_level: null,
@@ -44,12 +42,12 @@ export default {
         public_admission: false,
         allow_membership_requests: true,
         membership_request_template: "Please add me",
-        full_name: null
-      }
+        full_name: null,
+      },
     ],
     extras: { group_user_ids: [] },
     total_rows_groups: 2,
-    load_more_groups: "/groups?page=1"
+    load_more_groups: "/groups?page=1",
   },
   "/groups.json?username=eviltrout": {
     groups: [
@@ -61,7 +59,6 @@ export default {
         alias_level: 0,
         visible: true,
         automatic_membership_email_domains: "",
-        automatic_membership_retroactive: false,
         primary_group: false,
         title: null,
         grant_trust_level: null,
@@ -73,11 +70,11 @@ export default {
         bio_cooked: null,
         public_admission: true,
         allow_membership_requests: false,
-        full_name: "Awesome Team"
-      }
+        full_name: "Awesome Team",
+      },
     ],
     extras: { group_user_ids: [] },
     total_rows_groups: 1,
-    load_more_groups: "/groups?page=1"
-  }
+    load_more_groups: "/groups?page=1",
+  },
 };

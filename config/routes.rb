@@ -99,6 +99,8 @@ Discourse::Application.routes.draw do
         put "owners" => "groups#add_owners"
         delete "owners" => "groups#remove_owner"
       end
+
+      put "automatic_membership_count" => "groups#automatic_membership_count"
     end
 
     get "groups/:type" => "groups#show", constraints: AdminConstraint.new

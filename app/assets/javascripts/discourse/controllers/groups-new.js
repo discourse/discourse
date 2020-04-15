@@ -9,6 +9,9 @@ export default Controller.extend({
       this.set("saving", true);
       const group = this.model;
 
+      bootbox.alert(group.automatic_membership_email_domains);
+      return;
+
       group
         .create()
         .then(() => {
@@ -16,6 +19,6 @@ export default Controller.extend({
         })
         .catch(popupAjaxError)
         .finally(() => this.set("saving", false));
-    }
-  }
+    },
+  },
 });

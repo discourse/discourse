@@ -7,7 +7,7 @@ export default {
         granted_at: "2014-05-16T02:39:38.388Z",
         badge_id: 4,
         user_id: 19,
-        granted_by_id: -1
+        granted_by_id: -1,
       },
       {
         id: 40673,
@@ -17,15 +17,15 @@ export default {
         badge_id: 23,
         user_id: 19,
         granted_by_id: -1,
-        topic_id: 3153
+        topic_id: 3153,
       },
       {
         id: 5868,
         granted_at: "2014-05-16T02:39:38.380Z",
         badge_id: 3,
         user_id: 19,
-        granted_by_id: -1
-      }
+        granted_by_id: -1,
+      },
     ],
     badges: [
       {
@@ -41,7 +41,7 @@ export default {
         enabled: true,
         badge_grouping_id: 4,
         system: true,
-        badge_type_id: 1
+        badge_type_id: 1,
       },
       {
         id: 23,
@@ -56,7 +56,7 @@ export default {
         enabled: true,
         badge_grouping_id: 2,
         system: true,
-        badge_type_id: 1
+        badge_type_id: 1,
       },
       {
         id: 3,
@@ -71,13 +71,13 @@ export default {
         enabled: true,
         badge_grouping_id: 4,
         system: true,
-        badge_type_id: 2
-      }
+        badge_type_id: 2,
+      },
     ],
     badge_types: [
       { id: 1, name: "Gold", sort_order: 9 },
       { id: 2, name: "Silver", sort_order: 8 },
-      { id: 3, name: "Bronze", sort_order: 7 }
+      { id: 3, name: "Bronze", sort_order: 7 },
     ],
     users: [
       {
@@ -85,15 +85,15 @@ export default {
         username: "eviltrout",
         uploaded_avatar_id: null,
         avatar_template:
-          "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png"
+          "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
       },
       {
         id: -1,
         username: "system",
         uploaded_avatar_id: null,
         avatar_template:
-          "/letter_avatar/system/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png"
-      }
+          "/letter_avatar/system/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
+      },
     ],
     topics: [
       {
@@ -102,12 +102,12 @@ export default {
         fancy_title:
           "Is it better for Discourse to use JavaScript or CoffeeScript?",
         slug: "is-it-better-for-discourse-to-use-javascript-or-coffeescript",
-        posts_count: 56
-      }
+        posts_count: 56,
+      },
     ],
     user: {
       user_option: {
-        text_size_seq: 1
+        text_size_seq: 1,
       },
       id: 19,
       username: "eviltrout",
@@ -120,8 +120,8 @@ export default {
         {
           name: "facebook",
           description: "robin.ward@example.com",
-          can_revoke: true
-        }
+          can_revoke: true,
+        },
       ],
       last_posted_at: "2015-05-07T15:23:35.074Z",
       last_seen_at: "2015-05-13T14:34:23.188Z",
@@ -147,7 +147,7 @@ export default {
         { action_type: 7, count: 949, id: null },
         { action_type: 9, count: 42, id: null },
         { action_type: 3, count: 8, id: null },
-        { action_type: 11, count: 20, id: null }
+        { action_type: 11, count: 20, id: null },
       ],
       can_send_private_messages: true,
       can_send_private_message_to_user: false,
@@ -193,7 +193,7 @@ export default {
         username: "sam",
         uploaded_avatar_id: null,
         avatar_template:
-          "/letter_avatar/sam/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png"
+          "/letter_avatar/sam/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
       },
       custom_groups: [
         {
@@ -204,9 +204,8 @@ export default {
           alias_level: 0,
           visible: true,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
-          title: null
+          title: null,
         },
         {
           id: 47,
@@ -216,10 +215,9 @@ export default {
           alias_level: 0,
           visible: true,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
-          title: null
-        }
+          title: null,
+        },
       ],
       featured_user_badge_ids: [5870, 40673, 5868],
       card_badge: {
@@ -236,7 +234,7 @@ export default {
         enabled: false,
         badge_grouping_id: 8,
         system: false,
-        badge_type_id: 3
+        badge_type_id: 3,
       },
       user_auth_tokens: [
         {
@@ -249,7 +247,7 @@ export default {
           icon: "fab-linux",
           created_at: "2018-09-08T21:22:56.225Z",
           seen_at: "2018-09-08T21:22:56.512Z",
-          is_active: false
+          is_active: false,
         },
         {
           id: 3,
@@ -261,7 +259,7 @@ export default {
           icon: "fab-linux",
           created_at: "2018-09-08T21:33:41.616Z",
           seen_at: "2018-09-08T21:33:42.209Z",
-          is_active: true
+          is_active: true,
         },
         {
           id: 6,
@@ -273,10 +271,10 @@ export default {
           icon: "fab-windows",
           created_at: "2018-09-07T21:44:41.616Z",
           seen_at: "2018-09-08T21:44:42.209Z",
-          is_active: false
-        }
-      ]
-    }
+          is_active: false,
+        },
+      ],
+    },
   },
   "/user_actions.json": {
     user_actions: [
@@ -306,7 +304,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -336,7 +334,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -366,7 +364,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 6,
@@ -396,7 +394,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -424,7 +422,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -452,7 +450,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -480,7 +478,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -508,7 +506,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -536,7 +534,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -564,7 +562,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -592,7 +590,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 6,
@@ -620,7 +618,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -648,7 +646,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -676,7 +674,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -704,7 +702,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -732,7 +730,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -762,7 +760,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -789,7 +787,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 6,
@@ -817,7 +815,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 6,
@@ -847,7 +845,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -875,7 +873,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: true,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -903,7 +901,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -933,7 +931,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -961,7 +959,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 6,
@@ -991,7 +989,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1021,7 +1019,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 6,
@@ -1049,7 +1047,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1079,7 +1077,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1109,7 +1107,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -1139,7 +1137,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1167,7 +1165,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1197,7 +1195,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1227,7 +1225,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -1257,7 +1255,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -1287,7 +1285,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1315,7 +1313,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1345,7 +1343,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1375,7 +1373,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -1405,7 +1403,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -1435,7 +1433,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 5,
@@ -1463,7 +1461,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1491,7 +1489,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1519,7 +1517,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1549,7 +1547,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1579,7 +1577,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1607,7 +1605,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 6,
@@ -1635,7 +1633,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1663,7 +1661,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1691,7 +1689,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1719,7 +1717,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1749,7 +1747,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 7,
@@ -1777,7 +1775,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 1,
@@ -1805,7 +1803,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1833,7 +1831,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1861,7 +1859,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1889,7 +1887,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1917,7 +1915,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -1945,7 +1943,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 6,
@@ -1973,7 +1971,7 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
+        edit_reason: null,
       },
       {
         action_type: 2,
@@ -2001,9 +1999,9 @@ export default {
         deleted: false,
         hidden: false,
         moderator_action: false,
-        edit_reason: null
-      }
-    ]
+        edit_reason: null,
+      },
+    ],
   },
   "/topics/created-by/eviltrout.json": {
     users: [
@@ -2011,62 +2009,62 @@ export default {
         id: 19,
         username: "eviltrout",
         avatar_template:
-          "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon"
+          "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
       },
       {
         id: 5460,
         username: "ned",
         avatar_template:
-          "//localhost:3000/uploads/default/avatars/06b/90d/3b3ea7e56b/{size}.png"
+          "//localhost:3000/uploads/default/avatars/06b/90d/3b3ea7e56b/{size}.png",
       },
       {
         id: 402,
         username: "thebrianbarlow",
         avatar_template:
-          "//www.gravatar.com/avatar/5ddf2459e8edd6cf52dfff6cb41ca70d.png?s={size}&r=pg&d=identicon"
+          "//www.gravatar.com/avatar/5ddf2459e8edd6cf52dfff6cb41ca70d.png?s={size}&r=pg&d=identicon",
       },
       {
         id: 5707,
         username: "trident",
         avatar_template:
-          "//localhost:3000/uploads/default/avatars/527/614/d16e1504d9/{size}.jpg"
+          "//localhost:3000/uploads/default/avatars/527/614/d16e1504d9/{size}.jpg",
       },
       {
         id: 32,
         username: "codinghorror",
         avatar_template:
-          "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon"
+          "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
       },
       {
         id: 1995,
         username: "zogstrip",
         avatar_template:
-          "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon"
+          "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon",
       },
       {
         id: 2702,
         username: "ryanflorence",
         avatar_template:
-          "//www.gravatar.com/avatar/749001c9fe6927c4b069a45c2a3d68f7.png?s={size}&r=pg&d=identicon"
+          "//www.gravatar.com/avatar/749001c9fe6927c4b069a45c2a3d68f7.png?s={size}&r=pg&d=identicon",
       },
       {
         id: 9,
         username: "tms",
         avatar_template:
-          "//www.gravatar.com/avatar/3981cd271c302f5cba628c6b6d2b32ee.png?s={size}&r=pg&d=identicon"
+          "//www.gravatar.com/avatar/3981cd271c302f5cba628c6b6d2b32ee.png?s={size}&r=pg&d=identicon",
       },
       {
         id: 1,
         username: "sam",
         avatar_template:
-          "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon"
+          "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
       },
       {
         id: 2636,
         username: "lonnon",
         avatar_template:
-          "//www.gravatar.com/avatar/9489ef302fbff6c19bba507d09f8cd1d.png?s={size}&r=pg&d=identicon"
-      }
+          "//www.gravatar.com/avatar/9489ef302fbff6c19bba507d09f8cd1d.png?s={size}&r=pg&d=identicon",
+      },
     ],
     topic_list: {
       can_create_topic: false,
@@ -2103,8 +2101,12 @@ export default {
             { extras: null, description: "Most Posts", user_id: 5460 },
             { extras: null, description: "Frequent Poster", user_id: 402 },
             { extras: null, description: "Frequent Poster", user_id: 5707 },
-            { extras: "latest", description: "Most Recent Poster", user_id: 32 }
-          ]
+            {
+              extras: "latest",
+              description: "Most Recent Poster",
+              user_id: 32,
+            },
+          ],
         },
         {
           id: 9318,
@@ -2134,9 +2136,9 @@ export default {
             {
               extras: "latest",
               description: "Original Poster, Most Recent Poster",
-              user_id: 19
-            }
-          ]
+              user_id: 19,
+            },
+          ],
         },
         {
           id: 7019,
@@ -2166,11 +2168,11 @@ export default {
             {
               extras: "latest",
               description: "Original Poster, Most Recent Poster",
-              user_id: 19
+              user_id: 19,
             },
             { extras: null, description: "Most Posts", user_id: 1995 },
-            { extras: null, description: "Frequent Poster", user_id: 2702 }
-          ]
+            { extras: null, description: "Frequent Poster", user_id: 2702 },
+          ],
         },
         {
           id: 4650,
@@ -2201,8 +2203,8 @@ export default {
             { extras: null, description: "Most Posts", user_id: 9 },
             { extras: null, description: "Frequent Poster", user_id: 1995 },
             { extras: null, description: "Frequent Poster", user_id: 32 },
-            { extras: "latest", description: "Most Recent Poster", user_id: 1 }
-          ]
+            { extras: "latest", description: "Most Recent Poster", user_id: 1 },
+          ],
         },
         {
           id: 4960,
@@ -2235,9 +2237,9 @@ export default {
             {
               extras: "latest",
               description: "Most Recent Poster",
-              user_id: 1995
-            }
-          ]
+              user_id: 1995,
+            },
+          ],
         },
         {
           id: 2918,
@@ -2267,13 +2269,13 @@ export default {
             {
               extras: "latest",
               description: "Original Poster, Most Recent Poster",
-              user_id: 19
+              user_id: 19,
             },
-            { extras: null, description: "Most Posts", user_id: 2636 }
-          ]
-        }
-      ]
-    }
+            { extras: null, description: "Most Posts", user_id: 2636 },
+          ],
+        },
+      ],
+    },
   },
   "/u/charlie.json": {
     user_badges: [
@@ -2283,8 +2285,8 @@ export default {
         count: 1,
         badge_id: 3,
         user_id: 5,
-        granted_by_id: -1
-      }
+        granted_by_id: -1,
+      },
     ],
     badges: [
       {
@@ -2303,8 +2305,8 @@ export default {
         system: true,
         slug: "regular",
         manually_grantable: false,
-        badge_type_id: 2
-      }
+        badge_type_id: 2,
+      },
     ],
     badge_types: [{ id: 2, name: "Silver", sort_order: 8 }],
     users: [
@@ -2314,7 +2316,7 @@ export default {
         name: null,
         avatar_template: "/letter_avatar_proxy/v3/letter/c/d6d6ee/{size}.png",
         moderator: false,
-        admin: false
+        admin: false,
       },
       {
         id: -1,
@@ -2322,8 +2324,8 @@ export default {
         name: "system",
         avatar_template: "/user_avatar/localhost/system/{size}/2_2.png",
         moderator: true,
-        admin: true
-      }
+        admin: true,
+      },
     ],
     user: {
       id: 5,
@@ -2392,7 +2394,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2408,7 +2409,7 @@ export default {
           allow_membership_requests: false,
           full_name: null,
           default_notification_level: 3,
-          membership_request_template: null
+          membership_request_template: null,
         },
         {
           id: 11,
@@ -2420,7 +2421,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2436,7 +2436,7 @@ export default {
           allow_membership_requests: false,
           full_name: null,
           default_notification_level: 3,
-          membership_request_template: null
+          membership_request_template: null,
         },
         {
           id: 12,
@@ -2448,7 +2448,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2464,7 +2463,7 @@ export default {
           allow_membership_requests: false,
           full_name: null,
           default_notification_level: 3,
-          membership_request_template: null
+          membership_request_template: null,
         },
         {
           id: 13,
@@ -2476,7 +2475,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2492,14 +2490,14 @@ export default {
           allow_membership_requests: false,
           full_name: null,
           default_notification_level: 3,
-          membership_request_template: null
-        }
+          membership_request_template: null,
+        },
       ],
       group_users: [
         { group_id: 10, user_id: 5, notification_level: 3 },
         { group_id: 11, user_id: 5, notification_level: 3 },
         { group_id: 12, user_id: 5, notification_level: 3 },
-        { group_id: 13, user_id: 5, notification_level: 3 }
+        { group_id: 13, user_id: 5, notification_level: 3 },
       ],
       featured_user_badge_ids: [17],
       user_option: {
@@ -2527,9 +2525,9 @@ export default {
         homepage_id: null,
         hide_profile_and_presence: false,
         text_size: "normal",
-        text_size_seq: 0
-      }
-    }
+        text_size_seq: 0,
+      },
+    },
   },
   "/u/charlie/summary.json": {
     topics: [],
@@ -2550,8 +2548,8 @@ export default {
         system: true,
         slug: "regular",
         manually_grantable: false,
-        badge_type_id: 2
-      }
+        badge_type_id: 2,
+      },
     ],
     badge_types: [{ id: 2, name: "Silver", sort_order: 8 }],
     users: [
@@ -2561,7 +2559,7 @@ export default {
         name: null,
         avatar_template: "/letter_avatar_proxy/v3/letter/c/d6d6ee/{size}.png",
         moderator: false,
-        admin: false
+        admin: false,
       },
       {
         id: -1,
@@ -2569,8 +2567,8 @@ export default {
         name: "system",
         avatar_template: "/user_avatar/localhost/system/{size}/2_2.png",
         moderator: true,
-        admin: true
-      }
+        admin: true,
+      },
     ],
     user_summary: {
       likes_given: 0,
@@ -2595,11 +2593,11 @@ export default {
           count: 1,
           badge_id: 3,
           user_id: 5,
-          granted_by_id: -1
-        }
+          granted_by_id: -1,
+        },
       ],
-      top_categories: []
-    }
+      top_categories: [],
+    },
   },
   "/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3.json": {
     user_badges: [],
@@ -2673,8 +2671,8 @@ export default {
           icon: "fab-linux",
           created_at: "2019-06-26T08:41:18.436Z",
           seen_at: "2019-06-26T09:24:24.683Z",
-          is_active: true
-        }
+          is_active: true,
+        },
       ],
       invited_by: null,
       groups: [
@@ -2701,7 +2699,7 @@ export default {
           allow_membership_requests: false,
           full_name: null,
           default_notification_level: 3,
-          membership_request_template: null
+          membership_request_template: null,
         },
         {
           id: 11,
@@ -2726,12 +2724,12 @@ export default {
           allow_membership_requests: false,
           full_name: null,
           default_notification_level: 3,
-          membership_request_template: null
-        }
+          membership_request_template: null,
+        },
       ],
       group_users: [
         { group_id: 10, user_id: 2, notification_level: 3, owner: false },
-        { group_id: 11, user_id: 2, notification_level: 3, owner: false }
+        { group_id: 11, user_id: 2, notification_level: 3, owner: false },
       ],
       featured_user_badge_ids: [],
       user_option: {
@@ -2761,9 +2759,9 @@ export default {
         hide_profile_and_presence: false,
         text_size: "normal",
         text_size_seq: 0,
-        title_count_mode: "notifications"
-      }
-    }
+        title_count_mode: "notifications",
+      },
+    },
   },
   "/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary.json": {
     topics: [],
@@ -2785,7 +2783,7 @@ export default {
       most_liked_users: [],
       most_replied_to_users: [],
       badges: [],
-      top_categories: []
-    }
-  }
+      top_categories: [],
+    },
+  },
 };
