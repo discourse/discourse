@@ -205,7 +205,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed()
-  textMonthFormatted() {
+  nextMonthFormatted() {
     return this.nextMonth().format(I18n.t("dates.long_no_year"));
   },
 
