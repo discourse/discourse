@@ -454,7 +454,8 @@ nav.post-controls {
       color: $tertiary;
     }
   }
-  .bookmark.bookmarked .d-icon-bookmark {
+  .bookmark.bookmarked .d-icon-bookmark,
+  .bookmark.bookmarked .d-icon-discourse-bookmark-clock {
     color: $tertiary;
   }
   .feature-on-profile.featured-on-profile .d-icon-id-card {
