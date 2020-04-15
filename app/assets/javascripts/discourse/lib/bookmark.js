@@ -1,5 +1,5 @@
 export function formattedReminderTime(reminderAt, timezone) {
-  let reminderAtDate = moment(reminderAt).tz(timezone);
+  let reminderAtDate = moment.tz(reminderAt, timezone);
   let formatted = reminderAtDate.format(I18n.t("dates.time"));
   let now = moment.tz(timezone);
   let tomorrow = moment(now).add(1, "day");
