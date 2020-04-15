@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { popupAutomaticMembershipAlert } from "discourse/lib/utilities";
 
 export default Controller.extend({
   saving: null,
@@ -9,8 +10,10 @@ export default Controller.extend({
       this.set("saving", true);
       const group = this.model;
 
-      bootbox.alert(group.automatic_membership_email_domains);
-      return;
+      popupAutomaticMembershipAlert(
+        group.id,
+        group.automatic_membership_email_domains
+      );
 
       group
         .create()

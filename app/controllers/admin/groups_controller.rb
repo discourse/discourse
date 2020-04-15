@@ -123,7 +123,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def automatic_membership_count
     domains = Group.get_valid_email_domains(params.require(:automatic_membership_email_domains))
-    group_id = params.require(:id)
+    group_id = params[:id]
     user_count = 0
 
     if domains.present?

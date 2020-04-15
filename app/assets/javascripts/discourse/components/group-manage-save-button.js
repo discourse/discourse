@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { popupAutomaticMembershipAlert } from "discourse/lib/utilities";
 
 export default Component.extend({
   saving: null,
@@ -14,10 +15,14 @@ export default Component.extend({
   actions: {
     save() {
       this.set("saving", true);
+      const group = this.model;
 
-      alert(this.model.automatic_membership_email_domains);
+      popupAutomaticMembershipAlert(
+        group.id,
+        group.automatic_membership_email_domains
+      );
 
-      return this.model
+      return group
         .save()
         .then(() => {
           this.set("saved", true);
