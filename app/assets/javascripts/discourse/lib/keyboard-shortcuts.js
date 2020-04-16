@@ -283,10 +283,12 @@ export default {
     });
   },
 
-  createTopic() {
+  createTopic(event) {
     if (!(this.currentUser && this.currentUser.can_create_topic)) {
       return;
     }
+
+    event.preventDefault();
 
     // If the page has a create-topic button, use it for context sensitive attributes like category
     let $createTopicButton = $("#create-topic");
