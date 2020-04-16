@@ -1,15 +1,18 @@
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import { readOnly } from "@ember/object/computed";
+import deprecated from "discourse-common/lib/deprecated";
 
 const Tab = EmberObject.extend({
   init() {
     this._super(...arguments);
-    let name = this.name;
-    this.set("route", this.route || `group.` + name);
-    this.set("message", I18n.t(`groups.${this.i18nKey || name}`));
+
+    this.setProperties({
+      route: this.route || `group.${this.name}`,
+      message: I18n.t(`groups.${this.i18nKey || this.name}`)
+    });
   }
 });
 
@@ -19,7 +22,7 @@ export default Controller.extend({
   showing: "members",
   destroying: null,
   router: service(),
-  currentPath: readOnly("router._router.currentPath"),
+  currentPath: readOnly("router.currentRouteName"),
 
   @discourseComputed(
     "showMessages",
@@ -39,10 +42,9 @@ export default Controller.extend({
       name: "members",
       route: "group.index",
       icon: "users",
-      i18nKey: "members.title"
+      i18nKey: "members.title",
+      count: userCount
     });
-
-    membersTab.set("count", userCount);
 
     const defaultTabs = [membersTab, Tab.create({ name: "activity" })];
 
@@ -127,37 +129,45 @@ export default Controller.extend({
     );
   },
 
-  actions: {
-    messageGroup() {
-      this.send("createNewMessageViaParams", this.get("model.name"));
-    },
+  @action
+  messageGroup() {
+    this.send("createNewMessageViaParams", this.get("model.name"));
+  },
 
-    destroy() {
-      const group = this.model;
-      this.set("destroying", true);
+  @action
+  destroyGroup() {
+    this.set("destroying", true);
 
-      bootbox.confirm(
-        I18n.t("admin.groups.delete_confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        confirmed => {
-          if (confirmed) {
-            group
-              .destroy()
-              .then(() => {
-                this.transitionToRoute("groups.index");
-              })
-              .catch(error => {
-                // eslint-disable-next-line no-console
-                console.error(error);
-                bootbox.alert(I18n.t("admin.groups.delete_failed"));
-              })
-              .finally(() => this.set("destroying", false));
-          } else {
-            this.set("destroying", false);
-          }
+    bootbox.confirm(
+      I18n.t("admin.groups.delete_confirm"),
+      I18n.t("no_value"),
+      I18n.t("yes_value"),
+      confirmed => {
+        if (confirmed) {
+          this.model
+            .destroy()
+            .then(() => this.transitionToRoute("groups.index"))
+            .catch(error => {
+              // eslint-disable-next-line no-console
+              console.error(error);
+              bootbox.alert(I18n.t("admin.groups.delete_failed"));
+            })
+            .finally(() => this.set("destroying", false));
+        } else {
+          this.set("destroying", false);
         }
-      );
+      }
+    );
+  },
+
+  actions: {
+    destroy() {
+      deprecated("Use `destroyGroup` action instead of `destroy`.", {
+        since: "2.5.0",
+        dropFrom: "2.6.0"
+      });
+
+      this.destroyGroup();
     }
   }
 });

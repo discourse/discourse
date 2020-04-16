@@ -768,6 +768,7 @@ describe UsersController do
           json = JSON.parse(response.body)
 
           new_user = User.find(json["user_id"])
+          email_token = new_user.email_tokens.active.where(email: new_user.email).first
 
           expect(json['active']).to be_truthy
 
@@ -775,6 +776,7 @@ describe UsersController do
           expect(new_user.approved).to eq(true)
           expect(new_user.approved_by_id).to eq(admin.id)
           expect(new_user.approved_at).to_not eq(nil)
+          expect(email_token.confirmed?).to eq(true)
         end
 
         it "will create a reviewable when a user is created as active but not approved" do

@@ -5,6 +5,7 @@ import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
+import { formattedReminderTime } from "discourse/lib/bookmark";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -314,12 +315,13 @@ registerButton("bookmarkWithReminder", (attrs, state, siteSettings) => {
     classNames.push("bookmarked");
 
     if (attrs.bookmarkReminderAt) {
-      let reminderAtDate = moment(attrs.bookmarkReminderAt).tz(
+      let formattedReminder = formattedReminderTime(
+        attrs.bookmarkReminderAt,
         Discourse.currentUser.resolvedTimezone()
       );
       title = "bookmarks.created_with_reminder";
       titleOptions = {
-        date: reminderAtDate.format(I18n.t("dates.long_with_year"))
+        date: formattedReminder
       };
     } else if (attrs.bookmarkReminderType === "at_desktop") {
       title = "bookmarks.created_with_at_desktop_reminder";

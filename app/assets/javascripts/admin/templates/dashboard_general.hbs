@@ -5,7 +5,7 @@
     <div class="period-section">
       <div class="section-title">
         <h2>
-          <a href={{get-url '/admin/dashboard/reports'}}>
+          <a href={{get-url "/admin/dashboard/reports"}}>
             {{i18n "admin.dashboard.community_health"}}
           </a>
         </h2>
@@ -76,10 +76,10 @@
             <div class="counters-list">
               <div class="counters-header">
                 <div class="counters-cell"></div>
-                <div class="counters-cell">{{i18n 'admin.dashboard.reports.today'}}</div>
-                <div class="counters-cell">{{i18n 'admin.dashboard.reports.yesterday'}}</div>
-                <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_7_days'}}</div>
-                <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_30_days'}}</div>
+                <div class="counters-cell">{{i18n "admin.dashboard.reports.today"}}</div>
+                <div class="counters-cell">{{i18n "admin.dashboard.reports.yesterday"}}</div>
+                <div class="counters-cell">{{i18n "admin.dashboard.reports.last_7_days"}}</div>
+                <div class="counters-cell">{{i18n "admin.dashboard.reports.last_30_days"}}</div>
               </div>
 
               {{#each activityMetrics as |metric|}}
@@ -121,7 +121,7 @@
             <div>
               <h4>{{i18n "admin.dashboard.discourse_last_updated"}} </h4>
               <p>{{format-date model.attributes.discourse_updated_at leaveAgo="true"}}</p>
-              <a rel="noopener" target="_blank" href={{model.attributes.release_notes_link}} class="btn btn-default">
+              <a rel="noopener noreferrer" target="_blank" href={{model.attributes.release_notes_link}} class="btn btn-default">
                 {{i18n "admin.dashboard.whats_new_in_discourse"}}
               </a>
             </div>

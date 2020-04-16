@@ -17,7 +17,7 @@ pre-commit:
       exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
       run: yarn eslint -f compact {staged_files}
     ember-template-lint:
-      run: yarn run ember-template-lint app
+      run: yarn run ember-template-lint {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
       # database.yml is an erb file not a yaml file

@@ -3,7 +3,7 @@
     <label class="control-label">{{i18n "admin.groups.manage.membership.automatic"}}</label>
 
     <label for="automatic_membership">
-      {{i18n 'admin.groups.manage.membership.automatic_membership_email_domains'}}
+      {{i18n "admin.groups.manage.membership.automatic_membership_email_domains"}}
     </label>
 
     {{list-setting
@@ -23,7 +23,7 @@
           checked=model.automatic_membership_retroactive
           class="groups-form-automatic-membership-retroactive"}}
 
-      {{i18n 'admin.groups.manage.membership.automatic_membership_retroactive'}}
+      {{i18n "admin.groups.manage.membership.automatic_membership_retroactive"}}
     </label>
   </div>
 
@@ -32,7 +32,7 @@
 
   <div class="control-group">
     <label class="control-label">{{i18n "admin.groups.manage.membership.effects"}}</label>
-    <label for="grant_trust_level">{{i18n 'admin.groups.manage.membership.trust_levels_title'}}</label>
+    <label for="grant_trust_level">{{i18n "admin.groups.manage.membership.trust_levels_title"}}</label>
 
     {{combo-box
       name="grant_trust_level"
@@ -47,7 +47,7 @@
           checked=model.primary_group
           class="groups-form-primary-group"}}
 
-      {{i18n 'admin.groups.manage.membership.primary_group'}}
+      {{i18n "admin.groups.manage.membership.primary_group"}}
     </label>
 
   </div>
@@ -62,15 +62,15 @@
         checked=model.public_admission
         disabled=disablePublicSetting}}
 
-    {{i18n 'groups.public_admission'}}
+    {{i18n "groups.public_admission"}}
   </label>
 
   <label>
-    {{input type='checkbox'
-        class='group-form-public-exit'
+    {{input type="checkbox"
+        class="group-form-public-exit"
         checked=model.public_exit}}
 
-    {{i18n 'groups.public_exit'}}
+    {{i18n "groups.public_exit"}}
   </label>
 
   <label>
@@ -79,17 +79,17 @@
         checked=model.allow_membership_requests
         disabled=disableMembershipRequestSetting}}
 
-    {{i18n 'groups.allow_membership_requests'}}
+    {{i18n "groups.allow_membership_requests"}}
   </label>
 
   {{#if model.allow_membership_requests}}
     <div>
       <label for="membership-request-template">
-        {{i18n 'groups.membership_request_template'}}
+        {{i18n "groups.membership_request_template"}}
       </label>
 
       {{expanding-text-area name="membership-request-template"
-          class='group-form-membership-request-template input-xxlarge'
+          class="group-form-membership-request-template input-xxlarge"
           value=model.membership_request_template}}
     </div>
   {{/if}}

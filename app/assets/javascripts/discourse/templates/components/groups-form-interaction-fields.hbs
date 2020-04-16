@@ -1,7 +1,7 @@
 {{#if currentUser.admin}}
   <div class="control-group">
-    <label class="control-label">{{i18n 'admin.groups.manage.interaction.visibility'}}</label>
-    <label for="visiblity">{{i18n 'admin.groups.manage.interaction.visibility_levels.title'}}</label>
+    <label class="control-label">{{i18n "admin.groups.manage.interaction.visibility"}}</label>
+    <label for="visiblity">{{i18n "admin.groups.manage.interaction.visibility_levels.title"}}</label>
 
     {{combo-box
       name="alias"
@@ -14,12 +14,12 @@
     }}
 
     <div class="control-instructions">
-      {{i18n 'admin.groups.manage.interaction.visibility_levels.description'}}
+      {{i18n "admin.groups.manage.interaction.visibility_levels.description"}}
     </div>
   </div>
 
   <div class="control-group">
-    <label for="visiblity">{{i18n 'admin.groups.manage.interaction.members_visibility_levels.title'}}</label>
+    <label for="visiblity">{{i18n "admin.groups.manage.interaction.members_visibility_levels.title"}}</label>
 
     {{combo-box name="alias"
         valueProperty="value"
@@ -29,14 +29,14 @@
         class="groups-form-members-visibility-level"}}
 
     <div class="control-instructions">
-      {{i18n 'admin.groups.manage.interaction.members_visibility_levels.description'}}
+      {{i18n "admin.groups.manage.interaction.members_visibility_levels.description"}}
     </div>
   </div>
 {{/if}}
 
 <div class="control-group">
-  <label class="control-label">{{i18n 'groups.manage.interaction.posting'}}</label>
-  <label for="alias">{{i18n 'groups.alias_levels.mentionable'}}</label>
+  <label class="control-label">{{i18n "groups.manage.interaction.posting"}}</label>
+  <label for="alias">{{i18n "groups.alias_levels.mentionable"}}</label>
 
   {{combo-box
     name="alias"
@@ -49,7 +49,7 @@
 </div>
 
 <div class="control-group">
-  <label for="alias">{{i18n 'groups.alias_levels.messageable'}}</label>
+  <label for="alias">{{i18n "groups.alias_levels.messageable"}}</label>
 
   {{combo-box
     name="alias"
@@ -67,14 +67,14 @@
           checked=model.publish_read_state
           class="groups-form-publish-read-state"}}
 
-    {{i18n 'admin.groups.manage.interaction.publish_read_state'}}
+    {{i18n "admin.groups.manage.interaction.publish_read_state"}}
   </label>
 </div>
 
 {{#if showEmailSettings}}
   <div class="control-group">
-    <label class="control-label">{{i18n 'admin.groups.manage.interaction.email'}}</label>
-    <label for="incoming_email">{{i18n 'admin.groups.manage.interaction.incoming_email'}}</label>
+    <label class="control-label">{{i18n "admin.groups.manage.interaction.email"}}</label>
+    <label for="incoming_email">{{i18n "admin.groups.manage.interaction.incoming_email"}}</label>
 
     {{text-field name="incoming_email"
         class="input-xxlarge groups-form-incoming-email"
@@ -85,10 +85,10 @@
   </div>
 {{/if}}
 
-<label class="control-label">{{i18n 'groups.manage.interaction.notification'}}</label>
+<label class="control-label">{{i18n "groups.manage.interaction.notification"}}</label>
 
 <div class="control-group">
-  <label>{{i18n 'groups.notification_level'}}</label>
+  <label>{{i18n "groups.notification_level"}}</label>
 
   {{notifications-button
     value=model.default_notification_level

@@ -8,9 +8,9 @@ module.exports = {
   rules: {
     "block-indentation": true,
     "deprecated-render-helper": true,
-    "img-alt-attributes": false,
+    "require-valid-alt-text": false,
     "linebreak-style": true,
-    "link-rel-noopener": true,
+    "link-rel-noopener": "strict",
     "no-abstract-roles": true,
     "no-args-paths": true,
     "no-attrs-in-components": true,
@@ -43,13 +43,14 @@ module.exports = {
     "no-unnecessary-concat": true,
     "no-unnecessary-component-helper": true,
     "no-unused-block-params": true,
-    "quotes": false,
-    "require-button-type": false,
+    quotes: "double",
+    "require-button-type": true,
     "require-iframe-title": true,
     "require-valid-alt-text": false,
     "self-closing-void-elements": true,
     "simple-unless": true,
     "style-concatenation": true,
-    "table-groups": true
+    "table-groups": true,
+    "link-href-attributes": false
   }
 };

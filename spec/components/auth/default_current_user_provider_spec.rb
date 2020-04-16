@@ -595,6 +595,43 @@ describe Auth::DefaultCurrentUserProvider do
 
   end
 
+  context "events" do
+    before do
+      @refreshes = 0
+
+      @increase_refreshes = -> (user) { @refreshes += 1 }
+      DiscourseEvent.on(:user_session_refreshed, &@increase_refreshes)
+    end
+
+    after do
+      DiscourseEvent.off(:user_session_refreshed, &@increase_refreshes)
+    end
+
+    it "fires event when updating last seen" do
+      user = Fabricate(:user)
+      @provider = provider('/')
+      cookies = {}
+      @provider.log_on_user(user, {}, cookies)
+      unhashed_token = cookies["_t"][:value]
+      freeze_time 20.minutes.from_now
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      provider2.refresh_session(user, {}, {})
+      expect(@refreshes).to eq(1)
+    end
+
+    it "does not fire an event when last seen does not update" do
+      user = Fabricate(:user)
+      @provider = provider('/')
+      cookies = {}
+      @provider.log_on_user(user, {}, cookies)
+      unhashed_token = cookies["_t"][:value]
+      freeze_time 2.minutes.from_now
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      provider2.refresh_session(user, {}, {})
+      expect(@refreshes).to eq(0)
+    end
+  end
+
   context "rate limiting" do
 
     before do

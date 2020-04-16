@@ -1,7 +1,7 @@
-<div class='email-template'>
+<div class="email-template">
   <label>{{i18n "admin.customize.email_templates.subject"}}</label>
   {{#if hasMultipleSubjects}}
-    <h3>{{#link-to 'adminSiteText' (query-params q=hasMultipleSubjects)}}{{i18n "admin.customize.email_templates.multiple_subjects"}}{{/link-to}}</h3>
+    <h3>{{#link-to "adminSiteText" (query-params q=hasMultipleSubjects)}}{{i18n "admin.customize.email_templates.multiple_subjects"}}{{/link-to}}</h3>
   {{else}}
     {{input value=buffered.subject}}
   {{/if}}

@@ -148,6 +148,7 @@ class Auth::DefaultCurrentUserProvider
                                client_ip: @request.ip,
                                path: @env['REQUEST_PATH'])
           cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
+          DiscourseEvent.trigger(:user_session_refreshed, user)
         end
       end
     end

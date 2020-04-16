@@ -1,4 +1,4 @@
-<div class='search-area'>
+<div class="search-area">
   <p>{{i18n "admin.site_text.description"}}</p>
 
   {{text-field value=q
@@ -18,7 +18,7 @@
   <p class="filter-options">
     <label>
       {{input type="checkbox" checked=overridden click=(action "toggleOverridden")}}
-      {{i18n 'admin.site_text.show_overriden'}}
+      {{i18n "admin.site_text.show_overriden"}}
     </label>
   </p>
 </div>
@@ -33,6 +33,6 @@
   {{/each}}
 
   {{#if siteTexts.extras.has_more}}
-    <p class="warning">{{i18n 'admin.site_text.more_than_50_results'}}</p>
+    <p class="warning">{{i18n "admin.site_text.more_than_50_results"}}</p>
   {{/if}}
 {{/conditional-loading-spinner}}

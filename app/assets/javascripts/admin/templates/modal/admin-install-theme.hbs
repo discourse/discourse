@@ -1,4 +1,4 @@
-{{#d-modal-body class='upload-selector install-theme' title="admin.customize.theme.install"}}
+{{#d-modal-body class="upload-selector install-theme" title="admin.customize.theme.install"}}
   <div class="install-theme-items">
     {{install-theme-item value="popular" selection=selection label="admin.customize.theme.install_popular"}}
     {{install-theme-item value="local" selection=selection label="admin.customize.theme.install_upload"}}
@@ -11,9 +11,9 @@
         {{#each themes as |theme|}}
           <div class="popular-theme-item">
             <div class="popular-theme-name">
-              <a href={{theme.meta_url}} rel="noopener" target="_blank">
+              <a href={{theme.meta_url}} rel="noopener noreferrer" target="_blank">
                 {{#if theme.component}}
-                  {{d-icon 'puzzle-piece' title='admin.customize.theme.component'}}
+                  {{d-icon "puzzle-piece" title="admin.customize.theme.component"}}
                 {{/if}}
                 {{theme.name}}
               </a>
@@ -26,14 +26,14 @@
               {{#if theme.installed}}
                 <span>{{i18n "admin.customize.theme.installed"}}</span>
               {{else}}
-                {{d-button class='btn-small'
+                {{d-button class="btn-small"
                   label="admin.customize.theme.install"
                   disabled=installDisabled
                   icon="upload"
                   action=(action "installThemeFromList" theme.value)}}
 
                 {{#if theme.preview}}
-                  <a href={{theme.preview}} rel="noopener" target="_blank">{{d-icon "desktop"}} {{i18n "admin.customize.theme.preview"}}</a>
+                  <a href={{theme.preview}} rel="noopener noreferrer" target="_blank">{{d-icon "desktop"}} {{i18n "admin.customize.theme.preview"}}</a>
                 {{/if}}
               {{/if}}
             </div>
@@ -44,38 +44,38 @@
 
     {{#if local}}
       <div class="inputs">
-        <input onchange={{action "uploadLocaleFile"}} type="file" id="file-input" accept='.dcstyle.json,application/json,.tar.gz,application/x-gzip,.zip,application/zip'><br>
-        <span class="description">{{i18n 'admin.customize.theme.import_file_tip'}}</span>
+        <input onchange={{action "uploadLocaleFile"}} type="file" id="file-input" accept=".dcstyle.json,application/json,.tar.gz,application/x-gzip,.zip,application/zip"><br>
+        <span class="description">{{i18n "admin.customize.theme.import_file_tip"}}</span>
       </div>
     {{/if}}
 
     {{#if remote}}
       <div class="inputs">
-        <div class='repo'>
-          <div class="label">{{i18n 'admin.customize.theme.import_web_tip'}}</div>
+        <div class="repo">
+          <div class="label">{{i18n "admin.customize.theme.import_web_tip"}}</div>
           {{input value=uploadUrl placeholder=urlPlaceholder}}
         </div>
 
         {{d-button
           class="btn-small advanced-repo"
           action=(action "toggleAdvanced")
-          label='admin.customize.theme.import_web_advanced'}}
+          label="admin.customize.theme.import_web_advanced"}}
 
         {{#if advancedVisible}}
-          <div class='branch'>
-            <div class="label">{{i18n 'admin.customize.theme.remote_branch'}}</div>
+          <div class="branch">
+            <div class="label">{{i18n "admin.customize.theme.remote_branch"}}</div>
             {{input value=branch placeholder="master"}}
           </div>
 
-          <div class='check-private'>
+          <div class="check-private">
             <label>
               {{input type="checkbox" checked=privateChecked}}
-              {{i18n 'admin.customize.theme.is_private'}}
+              {{i18n "admin.customize.theme.is_private"}}
             </label>
           </div>
           {{#if showPublicKey}}
-            <div class='public-key'>
-              <div class="label">{{i18n 'admin.customize.theme.public_key'}}</div>
+            <div class="public-key">
+              <div class="label">{{i18n "admin.customize.theme.public_key"}}</div>
               {{textarea readonly=true value=publicKey}}
             </div>
           {{/if}}
@@ -103,7 +103,7 @@
 
 {{#unless popular}}
   <div class="modal-footer">
-    {{d-button action=(action "installTheme") disabled=installDisabled class='btn btn-primary' label=submitLabel}}
+    {{d-button action=(action "installTheme") disabled=installDisabled class="btn btn-primary" label=submitLabel}}
     {{d-modal-cancel close=(route-action "closeModal")}}
   </div>
 {{/unless}}

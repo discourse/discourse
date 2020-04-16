@@ -6,7 +6,7 @@
   </td>
 
   <td>
-    <span>{{avatar log.acting_user imageSize='tiny'}}</span>
+    <span>{{avatar log.acting_user imageSize="tiny"}}</span>
 
     {{#d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.acting_user.username key="acting_user")}}
       {{log.acting_user.username}}
@@ -15,7 +15,7 @@
 
   <td>
     {{#if log.target_user}}
-      <span>{{avatar log.target_user imageSize='tiny'}}</span>
+      <span>{{avatar log.target_user imageSize="tiny"}}</span>
 
       {{#d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.target_user.username key="target_user")}}
         {{log.target_user.username}}
@@ -45,13 +45,13 @@
 
 {{#if expandDetails}}
   <tr>
-    <td colspan='6'>
+    <td colspan="6">
       <p>
-        <strong>{{i18n 'groups.manage.logs.from'}}</strong>: <code>{{log.prev_value}}</code>
+        <strong>{{i18n "groups.manage.logs.from"}}</strong>: <code>{{log.prev_value}}</code>
       </p>
 
       <p>
-        <strong>{{i18n 'groups.manage.logs.to'}}</strong>: <code>{{log.new_value}}</code>
+        <strong>{{i18n "groups.manage.logs.to"}}</strong>: <code>{{log.new_value}}</code>
       </p>
     </td>
   </tr>

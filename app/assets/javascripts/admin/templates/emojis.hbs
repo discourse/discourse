@@ -1,5 +1,5 @@
-<div class='admin-emojis'>
-  <h1>{{i18n 'admin.emoji.title'}}</h1>
+<div class="admin-emojis">
+  <h1>{{i18n "admin.emoji.title"}}</h1>
 
   <p class="desc">{{i18n "admin.emoji.help"}}</p>
 
@@ -31,7 +31,7 @@
       <tbody>
         {{#each sortedEmojis as |e|}}
           <tr>
-            <th><img class="emoji emoji-custom" src={{e.url}} title={{e.name}}></th>
+            <th><img class="emoji emoji-custom" src={{e.url}} title={{e.name}} alt={{i18n "admin.emoji.alt"}}></th>
             <th>:{{e.name}}:</th>
             <th>{{e.group}}</th>
             <th>

@@ -7,6 +7,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { REMINDER_TYPES } from "discourse/lib/bookmark";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
@@ -19,19 +20,7 @@ import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "d", "t"];
 const START_OF_DAY_HOUR = 8;
 const LATER_TODAY_CUTOFF_HOUR = 17;
-const REMINDER_TYPES = {
-  AT_DESKTOP: "at_desktop",
-  LATER_TODAY: "later_today",
-  NEXT_BUSINESS_DAY: "next_business_day",
-  TOMORROW: "tomorrow",
-  NEXT_WEEK: "next_week",
-  NEXT_MONTH: "next_month",
-  CUSTOM: "custom",
-  LAST_CUSTOM: "last_custom",
-  NONE: "none",
-  START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
-  LATER_THIS_WEEK: "later_this_week"
-};
+const LATER_TODAY_MAX_HOUR = 18;
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -78,7 +67,7 @@ export default Controller.extend(ModalFunctionality, {
       closeWithoutSaving: false,
       isSavingBookmarkManually: false,
       customReminderDate: null,
-      customReminderTime: null,
+      customReminderTime: this.defaultCustomReminderTime(),
       lastCustomReminderDate: null,
       lastCustomReminderTime: null,
       userTimezone: this.currentUser.resolvedTimezone()
@@ -172,7 +161,7 @@ export default Controller.extend(ModalFunctionality, {
     let later = this.laterToday();
     return (
       !later.isSame(this.tomorrow(), "date") &&
-      later.hour() <= LATER_TODAY_CUTOFF_HOUR
+      this.now().hour() < LATER_TODAY_CUTOFF_HOUR
     );
   },
 
@@ -270,6 +259,10 @@ export default Controller.extend(ModalFunctionality, {
     return moment.tz(date + " " + time, this.userTimezone);
   },
 
+  defaultCustomReminderTime() {
+    return `0${START_OF_DAY_HOUR}:00`;
+  },
+
   reminderAt() {
     if (!this.selectedReminderType) {
       return;
@@ -295,7 +288,7 @@ export default Controller.extend(ModalFunctionality, {
       case REMINDER_TYPES.CUSTOM:
         this.set(
           "customReminderTime",
-          this.customReminderTime || `0${START_OF_DAY_HOUR}:00`
+          this.customReminderTime || this.defaultCustomReminderTime()
         );
         const customDateTime = this.parseCustomDateTime(
           this.customReminderDate,
@@ -336,8 +329,11 @@ export default Controller.extend(ModalFunctionality, {
 
   laterToday() {
     let later = this.now().add(3, "hours");
+    if (later.hour() >= LATER_TODAY_MAX_HOUR) {
+      return later.hour(LATER_TODAY_MAX_HOUR).startOf("hour");
+    }
     return later.minutes() < 30
-      ? later.minutes(30)
+      ? later.startOf("hour")
       : later.add(30, "minutes").startOf("hour");
   },
 

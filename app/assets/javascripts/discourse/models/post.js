@@ -349,8 +349,8 @@ const Post = RestModel.extend({
         controller.setProperties({
           onCloseWithoutSaving: () => {
             this.toggleProperty("bookmarked_with_reminder");
+            resolve({ closedWithoutSaving: true });
             this.appEvents.trigger("post-stream:refresh", { id: this.id });
-            resolve();
           },
           afterSave: (reminderAtISO, reminderType) => {
             this.setProperties({
@@ -358,8 +358,8 @@ const Post = RestModel.extend({
               bookmark_reminder_at: reminderAtISO,
               bookmark_reminder_type: reminderType
             });
+            resolve({ closedWithoutSaving: false });
             this.appEvents.trigger("post-stream:refresh", { id: this.id });
-            resolve();
           }
         });
       });

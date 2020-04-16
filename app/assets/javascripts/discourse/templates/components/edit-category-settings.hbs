@@ -1,19 +1,19 @@
 <section>
-  <h3>{{i18n 'category.settings_sections.general'}}</h3>
+  <h3>{{i18n "category.settings_sections.general"}}</h3>
 
   {{#if showPositionInput}}
-    <section class='field position-fields'>
+    <section class="field position-fields">
       <label for="category-position">
-        {{i18n 'category.position'}}
+        {{i18n "category.position"}}
       </label>
       {{text-field value=category.position id="category-position" class="position-input" type="number"}}
     </section>
   {{/if}}
 
   {{#unless showPositionInput}}
-    <section class='field'>
-      {{i18n 'category.position_disabled'}}
-      <a href={{get-url '/admin/site_settings/category/basic'}}>{{i18n 'category.position_disabled_click'}}</a>
+    <section class="field">
+      {{i18n "category.position_disabled"}}
+      <a href={{get-url "/admin/site_settings/category/basic"}}>{{i18n "category.position_disabled_click"}}</a>
     </section>
   {{/unless}}
 
@@ -46,19 +46,19 @@
     </div>
   </section>
 
-  <section class='field'>
+  <section class="field">
     <label>
       {{input type="checkbox" checked=category.allow_badges}}
-      {{i18n 'category.allow_badges_label'}}
+      {{i18n "category.allow_badges_label"}}
     </label>
   </section>
 
   {{#if siteSettings.topic_featured_link_enabled}}
-    <section class='field'>
+    <section class="field">
       <div class="allowed-topic-featured-link-category">
         <label class="checkbox-label">
           {{input type="checkbox" checked=category.topic_featured_link_allowed}}
-          {{i18n 'category.topic_featured_link_allowed'}}
+          {{i18n "category.topic_featured_link_allowed"}}
         </label>
       </div>
     </section>
@@ -80,11 +80,11 @@
 </section>
 
 <section>
-  <h3>{{i18n 'category.settings_sections.moderation'}}</h3>
+  <h3>{{i18n "category.settings_sections.moderation"}}</h3>
   {{#if siteSettings.enable_category_group_review}}
     <section class="field">
       <label for="reviewable-by-group">
-        {{i18n 'category.reviewable_by_group'}}
+        {{i18n "category.reviewable_by_group"}}
       </label>
       {{group-selector
         groupFinder=groupFinder
@@ -98,34 +98,34 @@
   <section class="field">
     <label>
       {{input type="checkbox" checked=category.custom_fields.require_topic_approval}}
-      {{i18n 'category.require_topic_approval'}}
+      {{i18n "category.require_topic_approval"}}
     </label>
   </section>
 
   <section class="field">
     <label>
       {{input type="checkbox" checked=category.custom_fields.require_reply_approval}}
-      {{i18n 'category.require_reply_approval'}}
+      {{i18n "category.require_reply_approval"}}
     </label>
   </section>
 
-  <section class='field'>
+  <section class="field">
     <div class="control-group">
       <label for="topic-auto-close">
-        {{i18n 'topic.auto_close.label'}}
+        {{i18n "topic.auto_close.label"}}
       </label>
       {{text-field value=category.auto_close_hours id="topic-auto-close" type="number"}}
       <label>
         {{input type="checkbox" checked=category.auto_close_based_on_last_post}}
-        {{i18n 'topic.auto_close.based_on_last_post'}}
+        {{i18n "topic.auto_close.based_on_last_post"}}
       </label>
     </div>
   </section>
 
   {{#if siteSettings.tagging_enabled}}
-    <section class='field minimum-required-tags'>
+    <section class="field minimum-required-tags">
       <label for="category-minimum-tags">
-        {{i18n 'category.minimum_required_tags'}}
+        {{i18n "category.minimum_required_tags"}}
       </label>
       {{text-field value=category.minimum_required_tags id="category-minimum-tags" type="number" min="0"}}
     </section>
@@ -227,25 +227,25 @@
   <h3>{{i18n "category.settings_sections.email"}}</h3>
 
   {{#if emailInEnabled}}
-    <section class='field'>
+    <section class="field">
       <label for="category-email-in">
         {{d-icon "far-envelope"}}
-        {{i18n 'category.email_in'}}
+        {{i18n "category.email_in"}}
       </label>
       {{text-field id="category-email-in" class="email-in" value=category.email_in}}
     </section>
 
-    <section class='field'>
+    <section class="field">
       <label>
         {{input type="checkbox" checked=category.email_in_allow_strangers}}
-        {{i18n 'category.email_in_allow_strangers'}}
+        {{i18n "category.email_in_allow_strangers"}}
       </label>
     </section>
 
-    <section class='field'>
+    <section class="field">
       <label>
         {{input type="checkbox" checked=category.mailinglist_mirror}}
-        {{i18n 'category.mailinglist_mirror'}}
+        {{i18n "category.mailinglist_mirror"}}
       </label>
     </section>
 
@@ -253,9 +253,9 @@
   {{/if}}
 
   {{#unless emailInEnabled}}
-    <section class='field'>
-      {{i18n 'category.email_in_disabled'}}
-      <a href={{get-url '/admin/site_settings/category/email'}}>{{i18n 'category.email_in_disabled_click'}}</a>
+    <section class="field">
+      {{i18n "category.email_in_disabled"}}
+      <a href={{get-url "/admin/site_settings/category/email"}}>{{i18n "category.email_in_disabled_click"}}</a>
     </section>
   {{/unless}}
 </section>

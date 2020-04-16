@@ -1,4 +1,5 @@
 import { inject as service } from "@ember/service";
+import { throttle, debounce, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { on, observes } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -11,28 +12,19 @@ import {
 import { safariHacksDisabled } from "discourse/lib/utilities";
 import ENV, { INPUT_DELAY } from "discourse-common/config/environment";
 
-const { run } = Ember;
-
 const PER_ROW = 11;
 function customEmojis() {
   const list = extendedEmojiList();
-  const emojis = Object.keys(list)
-    .map(code => {
-      const { group } = list[code];
-      return {
-        code,
-        src: emojiUrlFor(code),
-        group,
-        key: `emoji_picker.${group || "default"}`
-      };
-    })
-    .reduce((acc, curr) => {
-      if (!acc[curr.group]) acc[curr.group] = [];
-      acc[curr.group].push(curr);
-      return acc;
-    }, {});
-
-  return Object.values(emojis);
+  const groups = [];
+  Object.keys(list).forEach(code => {
+    const emoji = list[code];
+    groups[emoji.group] = groups[emoji.group] || [];
+    groups[emoji.group].push({
+      code,
+      src: emojiUrlFor(code)
+    });
+  });
+  return groups;
 }
 
 export default Component.extend({
@@ -42,9 +34,8 @@ export default Component.extend({
   close() {
     this._unbindEvents();
 
-    this.$picker
-      .css({ width: "", left: "", bottom: "", display: "none" })
-      .empty();
+    this.$picker &&
+      this.$picker.css({ width: "", left: "", bottom: "", display: "none" });
 
     this.$modal.removeClass("fadeIn");
 
@@ -52,11 +43,6 @@ export default Component.extend({
   },
 
   show() {
-    const template = findRawTemplate("emoji-picker")({
-      customEmojis: customEmojis()
-    });
-    this.$picker.html(template);
-
     this.$filter = this.$picker.find(".filter");
     this.$results = this.$picker.find(".results");
     this.$list = this.$picker.find(".list");
@@ -66,7 +52,7 @@ export default Component.extend({
       recentEmojis: this.emojiStore.favorites
     });
 
-    run.scheduleOnce("afterRender", this, function() {
+    schedule("afterRender", this, function() {
       this._bindEvents();
       this._loadCategoriesEmojis();
       this._positionPicker();
@@ -84,6 +70,7 @@ export default Component.extend({
 
   @on("init")
   _setInitialValues() {
+    this.set("customEmojis", customEmojis());
     this._checkTimeout = null;
     this.scrollPosition = 0;
     this.$visibleSections = [];
@@ -100,21 +87,28 @@ export default Component.extend({
 
   @on("didInsertElement")
   _setup() {
-    this.$picker = $(this.element.querySelector(".emoji-picker"));
-    this.$modal = $(this.element.querySelector(".emoji-picker-modal"));
     this.appEvents.on("emoji-picker:close", this, "_closeEmojiPicker");
   },
 
   @on("didUpdateAttrs")
   _setState() {
-    this.active ? this.show() : this.close();
+    schedule("afterRender", () => {
+      if (!this.element) {
+        return;
+      }
+
+      this.$picker = $(this.element.querySelector(".emoji-picker"));
+      this.$modal = $(this.element.querySelector(".emoji-picker-modal"));
+
+      this.active ? this.show() : this.close();
+    });
   },
 
   @observes("filter")
   filterChanged() {
     this.$filter.find(".clear-filter").toggle(!_.isEmpty(this.filter));
     const filterDelay = this.site.isMobileDevice ? 400 : INPUT_DELAY;
-    run.debounce(this, this._filterEmojisList, filterDelay);
+    debounce(this, this._filterEmojisList, filterDelay);
   },
 
   @observes("selectedDiversity")
@@ -313,11 +307,11 @@ export default Component.extend({
 
   _bindResizing() {
     $(window).on("resize", () => {
-      run.throttle(this, this._positionPicker, 16);
+      throttle(this, this._positionPicker, 16);
     });
 
     $("#reply-control").on("div-resizing", () => {
-      run.throttle(this, this._positionPicker, 16);
+      throttle(this, this._positionPicker, 16);
     });
   },
 
@@ -380,7 +374,7 @@ export default Component.extend({
 
   _bindSectionsScroll() {
     let onScroll = () => {
-      run.debounce(this, this._checkVisibleSection, 50);
+      debounce(this, this._checkVisibleSection, 50);
     };
 
     this.$list.on("scroll", onScroll);

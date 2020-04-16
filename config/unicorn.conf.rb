@@ -95,6 +95,13 @@ before_fork do |server, worker|
         Demon::Sidekiq.stop
       end
 
+      # Trap USR1, so we can re-issue to sidekiq workers
+      # but chain the default unicorn implementation as well
+      old_handler = Signal.trap("USR1") do
+        Demon::Sidekiq.kill("USR1")
+        old_handler.call
+      end
+
       class ::Unicorn::HttpServer
         alias :master_sleep_orig :master_sleep
 

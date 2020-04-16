@@ -24,7 +24,7 @@
 <div>
   <label class="show-words-checkbox">
     {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}
-    {{i18n 'admin.watched_words.show_words'}}
+    {{i18n "admin.watched_words.show_words"}}
   </label>
 </div>
 <div class="watched-words-list">
@@ -33,7 +33,7 @@
       <div class="watched-word-box">{{admin-watched-word word=word action=(action "recordRemoved")}}</div>
     {{/each}}
   {{else}}
-    {{i18n 'admin.watched_words.word_count' count=wordCount}}
+    {{i18n "admin.watched_words.word_count" count=wordCount}}
   {{/if}}
 </div>
 

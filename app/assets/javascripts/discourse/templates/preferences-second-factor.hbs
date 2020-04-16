@@ -1,10 +1,10 @@
-<section class='user-preferences solo-preference second-factor'>
+<section class="user-preferences solo-preference second-factor">
   {{#conditional-loading-spinner condition=loading}}
     <form class="form-horizontal">
       {{#if showEnforcedNotice}}
         <div class="control-group">
           <div class="controls">
-            <div class='alert alert-error'>{{i18n 'user.second_factor.enforced_notice'}}</div>
+            <div class="alert alert-error">{{i18n "user.second_factor.enforced_notice"}}</div>
           </div>
         </div>
       {{/if}}
@@ -12,7 +12,7 @@
       {{#if displayOAuthWarning}}
         <div class="control-group">
           <div class="controls">
-            {{i18n 'user.second_factor.oauth_enabled_warning'}}
+            {{i18n "user.second_factor.oauth_enabled_warning"}}
           </div>
         </div>
       {{/if}}
@@ -20,7 +20,7 @@
       {{#if errorMessage}}
         <div class="control-group">
           <div class="controls">
-            <div class='alert alert-error'>{{errorMessage}}</div>
+            <div class="alert alert-error">{{errorMessage}}</div>
           </div>
         </div>
       {{/if}}
@@ -85,9 +85,9 @@
             <h2>{{i18n "user.second_factor_backup.title"}}</h2>
             {{#if model.second_factor_enabled}}
               {{#if model.second_factor_backup_enabled}}
-                {{html-safe (i18n 'user.second_factor_backup.manage' count=model.second_factor_remaining_backup_codes)}}
+                {{html-safe (i18n "user.second_factor_backup.manage" count=model.second_factor_remaining_backup_codes)}}
               {{else}}
-                {{i18n 'user.second_factor_backup.enable_long'}}
+                {{i18n "user.second_factor_backup.enable_long"}}
               {{/if}}
 
               {{#if isCurrentUser}}
@@ -119,7 +119,7 @@
         {{/if}}
       {{else}}
         <div class="control-group">
-          <label class='control-label'>{{i18n 'user.password.title'}}</label>
+          <label class="control-label">{{i18n "user.password.title"}}</label>
 
           <div class="controls">
             <div>
@@ -129,8 +129,8 @@
                 classNames="input-large"
                 autofocus="autofocus"}}
             </div>
-            <div class='instructions'>
-              {{i18n 'user.second_factor.confirm_password_description'}}
+            <div class="instructions">
+              {{i18n "user.second_factor.confirm_password_description"}}
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@
           <div class="controls" style="margin-top: 5px">
             {{resetPasswordProgress}}
             {{#unless resetPasswordLoading}}
-              <a href class="instructions" {{action "resetPassword"}}>{{ i18n 'user.second_factor.forgot_password' }}</a>
+              <a href class="instructions" {{action "resetPassword"}}>{{ i18n "user.second_factor.forgot_password" }}</a>
             {{/unless}}
           </div>
         </div>

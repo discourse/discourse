@@ -6,7 +6,7 @@
   <form class="groups-form form-vertical">
     {{#groups-form-profile-fields model=model disableSave=saving}}
       <div class="control-group">
-        <label class="control-label" for="owner-selector">{{i18n 'admin.groups.add_owners'}}</label>
+        <label class="control-label" for="owner-selector">{{i18n "admin.groups.add_owners"}}</label>
 
         {{user-selector usernames=model.ownerUsernames
             class="input-xxlarge"
@@ -15,7 +15,7 @@
       </div>
 
       <div class="control-group">
-        <label class="control-label" for="member-selector">{{i18n 'groups.members.title'}}</label>
+        <label class="control-label" for="member-selector">{{i18n "groups.members.title"}}</label>
 
         {{user-selector usernames=model.usernames
             class="input-xxlarge"
@@ -27,16 +27,16 @@
     {{groups-form-membership-fields model=model}}
     {{groups-form-interaction-fields model=model}}
 
-    <div class='control-group buttons'>
+    <div class="control-group buttons">
       {{d-button
         action=(action "save")
         type="submit"
         disabled=saving
-        class='btn btn-primary group-form-save'
+        class="btn btn-primary group-form-save"
         label="admin.groups.new.create"}}
 
       {{#link-to "groups"}}
-        {{i18n 'cancel'}}
+        {{i18n "cancel"}}
       {{/link-to}}
     </div>
   </form>

@@ -1,8 +1,7 @@
 import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
@@ -137,9 +136,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return;
     }
 
-    scheduleOnce("afterRender", () => {
-      this.send("showHistory", post, revision);
-    });
+    schedule("afterRender", () => this.send("showHistory", post, revision));
   },
 
   showCategoryChooser: not("model.isPrivateMessage"),

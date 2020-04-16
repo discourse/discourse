@@ -507,8 +507,10 @@ class UsersController < ApplicationController
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
 
-      # If the user was created as active, they might need to be approved
-      user.create_reviewable if user.active?
+      # If the user was created as active this will
+      # ensure their email is confirmed and
+      # add them to the review queue if they need to be approved
+      user.activate if user.active?
 
       render json: {
         success: true,

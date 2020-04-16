@@ -10,10 +10,10 @@
 
   {{#if hasRequesters}}
     {{#load-more selector=".group-members tr" action=(action "loadMore")}}
-      <table class='group-members'>
+      <table class="group-members">
         <thead>
-          {{group-index-toggle order=order desc=desc field='username_lower' i18nKey='username'}}
-          {{group-index-toggle order=order desc=desc field='requested_at' i18nKey='groups.member_requested'}}
+          {{group-index-toggle order=order desc=desc field="username_lower" i18nKey="username"}}
+          {{group-index-toggle order=order desc=desc field="requested_at" i18nKey="groups.member_requested"}}
           <th>{{i18n "groups.requests.reason"}}</th>
           <th></th>
           <th></th>
@@ -22,7 +22,7 @@
         <tbody>
           {{#each model.requesters as |m|}}
             <tr>
-              <td class='avatar'>
+              <td class="avatar">
                 {{user-info user=m skipName=skipName}}
               </td>
               <td>

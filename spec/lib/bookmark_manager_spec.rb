@@ -32,6 +32,14 @@ RSpec.describe BookmarkManager do
       end
     end
 
+    context "when bookmarking the topic level (post is OP)" do
+      it "updates the topic user bookmarked column to true" do
+        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        tu = TopicUser.find_by(user: user)
+        expect(tu.bookmarked).to eq(true)
+      end
+    end
+
     context "when the reminder type is at_desktop" do
       let(:reminder_type) { 'at_desktop' }
       let(:reminder_at) { nil }
@@ -188,6 +196,12 @@ RSpec.describe BookmarkManager do
       end
     end
 
+    it "updates the topic user bookmarked column to false" do
+      TopicUser.create(user: user, topic: topic, bookmarked: true)
+      subject.destroy_for_topic(topic)
+      tu = TopicUser.find_by(user: user)
+      expect(tu.bookmarked).to eq(false)
+    end
   end
 
   describe ".send_reminder_notification" do

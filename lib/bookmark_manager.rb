@@ -27,6 +27,11 @@ class BookmarkManager
       return add_errors_from(bookmark)
     end
 
+    # bookmarking the topic-level mean
+    if post.is_first_post?
+      update_topic_user_bookmarked(topic: post.topic, bookmarked: true)
+    end
+
     BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(@user)
     bookmark
   end
@@ -49,6 +54,8 @@ class BookmarkManager
         raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
         bookmark.destroy
       end
+
+      update_topic_user_bookmarked(topic: topic, bookmarked: false)
     end
 
     clear_at_desktop_cache_if_required
@@ -68,5 +75,9 @@ class BookmarkManager
 
   def user_has_any_pending_at_desktop_reminders?
     Bookmark.at_desktop_reminders_for_user(@user).any?
+  end
+
+  def update_topic_user_bookmarked(topic:, bookmarked:)
+    TopicUser.change(@user.id, topic, bookmarked: bookmarked)
   end
 end

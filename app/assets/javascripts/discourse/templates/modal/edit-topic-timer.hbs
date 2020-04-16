@@ -1,13 +1,13 @@
 {{#d-modal-body title="topic.topic_status_update.title" autoFocus="false"}}
   <div class="radios">
     <label for="public-topic-timer">
-      {{radio-button id='public-topic-timer' name="topic-timer" value="true" selection=isPublic}}
-      <b>{{i18n 'topic.topic_status_update.public_timer_types'}}</b>
+      {{radio-button id="public-topic-timer" name="topic-timer" value="true" selection=isPublic}}
+      <b>{{i18n "topic.topic_status_update.public_timer_types"}}</b>
     </label>
 
     <label for="private-topic-timer">
-      {{radio-button id='private-topic-timer' name="topic-timer" value="false" selection=isPublic}}
-      <b>{{i18n 'topic.topic_status_update.private_timer_types'}}</b>
+      {{radio-button id="private-topic-timer" name="topic-timer" value="false" selection=isPublic}}
+      <b>{{i18n "topic.topic_status_update.private_timer_types"}}</b>
     </label>
   </div>
 
@@ -33,6 +33,6 @@
   {{#if topicTimer.execute_at}}
     {{d-button class="pull-right btn-danger"
         action=(action "removeTimer")
-        label='topic.topic_status_update.remove'}}
+        label="topic.topic_status_update.remove"}}
   {{/if}}
 </div>
