@@ -50,8 +50,8 @@ class Report
   end
 
   def self.cache_key(report)
-    (+"reports:") <<
     [
+      "reports",
       report.type,
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
@@ -63,8 +63,12 @@ class Report
   end
 
   def add_filter(name, options = {})
-    default_filter = { allow_any: false, choices: [], default: nil }
-    available_filters[name] = default_filter.merge(options)
+    if options[:type].blank?
+      options[:type] = name
+      Discourse.deprecate("#{name} filter should define a `:type` option. Temporarily setting type to #{name}.")
+    end
+
+    available_filters[name] = options
   end
 
   def remove_filter(name)
@@ -72,21 +76,13 @@ class Report
   end
 
   def add_category_filter
-    category_id = filters.dig(:category)
-    add_filter('category', default: category_id)
+    category_id = filters[:category].to_i if filters[:category].present?
+    add_filter('category', type: 'category', default: category_id)
+    return [nil, nil] if category_id.blank?
 
-    if category_id.present?
-      include_subcategories = filters.dig(:'include-subcategories')
-      add_filter('include-subcategories', default: include_subcategories)
-    end
-
-    # Cast only happens here because all filters must be strings
-    if category_id.present?
-      category_id = category_id.to_i
-      include_subcategories = !!ActiveRecord::Type::Boolean.new.cast(include_subcategories)
-    else
-      include_subcategories = false
-    end
+    include_subcategories = filters[:'include-subcategories']
+    include_subcategories = !!ActiveRecord::Type::Boolean.new.cast(include_subcategories)
+    add_filter('include-subcategories', type: 'bool', default: include_subcategories)
 
     [category_id, include_subcategories]
   end
