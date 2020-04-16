@@ -1,4 +1,4 @@
-import { scheduleOnce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
 import toMarkdown from "discourse/lib/to-markdown";
@@ -138,7 +138,11 @@ export default Component.extend({
     }
 
     // change the position of the button
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       let top = markerOffset.top;
       let left = markerOffset.left + Math.max(0, parentScrollLeft);
 
@@ -160,6 +164,8 @@ export default Component.extend({
   },
 
   didInsertElement() {
+    this._super(...arguments);
+
     const { isWinphone, isAndroid } = this.capabilities;
     const wait = isWinphone || isAndroid ? INPUT_DELAY : 25;
     const onSelectionChanged = discourseDebounce(

@@ -7,5 +7,9 @@ export default {
   initialize(container) {
     KeyboardShortcuts.init(Mousetrap, container);
     KeyboardShortcuts.bindEvents();
+  },
+
+  teardown() {
+    KeyboardShortcuts.teardown();
   }
 };
