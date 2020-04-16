@@ -106,6 +106,10 @@ export default {
     });
   },
 
+  teardown() {
+    this.container = null;
+  },
+
   bindKey(key, binding = null) {
     if (!binding) {
       binding = DEFAULT_BINDINGS[key];

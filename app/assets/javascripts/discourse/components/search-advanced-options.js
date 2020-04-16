@@ -77,7 +77,7 @@ export default Component.extend({
 
     this._init();
 
-    scheduleOnce("afterRender", () => this._update());
+    scheduleOnce("afterRender", this, this._update);
   },
 
   @observes("searchTerm")

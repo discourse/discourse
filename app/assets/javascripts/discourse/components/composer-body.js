@@ -1,7 +1,7 @@
 import {
   run,
   cancel,
-  scheduleOnce,
+  schedule,
   later,
   debounce,
   throttle
@@ -65,7 +65,7 @@ export default Component.extend(KeyEnterEscape, {
     "composer.canEditTopicFeaturedLink"
   )
   resize() {
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
         return;
       }
