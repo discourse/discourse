@@ -14,6 +14,6 @@ export default DiscourseRoute.extend({
   },
 
   setupController(controller, model) {
-    controller.setProperties({ model });
+    controller.set("model", model);
   }
 });
