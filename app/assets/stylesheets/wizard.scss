@@ -11,10 +11,9 @@ body.wizard {
   background-image: asset-url("/images/wizard/bubbles.png");
   background-repeat: repeat;
   background-position: left top;
-
   color: #444;
-
   line-height: $line-height-large;
+  font-size: 15px;
 }
 
 .finish-installation {
