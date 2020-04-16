@@ -29,9 +29,9 @@ import {
   formatUsername,
   clipboardData,
   caretPosition,
-  inCodeBlock,
-  putCursorAtEnd
+  inCodeBlock
 } from "discourse/lib/utilities";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import {
   validateUploadedFiles,
   authorizesOneOrMoreImageExtensions,
