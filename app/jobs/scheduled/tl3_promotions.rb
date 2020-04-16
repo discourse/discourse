@@ -6,22 +6,24 @@ module Jobs
     daily at: 4.hours
 
     def execute(args)
-      # Demotions
-      demoted_user_ids = []
-      User.real
-        .joins("LEFT JOIN (SELECT gu.user_id, MAX(g.grant_trust_level) AS group_granted_trust_level FROM groups g, group_users gu WHERE g.id = gu.group_id GROUP BY gu.user_id) tl ON users.id = tl.user_id")
-        .where(
-          trust_level: TrustLevel[3],
-          manual_locked_trust_level: nil
-        )
-        .where("group_granted_trust_level IS NULL OR group_granted_trust_level < ?", TrustLevel[3])
-        .find_each do |u|
-        # Don't demote too soon after being promoted
-        next if u.on_tl3_grace_period?
+      if SiteSetting.default_trust_level < 3
+        # Demotions
+        demoted_user_ids = []
+        User.real
+          .joins("LEFT JOIN (SELECT gu.user_id, MAX(g.grant_trust_level) AS group_granted_trust_level FROM groups g, group_users gu WHERE g.id = gu.group_id GROUP BY gu.user_id) tl ON users.id = tl.user_id")
+          .where(
+            trust_level: TrustLevel[3],
+            manual_locked_trust_level: nil
+          )
+          .where("group_granted_trust_level IS NULL OR group_granted_trust_level < ?", TrustLevel[3])
+          .find_each do |u|
+          # Don't demote too soon after being promoted
+          next if u.on_tl3_grace_period?
 
-        if Promotion.tl3_lost?(u)
-          demoted_user_ids << u.id
-          Promotion.new(u).change_trust_level!(TrustLevel[2])
+          if Promotion.tl3_lost?(u)
+            demoted_user_ids << u.id
+            Promotion.new(u).change_trust_level!(TrustLevel[2])
+          end
         end
       end
 

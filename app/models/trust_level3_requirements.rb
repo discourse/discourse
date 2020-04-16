@@ -67,6 +67,7 @@ class TrustLevel3Requirements
 
   def requirements_lost?
     return false if trust_level_locked
+    return false if SiteSetting.default_trust_level > 2
 
     @user.suspended? ||
       @user.silenced? ||

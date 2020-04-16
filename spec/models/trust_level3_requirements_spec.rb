@@ -586,6 +586,14 @@ describe TrustLevel3Requirements do
       user.silenced_till = 4.weeks.from_now
       expect(tl3_requirements.requirements_lost?).to eq(true)
     end
+
+    [3, 4].each do |default_tl|
+      it "is not lost if default_trust_level is #{default_tl}" do
+        SiteSetting.default_trust_level = default_tl
+        tl3_requirements.stubs(:days_visited).returns(1)
+        expect(tl3_requirements.requirements_lost?).to eq(false)
+      end
+    end
   end
 
 end
