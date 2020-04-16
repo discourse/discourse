@@ -1,5 +1,5 @@
 import { inject as service } from "@ember/service";
-import { schedule } from "@ember/runloop";
+import { throttle, debounce, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { on, observes } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -11,8 +11,6 @@ import {
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
 import ENV, { INPUT_DELAY } from "discourse-common/config/environment";
-
-const { run } = Ember;
 
 const PER_ROW = 11;
 function customEmojis() {
@@ -54,7 +52,7 @@ export default Component.extend({
       recentEmojis: this.emojiStore.favorites
     });
 
-    run.scheduleOnce("afterRender", this, function() {
+    schedule("afterRender", this, function() {
       this._bindEvents();
       this._loadCategoriesEmojis();
       this._positionPicker();
@@ -110,7 +108,7 @@ export default Component.extend({
   filterChanged() {
     this.$filter.find(".clear-filter").toggle(!_.isEmpty(this.filter));
     const filterDelay = this.site.isMobileDevice ? 400 : INPUT_DELAY;
-    run.debounce(this, this._filterEmojisList, filterDelay);
+    debounce(this, this._filterEmojisList, filterDelay);
   },
 
   @observes("selectedDiversity")
@@ -309,11 +307,11 @@ export default Component.extend({
 
   _bindResizing() {
     $(window).on("resize", () => {
-      run.throttle(this, this._positionPicker, 16);
+      throttle(this, this._positionPicker, 16);
     });
 
     $("#reply-control").on("div-resizing", () => {
-      run.throttle(this, this._positionPicker, 16);
+      throttle(this, this._positionPicker, 16);
     });
   },
 
@@ -376,7 +374,7 @@ export default Component.extend({
 
   _bindSectionsScroll() {
     let onScroll = () => {
-      run.debounce(this, this._checkVisibleSection, 50);
+      debounce(this, this._checkVisibleSection, 50);
     };
 
     this.$list.on("scroll", onScroll);

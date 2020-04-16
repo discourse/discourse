@@ -34,6 +34,13 @@ class Demon::Sidekiq < ::Demon::Base
     Sidekiq.logger = nil
     cli = Sidekiq::CLI.instance
 
+    # Unicorn uses USR1 to indicate that log files have been rotated
+    Signal.trap("USR1") do
+      puts "Sidekiq PID #{Process.pid} reopening logs..."
+      Unicorn::Util.reopen_logs
+      puts "Sidekiq PID #{Process.pid} done reopening logs..."
+    end
+
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]
 
     [['critical', 8], ['default', 4], ['low', 2], ['ultra_low', 1]].each do |queue_name, weight|

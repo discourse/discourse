@@ -1,8 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { alias } from "@ember/object/computed";
+import { gt, readOnly } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
+import { action } from "@ember/object";
 
 export default Controller.extend({
   application: controller(),
@@ -15,7 +16,7 @@ export default Controller.extend({
   filterInput: null,
 
   loading: false,
-  isOwner: alias("model.is_group_owner"),
+  isOwner: readOnly("model.is_group_owner"),
   showActions: false,
 
   @observes("filterInput")
@@ -29,27 +30,22 @@ export default Controller.extend({
   },
 
   findMembers(refresh) {
-    if (this.loading) {
+    if (this.loading || !this.model) {
       return;
     }
 
-    const model = this.model;
-    if (!model) {
-      return;
-    }
-
-    if (!refresh && model.members.length >= model.user_count) {
+    if (!refresh && this.model.members.length >= this.model.user_count) {
       this.set("application.showFooter", true);
       return;
     }
 
     this.set("loading", true);
-    model.findMembers(this.memberParams, refresh).finally(() => {
-      this.set(
-        "application.showFooter",
-        model.members.length >= model.user_count
-      );
-      this.set("loading", false);
+    this.model.findMembers(this.memberParams, refresh).finally(() => {
+      this.setProperties({
+        "application.showFooter":
+          this.model.members.length >= this.model.user_count,
+        loading: false
+      });
     });
   },
 
@@ -58,10 +54,7 @@ export default Controller.extend({
     return { order, desc, filter };
   },
 
-  @discourseComputed("model.members.[]")
-  hasMembers(members) {
-    return members && members.length > 0;
-  },
+  hasMembers: gt("model.members.length", 0),
 
   @discourseComputed("model")
   canManageGroup(model) {
@@ -77,49 +70,53 @@ export default Controller.extend({
     }
   },
 
-  actions: {
-    loadMore() {
-      this.findMembers();
-    },
+  @action
+  loadMore() {
+    this.findMembers();
+  },
 
-    toggleActions() {
-      this.toggleProperty("showActions");
-    },
+  @action
+  toggleActions() {
+    this.toggleProperty("showActions");
+  },
 
-    actOnGroup(member, actionId) {
-      switch (actionId) {
-        case "removeMember":
-          this.send("removeMember", member);
-          break;
-        case "makeOwner":
-          this.send("makeOwner", member.username);
-          break;
-        case "removeOwner":
-          this.send("removeOwner", member);
-          break;
-      }
-    },
+  @action
+  actOnGroup(member, actionId) {
+    switch (actionId) {
+      case "removeMember":
+        this.removeMember(member);
+        break;
+      case "makeOwner":
+        this.makeOwner(member.username);
+        break;
+      case "removeOwner":
+        this.removeOwner(member);
+        break;
+    }
+  },
 
-    removeMember(user) {
-      this.model.removeMember(user, this.memberParams);
-    },
+  @action
+  removeMember(user) {
+    this.model.removeMember(user, this.memberParams);
+  },
 
-    makeOwner(username) {
-      this.model.addOwners(username);
-    },
+  @action
+  makeOwner(username) {
+    this.model.addOwners(username);
+  },
 
-    removeOwner(user) {
-      this.model.removeOwner(user);
-    },
+  @action
+  removeOwner(user) {
+    this.model.removeOwner(user);
+  },
 
-    addMembers() {
-      const usernames = this.usernames;
-      if (usernames && usernames.length > 0) {
-        this.model
-          .addMembers(usernames)
-          .then(() => this.set("usernames", []))
-          .catch(popupAjaxError);
-      }
+  @action
+  addMembers() {
+    if (this.usernames && this.usernames.length > 0) {
+      this.model
+        .addMembers(this.usernames)
+        .then(() => this.set("usernames", []))
+        .catch(popupAjaxError);
     }
   }
 });

@@ -145,7 +145,11 @@ createSearchResult({
 
     const firstLine = [
       this.attach("topic-status", { topic, disableActions: true }),
-      h("span.topic-title", new Highlighted(topic.fancyTitle, term))
+      h(
+        "span.topic-title",
+        { attributes: { "data-topic-id": topic.id } },
+        new Highlighted(topic.fancyTitle, term)
+      )
     ];
 
     const secondLine = [
