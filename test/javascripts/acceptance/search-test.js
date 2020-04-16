@@ -28,6 +28,10 @@ QUnit.test("search", async assert => {
   await fillIn("#search-term", "dev");
   await keyEvent("#search-term", "keyup", 16);
   assert.ok(exists(".search-menu .results ul li"), "it shows results");
+  assert.ok(
+    exists(".search-menu .results ul li .topic-title[data-topic-id]"),
+    "topic has data-topic-id"
+  );
 
   await click(".show-help");
 
