@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe GroupsController do
   fab!(:user) { Fabricate(:user) }
+  let(:user2) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
   fab!(:admin) { Fabricate(:admin) }
@@ -91,7 +92,7 @@ describe GroupsController do
         sign_in(user)
       end
 
-      let!(:other_group) { Fabricate(:group, name: "other_group", users: [user]) }
+      let!(:other_group) { Fabricate(:group, name: "other_group", users: [user, user2]) }
 
       context "with default (descending) order" do
         it "sorts by name" do
