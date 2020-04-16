@@ -28,7 +28,6 @@ import {
   tinyAvatar,
   formatUsername,
   clipboardData,
-  safariHacksDisabled,
   caretPosition,
   inCodeBlock,
   putCursorAtEnd
@@ -210,10 +209,7 @@ export default Component.extend({
     }
 
     // Focus on the body unless we have a title
-    if (
-      !this.get("composer.canEditTitle") &&
-      (!this.capabilities.isIOS || safariHacksDisabled())
-    ) {
+    if (!this.get("composer.canEditTitle")) {
       putCursorAtEnd(this.element.querySelector(".d-editor-input"));
     }
 

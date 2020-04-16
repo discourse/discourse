@@ -1,5 +1,6 @@
 import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
+import positioningWorkaround from "discourse/lib/safari-hacks";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
 
@@ -445,9 +446,17 @@ export function inCodeBlock(text, pos) {
 }
 
 export function putCursorAtEnd(element) {
-  element.focus();
+  if (isAppleDevice() && positioningWorkaround.touchstartEvent) {
+    positioningWorkaround.touchstartEvent(element);
+  } else {
+    element.focus();
+  }
+
   const len = element.value.length;
   element.setSelectionRange(len, len);
+
+  // Scroll to the bottom, in case we're in a tall textarea
+  element.scrollTop = 999999;
 }
 
 // This prevents a mini racer crash
