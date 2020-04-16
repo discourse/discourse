@@ -1,6 +1,7 @@
 import { logIn } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
+import { REMINDER_TYPES } from "discourse/lib/bookmark";
 let BookmarkController;
 
 moduleFor("controller:bookmark", {
@@ -263,3 +264,20 @@ QUnit.test("user timezone updates when the modal is shown", function(assert) {
   );
   stub.restore();
 });
+
+QUnit.test(
+  "opening the modal with an existing bookmark with reminder at prefills the custom reminder type",
+  function(assert) {
+    let name = "test";
+    let reminderAt = "2020-05-15T09:45:00";
+    BookmarkController.model = { id: 1, name: name, reminderAt: reminderAt };
+    BookmarkController.onShow();
+    assert.equal(
+      BookmarkController.selectedReminderType,
+      REMINDER_TYPES.CUSTOM
+    );
+    assert.equal(BookmarkController.customReminderDate, "2020-05-15");
+    assert.equal(BookmarkController.customReminderTime, "09:45");
+    assert.equal(BookmarkController.model.name, name);
+  }
+);

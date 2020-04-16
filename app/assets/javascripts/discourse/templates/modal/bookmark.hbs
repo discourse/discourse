@@ -9,8 +9,14 @@
     {{/if}}
 
     <div class="control-group">
-      {{input value=name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
+      {{input value=model.name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
     </div>
+
+    {{#if showExistingReminderAt }}
+      <div class="alert alert-info existing-reminder-at-alert">
+        {{d-icon "far-clock"}} {{i18n "bookmarks.reminders.existing_reminder"}} {{existingReminderAtFormatted}}
+      </div>
+    {{/if}}
 
     {{#if showBookmarkReminderControls}}
       <div class="control-group">
