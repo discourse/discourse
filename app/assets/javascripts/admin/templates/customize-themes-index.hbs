@@ -7,7 +7,7 @@
     </div>
     <div class="external-resources">
       {{#each externalResources as |resource|}}
-        <a href={{resource.link}} class="external-link" rel="noopener" target="_blank">
+        <a href={{resource.link}} class="external-link" rel="noopener noreferrer" target="_blank">
           {{d-icon resource.icon}}
           {{i18n resource.key}}
         </a>
