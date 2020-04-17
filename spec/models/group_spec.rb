@@ -407,6 +407,7 @@ describe Group do
     Group.refresh_automatic_groups!
 
     groups = Group.includes(:users).to_a
+    puts groups.pluck(:name).inspect
     expect(groups.count).to eq Group::AUTO_GROUPS.count
 
     g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:admins] }
@@ -942,7 +943,7 @@ describe Group do
   end
 
   describe '#automatic_group_membership' do
-    let(:group) { Fabricate(:group) }
+    let(:group) { Fabricate(:group, automatic_membership_email_domains: "example.com") }
 
     it "should be triggered on create and update" do
       expect { group }
