@@ -302,11 +302,13 @@ en:
       help:
         bookmark: "Click to bookmark the first post on this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
+        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
+
 
     bookmarks:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
-      created_with_reminder: "you've bookmarked this post with a reminder at %{date}"
+      created_with_reminder: "you've bookmarked this post with a reminder %{date}"
       created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
@@ -326,6 +328,10 @@ en:
         custom: "Custom date and time"
         last_custom: "Last"
         none: "No reminder needed"
+        today_with_time: "today at %{time}"
+        tomorrow_with_time: "tomorrow at %{time}"
+        at_time: "at %{date_time}"
+        existing_reminder: "You have a reminder set for this bookmark which will be sent"
 
     drafts:
       resume: "Resume"
@@ -983,6 +989,7 @@ en:
         success: "(email sent)"
         in_progress: "(sending email)"
         error: "(error)"
+        emoji: "lock emoji"
         action: "Send Password Reset Email"
         set_password: "Set Password"
         choose_new: "Choose a new password"
@@ -1504,6 +1511,7 @@ en:
     email_login:
       link_label: "Email me a login link"
       button_label: "with email"
+      emoji: "lock emoji"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a login link shortly."
       complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
@@ -1584,6 +1592,7 @@ en:
         backup_code: "Use a backup code instead"
     invites:
       accept_title: "Invitation"
+      emoji: "envelope emoji"
       welcome_to: "Welcome to %{site_name}!"
       invited_by: "You were invited by:"
       social_login_available: "You'll also be able to sign in with any social login using that email."
@@ -2708,6 +2717,7 @@ en:
 
       bookmarks:
         create: "Create bookmark"
+        edit: "Edit bookmark"
         created: "Created"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
@@ -2716,6 +2726,9 @@ en:
           delete_bookmark:
             name: "Delete bookmark"
             description: "Removes the bookmark from your profile and stops all reminders for the bookmark"
+          edit_bookmark:
+            name: "Edit bookmark"
+            description: "Edit the bookmark name or change the reminder date and time"
 
     category:
       can: "can&hellip; "
@@ -3719,6 +3732,7 @@ en:
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
+          themes_intro_emoji: "woman artist emoji"
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
           browse_themes: "Browse community themes"
@@ -4580,6 +4594,7 @@ en:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
           title: "Select an existing badge or create a new one to get started"
+          emoji: "woman student emoji"
           what_are_badges_title: "What are badges?"
           badge_query_examples_title: "Badge query examples"
         mass_award:
@@ -4599,6 +4614,7 @@ en:
         name: "Name"
         group: "Group"
         image: "Image"
+        alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
 
       embedding:
@@ -4620,6 +4636,7 @@ en:
         embed_post_limit: "Maximum number of posts to embed"
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
+        embed_unlisted: "Imported topics will be unlisted until there is a reply."
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
         embed_classname_whitelist: "Allowed CSS class names"

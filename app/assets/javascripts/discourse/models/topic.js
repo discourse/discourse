@@ -401,6 +401,7 @@ const Topic = RestModel.extend({
     if (firstPost) {
       firstPost.set("bookmarked", true);
       firstPost.set("bookmarked_with_reminder", true);
+      this.set("bookmark_reminder_at", firstPost.bookmark_reminder_at);
       return [firstPost.id];
     }
   },
@@ -443,6 +444,7 @@ const Topic = RestModel.extend({
           return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" })
             .then(() => {
               this.toggleProperty("bookmarked");
+              this.set("bookmark_reminder_at", null);
               if (posts) {
                 const updated = [];
                 posts.forEach(post => {
@@ -455,6 +457,7 @@ const Topic = RestModel.extend({
                     updated.push(post.id);
                   }
                 });
+                firstPost.set("bookmarked_with_reminder", false);
                 return updated;
               }
             })

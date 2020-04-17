@@ -135,5 +135,14 @@ describe Jobs::Tl3Promotions do
       run_job
       expect(user.reload.trust_level).to eq(TrustLevel[3])
     end
+
+    it "doesn't demote if default trust level for all users is 3" do
+      SiteSetting.default_trust_level = 3
+      user = Fabricate(:user, trust_level: TrustLevel[3], created_at: 1.year.ago)
+      expect(user).to_not be_on_tl3_grace_period
+      TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
+      run_job
+      expect(user.reload.trust_level).to eq(TrustLevel[3])
+    end
   end
 end

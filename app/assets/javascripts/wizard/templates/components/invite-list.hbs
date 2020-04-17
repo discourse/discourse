@@ -8,7 +8,7 @@
 {{/if}}
 
 <div class="new-user">
-  <div class="text-field {{if invalid 'invalid'}}">
+  <div class="text-field {{if invalid "invalid"}}">
     {{input class="invite-email wizard-focusable" value=inviteEmail placeholder="user@example.com" tabindex="9"}}
   </div>
 
@@ -19,7 +19,7 @@
     onChange=(action (mut inviteRole))
   }}
 
-  <button class="wizard-btn small add-user" {{action "addUser"}}>
+  <button type="button" class="wizard-btn small add-user" {{action "addUser"}}>
     {{d-icon "plus"}}{{i18n "wizard.invites.add_user"}}
   </button>
 </div>

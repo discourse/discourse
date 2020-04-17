@@ -20,7 +20,7 @@
     {{!-- context is only provided when searching from mobile view --}}
     <div class="search-context">
       {{#if context}}
-        <div class='fps-search-context'>
+        <div class="fps-search-context">
           <label>
             {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
           </label>
@@ -29,7 +29,7 @@
     </div>
 
     {{#if hasResults}}
-      <div class='search-title'>
+      <div class="search-title">
         {{#if hasResults}}
           {{create-topic-button canCreateTopic=canCreateTopic action=(action "createTopic" searchTerm)}}
         {{/if}}
@@ -40,19 +40,19 @@
         {{/if}}
 
         {{#if bulkSelectEnabled}}
-          <div class='fps-select'>
+          <div class="fps-select">
             <a href {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
             <a href {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
           </div>
         {{/if}}
       </div>
 
-      <div class='search-info'>
-        <div class='result-count'>
+      <div class="search-info">
+        <div class="result-count">
           {{html-safe resultCountLabel}}
         </div>
-        <div class='sort-by'>
-          <span class='desc'>
+        <div class="sort-by">
+          <span class="desc">
             {{i18n "search.sort_by"}}
           </span>
           {{combo-box
@@ -73,27 +73,27 @@
       <div class="search-results">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
           {{#each model.posts as |result|}}
-            <div class='fps-result'>
-              <div class='author'>
+            <div class="fps-result">
+              <div class="author">
                 <a href={{result.userPath}} data-user-card={{result.username}}>
                   {{avatar result imageSize="large"}}
                 </a>
               </div>
 
-              <div class='fps-topic'>
-                <div class='topic'>
+              <div class="fps-topic">
+                <div class="topic">
                   {{#if bulkSelectEnabled}}
                     {{track-selected selectedList=selected selectedId=result.topic}}
                   {{/if}}
 
-                  <a class='search-link' href={{result.url}} {{action "logClick" result.topic_id}}>
+                  <a href={{result.url}} {{action "logClick" result.topic_id}} class="search-link">
                     {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
-                    <span class='topic-title'>{{#highlight-text highlight=q}}{{html-safe result.topic.fancyTitle}}{{/highlight-text}}</span>
+                    <span class="topic-title">{{#highlight-search highlight=q}}{{html-safe result.topic.fancyTitle}}{{/highlight-search}}</span>
                   </a>
 
-                  <div class='search-category'>
+                  <div class="search-category">
                     {{#if result.topic.category.parentCategory}}
-                    {{category-link result.topic.category.parentCategory}}
+                      {{category-link result.topic.category.parentCategory}}
                     {{/if}}
                     {{category-link result.topic.category hideParent=true}}
                     {{#each result.topic.tags as |tag|}}
@@ -103,24 +103,24 @@
                   </div>
                 </div>
 
-                <div class='blurb container'>
-                  <span class='date'>
+                <div class="blurb container">
+                  <span class="date">
                     {{format-age result.created_at}}
                     {{#if result.blurb}}
-                    -
+                      -
                     {{/if}}
                   </span>
 
                   {{#if result.blurb}}
-                    {{#highlight-text highlight=highlightQuery}}
+                    {{#highlight-search highlight=highlightQuery}}
                       {{html-safe result.blurb}}
-                    {{/highlight-text}}
+                    {{/highlight-search}}
                   {{/if}}
                 </div>
 
                 {{#if showLikeCount}}
                   {{#if result.like_count}}
-                    <span class='like-count'>
+                    <span class="like-count">
                       {{result.like_count}} {{d-icon "heart"}}
                     </span>
                   {{/if}}

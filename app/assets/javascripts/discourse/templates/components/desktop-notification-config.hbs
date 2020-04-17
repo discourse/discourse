@@ -2,7 +2,7 @@
   {{d-button icon="bell-slash" class="btn-default" label="user.desktop_notifications.not_supported" disabled="true"}}
 {{/if}}
 {{#if isDeniedPermission}}
-  {{d-button icon="bell-slash" class="btn-default"  label="user.desktop_notifications.perm_denied_btn" action=(action "recheckPermission") disabled='true'}}
+  {{d-button icon="bell-slash" class="btn-default" label="user.desktop_notifications.perm_denied_btn" action=(action "recheckPermission") disabled="true"}}
   {{i18n "user.desktop_notifications.perm_denied_expl"}}
 {{else}}
   {{#if isEnabled}}

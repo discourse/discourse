@@ -17,13 +17,13 @@ describe Jobs::EmitWebHookEvent do
 
   it 'raises an error when there is no event type' do
     expect do
-      subject.execute(web_hook_id: 1, payload: {})
+      subject.execute(web_hook_id: post_hook.id, payload: {})
     end.to raise_error(Discourse::InvalidParameters)
   end
 
   it 'raises an error when there is no payload' do
     expect do
-      subject.execute(web_hook_id: 1, event_type: 'post')
+      subject.execute(web_hook_id: post_hook.id, event_type: 'post')
     end.to raise_error(Discourse::InvalidParameters)
   end
 

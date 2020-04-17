@@ -1,23 +1,23 @@
 {{#if showThemeSelector}}
-<div class="control-group theme">
-  <label class="control-label">{{i18n 'user.theme'}}</label>
-  <div class="controls">
-    {{combo-box
-      content=userSelectableThemes
-      value=themeId
-      onChange=(action (mut themeId))
-    }}
-  </div>
-  {{#if showThemeSetDefault}}
+  <div class="control-group theme">
+    <label class="control-label">{{i18n "user.theme"}}</label>
     <div class="controls">
-      {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}
+      {{combo-box
+        content=userSelectableThemes
+        value=themeId
+        onChange=(action (mut themeId))
+      }}
     </div>
-  {{/if}}
-</div>
+    {{#if showThemeSetDefault}}
+      <div class="controls">
+        {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}
+      </div>
+    {{/if}}
+  </div>
 {{/if}}
 
 <div class="control-group text-size">
-  <label class="control-label">{{i18n 'user.text_size.title'}}</label>
+  <label class="control-label">{{i18n "user.text_size.title"}}</label>
   <div class="controls">
     {{combo-box
       valueProperty="value"
@@ -35,7 +35,7 @@
 
 {{#if siteSettings.allow_user_locale}}
   <div class="control-group pref-locale">
-    <label class="control-label">{{i18n 'user.locale.title'}}</label>
+    <label class="control-label">{{i18n "user.locale.title"}}</label>
     <div class="controls">
       {{combo-box
         valueProperty="value"
@@ -48,14 +48,14 @@
         )
       }}
     </div>
-    <div class='instructions'>
-      {{i18n 'user.locale.instructions'}}
+    <div class="instructions">
+      {{i18n "user.locale.instructions"}}
     </div>
   </div>
 {{/if}}
 
 <div class="control-group home">
-  <label class="control-label">{{i18n 'user.home'}}</label>
+  <label class="control-label">{{i18n "user.home"}}</label>
   <div class="controls">
     {{combo-box
       content=userSelectableHome
@@ -67,7 +67,7 @@
 </div>
 
 <div class="control-group other">
-  <label class="control-label">{{i18n 'user.other_settings'}}</label>
+  <label class="control-label">{{i18n "user.other_settings"}}</label>
 
   {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=model.user_option.external_links_in_new_tab class="pref-external-links"}}
   {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting class="pref-enable-quoting"}}
@@ -80,8 +80,8 @@
     {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks  class="pref-safari-hacks"}}
   {{/if}}
   {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon  class="pref-dynamic-favicon"}}
-  <div class='controls controls-dropdown pref-page-title'>
-    <label for="user-email-level">{{i18n 'user.title_count_mode.title'}}</label>
+  <div class="controls controls-dropdown pref-page-title">
+    <label for="user-email-level">{{i18n "user.title_count_mode.title"}}</label>
     {{combo-box
       valueProperty="value"
       content=titleCountModes

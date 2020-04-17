@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { cancel, debounce, scheduleOnce } from "@ember/runloop";
+import { cancel, debounce, schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { searchForTerm } from "discourse/lib/search";
@@ -17,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
       selectedRow: -1
     });
 
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       const element = document.querySelector(".insert-link");
 
       element.addEventListener("keydown", e => this.keyDown(e));

@@ -85,13 +85,17 @@ export default ComboBoxComponent.extend({
     }
   },
 
-  content: computed("selectKit.{filter,options.scopedCategoryId}", function() {
-    if (!this.selectKit.filter && this.selectKit.options.scopedCategoryId) {
-      return this.categoriesByScope(this.selectKit.options.scopedCategoryId);
-    } else {
-      return this.categoriesByScope();
+  content: computed(
+    "selectKit.filter",
+    "selectKit.options.scopedCategoryId",
+    function() {
+      if (!this.selectKit.filter && this.selectKit.options.scopedCategoryId) {
+        return this.categoriesByScope(this.selectKit.options.scopedCategoryId);
+      } else {
+        return this.categoriesByScope();
+      }
     }
-  }),
+  ),
 
   categoriesByScope(scopedCategoryId = null) {
     const categories = this.fixedCategoryPositionsOnCreate

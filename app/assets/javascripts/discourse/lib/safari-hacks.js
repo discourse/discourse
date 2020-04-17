@@ -84,6 +84,12 @@ function positioningWorkaround($fixedElement) {
     return;
   }
 
+  document.addEventListener("scroll", () => {
+    if (!caps.isIpadOS && workaroundActive) {
+      document.documentElement.scrollTop = 0;
+    }
+  });
+
   const fixedElement = $fixedElement[0];
   const oldHeight = fixedElement.style.height;
 
@@ -94,17 +100,17 @@ function positioningWorkaround($fixedElement) {
     if (workaroundActive) {
       $("body").removeClass("ios-safari-composer-hacks");
 
+      $(window).scrollTop(originalScrollTop);
+      if (evt && evt.target) {
+        evt.target.removeEventListener("blur", blurred);
+      }
+
+      workaroundActive = false;
+
       if (!iOSWithVisualViewport()) {
         fixedElement.style.height = oldHeight;
         later(() => $(fixedElement).removeClass("no-transition"), 500);
       }
-
-      $(window).scrollTop(originalScrollTop);
-
-      if (evt) {
-        evt.target.removeEventListener("blur", blurred);
-      }
-      workaroundActive = false;
     }
   };
 
@@ -113,8 +119,9 @@ function positioningWorkaround($fixedElement) {
     // document.activeElement is also unreliable (iOS does not mark buttons as focused)
     // so instead, we store the last touched element and check against it
 
-    // cancel blur event if user is:
+    // cancel blur event when:
     // - switching to another iOS app
+    // - displaying title field
     // - invoking a select-kit dropdown
     // - invoking mentions
     // - invoking emoji dropdown via : and hitting return
@@ -123,6 +130,7 @@ function positioningWorkaround($fixedElement) {
     if (
       lastTouchedElement &&
       (document.visibilityState === "hidden" ||
+        $fixedElement.hasClass("edit-title") ||
         $(lastTouchedElement).hasClass("select-kit-header") ||
         $(lastTouchedElement).closest(".autocomplete").length ||
         (lastTouchedElement.nodeName.toLowerCase() === "textarea" &&
@@ -140,6 +148,12 @@ function positioningWorkaround($fixedElement) {
   var blurred = discourseDebounce(blurredNow, INPUT_DELAY);
 
   var positioningHack = function(evt) {
+    let _this = this;
+
+    if (evt === undefined) {
+      evt = new CustomEvent("no-op");
+    }
+
     // we need this, otherwise changing focus means we never clear
     this.addEventListener("blur", blurred);
 
@@ -150,12 +164,22 @@ function positioningWorkaround($fixedElement) {
       .find(".select-kit > button.is-focused")
       .removeClass("is-focused");
 
-    if ($(window).scrollTop() > 0) {
-      originalScrollTop = $(window).scrollTop();
+    originalScrollTop = $(window).scrollTop();
+
+    const elementRect = _this.getBoundingClientRect();
+    if (elementRect.top > 100) {
+      // this tricks iOS safari into assuming input/textarea is at top of the viewport
+      // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
+      _this.style.transform = "translateY(-400px)";
+      setTimeout(function() {
+        _this.style.transform = "none";
+      }, 30);
     }
 
+    let delay = caps.isIpadOS ? 350 : 150;
+
     setTimeout(function() {
-      if (iOSWithVisualViewport()) {
+      if (caps.isIpadOS && iOSWithVisualViewport()) {
         // disable hacks when using a hardware keyboard
         // by default, a hardware keyboard will show the keyboard accessory bar
         // whose height is currently 55px (using 75 for a bit of a buffer)
@@ -165,37 +189,13 @@ function positioningWorkaround($fixedElement) {
         }
       }
 
-      if (fixedElement.style.top === "0px") {
-        if (this !== document.activeElement) {
-          evt.preventDefault();
-
-          // this tricks safari into assuming current input is at top of the viewport
-          // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
-          this.style.transform = "translateY(-200px)";
-          this.focus();
-          let _this = this;
-          setTimeout(function() {
-            _this.style.transform = "none";
-          }, 30);
-        }
-        return;
-      }
-
       // don't trigger keyboard on disabled element (happens when a category is required)
-      if (this.disabled) {
+      if (_this.disabled) {
         return;
       }
 
       $("body").addClass("ios-safari-composer-hacks");
       $(window).scrollTop(0);
-
-      let i = 20;
-      let interval = setInterval(() => {
-        $(window).scrollTop(0);
-        if (i-- === 0) {
-          clearInterval(interval);
-        }
-      }, 10);
 
       if (!iOSWithVisualViewport()) {
         const height = calcHeight();
@@ -204,9 +204,9 @@ function positioningWorkaround($fixedElement) {
       }
 
       evt.preventDefault();
-      this.focus();
+      _this.focus();
       workaroundActive = true;
-    }, 350);
+    }, delay);
   };
 
   var lastTouched = function(evt) {
@@ -229,6 +229,11 @@ function positioningWorkaround($fixedElement) {
       attachTouchStart(this, positioningHack);
     });
   }, 100);
+
+  positioningWorkaround.touchstartEvent = function(element) {
+    var triggerHack = positioningHack.bind(element);
+    triggerHack();
+  };
 
   const config = {
     childList: true,

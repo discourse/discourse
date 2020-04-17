@@ -1,22 +1,23 @@
 <div class="control-group pref-username">
-  <label class="control-label">{{i18n 'user.username.title'}}</label>
+  <label class="control-label">{{i18n "user.username.title"}}</label>
   <div class="controls">
-    <span class='static'>{{model.username}}</span>
+    <span class="static">{{model.username}}</span>
     {{#if model.can_edit_username}}
       {{#link-to "preferences.username" class="btn btn-default btn-small btn-icon pad-left no-text"}}
-      {{d-icon "pencil-alt"}} {{/link-to}}
+        {{d-icon "pencil-alt"}}
+      {{/link-to}}
     {{/if}}
   </div>
   {{#if siteSettings.enable_mentions}}
-    <div class='instructions'>
-      {{html-safe (i18n 'user.username.short_instructions' username=model.username)}}
+    <div class="instructions">
+      {{html-safe (i18n "user.username.short_instructions" username=model.username)}}
     </div>
   {{/if}}
 </div>
 
 {{#unless siteSettings.sso_overrides_avatar}}
   <div class="control-group pref-avatar">
-    <label class="control-label" id="profile-picture">{{i18n 'user.avatar.title'}}</label>
+    <label class="control-label" id="profile-picture">{{i18n "user.avatar.title"}}</label>
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar model "huge"}}
@@ -27,15 +28,15 @@
 
 {{#if canEditName}}
   <div class="control-group pref-name">
-    <label class="control-label">{{i18n 'user.name.title'}}</label>
+    <label class="control-label">{{i18n "user.name.title"}}</label>
     <div class="controls">
       {{#if model.can_edit_name}}
         {{text-field value=newNameInput classNames="input-xxlarge" maxlength="255"}}
       {{else}}
-        <span class='static'>{{model.name}}</span>
+        <span class="static">{{model.name}}</span>
       {{/if}}
     </div>
-    <div class='instructions'>
+    <div class="instructions">
       {{nameInstructions}}
     </div>
   </div>
@@ -43,19 +44,19 @@
 
 {{#if canCheckEmails}}
   <div class="control-group pref-email">
-    <label class="control-label">{{i18n 'user.email.title'}}</label>
+    <label class="control-label">{{i18n "user.email.title"}}</label>
     {{#if model.email}}
       <div class="controls">
-        <span class='static'>{{model.email}}</span>
+        <span class="static">{{model.email}}</span>
         {{#if model.can_edit_email}}
           {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
         {{/if}}
       </div>
-      <div class='instructions'>
+      <div class="instructions">
         {{#if siteSettings.sso_overrides_email}}
-          {{i18n 'user.email.sso_override_instructions'}}
+          {{i18n "user.email.sso_override_instructions"}}
         {{/if}}
-        {{i18n 'user.email.instructions'}}
+        {{i18n "user.email.instructions"}}
       </div>
     {{else}}
       <div class="controls">
@@ -66,42 +67,42 @@
 {{/if}}
 
 {{#if canChangePassword}}
-<div class="control-group pref-password">
-  <label class="control-label">{{i18n 'user.password.title'}}</label>
-  <div class="controls">
-    <a href {{action "changePassword"}} class='btn btn-default'>
-      {{d-icon "envelope"}}
-      {{#if model.no_password}}
-        {{i18n 'user.change_password.set_password'}}
-      {{else}}
-        {{i18n 'user.change_password.action'}}
+  <div class="control-group pref-password">
+    <label class="control-label">{{i18n "user.password.title"}}</label>
+    <div class="controls">
+      <a href {{action "changePassword"}} class="btn btn-default">
+        {{d-icon "envelope"}}
+        {{#if model.no_password}}
+          {{i18n "user.change_password.set_password"}}
+        {{else}}
+          {{i18n "user.change_password.action"}}
+        {{/if}}
+      </a>
+
+      {{passwordProgress}}
+    </div>
+  </div>
+
+  <div class="control-group pref-second-factor">
+    <label class="control-label">{{i18n "user.second_factor.title"}}</label>
+    {{#unless model.second_factor_enabled}}
+      <label>
+        {{i18n "user.second_factor.short_description"}}
+      </label>
+    {{/unless}}
+    <div class="controls pref-second-factor">
+      {{#if isCurrentUser}}
+        {{#link-to "preferences.second-factor" class="btn btn-default"}}
+          {{d-icon "lock"}} <span>{{i18n "user.second_factor.enable"}}</span>
+        {{/link-to}}
       {{/if}}
-    </a>
-
-    {{passwordProgress}}
+    </div>
   </div>
-</div>
-
-<div class="control-group pref-second-factor">
-  <label class="control-label">{{i18n 'user.second_factor.title'}}</label>
-  {{#unless model.second_factor_enabled}}
-    <label>
-        {{i18n 'user.second_factor.short_description'}}
-    </label>
-  {{/unless}}
-  <div class="controls pref-second-factor">
-    {{#if isCurrentUser}}
-      {{#link-to "preferences.second-factor" class="btn btn-default"}}
-        {{d-icon "lock"}} <span>{{i18n 'user.second_factor.enable'}}</span>
-      {{/link-to}}
-    {{/if}}
-  </div>
-</div>
 {{/if}}
 
 {{#if canUpdateAssociatedAccounts}}
   <div class="control-group pref-associated-accounts">
-    <label class="control-label">{{i18n 'user.associated_accounts.title'}}</label>
+    <label class="control-label">{{i18n "user.associated_accounts.title"}}</label>
     {{#if associatedAccountsLoaded}}
       <table>
         <tbody>
@@ -109,23 +110,23 @@
             {{#if authProvider.account}}
               <tr class="{{dasherize authProvider.method.name}} account-connected">
                 <td>{{authProvider.method.prettyName}}</td>
-                  <td>{{authProvider.account.description}}</td>
-                  <td>
-                    {{#if authProvider.method.can_revoke}}
-                      {{d-button action=(action "revokeAccount") actionParam=authProvider.account title="user.associated_accounts.revoke" class="btn-danger no-text" icon="trash-alt" disabled=(get revoking authProvider.method.name) }}
-                    {{/if}}
-                  </td>
+                <td>{{authProvider.account.description}}</td>
+                <td>
+                  {{#if authProvider.method.can_revoke}}
+                    {{d-button action=(action "revokeAccount") actionParam=authProvider.account title="user.associated_accounts.revoke" class="btn-danger no-text" icon="trash-alt" disabled=(get revoking authProvider.method.name) }}
+                  {{/if}}
+                </td>
               </tr>
             {{else}}
               <tr class={{dasherize authProvider.method.name}}>
                 <td>{{authProvider.method.prettyName}}</td>
-                  <td colspan=2>
-                    {{#if authProvider.method.can_connect}}
-                      {{d-button action=(action "connectAccount") actionParam=authProvider.method label="user.associated_accounts.connect" class="btn-default" icon="plug" disabled=disableConnectButtons}}
-                    {{else}}
-                      {{i18n 'user.associated_accounts.not_connected'}}
-                    {{/if}}
-                  </td>
+                <td colspan="2">
+                  {{#if authProvider.method.can_connect}}
+                    {{d-button action=(action "connectAccount") actionParam=authProvider.method label="user.associated_accounts.connect" class="btn-default" icon="plug" disabled=disableConnectButtons}}
+                  {{else}}
+                    {{i18n "user.associated_accounts.not_connected"}}
+                  {{/if}}
+                </td>
               </tr>
             {{/if}}
           {{/each}}
@@ -141,7 +142,7 @@
 
 {{#if canSelectTitle}}
   <div class="control-group pref-title">
-    <label class="control-label">{{i18n 'user.title.title'}}</label>
+    <label class="control-label">{{i18n "user.title.title"}}</label>
     <div class="controls">
       {{combo-box
         value=newTitleInput
@@ -155,7 +156,7 @@
 
 {{#if canSelectPrimaryGroup}}
   <div class="control-group pref-primary-group">
-    <label class="control-label">{{i18n 'user.primary_group.title'}}</label>
+    <label class="control-label">{{i18n "user.primary_group.title"}}</label>
     <div class="controls">
       {{combo-box
         value=newPrimaryGroupInput
@@ -167,7 +168,7 @@
 
 {{#if canCheckEmails}}
   <div class="control-group pref-auth-tokens">
-    <label class="control-label">{{i18n 'user.auth_tokens.title'}}</label>
+    <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
 
     <div class="auth-tokens">
       {{#each authTokens as |token|}}
@@ -184,7 +185,7 @@
           <div class="auth-token-second">
             {{token.browser}} |
             {{#if token.is_active}}
-              <span class="active">{{i18n 'user.auth_tokens.active'}}</span>
+              <span class="active">{{i18n "user.auth_tokens.active"}}</span>
             {{else}}
               {{format-date token.seen_at}}
             {{/if}}
@@ -196,14 +197,14 @@
     {{#if canShowAllAuthTokens}}
       <a href {{action "toggleShowAllAuthTokens"}}>
         {{#if showAllAuthTokens}}
-          {{d-icon "caret-up"}} {{i18n 'user.auth_tokens.show_few'}}
+          {{d-icon "caret-up"}} {{i18n "user.auth_tokens.show_few"}}
         {{else}}
-          {{d-icon "caret-down"}} {{i18n 'user.auth_tokens.show_all' count=model.user_auth_tokens.length}}
+          {{d-icon "caret-down"}} {{i18n "user.auth_tokens.show_all" count=model.user_auth_tokens.length}}
         {{/if}}
       </a>
     {{/if}}
 
-    <a href {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n 'user.auth_tokens.log_out_all'}}</a>
+    <a href {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n "user.auth_tokens.log_out_all"}}</a>
   </div>
 {{/if}}
 

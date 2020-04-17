@@ -1,21 +1,27 @@
 {{#d-modal-body id="bookmark-reminder-modal"}}
   {{#conditional-loading-spinner condition=loading}}
     {{#if errorMessage}}
-    <div class="control-group">
-      <div class="controls">
-        <div class='alert alert-error'>{{errorMessage}}</div>
+      <div class="control-group">
+        <div class="controls">
+          <div class="alert alert-error">{{errorMessage}}</div>
+        </div>
       </div>
-    </div>
     {{/if}}
 
     <div class="control-group">
-      {{input value=name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
+      {{input value=model.name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
     </div>
 
-    {{#if showBookmarkReminderControls}}
+    {{#if showExistingReminderAt }}
+      <div class="alert alert-info existing-reminder-at-alert">
+        {{d-icon "far-clock"}}
+        <span>{{i18n "bookmarks.reminders.existing_reminder"}} {{existingReminderAtFormatted}}</span>
+      </div>
+    {{/if}}
+
     <div class="control-group">
       <label class="control-label" for="set_reminder">
-        {{i18n 'post.bookmarks.set_reminder'}}
+        {{i18n "post.bookmarks.set_reminder"}}
       </label>
 
       {{#if userHasTimezoneSet}}
@@ -90,7 +96,6 @@
         <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=basePath)}}</div>
       {{/if}}
     </div>
-    {{/if}}
 
     <div class="control-group">
       {{d-button label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}

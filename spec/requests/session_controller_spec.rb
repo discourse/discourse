@@ -252,6 +252,14 @@ RSpec.describe SessionController do
         end
       end
 
+      context "when timezone param is provided" do
+        it "sets the user_option timezone for the user" do
+          post "/session/email-login/#{email_token.token}.json", params: { timezone: "Australia/Melbourne" }
+          expect(response.status).to eq(200)
+          expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
+        end
+      end
+
       it "fails when user is suspended" do
         user.update!(
           suspended_till: 2.days.from_now,

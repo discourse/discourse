@@ -6,11 +6,11 @@ module.exports = {
   // "eol-last": "always",
 
   rules: {
-    "block-indentation": false,
+    "block-indentation": true,
     "deprecated-render-helper": true,
-    "img-alt-attributes": false,
+    "require-valid-alt-text": false,
     "linebreak-style": true,
-    "link-rel-noopener": true,
+    "link-rel-noopener": "strict",
     "no-abstract-roles": true,
     "no-args-paths": true,
     "no-attrs-in-components": true,
@@ -35,7 +35,7 @@ module.exports = {
     "no-outlet-outside-routes": true,
     "no-partial": true,
     "no-positive-tabindex": false,
-    "no-quoteless-attributes": false,
+    "no-quoteless-attributes": true,
     "no-shadowed-elements": true,
     "no-trailing-spaces": true,
     "no-triple-curlies": true,
@@ -43,13 +43,14 @@ module.exports = {
     "no-unnecessary-concat": true,
     "no-unnecessary-component-helper": true,
     "no-unused-block-params": true,
-    "quotes": false,
-    "require-button-type": false,
+    quotes: "double",
+    "require-button-type": true,
     "require-iframe-title": true,
     "require-valid-alt-text": false,
     "self-closing-void-elements": true,
     "simple-unless": true,
     "style-concatenation": true,
-    "table-groups": true
+    "table-groups": true,
+    "link-href-attributes": false
   }
 };

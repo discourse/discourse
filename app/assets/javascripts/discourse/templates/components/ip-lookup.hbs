@@ -14,7 +14,7 @@
       {{d-button action=(action "copy") class="pull-right no-text" icon="copy"}}
     {{/if}}
     <h4>{{i18n "ip_lookup.title"}}</h4>
-    <p class='powered-by'>{{html-safe (i18n "ip_lookup.powered_by")}}</p>
+    <p class="powered-by">{{html-safe (i18n "ip_lookup.powered_by")}}</p>
     <dl>
       {{#if location}}
         {{#if location.hostname}}
@@ -25,7 +25,7 @@
         <dt>{{i18n "ip_lookup.location"}}</dt>
         <dd>
           {{#if location.location}}
-            <a href="https://maps.google.com/maps?q={{location.latitude}},{{location.longitude}}" rel="noopener" target="_blank">
+            <a href="https://maps.google.com/maps?q={{location.latitude}},{{location.longitude}}" rel="noopener noreferrer" target="_blank">
               {{location.location}}
             </a>
           {{else}}

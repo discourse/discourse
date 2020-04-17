@@ -24,13 +24,15 @@
 
           <td class="plugin-name">
             {{#if plugin.url}}
-              <a href={{plugin.url}} rel="noopener" target="_blank">{{plugin.name}}</a>
+              <a href={{plugin.url}} rel="noopener noreferrer" target="_blank">{{plugin.name}}</a>
             {{else}}
               {{plugin.name}}
             {{/if}}
           </td>
-          <td class="version">              <div class="label">{{i18n "admin.plugins.version"}}</div>
-{{plugin.version}}</td>
+          <td class="version">
+            <div class="label">{{i18n "admin.plugins.version"}}</div>
+            {{plugin.version}}
+          </td>
           <td class="col-enabled">
             <div class="label">{{i18n "admin.plugins.enabled"}}</div>
             {{#if plugin.enabled_setting}}

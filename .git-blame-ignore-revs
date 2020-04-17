@@ -34,3 +34,9 @@ acc5cbdf8ecb9293a0fa9474ee73baf499c02428
 
 # The last remaining ES6
 aabeb17aab4e73de5ef56753ab22ef5d416d2932
+
+# DEV: enforces block-indentation of ember-template-lint rules
+b66b277dc44bcd2122dc21965dab209c30636214
+
+# DEV: enforces double quotes ember-template-lint
+c4644c61d97c823b7dd940ffaf0967a104f4b58c

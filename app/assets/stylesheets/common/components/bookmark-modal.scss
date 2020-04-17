@@ -19,6 +19,16 @@
     }
   }
 
+  .existing-reminder-at-alert {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .d-icon {
+      margin-right: 1em;
+    }
+  }
+
   .custom-date-time-wrap {
     padding: 1em 1em 0.5em;
     border: 1px solid $primary-low;
