@@ -40,14 +40,14 @@ export default Controller.extend(CanCheckEmails, {
     if (buffer === null) return false;
 
     return buffer.length === original.length
-      ? buffer.any(id => !original.includes(id))
+      ? buffer.any((id) => !original.includes(id))
       : true;
   },
 
   @discourseComputed("model.automaticGroups")
   automaticGroups(automaticGroups) {
     return automaticGroups
-      .map(group => {
+      .map((group) => {
         const name = htmlSafe(group.name);
         return `<a href="/g/${name}">${name}</a>`;
       })
@@ -62,7 +62,7 @@ export default Controller.extend(CanCheckEmails, {
   @discourseComputed("model.associated_accounts")
   associatedAccounts(associatedAccounts) {
     return associatedAccounts
-      .map(provider => `${provider.name} (${provider.description})`)
+      .map((provider) => `${provider.name} (${provider.description})`)
       .join(", ");
   },
 
@@ -88,11 +88,11 @@ export default Controller.extend(CanCheckEmails, {
     }
     if (postCount > this.siteSettings.delete_all_posts_max) {
       return I18n.t("admin.user.cant_delete_all_too_many_posts", {
-        count: this.siteSettings.delete_all_posts_max
+        count: this.siteSettings.delete_all_posts_max,
       });
     } else {
       return I18n.t("admin.user.cant_delete_all_posts", {
-        count: this.siteSettings.delete_user_max_post_age
+        count: this.siteSettings.delete_user_max_post_age,
       });
     }
   },
@@ -107,7 +107,7 @@ export default Controller.extend(CanCheckEmails, {
       return I18n.t("admin.user.delete_forbidden_because_staff");
     } else {
       return I18n.t("admin.user.delete_forbidden", {
-        count: this.siteSettings.delete_user_max_post_age
+        count: this.siteSettings.delete_user_max_post_age,
       });
     }
   },
@@ -207,9 +207,13 @@ export default Controller.extend(CanCheckEmails, {
       }
     },
 
+    transfer() {
+      bootbox.dialog(I18n.t("admin.user.deleting_user"));
+    },
+
     viewActionLogs() {
       this.adminTools.showActionLogs(this, {
-        target_user: this.get("model.username")
+        target_user: this.get("model.username"),
       });
     },
     showSuspendModal() {
@@ -229,7 +233,7 @@ export default Controller.extend(CanCheckEmails, {
       const path = `/users/${oldUsername.toLowerCase()}/preferences/username`;
 
       return ajax(path, { data: { new_username: newUsername }, type: "PUT" })
-        .catch(e => {
+        .catch((e) => {
           this.set("model.username", oldUsername);
           popupAjaxError(e);
         })
@@ -243,7 +247,7 @@ export default Controller.extend(CanCheckEmails, {
       const path = userPath(`${this.get("model.username").toLowerCase()}.json`);
 
       return ajax(path, { data: { name: newName }, type: "PUT" })
-        .catch(e => {
+        .catch((e) => {
           this.set("model.name", oldName);
           popupAjaxError(e);
         })
@@ -257,7 +261,7 @@ export default Controller.extend(CanCheckEmails, {
       const path = userPath(`${this.get("model.username").toLowerCase()}.json`);
 
       return ajax(path, { data: { title: newTitle }, type: "PUT" })
-        .catch(e => {
+        .catch((e) => {
           this.set("model.title", oldTitle);
           popupAjaxError(e);
         })
@@ -270,12 +274,12 @@ export default Controller.extend(CanCheckEmails, {
       const availableGroups = this.availableGroups;
 
       bufferedIds
-        .filter(id => !currentIds.includes(id))
-        .forEach(id => this.groupAdded(availableGroups.findBy("id", id)));
+        .filter((id) => !currentIds.includes(id))
+        .forEach((id) => this.groupAdded(availableGroups.findBy("id", id)));
 
       currentIds
-        .filter(id => !bufferedIds.includes(id))
-        .forEach(id => this.groupRemoved(id));
+        .filter((id) => !bufferedIds.includes(id))
+        .forEach((id) => this.groupRemoved(id));
     },
 
     resetCustomGroups() {
@@ -288,7 +292,7 @@ export default Controller.extend(CanCheckEmails, {
 
       return ajax(path, {
         type: "PUT",
-        data: { primary_group_id: primaryGroupId }
+        data: { primary_group_id: primaryGroupId },
       })
         .then(() => this.set("originalPrimaryGroupId", primaryGroupId))
         .catch(() => bootbox.alert(I18n.t("generic_error")));
@@ -296,6 +300,6 @@ export default Controller.extend(CanCheckEmails, {
 
     resetPrimaryGroup() {
       this.set("model.primary_group_id", this.originalPrimaryGroupId);
-    }
-  }
+    },
+  },
 });
