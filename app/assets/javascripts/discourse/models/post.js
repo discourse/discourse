@@ -365,25 +365,20 @@ const Post = RestModel.extend({
           });
           resolve({ closedWithoutSaving: false });
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
+        },
+        afterDelete: topicBookmarked => {
+          this.set("topic.bookmarked", topicBookmarked);
+          this.setProperties({
+            bookmark_reminder_at: null,
+            bookmark_reminder_type: null,
+            bookmark_name: null,
+            bookmark_id: null,
+            bookmarked_with_reminder: false
+          });
+          this.appEvents.trigger("page:bookmark-post-toggled", this);
         }
       });
     });
-    // if (this.bookmarked_with_reminder) {
-    // } else {
-    //   this.setProperties({
-    //     bookmark_reminder_at: null,
-    //     bookmark_reminder_type: null
-    //   });
-    //   return Post.destroyBookmark(this.id)
-    //     .then(result => {
-    //       this.set("topic.bookmarked", result.topic_bookmarked);
-    //       this.appEvents.trigger("page:bookmark-post-toggled", this);
-    //     })
-    //     .catch(error => {
-    //       this.toggleProperty("bookmarked_with_reminder");
-    //       throw new Error(error);
-    //     });
-    // }
   },
 
   updateActionsSummary(json) {

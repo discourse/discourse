@@ -42,7 +42,8 @@ const BOOKMARK_BINDINGS = {
   },
   "n m": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_MONTH] },
   "c r": { handler: "selectReminderType", args: [REMINDER_TYPES.CUSTOM] },
-  "n r": { handler: "selectReminderType", args: [REMINDER_TYPES.NONE] }
+  "n r": { handler: "selectReminderType", args: [REMINDER_TYPES.NONE] },
+  "d d": { handler: "delete" }
 };
 
 export default Controller.extend(ModalFunctionality, {
@@ -162,6 +163,11 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("model.reminderAt")
   showExistingReminderAt(existingReminderAt) {
     return isPresent(existingReminderAt);
+  },
+
+  @discourseComputed("model.id")
+  showDelete(id) {
+    return isPresent(id);
   },
 
   @discourseComputed()
@@ -310,6 +316,16 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
+  deleteBookmark() {
+    return ajax("/bookmarks/" + this.model.id, {
+      type: "DELETE"
+    }).then(response => {
+      if (this.afterDelete) {
+        this.afterDelete(response.topic_bookmarked);
+      }
+    });
+  },
+
   parseCustomDateTime(date, time) {
     let dateTime = isPresent(time) ? date + " " + time : date;
     return moment.tz(dateTime, this.userTimezone);
@@ -411,7 +427,7 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     saveAndClose() {
-      if (this.saving) {
+      if (this.saving || this.deleting) {
         return;
       }
 
@@ -421,6 +437,22 @@ export default Controller.extend(ModalFunctionality, {
         .then(() => this.send("closeModal"))
         .catch(e => this.handleSaveError(e))
         .finally(() => (this.saving = false));
+    },
+
+    delete() {
+      this.deleting = true;
+      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
+        if (result) {
+          this.closeWithoutSaving = true;
+          this.deleteBookmark()
+            .then(() => {
+              this.deleting = false;
+              this.deletedBookmark = true;
+              this.send("closeModal");
+            })
+            .catch(e => this.handleSaveError(e));
+        }
+      });
     },
 
     closeWithoutSavingBookmark() {

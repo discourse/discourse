@@ -23,8 +23,8 @@ class BookmarksController < ApplicationController
 
   def destroy
     params.require(:id)
-    BookmarkManager.new(current_user).destroy(params[:id])
-    render json: success_json
+    result = BookmarkManager.new(current_user).destroy(params[:id])
+    render json: success_json.merge(result)
   end
 
   def update
