@@ -1,6 +1,5 @@
 import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
-import { ajax } from "discourse/lib/ajax";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
 
@@ -443,35 +442,6 @@ export function inCodeBlock(text, pos) {
   }
 
   return result;
-}
-
-export function popupAutomaticMembershipAlert(group_id, email_domains) {
-  if (!email_domains) {
-    return;
-  }
-
-  const data = {};
-  data["automatic_membership_email_domains"] = email_domains;
-
-  if (group_id) {
-    data["id"] = group_id;
-  }
-
-  ajax(`/admin/groups/automatic_membership_count.json`, {
-    type: "PUT",
-    data
-  }).then(result => {
-    const count = result.user_count;
-
-    if (count > 0) {
-      bootbox.alert(
-        I18n.t(
-          "admin.groups.manage.membership.automatic_membership_user_count",
-          { count }
-        )
-      );
-    }
-  });
 }
 
 // This prevents a mini racer crash
