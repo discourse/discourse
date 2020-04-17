@@ -29,6 +29,6 @@ export default Component.extend({
         })
         .catch(popupAjaxError)
         .finally(() => this.set("saving", false));
-    },
-  },
+    }
+  }
 });

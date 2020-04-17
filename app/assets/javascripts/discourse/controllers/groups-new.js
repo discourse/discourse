@@ -22,6 +22,6 @@ export default Controller.extend({
         })
         .catch(popupAjaxError)
         .finally(() => this.set("saving", false));
-    },
-  },
+    }
+  }
 });
