@@ -76,9 +76,7 @@ export default Controller.extend({
         modalClass: "bookmark-with-reminder"
       });
       controller.setProperties({
-        afterSave: () => {
-          this.loadItems();
-        }
+        afterSave: () => this.loadItems()
       });
     },
 

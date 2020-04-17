@@ -62,10 +62,7 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.setProperties({
       errorMessage: null,
-      selectedReminderType:
-        this.editingExistingBookmark() && this.existingBookmarkHasReminder()
-          ? REMINDER_TYPES.CUSTOM
-          : REMINDER_TYPES.NONE,
+      selectedReminderType: REMINDER_TYPES.NONE,
       closeWithoutSaving: false,
       isSavingBookmarkManually: false,
       customReminderDate: null,
@@ -75,25 +72,41 @@ export default Controller.extend(ModalFunctionality, {
       userTimezone: this.currentUser.resolvedTimezone()
     });
 
-    this.parseExistingBookmarkReminderAt();
     this.bindKeyboardShortcuts();
     this.loadLastUsedCustomReminderDatetime();
 
-    // make sure the input is cleared, otherwise the keyboard shortcut to toggle
-    // bookmark for post ends up in the input
-    if (!this.editingExistingBookmark()) {
+    if (this.editingExistingBookmark()) {
+      this.initializeExistingBookmarkData();
+    } else {
+      // make sure the input is cleared, otherwise the keyboard shortcut to toggle
+      // bookmark for post ends up in the input
       next(() => this.set("model.name", null));
     }
   },
 
-  parseExistingBookmarkReminderAt() {
-    if (this.editingExistingBookmark() && this.existingBookmarkHasReminder()) {
-      let parsedReminderAt = moment.tz(
-        this.model.reminderAt,
-        this.userTimezone
-      );
-      this.set("customReminderDate", parsedReminderAt.format("YYYY-MM-DD"));
-      this.set("customReminderTime", parsedReminderAt.format("HH:mm"));
+  /**
+   * We always want to save the bookmark unless the user specifically
+   * clicks the save or cancel button to mimic browser behaviour.
+   */
+  onClose() {
+    this.unbindKeyboardShortcuts();
+    this.restoreGlobalShortcuts();
+    if (!this.closeWithoutSaving && !this.isSavingBookmarkManually) {
+      this.saveBookmark().catch(e => this.handleSaveError(e));
+    }
+    if (this.onCloseWithoutSaving && this.closeWithoutSaving) {
+      this.onCloseWithoutSaving();
+    }
+  },
+
+  initializeExistingBookmarkData() {
+    if (this.existingBookmarkHasReminder()) {
+      let parsedReminderAt = this.parseCustomDateTime(this.model.reminderAt);
+      this.setProperties({
+        customReminderDate: parsedReminderAt.format("YYYY-MM-DD"),
+        customReminderTime: parsedReminderAt.format("HH:mm"),
+        selectedReminderType: REMINDER_TYPES.CUSTOM
+      });
     }
   },
 
@@ -112,6 +125,7 @@ export default Controller.extend(ModalFunctionality, {
     if (lastTime && lastDate) {
       let parsed = this.parseCustomDateTime(lastDate, lastTime);
 
+      // can't set reminders in the past
       if (parsed < this.now()) {
         return;
       }
@@ -145,24 +159,9 @@ export default Controller.extend(ModalFunctionality, {
     KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
   },
 
-  // we always want to save the bookmark unless the user specifically
-  // clicks the save or cancel button to mimic browser behaviour
-  onClose() {
-    this.unbindKeyboardShortcuts();
-    this.restoreGlobalShortcuts();
-    if (!this.closeWithoutSaving && !this.isSavingBookmarkManually) {
-      this.saveBookmark().catch(e => this.handleSaveError(e));
-    }
-    if (this.onCloseWithoutSaving && this.closeWithoutSaving) {
-      this.onCloseWithoutSaving();
-    }
-  },
-
-  showBookmarkReminderControls: true,
-
   @discourseComputed("model.reminderAt")
   showExistingReminderAt(existingReminderAt) {
-    return existingReminderAt != null;
+    return isPresent(existingReminderAt);
   },
 
   @discourseComputed()
@@ -302,7 +301,8 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   parseCustomDateTime(date, time) {
-    return moment.tz(date + " " + time, this.userTimezone);
+    let dateTime = isPresent(time) ? date + " " + time : date;
+    return moment.tz(dateTime, this.userTimezone);
   },
 
   defaultCustomReminderTime() {

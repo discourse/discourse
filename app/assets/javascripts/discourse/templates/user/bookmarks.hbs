@@ -43,9 +43,10 @@
               {{raw "list/activity-column" topic=bookmark class="num" tagName="td"}}
               <td>
                 {{bookmark-actions-dropdown
-                bookmark=bookmark
-                removeBookmark=(action "removeBookmark")
-                editBookmark=(action "editBookmark")}}
+                  bookmark=bookmark
+                  removeBookmark=(action "removeBookmark")
+                  editBookmark=(action "editBookmark")
+                }}
               </td>
             </tr>
           {{/each}}
