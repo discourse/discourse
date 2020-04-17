@@ -23,6 +23,8 @@ describe ImportExport::GroupExporter do
     group_user = Fabricate(:group_user, group: group, user: user)
     data = ImportExport::GroupExporter.new(true).perform.export_data
 
+    p data.inspect
+
     expect(data[:groups].count).to eq(10)
     expect(data[:users].count).to eq(1)
   end
