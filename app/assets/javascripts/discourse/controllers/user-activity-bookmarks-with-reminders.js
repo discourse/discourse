@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { inject } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -35,9 +36,9 @@ export default Controller.extend({
       );
   },
 
-  @discourseComputed("loaded", "content.length")
-  noContent(loaded, contentLength) {
-    return loaded && contentLength === 0;
+  @discourseComputed("loaded", "content.length", "noResultsHelp")
+  noContent(loaded, contentLength, noResultsHelp) {
+    return loaded && contentLength === 0 && noResultsHelp !== null;
   },
 
   processLoadResponse(response) {
@@ -61,6 +62,22 @@ export default Controller.extend({
   actions: {
     removeBookmark(bookmark) {
       return bookmark.destroy().then(() => this.loadItems());
+    },
+
+    editBookmark(bookmark) {
+      let controller = showModal("bookmark", {
+        model: {
+          postId: bookmark.post_id,
+          id: bookmark.id,
+          reminderAt: bookmark.reminder_at,
+          name: bookmark.name
+        },
+        title: "post.bookmarks.edit",
+        modalClass: "bookmark-with-reminder"
+      });
+      controller.setProperties({
+        afterSave: () => this.loadItems()
+      });
     },
 
     loadMore() {

@@ -1,4 +1,5 @@
 import { and } from "@ember/object/computed";
+import { isPresent } from "@ember/utils";
 import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { Promise } from "rsvp";
@@ -7,7 +8,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import { REMINDER_TYPES } from "discourse/lib/bookmark";
+import { formattedReminderTime, REMINDER_TYPES } from "discourse/lib/bookmark";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
@@ -47,7 +48,6 @@ const BOOKMARK_BINDINGS = {
 export default Controller.extend(ModalFunctionality, {
   loading: false,
   errorMessage: null,
-  name: null,
   selectedReminderType: null,
   closeWithoutSaving: false,
   isSavingBookmarkManually: false,
@@ -62,7 +62,6 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.setProperties({
       errorMessage: null,
-      name: null,
       selectedReminderType: REMINDER_TYPES.NONE,
       closeWithoutSaving: false,
       isSavingBookmarkManually: false,
@@ -76,9 +75,47 @@ export default Controller.extend(ModalFunctionality, {
     this.bindKeyboardShortcuts();
     this.loadLastUsedCustomReminderDatetime();
 
-    // make sure the input is cleared, otherwise the keyboard shortcut to toggle
-    // bookmark for post ends up in the input
-    next(() => this.set("name", null));
+    if (this.editingExistingBookmark()) {
+      this.initializeExistingBookmarkData();
+    } else {
+      // make sure the input is cleared, otherwise the keyboard shortcut to toggle
+      // bookmark for post ends up in the input
+      next(() => this.set("model.name", null));
+    }
+  },
+
+  /**
+   * We always want to save the bookmark unless the user specifically
+   * clicks the save or cancel button to mimic browser behaviour.
+   */
+  onClose() {
+    this.unbindKeyboardShortcuts();
+    this.restoreGlobalShortcuts();
+    if (!this.closeWithoutSaving && !this.isSavingBookmarkManually) {
+      this.saveBookmark().catch(e => this.handleSaveError(e));
+    }
+    if (this.onCloseWithoutSaving && this.closeWithoutSaving) {
+      this.onCloseWithoutSaving();
+    }
+  },
+
+  initializeExistingBookmarkData() {
+    if (this.existingBookmarkHasReminder()) {
+      let parsedReminderAt = this.parseCustomDateTime(this.model.reminderAt);
+      this.setProperties({
+        customReminderDate: parsedReminderAt.format("YYYY-MM-DD"),
+        customReminderTime: parsedReminderAt.format("HH:mm"),
+        selectedReminderType: REMINDER_TYPES.CUSTOM
+      });
+    }
+  },
+
+  editingExistingBookmark() {
+    return isPresent(this.model) && isPresent(this.model.id);
+  },
+
+  existingBookmarkHasReminder() {
+    return isPresent(this.model) && isPresent(this.model.reminderAt);
   },
 
   loadLastUsedCustomReminderDatetime() {
@@ -88,6 +125,7 @@ export default Controller.extend(ModalFunctionality, {
     if (lastTime && lastDate) {
       let parsed = this.parseCustomDateTime(lastDate, lastTime);
 
+      // can't set reminders in the past
       if (parsed < this.now()) {
         return;
       }
@@ -121,20 +159,10 @@ export default Controller.extend(ModalFunctionality, {
     KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
   },
 
-  // we always want to save the bookmark unless the user specifically
-  // clicks the save or cancel button to mimic browser behaviour
-  onClose() {
-    this.unbindKeyboardShortcuts();
-    this.restoreGlobalShortcuts();
-    if (!this.closeWithoutSaving && !this.isSavingBookmarkManually) {
-      this.saveBookmark().catch(e => this.handleSaveError(e));
-    }
-    if (this.onCloseWithoutSaving && this.closeWithoutSaving) {
-      this.onCloseWithoutSaving();
-    }
+  @discourseComputed("model.reminderAt")
+  showExistingReminderAt(existingReminderAt) {
+    return isPresent(existingReminderAt);
   },
-
-  showBookmarkReminderControls: true,
 
   @discourseComputed()
   showAtDesktop() {
@@ -175,6 +203,11 @@ export default Controller.extend(ModalFunctionality, {
     return parsedLastCustomReminderDatetime.format(
       I18n.t("dates.long_no_year")
     );
+  },
+
+  @discourseComputed("model.reminderAt")
+  existingReminderAtFormatted(existingReminderAt) {
+    return formattedReminderTime(existingReminderAt, this.userTimezone);
   },
 
   @discourseComputed()
@@ -244,19 +277,32 @@ export default Controller.extend(ModalFunctionality, {
     const data = {
       reminder_type: reminderType,
       reminder_at: reminderAtISO,
-      name: this.name,
-      post_id: this.model.postId
+      name: this.model.name,
+      post_id: this.model.postId,
+      id: this.model.id
     };
 
-    return ajax("/bookmarks", { type: "POST", data }).then(() => {
-      if (this.afterSave) {
-        this.afterSave(reminderAtISO, this.selectedReminderType);
-      }
-    });
+    if (this.editingExistingBookmark()) {
+      return ajax("/bookmarks/" + this.model.id, {
+        type: "PUT",
+        data
+      }).then(() => {
+        if (this.afterSave) {
+          this.afterSave(reminderAtISO, this.selectedReminderType);
+        }
+      });
+    } else {
+      return ajax("/bookmarks", { type: "POST", data }).then(() => {
+        if (this.afterSave) {
+          this.afterSave(reminderAtISO, this.selectedReminderType);
+        }
+      });
+    }
   },
 
   parseCustomDateTime(date, time) {
-    return moment.tz(date + " " + time, this.userTimezone);
+    let dateTime = isPresent(time) ? date + " " + time : date;
+    return moment.tz(dateTime, this.userTimezone);
   },
 
   defaultCustomReminderTime() {

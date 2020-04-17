@@ -66,6 +66,24 @@ class BookmarkManager
     BookmarkReminderNotificationHandler.send_notification(bookmark)
   end
 
+  def update(bookmark_id:, name:, reminder_type:, reminder_at:)
+    bookmark = Bookmark.find_by(id: bookmark_id)
+
+    raise Discourse::NotFound if bookmark.blank?
+    raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_edit?(bookmark)
+
+    if bookmark.errors.any?
+      return add_errors_from(bookmark)
+    end
+
+    bookmark.update(
+      name: name,
+      reminder_at: reminder_at,
+      reminder_type: reminder_type,
+      reminder_set_at: Time.zone.now
+    )
+  end
+
   private
 
   def clear_at_desktop_cache_if_required

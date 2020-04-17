@@ -42,7 +42,11 @@
               <td>{{format-date bookmark.created_at format="tiny"}}</td>
               {{raw "list/activity-column" topic=bookmark class="num" tagName="td"}}
               <td>
-                {{bookmark-actions-dropdown bookmark=bookmark removeBookmark=(action "removeBookmark")}}
+                {{bookmark-actions-dropdown
+                  bookmark=bookmark
+                  removeBookmark=(action "removeBookmark")
+                  editBookmark=(action "editBookmark")
+                }}
               </td>
             </tr>
           {{/each}}

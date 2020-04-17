@@ -331,6 +331,7 @@ en:
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
+        existing_reminder: "You have a reminder set for this bookmark which will be sent"
 
     drafts:
       resume: "Resume"
@@ -2716,6 +2717,7 @@ en:
 
       bookmarks:
         create: "Create bookmark"
+        edit: "Edit bookmark"
         created: "Created"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
@@ -2724,6 +2726,9 @@ en:
           delete_bookmark:
             name: "Delete bookmark"
             description: "Removes the bookmark from your profile and stops all reminders for the bookmark"
+          edit_bookmark:
+            name: "Edit bookmark"
+            description: "Edit the bookmark name or change the reminder date and time"
 
     category:
       can: "can&hellip; "
