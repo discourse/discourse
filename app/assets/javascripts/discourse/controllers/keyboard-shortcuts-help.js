@@ -170,6 +170,10 @@ export default Controller.extend(ModalFunctionality, {
         none: buildShortcut("bookmarks.none", {
           keys1: ["n", "r"],
           shortcutsDelimiter: "space"
+        }),
+        delete: buildShortcut("bookmarks.delete", {
+          keys1: ["d", "d"],
+          shortcutsDelimiter: "space"
         })
       },
       actions: {
