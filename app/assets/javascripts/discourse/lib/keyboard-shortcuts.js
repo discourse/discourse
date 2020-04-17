@@ -174,7 +174,10 @@ export default {
     this.pause(Object.keys(combinations));
   },
 
-  toggleBookmark() {
+  toggleBookmark(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     this.sendToSelectedPost("toggleBookmark");
     this.sendToTopicListItemView("toggleBookmark");
   },
