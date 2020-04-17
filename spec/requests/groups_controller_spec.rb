@@ -666,7 +666,7 @@ describe GroupsController do
               mentionable_level: 1,
               messageable_level: 1,
               visibility_level: 1,
-              automatic_membership_email_domains: 'test.org'
+              automatic_membership_email_domains: 'test.org',
               title: 'haha',
               primary_group: true,
               grant_trust_level: 1,
