@@ -97,7 +97,7 @@ export default {
 
       function _attachCommands($elem) {
         const siteSettings = container.lookup("site-settings:main");
-        const { isIE11 } = api.container.lookup("capabilities:main");
+        const { isIE11 } = container.lookup("capabilities:main");
         if (!siteSettings.show_copy_button_on_codeblocks || isIE11) {
           return;
         }
