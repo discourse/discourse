@@ -82,12 +82,7 @@ export default {
         const code = button.nextSibling;
 
         if (code) {
-          let string = code.innerText;
-
-          if (string) {
-            string = string.trim();
-            clipboardCopy(string);
-          }
+          clipboardCopy(code.innerText.trim());
 
           button.classList.add("copied");
 
@@ -95,19 +90,21 @@ export default {
         }
       }
 
-      function _attachCommands($elem) {
+      function _attachCommands(postElements) {
         const siteSettings = container.lookup("site-settings:main");
         const { isIE11 } = container.lookup("capabilities:main");
         if (!siteSettings.show_copy_button_on_codeblocks || isIE11) {
           return;
         }
-        const commands = $elem[0].querySelectorAll(":scope > pre > code");
+        const commands = postElements[0].querySelectorAll(
+          ":scope > pre > code"
+        );
 
         if (!commands.length) {
           return;
         }
 
-        _clickHandlerElement = $elem[0];
+        _clickHandlerElement = postElements[0];
 
         commands.forEach(command => {
           const button = document.createElement("button");
