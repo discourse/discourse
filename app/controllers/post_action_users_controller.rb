@@ -27,7 +27,7 @@ class PostActionUsersController < ApplicationController
     end
 
     action_type = PostActionType.types.key(post_action_type_id)
-    total_count = post["#{action_type}_count"]
+    total_count = post["#{action_type}_count"].to_i
 
     data = { post_action_users: serialize_data(post_actions.to_a, PostActionUserSerializer) }
 
