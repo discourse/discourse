@@ -13,7 +13,7 @@ import discourseComputed, {
   on
 } from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon
@@ -136,10 +136,6 @@ export default Controller.extend({
     "model.composeState"
   )
   focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
-    if (this.capabilities.isIOS && !safariHacksDisabled()) {
-      return "none";
-    }
-
     // Focus on usernames if it's blank or if it's just you
     usernames = usernames || "";
     if (

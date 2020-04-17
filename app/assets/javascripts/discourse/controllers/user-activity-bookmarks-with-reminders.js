@@ -84,6 +84,22 @@ export default Controller.extend({
       });
     },
 
+    editBookmark(bookmark) {
+      let controller = showModal("bookmark", {
+        model: {
+          postId: bookmark.post_id,
+          id: bookmark.id,
+          reminderAt: bookmark.reminder_at,
+          name: bookmark.name
+        },
+        title: "post.bookmarks.edit",
+        modalClass: "bookmark-with-reminder"
+      });
+      controller.setProperties({
+        afterSave: () => this.loadItems()
+      });
+    },
+
     loadMore() {
       if (this.loadingMore) {
         return Promise.resolve();
