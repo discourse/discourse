@@ -336,6 +336,14 @@ class PostSerializer < BasicPostSerializer
     include_bookmarked_with_reminder?
   end
 
+  def include_bookmark_name?
+    include_bookmarked_with_reminder?
+  end
+
+  def include_bookmark_id?
+    include_bookmarked_with_reminder?
+  end
+
   def post_bookmark
     return nil if !SiteSetting.enable_bookmarks_with_reminders? || @topic_view.blank?
     @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id }
