@@ -288,13 +288,23 @@ export default Controller.extend(ModalFunctionality, {
         data
       }).then(() => {
         if (this.afterSave) {
-          this.afterSave(reminderAtISO, this.selectedReminderType);
+          this.afterSave({
+            reminderAt: reminderAtISO,
+            reminderType: this.selectedReminderType,
+            id: this.model.id,
+            name: this.model.name
+          });
         }
       });
     } else {
-      return ajax("/bookmarks", { type: "POST", data }).then(() => {
+      return ajax("/bookmarks", { type: "POST", data }).then(response => {
         if (this.afterSave) {
-          this.afterSave(reminderAtISO, this.selectedReminderType);
+          this.afterSave({
+            reminderAt: reminderAtISO,
+            reminderType: this.selectedReminderType,
+            id: response.id,
+            name: this.model.name
+          });
         }
       });
     }
