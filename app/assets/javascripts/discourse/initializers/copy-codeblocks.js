@@ -85,7 +85,7 @@ export default {
           let string = code.innerText;
 
           if (string) {
-            string = string.replace(/^\s+|\s+$/g, "");
+            string = string.trim();
             clipboardCopy(string);
           }
 
