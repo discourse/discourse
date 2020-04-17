@@ -123,8 +123,15 @@ RSpec.describe BookmarkManager do
   describe ".destroy" do
     let!(:bookmark) { Fabricate(:bookmark, user: user, post: post) }
     it "deletes the existing bookmark" do
-      subject.destroy(bookmark.id)
+      result = subject.destroy(bookmark.id)
       expect(Bookmark.exists?(id: bookmark.id)).to eq(false)
+      expect(result[:topic_bookmarked]).to eq(false)
+    end
+
+    it "returns a value indicating whether there are still other bookmarks in the topic for the user" do
+      Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic))
+      result = subject.destroy(bookmark.id)
+      expect(result[:topic_bookmarked]).to eq(true)
     end
 
     context "if the bookmark is belonging to some other user" do
