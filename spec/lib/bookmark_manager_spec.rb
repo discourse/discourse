@@ -160,6 +160,43 @@ RSpec.describe BookmarkManager do
     end
   end
 
+  describe ".update" do
+    let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: user, post: post, name: "Old name") }
+    let(:new_name) { "Some new name" }
+    let(:new_reminder_at) { 10.days.from_now }
+    let(:new_reminder_type) { Bookmark.reminder_types[:custom] }
+
+    def update_bookmark
+      subject.update(
+        bookmark_id: bookmark.id, name: new_name, reminder_type: new_reminder_type, reminder_at: new_reminder_at
+      )
+    end
+
+    it "saves the time and new reminder type sucessfully" do
+      update_bookmark
+       bookmark.reload
+       expect(bookmark.name).to eq(new_name)
+       expect(bookmark.reminder_at).to eq_time(new_reminder_at)
+       expect(bookmark.reminder_type).to eq(new_reminder_type)
+    end
+
+    context "if the bookmark is belonging to some other user" do
+      let!(:bookmark) { Fabricate(:bookmark, user: Fabricate(:admin), post: post) }
+      it "raises an invalid access error" do
+        expect { update_bookmark }.to raise_error(Discourse::InvalidAccess)
+      end
+    end
+
+    context "if the bookmark no longer exists" do
+      before do
+        bookmark.destroy!
+      end
+      it "raises an invalid access error" do
+        expect { update_bookmark }.to raise_error(Discourse::NotFound)
+      end
+    end
+  end
+
   describe ".destroy_for_topic" do
     let!(:topic) { Fabricate(:topic) }
     let!(:bookmark1) { Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user) }
