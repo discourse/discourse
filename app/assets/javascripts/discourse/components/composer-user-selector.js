@@ -1,7 +1,7 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { putCursorAtEnd } from "discourse/lib/utilities";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 
 export default Component.extend({
   showSelector: true,
