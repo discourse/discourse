@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -12,28 +13,28 @@ export default DiscourseRoute.extend({
   },
 
   setupController(controller, model) {
-    this.controllerFor("group").set("showing", "members");
-
     controller.setProperties({
       model,
-      filterInput: this._params.filter
+      filterInput: this._params.filter,
+      showing: "members"
     });
 
     controller.findMembers(true);
   },
 
-  actions: {
-    showAddMembersModal() {
-      showModal("group-add-members", { model: this.modelFor("group") });
-    },
+  @action
+  showAddMembersModal() {
+    showModal("group-add-members", { model: this.modelFor("group") });
+  },
 
-    showBulkAddModal() {
-      showModal("group-bulk-add", { model: this.modelFor("group") });
-    },
+  @action
+  showBulkAddModal() {
+    showModal("group-bulk-add", { model: this.modelFor("group") });
+  },
 
-    didTransition() {
-      this.controllerFor("group-index").set("filterInput", this._params.filter);
-      return true;
-    }
+  @action
+  didTransition() {
+    this.controllerFor("group-index").set("filterInput", this._params.filter);
+    return true;
   }
 });

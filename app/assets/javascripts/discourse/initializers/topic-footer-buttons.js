@@ -1,10 +1,12 @@
 import showModal from "discourse/lib/show-modal";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
+import { formattedReminderTime } from "discourse/lib/bookmark";
 
 export default {
   name: "topic-footer-buttons",
 
-  initialize() {
+  initialize(container) {
+    const currentUser = container.lookup("current-user:main");
     registerTopicFooterButton({
       id: "share-and-invite",
       icon: "link",
@@ -84,7 +86,12 @@ export default {
     registerTopicFooterButton({
       dependentKeys: ["topic.bookmarked", "topic.isPrivateMessage"],
       id: "bookmark",
-      icon: "bookmark",
+      icon() {
+        if (this.get("topic.bookmark_reminder_at")) {
+          return "discourse-bookmark-clock";
+        }
+        return "bookmark";
+      },
       priority: 1000,
       classNames() {
         const bookmarked = this.get("topic.bookmarked");
@@ -94,11 +101,21 @@ export default {
         const bookmarked = this.get("topic.bookmarked");
         return bookmarked ? "bookmarked.clear_bookmarks" : "bookmarked.title";
       },
-      title() {
+      translatedTitle() {
         const bookmarked = this.get("topic.bookmarked");
-        return bookmarked
-          ? "bookmarked.help.unbookmark"
-          : "bookmarked.help.bookmark";
+        const bookmark_reminder_at = this.get("topic.bookmark_reminder_at");
+        if (bookmarked) {
+          if (bookmark_reminder_at) {
+            return I18n.t("bookmarked.help.unbookmark_with_reminder", {
+              reminder_at: formattedReminderTime(
+                bookmark_reminder_at,
+                currentUser.resolvedTimezone()
+              )
+            });
+          }
+          return I18n.t("bookmarked.help.unbookmark");
+        }
+        return I18n.t("bookmarked.help.bookmark");
       },
       action: "toggleBookmark",
       dropdown() {

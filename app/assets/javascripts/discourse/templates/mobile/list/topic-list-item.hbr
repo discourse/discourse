@@ -17,7 +17,7 @@
         <div class='main-link'>
           {{~raw-plugin-outlet name="topic-list-before-status"}}
           {{~raw "topic-status" topic=topic~}}
-          {{~topic-link topic~}}
+          {{~topic-link topic class="raw-link raw-topic-link"}}
           {{~#if topic.featured_link~}}
           {{~topic-featured-link topic~}}
           {{~/if~}}

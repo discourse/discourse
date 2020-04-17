@@ -7,7 +7,7 @@ import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import ENV from "discourse-common/config/environment";
 import EmberObject from "@ember/object";
-import { putCursorAtEnd } from "discourse/lib/utilities";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 
 export default Component.extend({
   classNames: ["title-input"],

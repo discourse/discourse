@@ -10,6 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
+import { formattedReminderTime } from "discourse/lib/bookmark";
 
 const Bookmark = RestModel.extend({
   newBookmark: none("id"),
@@ -110,9 +111,10 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {
-    return moment
-      .tz(bookmarkReminderAt, currentUser.resolvedTimezone())
-      .format(I18n.t("dates.long_with_year"));
+    return formattedReminderTime(
+      bookmarkReminderAt,
+      currentUser.resolvedTimezone()
+    ).capitalize();
   },
 
   loadItems() {

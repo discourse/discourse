@@ -302,11 +302,13 @@ en:
       help:
         bookmark: "Click to bookmark the first post on this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
+        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
+
 
     bookmarks:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
-      created_with_reminder: "you've bookmarked this post with a reminder at %{date}"
+      created_with_reminder: "you've bookmarked this post with a reminder %{date}"
       created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
@@ -326,6 +328,10 @@ en:
         custom: "Custom date and time"
         last_custom: "Last"
         none: "No reminder needed"
+        today_with_time: "today at %{time}"
+        tomorrow_with_time: "tomorrow at %{time}"
+        at_time: "at %{date_time}"
+        existing_reminder: "You have a reminder set for this bookmark which will be sent"
 
     drafts:
       resume: "Resume"
@@ -2711,6 +2717,7 @@ en:
 
       bookmarks:
         create: "Create bookmark"
+        edit: "Edit bookmark"
         created: "Created"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
@@ -2719,6 +2726,9 @@ en:
           delete_bookmark:
             name: "Delete bookmark"
             description: "Removes the bookmark from your profile and stops all reminders for the bookmark"
+          edit_bookmark:
+            name: "Edit bookmark"
+            description: "Edit the bookmark name or change the reminder date and time"
 
     category:
       can: "can&hellip; "

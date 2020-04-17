@@ -1,12 +1,12 @@
 import { TextArea } from "@ember/component";
-import { scheduleOnce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { on, observes } from "discourse-common/utils/decorators";
 import autosize from "discourse/lib/autosize";
 
 export default TextArea.extend({
   @on("didInsertElement")
   _startWatching() {
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       $(this.element).focus();
       autosize(this.element);
     });

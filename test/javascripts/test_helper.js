@@ -201,6 +201,8 @@ QUnit.testDone(function() {
   });
 
   window.MessageBus.unsubscribe("*");
+  delete window.server;
+  window.Mousetrap.reset();
 });
 
 // Load ES6 tests

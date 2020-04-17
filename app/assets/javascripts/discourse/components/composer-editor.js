@@ -1,4 +1,4 @@
-import { debounce, later, next, scheduleOnce, throttle } from "@ember/runloop";
+import { debounce, later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import discourseComputed, {
@@ -28,11 +28,10 @@ import {
   tinyAvatar,
   formatUsername,
   clipboardData,
-  safariHacksDisabled,
   caretPosition,
-  inCodeBlock,
-  putCursorAtEnd
+  inCodeBlock
 } from "discourse/lib/utilities";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import {
   validateUploadedFiles,
   authorizesOneOrMoreImageExtensions,
@@ -194,7 +193,7 @@ export default Component.extend({
         transformComplete: v => v.username || v.name,
         afterComplete() {
           // ensures textarea scroll position is correct
-          scheduleOnce("afterRender", () => $input.blur().focus());
+          schedule("afterRender", () => $input.blur().focus());
         },
         triggerRule: textarea =>
           !inCodeBlock(textarea.value, caretPosition(textarea))
@@ -210,10 +209,7 @@ export default Component.extend({
     }
 
     // Focus on the body unless we have a title
-    if (
-      !this.get("composer.canEditTitle") &&
-      (!this.capabilities.isIOS || safariHacksDisabled())
-    ) {
+    if (!this.get("composer.canEditTitle")) {
       putCursorAtEnd(this.element.querySelector(".d-editor-input"));
     }
 
@@ -323,7 +319,7 @@ export default Component.extend({
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       $input.on("touchstart mouseenter", () => {
         if (!$preview.is(":visible")) return;
         $preview.off("scroll");
@@ -569,7 +565,7 @@ export default Component.extend({
   },
 
   _warnMentionedGroups($preview) {
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       var found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
@@ -597,7 +593,7 @@ export default Component.extend({
       return;
     }
 
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       let found = this.warnedCannotSeeMentions || [];
 
       $preview.find(".mention.cannot-see").each((idx, e) => {

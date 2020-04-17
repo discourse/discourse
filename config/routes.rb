@@ -607,7 +607,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :bookmarks, only: %i[create destroy]
+  resources :bookmarks, only: %i[create destroy update]
 
   resources :notifications, except: :show do
     collection do

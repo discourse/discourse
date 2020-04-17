@@ -445,12 +445,6 @@ export function inCodeBlock(text, pos) {
   return result;
 }
 
-export function putCursorAtEnd(element) {
-  element.focus();
-  const len = element.value.length;
-  element.setSelectionRange(len, len);
-}
-
 export function popupAutomaticMembershipAlert(group_id, email_domains) {
   if (!email_domains) {
     return;
