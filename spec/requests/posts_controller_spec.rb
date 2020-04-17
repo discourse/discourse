@@ -473,7 +473,7 @@ describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: topic)
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: post.topic)
       end
       it "marks topic_bookmaked as true" do
         delete "/posts/#{post.id}/bookmark.json"
