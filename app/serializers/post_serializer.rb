@@ -51,7 +51,9 @@ class PostSerializer < BasicPostSerializer
              :bookmarked,
              :bookmarked_with_reminder,
              :bookmark_reminder_at,
+             :bookmark_id,
              :bookmark_reminder_type,
+             :bookmark_name,
              :raw,
              :actions_summary,
              :moderator?,
@@ -346,6 +348,14 @@ class PostSerializer < BasicPostSerializer
   def bookmark_reminder_type
     return if post_bookmark.blank?
     Bookmark.reminder_types[post_bookmark.reminder_type].to_s
+  end
+
+  def bookmark_name
+    post_bookmark&.name
+  end
+
+  def bookmark_id
+    post_bookmark&.id
   end
 
   def include_display_username?
