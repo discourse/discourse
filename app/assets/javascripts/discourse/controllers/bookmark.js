@@ -1,6 +1,5 @@
 import { and } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
-import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -77,10 +76,6 @@ export default Controller.extend(ModalFunctionality, {
 
     if (this.editingExistingBookmark()) {
       this.initializeExistingBookmarkData();
-    } else {
-      // make sure the input is cleared, otherwise the keyboard shortcut to toggle
-      // bookmark for post ends up in the input
-      next(() => this.set("model.name", null));
     }
   },
 
