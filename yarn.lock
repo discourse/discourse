@@ -415,6 +415,30 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
+blueimp-canvas-to-blob@3:
+  version "3.19.0"
+  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.19.0.tgz#842a30605c59ec12b1219bb3d8969160e27b6f8e"
+  integrity sha512-WlLp3GOEdpyQr5hqyPaRoFHGdzMcf6T5Wr8ZjjGl1MM4tit6+rCsJcw7psXFvgoIk69uCGEhyvZOWXU2b4bDcQ==
+
+blueimp-file-upload@10.13.0:
+  version "10.13.0"
+  resolved "https://registry.yarnpkg.com/blueimp-file-upload/-/blueimp-file-upload-10.13.0.tgz#3994d1606caa44197e4aa29d7f7e1cdd6f521568"
+  integrity sha512-N0yIt/5oR0ZioBaj6u8YuCRSp+1doaJOnNJHIYHBHZdrcWfjfc9Xq03nzodkSdbQIRfWwNin5rexUwY203V35g==
+  optionalDependencies:
+    blueimp-canvas-to-blob "3"
+    blueimp-load-image "3"
+    blueimp-tmpl "3"
+
+blueimp-load-image@3:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-3.0.0.tgz#d71c39440a7d2f1a83e3e86a625e329116a51705"
+  integrity sha512-Q9rFbd4ZUNvzSFmRXx9MoG0RwWwJeMjjEUbG7WIOJgUg22Jgkow0wL5b35B6qwiBscxACW9OHdrP5s2vQ3x8DQ==
+
+blueimp-tmpl@3:
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/blueimp-tmpl/-/blueimp-tmpl-3.14.0.tgz#4951cf03a127521fa88922db616949d75cbbd5c3"
+  integrity sha512-mA8iwfEVkvpjtBXpRp25DxGqW2YOZqC9FVLLOa03Qwdsd6J4kVyL1noC04arAm0CNsu3Y0FmxkAOt+x2MoxpYA==
+
 bootbox@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/bootbox/-/bootbox-3.2.0.tgz#00bf643fc9edefd9ae1e7c648c6b022db4be0aee"
