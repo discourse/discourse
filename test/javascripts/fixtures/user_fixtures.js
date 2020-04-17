@@ -278,6 +278,125 @@ export default {
       ]
     }
   },
+  "/u/eviltrout/card.json": {
+    user_badges: [
+      {
+        id: 5870,
+        granted_at: "2014-05-16T02:39:38.388Z",
+        badge_id: 4,
+        user_id: 19,
+        granted_by_id: -1
+      },
+      {
+        id: 40673,
+        granted_at: "2014-03-31T14:23:18.060Z",
+        post_id: 7241,
+        post_number: 19,
+        badge_id: 23,
+        user_id: 19,
+        granted_by_id: -1,
+        topic_id: 3153
+      },
+      {
+        id: 5868,
+        granted_at: "2014-05-16T02:39:38.380Z",
+        badge_id: 3,
+        user_id: 19,
+        granted_by_id: -1
+      }
+    ],
+    badges: [
+      {
+        id: 4,
+        name: "Leader",
+        description: null,
+        grant_count: 7,
+        allow_title: true,
+        multiple_grant: false,
+        icon: "fa-user",
+        image: null,
+        listable: true,
+        enabled: true,
+        badge_grouping_id: 4,
+        system: true,
+        badge_type_id: 1
+      },
+      {
+        id: 23,
+        name: "Great Share",
+        description: null,
+        grant_count: 14,
+        allow_title: false,
+        multiple_grant: true,
+        icon: "fa-certificate",
+        image: null,
+        listable: true,
+        enabled: true,
+        badge_grouping_id: 2,
+        system: true,
+        badge_type_id: 1
+      },
+      {
+        id: 3,
+        name: "Regular",
+        description: null,
+        grant_count: 30,
+        allow_title: true,
+        multiple_grant: false,
+        icon: "fa-user",
+        image: null,
+        listable: true,
+        enabled: true,
+        badge_grouping_id: 4,
+        system: true,
+        badge_type_id: 2
+      }
+    ],
+    badge_types: [
+      { id: 1, name: "Gold", sort_order: 9 },
+      { id: 2, name: "Silver", sort_order: 8 },
+      { id: 3, name: "Bronze", sort_order: 7 }
+    ],
+    users: [
+      {
+        id: 19,
+        username: "eviltrout",
+        uploaded_avatar_id: null,
+        avatar_template:
+          "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png"
+      },
+      {
+        id: -1,
+        username: "system",
+        uploaded_avatar_id: null,
+        avatar_template:
+          "/letter_avatar/system/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png"
+      }
+    ],
+    user: {
+      id: 19,
+      username: "eviltrout",
+      name: "Robin Ward",
+      avatar_template:
+        "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
+      last_posted_at: "2015-05-07T15:23:35.074Z",
+      last_seen_at: "2015-05-13T14:34:23.188Z",
+      created_at: "2013-02-03T15:19:22.704Z",
+      can_send_private_messages: true,
+      can_send_private_message_to_user: false,
+      trust_level: 4,
+      moderator: true,
+      admin: true,
+      title: "co-founder",
+      badge_count: 23,
+      custom_fields: {},
+      bio_excerpt:
+        '<p>Co-founder of Discourse. Previously, I created <a href="http://forumwarz.com">Forumwarz</a>. <a href="https://twitter.com/eviltrout">Follow me on Twitter</a>. I am <a class="mention" href="/u/eviltrout">@eviltrout</a>.</p>',
+      website: "http://eviltrout.com",
+      location: "Toronto",
+      featured_user_badge_ids: [5870, 40673, 5868]
+    }
+  },
   "/user_actions.json": {
     user_actions: [
       {
@@ -2529,6 +2648,84 @@ export default {
         text_size: "normal",
         text_size_seq: 0
       }
+    }
+  },
+  "/u/charlie/card.json": {
+    user_badges: [
+      {
+        id: 17,
+        granted_at: "2019-03-06T19:08:28.230Z",
+        count: 1,
+        badge_id: 3,
+        user_id: 5,
+        granted_by_id: -1
+      }
+    ],
+    badges: [
+      {
+        id: 3,
+        name: "Regular",
+        description:
+          '<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> recategorize, rename, followed links, wiki, more likes',
+        grant_count: 3,
+        allow_title: true,
+        multiple_grant: false,
+        icon: "fa-user",
+        image: null,
+        listable: true,
+        enabled: true,
+        badge_grouping_id: 4,
+        system: true,
+        slug: "regular",
+        manually_grantable: false,
+        badge_type_id: 2
+      }
+    ],
+    badge_types: [{ id: 2, name: "Silver", sort_order: 8 }],
+    users: [
+      {
+        id: 5,
+        username: "charlie",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v3/letter/c/d6d6ee/{size}.png",
+        moderator: false,
+        admin: false
+      },
+      {
+        id: -1,
+        username: "system",
+        name: "system",
+        avatar_template: "/user_avatar/localhost/system/{size}/2_2.png",
+        moderator: true,
+        admin: true
+      }
+    ],
+    user: {
+      id: 5,
+      username: "charlie",
+      name: null,
+      avatar_template: "/letter_avatar_proxy/v3/letter/c/d6d6ee/{size}.png",
+      last_posted_at: null,
+      last_seen_at: null,
+      created_at: "2019-03-06T19:06:20.340Z",
+      ignored: false,
+      can_ignore_user: false,
+      can_send_private_messages: true,
+      can_send_private_message_to_user: true,
+      trust_level: 3,
+      moderator: false,
+      admin: false,
+      title: null,
+      badge_count: 3,
+      custom_fields: {},
+      time_read: 0,
+      recent_time_read: 0,
+      primary_group_name: null,
+      primary_group_flair_url: null,
+      primary_group_flair_bg_color: null,
+      primary_group_flair_color: null,
+      staged: false,
+      featured_user_badge_ids: [17]
     }
   },
   "/u/charlie/summary.json": {
