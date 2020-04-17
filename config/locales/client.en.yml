@@ -3120,6 +3120,7 @@ en:
         next_business_day: "%{shortcut} Next business day"
         custom: "%{shortcut} Custom date and time"
         none: "%{shortcut} No reminder"
+        delete: "%{shortcut} Delete bookmark"
       actions:
         title: "Actions"
         bookmark_topic: "%{shortcut} Toggle bookmark topic"
