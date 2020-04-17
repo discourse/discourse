@@ -2,6 +2,8 @@
 
 class CreateBookmarksFromPostActionBookmarks < ActiveRecord::Migration[6.0]
   def up
+    SiteSetting.enable_bookmarks_with_reminders = true
+
     post_action_bookmarks = PostAction
       .select('post_actions.id', 'post_actions.post_id', 'posts.topic_id', 'post_actions.user_id')
       .where(post_action_type_id: PostActionType.types[:bookmark])

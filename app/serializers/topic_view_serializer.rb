@@ -190,7 +190,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_bookmark_reminder_at?
-    SiteSetting.enable_bookmarks_with_reminders? && bookmarked
+    bookmarked
   end
 
   def bookmark_reminder_at
