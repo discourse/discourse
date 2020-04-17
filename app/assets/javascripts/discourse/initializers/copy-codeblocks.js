@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { later } from "@ember/runloop";
+import { cancel, later } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
@@ -55,6 +55,7 @@ function clipboardCopy(text) {
 }
 
 let _clickHandlerElement = null;
+let _runLater = null;
 
 export default {
   name: "copy-codeblocks",
@@ -65,6 +66,10 @@ export default {
         if (_clickHandlerElement) {
           _clickHandlerElement.removeEventListener("click", _handleClick);
           _clickHandlerElement = null;
+        }
+        if (_runLater) {
+          cancel(_runLater);
+          _runLater = null;
         }
       }
 
@@ -86,7 +91,7 @@ export default {
 
           button.classList.add("copied");
 
-          later(() => button.classList.remove("copied"), 3000);
+          _runLater = later(() => button.classList.remove("copied"), 3000);
         }
       }
 
