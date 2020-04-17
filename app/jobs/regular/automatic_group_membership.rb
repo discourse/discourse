@@ -12,7 +12,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:group_id) if group.nil?
 
       domains = group.automatic_membership_email_domains
-      return domains.blank?
+      return if domains.blank?
 
       Group.automatic_membership_users(domains).find_each do |user|
         next unless user.email_confirmed?

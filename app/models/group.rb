@@ -789,7 +789,9 @@ class Group < ActiveRecord::Base
   end
 
   def automatic_group_membership
-    Jobs.enqueue(:automatic_group_membership, group_id: self.id)
+    if self.automatic_membership_email_domains.present?
+      Jobs.enqueue(:automatic_group_membership, group_id: self.id)
+    end
   end
 
   def update_title
