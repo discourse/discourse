@@ -8,11 +8,11 @@ module ImportExport
                       :auto_close_hours, :parent_category_id, :auto_close_based_on_last_post,
                       :topic_template, :all_topics_wiki, :permissions_params]
 
-    GROUP_ATTRS = [:id, :name, :created_at, :automatic_membership_email_domains, :automatic_membership_retroactive,
-                   :primary_group, :title, :grant_trust_level, :incoming_email, :bio_raw, :allow_membership_requests,
-                   :full_name, :default_notification_level, :visibility_level, :public_exit, :public_admission,
-                   :membership_request_template, :messageable_level, :mentionable_level, :members_visibility_level,
-                   :publish_read_state]
+    GROUP_ATTRS = [:id, :name, :created_at, :automatic_membership_email_domains, :primary_group,
+                   :title, :grant_trust_level, :incoming_email, :bio_raw, :allow_membership_requests,
+                   :full_name, :default_notification_level, :visibility_level, :public_exit,
+                   :public_admission, :membership_request_template, :messageable_level, :mentionable_level,
+                   :members_visibility_level, :publish_read_state]
 
     USER_ATTRS = [:id, :email, :username, :name, :created_at, :trust_level, :active, :last_emailed_at]
 

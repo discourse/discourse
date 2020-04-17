@@ -9,24 +9,24 @@ describe ImportExport::GroupExporter do
     STDOUT.stubs(:write)
   end
 
-  it 'export all the groups' do
+  it 'exports all the groups' do
     group = Fabricate(:group)
+    user = Fabricate(:user)
+    group_user = Fabricate(:group_user, group: group, user: user)
     data = ImportExport::GroupExporter.new.perform.export_data
 
-    expect(data[:groups].count).to eq(10)
+    expect(data[:groups].map { |g| g[:id] }).to include(group.id)
     expect(data[:users].blank?).to eq(true)
   end
 
-  it 'export groups with users' do
+  it 'exports all the groups with users' do
     group = Fabricate(:group)
     user = Fabricate(:user)
     group_user = Fabricate(:group_user, group: group, user: user)
     data = ImportExport::GroupExporter.new(true).perform.export_data
 
-    p data.inspect
-
-    expect(data[:groups].count).to eq(10)
-    expect(data[:users].count).to eq(1)
+    expect(data[:groups].map { |g| g[:id] }).to include(group.id)
+    expect(data[:users].map { |u| u[:id] }).to include(user.id)
   end
 
 end
