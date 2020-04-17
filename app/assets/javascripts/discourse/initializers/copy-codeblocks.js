@@ -54,8 +54,8 @@ function clipboardCopy(text) {
       );
 }
 
-let _clickHandlerElement = null;
-let _runLater = null;
+let _copyCodeblocksClickHandlers = {};
+let _fadeCopyCodeblocksRunners = {};
 
 export default {
   name: "copy-codeblocks",
@@ -63,14 +63,16 @@ export default {
   initialize(container) {
     withPluginApi("0.8.7", api => {
       function _cleanUp() {
-        if (_clickHandlerElement) {
-          _clickHandlerElement.removeEventListener("click", _handleClick);
-          _clickHandlerElement = null;
-        }
-        if (_runLater) {
-          cancel(_runLater);
-          _runLater = null;
-        }
+        Object.values(_copyCodeblocksClickHandlers || {}).forEach(handler =>
+          handler.removeEventListener("click", _handleClick)
+        );
+
+        Object.values(_fadeCopyCodeblocksRunners || {}).forEach(runner =>
+          cancel(runner)
+        );
+
+        _copyCodeblocksClickHandlers = {};
+        _fadeCopyCodeblocksRunners = {};
       }
 
       function _handleClick(event) {
@@ -82,39 +84,58 @@ export default {
         const code = button.nextSibling;
 
         if (code) {
-          clipboardCopy(code.innerText.trim());
+          clipboardCopy(code.innerText.trim()).then(() => {
+            button.classList.add("copied");
 
-          button.classList.add("copied");
+            const commandId = button.dataset.commandId;
 
-          _runLater = later(() => button.classList.remove("copied"), 3000);
+            if (_fadeCopyCodeblocksRunners[commandId]) {
+              cancel(_fadeCopyCodeblocksRunners[commandId]);
+              delete _fadeCopyCodeblocksRunners[commandId];
+            }
+
+            _fadeCopyCodeblocksRunners[commandId] = later(
+              () => button.classList.remove("copied"),
+              3000
+            );
+          });
         }
       }
 
-      function _attachCommands(postElements) {
+      function _attachCommands(postElements, helper) {
+        if (!helper) {
+          return;
+        }
+
         const siteSettings = container.lookup("site-settings:main");
         const { isIE11 } = container.lookup("capabilities:main");
         if (!siteSettings.show_copy_button_on_codeblocks || isIE11) {
           return;
         }
+
         const commands = postElements[0].querySelectorAll(
           ":scope > pre > code"
         );
 
-        if (!commands.length) {
+        const post = helper.getModel();
+
+        if (!commands.length || !post) {
           return;
         }
 
-        _clickHandlerElement = postElements[0];
+        const postElement = postElements[0];
+        _copyCodeblocksClickHandlers[post.id] = postElement;
 
-        commands.forEach(command => {
+        commands.forEach((command, commandIndex) => {
           const button = document.createElement("button");
           button.classList.add("btn", "nohighlight", "copy-cmd");
           button.innerHTML = iconHTML("copy");
+          button.dataset.commandId = `${post.id}-${commandIndex}`;
           command.before(button);
           command.parentElement.classList.add("copy-codeblocks");
         });
 
-        _clickHandlerElement.addEventListener("click", _handleClick, false);
+        postElement.addEventListener("click", _handleClick, false);
       }
 
       api.decorateCooked(_attachCommands, { id: "copy-codeblocks" });
