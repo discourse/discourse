@@ -47,31 +47,33 @@ module Jobs
       end
 
       user_export = UserExport.create(file_name: file_name_prefix, user_id: @current_user.id)
-      file_name = "#{file_name_prefix}-#{user_export.id}.csv"
-      absolute_path = "#{UserExport.base_directory}/#{file_name}"
+
+      name = "#{file_name_prefix}-#{user_export.id}"
+      dirname = "#{UserExport.base_directory}/#{name}"
+      filename = "#{dirname}/#{name}.csv"
 
       # ensure directory exists
-      FileUtils.mkdir_p(UserExport.base_directory) unless Dir.exists?(UserExport.base_directory)
+      FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
 
       # Generate a compressed CSV file
       begin
-        CSV.open(absolute_path, "w") do |csv|
+        CSV.open(filename, "w") do |csv|
           csv << get_header if @entity != "report"
           public_send(export_method).each { |d| csv << d }
         end
-        compressed_file_path = Compression::Zip.new.compress(UserExport.base_directory, file_name)
+        zip_filename = Compression::Zip.new.compress(UserExport.base_directory, name)
       ensure
-        File.delete(absolute_path)
+        FileUtils.rm_rf(dirname)
       end
 
       # create upload
       upload = nil
 
-      if File.exist?(compressed_file_path)
-        File.open(compressed_file_path) do |file|
+      if File.exist?(zip_filename)
+        File.open(zip_filename) do |file|
           upload = UploadCreator.new(
             file,
-            File.basename(compressed_file_path),
+            File.basename(zip_filename),
             type: 'csv_export',
             for_export: 'true'
           ).create_for(@current_user.id)
@@ -79,11 +81,11 @@ module Jobs
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
           else
-            Rails.logger.warn("Failed to upload the file #{compressed_file_path}")
+            Rails.logger.warn("Failed to upload the file #{zip_filename}")
           end
         end
 
-        File.delete(compressed_file_path)
+        File.delete(zip_filename)
       end
     ensure
       post = notify_user(upload, export_title)
