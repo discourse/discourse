@@ -246,7 +246,14 @@ def process_uploads
       next
     end
 
-    if upload.read_attribute(:width) != w || upload.read_attribute(:height) != h || upload.read_attribute(:thumbnail_width) != ww || upload.read_attribute(:thumbnail_height) != hh
+    upload.attributes = {
+      width: w,
+      height: h,
+      thumbnail_width: ww,
+      thumbnail_height: hh
+    }
+
+    if upload.changed?
       if ENV["VERBOSE"]
         puts "Correcting the upload dimensions"
         puts "Before: #{upload.read_attribute(:width)}x#{upload.read_attribute(:height)} #{upload.read_attribute(:thumbnail_width)}x#{upload.read_attribute(:thumbnail_height)}"
@@ -254,13 +261,7 @@ def process_uploads
       end
 
       dimensions_count += 1
-
-      upload.update!(
-        width: w,
-        height: h,
-        thumbnail_width: ww,
-        thumbnail_height: hh,
-      )
+      upload.save!
     end
 
     if w * h < MAX_IMAGE_PIXELS
