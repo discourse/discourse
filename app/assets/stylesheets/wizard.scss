@@ -11,10 +11,9 @@ body.wizard {
   background-image: asset-url("/images/wizard/bubbles.png");
   background-repeat: repeat;
   background-position: left top;
-
   color: #444;
-
   line-height: $line-height-large;
+  font-size: 15px;
 }
 
 .finish-installation {
@@ -280,7 +279,8 @@ body.wizard {
       font-size: $font-down-1;
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: #eee;
     }
 
@@ -311,7 +311,8 @@ body.wizard {
     color: white;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: #80b3ff;
     }
 
@@ -328,7 +329,8 @@ body.wizard {
     background-color: #e60000;
     color: white;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: #cc0000;
     }
 
@@ -374,7 +376,8 @@ body.wizard {
       color: #333;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: #eee;
       }
 
@@ -396,7 +399,8 @@ body.wizard {
       color: #fff;
       background-color: #33b333;
 
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: #4dcd4d;
       }
 
@@ -477,7 +481,8 @@ body.wizard {
       padding: 8px;
       margin: 0px 4px;
       width: 25%;
-      &:hover {
+      &:hover,
+      &:focus {
         background: #f3f3f3;
       }
     }
@@ -519,7 +524,8 @@ body.wizard {
   margin-bottom: 1.25em;
 
   input {
-    outline: 0;
+    /* TODO: Custom :focus style */
+    /* outline: 0;*/
   }
 
   .radio-label {

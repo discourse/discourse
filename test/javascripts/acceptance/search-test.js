@@ -28,6 +28,10 @@ QUnit.test("search", async assert => {
   await fillIn("#search-term", "dev");
   await keyEvent("#search-term", "keyup", 16);
   assert.ok(exists(".search-menu .results ul li"), "it shows results");
+  assert.ok(
+    exists(".search-menu .results ul li .topic-title[data-topic-id]"),
+    "topic has data-topic-id"
+  );
 
   await click(".show-help");
 
@@ -94,13 +98,13 @@ QUnit.test("Search with context", async assert => {
 
   const highlighted = [];
 
-  find("#post_7 span.highlight-strong").map((_, span) => {
+  find("#post_7 span.highlighted").map((_, span) => {
     highlighted.push(span.innerText);
   });
 
   assert.deepEqual(
     highlighted,
-    ["a", "a", "proper", "a"],
+    ["a proper"],
     "it should highlight the post with the search terms correctly"
   );
 

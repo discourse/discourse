@@ -279,6 +279,18 @@ describe UsersController do
         expect(response).to redirect_to(wizard_path)
       end
 
+      it "sets the users timezone if the param is present" do
+        user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+
+        token = user.email_tokens.create(email: user.email).token
+        get "/u/password-reset/#{token}"
+
+        expect(user.user_option.timezone).to eq(nil)
+        put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger', timezone: "America/Chicago" }
+        expect(user.user_option.reload.timezone).to eq("America/Chicago")
+      end
+
       it "logs the password change" do
         user = Fabricate(:admin)
         UserAuthToken.generate!(user_id: user.id)
@@ -768,6 +780,7 @@ describe UsersController do
           json = JSON.parse(response.body)
 
           new_user = User.find(json["user_id"])
+          email_token = new_user.email_tokens.active.where(email: new_user.email).first
 
           expect(json['active']).to be_truthy
 
@@ -775,6 +788,7 @@ describe UsersController do
           expect(new_user.approved).to eq(true)
           expect(new_user.approved_by_id).to eq(admin.id)
           expect(new_user.approved_at).to_not eq(nil)
+          expect(email_token.confirmed?).to eq(true)
         end
 
         it "will create a reviewable when a user is created as active but not approved" do

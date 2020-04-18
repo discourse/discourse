@@ -1,18 +1,18 @@
 {{#if categories}}
-  <table class="category-list {{if showTopics 'with-topics'}}">
+  <table class="category-list {{if showTopics "with-topics"}}">
     <thead>
       <tr>
-        <th class="category"><span aria-role="heading" aria-level="2" id="categories-only-category">{{i18n 'categories.category'}}</span></th>
-        <th class="topics">{{i18n 'categories.topics'}}</th>
+        <th class="category"><span aria-role="heading" aria-level="2" id="categories-only-category">{{i18n "categories.category"}}</span></th>
+        <th class="topics">{{i18n "categories.topics"}}</th>
         {{#if showTopics}}
-          <th class="latest">{{i18n 'categories.latest'}}</th>
+          <th class="latest">{{i18n "categories.latest"}}</th>
         {{/if}}
       </tr>
     </thead>
     <tbody aria-labelledby="categories-only-category">
       {{#each categories as |c|}}
-        <tr data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.uploaded_logo.url 'has-logo' 'no-logo'}}">
-          <td class="category {{if c.isMuted 'muted'}} {{if noCategoryStyle "no-category-style"}}" style={{unless noCategoryStyle (border-color c.color)}}>
+        <tr data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} class="{{if c.description_excerpt "has-description" "no-description"}} {{if c.uploaded_logo.url "has-logo" "no-logo"}}">
+          <td class="category {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-style"}}" style={{unless noCategoryStyle (border-color c.color)}}>
             {{category-title-link category=c}}
             {{#unless c.isMuted}}
               {{#if c.description_excerpt}}
@@ -24,7 +24,7 @@
                 <table class="category-list subcategories-with-subcategories">
                   <tbody>
                     {{#each c.subcategories as |subcategory|}}
-                      <tr data-category-id={{subcategory.id}} data-notification-level={{subcategory.notificationLevelString}} class="{{if subcategory.description_excerpt 'has-description' 'no-description'}} {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
+                      <tr data-category-id={{subcategory.id}} data-notification-level={{subcategory.notificationLevelString}} class="{{if subcategory.description_excerpt "has-description" "no-description"}} {{if subcategory.uploaded_logo.url "has-logo" "no-logo"}}">
                         <td class="category" style={{border-color subcategory.color}}>
                           {{category-title-link tagName="h4" category=subcategory}}
                           {{#if subcategory.description_excerpt}}
@@ -33,10 +33,10 @@
                             </div>
                           {{/if}}
                           {{#if subcategory.subcategories}}
-                            <div class='subcategories'>
+                            <div class="subcategories">
                               {{#each subcategory.subcategories as |subsubcategory|}}
                                 {{#unless subsubcategory.isMuted}}
-                                  <span class='subcategory'>
+                                  <span class="subcategory">
                                     {{category-title-before category=subsubcategory}}
                                     {{category-link subsubcategory hideParent="true"}}
                                   </span>
@@ -56,10 +56,10 @@
                   </tbody>
                 </table>
               {{else if c.subcategories}}
-                <div class='subcategories'>
+                <div class="subcategories">
                   {{#each c.subcategories as |subcategory|}}
                     {{#unless subcategory.isMuted}}
-                      <span class='subcategory'>
+                      <span class="subcategory">
                         {{category-title-before category=subcategory}}
                         {{category-link subcategory hideParent="true"}}
                         {{category-unread category=subcategory}}

@@ -35,7 +35,7 @@
         <div>{{html-safe (i18n "tagging.synonyms_description" base_tag_name=tagInfo.name)}}</div>
         <div class="tag-list">
           {{#each tagInfo.synonyms as |tag|}}
-            <div class='tag-box'>
+            <div class="tag-box">
               {{discourse-tag tag.id pmOnly=tag.pmOnly tagName="div"}}
               {{#if editSynonymsMode}}
                 <a href {{action "unlinkSynonym" tag}} class="unlink-synonym">
@@ -52,7 +52,7 @@
     {{/if}}
     {{#if editSynonymsMode}}
       <section class="add-synonyms field">
-        <label for="add-synonyms">{{i18n 'tagging.add_synonyms_label'}}</label>
+        <label for="add-synonyms">{{i18n "tagging.add_synonyms_label"}}</label>
         {{tag-chooser
           id="add-synonyms"
           tags=newSynonyms
@@ -69,6 +69,6 @@
     {{/if}}
   {{/if}}
   {{#if loading}}
-    <div>{{i18n 'loading'}}</div>
+    <div>{{i18n "loading"}}</div>
   {{/if}}
 </section>

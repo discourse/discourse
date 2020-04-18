@@ -1,7 +1,6 @@
 {{#each categories as |c|}}
-  <div class='category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}' style={{unless noCategoryStyle (border-color c.color)}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}}
-   data-url={{c.url}}>
-    <div class='category-box-inner'>
+  <div style={{unless noCategoryStyle (border-color c.color)}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
+    <div class="category-box-inner">
       {{#unless c.isMuted}}
         <div class="category-logo">
           {{#if c.uploaded_logo.url}}
@@ -15,11 +14,11 @@
         </div>
       {{/unless}}
       <div class="category-details">
-        <div class='category-box-heading'>
+        <div class="category-box-heading">
           <a class="parent-box-link" href={{c.url}}>
             <h3>
               {{#if c.read_restricted}}
-                {{d-icon 'lock'}}
+                {{d-icon "lock"}}
               {{/if}}
               {{c.name}}
             </h3>
@@ -27,19 +26,19 @@
         </div>
 
         {{#unless c.isMuted}}
-          <div class='description'>
+          <div class="description">
             {{text-overflow class="overflow" text=c.description_excerpt}}
           </div>
           {{#if c.isGrandParent}}
             {{#each c.subcategories as |subcategory|}}
-              <div data-category-id={{subcategory.id}} data-notification-level={{subcategory.notificationLevelString}}  style={{border-color subcategory.color}} class="subcategory with-subcategories {{if subcategory.uploaded_logo.url 'has-logo' 'no-logo'}}">
+              <div data-category-id={{subcategory.id}} data-notification-level={{subcategory.notificationLevelString}} style={{border-color subcategory.color}} class="subcategory with-subcategories {{if subcategory.uploaded_logo.url "has-logo" "no-logo"}}">
                 <div class="subcategory-box-inner">
                   {{category-title-link tagName="h4" category=subcategory}}
                   {{#if subcategory.subcategories}}
-                    <div class='subcategories'>
+                    <div class="subcategories">
                       {{#each subcategory.subcategories as |subsubcategory|}}
                         {{#unless subsubcategory.isMuted}}
-                          <span class='subcategory'>
+                          <span class="subcategory">
                             {{category-title-before category=subsubcategory}}
                             {{category-link subsubcategory hideParent="true"}}
                           </span>
@@ -51,7 +50,7 @@
               </div>
             {{/each}}
           {{else if c.subcategories}}
-            <div class='subcategories'>
+            <div class="subcategories">
               {{#each c.subcategories as |sc|}}
                 <a class="subcategory" href={{sc.url}}>
                   <span class="subcategory-image-placeholder">

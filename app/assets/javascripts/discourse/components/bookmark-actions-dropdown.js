@@ -20,6 +20,12 @@ export default DropdownSelectBoxComponent.extend({
         description: I18n.t(
           "post.bookmarks.actions.delete_bookmark.description"
         )
+      },
+      {
+        id: "edit",
+        icon: "pencil",
+        name: I18n.t("post.bookmarks.actions.edit_bookmark.name"),
+        description: I18n.t("post.bookmarks.actions.edit_bookmark.description")
       }
     ];
   }),
@@ -28,6 +34,8 @@ export default DropdownSelectBoxComponent.extend({
   onChange(selectedAction) {
     if (selectedAction === "remove") {
       this.removeBookmark(this.bookmark);
+    } else if (selectedAction === "edit") {
+      this.editBookmark(this.bookmark);
     }
   }
 });

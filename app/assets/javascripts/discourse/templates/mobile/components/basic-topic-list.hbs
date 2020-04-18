@@ -1,7 +1,7 @@
 {{#conditional-loading-spinner condition=loading}}
   {{#if hasIncoming}}
     <div class="show-mores">
-      <a href class='alert alert-info clickable' {{action showInserted}}>
+      <a href {{action showInserted}} class="alert alert-info clickable">
         {{count-i18n key="topic_count_" suffix="latest" count=incomingCount}}
       </a>
     </div>
@@ -11,9 +11,9 @@
     <table class="topic-list">
       <tbody>
         {{#each topics as |t|}}
-          <tr class="topic-list-item {{if t.archived 'archived'}} {{if t.visited 'visited'}}" data-topic-id={{t.id}}>
+          <tr class="topic-list-item {{if t.archived "archived"}} {{if t.visited "visited"}}" data-topic-id={{t.id}}>
             <td>
-              <div class='main-link'>
+              <div class="main-link">
                 {{topic-status topic=t}}
                 {{topic-link t}}
                 {{raw "list/unread-indicator"
@@ -29,29 +29,29 @@
                     {{html-safe t.excerpt}}
                     {{#if t.excerptTruncated}}
                       {{#unless t.canClearPin}}
-                        <a href={{t.url}}>{{i18n 'read_more'}}</a>
+                        <a href={{t.url}}>{{i18n "read_more"}}</a>
                       {{/unless}}
                     {{/if}}
                     {{#if t.canClearPin}}
-                      <a href {{action "clearPin" t}} title={{i18n 'topic.clear_pin.help'}}>
-                        {{i18n 'topic.clear_pin.title'}}
+                      <a href {{action "clearPin" t}} title={{i18n "topic.clear_pin.help"}}>
+                        {{i18n "topic.clear_pin.title"}}
                       </a>
                     {{/if}}
                   </div>
                 {{/if}}
               </div>
-              <div class='pull-right'>
+              <div class="pull-right">
                 {{raw "list/post-count-or-badges" topic=t postBadgesEnabled="true"}}
               </div>
-              <div class='clearfix'></div>
+              <div class="clearfix"></div>
               <div class="topic-item-stats clearfix">
                 {{discourse-tags t mode="list" tagsForUser=tagsForUser}}
                 <div class="pull-right">
                   {{raw "list/activity-column" topic=t tagName="div" class="num activity last"}}
-                  <a href={{t.lastPostUrl}} title='{{i18n 'last_post'}}: {{raw-date t.bumped_at}}'>{{t.last_poster_username}}</a>
+                  <a href={{t.lastPostUrl}} title="{{i18n "last_post"}}: {{raw-date t.bumped_at}}">{{t.last_poster_username}}</a>
                 </div>
                 {{#unless hideCategory}}
-                  <div class='category'>
+                  <div class="category">
                     {{category-link t.category}}
                   </div>
                 {{/unless}}
@@ -63,8 +63,8 @@
       </tbody>
     </table>
   {{else}}
-    <div class='alert alert-info'>
-      {{i18n 'choose_topic.none_found'}}
+    <div class="alert alert-info">
+      {{i18n "choose_topic.none_found"}}
     </div>
   {{/if}}
 {{/conditional-loading-spinner}}

@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
@@ -19,8 +19,8 @@ export default Controller.extend({
     "filters.target_user",
     "filters.subject"
   )
-  filterParams(action, acting_user, target_user, subject) {
-    return { action, acting_user, target_user, subject };
+  filterParams(filtersAction, acting_user, target_user, subject) {
+    return { action: filtersAction, acting_user, target_user, subject };
   },
 
   @observes(
@@ -54,28 +54,26 @@ export default Controller.extend({
     });
   },
 
-  actions: {
-    loadMore() {
-      if (this.get("model.all_loaded")) return;
+  @action
+  loadMore() {
+    if (this.get("model.all_loaded")) return;
 
-      this.set("loading", true);
+    this.set("loading", true);
 
-      this.get("group.model")
-        .findLogs(this.offset + 1, this.filterParams)
-        .then(results => {
-          results.logs.forEach(result =>
-            this.get("model.logs").addObject(result)
-          );
-          this.incrementProperty("offset");
-          this.set("model.all_loaded", results.all_loaded);
-        })
-        .finally(() => {
-          this.set("loading", false);
-        });
-    },
+    this.get("group.model")
+      .findLogs(this.offset + 1, this.filterParams)
+      .then(results => {
+        results.logs.forEach(result =>
+          this.get("model.logs").addObject(result)
+        );
+        this.incrementProperty("offset");
+        this.set("model.all_loaded", results.all_loaded);
+      })
+      .finally(() => this.set("loading", false));
+  },
 
-    clearFilter(key) {
-      this.set(`filters.${key}`, "");
-    }
+  @action
+  clearFilter(key) {
+    this.set(`filters.${key}`, "");
   }
 });

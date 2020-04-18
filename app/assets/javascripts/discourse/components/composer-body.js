@@ -1,7 +1,7 @@
 import {
   run,
   cancel,
-  scheduleOnce,
+  schedule,
   later,
   debounce,
   throttle
@@ -65,7 +65,7 @@ export default Component.extend(KeyEnterEscape, {
     "composer.canEditTopicFeaturedLink"
   )
   resize() {
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
         return;
       }
@@ -150,28 +150,27 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   viewportResize() {
-    const composerVH = window.visualViewport.height * 0.01;
+    const composerVH = window.visualViewport.height * 0.01,
+      doc = document.documentElement;
 
-    document.documentElement.style.setProperty(
-      "--composer-vh",
-      `${composerVH}px`
-    );
+    doc.style.setProperty("--composer-vh", `${composerVH}px`);
 
     const viewportWindowDiff =
       window.innerHeight - window.visualViewport.height;
 
+    viewportWindowDiff
+      ? doc.classList.add("keyboard-visible")
+      : doc.classList.remove("keyboard-visible");
     // adds bottom padding when using a hardware keyboard and the accessory bar is visible
     // accessory bar height is 55px, using 75 allows a small buffer
-    if (viewportWindowDiff > 0 && viewportWindowDiff < 75) {
-      document.documentElement.style.setProperty(
+
+    if (viewportWindowDiff < 75) {
+      doc.style.setProperty(
         "--composer-ipad-padding",
         `${viewportWindowDiff}px`
       );
     } else {
-      document.documentElement.style.setProperty(
-        "--composer-ipad-padding",
-        "0px"
-      );
+      doc.style.setProperty("--composer-ipad-padding", "0px");
     }
   },
 

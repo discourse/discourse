@@ -1,13 +1,11 @@
-import Component from "@ember/component";
-import highlightText from "discourse/lib/highlight-text";
+import highlightSearch from "discourse/components/highlight-search";
+import deprecated from "discourse-common/lib/deprecated";
 
-export default Component.extend({
-  tagName: "span",
-
-  _highlightOnInsert: function() {
-    const term = this.highlight;
-    highlightText($(this.element), term);
+export default highlightSearch.extend({
+  init() {
+    this._super(...arguments);
+    deprecated(
+      "`highlight-text` component is deprecated,  use the `highlight-search` instead."
+    );
   }
-    .observes("highlight")
-    .on("didInsertElement")
 });

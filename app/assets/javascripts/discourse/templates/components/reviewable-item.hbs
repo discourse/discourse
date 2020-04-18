@@ -1,34 +1,34 @@
-<div class='reviewable-item {{customClass}}' data-reviewable-id={{reviewable.id}}>
-  <div class='reviewable-meta-data'>
-    <span class='reviewable-type'>{{reviewable.humanType}}</span>
+<div data-reviewable-id={{reviewable.id}} class="reviewable-item {{customClass}}">
+  <div class="reviewable-meta-data">
+    <span class="reviewable-type">{{reviewable.humanType}}</span>
     {{#if reviewable.reply_count}}
-      <span class='reply-count'>{{i18n "review.replies" count=reviewable.reply_count}}</span>
+      <span class="reply-count">{{i18n "review.replies" count=reviewable.reply_count}}</span>
     {{/if}}
-    <span class='created-at'>
-      {{#link-to 'review.show' reviewable.id}}{{age-with-tooltip reviewable.created_at}}{{/link-to}}
+    <span class="created-at">
+      {{#link-to "review.show" reviewable.id}}{{age-with-tooltip reviewable.created_at}}{{/link-to}}
     </span>
-    <span class='status'>
+    <span class="status">
       {{reviewable-status reviewable.status}}
     </span>
-    <a href {{action "explainReviewable" reviewable}} class='explain' title={{i18n "review.explain.why"}}>
+    <a href {{action "explainReviewable" reviewable}} title={{i18n "review.explain.why"}} class="explain">
       {{d-icon "question-circle"}}
     </a>
   </div>
 
-  <div class='reviewable-contents'>
+  <div class="reviewable-contents">
     {{#if editing}}
-      <div class='editable-fields'>
+      <div class="editable-fields">
         {{#if reviewable.created_by}}
-          <div class='editable-created-by'>
+          <div class="editable-created-by">
             {{avatar reviewable.created_by imageSize="tiny"}}
-            {{reviewable-created-by-name user=reviewable.created_by tagName=''}}
+            {{reviewable-created-by-name user=reviewable.created_by tagName=""}}
           </div>
         {{/if}}
 
         {{#each reviewable.editable_fields as |f|}}
-          <div class='editable-field {{dasherize f.id}}'>
+          <div class="editable-field {{dasherize f.id}}">
             {{component (concat "reviewable-field-" f.type)
-              tagName=''
+              tagName=""
               value=(editable-value reviewable f.id)
               tagCategoryId=reviewable.category.id
               valueChanged=(action "valueChanged" f.id)
@@ -38,15 +38,15 @@
         {{/each}}
       </div>
     {{else}}
-      {{#component reviewableComponent reviewable=reviewable tagName=''}}
-        {{reviewable-scores reviewable=reviewable tagName=''}}
+      {{#component reviewableComponent reviewable=reviewable tagName=""}}
+        {{reviewable-scores reviewable=reviewable tagName=""}}
       {{/component}}
     {{/if}}
   </div>
-  <div class='reviewable-actions'>
+  <div class="reviewable-actions">
     {{#if claimEnabled}}
-      <div class='claimed-actions'>
-        <span class='help'>{{html-safe claimHelp}}</span>
+      <div class="claimed-actions">
+        <span class="help">{{html-safe claimHelp}}</span>
         {{reviewable-claimed-topic topicId=topicId claimedBy=reviewable.claimed_by}}
       </div>
     {{/if}}

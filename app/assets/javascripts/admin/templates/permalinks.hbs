@@ -1,8 +1,8 @@
 <div class="permalink-title">
-  <h2>{{i18n 'admin.permalink.title'}}</h2>
+  <h2>{{i18n "admin.permalink.title"}}</h2>
 </div>
 <div class="permalink-description">
-  <span>{{i18n 'admin.permalink.description'}}</span>
+  <span>{{i18n "admin.permalink.description"}}</span>
 </div>
 <div class="permalink-search">
   {{text-field value=filter class="url-input" placeholderKey="admin.permalink.form.filter" autocorrect="off" autocapitalize="off"}}
@@ -12,10 +12,10 @@
 
 {{#conditional-loading-spinner condition=loading}}
   {{#if model.length}}
-    <table class='admin-logs-table permalinks grid'>
+    <table class="admin-logs-table permalinks grid">
       <thead class="heading-container">
-        <th class="col heading first url">{{i18n 'admin.permalink.url'}}</th>
-        <th class="col heading destination">{{i18n 'admin.permalink.destination'}}</th>
+        <th class="col heading first url">{{i18n "admin.permalink.url"}}</th>
+        <th class="col heading destination">{{i18n "admin.permalink.destination"}}</th>
         <th class="col heading actions"></th>
       </thead>
       <tbody>
@@ -47,6 +47,6 @@
       </tbody>
     </table>
   {{else}}
-    {{i18n 'search.no_results'}}
+    {{i18n "search.no_results"}}
   {{/if}}
 {{/conditional-loading-spinner}}

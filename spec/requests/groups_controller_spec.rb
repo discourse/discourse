@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe GroupsController do
   fab!(:user) { Fabricate(:user) }
+  let(:other_user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
   fab!(:admin) { Fabricate(:admin) }
@@ -91,7 +92,7 @@ describe GroupsController do
         sign_in(user)
       end
 
-      let!(:other_group) { Fabricate(:group, name: "other_group", users: [user]) }
+      let!(:other_group) { Fabricate(:group, name: "other_group", users: [user, other_user]) }
 
       context "with default (descending) order" do
         it "sorts by name" do
@@ -116,7 +117,7 @@ describe GroupsController do
           body = JSON.parse(response.body)
 
           expect(body["groups"].map { |g| g["id"] }).to eq([
-            group.id, other_group.id, moderator_group_id
+            other_group.id, group.id, moderator_group_id
           ])
 
           expect(body["load_more_groups"]).to eq("/groups?order=user_count&page=1")

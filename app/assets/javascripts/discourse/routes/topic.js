@@ -1,20 +1,26 @@
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import { cancel, later, scheduleOnce } from "@ember/runloop";
+import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 import { EventTarget } from "rsvp";
-
-let isTransitioning = false,
-  scheduledReplace = null,
-  lastScrollPos = null;
 
 const SCROLL_DELAY = 500;
 
 import showModal from "discourse/lib/show-modal";
 
 const TopicRoute = DiscourseRoute.extend({
+  init() {
+    this._super(...arguments);
+
+    this.setProperties({
+      isTransitioning: false,
+      scheduledReplace: null,
+      lastScrollPos: null
+    });
+  },
+
   redirect() {
     return this.redirectIfLoginRequired();
   },
@@ -169,7 +175,7 @@ const TopicRoute = DiscourseRoute.extend({
     // Use replaceState to update the URL once it changes
     postChangedRoute(currentPost) {
       // do nothing if we are transitioning to another route
-      if (isTransitioning || TopicRoute.disableReplaceState) {
+      if (this.isTransitioning || TopicRoute.disableReplaceState) {
         return;
       }
 
@@ -180,14 +186,17 @@ const TopicRoute = DiscourseRoute.extend({
           postUrl += "/" + currentPost;
         }
 
-        cancel(scheduledReplace);
-        lastScrollPos = parseInt($(document).scrollTop(), 10);
-        scheduledReplace = later(
-          this,
-          "_replaceUnlessScrolling",
-          postUrl,
-          Ember.Test ? 0 : SCROLL_DELAY
-        );
+        cancel(this.scheduledReplace);
+
+        this.setProperties({
+          lastScrollPos: parseInt($(document).scrollTop(), 10),
+          scheduledReplace: later(
+            this,
+            "_replaceUnlessScrolling",
+            postUrl,
+            Ember.Test ? 0 : SCROLL_DELAY
+          )
+        });
       }
     },
 
@@ -198,8 +207,8 @@ const TopicRoute = DiscourseRoute.extend({
 
     willTransition() {
       this._super(...arguments);
-      cancel(scheduledReplace);
-      isTransitioning = true;
+      cancel(this.scheduledReplace);
+      this.set("isTransitioning", true);
       return true;
     }
   },
@@ -208,17 +217,20 @@ const TopicRoute = DiscourseRoute.extend({
   // within a topic until scrolling stops
   _replaceUnlessScrolling(url) {
     const currentPos = parseInt($(document).scrollTop(), 10);
-    if (currentPos === lastScrollPos) {
+    if (currentPos === this.lastScrollPos) {
       DiscourseURL.replaceState(url);
       return;
     }
-    lastScrollPos = currentPos;
-    scheduledReplace = later(
-      this,
-      "_replaceUnlessScrolling",
-      url,
-      SCROLL_DELAY
-    );
+
+    this.setProperties({
+      lastScrollPos: currentPos,
+      scheduledReplace: later(
+        this,
+        "_replaceUnlessScrolling",
+        url,
+        SCROLL_DELAY
+      )
+    });
   },
 
   setupParams(topic, params) {
@@ -264,7 +276,7 @@ const TopicRoute = DiscourseRoute.extend({
 
   activate() {
     this._super(...arguments);
-    isTransitioning = false;
+    this.set("isTransitioning", false);
 
     const topic = this.modelFor("topic");
     this.session.set("lastTopicIdViewed", parseInt(topic.get("id"), 10));
@@ -292,7 +304,7 @@ const TopicRoute = DiscourseRoute.extend({
 
   setupController(controller, model) {
     // In case we navigate from one topic directly to another
-    isTransitioning = false;
+    this.set("isTransitioning", false);
 
     controller.setProperties({
       model,
@@ -314,9 +326,9 @@ const TopicRoute = DiscourseRoute.extend({
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get("id"), controller);
 
-    scheduleOnce("afterRender", () => {
-      this.appEvents.trigger("header:update-topic", model);
-    });
+    schedule("afterRender", () =>
+      this.appEvents.trigger("header:update-topic", model)
+    );
   }
 });
 

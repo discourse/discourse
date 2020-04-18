@@ -15,7 +15,7 @@
 
   {{#each model.errors as |error|}}
     <div class="alert alert-error">
-      <button class="close" data-dismiss="alert">×</button>
+      <button type="button" class="close" data-dismiss="alert" aria-label={{i18n "modal.dismiss_error"}}>×</button>
       {{error}}
     </div>
   {{/each}}
@@ -45,7 +45,7 @@
         {{i18n "admin.customize.theme.disabled"}}
       {{/if}}
       {{d-button
-        class='btn-default'
+        class="btn-default"
         action=(action "enableComponent")
         icon="check"
         label="admin.customize.theme.enable"}}
@@ -97,31 +97,31 @@
         {{/if}}
 
         {{#if model.remote_theme.commits_behind}}
-          {{#d-button action=(action "updateToLatest") icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
+          {{#d-button action=(action "updateToLatest") icon="download" class="btn-primary"}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
         {{else}}
           {{#d-button action=(action "checkForThemeUpdates") icon="sync" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
         {{/if}}
 
-        <span class='status-message'>
+        <span class="status-message">
           {{#if updatingRemote}}
-            {{i18n 'admin.customize.theme.updating'}}
+            {{i18n "admin.customize.theme.updating"}}
           {{else}}
             {{#if model.remote_theme.commits_behind}}
-              {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
+              {{i18n "admin.customize.theme.commits_behind" count=model.remote_theme.commits_behind}}
               {{#if model.remote_theme.github_diff_link}}
                 <a href={{model.remote_theme.github_diff_link}}>
-                  {{i18n 'admin.customize.theme.compare_commits'}}
+                  {{i18n "admin.customize.theme.compare_commits"}}
                 </a>
               {{/if}}
             {{else}}
               {{#unless showRemoteError}}
-                {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
+                {{i18n "admin.customize.theme.up_to_date"}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
               {{/unless}}
             {{/if}}
           {{/if}}
         </span>
       {{else}}
-        <span class='status-message'>
+        <span class="status-message">
           {{d-icon "info-circle"}} {{i18n "admin.customize.theme.imported_from_archive"}}
         </span>
       {{/if}}
@@ -159,7 +159,7 @@
       <div class="mini-title">{{i18n "admin.customize.theme.component_of"}}</div>
       <ul>
         {{#each parentThemes as |theme|}}
-          <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
+          <li>{{#link-to "adminCustomizeThemes.show" theme replace=true}}{{theme.name}}{{/link-to}}</li>
         {{/each}}
       </ul>
     </div>
@@ -203,11 +203,11 @@
   <div class="control-unit">
     <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
     {{#if model.uploads}}
-      <ul class='removable-list'>
+      <ul class="removable-list">
         {{#each model.uploads as |upload|}}
           <li>
-            <span class='col'>${{upload.name}}: <a href={{upload.url}} rel="noopener" target='_blank'>{{upload.filename}}</a></span>
-            <span class='col'>
+            <span class="col">${{upload.name}}: <a href={{upload.url}} rel="noopener noreferrer" target="_blank">{{upload.filename}}</a></span>
+            <span class="col">
               {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
             </span>
           </li>
@@ -241,21 +241,21 @@
     </div>
   {{/if}}
 
-  <a href={{previewUrl}} title={{i18n 'admin.customize.explain_preview'}} rel="noopener" target='_blank' class='btn btn-default'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
-  <a class="btn btn-default export" rel="noopener" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
+  <a href={{previewUrl}} title={{i18n "admin.customize.explain_preview"}} rel="noopener noreferrer" target="_blank" class="btn btn-default">{{d-icon "desktop"}}{{i18n "admin.customize.theme.preview"}}</a>
+  <a class="btn btn-default export" rel="noopener noreferrer" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n "admin.export_json.button_text"}}</a>
 
   {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
 
   {{#if model.component}}
     {{#if model.enabled}}
       {{d-button
-        class='btn-default'
+        class="btn-default"
         action=(action "disableComponent")
         icon="ban"
         label="admin.customize.theme.disable"}}
     {{else}}
       {{d-button
-        class='btn-default'
+        class="btn-default"
         action=(action "enableComponent")
         icon="check"
         label="admin.customize.theme.enable"}}

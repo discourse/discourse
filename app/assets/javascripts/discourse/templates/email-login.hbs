@@ -1,12 +1,12 @@
 <div class="container email-login clearfix">
   <div class="pull-left col-image">
-    <img src={{lockImageUrl}} class="password-reset-img">
+    <img src={{lockImageUrl}} class="password-reset-img" alt={{i18n "email_login.emoji"}}>
   </div>
 
   <div class="pull-left col-form">
     <form>
       {{#if model.error}}
-        <div class='alert alert-error'>
+        <div class="alert alert-error">
           {{model.error}}
         </div>
       {{/if}}

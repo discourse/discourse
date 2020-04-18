@@ -459,6 +459,7 @@ login:
   email_domains_whitelist:
     default: ""
     type: list
+  enforce_canonical_emails: false
   auto_approve_email_domains:
     default: ""
     type: list
@@ -2009,11 +2010,6 @@ uncategorized:
 
   overridden_robots_txt:
     default: ""
-    hidden: true
-
-  enable_new_user_card_route:
-    default: false
-    client: true
     hidden: true
 
 user_preferences:

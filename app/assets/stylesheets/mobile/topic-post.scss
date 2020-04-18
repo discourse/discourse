@@ -237,7 +237,8 @@ a.reply-to-tab {
 #topic-footer-buttons {
   @include clearfix;
   padding: 20px 0 0 0;
-  .d-icon-bookmark.bookmarked {
+  .d-icon-bookmark.bookmarked,
+  .d-icon-discourse-bookmark-clock.bookmarked {
     color: $tertiary;
   }
   .combobox {

@@ -58,7 +58,7 @@ export default Component.extend({
   willClearRender() {
     const callbacks = _cleanCallbacks[this.widget];
     if (callbacks) {
-      callbacks.forEach(cb => cb());
+      callbacks.forEach(cb => cb(this._tree));
     }
 
     this._connected.forEach(v => v.destroy());
