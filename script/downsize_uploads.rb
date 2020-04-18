@@ -195,7 +195,13 @@ def process_uploads
   downsized_count = 0
 
   scope = Upload.where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
-  scope = scope.where("COALESCE(width, 0) = 0 OR COALESCE(height, 0) = 0 OR COALESCE(thumbnail_width, 0) = 0 OR COALESCE(thumbnail_height, 0) = 0 OR width * height > ?", MAX_IMAGE_PIXELS)
+  scope = scope.where(<<-SQL, MAX_IMAGE_PIXELS)
+    COALESCE(width, 0) = 0 OR
+    COALESCE(height, 0) = 0 OR
+    COALESCE(thumbnail_width, 0) = 0 OR
+    COALESCE(thumbnail_height, 0) = 0 OR
+    width * height > ?
+  SQL
 
   if ENV["WORKER_ID"] && ENV["WORKER_COUNT"]
     scope = scope.where("id % ? = ?", ENV["WORKER_COUNT"], ENV["WORKER_ID"])
