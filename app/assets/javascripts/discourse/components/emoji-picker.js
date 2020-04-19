@@ -434,7 +434,7 @@ export default Component.extend({
 
     this.$visibleSections.forEach(visibleSection => {
       const $unloadedEmojis = $(visibleSection).find(
-        "button.emoji[data-loaded!='1']"
+        "button.emoji:not(.custom)[data-loaded!='1']"
       );
       $.each($unloadedEmojis, (_, button) => {
         let offsetTop = button.offsetTop;
