@@ -670,11 +670,12 @@ class CookedPostProcessor
   end
 
   def disable_if_low_on_disk_space
-    return false if Discourse.store.external?
-    return false if !SiteSetting.download_remote_images_to_local
-    return false if available_disk_space >= SiteSetting.download_remote_images_threshold
+    return if Discourse.store.external?
+    return if !SiteSetting.download_remote_images_to_local
+    return if available_disk_space >= SiteSetting.download_remote_images_threshold
 
     SiteSetting.download_remote_images_to_local = false
+
     # log the site setting change
     reason = I18n.t("disable_remote_images_download_reason")
     staff_action_logger = StaffActionLogger.new(Discourse.system_user)
@@ -682,8 +683,6 @@ class CookedPostProcessor
 
     # also send a private message to the site contact user
     notify_about_low_disk_space
-
-    true
   end
 
   def notify_about_low_disk_space
