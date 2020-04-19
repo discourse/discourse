@@ -198,7 +198,7 @@ module FileStore
       FileUtils.symlink(source_path, public_upload_path)
 
       FileStore::ToS3Migration.new(
-        s3_options: FileStore::ToS3Migration.s3_options_from_env,
+        s3_options: FileStore::ToS3Migration.s3_options_from_site_settings,
         migrate_to_multisite: Rails.configuration.multisite,
       ).migrate
 
