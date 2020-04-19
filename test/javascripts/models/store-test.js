@@ -182,3 +182,9 @@ QUnit.test("findAll embedded", async assert => {
 
   assert.equal(fruits.objectAt(2).get("farmer.name"), "Luke Skywalker");
 });
+
+QUnit.test("custom primaryKey", async assert => {
+  const store = createStore();
+  const cats = await store.findAll("cat");
+  assert.equal(cats.objectAt(0).name, "souna");
+});

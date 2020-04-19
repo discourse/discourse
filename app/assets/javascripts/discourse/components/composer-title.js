@@ -5,9 +5,9 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
-import afterTransition from "discourse/lib/after-transition";
 import ENV from "discourse-common/config/environment";
 import EmberObject from "@ember/object";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 
 export default Component.extend({
   classNames: ["title-input"],
@@ -17,11 +17,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     if (this.focusTarget === "title") {
-      const $input = $(this.element.querySelector("input"));
-
-      afterTransition($(this.element).closest("#reply-control"), () => {
-        $input.putCursorAtEnd();
-      });
+      putCursorAtEnd(this.element.querySelector("input"));
     }
 
     if (this.get("composer.titleLength") > 0) {
@@ -136,14 +132,14 @@ export default Component.extend({
           .finally(() => {
             this.set("composer.loading", false);
             schedule("afterRender", () => {
-              $(this.element.querySelector("input")).putCursorAtEnd();
+              putCursorAtEnd(this.element.querySelector("input"));
             });
           });
       } else {
         this._updatePost(loadOnebox);
         this.set("composer.loading", false);
         schedule("afterRender", () => {
-          $(this.element.querySelector("input")).putCursorAtEnd();
+          putCursorAtEnd(this.element.querySelector("input"));
         });
       }
     }

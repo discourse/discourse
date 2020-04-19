@@ -141,7 +141,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     this.setProperties({ visible: true, loading: true });
 
     const args = {
-      forCard: this.siteSettings.enable_new_user_card_route,
+      forCard: true,
       include_post_count_for: this.get("topic.id")
     };
 

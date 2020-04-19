@@ -1,22 +1,22 @@
 <div class="future-date-input">
   {{#unless isBasedOnDuration}}
-  <div class="control-group">
-    <label>{{displayLabel}}</label>
-    {{future-date-input-selector
-      minimumResultsForSearch=-1
-      statusType=statusType
-      value=(readonly selection)
-      input=(readonly input)
-      includeDateTime=includeDateTime
-      includeWeekend=includeWeekend
-      includeFarFuture=includeFarFuture
-      includeMidFuture=includeMidFuture
-      clearable=clearable
-      none="topic.auto_update_input.none"
-      onChangeInput=onChangeInput
-      onChange=(action (mut selection))
-    }}
-  </div>
+    <div class="control-group">
+      <label>{{displayLabel}}</label>
+      {{future-date-input-selector
+        minimumResultsForSearch=-1
+        statusType=statusType
+        value=(readonly selection)
+        input=(readonly input)
+        includeDateTime=includeDateTime
+        includeWeekend=includeWeekend
+        includeFarFuture=includeFarFuture
+        includeMidFuture=includeMidFuture
+        clearable=clearable
+        none="topic.auto_update_input.none"
+        onChangeInput=onChangeInput
+        onChange=(action (mut selection))
+      }}
+    </div>
   {{/unless}}
 
   {{#if displayDateAndTimePicker}}

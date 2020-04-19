@@ -27,7 +27,16 @@ class DirectoryItem < ActiveRecord::Base
     period_types.each_key { |p| refresh_period!(p) }
   end
 
+  def self.last_updated_at(period_type)
+    val = Discourse.redis.get("directory_#{period_type}")
+    return nil if val.nil?
+
+    Time.zone.at(val.to_i)
+  end
+
   def self.refresh_period!(period_type, force: false)
+
+    Discourse.redis.set("directory_#{period_types[period_type]}", Time.zone.now.to_i)
 
     # Don't calculate it if the user directory is disabled
     return unless SiteSetting.enable_user_directory? || force

@@ -8,9 +8,11 @@ module ImportExport
                       :auto_close_hours, :parent_category_id, :auto_close_based_on_last_post,
                       :topic_template, :all_topics_wiki, :permissions_params]
 
-    GROUP_ATTRS = [ :id, :name, :created_at, :mentionable_level, :messageable_level, :visibility_level,
-                    :automatic_membership_email_domains, :automatic_membership_retroactive,
-                    :primary_group, :title, :grant_trust_level, :incoming_email]
+    GROUP_ATTRS = [:id, :name, :created_at, :automatic_membership_email_domains, :primary_group,
+                   :title, :grant_trust_level, :incoming_email, :bio_raw, :allow_membership_requests,
+                   :full_name, :default_notification_level, :visibility_level, :public_exit,
+                   :public_admission, :membership_request_template, :messageable_level, :mentionable_level,
+                   :members_visibility_level, :publish_read_state]
 
     USER_ATTRS = [:id, :email, :username, :name, :created_at, :trust_level, :active, :last_emailed_at]
 
@@ -39,6 +41,26 @@ module ImportExport
       self
     end
 
+    def export_groups(group_names)
+      data = []
+      groups = Group.all
+      groups = groups.where(name: group_names) if group_names.present?
+
+      groups.find_each do |group|
+        attrs = GROUP_ATTRS.inject({}) { |h, a| h[a] = group.public_send(a); h }
+        attrs[:user_ids] = group.users.pluck(:id)
+        data << attrs
+      end
+
+      data
+    end
+
+    def export_groups!
+      @export_data[:groups] = export_groups([])
+
+      self
+    end
+
     def export_category_groups
       groups = []
       group_names = []
@@ -53,13 +75,7 @@ module ImportExport
       group_names.uniq!
       return [] if group_names.empty?
 
-      Group.where(name: group_names).find_each do |group|
-        attrs = GROUP_ATTRS.inject({}) { |h, a| h[a] = group.public_send(a); h }
-        attrs[:user_ids] = group.users.pluck(:id)
-        groups << attrs
-      end
-
-      groups
+      export_groups(group_names)
     end
 
     def export_category_groups!

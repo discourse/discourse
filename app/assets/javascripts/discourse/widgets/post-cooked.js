@@ -2,7 +2,11 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
-import highlightText from "discourse/lib/highlight-text";
+import highlightSearch from "discourse/lib/highlight-search";
+import {
+  default as highlightHTML,
+  unhighlightHTML
+} from "discourse/lib/highlight-html";
 
 let _decorators = [];
 
@@ -48,17 +52,18 @@ export default class PostCooked {
   }
 
   _applySearchHighlight($html) {
+    const html = $html[0];
     const highlight = this.attrs.highlightTerm;
 
     if (highlight && highlight.length > 2) {
       if (this._highlighted) {
-        $html.unhighlight();
+        unhighlightHTML(html);
       }
 
-      highlightText($html, highlight, { defaultClassName: true });
+      highlightSearch(html, highlight, { defaultClassName: true });
       this._highlighted = true;
     } else if (this._highlighted) {
-      $html.unhighlight();
+      unhighlightHTML(html);
       this._highlighted = false;
     }
   }
@@ -175,10 +180,8 @@ export default class PostCooked {
           div.html(result.cooked);
           _decorators.forEach(cb => cb(div, this.decoratorHelper));
 
-          div.highlight(originalText, {
-            caseSensitive: true,
-            element: "span",
-            className: "highlighted"
+          highlightHTML(div[0], originalText, {
+            matchCase: true
           });
           $blockQuote.showHtml(div, "fast", finished);
         })

@@ -1,4 +1,4 @@
-<section class="details {{unless model.active 'not-activated'}}">
+<section class="details {{unless model.active "not-activated"}}">
   <div class="user-controls">
     {{#if model.canViewProfile}}
       {{#link-to "user" model class="btn btn-default"}}
@@ -474,7 +474,7 @@
       <div class="value">
         {{#link-to "adminUser" model.silencedBy}}
           {{avatar model.silencedBy imageSize="tiny"}}
-          {{/link-to}}
+        {{/link-to}}
         {{#link-to "adminUser" model.silencedBy}}
           {{model.silencedBy.username}}
         {{/link-to}}
@@ -507,45 +507,45 @@
 {{#if currentUser.admin}}
   <section class="details">
     <h1>{{i18n "admin.groups.title"}}</h1>
-      <div class="display-row">
-        <div class="field">{{i18n "admin.groups.automatic"}}</div>
-        <div class="value">{{html-safe automaticGroups}}</div>
+    <div class="display-row">
+      <div class="field">{{i18n "admin.groups.automatic"}}</div>
+      <div class="value">{{html-safe automaticGroups}}</div>
+    </div>
+    <div class="display-row">
+      <div class="field">{{i18n "admin.groups.custom"}}</div>
+      <div class="value">
+        {{admin-group-selector
+          content=availableGroups
+          value=customGroupIdsBuffer
+          onChange=(action (mut customGroupIdsBuffer))
+        }}
       </div>
+      {{#if customGroupsDirty}}
+        <div class="controls">
+          {{d-button icon="check" class="ok" action=(action "saveCustomGroups")}}
+          {{d-button icon="times" class="cancel" action=(action "resetCustomGroups")}}
+        </div>
+      {{/if}}
+    </div>
+    {{#if model.customGroups}}
       <div class="display-row">
-        <div class="field">{{i18n "admin.groups.custom"}}</div>
+        <div class="field">{{i18n "admin.groups.primary"}}</div>
         <div class="value">
-          {{admin-group-selector
-            content=availableGroups
-            value=customGroupIdsBuffer
-            onChange=(action (mut customGroupIdsBuffer))
+          {{combo-box
+            content=model.customGroups
+            value=model.primary_group_id
+            none="admin.groups.no_primary"
+            onChange=(action (mut model.primary_group_id))
           }}
         </div>
-        {{#if customGroupsDirty}}
+        {{#if primaryGroupDirty}}
           <div class="controls">
-            {{d-button icon="check" class="ok" action=(action "saveCustomGroups")}}
-            {{d-button icon="times" class="cancel" action=(action "resetCustomGroups")}}
+            {{d-button icon="check" class="ok" action=(action "savePrimaryGroup")}}
+            {{d-button icon="times" class="cancel" action=(action "resetPrimaryGroup")}}
           </div>
         {{/if}}
       </div>
-      {{#if model.customGroups}}
-        <div class="display-row">
-          <div class="field">{{i18n "admin.groups.primary"}}</div>
-          <div class="value">
-            {{combo-box
-              content=model.customGroups
-              value=model.primary_group_id
-              none="admin.groups.no_primary"
-              onChange=(action (mut model.primary_group_id))
-            }}
-          </div>
-          {{#if primaryGroupDirty}}
-            <div class="controls">
-              {{d-button icon="check" class="ok" action=(action "savePrimaryGroup")}}
-              {{d-button icon="times" class="cancel" action=(action "resetPrimaryGroup")}}
-            </div>
-          {{/if}}
-        </div>
-      {{/if}}
+    {{/if}}
   </section>
 {{/if}}
 
@@ -604,7 +604,7 @@
     </div>
     <div class="controls">
       {{#if model.flags_received_count}}
-        {{#link-to 'review' (query-params username=model.username type="ReviewableFlaggedPost" status="all") class="btn"}}
+        {{#link-to "review" (query-params username=model.username type="ReviewableFlaggedPost" status="all") class="btn"}}
           {{i18n "admin.user.show_flags_received"}}
         {{/link-to}}
       {{/if}}
@@ -625,34 +625,34 @@
 </section>
 
 {{#if model.single_sign_on_record}}
-<section class="details">
-  <h1>{{i18n "admin.user.sso.title"}}</h1>
+  <section class="details">
+    <h1>{{i18n "admin.user.sso.title"}}</h1>
 
-  {{#with model.single_sign_on_record as |sso|}}
-    <div class="display-row">
-      <div class="field">{{i18n "admin.user.sso.external_id"}}</div>
-      <div class="value">{{sso.external_id}}</div>
-    </div>
-    <div class="display-row">
-      <div class="field">{{i18n "admin.user.sso.external_username"}}</div>
-      <div class="value">{{sso.external_username}}</div>
-    </div>
-    <div class="display-row">
-      <div class="field">{{i18n "admin.user.sso.external_name"}}</div>
-      <div class="value">{{sso.external_name}}</div>
-    </div>
-    {{#if sso.external_email}}
+    {{#with model.single_sign_on_record as |sso|}}
       <div class="display-row">
-        <div class="field">{{i18n "admin.user.sso.external_email"}}</div>
-        <div class="value">{{sso.external_email}}</div>
+        <div class="field">{{i18n "admin.user.sso.external_id"}}</div>
+        <div class="value">{{sso.external_id}}</div>
       </div>
-    {{/if}}
-    <div class="display-row">
-      <div class="field">{{i18n "admin.user.sso.external_avatar_url"}}</div>
-      <div class="value">{{sso.external_avatar_url}}</div>
-    </div>
-  {{/with}}
-</section>
+      <div class="display-row">
+        <div class="field">{{i18n "admin.user.sso.external_username"}}</div>
+        <div class="value">{{sso.external_username}}</div>
+      </div>
+      <div class="display-row">
+        <div class="field">{{i18n "admin.user.sso.external_name"}}</div>
+        <div class="value">{{sso.external_name}}</div>
+      </div>
+      {{#if sso.external_email}}
+        <div class="display-row">
+          <div class="field">{{i18n "admin.user.sso.external_email"}}</div>
+          <div class="value">{{sso.external_email}}</div>
+        </div>
+      {{/if}}
+      <div class="display-row">
+        <div class="field">{{i18n "admin.user.sso.external_avatar_url"}}</div>
+        <div class="value">{{sso.external_avatar_url}}</div>
+      </div>
+    {{/with}}
+  </section>
 {{/if}}
 
 {{plugin-outlet name="after-user-details" args=(hash model=model)}}

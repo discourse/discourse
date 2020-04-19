@@ -669,7 +669,7 @@ class TopicQuery
       if options[:no_subcategories]
         result = result.where('categories.id = ?', category_id)
       else
-        result = result.where(<<~SQL, subcategory_ids: subcategory_ids(category_id), category_id: category_id)
+        result = result.where(<<~SQL, subcategory_ids: Category.subcategory_ids(category_id), category_id: category_id)
           categories.id in (:subcategory_ids) AND (
             categories.topic_id <> topics.id OR categories.id = :category_id
           )
@@ -1051,29 +1051,6 @@ class TopicQuery
   end
 
   private
-
-  def subcategory_ids(category_id)
-    @subcategory_ids ||= {}
-    @subcategory_ids[category_id] ||=
-      begin
-        sql = <<~SQL
-            WITH RECURSIVE subcategories AS (
-                SELECT :category_id id, 1 depth
-                UNION
-                SELECT categories.id, (subcategories.depth + 1) depth
-                FROM categories
-                JOIN subcategories ON subcategories.id = categories.parent_category_id
-                WHERE subcategories.depth < :max_category_nesting
-            )
-            SELECT id FROM subcategories
-          SQL
-        DB.query_single(
-          sql,
-          category_id: category_id,
-          max_category_nesting: SiteSetting.max_category_nesting
-        )
-      end
-  end
 
   def sanitize_sql_array(input)
     ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))

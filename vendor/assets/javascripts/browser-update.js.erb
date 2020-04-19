@@ -4,24 +4,25 @@
 (function() {
 
 var $buo = function() {
-
-  var badAndroid = false, ua = null;
-
   // Sometimes we have to resort to parsing the user agent string. :(
   if (navigator && navigator.userAgent) {
-    ua = navigator.userAgent;
+    var ua = navigator.userAgent;
+
+    // we don't ask Googlebot to update their browser
+    if (ua.indexOf('Googlebot') >= 0 || ua.indexOf('Mediapartners') >= 0 || ua.indexOf('AdsBot') >= 0) {
+      return;
+    }
   }
 
-  // sam: we require WeakMap, this allows us to easily feature detect IE10 that does not support it
-  // This also catches ancient android phones that never had that feature (2.2 and below)
-  if (window.WeakMap) {
+  if (!window.unsupportedBrowser) {
     return;
   }
 
-  // we don't ask Googlebot to update their browser
-  if (ua.indexOf('Googlebot') >= 0 || ua.indexOf('Mediapartners') >= 0 || ua.indexOf('AdsBot') >= 0) {
-    return;
-  }
+  var mainElement = document.getElementById("main");
+  var noscriptElements = document.getElementsByTagName("noscript");
+  // noscriptElements[0].innerHTML contains encoded HTML
+  var innerHTML = noscriptElements[0].childNodes[0].nodeValue;
+  mainElement.innerHTML = innerHTML;
 
   // retrieve localized browser upgrade text
   var t = <%= "'" + I18n.t('js.browser_update') + "'" %>;

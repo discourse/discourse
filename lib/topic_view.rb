@@ -354,6 +354,10 @@ class TopicView
     @topic.bookmarks.exists?(user_id: @user.id)
   end
 
+  def first_post_bookmark_reminder_at
+    @topic.first_post.bookmarks.where(user: @user).pluck_first(:reminder_at)
+  end
+
   MAX_PARTICIPANTS = 24
 
   def post_counts_by_user
@@ -594,6 +598,10 @@ class TopicView
 
   def queued_posts_count
     ReviewableQueuedPost.viewable_by(@user).where(topic_id: @topic.id).pending.count
+  end
+
+  def published_page
+    @topic.published_page
   end
 
   protected

@@ -54,6 +54,7 @@
 //= require ./discourse/lib/autocomplete
 //= require ./discourse/lib/after-transition
 //= require ./discourse/lib/safari-hacks
+//= require ./discourse/lib/put-cursor-at-end
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/post-action-type
 //= require ./discourse/models/post

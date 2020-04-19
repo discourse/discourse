@@ -124,14 +124,14 @@ export default EmberObject.extend({
 
       if (adapter.cache) {
         const stale = adapter.findStale(this, type, findArgs, opts);
-        hydrated = this._updateStale(stale, hydrated);
+        hydrated = this._updateStale(stale, hydrated, adapter.primaryKey);
         adapter.cacheFind(this, type, findArgs, opts, hydrated);
       }
       return hydrated;
     });
   },
 
-  _updateStale(stale, hydrated) {
+  _updateStale(stale, hydrated, primaryKey) {
     if (!stale) {
       return hydrated;
     }
@@ -139,7 +139,7 @@ export default EmberObject.extend({
     hydrated.set(
       "content",
       hydrated.get("content").map(item => {
-        var staleItem = stale.content.findBy("id", item.get("id"));
+        var staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
         if (staleItem) {
           staleItem.setProperties(item);
         } else {
@@ -186,12 +186,11 @@ export default EmberObject.extend({
   },
 
   update(type, id, attrs) {
-    return this.adapterFor(type).update(this, type, id, attrs, function(
-      result
-    ) {
-      if (result && result[type] && result[type].id) {
+    const adapter = this.adapterFor(type);
+    return adapter.update(this, type, id, attrs, function(result) {
+      if (result && result[type] && result[type][adapter.primaryKey]) {
         const oldRecord = findAndRemoveMap(type, id);
-        storeMap(type, result[type].id, oldRecord);
+        storeMap(type, result[type][adapter.primaryKey], oldRecord);
       }
       return result;
     });
@@ -199,22 +198,25 @@ export default EmberObject.extend({
 
   createRecord(type, attrs) {
     attrs = attrs || {};
-    return !!attrs.id ? this._hydrate(type, attrs) : this._build(type, attrs);
+    const adapter = this.adapterFor(type);
+    return !!attrs[adapter.primaryKey]
+      ? this._hydrate(type, attrs)
+      : this._build(type, attrs);
   },
 
   destroyRecord(type, record) {
+    const adapter = this.adapterFor(type);
+
     // If the record is new, don't perform an Ajax call
     if (record.get("isNew")) {
-      removeMap(type, record.get("id"));
+      removeMap(type, record.get(adapter.primaryKey));
       return Promise.resolve(true);
     }
 
-    return this.adapterFor(type)
-      .destroyRecord(this, type, record)
-      .then(function(result) {
-        removeMap(type, record.get("id"));
-        return result;
-      });
+    return adapter.destroyRecord(this, type, record).then(function(result) {
+      removeMap(type, record.get(adapter.primaryKey));
+      return result;
+    });
   },
 
   _resultSet(type, result, findArgs) {
@@ -252,9 +254,10 @@ export default EmberObject.extend({
   },
 
   _build(type, obj) {
+    const adapter = this.adapterFor(type);
     obj.store = this;
     obj.__type = type;
-    obj.__state = obj.id ? "created" : "new";
+    obj.__state = obj[adapter.primaryKey] ? "created" : "new";
 
     // TODO: Have injections be automatic
     obj.topicTrackingState = this.register.lookup("topic-tracking-state:main");
@@ -264,7 +267,7 @@ export default EmberObject.extend({
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);
 
-    storeMap(type, obj.id, model);
+    storeMap(type, obj[adapter.primaryKey], model);
     return model;
   },
 
@@ -288,6 +291,7 @@ export default EmberObject.extend({
       subType = root.meta.types[subType] || subType;
     }
 
+    const subTypeAdapter = this.adapterFor(subType);
     const pluralType = this.pluralize(subType);
     const collection = root[this.pluralize(subType)];
     if (collection) {
@@ -296,7 +300,7 @@ export default EmberObject.extend({
       if (!hashedCollection) {
         hashedCollection = {};
         collection.forEach(function(it) {
-          hashedCollection[it.id] = it;
+          hashedCollection[it[subTypeAdapter.primaryKey]] = it;
         });
         root[hashedProp] = hashedCollection;
       }
@@ -311,7 +315,12 @@ export default EmberObject.extend({
   },
 
   _hydrateEmbedded(type, obj, root) {
+    const adapter = this.adapterFor(type);
     Object.keys(obj).forEach(k => {
+      if (k === adapter.primaryKey) {
+        return;
+      }
+
       const m = /(.+)\_id(s?)$/.exec(k);
       if (m) {
         const subType = m[1];
@@ -340,9 +349,13 @@ export default EmberObject.extend({
       throw new Error("Can't hydrate " + type + " of `null`");
     }
 
-    const id = obj.id;
+    const adapter = this.adapterFor(type);
+
+    const id = obj[adapter.primaryKey];
     if (!id) {
-      throw new Error("Can't hydrate " + type + " without an `id`");
+      throw new Error(
+        `Can't hydrate ${type} without primaryKey: \`${adapter.primaryKey}\``
+      );
     }
 
     root = root || obj;
@@ -357,7 +370,7 @@ export default EmberObject.extend({
     }
 
     if (existing) {
-      delete obj.id;
+      delete obj[adapter.primaryKey];
       let klass = this.register.lookupFactory("model:" + type);
 
       if (klass && klass.class) {
@@ -369,7 +382,7 @@ export default EmberObject.extend({
       }
 
       existing.setProperties(klass.munge(obj));
-      obj.id = id;
+      obj[adapter.primaryKey] = id;
       return existing;
     }
 

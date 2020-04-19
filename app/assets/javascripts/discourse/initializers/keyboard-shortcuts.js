@@ -5,6 +5,11 @@ export default {
   name: "keyboard-shortcuts",
 
   initialize(container) {
-    KeyboardShortcuts.bindEvents(Mousetrap, container);
+    KeyboardShortcuts.init(Mousetrap, container);
+    KeyboardShortcuts.bindEvents();
+  },
+
+  teardown() {
+    KeyboardShortcuts.teardown();
   }
 };

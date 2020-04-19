@@ -96,7 +96,7 @@ en:
       optimized_link: Optimized image links are ephemeral and should not be included in theme source code.
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
-      data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list` and `enum`"
+      data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list`, `enum` and `upload`"
       name_too_long: "There is a setting with a too long name. Maximum length is 255"
       default_value_missing: "Setting `%{name}` has no default value"
       default_not_match_type: "Setting `%{name}` default value's type doesn't match with the setting type."
@@ -391,11 +391,11 @@ en:
 
     reminders:
       at_desktop: "Next time I'm at my desktop"
-      later_today: "Later today <br/>{{date}}"
-      next_business_day: "Next business day <br/>{{date}}"
-      tomorrow: "Tomorrow <br/>{{date}}"
-      next_week: "Next week <br/>{{date}}"
-      next_month: "Next month <br/>{{date}}"
+      later_today: "Later today"
+      next_business_day: "Next business day"
+      tomorrow: "Tomorrow"
+      next_week: "Next week"
+      next_month: "Next month"
       custom: "Custom date and time"
 
   groups:
@@ -1375,7 +1375,6 @@ en:
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
-    gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
     memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
@@ -1490,8 +1489,8 @@ en:
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
-    summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
-    summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
+    summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
+    summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summarize This Topic'"
 
@@ -1582,6 +1581,8 @@ en:
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
+    enforce_canonical_emails: "Prior to creating users strip email to canonical form ensuring uniqueness. Setting will only take effect on new account registrations. When set user+1@domain.com will not be allowed to register if user+2@domain.com is already registered."
+    auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved."
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup and from the forgot password form."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the <a href='%{base_path}/admin' target='_blank'>/admin</a> dashboard"
@@ -1951,6 +1952,7 @@ en:
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
+    delete_user_self_max_post_count: "The maximum number of posts a user can have while allowing self-service account deletion. Set to -1 to disable self-service account deletion."
     username_change_period: "The maximum number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "Location to redirect browser to after logout (eg: https://example.com/logout)"
@@ -2066,6 +2068,7 @@ en:
     embed_topics_list: "Support HTML embedding of topics lists"
     embed_set_canonical_url: "Set the canonical URL for embeded topics to the embeded content's URL."
     embed_truncate: "Truncate the embedded posts."
+    embed_unlisted: "Imported topics will be unlisted until a user replies."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
@@ -2105,6 +2108,7 @@ en:
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
+    enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
@@ -2296,6 +2300,12 @@ en:
 
   change_owner:
     post_revision_text: "Ownership transferred"
+
+  publish_page:
+    slug_errors:
+      blank: "can't be blank"
+      unavailable: "is unavailable"
+      invalid: "contains invalid characters"
 
   topic_statuses:
     autoclosed_message_max_posts:
@@ -3520,8 +3530,8 @@ en:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
       since_last_visit: "Since your last visit"
       new_topics: "New Topics"
-      unread_messages: "Unread Messages"
       unread_notifications: "Unread Notifications"
+      unread_high_priority: "Unread High Priority Notifications"
       liked_received: "Likes Received"
       new_users: "New Users"
       popular_topics: "Popular Topics"

@@ -1038,6 +1038,32 @@ RSpec.describe TopicsController do
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
           end
 
+          it "can create a tag" do
+            SiteSetting.min_trust_to_create_tag = 0
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                tags: ["newtag"]
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
+          end
+
+          it "can change the category and create a new tag" do
+            SiteSetting.min_trust_to_create_tag = 0
+            category = Fabricate(:category)
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                tags: ["newtag"],
+                category_id: category.id
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
+          end
+
           it "can add a tag to wiki topic" do
             SiteSetting.min_trust_to_edit_wiki_post = 2
             topic.first_post.update!(wiki: true)

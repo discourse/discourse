@@ -258,6 +258,16 @@ describe TopicViewSerializer do
       expect(details[:allowed_groups].find { |ag| ag[:id] == group.id }).to be_present
     end
 
+    it "has can_publish_page if possible" do
+      SiteSetting.enable_page_publishing = true
+
+      json = serialize_topic(topic, user)
+      expect(json[:details][:can_publish_page]).to be_blank
+
+      json = serialize_topic(topic, admin)
+      expect(json[:details][:can_publish_page]).to eq(true)
+    end
+
     context "can_edit_tags" do
       before do
         SiteSetting.tagging_enabled = true
@@ -276,6 +286,28 @@ describe TopicViewSerializer do
         json = serialize_topic(topic, user)
         expect(json[:details][:can_edit_tags]).to eq(true)
       end
+    end
+  end
+
+  context "published_page" do
+    fab!(:published_page) { Fabricate(:published_page, topic: topic) }
+
+    it "doesn't return the published page if not enabled" do
+      json = serialize_topic(topic, admin)
+      expect(json[:published_page]).to be_blank
+    end
+
+    it "doesn't return the published page unless staff" do
+      SiteSetting.enable_page_publishing = true
+      json = serialize_topic(topic, user)
+      expect(json[:published_page]).to be_blank
+    end
+
+    it "returns the published page if enabled and staff" do
+      SiteSetting.enable_page_publishing = true
+      json = serialize_topic(topic, admin)
+      expect(json[:published_page]).to be_present
+      expect(json[:published_page][:slug]).to eq("published-page-test")
     end
   end
 

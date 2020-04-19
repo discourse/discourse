@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
-import Quote from "discourse/lib/quote";
+import { buildQuote } from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
 import Composer from "discourse/models/composer";
 import discourseComputed, {
@@ -13,7 +13,7 @@ import discourseComputed, {
   on
 } from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon
@@ -27,6 +27,8 @@ import EmberObject, { computed } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 
 function loadDraft(store, opts) {
+  let promise = Promise.resolve();
+
   opts = opts || {};
 
   let draft = opts.draft;
@@ -52,17 +54,18 @@ function loadDraft(store, opts) {
       draftKey,
       draftSequence,
       draft: true,
-      composerState: Composer.DRAFT
+      composerState: Composer.DRAFT,
+      topic: opts.topic
     };
 
     serializedFields.forEach(f => {
       attrs[f] = draft[f] || opts[f];
     });
 
-    composer.open(attrs);
-
-    return composer;
+    promise = promise.then(() => composer.open(attrs)).then(() => composer);
   }
+
+  return promise;
 }
 
 const _popupMenuOptionsCallbacks = [];
@@ -133,10 +136,6 @@ export default Controller.extend({
     "model.composeState"
   )
   focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
-    if (this.capabilities.isIOS && !safariHacksDisabled()) {
-      return "none";
-    }
-
     // Focus on usernames if it's blank or if it's just you
     usernames = usernames || "";
     if (
@@ -498,15 +497,14 @@ export default Controller.extend({
 
       if (postId) {
         this.set("model.loading", true);
-        const composer = this;
 
         return this.store.find("post", postId).then(post => {
-          const quote = Quote.build(post, post.raw, {
-            raw: true,
+          const quote = buildQuote(post, post.raw, {
             full: true
           });
+
           toolbarEvent.addText(quote);
-          composer.set("model.loading", false);
+          this.set("model.loading", false);
         });
       }
     },
@@ -799,7 +797,8 @@ export default Controller.extend({
     this.setProperties({
       showEditReason: false,
       editReason: null,
-      scopedCategoryId: null
+      scopedCategoryId: null,
+      skipAutoSave: true
     });
 
     // Scope the categories drop down to the category we opened the composer with.
@@ -820,7 +819,7 @@ export default Controller.extend({
       composerModel = null;
     }
 
-    return new Promise((resolve, reject) => {
+    let promise = new Promise((resolve, reject) => {
       if (composerModel && composerModel.replyDirty) {
         // If we're already open, we don't have to do anything
         if (
@@ -870,7 +869,7 @@ export default Controller.extend({
               opts.draft = data.draft;
             }
             opts.draftSequence = data.draft_sequence;
-            this._setModel(composerModel, opts);
+            return this._setModel(composerModel, opts);
           })
           .then(resolve, reject);
       }
@@ -884,72 +883,88 @@ export default Controller.extend({
             if (data.draft) {
               opts.draft = data.draft;
               opts.draftSequence = data.draft_sequence;
-              this.open(opts);
+              return this.open(opts);
             }
           });
       }
 
-      this._setModel(composerModel, opts);
-      resolve();
+      this._setModel(composerModel, opts).then(resolve, reject);
     });
+
+    promise = promise.finally(() => {
+      this.skipAutoSave = false;
+    });
+    return promise;
   },
 
   // Given a potential instance and options, set the model for this composer.
-  _setModel(composerModel, opts) {
+  _setModel(optionalComposerModel, opts) {
+    let promise = Promise.resolve();
+
     this.set("linkLookup", null);
 
-    if (opts.draft) {
-      composerModel = loadDraft(this.store, opts);
-      if (composerModel) {
-        composerModel.set("topic", opts.topic);
+    promise = promise.then(() => {
+      if (opts.draft) {
+        return loadDraft(this.store, opts).then(model => {
+          if (!model) {
+            throw new Error("draft was not found");
+          }
+          return model;
+        });
+      } else {
+        let model =
+          optionalComposerModel || this.store.createRecord("composer");
+        return model.open(opts).then(() => model);
       }
-    } else {
-      composerModel = composerModel || this.store.createRecord("composer");
-      composerModel.open(opts);
-    }
-
-    this.set("model", composerModel);
-    composerModel.setProperties({
-      composeState: Composer.OPEN,
-      isWarning: false
     });
 
-    if (!this.model.targetRecipients) {
-      if (opts.usernames) {
-        deprecated("`usernames` is deprecated, use `recipients` instead.");
-        this.model.set("targetRecipients", opts.usernames);
-      } else if (opts.recipients) {
-        this.model.set("targetRecipients", opts.recipients);
+    promise.then(composerModel => {
+      this.set("model", composerModel);
+
+      composerModel.setProperties({
+        composeState: Composer.OPEN,
+        isWarning: false
+      });
+
+      if (!this.model.targetRecipients) {
+        if (opts.usernames) {
+          deprecated("`usernames` is deprecated, use `recipients` instead.");
+          this.model.set("targetRecipients", opts.usernames);
+        } else if (opts.recipients) {
+          this.model.set("targetRecipients", opts.recipients);
+        }
       }
-    }
 
-    if (
-      opts.topicTitle &&
-      opts.topicTitle.length <= this.siteSettings.max_topic_title_length
-    ) {
-      this.model.set("title", opts.topicTitle);
-    }
+      if (
+        opts.topicTitle &&
+        opts.topicTitle.length <= this.siteSettings.max_topic_title_length
+      ) {
+        this.model.set("title", opts.topicTitle);
+      }
 
-    if (opts.topicCategoryId) {
-      this.model.set("categoryId", opts.topicCategoryId);
-    }
+      if (opts.topicCategoryId) {
+        this.model.set("categoryId", opts.topicCategoryId);
+      }
 
-    if (opts.topicTags && !this.site.mobileView && this.site.can_tag_topics) {
-      let tags = escapeExpression(opts.topicTags)
-        .split(",")
-        .slice(0, this.siteSettings.max_tags_per_topic);
+      if (opts.topicTags && !this.site.mobileView && this.site.can_tag_topics) {
+        let tags = escapeExpression(opts.topicTags)
+          .split(",")
+          .slice(0, this.siteSettings.max_tags_per_topic);
 
-      tags.forEach(
-        (tag, index, array) =>
-          (array[index] = tag.substring(0, this.siteSettings.max_tag_length))
-      );
+        tags.forEach(
+          (tag, index, array) =>
+            (array[index] = tag.substring(0, this.siteSettings.max_tag_length))
+        );
 
-      this.model.set("tags", tags);
-    }
+        this.model.set("tags", tags);
+      }
 
-    if (opts.topicBody) {
-      this.model.set("reply", opts.topicBody);
-    }
+      if (opts.topicBody) {
+        this.model.set("reply", opts.topicBody);
+      }
+    });
+
+    return promise;
   },
 
   viewNewReply() {
@@ -1009,10 +1024,12 @@ export default Controller.extend({
   },
 
   cancelComposer(differentDraft = false) {
+    this.skipAutoSave = true;
+
     const keyPrefix =
       this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
 
-    return new Promise(resolve => {
+    let promise = new Promise(resolve => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
           {
@@ -1051,6 +1068,10 @@ export default Controller.extend({
         });
       }
     });
+
+    return promise.finally(() => {
+      this.skipAutoSave = false;
+    });
   },
 
   shrink() {
@@ -1073,7 +1094,14 @@ export default Controller.extend({
 
   @observes("model.reply", "model.title")
   _shouldSaveDraft() {
-    debounce(this, this._saveDraft, 2000);
+    if (
+      this.model &&
+      !this.model.loading &&
+      !this.skipAutoSave &&
+      !this.model.disableDrafts
+    ) {
+      debounce(this, this._saveDraft, 2000);
+    }
   },
 
   @discourseComputed("model.categoryId", "lastValidatedAt")

@@ -78,7 +78,7 @@ module Stylesheet
 
                 target = nil
                 if !plugin_name
-                  target_match = long.match(/admin|desktop|mobile/)
+                  target_match = long.match(/admin|desktop|mobile|publish/)
                   if target_match&.length
                     target = target_match[0]
                   end

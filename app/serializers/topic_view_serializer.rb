@@ -61,6 +61,7 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
+    :bookmark_reminder_at,
     :message_archived,
     :topic_timer,
     :private_topic_timer,
@@ -71,11 +72,13 @@ class TopicViewSerializer < ApplicationSerializer
     :pm_with_non_human_user,
     :queued_posts_count,
     :show_read_indicator,
-    :requested_group_name
+    :requested_group_name,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
   has_many :pending_posts, serializer: TopicPendingPostSerializer, root: false, embed: :objects
+
+  has_one :published_page, embed: :objects
 
   def details
     object
@@ -190,6 +193,14 @@ class TopicViewSerializer < ApplicationSerializer
     end
   end
 
+  def include_bookmark_reminder_at?
+    SiteSetting.enable_bookmarks_with_reminders? && bookmarked
+  end
+
+  def bookmark_reminder_at
+    object.first_post_bookmark_reminder_at
+  end
+
   def topic_timer
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
   end
@@ -272,5 +283,9 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_requested_group_name?
     object.personal_message
+  end
+
+  def include_published_page?
+    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
   end
 end

@@ -205,7 +205,7 @@ describe UserApiKeysController do
       expect(parsed["nonce"]).to eq(args[:nonce])
       expect(parsed["push"]).to eq(true)
 
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.with_key(parsed["key"]).first
 
       expect(api_key.user_id).to eq(user.id)
       expect(api_key.scopes.sort).to eq(["push", "message_bus", "notifications", "session_info", "one_time_password"].sort)
@@ -242,7 +242,7 @@ describe UserApiKeysController do
       encrypted = Base64.decode64(payload)
       key = OpenSSL::PKey::RSA.new(private_key)
       parsed = JSON.parse(key.private_decrypt(encrypted))
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.with_key(parsed["key"]).first
       expect(api_key.user_id).to eq(user.id)
     end
 
@@ -259,7 +259,7 @@ describe UserApiKeysController do
       encrypted = Base64.decode64(payload)
       key = OpenSSL::PKey::RSA.new(private_key)
       parsed = JSON.parse(key.private_decrypt(encrypted))
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.with_key(parsed["key"]).first
       expect(api_key.user_id).to eq(user.id)
 
     end

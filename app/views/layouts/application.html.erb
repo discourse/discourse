@@ -19,6 +19,8 @@
 
     <%= build_plugin_html 'server:before-script-load' %>
 
+    <%= preload_script 'browser-detect' %>
+
     <%= preload_script "locales/#{I18n.locale}" %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
@@ -67,11 +69,11 @@
     <%= render_google_tag_manager_body_code %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>
-      <div id="main-outlet" class="wrap">
+      <div id="main-outlet" class="wrap" role="main">
         <!-- preload-content: -->
         <%= yield %>
         <!-- :preload-content -->
-        <footer>
+        <footer class="noscript-footer-nav">
           <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
             <a href='<%= path "/" %>'><%= t 'home_title' %></a>
             <%= link_to t('js.filters.categories.title'), path("/categories") %>
@@ -83,7 +85,7 @@
       </div>
 
       <footer id='noscript-footer'>
-        <p style="text-align:center;"><%= t 'powered_by_html' %></p>
+        <p><%= t 'powered_by_html' %></p>
       </footer>
     </noscript>
 

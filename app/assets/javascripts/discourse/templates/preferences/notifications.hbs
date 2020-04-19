@@ -1,8 +1,8 @@
 <div class="control-group notifications">
-      <label class="control-label">{{i18n 'user.notifications'}}</label>
+  <label class="control-label">{{i18n "user.notifications"}}</label>
 
   <div class="controls controls-dropdown">
-    <label>{{i18n 'user.new_topic_duration.label'}}</label>
+    <label>{{i18n "user.new_topic_duration.label"}}</label>
     {{combo-box
       class="duration"
       valueProperty="value"
@@ -13,7 +13,7 @@
   </div>
 
   <div class="controls controls-dropdown">
-    <label>{{i18n 'user.auto_track_topics'}}</label>
+    <label>{{i18n "user.auto_track_topics"}}</label>
     {{combo-box
       valueProperty="value"
       content=autoTrackDurations
@@ -23,7 +23,7 @@
   </div>
 
   <div class="controls controls-dropdown">
-    <label>{{i18n 'user.notification_level_when_replying'}}</label>
+    <label>{{i18n "user.notification_level_when_replying"}}</label>
     {{combo-box
       valueProperty="value"
       content=notificationLevelsForReplying
@@ -33,7 +33,7 @@
   </div>
 
   <div class="controls controls-dropdown">
-    <label>{{i18n 'user.like_notification_frequency.title'}}</label>
+    <label>{{i18n "user.like_notification_frequency.title"}}</label>
     {{combo-box
       valueProperty="value"
       content=likeNotificationFrequencies
@@ -45,16 +45,16 @@
 
 {{#unless isIOS}}
   <div class="control-group desktop-notifications">
-    <label class="control-label">{{i18n 'user.desktop_notifications.label'}}</label>
+    <label class="control-label">{{i18n "user.desktop_notifications.label"}}</label>
     {{desktop-notification-config}}
-    <div class="instructions">{{i18n 'user.desktop_notifications.each_browser_note'}}</div>
+    <div class="instructions">{{i18n "user.desktop_notifications.each_browser_note"}}</div>
     {{plugin-outlet name="user-preferences-desktop-notifications" args=(hash model=model save=(action "save"))}}
   </div>
 {{/unless}}
 
 {{#if siteSettings.enable_personal_messages}}
   <div class="control-group private-messages">
-    <label class="control-label">{{i18n 'user.private_messages'}}</label>
+    <label class="control-label">{{i18n "user.private_messages"}}</label>
 
     <div class="controls">
       {{preference-checkbox

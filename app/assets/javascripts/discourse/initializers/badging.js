@@ -10,7 +10,7 @@ export default {
     if (!user) return; // must be logged in
 
     this.notifications =
-      user.unread_notifications + user.unread_private_messages;
+      user.unread_notifications + user.unread_high_priority_notifications;
 
     container
       .lookup("service:app-events")

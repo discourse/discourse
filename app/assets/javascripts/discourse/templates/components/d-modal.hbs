@@ -3,7 +3,7 @@
     <div class="modal-inner-container">
       <div class="modal-header">
         {{#if dismissable}}
-          {{d-button icon="times" action=(route-action "closeModal") class="btn btn-flat modal-close close" }}
+          {{d-button icon="times" action=(route-action "closeModal") class="btn btn-flat modal-close close" title="modal.close"}}
         {{/if}}
 
         {{#if panels}}
@@ -27,13 +27,13 @@
         {{/if}}
       </div>
 
-      <div id='modal-alert'></div>
+      <div id="modal-alert"></div>
 
       {{yield}}
 
       {{#each errors as |error|}}
         <div class="alert alert-error">
-          <button class="close" data-dismiss="alert">×</button>
+          <button type="button" class="close" data-dismiss="alert" aria-label={{i18n "modal.dismiss_error"}}>×</button>
           {{error}}
         </div>
       {{/each}}

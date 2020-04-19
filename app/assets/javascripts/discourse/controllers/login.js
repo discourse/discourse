@@ -2,8 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { alias, or, readOnly } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import { scheduleOnce } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -152,7 +151,7 @@ export default Controller.extend(ModalFunctionality, {
 
               // only need to focus the 2FA input for TOTP
               if (!this.showSecurityKey) {
-                scheduleOnce("afterRender", () =>
+                schedule("afterRender", () =>
                   document
                     .getElementById("second-factor")
                     .querySelector("input")

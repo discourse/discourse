@@ -2348,6 +2348,20 @@ describe Topic do
       expect(Topic.time_to_first_response_total).to eq(1)
     end
 
+    it "should have results if there's a topic with replies" do
+      SiteSetting.max_category_nesting = 3
+
+      category = Fabricate(:category_with_definition)
+      subcategory = Fabricate(:category_with_definition, parent_category_id: category.id)
+      subsubcategory = Fabricate(:category_with_definition, parent_category_id: subcategory.id)
+
+      topic = Fabricate(:topic, category: subsubcategory, created_at: 3.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 3.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
+
+      expect(Topic.time_to_first_response_total(category_id: category.id)).to eq(1)
+    end
+
     it "should only count regular posts as the first response" do
       topic = Fabricate(:topic, created_at: 5.hours.ago)
       Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
@@ -2558,6 +2572,42 @@ describe Topic do
 
       topic.update(category: category)
       expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
+
+  describe '#auto_close_threshold_reached?' do
+    before do
+      Reviewable.set_priorities(low: 2.0, medium: 6.0, high: 9.0)
+      SiteSetting.num_flaggers_to_close_topic = 2
+      SiteSetting.reviewable_default_visibility = 'medium'
+      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:high]
+      post = Fabricate(:post)
+      @topic = post.topic
+      @reviewable = Fabricate(:reviewable_flagged_post, target: post, topic: @topic)
+    end
+
+    it 'ignores flags with a low score' do
+      5.times do
+        @reviewable.add_score(
+          Fabricate(:user, trust_level: TrustLevel[0]),
+          PostActionType.types[:spam],
+          created_at: 1.minute.ago
+        )
+      end
+
+      expect(@topic.auto_close_threshold_reached?).to eq(false)
+    end
+
+    it 'returns true when the flags have a high score' do
+      5.times do
+        @reviewable.add_score(
+          Fabricate(:user, admin: true),
+          PostActionType.types[:spam],
+          created_at: 1.minute.ago
+        )
+      end
+
+      expect(@topic.auto_close_threshold_reached?).to eq(true)
     end
   end
 end

@@ -1,4 +1,67 @@
 export default {
+  "/posts/98737532": {
+    id: 98737532,
+    name: null,
+    username: "tim.lange",
+    avatar_template: "/images/avatar.png",
+    created_at: "2019-03-28T07:57:50.527Z",
+    cooked: "<p>I am writing this private message to you</p>",
+    ignored: false,
+    post_number: 1,
+    post_type: 1,
+    updated_at: "2019-03-28T07:57:50.527Z",
+    reply_count: 0,
+    reply_to_post_number: null,
+    quote_count: 0,
+    incoming_link_count: 0,
+    reads: 2,
+    score: 1.15,
+    yours: true,
+    topic_id: 34,
+    topic_slug: "test-pm",
+    display_username: null,
+    primary_group_name: null,
+    primary_group_flair_url: null,
+    primary_group_flair_bg_color: null,
+    primary_group_flair_color: null,
+    version: 1,
+    can_edit: true,
+    can_delete: false,
+    can_recover: null,
+    can_wiki: true,
+    read: true,
+    user_title: null,
+    actions_summary: [
+      {
+        id: 3,
+        can_act: true
+      },
+      {
+        id: 4,
+        can_act: true
+      },
+      {
+        id: 8,
+        can_act: true
+      },
+      {
+        id: 7,
+        can_act: true
+      }
+    ],
+    moderator: false,
+    admin: true,
+    staff: true,
+    user_id: 1,
+    hidden: false,
+    trust_level: 1,
+    deleted_at: null,
+    user_deleted: false,
+    edit_reason: null,
+    can_view_edit_history: true,
+    wiki: false
+  },
+
   "/posts/398": {
     id: 398,
     name: "Uwe Keim",

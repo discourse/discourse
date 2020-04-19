@@ -85,11 +85,29 @@
           {{topic-category topic=model class="topic-category"}}
         {{/if}}
       {{/topic-title}}
+
+      {{#if model.publishedPage}}
+        <div class="published-page">
+          <div class="details">
+            {{i18n "topic.publish_page.topic_published"}}
+            <div>
+              <a href={{model.publishedPage.url}} target="_blank" rel="noopener noreferrer">{{model.publishedPage.url}}</a>
+            </div>
+          </div>
+          <div class="controls">
+            {{d-button
+              icon="file"
+              label="topic.publish_page.publishing_settings"
+              action=(route-action "showPagePublish")
+            }}
+          </div>
+        </div>
+      {{/if}}
+
     {{/if}}
 
-
     <div class="container posts">
-      <div class='selected-posts {{unless multiSelect 'hidden'}}'>
+      <div class="selected-posts {{unless multiSelect "hidden"}}">
         {{selected-posts
           selectedPostsCount=selectedPostsCount
           canSelectAll=canSelectAll
@@ -206,7 +224,6 @@
                 deletePost=(action "deletePost")
                 recoverPost=(action "recoverPost")
                 expandHidden=(action "expandHidden")
-                newTopicAction=(action "replyAsNewTopic")
                 toggleBookmark=(action "toggleBookmark")
                 toggleBookmarkWithReminder=(action "toggleBookmarkWithReminder")
                 togglePostType=(action "togglePostType")
@@ -232,7 +249,8 @@
                 selectBelow=(action "selectBelow")
                 fillGapBefore=(action "fillGapBefore")
                 fillGapAfter=(action "fillGapAfter")
-                showInvite=(route-action "showInvite")}}
+                showInvite=(route-action "showInvite")
+                showPagePublish=(route-action "showPagePublish")}}
             {{/unless}}
 
             {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
@@ -243,25 +261,25 @@
             {{#if loadedAllPosts}}
 
               {{#if model.pending_posts}}
-                <div class='pending-posts'>
+                <div class="pending-posts">
                   {{#each model.pending_posts as |pending|}}
-                    <div class='reviewable-item'>
-                      <div class='reviewable-meta-data'>
-                        <span class='reviewable-type'>
+                    <div class="reviewable-item">
+                      <div class="reviewable-meta-data">
+                        <span class="reviewable-type">
                           {{i18n "review.awaiting_approval"}}
                         </span>
-                        <span class='created-at'>
+                        <span class="created-at">
                           {{age-with-tooltip pending.created_at}}
                         </span>
                       </div>
-                      <div class='post-contents-wrapper'>
-                        {{reviewable-created-by user=currentUser tagName=''}}
-                        <div class='post-contents'>
-                          {{reviewable-created-by-name user=currentUser tagName=''}}
-                          <div class='post-body'>{{cook-text pending.raw}}</div>
+                      <div class="post-contents-wrapper">
+                        {{reviewable-created-by user=currentUser tagName=""}}
+                        <div class="post-contents">
+                          {{reviewable-created-by-name user=currentUser tagName=""}}
+                          <div class="post-body">{{cook-text pending.raw}}</div>
                         </div>
                       </div>
-                      <div class='reviewable-actions'>
+                      <div class="reviewable-actions">
                         {{d-button
                           class="btn-danger"
                           label="review.delete"
@@ -279,7 +297,7 @@
                     {{html-safe (i18n "review.topic_has_pending" count=model.queued_posts_count)}}
                   </div>
 
-                  {{#link-to 'review' (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
+                  {{#link-to "review" (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
                     {{i18n "review.view_pending"}}
                   {{/link-to}}
                 </div>
@@ -338,7 +356,7 @@
               {{/if}}
 
               {{#if showSelectedPostsAtBottom}}
-                <div class='selected-posts {{unless multiSelect 'hidden'}}'>
+                <div class="selected-posts {{unless multiSelect "hidden"}}">
                   {{selected-posts
                     selectedPostsCount=selectedPostsCount
                     canSelectAll=canSelectAll
@@ -357,7 +375,7 @@
               {{/if}}
 
               {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
-              <div class="{{if model.relatedMessages.length 'related-messages-wrapper'}} {{if model.suggestedTopics.length 'suggested-topics-wrapper'}}">
+              <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
                 {{#if model.relatedMessages.length}}
                   {{related-messages topic=model}}
                 {{/if}}

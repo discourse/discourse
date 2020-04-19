@@ -44,7 +44,7 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_no_year: "D MMM HH:mm"
+      long_no_year: "D MMM, HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_no_year_no_time: "D MMM"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
@@ -302,11 +302,13 @@ en:
       help:
         bookmark: "Click to bookmark the first post on this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
+        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
+
 
     bookmarks:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
-      created_with_reminder: "you've bookmarked this post with a reminder at %{date}"
+      created_with_reminder: "you've bookmarked this post with a reminder %{date}"
       created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
       remove: "Remove Bookmark"
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
@@ -316,14 +318,20 @@ en:
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       reminders:
         at_desktop: "Next time I'm at my desktop"
-        later_today: "Later today <br/>{{date}}"
-        next_business_day: "Next business day <br/>{{date}}"
-        tomorrow: "Tomorrow <br/>{{date}}"
-        next_week: "Next week <br/>{{date}}"
-        next_month: "Next month <br/>{{date}}"
+        later_today: "Later today"
+        next_business_day: "Next business day"
+        tomorrow: "Tomorrow"
+        next_week: "Next week"
+        later_this_week: "Later this week"
+        start_of_next_business_week: "Next Monday"
+        next_month: "Next month"
         custom: "Custom date and time"
-        last_custom: "Last <br/>{{date}}"
+        last_custom: "Last"
         none: "No reminder needed"
+        today_with_time: "today at %{time}"
+        tomorrow_with_time: "tomorrow at %{time}"
+        at_time: "at %{date_time}"
+        existing_reminder: "You have a reminder set for this bookmark which will be sent"
 
     drafts:
       resume: "Resume"
@@ -587,6 +595,7 @@ en:
       days_visited_long: "Days Visited"
       posts_read: "Read"
       posts_read_long: "Posts Read"
+      last_updated: "Last Updated:"
       total_rows:
         one: "%{count} user"
         other: "%{count} users"
@@ -980,6 +989,7 @@ en:
         success: "(email sent)"
         in_progress: "(sending email)"
         error: "(error)"
+        emoji: "lock emoji"
         action: "Send Password Reset Email"
         set_password: "Set Password"
         choose_new: "Choose a new password"
@@ -1378,6 +1388,9 @@ en:
         back: "Go Back"
         again: "Try Again"
         fixed: "Load Page"
+    modal:
+      close: "close"
+      dismiss_error: "Dismiss error"
     close: "Close"
     assets_changed_confirm: "This site was just updated. Refresh now for the latest version?"
     logout: "You were logged out."
@@ -1498,6 +1511,7 @@ en:
     email_login:
       link_label: "Email me a login link"
       button_label: "with email"
+      emoji: "lock emoji"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a login link shortly."
       complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
@@ -1578,6 +1592,7 @@ en:
         backup_code: "Use a backup code instead"
     invites:
       accept_title: "Invitation"
+      emoji: "envelope emoji"
       welcome_to: "Welcome to %{site_name}!"
       invited_by: "You were invited by:"
       social_login_available: "You'll also be able to sign in with any social login using that email."
@@ -1651,7 +1666,6 @@ en:
       objects: Objects
       symbols: Symbols
       flags: Flags
-      custom: Custom emojis
       recent: Recently used
       default_tone: No skin tone
       light_tone: Light skin tone
@@ -1659,6 +1673,7 @@ en:
       medium_tone: Medium skin tone
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
+      default: Custom emojis
 
     shared_drafts:
       title: "Shared Drafts"
@@ -1811,6 +1826,9 @@ en:
         message:
           one: "%{count} unread message"
           other: "{{count}} unread messages"
+        high_priority:
+          one: "%{count} unread high priority notification"
+          other: "%{count} unread high priority notificationis"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
@@ -1874,6 +1892,7 @@ en:
         moved_post: "post moved"
         linked: "linked"
         bookmark_reminder: "bookmark reminder"
+        bookmark_reminder_with_name: "bookmark reminder - %{name}"
         granted_badge: "badge granted"
         invited_to_topic: "invited to topic"
         group_mentioned: "group mentioned"
@@ -2432,6 +2451,19 @@ en:
         action: "merge selected posts"
         error: "There was an error merging the selected posts."
 
+      publish_page:
+        title: "Page Publishing"
+        publish: "Publish"
+        description: "When a topic is published as a page, its URL can be shared and it will displayed with custom styling."
+        slug: "Slug"
+        publish_url: "Your page has been published at:"
+        topic_published: "Your topic has been published at:"
+        preview_url: "Your page will be published at:"
+        invalid_slug: "Sorry, you can't publish this page."
+        unpublish: "Unpublish"
+        unpublished: "Your page has been unpublished and is no longer accessible."
+        publishing_settings: "Publishing Settings"
+
       change_owner:
         title: "Change Owner"
         action: "change ownership"
@@ -2584,6 +2616,7 @@ en:
         convert_to_moderator: "Add Staff Color"
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
+        publish_page: "Page Publishing"
         unhide: "Unhide"
         change_owner: "Change Ownership"
         grant_badge: "Grant Badge"
@@ -2684,6 +2717,7 @@ en:
 
       bookmarks:
         create: "Create bookmark"
+        edit: "Edit bookmark"
         created: "Created"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
@@ -2692,6 +2726,9 @@ en:
           delete_bookmark:
             name: "Delete bookmark"
             description: "Removes the bookmark from your profile and stops all reminders for the bookmark"
+          edit_bookmark:
+            name: "Edit bookmark"
+            description: "Edit the bookmark name or change the reminder date and time"
 
     category:
       can: "can&hellip; "
@@ -3069,6 +3106,18 @@ en:
         title: "Composing"
         return: "%{shortcut} Return to composer"
         fullscreen: "%{shortcut} Fullscreen composer"
+      bookmarks:
+        title: "Bookmarking"
+        enter: "%{shortcut} Save and close"
+        later_today: "%{shortcut} Later today"
+        later_this_week: "%{shortcut} Later this week"
+        tomorrow: "%{shortcut} Tomorrow"
+        next_week: "%{shortcut} Next week"
+        next_month: "%{shortcut} Next month"
+        next_business_week: "%{shortcut} Start of next week"
+        next_business_day: "%{shortcut} Next business day"
+        custom: "%{shortcut} Custom date and time"
+        none: "%{shortcut} No reminder"
       actions:
         title: "Actions"
         bookmark_topic: "%{shortcut} Toggle bookmark topic"
@@ -3526,6 +3575,9 @@ en:
         notification_event:
           name: "Notification Event"
           details: "When a user receives a notification in their feed."
+        user_badge_event:
+          name: "Badge Grant Event"
+          details: "When a user receives a badge."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -3680,6 +3732,7 @@ en:
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
+          themes_intro_emoji: "woman artist emoji"
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
           browse_themes: "Browse community themes"
@@ -4064,6 +4117,8 @@ en:
             api_key_update: "api key update"
             api_key_destroy: "api key destroy"
             override_upload_secure_status: "override upload secure status"
+            page_published: "page published"
+            page_unpublished: "page unpublished"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -4539,6 +4594,7 @@ en:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
           title: "Select an existing badge or create a new one to get started"
+          emoji: "woman student emoji"
           what_are_badges_title: "What are badges?"
           badge_query_examples_title: "Badge query examples"
         mass_award:
@@ -4556,7 +4612,9 @@ en:
         help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
         add: "Add New Emoji"
         name: "Name"
+        group: "Group"
         image: "Image"
+        alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
 
       embedding:
@@ -4578,6 +4636,7 @@ en:
         embed_post_limit: "Maximum number of posts to embed"
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
+        embed_unlisted: "Imported topics will be unlisted until there is a reply."
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
         embed_classname_whitelist: "Allowed CSS class names"

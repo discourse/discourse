@@ -1,6 +1,7 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 
 export default Component.extend({
   showSelector: true,
@@ -11,7 +12,7 @@ export default Component.extend({
     this._super(...arguments);
 
     if (this.focusTarget === "usernames") {
-      $(this.element.querySelector("input")).putCursorAtEnd();
+      putCursorAtEnd(this.element.querySelector("input"));
     }
   },
 

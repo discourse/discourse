@@ -30,7 +30,7 @@ cs:
     dates:
       time: "H:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMMM H:mm"
+      long_no_year: "D. MMMM, H:mm"
       long_no_year_no_time: "D. MMMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. M. YYYY, H:mm"

@@ -5,34 +5,34 @@
     {{/if}}
   {{/unless}}
 
-  {{#mobile-nav class='messages-nav' desktopClass='nav-stacked action-list' currentPath=currentPath}}
+  {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list" currentPath=currentPath}}
     <li class="noGlyph">
-      {{#link-to 'userPrivateMessages.index' model}}
-        {{i18n 'user.messages.inbox'}}
+      {{#link-to "userPrivateMessages.index" model}}
+        {{i18n "user.messages.inbox"}}
       {{/link-to}}
     </li>
     <li class="noGlyph">
-      {{#link-to 'userPrivateMessages.sent' model}}
-        {{i18n 'user.messages.sent'}}
+      {{#link-to "userPrivateMessages.sent" model}}
+        {{i18n "user.messages.sent"}}
       {{/link-to}}
     </li>
     <li class="noGlyph">
-      {{#link-to 'userPrivateMessages.archive' model}}
-        {{i18n 'user.messages.archive'}}
+      {{#link-to "userPrivateMessages.archive" model}}
+        {{i18n "user.messages.archive"}}
       {{/link-to}}
     </li>
-    {{plugin-outlet name="user-messages-nav" connectorTagName='li' args=(hash model=model)}}
+    {{plugin-outlet name="user-messages-nav" connectorTagName="li" args=(hash model=model)}}
     {{#each model.groups as |group|}}
       {{#if group.has_messages}}
         <li>
-          {{#link-to 'userPrivateMessages.group' group.name}}
+          {{#link-to "userPrivateMessages.group" group.name}}
             {{d-icon "users"}}
             {{capitalize-string group.name}}
           {{/link-to}}
         </li>
-        <li class='archive'>
-          {{#link-to 'userPrivateMessages.groupArchive' group.name}}
-            {{i18n 'user.messages.archive'}}
+        <li class="archive">
+          {{#link-to "userPrivateMessages.groupArchive" group.name}}
+            {{i18n "user.messages.archive"}}
           {{/link-to}}
         </li>
       {{/if}}
@@ -40,13 +40,13 @@
 
     {{#if pmTaggingEnabled}}
       <li class="noGlyph">
-        {{#link-to 'userPrivateMessages.tags' model}}
-          {{i18n 'user.messages.tags'}}
+        {{#link-to "userPrivateMessages.tags" model}}
+          {{i18n "user.messages.tags"}}
         {{/link-to}}
       </li>
       {{#if tagId}}
         <li class="archive">
-          {{#link-to 'userPrivateMessages.tagsShow' tagId}}
+          {{#link-to "userPrivateMessages.tagsShow" tagId}}
             {{tagId}}
           {{/link-to}}
         </li>
@@ -55,10 +55,8 @@
   {{/mobile-nav}}
 {{/d-section}}
 
-<section class='user-content'>
-
-<div class="list-actions">
-
+<section class="user-content">
+  <div class="list-actions">
     {{#unless site.mobileView}}
       {{#if showToggleBulkSelect}}
         {{d-button
@@ -106,7 +104,6 @@
         onChange=(action "changeGroupNotificationLevel")
       }}
     {{/if}}
-</div>
-
-{{outlet}}
+  </div>
+  {{outlet}}
 </section>

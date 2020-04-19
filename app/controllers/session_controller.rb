@@ -254,6 +254,10 @@ class SessionController < ApplicationController
 
       render_sso_error(text: text || I18n.t("sso.unknown_error"), status: 500)
 
+    rescue DiscourseSingleSignOn::BlankExternalId
+
+      render_sso_error(text: I18n.t("sso.blank_id_error"), status: 500)
+
     rescue => e
       message = +"Failed to create or lookup user: #{e}."
       message << "  "
@@ -364,6 +368,7 @@ class SessionController < ApplicationController
       elsif payload = login_error_check(user)
         return render json: payload
       else
+        user.update_timezone_if_missing(params[:timezone])
         log_on_user(user)
         return render json: success_json
       end

@@ -74,7 +74,7 @@ Object.keys(pathBindings).forEach(path => {
   var testName = binding + " goes to " + path;
 
   test(testName, function(assert) {
-    KeyboardShortcuts.bindEvents(testMouseTrap, Discourse.__container__);
+    KeyboardShortcuts.bindEvents();
     testMouseTrap.trigger(binding);
 
     assert.ok(DiscourseURL.routeTo.calledWith(path));
@@ -89,7 +89,7 @@ Object.keys(clickBindings).forEach(selector => {
   var testName = binding + " clicks on " + selector;
 
   test(testName, function(assert) {
-    KeyboardShortcuts.bindEvents(testMouseTrap, Discourse.__container__);
+    KeyboardShortcuts.bindEvents();
     $(selector).on("click", function() {
       assert.ok(true, selector + " was clicked");
     });
@@ -109,7 +109,7 @@ Object.keys(functionBindings).forEach(func => {
     sandbox.stub(KeyboardShortcuts, func, function() {
       assert.ok(true, func + " is called when " + binding + " is triggered");
     });
-    KeyboardShortcuts.bindEvents(testMouseTrap, Discourse.__container__);
+    KeyboardShortcuts.bindEvents();
 
     testMouseTrap.trigger(binding);
   });

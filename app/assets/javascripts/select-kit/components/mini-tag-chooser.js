@@ -77,6 +77,20 @@ export default ComboBox.extend(TagsMixin, {
     );
   }),
 
+  modifyNoSelection() {
+    if (this.selectKit.options.minimum) {
+      const minimum = parseInt(this.selectKit.options.minimum, 10);
+      if (minimum > 0) {
+        return this.defaultItem(
+          null,
+          I18n.t("select_kit.min_content_not_reached", { count: minimum })
+        );
+      }
+    }
+
+    return this._super(...arguments);
+  },
+
   init() {
     this._super(...arguments);
 
@@ -174,7 +188,9 @@ export default ComboBox.extend(TagsMixin, {
     const value = makeArray(this.value);
 
     if (event.keyCode === 8) {
-      this._onBackspace(this.value, this.highlightedTag);
+      if (!this.selectKit.filter) {
+        this._onBackspace(this.value, this.highlightedTag);
+      }
     } else if (event.keyCode === 37) {
       if (this.highlightedTag) {
         const index = value.indexOf(this.highlightedTag);

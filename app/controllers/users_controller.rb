@@ -317,8 +317,12 @@ class UsersController < ApplicationController
       filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
       invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
     end
-    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer, show_emails: show_emails),
-                     can_see_invite_details: guardian.can_see_invite_details?(inviter)
+
+    render json: MultiJson.dump(InvitedSerializer.new(
+      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter),
+      scope: guardian,
+      root: false
+    ))
   end
 
   def invited_count
@@ -447,8 +451,11 @@ class UsersController < ApplicationController
     user ||= User.new
     user.attributes = new_user_params
 
-    # Handle API approval
-    ReviewableUser.set_approved_fields!(user, current_user) if user.approved?
+    # Handle API approval and
+    # auto approve users based on auto_approve_email_domains setting
+    if user.approved? || EmailValidator.can_auto_approve_user?(user.email)
+      ReviewableUser.set_approved_fields!(user, current_user)
+    end
 
     # Handle custom fields
     user_fields = UserField.all
@@ -500,8 +507,10 @@ class UsersController < ApplicationController
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
 
-      # If the user was created as active, they might need to be approved
-      user.create_reviewable if user.active?
+      # If the user was created as active this will
+      # ensure their email is confirmed and
+      # add them to the review queue if they need to be approved
+      user.activate if user.active?
 
       render json: {
         success: true,
@@ -632,6 +641,7 @@ class UsersController < ApplicationController
       # if we have run into no errors then the user is a-ok to
       # change the password
       if @user.errors.empty?
+        @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
         @user.user_auth_tokens.destroy_all
@@ -1401,15 +1411,18 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.json do
-        bookmarks = BookmarkQuery.new(user: user, guardian: guardian, params: params).list_all
+        bookmark_list = UserBookmarkList.new(user: user, guardian: guardian, params: params)
+        bookmark_list.load
 
-        if bookmarks.empty?
+        if bookmark_list.bookmarks.empty?
           render json: {
             bookmarks: [],
             no_results_help: I18n.t("user_activity.no_bookmarks.self")
           }
         else
-          render_serialized(bookmarks, UserBookmarkSerializer, root: 'bookmarks')
+          page = params[:page].to_i + 1
+          bookmark_list.more_bookmarks_url = "#{Discourse.base_path}/u/#{params[:username]}/bookmarks.json?page=#{page}"
+          render_serialized(bookmark_list, UserBookmarkListSerializer)
         end
       end
       format.ics do

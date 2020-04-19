@@ -1,7 +1,7 @@
 {{#if collection}}
-  <div class='values'>
+  <div class="values">
     {{#each collection as |value index|}}
-      <div class='value' data-index={{index}}>
+      <div data-index={{index}} class="value">
         {{d-button
           action=(action "removeValue")
           actionParam=value

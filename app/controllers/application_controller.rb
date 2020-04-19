@@ -376,8 +376,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_theme
-    return if request.xhr? || request.format == "json" || request.format == "js"
-    return if request.method != "GET"
+    return if request.format == "js"
 
     resolve_safe_mode
     return if request.env[NO_CUSTOM]

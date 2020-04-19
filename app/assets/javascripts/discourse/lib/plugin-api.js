@@ -1,4 +1,3 @@
-/*global Mousetrap:true*/
 import deprecated from "discourse-common/lib/deprecated";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
@@ -52,7 +51,7 @@ import { addCategorySortCriteria } from "discourse/components/edit-category-sett
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
-import KeyboardShortcuts, { bindings } from "discourse/lib/keyboard-shortcuts";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.8.40";
@@ -230,12 +229,11 @@ class PluginApi {
     }
   }
 
+  /**
+   * See KeyboardShortcuts.addShortcut documentation.
+   **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
-    shortcut = shortcut.trim().replace(/\s/g, ""); // Strip all whitespace
-    let newBinding = {};
-    newBinding[shortcut] = Object.assign({ handler: callback }, opts);
-    Object.assign(bindings, newBinding);
-    KeyboardShortcuts.bindEvents(Mousetrap, this.container);
+    KeyboardShortcuts.addShortcut(shortcut, callback, opts);
   }
 
   /**
@@ -1027,11 +1025,9 @@ class PluginApi {
    * For example, to replace the topic title:
    *
    * ```
-   * api.decorateTopicTitle(
-   *   (topicModel, node, topicTitleType) => {
-   *     node.innerText("my new topic title");
-   *   }
-   * );
+   * api.decorateTopicTitle((topicModel, node, topicTitleType) => {
+   *   node.innerText = "my new topic title";
+   * });
    * ```
    *
    **/

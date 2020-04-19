@@ -5,7 +5,7 @@ import { cancel, later, next, throttle } from "@ember/runloop";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import { throwAjaxError } from "discourse/lib/ajax-error";
-import Quote from "discourse/lib/quote";
+import { QUOTE_REGEXP } from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
 import discourseComputed, {
   observes,
@@ -77,8 +77,6 @@ const CLOSED = "closed",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
-    // TODO remove together with 'targetUsername' deprecations
-    usernames: "targetUsernames",
     recipients: "targetRecipients"
   },
   _add_draft_fields = {},
@@ -343,14 +341,6 @@ const Composer = RestModel.extend({
   },
 
   @discourseComputed("targetRecipients")
-  targetUsernames(targetRecipients) {
-    deprecated(
-      "`targetUsernames` is deprecated, use `targetRecipients` instead."
-    );
-    return targetRecipients;
-  },
-
-  @discourseComputed("targetRecipients")
   targetRecipientsArray(targetRecipients) {
     const recipients = targetRecipients ? targetRecipients.split(",") : [];
     const groups = new Set(this.site.groups.map(g => g.name));
@@ -527,10 +517,10 @@ const Composer = RestModel.extend({
       return reply.length;
     }
 
-    while (Quote.REGEXP.test(reply)) {
+    while (QUOTE_REGEXP.test(reply)) {
       // make it global so we can strip as many quotes at once
       // keep in mind nested quotes mean we still need a loop here
-      const regex = new RegExp(Quote.REGEXP.source, "img");
+      const regex = new RegExp(QUOTE_REGEXP.source, "img");
       reply = reply.replace(regex, "");
     }
 
@@ -673,14 +663,16 @@ const Composer = RestModel.extend({
        quote    - If we're opening a reply from a quote, the quote we're making
   */
   open(opts) {
+    let promise = Promise.resolve();
+
     if (!opts) opts = {};
-    this.set("loading", false);
+    this.set("loading", true);
 
     const replyBlank = isEmpty(this.reply);
 
     const composer = this;
     if (!replyBlank && (opts.reply || isEdit(opts.action)) && this.replyDirty) {
-      return;
+      return promise;
     }
 
     if (opts.action === REPLY && isEdit(this.action)) {
@@ -741,11 +733,14 @@ const Composer = RestModel.extend({
     }
 
     if (opts.postId) {
-      this.set("loading", true);
-
-      this.store
-        .find("post", opts.postId)
-        .then(post => composer.setProperties({ post, loading: false }));
+      promise = promise.then(() =>
+        this.store.find("post", opts.postId).then(post => {
+          composer.set("post", post);
+          if (post) {
+            composer.set("topic", post.topic);
+          }
+        })
+      );
     }
 
     // If we are editing a post, load it.
@@ -759,15 +754,30 @@ const Composer = RestModel.extend({
       }
       this.setProperties(topicProps);
 
-      this.store.find("post", opts.post.id).then(post => {
-        composer.setProperties({
-          reply: post.raw,
-          originalText: post.raw,
-          loading: false
-        });
+      promise = promise.then(() =>
+        this.store.find("post", opts.post.id).then(post => {
+          composer.setProperties({
+            reply: post.raw,
+            originalText: post.raw,
+            post: post
+          });
 
-        composer.appEvents.trigger("composer:reply-reloaded", composer);
-      });
+          promise = Promise.resolve();
+          // edge case ... make a post then edit right away
+          // store does not have topic for the post
+          if (composer.topic && composer.topic.id === post.topic_id) {
+            // nothing to do ... we have the right topic
+          } else {
+            promise = this.store.find("topic", post.topic_id).then(topic => {
+              this.set("topic", topic);
+            });
+          }
+
+          return promise.then(() => {
+            composer.appEvents.trigger("composer:reply-reloaded", composer);
+          });
+        })
+      );
     } else if (opts.action === REPLY && opts.quote) {
       this.setProperties({
         reply: opts.quote,
@@ -785,7 +795,9 @@ const Composer = RestModel.extend({
     }
 
     if (!isEdit(opts.action) || !opts.post) {
-      composer.appEvents.trigger("composer:reply-reloaded", composer);
+      promise = promise.then(() =>
+        composer.appEvents.trigger("composer:reply-reloaded", composer)
+      );
     }
 
     // Ensure additional draft fields are set
@@ -793,7 +805,9 @@ const Composer = RestModel.extend({
       this.set(_add_draft_fields[f], opts[f]);
     });
 
-    return false;
+    return promise.finally(() => {
+      this.set("loading", false);
+    });
   },
 
   // Overwrite to implement custom logic

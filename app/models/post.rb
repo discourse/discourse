@@ -127,7 +127,8 @@ class Post < ActiveRecord::Base
                                  flagged_by_tl3_user: 4,
                                  email_spam_header_found: 5,
                                  flagged_by_tl4_user: 6,
-                                 email_authentication_result_header: 7)
+                                 email_authentication_result_header: 7,
+                                 imported_as_unlisted: 8)
   end
 
   def self.types
@@ -767,7 +768,7 @@ class Post < ActiveRecord::Base
   def self.public_posts_count_per_day(start_date, end_date, category_id = nil)
     result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
       .where(post_type: Post.types[:regular])
-    result = result.where('topics.category_id = ?', category_id) if category_id
+    result = result.where('topics.category_id IN (?)', Category.subcategory_ids(category_id.to_i)) if category_id
     result
       .group('date(posts.created_at)')
       .order('date(posts.created_at)')

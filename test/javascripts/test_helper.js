@@ -117,7 +117,17 @@ QUnit.testStart(function(ctx) {
     return body;
   };
 
+  if (QUnit.config.logAllRequests) {
+    server.handledRequest = function(verb, path, request) {
+      console.log("REQ: " + verb + " " + path);
+    };
+  }
+
   server.unhandledRequest = function(verb, path) {
+    if (QUnit.config.logAllRequests) {
+      console.log("REQ: " + verb + " " + path + " missing");
+    }
+
     const error =
       "Unhandled request in test environment: " + path + " (" + verb + ")";
     window.console.error(error);
@@ -191,6 +201,8 @@ QUnit.testDone(function() {
   });
 
   window.MessageBus.unsubscribe("*");
+  delete window.server;
+  window.Mousetrap.reset();
 });
 
 // Load ES6 tests

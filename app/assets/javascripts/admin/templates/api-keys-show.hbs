@@ -1,11 +1,11 @@
-{{#link-to 'adminApiKeys.index' class="go-back"}}
-  {{d-icon 'arrow-left'}}
-  {{i18n 'admin.api.all_api_keys'}}
+{{#link-to "adminApiKeys.index" class="go-back"}}
+  {{d-icon "arrow-left"}}
+  {{i18n "admin.api.all_api_keys"}}
 {{/link-to}}
 
 <div class="api-key">
   {{#admin-form-row label="admin.api.key"}}
-    {{#if model.revoked_at}}{{d-icon 'times-circle'}}{{/if}}
+    {{#if model.revoked_at}}{{d-icon "times-circle"}}{{/if}}
     {{model.truncatedKey}}
   {{/admin-form-row}}
 
@@ -18,7 +18,7 @@
       </span>
     {{/if}}
 
-    <div class='controls'>
+    <div class="controls">
       {{#if editingDescription}}
         {{d-button class="ok" action=(action "saveDescription") icon="check"}}
         {{d-button class="cancel" action=(action "editDescription") icon="times"}}
@@ -30,11 +30,11 @@
 
   {{#admin-form-row label="admin.api.user"}}
     {{#if model.user}}
-        {{#link-to "adminUser" model.user}}
-            {{avatar model.user imageSize="small"}} {{model.user.username}}
-        {{/link-to}}
+      {{#link-to "adminUser" model.user}}
+        {{avatar model.user imageSize="small"}} {{model.user.username}}
+      {{/link-to}}
     {{else}}
-        {{i18n "admin.api.all_users"}}
+      {{i18n "admin.api.all_users"}}
     {{/if}}
   {{/admin-form-row}}
 
@@ -58,7 +58,7 @@
     {{#if model.revoked_at}}
       {{format-date model.revoked_at leaveAgo="true"}}
     {{/if}}
-    <div class='controls'>
+    <div class="controls">
       {{#if model.revoked_at}}
         {{d-button
           action=(action "undoRevokeKey")

@@ -972,6 +972,9 @@ if (!String.prototype.startsWith) {
 /* eslint-enable */
 
 // Polyfill Promise - used by popper.js
+if (!window.Promise) {
+  window.Promise = true;
+}
 window.addEventListener(
   "load",
   function() {

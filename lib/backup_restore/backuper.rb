@@ -194,6 +194,7 @@ module BackupRestore
       [ password_argument,            # pass the password to pg_dump (if any)
         "pg_dump",                    # the pg_dump command
         "--schema=public",            # only public schema
+        "-T public.pg_*",             # exclude tables and views whose name starts with "pg_"
         "--file='#{@dump_filename}'", # output to the dump.sql file
         "--no-owner",                 # do not output commands to set ownership of objects
         "--no-privileges",            # prevent dumping of access privileges
@@ -290,19 +291,16 @@ module BackupRestore
           log "Failed to download file with upload ID #{upload.id} from S3", ex
         end
 
-        if File.exists?(filename)
-          Discourse::Utils.execute_command(
-            'tar', '--append', '--file', tar_filename, upload_directory,
-            failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1],
-            chdir: @tmp_directory
-          )
-
-          File.delete(filename)
-        end
-
         count += 1
         log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
       end
+
+      log "Appending uploads to archive..."
+      Discourse::Utils.execute_command(
+        'tar', '--append', '--file', tar_filename, upload_directory,
+        failure_message: "Failed to append uploads to archive.", success_status_codes: [0, 1],
+        chdir: @tmp_directory
+      )
 
       log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
     end

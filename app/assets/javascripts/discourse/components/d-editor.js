@@ -52,7 +52,7 @@ const OP = {
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
-const _createCallbacks = [];
+let _createCallbacks = [];
 
 const isInside = (text, regex) => {
   const matches = text.match(regex);
@@ -212,6 +212,9 @@ class Toolbar {
 export function addToolbarCallback(func) {
   _createCallbacks.push(func);
 }
+export function clearToolbarCallbacks() {
+  _createCallbacks = [];
+}
 
 export function onToolbarCreate(func) {
   deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.");
@@ -325,7 +328,7 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
   },
 
-  @discourseComputed
+  @discourseComputed("attrs.outletArgs.composer.action")
   toolbar() {
     const toolbar = new Toolbar(
       this.getProperties("site", "siteSettings", "showLink")
@@ -353,7 +356,7 @@ export default Component.extend({
         return;
       }
       this.set("preview", cooked);
-      scheduleOnce("afterRender", () => {
+      schedule("afterRender", () => {
         if (this._state !== "inDOM") {
           return;
         }
@@ -556,7 +559,7 @@ export default Component.extend({
   },
 
   _selectText(from, length) {
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       const textarea = this.element.querySelector("textarea.d-editor-input");
       const $textarea = $(textarea);
       const oldScrollPos = $textarea.scrollTop();
@@ -895,7 +898,7 @@ export default Component.extend({
   // ensures textarea scroll position is correct
   _focusTextArea() {
     const textarea = this.element.querySelector("textarea.d-editor-input");
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       textarea.blur();
       textarea.focus();
     });

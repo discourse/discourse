@@ -148,6 +148,7 @@ class Auth::DefaultCurrentUserProvider
                                client_ip: @request.ip,
                                path: @env['REQUEST_PATH'])
           cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
+          DiscourseEvent.trigger(:user_session_refreshed, user)
         end
       end
     end
@@ -260,7 +261,7 @@ class Auth::DefaultCurrentUserProvider
   protected
 
   def lookup_user_api_user_and_update_key(user_api_key, client_id)
-    if api_key = UserApiKey.where(key: user_api_key, revoked_at: nil).includes(:user).first
+    if api_key = UserApiKey.active.with_key(user_api_key).includes(:user).first
       unless api_key.allow?(@env)
         raise Discourse::InvalidAccess
       end
@@ -286,12 +287,8 @@ class Auth::DefaultCurrentUserProvider
     if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
-      # Check for deprecated api auth
       if !header_api_key?
-        unless is_whitelisted_query_param_auth_route?(request)
-          # Notify admins of deprecated auth method
-          AdminDashboardData.add_problem_message('dashboard.deprecated_api_usage', 1.day)
-        end
+        raise Discourse::InvalidAccess unless is_whitelisted_query_param_auth_route?(request)
       end
 
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
@@ -321,12 +318,13 @@ class Auth::DefaultCurrentUserProvider
   private
 
   def is_whitelisted_query_param_auth_route?(request)
-    (is_rss_feed?(request) || is_handle_mail?(request))
+    (is_user_feed?(request) || is_handle_mail?(request))
   end
 
-  def is_rss_feed?(request)
+  def is_user_feed?(request)
     return true if request.path.match?(/\/(c|t){1}\/\S*.(rss|json)/) && request.get? # topic or category route
     return true if request.path.match?(/\/(latest|top|categories).(rss|json)/) && request.get? # specific routes with rss
+    return true if request.path.match?(/\/u\/\S*\/bookmarks.(ics|json)/) && request.get? # specific routes with ics
   end
 
   def is_handle_mail?(request)

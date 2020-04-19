@@ -59,7 +59,7 @@ describe InviteRedeemer do
   end
 
   describe "#redeem" do
-    fab!(:invite) { Fabricate(:invite) }
+    fab!(:invite) { Fabricate(:invite, email: "foobar@example.com") }
     let(:name) { 'john snow' }
     let(:username) { 'kingofthenorth' }
     let(:password) { 'know5nOthiNG' }
@@ -99,6 +99,16 @@ describe InviteRedeemer do
       expect(user.username).to eq(username)
       expect(user.invited_by).to eq(inviter)
       expect(inviter.notifications.count).to eq(1)
+      expect(user.approved).to eq(true)
+    end
+
+    it "should redeem the invite if invited by non staff and approve if email in auto_approve_email_domains setting" do
+      SiteSetting.must_approve_users = true
+      SiteSetting.auto_approve_email_domains = "example.com"
+      user = invite_redeemer.redeem
+
+      expect(user.name).to eq(name)
+      expect(user.username).to eq(username)
       expect(user.approved).to eq(true)
     end
 
