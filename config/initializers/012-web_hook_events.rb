@@ -26,7 +26,7 @@ end
 end
 
 DiscourseEvent.on(:post_edited) do |post, topic_changed|
-  if post.topic
+  unless post.topic&.trashed?
     WebHook.enqueue_post_hooks(:post_edited, post)
 
     if post.is_first_post? && topic_changed
