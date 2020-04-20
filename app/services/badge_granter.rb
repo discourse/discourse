@@ -16,7 +16,7 @@ class BadgeGranter
     return unless badge.enabled?
 
     system_user_id = Discourse.system_user.id
-    now = Time.now
+    now = Time.zone.now
     user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now } }
     granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
 
