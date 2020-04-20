@@ -114,6 +114,11 @@ te:
     latest: "తాజా విషయాలు"
   too_late_to_edit: "ఈ టపా పురాతన కాలంలో సృష్టించబడింది. ఇప్పుడు ఇహ సవరించలేము లేదా తొలగించలేము."
   excerpt_image: "బొమ్మ"
+  bookmarks:
+    reminders:
+      tomorrow: "రేపు"
+      next_week: "వచ్చే వారం"
+      next_month: "వచ్చే నెల"
   groups:
     default_names:
       everyone: "ప్రతీఒక్కరూ"
@@ -589,6 +594,10 @@ te:
   most_posts: "అధిక టపాలు"
   most_recent_poster: "ఇటీవలి పోస్టర్"
   frequent_poster: "తరచూ వచ్చే పోస్టర్"
+  publish_page:
+    slug_errors:
+      blank: "ఖాళీగా ఉండకూడదు"
+      invalid: "చెల్లని అక్షరాలు ఉన్నాయి."
   topic_statuses:
     autoclosed_disabled: "ఈ విషయం ఇప్పుడు తెరవబడింది.కొత్త జవాబులకు అనుమతి."
     autoclosed_disabled_lastpost: "ఈ విషయం ఇప్పుడు తెరవబడింది.కొత్త జవాబులకు అనుమతి."

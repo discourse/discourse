@@ -222,8 +222,6 @@ tr_TR:
       bookmark:
         instructions: |-
           Daha fazla bilgi edinmek istiyorsanız aşağıdan seç<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ve ** bu özel ileti yi yer im lerine ekle<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
-        reply: |-
-          Mükemmel! Artık doğrudan [profilinizdeki yer işaretleri sekmesinden] (%{profile_page_url} / etkinlik / yer işaretleri) özel mesajlarımıza geri dönüş yolunuzu kolayca bulabilirsiniz. Sağ üstteki profil resminizi seçmeniz yeterlidir ↗
         not_found: |-
           Ah, bu konuda hiçbir yer işareti görmüyorum. Her gönderinin altındaki yer işaretlerini gördünüz mü? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">Ek eylemleri ortaya çıkarmak için daha fazla göster seçeneğini kullanın.
       emoji:

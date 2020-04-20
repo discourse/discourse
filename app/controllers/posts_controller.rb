@@ -511,15 +511,10 @@ class PostsController < ApplicationController
   def destroy_bookmark
     params.require(:post_id)
 
-    existing_bookmark = Bookmark.find_by(post_id: params[:post_id], user_id: current_user.id)
-    topic_bookmarked = false
+    bookmark_id = Bookmark.where(post_id: params[:post_id], user_id: current_user.id).pluck_first(:id)
+    result = BookmarkManager.new(current_user).destroy(bookmark_id)
 
-    if existing_bookmark.present?
-      topic_bookmarked = Bookmark.exists?(topic_id: existing_bookmark.topic_id, user_id: current_user.id)
-      existing_bookmark.destroy
-    end
-
-    render json: success_json.merge(topic_bookmarked: topic_bookmarked)
+    render json: success_json.merge(result)
   end
 
   def wiki

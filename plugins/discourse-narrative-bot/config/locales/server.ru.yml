@@ -232,8 +232,6 @@ ru:
       bookmark:
         instructions: |-
           Если вы хотите узнать больше, выберите <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ниже и <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **добавьте это сообщение в закладки**. Если вы сделаете это, в скором времени вас ждет :gift:
-        reply: |-
-          Отлично! Теперь вы можете легко найти свой путь назад к нашей частной беседе любой момент, прямо с [закладок в профиле](%{profile_page_url}/activity/bookmarks). Просто выберите фотографию профиля в правом верхнем углу &#8599;
         not_found: |-
           Упс, я не вижу никаких закладок в этой теме. Вы нашли закладку под каждым постом? Воспользуйтесь опцией "показать еще" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> для просмотра дополнительных инструментов при необходимости.
       emoji:

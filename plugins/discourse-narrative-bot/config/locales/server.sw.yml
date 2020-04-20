@@ -187,8 +187,6 @@ sw:
       bookmark:
         instructions: |-
           Kama ukipenda kujifunza zaidi, chagua <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">chini na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **alamisha ujumbe huu binafsi**. Ukifanya hivyo, unaweza kupata :gift: baadae!
-        reply: |-
-          Vizuri! Sasa unaweza kurudi kwenye maongezi yetu binafsi mda wowote, kupitia [kichupo cha mialamisho kwenye umbo lako](%{profile_page_url}/activity/mialamisho). Chagua umbo lako iliyopo juu upande wa kulia &#8599;
         not_found: |-
           Nimeshindwa kuona mialamisho ya mada hii. Umeona alamisho yoyote kwenye kila chapisho? Tumia onyesha zaidi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">kuona vitendo zaidi kama vinahitajika.
       emoji:

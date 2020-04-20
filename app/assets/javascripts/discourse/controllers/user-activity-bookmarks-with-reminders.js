@@ -61,7 +61,11 @@ export default Controller.extend({
 
   actions: {
     removeBookmark(bookmark) {
-      return bookmark.destroy().then(() => this.loadItems());
+      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
+        if (result) {
+          return bookmark.destroy().then(() => this.loadItems());
+        }
+      });
     },
 
     editBookmark(bookmark) {

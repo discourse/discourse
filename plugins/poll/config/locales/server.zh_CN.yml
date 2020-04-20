@@ -15,7 +15,7 @@ zh_CN:
     poll_export_data_explorer_query_id: "用于导出投票结果的数据资源管理器查询的ID（0为禁用）。"
   poll:
     poll: "投票"
-    invalid_argument: "参数“%{argument}”无效值“%{value}”。"
+    invalid_argument: "“%{argument}”参数的无效值“%{value}”。"
     multiple_polls_without_name: "有多个投票没有名字。使用“<code>name</code>”属性区分各投票。"
     multiple_polls_with_same_name: "有多个投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”属性区分各投票。"
     default_poll_must_have_at_least_1_option: "投票必须至少有一个选项。"

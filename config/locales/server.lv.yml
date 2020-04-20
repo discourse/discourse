@@ -57,6 +57,12 @@ lv:
   read_full_topic: "Lasīt pilnu tēmu"
   rss_description:
     latest: "Jaunākās tēmas"
+  bookmarks:
+    reminders:
+      later_today: "Vēlāk šodien"
+      tomorrow: "Rītdien"
+      next_week: "Nākamā nedēļā"
+      next_month: "Nākamā mēnesī"
   groups:
     default_names:
       everyone: "ikviens"

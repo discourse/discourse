@@ -214,8 +214,6 @@ ur:
       bookmark:
         instructions: |-
           اگر آپ مزید جاننا چاہتے ہیں، تو ذیل میں <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> منتخب کریں اور <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **اِس ذاتی پیغام کو بُک مارک کریں**۔ اگر آپ ایسا کرتے ہیں، تو ہو سکتا ہے کہ آپ کے مستقبل میں ایک :gift: ہو!
-        reply: |-
-          بہترین! اَب آپ [اپنی پروفائل پر موجود بُک مارکس ٹَیب](%{profile_page_url}/activity/bookmarks) کے زریعے آسانی سے ہماری نجی بات چیت تک دوبارہ رسائی حاصل کر سکتے ہیں۔ صرف اوپری دائیں طرف پر اپنی پروفائل تصویر کو سَلَیکٹ کریں &#8599;
         not_found: |-
           اوہ، مجھے اس ٹاپک میں کوئی بک مارکس نظر نہیں آرہے۔ کیا آپ کو ہر پوسٹ کے نیچے بُک مارک ملا؟ اگر ضرورت ہو تو اضافی کارروائیوں کو ظاہر کرنے کیلئے مزید دکھایے <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> کو استعمال کریں۔
       emoji:

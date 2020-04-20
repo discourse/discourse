@@ -184,8 +184,6 @@ bs_BA:
       bookmark:
         instructions: |-
           Ako želite da saznate više, izaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ispod i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ** označi ovu osobnu poruku **. Ako to učinite, možda postoji: dar: u vašoj budućnosti!
-        reply: |-
-          Odlično! Sada možete lako pronaći put do našeg privatnog razgovora u bilo koje vrijeme, direktno iz [kartice oznaka u vašem profilu] (%{profile_page_url} / activity / bookmarks). Samo izaberite sliku u gornjem desnom uglu
         not_found: |-
           Uh oh, ne vidim oznake u ovoj temi. Da li ste pronašli oznaku ispod svakog posta? Koristite show više <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da otkrije dodatne akcije ako je potrebno.
       emoji:

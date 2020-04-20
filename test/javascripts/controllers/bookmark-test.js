@@ -201,7 +201,7 @@ QUnit.test(
     BookmarkController.customReminderDate = "2028-12-12";
     BookmarkController.selectedReminderType =
       BookmarkController.reminderTypes.CUSTOM;
-    const reminderAt = BookmarkController.reminderAt();
+    const reminderAt = BookmarkController._reminderAt();
     assert.equal(BookmarkController.customReminderTime, "08:00");
     assert.equal(
       reminderAt.toString(),
@@ -223,7 +223,7 @@ QUnit.test(
     localStorage.lastCustomBookmarkReminderDate = "2019-12-12";
     localStorage.lastCustomBookmarkReminderTime = "08:00";
 
-    BookmarkController.loadLastUsedCustomReminderDatetime();
+    BookmarkController._loadLastUsedCustomReminderDatetime();
 
     assert.equal(BookmarkController.lastCustomReminderDate, "2019-12-12");
     assert.equal(BookmarkController.lastCustomReminderTime, "08:00");
@@ -237,7 +237,7 @@ QUnit.test(
     localStorage.lastCustomBookmarkReminderDate = "2019-12-11";
     localStorage.lastCustomBookmarkReminderTime = "07:00";
 
-    BookmarkController.loadLastUsedCustomReminderDatetime();
+    BookmarkController._loadLastUsedCustomReminderDatetime();
 
     assert.equal(BookmarkController.lastCustomReminderDate, null);
     assert.equal(BookmarkController.lastCustomReminderTime, null);
