@@ -461,6 +461,12 @@ const Topic = RestModel.extend({
             .then(() => {
               this.toggleProperty("bookmarked");
               this.set("bookmark_reminder_at", null);
+              let clearedBookmarkProps = {
+                bookmarked_with_reminder: false,
+                bookmark_id: null,
+                bookmark_name: null,
+                bookmark_reminder_at: null
+              };
               if (posts) {
                 const updated = [];
                 posts.forEach(post => {
@@ -472,11 +478,11 @@ const Topic = RestModel.extend({
                     this.siteSettings.enable_bookmarks_with_reminders &&
                     post.bookmarked_with_reminder
                   ) {
-                    post.set("bookmarked_with_reminder", false);
+                    post.setProperties(clearedBookmarkProps);
                     updated.push(post.id);
                   }
                 });
-                firstPost.set("bookmarked_with_reminder", false);
+                firstPost.setProperties(clearedBookmarkProps);
                 return updated;
               }
             })
