@@ -5,12 +5,13 @@ import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 import Evented from "@ember/object/evented";
+import EmberObject from "@ember/object";
 
 const SCROLL_DELAY = 500;
 
 import showModal from "discourse/lib/show-modal";
 
-const TopicRoute = DiscourseRoute.extend(Evented, {
+const TopicRoute = DiscourseRoute.extend({
   init() {
     this._super(...arguments);
 
@@ -331,5 +332,10 @@ const TopicRoute = DiscourseRoute.extend(Evented, {
     );
   }
 });
+
+// TODO: Remove this - it's barely used.
+const events = EmberObject.extend(Evented).create();
+TopicRoute.on = events.on;
+TopicRoute.trigger = events.trigger;
 
 export default TopicRoute;
