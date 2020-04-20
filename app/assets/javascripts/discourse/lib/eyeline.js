@@ -79,13 +79,7 @@ Eyeline.prototype.update = function() {
     // If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
     if (!atBottom) {
       appEvents.trigger("saw", { detail: $elem });
-      if (i === 0) {
-        appEvents.trigger("sawTop", { detail: $elem });
-      }
       return false;
-    }
-    if (i === 0) {
-      appEvents.trigger("sawTop", { detail: $elem });
     }
     if (i === $elements.length - 1) {
       return appEvents.trigger("sawBottom", { detail: $elem });
