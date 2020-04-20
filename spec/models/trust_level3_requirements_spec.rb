@@ -8,13 +8,17 @@ describe TrustLevel3Requirements do
   subject(:tl3_requirements) { described_class.new(user) }
   fab!(:moderator) { Fabricate(:moderator) }
 
+  fab!(:topic1) { Fabricate(:topic) }
+  fab!(:topic2) { Fabricate(:topic) }
+  fab!(:topic3) { Fabricate(:topic) }
+  fab!(:topic4) { Fabricate(:topic) }
+
   before do
     described_class.clear_cache
   end
 
-  def make_view(id, at, user_id)
-    Fabricate(:topic, id: id) unless Topic.where(id: id).exists?
-    TopicViewItem.add(id, '11.22.33.44', user_id, at, _skip_redis = true)
+  def make_view(topic, at, user_id)
+    TopicViewItem.add(topic.id, '11.22.33.44', user_id, at, _skip_redis = true)
   end
 
   def like_at(created_by, post, created_at)
@@ -270,21 +274,21 @@ describe TrustLevel3Requirements do
   describe "topics_viewed" do
     it "counts topics views within last 100 days (default time period), not counting a topic more than once" do
       user.save
-      make_view(9, 1.day.ago,    user.id)
-      make_view(9, 3.days.ago,   user.id) # same topic, different day
-      make_view(3, 4.days.ago,   user.id)
-      make_view(2, 101.days.ago, user.id) # too long ago
+      make_view(topic1, 1.day.ago,    user.id)
+      make_view(topic1, 3.days.ago,   user.id) # same topic, different day
+      make_view(topic2, 4.days.ago,   user.id)
+      make_view(topic3, 101.days.ago, user.id) # too long ago
       expect(tl3_requirements.topics_viewed).to eq(2)
     end
 
     it "counts topics views within last 200 days, respecting tl3_time_period setting" do
       SiteSetting.tl3_time_period = 200
       user.save
-      make_view(9, 1.day.ago,    user.id)
-      make_view(9, 3.days.ago,   user.id) # same topic, different day
-      make_view(3, 4.days.ago,   user.id)
-      make_view(2, 101.days.ago, user.id)
-      make_view(4, 201.days.ago, user.id) # too long ago
+      make_view(topic1, 1.day.ago,    user.id)
+      make_view(topic1, 3.days.ago,   user.id) # same topic, different day
+      make_view(topic2, 4.days.ago,   user.id)
+      make_view(topic3, 101.days.ago, user.id)
+      make_view(topic4, 201.days.ago, user.id) # too long ago
       expect(tl3_requirements.topics_viewed).to eq(3)
     end
 
@@ -296,8 +300,8 @@ describe TrustLevel3Requirements do
         target_usernames: [user.username, moderator.username]
       ).topic
 
-      make_view(9, 1.day.ago, user.id)
-      make_view(private_topic.id, 1.day.ago, user.id)
+      make_view(topic1, 1.day.ago, user.id)
+      make_view(private_topic, 1.day.ago, user.id)
       expect(tl3_requirements.topics_viewed).to eq(1)
     end
   end
@@ -316,9 +320,9 @@ describe TrustLevel3Requirements do
   describe "topics_viewed_all_time" do
     it "counts topics viewed at any time" do
       user.save
-      make_view(10, 1.day.ago,    user.id)
-      make_view(9,  100.days.ago, user.id)
-      make_view(8,  101.days.ago, user.id)
+      make_view(topic1, 1.day.ago,    user.id)
+      make_view(topic2,  100.days.ago, user.id)
+      make_view(topic3,  101.days.ago, user.id)
       expect(tl3_requirements.topics_viewed_all_time).to eq(3)
     end
 
@@ -330,11 +334,11 @@ describe TrustLevel3Requirements do
         target_usernames: [user.username, moderator.username]
       ).topic
 
-      make_view(10, 1.day.ago,    user.id)
-      make_view(9,  100.days.ago, user.id)
-      make_view(8,  101.days.ago, user.id)
-      make_view(private_topic.id, 1.day.ago, user.id)
-      make_view(private_topic.id, 100.days.ago, user.id)
+      make_view(topic1, 1.day.ago,    user.id)
+      make_view(topic2,  100.days.ago, user.id)
+      make_view(topic3,  101.days.ago, user.id)
+      make_view(private_topic, 1.day.ago, user.id)
+      make_view(private_topic, 100.days.ago, user.id)
       expect(tl3_requirements.topics_viewed_all_time).to eq(3)
     end
   end

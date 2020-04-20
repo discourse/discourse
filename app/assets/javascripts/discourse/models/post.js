@@ -336,48 +336,49 @@ const Post = RestModel.extend({
   },
 
   toggleBookmarkWithReminder() {
-    this.toggleProperty("bookmarked_with_reminder");
-    if (this.bookmarked_with_reminder) {
-      return new Promise(resolve => {
-        let controller = showModal("bookmark", {
-          model: {
-            postId: this.id
-          },
-          title: "post.bookmarks.create",
-          modalClass: "bookmark-with-reminder"
-        });
-        controller.setProperties({
-          onCloseWithoutSaving: () => {
-            this.toggleProperty("bookmarked_with_reminder");
-            resolve({ closedWithoutSaving: true });
-            this.appEvents.trigger("post-stream:refresh", { id: this.id });
-          },
-          afterSave: (reminderAtISO, reminderType) => {
-            this.setProperties({
-              "topic.bookmarked": true,
-              bookmark_reminder_at: reminderAtISO,
-              bookmark_reminder_type: reminderType
-            });
-            resolve({ closedWithoutSaving: false });
-            this.appEvents.trigger("post-stream:refresh", { id: this.id });
-          }
-        });
+    return new Promise(resolve => {
+      let controller = showModal("bookmark", {
+        model: {
+          postId: this.id,
+          id: this.bookmark_id,
+          reminderAt: this.bookmark_reminder_at,
+          name: this.bookmark_name
+        },
+        title: this.bookmark_id
+          ? "post.bookmarks.edit"
+          : "post.bookmarks.create",
+        modalClass: "bookmark-with-reminder"
       });
-    } else {
-      this.setProperties({
-        bookmark_reminder_at: null,
-        bookmark_reminder_type: null
-      });
-      return Post.destroyBookmark(this.id)
-        .then(result => {
-          this.set("topic.bookmarked", result.topic_bookmarked);
+      controller.setProperties({
+        onCloseWithoutSaving: () => {
+          resolve({ closedWithoutSaving: true });
+          this.appEvents.trigger("post-stream:refresh", { id: this.id });
+        },
+        afterSave: savedData => {
+          this.setProperties({
+            "topic.bookmarked": true,
+            bookmarked_with_reminder: true,
+            bookmark_reminder_at: savedData.reminderAt,
+            bookmark_reminder_type: savedData.reminderType,
+            bookmark_name: savedData.name,
+            bookmark_id: savedData.id
+          });
+          resolve({ closedWithoutSaving: false });
+          this.appEvents.trigger("post-stream:refresh", { id: this.id });
+        },
+        afterDelete: topicBookmarked => {
+          this.set("topic.bookmarked", topicBookmarked);
+          this.setProperties({
+            bookmark_reminder_at: null,
+            bookmark_reminder_type: null,
+            bookmark_name: null,
+            bookmark_id: null,
+            bookmarked_with_reminder: false
+          });
           this.appEvents.trigger("page:bookmark-post-toggled", this);
-        })
-        .catch(error => {
-          this.toggleProperty("bookmarked_with_reminder");
-          throw new Error(error);
-        });
-    }
+        }
+      });
+    });
   },
 
   updateActionsSummary(json) {

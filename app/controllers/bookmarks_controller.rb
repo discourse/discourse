@@ -15,7 +15,7 @@ class BookmarksController < ApplicationController
     )
 
     if bookmark_manager.errors.empty?
-      return render json: success_json
+      return render json: success_json.merge(id: bookmark.id)
     end
 
     render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
@@ -23,8 +23,8 @@ class BookmarksController < ApplicationController
 
   def destroy
     params.require(:id)
-    BookmarkManager.new(current_user).destroy(params[:id])
-    render json: success_json
+    result = BookmarkManager.new(current_user).destroy(params[:id])
+    render json: success_json.merge(result)
   end
 
   def update

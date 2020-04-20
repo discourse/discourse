@@ -641,6 +641,7 @@ class UsersController < ApplicationController
       # if we have run into no errors then the user is a-ok to
       # change the password
       if @user.errors.empty?
+        @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
         @user.user_auth_tokens.destroy_all
