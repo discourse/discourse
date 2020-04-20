@@ -234,9 +234,9 @@ class ImportScripts::VBulletin < ImportScripts::Base
     # keep track of closed topics
     @closed_topic_ids = []
 
-    topic_count = mysql_query("SELECT COUNT(nodeid) cnt 
-        FROM #{DB_PREFIX}node 
-        WHERE (unpublishdate = 0 OR unpublishdate IS NULL) 
+    topic_count = mysql_query("SELECT COUNT(nodeid) cnt
+        FROM #{DB_PREFIX}node
+        WHERE (unpublishdate = 0 OR unpublishdate IS NULL)
         AND (approved = 1 AND showapproved = 1)
         AND parentid IN (
         SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid=#{@channel_typeid} ) AND contenttypeid=#{@text_typeid};"
@@ -381,7 +381,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           f.write(upload['filedata'])
         }
       end
-      
+
       upl_obj = create_upload(post.user.id, filename, real_filename)
       if upl_obj&.persisted?
         html = html_for_upload(upl_obj, real_filename)
@@ -391,7 +391,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           PostUpload.create!(post: post, upload: upl_obj) unless PostUpload.where(post: post, upload: upl_obj).exists?
         end
       else
-        puts "Fail" 
+        puts "Fail"
         exit
       end
       current_count += 1
@@ -619,9 +619,9 @@ class ImportScripts::VBulletin < ImportScripts::Base
     puts "", "creating permalinks..."
 
     current_count = 0
-    total_count = mysql_query("SELECT COUNT(nodeid) cnt 
-        FROM #{DB_PREFIX}node 
-        WHERE (unpublishdate = 0 OR unpublishdate IS NULL) 
+    total_count = mysql_query("SELECT COUNT(nodeid) cnt
+        FROM #{DB_PREFIX}node
+        WHERE (unpublishdate = 0 OR unpublishdate IS NULL)
         AND (approved = 1 AND showapproved = 1)
         AND parentid IN (
         SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid=#{@channel_typeid} ) AND contenttypeid=#{@text_typeid};"
@@ -631,7 +631,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       topics = mysql_query <<-SQL
         SELECT p.urlident p1, f.urlident p2, t.nodeid, t.urlident p3
         FROM #{DB_PREFIX}node f
-        LEFT JOIN #{DB_PREFIX}node t ON t.parentid = f.nodeid 
+        LEFT JOIN #{DB_PREFIX}node t ON t.parentid = f.nodeid
         LEFT JOIN #{DB_PREFIX}node p ON p.nodeid = f.parentid
         WHERE f.contenttypeid = #{@channel_typeid}
           AND t.contenttypeid = #{@text_typeid}
@@ -650,7 +650,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
         disc_topic = topic_lookup_from_imported_post_id("thread-#{topic['nodeid']}")
 
         Permalink.create(
-          url: "#{URL_PREFIX}#{topic['p1']}/#{topic['p2']}/#{topic['nodeid']}-#{topic['p3']}", 
+          url: "#{URL_PREFIX}#{topic['p1']}/#{topic['p2']}/#{topic['nodeid']}-#{topic['p3']}",
           topic_id: disc_topic[:topic_id]
         ) rescue nil
       end
@@ -658,9 +658,9 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # cats
     cats = mysql_query <<-SQL
-      SELECT nodeid, urlident 
-      FROM #{DB_PREFIX}node 
-      WHERE contenttypeid=#{@channel_typeid} 
+      SELECT nodeid, urlident
+      FROM #{DB_PREFIX}node
+      WHERE contenttypeid=#{@channel_typeid}
       AND parentid=#{ROOT_NODE};
     SQL
     cats.each do |c|
@@ -670,10 +670,10 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # subcats
     subcats = mysql_query <<-SQL
-      SELECT n1.nodeid,n2.urlident p1,n1.urlident p2 
-      FROM #{DB_PREFIX}node n1 
-      LEFT JOIN #{DB_PREFIX}node n2 ON n2.nodeid=n1.parentid 
-      WHERE n2.parentid = #{ROOT_NODE} 
+      SELECT n1.nodeid,n2.urlident p1,n1.urlident p2
+      FROM #{DB_PREFIX}node n1
+      LEFT JOIN #{DB_PREFIX}node n2 ON n2.nodeid=n1.parentid
+      WHERE n2.parentid = #{ROOT_NODE}
       AND n1.contenttypeid=#{@channel_typeid};
     SQL
     subcats.each do |sc|
@@ -691,11 +691,11 @@ class ImportScripts::VBulletin < ImportScripts::Base
     staff_guardian = Guardian.new(Discourse.system_user)
 
     records = mysql_query(<<~SQL
-      SELECT nodeid, GROUP_CONCAT(tagtext) tags 
-      FROM #{DB_PREFIX}tag t 
-      LEFT JOIN #{DB_PREFIX}tagnode tn ON tn.tagid = t.tagid 
-      WHERE t.tagid IS NOT NULL 
-      AND tn.nodeid IS NOT NULL 
+      SELECT nodeid, GROUP_CONCAT(tagtext) tags
+      FROM #{DB_PREFIX}tag t
+      LEFT JOIN #{DB_PREFIX}tagnode tn ON tn.tagid = t.tagid
+      WHERE t.tagid IS NOT NULL
+      AND tn.nodeid IS NOT NULL
       GROUP BY nodeid
     SQL
     ).to_a
