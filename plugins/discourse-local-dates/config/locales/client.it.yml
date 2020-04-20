@@ -12,6 +12,8 @@ it:
         today: Oggi %{time}
         tomorrow: Domani %{time}
         yesterday: Ieri %{time}
+        countdown:
+          passed: la data è passata
       title: Inserisci data / ora
       create:
         form:

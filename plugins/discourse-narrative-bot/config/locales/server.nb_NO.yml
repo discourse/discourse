@@ -188,8 +188,6 @@ nb_NO:
       bookmark:
         instructions: |-
           Hvis du ønsker å lære mer, velg <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> under og <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bokmerke denne personlige meldingen**. Hvis du gjør dette, venter det kanskje en :gift: på deg i fremtiden!
-        reply: |-
-          Strålende! Nå kan du enkelt finne tilbake til den private samtalen vår på et senere tidspunkt, rett fra [listen over bokmerker i profilen din](%{profile_page_url}/activity/bookmarks). Bare klikk på profilbildet ditt øverst til høyre. &#8599;
         not_found: |-
           Øh, jeg ser ingen bokmerker noe sted i dette emnet. Fant du bokmerket under hvert innlegg? Bruk "vis mer" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> knappen for å vise flere handlinger ved behov.
       emoji:

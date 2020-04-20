@@ -202,6 +202,12 @@ ro:
   too_late_to_edit: "Acea postare este prea veche. Nu mai poate fi editată sau ștearsă."
   revert_version_same: "Versiunea curentă este identică cu cea la care încerci să revii."
   excerpt_image: "imagine"
+  bookmarks:
+    reminders:
+      later_today: "Mai târziu azi"
+      tomorrow: "Mâine"
+      next_week: "Săptămâna viitoare"
+      next_month: "Luna viitoare"
   groups:
     errors:
       can_not_modify_automatic: "Nu poți modifica un grup automat"
@@ -537,6 +543,7 @@ ro:
         make: "Acest subiect este de acum un banner. Va apărea în susul fiecărei pagini până când opțiunea va fi anulată de către utilizator."
         remove: "Acest subiect nu mai este un banner. Nu va mai apărea în susul fiecărei pagini."
   unsubscribed:
+    description: "Setările de email pentru <b>%{email}</b>au fost actualizate. Pentru a schimba setările de email, <a href='%{url}'>du-te la setări.</a>"
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
     title: "Dezabonare"
@@ -834,8 +841,6 @@ ro:
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
-    summary_posts_required: "Minimul de postări într-un subiect înainte de a se activa 'Rezumă acest subiect'."
-    summary_likes_required: "Minimul de aprecieri într-un subiect înainte de a se activa 'Rezumă acest subiect'."
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
     enable_personal_messages: "Acordă nivelul de încredere 1 (configurabil via nivel minim de încredere pentru trimiterea de mesaje) utilizatorilor, pentru a le permite să creeze și să răspundă la mesaje. Atenție: echipa poate oricând să trimită mesaje, indiferent de setări."
     enable_long_polling: "Bus-ul de mesaje folosit pentru notificări poate utiliza long polling."
@@ -901,7 +906,6 @@ ro:
     enable_instagram_logins: "Activează autentificarea prin Instagram, necesită instagram_consumer_key și instagram_consumer_secret"
     instagram_consumer_key: "Cheie consumator pentru autentificarea Instagram"
     instagram_consumer_secret: "Autentificare Instagram pe bază de secret consumator"
-    readonly_mode_during_backup: "Activează modul exclusiv-citire în timpul operațiunii de backup"
     allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
@@ -1209,6 +1213,10 @@ ro:
     errors:
       different_topics: "Postările care aparțin unor subiecte diferite nu pot fi comasate."
       different_users: "Postările care aparțin unor utilizatori diferiți nu pot fi comasate."
+  publish_page:
+    slug_errors:
+      blank: "nu poate fi gol"
+      invalid: "conține caractere invalide"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Acest mesaj va fi închis automat după ce atinge limita de maximă de un răspuns."
@@ -1585,7 +1593,6 @@ ro:
       why: "Un rezumat scurt al %{site_link} de la ultima ta vizită din %{last_seen_at}."
       since_last_visit: "De la ultima ta vizită"
       new_topics: "Subiecte noi"
-      unread_messages: "Mesaje necitite"
       unread_notifications: "Notificări necitite"
       liked_received: "Aprecieri primite"
       new_users: "Utilizatori noi"
@@ -1593,6 +1600,8 @@ ro:
       follow_topic: "Urmărește acest subiect"
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
+      unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Poți schimba %{email_preferences_link} sau, pentru a te dezabona, %{unsubscribe_link}"
+      your_email_settings: "setările de email"
       click_here: "click aici"
       preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
     forgot_password:

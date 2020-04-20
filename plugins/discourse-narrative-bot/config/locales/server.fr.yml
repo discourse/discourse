@@ -232,8 +232,6 @@ fr:
       bookmark:
         instructions: |-
           Si vous souhaitez en savoir plus, sélectionnez <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en dessous et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ajouter ce message direct aux signets**. Si vous le faites, il pourrait y avoir un :gift: dans le futur !
-        reply: |-
-          Excellent ! Maintenant, vous pouvez facilement retrouver notre conversation privée à tout moment, à partir de [l'onglet marque page sur votre profil](%{profile_page_url}/activity/bookmarks). Sélectionnez juste votre photo de profil dans le coin en haut à droite &#8599;
         not_found: |-
           Uh oh, je ne vois aucun signet sur ce sujet ! Avez-vous trouvé le bouton signet sous chaque message ? Utilisez le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour dévoiler d'autres actions si nécessaire.
       emoji:

@@ -16,6 +16,8 @@ de:
     invalid_argument: "Ungültiger Wert '%{value}' für Argument '%{argument}'."
     multiple_polls_without_name: "Es gibt mehrere namenlose Umfragen. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
     multiple_polls_with_same_name: "Es gibt mehre Umfragen mit dem selben Namen: <strong>%{name}</strong>. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
+    default_poll_must_have_at_least_1_option: "Umfrage muss mindestens eine Auswahl haben."
+    named_poll_must_have_at_least_1_option: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss mindestens eine Auswahl haben."
     default_poll_must_have_less_options:
       one: "Die Umfrage muss weniger als eine Option haben."
       other: "Die Umfrage muss weniger als %{count} Optionen haben."
@@ -24,6 +26,8 @@ de:
       other: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss weniger als %{count} Optionen haben."
     default_poll_must_have_different_options: "Die Umfrage muss unterschiedliche Optionen haben."
     named_poll_must_have_different_options: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss unterschiedliche Optionen haben."
+    default_poll_must_not_have_any_empty_options: "Umfrage darf keine leere Auswahl haben."
+    named_poll_must_not_have_any_empty_options: "Die Umfrage mit dem Namen <strong>%{name}</strong> darf keine leere Auswahl haben."
     default_poll_with_multiple_choices_has_invalid_parameters: "Die Mehrfachauswahl-Umfrage hat ungültige Parameter."
     named_poll_with_multiple_choices_has_invalid_parameters: "Die Mehrfachauswahl-Umfrage mit dem Namen <strong>%{name}</strong> hat ungültige Parameter."
     requires_at_least_1_valid_option: "Du musst mindestens eine gültige Option auswählen."
@@ -40,3 +44,5 @@ de:
     insufficient_rights_to_create: "Du darfst keine Umfragen erstellen."
     email:
       link_to_poll: "Klicke hier, um die Umfrage zu sehen."
+    user_field:
+      no_data: "Keine Daten"

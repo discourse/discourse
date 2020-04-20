@@ -58,7 +58,6 @@ ca:
       no_multilevels_components: "Les aparences amb aparences filla no poden ser elles mateixes aparences  filles."
     settings_errors:
       invalid_yaml: "El YAML proveït no és vàlid"
-      data_type_not_a_number: "El paràmetre de tipus `%{name}` no és admès. Els tipus admesos són `integer`, `bool`, `list` i `enum`."
       name_too_long: "Hi ha un paràmetre amb un nom massa llarg. La longitud màxima és 255."
       default_value_missing: "El paràmetre `%{name}` no té un valor per defecte."
       default_not_match_type: "El tipus del valor per defecte del paràmetre `%{name}` no coincideix amb el tipus del paràmetre."
@@ -316,6 +315,12 @@ ca:
   edit_conflict: "Aquesta publicació ha estat editada per un altre usuari i els vostres canvis no es poden desar."
   revert_version_same: "La versió actual és la mateixa que la versió que intenteu revertir."
   excerpt_image: "imatge"
+  bookmarks:
+    reminders:
+      later_today: "Més tard avui"
+      tomorrow: "Demà"
+      next_week: "La setmana que ve"
+      next_month: "El mes que ve"
   groups:
     success:
       bulk_add:
@@ -345,7 +350,6 @@ ca:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Sol·licitud d'afiliació a @%{group_name}"
-      handle: "gestiona la sol·licitud d'afiliació"
     view_hidden_topic_request_reason: "Voldria unir-me al grup '%{group_name}' de manera que tingui accés a [aquest tema](%{topic_url})"
   education:
     until_posts:
@@ -1233,7 +1237,6 @@ ca:
   dashboard:
     rails_env_warning: "El vostre servidor s'executa en mode %{env}."
     host_names_warning: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
-    gc_warning: 'El servidor utilitza paràmetres d''alliberament de recursos (garbage collection) de Ruby per defecte que no us donaran el millor rendiment. Llegiu aquest article sobre l''ajust de rendiment: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a> .'
     sidekiq_warning: 'Sidekiq no s''està executant. Sidekiq fa que moltes tasques, com ara enviar correus electrònics, s''executin de manera asincrònica. Assegureu-vos que s''executa almenys un procés Sidekiq. <a href="https://github.com/mperham/sidekiq" target="_blank">Obtingueu informació sobre Sidekiq aquí</a> .'
     queue_size_warning: "El nombre de tasques en cua és de %{queue_size}, que és elevat. Això podria indicar un problema amb un o més processos, o potser us cal afegir més treballadors de <i>Sidekiq</i>."
     memory_warning: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
@@ -1341,8 +1344,6 @@ ca:
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
     same_site_cookies: "Utilitza les mateixes galetes del lloc web. Eliminen tots els vectors Cross Site Request Forgery (falsificació de petició entre llocs) en els navegadors compatibles (Lax o Strict). Advertència: Strict sols funcionarà en llocs que forcin l'inici de sessió i utilitzin SSO."
     summary_score_threshold: "La puntuació mínima requerida perquè una publicació sigui inclosa en 'Resumeix aquest tema'"
-    summary_posts_required: "Publicacions mínimes en un tema abans que sigui activat 'Resumeix aquest tema'"
-    summary_likes_required: "Nombre mínim de 'M'agrades' en un tema abans que sigui activat 'Resumeix aquest tema'"
     summary_percent_filter: "Quan un usuari fa clic en 'Resumeix aquest tema', mostra el % superior de les publicacions"
     summary_max_results: "Nombre màxim de publicacions retornades per \"Resumeix aquest tema\""
     enable_personal_messages: "Permet que els usuaris amb nivell de confiança 1 puguin crear missatges i respondre-hi (configurable amb nivell de confiança mínim per a enviar missatges). Observeu que l'equip responsable sempre pot enviar tota mena de missatges."
@@ -1478,7 +1479,6 @@ ca:
     discord_client_id: 'Identificador de client Discord (si us en cal un, visiteu <a href="https://discordapp.com/developers/applications/me">el portal de desenvolupadors Discord</a>)'
     discord_secret: "Clau secreta de Discord"
     discord_trusted_guilds: 'Permet sols als membres d''aquests gremis Discord iniciar sessió mitjançant Discord. Utilitzeu l''identificador numèric per al gremi. Per a obtenir més informació, consulteu les instruccions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Deixeu-ho en blanc per a permetre qualsevol gremi.'
-    readonly_mode_during_backup: "Activa el mode només de lectura mentre es fa la còpia de seguretat"
     enable_backups: "Permet als administradors crear còpies de seguretat del fòrum"
     allow_restore: "Permet restaurar, cosa que pot reemplaçar TOTES les dades del lloc web! Deixeu-ho com a \"fals\" si no preteneu restaurar una còpia de seguretat."
     maximum_backups: "Nombre màxim de còpies de seguretat que es mantenen en el disc. Les còpies més antigues seran suprimides automàticament."
@@ -1608,11 +1608,13 @@ ca:
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
     category_colors: "Llista de valors de color hexadecimal permesos per a categories."
     category_style: "Estil visual per a insígnies de categoria."
+    max_image_size_kb: "Mida màxima de càrrega d'imatge en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també. Les imatges més grans que aquest límit i més petites que client_max_body_size es redimensionaran en la càrrega."
     max_attachment_size_kb: "Mida màxima de càrrega de fitxers adjunts en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
     authorized_extensions: "Llista d'extensions de fitxer permeses per a carregar (feu servir '*' per a habilitar tota mena de fitxers)"
     authorized_extensions_for_staff: "Llista d'extensions permeses als usuaris de l'equip responsable en carregar fitxers a més de la llista definida en el paràmetre `authorized_extensions` de la configuració. (Feu servir \"*\" per a habilitar tots els tipus de fitxers.)"
     theme_authorized_extensions: "Llista d'extensions de fitxers permeses per a càrregues d'aparences (utilitzeu '*' per a permetre tots els tipus de fitxers)"
     max_similar_results: "Quants temes semblants es mostren per damunt de l'editor quan es redacta un tema nou. La comparació es basa en el títol i el cos."
+    max_image_megapixels: "Nombre màxim de megapíxels permesos en una imatge. Es rebutjaran les imatges amb un nombre més alt de megapíxels. "
     title_prettify: "Evita errades tipogràfiques freqüents en el títol, incloent-hi tot en majúscula, primer caràcter en minúscula, exclamacions i interrogants múltiples, punts extres al final, etc."
     title_remove_extraneous_space: "Elimina els espais blancs de davant de la puntuació final."
     automatic_topic_heat_values: 'Actualitza automàticament els paràmetres de "topic views heat" i "topic post like heat" basant-se en l''activitat del lloc web. '
@@ -1967,6 +1969,10 @@ ca:
       other: "%{count} publicacions s'han combinat en un missatge existent: %{topic_link}"
   change_owner:
     post_revision_text: "Propietat transferida"
+  publish_page:
+    slug_errors:
+      blank: "no pot ser buit"
+      invalid: "conté caràcters no vàlids"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Aquest missatge s'ha tancat automàticament després d'arribar al límit màxim d'%{count} resposta."
@@ -2699,7 +2705,6 @@ ca:
       why: "Un resum breu de %{site_link} des de la vostra darrera visita el  %{last_seen_at}"
       since_last_visit: "Des de la vostra darrera visita"
       new_topics: "Temes nous"
-      unread_messages: "Missatges no llegits"
       unread_notifications: "Alertes sense llegir"
       liked_received: "M'agrades rebuts"
       new_users: "Usuaris nous"
@@ -3036,11 +3041,17 @@ ca:
         Aquesta insígnia es concedeix quan rebeu 5 'M'agrada' en 300 publicacions diferents. Molt bé! La comunitat admira les vostres aportacions freqüents i d'alta gran qualitat a les converses!
     out_of_love:
       name: Sense amor
+      long_description: |
+        Aquesta insígnia es concedeix quan gasteu tots els %{max_likes_per_day} dels vostres 'M'agrada' diaris. Dedicar un temps a mostrar estima per les publicacions que us han agradat encoratja els membres de la comunitat a crear discussions encara millors en el futur.
     higher_love:
       name: Un amor més elevat
+      long_description: |
+        Aquesta insígnia es concedeix quan gasteu tots els %{max_likes_per_day} dels vostres 'M'agrada' diaris durant 5 dies. Gràcies per animar activament les millors converses cada dia.
     crazy_in_love:
       name: Boig d'amor
       description: Ha fet servir 50 'M'agrada' en un dia 20 vegades
+      long_description: |
+        Aquesta insígnia es concedeix quan utilitzeu tots els vostres %{max_likes_per_day} 'm'agrada' diaris durant vint dies. Oh! Sou un model per a animar els companys de comunitat!
     thank_you:
       name: Gràcies
       description: Té 20 publicacions amb 'm'agrada' i ha donat 10 'm'agrada'

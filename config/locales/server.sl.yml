@@ -176,6 +176,12 @@ sl:
     badge: "%{display_name} značka na %{site_title}"
   edit_conflict: "Ta prispevek je bil spremenjen s strani drugega uporabnika zato ne moremo shraniti vaših sprememb."
   excerpt_image: "slika"
+  bookmarks:
+    reminders:
+      later_today: "Kasneje v dnevu"
+      tomorrow: "Jutri"
+      next_week: "Naslednji teden"
+      next_month: "Naslednji mesec"
   groups:
     errors:
       already_requested_membership: "Za članstvo v tej skupini ste že zaprosili."
@@ -1586,7 +1592,6 @@ sl:
       why: "Kratek povzetek %{site_link} od vašega zadnjega obiska %{last_seen_at}"
       since_last_visit: "Od vašega zadnjega obiska"
       new_topics: "Nove teme"
-      unread_messages: "Neprebrana zasebna sporočila"
       unread_notifications: "Neprebrana obvestila"
       liked_received: "Prejeti všečki"
       new_users: "Novi uporabniki"

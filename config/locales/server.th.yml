@@ -182,6 +182,9 @@ th:
     types:
       category: "หมวดหมู่"
       user: "ผู้ใช้"
+  publish_page:
+    slug_errors:
+      invalid: "มีตัวอักษรที่ไม่สามารถใช้งานได้"
   login:
     admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
   subject_re: "ตอบ: "
