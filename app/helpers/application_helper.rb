@@ -513,4 +513,14 @@ module ApplicationHelper
     !SiteSetting.invite_only &&
     !SiteSetting.enable_sso
   end
+
+  def rss_creator(user)
+    if user
+      if SiteSetting.prioritize_username_in_ux
+        "#{user.username}"
+      else
+        "#{user.name.presence || user.username }"
+      end
+    end
+  end
 end

@@ -12,23 +12,15 @@
       <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
       <% @topic_list.topics.each do |topic| %>
         <% topic_url = topic.url -%>
-        <% username = topic.user ? topic.user.username : "" %>
-        <% name = topic.user ? topic.user.name : "" %>
         <item>
           <title><%= topic.title %></title>
-          <dc:creator><![CDATA[<%= "@#{username}#{" #{name}" if (name.present? && SiteSetting.enable_names?)}" -%>]]></dc:creator>
+          <dc:creator><![CDATA[<%= rss_creator(topic.user) -%>]]></dc:creator>
           <category><%= topic.category.name %></category>
           <description><![CDATA[
-            <% if username.present? %>
-            <p><%= t('author_wrote', author: link_to("@#{username}", "#{Discourse.base_url}/u/#{url_encode(topic.user.username_lower)}")).html_safe %></p>
-            <% end %>
-            <blockquote>
-              <%- if first_post = topic.ordered_posts.first %>
-              <%= first_post.cooked.html_safe %>
-              <%- end %>
-            </blockquote>
-            <p><%= t 'num_posts' %> <%= topic.posts_count %></p>
-            <p><%= t 'num_participants' %> <%= topic.participant_count %></p>
+            <%- if first_post = topic.ordered_posts.first %>
+            <%= first_post.cooked.html_safe %>
+            <%- end %>
+            <p><small><%= t 'rss_num_posts', count: topic.posts_count %> - <%= t 'rss_num_participants', count: topic.participant_count %></small></p>
             <p><%= link_to t('read_full_topic'), topic_url %></p>
           ]]></description>
           <link><%= topic_url %></link>
