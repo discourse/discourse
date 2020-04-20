@@ -4,13 +4,13 @@ import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
-import { EventTarget } from "rsvp";
+import Evented from "@ember/object/evented";
 
 const SCROLL_DELAY = 500;
 
 import showModal from "discourse/lib/show-modal";
 
-const TopicRoute = DiscourseRoute.extend({
+const TopicRoute = DiscourseRoute.extend(Evented, {
   init() {
     this._super(...arguments);
 
@@ -332,5 +332,4 @@ const TopicRoute = DiscourseRoute.extend({
   }
 });
 
-EventTarget.mixin(TopicRoute);
 export default TopicRoute;

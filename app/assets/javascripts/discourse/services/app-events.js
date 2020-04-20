@@ -3,7 +3,10 @@ import Evented from "@ember/object/evented";
 import Service from "@ember/service";
 
 export default Service.extend(Evented, {
-  _events: {},
+  init() {
+    this._super(...arguments);
+    this._events = {};
+  },
 
   on() {
     if (arguments.length === 2) {
