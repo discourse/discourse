@@ -75,6 +75,7 @@ describe TopicEmbed do
       end
 
       it "will make the topic unlisted if `embed_unlisted` is set until someone replies" do
+        Jobs.run_immediately!
         SiteSetting.embed_unlisted = true
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
         expect(imported_post.topic).not_to be_visible

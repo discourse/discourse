@@ -186,7 +186,6 @@ class PostCreator
         @post.link_post_uploads
         update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
-        make_visible
         unarchive_message
         if !@opts[:import_mode]
           DraftSequence.next!(@user, draft_key)
@@ -412,17 +411,6 @@ class PostCreator
                                            )', @user.id).exists?
         @topic.topic_allowed_users.create!(user_id: @user.id)
       end
-    end
-  end
-
-  def make_visible
-    return unless SiteSetting.embed_unlisted?
-    return unless @post.post_number > 1
-    return if @post.topic.visible?
-    return if @post.post_type != Post.types[:regular]
-
-    if embed = @post.topic.topic_embed
-      @post.topic.update_status('visible', true, @user)
     end
   end
 
