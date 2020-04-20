@@ -132,7 +132,7 @@ export const TIMEFRAMES = [
   buildTimeframe({
     id: "six_months",
     format: "MMM D",
-    enabled: opts => opts.includeFarFuture,
+    enabled: opts => opts.includeMidFuture,
     when: (time, timeOfDay) =>
       time
         .add(6, "month")

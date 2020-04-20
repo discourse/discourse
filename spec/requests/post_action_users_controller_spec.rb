@@ -15,8 +15,8 @@ describe PostActionUsersController do
 
       get "/post_action_users.json", params: { id: post.id, post_action_type_id: notify_mod }
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
-      users = json["post_action_users"]
+
+      users = response.parsed_body["post_action_users"]
 
       expect(users.length).to eq(1)
       expect(users[0]["id"]).to eq(post.user.id)
@@ -69,14 +69,27 @@ describe PostActionUsersController do
 
     get "/post_action_users.json",
       params: { id: post.id, post_action_type_id: PostActionType.types[:like], page: 1, limit: 2 }
-    json = JSON.parse(response.body)
 
-    users = json["post_action_users"]
-    total = json["total_rows_post_action_users"]
+    users = response.parsed_body["post_action_users"]
+    total = response.parsed_body["total_rows_post_action_users"]
 
     expect(users.length).to eq(2)
     expect(users.map { |u| u["id"] }).to eq(user_ids[2..3])
 
     expect(total).to eq(5)
+  end
+
+  it 'returns no users when the action type id is invalid' do
+    get "/post_action_users.json", params: {
+      id: post.id, post_action_type_id: "invalid_action_type"
+    }
+
+    expect(response.status).to eq(200)
+
+    users = response.parsed_body["post_action_users"]
+    total = response.parsed_body["total_rows_post_action_users"]
+
+    expect(users.length).to eq(0)
+    expect(total).to be_nil
   end
 end

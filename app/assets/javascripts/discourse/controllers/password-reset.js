@@ -54,7 +54,8 @@ export default Controller.extend(PasswordValidation, {
           password: this.accountPassword,
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,
-          second_factor_method: this.secondFactorMethod
+          second_factor_method: this.secondFactorMethod,
+          timezone: moment.tz.guess()
         }
       })
         .then(result => {
