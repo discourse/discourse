@@ -16,7 +16,8 @@ class BadgeGranter
     return unless badge.enabled?
 
     system_user_id = Discourse.system_user.id
-    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: Time.now } }
+    now = Time.zone.now
+    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now } }
     granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
 
     users.each do |user|
@@ -325,8 +326,8 @@ class BadgeGranter
 
     sql = <<~SQL
       WITH w as (
-        INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
-        SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}
+        INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, created_at, post_id)
+        SELECT :id, q.user_id, q.granted_at, -1, current_timestamp, #{post_id_field}
           FROM (
                  #{badge.query}
                ) q
