@@ -75,7 +75,7 @@ describe TopicTrackingState do
   describe '#publish_muted' do
     it "can correctly publish muted" do
       TopicUser.find_by(topic: post.topic, user: post.user).update(notification_level: 0)
-      message = MessageBus.track_publish(described_class.muted_channel_key(post.user.id)) do
+      message = MessageBus.track_publish("/muted-topics") do
         TopicTrackingState.publish_muted(post)
       end.first
 
@@ -86,7 +86,7 @@ describe TopicTrackingState do
     end
 
     it 'should not publish any message when notification level is not muted' do
-      messages = MessageBus.track_publish(described_class.muted_channel_key(post.user.id)) do
+      messages = MessageBus.track_publish("/muted-topics") do
         TopicTrackingState.publish_muted(post)
       end
 

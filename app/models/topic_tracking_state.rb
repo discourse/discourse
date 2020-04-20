@@ -72,18 +72,13 @@ class TopicTrackingState
     "/unread/#{user_id}"
   end
 
-  def self.muted_channel_key(user_id)
-    "/muted/#{user_id}"
-  end
-
   def self.publish_muted(post)
-    post.topic.topic_users.where(notification_level: NotificationLevels.all[:muted]).order(notifications_changed_at: :desc).limit(100).pluck(:user_id).each do |user_id|
-      message = {
-        topic_id: post.topic_id,
-        message_type: MUTED_MESSAGE_TYPE,
-      }
-      MessageBus.publish(self.muted_channel_key(user_id), message.as_json)
-    end
+    user_ids = post.topic.topic_users.where(notification_level: NotificationLevels.all[:muted]).order(notifications_changed_at: :desc).limit(100).pluck(:user_id)
+    message = {
+      topic_id: post.topic_id,
+      message_type: MUTED_MESSAGE_TYPE,
+    }
+    MessageBus.publish("/muted-topics", message.as_json, user_ids: user_ids) if user_ids.present?
   end
 
   def self.publish_unread(post)

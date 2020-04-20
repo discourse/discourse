@@ -116,13 +116,10 @@ const TopicTrackingState = EmberObject.extend({
 
     this.messageBus.subscribe("/new", process);
     this.messageBus.subscribe("/latest", process);
+    this.messageBus.subscribe("/muted-topics", process);
     if (this.currentUser) {
       this.messageBus.subscribe(
         "/unread/" + this.currentUser.get("id"),
-        process
-      );
-      this.messageBus.subscribe(
-        "/muted/" + this.currentUser.get("id"),
         process
       );
     }
