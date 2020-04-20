@@ -354,8 +354,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
     total_count = uploads.count
 
     uploads.each do |upload|
-      post_id = PostCustomField.where(:name => 'import_id').where(:value => upload['nodeid']).first&.post_id
-      post_id = PostCustomField.where(:name => 'import_id').where(:value => "thread-#{upload['nodeid']}").first&.post_id unless post_id
+      post_id = PostCustomField.where(name: 'import_id').where(value: upload['nodeid']).first&.post_id
+      post_id = PostCustomField.where(name: 'import_id').where(value: "thread-#{upload['nodeid']}").first&.post_id unless post_id
       if post_id.nil?
         puts "Post for #{upload['nodeid']} not found"
         next
@@ -664,7 +664,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       AND parentid=#{ROOT_NODE};
     SQL
     cats.each do |c|
-      category_id = CategoryCustomField.where(:name => 'import_id').where(:value => c['nodeid']).first.category_id
+      category_id = CategoryCustomField.where(name: 'import_id').where(value: c['nodeid']).first.category_id
       Permalink.create(url: "#{URL_PREFIX}#{c['urlident']}", category_id: category_id) rescue nil
     end
 
@@ -677,7 +677,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       AND n1.contenttypeid=#{@channel_typeid};
     SQL
     subcats.each do |sc|
-      category_id = CategoryCustomField.where(:name => 'import_id').where(:value => sc['nodeid']).first.category_id
+      category_id = CategoryCustomField.where(name: 'import_id').where(value: sc['nodeid']).first.category_id
       Permalink.create(url: "#{URL_PREFIX}#{sc['p1']}/#{sc['p2']}", category_id: category_id) rescue nil
     end
   end
