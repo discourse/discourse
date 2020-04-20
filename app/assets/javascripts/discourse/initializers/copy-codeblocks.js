@@ -87,17 +87,17 @@ export default {
           clipboardCopy(code.innerText.trim()).then(() => {
             button.classList.add("copied");
 
-            const commandId = button.dataset.commandId;
+            const commandId = Ember.guidFor(button);
 
             if (_fadeCopyCodeblocksRunners[commandId]) {
               cancel(_fadeCopyCodeblocksRunners[commandId]);
               delete _fadeCopyCodeblocksRunners[commandId];
             }
 
-            _fadeCopyCodeblocksRunners[commandId] = later(
-              () => button.classList.remove("copied"),
-              3000
-            );
+            _fadeCopyCodeblocksRunners[commandId] = later(() => {
+              button.classList.remove("copied");
+              delete _fadeCopyCodeblocksRunners[commandId];
+            }, 3000);
           });
         }
       }
@@ -124,21 +124,32 @@ export default {
         }
 
         const postElement = postElements[0];
-        _copyCodeblocksClickHandlers[post.id] = postElement;
 
-        commands.forEach((command, commandIndex) => {
+        commands.forEach(command => {
           const button = document.createElement("button");
           button.classList.add("btn", "nohighlight", "copy-cmd");
           button.innerHTML = iconHTML("copy");
-          button.dataset.commandId = `${post.id}-${commandIndex}`;
           command.before(button);
           command.parentElement.classList.add("copy-codeblocks");
         });
 
+        if (_copyCodeblocksClickHandlers[post.id]) {
+          _copyCodeblocksClickHandlers[post.id].removeEventListener(
+            "click",
+            _handleClick
+          );
+
+          delete _copyCodeblocksClickHandlers[post.id];
+        }
+
+        _copyCodeblocksClickHandlers[post.id] = postElement;
         postElement.addEventListener("click", _handleClick, false);
       }
 
-      api.decorateCooked(_attachCommands, { id: "copy-codeblocks" });
+      api.decorateCooked(_attachCommands, {
+        onlyStream: true,
+        id: "copy-codeblocks"
+      });
 
       api.cleanupStream(_cleanUp);
     });
