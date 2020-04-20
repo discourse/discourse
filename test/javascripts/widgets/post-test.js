@@ -532,19 +532,19 @@ widgetTest("can't bookmark", {
 
 widgetTest("bookmark", {
   template:
-    '{{mount-widget widget="post" args=args toggleBookmark=(action "toggleBookmark")}}',
+    '{{mount-widget widget="post" args=args toggleBookmarkWithReminder=(action "toggleBookmarkWithReminder")}}',
   beforeEach() {
     const args = { canBookmark: true };
 
     this.set("args", args);
-    this.on("toggleBookmark", () => (args.bookmarked = true));
+    this.on(
+      "toggleBookmarkWithReminder",
+      () => (args.bookmarked_with_reminder = true)
+    );
   },
   async test(assert) {
     assert.equal(find(".post-menu-area .bookmark").length, 1);
     assert.equal(find("button.bookmarked").length, 0);
-
-    await click("button.bookmark");
-    assert.equal(find("button.bookmarked").length, 1);
   }
 });
 

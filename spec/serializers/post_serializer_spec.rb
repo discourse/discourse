@@ -271,20 +271,6 @@ describe PostSerializer do
           end
         end
       end
-
-      context "when the site setting for bookmarks with reminders is disabled" do
-        before do
-          SiteSetting.enable_bookmarks_with_reminders = false
-        end
-
-        it "does not return the bookmarked_with_reminder attribute" do
-          expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
-        end
-
-        it "does not return the bookmark_reminder_at attribute" do
-          expect(serialized.as_json.key?(:bookmark_reminder_at)).to eq(false)
-        end
-      end
     end
   end
 
