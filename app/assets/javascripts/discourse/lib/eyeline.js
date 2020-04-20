@@ -78,24 +78,12 @@ Eyeline.prototype.update = function() {
 
     // If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
     if (!atBottom) {
-      appEvents.trigger("saw", { detail: $elem });
       return false;
     }
     if (i === $elements.length - 1) {
       return appEvents.trigger("sawBottom", { detail: $elem });
     }
   });
-};
-
-//  Call this when we know aren't loading any more elements. Mark the rest as seen
-Eyeline.prototype.flushRest = function() {
-  if (ENV.environment === "test") {
-    return;
-  }
-
-  $(this.selector).each((i, elem) =>
-    this.appEvents.trigger("saw", { detail: $(elem) })
-  );
 };
 
 export default Eyeline;
