@@ -419,6 +419,7 @@ class PostCreator
     return unless SiteSetting.embed_unlisted?
     return unless @post.post_number > 1
     return if @post.topic.visible?
+    return if @post.post_type != Post.types[:regular]
 
     if embed = @post.topic.topic_embed
       @post.topic.update_status('visible', true, @user)
