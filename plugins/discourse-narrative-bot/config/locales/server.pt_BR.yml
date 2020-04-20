@@ -232,8 +232,6 @@ pt_BR:
       bookmark:
         instructions: |-
           Se você quiser saber mais, selecione <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> abaixo e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marque esta mensagem pessoal como favorita**. Se você fizer isto, pode haver um :gift: no seu futuro!
-        reply: |-
-          Excelente! Agora você pode encontrar facilmente o caminho de volta à nossa conversa particular a qualquer momento, diretamente da [guia de favoritos no seu perfil](%{profile_page_url}/activity/bookmarks). É só selecionar sua foto de perfil no canto superior direito &#8599;
         not_found: |-
           Oh oh, não vejo nenhum favorito neste tópico. Você encontrou o marcador embaixo de cada postagem? Use o mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar ações adicionais, se necessário.
       emoji:

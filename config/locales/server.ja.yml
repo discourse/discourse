@@ -55,7 +55,6 @@ ja:
       no_multilevels_components: "子テーマ自身を子テーマのテーマにはできません"
     settings_errors:
       invalid_yaml: "入力されたYAMLは不正です"
-      data_type_not_a_number: "%{name}型の設定はサポートされていません。サポートされている型は `integer`、`bool`、`list`、`enum`です。"
       name_too_long: "長すぎる名前の設定があります。長さの最大値は255です。"
       default_value_missing: "設定%{name}はデフォルト値を持っていません"
       default_not_match_type: "設定%{name}のデフォルト値の型が、設定の型と合致しません"
@@ -217,6 +216,12 @@ ja:
     tag: "タグされたトピック"
   too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
   excerpt_image: "画像"
+  bookmarks:
+    reminders:
+      later_today: "今日中"
+      tomorrow: "明日"
+      next_week: "来週"
+      next_month: "来月"
   groups:
     errors:
       invalid_incoming_email: "%{email}のメール認証に失敗しました\U0001F62D"
@@ -796,8 +801,6 @@ ja:
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインはSPF、DKIM、逆引きPTRレコードが正しく設定されている必要があります。"
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
     summary_score_threshold: "'トピックサマリー'に投稿が含まれるために必要な最低スコア"
-    summary_posts_required: "'トピックサマリー'が有効になるために必要な最小投稿数"
-    summary_likes_required: "'トピックサマリー'が有効になるために必要な最小「いいね!」数"
     summary_percent_filter: "ユーザが'トピックサマリー'をクリックしたとき, 上位何パーセントのポストを表示するか"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_base_url: "ロングポーリングのベースURL(CDNが動的コンテンツを配信している場合、これをoriginに指定してください) eg: http://origin.site.com"
@@ -1030,6 +1033,10 @@ ja:
   move_posts:
     existing_topic_moderator_post:
       other: "%{count}つのポストが存在するトピックに統合されました：%{topic_link}"
+  publish_page:
+    slug_errors:
+      blank: "を入力してください"
+      invalid: "は不正な文字を含んでいます"
   topic_statuses:
     autoclosed_message_max_posts:
       other: "このメッセージは%{count}つの返信に達した時に自動的に閉じます。"
@@ -1254,7 +1261,6 @@ ja:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
       since_last_visit: "最後の訪問"
       new_topics: "新しいトピック"
-      unread_messages: "未読メッセージ"
       unread_notifications: "未読通知"
       liked_received: "いいねを受領"
       new_users: "新しいユーザー"

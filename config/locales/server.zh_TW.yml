@@ -55,7 +55,6 @@ zh_TW:
       no_multilevels_components: "含有兒童佈景主題的主題本身不能是兒童佈景主題"
     settings_errors:
       invalid_yaml: "提供的 YAML 無效"
-      data_type_not_a_number: "不支援 `%{name}` 類型設定。支援類型有：`integer`, `bool`, `list` 及`enum`"
       name_too_long: "此設定名稱過長，長度上限為 255"
       default_value_missing: "`%{name}` 設定沒有預設數值"
       default_not_match_type: "`%{name}` 設定的預設值類型與此設定類型不相符。"
@@ -281,6 +280,12 @@ zh_TW:
   edit_conflict: "那篇貼文已被另一位使用者編輯過，您更改的內容無法被儲存。"
   revert_version_same: "您試圖回復的版本和當前版本相同。"
   excerpt_image: "圖片"
+  bookmarks:
+    reminders:
+      later_today: "今日稍晚"
+      tomorrow: "明天"
+      next_week: "下週"
+      next_month: "下個月"
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任層級。"
@@ -305,7 +310,6 @@ zh_TW:
       trust_level_4: "信任等級 4"
     request_membership_pm:
       title: "@%{group_name} 的群組會員要求"
-      handle: "處理會員申請"
   education:
     until_posts:
       other: "%{count} 篇貼文"
@@ -1123,7 +1127,6 @@ zh_TW:
   dashboard:
     rails_env_warning: "伺服器現在運行 %{env} 模式。"
     host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
-    gc_warning: '伺服器正在使用的 Ruby 可能僅啟用了預設的 垃圾回收設定 （garbage collection），這個設定無法提供最佳效能。請瀏覽此效能設定的資訊：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
     queue_size_warning: "隊列中有較多任務，為 %{queue_size} 個。這可能是因為 Sidekiq 進程的問題導致，或者需要更多的 Sidekiq 進程。"
     memory_warning: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
@@ -1225,8 +1228,6 @@ zh_TW:
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
     same_site_cookies: "使用同一網站的Cookie，它們消除所有載體上支持的瀏覽器（LAX或嚴格模式）跨站請求偽造。警告：嚴格只會在強制登錄和使用SSO的網站執行。"
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
-    summary_posts_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小的貼文的數量"
-    summary_likes_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小得到\"讚\"的數量"
     summary_percent_filter: "當使用者點擊 \"此話題的摘要\"，顯示前面多少 % 的貼文"
     summary_max_results: "“概括主題”將顯示最大貼文數量"
     enable_personal_messages: "允許信任等級1（可以另外選擇發送消息的信任等級）的使用者建立訊息和回覆訊息。注意：管理人員不受限制。"
@@ -1350,7 +1351,6 @@ zh_TW:
     enable_github_logins: "開啟 Github 登入驗證，需要填寫 github_client_id 及 github_client_secret。參閱<a href='https://meta.discourse.org/t/13745' target='_blank'>設定 在Discourse Github 登入官方文件</a>\b"
     github_client_id: "Github 帳號驗證的使用者端帳號（Client id），到 <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/applications </a>來註冊取得 Client id"
     github_client_secret: "Github 帳號驗證的使用者端密碼（Client secret），到 <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers </a>來註冊取得 Client secret"
-    readonly_mode_during_backup: "備份時啟用只讀模式"
     enable_backups: "允許管理員建立備份"
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
@@ -1806,6 +1806,10 @@ zh_TW:
       other: "%{count}則貼文被合併到一個已存在的訊息：%{topic_link}"
   change_owner:
     post_revision_text: "\b所有權已被轉讓"
+  publish_page:
+    slug_errors:
+      blank: "不能空白"
+      invalid: "包含無效字詞"
   topic_statuses:
     autoclosed_message_max_posts:
       other: "消息中回覆已經達到上限 %{count}，自動鎖定。"
@@ -2679,7 +2683,6 @@ zh_TW:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       since_last_visit: "自你上次訪問至今"
       new_topics: "新主題"
-      unread_messages: "未讀私訊"
       unread_notifications: "未讀通知"
       liked_received: "獲得贊"
       new_users: "新使用者"

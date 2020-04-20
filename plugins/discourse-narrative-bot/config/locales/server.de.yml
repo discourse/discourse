@@ -28,6 +28,12 @@ de:
     bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne irgendwo **`@%{discobot_username}`**, um mit mir zu interagieren."
     tl2_promotion_message:
       subject_template: "Herzlichen Glückwunsch zur Beförderung ihrer Vertrauensstufe!"
+      text_body_template: |
+        Da du befördert worden bist, ist es an der Zeit etwas über die erweiterten Funktionen zu lernen!
+
+        Antworte auf diese Nachricht mit `@%{discobot_username} %{reset_trigger}` um herauszufinden, was du noch alles machen kannst.
+
+        Wir laden dich ein, dich weiter zu engagieren – wir freuen uns, dass du hier bist.
     timeout:
       message: |-
         Hallo @%{username}! Ich wollte mich nur wieder einmal melden, weil ich schon länger nichts von dir gehört habe.
@@ -120,6 +126,15 @@ de:
 
           `@%{discobot_username} %{reset_trigger} {Name-des-Tutorials}`
           > Startet ein interaktives Tutorial. `{Name-des-Tutorials}` kann eins von: `%{tracks}` sein.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Du kannst dich darauf verlassen
       do_not_understand:
         first_response: |-
           Danke für die Antwort!
@@ -217,8 +232,6 @@ de:
       bookmark:
         instructions: |-
           Wenn du gerne mehr darüber erfahren möchtest, wähle unten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> aus und klicke auf <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **Lesezeichen für diese Nachricht**. Wenn du das machst, wird es demnächst vielleicht ein :gift: geben!
-        reply: |-
-          Hervorragend! Jetzt kannst du jederzeit über [den Lesezeichen-Reiter in deinem Profil](%{profile_page_url}/activity/bookmarks) zu unserer Unterhaltung zurückkehren. Gehe dazu einfach auf dein Profilbild oben rechts &#8599;.
         not_found: |-
           Oh weh, ich sehe keine Lesezeichen in diesem Thema. Hast du das Lesezeichen unter jedme Beitrag gefunden? Verwende das „Mehr anzeigen“-Symbol <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, um bei Bedarf weitere Aktionen anzuzeigen.
       emoji:

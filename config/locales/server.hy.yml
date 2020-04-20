@@ -55,7 +55,6 @@ hy:
       no_multilevels_components: "Դուստր-թեմա ունեցող թեմաները չեն կարող լինել իրենք իրենց դուստր-թեմա"
     settings_errors:
       invalid_yaml: "Տրված YAML -ը անվավեր է:"
-      data_type_not_a_number: "Կարգավորման `%{name}` տիպը չի ապահովվում: Ապահովվող տիպերն են՝ `integer`, `bool`, `list` և `enum` :"
       name_too_long: "Չափազանց երկար անունով կարգավորում կա: Առավելագույն երկարությունն է 255:"
       default_value_missing: " `%{name}` կարգավորումը չունի լռելյայն արժեք"
       default_not_match_type: "Կարգավորման `%{name}` լռելյայն արժեքի տիպը չի համապատասխանում կարգավորման տիպին:"
@@ -291,6 +290,12 @@ hy:
   edit_conflict: "Այդ գրառումը խմբագրվել է մեկ այլ օգտաիրոջ կողմից, և Ձեր փոփոխությունները այլևս չեն կարող պահպանվել:"
   revert_version_same: "Ընթացիկ տարբերակը նույնն է, ինչ այն, որը Դուք փորձում եք վերադարձնել:"
   excerpt_image: "նկար"
+  bookmarks:
+    reminders:
+      later_today: "Այսօր, մի փոքր ուշ"
+      tomorrow: "Վաղը"
+      next_week: "Հաջորդ շաբաթ"
+      next_month: "Հաջորդ ամիս"
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' -ը վավեր վստահության մակարդակ չէ:"
@@ -1082,7 +1087,6 @@ hy:
   dashboard:
     rails_env_warning: "Ձեր սերվերը աշխատում է %{env} ռեժիմով:"
     host_names_warning: "Ձեր config/database.yml ֆայլը օգտագործում է լռելյայն localhost հոսթի անուն: Թարմացրեք այն Ձեր կայքի հոսթի անունով:"
-    gc_warning: 'Ձեր սերվերը լռելյայն օգտագործում է ruby garbage collection պարամետրեր, որը լավագույն կատարողականություն չի տա: Կարդացեք կատարողականության կարգավորման մասին այս թեման՝ <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Ruby and Rails -ի կարգավորում Discourse-ի համար</a>:'
     sidekiq_warning: 'Sidekiq -ը չի աշխատում: Շատ առաջադրանքներ, օրինակ՝ էլ. նամակների ուղարկումը, անհամաժամորեն(asynchronously) իրականացվում են sidekiq -ի կողմից: Խնդրում ենք համոզվել, որ առնվազն մեկ sidekiq գործընթաց աշխատում է: <a href="https://github.com/mperham/sidekiq" target="_blank">Իմացեք Sidekiq -ի մասին այստեղ</a>:'
     queue_size_warning: "Սպասող job-երի քանակը %{queue_size} է, ինչը բարձր է: Սա կարող է խնդիր առաջացնել Sidekiq գործընթաց(ներ)ի հետ, կամ հնարավոր է՝ կարիք լինի ավելացնելու ավելի շատ Sidekiq աշխատողների:"
     memory_warning: "Ձեր սերվերն աշխատում է 1 ԳԲ-ից քիչ ընդհանուր հիշողությամբ: Խորհուրդ է տրվում առնվազն 1 ԳԲ հիշողություն:"
@@ -1179,8 +1183,6 @@ hy:
     force_https: "Պարտադրեք Ձեր կայքին օգտագործել միայն HTTPS: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ ՄԻ միացրեք սա, քանի դեռ համոզված չեք, որ HTTPS -ը ամբողջությամբ կարգավորված է և աշխատում է բացառապես ամենուր! Դուք ստուգե՞լ եք նաև Ձեր CDN-ը, բոլոր սոցիալական կայքերը և ցանկացած արտաքին լոգո / կախյալներ՝ համոզվելու համար, որ դրանք բոլորը համատեղելի են HTTPS -ի հետ:"
     same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
     summary_score_threshold: "'Ամփոփել Այս Թեման'-ի մեջ ներառման համար անհրաժեշտ գրառման նվազագույն միավորը"
-    summary_posts_required: "Թեմայի նվազագույն գրառումները՝ մինչ 'Ամփոփել Այս Թեման' միացնելը"
-    summary_likes_required: "Թեմայի նվազագույն հավանումները՝ մինչ 'Ամփոփել Այս Թեման' միացնելը"
     summary_percent_filter: "Երբ օգտատերը սեղմում է 'Ամփոփել Այս Թեման' , ցուցադրել գրառումների թոփ %-ը"
     summary_max_results: "'Ամփոփել Այս Թեման' -ի կողմից վերադարձված առավելագույն գրառումները"
     enable_personal_messages: "Թույլատրել վստահության 1-ին մակարդակի (կարգավորվում է հաղորդագրություններ ուղարկելու համար նվազագույն վստահության մակարդակի միջոցով) օգտատերերին ստեղծել և պատասխանել հաղորդագրություններին: Նկատի ունեցեք, որ անձնակազմը միշտ կարող է ուղարկել հաղորդագրություն, կապ չունի թե ինչպիսի:"
@@ -1299,7 +1301,6 @@ hy:
     enable_github_logins: "Միացնել Github-ով վավերականացումը, պահանջում է github_client_id և github_client_secret: Այցելեք <a href='https://meta.discourse.org/t/13745' target='_blank'>GitHub-ով մուտքի կարգավորումը Discourse -ի համար</a>:"
     github_client_id: "Հաճախորդի id-ն Github-ով վավերականացման համար, որը գտնվում է այստեղ՝ <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Հաճախորդի գաղտնի արժեքը Github-ով վավերականացման համար, որը գտնվում է այստեղ՝ <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    readonly_mode_during_backup: "Պահուստ ստեղծելիս միացնել միայն կարդալու համար ռեժիմը"
     enable_backups: "Թույլատրել ադմինիստրատորներին ստեղծել ֆորումի պահուստներ"
     allow_restore: "Թույլատրել վերականգնումը, որը կարող է փոխարինել կայքի ԲՈԼՈՐ տվյալները: Թողեք սխալ, մինչև որ չպլանավորեք վերականգնել պահուստ:"
     maximum_backups: "Պահուստների՝ դիսկի վրա պահելու առավելագույն քանակը: Ավելի հին պահուստները ավտոմատ կերպով ջնջվում են:"
@@ -1740,6 +1741,10 @@ hy:
       other: "%{count} գրառում միավորվել է գոյություն ունեցող հաղորդագրության՝ %{topic_link}"
   change_owner:
     post_revision_text: "Սեփականությունը փոխանցված է"
+  publish_page:
+    slug_errors:
+      blank: "չի կարող լինել դատարկ"
+      invalid: "պարունակում է անվավեր սիմվոլներ"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Այս հաղորդագրությունը ավտոմատ փակվել է՝ պատասխանների առավելագույն %{count} թվին հասնելուց հետո:"
@@ -2595,7 +2600,6 @@ hy:
       why: " %{site_link}-ի համառոտ ամփոփում՝ Ձեր %{last_seen_at}վերջին այցելությունից հետո"
       since_last_visit: "Ձեր վերջին այցելությունից հետո"
       new_topics: "Նոր Թեմաներ"
-      unread_messages: "Չկարդացած Նամակներ"
       unread_notifications: "Չկարդացած Ծանուցումներ"
       liked_received: "Ստացված Հավանումներ"
       new_users: "Նոր Օգտատերեր"

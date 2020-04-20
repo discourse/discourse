@@ -59,7 +59,6 @@ uk:
       optimized_link: Посилання на оптимізовані зображення є ефемерними і не повинні включатись у вихідний код теми.
     settings_errors:
       invalid_yaml: "За умови, що YAML недійсний."
-      data_type_not_a_number: "Налаштування `%{name}` не підтримується. Підтримувані типи: `integer`, `bool`, `list` та `enum`"
       name_too_long: "Є налаштування із занадто довгим ім’ям. Максимальна довжина 255"
       default_value_missing: "Налаштування `%{name}` не має значення за замовчуванням"
       default_not_match_type: "Налаштування `%{name}` за замовчуванням, не збігається з типом параметра."
@@ -361,11 +360,10 @@ uk:
       time_must_be_provided: "Для всіх нагадувань повинен бути встановлений час, крім '%{reminder_type}'"
     reminders:
       at_desktop: "Наступного разу на мій робочий стіл"
-      later_today: "Пізніше сьогодні <br/> {{date}}"
-      next_business_day: "Наступний робочий день <br/> {{date}}"
-      tomorrow: "Завтра <br/> {{date}}"
-      next_week: "Наступного тижня <br/> {{date}}"
-      next_month: "Наступного місяця <br/> {{date}}"
+      later_today: "Пізніше сьогодні"
+      tomorrow: "Завтра"
+      next_week: "На наступному тижні"
+      next_month: "В наступному місяці"
       custom: "Вибрана дата та час"
   groups:
     success:
@@ -400,7 +398,6 @@ uk:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Запит на членство в групі @%{group_name}"
-      handle: "обробляти запит на вступ"
     view_hidden_topic_request_reason: "Я хочу приєднатися до групи '%{group_name}', щоб я міг отримати доступ до [this topic](%{topic_url})"
   education:
     until_posts:
@@ -1312,7 +1309,6 @@ uk:
   dashboard:
     rails_env_warning: "Ваш сервер працює в режимі %{env}."
     host_names_warning: "Ваш файл config/database.yml використовує локальне ім’я хоста за замовчуванням. Поміняйте його на ім’я хоста вашого веб-сайту."
-    gc_warning: 'Ваш сервер використовує параметри сборкі мусори ruby за умовами, що не дають вам найлучшу виробництво. Прочитайте цей розділ про налаштування виробничої якості: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Налаштування Ruby and Rails для Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
     memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
@@ -1407,8 +1403,6 @@ uk:
     detailed_404: "Надає користувачам більше інформації про те, чому він не може отримати доступ до певної теми. Примітка: Це не дуже безпечно, оскільки користувачі дізнаються, чи URL-адреса посилається на дійсну тему."
     enforce_second_factor: "Змушує користувачів включити двохфакторную перевірку справжності. Виберіть 'всі', щоб застосувати його до всіх користувачів. Виберіть 'персонал', щоб примусово застосовувати його тільки до співробітників."
     summary_score_threshold: "Мінімальна оцінка повідомлення, необхідна для його включення в зведення по темі"
-    summary_posts_required: "Мінімальна кількість повідомлень в темі для активації кнопки \"Зведення по темі\""
-    summary_likes_required: "Мінімальна кількість симпатій в темі для активації кнопки \"Зведення по темі\""
     summary_percent_filter: "При натисканні на кнопку \"Зведення по темі\", показувати кращі % дописів"
     summary_max_results: "Максимальна кількість повідомлень, що показуються в 'Зведенні по темі'"
     enable_system_message_replies: "Дозволяє користувачам відповідати на системні повідомлення, навіть якщо приватні повідомлення відключені"
@@ -1439,7 +1433,6 @@ uk:
     markdown_typographer_quotation_marks: "Список подвійних та одиничних лапок змінювати парами"
     post_undo_action_window_mins: "Кількість хвилин, за які користувачі зможуть скасувати останні дії в публікації (наприклад, вподобайки, скарги тощо)"
     must_approve_users: "Персонал повинен схвалити всі нові облікові записи користувачів, перш ніж їм буде надано доступ до сайту"
-    approve_suspect_users: "Персонал повинен схвалити всі підозрювані записи"
     pending_users_reminder_delay: "Повідомляти модераторів, якщо нові користувачі чекають схвалення довше ніж стільки годин. Встановіть -1 для відключення цих повідомлень."
     maximum_session_age: "Користувач залишиться в системі протягом n годин з моменту останнього відвідування"
     moderators_create_categories: "Дозволити модераторам створювати нові категорії"
@@ -1515,7 +1508,6 @@ uk:
     twitter_consumer_key: "Ключ користувача для аутентифікації в Twitter, зареєстрований за адресою <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Секретний номер для перевірки справжності Twitter, зареєстрований в <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     enable_discord_logins: "Дозволити користувачам вхід за допомогою Discord?"
-    readonly_mode_during_backup: "Включати режим \"тільки для читання\" під час виконання резервного копіювання"
     enable_backups: "Дозволити адміністраторам створювати резервні копії форуму"
     allow_restore: "Дозволити імпорт, який може замінити ВСІ дані сайту. Залиште вимкненим, якщо не плануєте відновлювати резервну копію"
     maximum_backups: "Максимальна кількість резервних копій для зберігання на диску. Старіші резервні копії автоматично видаляються"
@@ -1985,6 +1977,10 @@ uk:
       other: "Дописи %{count} були об’єднані в існуюче повідомлення: %{topic_link}"
   change_owner:
     post_revision_text: "Право власності передано"
+  publish_page:
+    slug_errors:
+      blank: "не може бути порожнім"
+      invalid: "містить неприпустимі символи"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Це повідомлення було автоматично закрито після досягнення максимальної межі відповіді %{count}."
@@ -2500,7 +2496,6 @@ uk:
       why: "Короткий підсумок %{site_link} з часу останнього вашого візиту на %{last_seen_at}"
       since_last_visit: "З вашого останнього відвідування"
       new_topics: "Нові теми"
-      unread_messages: "Непрочитані повідомлення"
       unread_notifications: "Непрочитані сповіщення"
       liked_received: "Отримані вподобання"
       new_users: "Нові користувачі"

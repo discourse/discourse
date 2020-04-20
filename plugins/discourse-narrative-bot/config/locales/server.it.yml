@@ -26,6 +26,14 @@ it:
         Questo distintivo è assegnato al completamento del tutorial interattivo per utenti avanzati. Hai imparato gli strumenti avanzati di discussione — e ora sei un diplomato!
   discourse_narrative_bot:
     bio: "Ciao, io non sono una persona reale. Sono un robot che ti può insegnare ad usare questo sito. Per interagire con me inviami un messaggio o menziona**`@%{discobot_username}`** ovunque."
+    tl2_promotion_message:
+      subject_template: "Congratulazioni per la promozione del tuo livello di esperienza!"
+      text_body_template: |
+        Ora che sei stato promosso, è tempo di conoscere alcune funzionalità avanzate!
+
+        Rispondi a questo messaggio con `@%{discobot_username} %{reset_trigger}` per scoprire di più su cosa puoi fare.
+
+        Continua a farti coinvolgere - ci piace averti in giro.
     timeout:
       message: |-
         Hey @%{username}, sto solo controllando perché è da un po' che non ti sento.
@@ -118,6 +126,15 @@ it:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
           > Inizia un tutorial interattivo. `{name-of-tutorial}` può essere uno di: `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Ci puoi contare
       do_not_understand:
         first_response: |-
           Hey, grazie per la risposta!
@@ -214,9 +231,9 @@ it:
           Selezionare un qualsiasi testo del mio messaggio farà apparire il pulsante <kbd>**Cita**</kbd>. E anche premere **Rispondi** con qualsiasi testo selezionato funzionerà! Puoi provare di nuovo?
       bookmark:
         instructions: |-
-          Se vuoi saperne di più, seleziona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">qui sotto e<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**inserisci questo messaggio privato nei segnalibri**. Se lo farai, ci potrebbe essere un :gift: per te!
-        reply: |-
-          Eccellente! Ora potrai tornare facilmente a questa conversazione privata in ogni momento, proprio dalla [scheda segnalibri sul tuo profilo](%{profile_page_url}/activity/bookmarks). Basta selezionare l'immagine del tuo profilo in alto a destra &#8599;
+          Se vuoi saperne di più, seleziona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> qui sotto e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **inserisci questo messaggio personale nei segnalibri**. Se lo farai, ci potrebbe essere un :gift: per te!
+        reply: |
+          Eccellente! Ora puoi facilmente tornare alla nostra conversazione privata in qualsiasi momento, direttamente dalla [scheda dei segnalibri sul tuo profilo](%{bookmark_url}). Basta selezionare la tua foto del profilo in alto a destra &#8599;
         not_found: |-
           Oh oh, non vedo nessun segnalibro in questo argomento. Hai trovato il pulsante "segnalibro" presente sotto i messaggi? Usa il pulsante "mostra altro" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare altri pulsanti, se necessario.
       emoji:

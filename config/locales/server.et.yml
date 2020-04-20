@@ -193,6 +193,12 @@ et:
   too_late_to_edit: "Postitus loodi kaua aega tagasi. Seda ei saa enam muuta ega kustutada."
   revert_version_same: "Praegune versioon on sama sellega, millele sa püüad tagasi pöörduda."
   excerpt_image: "pilt"
+  bookmarks:
+    reminders:
+      later_today: "Täna hiljem"
+      tomorrow: "Homme"
+      next_week: "Järgmisel nädalal"
+      next_month: "Järgmisel kuul"
   groups:
     errors:
       can_not_modify_automatic: "Autommatset gruppi ei saa muuta"
@@ -785,6 +791,10 @@ et:
   most_posts: "Enamus postitusi"
   most_recent_poster: "Viimane postitaja"
   frequent_poster: "Tihedam postitaja"
+  publish_page:
+    slug_errors:
+      blank: "ei saa olla tühi"
+      invalid: "sisaldab ebasobivaid tähemärke"
   login:
     not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
@@ -834,7 +844,6 @@ et:
         %{message}
     digest:
       new_topics: "Uued teemad"
-      unread_messages: "Lugemata sõnumid"
       unread_notifications: "Lugemata teavitused"
       liked_received: "Meeldimisi saadud"
       new_users: "Uued kasutajad"

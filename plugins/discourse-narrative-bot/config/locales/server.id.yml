@@ -181,9 +181,6 @@ id:
           Hmm, sepertinya Anda tidak mengutip salah satu kalimat saya di atas?
 
           Pilih teks apa saja di pos di atas untuk memunculkan tombol <kbd>**Quote**</kbd>. Lalu tekan tombol **Reply** setelah memilih teks apa saja. Bisakah tolong dicoba lagi?
-      bookmark:
-        reply: |-
-          Hebat! Kelak Anda dapat mudah menemukan percakapan pribadi kapan saja, langsung dari [the bookmarks tab on your profile](%{profile_page_url}/activity/bookmarks). Cukup pilih gambar profil Anda di pojok kanan atas &#8599;
       emoji:
         reply: |-
           Hebat :sparkles: _emojitastic!_ :sparkles:

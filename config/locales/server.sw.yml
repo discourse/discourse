@@ -42,7 +42,6 @@ sw:
       git: "Tatizo limetokea wakati wa kunakili weko la git, hauna ruhusa au weko haijapatikana"
     settings_errors:
       invalid_yaml: "YAML iliyowekwa ni batili."
-      data_type_not_a_number: "Aina ya mpangilio `%{name}` hauruhusiwi. Aina zinazoruhusiwa ni `namba kamili`, `bool`, `orodha` na `enum`"
       name_too_long: "Kuna mpangilio wenye jina lefu sana. Kiwango cha juu cha urefu ni 255"
       default_value_missing: "Mpangilio wa `%{name}` hauna thamani"
       default_out_range: "Mpangilio `%{name}` chaguo-msingi haupo kwenye namba zilizotajwa."
@@ -194,6 +193,12 @@ sw:
   too_late_to_edit: "Chapisho lilitengenezwa kitambo sana. Haiwezi kufanyiwa uhariri au kufutwa."
   revert_version_same: "Toleo la sasa ni sawa na toleo unalo jaribu kurudisha."
   excerpt_image: "Picha"
+  bookmarks:
+    reminders:
+      later_today: "Baada ya mda leo"
+      tomorrow: "Kesho"
+      next_week: "Wiki Ijayo"
+      next_month: "Mwezi ujao"
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' sio kiwango cha uaminifu."
@@ -783,8 +788,6 @@ sw:
     onebox_domains_blacklist: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
     inline_onebox_domains_whitelist: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
-    summary_posts_required: "Kiwango cha chini cha machapisho ndani ya mada kabla 'Fupisha Mada' haijaonyeshwa"
-    summary_likes_required: "Kiwango cha chini cha likes ndani ya mada kabla 'Mada kufupishwa' haijaruhusiwa"
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
     enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
     enable_system_message_replies: "Waruhusu watumiaji wajibu ujumbe wa mfumo,hata kama ujumbe binafsi umezuiliwa."
@@ -818,7 +821,6 @@ sw:
     enable_instagram_logins: "Ruhusu Uhalalishaji wa Instagram, inahitaji instagram_consumer_key na instagram_consumer_secret"
     instagram_consumer_key: "Ufunguo wa uhalalishaji wa Mtumiaji kupitia Instagram"
     instagram_consumer_secret: "Uhalalishaji wa Siri wa Mtumiaji kupitia Instagram"
-    readonly_mode_during_backup: "Ruhusu hali-tumizi ya usomaji tu kipindi cha chelezo"
     enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
     allow_restore: "ruhusu urejeshaji, itabadilisha taarifa zote za tovuti! Acha iwe hapana, badilisha kama unataka kurejesha chelezo"
     maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
@@ -996,6 +998,10 @@ sw:
     errors:
       different_topics: "Machapisho kutoka mada tofauti hayawezi kuunganishwa."
       different_users: "Machapisho kutoka watumiaji tofauti hayawezi kuunganishwa."
+  publish_page:
+    slug_errors:
+      blank: "haiwezi kubaki wazi"
+      invalid: "ina herufi batili"
   topic_statuses:
     autoclosed_disabled: "Mada hii imefunguliwa. Majibu mapya yanaruhusiwa."
     autoclosed_disabled_lastpost: "Hii mada iko wazi. Majibu mapya yanakaribishwa."
@@ -1655,7 +1661,6 @@ sw:
       why: "Muhtasari Mfupi wa %{site_link} toka mara ya mwisho ulivyotembelea %{last_seen_at}"
       since_last_visit: "Kutoka mara ya mwisho ulivyotembelea"
       new_topics: "Mada Mpya"
-      unread_messages: "Ujumbe ambao Haujasomwa"
       unread_notifications: "Taarifa ambazo Hazijasomwa"
       liked_received: "Upendo Uliopokelewa"
       new_users: "Watumiaji Wapya"

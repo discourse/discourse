@@ -165,6 +165,8 @@ be:
       created: "вы дадалі гэты паведамленне ў закладкі"
       remove: "выдаліць закладку"
       save: "Захаваць"
+      reminders:
+        tomorrow: "заўтра"
     drafts:
       remove: "выдаліць"
       abandon:
@@ -277,6 +279,7 @@ be:
         title: "Дадаць удзельнікаў"
       requests:
         reason: "прычына"
+        handle: "звяртацца з просьбай аб членстве"
       manage:
         name: "Імя"
         full_name: "поўнае Імя"
@@ -475,8 +478,6 @@ be:
         error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
         success: "Мы надсилалы ліст на гэтую скрыню. Выканайце інструкцыі па пидтердження."
       change_avatar:
-        gravatar_title: "Змяніць аватарку на сайце Gravatar"
-        refresh_gravatar_title: "Абнавіць мой Gravatar"
         letter_based: "Ваша выява дададзена сістэмай"
         uploaded_avatar: "Іншая выява"
         uploaded_avatar_empty: "Дадаць малюнак"
@@ -628,6 +629,8 @@ be:
         back: "вярнуцца"
         again: "Паспрабаваць яшчэ раз"
         fixed: "загрузка Старонкі"
+    modal:
+      close: "схаваць"
     close: "зачыніць"
     refresh: "абнавіць"
     read_only_mode:
@@ -1043,6 +1046,7 @@ be:
           side_by_side_markdown:
             title: "Паказаць непасрэдныя адрозненні побач"
       bookmarks:
+        created: "створаны"
         name: "Імя"
     category:
       can: "можа&hellip;"
@@ -1637,13 +1641,11 @@ be:
           staff: "персанал"
           suspended: "прыпыненыя"
           silenced: "глушыцелем"
-          suspect: "Магчыма крэмлебот"
         approved: "Адобрана?"
         titles:
           active: "Актыўныя карыстальнікі"
           new: "Новыя карыстальнікі"
           staff: "персанал"
-          suspect: "Крэмлеботы і тролі"
       user:
         suspend_reason: "прычына"
         silence_reason: "прычына"
@@ -1823,6 +1825,7 @@ be:
       emoji:
         title: "Абразкі"
         name: "Імя"
+        group: "Група"
         image: "Выява"
       embedding:
         confirm_delete: "Вы ўпэўненыя, што жадаеце выдаліць гэты хост?"
