@@ -46,8 +46,9 @@ describe TopicEmbed do
 
       it "Supports updating the post content" do
         expect do
-          TopicEmbed.import(user, url, title, "muhahaha new contents!")
+          TopicEmbed.import(user, url, "New title received", "muhahaha new contents!")
         end.to change { topic_embed.reload.content_sha1 }
+        expect(topic_embed.topic.title).to eq("New title received")
 
         expect(topic_embed.post.cooked).to match(/new contents/)
       end

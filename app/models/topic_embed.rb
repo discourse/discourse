@@ -92,12 +92,10 @@ class TopicEmbed < ActiveRecord::Base
         end
 
         if content_sha1 != embed.content_sha1
-          post.revise(
-            user,
-            { raw: absolutize_urls(url, contents) },
-            skip_validations: true,
-            bypass_rate_limiter: true
-          )
+          changes = { raw: absolutize_urls(url, contents) }
+          changes[:title] = title if title.present?
+
+          post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)
           embed.update!(content_sha1: content_sha1)
         end
       end
