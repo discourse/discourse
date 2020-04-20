@@ -7,6 +7,7 @@ import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
 
 const Category = RestModel.extend({
   permissions: null,
@@ -241,6 +242,16 @@ const Category = RestModel.extend({
 
   setNotification(notification_level) {
     this.set("notification_level", notification_level);
+
+    User.currentProp(
+      "muted_category_ids",
+      User.current().calculateMutedIds(
+        notification_level,
+        this.id,
+        "muted_category_ids"
+      )
+    );
+
     const url = `/category/${this.id}/notifications`;
     return ajax(url, { data: { notification_level }, type: "POST" });
   },

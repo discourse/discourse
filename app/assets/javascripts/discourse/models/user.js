@@ -25,6 +25,7 @@ import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -859,6 +860,15 @@ const User = RestModel.extend({
 
   changeTimezone(tz) {
     this._timezone = tz;
+  },
+
+  calculateMutedIds(notificationLevel, id, type) {
+    const muted_ids = this.get(type);
+    if (notificationLevel === NotificationLevels.MUTED) {
+      return muted_ids.concat(id).uniq();
+    } else {
+      return muted_ids.filter(existing_id => existing_id !== id);
+    }
   }
 });
 
