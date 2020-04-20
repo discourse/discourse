@@ -211,7 +211,7 @@ export default createWidget("header-topic-info", {
   showCategory(topic) {
     return (
       topic.category &&
-      (!topic.category.get("isUncategorizedCategory") ||
+      (!topic.category.isUncategorizedCategory ||
         !this.siteSettings.suppress_uncategorized_badge)
     );
   },
