@@ -29,6 +29,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   before do
     Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
+    SiteSetting.enable_bookmarks_with_reminders = false
   end
 
   describe '#notify_timeout' do
