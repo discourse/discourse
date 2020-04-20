@@ -682,7 +682,6 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
   end
 
-
   def import_tags
     puts "", "importing tags..."
 
