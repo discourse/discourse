@@ -73,12 +73,19 @@ class TopicTrackingState
   end
 
   def self.publish_muted(post)
-    user_ids = post.topic.topic_users.where(notification_level: NotificationLevels.all[:muted]).order(notifications_changed_at: :desc).limit(100).pluck(:user_id)
+    user_ids = post.topic.topic_users
+      .where(notification_level: NotificationLevels.all[:muted])
+      .joins(:user)
+      .where("users.last_seen_at > ?", 7.days.ago)
+      .order("users.last_seen_at DESC")
+      .limit(100)
+      .pluck(:user_id)
+    return if user_ids.blank?
     message = {
       topic_id: post.topic_id,
       message_type: MUTED_MESSAGE_TYPE,
     }
-    MessageBus.publish("/muted-topics", message.as_json, user_ids: user_ids) if user_ids.present?
+    MessageBus.publish("/muted-topics", message.as_json, user_ids: user_ids)
   end
 
   def self.publish_unread(post)

@@ -73,7 +73,14 @@ describe TopicTrackingState do
   end
 
   describe '#publish_muted' do
-    it "can correctly publish muted" do
+    let(:user) do
+      Fabricate(:user, last_seen_at: Date.today)
+    end
+    let(:post) do
+      create_post(user: user)
+    end
+
+    it 'can correctly publish muted' do
       TopicUser.find_by(topic: post.topic, user: post.user).update(notification_level: 0)
       message = MessageBus.track_publish("/muted-topics") do
         TopicTrackingState.publish_muted(post)
@@ -90,6 +97,15 @@ describe TopicTrackingState do
         TopicTrackingState.publish_muted(post)
       end
 
+      expect(messages).to eq([])
+    end
+
+    it 'should not publish any message when the user was not seen in the last 7 days' do
+      TopicUser.find_by(topic: post.topic, user: post.user).update(notification_level: 0)
+      post.user.update(last_seen_at: 8.days.ago)
+      messages = MessageBus.track_publish("/muted-topics") do
+        TopicTrackingState.publish_muted(post)
+      end
       expect(messages).to eq([])
     end
   end

@@ -146,7 +146,7 @@ const TopicTrackingState = EmberObject.extend({
       return [];
     }
     let mutedTopics = this.currentUser.muted_topics || [];
-    let now = new Date();
+    let now = Date.now();
 
     if (data.message_type === "muted") {
       mutedTopics = mutedTopics.concat({
