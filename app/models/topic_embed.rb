@@ -91,7 +91,7 @@ class TopicEmbed < ActiveRecord::Base
           post.reload
         end
 
-        if content_sha1 != embed.content_sha1
+        if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title)
           changes = { raw: absolutize_urls(url, contents) }
           changes[:title] = title if title.present?
 
