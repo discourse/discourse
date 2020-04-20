@@ -44,6 +44,8 @@ class BookmarkManager
 
     bookmark.destroy
     clear_at_desktop_cache_if_required
+
+    { topic_bookmarked: Bookmark.exists?(topic_id: bookmark.topic_id, user: @user) }
   end
 
   def destroy_for_topic(topic)
