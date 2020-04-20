@@ -397,6 +397,34 @@ export default {
       featured_user_badge_ids: [5870, 40673, 5868]
     }
   },
+  "/u/eviltrout/bookmarks.json": {
+    user_bookmark_list: {
+      bookmarks: [
+        {
+          excerpt: "Here this is my new topic where I yell.",
+          tags: [],
+          id: 576,
+          created_at: "2020-04-07T05:30:40.446Z",
+          topic_id: 119,
+          linked_post_number: 1,
+          post_id: 281,
+          name: "test",
+          reminder_at: null,
+          title: "Yelling topic title :/",
+          deleted: false,
+          hidden: false,
+          category_id: 1,
+          closed: false,
+          archived: false,
+          archetype: "regular",
+          highest_post_number: 5,
+          bumped_at: "2020-04-06T05:20:00.172Z",
+          slug: "yelling-topic-title",
+          username: "someguy"
+        }
+      ]
+    }
+  },
   "/user_actions.json": {
     user_actions: [
       {
