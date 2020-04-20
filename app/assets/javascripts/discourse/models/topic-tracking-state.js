@@ -53,6 +53,14 @@ const TopicTrackingState = EmberObject.extend({
     const tracker = this;
 
     const process = data => {
+      if (
+        tracker
+          .trackMutedTopics(data)
+          .find(mutedTopic => mutedTopic.topicId === data.topic_id)
+      ) {
+        return;
+      }
+
       if (data.message_type === "delete") {
         tracker.removeTopic(data.topic_id);
         tracker.incrementMessageCount();
@@ -113,6 +121,10 @@ const TopicTrackingState = EmberObject.extend({
         "/unread/" + this.currentUser.get("id"),
         process
       );
+      this.messageBus.subscribe(
+        "/muted/" + this.currentUser.get("id"),
+        process
+      );
     }
 
     this.messageBus.subscribe("/delete", msg => {
@@ -130,6 +142,28 @@ const TopicTrackingState = EmberObject.extend({
       }
       tracker.incrementMessageCount();
     });
+  },
+
+  trackMutedTopics(data) {
+    if (!this.currentUser) {
+      return [];
+    }
+    let mutedTopics = this.currentUser.muted_topics || [];
+    let now = new Date();
+
+    if (data.message_type === "muted") {
+      mutedTopics = mutedTopics.concat({
+        topicId: data.topic_id,
+        createdAt: now
+      });
+    } else {
+      mutedTopics = mutedTopics.filter(
+        mutedTopic => now - mutedTopic.createdAt < 60000
+      );
+    }
+    this.currentUser.set("muted_topics", mutedTopics);
+
+    return mutedTopics;
   },
 
   updateSeen(topicId, highestSeen) {

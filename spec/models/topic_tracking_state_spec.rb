@@ -72,6 +72,28 @@ describe TopicTrackingState do
     end
   end
 
+  describe '#publish_muted' do
+    it "can correctly publish muted" do
+      TopicUser.find_by(topic: post.topic, user: post.user).update(notification_level: 0)
+      message = MessageBus.track_publish(described_class.muted_channel_key(post.user.id)) do
+        TopicTrackingState.publish_muted(post)
+      end.first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(topic.id)
+      expect(data["message_type"]).to eq(described_class::MUTED_MESSAGE_TYPE)
+    end
+
+    it 'should not publish any message when notification level is not muted' do
+      messages = MessageBus.track_publish(described_class.muted_channel_key(post.user.id)) do
+        TopicTrackingState.publish_muted(post)
+      end
+
+      expect(messages).to eq([])
+    end
+  end
+
   describe '#publish_private_message' do
     fab!(:admin) { Fabricate(:admin) }
 

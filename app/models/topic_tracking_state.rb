@@ -12,6 +12,7 @@ class TopicTrackingState
   CHANNEL = "/user-tracking"
   UNREAD_MESSAGE_TYPE = "unread".freeze
   LATEST_MESSAGE_TYPE = "latest".freeze
+  MUTED_MESSAGE_TYPE = "muted".freeze
 
   attr_accessor :user_id,
                 :topic_id,
@@ -69,6 +70,20 @@ class TopicTrackingState
 
   def self.unread_channel_key(user_id)
     "/unread/#{user_id}"
+  end
+
+  def self.muted_channel_key(user_id)
+    "/muted/#{user_id}"
+  end
+
+  def self.publish_muted(post)
+    post.topic.topic_users.where(notification_level: NotificationLevels.all[:muted]).order(notifications_changed_at: :desc).limit(100).pluck(:user_id).each do |user_id|
+      message = {
+        topic_id: post.topic_id,
+        message_type: MUTED_MESSAGE_TYPE,
+      }
+      MessageBus.publish(self.muted_channel_key(user_id), message.as_json)
+    end
   end
 
   def self.publish_unread(post)
