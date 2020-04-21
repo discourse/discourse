@@ -23,7 +23,7 @@ module Jobs
         end
 
         cp = CookedPostProcessor.new(post, args)
-        cp.post_process(bypass_bump: args[:bypass_bump], new_post: args[:new_post])
+        cp.post_process(new_post: args[:new_post])
 
         # If we changed the document, save it
         cooked = cp.html
