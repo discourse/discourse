@@ -122,10 +122,6 @@ export default Component.extend(
       );
     },
 
-    click(event) {
-      event.stopPropagation();
-    },
-
     _modifyComponentForRowWrapper(collection, item) {
       let component = this.modifyComponentForRow(collection, item);
       return component || "select-kit/select-kit-row";
