@@ -56,9 +56,12 @@ createWidget("topic-header-participant", {
 
 export default createWidget("header-topic-info", {
   tagName: "div.extra-info-wrapper",
+  contents: null,
+  title: null,
 
-  buildClasses(attrs) {
-    return this.showCategory(attrs.topic) ? "two-rows" : "";
+  buildClasses(attrs, state) {
+    this.buildAttributes(attrs, state);
+    return this.containerClassName();
   },
 
   buildFancyTitleClass() {
@@ -73,7 +76,7 @@ export default createWidget("header-topic-info", {
       .join(" ");
   },
 
-  html(attrs, state) {
+  buildAttributes(attrs, state) {
     const topic = attrs.topic;
 
     const heading = [];
@@ -112,11 +115,15 @@ export default createWidget("header-topic-info", {
       );
     }
 
-    const title = [h("h1.header-title", heading)];
+    this.title = [h("h1.header-title", heading)];
     const category = topic.get("category");
 
     if (loaded || category) {
-      if (this.showCategory(topic)) {
+      if (
+        category &&
+        (!category.isUncategorizedCategory ||
+          !this.siteSettings.suppress_uncategorized_badge)
+      ) {
         const parentCategory = category.get("parentCategory");
         const categories = [];
         if (parentCategory) {
@@ -126,7 +133,7 @@ export default createWidget("header-topic-info", {
         }
         categories.push(this.attach("category-link", { category }));
 
-        title.push(h("div.categories-wrapper", categories));
+        this.title.push(h("div.categories-wrapper", categories));
       }
 
       let extra = [];
@@ -196,24 +203,23 @@ export default createWidget("header-topic-info", {
         }
       }
       if (extra.length) {
-        title.push(h("div.topic-header-extra", extra));
+        this.title.push(h("div.topic-header-extra", extra));
       }
     }
 
-    const contents = h("div.title-wrapper", title);
+    this.contents = h("div.title-wrapper", this.title);
+  },
+
+  html() {
     return h(
       "div.extra-info",
-      { className: title.length > 1 ? "two-rows" : "" },
-      contents
+      { className: this.containerClassName() },
+      this.contents
     );
   },
 
-  showCategory(topic) {
-    return (
-      topic.category &&
-      (!topic.category.isUncategorizedCategory ||
-        !this.siteSettings.suppress_uncategorized_badge)
-    );
+  containerClassName() {
+    return this.title.length > 1 ? "two-rows" : "";
   },
 
   jumpToTopPost() {
