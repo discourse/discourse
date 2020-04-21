@@ -78,7 +78,7 @@ class Report
   def add_category_filter
     category_id = filters[:category].to_i if filters[:category].present?
     add_filter('category', type: 'category', default: category_id)
-    return [nil, nil] if category_id.blank?
+    return if category_id.blank?
 
     include_subcategories = filters[:'include-subcategories']
     include_subcategories = !!ActiveRecord::Type::Boolean.new.cast(include_subcategories)
