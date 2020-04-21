@@ -312,7 +312,7 @@ en:
       created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
-      confirm_delete: "Are you sure you want to delete this bookmark? If you set a reminder it will also be deleted."
+      confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
       save: "Save"
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'

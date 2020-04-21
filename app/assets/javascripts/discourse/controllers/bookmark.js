@@ -436,17 +436,25 @@ export default Controller.extend(ModalFunctionality, {
 
     delete() {
       this._deleting = true;
-      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
-        if (result) {
-          this._closeWithoutSaving = true;
-          this._deleteBookmark()
-            .then(() => {
-              this._deleting = false;
-              this.send("closeModal");
-            })
-            .catch(e => this._handleSaveError(e));
-        }
-      });
+      let deleteAction = () => {
+        this._closeWithoutSaving = true;
+        this._deleteBookmark()
+          .then(() => {
+            this._deleting = false;
+            this.send("closeModal");
+          })
+          .catch(e => this._handleSaveError(e));
+      };
+
+      if (this._existingBookmarkHasReminder()) {
+        bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
+          if (result) {
+            deleteAction();
+          }
+        });
+      } else {
+        deleteAction();
+      }
     },
 
     closeWithoutSavingBookmark() {
