@@ -53,11 +53,7 @@ const TopicTrackingState = EmberObject.extend({
     const tracker = this;
 
     const process = data => {
-      if (
-        tracker
-          .trackMutedTopics(data)
-          .findBy("topicId", data.topic_id)
-      ) {
+      if (tracker.trackMutedTopics(data).findBy("topicId", data.topic_id)) {
         return;
       }
 
