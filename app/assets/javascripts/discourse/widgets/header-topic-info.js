@@ -119,7 +119,11 @@ export default createWidget("header-topic-info", {
     const category = topic.get("category");
 
     if (loaded || category) {
-      if (this.showCategory(topic)) {
+      if (
+        category &&
+        (!category.isUncategorizedCategory ||
+          !this.siteSettings.suppress_uncategorized_badge)
+      ) {
         const parentCategory = category.get("parentCategory");
         const categories = [];
         if (parentCategory) {
@@ -216,14 +220,6 @@ export default createWidget("header-topic-info", {
 
   containerClassName() {
     return this.title.length > 1 ? "two-rows" : "";
-  },
-
-  showCategory(topic) {
-    return (
-      topic.category &&
-      (!topic.category.isUncategorizedCategory ||
-        !this.siteSettings.suppress_uncategorized_badge)
-    );
   },
 
   jumpToTopPost() {
