@@ -886,6 +886,7 @@ a.mention-group {
 }
 
 .broken-image {
+  display: inline-flex;
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
   font-size: $font-up-5;
