@@ -165,7 +165,7 @@ export default createWidget("topic-admin-menu", {
           className: "topic-admin-open",
           buttonClass: "btn-default",
           action: "toggleClosed",
-          icon: "unlock",
+          icon: "discourse-comment",
           label: "actions.open"
         });
       } else {
@@ -173,7 +173,7 @@ export default createWidget("topic-admin-menu", {
           className: "topic-admin-close",
           buttonClass: "btn-default",
           action: "toggleClosed",
-          icon: "lock",
+          icon: "discourse-comment-slash",
           label: "actions.close"
         });
       }
@@ -239,7 +239,7 @@ export default createWidget("topic-admin-menu", {
           action: isPrivateMessage
             ? "convertToPublicTopic"
             : "convertToPrivateMessage",
-          icon: isPrivateMessage ? "comment" : "envelope",
+          icon: isPrivateMessage ? "discourse-comment" : "envelope",
           label: isPrivateMessage
             ? "actions.make_public"
             : "actions.make_private"
