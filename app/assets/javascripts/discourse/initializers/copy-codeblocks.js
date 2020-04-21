@@ -114,7 +114,7 @@ export default {
         }
 
         const commands = postElements[0].querySelectorAll(
-          ":scope > pre > code"
+          ":scope > pre > code, :scope :not(article) > pre > code"
         );
 
         const post = helper.getModel();
