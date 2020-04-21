@@ -206,7 +206,7 @@ export default createWidget("header-topic-info", {
     this.contents = h("div.title-wrapper", this.title);
   },
 
-  html(attrs, state) {
+  html() {
     return h(
       "div.extra-info",
       { className: this.containerClassName() },
