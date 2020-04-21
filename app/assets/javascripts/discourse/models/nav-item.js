@@ -92,45 +92,6 @@ const ExtraNavItem = NavItem.extend({
       return (this._href = value);
     }
   }),
-  displayName: discourseComputed("displayName", {
-    get() {
-      if (this._displayName) {
-        return this._displayName;
-      }
-
-      return this.displayName;
-    },
-
-    set(key, value) {
-      return (this._displayName = value);
-    }
-  }),
-  filterMode: discourseComputed("filterMode", {
-    get() {
-      if (this._filterMode) {
-        return this._filterMode;
-      }
-
-      return this.filterMode;
-    },
-
-    set(key, value) {
-      return (this._filterMode = value);
-    }
-  }),
-  title: discourseComputed("title", {
-    get() {
-      if (this._title) {
-        return this._title;
-      }
-
-      return this.title;
-    },
-
-    set(key, value) {
-      return (this._title = value);
-    }
-  }),
 
   count: 0,
 
