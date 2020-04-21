@@ -56,11 +56,13 @@ def downsize_upload(upload, path)
     return
   end
 
-  upload.sha1 = sha1
-  upload.width = w
-  upload.height = h
-  upload.thumbnail_width = ww
-  upload.thumbnail_height = hh
+  upload.attributes = {
+    sha1: sha1,
+    width: w,
+    height: h,
+    thumbnail_width: ww,
+    thumbnail_height: hh
+  }
 
   if new_file
     url = Discourse.store.store_upload(File.new(path), upload)
