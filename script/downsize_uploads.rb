@@ -213,7 +213,7 @@ def process_uploads
 
   scope.find_each do |upload|
     puts "\n" if ENV["VERBOSE"]
-    print "\rFixed dimensions: %8d        Downsized: %8d (upload id: #{upload.id})".freeze % [dimensions_count, downsized_count]
+    print "\rFixed dimensions: #{dimensions_count} Downsized: #{downsized_count} (upload id: #{upload.id})"
     puts "\n" if ENV["VERBOSE"]
 
     source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
