@@ -12,7 +12,7 @@ widgetTest("basics", {
     });
   },
   test(assert) {
-    assert.ok(find(".topic-status .d-icon-lock").length);
+    assert.ok(find(".topic-status .d-icon-discourse-comment-slash").length);
   }
 });
 
