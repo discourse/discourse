@@ -85,7 +85,7 @@ class TopicTrackingState
       topic_id: post.topic_id,
       message_type: MUTED_MESSAGE_TYPE,
     }
-    MessageBus.publish("/muted-topics", message.as_json, user_ids: user_ids)
+    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
   end
 
   def self.publish_unread(post)
