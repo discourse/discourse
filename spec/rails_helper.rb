@@ -244,6 +244,8 @@ RSpec.configure do |config|
 
     RailsMultisite::ConnectionManagement.config_filename =
       "spec/fixtures/multisite/two_dbs.yml"
+
+    RailsMultisite::ConnectionManagement.establish_connection(db: 'default')
   end
 
   config.after(:each, type: :multisite) do

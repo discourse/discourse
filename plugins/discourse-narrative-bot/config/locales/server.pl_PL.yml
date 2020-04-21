@@ -7,7 +7,7 @@
 
 pl_PL:
   site_settings:
-    discourse_narrative_bot_enabled: "Włącz bota Discourse Narrative"
+    discourse_narrative_bot_enabled: "Enable Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Dezaktywuj wpis powitalny Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nazwy użytkownika, które bot Discourse Narrative powinien zignorować"
     discourse_narrative_bot_disable_public_replies: "Wyłącz publiczne odpowiedzi bota Discourse Narrative"
@@ -28,6 +28,8 @@ pl_PL:
     bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby skomunikować się ze mną, wyślij do mnie wiadomość lub oznacz **`@%{discobot_username}`** w dowolnym miejscu."
     tl2_promotion_message:
       subject_template: "Gratuluję zdobycia nowego poziomu zaufania!"
+      text_body_template: |
+        Po awansie nadszedł czas, aby dowiedzieć się o niektórych zaawansowanych funkcjach! Odpowiedz na tę wiadomość za pomocą „@ %{discobot_username} %{reset_trigger}”, aby dowiedzieć się więcej o tym, co możesz zrobić. Zapraszamy do dalszego angażowania się - cieszymy się, że jesteśmy w pobliżu.
     timeout:
       message: |-
         Witaj @%{username}, przypominam o sobie bo od dawna do mnie nie zaglądałeś.
@@ -228,7 +230,7 @@ pl_PL:
         instructions: |-
           Jeśli chcesz dowiedzieć się więcej, wybierz <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">poniżej i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **dodaj tę wiadomość prywatną do zakładek**. Jeśli to zrobisz, możesz otrzymać :gift: w przyszłości!
         reply: |-
-          Wspaniale! Teraz możesz w łatwy sposób, w każdym momencie przejść do konwersacji prywatnej, po prawej od [zakładki dodawania do zakładek w twoim profilu]%{profile_page_url}/activity/bookmarks). Wystarczy, że klikniesz na swoj zdjęcie profilowe po prawej u góry&#8599;
+          Doskonały! Teraz możesz łatwo znaleźć drogę do naszej prywatnej rozmowy w dowolnym momencie, bezpośrednio z [zakładki zakładek w swoim profilu] (%{bookmark_url}). Wystarczy wybrać zdjęcie profilowe w prawym górnym rogu ↗
         not_found: |-
           Ups, nie widzę żadnych zakładek w tym temacie. Czy widzisz przycisk zakładki pod każdym wpisem? Użyj przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, żeby wyświetlić więcej akcji, jeśli to potrzebne.
       emoji:

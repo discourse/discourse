@@ -11,11 +11,15 @@ it:
     poll_maximum_options: "Numero massimo di opzioni permesse in un sondaggio."
     poll_edit_window_mins: "Numero di minuti dopo la creazione di un messaggio durante i quali i sondaggi possono ancora essere modificati."
     poll_minimum_trust_level_to_create: "Definisce il minimo livello di esperienza necessario per poter creare sondaggi."
+    poll_groupable_user_fields: "Un insieme di nomi di campi utente che possono essere utilizzati per raggruppare e filtrare i risultati del sondaggio."
+    poll_export_data_explorer_query_id: "ID della query Data Explorer da utilizzare per l'esportazione dei risultati del sondaggio (0 per disabilitare)."
   poll:
     poll: "sondaggio"
     invalid_argument: "Valore '%{value}' non valido per l'argomento '%{argument}'."
     multiple_polls_without_name: "Ci sono più sondaggi privi di nome. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."
     multiple_polls_with_same_name: "Ci sono più sondaggi con lo stesso nome: <strong>%{name}</strong>. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."
+    default_poll_must_have_at_least_1_option: " Il sondaggio deve avere almeno 1 opzione."
+    named_poll_must_have_at_least_1_option: "Il sondaggio di nome <strong>%{name}</strong> deve avere almeno 1 opzione."
     default_poll_must_have_less_options:
       one: "Il sondaggio deve avere meno di una opzione."
       other: "Il sondaggio deve avere meno di %{count} opzioni."
@@ -24,6 +28,8 @@ it:
       other: "Il sondaggio <strong>%{name}</strong> deve avere meno di %{count} opzioni."
     default_poll_must_have_different_options: "Il sondaggio deve avere opzioni diverse."
     named_poll_must_have_different_options: "Il sondaggio dal nome <strong>%{name}</strong> deve avere opzioni diverse."
+    default_poll_must_not_have_any_empty_options: "Il sondaggio non deve avere opzioni vuote."
+    named_poll_must_not_have_any_empty_options: "Il sondaggio dal nome <strong>%{name}</strong>non deve avere opzioni vuote."
     default_poll_with_multiple_choices_has_invalid_parameters: "Il sondaggio a scelta multipla ha parametri non validi."
     named_poll_with_multiple_choices_has_invalid_parameters: "Il sondaggio a scelta multipla dal nome <strong>%{name}</strong> ha parametri non validi."
     requires_at_least_1_valid_option: "Devi scegliere almeno una opzione valida."
@@ -40,3 +46,5 @@ it:
     insufficient_rights_to_create: "Non sei autorizzato a creare sondaggi."
     email:
       link_to_poll: "Clicca per vedere il sondaggio."
+    user_field:
+      no_data: "Nessun Dato"

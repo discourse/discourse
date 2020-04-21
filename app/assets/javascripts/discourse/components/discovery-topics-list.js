@@ -38,9 +38,7 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
       Discourse.updateContextCount(0);
       this.model.loadMore().then(hasMoreResults => {
         schedule("afterRender", () => this.saveScrollPosition());
-        if (!hasMoreResults) {
-          this.eyeline.flushRest();
-        } else if ($(window).height() >= $(document).height()) {
+        if (hasMoreResults && $(window).height() >= $(document).height()) {
           this.send("loadMore");
         }
       });

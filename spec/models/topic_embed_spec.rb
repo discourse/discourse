@@ -46,8 +46,9 @@ describe TopicEmbed do
 
       it "Supports updating the post content" do
         expect do
-          TopicEmbed.import(user, url, title, "muhahaha new contents!")
+          TopicEmbed.import(user, url, "New title received", "muhahaha new contents!")
         end.to change { topic_embed.reload.content_sha1 }
+        expect(topic_embed.topic.title).to eq("New title received")
 
         expect(topic_embed.post.cooked).to match(/new contents/)
       end
@@ -74,6 +75,7 @@ describe TopicEmbed do
       end
 
       it "will make the topic unlisted if `embed_unlisted` is set until someone replies" do
+        Jobs.run_immediately!
         SiteSetting.embed_unlisted = true
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
         expect(imported_post.topic).not_to be_visible

@@ -57,6 +57,10 @@ createWidget("topic-header-participant", {
 export default createWidget("header-topic-info", {
   tagName: "div.extra-info-wrapper",
 
+  buildClasses(attrs) {
+    return this.showCategory(attrs.topic) ? "two-rows" : "";
+  },
+
   buildFancyTitleClass() {
     const baseClass = ["topic-link"];
     const flatten = array => [].concat.apply([], array);
@@ -112,11 +116,7 @@ export default createWidget("header-topic-info", {
     const category = topic.get("category");
 
     if (loaded || category) {
-      if (
-        category &&
-        (!category.get("isUncategorizedCategory") ||
-          !this.siteSettings.suppress_uncategorized_badge)
-      ) {
+      if (this.showCategory(topic)) {
         const parentCategory = category.get("parentCategory");
         const categories = [];
         if (parentCategory) {
@@ -205,6 +205,14 @@ export default createWidget("header-topic-info", {
       "div.extra-info",
       { className: title.length > 1 ? "two-rows" : "" },
       contents
+    );
+  },
+
+  showCategory(topic) {
+    return (
+      topic.category &&
+      (!topic.category.isUncategorizedCategory ||
+        !this.siteSettings.suppress_uncategorized_badge)
     );
   },
 

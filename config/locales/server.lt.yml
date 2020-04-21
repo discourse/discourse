@@ -150,6 +150,12 @@ lt:
     badge: "%{display_name} ženklelis puslapyje %{site_title}"
   too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
   excerpt_image: "paveikslėlis"
+  bookmarks:
+    reminders:
+      later_today: "Šiandien vėliau"
+      tomorrow: "Rytoj"
+      next_week: "Kitą savaitę"
+      next_month: "Kitą mėnesį"
   groups:
     default_names:
       everyone: "visi"
@@ -630,6 +636,10 @@ lt:
       category: "Kategorijos"
       topic: "Rezultatai"
       user: "Vartotojai"
+  publish_page:
+    slug_errors:
+      blank: "negali būti tuščia"
+      invalid: "turi neleistinų simbolių"
   login:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"

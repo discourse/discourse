@@ -14,7 +14,7 @@ ru:
         yesterday: 'Вчера %{time} '
         countdown:
           passed: дата прошла
-      title: Введите дату / время
+      title: Дата / время
       create:
         form:
           insert: Вставить

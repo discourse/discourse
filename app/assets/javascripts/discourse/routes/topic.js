@@ -4,7 +4,8 @@ import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
-import { EventTarget } from "rsvp";
+import Evented from "@ember/object/evented";
+import EmberObject from "@ember/object";
 
 const SCROLL_DELAY = 500;
 
@@ -332,5 +333,9 @@ const TopicRoute = DiscourseRoute.extend({
   }
 });
 
-EventTarget.mixin(TopicRoute);
+// TODO: Remove this - it's barely used.
+const events = EmberObject.extend(Evented).create();
+TopicRoute.on = events.on;
+TopicRoute.trigger = events.trigger;
+
 export default TopicRoute;

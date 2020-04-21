@@ -1,5 +1,5 @@
 import ENV from "discourse-common/config/environment";
-import { EventTarget } from "rsvp";
+import AppEvents from "discourse/services/app-events";
 
 let _skipUpdate;
 let _rootElement;
@@ -19,6 +19,15 @@ configureEyeline();
 //  Track visible elements on the screen.
 const Eyeline = function Eyeline(selector) {
   this.selector = selector;
+  this.appEvents = AppEvents.create();
+};
+
+Eyeline.prototype.on = function(name, cb) {
+  this.appEvents.on(name, cb);
+};
+
+Eyeline.prototype.off = function(name, cb) {
+  this.appEvents.off(name, cb);
 };
 
 Eyeline.prototype.update = function() {
@@ -44,6 +53,7 @@ Eyeline.prototype.update = function() {
       bottomOffset.top <= docViewBottom && bottomOffset.top >= docViewTop;
   }
 
+  let { appEvents } = this;
   return $elements.each((i, elem) => {
     const $elem = $(elem),
       elemTop = _rootElement ? $elem.position().top : $elem.offset().top,
@@ -68,30 +78,12 @@ Eyeline.prototype.update = function() {
 
     // If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
     if (!atBottom) {
-      this.trigger("saw", { detail: $elem });
-      if (i === 0) {
-        this.trigger("sawTop", { detail: $elem });
-      }
       return false;
     }
-    if (i === 0) {
-      this.trigger("sawTop", { detail: $elem });
-    }
     if (i === $elements.length - 1) {
-      return this.trigger("sawBottom", { detail: $elem });
+      return appEvents.trigger("sawBottom", { detail: $elem });
     }
   });
 };
-
-//  Call this when we know aren't loading any more elements. Mark the rest as seen
-Eyeline.prototype.flushRest = function() {
-  if (ENV.environment === "test") {
-    return;
-  }
-
-  $(this.selector).each((i, elem) => this.trigger("saw", { detail: $(elem) }));
-};
-
-EventTarget.mixin(Eyeline.prototype);
 
 export default Eyeline;

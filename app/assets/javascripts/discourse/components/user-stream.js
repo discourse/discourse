@@ -110,10 +110,7 @@ export default Component.extend(LoadMore, {
 
       this.set("loading", true);
       const stream = this.stream;
-      stream.findItems().then(() => {
-        this.set("loading", false);
-        this.eyeline.flushRest();
-      });
+      stream.findItems().then(() => this.set("loading", false));
     }
   }
 });

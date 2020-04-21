@@ -287,6 +287,7 @@ class Category < ActiveRecord::Base
       update_column(:topic_id, t.id)
       post = t.posts.build(raw: description || post_template, user: user)
       post.save!(validate: false)
+      update_column(:description, post.cooked) if description.present?
 
       t
     end

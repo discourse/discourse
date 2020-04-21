@@ -233,7 +233,7 @@ he:
         instructions: |-
           אם מעניין אותך לדעת עוד, יש לבחור ב־<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> להלן ולהוסיף<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **הודעה אישית זו לסימניות**. ביצוע המשימה בשלמותה עשוי לזכות אותך ב־:gift: עתידית!
         reply: |-
-          מעולה! מעכשיו דרכך חזרה אל השיחה שלנו תהיה קלה יותר בכל עת ותתאפשר ישירות מ[לשונית הסימניות בפרופיל שלך](%{profile_page_url}/activity/bookmarks). עליך פשוט לבחור בתמונת הפרופיל בפינה השמאלית העליונה &#8599;
+          מצוין! מעתה יתאפשר לך למצוא את דרכך חזרה אל הדיון בכל עת, הישר מתוך [לשונית הסימניות שבפרופיל שלך](%{bookmark_url}). עליך פשוט לבחור בתמונת הפרופיל שלך בפינה השמאלית העליונה&#8599;
         not_found: |-
           שוד ושבר, לא מצאתי סימניות בנושא זה. מצאת את הסימניות מתחת לכל פוסט? יש להשתמש בסמל להציג פעולות נוספות <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף אותן במקרה הצורך.
       emoji:

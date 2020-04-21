@@ -265,6 +265,9 @@ sr:
     types:
       category: "Kategorije"
       user: "Korisnici"
+  publish_page:
+    slug_errors:
+      invalid: "sadrži nevažeće karaktere."
   login:
     admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
   admin:
