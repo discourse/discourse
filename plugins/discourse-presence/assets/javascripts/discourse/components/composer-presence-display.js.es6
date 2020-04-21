@@ -1,12 +1,8 @@
-import { cancel, debounce, once } from "@ember/runloop";
+import { throttle } from "@ember/runloop";
 import Component from "@ember/component";
-import { equal, gt } from "@ember/object/computed";
-import { Promise } from "rsvp";
-import { ajax } from "discourse/lib/ajax";
-import computed, { observes, on } from "discourse-common/utils/decorators";
-
-export const keepAliveDuration = 10000;
-export const bufferTime = 3000;
+import { equal, gt, alias } from "@ember/object/computed";
+import { observes, on } from "discourse-common/utils/decorators";
+import { REPLYING, CLOSED } from "../lib/presence-manager";
 
 export default Component.extend({
   // Passed in variables
@@ -16,114 +12,23 @@ export default Component.extend({
   reply: null,
   title: null,
 
-  // Internal variables
-  previousState: null,
-  currentState: null,
-  presenceUsers: null,
-  channel: null,
-
-  isReply: equal("action", "reply"),
+  presenceManager: alias("topic.presenceManager"),
+  users: alias("presenceManager.users"),
   shouldDisplay: gt("users.length", 0),
+  isReply: equal("action", "reply"),
 
   @on("didInsertElement")
-  composerOpened() {
-    this._lastPublish = new Date();
-    once(this, "updateState");
-  },
-
-  @observes("action", "post.id", "topic.id")
-  composerStateChanged() {
-    once(this, "updateState");
+  subscribe() {
+    this.get("presenceManager").subscribe();
   },
 
   @observes("reply", "title")
   typing() {
-    if (new Date() - this._lastPublish > keepAliveDuration) {
-      this.publish({ current: this.currentState });
-    }
+    throttle(this, this.get("presenceManager").publish, REPLYING, 10000);
   },
 
   @on("willDestroyElement")
   composerClosing() {
-    this.publish({ previous: this.currentState });
-    cancel(this._pingTimer);
-    cancel(this._clearTimer);
-  },
-
-  updateState() {
-    let state = null;
-    const action = this.action;
-
-    if (action === "reply" || action === "edit") {
-      state = { action };
-      if (action === "reply") state.topic_id = this.get("topic.id");
-      if (action === "edit") state.post_id = this.get("post.id");
-    }
-
-    this.set("previousState", this.currentState);
-    this.set("currentState", state);
-  },
-
-  @observes("currentState")
-  currentStateChanged() {
-    if (this.channel) {
-      this.messageBus.unsubscribe(this.channel);
-      this.set("channel", null);
-    }
-
-    this.clear();
-
-    if (!["reply", "edit"].includes(this.action)) {
-      return;
-    }
-
-    this.publish({
-      response_needed: true,
-      previous: this.previousState,
-      current: this.currentState
-    }).then(r => {
-      if (this.isDestroyed) {
-        return;
-      }
-      this.set("presenceUsers", r.users);
-      this.set("channel", r.messagebus_channel);
-
-      if (!r.messagebus_channel) {
-        return;
-      }
-
-      this.messageBus.subscribe(
-        r.messagebus_channel,
-        message => {
-          if (!this.isDestroyed) this.set("presenceUsers", message.users);
-          this._clearTimer = debounce(
-            this,
-            "clear",
-            keepAliveDuration + bufferTime
-          );
-        },
-        r.messagebus_id
-      );
-    });
-  },
-
-  clear() {
-    if (!this.isDestroyed) this.set("presenceUsers", []);
-  },
-
-  publish(data) {
-    this._lastPublish = new Date();
-
-    // Don't publish presence if disabled
-    if (this.currentUser.hide_profile_and_presence) {
-      return Promise.resolve();
-    }
-
-    return ajax("/presence/publish", { type: "POST", data });
-  },
-
-  @computed("presenceUsers", "currentUser.id")
-  users(users, currentUserId) {
-    return (users || []).filter(user => user.id !== currentUserId);
+    this.get("presenceManager").publish(CLOSED);
   }
 });
