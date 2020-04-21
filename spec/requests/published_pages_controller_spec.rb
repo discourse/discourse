@@ -114,6 +114,7 @@ RSpec.describe PublishedPagesController do
           PublishedPage.create!(slug: 'i-hate-salt', topic: Fabricate(:topic))
           put "/pub/by-topic/#{topic.id}.json", params: { published_page: { slug: 'i-hate-salt' } }
           expect(response).not_to be_successful
+          expect(response.parsed_body['errors']).to eq(['Slug has already been taken'])
         end
 
         it "returns an error if the topic already has been published" do

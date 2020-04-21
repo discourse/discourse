@@ -124,7 +124,7 @@ class Admin::GroupsController < Admin::AdminController
   protected
 
   def can_not_modify_automatic
-    render json: { errors: I18n.t('groups.errors.can_not_modify_automatic') }, status: 422
+    render_json_error(I18n.t('groups.errors.can_not_modify_automatic'))
   end
 
   private
