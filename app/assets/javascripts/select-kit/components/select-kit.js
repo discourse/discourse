@@ -123,7 +123,9 @@ export default Component.extend(
     },
 
     click(event) {
-      event.stopPropagation();
+      if (this.selectKit.options.preventsClickPropagation) {
+        event.stopPropagation();
+      }
     },
 
     _modifyComponentForRowWrapper(collection, item) {
@@ -270,7 +272,8 @@ export default Component.extend(
       placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
-      castInteger: false
+      castInteger: false,
+      preventsClickPropagation: false
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
