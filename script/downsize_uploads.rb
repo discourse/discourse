@@ -29,14 +29,14 @@ def downsize_upload(upload, path)
   sha1 = Upload.generate_digest(path)
 
   if sha1 == upload.sha1
-    puts "no sha1 change" if ENV["VERBOSE"]
+    puts "No sha1 change" if ENV["VERBOSE"]
     return
   end
 
   w, h = FastImage.size(path, timeout: 15, raise_on_failure: true)
 
   if !w || !h
-    puts "invalid image dimensions after resizing" if ENV["VERBOSE"]
+    puts "Invalid image dimensions after resizing" if ENV["VERBOSE"]
     return
   end
 
@@ -54,7 +54,7 @@ def downsize_upload(upload, path)
   upload.filesize = File.size(path)
 
   if upload.filesize > before
-    puts "no filesize reduction" if ENV["VERBOSE"]
+    puts "No filesize reduction" if ENV["VERBOSE"]
     return
   end
 
@@ -80,7 +80,7 @@ def downsize_upload(upload, path)
   if ENV["VERBOSE"]
     puts "base62: #{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
     puts "sha: #{original_upload.sha1} -> #{sha1}"
-    puts "is a new file: #{new_file}"
+    puts "Is a new file: #{new_file}"
   end
 
   success = true
@@ -229,7 +229,7 @@ def process_uploads
     source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
 
     unless source
-      puts "no path or URL" if ENV["VERBOSE"]
+      puts "No path or URL" if ENV["VERBOSE"]
       next
     end
 
@@ -239,22 +239,22 @@ def process_uploads
       puts "Retrying image resizing"
       w, h = FastImage.size(source, timeout: 15)
     rescue FastImage::UnknownImageType
-      puts "unknown image type" if ENV["VERBOSE"]
+      puts "Unknown image type" if ENV["VERBOSE"]
       next
     rescue FastImage::SizeNotFound
-      puts "size not found" if ENV["VERBOSE"]
+      puts "Size not found" if ENV["VERBOSE"]
       next
     end
 
     if !w || !h
-      puts "invalid image dimensions" if ENV["VERBOSE"]
+      puts "Invalid image dimensions" if ENV["VERBOSE"]
       next
     end
 
     ww, hh = ImageSizer.resize(w, h)
 
     if w == 0 || h == 0 || ww == 0 || hh == 0
-      puts "invalid image dimensions" if ENV["VERBOSE"]
+      puts "Invalid image dimensions" if ENV["VERBOSE"]
       next
     end
 
@@ -277,14 +277,14 @@ def process_uploads
     end
 
     if w * h < MAX_IMAGE_PIXELS
-      puts "image size within allowed range" if ENV["VERBOSE"]
+      puts "Image size within allowed range" if ENV["VERBOSE"]
       next
     end
 
     path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
 
     unless path
-      puts "no image path" if ENV["VERBOSE"]
+      puts "No image path" if ENV["VERBOSE"]
       next
     end
 
