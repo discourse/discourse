@@ -609,6 +609,34 @@ pre {
   }
 }
 
+.copy-codeblocks {
+  display: block;
+  position: relative;
+  overflow: visible;
+
+  .copy-cmd {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-height: 0;
+    font-size: $font-down-2;
+    min-height: 0;
+    font-size: $font-down-2;
+    user-select: none;
+
+    &.copied {
+      .d-icon {
+        color: $tertiary;
+      }
+    }
+
+    .d-icon {
+      pointer-events: none;
+      margin-right: 0;
+    }
+  }
+}
+
 kbd {
   border-radius: 3px;
   box-shadow: shadow("kbd");
