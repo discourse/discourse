@@ -32,10 +32,10 @@ export function actionDescription(actionCode, createdAt, username) {
 }
 
 const icons = {
-  "closed.enabled": "lock",
-  "closed.disabled": "unlock-alt",
-  "autoclosed.enabled": "lock",
-  "autoclosed.disabled": "unlock-alt",
+  "closed.enabled": "discourse-comment-slash",
+  "closed.disabled": "discourse-comment",
+  "autoclosed.enabled": "discourse-comment-slash",
+  "autoclosed.disabled": "discourse-comment",
   "archived.enabled": "folder",
   "archived.disabled": "folder-open",
   "pinned.enabled": "thumbtack",
@@ -52,7 +52,7 @@ const icons = {
   user_left: "minus-circle",
   removed_user: "minus-circle",
   removed_group: "minus-circle",
-  public_topic: "comment",
+  public_topic: "discourse-comment",
   private_topic: "envelope",
   autobumped: "hand-point-right"
 };
