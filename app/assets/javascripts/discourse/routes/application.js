@@ -1,4 +1,4 @@
-import { next, once } from "@ember/runloop";
+import { once } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
@@ -11,7 +11,6 @@ import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
-import { EventTarget } from "rsvp";
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -236,14 +235,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     }
   },
 
-  activate() {
-    this._super(...arguments);
-    next(function() {
-      // Support for callbacks once the application has activated
-      ApplicationRoute.trigger("activate");
-    });
-  },
-
   renderTemplate() {
     this.render("application");
     this.render("user-card", { into: "application", outlet: "user-card" });
@@ -298,5 +289,4 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   }
 });
 
-EventTarget.mixin(ApplicationRoute);
 export default ApplicationRoute;

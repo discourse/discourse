@@ -9,7 +9,7 @@
     {{/if}}
 
     <div class="control-group">
-      {{input value=model.name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
+      {{input id="bookmark-name" value=model.name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
     </div>
 
     {{#if showExistingReminderAt }}
@@ -100,6 +100,11 @@
     <div class="control-group">
       {{d-button label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
       {{d-modal-cancel close=(action "closeWithoutSavingBookmark")}}
+      {{#if showDelete}}
+        <div class="pull-right">
+          {{d-button icon="trash" class="btn-danger" action=(action "delete")}}
+        </div>
+      {{/if}}
     </div>
   {{/conditional-loading-spinner}}
 {{/d-modal-body}}

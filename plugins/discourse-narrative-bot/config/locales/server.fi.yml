@@ -232,8 +232,6 @@ fi:
       bookmark:
         instructions: |-
           Jos haluat oppia lisää, valitse <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän viestin alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä yksityisviestiketju kirjanmerkkeihisi**. Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
-        reply: |-
-          Erinomaista! Löydät yksityiskeskustelumme nyt helposti koska vain [profiilisi kirjanmerkkivälilehdeltä](%{profile_page_url}/activity/bookmarks). Klikkaat vain profiilikuvaasi oikeassa yläkulmasssa &#8599;
         not_found: |-
           Tuota noin, et ole mielestäni kirjanmerkinnyt tämän ketjun viestejä. Löysithän kirjanmerkkikuvakkeen kunkin viestin alta? Voi olla, että sinun täytyy klikata <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">-kuvaketta, jotta näet sen ja muita toimintoja.
       emoji:
@@ -356,7 +354,7 @@ fi:
           Huomioi, että viestin voi palauttaa vain %{deletion_after} tunnin sisällä sen poistamisesta.
       category_hashtag:
         instructions: |-
-          Tiesitkö, että viesteissä voi viitata alueisiin ja tunnisteisiin? Esimerkiksi, oletko käynyt %{category}-alueella?
+          Tiesitkö, että viesteissä voi viitata alueisiin ja tunnisteisiin? Esimerkiksi, oletko käynyt %{category} -alueella?
 
           Näppäile lauseen keskellä `#` ja valitse mieleinen alue tai tunniste.
         not_found: |-

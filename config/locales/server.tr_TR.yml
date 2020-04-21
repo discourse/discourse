@@ -59,7 +59,6 @@ tr_TR:
       optimized_link: Optimize edilmiş görüntü bağlantıları geçicidir ve tema kaynak koduna dahil edilmemelidir.
     settings_errors:
       invalid_yaml: "Sağlanan YAML geçersiz."
-      data_type_not_a_number: "`%{name}` tipinin ayarlanması desteklenmiyor. Desteklenen türler tam sayı, bool, liste ve enum'dur."
       name_too_long: "Çok uzun ismi olan bir ayar var. Maksimum uzunluk 255"
       default_value_missing: "`%{name}` ayarının varsayılan değeri yoktur"
       default_not_match_type: "`%{name}` ayarının varsayılan değerinin türü ayar türüyle eşleşmiyor."
@@ -331,11 +330,10 @@ tr_TR:
       time_must_be_provided: "&#39;%{reminder_type}&#39; dışındaki tüm hatırlatıcılara zaman verilmelidir"
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
-      later_today: "Bugünden sonra <br/> {{date}}"
-      next_business_day: "Bir sonraki iş günü <br/> {{date}}"
-      tomorrow: "Yarın <br/> {{date}}"
-      next_week: "Gelecek hafta <br/> {{date}}"
-      next_month: "Gelecek ay <br/> {{date}}"
+      later_today: "Bugün ilerleyen saatlerde"
+      tomorrow: "Yarın"
+      next_week: "Gelecek hafta"
+      next_month: "Gelecek ay"
       custom: "Özel tarih ve saat"
   groups:
     success:
@@ -366,7 +364,6 @@ tr_TR:
       trust_level_4: "güven_seviyesi_4"
     request_membership_pm:
       title: "@ %{group_name} için üyelik talebi"
-      handle: "üyelik isteğini yerine getir"
     view_hidden_topic_request_reason: "'%{group_name}', grubuna katılmak istiyorum, böylece katılabilirim[bu konuya](%{topic_url})"
   education:
     until_posts:
@@ -1252,7 +1249,6 @@ tr_TR:
   dashboard:
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
     host_names_warning: "config/database.yml dosyasınızda, bilgisayar adı olarak öntanımlı değer olan \"localhost\" ayarlı. Değeri, sitenizin bilgisayar adını kullanacak biçimde güncelleyiniz."
-    gc_warning: 'Sunucunuz, Ruby''nin öntanımlı çöp toplama ayarlarını kullanıyor ki bu size en iyi performansı vermeyecektir. Performansı ayarı için şu konuyu okuyun: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Discourse için Ruby on Rails Ayarları.'
     sidekiq_warning: 'Sidekiq çalışmıyor. E-posta yollamak gibi gibi birçok asenkron görev sidekiq''in işidir. En az bir tane sidekiq süreci çalıştırdığınızdan emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq ile ilgili bilgi burada</a>.'
     queue_size_warning: "Kuyruğa eklenmiş işlerin sayısı fazla: %{queue_size}. Bu Sidekiq işlem(ler)indeki bir sorunu işaret ediyor olabilir, ya da daha fazla Sidekiq işçisi eklemeniz gerekiyor olabilir."
     memory_warning: "Sunucunuz toplam 1GB'tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir."
@@ -1363,8 +1359,6 @@ tr_TR:
     force_https: "Sitenizi HTTPS kullanmaya zorlayın. DİKKAT: bu seçeneği HTTPS'nin her yerde doğru bir şekilde çalıştığından emin olmadan SEÇMEYİN. Sitenizde bulunan paylaşım siteleri bağlantılarını, CDN' adresinizi, dışsal bağlantısı olan görsellerinizi de kontrol ettiniz mi?"
     same_site_cookies: "Aynı site çerezlerini kullanın, desteklenen tüm tarayıcılardaki Siteler Arası İstek Sahteciliği'ni (Lax veya Strict) ortadan kaldırırlar. Uyarı: Katı kurallı oturum, yalnızca giriş yapmaya ve TOA kullanmaya zorlayan sitelerde çalışır."
     summary_score_threshold: "Bir gönderinin 'Bu Konuyu Özetle' içinde yer alması için gereken en az skor."
-    summary_posts_required: "'Bu Konuyu Özetle'nin etkinleştirilmesi için konuda olması gereken en az gönderi sayısı"
-    summary_likes_required: "'Bu Konuyu Özetle'nin etkinleştirilmesi için konuda olması gereken en az beğeni sayısı"
     summary_percent_filter: "Kullanıcı 'Bu Konuyu Özetle'ye tıkladığında, gönderinin ilk % kısmını göster"
     summary_max_results: "'Bu Konuyu Özetle' den dönen en fazla gönderi sayısı"
     enable_personal_messages: "Güven seviyesi 1'e(özel ileti göndermek için en az seviye ayarıyla belirlenebilir) sahip kullanıcıların ileti oluşturup cevaplamasına izin ver. Görevliler her durumda ileti gönderebilir."
@@ -1396,7 +1390,6 @@ tr_TR:
     markdown_typographer_quotation_marks: "Çift ve tek tırnak değiştirme çiftlerinin listesi"
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir."
-    approve_suspect_users: "Personel tüm şüpheli hesapları onaylamalıdır"
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
     maximum_session_age: "Kullanıcı son ziyaretinden bu yana n saat boyunca giriş yapmış olarak kalacak"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) takip kodu, örn: UA-12345678-9; bkz. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1502,7 +1495,6 @@ tr_TR:
     discord_client_id: 'Discord İstemci Kimliği (birine ihtiyacınız var mı? <a href="https://discordapp.com/developers/applications/me">Discord geliştirici portalını</a> ziyaret edin)'
     discord_secret: "Discord Gizli Anahtarı"
     discord_trusted_guilds: 'Yalnızca bu Discord loncalarının üyelerinin Discord üzerinden giriş yapmasına izin verin. Lonca için sayısal kimliği kullanın. Daha fazla bilgi için, talimatları kontrol edin <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">buraya</a> . Bir loncaya izin vermek için boş bırakın.'
-    readonly_mode_during_backup: "Yedek alınırken yalnızca okuma modunu etkinleştir"
     enable_backups: "Yöneticilerin forumun yedeklerini oluşturmalarına izin ver"
     allow_restore: "Geri almaya izin ver. Sitedeki TÜM verileri değiştirebilir! Bir yedeklemeyi geri yüklemeyi planlamıyorsanız devre dışı bırakın."
     maximum_backups: "Diskte tutulacak en fazla yedek sayısı. Eski yedekler otomatik olarak silinir."
@@ -1819,7 +1811,6 @@ tr_TR:
     delete_drafts_older_than_n_days: "(n) günden eski taslakları sil."
     bootstrap_mode_min_users: "bootstrap modunun edilgen olması için gereken en az kullanıcı sayısı (edilgen bırakmak için 0 yapın)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların eklenti indirebilmesini önle. DİKKAT: Bu ayar, eklenti olarak gönderilen resim-dışı site içeriklerinin de çalışmasını engelleyebilir."
-    secure_media: 'Medya yüklemelerine (resimler, video, ses) erişimi sınırlar."Oturum açma gerekli" etkinse, yalnızca oturum açmış kullanıcılar medya yüklemelerine erişebilir. Aksi takdirde, erişim yalnızca özel mesajlardaki medya yüklemeleri için sınırlandırılır. Not: Bu ayar etkinleştirilmeden önce S3 yüklemeleri etkinleştirilmelidir.'
     slug_generation_method: "Slug üretim yöntemi seçin. 'kodlanmış' seçeneği yüzde kodlamalı metin oluşturur. 'hiçbiri' seçeneği slug'ı devre dışı bırakır."
     enable_emoji: "Emojiyi etkinleştir"
     enable_emoji_shortcuts: ":): p :( gibi yaygın gülen yüz ifadeleri emojilere dönüştürülecek"
@@ -2001,6 +1992,10 @@ tr_TR:
       other: "%{count} gönderiler mevcut bir mesajla birleştirildi: %{topic_link}"
   change_owner:
     post_revision_text: "Sahiplik aktarıldı"
+  publish_page:
+    slug_errors:
+      blank: "boş bırakılamaz"
+      invalid: "geçersiz karakterler barındırıyor"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
@@ -3033,7 +3028,6 @@ tr_TR:
       why: "%{last_seen_at} tarihindeki son girişinizden beri %{site_link} sitesine olanların kısa bir özeti"
       since_last_visit: "Son ziyaretinizden bu yana"
       new_topics: "Yeni Konular"
-      unread_messages: "Okunmamış İletiler"
       unread_notifications: "Okunmamış Bildirimler"
       liked_received: "Alınan Beğeniler"
       new_users: "Yeni Kullanıcılar"
@@ -3704,7 +3698,6 @@ tr_TR:
       invite_only: "Tüm yeni kullanıcılar davet edilmelidir. Bkz.`invite_only`"
       email_auth_res_enqueue: "Bu e-posta DMARC kontrolünde başarısız oldu, büyük olasılıkla kimden geldiği belli değil. Daha fazla bilgi için satır e-posta başlıklarına bakın."
       email_spam: "Bu e-posta, 'email_in_spam_header' içinde tanımlanan başlık tarafından spam olarak işaretlendi."
-      suspect_user: "Şüpheli listesindeki kullanıcılar personel tarafından kontrol edilmelidir. Bkz."
     actions:
       agree:
         title: "Kabul..."

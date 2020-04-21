@@ -342,17 +342,54 @@ RSpec.describe Admin::UsersController do
 
       expect(response.status).to eq(200)
     end
+
+    it 'returns not-found error when there is no group' do
+      group.destroy!
+
+      put "/admin/users/#{user.id}/groups.json", params: {
+        group_id: group.id
+      }
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does not allow adding users to an automatic group' do
+      group.update!(automatic: true)
+
+      expect do
+        post "/admin/users/#{user.id}/groups.json", params: {
+          group_id: group.id
+        }
+      end.to_not change { group.users.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
+    end
   end
 
   describe '#remove_group' do
     it "also clears the user's primary group" do
-      u = Fabricate(:user)
-      g = Fabricate(:group, users: [u])
-      u.update!(primary_group_id: g.id)
-      delete "/admin/users/#{u.id}/groups/#{g.id}.json"
+      group = Fabricate(:group, users: [user])
+      user.update!(primary_group_id: group.id)
+      delete "/admin/users/#{user.id}/groups/#{group.id}.json"
 
       expect(response.status).to eq(200)
-      expect(u.reload.primary_group).to eq(nil)
+      expect(user.reload.primary_group).to eq(nil)
+    end
+
+    it 'returns not-found error when there is no group' do
+      delete "/admin/users/#{user.id}/groups/9090.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does not allow removing owners from an automatic group' do
+      group = Fabricate(:group, users: [user], automatic: true)
+
+      delete "/admin/users/#{user.id}/groups/#{group.id}.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
     end
   end
 

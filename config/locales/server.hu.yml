@@ -57,7 +57,6 @@ hu:
       no_multilevels_components: "A gyermektémákat tartalmazó témák nem lehet maguk is gyermektémák"
     settings_errors:
       invalid_yaml: "A megadott YAML érvénytelen."
-      data_type_not_a_number: "A(z) „%{name}” típus beállítása nem támogatott. A támogatott típusok: „integer”, „bool”, „list” és „enum”."
       name_too_long: "Az egyik beállítás neve túl hosszú. A legnagyobb hossz 255"
       default_value_missing: "A(z) „%{name}” beállításnak nincs alapértelmezett értéke."
       default_not_match_type: "A(z) „%{name}” beállítás alapértelmezett értékének típusa nem egyezik a beállítás típusával."
@@ -245,6 +244,12 @@ hu:
   too_late_to_edit: "Ez a bejegyzés túl régen lett létrehozva. Már nem lehet szerkeszteni vagy törölni."
   revert_version_same: "A jelenlegi verzió megegyezik azzal a verzióval amire vissza szeretne térni."
   excerpt_image: "kép"
+  bookmarks:
+    reminders:
+      later_today: "A mai nap folyamán"
+      tomorrow: "Holnap"
+      next_week: "Jövő héten"
+      next_month: "Jövő hónapban"
   groups:
     errors:
       can_not_modify_automatic: "Nem módosíthat egy automata csoportot"
@@ -791,6 +796,10 @@ hu:
   redirected_to_top_reasons:
     new_user: "Üdv a közösségünkben! Ezek a legnépszerűbb témakörök."
     not_seen_in_a_month: "Üdv újra itt! Régóta nem láttuk. Ezek a legnépszerűbb témakörök, amióta távol volt."
+  publish_page:
+    slug_errors:
+      blank: "nem lehet üres"
+      invalid: "érvénytelen karaktereket tartalmaz"
   topic_statuses:
     autoclosed_disabled: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
     autoclosed_disabled_lastpost: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
@@ -1019,7 +1028,6 @@ hu:
       why: "Egy kis összefoglaló a(z) %{site_link} oldalról, hogy mik történtek a legutóbbi látogatása (%{last_seen_at}) óta."
       since_last_visit: "Utolsó látogatása óta"
       new_topics: "Új téma"
-      unread_messages: "Olvasatlan üzenet"
       unread_notifications: "Olvasatlan értesítés"
       liked_received: "Kapott kedvelés"
       new_users: "Új felhasználó"

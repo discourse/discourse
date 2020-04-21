@@ -45,9 +45,12 @@ class PostRevisor
 
   attr_reader :category_changed
 
-  def initialize(post, topic = nil)
+  def initialize(post, topic = post.topic)
     @post = post
-    @topic = topic || post.topic
+    @topic = topic
+
+    # Make sure we have only one Topic instance
+    post.topic = topic
   end
 
   def self.tracked_topic_fields
@@ -383,7 +386,7 @@ class PostRevisor
         .where(action_type: UserAction::WAS_LIKED)
         .update_all(user_id: new_owner.id)
 
-      private_message = @post.topic.private_message?
+      private_message = @topic.private_message?
 
       prev_owner_user_stat = prev_owner.user_stat
       unless private_message

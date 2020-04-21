@@ -197,8 +197,6 @@ fa_IR:
       bookmark:
         instructions: |-
           اگر دوست داری بیشتر یاد بگیری، <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> را انتخاب کن و <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **این پیام خصوصی را نشانک بزن**. اگر این کار را بکنی، شاید در آینده یک :gift: بگیری!
-        reply: |-
-          عالی! الان تو میتوانی راه برگشت به این پیغام خصوصی را هر زمان که دوست داشتی از [برگه‌ی نشانک‌ها در پروفایل کاربری](%{profile_page_url}/activity/bookmarks) پیدا کنی. فقط کافی است که روی عکس پروفایل خود در بالا سمت چپ انتخاب کنی &#8598;
         not_found: |-
           اوه، هیچ نشانکی در این موضوع نمیبینم. آیا آیکون نشانک را زیر هر نوشته پیدا کردی؟ در صورت لزوم از آیکون "بیشتر نشان بده" <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> برای آشکار کردن دیگر قابلیت ها استفاده کن.
       emoji:

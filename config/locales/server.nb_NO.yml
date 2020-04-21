@@ -46,7 +46,6 @@ nb_NO:
       no_multilevels_components: "Drakter som inneholder underdrakter kan ikke selv være en underdrakt"
     settings_errors:
       invalid_yaml: "YAML koden er ikke gyldig."
-      data_type_not_a_number: "Innstilling `%{name}` typen er ikke støttet. Støttede typer er `integer`, `bool`, `list` og `enum`"
       name_too_long: "En eller flere innstillinger har for langt navn. Maksimal lengde er 255 tegn"
       default_value_missing: "Innstilling `%{name}` har ingen standardverdi"
       default_not_match_type: "Innstilling `%{name}` har en type standardverdi som ikke stemmer med den definerte typen for innstillingen."
@@ -257,6 +256,14 @@ nb_NO:
   too_late_to_edit: "Det er for lenge siden det innlegget ble skrevet. Det kan ikke lenger redigeres eller slettes."
   revert_version_same: "Den gjeldende versjonen er den samme som den du prøver å rulle tilbake til."
   excerpt_image: "bilde"
+  bookmarks:
+    reminders:
+      at_desktop: "Neste gang jeg er på datamaskinen min"
+      later_today: "Senere i dag"
+      tomorrow: "I morgen"
+      next_week: "Neste uke"
+      next_month: "Neste måned"
+      custom: "Egendefinert dato og tid"
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' er ikke et gyldig tillitsnivå."
@@ -1028,8 +1035,6 @@ nb_NO:
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
     same_site_cookies: "Bruk Same-Site cookies/kapsler, de eliminerer alle former for Cross Site Request Forgery på nettlesere som støtter dem (Lax eller Strict). Avarsel: Strict vil kun fungere på nettsteder som tvinger innlogging og bruker SSO."
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
-    summary_posts_required: "Minste antall innlegg før 'Sammendrag for Emnet' aktiveres"
-    summary_likes_required: "Minste antall 'likes' i et emne før 'Sammendrag for Emnet' aktiveres"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
     num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
@@ -1107,6 +1112,10 @@ nb_NO:
   redirected_to_top_reasons:
     new_user: "Velkommen til felleskapet vårt! Dette er de mest populære emnene for tiden. "
     not_seen_in_a_month: "Velkommen tilbake! Vi har ikke sett deg på en stund. Dette er de mest populære emnene siden du var her sist."
+  publish_page:
+    slug_errors:
+      blank: "kan ikke være tom"
+      invalid: "inneholder ugyldige tegn"
   topic_statuses:
     autoclosed_enabled_days:
       one: "Denne tråden ble automatisk lukket etter %{count} dag. Nye svar er ikke lenger tillatt. "
@@ -1218,7 +1227,6 @@ nb_NO:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"
       new_topics: "Nye emner"
-      unread_messages: "Uleste meldinger"
       unread_notifications: "Uleste varslinger."
       liked_received: "Likes mottatt"
       new_users: "Nye brukere"

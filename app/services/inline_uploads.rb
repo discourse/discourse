@@ -148,7 +148,7 @@ class InlineUploads
   end
 
   def self.match_md_inline_img(markdown, external_src: false)
-    markdown.scan(/(!?\[([^\[\]]*)\]\(([a-zA-z0-9\.\/:-]+)([ ]*['"]{1}[^\)]*['"]{1}[ ]*)?\))/) do |match|
+    markdown.scan(/(!?\[([^\[\]]*)\]\(([^\s\)]+)([ ]*['"]{1}[^\)]*['"]{1}[ ]*)?\))/) do |match|
       if (matched_uploads(match[2]).present? || external_src) && block_given?
         yield(
           match[0],

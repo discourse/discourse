@@ -18,6 +18,7 @@ class PostJobsEnqueuer
     unless skip_after_create?
       after_post_create
       after_topic_create
+      make_visible
     end
 
     if @topic.private_message?
@@ -42,6 +43,17 @@ class PostJobsEnqueuer
 
   def trigger_post_post_process
     @post.trigger_post_process(new_post: true)
+  end
+
+  def make_visible
+    return unless SiteSetting.embed_unlisted?
+    return unless @post.post_number > 1
+    return if @topic.visible?
+    return if @post.post_type != Post.types[:regular]
+
+    if @topic.topic_embed.present?
+      Jobs.enqueue(:make_embedded_topic_visible, topic_id: @topic.id)
+    end
   end
 
   def after_post_create

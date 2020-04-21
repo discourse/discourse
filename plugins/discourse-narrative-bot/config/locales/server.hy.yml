@@ -200,8 +200,6 @@ hy:
       bookmark:
         instructions: |-
           Եթե ցանկանում եք իմանալ ավելին, ընտրեք <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ներքևում և <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **էջանշեք այս անձնական նամակը**. Եթե Դուք դա անեք, հնարավոր է Ձեզ համար :gift: լինի!
-        reply: |-
-          Գերազանց է! Այժմ Դուք հեշտությամբ կարող եք ցանկացած պահի գտնել վերադարձի ուղին դեպի մեր մասնավոր խոսակցություն, հենց [Ձեր պրոֆիլի էջանշանների ցանկից](%{profile_page_url}/activity/bookmarks): Ուղղակի ընտրեք Ձեր պրոֆիլի նկարը վերևի աջ մասում &#8599;
         not_found: |-
           Օհ, ես չեմ տեսնում որևէ էջանշում այս թեմայում: Դուք գտե՞լ եք յուրաքանչյուր գրառման տակ գտվնող էջանշումը: Եթե անհրաժեշտ է, օգտագործեք ցուցադրել ավելին <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ՝ լրացուցիչ գործողությունները տեսնելու համար:
       emoji:
