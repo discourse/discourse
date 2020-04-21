@@ -481,8 +481,9 @@ describe CategoriesController do
       end
 
       it 'rejects invalid custom slug' do
-        put "/category/#{category.id}/slug.json", params: { slug: '  ' }
+        put "/category/#{category.id}/slug.json", params: { slug: '.' }
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["Slug is invalid"])
       end
     end
   end

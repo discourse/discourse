@@ -343,7 +343,12 @@ class Category < ActiveRecord::Base
       slug = SiteSetting.slug_generation_method == 'encoded' ? CGI.unescape(self.slug) : self.slug
       # sanitize the custom slug
       self.slug = Slug.sanitize(slug)
-      errors.add(:slug, 'is already in use') if duplicate_slug?
+
+      if self.slug.blank?
+        errors.add(:slug, :invalid)
+      elsif duplicate_slug?
+        errors.add(:slug, 'is already in use')
+      end
     else
       # auto slug
       self.slug = Slug.for(name, '')
