@@ -5,6 +5,8 @@ require File.expand_path("../../config/environment", __FILE__)
 # no less than 1 megapixel
 MAX_IMAGE_PIXELS = [ARGV[0].to_i, 1_000_000].max
 
+ENV["VERBOSE"] = "1" if ENV["INTERACTIVE"]
+
 def transform_post(post, upload_before, upload_after)
   post.raw.gsub!(/upload:\/\/#{upload_before.base62_sha1}(\.#{upload_before.extension})?/i, upload_after.short_url)
   post.raw.gsub!(Discourse.store.cdn_url(upload_before.url), Discourse.store.cdn_url(upload_after.url))
@@ -68,7 +70,7 @@ def downsize_upload(upload, path)
     url = Discourse.store.store_upload(File.new(path), upload)
 
     unless url
-      puts "couldn't store the upload" if ENV["VERBOSE"]
+      puts "Couldn't store the upload" if ENV["VERBOSE"]
       return
     end
 
@@ -133,10 +135,18 @@ def downsize_upload(upload, path)
   end
 
   unless success
-    print "Press any key to continue with the upload"
-    STDIN.beep
-    STDIN.getch
-    puts " k"
+    if ENV["INTERACTIVE"]
+      print "Press any key to continue with the upload"
+      STDIN.beep
+      STDIN.getch
+      puts " k"
+    elsif new_file && !Upload.where(url: upload.url).exist?
+      # Clean up if we bail
+      Discourse.store.remove_upload(upload)
+
+      puts "Skipping" if ENV["VERBOSE"]
+      return
+    end
   end
 
   upload.save!
