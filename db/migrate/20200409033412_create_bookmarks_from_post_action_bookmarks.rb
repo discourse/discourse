@@ -4,42 +4,32 @@ class CreateBookmarksFromPostActionBookmarks < ActiveRecord::Migration[6.0]
   def up
     SiteSetting.enable_bookmarks_with_reminders = true
 
-    post_action_bookmarks = PostAction
-      .select('post_actions.id', 'post_actions.post_id', 'posts.topic_id', 'post_actions.user_id')
-      .where(post_action_type_id: PostActionType.types[:bookmark])
-      .joins(:post)
-      .where(deleted_at: nil)
-      .joins('LEFT JOIN bookmarks ON bookmarks.post_id = post_actions.post_id AND bookmarks.user_id = post_actions.user_id')
-      .joins('INNER JOIN topics ON topics.id = posts.topic_id')
-      .where('bookmarks.id IS NULL')
-
-    post_action_bookmark_count = post_action_bookmarks.count('post_actions.id')
-    i = 0
-
     bookmarks_to_create = []
-    post_action_bookmarks.find_each(batch_size: 2000) do |pab|
-      now = Time.zone.now
-      bookmarks_to_create << {
-        topic_id: pab.topic_id,
-        post_id: pab.post_id,
-        user_id: pab.user_id,
-        created_at: now,
-        updated_at: now
-      }
+    loop do
+      # post action type id 1 is :bookmark. we do not need to OFFSET here for
+      # paging because the WHERE bookmarks.id IS NULL clause handles this effectively,
+      # because we do not get bookmarks back that have already been inserted
+      post_action_bookmarks = DB.query(
+        <<~SQL, type_id: 1
+        SELECT post_actions.id, post_actions.post_id, posts.topic_id, post_actions.user_id
+        FROM post_actions
+        INNER JOIN posts ON posts.id = post_actions.post_id
+        LEFT JOIN bookmarks ON bookmarks.post_id = post_actions.post_id AND bookmarks.user_id = post_actions.user_id
+        INNER JOIN topics ON topics.id = posts.topic_id
+        WHERE bookmarks.id IS NULL AND post_action_type_id = :type_id AND post_actions.deleted_at IS NULL AND posts.deleted_at IS NULL
+        LIMIT 2000
+        SQL
+      )
+      break if post_action_bookmarks.count.zero?
 
-      i += 1
-
-      # once we get to 2000 records to create, insert them all and reset
-      # the array and counter to make sure we don't have too many in memory
-      if i >= 2000
-        create_bookmarks(bookmarks_to_create)
-        i = 0
-        bookmarks_to_create = []
+      post_action_bookmarks.each do |pab|
+        now = Time.zone.now
+        bookmarks_to_create << "(#{pab.topic_id}, #{pab.post_id}, #{pab.user_id}, '#{now}', '#{now}')"
       end
-    end
 
-    # if there was < 2000 bookmarks this finishes off the last ones
-    create_bookmarks(bookmarks_to_create)
+      create_bookmarks(bookmarks_to_create)
+      bookmarks_to_create = []
+    end # loop
   end
 
   def down
@@ -56,6 +46,13 @@ class CreateBookmarksFromPostActionBookmarks < ActiveRecord::Migration[6.0]
     # we shouldn't have duplicates here at any rate because of
     # the above LEFT JOIN but best to be safe knowing this
     # won't blow up
-    Bookmark.insert_all(bookmarks_to_create)
+    #
+    DB.exec(
+      <<~SQL
+      INSERT INTO bookmarks (topic_id, post_id, user_id, created_at, updated_at)
+      VALUES #{bookmarks_to_create.join(",\n")}
+      ON CONFLICT DO NOTHING
+      SQL
+    )
   end
 end
