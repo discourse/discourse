@@ -231,11 +231,14 @@ class TopicsController < ApplicationController
 
     fetch_topic_view(options)
 
-    render_json_dump(TopicViewPostsSerializer.new(@topic_view,
-                                                  scope: guardian,
-                                                  root: false,
-                                                  include_raw: !!params[:include_raw]
-                                                 ))
+    render_json_dump(
+      TopicViewPostsSerializer.new(
+        @topic_view,
+        scope: guardian,
+        root: false,
+        include_raw: !!params[:include_raw]
+      )
+    )
   end
 
   def excerpts
@@ -282,9 +285,9 @@ class TopicsController < ApplicationController
 
     last_notification = Notification
       .where(
-    user_id: current_user.id,
-    topic_id: topic_id
-    )
+        user_id: current_user.id,
+        topic_id: topic_id
+      )
       .order(created_at: :desc)
       .limit(1)
       .first
@@ -612,9 +615,9 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     unless pm_has_slots?(topic)
-      return render_json_error(I18n.t("pm_reached_recipients_limit",
-                                      recipients_limit: SiteSetting.max_allowed_message_recipients
-                                     ))
+      return render_json_error(
+        I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
+      )
     end
 
     if topic.private_message?
@@ -638,9 +641,9 @@ class TopicsController < ApplicationController
     )
 
     unless pm_has_slots?(topic)
-      return render_json_error(I18n.t("pm_reached_recipients_limit",
-                                      recipients_limit: SiteSetting.max_allowed_message_recipients
-                                     ))
+      return render_json_error(
+        I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
+      )
     end
 
     guardian.ensure_can_invite_to!(topic)
@@ -667,9 +670,10 @@ class TopicsController < ApplicationController
 
           if group_names.present?
             json.merge!(errors: [
-              I18n.t("topic_invite.failed_to_invite",
-                     group_names: group_names
-                    )
+              I18n.t(
+                "topic_invite.failed_to_invite",
+                group_names: group_names
+              )
             ])
           end
         end
@@ -995,11 +999,12 @@ class TopicsController < ApplicationController
       return
     end
 
-    topic_view_serializer = TopicViewSerializer.new(@topic_view,
-                                                    scope: guardian,
-                                                    root: false,
-                                                    include_raw: !!params[:include_raw]
-                                                   )
+    topic_view_serializer = TopicViewSerializer.new(
+      @topic_view,
+      scope: guardian,
+      root: false,
+      include_raw: !!params[:include_raw]
+    )
 
     respond_to do |format|
       format.html do
