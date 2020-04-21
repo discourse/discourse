@@ -181,10 +181,19 @@ RSpec.describe BookmarkManager do
 
     it "saves the time and new reminder type sucessfully" do
       update_bookmark
-       bookmark.reload
-       expect(bookmark.name).to eq(new_name)
-       expect(bookmark.reminder_at).to eq_time(new_reminder_at)
-       expect(bookmark.reminder_type).to eq(new_reminder_type)
+      bookmark.reload
+      expect(bookmark.name).to eq(new_name)
+      expect(bookmark.reminder_at).to eq_time(new_reminder_at)
+      expect(bookmark.reminder_type).to eq(new_reminder_type)
+    end
+
+    context "if the new reminder type is a string" do
+      let(:new_reminder_type) { "custom" }
+      it "is parsed" do
+        update_bookmark
+        bookmark.reload
+        expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:custom])
+      end
     end
 
     context "if the bookmark is belonging to some other user" do
