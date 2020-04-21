@@ -56,7 +56,7 @@ const TopicTrackingState = EmberObject.extend({
       if (
         tracker
           .trackMutedTopics(data)
-          .find(mutedTopic => mutedTopic.topicId === data.topic_id)
+          .findBy("topicId", data.topic_id)
       ) {
         return;
       }
