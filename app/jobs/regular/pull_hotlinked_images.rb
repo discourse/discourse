@@ -164,7 +164,7 @@ module Jobs
         doc.css(".lightbox img[src]")
     end
 
-    def should_download_image?(src, post = nil)
+    def should_download_image?(src, post)
       # make sure we actually have a url
       return false unless src.present?
 
@@ -181,9 +181,14 @@ module Jobs
         # media was enabled, then we definitely want to redownload again otherwise
         # we end up reusing existing uploads which may be linked to many posts
         # already.
-        upload = Upload.consider_for_reuse(Upload.get_from_url(src), post)
+        upload = Upload.get_from_url(src)
+        return true if upload.blank?
 
-        return !upload.present?
+        if SiteSetting.secure_media && upload.access_control_post_id.present?
+          return true if upload.copied_from_other_post?(post) || upload.uploaded_before_secure_media_enabled?
+        end
+
+        return false
       end
 
       # Don't download non-local images unless site setting enabled

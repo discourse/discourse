@@ -302,25 +302,27 @@ describe Jobs::PullHotlinkedImages do
   end
 
   describe '#should_download_image?' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post, topic: Fabricate(:topic, title: "A test of downloads", user: user), user: user) }
     subject { described_class.new }
 
     describe 'when url is invalid' do
       it 'should return false' do
-        expect(subject.should_download_image?("null")).to eq(false)
-        expect(subject.should_download_image?("meta.discourse.org")).to eq(false)
+        expect(subject.should_download_image?("null", post)).to eq(false)
+        expect(subject.should_download_image?("meta.discourse.org", post)).to eq(false)
       end
     end
 
     describe 'when url is valid' do
       it 'should return true' do
-        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(true)
-        expect(subject.should_download_image?("//meta.discourse.org")).to eq(true)
+        expect(subject.should_download_image?("http://meta.discourse.org", post)).to eq(true)
+        expect(subject.should_download_image?("//meta.discourse.org", post)).to eq(true)
       end
     end
 
     describe 'when url is an upload' do
       it 'should return false for original' do
-        expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
+        expect(subject.should_download_image?(Fabricate(:upload, user: user).url, post)).to eq(false)
       end
 
       context "when secure media enabled" do
@@ -329,13 +331,13 @@ describe Jobs::PullHotlinkedImages do
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           url = Upload.secure_media_url_from_upload_url(upload.url)
-          expect(subject.should_download_image?(url)).to eq(false)
+          expect(subject.should_download_image?(url, post)).to eq(false)
         end
       end
 
       it 'should return true for optimized' do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
-        expect(subject.should_download_image?(src)).to eq(true)
+        expect(subject.should_download_image?(src, post)).to eq(true)
       end
     end
 
@@ -346,16 +348,16 @@ describe Jobs::PullHotlinkedImages do
 
       it "still returns true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
-        expect(subject.should_download_image?(src)).to eq(true)
+        expect(subject.should_download_image?(src, post)).to eq(true)
       end
 
       it "returns false for emoji" do
         src = Emoji.url_for("testemoji.png")
-        expect(subject.should_download_image?(src)).to eq(false)
+        expect(subject.should_download_image?(src, post)).to eq(false)
       end
 
       it 'returns false for valid remote URLs' do
-        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(false)
+        expect(subject.should_download_image?("http://meta.discourse.org", post)).to eq(false)
       end
     end
   end
