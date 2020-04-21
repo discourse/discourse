@@ -4,8 +4,6 @@ import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
-import Evented from "@ember/object/evented";
-import EmberObject from "@ember/object";
 
 const SCROLL_DELAY = 500;
 
@@ -313,8 +311,6 @@ const TopicRoute = DiscourseRoute.extend({
       firstPostExpanded: false
     });
 
-    TopicRoute.trigger("setupTopicController", this);
-
     this.searchService.set("searchContext", model.get("searchContext"));
 
     // close the multi select when switching topics
@@ -332,10 +328,5 @@ const TopicRoute = DiscourseRoute.extend({
     );
   }
 });
-
-// TODO: Remove this - it's barely used.
-const events = EmberObject.extend(Evented).create();
-TopicRoute.on = events.on;
-TopicRoute.trigger = events.trigger;
 
 export default TopicRoute;
