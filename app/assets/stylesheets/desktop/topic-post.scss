@@ -247,6 +247,17 @@ nav.post-controls {
   }
 }
 
+pre.copy-codeblocks .copy-cmd:not(.copied) {
+  opacity: 0;
+  transition: 0.2s;
+  visibility: hidden;
+}
+
+pre.copy-codeblocks:hover .copy-cmd {
+  opacity: 1;
+  visibility: visible;
+}
+
 .embedded-posts {
   h1,
   h2,

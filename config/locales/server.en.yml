@@ -2067,6 +2067,7 @@ en:
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
+    show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard. This feature is not supported on Internet Explorer."
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
     embed_topics_list: "Support HTML embedding of topics lists"
