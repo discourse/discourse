@@ -1,4 +1,4 @@
-pre-commit:
+pre-push:
   parallel: true
   commands:
     rubocop:
