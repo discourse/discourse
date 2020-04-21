@@ -883,8 +883,29 @@ export default Component.extend(
 
       this._safeAfterRender(() => {
         this._focusFilter();
+        this._scrollToCurrent();
         this.popper && this.popper.update();
       });
+    },
+
+    _scrollToCurrent() {
+      if (this.value && this.mainCollection) {
+        let highlighted;
+        if (this.valueProperty) {
+          highlighted = this.mainCollection.findBy(
+            this.valueProperty,
+            this.value
+          );
+        } else {
+          const index = this.mainCollection.indexOf(this.value);
+          highlighted = this.mainCollection.objectAt(index);
+        }
+
+        if (highlighted) {
+          this._scrollToRow(highlighted);
+          this.set("selectKit.highlighted", highlighted);
+        }
+      }
     },
 
     _focusFilter(forceHeader = false) {
