@@ -18,6 +18,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_delete_all_posts,
              :can_be_deleted,
              :can_be_anonymized,
+             :can_be_merged,
              :full_suspend_reason,
              :suspended_till,
              :silence_reason,
@@ -72,6 +73,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def can_be_anonymized
     scope.can_anonymize_user?(object)
+  end
+
+  def can_be_merged
+    scope.can_merge_user?(object)
   end
 
   def topic_count
