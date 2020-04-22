@@ -149,6 +149,6 @@ export function openNewCategoryModal(context) {
   });
 
   showModal("edit-category", { model }).set("selectedTab", "general");
-};
+}
 
 export default DiscoveryCategoriesRoute;
