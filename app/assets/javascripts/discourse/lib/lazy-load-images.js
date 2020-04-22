@@ -85,7 +85,7 @@ function show(image) {
 }
 
 function forEachImage($post, callback) {
-  $("img", $post).each((_, img) => {
+  $post[0].querySelectorAll("img").forEach(img => {
     if (img.width >= MINIMUM_SIZE && img.height >= MINIMUM_SIZE) {
       callback(img);
     }
