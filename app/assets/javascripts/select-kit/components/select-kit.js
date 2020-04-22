@@ -122,6 +122,12 @@ export default Component.extend(
       );
     },
 
+    click(event) {
+      if (this.selectKit.options.preventsClickPropagation) {
+        event.stopPropagation();
+      }
+    },
+
     _modifyComponentForRowWrapper(collection, item) {
       let component = this.modifyComponentForRow(collection, item);
       return component || "select-kit/select-kit-row";
@@ -266,7 +272,8 @@ export default Component.extend(
       placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
-      castInteger: false
+      castInteger: false,
+      preventsClickPropagation: false
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -879,8 +886,29 @@ export default Component.extend(
 
       this._safeAfterRender(() => {
         this._focusFilter();
+        this._scrollToCurrent();
         this.popper && this.popper.update();
       });
+    },
+
+    _scrollToCurrent() {
+      if (this.value && this.mainCollection) {
+        let highlighted;
+        if (this.valueProperty) {
+          highlighted = this.mainCollection.findBy(
+            this.valueProperty,
+            this.value
+          );
+        } else {
+          const index = this.mainCollection.indexOf(this.value);
+          highlighted = this.mainCollection.objectAt(index);
+        }
+
+        if (highlighted) {
+          this._scrollToRow(highlighted);
+          this.set("selectKit.highlighted", highlighted);
+        }
+      }
     },
 
     _focusFilter(forceHeader = false) {

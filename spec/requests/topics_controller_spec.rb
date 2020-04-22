@@ -989,7 +989,7 @@ RSpec.describe TopicsController do
           }
 
           expect(response.status).to eq(422)
-          expect(JSON.parse(response.body)['errors']).to be_present
+          expect(response.parsed_body['errors']).to match_array([/Title is too short/, /Title seems unclear/])
         end
 
         it "returns errors when the rate limit is exceeded" do

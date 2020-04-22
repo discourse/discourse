@@ -380,6 +380,7 @@ describe ReviewablesController do
           ReviewableClaimedTopic.create!(topic_id: qp.topic_id, user: Fabricate(:admin))
           put "/review/#{qp.id}/perform/approve_post.json?version=#{qp.version}"
           expect(response.code).to eq("422")
+          expect(response.parsed_body["errors"]).to match_array(["This item has been claimed by another user."])
         end
 
         it "works when claims are optional" do

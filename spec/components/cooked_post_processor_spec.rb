@@ -1513,7 +1513,7 @@ describe CookedPostProcessor do
 
       context "and there is enough disk space" do
 
-        before { cpp.expects(:disable_if_low_on_disk_space).returns(false) }
+        before { cpp.expects(:disable_if_low_on_disk_space) }
 
         it "does not run when the system user updated the post" do
           post.last_editor_id = Discourse.system_user.id
@@ -1529,7 +1529,7 @@ describe CookedPostProcessor do
             Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
 
             delay = SiteSetting.editing_grace_period + 1
-            Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
+            Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id).once
 
             cpp.pull_hotlinked_images
           end
@@ -1555,7 +1555,7 @@ describe CookedPostProcessor do
 
     it "does nothing when there's enough disk space" do
       SiteSetting.expects(:download_remote_images_to_local=).never
-      expect(cpp.disable_if_low_on_disk_space).to eq(false)
+      cpp.disable_if_low_on_disk_space
     end
 
     context "when there's not enough disk space" do
@@ -1565,7 +1565,8 @@ describe CookedPostProcessor do
       it "disables download_remote_images_threshold and send a notification to the admin" do
         StaffActionLogger.any_instance.expects(:log_site_setting_change).once
         SystemMessage.expects(:create_from_system_user).with(Discourse.site_contact_user, :download_remote_images_disabled).once
-        expect(cpp.disable_if_low_on_disk_space).to eq(true)
+        cpp.disable_if_low_on_disk_space
+
         expect(SiteSetting.download_remote_images_to_local).to eq(false)
       end
 
@@ -1573,7 +1574,8 @@ describe CookedPostProcessor do
         SiteSetting.s3_access_key_id = "s3-access-key-id"
         SiteSetting.s3_secret_access_key = "s3-secret-access-key"
         SiteSetting.enable_s3_uploads = true
-        expect(cpp.disable_if_low_on_disk_space).to eq(false)
+        cpp.disable_if_low_on_disk_space
+
         expect(SiteSetting.download_remote_images_to_local).to eq(true)
       end
 
@@ -1603,7 +1605,7 @@ describe CookedPostProcessor do
       Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
 
       delay = SiteSetting.editing_grace_period + 1
-      Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
+      Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id).once
 
       cpp.pull_hotlinked_images
     end

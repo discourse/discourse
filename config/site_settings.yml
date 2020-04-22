@@ -850,6 +850,9 @@ posting:
     type: list
     client: true
     list_type: compact
+  show_copy_button_on_codeblocks:
+    client: true
+    default: false
   delete_old_hidden_posts: true
   enable_emoji:
     default: true

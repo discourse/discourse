@@ -22,9 +22,10 @@ function hide(image) {
     height: image.height,
     className: image.className
   });
-  image.removeAttribute("srcset");
 
   image.src = image.dataset.smallUpload || LOADING_DATA;
+  image.removeAttribute("srcset");
+
   image.removeAttribute("data-small-upload");
 }
 
@@ -35,10 +36,10 @@ function show(image) {
   if (imageData) {
     const copyImg = new Image();
     copyImg.onload = () => {
-      image.src = copyImg.src;
       if (copyImg.srcset) {
         image.srcset = copyImg.srcset;
       }
+      image.src = copyImg.src;
       image.classList.remove("d-lazyload-hidden");
 
       if (image.onload) {
@@ -55,11 +56,11 @@ function show(image) {
       copyImg.onload = null;
     };
 
-    copyImg.src = imageData.src;
-
     if (imageData.srcset) {
       copyImg.srcset = imageData.srcset;
     }
+
+    copyImg.src = imageData.src;
 
     // width of image may not match, use computed style which
     // is the actual size of the image
