@@ -19,7 +19,10 @@ function initialize(api) {
       // be created without reminder options, to streamline the new user
       // narrative.
       if (this.username === "discobot" && !this.bookmarked_with_reminder) {
-        return ajax("/bookmarks", { type: "POST", data: { post_id: this.id } }).then((response) => {
+        return ajax("/bookmarks", {
+          type: "POST",
+          data: { post_id: this.id }
+        }).then(response => {
           this.setProperties({
             "topic.bookmarked": true,
             bookmarked_with_reminder: true,
