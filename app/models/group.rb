@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Group < ActiveRecord::Base
+  self.ignored_columns = %w{
+    automatic_membership_retroactive
+  }
+
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
