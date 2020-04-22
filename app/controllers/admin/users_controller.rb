@@ -20,6 +20,7 @@ class Admin::UsersController < Admin::AdminController
                                     :remove_group,
                                     :primary_group,
                                     :anonymize,
+                                    :merge,
                                     :reset_bounce_score,
                                     :disable_second_factor,
                                     :delete_posts_batch]
@@ -468,6 +469,19 @@ class Admin::UsersController < Admin::AdminController
       render json: success_json.merge(username: user.username)
     else
       render json: failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
+    end
+  end
+
+  def merge
+    target_username = params.require(:target_username)
+    target_user = User.find_by_username(target_username)
+
+    guardian.ensure_can_merge_user!(@user, target_user)
+
+    if user = UserMerger.new(@user, target_user, current_user).merge!
+      render json: success_json.merge(merged: true, user: user)
+    else
+      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, root: false).as_json)
     end
   end
 

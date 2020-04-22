@@ -4334,6 +4334,32 @@ en:
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
+        merge:
+          transfer_and_delete: "Transfer & Delete"
+          prompt:
+            title: "Transfer & Delete @%{username}"
+            description: |
+              <p>Please choose a new owner for <b>@%{username}'s</b> content.</p>
+
+              <p>All topics, posts, messages and other content created by <b>@%{username}</b> will be transferred.</p>
+
+            target_username_placeholder: "Username of new owner"
+            transfer_and_delete: "Transfer & Delete @%{username}"
+            cancel: "Cancel"
+          confirmation:
+            title: "Transfer & Delete @%{username}"
+            description: |
+              <p>All of <b>@%{username}'s</b> content will be transferred and attributed to <b>@%{targetUsername}</b>. After the content is transferred, <b>@%{username}'s</b> account will be deleted.</p>
+
+              <p><b>This can not be undone!</b></p>
+
+              <p>To continue type: <code>%{text}</code></p>
+
+            transfer_and_delete: "Transfer & Delete @%{username}"
+            cancel: "Cancel"
+
+        merging_user: "Merging user..."
+        merge_failed: "There was an error while merging the users."
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
         delete_forbidden:

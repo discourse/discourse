@@ -988,4 +988,22 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#merge" do
+    fab!(:target_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
+
+    it 'should merge source user to target user' do
+      post "/admin/users/#{user.id}/merge.json", params: {
+        target_username: target_user.username
+      }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["merged"]).to be_truthy
+      expect(response.parsed_body["user"]["id"]).to eq(target_user.id)
+      expect(topic.reload.user_id).to eq(target_user.id)
+      expect(first_post.reload.user_id).to eq(target_user.id)
+    end
+  end
+
 end
