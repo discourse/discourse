@@ -77,7 +77,13 @@
       {{/if}}
 
       <div class="reviewable-filter date-range">
-        {{date-time-input-range showFromTime=false showToTime=false from=filterFromDate to=filterToDate onChange=setRange}}
+        {{date-time-input-range
+          from=filterFromDate
+          to=filterToDate
+          onChange=setRange
+          showFromTime=false
+          showToTime=false
+        }}
       </div>
 
       <div class="reviewable-filter sort-order">

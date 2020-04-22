@@ -1,53 +1,46 @@
-import { equal } from "@ember/object/computed";
 import Component from "@ember/component";
+import { action } from "@ember/object";
+
 export default Component.extend({
   classNames: ["d-date-time-input-range"],
-
   from: null,
   to: null,
   onChangeTo: null,
   onChangeFrom: null,
-  currentPanel: "from",
-  showFromTime: true,
+  toTimeFirst: false,
   showToTime: true,
-  error: null,
+  showFromTime: true,
+  clearable: false,
 
-  fromPanelActive: equal("currentPanel", "from"),
-  toPanelActive: equal("currentPanel", "to"),
+  @action
+  onChangeRanges(options, value) {
+    if (this.onChange) {
+      const state = {
+        from: this.from,
+        to: this.to
+      };
 
-  _valid(state) {
-    if (state.to && state.from && state.to < state.from) {
-      return I18n.t("date_time_picker.errors.to_before_from");
-    }
+      const diff = {};
 
-    return true;
-  },
-
-  actions: {
-    _onChange(options, value) {
-      if (this.onChange) {
-        const state = {
-          from: this.from,
-          to: this.to
-        };
-
-        const diff = {};
-        diff[options.prop] = value;
-
-        const newState = Object.assign(state, diff);
-
-        const validation = this._valid(newState);
-        if (validation === true) {
-          this.set("error", null);
-          this.onChange(newState);
+      if (options.prop === "from") {
+        if (value && value.isAfter(this.to)) {
+          diff[options.prop] = value;
+          diff["to"] = value.clone().add(1, "hour");
         } else {
-          this.set("error", validation);
+          diff[options.prop] = value;
         }
       }
-    },
 
-    onChangePanel(panel) {
-      this.set("currentPanel", panel);
+      if (options.prop === "to") {
+        if (value && value.isBefore(this.from)) {
+          diff[options.prop] = this.from.clone().add(1, "hour");
+        } else {
+          diff[options.prop] = value;
+        }
+      }
+
+      const newState = Object.assign({}, state, diff);
+      this.onChange(newState);
     }
   }
 });

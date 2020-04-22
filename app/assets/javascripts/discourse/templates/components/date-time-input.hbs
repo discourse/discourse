@@ -1,13 +1,31 @@
-{{date-input date=date onChange=(action "onChangeDate")}}
+{{#unless timeFirst}}
+  {{date-input
+    date=date
+    relativeDate=relativeDate
+    onChange=(action "onChangeDate")
+  }}
+{{/unless}}
 
 {{#if showTime}}
   {{time-input
-    hours=_hours
-    minutes=_minutes
+    date=date
+    relativeDate=relativeDate
     onChange=(action "onChangeTime")
   }}
+{{/if}}
 
-  {{#if clearable}}
-    {{d-button icon="times" action=(action "onClear")}}
-  {{/if}}
+{{#if timeFirst}}
+  {{date-input
+    date=date
+    relativeDate=relativeDate
+    onChange=(action "onChangeDate")
+  }}
+{{/if}}
+
+{{#if clearable}}
+  {{d-button
+    class="clear-date-time"
+    icon="times"
+    action=(action "onClear")
+  }}
 {{/if}}
