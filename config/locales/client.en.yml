@@ -3411,6 +3411,8 @@ en:
               label: Group
             category:
               label: Category
+            include-subcategories:
+              label: "Include Subcategories"
 
       commits:
         latest_changes: "Latest changes: please update often!"

@@ -165,7 +165,8 @@
 
               <div class="input">
                 {{component
-                  (concat "report-filters/" filter.id)
+                  (concat "report-filters/" filter.type)
+                  model=model
                   filter=filter
                   applyFilter=(action "applyFilter")}}
               </div>

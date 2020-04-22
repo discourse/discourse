@@ -61,7 +61,7 @@ let signups = {
   dates_filtering: true,
   report_key: 'reports:signups:start:end:[:prev_period]:50:{"group":"88"}:4',
   available_filters: [
-    { id: "group", allow_any: false, choices: [], default: "88" }
+    { id: "group", type: "group", allow_any: false, choices: [], default: "88" }
   ],
   labels: [
     { type: "date", properties: ["x"], title: "Day" },

@@ -7,7 +7,6 @@ import Component from "@ember/component";
 import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import { isNumeric } from "discourse/lib/utilities";
 import Report, { SCHEMA_VERSION } from "admin/models/report";
 import ENV from "discourse-common/config/environment";
 
@@ -167,10 +166,9 @@ export default Component.extend({
       ENV.environment === "test" ? "end" : endDate.replace(/-/g, ""),
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
+      // Convert all filter values to strings to ensure unique serialization
       customFilters
-        ? JSON.stringify(customFilters, (key, value) =>
-            isNumeric(value) ? value.toString() : value
-          )
+        ? JSON.stringify(customFilters, (k, v) => (k ? `${v}` : v))
         : null,
       SCHEMA_VERSION
     ]
