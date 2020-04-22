@@ -184,7 +184,6 @@ const Group = RestModel.extend({
       visibility_level: this.visibility_level,
       members_visibility_level: this.members_visibility_level,
       automatic_membership_email_domains: this.emailDomains,
-      automatic_membership_retroactive: !!this.automatic_membership_retroactive,
       title: this.title,
       primary_group: !!this.primary_group,
       grant_trust_level: this.grant_trust_level,

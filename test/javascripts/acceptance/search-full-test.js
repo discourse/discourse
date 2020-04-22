@@ -30,7 +30,6 @@ acceptance("Search - Full Page", {
         alias_level: 0,
         visible: true,
         automatic_membership_email_domains: null,
-        automatic_membership_retroactive: false,
         primary_group: false,
         title: null,
         grant_trust_level: null,

@@ -204,7 +204,6 @@ export default {
           alias_level: 0,
           visible: true,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null
         },
@@ -216,7 +215,6 @@ export default {
           alias_level: 0,
           visible: true,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null
         }
@@ -2250,7 +2248,11 @@ export default {
             { extras: null, description: "Most Posts", user_id: 5460 },
             { extras: null, description: "Frequent Poster", user_id: 402 },
             { extras: null, description: "Frequent Poster", user_id: 5707 },
-            { extras: "latest", description: "Most Recent Poster", user_id: 32 }
+            {
+              extras: "latest",
+              description: "Most Recent Poster",
+              user_id: 32
+            }
           ]
         },
         {
@@ -2539,7 +2541,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2567,7 +2568,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2595,7 +2595,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2623,7 +2622,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
