@@ -165,7 +165,7 @@ export default createWidget("topic-admin-menu", {
           className: "topic-admin-open",
           buttonClass: "btn-default",
           action: "toggleClosed",
-          icon: "discourse-comment",
+          icon: "discourse-comment-plus",
           label: "actions.open"
         });
       } else {
@@ -239,7 +239,7 @@ export default createWidget("topic-admin-menu", {
           action: isPrivateMessage
             ? "convertToPublicTopic"
             : "convertToPrivateMessage",
-          icon: isPrivateMessage ? "discourse-comment" : "envelope",
+          icon: isPrivateMessage ? "discourse-comment-plus" : "envelope",
           label: isPrivateMessage
             ? "actions.make_public"
             : "actions.make_private"
