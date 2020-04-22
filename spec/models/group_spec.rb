@@ -407,7 +407,6 @@ describe Group do
     Group.refresh_automatic_groups!
 
     groups = Group.includes(:users).to_a
-    puts groups.pluck(:name).inspect
     expect(groups.count).to eq Group::AUTO_GROUPS.count
 
     g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:admins] }

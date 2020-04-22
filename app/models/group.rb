@@ -841,9 +841,9 @@ class Group < ActiveRecord::Base
   end
 
   def self.automatic_membership_users(domains, group_id = nil)
-    domains = domains.gsub('.', '\.')
+    pattern = "@(#{domains.gsub('.', '\.')})$"
 
-    users = User.joins(:user_emails).where("user_emails.email ~* '@(#{domains})$'").activated.where(staged: false)
+    users = User.joins(:user_emails).where("user_emails.email ~* ?", pattern).activated.where(staged: false)
     users = users.where("users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)", group_id) if group_id.present?
 
     users
