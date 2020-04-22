@@ -942,27 +942,25 @@ describe Group do
   end
 
   describe '#automatic_group_membership' do
-    describe 'for a automatic_membership_retroactive group' do
-      let(:group) { Fabricate(:group, automatic_membership_retroactive: true) }
+    let(:group) { Fabricate(:group, automatic_membership_email_domains: "example.com") }
 
-      it "should be triggered on create and update" do
-        expect { group }
-          .to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
+    it "should be triggered on create and update" do
+      expect { group }
+        .to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
 
-        job = Jobs::AutomaticGroupMembership.jobs.last
+      job = Jobs::AutomaticGroupMembership.jobs.last
 
-        expect(job["args"].first["group_id"]).to eq(group.id)
+      expect(job["args"].first["group_id"]).to eq(group.id)
 
-        Jobs::AutomaticGroupMembership.jobs.clear
+      Jobs::AutomaticGroupMembership.jobs.clear
 
-        expect do
-          group.update!(name: 'asdiaksjdias')
-        end.to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
+      expect do
+        group.update!(name: 'asdiaksjdias')
+      end.to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
 
-        job = Jobs::AutomaticGroupMembership.jobs.last
+      job = Jobs::AutomaticGroupMembership.jobs.last
 
-        expect(job["args"].first["group_id"]).to eq(group.id)
-      end
+      expect(job["args"].first["group_id"]).to eq(group.id)
     end
   end
 
