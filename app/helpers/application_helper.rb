@@ -502,6 +502,8 @@ module ApplicationHelper
       absolute_url = "#{Discourse.base_url}#{link}"
     elsif link.start_with?("/images/")
       absolute_url = "#{Discourse.base_url}#{link}"
+    elsif link.start_with?("/user_avatar/")
+      absolute_url = "#{Discourse.base_url}#{link}"
     elsif GlobalSetting.relative_url_root && link.start_with?(GlobalSetting.relative_url_root)
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
     end
