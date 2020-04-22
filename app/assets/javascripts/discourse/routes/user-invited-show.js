@@ -2,7 +2,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
 import showModal from "discourse/lib/show-modal";
 
-export default DiscourseRoute.extend({
+const userInvitedShow = DiscourseRoute.extend({
   model(params) {
     Invite.findInvitedCount(this.modelFor("user")).then(result =>
       this.set("invitesCount", result)
@@ -36,13 +36,25 @@ export default DiscourseRoute.extend({
           {
             id: "invite",
             title: "user.invited.create",
-            model: {
-              inviteModel: this.currentUser,
-              userInvitedShow: this.controllerFor("user-invited-show")
-            }
+            model: this.userInviteModel(this)
           }
         ]
       });
     }
   }
 });
+
+userInvitedShow.reopenClass({
+  defaultUserInviteModel: function(context) {
+    return {
+      inviteModel: context.currentUser,
+      userInvitedShow: context.controllerFor("user-invited-show")
+    };
+  }
+});
+
+userInvitedShow.reopen({
+  userInviteModel: userInvitedShow.defaultUserInviteModel
+});
+
+export default userInvitedShow;
