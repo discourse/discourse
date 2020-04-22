@@ -44,7 +44,9 @@
     <thead>
       <tr>
         <th><%= t 'js.topic.title' %></th>
+        <th></th>
         <th><%= t 'js.replies' %></th>
+        <th><%= t 'js.views' %></th>
         <th><%= t 'js.activity' %></th>
       </tr>
     </thead>
@@ -60,16 +62,39 @@
             <a href='<%= t.url %>' class='title raw-link raw-topic-link'>
               <span><%= t.title %></span>
             </a>
-            <% if (!@category || @category.has_children?) && t.category %>
-              <div>
-                <a href='<%= t.category.url %>'><span class='category-name'><%= t.category.name %></span></a>
-              </div>
-            <% end %>
+            <div class="link-bottom-line">
+              <% if (!@category || @category.has_children?) && t.category %>
+                <a href='<%= t.category.url %>' class='category-name'><%= t.category.name %></a>
+              <% end %>
+              <% if t.tags %>
+                <div class="discourse-tags">
+                  <% t.tags.each_with_index do |tag, index| %>
+                    <a href='<%= tag.full_url %>' class='discourse-tag'>
+                      <%= tag.name %><% if index < t.tags.size - 1 %>,<% end %>
+                    </a>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
             <% if t.pinned_until && (t.pinned_until > Time.zone.now) && (t.pinned_globally || @list.category) && t.excerpt %>
               <p class='excerpt'>
                 <%= t.excerpt.html_safe %>
               </p>
             <% end %>
+          </td>
+          <td class='posters'>
+            <% t.posters.each do |poster| %>
+              <% if poster.moreCount %>
+                <a class="posters-more-count"><% poster.moreCount %></a>
+              <% else %>
+                <a href="<%= Discourse.base_url %>/u/<%= poster.user.username %>" class="<%= poster.extraClasses %>">
+                  <img width="25" height="25" src="<%= poster.user.avatar_template.gsub('{size}', '25') %>" class="avatar" title='<%= h("#{poster.user.username} - #{poster.description}") %>' aria-label='<%= h("#{poster.user.username} - #{poster.description}") %>'>
+                </a>
+              <% end %>
+            <% end %>
+          </td>
+          <td>
+            <span class='views' title='<%= t 'views' %>'><%= t.views %></span>
           </td>
           <td>
             <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count %></span>
@@ -89,7 +114,9 @@
     <% if params[:page].to_i > 0 %>
       <span itemprop='name'><a href='<%= @list.prev_topics_url %>' rel='prev' itemprop='url'><%= t 'prev_page' %></a> &nbsp;</span>
     <% end %>
-    <span itemprop='name'><b><a href='<%= @list.more_topics_url %>' rel='next' itemprop='url'><%= t 'next_page' %></a></b></span>
+    <% if @list.topics.size == @list.per_page %>
+      <span itemprop='name'><b><a href='<%= @list.more_topics_url %>' rel='next' itemprop='url'><%= t 'next_page' %></a></b></span>
+    <% end %>
   </div>
 
   <% content_for :head do %>
