@@ -61,7 +61,7 @@ class PollSerializer < ApplicationSerializer
   end
 
   def include_preloaded_voters?
-    object.can_see_voters?(scope)
+    object.can_see_voters?(scope.user)
   end
 
 end

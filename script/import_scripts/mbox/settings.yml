@@ -1,18 +1,51 @@
+# Directory where all emails and mbox files are stored.
 data_dir: /shared/import/data
 
-# mbox files
+# Regular expression for splitting emails in mbox files.
+# Choose one of the following examples that works for you or add your own regular expression.
 split_regex: "^From .+@.+"
 #split_regex: "^From .+@example.com.+"
-
-# individual emails
-#split_regex: ""
 
 # Listserv files
 #split_regex: "^========================================================================="
 
-default_trust_level: 1
+# When each file contains only one email
+#split_regex: ""
+
+# Prefer the HTML part of emails instead of the plain text part.
 prefer_html: true
+
+# The trust level of users created by the import script.
+default_trust_level: 1
+
+# Create staged users instead of regular users.
 staged: true
+
+# You can enable this option if the script should stop after indexing all emails
+# instead of executing the import right away. That's useful if you need to make some changes
+# to the indexed data in the `index.db` created during the indexing step.
 index_only: false
 
+# Only enable this option when the import script fails to group messages with
+# with the `In-Reply-To` and `References` headers.
 group_messages_by_subject: false
+
+# Always show trimmed part of emails. WARNING: This might reveal email addresses.
+show_trimmed_content: false
+
+# Remove prefixes like [FOO] or (BAR) from topic titles and replace them with tags.
+# You can map one or more case-insensitive prefixes to the same tag in Discourse.
+# "Tag name in Discourse": "foo"
+# "Tag name in Discourse": ["foo", "bar"]
+# You can use an empty tag name to remove prefixes without creating a tag in Discourse.
+tags:
+#  "off-topic": "ot"
+#  announcement: ["ann", "announce", "announcement"]
+#  "": ["foo", "bar"]
+
+# These prefixes will be removed from the beginning of topic titles. You can use regular expessions.
+# Prefixes are case-insensitive. You can add additional prefixes (e.g. localized prefixes from
+# https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages).
+remove_subject_prefixes:
+  - "Re: "
+  - "Fwd?: "

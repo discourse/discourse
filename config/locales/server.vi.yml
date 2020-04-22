@@ -31,6 +31,7 @@ vi:
   submit: "Gửi đi"
   disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì không dung lượng lưu trữ."
   anonymous: "Ẩn danh"
+  remove_posts_deleted_by_author: "Đã bị xóa bởi tác giả"
   themes:
     import_error:
       git: "Lỗi nhân bản kho git, truy cập bị từ chối hoặc không tìm thấy kho lưu trữ"
@@ -168,11 +169,9 @@ vi:
   bookmarks:
     reminders:
       at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
-      later_today: "Sau ngày hôm nay <br/> {{date}}"
-      next_business_day: "Ngày làm việc tiếp theo <br/> {{date}}"
-      tomorrow: "Ngày mai <br/> {{date}}"
-      next_week: "Tuần tới <br/> {{date}}"
-      next_month: "Tháng tiếp theo <br/> {{date}}"
+      tomorrow: "Ngày mai"
+      next_week: "Tuần tới"
+      next_month: "Tháng t"
       custom: "Ngày giờ tùy chỉnh"
   groups:
     errors:
@@ -710,8 +709,6 @@ vi:
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
-    summary_posts_required: "Số bài viết tối thiểu trong một chủ đề trước khi 'Tóm tắt chủ đề này' được kích hoạt"
-    summary_likes_required: "Số lượt thích trong một chủ đề trước khi 'Tóm tắt chủ đề này' được kích hoạt"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
     enable_long_polling: "Message Bus sử dụng để thông báo có thể sử dụng vòng gọi dài"
     long_polling_base_url: "URL chính sử dụng cho vòng gọi dài (khi một CDN phục vụ nội dung động, hãy chắc chắn để thiết lập này là vòng gọi gốc), vd: http://origin.site.com"
@@ -946,7 +943,6 @@ vi:
     delete_drafts_older_than_n_days: "Xóa các bản nháp cũ hơn (n) ngày."
     bootstrap_mode_min_users: "Số thành viên tối thiểu được yêu cầu để tắt chế độ bootstrap (đặt thành 0 để tắt)"
     prevent_anons_from_downloading_files: "Cấm khách truy cập tải các tập tin đính kèm. CẢNH BÁO: việc này sẽ chặn những hình ảnh không thuộc giao diện trang hoạt động"
-    secure_media: 'Giới hạn truy cập để tải lên phương tiện truyền thông (hình ảnh, video, âm thanh). Nếu "yêu cầu đăng nhập" được bật, chỉ Thành viên đã đăng nhập mới có thể truy cập tải lên phương tiện. Nếu không, quyền truy cập sẽ chỉ bị giới hạn đối với các phương tiện tải lên trong các tin nhắn riêng tư. Lưu ý: Tải lên S3 phải được bật trước khi bật cài đặt này.'
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
     enable_emoji: "Kích hoạt emoji"
     emoji_set: "Bạn thích dùng gói emoji nào?"
@@ -1008,6 +1004,10 @@ vi:
   redirected_to_top_reasons:
     new_user: "Chào mừng đến với cộng dồng của chúng tôi! Ở đây có những chủ để phổ biến."
     not_seen_in_a_month: "Chào mừng quay trở lại! Chúng tôi thấy bạn truy cập một khoảng thời gian. Ở đây có những bài viết phổ biến từ lúc bạn đ."
+  publish_page:
+    slug_errors:
+      blank: "không được để trống"
+      invalid: "chứa các kí tự không hợp lệ"
   topic_statuses:
     autoclosed_enabled_days:
       other: "Chủ đề này sẽ được tự động đóng sau %{count} ngày, sẽ không được gửi trả lời."

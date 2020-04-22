@@ -45,6 +45,12 @@ Discourse::Application.routes.draw do
   get "finish-installation/confirm-email" => "finish_installation#confirm_email"
   put "finish-installation/resend-email" => "finish_installation#resend_email"
 
+  get "pub/check-slug" => "published_pages#check_slug"
+  get "pub/by-topic/:topic_id" => "published_pages#details"
+  put "pub/by-topic/:topic_id" => "published_pages#upsert"
+  delete "pub/by-topic/:topic_id" => "published_pages#destroy"
+  get "pub/:slug" => "published_pages#show"
+
   resources :directory_items
 
   get "site" => "site#site"
@@ -131,6 +137,7 @@ Discourse::Application.routes.draw do
       get "leader_requirements" => "users#tl3_requirements"
       get "tl3_requirements"
       put "anonymize"
+      post "merge"
       post "reset_bounce_score"
       put "disable_second_factor"
     end
@@ -367,6 +374,8 @@ Discourse::Application.routes.draw do
   get "user_preferences" => "users#user_preferences_redirect"
   get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
 
+  get "user-cards" => "users#cards", format: :json
+
   %w{users u}.each_with_index do |root_path, index|
     get "#{root_path}" => "users#index", constraints: { format: 'html' }
 
@@ -467,6 +476,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/activity" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/activity/:filter" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/badges" => "users#badges", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/bookmarks" => "users#bookmarks", constraints: { username: RouteFormat.username, format: /(json|ics)/ }
     get "#{root_path}/:username/notifications" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/notifications/:filter" => "users#show", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username" => "users#destroy", constraints: { username: RouteFormat.username }
@@ -576,7 +586,6 @@ Discourse::Application.routes.draw do
   put "admin/groups/:id/members" => "groups#add_members", constraints: AdminConstraint.new
 
   resources :posts do
-    put "bookmark"
     delete "bookmark", to: "posts#destroy_bookmark"
     put "wiki"
     put "post_type"
@@ -597,7 +606,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :bookmarks, only: %i[create destroy]
+  resources :bookmarks, only: %i[create destroy update]
 
   resources :notifications, except: :show do
     collection do
@@ -950,6 +959,8 @@ Discourse::Application.routes.draw do
   post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
 
   resources :csp_reports, only: [:create]
+
+  get "/permalink-check", to: 'permalinks#check'
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end

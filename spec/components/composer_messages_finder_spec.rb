@@ -157,9 +157,11 @@ describe ComposerMessagesFinder do
       SiteSetting.educate_until_posts = 10
       user.stubs(:post_count).returns(11)
 
-      Fabricate(:post, topic: topic, user: user)
-      Fabricate(:post, topic: topic, user: user)
-      Fabricate(:post, topic: topic, user: user, post_type: Post.types[:small_action])
+      freeze_time(5.minutes.ago) do
+        Fabricate(:post, topic: topic, user: user)
+        Fabricate(:post, topic: topic, user: user)
+        Fabricate(:post, topic: topic, user: user, post_type: Post.types[:small_action])
+      end
 
       SiteSetting.sequential_replies_threshold = 2
     end

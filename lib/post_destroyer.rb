@@ -276,6 +276,8 @@ class PostDestroyer
   end
 
   def notify_deletion(reviewable)
+    return if @post.user.blank?
+
     allowed_user = @user.human? && @user.staff?
     return unless allowed_user && rs = reviewable.reviewable_scores.order('created_at DESC').first
 

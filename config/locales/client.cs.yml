@@ -30,7 +30,6 @@ cs:
     dates:
       time: "H:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMMM H:mm"
       long_no_year_no_time: "D. MMMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. M. YYYY, H:mm"
@@ -293,6 +292,12 @@ cs:
       remove: "Odstranit záložku"
       confirm_clear: "Opravdu chcete odstranit všechny své záložky z tohoto tématu?"
       save: "Uložit"
+      reminders:
+        later_today: "Později během dnešního dne"
+        tomorrow: "Zítra"
+        next_week: "Další týden"
+        later_this_week: "Později během tohoto týdne"
+        next_month: "Další měsíc"
     drafts:
       resume: "Pokračovat"
       remove: "Odstranit"
@@ -799,10 +804,6 @@ cs:
         success_staff: "Na vaši aktuální adresu jsme zaslali email. Následujte prosím instrukce v tomto emailu."
       change_avatar:
         title: "Změňte si svůj profilový obrázek"
-        gravatar: "Založeno na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>u"
-        gravatar_title: "Změňte si avatar na webových stránkách Gravatar"
-        gravatar_failed: "Nemohli sme najít Gravatar asociován s touto email adresou."
-        refresh_gravatar_title: "Obnovit Gravatar"
         letter_based: "Systémem přidělený profilový obrázek"
         uploaded_avatar: "Vlastní obrázek"
         uploaded_avatar_empty: "Přidat vlastní obrázek"
@@ -1075,6 +1076,8 @@ cs:
         back: "Zpět"
         again: "Zkusit znovu"
         fixed: "Nahrávám"
+    modal:
+      close: "zavřít"
     close: "Zavřít"
     assets_changed_confirm: "Tento web se právě aktualizoval. Chcete obnovit stránku a mít nejnovější verzi?"
     logout: "Byli jste odhlášeni."
@@ -1272,7 +1275,6 @@ cs:
       filter_placeholder: Hledat emoji
       objects: Objekty
       flags: Nahlášení
-      custom: Vlastní emoji
       recent: Nedávno použité
       default_tone: Bez barvy pleti
       light_tone: Světlá pleť
@@ -1280,6 +1282,7 @@ cs:
       medium_tone: Mírně hnědá pleť
       medium_dark_tone: Hnědá pleť
       dark_tone: Černá pleť
+      default: Vlastní emoji
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma uvidí pouze uživatelé, kteří mohou vidět kategorii <b>{{category}}</b>"
@@ -1423,6 +1426,7 @@ cs:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2156,6 +2160,7 @@ cs:
             title: "Zobrazit html část emailu"
             button: "HTML"
       bookmarks:
+        created: "Vytvořený"
         name: "Jméno"
     category:
       can: "smí&hellip; "
@@ -3324,7 +3329,6 @@ cs:
           staff: "Redakce"
           suspended: "Zakázaní"
           silenced: "Ztišení"
-          suspect: "Podezřelí"
           staged: "Staged"
         approved: "Schválen?"
         titles:
@@ -3341,7 +3345,6 @@ cs:
           moderators: "Moderátoři"
           silenced: "Ztišení uživatelé"
           suspended: "Zakázaní uživatelé"
-          suspect: "Podezřelí uživatelé"
         not_verified: "Neověřeno"
         check_email:
           title: "Odhal emailovou adresu tohoto uživatele"
@@ -3671,6 +3674,7 @@ cs:
         help: "Vložte nové emoji, které bude dostupné pro všechny na fóru. (Protip: můžete přetáhnout několik souborů najednou.)"
         add: "Vložit nový Emoji"
         name: "Název"
+        group: "Skupina"
         image: "Obrázek"
         delete_confirm: "Určitě chcete smazat :%{name}: emoji?"
       embedding:

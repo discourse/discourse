@@ -30,7 +30,6 @@ sl:
     dates:
       time: "H:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMM H:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. MMM YYYY H:mm"
@@ -310,6 +309,12 @@ sl:
       remove: "Odstrani zaznamek"
       confirm_clear: "Ste prepričani, da želite odstraniti vse svoje zaznamke iz te teme?"
       save: "Shrani"
+      reminders:
+        later_today: "Kasneje v dnevu"
+        tomorrow: "Jutri"
+        next_week: "Naslednji teden"
+        later_this_week: "Kasneje v tednu"
+        next_month: "Naslednji mesec"
     drafts:
       resume: "Nadaljuj"
       remove: "Odstrani"
@@ -931,10 +936,6 @@ sl:
         success_staff: "Poslali smo e-sporočilo na vaš trenutni naslov. Sledite navodilom za potrditev."
       change_avatar:
         title: "Menjaj profilno sliko"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a> od"
-        gravatar_title: "Spremeni svoj avatar na Gravatar strani"
-        gravatar_failed: "Nismo našli Gravatar s tem e-naslovom."
-        refresh_gravatar_title: "Osveži svoj Gravatar"
         letter_based: "Sistemsko privzeta profilna slika"
         uploaded_avatar: "Slika po meri"
         uploaded_avatar_empty: "Dodaj sliko po meri"
@@ -1230,6 +1231,8 @@ sl:
         back: "Nazaj"
         again: "Poskusi ponovno"
         fixed: "Naloži stran"
+    modal:
+      close: "zapri"
     close: "Zapri"
     assets_changed_confirm: "Stran ji bala pravkar posodobljena. Osvežimo takoj za zadnjo verzijo?"
     logout: "Bili ste odjavljeni."
@@ -1445,7 +1448,6 @@ sl:
       objects: Stvari
       symbols: Simboli
       flags: Zastave
-      custom: Po meri emoji
       recent: Nedavno uporabljeni
       default_tone: Brez barve kože
       light_tone: Svetla barva kože
@@ -1453,6 +1455,7 @@ sl:
       medium_tone: Srednja barva kože
       medium_dark_tone: Srednje temna barva kože
       dark_tone: Temna barva kože
+      default: Po meri emoji
     shared_drafts:
       title: "Skupni osnutki"
       notice: "Ta tema je vidna samo tistim, ki lahko vidijo kategorijo <b>{{category}}</b>."
@@ -1605,6 +1608,7 @@ sl:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2424,6 +2428,7 @@ sl:
             title: "Prikaži HTML obliko e-sporočila"
             button: "HTML"
       bookmarks:
+        created: "Ustvarjeno"
         name: "Polno ime"
     category:
       can: "lahko&hellip; "
@@ -3470,7 +3475,6 @@ sl:
           staff: "Osebje"
           suspended: "Suspendirani"
           silenced: "Utišani"
-          suspect: "Sumljivi"
           staged: "Prirejeni"
         approved: "Potrjen?"
         titles:
@@ -3486,7 +3490,6 @@ sl:
           moderators: "Moderatorji"
           silenced: "Utišani uporabniki"
           suspended: "Suspendirani uporabniki"
-          suspect: "Sumljivi uporabniki"
           staged: "Prirejeni uporabniki"
         check_email:
           text: "Prikaži"
@@ -3784,6 +3787,7 @@ sl:
         help: "Dodaj nov emoji, ki bo na voljo vsem. (lahko prestavite in spustite več datotek naenkrat)"
         add: "Dodaj nov emoji"
         name: "Ime"
+        group: "Skupina"
         image: "Slika"
         delete_confirm: "Ali ste prepričani, da hočete izbrisati emoji :%{name}:?"
       embedding:

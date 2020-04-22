@@ -57,7 +57,6 @@ bs_BA:
       no_multilevels_components: "Teme s dječjim temama ne mogu biti same teme djeteta"
     settings_errors:
       invalid_yaml: "Korišteni YAML fajl nije validan."
-      data_type_not_a_number: "Postavka tipa `%{name}` nije podržana. Podržani tipovi su `integer`, `bool`, `list` i `enum`"
       name_too_long: "Postoji postavka sa predugim imenom. Maksimalna dužina je 255"
       default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost"
       default_not_match_type: "Postavka `%{name}` default uobičajena vrijednosti se ne podudara sa tipom postavke."
@@ -154,11 +153,10 @@ bs_BA:
   bookmarks:
     reminders:
       at_desktop: "Sljedeći put sam za svojim desktop kompjuterom"
-      later_today: "Danas, malo kasnije <br/>{{date}}"
-      next_business_day: "Sljedeći radni dan <br/>{{date}}"
-      tomorrow: "Sutradan <br/>{{date}}"
-      next_week: "Sljedeće sedmice <br/>{{date}}"
-      next_month: "Naredni mjesec <br/>{{date}}"
+      later_today: "Kasnije danas"
+      tomorrow: "Sutra"
+      next_week: "Sljedeće sedmice"
+      next_month: "Sljedeći mjesec"
       custom: "Ciljano vrijeme i datum"
   groups:
     default_names:
@@ -570,8 +568,6 @@ bs_BA:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
-    summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
-    summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -744,6 +740,9 @@ bs_BA:
   redirected_to_top_reasons:
     new_user: "Dobrodošli u našu zajednicu! Ovo su najnovije popularne teme."
     not_seen_in_a_month: "Dobrodošli nazad! Nismo vas odavno vidjeli. Ovo su najnovije popularne teme od vaše zadnje posjete."
+  publish_page:
+    slug_errors:
+      invalid: "contains invalid characters"
   topic_statuses:
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "Ova tema je sada otvorena. Novi postovi su dozvoljeni."

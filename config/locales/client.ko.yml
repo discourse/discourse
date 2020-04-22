@@ -27,7 +27,6 @@ ko:
     dates:
       time: "a h:mm"
       timeline_date: "YYYY MMM"
-      long_no_year: "M D a h:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "YYYY MMM D a h:mm"
@@ -239,6 +238,12 @@ ko:
       remove: "북마크 삭제"
       confirm_clear: "이 토픽의 모든 북마크를 지우시겠습니까?"
       save: "저장"
+      reminders:
+        later_today: "오늘 늦게"
+        tomorrow: "내일"
+        next_week: "다음 주"
+        later_this_week: "이번 주 후반"
+        next_month: "다음 달"
     drafts:
       resume: "이력서"
       remove: "삭제"
@@ -757,9 +762,6 @@ ko:
         success_staff: "현재 주소로 이메일을 보냈습니다. 확인 절차에 따라 진행해 주세요."
       change_avatar:
         title: "프로필 사진 변경"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a> 기반"
-        gravatar_title: "Gravata 웹사이트에서 아바타 바꾸기"
-        refresh_gravatar_title: "Gravatar 새로고침"
         letter_based: "자동 생성된 아바타"
         uploaded_avatar: "커스텀 사진"
         uploaded_avatar_empty: "커스텀 사진 추가"
@@ -995,6 +997,8 @@ ko:
         back: "뒤로가기"
         again: "다시시도"
         fixed: "페이지 열기"
+    modal:
+      close: "닫기"
     close: "닫기"
     assets_changed_confirm: "사이트가 업데이트 되었습니다. 새로고침하시겠습니까?"
     logout: "로그아웃 되었습니다."
@@ -1158,7 +1162,6 @@ ko:
       filter_placeholder: 이모지 찾기
       objects: 사물
       flags: 신고들
-      custom: 커스텀 emoji
       recent: 최근 사용
       default_tone: 피부색 없음
       light_tone: 밝은 피부색
@@ -1166,6 +1169,7 @@ ko:
       medium_tone: 중간 피부색
       medium_dark_tone: 약간 어두운 피부색
       dark_tone: 어두운 피부색
+      default: 커스텀 emoji
     composer:
       emoji: "이모지 :)"
       more_emoji: "더보기..."
@@ -1262,6 +1266,7 @@ ko:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}} "
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}} "
@@ -1874,6 +1879,7 @@ ko:
             title: "이메일 HTML 파트 보이기"
             button: "HTML"
       bookmarks:
+        created: "생성일자"
         name: "이름"
     category:
       can: "허용"
@@ -2961,7 +2967,6 @@ ko:
           active: "활성화 사용자"
           staff: "스태프"
           suspended: "접근 금지 사용자"
-          suspect: "의심스러운 사용자"
           staged: "격리됨"
         approved: "승인?"
         titles:
@@ -2977,7 +2982,6 @@ ko:
           admins: "관리자"
           moderators: "운영자"
           suspended: "접근 금지된 사용자들"
-          suspect: "의심스러운 사용자들"
         not_verified: "확인되지 않은"
         check_email:
           title: "사용자의 이메일 주소 표시"
@@ -3297,6 +3301,7 @@ ko:
         help: "모든 사람이 쓸 수 있는 이모지를 추가합니다. (팁: 여러개 파일을 한 번에 드래그 & 드롭할 수 있어요)"
         add: "새 이모지 추가"
         name: "이름"
+        group: "그룹"
         image: "이미지"
         delete_confirm: "정말로 :%{name}: 이모지를 삭제할까요?"
       embedding:

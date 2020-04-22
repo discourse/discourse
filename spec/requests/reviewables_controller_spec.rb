@@ -192,6 +192,32 @@ describe ReviewablesController do
           expect(json_review['id']).to eq(reviewable.id)
         end
       end
+
+      context "with user custom field" do
+        before do
+          plugin = Plugin::Instance.new
+          plugin.whitelist_public_user_custom_field :public_field
+        end
+
+        after do
+          User.plugin_public_user_custom_fields.clear
+        end
+
+        it "returns user data with custom fields" do
+          user = Fabricate(:user)
+          user.custom_fields["public_field"] = "public"
+          user.custom_fields["private_field"] = "private"
+          user.save!
+
+          reviewable = Fabricate(:reviewable, target_created_by: user)
+
+          get "/review.json"
+          json = response.parsed_body
+          expect(json['users']).to be_present
+          expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id && u['custom_fields']['public_field'] == 'public' }).to eq(true)
+          expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id && u['custom_fields']['private_field'] == 'private' }).to eq(false)
+        end
+      end
     end
 
     context "#show" do
@@ -354,6 +380,7 @@ describe ReviewablesController do
           ReviewableClaimedTopic.create!(topic_id: qp.topic_id, user: Fabricate(:admin))
           put "/review/#{qp.id}/perform/approve_post.json?version=#{qp.version}"
           expect(response.code).to eq("422")
+          expect(response.parsed_body["errors"]).to match_array(["This item has been claimed by another user."])
         end
 
         it "works when claims are optional" do

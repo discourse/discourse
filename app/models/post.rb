@@ -127,7 +127,8 @@ class Post < ActiveRecord::Base
                                  flagged_by_tl3_user: 4,
                                  email_spam_header_found: 5,
                                  flagged_by_tl4_user: 6,
-                                 email_authentication_result_header: 7)
+                                 email_authentication_result_header: 7,
+                                 imported_as_unlisted: 8)
   end
 
   def self.types
@@ -706,7 +707,7 @@ class Post < ActiveRecord::Base
       self.cooked = cook(raw, topic_id: topic_id)
     end
 
-    self.baked_at = Time.new
+    self.baked_at = Time.zone.now
     self.baked_version = BAKED_VERSION
   end
 
@@ -764,10 +765,19 @@ class Post < ActiveRecord::Base
     DiscourseEvent.trigger(:after_trigger_post_process, self)
   end
 
-  def self.public_posts_count_per_day(start_date, end_date, category_id = nil)
-    result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
+  def self.public_posts_count_per_day(start_date, end_date, category_id = nil, include_subcategories = false)
+    result = public_posts
+      .where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
       .where(post_type: Post.types[:regular])
-    result = result.where('topics.category_id = ?', category_id) if category_id
+
+    if category_id
+      if include_subcategories
+        result = result.where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
+      else
+        result = result.where('topics.category_id = ?', category_id)
+      end
+    end
+
     result
       .group('date(posts.created_at)')
       .order('date(posts.created_at)')
@@ -941,8 +951,9 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
 
-    links = fragments.css("a/@href", "img/@src").map do |media|
+    links = selectors.map do |media|
       src = media.value
       next if src.blank?
 

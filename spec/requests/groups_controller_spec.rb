@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe GroupsController do
   fab!(:user) { Fabricate(:user) }
+  let(:other_user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
   fab!(:admin) { Fabricate(:admin) }
@@ -91,7 +92,7 @@ describe GroupsController do
         sign_in(user)
       end
 
-      let!(:other_group) { Fabricate(:group, name: "other_group", users: [user]) }
+      let!(:other_group) { Fabricate(:group, name: "other_group", users: [user, other_user]) }
 
       context "with default (descending) order" do
         it "sorts by name" do
@@ -116,7 +117,7 @@ describe GroupsController do
           body = JSON.parse(response.body)
 
           expect(body["groups"].map { |g| g["id"] }).to eq([
-            group.id, other_group.id, moderator_group_id
+            other_group.id, group.id, moderator_group_id
           ])
 
           expect(body["load_more_groups"]).to eq("/groups?order=user_count&page=1")
@@ -1192,6 +1193,11 @@ describe GroupsController do
         expect(response.status).to eq(400)
       end
 
+      it "raises an error when removing a valid user but is not a member of that group" do
+        delete "/groups/#{group.id}/members.json", params: { user_id: -1 }
+        expect(response.status).to eq(400)
+      end
+
       context "is able to remove a member" do
         it "removes by id" do
           expect do
@@ -1314,12 +1320,10 @@ describe GroupsController do
           end
 
           it "only removes users in that group" do
-            expect do
-              delete "/groups/#{group1.id}/members.json",
-                params: { usernames: [user.username, user2.username].join(",") }
-            end.to change { group1.users.count }.by(-1)
+            delete "/groups/#{group1.id}/members.json",
+              params: { usernames: [user.username, user2.username].join(",") }
 
-            expect(response.status).to eq(200)
+            expect(response.status).to eq(400)
           end
         end
       end
@@ -1367,7 +1371,7 @@ describe GroupsController do
 
           expect(response.status).to eq(200)
 
-          result = JSON.parse(response.body)["logs"].last
+          result = JSON.parse(response.body)["logs"].find { |entry| entry["subject"] == "public_exit" }
 
           expect(result["action"]).to eq(GroupHistory.actions[1].to_s)
           expect(result["subject"]).to eq('public_exit')
@@ -1476,7 +1480,7 @@ describe GroupsController do
       body = JSON.parse(response.body)
 
       expect(body['relative_url']).to eq(topic.relative_url)
-      expect(post.custom_fields['requested_group_id'].to_i).to eq(group.id)
+      expect(post.topic.custom_fields['requested_group_id'].to_i).to eq(group.id)
       expect(post.user).to eq(user)
 
       expect(topic.title).to eq(I18n.t('groups.request_membership_pm.title',

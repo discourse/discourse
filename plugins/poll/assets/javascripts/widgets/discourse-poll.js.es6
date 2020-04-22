@@ -454,7 +454,9 @@ createWidget("discourse-poll-info", {
 
 function transformUserFieldToLabel(fieldName) {
   let transformed = fieldName.split("_").filter(Boolean);
-  transformed[0] = classify(transformed[0]);
+  if (transformed.length > 1) {
+    transformed[0] = classify(transformed[0]);
+  }
   return transformed.join(" ");
 }
 
@@ -676,6 +678,7 @@ createWidget("discourse-poll-buttons", {
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
     const isAdmin = this.currentUser && this.currentUser.admin;
+    const isMe = this.currentUser && post.user_id === this.currentUser.id;
     const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
     const hideResultsDisabled = !staffOnly && (closed || topicArchived);
     const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
@@ -708,7 +711,7 @@ createWidget("discourse-poll-buttons", {
         })
       );
     } else {
-      if (poll.get("results") === "on_vote" && !attrs.hasVoted) {
+      if (poll.get("results") === "on_vote" && !attrs.hasVoted && !isMe) {
         contents.push(infoTextHtml(I18n.t("poll.results.vote.title")));
       } else if (poll.get("results") === "on_close" && !closed) {
         contents.push(infoTextHtml(I18n.t("poll.results.closed.title")));

@@ -59,7 +59,6 @@ fr:
       optimized_link: Les liens optimisés d'images sont éphémères et ne devraient pas être inclus dans le code source d'un thème.
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
-      data_type_not_a_number: "Le type du paramètre `%{name}` n'est pas supporté. Les types supportés sont `integer`, `bool`, `list` et `enum`"
       name_too_long: "Il y a un paramètre avec un nom trop long. Longueur maximum 255"
       default_value_missing: "Le paramètre `%{name}` n'a pas de valeur par défaut"
       default_not_match_type: "Le type de la valeur par défaut de paramètre `%{name}` ne correspond pas au type du paramètre."
@@ -325,13 +324,15 @@ fr:
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"
   bookmarks:
+    errors:
+      already_bookmarked_post: "Il n'est pas possible de mettre plus d'un signet sur un même message."
+      cannot_set_past_reminder: "Vous ne pouvez pas définir un rappel de signet à une date passée."
     reminders:
       at_desktop: "La prochaine fois je suis à mon bureau"
-      later_today: "Plus tard dans la journée\n{{date}}"
-      next_business_day: "Prochain jour ouvré<br/>{{date}}"
-      tomorrow: "Demain<br/>{{date}}"
-      next_week: "La semaine prochaine<br/>{{date}}"
-      next_month: "Le mois prochain<br/>{{date}}"
+      later_today: "Plus tard aujourd'hui"
+      tomorrow: "Demain"
+      next_week: "Semaine prochaine"
+      next_month: "Mois prochai"
       custom: "Date et heure personnalisés"
   groups:
     success:
@@ -362,7 +363,6 @@ fr:
       trust_level_4: "niveau_confiance_4"
     request_membership_pm:
       title: "Demande d'adhésion pour @%{group_name}"
-      handle: "Gérer demande d'adhésion"
     view_hidden_topic_request_reason: "J'aimerais rejoindre le groupe '%{group_name}' afin d'accéder à [ce sujet] (%{topic_url})."
   education:
     until_posts:
@@ -472,6 +472,10 @@ fr:
               same_as_password: "est identique à votre mot de passe."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "Ce sujet ne peut pas être mis à la une sur votre profil."
         user_email:
           attributes:
             user_id:
@@ -816,8 +820,10 @@ fr:
       long_form: "a été aimé"
   draft:
     sequence_conflict_error:
+      title: "erreur d'ébauche"
       description: "L'ébauche est en train d'être modifiée dans une autre fenêtre. Veuillez recharger cette page."
   draft_backup:
+    pm_title: "Sauvegarde des ébauches sur les sujets en cours."
     pm_body: "Sujet contenant des ébauches sauvegardées"
   user_activity:
     no_default:
@@ -836,7 +842,9 @@ fr:
       self: "Vous n'avez pas d'ébauche ; commencez à répondre à un sujet et la réponse sera automatiquement sauvegardée comme nouvelle ébauche."
   webauthn:
     validation:
+      challenge_mismatch_error: "Le défi fourni ne correspond pas au défi généré par le serveur d'authentification."
       invalid_origin_error: "L'origine de la requête d'authentification ne correspond pas à l'origine du serveur."
+      malformed_attestation_error: "Une erreur s'est produite pendant le déchiffrage des données d'attestation."
       user_verification_error: "Une vérification de l'utilisateur est requise."
       unsupported_public_key_algorithm_error: "L'algorithme de clé publique fournie n'est pas supporté par le serveur."
       ownership_error: "La clé de sécurité n'appartient pas à l'utilisateur."
@@ -991,7 +999,13 @@ fr:
       yaxis: "Nombre de nouveaux contributeurs"
       description: "Nombre d'utilisateurs qui ont fait leur première contribution durant cette période."
     trust_level_growth:
+      xaxis:
+        tl1_reached: "Niveau de confiance 1 atteint"
+        tl2_reached: "Niveau de confiance 2 atteint"
+        tl3_reached: "Niveau de confiance 3 atteint"
+        tl4_reached: "Niveau de confiance 4 atteint"
       yaxis: "Jour"
+      description: "Nombre d'utilisateurs ayant augmenté leur niveau de confiance au cours de cette période."
     consolidated_page_views:
       title: "Pages vues unifiées"
       xaxis:
@@ -1244,7 +1258,6 @@ fr:
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
-    gc_warning: 'Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donnera pas les meilleures performances. Merci de lire ce sujet sur <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">l''optimisation des performances de Ruby et Rails pour Discourse</a>.'
     sidekiq_warning: 'Sidekiq n''est pas lancé. De nombreuses tâches, comme l''envoi des courriels, sont exécutées de manière asynchrone par sidekiq. Assurez-vous d''avoir au moins un processus sidekiq de lancé. <a href="https://github.com/mperham/sidekiq">En savoir plus sur sidekiq</a>.'
     queue_size_warning: "Le nombre de jobs dans la file d'attente est de %{queue_size}, ce qui est assez élevé. Cela peut indiquer un problème avec le(s) process Sidekiq, ou la nécessité d'ajouter davantage de workers."
     memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
@@ -1350,8 +1363,6 @@ fr:
     force_https: "Forcer votre site en HTTPS uniquement. ATTENTION : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré et fonctionne absolument partout ! Avez-vous vérifié que vos CDN, vos connexions via réseaux sociaux ainsi que tous les logos / dépendances tiers sont tous compatibles HTTPS eux aussi ?"
     same_site_cookies: "Utiliser des cookies de même site, qui éliminent tous les vecteurs de Cross Site Request Forgery sur les navigateurs supportés (Lax ou Strict). Avertissement : Strict ne fonctionnera que sur des sites qui imposent la connexion et utilisent le SSO."
     summary_score_threshold: "Le score minimum requis pour qu'un message soit inclus dans le 'Résumé de ce sujet'"
-    summary_posts_required: "Nombre minimum de messages dans un sujet avant que le 'Résumé du sujet' soit activé"
-    summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par « Résumer ce sujet »"
     enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
@@ -1487,7 +1498,6 @@ fr:
     discord_client_id: 'Identifiant de l''utilisateur Discord (en cas de besoin, le créer via <a href="https://discordapp.com/developers/applications/me">le portail de développement Discord</a>)'
     discord_secret: "Clé secrète Discord"
     discord_trusted_guilds: ' Seuls les membres de ces guildes Discord peuvent se connecter via Discord. Utiliser les identifiants numériques des guildes. Pour plus d''informations, suivre les instructions<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">ici</a>. Laisser blanc pour autoriser toutes les guildes.'
-    readonly_mode_during_backup: "Activer le mode lecture seule pendant une sauvegarde"
     enable_backups: "Autoriser les administrateurs à créer de nouveaux sauvegardes du forum"
     allow_restore: "Autoriser la restauration, qui peut remplacer TOUTES les données du site ! Laissez à faux, sauf si vous envisagez de faire restaurer une sauvegarde"
     maximum_backups: "Nombre maximum de sauvegardes à conserver sur le disque. Les anciennes sauvegardes seront automatiquement supprimées"
@@ -1661,6 +1671,7 @@ fr:
     reviewable_claiming: "Est-ce que les contenu à vérifier doit être réservé avant qu'on puisse agir dessus ?"
     reviewable_default_topics: "Afficher le contenu révisable groupé par sujet par défaut"
     reviewable_default_visibility: "Ne pas afficher les éléments révisables à moins qu'ils répondent à cette priorité"
+    high_trust_flaggers_auto_hide_posts: "Les messages des nouveaux utilisateurs seront automatiquement cachés après avoir été signalés comme spam par un utilisateur d'un niveau de confiance 3 et plus"
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant, exemple : %%{reply_key}@reply.example.com ou replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1747,13 +1758,16 @@ fr:
     anonymous_posting_min_trust_level: "Le niveau de confiance minimum pour passer en mode anonyme."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme tous les N minutes pour chaque utilisateur. Exemple : si 600 est choisi, dès 600 minutes après le dernier message ET que l'utilisateur passe en mode anonyme, un nouveau compte anonyme lui sera crée."
     hide_user_profiles_from_public: "Cacher les cartes, les profils et le répertoire d'utilisateurs aux visiteurs."
+    allow_featured_topic_on_user_profiles: "Permet aux utilisateurs de mettre un lien vers un sujet à la une sur leur fiche et leur profil."
     show_inactive_accounts: "Autoriser les utilisateurs connectés à parcourir les profils de comptes inactifs."
     hide_suspension_reasons: "Ne pas afficher les raisons d'une suspension sur les profils utilisateurs."
     log_personal_messages_views: "Logguer les vues de messages directs par Admin pour d'autres utilisateurs/groupes."
     ignored_users_count_message_threshold: "Notifier les modérateur si un utilisateur est ignoré par autant d'utilisateurs."
     ignored_users_message_gap_days: "Combien de temps faut-il attendre avant de notifier à nouveau les modérateurs d'un utilisateur ignoré par beaucoup d'autres."
     clean_up_inactive_users_after_days: "Nombre de jours avant qu'un utilisateur inactif (niveau de confiance 0 sans aucun messages) soit supprimé. Pour désactiver le nettoyage saisir 0."
+    clean_up_unused_staged_users_after_days: "Nombre de jours avant de supprimer un utilisateur distant inutilisé (sans aucun message). 0 pour désactiver le nettoyage."
     user_selected_primary_groups: "Autoriser les utilisateurs à définir leur groupe principal"
+    max_notifications_per_user: "Volume de notifications maximum par utilisateur. Si ce seuil est dépassé alors les notifications les plus anciennes seront supprimées. Appliqué chaque semaine. 0 pour le désactiver."
     user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
@@ -1818,6 +1832,7 @@ fr:
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
+    default_email_level: "Définit le niveau des notifications par défaut pour les sujets standards."
     default_email_messages_level: "Définissez le niveau de notification courriel par défaut quand quelqu'un envoie un message direct à un utilisateur."
     default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
     default_email_mailing_list_mode_frequency: "Par défaut, les utilisateurs ayant activé la liste de diffusion recevront des courriels à cette fréquence."
@@ -1837,6 +1852,7 @@ fr:
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
     default_categories_watching_first_post: "Liste des catégories dont le premier message de chaque nouveau sujet sera surveillé par défaut."
+    mute_all_categories_by_default: "Définit le niveau des notifications pour toutes les catégories à silencieux. Nécessite que les utilisateurs acceptent explicitement les catégories pour les faire apparaître sur les pages 'récents' et 'catégories'. Si vous souhaitez corriger les valeurs par défaut pour les utilisateurs anonymes veuillez renseigner les paramètres 'default_categories_'."
     default_tags_watching: "Liste des étiquettes qui sont surveillées par défaut."
     default_tags_tracking: "Liste des étiquettes qui sont suivies par défaut."
     default_tags_muted: "Liste des étiquettes qui sont mises sous silence par défaut."
@@ -1973,6 +1989,10 @@ fr:
       other: "%{count} messages ont été fusionnés à un message direct existant : %{topic_link}"
   change_owner:
     post_revision_text: "Propriété transférée"
+  publish_page:
+    slug_errors:
+      blank: "ne peut être vide"
+      invalid: "contient des caractères invalides"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Ce message a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponse."
@@ -2064,6 +2084,8 @@ fr:
     second_factor_backup_title: "Code de secours de l'authentification à deux facteurs"
     invalid_second_factor_code: "Code d'authentification invalide. Chaque code ne peut être utilisé qu'une fois."
     invalid_security_key: "Clé de sécurité invalide."
+    missing_second_factor_name: "Veuillez renseigner un nom."
+    missing_second_factor_code: "Veuillez renseigne un code."
     second_factor_toggle:
       backup_code: "Utilisez plutôt un code de secours"
   admin:
@@ -2101,6 +2123,7 @@ fr:
       fixed_primary_email: "Correction de l'email primaire pour utilisateur distant"
       same_ip_address: "Même adresse IP (%{ip_address}) que d'autres utilisateurs"
       inactive_user: "Utilisateur inactif"
+    email_in_spam_header: "Le premier courriel de l'utilisateur a été signalé comme spam"
   reviewables_reminder:
     submitted:
       one: "Ces éléments ont été soumis il y a plus d'une heure. [Veuillez les passer en revue](%{base_path}/flags)."
@@ -2221,6 +2244,10 @@ fr:
   admin_confirmation_mailer:
     title: "Confirmation de l'Administrateur"
     subject_template: "[%{email_prefix}] Confirmer votre nouveau compte"
+    text_body_template: |
+      Merci de confirmer que vous souhaitez ajouter **%{target_username} (%{target_email})** comme administrateur à votre forum.
+
+      [Confirmer le compte administrateur](%{admin_confirm_url})
   test_mailer:
     title: "Envoyer un courriel de test"
     subject_template: "[%{email_prefix}] Test de délivrabilité courriel"
@@ -2314,7 +2341,14 @@ fr:
 
         Nous sommes ravis que vous passiez du temps avec nous, et nous adorerions en savoir plus sur vous. Prenez un moment pour [remplir votre profil](%{base_url}/my/preferences/profile) ou sentez-vous libre de [démarrer un nouveau sujet](%{base_url}/categories).
     welcome_staff:
+      title: "Bienvenue dans l'équipe"
       subject_template: "Félicitations, le statut de %{role} vous a été accordé !"
+      text_body_template: |
+        Le rôle de %{role} vous a été accordé par un membre de l'équipe.
+
+        En tant que %{role}, vous avez maintenant accès à l'interface <a href='%{base_url}/admin' target='_blank'>d'administration</a>.
+
+        À grand pouvoir grande responsabilité. Si vous débutez dans le rôle de modérateur, veuillez consulter le [Guide de modération](https://meta.discourse.org/t/guide-des-moderateurs/89968).
     welcome_invite:
       title: "Bienvenue invité"
       subject_template: "Bienvenue sur %{site_name} !"
@@ -2955,7 +2989,6 @@ fr:
       why: "Voici un bref résumé de ce qu'il s'est passé sur %{site_link} depuis votre dernière visite le %{last_seen_at}"
       since_last_visit: "Depuis votre dernière visite"
       new_topics: "Nouveaux sujets"
-      unread_messages: "Messages non lus"
       unread_notifications: "Notifications non lues"
       liked_received: "J'aime reçus"
       new_users: "Nouveaux utilisateurs"

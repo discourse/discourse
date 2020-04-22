@@ -153,10 +153,12 @@ $tag-color: $primary-medium;
   display: inline-block;
 }
 
-.topic-list-item .discourse-tags {
-  display: inline-flex;
-  font-weight: normal;
-  font-size: $font-down-1;
+.topic-list-item {
+  .discourse-tags {
+    display: inline-flex;
+    font-weight: normal;
+    font-size: $font-down-1;
+  }
 }
 
 .categories-list .topic-list-latest .discourse-tags {

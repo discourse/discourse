@@ -1,5 +1,5 @@
 <label>
   {{input type="checkbox" checked=enabled}}
-  <span>{{{unbound setting.description}}}</span>
+  <span>{{html-safe setting.description}}</span>
   {{setting-validation-message message=validationMessage}}
 </label>

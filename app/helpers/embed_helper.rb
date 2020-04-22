@@ -17,6 +17,9 @@ module EmbedHelper
   end
 
   def get_html(post)
-    raw PrettyText.format_for_email(post.cooked, post)
+    key = "js.action_codes.#{post.action_code}"
+    cooked = post.cooked.blank? ? I18n.t(key, when: nil).humanize : post.cooked
+
+    raw PrettyText.format_for_email(cooked, post)
   end
 end

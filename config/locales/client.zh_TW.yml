@@ -27,7 +27,6 @@ zh_TW:
     dates:
       time: "h:mm a"
       timeline_date: "YYYY年 M月"
-      long_no_year: "M月 D日 h:mm a"
       long_no_year_no_time: "M月 D日"
       full_no_year_no_time: "M月 D日"
       long_with_year: "YYYY年 M月 D日 h:mm a"
@@ -238,6 +237,12 @@ zh_TW:
       remove: "移除書籤"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
       save: "儲存"
+      reminders:
+        later_today: "今日稍晚"
+        tomorrow: "明天"
+        next_week: "下週"
+        later_this_week: "本週稍晚"
+        next_month: "下個月"
     drafts:
       resume: "恢復"
       remove: "移除"
@@ -445,6 +450,7 @@ zh_TW:
         deny: "拒絕"
         denied: "被拒絕"
         undone: "請求未完成"
+        handle: "處理會員申請"
       manage:
         title: "管理"
         name: "名稱"
@@ -834,10 +840,6 @@ zh_TW:
         success_staff: "我們已傳送一封電子郵件至你目前的信箱。請根據確認指示進行操作。"
       change_avatar:
         title: "設定個人資料圖片"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
-        gravatar_title: "在 Gravatar 網站修改你的頭像"
-        gravatar_failed: "無法在 Gravatar 上找到這個電子郵件位置。"
-        refresh_gravatar_title: "重新整理你的 Gravatar 頭像"
         letter_based: "系統分配的個人資料圖片"
         uploaded_avatar: "自訂圖片"
         uploaded_avatar_empty: "新增一張自訂圖片"
@@ -1099,6 +1101,8 @@ zh_TW:
         back: "返回"
         again: "請再試一次"
         fixed: "載入頁面"
+    modal:
+      close: "關閉"
     close: "關閉"
     assets_changed_confirm: "此網站剛剛已更新，你要重整頁面以獲得最新版本嗎？"
     logout: "已登出"
@@ -1298,7 +1302,6 @@ zh_TW:
       objects: 物品
       symbols: 象徵<br>
       flags: 檢舉
-      custom: 自訂表情符號
       recent: 最近使用過的
       default_tone: 膚色深度：0
       light_tone: 膚色深度：1
@@ -1306,6 +1309,7 @@ zh_TW:
       medium_tone: 膚色深度：3
       medium_dark_tone: 膚色深度：4
       dark_tone: 膚色深度：5
+      default: 自訂表情符號
     shared_drafts:
       title: "共享草稿"
       notice: "\b只有能瀏覽<b>{{category}}</b>分類的使用者能看到這個話題"
@@ -1446,6 +1450,7 @@ zh_TW:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2135,6 +2140,7 @@ zh_TW:
             title: "顯示電子郵件HTML格式"
             button: "HTML"
       bookmarks:
+        created: "已建立"
         name: "名稱"
     category:
       can: "可以&hellip; "
@@ -3418,7 +3424,6 @@ zh_TW:
           staff: "管理員"
           suspended: "已停權"
           silenced: "被靜音"
-          suspect: "嫌疑"
           staged: "暫存"
         approved: "已批准？"
         titles:
@@ -3435,7 +3440,6 @@ zh_TW:
           moderators: "板主"
           silenced: "被靜音的使用者"
           suspended: "已停權的使用者"
-          suspect: "嫌疑使用者"
           staged: "暫存使用者"
         not_verified: "未確認"
         check_email:
@@ -3775,6 +3779,7 @@ zh_TW:
         help: "新增新的emoji供所有人使用。(提示：一次拖放多個檔案)"
         add: "新增emoji"
         name: "名稱"
+        group: "群組"
         image: "圖片"
         delete_confirm: "你確定要刪除 :%{name}: emoji ?"
       embedding:
@@ -3801,7 +3806,6 @@ zh_TW:
         save: "儲存崁入設定"
       permalink:
         title: "固定連結"
-        description: "請注意，這僅適用於外部來源，論壇上發佈的連接不會被重新導向。"
         url: "網址"
         topic_id: "話題 ID"
         topic_title: "話題"

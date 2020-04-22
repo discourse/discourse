@@ -27,7 +27,6 @@ th:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -561,9 +560,6 @@ th:
         success: "เราส่งอีเมลไปยังที่อยู่อีเมลดังกล่าวแล้ว กรุณาทำตามขั้นตอนยืนยัน"
       change_avatar:
         title: "เปลี่ยนรูปโพรไฟล์"
-        gravatar: "ทำงานด้วย <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
-        gravatar_title: "เปลี่ยนภาพแทนตัวของคุณบนเว็บไซต์ Gravatar"
-        refresh_gravatar_title: "เรียกของคุณ Gravatar ใหม่"
         letter_based: "รูปโพรไฟล์ที่ระบบทำให้อัตโนมัติ"
         uploaded_avatar: "รูปกำหนดเอง"
         uploaded_avatar_empty: "เพิ่มรูปกำหนดเอง"
@@ -772,6 +768,8 @@ th:
         back: "ย้อนกลับ"
         again: "ลองอีกครั้ง"
         fixed: "โหลดหน้า"
+    modal:
+      close: "ปิด"
     close: "ปิด"
     assets_changed_confirm: "เว็บนี้พึ่งได้รับการอัปเดต รีเฟรชเพื่อเข้าหน้าเว็บล่าสุด?"
     logout: "คุณได้ออกจากระบบ"
@@ -1264,6 +1262,7 @@ th:
         by_you:
           bookmark: "บุ๊คมาร์คโพสนี้"
       bookmarks:
+        created: "สร้างเมื่อ"
         name: "ชื่อ"
     category:
       edit: "แก้ไข"
@@ -1748,7 +1747,6 @@ th:
           active: "ใช้งานอยู่"
           staff: "ทีมงาน"
           suspended: "ระงับการใช้งาน"
-          suspect: "ต้องสงสัย"
         approved: "ยืนยันหรือไม่"
         titles:
           active: "ผู้ใช้ที่ใช้งานอยู่"
@@ -1761,7 +1759,6 @@ th:
           leader: "ผู้ใช้ที่ระดับความไว้ใจ 4 (ผู้นำ)"
           staff: "ทีมงาน"
           suspended: "ผู้ใช้งานที่ถูกระงับ"
-          suspect: "ผู้ใช้งานที่ต้องสงสัย"
         not_verified: "ยังไม่ได้รับการตรวจสอบ"
         check_email:
           title: "แสดงอีเมลผู้ใช้งาน"
@@ -1936,6 +1933,7 @@ th:
         title: "Emoji"
         add: "เพิ่ม Emoji ใหม่"
         name: "ชื่อ"
+        group: "กลุ่ม"
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบ Emoji :%{name}: ออก?"
       embedding:

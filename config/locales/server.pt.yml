@@ -57,7 +57,6 @@ pt:
       no_multilevels_components: "Temas com temas descendentes não pode ser temas descendentes"
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
-      data_type_not_a_number: "Tipo de configuração `%{name}` não é suportado. Tipos suportados são `integer`, `bool`, `lista` e `enum`."
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
       default_value_missing: "A configuração `%{name}` não tem um valor predefinido"
       default_not_match_type: "O tipo do valor predefinido para a configuração `%{name}` não é igual ao esperado pela configuração."
@@ -263,6 +262,12 @@ pt:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   revert_version_same: "A versão actual é o mesma versão para a qual está a tentar reverter."
   excerpt_image: "imagem"
+  bookmarks:
+    reminders:
+      later_today: "Hoje, mais tarde"
+      tomorrow: "Amanhã"
+      next_week: "Próxima semana"
+      next_month: "Próximo mês"
   groups:
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
@@ -878,8 +883,6 @@ pt:
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
-    summary_posts_required: "Número mínimo de mensagens num tópico antes que 'Resumir Este Tópico' seja ativo."
-    summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores % de mensagens"
     enable_personal_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens. Note que a equipa de apoio pode mandar mensagens de qualquer maneira."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
@@ -944,7 +947,6 @@ pt:
     enable_instagram_logins: "Activar autenticação pelo Instagram, requer instagram_consumer_key e instagram_consumer_secret"
     instagram_consumer_key: "Chave de consumidor para a autenticação via Instagram"
     instagram_consumer_secret: "Segredo de consumidor para a autenticação via Instagram"
-    readonly_mode_during_backup: "Activar modo de leitura penas durante a realização de uma cópia de segurança"
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
@@ -1251,6 +1253,10 @@ pt:
     errors:
       different_topics: "Publicações pertencentes a tópicos diferentes não podem ser unidas."
       different_users: "Publicações pertencentes a utilizadores diferentes não podem ser unidas."
+  publish_page:
+    slug_errors:
+      blank: "não pode estar em branco"
+      invalid: "contem caracteres inválidos"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Esta mensagem foi automaticamente fechada após atingir o limite máximo de %{count} resposta."
@@ -1653,7 +1659,6 @@ pt:
       why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"
-      unread_messages: "Mensagens Não Lidas"
       unread_notifications: "Notificações Não Lidas"
       liked_received: "Gostos Recebidos"
       new_users: "Novos Utilizadores"

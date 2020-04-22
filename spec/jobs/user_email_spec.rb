@@ -192,18 +192,21 @@ describe Jobs::UserEmail do
   end
 
   context "email_log" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post, created_at: 30.seconds.ago) }
 
     before do
       SiteSetting.editing_grace_period = 0
-      post
     end
 
     it "creates an email log when the mail is sent (via Email::Sender)" do
-      last_emailed_at = user.last_emailed_at
+      freeze_time
+
+      last_emailed_at = 7.days.ago
+      user.update!(last_emailed_at: last_emailed_at)
+      Topic.last.update(created_at: 1.minute.ago)
 
       expect do
-        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id,)
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
       end.to change { EmailLog.count }.by(1)
 
       email_log = EmailLog.last
@@ -211,12 +214,17 @@ describe Jobs::UserEmail do
       expect(email_log.user).to eq(user)
       expect(email_log.post).to eq(nil)
       # last_emailed_at should have changed
-      expect(email_log.user.last_emailed_at).to_not eq(last_emailed_at)
+      expect(email_log.user.last_emailed_at).to_not eq_time(last_emailed_at)
     end
 
     it "creates a skipped email log when the mail is skipped" do
-      last_emailed_at = user.last_emailed_at
-      user.update_columns(suspended_till: 1.year.from_now)
+      freeze_time
+
+      last_emailed_at = 7.days.ago
+      user.update!(
+        last_emailed_at: last_emailed_at,
+        suspended_till: 1.year.from_now
+      )
 
       expect do
         Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
@@ -231,7 +239,7 @@ describe Jobs::UserEmail do
       )).to eq(true)
 
       # last_emailed_at doesn't change
-      expect(user.last_emailed_at).to eq(last_emailed_at)
+      expect(user.last_emailed_at).to eq_time(last_emailed_at)
     end
 
     it "creates a skipped email log when the user isn't allowed to see the post" do
@@ -663,5 +671,33 @@ describe Jobs::UserEmail do
       end
     end
 
+  end
+
+  context "canonical emails" do
+    it "correctly creates canonical emails" do
+      expect(UserEmail.canonical('s.a.m+1@gmail.com')).to eq('sam@gmail.com')
+      expect(UserEmail.canonical('sa.m+1@googlemail.com')).to eq('sam@googlemail.com')
+      expect(UserEmail.canonical('sa.m+1722@sam.com')).to eq('sa.m@sam.com')
+      expect(UserEmail.canonical('sa.m@sam.com')).to eq('sa.m@sam.com')
+    end
+
+    it "correctly bans non canonical emails" do
+
+      email = UserEmail.create!(email: 'sam@sam.com', user_id: user.id)
+      expect(email.canonical_email).to eq(nil)
+
+      email = UserEmail.create!(email: 'sam+1@sam.com', user_id: user.id)
+      expect(email.canonical_email).to eq(nil)
+
+      SiteSetting.enforce_canonical_emails = true
+
+      email = UserEmail.create!(email: 'Sam+5@sam.com', user_id: user.id)
+      expect(email.canonical_email).to eq('sam@sam.com')
+
+      expect do
+        UserEmail.create!(email: 'saM+3@sam.com', user_id: user.id)
+      end.to raise_error(ActiveRecord::RecordInvalid)
+
+    end
   end
 end

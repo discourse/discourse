@@ -1,9 +1,9 @@
 {{#if model.error}}
   <div class="item error">
     {{#if model.forbidden}}
-      {{i18n 'errors.reasons.forbidden'}}
+      {{i18n "errors.reasons.forbidden"}}
     {{else}}
-      {{i18n 'errors.desc.unknown'}}
+      {{i18n "errors.desc.unknown"}}
     {{/if}}
   </div>
 {{/if}}
@@ -12,5 +12,5 @@
   {{user-notifications-large notifications=model}}
   {{conditional-loading-spinner condition=loading}}
 {{else}}
-  <div class='alert alert-info'>{{i18n 'notifications.empty'}}</div>
+  <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
 {{/if}}

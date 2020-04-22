@@ -26,10 +26,9 @@ fa_IR:
         thousands: "{{number}} هزار"
         millions: "{{number}} میلیون"
     dates:
-      time: "h:mm a"
-      time_short_day: "h:mm a"
+      time: "HH:mm"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -42,16 +41,16 @@ fa_IR:
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} پیش"
       tiny:
-        half_a_minute: "< 1 دقیقه"
+        half_a_minute: "1 دقیقه پیش"
         less_than_x_seconds:
           one: "< %{count} ثانیه"
-          other: "< %{count} ثانیه"
+          other: "%{count} ثانیه پیش"
         x_seconds:
           one: "%{count} ثانیه"
           other: "%{count} ثانیه"
         less_than_x_minutes:
           one: "< %{count} دقیقه"
-          other: "< %{count} دقیقه"
+          other: "%{count} دقیقه پیش"
         x_minutes:
           one: "%{count} دقیقه"
           other: "%{count} دقیقه"
@@ -73,7 +72,7 @@ fa_IR:
         almost_x_years:
           one: "%{count} سال"
           other: "%{count} سال"
-        date_month: "MMM D"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -264,18 +263,17 @@ fa_IR:
     bookmarks:
       created: "شما این نوشته را نشانک زده‌اید"
       not_bookmarked: "این نوشته را نشانک بزنید"
-      created_with_reminder: "شما بر روی این پست نشانک همراه با یادآوری گذاشته اید در %{date}"
       remove: "پاک کردن نشانک"
       confirm_clear: "آیا مطمئنید می‌خواهید همه‌ی نشانک‌های خود را از این موضوع پاک کنید؟"
       save: "ذخیره"
       no_timezone: 'شما هنوز منطقه زمانی مشخص نکرده اید. شما قادر به تنظیم کردن یادآوری نیستید. یکی را در <a href="%{basePath}/my/preferences/profile"> پروفایل تان </a> تنظیم کنید.'
       reminders:
         at_desktop: "بار آینده من پشت میزم هستم"
-        later_today: "امروز کمی بعد <br/>{{date}}"
-        next_business_day: "روز کاری آینده <br/>{{date}}"
-        tomorrow: "فردا <br/>{{date}}"
-        next_week: "هفته ی آینده <br/>{{date}}"
-        next_month: "ماه آینده <br/>{{date}}"
+        later_today: "امروز"
+        tomorrow: "فردا"
+        next_week: "هفته بعد"
+        later_this_week: "این هفته"
+        next_month: "ماه بعد"
         custom: "درج تاریخ و ساعت"
     drafts:
       resume: "از سر گیری"
@@ -965,10 +963,6 @@ fa_IR:
         success_staff: "یک ایمیل به آدرس کنونی شما ارسال کردیم. لطفا دستورالعمل آن را دنبال کنید."
       change_avatar:
         title: "عکس نمایه خود را تغییر دهید"
-        gravatar: "بر‌اساس <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
-        gravatar_title: "تصویرتان را در سایت Gravatar تغییر دهید"
-        gravatar_failed: "هیچ گراواتاری با این آدرس ایمیل پیدا نکردیم"
-        refresh_gravatar_title: "تازه‌سازی Gravatar شما"
         letter_based: "سیستم تصویر پرفایل را اختصاص داده است"
         uploaded_avatar: "تصویر سفارشی"
         uploaded_avatar_empty: "افزودن تصویر سفارشی"
@@ -1246,6 +1240,8 @@ fa_IR:
         back: "برگشت"
         again: "تلاش دوباره"
         fixed: "بارگذاری برگه"
+    modal:
+      close: "بسته"
     close: "بستن"
     assets_changed_confirm: "این وب سایت به روز رسانی شده است. برای دیدن آخرین نسخه تازه‌سازی می‌کنید؟"
     logout: "شما از سایت خارج شده‌اید."
@@ -1462,7 +1458,6 @@ fa_IR:
       objects: اشیا
       symbols: نشانه ها
       flags: پرچم‌ها
-      custom: ایموجی های مخصوص
       recent: اخیرا استفاده شده
       default_tone: بدون رنگ خاص
       light_tone: رنگ پوست روشن
@@ -1470,6 +1465,7 @@ fa_IR:
       medium_tone: رنگ پوست روشن
       medium_dark_tone: رنگ پوست روشن تیره
       dark_tone: رنگ پوست تیره
+      default: ایموجی های مخصوص
     shared_drafts:
       title: "درفت مشترک"
       notice: "این موضوع فقط برای افرادی که به دسته بندی <b>{{category}}</b>دسترسی دارند نمایش داده می‌شود."
@@ -1613,6 +1609,7 @@ fa_IR:
       mentioned: "<span>{{username}}</span>{{description}}"
       group_mentioned: "<span>{{username}}</span>{{description}}"
       quoted: "<span>{{username}}</span>{{description}}"
+      bookmark_reminder: "<span>{{username}}</span>{{description}}"
       replied: "<span>{{username}}</span>{{description}}"
       posted: "<span>{{username}}</span>{{description}}"
       edited: "<span>{{username}}</span>{{description}}"
@@ -2335,6 +2332,7 @@ fa_IR:
             title: "نمایش قسمت HTML ایمیل"
             button: "HTML"
       bookmarks:
+        created: "ساخته شده"
         name: "نام"
     category:
       can: "can&hellip; "
@@ -3534,7 +3532,6 @@ fa_IR:
           active: "فعال"
           staff: "همکاران"
           suspended: "تعلیق شد "
-          suspect: "مشکوک"
           staged: "کاربر از راه دور"
         approved: "تایید شده ؟"
         titles:
@@ -3550,7 +3547,6 @@ fa_IR:
           admins: "مدیران ارشد"
           moderators: "مدیران"
           suspended: "کاربران تعلیق شده"
-          suspect: "کاربران مشکوک"
         not_verified: "تایید نشده"
         check_email:
           title: "ایمیل این کاربران را قابل رویت کن"
@@ -3850,6 +3846,7 @@ fa_IR:
         help: "اضافه کردن شکلک های جدید که در دسترس همگان خواهد بود.(PROTIP: کشیدن و رها کردن چند فایل در یک بار)"
         add: "افزودن شکلک جدید"
         name: "نام"
+        group: "گروه"
         image: "تصویر"
         delete_confirm: "آیا مطمئنید که می‌خواهید شکلک :{name}%: را پاک کنید؟"
       embedding:

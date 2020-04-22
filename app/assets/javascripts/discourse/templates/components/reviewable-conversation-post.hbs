@@ -1,8 +1,8 @@
 {{#if post}}
-  <div class='reviewable-conversation-post'>
+  <div class="reviewable-conversation-post">
     {{#if showUsername}}
-      {{#link-to 'user' post.user class="username"}}@{{post.user.username}}{{/link-to}}
+      {{#link-to "user" post.user class="username"}}@{{post.user.username}}{{/link-to}}
     {{/if}}
-    {{{post.excerpt}}}
+    {{html-safe post.excerpt}}
   </div>
 {{/if}}

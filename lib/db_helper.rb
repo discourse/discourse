@@ -29,17 +29,17 @@ class DbHelper
 
     text_columns.each do |table, columns|
       set = columns.map do |column|
-        replace = "REPLACE(#{column[:name]}, :from, :to)"
+        replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
         replace = truncate(replace, table, column)
-        "#{column[:name]} = #{replace}"
+        "\"#{column[:name]}\" = #{replace}"
       end.join(", ")
 
       where = columns.map do |column|
-        "#{column[:name]} IS NOT NULL AND #{column[:name]} LIKE :like"
+        "\"#{column[:name]}\" IS NOT NULL AND \"#{column[:name]}\" LIKE :like"
       end.join(" OR ")
 
       rows = DB.exec(<<~SQL, from: from, to: to, like: like)
-        UPDATE #{table}
+        UPDATE \"#{table}\"
            SET #{set}
          WHERE #{where}
       SQL
@@ -55,17 +55,17 @@ class DbHelper
 
     text_columns.each do |table, columns|
       set = columns.map do |column|
-        replace = "REGEXP_REPLACE(#{column[:name]}, :pattern, :replacement, :flags)"
+        replace = "REGEXP_REPLACE(\"#{column[:name]}\", :pattern, :replacement, :flags)"
         replace = truncate(replace, table, column)
-        "#{column[:name]} = #{replace}"
+        "\"#{column[:name]}\" = #{replace}"
       end.join(", ")
 
       where = columns.map do |column|
-        "#{column[:name]} IS NOT NULL AND #{column[:name]} #{match} :pattern"
+        "\"#{column[:name]}\" IS NOT NULL AND \"#{column[:name]}\" #{match} :pattern"
       end.join(" OR ")
 
       rows = DB.exec(<<~SQL, pattern: pattern, replacement: replacement, flags: flags, match: match)
-        UPDATE #{table}
+        UPDATE \"#{table}\"
            SET #{set}
          WHERE #{where}
       SQL
@@ -84,9 +84,9 @@ class DbHelper
       next if excluded_tables.include?(r.table_name)
 
       rows = DB.query(<<~SQL, like: like)
-        SELECT #{r.column_name}
-          FROM #{r.table_name}
-         WHERE #{r.column_name} LIKE :like
+        SELECT \"#{r.column_name}\"
+          FROM \"#{r.table_name}\"
+         WHERE \""#{r.column_name}"\" LIKE :like
       SQL
 
       if rows.size > 0

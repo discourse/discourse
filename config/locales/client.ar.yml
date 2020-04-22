@@ -33,7 +33,6 @@ ar:
       time: "h:mm a"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY h:mm a"
@@ -359,13 +358,17 @@ ar:
     bookmarks:
       created: "لقد وضعت علامة مرجعية علي هذا المنشور"
       not_bookmarked: "أشر هذا المكتوب"
-      created_with_reminder: "لقد أشرت هذا المكتوب بتذكير عند %{date}"
       remove: "أزل العلامة المرجعية"
       confirm_clear: "هل أنت متأكد من مسح جميع الاشعارات المرجعية من هذا الموضوع؟"
       save: "احفظ"
       no_timezone: 'لم تحدد منظقتك الزمنية بعد. لن تتمكن من تفعيل التذكيرات. حددها <a href="%{basePath}/my/preferences/profile">في ملفك الشخصي</a>.'
       reminders:
         at_desktop: "في المرة القادمة سأكون عند مكتبي"
+        later_today: "في وقت لاحق اليوم"
+        tomorrow: "غداً"
+        next_week: "الاسبوع القادم"
+        later_this_week: "في وقت لاحق هذا الاسبوع"
+        next_month: "الشهر القادم"
     drafts:
       resume: "أكمل"
       remove: "احذف"
@@ -435,6 +438,8 @@ ar:
           title: "قيد الانتظار"
         rejected:
           title: "مرفوض"
+        deleted:
+          title: "محذوف"
       types:
         reviewable_user:
           title: "مستخدم"
@@ -473,6 +478,7 @@ ar:
       days_visited_long: "أيام الزيارة"
       posts_read: "المقروءة"
       posts_read_long: "المنشورات المقروءة"
+      last_updated: "اخر تحديث"
       total_rows:
         zero: "لا أعضاء"
         one: "عضو واحد"
@@ -833,9 +839,6 @@ ar:
         success_staff: "لقد قمنا بأرسال بريدا إلكتروني الى عنوانك الحالي, رجاء اتبع تعليمات التأكيد."
       change_avatar:
         title: "غيّر صورة الملفك الشخصي"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>، من"
-        gravatar_title: "غير صورتك الشخصية على موقع Gravatar's."
-        refresh_gravatar_title: "حدث صورة Gravatar"
         letter_based: "صورة الملف الشخصي الافتراضية"
         uploaded_avatar: "صورة مخصصة"
         uploaded_avatar_empty: "اضافة صورة مخصصة"
@@ -1088,6 +1091,8 @@ ar:
         back: "الرجوع"
         again: "أعد المحاولة"
         fixed: "حمل الصفحة"
+    modal:
+      close: "أغلق"
     close: "اغلق"
     assets_changed_confirm: "حُدث الموقع لتوّه. أتريد تحديث الصفحة ورؤية أحدث إصدار؟"
     logout: "لقد سجلت خروج."
@@ -1249,7 +1254,6 @@ ar:
       filter_placeholder: بحث عن الرموز التعبيرية
       objects: اشياء
       flags: الأبلاغ
-      custom: الرموز التعبيرية المخصصة
       recent: تم استخدامه مؤخراً
       default_tone: لون البشرة إفتراضي
       light_tone: لون البشرة أبيض
@@ -1257,6 +1261,7 @@ ar:
       medium_tone: لون بشرة اسمر
       medium_dark_tone: لون البشرة اسمر قاتم
       dark_tone: لون البشرة داكن
+      default: الرموز التعبيرية المخصصة
     composer:
       emoji: "الرموز التعبيرية :)"
       more_emoji: "أكثر..."
@@ -1350,6 +1355,7 @@ ar:
       mentioned: "<span>{{username}}</span>{{description}}"
       group_mentioned: "<span>{{username}}</span>{{description}} "
       quoted: "<span>{{username}}</span>{{description}} "
+      bookmark_reminder: "<span>{{username}}</span>{{description}} "
       replied: "<span>{{username}}</span>{{description}} "
       posted: "<span>{{username}}</span>{{description}} "
       edited: "<span>{{username}}</span>{{description}} "
@@ -2053,6 +2059,7 @@ ar:
             title: "اظهر جزء الـ HTML من رسالة البريد الالكتروني"
             button: "HTML"
       bookmarks:
+        created: "أُنشئ في"
         name: "الإسم"
     category:
       can: "قادر علي&hellip;"
@@ -2621,7 +2628,11 @@ ar:
           view_graph: "رسم بياني"
           refresh_report: "تحديث التقرير "
           groups: "كل المجموعات"
+          total: "مجموع الوقت الكلي"
+          no_data: "لا توجد بيانات للعرض"
           filters:
+            file-extension:
+              label: إمتداد الملف
             group:
               label: المجموعة
             category:
@@ -2634,6 +2645,9 @@ ar:
           title: "مجموعة جديدة"
           create: "إنشاء:"
           name:
+            too_short: "إسم المجموعة قصير جداً"
+            too_long: "إسم المجموعة طويل جداً"
+            checking: "التأكد من توفر إسم المجموعة"
             available: "اسم المجموعة متاح"
             not_available: "اسم المجموعة غير متاح"
             blank: "يجب تحديد اسم للمجموعة"
@@ -3160,7 +3174,6 @@ ar:
           active: "النشطون"
           staff: "الطاقم"
           suspended: "موقوف"
-          suspect: "المريبون"
         approved: "موافقة؟"
         titles:
           active: "الأعضاء النشطون"
@@ -3175,7 +3188,6 @@ ar:
           admins: "الأعضاء المدراء"
           moderators: "المشرفون"
           suspended: "أعضاء موقوفين"
-          suspect: "الأعضاء المريبون"
         not_verified: "لم يتم التحقق"
         check_email:
           title: "اكشف عنوان البريد الإلكتروني لهذا العضو"
@@ -3196,6 +3208,7 @@ ar:
         suspended_until: "(حتى %{until})"
         cant_suspend: "لا يمكن ايقاف هذا العضو"
         delete_all_posts: "احذف كل مشاركاته"
+        penalty_post_actions: "ما الذي تريد فعله بالمشاركة المرتبطة؟"
         penalty_post_delete: "حذف الموضوع"
         penalty_post_edit: "تعديل الموضوع"
         delete_all_posts_confirm_MF: "أنت على وشك {POSTS, plural, zero {عدم حذف شيء} one {حذف مشاركة واحدة} two {حذف مشاركتين} few {حذف # مشاركات} many {حذف # مشاركة} other {حذف # مشاركة}}{TOPICS, plural, zero {} one { وموضوع واحد} two { وموضوعين} few { و# مواضيع} many {و# موضوعا} other {و# موضوع}}. أمتأكد؟"
@@ -3492,6 +3505,7 @@ ar:
         help: "أضف رموز تعبيرية جديدة التي سوف تكون متاحة للكل . (PROTIP: drag & drop multiple files at once)"
         add: "أضافة وجه تعبيري جديد ؟"
         name: "الأسم"
+        group: "المجموعة"
         image: "صورة"
         delete_confirm: "أمتأكّد من حذف الإيموجي :%{name}: هذا؟"
       embedding:

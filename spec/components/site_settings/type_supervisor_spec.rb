@@ -82,6 +82,12 @@ describe SiteSettings::TypeSupervisor do
       it "'group_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:group_list]).to eq(20)
       end
+      it "'tag_list' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:tag_list]).to eq(21)
+      end
+      it "'color' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:color]).to eq(22)
+      end
     end
   end
 

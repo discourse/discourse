@@ -35,7 +35,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= [Post::NOTICE_TYPE, Post::NOTICE_ARGS, "action_code_who", "requested_group_id"]
+    @default_post_custom_fields ||= [Post::NOTICE_TYPE, Post::NOTICE_ARGS, "action_code_who"]
   end
 
   def self.post_custom_fields_whitelisters
@@ -113,6 +113,10 @@ class TopicView
   end
 
   def canonical_path
+    if SiteSetting.embed_set_canonical_url
+      topic_embed = topic.topic_embed
+      return topic_embed.embed_url if topic_embed
+    end
     path = relative_url.dup
     path <<
       if @page > 1
@@ -343,6 +347,15 @@ class TopicView
       return nil if @user.blank?
       @topic.topic_users.find_by(user_id: @user.id)
     end
+  end
+
+  def has_bookmarks?
+    return false if @user.blank?
+    @topic.bookmarks.exists?(user_id: @user.id)
+  end
+
+  def first_post_bookmark_reminder_at
+    @topic.first_post.bookmarks.where(user: @user).pluck_first(:reminder_at)
   end
 
   MAX_PARTICIPANTS = 24
@@ -585,6 +598,10 @@ class TopicView
 
   def queued_posts_count
     ReviewableQueuedPost.viewable_by(@user).where(topic_id: @topic.id).pending.count
+  end
+
+  def published_page
+    @topic.published_page
   end
 
   protected

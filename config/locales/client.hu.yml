@@ -28,7 +28,6 @@ hu:
     dates:
       time: "h:mm a"
       timeline_date: "YYYY MMMM"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMM DD"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -265,6 +264,12 @@ hu:
       remove: "Könyvjelző eltávolítása"
       confirm_clear: "Biztos, hogy törli az összes könyvjelzőjétt ebből a témából?"
       save: "Mentés"
+      reminders:
+        later_today: "A mai nap folyamán"
+        tomorrow: "Holnap"
+        next_week: "Jövő héten"
+        later_this_week: "A hét folyamán"
+        next_month: "Jövő hónapban"
     drafts:
       resume: "Folytatás"
       remove: "Eltávolítás"
@@ -900,9 +905,6 @@ hu:
         success_staff: "Küldtünk egy üzenetet az email címedre. Kérlek, kövesd az utasításokat fiókod érvényesítéséhez!"
       change_avatar:
         title: "Profilkép megváltoztatása"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, alapján"
-        gravatar_title: "Az avatar megváltoztatása a Gravatar weboldalon"
-        refresh_gravatar_title: "Gravatar frissítése"
         letter_based: "A rendszer által adott profilkép"
         uploaded_avatar: "Egyéni kép"
         uploaded_avatar_empty: "Egyéni kép hozzáadása"
@@ -1154,6 +1156,8 @@ hu:
         back: "Visszalépés"
         again: "Újrapróbál"
         fixed: "Oldal betöltése"
+    modal:
+      close: "bezárás"
     close: "Bezárás"
     assets_changed_confirm: "Az oldal frissítve lett. Frissíts a legújabb verzióért "
     logout: "Kijelentkeztél."
@@ -1325,7 +1329,6 @@ hu:
       filter_placeholder: Emodzsi keresése
       objects: Tárgyak
       flags: Jelölések
-      custom: Egyéni emodzsik
       recent: Nemrég használt
       default_tone: Nincs bőrszín
       light_tone: Világos bőrszín
@@ -1333,6 +1336,7 @@ hu:
       medium_tone: Közepes bőrszín
       medium_dark_tone: Közepesen sötét bőrszín
       dark_tone: Sötét bőrszín
+      default: Egyéni emodzsik
     shared_drafts:
       title: "Megosztott vázlatok"
       notice: "Ez a téma azoknak látható akik látják a <b>{{category}}</b>kategóriát"
@@ -1455,6 +1459,7 @@ hu:
       mentioned: "<span>{{username}}</span>{{description}}"
       group_mentioned: "<span>{{username}} </span>{{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1962,6 +1967,7 @@ hu:
             title: "A html rész mutatása az e-mailnak"
             button: "HTML"
       bookmarks:
+        created: "Létrehozott"
         name: "Név"
     category:
       none: "(nincs kategória)"
@@ -2930,7 +2936,6 @@ hu:
           staff: "Személyzet"
           suspended: "Felfüggesztett"
           silenced: "Némított"
-          suspect: "Meggyanúsítás"
           staged: "Lépcsőzetes"
         approved: "Jóváhagyott?"
         titles:
@@ -2947,7 +2952,6 @@ hu:
           moderators: "Moderátorok"
           silenced: "Némított felhasználók"
           suspended: "Felfüggesztett felhasználok"
-          suspect: "Megfigyelt felhasználok"
         not_verified: "Nincs megerősítve"
         check_email:
           title: "A felhasználó email címének megjelenítése"
@@ -3161,6 +3165,7 @@ hu:
         help: "Adjon hozzá egy új emodzsit, amely mindenki számára elérhető lesz. (PROTIP: fogjon és vigyen több fájlt egyszerre)"
         add: "Új emodzsi hozzáadása"
         name: "Név"
+        group: "Csoport"
         image: "Kép"
         delete_confirm: "Biztos, hogy törli a(z) :%{name}: emodzsit?"
       embedding:

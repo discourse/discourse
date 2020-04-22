@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<!-- disable these super-advanced searches for now
+{{!-- disable these super-advanced searches for now
 <div class="container">
   <div class="control-group pull-left">
     <label class="control-label" for="search-in-group">{{i18n "search.advanced.in_group.label"}}</label>
@@ -38,8 +38,7 @@
       {{badge-selector badgeFinder=badgeFinder badgeNames=searchedTerms.badge single="true" canReceiveUpdates="true"}}
     </div>
   </div>
-</div>
--->
+</div> --}}
 
 {{#if siteSettings.tagging_enabled}}
   <div class="container advanced-search-tag-group">
@@ -54,9 +53,9 @@
           unlimitedTagCount=true
           onChange=(action (mut searchedTerms.tags))
         }}
-      <section class="field">
+        <section class="field">
           <label>{{ input type="checkbox" class="all-tags" checked=searchedTerms.special.all_tags}} {{i18n "search.advanced.filters.all_tags"}} </label>
-      </section>
+        </section>
       </div>
     </div>
   </div>
@@ -67,7 +66,7 @@
     <label class="control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</label>
     <div class="controls">
       {{#if currentUser}}
-        <section class='field'>
+        <section class="field">
           <label>{{input type="checkbox" class="in-title" checked=searchedTerms.special.in.title}} {{i18n "search.advanced.filters.title"}}</label>
           <label>{{input type="checkbox" class="in-likes" checked=searchedTerms.special.in.likes}} {{i18n "search.advanced.filters.likes"}}</label>
           <label>{{input type="checkbox" class="in-private" checked=searchedTerms.special.in.personal}} {{i18n "search.advanced.filters.private"}}</label>
@@ -120,7 +119,7 @@
   <div class="control-group pull-left">
     <label class="control-label" for="search-min-post-count">{{i18n "search.advanced.post.count.label"}}</label>
     <div class="controls">
-      {{input type="number" value=searchedTerms.min_post_count class="input-small" id='search-min-post-count'}}
+      {{input type="number" value=searchedTerms.min_post_count class="input-small" id="search-min-post-count"}}
     </div>
   </div>
 </div>

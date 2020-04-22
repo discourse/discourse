@@ -59,7 +59,6 @@ fi:
       optimized_link: Optimoidut kuvalinkit ovat lyhytikäisiä eikä niitä tulisi sisällyttää teeman lähdekoodiin.
     settings_errors:
       invalid_yaml: "Annettu YAML ei kelpaa"
-      data_type_not_a_number: "Ei voi asettaa tietotyypiksi %{name}. Tuettuja tyyppejä ovat integer, blool, list ja enum."
       name_too_long: "Jollain asetuksella on liian pitkä nimi. Enimmäispituus on 255."
       default_value_missing: "Asetuksella \"%{name}\" ei ole oletusarvoa"
       default_not_match_type: "Asetuksen \"%{name}\" oletusarvo ei sovi asetuksen tyyppiin."
@@ -328,14 +327,16 @@ fi:
   bookmarks:
     errors:
       already_bookmarked_post: "Samaa viestiä ei voi kirjanmerkitä kahdesti."
+      cannot_set_past_reminder: "Kirjanmerkkimuistutusta ei voi asettaa menneisyyteen."
+      cannot_set_reminder_in_distant_future: "Kirjanmerkkimuistutusta ei voi asettaa yli 10 vuoden päähän tulevaisuuteen."
       time_must_be_provided: "kaikkiin muistutuksiin paitsi '%{reminder_type}' tarvitaan aika"
     reminders:
       at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
-      later_today: "Myöhemmin tänään  <br/>{{date}}"
-      next_business_day: "Seuraavana arkipäivänä <br/>{{date}}"
-      tomorrow: "Huomenna <br/>{{date}}"
-      next_week: "Ensi viikolla <br/>{{date}}"
-      next_month: "Ensi kuussa <br/>{{date}}"
+      later_today: "Myöhemmin tänään"
+      next_business_day: "Seuraavana arkipäivänä"
+      tomorrow: "Huomenna"
+      next_week: "Ensi viikolla"
+      next_month: "Ensi kuussa"
       custom: "Valitse päivämäärä ja kellonaika"
   groups:
     success:
@@ -366,7 +367,6 @@ fi:
       trust_level_4: "luottamustaso_4"
     request_membership_pm:
       title: "Jäsenhakemus ryhmään @%{group_name}"
-      handle: "käsittele jäsenyyshakemus"
     view_hidden_topic_request_reason: "Haluaisin liittyä ryhmään '%{group_name}', jotta pääsen [tähän ketjuun](%{topic_url})"
   education:
     until_posts:
@@ -1072,6 +1072,7 @@ fi:
       labels:
         level: Taso
       description: "Kuinka monta käyttäjää on milläkin luottamustasolla."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Käyttäjät tyypeittäin"
       xaxis: "Tyyppi"
@@ -1264,7 +1265,6 @@ fi:
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan %{env} moodissa."
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusisäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
-    gc_warning: 'Palvelimesi käyttää Rubyn oletuksia roskienkeräyksessä, mikä ei tarjoa parasta mahdollista suorituskykyä. Tässä ketjussa on suorituskyvyn optimoisesta: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     queue_size_warning: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosess(e)issa tai sinun voi täytyä lisätä Sidekiq workerien määrää."
     memory_warning: "Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa."
@@ -1372,8 +1372,6 @@ fi:
     enforce_second_factor: "Pakottaa käyttäjiä ottamaan kaksivaiheisen tunnistautumisen käyttöön. Voit pakottaa sen kaikille valitsemalla \"kaikki\". Vaihtoehto \"henkilökunta\" pakottaa sen vain henkilökunnalle."
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot / muut riippuvuudet ovat myös HTTPS-yhteensopivia?"
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
-    summary_posts_required: "Montako viestiä ketjussa täytyy olla, jotta ketjun tiivistelmä otetaan käyttöön"
-    summary_likes_required: "Montako tykkäystä ketjussa pitää olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     summary_max_results: "Maksimimäärä viestejä, jotka näytetään ketjun tiivistelmässä"
     enable_personal_messages: "Salli luottamustason 1 saavuttaneiden käyttäjien (\"min trust level to send messages\" on säädettävissä) lähettää yksityisviestejä ja vastata niihin. Huomioi, että henkilökunta voi aina lähettää yksityisviestejä."
@@ -1506,7 +1504,6 @@ fi:
     discord_client_id: 'Discordin Client ID (Tarvitsetko? Käy Discordin <a href="https://discordapp.com/developers/applications/me">kehittäjäportaalissa</a>)'
     discord_secret: "Discordin Secret Key"
     discord_trusted_guilds: 'Salli vain näiden Discord-kiltojen jäsenten kirjautua Discordin avulla. Käytä killan numeerista ID:tä. Jos tarvitset lisätietoa, ohjeet löytyy <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">täältä</a>. Jätä tyhjäksi, jos et halua rajoittaa killan perusteella.'
-    readonly_mode_during_backup: "Ota käyttöön vain luku -tila, kun otetaan varmuuskopiota"
     enable_backups: "Salli ylläpitäjien tehdä varmuuskopioita palstasta"
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
@@ -1814,7 +1811,6 @@ fi:
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
     prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta liitetiedostoja. VAROITUS: tämä estää viestin liitettyjen muiden tiedostojen, kuin kuvien käyttämisen sivustolla."
-    secure_media: 'Rajoita pääsyä ladattuihin mediatiedostoihin (kuvat, video, äänitiedostot). Jos "kirjautuminen vaaditaan" -tila on käytössä, vain kirjautuneilla käyttäjillä on pääsy mediatiedostoihin. Muussa tapauksessa vain pääsyä rajoitetaan vain yksityiskeskusteluiden medialatauksiin. Huomioi: S3-lataukset tulee olla käytössä ennen tämän asetuksen käyttöönottoa.'
     slug_generation_method: "Valitse polkulyhenteen luomisen metodi. 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
     enable_emoji: "Ota emoji käyttöön"
     enable_emoji_shortcuts: "Yleiset tekstiemojit kuten :) :p :( muunnetaan emojeiksi"
@@ -1995,6 +1991,10 @@ fi:
       other: "%{count} viestiä siirrettiin yksityisviestiketjuun: %{topic_link}"
   change_owner:
     post_revision_text: "Vaihtoi omistajaa"
+  publish_page:
+    slug_errors:
+      blank: "ei voi olla tyhjä"
+      invalid: "sisältää epäkelpoja merkkejä"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}."
@@ -3065,7 +3065,6 @@ fi:
       why: "Lyhyt kooste siitä mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
       since_last_visit: "Viime vierailusi jälkeen"
       new_topics: "Uutta ketjua"
-      unread_messages: "Lukematonta viestiä"
       unread_notifications: "Lukematonta ilmoitusta"
       liked_received: "Saatua tykkäystä"
       new_users: "Uutta käyttäjää"
@@ -3535,7 +3534,7 @@ fi:
       name: Hyvä vastaus
       description: Vastaus sai 10 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun vastauksesi saa 10 tykkäykstä. Teit sillä vaikutuksen yhteisöön ja edistit keskustelua!
+        Tämä ansiomerkki myönnetään, kun vastauksesi saa 10 tykkäystä. Teit sillä vaikutuksen yhteisöön ja edistit keskustelua!
     good_post:
       name: Erinomainen vastaus
       description: Vastaus sai 25 tykkäystä

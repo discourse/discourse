@@ -18,6 +18,8 @@ de:
       public:
         title: "Stimmen sind <strong>öffentlich</strong>."
       results:
+        groups:
+          title: "Du musst ein Mitglied von %{groups} sein, um an dieser Umfrage teilnehmen zu können."
         vote:
           title: "Ergebnisse werden <strong>nach Stimmabgabe</strong> angezeigt."
         closed:
@@ -68,6 +70,7 @@ de:
       error_while_toggling_status: "Entschuldige, beim Wechseln des Status dieser Umfrage ist ein Fehler aufgetreten."
       error_while_casting_votes: "Entschuldige, beim Abgeben deiner Stimme ist ein Fehler aufgetreten."
       error_while_fetching_voters: "Entschuldige, beim Anzeigen der Teilnehmer ist ein Fehler aufgetreten."
+      error_while_exporting_results: "Leider ist beim Exportieren der Umfrageergebnisse ein Fehler aufgetreten."
       ui_builder:
         title: Umfrage erstellen
         insert: Umfrage einfügen
@@ -86,6 +89,10 @@ de:
           vote: Nach Stimmabgabe
           closed: Nach Ende der Abstimmung
           staff: Nur Teammitglieder
+        poll_groups:
+          label: Zugelassene Gruppen
+        poll_chart_type:
+          label: Diagrammtyp
         poll_config:
           max: max.
           min: min.

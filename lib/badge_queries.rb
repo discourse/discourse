@@ -103,12 +103,18 @@ module BadgeQueries
   SQL
 
   WikiEditor = <<~SQL
-    SELECT DISTINCT ON (pr.user_id) pr.user_id, pr.post_id, pr.created_at granted_at
-    FROM post_revisions pr
-    JOIN badge_posts p on p.id = pr.post_id
-    WHERE p.wiki
-        AND NOT pr.hidden
-        AND (:backfill OR p.id IN (:post_ids))
+    SELECT pr2.user_id, pr2.post_id, pr2.created_at granted_at
+    FROM
+    (
+      SELECT min(pr.id) id
+      FROM post_revisions pr
+      JOIN badge_posts p on p.id = pr.post_id
+      WHERE p.wiki
+          AND NOT pr.hidden
+          AND (:backfill OR p.id IN (:post_ids))
+      GROUP BY pr.user_id
+    ) as X
+    JOIN post_revisions pr2 ON pr2.id = X.id
   SQL
 
   Welcome = <<~SQL

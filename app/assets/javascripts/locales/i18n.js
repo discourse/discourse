@@ -32,9 +32,9 @@ I18n.lookup = function(scope, options) {
   options = options || {};
 
   var translations = this.prepareOptions(I18n.translations),
-      locale = options.locale || I18n.currentLocale(),
-      messages = translations[locale] || {},
-      currentScope;
+    locale = options.locale || I18n.currentLocale(),
+    messages = translations[locale] || {},
+    currentScope;
 
   options = this.prepareOptions(options);
 
@@ -83,8 +83,8 @@ I18n.lookup = function(scope, options) {
 //
 I18n.prepareOptions = function() {
   var options = {},
-      opts,
-      count = arguments.length;
+    opts,
+    count = arguments.length;
 
   for (var i = 0; i < count; i++) {
     opts = arguments[i];
@@ -107,13 +107,15 @@ I18n.interpolate = function(message, options) {
   options = this.prepareOptions(options);
 
   var matches = message.match(this.PLACEHOLDER),
-      placeholder,
-      value,
-      name;
+    placeholder,
+    value,
+    name;
 
-  if (!matches) { return message; }
+  if (!matches) {
+    return message;
+  }
 
-  for (var i = 0; placeholder = matches[i]; i++) {
+  for (var i = 0; (placeholder = matches[i]); i++) {
     name = placeholder.replace(this.PLACEHOLDER, "$1");
 
     if (typeof options[name] === "string") {
@@ -130,7 +132,9 @@ I18n.interpolate = function(message, options) {
       value = "[missing " + placeholder + " value]";
     }
 
-    var regex = new RegExp(placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}"));
+    var regex = new RegExp(
+      placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}")
+    );
     message = message.replace(regex, value);
   }
 
@@ -157,8 +161,8 @@ I18n.translate = function(scope, options) {
       translation = this.findTranslation(scope, options);
     }
 
-    if (!translation && this.currentLocale() !== 'en') {
-      options.locale = 'en';
+    if (!translation && this.currentLocale() !== "en") {
+      options.locale = "en";
       translation = this.findTranslation(scope, options);
     }
   }
@@ -181,25 +185,28 @@ I18n.findTranslation = function(scope, options) {
 };
 
 I18n.toNumber = function(number, options) {
-  options = this.prepareOptions(
-    options,
-    this.lookup("number.format"),
-    {precision: 3, separator: this.SEPARATOR, delimiter: ",", strip_insignificant_zeros: false}
-  );
+  options = this.prepareOptions(options, this.lookup("number.format"), {
+    precision: 3,
+    separator: this.SEPARATOR,
+    delimiter: ",",
+    strip_insignificant_zeros: false
+  });
 
   var negative = number < 0,
-      string = Math.abs(number).toFixed(options.precision).toString(),
-      parts = string.split(this.SEPARATOR),
-      precision,
-      buffer = [],
-      formattedNumber;
+    string = Math.abs(number)
+      .toFixed(options.precision)
+      .toString(),
+    parts = string.split(this.SEPARATOR),
+    precision,
+    buffer = [],
+    formattedNumber;
 
   number = parts[0];
   precision = parts[1];
 
   while (number.length > 0) {
     buffer.unshift(number.substr(Math.max(0, number.length - 3), 3));
-    number = number.substr(0, number.length -3);
+    number = number.substr(0, number.length - 3);
   }
 
   formattedNumber = buffer.join(options.delimiter);
@@ -214,14 +221,13 @@ I18n.toNumber = function(number, options) {
 
   if (options.strip_insignificant_zeros) {
     var regex = {
-        separator: new RegExp(options.separator.replace(/\./, "\\.") + "$"),
-        zeros: /0+$/
+      separator: new RegExp(options.separator.replace(/\./, "\\.") + "$"),
+      zeros: /0+$/
     };
 
     formattedNumber = formattedNumber
       .replace(regex.zeros, "")
-      .replace(regex.separator, "")
-    ;
+      .replace(regex.separator, "");
   }
 
   return formattedNumber;
@@ -229,10 +235,10 @@ I18n.toNumber = function(number, options) {
 
 I18n.toHumanSize = function(number, options) {
   var kb = 1024,
-      size = number,
-      iterations = 0,
-      unit,
-      precision;
+    size = number,
+    iterations = 0,
+    unit,
+    precision;
 
   while (size >= kb && iterations < 4) {
     size = size / kb;
@@ -240,23 +246,24 @@ I18n.toHumanSize = function(number, options) {
   }
 
   if (iterations === 0) {
-    unit = this.t("number.human.storage_units.units.byte", {count: size});
+    unit = this.t("number.human.storage_units.units.byte", { count: size });
     precision = 0;
   } else {
-    unit = this.t("number.human.storage_units.units." + [null, "kb", "mb", "gb", "tb"][iterations]);
-    precision = (size - Math.floor(size) === 0) ? 0 : 1;
+    unit = this.t(
+      "number.human.storage_units.units." +
+        [null, "kb", "mb", "gb", "tb"][iterations]
+    );
+    precision = size - Math.floor(size) === 0 ? 0 : 1;
   }
 
-  options = this.prepareOptions(
-    options,
-    {precision: precision, format: "%n%u", delimiter: ""}
-  );
+  options = this.prepareOptions(options, {
+    precision: precision,
+    format: "%n%u",
+    delimiter: ""
+  });
 
   number = this.toNumber(size, options);
-  number = options.format
-    .replace("%u", unit)
-    .replace("%n", number)
-  ;
+  number = options.format.replace("%u", unit).replace("%n", number);
 
   return number;
 };
@@ -283,7 +290,7 @@ I18n.pluralize = function(translation, scope, options) {
 
   var pluralizer = this.pluralizer(options.locale || this.currentLocale());
   var key = pluralizer(Math.abs(count));
-  var keys = ((typeof key === "object") && (key instanceof Array)) ? key : [key];
+  var keys = typeof key === "object" && key instanceof Array ? key : [key];
 
   var message = this.findAndTranslateValidNode(keys, translation);
 
@@ -295,9 +302,11 @@ I18n.pluralize = function(translation, scope, options) {
 };
 
 I18n.missingTranslation = function(scope, key) {
-  var message = '[' + this.currentLocale() + this.SEPARATOR + scope;
-  if (key) { message += this.SEPARATOR + key; }
-  return message + ']';
+  var message = "[" + this.currentLocale() + this.SEPARATOR + scope;
+  if (key) {
+    message += this.SEPARATOR + key;
+  }
+  return message + "]";
 };
 
 I18n.currentLocale = function() {
@@ -311,7 +320,7 @@ I18n.enableVerboseLocalization = function() {
 
   I18n.noFallbacks = true;
 
-  I18n.t = I18n.translate = function(scope, value){
+  I18n.t = I18n.translate = function(scope, value) {
     var current = keys[scope];
     if (!current) {
       current = keys[scope] = ++counter;
@@ -330,7 +339,7 @@ I18n.enableVerboseLocalizationSession = function() {
   sessionStorage.setItem("verbose_localization", "true");
   I18n.enableVerboseLocalization();
 
-  return 'Verbose localization is enabled. Close the browser tab to turn it off. Reload the page to see the translation keys.';
+  return "Verbose localization is enabled. Close the browser tab to turn it off. Reload the page to see the translation keys.";
 };
 
 // shortcuts

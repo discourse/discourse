@@ -90,8 +90,8 @@ describe Admin::EmailController do
 
   describe '#skipped' do
     fab!(:user) { Fabricate(:user) }
-    fab!(:log1) { Fabricate(:skipped_email_log, user: user) }
-    fab!(:log2) { Fabricate(:skipped_email_log) }
+    fab!(:log1) { Fabricate(:skipped_email_log, user: user, created_at: 20.minutes.ago) }
+    fab!(:log2) { Fabricate(:skipped_email_log, created_at: 10.minutes.ago) }
 
     it "succeeds" do
       get "/admin/email/skipped.json"

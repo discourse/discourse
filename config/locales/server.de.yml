@@ -59,7 +59,6 @@ de:
       optimized_link: Optimierte Bild-Verknüpfungen sind kurzlebig und sollten nicht in Theme-Quellcode enthalten sein.
     settings_errors:
       invalid_yaml: "Der YAML-Code ist ungültig."
-      data_type_not_a_number: "Der eingestellte Datentyp `%{name}` wird nicht unterstützt. Unterstützte Datentypen sind `integer`, `bool`, `list` und `enum`."
       name_too_long: "Es gibt eine Einstellung mit einem zu langen Namen. Die maximale Länge beträgt 255 Zeichen."
       default_value_missing: "Einstellung `%{name}` hat keinen Standardwert."
       default_not_match_type: "Bei der Einstellung `%{name}` stimmt der Datentyp des Standardwerts nicht mit dem Datentyp der Einstellung überein."
@@ -289,6 +288,7 @@ de:
   pm_reached_recipients_limit: "Entschuldige, aber Du kannst nicht mehr als %{recipients_limit} Empfänger in einer Nachricht haben."
   removed_direct_reply_full_quotes: "Automatisch entferntes Zitat des gesamten vorherigen Beitrags."
   secure_upload_not_allowed_in_public_topic: "Entschuldigung, der/die folgende/n sichere Upload(s) konnte nicht in einem öffentlichen Thema verwendet werden: %{upload_filenames}."
+  create_pm_on_existing_topic: "Entschuldigung, du kannst keine PM für ein exisiterendes Thema erstellen."
   just_posted_that: "ist einer einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
   invalid_characters: "enthält ungültige Zeichen"
   is_invalid: "scheint unklar, ist das ein ganzer Satz?"
@@ -331,11 +331,10 @@ de:
       time_must_be_provided: "Zeit muss eingestellt werden für alle Erinnerungen ausser '%{reminder_type}'"
     reminders:
       at_desktop: "Nächstes mal wenn ich an meinem PC bin"
-      later_today: "Im Laufe des Tages <br/>{{date}}"
-      next_business_day: "Nächster Geschäftstag <br/>{{date}}"
-      tomorrow: "Morgen <br/>{{date}}"
-      next_week: "Nächste Woche <br/>{{date}}"
-      next_month: "Nächster Monat <br/>{{date}}"
+      later_today: "Im Laufe des Tages"
+      tomorrow: "Morgen"
+      next_week: "Nächste Woche"
+      next_month: "Nächster Monat"
       custom: "Eigenes Datum und Zeit"
   groups:
     success:
@@ -366,7 +365,6 @@ de:
       trust_level_4: "vertrauensstufe_4"
     request_membership_pm:
       title: "Mitgliedschaftsanfrage für @%{group_name}"
-      handle: "Mitgliedschaftsanfrage bearbeiten"
     view_hidden_topic_request_reason: "Ich möchte der Gruppe '%{group_name}' beitreten, damit ich auf [this topic](%{topic_url}) zugreifen kann"
   education:
     until_posts:
@@ -1052,6 +1050,7 @@ de:
       labels:
         level: Stufe
       description: "Anzahl von Benutzern nach Vertrauensstufe."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Benutzer nach Art"
       xaxis: "Art"
@@ -1244,7 +1243,6 @@ de:
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
     host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen deiner Website ein."
-    gc_warning: 'Dein Server verwendet die Standardparameter für Rubys Garbage-Collector, die nicht optimal sind. Lese dieses Thema über Performanzeinstellungen (en): <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von E-Mails, werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
     queue_size_warning: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten."
     memory_warning: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
@@ -1355,8 +1353,6 @@ de:
     force_https: "Erzwinge HTTPS für deine Site. ACHTUNG: Aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
     same_site_cookies: "Verwende Same-Site-Cookies, die alle Angriffsszenarien für Cross-Site-Request-Forgery in unterstützten Browsern verhindern. Warnung: Strikt wird nur auf Seiten funktionieren, die Login erzwingen und SSO verwenden."
     summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
-    summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\"-Funktion aktiviert wird."
-    summary_likes_required: "Mindestanzahl an Likes in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge bei 'Dieses Thema zusammenfassen'"
     enable_personal_messages: "Erlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten und Antworten senden kann."
@@ -1388,7 +1384,6 @@ de:
     markdown_typographer_quotation_marks: "Liste von doppelten und einzelnen Ausführungszeichen-Paaren für die Ersetzung"
     post_undo_action_window_mins: "Minuten, die ein Benutzer hat, um Aktionen auf einen Beitrag rückgängig zu machen (Gefällt mir, Meldung, usw.)."
     must_approve_users: "Alle neuen Benutzerkonten müssen von Mitarbeitern freigeschaltet werden, bevor sie Zugriff auf die Seite erhalten."
-    approve_suspect_users: "Team Mitglieder müssen alle verdächtigen Benutzerkonten genehmigen"
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
     ga_universal_tracking_code: "Tracking Code ID von Google Universal Analytics (analytics.js), eg: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1494,7 +1489,6 @@ de:
     discord_client_id: 'Discord Client ID (benötigst du eine? besuche<a href="https://discordapp.com/developers/applications/me">das Discord Entwickler Portal</a>)'
     discord_secret: "Discord geheimer Schlüssel"
     discord_trusted_guilds: 'Das Einloggen per Discord nur Mitgliedern dieser Discord Gilden gestatten. Verwende die numerische ID der Gilde. Lies die Anleitung <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a>, um mehr zu erfahren. Leer lassen um jede Gilde zuzulassen.'
-    readonly_mode_during_backup: "Nur-Lesen-Modus beim Erstellen einer Sicherung aktivieren"
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
     allow_restore: "Wiederherstellung von Sicherungen zulassen, die ALLE vorhandenen Daten überschreiben! Auf 'false' lassen, sofern Sie nicht planen, eine Sicherung wiederherzustellen."
     maximum_backups: "Die maximale Anzahl an Sicherungen, die auf dem Server gespeichert werden. Ältere Sicherungen werden automatisch gelöscht."
@@ -1502,7 +1496,7 @@ de:
     backup_frequency: "Die Anzahl von Tagen zwischen Backups."
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
     s3_endpoint: "Dieser Endpunkt kann so angepasst werden, dass er die Sicherung an einen S3-kompatiblen Service wie DigitalOcean Spaces oder Minio übertragt. WARNUNG: Verwende den Standard bei Verwendung von AWS S3."
-    s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Grabstein-Uploads. WICHTIGT: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
+    s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Grabstein-Uploads. WICHTIG: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
     s3_disable_cleanup: "Deaktiviere das Löschen von Backups aus S3 wenn sie lokal entfernt werden"
     enable_s3_inventory: "Erstelle Berichte und überprüfe Uploads mit Amazon S3-Bestand. WICHTIG: Benötigt gültige S3-Anmeldeinformationen (sowohl access_key_id als auch secret_access_key)."
     backup_time_of_day: "Uhrzeit in UTC, wenn Backups ausgeführt werden sollen."
@@ -1625,6 +1619,7 @@ de:
     desktop_category_page_style: "Visueller Stil für die /categories Seite"
     category_colors: "Liste hexadezimaler Farbwerte, die als Kategoriefarben erlaubt sind."
     category_style: "Visueller Stil für Kategorie-Abzeichen."
+    max_image_size_kb: "Die maximale Bild Upload Größe in kB. Sie muss in nginx (client_max_body_size) / Apache oder einem Proxy ebenfalls konfiguriert werden. Bilder, die größer als dieses Limit und kleiner als client_max_body_size sind werden in der Größe verändert, um für den Upload zu passen."
     max_attachment_size_kb: "Maximale Größe hochgeladener Dateianhänge in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
     authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Dateien ('*' um alle Dateiendungen zu erlauben)"
     authorized_extensions_for_staff: "Eine Liste von erlaubten Dateiendungen für den Upload von Dateien durch Team-Benutzer, zusätzlich zu der in der Seiteninstellung `authorized_extensions` definierten Liste. (Der Wert „*“ erlaubt alle Dateitypen.)"
@@ -1811,7 +1806,6 @@ de:
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die mehr als (n) Tage alt sind."
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (0 = ausgeschaltet)"
     prevent_anons_from_downloading_files: "Nichtangemeldeten Benutzern das Herunterladen von Anhängen verbieten. WARNUNG: dies verhindert auch das Herunterladen jeglicher Ressourcen für Website-Anpassungen, die als Anhänge gespeichert wurden."
-    secure_media: 'Beschränkt den Zugriff auf Medien-Uploads (Bilder, Videos, Audio). Falls "Login erforderlich" aktiviert ist, können nur angemeldete Benutzer auf Medien-Uploads zugreifen. Sonst wird der Zugriff nur für Medien-Uploads in privaten Nachrichten beschränkt. Hinweis. S3 Uploads müssen vor Aktivierung dieser Einstellung aktiviert sein.'
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. 'encoded' verwendet einen Prozent-Encodierten String, bei 'none' wird kein Kürzel verwendet."
     enable_emoji: "Aktiviere emoji"
     enable_emoji_shortcuts: "Geläufige Text-Smileys wie :) :p :( werden in Emojis umgewandelt"
@@ -1993,6 +1987,10 @@ de:
       other: "%{count} Beiträge wurden in eine existierende Nachricht verschoben: %{topic_link}"
   change_owner:
     post_revision_text: "Eigentümer übertragen."
+  publish_page:
+    slug_errors:
+      blank: "darf nicht leer sein"
+      invalid: "enthält ungültige Zeichen"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Diese Nachricht wurde automatisch geschlossen, nachde mdie maximale Anzahl von einer Antwort erreicht wurde."
@@ -2083,6 +2081,7 @@ de:
     second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungs-Codes ein:"
     second_factor_backup_title: "Zwei-Faktor-Wiederherstellungs-Code"
     invalid_second_factor_code: "Ungültiger Authentifizierungscode. Jeder Code kann nur einmal benutzt werden."
+    invalid_security_key: "Ungültiger Sicherheitsschlüssel."
     second_factor_toggle:
       backup_code: "Benutze stattdessen einen Backup Code"
   admin:
@@ -2536,7 +2535,7 @@ de:
       date_invalid: "Kein Beitrag-Erstelldatum gefunden. Fehlt der E-Mail ein „Date:“-Header?"
     email_reject_post_too_short:
       title: "E-Mail Ablehnungsbeitrag zu kurz"
-      subject_template: "[%{email_prefix}] Email Problem -- Beitrag zu kurz"
+      subject_template: "[%{email_prefix}] E-Mail Problem -- Beitrag zu kurz"
       text_body_template: |
         Es tut uns leid aber Deine E-Mail Nachricht an %{destination} (betitelt mit %{former_title}) funktionierte nicht.
 
@@ -2970,7 +2969,6 @@ de:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
       since_last_visit: "Seit deinem letzten Besuch"
       new_topics: "Neue Themen"
-      unread_messages: "Ungelesene Nachrichten"
       unread_notifications: "Ungelesene Benachrichtigungen"
       liked_received: "Erhaltene Likes"
       new_users: "Neue Benutzer"

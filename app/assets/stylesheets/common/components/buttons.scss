@@ -67,6 +67,31 @@
     }
     cursor: not-allowed;
   }
+
+  .loading-container {
+    display: none;
+    margin: 0 6.75px 0 0;
+  }
+
+  &.is-loading {
+    &.btn-text {
+      .d-button-label {
+        font-size: $font-down-2;
+      }
+
+      &.btn-small {
+        .loading-icon {
+          font-size: $font-down-1;
+          margin-right: 0.2em;
+        }
+      }
+    }
+
+    .loading-icon {
+      -webkit-animation: rotate-forever 1s infinite linear, fadein 1s;
+      animation: rotate-forever 1s infinite linear, fadein 1s;
+    }
+  }
 }
 
 .btn.hidden {

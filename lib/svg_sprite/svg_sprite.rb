@@ -62,6 +62,8 @@ module SvgSprite
     "discourse-bell-one",
     "discourse-bell-slash",
     "discourse-compress",
+    "discourse-comment",
+    "discourse-comment-slash",
     "discourse-expand",
     "download",
     "ellipsis-h",
@@ -173,6 +175,7 @@ module SvgSprite
     "step-backward",
     "step-forward",
     "stream",
+    "sync-alt",
     "sync",
     "table",
     "tag",
@@ -197,7 +200,8 @@ module SvgSprite
     "user-shield",
     "user-times",
     "users",
-    "wrench"
+    "wrench",
+    "spinner"
   ])
 
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fas fa-' => '', 'fa-' => '' }
@@ -398,6 +402,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
         end
       end
     end
+
+    theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
 
     theme_icon_settings
   end

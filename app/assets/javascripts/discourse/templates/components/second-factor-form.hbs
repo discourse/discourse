@@ -1,7 +1,7 @@
 <div id="second-factor">
   <h3>{{secondFactorTitle}}</h3>
   {{#if optionalText}}
-    <p>{{{optionalText}}}</p>
+    <p>{{html-safe optionalText}}</p>
   {{/if}}
   <p>{{secondFactorDescription}}</p>
   {{yield}}

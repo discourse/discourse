@@ -267,7 +267,7 @@ RSpec.describe MigratePollsData do
       poll = Poll.find_by(name: "poll")
 
       expect(poll.post_id).to eq(post.id)
-      expect(poll.close_at).to eq("2018-10-08T00:00:00.000Z")
+      expect(poll.close_at).to eq_time(Time.parse("2018-10-08T00:00:00.000Z"))
 
       expect(poll.regular?).to eq(true)
       expect(poll.open?).to eq(true)

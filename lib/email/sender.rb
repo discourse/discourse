@@ -96,12 +96,13 @@ module Email
       if topic_id.present? && post_id.present?
         post = Post.find_by(id: post_id, topic_id: topic_id)
 
-        # guards against deleted posts
-        return skip(SkippedEmailLog.reason_types[:sender_post_deleted]) unless post
-
-        add_attachments(post)
+        # guards against deleted posts and topics
+        return skip(SkippedEmailLog.reason_types[:sender_post_deleted]) if post.blank?
 
         topic = post.topic
+        return skip(SkippedEmailLog.reason_types[:sender_topic_deleted]) if topic.blank?
+
+        add_attachments(post)
         first_post = topic.ordered_posts.first
 
         topic_message_id = first_post.incoming_email&.message_id.present? ?
@@ -269,6 +270,50 @@ module Email
             }
           )
         end
+      end
+
+      fix_parts_after_attachments!
+    end
+
+    #
+    # Two behaviors in the mail gem collide:
+    #
+    #  1. Attachments are added as extra parts at the top level,
+    #  2. When there are both text and html parts, the content type is set
+    #     to 'multipart/alternative'.
+    #
+    # Since attachments aren't alternative renderings, for emails that contain
+    # attachments and both html and text parts, some coercing is necessary.
+    #
+    # When there are alternative rendering and attachments, this method causes
+    # the top level to be 'multipart/mixed' and puts the html and text parts
+    # into a nested 'multipart/alternative' part.
+    #
+    # Due to mail gem magic, @message.text_part and @message.html_part still
+    # refer to the same objects.
+    #
+    def fix_parts_after_attachments!
+      has_attachments = @message.attachments.present?
+      has_alternative_renderings =
+        @message.html_part.present? && @message.text_part.present?
+
+      if has_attachments && has_alternative_renderings
+        @message.content_type = "multipart/mixed"
+
+        html_part = @message.html_part
+        @message.html_part = nil
+
+        text_part = @message.text_part
+        @message.text_part = nil
+
+        content = Mail::Part.new do
+          content_type "multipart/alternative"
+
+          part html_part
+          part text_part
+        end
+
+        @message.parts.unshift(content)
       end
     end
 

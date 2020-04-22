@@ -107,7 +107,7 @@ class ThemeStore::GitImporter
     ssh_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_ssh_#{SecureRandom.hex}"
     FileUtils.mkdir_p ssh_folder
 
-    File.write("#{ssh_folder}/id_rsa", @private_key.strip)
+    File.write("#{ssh_folder}/id_rsa", @private_key)
     FileUtils.chmod(0600, "#{ssh_folder}/id_rsa")
 
     begin

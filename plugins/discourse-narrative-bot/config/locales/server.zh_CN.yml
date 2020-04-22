@@ -146,7 +146,7 @@ zh_CN:
 
           我只是个机器人，但是如果你想要找到真人，看看[我们的联系页面](%{base_path}/about)。
 
-          同时，我不会再烦你。
+          同时，我不会再烦你了。
     new_user_narrative:
       reset_trigger: "教程"
       title: "新用户教程完成证明"
@@ -156,11 +156,11 @@ zh_CN:
         message: |-
           感谢加入%{title}，欢迎！
 
-          -我只是一个机器人，但是我们[友好的管理员]可以提供真人帮助。
+          - 我只是一个机器人，但是我们[友好的管理员]可以提供真人帮助。
 
-          -出于安全考虑，我们暂时限制新用户能够使用的功能。当我们更了解你的时候，你就可以获得[新功能](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (还有 [徽章](%{base_uri}/badges))
+          - 出于安全考虑，我们暂时限制新用户能够使用的功能。当我们更了解你的时候，你就可以获得[新功能](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (还有 [徽章](%{base_uri}/badges))
 
-          -我们始终相信[社区文明守则](%{base_uri}/guidelines)。
+          - 我们始终信奉[社区文明守则](%{base_uri}/guidelines)。
       onebox:
         instructions: |-
           接下来，你能分享下列链接给我么？回复**单独一行的链接**，然后它会自动展开显示一个有用的摘要。
@@ -233,9 +233,9 @@ zh_CN:
         instructions: |-
           如果你想了解更多，请选择下方<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做，你一会可能收到份 :gift: ！
         reply: |-
-          太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像 &#8599;
+          太棒了！现在你可以在任何时候轻松地找到我们的私信，[你的个人页面收藏栏](%{bookmark_url})右边。只需点击你在右上方的个人头像 &#8599;
         not_found: |-
-          啊哦，我没有在这个主题中看到任何收藏。你在每个帖子下找到了收藏按钮吗？如果需要的话，使用显示更多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
+          啊哦，我没有在此主题中看到有任何收藏。你看到每个帖子下方的收藏按钮了吗？如果需要的话，使用显示更多来<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
       emoji:
         instructions: |-
           你可能已经看到我在回复中用了很多小图片 :blue_car::dash: 这些叫做[绘文字（Emoji）](https://zh.wikipedia.org/wiki/%E7%B9%AA%E6%96%87%E5%AD%97)。你能在回复中**使用一个 Emoji **吗？这些都可以用：
@@ -272,7 +272,7 @@ zh_CN:
 
           > :imp: 我在这写了些脏话
 
-          我猜你知道要做什么了。点击**标记该贴**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">为不合适！
+          我猜你知道要做什么了。**标记该贴**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">为不恰当的发言！
         reply: |-
           [我们的管理人员](%{base_uri}/groups/staff)将私下通知你的标记。如果有足够的社区成员标记帖子，作为预防措施它也会自动隐藏。（因为我实际上并没有写一篇讨厌的帖子:angel:我现在已经取消了标记。）
         not_found: |-
@@ -371,11 +371,11 @@ zh_CN:
         instructions: |-
           每个主题都有通知等级。默认为“普通”，只有别人直接回复你的时候才会提醒你。
 
-          默认情况下，私信中的通知等级被设为最高级“监看”，即你将收到每个新回复的提醒。但是你可以覆盖任意一个主题的通知等级至“监看”、“追踪”或“静音”。
+          默认情况下，私信中的通知等级被设为最高级“监看”，即你将收到每个新回复的提醒。但是你可以改变任意一个主题的通知等级至“监看”、“追踪”或“静音”。
 
-          让我们试试改变这个主题的通知等级。在主题最下方，你可以看到一个**监看**的按钮。你可以把通知等级改到**追踪**吗？
+          让我们试试改变这个主题的通知等级。在主题最下方，你可以看到一个**监看**的按钮。你可以把通知等级改成**追踪**吗？
         not_found: |-
-          看起来你仍在关注 :eyes: 这个主题！没找到按钮？通知等级就在主题页面的最下方。
+          看起来你仍在关注 :eyes: 这个主题！不知道如何关注？通知等级按钮就在主题的下方。
         reply: |-
           太棒了！我希望你没有把这个话题静音，因为我有时会说话有点健谈:grin:。
 

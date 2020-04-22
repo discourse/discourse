@@ -364,17 +364,24 @@ class Search
     end
   end
 
-  advanced_filter(/^in:(likes|bookmarks)$/) do |posts, match|
-    if @guardian.user
-      post_action_type = PostActionType.types[:like] if match == "likes"
-      post_action_type = PostActionType.types[:bookmark] if match == "bookmarks"
+  def post_action_type_filter(posts, post_action_type)
+    posts.where("posts.id IN (
+      SELECT pa.post_id FROM post_actions pa
+      WHERE pa.user_id = #{@guardian.user.id} AND
+            pa.post_action_type_id = #{post_action_type} AND
+            deleted_at IS NULL
+    )")
+  end
 
-      posts.where("posts.id IN (
-                            SELECT pa.post_id FROM post_actions pa
-                            WHERE pa.user_id = #{@guardian.user.id} AND
-                                  pa.post_action_type_id = #{post_action_type} AND
-                                  deleted_at IS NULL
-                         )")
+  advanced_filter(/^in:(likes)$/) do |posts, match|
+    if @guardian.user
+      post_action_type_filter(posts, PostActionType.types[:like])
+    end
+  end
+
+  advanced_filter(/^in:(bookmarks)$/) do |posts, match|
+    if @guardian.user
+      posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
     end
   end
 
@@ -462,20 +469,16 @@ class Search
     next unless category_slug
 
     if subcategory_slug
-      # sub category
-      parent_category_id = Category
-        .where(
-          "lower(slug) = ? AND parent_category_id IS NULL", category_slug.downcase
-        )
-        .pluck(:id)
-        .first
 
-      category_id = Category
-        .where("lower(slug) = ? AND parent_category_id = ?",
-          subcategory_slug.downcase, parent_category_id
-        )
-        .pluck(:id)
-        .first
+      category_id, _ = DB.query_single(<<~SQL, category_slug.downcase, subcategory_slug.downcase)
+        SELECT sub.id
+        FROM categories sub
+        JOIN categories c ON sub.parent_category_id = c.id
+        WHERE LOWER(c.slug)  = ? AND LOWER(sub.slug) = ?
+        ORDER BY c.id
+        LIMIT 1
+      SQL
+
     else
       # main category
       if category_slug[0] == "="

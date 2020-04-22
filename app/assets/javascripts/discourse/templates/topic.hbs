@@ -36,7 +36,6 @@
                 options=(hash
                   filterable=true
                   categoryId=buffered.category_id
-                  filterable=true
                 )
               }}
             {{/if}}
@@ -48,7 +47,7 @@
               {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times"}}
 
               {{#if canRemoveTopicFeaturedLink}}
-                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title="{{i18n "composer.remove_featured_link"}}">
+                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title={{i18n "composer.remove_featured_link"}}>
                   {{d-icon "times-circle"}}
                   {{featuredLinkDomain}}
                 </a>
@@ -57,7 +56,7 @@
           </div>
 
         {{else}}
-          <h1 data-topic-id="{{unbound model.id}}">
+          <h1 data-topic-id={{model.id}}>
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
                 {{private-message-glyph
@@ -73,25 +72,56 @@
 
             {{#if model.details.loaded}}
               {{topic-status topic=model}}
-              <a href="{{unbound model.url}}" {{action "jumpTop"}} class="fancy-title">
-                {{{model.fancyTitle}}}
+              <a href={{model.url}} {{action "jumpTop"}} class="fancy-title">
+                {{html-safe model.fancyTitle}}
               </a>
             {{/if}}
 
             {{#if model.details.can_edit}}
-              <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{d-icon "pencil-alt"}}</a>
+              <a href {{action "editTopic"}} class="edit-topic" title={{i18n "edit"}}>{{d-icon "pencil-alt"}}</a>
             {{/if}}
           </h1>
 
           {{topic-category topic=model class="topic-category"}}
         {{/if}}
       {{/topic-title}}
+
+      {{#if model.publishedPage}}
+        <div class="published-page">
+          <div class="details">
+            {{i18n "topic.publish_page.topic_published"}}
+            <div>
+              <a href={{model.publishedPage.url}} target="_blank" rel="noopener noreferrer">{{model.publishedPage.url}}</a>
+            </div>
+          </div>
+          <div class="controls">
+            {{d-button
+              icon="file"
+              label="topic.publish_page.publishing_settings"
+              action=(route-action "showPagePublish")
+            }}
+          </div>
+        </div>
+      {{/if}}
+
     {{/if}}
 
-
     <div class="container posts">
-      <div class='selected-posts {{unless multiSelect 'hidden'}}'>
-        {{partial "selected-posts"}}
+      <div class="selected-posts {{unless multiSelect "hidden"}}">
+        {{selected-posts
+          selectedPostsCount=selectedPostsCount
+          canSelectAll=canSelectAll
+          canDeselectAll=canDeselectAll
+          canDeleteSelected=canDeleteSelected
+          canMergeTopic=canMergeTopic
+          canChangeOwner=canChangeOwner
+          canMergePosts=canMergePosts
+          toggleMultiSelect=(action "toggleMultiSelect")
+          mergePosts=(action "mergePosts")
+          deleteSelected=(action "deleteSelected")
+          deselectAll=(action "deselectAll")
+          selectAll=(action "selectAll")
+        }}
       </div>
 
       {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
@@ -170,7 +200,7 @@
       {{/topic-navigation}}
 
       <div class="row">
-        <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
+        <section class="topic-area" id="topic" data-topic-id={{model.id}}>
 
           <div class="posts-wrapper">
             {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
@@ -194,7 +224,6 @@
                 deletePost=(action "deletePost")
                 recoverPost=(action "recoverPost")
                 expandHidden=(action "expandHidden")
-                newTopicAction=(action "replyAsNewTopic")
                 toggleBookmark=(action "toggleBookmark")
                 toggleBookmarkWithReminder=(action "toggleBookmarkWithReminder")
                 togglePostType=(action "togglePostType")
@@ -220,7 +249,8 @@
                 selectBelow=(action "selectBelow")
                 fillGapBefore=(action "fillGapBefore")
                 fillGapAfter=(action "fillGapAfter")
-                showInvite=(route-action "showInvite")}}
+                showInvite=(route-action "showInvite")
+                showPagePublish=(route-action "showPagePublish")}}
             {{/unless}}
 
             {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
@@ -231,25 +261,25 @@
             {{#if loadedAllPosts}}
 
               {{#if model.pending_posts}}
-                <div class='pending-posts'>
+                <div class="pending-posts">
                   {{#each model.pending_posts as |pending|}}
-                    <div class='reviewable-item'>
-                      <div class='reviewable-meta-data'>
-                        <span class='reviewable-type'>
+                    <div class="reviewable-item">
+                      <div class="reviewable-meta-data">
+                        <span class="reviewable-type">
                           {{i18n "review.awaiting_approval"}}
                         </span>
-                        <span class='created-at'>
+                        <span class="created-at">
                           {{age-with-tooltip pending.created_at}}
                         </span>
                       </div>
-                      <div class='post-contents-wrapper'>
-                        {{reviewable-created-by user=currentUser tagName=''}}
-                        <div class='post-contents'>
-                          {{reviewable-created-by-name user=currentUser tagName=''}}
-                          <div class='post-body'>{{cook-text pending.raw}}</div>
+                      <div class="post-contents-wrapper">
+                        {{reviewable-created-by user=currentUser tagName=""}}
+                        <div class="post-contents">
+                          {{reviewable-created-by-name user=currentUser tagName=""}}
+                          <div class="post-body">{{cook-text pending.raw}}</div>
                         </div>
                       </div>
-                      <div class='reviewable-actions'>
+                      <div class="reviewable-actions">
                         {{d-button
                           class="btn-danger"
                           label="review.delete"
@@ -264,10 +294,10 @@
               {{#if model.queued_posts_count}}
                 <div class="has-pending-posts">
                   <div>
-                    {{{i18n "review.topic_has_pending" count=model.queued_posts_count}}}
+                    {{html-safe (i18n "review.topic_has_pending" count=model.queued_posts_count)}}
                   </div>
 
-                  {{#link-to 'review' (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
+                  {{#link-to "review" (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
                     {{i18n "review.view_pending"}}
                   {{/link-to}}
                 </div>
@@ -326,13 +356,26 @@
               {{/if}}
 
               {{#if showSelectedPostsAtBottom}}
-                <div class='selected-posts {{unless multiSelect 'hidden'}}'>
-                  {{partial "selected-posts"}}
+                <div class="selected-posts {{unless multiSelect "hidden"}}">
+                  {{selected-posts
+                    selectedPostsCount=selectedPostsCount
+                    canSelectAll=canSelectAll
+                    canDeselectAll=canDeselectAll
+                    canDeleteSelected=canDeleteSelected
+                    canMergeTopic=canMergeTopic
+                    canChangeOwner=canChangeOwner
+                    canMergePosts=canMergePosts
+                    toggleMultiSelect=(action "toggleMultiSelect")
+                    mergePosts=(action "mergePosts")
+                    deleteSelected=(action "deleteSelected")
+                    deselectAll=(action "deselectAll")
+                    selectAll=(action "selectAll")
+                  }}
                 </div>
               {{/if}}
 
               {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
-              <div class="{{if model.relatedMessages.length 'related-messages-wrapper'}} {{if model.suggestedTopics.length 'suggested-topics-wrapper'}}">
+              <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
                 {{#if model.relatedMessages.length}}
                   {{related-messages topic=model}}
                 {{/if}}
@@ -351,7 +394,7 @@
     <div class="container">
       {{#conditional-loading-spinner condition=noErrorYet}}
         {{#if model.errorHtml}}
-          <div class="not-found">{{{model.errorHtml}}}</div>
+          <div class="not-found">{{html-safe model.errorHtml}}</div>
         {{else}}
           <div class="topic-error">
             <div>{{model.errorMessage}}</div>

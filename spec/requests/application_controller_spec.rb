@@ -84,6 +84,14 @@ RSpec.describe ApplicationController do
         expect(response).to redirect_to("/login")
       end
     end
+
+    it 'contains authentication data when cookies exist' do
+      COOKIE_DATA = "someauthenticationdata"
+      cookies['authentication_data'] = COOKIE_DATA
+      get '/login'
+      expect(response.status).to eq(200)
+      expect(response.body).to include("data-authentication-data=\"#{COOKIE_DATA }\"")
+    end
   end
 
   describe '#redirect_to_second_factor_if_required' do
@@ -297,7 +305,7 @@ RSpec.describe ApplicationController do
         permalink = Permalink.create!(url: trashed_topic.relative_url, category_id: category.id)
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
-        expect(response).to redirect_to("/forum/c/#{category.slug}")
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}")
 
         permalink.destroy
         permalink = Permalink.create!(url: trashed_topic.relative_url, post_id: new_topic.posts.last.id)

@@ -30,7 +30,6 @@ sk:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -288,6 +287,10 @@ sk:
       remove: "Odstrániť záložku"
       confirm_clear: "Ste si istý, že chcete odstrániť všetky záložky z tejto témy?"
       save: "Uložiť"
+      reminders:
+        tomorrow: "Zajtra"
+        next_week: "Budúci týždeň"
+        next_month: "Budúci mesiac"
     drafts:
       resume: "Pokračovať"
       remove: "Odstrániť"
@@ -792,10 +795,6 @@ sk:
         success_staff: "Na váš aktuálny email sme odoslali správu. Nasledujte prosím inštrukcie pre potvrdenie."
       change_avatar:
         title: "Zmeniť váš profilový obrázok"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, podľa"
-        gravatar_title: "Zmeňte váš avatar na webe Gravatar "
-        gravatar_failed: "Nemohli sme nájsť žiadny Gravatar s touto emailovou adresou."
-        refresh_gravatar_title: "Obnoviť váš Gravatar"
         letter_based: "Systém pridelil profilový obrázok"
         uploaded_avatar: "Vlastný obrázok"
         uploaded_avatar_empty: "Pridať vlastný obrázok"
@@ -1043,6 +1042,8 @@ sk:
         back: "Späť"
         again: "Skúsiť znova"
         fixed: "Načítať stránku"
+    modal:
+      close: "zatvoriť"
     close: "Zatvoriť"
     assets_changed_confirm: "Táto stránka bola práve aktualizovaná. Obnoviť na najnovšiu verziu?"
     logout: "Boli ste odhlásený."
@@ -1837,6 +1838,7 @@ sk:
           text_part:
             button: "Text"
       bookmarks:
+        created: "Vytvorené"
         name: "Meno"
     category:
       can: "môže &hellip; "
@@ -2762,7 +2764,6 @@ sk:
           active: "Aktívny"
           staff: "Zamestnanci"
           suspended: "Odobrate práva"
-          suspect: "Podozrivý"
           staged: "Dočasný"
         approved: "Schválený?"
         titles:
@@ -2778,7 +2779,6 @@ sk:
           admins: "Admin používatelia"
           moderators: "Moderátori"
           suspended: "Užívatelia s odobratými právami"
-          suspect: "Podozriví užívatelia"
         not_verified: "Neoverený"
         check_email:
           title: "Odhaliť emailovú adresu tohto používateľa"
@@ -3056,6 +3056,7 @@ sk:
         help: "Pridaj nové emoji, ktoré bude dostupné pre všetkých (TIP: môžete pretiahnuť viac súborov naraz)"
         add: "Pridaj nové Emoji"
         name: "Meno"
+        group: "Skupina"
         image: "Obrázok"
         delete_confirm: "Ste si istý, že chcete zmazať: %{name}: emoji?"
       embedding:

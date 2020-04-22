@@ -23,19 +23,19 @@ module PrettyText
 
     erb_name = "#{filename}.js.es6.erb"
     return erb_name if File.file?("#{root}#{erb_name}")
+
+    erb_name = "#{filename}.js.erb"
+    return erb_name if File.file?("#{root}#{erb_name}")
   end
 
   def self.apply_es6_file(ctx, root_path, part_name)
     filename = find_file(root_path, part_name)
     if filename
       source = File.read("#{root_path}#{filename}")
+      source = ERB.new(source).result(binding) if filename =~ /\.erb$/
 
-      if filename =~ /\.erb$/
-        source = ERB.new(source).result(binding)
-      end
-
-      template = Tilt::ES6ModuleTranspilerTemplate.new {}
-      transpiled = template.module_transpile(source, "#{Rails.root}/app/assets/javascripts/", part_name)
+      transpiler = DiscourseJsProcessor::Transpiler.new
+      transpiled = transpiler.perform(source, "#{Rails.root}/app/assets/javascripts/", part_name)
       ctx.eval(transpiled)
     else
       # Look for vendored stuff
@@ -58,14 +58,14 @@ module PrettyText
       elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
         path = Regexp.last_match[2]
         Dir["#{root_path}/#{path}/**"].sort.each do |f|
-          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js.es6$/, ''))
+          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js(.es6)?$/, ''))
         end
       end
     end
   end
 
   def self.create_es6_context
-    ctx = MiniRacer::Context.new(timeout: 15000)
+    ctx = MiniRacer::Context.new(timeout: 25000)
 
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
@@ -97,7 +97,7 @@ module PrettyText
     to_load.uniq.each do |f|
       if f =~ /^.+assets\/javascripts\//
         root = Regexp.last_match[0]
-        apply_es6_file(ctx, root, f.sub(root, '').sub(/\.js\.es6$/, ''))
+        apply_es6_file(ctx, root, f.sub(root, '').sub(/\.js(\.es6)?$/, ''))
       end
     end
 

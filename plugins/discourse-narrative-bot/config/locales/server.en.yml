@@ -244,7 +244,7 @@ en:
         instructions: |-
           If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this personal message**. If you do, there may be a :gift: in your future!
         reply: |-
-          Excellent! Now you can easily find your way back to our private conversation any time, right from [the bookmarks tab on your profile](%{profile_page_url}/activity/bookmarks). Just select your profile picture at the upper right &#8599;
+          Excellent! Now you can easily find your way back to our private conversation any time, right from [the bookmarks tab on your profile](%{bookmark_url}). Just select your profile picture at the upper right &#8599;
         not_found: |-
           Uh oh, I don’t see any bookmarks in this topic. Did you find the bookmark under each post? Use the show more <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal additional actions if needed.
 

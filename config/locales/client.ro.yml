@@ -29,7 +29,6 @@ ro:
     dates:
       time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "DD MMM HH:mm"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM "
       long_with_year: "DD MMM YYYY HH:mm"
@@ -260,6 +259,12 @@ ro:
       created: "Ai pus semn de carte pe acest mesaj"
       remove: "Șterge semn de carte"
       save: "Salvează"
+      reminders:
+        later_today: "Mai târziu azi"
+        tomorrow: "Mâine"
+        next_week: "Săptămâna viitoare"
+        later_this_week: "Mai târziu săptămâna asta"
+        next_month: "Luna viitoare"
     drafts:
       resume: "Reluați"
       remove: "Eliminați"
@@ -734,9 +739,6 @@ ro:
         success_staff: "Ți-am trimis un email la adresa curentă. Urmează instrucțiunile de confirmare."
       change_avatar:
         title: "Schimbă poza de profil"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, bazat pe"
-        gravatar_title: "Schimbă-ți avatarul de pe site-ul Gravatar."
-        refresh_gravatar_title: "Reactualizează Gravatarul"
         letter_based: "Poză de profil atribuită de sistem."
         uploaded_avatar: "Poză preferată"
         uploaded_avatar_empty: "Adaugă poza preferată"
@@ -979,6 +981,8 @@ ro:
         back: "Înapoi"
         again: "Încearcă din nou"
         fixed: "Încărcare pagină"
+    modal:
+      close: "Închide"
     close: "Închide"
     assets_changed_confirm: "Acest site tocmai a fost actualizat. Reîmprospătați pentru cea mai nouă versiune?"
     logout: "Aţi fost deconectat."
@@ -1141,8 +1145,8 @@ ro:
       filter_placeholder: Caută emoji
       objects: Obiecte
       flags: Marcaje de avertizare
-      custom: Emojii personalizate
       recent: Folosite recent
+      default: Emojii personalizate
     shared_drafts:
       notice: "Această discuție este vizibilă doar pentru cei care pot accesa categoria <b>{{category}}</b>."
       publishing: "Se postează discuția ..."
@@ -1256,6 +1260,7 @@ ro:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1906,6 +1911,7 @@ ro:
             title: "Arată partea HTML a emailului"
             button: "HTML"
       bookmarks:
+        created: "Creat"
         name: "Nume"
     category:
       can: "can&hellip; "
@@ -2956,7 +2962,6 @@ ro:
           active: "Activi"
           staff: "Membrii echipei"
           suspended: "Suspendați"
-          suspect: "Suspecți"
           staged: "Pus în scenă"
         approved: "Aprobați?"
         titles:
@@ -2972,7 +2977,6 @@ ro:
           admins: "Administratori"
           moderators: "Moderatori"
           suspended: "Utilizatori suspendați"
-          suspect: "Utilizatori suspecţi"
         not_verified: "Neverificat"
         check_email:
           title: "Arată adresa de email a acestui utilizator"
@@ -3277,6 +3281,7 @@ ro:
         help: "Adaugă un nou \"emoji\" care va fi disponibil pentru toţi. (PROTIP: trage şi adaugă mai multe fişiere odată)"
         add: "Adaugă un emoji nou"
         name: "Nume"
+        group: "Grup"
         image: "Imagine"
         delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"
       embedding:

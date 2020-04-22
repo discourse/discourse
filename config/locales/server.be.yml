@@ -226,6 +226,9 @@ be:
   edit_conflict: "Гэта паведамленне было адрэдагавана іншым карыстальнікам, і вашы змены не могуць быць больш не захаваны."
   revert_version_same: "Бягучая версія супадае з версіяй на якую вы спрабуеце вярнуцца."
   excerpt_image: "малюнак"
+  bookmarks:
+    reminders:
+      tomorrow: "заўтра"
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' не з'яўляецца дапушчальным узроўнем даверу."
@@ -248,7 +251,6 @@ be:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Заяўка на ўступ у @%{group_name}"
-      handle: "звяртацца з просьбай аб членстве"
   education:
     until_posts:
       one: "%{count} запіс"
@@ -940,8 +942,6 @@ be:
     force_https: "Прымусьце свой сайт, каб выкарыстоўваць толькі HTTPS. УВАГА: Не ўключайце гэта, пакуль вы не пераканайцеся, HTTPS цалкам настроена і працуе абсалютна ўсюды! Праверылі Ці вы свой CDN, усе сацыяльныя лагіны, і ўсе знешнія лагатыпы"
     same_site_cookies: "Выкарыстоўвайце тыя ж печыва сайта, яны ліквідуюць ўсе вектары Cross Site Request Падробка на падтрымоўваных браўзэраў (LAX або Strict). Увага: Строгі будзе працаваць толькі на сайтах, якія прымушаюць лагін і выкарыстоўваць адзіны ўваход."
     summary_score_threshold: "Мінімальная колькасць балаў, неабходныя для пасады, якія будуць уключаны ў «Сумаваць гэтую тэму»"
-    summary_posts_required: "Мінімум паведамленні ў тэме да «Абагульніць Гэтую тэму» уключана"
-    summary_likes_required: "Мінімум любіць ў тэме да «Сумаваць Гэтую тэму» уключаны"
     summary_percent_filter: "Калі карыстальнік націскае «Сумаваць гэтую тэму», паказваюць верхнюю% паведамленняў"
     summary_max_results: "Максімум паведамлення якiя вяртаюцца «Абагульніць Гэтую тэму»"
     enable_personal_messages: "Дазволіць траставы ўзровень 1 (наладжваецца праз мін ўзровень даверу для адпраўкі паведамленняў) карыстальнікам ствараць паведамленні і адказваць на паведамленні. Звярніце ўвагу, што супрацоўнікі заўсёды могуць адпраўляць паведамленні незалежна ад таго, што."
@@ -1039,7 +1039,6 @@ be:
     enable_instagram_logins: "Ўключэнне праверкі сапраўднасці Instagram, патрабуе instagram_consumer_key і instagram_consumer_secret"
     instagram_consumer_key: "Спажывецкі ключ для аўтэнтыфікацыі Instagram"
     instagram_consumer_secret: "Спажывецкі сакрэт аўтэнтыфікацыі Instagram"
-    readonly_mode_during_backup: "Ўключыць рэжым чытання толькі падчас прыёму рэзервовага капіявання"
     enable_backups: "Дазволіць адміністратарам ствараць рэзервовыя копіі форуму"
     allow_restore: "Дазволіць аднаўленне, якое можа замяніць УСЕ дадзеныя сайта! Пакіньце хлусня, калі вы не плануеце аднавіць рэзервовую копію"
     maximum_backups: "Максімальную колькасць рэзервовых копій, каб захаваць на дыску. Старыя рэзервовыя копіі аўтаматычна выдаляюцца"
@@ -1421,6 +1420,10 @@ be:
       different_users: "Паведамленні, якія належаць розным карыстачам не могуць быць аб'яднаныя."
   change_owner:
     post_revision_text: "уласнасці перададзеныя"
+  publish_page:
+    slug_errors:
+      blank: "не можа быць пустым"
+      invalid: "ўтрымлівае недапушчальныя сімвалы"
   topic_statuses:
     autoclosed_disabled: "Гэтая тэма ў цяперашні час адкрыта. Новыя адказы дазволеныя."
     autoclosed_disabled_lastpost: "Гэтая тэма ў цяперашні час адкрыта. Новыя адказы дазволеныя."
@@ -1482,7 +1485,7 @@ be:
       inactive_user: "неактыўны карыстальнік"
   unsubscribe_mailer:
     title: "Адмовіцца ад Mailer"
-    subject_template: "Пераканайцеся, вы больш не жадаеце атрымліваць абвесткі ад% {SITE_TITLE}"
+    subject_template: "Пераканайцеся што вы больш не жадаеце атрымліваць абвесткі ад %{site_title}"
   invite_mailer:
     title: "запрасіць Mailer"
   custom_invite_mailer:
@@ -1565,38 +1568,59 @@ be:
     email_reject_inactive_user:
       title: "Email Адхіліць неактыўны карыстальнік"
     email_reject_parsing:
-      title: "Email Адхіліць Сінтаксічны"
+      title: "Email Reject Parsing"
+      subject_template: "[%{email_prefix}] Email issue -- Content Unrecognized"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        We couldn't find your reply in the email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
     email_reject_invalid_access:
       title: "Email Адхіліць Invalid доступу"
-      subject_template: "[% {Email_prefix}] Email пытанне - Invalid доступ"
-      text_body_template: |-
-        Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.Ваш уліковы запіс не мае права размяшчаць новыя тэмы ў гэтай катэгорыі. Калі вы лічыце, што гэта памылка, [кантакт супрацоўніка] (% {base_url}
+      subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your account does not have the privileges to post new topics in that category. If you believe this is an error, [contact a staff member](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Email Адхіліць Чужыя не дазволены"
-      subject_template: "[% {Email_prefix}] Email пытанне - Invalid доступ"
-      text_body_template: |-
-        Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.Катэгорыі вы паслалі гэты ліст дае толькі адказы ад карыстальнікаў з сапраўднымі рахункамі і вядомых адрасоў электроннай пошты. Калі вы лічыце, што гэта памылка, [кантакт супрацоўніка] (% {base_url}
+      subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is an error, [contact a staff member](%{base_url}/about).
     email_reject_invalid_post:
       title: "Email Адхіліць Invalid паведамленне"
-      subject_template: "[% {Email_prefix}] Email пытанне - Праводка памылак"
-      text_body_template: |-
-        Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.Некаторыя магчымыя прычыны: складанае фарматаванне, паведамленне занадта вялікае, паведамленне занадта малыя. Калі ласка, паспрабуйце яшчэ раз, або адправіць праз вэб-сайт, калі гэта будзе працягвацца.
+      subject_template: "[%{email_prefix}] Email issue -- Posting error"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
     email_reject_invalid_post_specified:
       title: "Email Адхіліць Invalid Паведамленне паказана"
-      subject_template: "[% {Email_prefix}] Email пытанне - Праводка памылак"
-      text_body_template: |-
-        Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.прычына:% {Post_error}Калі вы можаце выправіць гэтую праблему, калі ласка, паспрабуйце яшчэ раз.
+      subject_template: "[%{email_prefix}] Email issue -- Posting error"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Reason:
+
+        %{post_error}
+
+        If you can correct the problem, please try again.
       date_invalid: "Няма дата стварэння паста не знойдзена. Ці з'яўляецца адрас электроннай пошты адсутнічае Дата: загаловак?"
     email_reject_post_too_short:
       title: "Email Адхіліць паведамленне занадта кароткае"
-      subject_template: "[% {Email_prefix}] праблема электроннай пошты - паведамленне занадта кароткае"
-      text_body_template: |-
-        Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.Для таго, каб спрыяць больш паглыбленых гутарак, вельмі кароткія адказы не дапускаюцца. Ці можаце вы адказаць, па меншай меры% {лік} сымбаляў? Акрамя таго, вы можаце, як пост па электроннай пошце, адказваючы на «1».
+      subject_template: "[%{email_prefix}] праблема электроннай пошты - паведамленне занадта кароткае"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        To promote more in depth conversations, very short replies are not allowed. Can you please reply with at least %{count} characters? Alternatively, you can like a post via email by replying with "+1".
     email_reject_invalid_post_action:
       title: "Email Адхіліць Invalid Паведамленне Дзеянне"
-      subject_template: "[% {Email_prefix}] вопрос Email - Invalid паведамленне Дзеянне"
-      text_body_template: |-
-        Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.Паведамленне Дзеянне не было прызнана. Калі ласка, паспрабуйце яшчэ раз, або адправіць праз вэб-сайт, калі гэта будзе працягвацца.
+      subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The Post Action was not recognized. Please try again, or post via the website if this continues.
     email_reject_reply_key:
       title: "Email Адхіліць Адказаць Key"
       subject_template: "[% {Email_prefix}] Email пытанне - Unknown Адказаць Key"
@@ -1624,39 +1648,73 @@ be:
         Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.Тэма, якую вы адказваеце у цяперашні час зачынена і больш не прымаць адказы. Калі вы лічыце, што гэта памылка, [кантакт супрацоўніка] (% {base_url}
     email_reject_auto_generated:
       title: "Email Адхіліць Auto Generated"
-      subject_template: "[% {Email_prefix}] вопрос Email - Auto Сфарміраваны Адказаць"
-      text_body_template: |-
-        Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.Ваш электронны адрас быў адзначаны як «автогенерируемые», што азначае, што яна была створана аўтаматычна з дапамогай кампутара замест таго, каб быць набраны чалавекам; мы не можам прыняць гэтыя віды лістоў. Калі вы лічыце, што гэта памылка, [кантакт супрацоўніка] (% {base_url}
+      subject_template: "[%{email_prefix}] Email issue -- Auto Generated Reply"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is an error, [contact a staff member](%{base_url}/about).
     email_reject_unrecognized_error:
       title: "Email Адхіліць Неопознанная памылка"
-      subject_template: "[% {Email_prefix}] Email пытанне - Неопознанная памылка"
-      text_body_template: |-
-        Мы шкадуем, але паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) не працуе.Быў непрызнаная памылка пры апрацоўцы паведамлення і не была апублікавана. Вы павінны паспрабаваць яшчэ раз, або [кантакт супрацоўніка] (% {base_url}
+      subject_template: "[%{email_prefix}] Email issue -- Unrecognized Error"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        There was an unrecognized error while processing your email and it wasn't posted. You should try again, or [contact a staff member](%{base_url}/about).
     email_reject_attachment:
       title: "Email Attachment Адхілена"
-      subject_template: "[% {Email_prefix}] Email пытанне - Дадатак Адхілена"
-      text_body_template: |-
-        На жаль, некаторыя ўкладання ў паведамленне электроннай пошты ў% {прызначэння} (названы% {former_title}) былі адхіленыя.Чытаць далей:% {Rejected_errors}Калі вы лічыце, што гэта памылка, [кантакт супрацоўніка] (% {base_url}
+      subject_template: "[%{email_prefix}] Email issue -- Attachment Rejected"
+      text_body_template: |
+        Unfortunately some attachments in your email message to %{destination} (titled %{former_title}) were rejected.
+
+        Details:
+        %{rejected_errors}
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
+    email_reject_reply_not_allowed:
+      title: "Email Reject Reply Not Allowed"
+      subject_template: "[%{email_prefix}] Email issue -- Reply Not Allowed"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        You don't have permissions to reply to the topic. If you believe this is an error, [contact a staff member](%{base_url}/about).
     email_error_notification:
       title: "Апавяшчэнне па электроннай пошце пра памылку"
-      subject_template: "[% {Email_prefix}] Праблема электроннай пошты - памылка аўтэнтыфікацыі POP"
-      text_body_template: |-
-        На жаль, адбылася памылка аўтэнтыфікацыі падчас апытання пошты з сервера POP.Калі ласка, пераканайцеся, што вы правільна наладзілі POP уліковых дадзеных [налады сайта] (% {base_url}
+      subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
+      text_body_template: |
+        Unfortunately, there was an authentication error while polling mails from the POP server.
+
+        Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
+
+        If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
     email_revoked:
       title: "Email Revoked"
       subject_template: "Ці з'яўляецца ваш адрас электроннай пошты правільна?"
-      text_body_template: |-
-        Мы шкадуем, але мы ўзніклі праблемы дасягнення вам па электроннай пошце. Нашы апошнія некалькі электронных лістоў вам усё адскочылі назад, як здадзеныя.Вы можаце пераканацца, што [ваш адрас электроннай пошты] (% {base_url}
-    email_bounced: |-
-      Паведамленьне% {адрас электроннай пошты} падскочыў.### Больш падрабязна`` `Тэкст% {} Сыравіны`` `
+      text_body_template: |
+        We’re sorry, but we’re having trouble reaching you via email. Our last few emails to you have all bounced back as undeliverable.
+
+        Can you make sure [your email address](%{base_url}/my/preferences/email) is valid and working? You may also wish to add our email address to your address book / contact list to improve deliverability.
+    email_bounced: |
+      The message to %{email} bounced.
+
+      ### Details
+
+      ``` text
+      %{raw}
+      ```
     ignored_users_summary:
       title: "Ігнаруецца прайшоў парог карыстальніка"
       subject_template: "Карыстальнік ігнаруецца шматлікімі іншымі карыстальнікамі"
     too_many_spam_flags:
       title: "Занадта шмат спаму Сьцягоў"
       subject_template: "Новы ўліковы запіс на ўтрыманне"
-      text_body_template: |-
-        Добры дзень,Гэта аўтаматычнае паведамленне ад% {SITE_NAME}, каб вы ведалі, што вашы пасты былі часова схаваныя, паколькі яны былі адзначаны супольнасцю.У якасці меры засцярогі, новая уліковы запіс была адключаная і не зможа не ствараць адказы ці тэмы, пакуль супрацоўнік можа праглядзець Вашу ўліковы запіс. Просім прабачэння за прычыненыя нязручнасці.Для атрымання дадатковых указанняў, калі ласка, звярніцеся да нашых прынцыпам супольнасці [] (% {base_url}
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
+
+        As a precautionary measure, your new account has been silenced and will be unable to create replies or topics until a staff member can review your account. We apologize for the inconvenience.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Занадта шмат ТЛ3 Flags"
       subject_template: "Новы ўліковы запіс на ўтрыманне"
@@ -1684,127 +1742,213 @@ be:
         Добры дзень,Гэта аўтаматычнае паведамленне ад% {SITE_NAME}, каб вы ведаеце, што ваш уліковы запіс больш не на ўтрыманне пасля праверкі персаналу.Цяпер вы можаце ствараць новыя адказы і тэмы зноў. Дзякуй за ваша цярпенне.
     pending_users_reminder:
       title: "У чаканні карыстальнікаў Напамін"
-      text_body_template: |-
-        Ёсць новыя рэгістрацыі карыстальнікаў, якія чакаюць быць зацверджана (або адхілена), перш чым яны могуць атрымаць доступ да гэтага форуму.[Калі ласка, азнаёмцеся з імі] (% {base_url}
+      text_body_template: |
+        There are new user signups waiting to be approved (or rejected) before they can access this forum.
+
+        [Please review them](%{base_url}/review).
     download_remote_images_disabled:
       title: "Загрузіць выдаленыя выявы з абмежаванымі фізічнымі магчымасцямі"
       subject_template: "Загрузка аддаленых малюнкаў адключаная"
-      text_body_template: "Параметр `download_remote_images_to_local` быў адключаны, так як быў дасягнуты мяжа дыскавай прасторы на` download_remote_images_threshold`."
+      text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
     dashboard_problems:
       title: "праблемы Dashboard"
       subject_template: "Новыя рэкамендацыі на вашым сайце прыборнай панэлі"
     new_user_of_the_month:
       title: "Вы новы карыстальнік месяцы!"
       subject_template: "Вы новы карыстальнік месяцы!"
-      text_body_template: |-
-        Віншую, вы зарабілі ** Новы карыстальнік прэміі месяца за% {MONTH_YEAR} **. : Трафей:Гэтая ўзнагарода даецца толькі для двух новых карыстальнікаў у месяц, і ён будзе пастаянна бачны на [старонцы знакаў] (% {URL}).Вы хутка стаць каштоўным членам нашага супольнасці. Дзякуй за ўдзел, і захаваць вялікую працу!
+      text_body_template: |
+        Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
+
+        This award is only granted to two new users per month, and it will be permanently visible on [the badges page](%{url}).
+
+        You've quickly become a valuable member of our community. Thanks for joining, and keep up the great work!
     queued_posts_reminder:
       title: "QUEUED Паведамленняў Reminder"
-  unsubscribe_link: |-
-    Каб адмовіцца ад гэтых лістоў, [націсніце тут] (% {unsubscribe_url}).
-  unsubscribe_link_and_mail: |-
-    Каб адмовіцца ад гэтых лістоў, [націсніце тут] (% {unsubscribe_url}).
-  unsubscribe_mailing_list: |-
-    Вы атрымліваеце гэта таму, што вы ўключылі рэжым спісу рассылання.Каб адмовіцца ад гэтых лістоў, [націсніце тут] (% {unsubscribe_url}).
+      text_body_template: |
+        Hello,
+
+        Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/review?type=ReviewableQueuedPost).
+  unsubscribe_link: |
+    Каб адмовіцца ад гэтых лістоў, [націсніце тут] (%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Каб адмовіцца ад гэтых лістоў, [націсніце тут] ( %{unsubscribe_url}).
+  unsubscribe_mailing_list: "Вы атрымліваеце гэта таму, што вы ўключылі рэжым спісу \n\nрассылання. Каб адмовіцца ад гэтых лістоў, [націсніце тут]%{unsubscribe_url}).\n"
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from: "% {User_name} з дапамогай {%} site_name"
+  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "папярэднія адказы"
     in_reply_to: "У адказ на"
     unsubscribe:
       title: "Адмовіцца ад падпіскі"
       description: "Не зацікаўленыя ў атрыманні гэтых лістоў? Няма праблем! Націсніце ніжэй, каб адмовіцца ад падпіскі імгненна:"
-    reply_by_email: "[Наведаць тэма] (% {base_url}% {URL}) або адказаць на гэты ліст, каб адказаць."
-    reply_by_email_pm: "[Наведаць паведамленне] (% {base_url}% {URL}) або адказаць на гэты ліст, каб адказаць на% {удзельнікаў}."
+    reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
+    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond to %{participants}."
     only_reply_by_email: "Адказаць на гэтае паведамленне, каб адказаць."
     only_reply_by_email_pm: "Адказаць на гэты ліст, каб адказаць на% {удзельнікаў}."
-    visit_link_to_respond: "[Наведаць тэма] (% {base_url}% {URL}), каб адказаць."
-    visit_link_to_respond_pm: "[Наведаць паведамленне] (% {base_url}% {URL}), каб адказаць на% {удзельнікаў}."
-    posted_by: "Паведамленне ад% {імя карыстальніка} на {%} POST_DATE"
-    pm_participants: "Удзельнікі:% {ўдзельнікі}"
+    visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
+    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond to %{participants}."
+    posted_by: "Posted by %{username} on %{post_date}"
+    pm_participants: "Удзельнікі: %{participants}"
     user_invited_to_private_message_pm_group:
       title: "Карыстальнік Запрошаныя групе PM"
-      subject_template: "[% {Email_prefix}]% {імя карыстальніка} запрасіў @% {GROUP_NAME} на паведамленне '% {TOPIC_TITLE}'"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{username} invited @%{group_name} to a message '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Карыстальнік запрошаны ў лічку"
-      subject_template: "[% {Email_prefix}]% {імя карыстальніка} запрашае вас на паведамленне '% {TOPIC_TITLE}'"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Карыстальнік Запрошаны PM Паэтапнае"
       subject_template: "[% {Email_prefix}]% {імя карыстальніка} запрашае вас на паведамленне '% {TOPIC_TITLE}'"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Respond_instructions}
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_topic:
       title: "Карыстальнік запрошаны на тэму"
-      subject_template: "[% {Email_prefix}]% {імя карыстальніка} запрасіў вас '% {TOPIC_TITLE}'"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{username} запрасіў вас у '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_replied:
       title: "Карыстальнік Адказаў"
-      subject_template: "[% {Email_prefix}] {%} TOPIC_TITLE"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_replied_pm:
       title: "Карыстальнік Адказаў PM"
-      subject_template: "[% {Email_prefix}] [ЛС]% {TOPIC_TITLE}"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_quoted:
       title: "цытаты карыстальнікаў"
-      subject_template: "[% {Email_prefix}] {%} TOPIC_TITLE"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_linked:
       title: "Карыстальнік Linked"
-      subject_template: "[% {Email_prefix}] {%} TOPIC_TITLE"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_mentioned:
       title: "Карыстальнік Згадваецца"
-      subject_template: "[% {Email_prefix}] {%} TOPIC_TITLE"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_mentioned_pm:
       title: "Карыстальнік Згаданы PM"
-      subject_template: "[% {Email_prefix}] [ЛС]% {TOPIC_TITLE}"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned:
       title: "Карыстальнік Група Згадваецца"
-      subject_template: "[% {Email_prefix}] {%} TOPIC_TITLE"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Карыстальнік Паведамленне"
-      subject_template: "[% {Email_prefix}] {%} TOPIC_TITLE"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Карыстальнік Гледзячы першы пост"
-      subject_template: "[% {Email_prefix}] {%} TOPIC_TITLE"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted_pm:
       title: "Карыстальнік Паведамленне PM"
-      subject_template: "[% {Email_prefix}] [ЛС]% {TOPIC_TITLE}"
-      text_body_template: |-
-        % {Header_instructions}% {Паведамленне}% {Кантэкст}% {Respond_instructions}
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted_pm_staged:
       title: "Карыстальнік Паведамленне PM Пастановачная"
-      subject_template: "% {Optional_re}% {TOPIC_TITLE}"
-      text_body_template: |-
-        % {Паведамленне}
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
     account_suspended:
-      title: "кошт Падвесных"
-      subject_template: "[% {Email_prefix}] Ваш рахунак быў заблякаваны"
+      title: "Аккаунт прыпынены"
+      subject_template: "[%{email_prefix}] Ваш рахунак быў заблякаваны"
       text_body_template: |-
         Вы не былі адхіленыя ад форума да% {suspended_till}.% {Прычына}% {Паведамленне}
     account_silenced:
-      title: "кошт глушыцель"
+      title: "Аккаунт прыпынены"
       subject_template: "[% {Email_prefix}] Ваш уліковы запіс была адключаная"
       text_body_template: |-
         Вы не былі адключаныя ад форума да% {silenced_till}.% {Прычына}% {Паведамленне}
@@ -1819,10 +1963,9 @@ be:
       text_body_template: |-
         Два фактары аўтэнтыфікацыі быў адключаны на вашым рахунку ў% {site_name}. Цяпер вы можаце ўвайсці толькі з паролем; ня дадатковы код аўтэнтыфікацыі больш не патрабуецца.Калі вы не абралі, каб адключыць два фактары аўтэнтыфікацыі, хто-то можа скампраметавалі свой рахунак.Калі ў вас ёсць якія-небудзь пытанні, [звязацца з нашым прыязным персаналам] (% {base_url}
     digest:
-      why: "Кароткі выклад% {SITE_LINK} з моманту вашага апошняга наведвання% {last_seen_at}"
+      why: "Кароткі выклад %{site_link}з моманту вашага апошняга наведвання%{last_seen_at} "
       since_last_visit: "З моманту Вашага апошняга візіту"
       new_topics: "новыя тэмы"
-      unread_messages: "непрачытаныя паведамленні"
       unread_notifications: "непрачытаныя Апавяшчэнні"
       liked_received: "сімпатыі"
       new_users: "новыя карыстальнікі"
@@ -1831,72 +1974,106 @@ be:
       join_the_discussion: "Чытаць далей"
       popular_posts: "Папулярныя паведамленні"
       more_new: "Новае для вас"
-      subject_template: "[% {Email_prefix}] Кароткае апісанне"
-      unsubscribe: "[% {Email_prefix}] Кароткае апісанне..."
-      your_email_settings: "[% {Email_prefix}] Кароткае апісанне......"
-      click_here: "[% {Email_prefix}] Кароткае апісанне........."
-      preheader: "[% {Email_prefix}] Кароткае апісанне..............."
+      subject_template: "[%{email_prefix}] Кароткае апісанне"
+      unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
+      your_email_settings: "your email settings"
+      click_here: "click here"
+      preheader: "A brief summary since your last visit on %{last_seen_at}"
     forgot_password:
       title: "Забыліся на пароль"
-      subject_template: "[% {Email_prefix}] Аднаўленне пароля"
-      text_body_template: |-
-        Хто-то спытаў, каб скінуць пароль на [% {site_name}] (% {base_url}).Калі б гэта было не так, то вы можаце спакойна ігнараваць гэтае паведамленне.Націсніце на спасылку, каб выбраць новы пароль:% {Base_url}
+      subject_template: "[%{email_prefix}] Скінуць пароль"
+      text_body_template: |
+        Нехта спытаў каб скінуць пароль на [%{site_name}](%{base_url}).
+
+        Калі гэта былі не вы, то вы можаце спакойна ігнараваць гэтае паведамленне.
+
+        Націсніце на спасылку, каб выбраць новы пароль:
+        %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Увайсці па спасылцы"
-      subject_template: "[% {Email_prefix}] Уваход па спасылцы"
-      text_body_template: |-
-        Вось ваша спасылка ўвайсці на [% {site_name}] (% {base_url}).Калі вы не запытвалі гэтую спасылку, вы можаце спакойна ігнараваць гэтае паведамленне.Націсніце на спасылку, каб увайсці:% {Base_url}
+      subject_template: "[%{email_prefix}] Уваход па спасылцы"
+      text_body_template: |
+        Вось ваша спасылка каб ўвайсці на [%{site_name}](%{base_url}).
+
+        Калі вы не запытвалі гэтую спасылку, вы можаце спакойна ігнараваць гэтае паведамленне.
+
+        Націсніце на спасылку, каб увайсці:
+        %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "ўсталяваць пароль"
-      subject_template: "[% {Email_prefix}] Усталяваць пароль"
-      text_body_template: |-
-        Хто-то спытаў, каб дадаць пароль да вашай ўліковага запісу на [% {site_name}] (% {base_url}). Акрамя таго, вы можаце ўвайсці, выкарыстоўваючы любы з падтрымоўваных онлайн сэрвісу (Google, Facebook і г.д.), што звязана з гэтым пацверджаным адрасам электроннай пошты.Калі вы не рабілі гэты запыт, вы можаце спакойна ігнараваць гэтае паведамленне.Націсніце на спасылку, каб выбраць пароль:% {Base_url}
+      subject_template: "[%{email_prefix}] Усталяваць пароль"
+      text_body_template: |
+        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+
+        If you did not make this request, you can safely ignore this email.
+
+        Click the following link to choose a password:
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
-      title: "адміністратар Увайсці"
-      subject_template: "[% {Email_prefix}] Статыстыка"
+      title: "Увайсці як адміністратар"
+      subject_template: "[%{email_prefix}] Увайсці"
     account_created:
-      title: "уліковы запіс створаны"
-      subject_template: "[% {Email_prefix}] Ваш новы рахунак"
-      text_body_template: |-
-        Новы ўліковы запіс была створана для вас у% {site_name}Націсніце на спасылку, каб выбраць пароль для новага рахунку:% {Base_url}
+      title: "Уліковы запіс створаны"
+      subject_template: "[%{email_prefix}] Ваш новы рахунак"
+      text_body_template: |
+        A new account was created for you at %{site_name}
+
+        Click the following link to choose a password for your new account:
+        %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "Пацвердзіце новы Email"
-      subject_template: "[% {Email_prefix}] Пацвердзіце свой новы адрас электроннай пошты"
+      subject_template: "[%{email_prefix}] Пацвердзіце свой новы адрас электроннай пошты"
     confirm_old_email:
       title: "Пацвердзіце стары адрас электроннай пошты"
-      subject_template: "[% {Email_prefix}] Пацвердзіце свой бягучы адрас электроннай пошты"
+      subject_template: "[%{email_prefix}] Пацвердзіце свой бягучы адрас электроннай пошты"
     notify_old_email:
       title: "Апавяшчаць Стары e-mail"
-      subject_template: "[% {Email_prefix}] Ваш электронны адрас быў зменены"
-      text_body_template: |-
-        Гэта аўтаматычнае паведамленне, каб вы ведаеце, што ваш адрас электроннай пошты для% {Site_name} зменена. Калі гэта было зроблена па памылцы, калі ласка, звяжыцеся задміністратар сайта.Ваш электронны адрас быў зменены на:% {NEW_EMAIL}
+      subject_template: "[%{email_prefix}] Ваш электронны адрас быў зменены"
+      text_body_template: |
+        This is an automated message to let you know that your email address for
+        %{site_name} has been changed. If this was done in error, please contact
+        a site administrator.
+
+        Your email address has been changed to:
+
+        %{new_email}
     signup_after_approval:
       title: "Рэгістрацыя Пасля зацвярджэння"
-      subject_template: "Вы былі зацверджаны на% {site_name}!"
+      subject_template: "Вы былі зацверджаны на %{site_name}!"
       text_body_template: |-
         Сардэчна запрашаем у% {site_name}!Супрацоўнік зацвердзіў свой кошт на% {SITE_NAME}.Цяпер вы можаце атрымаць доступ да новага рахунку, увайшоўшы на сайт:% {Base_url}Калі вышэй ссылка не клікабельнасць, паспрабуйце скапіяваць і ўставіць яго ў адрасную радок вашага браўзэра.% {New_user_tips}Мы лічым, што ў [цывілізаванае паводзіны супольнасці] (% {base_url}
     signup:
       title: "Зарэгістравацца"
-      subject_template: "[% {Email_prefix}] Пацвердзіце новы рахунак"
+      subject_template: "[%{email_prefix}] Пацвердзіце новы рахунак"
       text_body_template: |-
         Сардэчна запрашаем у% {site_name}!Націсніце на спасылку, каб пацвердзіць і актываваць новы рахунак:% {Base_url}
     activation_reminder:
-      title: "актывацыя Напамін"
-      subject_template: "[% {Email_prefix}] Напамін, каб пацвердзіць свой рахунак"
+      title: "Актывацыя Напаміну"
+      subject_template: "[%{email_prefix}] Напамін, каб пацвердзіць свой рахунак"
       text_body_template: |-
         Сардэчна запрашаем у% {site_name}!Гэта сяброўскае напамін, каб актываваць свой рахунак.Націсніце на спасылку, каб пацвердзіць і актываваць новы рахунак:% {Base_url}
     suspicious_login:
       title: "Новы Лагін абвесткі"
-      subject_template: "[% {Site_name}] Новае Увайсці з% {месца}"
-      text_body_template: |-
-        Добры дзень,Мы заўважылі, што лагін ад прылады або месца, якія вы звычайна не выкарыстоўваеце. Ці быў гэта ты? - Размяшчэнне:% {месца} (% {client_ip}) - Браўзэр:% {браўзэр} - Прылада:% {прылада} - {%} восКалі гэта ты, выдатна! Там няма нічога іншага, што вам трэба зрабіць.Калі гэта не вы, калі ласка [агляд існуючых сесій] (% {base_url}
+      subject_template: "[%{site_name}] New Login from %{location}"
+      text_body_template: |
+        Hello,
+
+        We noticed a login from a device or location you don’t usually use. Was this you?
+
+         - Location: %{location} (%{client_ip})
+         - Browser: %{browser}
+         - Device: %{device} – %{os}
+
+        If this was you, great! There’s nothing else you need to do.
+
+        If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
   page_not_found:
     title: "На жаль! Гэтая старонка не існуе або з'яўляецца прыватнай уласнасцю."
     popular_topics: "папулярны"
-    recent_topics: "апошні"
-    see_more: "больш"
+    recent_topics: "Надаўнія"
+    see_more: "Больш"
     search_title: "Пошук па сайце"
-    search_button: "пошук"
+    search_button: "Пошук"
   offline:
     title: "Не ўдаецца загрузіць дадатак"
     offline_page_message: "Падобна на тое, што вы знаходзіцеся ў аўтаномным рэжыме! Калі ласка, праверце падключэнне да сеткі і паспрабуйце ізноў."
@@ -1909,9 +2086,9 @@ be:
   image: "малюнак"
   upload:
     edit_reason: "загружаныя лакальныя копіі малюнкаў"
-    unauthorized: "На жаль, файл, які вы ўкладаеце, ня санкцыянаваныя (аўтарызаваныя пашырэння:% {authorized_extensions})."
+    unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "ўстаўленае выява"
-    store_failure: "Не атрымалася захаваць загрузку #% {upload_id} для карыстальніка #% {user_id}."
+    store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     file_missing: "На жаль, вы павінны даць файл для загрузкі."
     empty: "Выбачайце, але Прадстаўлены файл пусты."
     png_to_jpg_conversion_failure_message: "Памылка пры пераўтварэнні з PNG ў JPG адбылося."

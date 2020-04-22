@@ -79,6 +79,14 @@
 
       .name {
         display: inline-block;
+        > .d-icon {
+          margin-left: 0.5em;
+          margin-right: 0;
+        }
+      }
+
+      > .d-icon {
+        margin-right: 0;
       }
 
       &.select-kit-selected-color {
@@ -103,6 +111,7 @@
       margin-left: auto;
       padding-left: 5px;
       pointer-events: none;
+      color: inherit;
     }
 
     .d-button-label {

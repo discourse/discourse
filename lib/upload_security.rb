@@ -23,21 +23,13 @@ class UploadSecurity
   def should_be_secure?
     return false if !SiteSetting.secure_media?
     return false if uploading_in_public_context?
-    (secure_attachment? || supported_media?) && uploading_in_secure_context?
+    uploading_in_secure_context?
   end
 
   private
 
   def uploading_in_public_context?
     @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji? || based_on_regular_emoji?
-  end
-
-  def supported_media?
-    FileHelper.is_supported_media?(@upload.original_filename)
-  end
-
-  def secure_attachment?
-    !supported_media? && SiteSetting.prevent_anons_from_downloading_files
   end
 
   def uploading_in_secure_context?

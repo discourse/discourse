@@ -24,10 +24,12 @@ describe PostMover do
 
   describe 'move_posts' do
     context 'topics' do
+      before { freeze_time }
+
       fab!(:user) { Fabricate(:user, admin: true) }
       fab!(:another_user) { evil_trout }
       fab!(:category) { Fabricate(:category, user: user) }
-      fab!(:topic) { Fabricate(:topic, user: user) }
+      fab!(:topic) { Fabricate(:topic, user: user, created_at: 4.hours.ago) }
       fab!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago, reply_count: 2) }
 
       fab!(:p2) do
@@ -37,14 +39,15 @@ describe PostMover do
           user: another_user,
           raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.",
           reply_to_post_number: p1.post_number,
-          reply_count: 1
+          reply_count: 1,
+          created_at: 2.hours.ago
         )
       end
 
-      fab!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
-      fab!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user) }
-      fab!(:p5) { Fabricate(:post) }
-      let(:p6) { Fabricate(:post, topic: topic) }
+      fab!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user, created_at: 1.hour.ago) }
+      fab!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user, created_at: 45.minutes.ago) }
+      fab!(:p5) { Fabricate(:post, created_at: 30.minutes.ago) }
+      let(:p6) { Fabricate(:post, topic: topic, created_at: 15.minutes.ago) }
 
       before do
         SiteSetting.tagging_enabled = true
@@ -135,8 +138,6 @@ describe PostMover do
         before do
           TopicUser.update_last_read(user, topic.id, p4.post_number, p4.post_number, 0)
           TopicLink.extract_from(p2)
-
-          freeze_time Time.now
         end
 
         def create_post_timing(post, user, msecs)
@@ -216,7 +217,6 @@ describe PostMover do
         end
 
         context "to a new topic" do
-
           it "works correctly" do
             topic.expects(:add_moderator_post).once
             new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id, tags: ["tag1", "tag2"])
@@ -238,8 +238,8 @@ describe PostMover do
 
             p4.reload
             expect(new_topic.last_post_user_id).to eq(p4.user_id)
-            expect(new_topic.last_posted_at).to eq(p4.created_at)
-            expect(new_topic.bumped_at).to be_within(1.second).of(Time.now)
+            expect(new_topic.last_posted_at).to eq_time(p4.created_at)
+            expect(new_topic.bumped_at).to eq_time(Time.zone.now)
 
             p2.reload
             expect(p2.sort_order).to eq(1)
@@ -470,7 +470,7 @@ describe PostMover do
                       last_read_post_number: 2,
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
-                      notification_level: TopicUser.notification_levels[:regular],
+                      notification_level: TopicUser.notification_levels[:tracking],
                       posted: false
                     )
               expect(TopicUser.find_by(topic: new_topic, user: user2))
@@ -486,7 +486,7 @@ describe PostMover do
                       last_read_post_number: 1,
                       highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
-                      notification_level: TopicUser.notification_levels[:regular],
+                      notification_level: TopicUser.notification_levels[:watching],
                       posted: false
                     )
             end
@@ -511,8 +511,8 @@ describe PostMover do
             expect(moved_to.category_id).to eq(SiteSetting.uncategorized_category_id)
             p4.reload
             expect(moved_to.last_post_user_id).to eq(p4.user_id)
-            expect(moved_to.last_posted_at).to eq(p4.created_at)
-            expect(moved_to.bumped_at).to be_within(1.second).of(Time.now)
+            expect(moved_to.last_posted_at).to eq_time(p4.created_at)
+            expect(moved_to.bumped_at).to eq_time(Time.zone.now)
 
             # Posts should be re-ordered
             p2.reload
@@ -822,8 +822,8 @@ describe PostMover do
 
             p4.reload
             expect(new_topic.last_post_user_id).to eq(p4.user_id)
-            expect(new_topic.last_posted_at).to eq(p4.created_at)
-            expect(new_topic.bumped_at).to be_within(1.second).of(Time.now)
+            expect(new_topic.last_posted_at).to eq_time(p4.created_at)
+            expect(new_topic.bumped_at).to eq_time(Time.zone.now)
 
             p2.reload
             expect(p2.sort_order).to eq(1)
@@ -920,7 +920,6 @@ describe PostMover do
         end
 
         context "moving the first post" do
-
           it "copies the OP, doesn't delete it" do
             topic.expects(:add_moderator_post).once
             new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
@@ -940,7 +939,7 @@ describe PostMover do
             # New first post
             new_first = new_topic.posts.where(post_number: 1).first
             expect(new_first.reply_count).to eq(1)
-            expect(new_first.created_at).to be_within(1.second).of(p1.created_at)
+            expect(new_first.created_at).to eq_time(p1.created_at)
 
             # Second post is in a new topic
             p2.reload
@@ -1074,13 +1073,12 @@ describe PostMover do
       fab!(:user) { Fabricate(:user) }
       fab!(:another_user) { Fabricate(:user) }
       fab!(:regular_user) { Fabricate(:trust_level_4) }
-      fab!(:topic) { Fabricate(:topic) }
       fab!(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
-      fab!(:p1) { Fabricate(:post, topic: personal_message, user: user) }
-      fab!(:p2) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: another_user) }
-      fab!(:p3) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: user) }
-      fab!(:p4) { Fabricate(:post, topic: personal_message, reply_to_post_number: p2.post_number, user: user) }
-      fab!(:p5) { Fabricate(:post, topic: personal_message, user: evil_trout) }
+      fab!(:p1) { Fabricate(:post, topic: personal_message, user: user, created_at: 4.hours.ago) }
+      fab!(:p2) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: another_user, created_at: 3.hours.ago) }
+      fab!(:p3) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: user, created_at: 2.hours.ago) }
+      fab!(:p4) { Fabricate(:post, topic: personal_message, reply_to_post_number: p2.post_number, user: user, created_at: 1.hour.ago) }
+      fab!(:p5) { Fabricate(:post, topic: personal_message, user: evil_trout, created_at: 30.minutes.ago) }
       let(:another_personal_message) do
         Fabricate(:private_message_topic, user: user, topic_allowed_users: [
           Fabricate.build(:topic_allowed_user, user: admin)
@@ -1181,6 +1179,8 @@ describe PostMover do
         end
 
         it "does not allow moving regular topic posts in personal message" do
+          topic = Fabricate(:topic, created_at: 4.hours.ago)
+
           expect {
             personal_message.move_posts(admin, [p2.id, p5.id], destination_topic_id: topic.id)
           }.to raise_error(Discourse::InvalidParameters)

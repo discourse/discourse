@@ -44,16 +44,18 @@ class ContentSecurityPolicy
 
       Theme.where(id: Theme.transform_ids(theme_ids)).find_each do |theme|
         theme.cached_settings.each do |setting, value|
-          extensions << build_theme_extension(value) if setting.to_s == THEME_SETTING
+          extensions << build_theme_extension(value.split("|")) if setting.to_s == THEME_SETTING
         end
       end
+
+      extensions << build_theme_extension(ThemeModifierHelper.new(theme_ids: theme_ids).csp_extensions)
 
       extensions
     end
 
-    def build_theme_extension(raw)
+    def build_theme_extension(entries)
       {}.tap do |extension|
-        raw.split('|').each do |entry|
+        entries.each do |entry|
           directive, source = entry.split(':', 2).map(&:strip)
 
           extension[directive] ||= []

@@ -2,31 +2,41 @@
 
 require 'yaml'
 
-# == YAML file format
 #
 # 2 different formats are accepted:
 #
+# == JSON format
+#
+# bin/rake themes:install -- '--{"discourse-something": "https://github.com/discourse/discourse-something"}'
+# OR
+# bin/rake themes:install -- '--{"discourse-something": {"url": "https://github.com/discourse/discourse-something", default: true}}'
+#
+# == YAML file formats
+#
 # theme_name: https://github.com/example/theme.git
-#
+# OR
 # theme_name:
-#   url: https://github.com/example/theme.git
-#   branch: abc
-#   private_key: ...
-#   default: true
+#   url: https://github.com/example/theme_name.git
+#   branch: "master"
+#   private_key: ""
+#   default: false
+#   add_to_all_themes: false  # only for components - install on every theme
 #
-# In the second form, only the url is required.
+# In the first form, only the url is required.
 #
 desc "Install themes & theme components"
-task "themes:install" => :environment do
-  yml = (STDIN.tty?) ? '' : STDIN.read
-  if yml == ''
-    puts
-    puts "Please specify a themes yml file"
-    puts "Example: rake themes:install < themes.yml"
-    exit 1
-  end
+task "themes:install" => :environment do |task, args|
+  theme_args = (STDIN.tty?) ? '' : STDIN.read
+  use_json = theme_args == ''
 
-  log, counts = ThemesInstallTask.install(yml)
+  theme_args = begin
+                 use_json ? JSON.parse(ARGV.last.gsub('--', '')) : YAML::load(theme_args)
+               rescue
+                 puts use_json ? "Invalid JSON input. \n#{ARGV.last}" : "Invalid YML: \n#{theme_args}"
+                 exit 1
+               end
+
+  log, counts = ThemesInstallTask.install(theme_args)
 
   puts log
 
@@ -34,7 +44,6 @@ task "themes:install" => :environment do
   puts "Results:"
   puts " Installed: #{counts[:installed]}"
   puts " Updated:   #{counts[:updated]}"
-  puts " Skipped:   #{counts[:skipped]}"
   puts " Errors:    #{counts[:errors]}"
 
   if counts[:errors] > 0

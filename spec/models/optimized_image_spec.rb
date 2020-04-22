@@ -312,9 +312,10 @@ describe OptimizedImage do
         end
       end
 
-      context "when an error happened while generatign the thumbnail" do
+      context "when we have a bad file returned" do
         it "returns nil" do
-          OptimizedImage.expects(:resize).returns(false)
+          # tempfile is empty
+          # this can not be resized
           expect(OptimizedImage.create_for(s3_upload, 100, 200)).to eq(nil)
         end
       end

@@ -1,17 +1,17 @@
-<section class='field'>
+<section class="field">
   {{#if category.is_special}}
     {{#if category.isUncategorizedCategory}}
-      <p class="warning">{{i18n 'category.uncategorized_security_warning'}}</p>
+      <p class="warning">{{i18n "category.uncategorized_security_warning"}}</p>
     {{else}}
-      <p class="warning">{{i18n 'category.special_warning'}}</p>
+      <p class="warning">{{i18n "category.special_warning"}}</p>
     {{/if}}
   {{/if}}
   {{#unless category.isUncategorizedCategory}}
-    <ul class='permission-list'>
+    <ul class="permission-list">
       {{#each category.permissions as |p|}}
         <li>
           <span class="name"><span class="badge-group">{{p.group_name}}</span></span>
-          {{{i18n "category.can"}}}
+          {{html-safe (i18n "category.can")}}
           <span class="permission">{{p.permission.description}}</span>
           {{#if editingPermissions}}
             <a class="remove-permission" href {{action "removePermission" p}}>{{d-icon "times-circle"}}</a>
@@ -29,6 +29,9 @@
         value=selectedGroup
         valueProperty=null
         nameProperty=null
+        options=(hash
+          placementStrategy="absolute"
+        )
       }}
       {{combo-box
         class="permission-selector"
@@ -36,6 +39,9 @@
         content=category.availablePermissions
         onChange=(action "onSelectPermission")
         value=selectedPermission
+        options=(hash
+          placementStrategy="absolute"
+        )
       }}
       {{d-button
         action=(action "addPermission" selectedGroup selectedPermission)

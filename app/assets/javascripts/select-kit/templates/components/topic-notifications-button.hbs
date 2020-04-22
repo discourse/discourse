@@ -5,11 +5,12 @@
   options=(hash
     showFullTitle=showFullTitle
     placement=placement
+    preventsClickPropagation=true
   )
 }}
 
 {{#if appendReason}}
   <p class="reason">
-    {{{topic.details.notificationReasonText}}}
+    {{html-safe topic.details.notificationReasonText}}
   </p>
 {{/if}}

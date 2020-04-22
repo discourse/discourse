@@ -1,8 +1,8 @@
 {{#d-section bodyClass=bodyClass class="container"}}
   {{#watch-read action=(action "markFaqRead") path=model.path}}
-    <div class='contents clearfix body-page'>
+    <div class="contents clearfix body-page">
       {{plugin-outlet name="above-static"}}
-      {{{model.html}}}
+      {{html-safe model.html}}
 
       {{#if showSignupButton}}
         {{d-button action=(route-action "showCreateAccount") class="btn-primary sign-up-button" label="sign_up"}}

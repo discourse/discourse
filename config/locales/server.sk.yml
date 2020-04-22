@@ -41,7 +41,6 @@ sk:
       git: "Nastala chyba pri klonovaní git repozitára. Prístup bol odmietnuty, alebo repozitár nebol nájdený."
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
-      data_type_not_a_number: "Hodnota nastavenia typu `%{name}` nie je podporovaná. Podporované typy sú `integer`, `bool`, `list` a `enum`"
   emails:
     incoming:
       default_subject: "Táto téma musí mať názov"
@@ -216,6 +215,11 @@ sk:
     tag: "Oštítkované témy"
   too_late_to_edit: "Tento príspevok bol vytvorený príliš dávno. Už nemôže byť upravovaný či zmazaný"
   excerpt_image: "Obrázok"
+  bookmarks:
+    reminders:
+      tomorrow: "Zajtra"
+      next_week: "Budúci týždeň"
+      next_month: "Budúci mesiac"
   groups:
     errors:
       can_not_modify_automatic: "Nemôžete upraviť automatickú skupinu"
@@ -816,8 +820,6 @@ sk:
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
-    summary_posts_required: "Minimálny počet príspevkou predtým ako je zapnuté 'Sumarizuj túto tému'"
-    summary_likes_required: "Minimálny počet páči sa mi predtým ako je zapnuté 'Sumarizuj túto tému'"
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
     enable_long_polling: "Zbernica správ pre upozornenia môže používať techniku long-polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -870,7 +872,6 @@ sk:
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
-    readonly_mode_during_backup: "Zapnúť režim len na čítanie počas vytvárania zálohy"
     allow_restore: "Umožniť obnovu, ktorá nahradí VŠETKY data na stránkach! Ponechajte prázdne okrem prípadu ak chcete obnoviť zo zálohy."
     maximum_backups: "Maximálny počet záloh udržiavaných na disku. Staršie zálohy budu automaticky vymazané"
     automatic_backups_enabled: "Spustiť automatické zálohy podľa nastavenia intervalu záloh"
@@ -1083,6 +1084,10 @@ sk:
   redirected_to_top_reasons:
     new_user: "Vitajte v našej komunite! Toto sú najpopulárnejšie z posledných tém."
     not_seen_in_a_month: "Vitajte späť! Nevideli sme Vás už nejaký čas. Toto sú najpopulárnejšie témy odkedy ste boli preč."
+  publish_page:
+    slug_errors:
+      blank: "nesmie byť prázdne"
+      invalid: "obsahuje neplatné znaky"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovede."

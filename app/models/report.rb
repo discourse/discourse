@@ -50,8 +50,8 @@ class Report
   end
 
   def self.cache_key(report)
-    (+"reports:") <<
     [
+      "reports",
       report.type,
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
@@ -63,12 +63,28 @@ class Report
   end
 
   def add_filter(name, options = {})
-    default_filter = { allow_any: false, choices: [], default: nil }
-    available_filters[name] = default_filter.merge(options)
+    if options[:type].blank?
+      options[:type] = name
+      Discourse.deprecate("#{name} filter should define a `:type` option. Temporarily setting type to #{name}.")
+    end
+
+    available_filters[name] = options
   end
 
   def remove_filter(name)
     available_filters.delete(name)
+  end
+
+  def add_category_filter
+    category_id = filters[:category].to_i if filters[:category].present?
+    add_filter('category', type: 'category', default: category_id)
+    return if category_id.blank?
+
+    include_subcategories = filters[:'include-subcategories']
+    include_subcategories = !!ActiveRecord::Type::Boolean.new.cast(include_subcategories)
+    add_filter('include-subcategories', type: 'bool', default: include_subcategories)
+
+    [category_id, include_subcategories]
   end
 
   def self.clear_cache(type = nil)
@@ -285,15 +301,22 @@ class Report
   end
 
   def self.post_action_report(report, post_action_type)
-    category_filter = report.filters.dig(:category)
-    report.add_filter('category', default: category_filter)
+    category_id, include_subcategories = report.add_category_filter
 
     report.data = []
-    PostAction.count_per_day_for_type(post_action_type, category_id: category_filter, start_date: report.start_date, end_date: report.end_date).each do |date, count|
+    PostAction.count_per_day_for_type(post_action_type, category_id: category_id, include_subcategories: include_subcategories, start_date: report.start_date, end_date: report.end_date).each do |date, count|
       report.data << { x: date, y: count }
     end
+
     countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
-    countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(category_filter)) if category_filter
+    if category_id
+      if include_subcategories
+        countable = countable.joins(post: :topic).where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
+      else
+        countable = countable.joins(post: :topic).where('topics.category_id = ?', category_id)
+      end
+    end
+
     add_counts report, countable, 'post_actions.created_at'
   end
 

@@ -279,6 +279,18 @@ describe UsersController do
         expect(response).to redirect_to(wizard_path)
       end
 
+      it "sets the users timezone if the param is present" do
+        user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+
+        token = user.email_tokens.create(email: user.email).token
+        get "/u/password-reset/#{token}"
+
+        expect(user.user_option.timezone).to eq(nil)
+        put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger', timezone: "America/Chicago" }
+        expect(user.user_option.reload.timezone).to eq("America/Chicago")
+      end
+
       it "logs the password change" do
         user = Fabricate(:admin)
         UserAuthToken.generate!(user_id: user.id)
@@ -583,7 +595,7 @@ describe UsersController do
       UsersController.any_instance.stubs(:honeypot_value).returns(nil)
       UsersController.any_instance.stubs(:challenge_value).returns(nil)
       SiteSetting.allow_new_registrations = true
-      @user = Fabricate.build(:user, password: "strongpassword")
+      @user = Fabricate.build(:user, email: "foobar@example.com", password: "strongpassword")
     end
 
     let(:post_user_params) do
@@ -593,8 +605,8 @@ describe UsersController do
         email: @user.email }
     end
 
-    def post_user
-      post "/u.json", params: post_user_params
+    def post_user(extra_params = {})
+      post "/u.json", params: post_user_params.merge(extra_params)
     end
 
     context 'when email params is missing' do
@@ -616,17 +628,28 @@ describe UsersController do
         expect(User.find_by(username: @user.username).locale).to eq('fr')
       end
 
+      it 'requires invite code when specified' do
+        expect(SiteSetting.require_invite_code).to eq(false)
+        SiteSetting.invite_code = "abc def"
+        expect(SiteSetting.require_invite_code).to eq(true)
+
+        post_user(invite_code: "abcd")
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(false)
+
+        # case insensitive and stripped of leading/ending spaces
+        post_user(invite_code: " AbC deF ")
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(true)
+
+      end
+
       context "when timezone is provided as a guess on signup" do
-        let(:post_user_params) do
-          { name: @user.name,
-            username: @user.username,
-            password: "strongpassword",
-            email: @user.email,
-            timezone: "Australia/Brisbane" }
-        end
 
         it "sets the timezone" do
-          post_user
+          post_user(timezone: "Australia/Brisbane")
           expect(response.status).to eq(200)
           expect(User.find_by(username: @user.username).user_option.timezone).to eq("Australia/Brisbane")
         end
@@ -732,7 +755,7 @@ describe UsersController do
 
         it "won't create the user as active with a regular key" do
           post "/u.json",
-            params: post_user_params.merge(active: true, api_key: api_key.key)
+            params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
 
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['active']).to be_falsey
@@ -748,7 +771,7 @@ describe UsersController do
           SiteSetting.must_approve_users = true
 
           #Sidekiq::Client.expects(:enqueue).never
-          post "/u.json", params: post_user_params.merge(approved: true, active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(approved: true, active: true), headers: { HTTP_API_KEY: api_key.key }
 
           expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
           expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
@@ -757,6 +780,7 @@ describe UsersController do
           json = JSON.parse(response.body)
 
           new_user = User.find(json["user_id"])
+          email_token = new_user.email_tokens.active.where(email: new_user.email).first
 
           expect(json['active']).to be_truthy
 
@@ -764,13 +788,14 @@ describe UsersController do
           expect(new_user.approved).to eq(true)
           expect(new_user.approved_by_id).to eq(admin.id)
           expect(new_user.approved_at).to_not eq(nil)
+          expect(email_token.confirmed?).to eq(true)
         end
 
         it "will create a reviewable when a user is created as active but not approved" do
           Jobs.run_immediately!
           SiteSetting.must_approve_users = true
 
-          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
 
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -785,7 +810,7 @@ describe UsersController do
           Jobs.run_immediately!
           SiteSetting.must_approve_users = true
 
-          post "/u.json", params: post_user_params.merge(api_key: api_key.key)
+          post "/u.json", params: post_user_params, headers: { HTTP_API_KEY: api_key.key }
 
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -799,7 +824,7 @@ describe UsersController do
         it "won't create the developer as active" do
           UsernameCheckerService.expects(:is_developer?).returns(true)
 
-          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['active']).to be_falsy
         end
@@ -808,12 +833,28 @@ describe UsersController do
           SiteSetting.allow_user_locale = true
           admin.update!(locale: :fr)
 
-          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
 
           json = JSON.parse(response.body)
           new_user = User.find(json["user_id"])
           expect(new_user.locale).not_to eq("fr")
+        end
+
+        it "will auto approve user if the user email domain matches auto_approve_email_domains setting" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+          SiteSetting.auto_approve_email_domains = "example.com"
+
+          post "/u.json", params: post_user_params.merge(active: true), headers: { HTTP_API_KEY: api_key.key }
+
+          expect(response.status).to eq(200)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+          expect(json['active']).to be_truthy
+          expect(new_user.approved).to be_truthy
+          expect(ReviewableUser.pending.find_by(target: new_user)).to be_blank
         end
       end
     end
@@ -831,7 +872,7 @@ describe UsersController do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as staged with a regular key" do
-          post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(staged: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
 
           new_user = User.where(username: post_user_params[:username]).first
@@ -844,7 +885,7 @@ describe UsersController do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "creates the user as staged with a regular key" do
-          post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(staged: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
 
           new_user = User.where(username: post_user_params[:username]).first
@@ -853,7 +894,7 @@ describe UsersController do
 
         it "won't create the developer as staged" do
           UsernameCheckerService.expects(:is_developer?).returns(true)
-          post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
+          post "/u.json", params: post_user_params.merge(staged: true), headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
 
           new_user = User.where(username: post_user_params[:username]).first
@@ -1440,7 +1481,7 @@ describe UsersController do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(inviter)
       invitee = Fabricate(:user)
-      invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+      _invite = Fabricate(:invite, invited_by: inviter, user: invitee)
       get "/u/#{user.username}/invited_count.json"
       expect(response.status).to eq(200)
 
@@ -1823,8 +1864,9 @@ describe UsersController do
                 },
                 user_fields: {
                   user_field.id.to_s => 'user field value'
-                },
-                api_key: api_key.key
+                }
+              }, headers: {
+                HTTP_API_KEY: api_key.key
               }
               expect(response.status).to eq(200)
               u = User.find_by_email('user@mail.com')
@@ -3052,6 +3094,34 @@ describe UsersController do
     end
   end
 
+  describe "#cards" do
+    fab!(:user) { Discourse.system_user }
+    fab!(:user2) { Fabricate(:user) }
+
+    it "returns success" do
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response.status).to eq(200)
+      parsed = JSON.parse(response.body)["users"]
+
+      expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
+    end
+
+    it "should redirect to login page for anonymous user when profiles are hidden" do
+      SiteSetting.hide_user_profiles_from_public = true
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response).to redirect_to '/login'
+    end
+
+    it "does not include hidden profiles" do
+      user2.user_option.update(hide_profile_and_presence: true)
+      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+      expect(response.status).to eq(200)
+      parsed = JSON.parse(response.body)["users"]
+
+      expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username)
+    end
+  end
+
   describe '#badges' do
     it "renders fine by default" do
       get "/u/#{user.username}/badges"
@@ -3427,7 +3497,6 @@ describe UsersController do
 
       it 'should return the right response' do
         post "/u/email-login.json", params: { login: user.email }
-
         expect(response.status).to eq(404)
       end
     end
@@ -3437,7 +3506,9 @@ describe UsersController do
         post "/u/email-login.json", params: { login: '@random' }
 
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)['user_found']).to eq(false)
+        json = JSON.parse(response.body)
+        expect(json['user_found']).to eq(false)
+        expect(json['hide_taken']).to eq(false)
         expect(Jobs::CriticalUserEmail.jobs).to eq([])
       end
     end
@@ -3448,7 +3519,9 @@ describe UsersController do
         post "/u/email-login.json", params: { login: user.email }
 
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body).has_key?('user_found')).to eq(false)
+        json = JSON.parse(response.body)
+        expect(json.has_key?('user_found')).to eq(false)
+        expect(json['hide_taken']).to eq(true)
       end
     end
 
@@ -3522,6 +3595,58 @@ describe UsersController do
     end
   end
 
+  describe "#enable_second_factor_totp" do
+    before do
+      sign_in(user)
+    end
+
+    def create_totp
+      stub_secure_session_confirmed
+      post "/users/create_second_factor_totp.json"
+    end
+
+    it "creates a totp for the user successfully" do
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token }
+
+      expect(response.status).to eq(200)
+      expect(user.user_second_factors.count).to eq(1)
+    end
+
+    context "when an incorrect token is provided" do
+      before do
+        create_totp
+        post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: "123456" }
+      end
+      it "shows a helpful error message to the user" do
+        expect(JSON.parse(response.body)['error']).to eq(I18n.t("login.invalid_second_factor_code"))
+      end
+    end
+
+    context "when a name is not provided" do
+      before do
+        create_totp
+        post "/users/enable_second_factor_totp.json", params: { second_factor_token: "123456" }
+      end
+      it "shows a helpful error message to the user" do
+        expect(JSON.parse(response.body)['error']).to eq(I18n.t("login.missing_second_factor_name"))
+      end
+    end
+
+    context "when a token is not provided" do
+      before do
+        create_totp
+        post "/users/enable_second_factor_totp.json", params: { name: "test" }
+      end
+      it "shows a helpful error message to the user" do
+        expect(JSON.parse(response.body)['error']).to eq(I18n.t("login.missing_second_factor_code"))
+      end
+    end
+  end
+
   describe '#update_second_factor' do
     let(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
@@ -3554,7 +3679,7 @@ describe UsersController do
 
         context 'when token is valid' do
           before do
-            ApplicationController.any_instance.stubs(:secure_session).returns("confirmed-password-#{user.id}" => "true")
+            stub_secure_session_confirmed
           end
           it 'should allow second factor for the user to be renamed' do
             put "/users/second_factor.json", params: {
@@ -3690,7 +3815,7 @@ describe UsersController do
       expect(response_parsed["user_secure_id"]).to eq(
         user.reload.create_or_fetch_secure_identifier
       )
-      expect(response_parsed["supported_algoriths"]).to eq(
+      expect(response_parsed["supported_algorithms"]).to eq(
         ::Webauthn::SUPPORTED_ALGORITHMS
       )
     end
@@ -3853,6 +3978,20 @@ describe UsersController do
         user.user_auth_tokens.reload
         expect(user.user_auth_tokens.count).to eq(1)
         expect(user.user_auth_tokens.first.id).to eq(ids[1])
+      end
+
+      it 'checks if token exists' do
+        ids = user.user_auth_tokens.order(:created_at).pluck(:id)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: ids[0] }
+
+        expect(response.status).to eq(200)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: ids[0] }
+
+        expect(response.status).to eq(400)
       end
 
       it 'does not let user log out of current session' do
@@ -4060,9 +4199,37 @@ describe UsersController do
     end
   end
 
+  describe "#bookmarks" do
+    let!(:bookmark1) { Fabricate(:bookmark, user: user) }
+    let!(:bookmark2) { Fabricate(:bookmark, user: user) }
+    let!(:bookmark3) { Fabricate(:bookmark) }
+
+    before do
+      TopicUser.change(user.id, bookmark1.topic_id, total_msecs_viewed: 1)
+      TopicUser.change(user.id, bookmark2.topic_id, total_msecs_viewed: 1)
+    end
+
+    it "returns a list of serialized bookmarks for the user" do
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+    end
+
+    it "does not show another user's bookmarks" do
+      sign_in(user)
+      get "/u/#{bookmark3.user.username}/bookmarks.json"
+      expect(response.status).to eq(403)
+    end
+  end
+
   def create_second_factor_security_key
     sign_in(user)
-    UsersController.any_instance.stubs(:secure_session_confirmed?).returns(true)
+    stub_secure_session_confirmed
     post "/u/create_second_factor_security_key.json"
+  end
+
+  def stub_secure_session_confirmed
+    UsersController.any_instance.stubs(:secure_session_confirmed?).returns(true)
   end
 end

@@ -227,8 +227,6 @@ ca:
       bookmark:
         instructions: |-
           Si voleu saber-ne més, seleccioneu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a sota i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marqueu com a preferit aquest missatge privat**. Si ho feu, potser tindreu un :gift: més avant!
-        reply: |-
-          Fantàstic! Ara podeu trobar fàcilment com tornar a la nostra conversa privada en qualsevol moment, exactament des de [la pestanya de favorits del vostre perfil](%{profile_page_url}/activity/bookmarks). Només heu de seleccionar la vostra imatge de perfil dalt a la dreta &#8599;
         not_found: |-
           Ui, no veig cap favorit marcat en aquest tema. ¿Heu trobat el marcador de favorits a sota de cada publicació? Utilitzeu "mostra'n més" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per a mostrar accions addicionals si calen.
       emoji:

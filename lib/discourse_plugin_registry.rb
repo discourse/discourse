@@ -151,7 +151,7 @@ class DiscoursePluginRegistry
     end
   end
 
-  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6|\.js\.no-module\.es6$/
+  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6$/
   HANDLEBARS_REGEX = /\.(hb[rs]|js\.handlebars)$/
 
   def self.register_asset(asset, opts = nil, plugin_directory_name = nil)

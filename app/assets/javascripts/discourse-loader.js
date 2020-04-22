@@ -12,7 +12,8 @@ var define, requirejs;
       jquery: { default: $ },
       "@ember/array": {
         default: Ember.Array,
-        A: Ember.A
+        A: Ember.A,
+        isArray: Ember.isArray
       },
       "@ember/array/proxy": {
         default: Ember.ArrayProxy
@@ -76,6 +77,7 @@ var define, requirejs;
       },
       "@ember/object/mixin": { default: Ember.Mixin },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
+      "@ember/object/promise-proxy-mixin": { default: Ember.PromiseProxyMixin },
       "@ember/object/evented": {
         default: Ember.Evented,
         on: Ember.on
@@ -99,14 +101,13 @@ var define, requirejs;
         inject: Ember.inject.service
       },
       "@ember/utils": {
-        isPresent: Ember.isPresent,
         isBlank: Ember.isBlank,
         isEmpty: Ember.isEmpty,
-        isNone: Ember.isNone
+        isNone: Ember.isNone,
+        isPresent: Ember.isPresent
       },
       rsvp: {
         default: Ember.RSVP,
-        EventTarget: Ember.RSVP.EventTarget,
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
         all: Ember.RSVP.all

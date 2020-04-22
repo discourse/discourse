@@ -120,6 +120,7 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     if actions.first.present?
+      unassign_topic performed_by, post
       DiscourseEvent.trigger(:flag_reviewed, post)
       DiscourseEvent.trigger(:flag_deferred, actions.first)
     end
@@ -190,6 +191,7 @@ class ReviewableFlaggedPost < Reviewable
     Post.with_deleted.where(id: target_id).update_all(cached)
 
     if actions.first.present?
+      unassign_topic performed_by, post
       DiscourseEvent.trigger(:flag_reviewed, post)
       DiscourseEvent.trigger(:flag_disagreed, actions.first)
     end
@@ -256,6 +258,7 @@ protected
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
 
     if actions.first.present?
+      unassign_topic performed_by, post
       DiscourseEvent.trigger(:flag_reviewed, post)
       DiscourseEvent.trigger(:flag_agreed, actions.first)
       yield(actions.first) if block_given?
@@ -277,6 +280,26 @@ protected
       action.client_action = client_action
       action.confirm_message = "#{prefix}.confirm" if confirm
     end
+  end
+
+  def unassign_topic(performed_by, post)
+    topic = post.topic
+    return unless topic && performed_by && SiteSetting.reviewable_claiming != 'disabled'
+    ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
+    topic.reviewables.find_each do |reviewable|
+      reviewable.log_history(:unclaimed, performed_by)
+    end
+
+    user_ids = User.staff.pluck(:id)
+
+    if SiteSetting.enable_category_group_review? && group_id = topic.category&.reviewable_by_group_id.presence
+      user_ids.concat(GroupUser.where(group_id: group_id).pluck(:user_id))
+      user_ids.uniq!
+    end
+
+    data = { topic_id: topic.id }
+
+    MessageBus.publish("/reviewable_claimed", data, user_ids: user_ids)
   end
 
 private

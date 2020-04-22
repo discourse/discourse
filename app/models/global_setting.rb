@@ -172,6 +172,7 @@ class GlobalSetting
         c[:db] = redis_db if redis_db != 0
         c[:db] = 1 if Rails.env == "test"
         c[:id] = nil if redis_skip_client_commands
+        c[:ssl] = true if redis_use_ssl
 
         c.freeze
       end
@@ -195,6 +196,7 @@ class GlobalSetting
         c[:db] = message_bus_redis_db if message_bus_redis_db != 0
         c[:db] = 1 if Rails.env == "test"
         c[:id] = nil if message_bus_redis_skip_client_commands
+        c[:ssl] = true if redis_use_ssl
 
         c.freeze
       end

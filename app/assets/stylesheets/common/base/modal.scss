@@ -594,7 +594,7 @@
   }
 }
 
-.flag-modal {
+.flag-modal-body {
   max-height: 450px;
   .flag-action-type-details {
     width: 100%;
@@ -681,6 +681,27 @@
     .topic-categories {
       width: 100%;
     }
+  }
+}
+
+.publish-page-modal .modal-body {
+  p.publish-description {
+    margin-top: 0;
+  }
+  input.publish-slug {
+    width: 100%;
+  }
+
+  .publish-url {
+    margin-bottom: 1em;
+    .example-url,
+    .invalid-slug {
+      font-weight: bold;
+    }
+  }
+
+  .publish-slug:disabled {
+    cursor: not-allowed;
   }
 }
 

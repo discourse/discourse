@@ -11,9 +11,9 @@ class Barber::Precompiler
   def precompiler
     if !@precompiler
 
-      source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/lib/raw-handlebars.js.es6")
-      template = Tilt::ES6ModuleTranspilerTemplate.new {}
-      transpiled = template.babel_transpile(source)
+      source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/lib/raw-handlebars.js")
+      transpiler = DiscourseJsProcessor::Transpiler.new(skip_module: true)
+      transpiled = transpiler.perform(source)
 
       # very hacky but lets us use ES6. I'm ashamed of this code -RW
       transpiled = transpiled[0...transpiled.index('export ')]

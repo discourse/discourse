@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   has_many :tag_users, dependent: :destroy
   has_many :user_api_keys, dependent: :destroy
   has_many :topics
+  has_many :bookmarks
 
   # dependent deleting handled via before_destroy
   has_many :user_actions
@@ -232,7 +233,6 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
-  MAX_SELF_DELETE_POST_COUNT ||= 1
   MAX_STAFF_DELETE_POST_COUNT ||= 5
 
   def self.max_password_length
@@ -363,22 +363,17 @@ class User < ActiveRecord::Base
     user
   end
 
-  def unstage
+  def unstage!
     if self.staged
-      self.staged = false
-      self.custom_fields[FROM_STAGED] = true
-      self.notifications.destroy_all
+      ActiveRecord::Base.transaction do
+        self.staged = false
+        self.custom_fields[FROM_STAGED] = true
+        self.notifications.destroy_all
+        save!
+      end
+
       DiscourseEvent.trigger(:user_unstaged, self)
     end
-  end
-
-  def self.unstage(params)
-    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      params.each { |k, v| user.public_send("#{k}=", v) }
-      user.active = false
-      user.unstage
-    end
-    user
   end
 
   def self.suggest_name(string)
@@ -475,6 +470,8 @@ class User < ActiveRecord::Base
     @unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
+    @unread_bookmarks = nil
+    @unread_high_prios = nil
     @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
@@ -496,17 +493,41 @@ class User < ActiveRecord::Base
           FROM notifications n
      LEFT JOIN topics t ON t.id = n.topic_id
          WHERE t.deleted_at IS NULL
-           AND n.notification_type = :type
+           AND n.notification_type = :notification_type
            AND n.user_id = :user_id
            AND NOT read
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, type: notification_type)[0].to_i
+    DB.query_single(sql, user_id: id, notification_type: notification_type)[0].to_i
   end
 
+  def unread_notifications_of_priority(high_priority:)
+    # perf critical, much more efficient than AR
+    sql = <<~SQL
+        SELECT COUNT(*)
+          FROM notifications n
+     LEFT JOIN topics t ON t.id = n.topic_id
+         WHERE t.deleted_at IS NULL
+           AND n.high_priority = :high_priority
+           AND n.user_id = :user_id
+           AND NOT read
+    SQL
+
+    # to avoid coalesce we do to_i
+    DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
+  end
+
+  ###
+  # DEPRECATED: This is only maintained for backwards compat until v2.5. There
+  # may be inconsistencies with counts in the UI because of this, because unread
+  # high priority includes PMs AND bookmark reminders.
   def unread_private_messages
-    @unread_pms ||= unread_notifications_of_type(Notification.types[:private_message])
+    @unread_pms ||= unread_high_priority_notifications
+  end
+
+  def unread_high_priority_notifications
+    @unread_high_prios ||= unread_notifications_of_priority(high_priority: true)
   end
 
   # PERF: This safeguard is in place to avoid situations where
@@ -531,7 +552,7 @@ class User < ActiveRecord::Base
           notifications n
           LEFT JOIN topics t ON t.id = n.topic_id
            WHERE t.deleted_at IS NULL AND
-            n.notification_type <> :pm AND
+            n.high_priority = FALSE AND
             n.user_id = :user_id AND
             n.id > :seen_notification_id AND
             NOT read
@@ -542,7 +563,6 @@ class User < ActiveRecord::Base
       DB.query_single(sql,
         user_id: id,
         seen_notification_id: seen_notification_id,
-        pm: Notification.types[:private_message],
         limit: User.max_unread_notifications
     )[0].to_i
     end
@@ -584,7 +604,7 @@ class User < ActiveRecord::Base
          LEFT JOIN topics t ON n.topic_id = t.id
          WHERE
           t.deleted_at IS NULL AND
-          n.notification_type = :type AND
+          n.high_priority AND
           n.user_id = :user_id AND
           NOT read
         ORDER BY n.id DESC
@@ -596,23 +616,21 @@ class User < ActiveRecord::Base
        LEFT JOIN topics t ON n.topic_id = t.id
        WHERE
         t.deleted_at IS NULL AND
-        (n.notification_type <> :type OR read) AND
+        (n.high_priority = FALSE OR read) AND
         n.user_id = :user_id
        ORDER BY n.id DESC
        LIMIT 20
       ) AS y
     SQL
 
-    recent = DB.query(sql,
-      user_id: id,
-      type: Notification.types[:private_message]
-    ).map! do |r|
+    recent = DB.query(sql, user_id: id).map! do |r|
       [r.id, r.read]
     end
 
     payload = {
       unread_notifications: unread_notifications,
       unread_private_messages: unread_private_messages,
+      unread_high_priority_notifications: unread_high_priority_notifications,
       read_first_notification: read_first_notification?,
       last_notification: json,
       recent: recent,
@@ -741,7 +759,7 @@ class User < ActiveRecord::Base
   end
 
   def self.gravatar_template(email)
-    "//www.gravatar.com/avatar/#{self.email_hash(email)}.png?s={size}&r=pg&d=identicon"
+    "//#{SiteSetting.gravatar_base_url}/avatar/#{self.email_hash(email)}.png?s={size}&r=pg&d=identicon"
   end
 
   # Don't pass this up to the client - it's meant for server side use
@@ -1125,6 +1143,14 @@ class User < ActiveRecord::Base
       .count
   end
 
+  def number_of_rejected_posts
+    Post.with_deleted
+      .where(user_id: self.id)
+      .joins('INNER JOIN reviewables r ON posts.id = r.target_id')
+      .where(r: { status: Reviewable.statuses[:rejected], type: ReviewableQueuedPost.name })
+      .count
+  end
+
   def number_of_flags_given
     PostAction.where(user_id: self.id)
       .where(disagreed_at: nil)
@@ -1259,6 +1285,7 @@ class User < ActiveRecord::Base
 
   def has_more_posts_than?(max_post_count)
     return true if user_stat && (user_stat.topic_count + user_stat.post_count) > max_post_count
+    return true if max_post_count < 0
 
     DB.query_single(<<~SQL, user_id: self.id).first > max_post_count
       SELECT COUNT(1)

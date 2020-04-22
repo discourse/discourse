@@ -644,9 +644,11 @@ class Group < ActiveRecord::Base
   end
 
   def remove(user)
-    self.group_users.where(user: user).each(&:destroy)
+    result = self.group_users.where(user: user).each(&:destroy)
+    return false if result.blank?
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
     DiscourseEvent.trigger(:user_removed_from_group, user, self)
+    true
   end
 
   def add_owner(user)

@@ -108,7 +108,7 @@ class TopicLink < ActiveRecord::Base
   end
 
   def self.extract_from(post)
-    return if post.blank? || post.whisper?
+    return if post.blank? || post.whisper? || post.user_id.blank?
 
     current_urls = []
     reflected_ids = []

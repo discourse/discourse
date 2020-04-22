@@ -204,37 +204,7 @@ module ImportScripts::Mbox
 
     def extract_subject(receiver, list_name)
       subject = receiver.subject
-      return nil if subject.blank?
-
-      # TODO: make the list name (or maybe multiple names) configurable
-      # Strip mailing list name from subject
-      subject = subject.gsub(/\[#{Regexp.escape(list_name)}\]/i, '').strip
-
-      clean_subject(subject)
-    end
-
-    # TODO: refactor and move prefixes to settings
-    def clean_subject(subject)
-      original_length = subject.length
-
-      # Strip Reply prefix from title (Standard and localized)
-      subject = subject.gsub(/^Re: */i, '')
-      subject = subject.gsub(/^R: */i, '') #Italian
-      subject = subject.gsub(/^RIF: */i, '') #Italian
-
-      # Strip Forward prefix from title (Standard and localized)
-      subject = subject.gsub(/^Fwd: */i, '')
-      subject = subject.gsub(/^I: */i, '') #Italian
-
-      subject.strip
-
-      # In case of mixed localized prefixes there could be many of them
-      # if the mail client didn't strip the localized ones
-      if original_length > subject.length
-        clean_subject(subject)
-      else
-        subject
-      end
+      subject.blank? ? nil : subject.strip
     end
 
     def ignored_file?(path, checksums)

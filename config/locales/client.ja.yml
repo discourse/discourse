@@ -27,7 +27,6 @@ ja:
     dates:
       time: "H:mm"
       timeline_date: "YYYY年M月"
-      long_no_year: "M月D日 H:mm"
       long_no_year_no_time: "M月D日"
       full_no_year_no_time: "M月D日"
       long_with_year: "YYYY年M月D日 H:mm"
@@ -240,6 +239,12 @@ ja:
       remove: "ブックマークを削除"
       confirm_clear: "このトピックのすべてのブックマークをクリアしますか?"
       save: "保存"
+      reminders:
+        later_today: "今日中"
+        tomorrow: "明日"
+        next_week: "来週"
+        later_this_week: "今週中"
+        next_month: "来月"
     drafts:
       resume: "続ける"
       remove: "削除"
@@ -816,9 +821,6 @@ ja:
         success_staff: "現在のメールアドレスにメールを送信しました。メールに従い手続きをおこなってください。"
       change_avatar:
         title: "プロフィール画像を変更"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>から取得、基準は"
-        gravatar_title: "Gravatarのアバターを変更"
-        refresh_gravatar_title: "Gravatarを更新する"
         letter_based: "システムプロフィール画像"
         uploaded_avatar: "カスタム画像"
         uploaded_avatar_empty: "カスタム画像を追加"
@@ -1066,6 +1068,8 @@ ja:
         back: "戻る"
         again: "やり直す"
         fixed: "ページロード"
+    modal:
+      close: "閉じる"
     close: "閉じる"
     assets_changed_confirm: "Discourseがアップデートされました。ページを更新して最新のバージョンにしますか？"
     logout: "ログアウトしました"
@@ -1244,7 +1248,6 @@ ja:
       objects: オブジェクト
       symbols: シンボル
       flags: 旗
-      custom: カスタム絵文字
       recent: 最近使ったもの
       default_tone: スキントーンなし
       light_tone: ライトスキントーン
@@ -1252,6 +1255,7 @@ ja:
       medium_tone: ミディアムスキントーン
       medium_dark_tone: ミディアムダークスキントーン
       dark_tone: ダークスキントーン
+      default: カスタム絵文字
     shared_drafts:
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピック公開中..."
@@ -1359,6 +1363,7 @@ ja:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1962,6 +1967,7 @@ ja:
             title: "メールのHTML部分を表示"
             button: "HTML"
       bookmarks:
+        created: "作成者"
         name: "名前"
     category:
       can: "can&hellip; "
@@ -2845,7 +2851,6 @@ ja:
           active: "アクティブ"
           staff: "スタッフ"
           suspended: "凍結中"
-          suspect: "マーク中"
           staged: "段階"
         approved: "承認?"
         titles:
@@ -2861,7 +2866,6 @@ ja:
           admins: "管理者ユーザ"
           moderators: "モデレータ"
           suspended: "凍結中のユーザ"
-          suspect: "マーク中のユーザ"
         not_verified: "検証されていません"
         check_email:
           title: "メールアドレスを表示する"
@@ -3154,6 +3158,7 @@ ja:
         help: "各ユーザが利用できる絵文字を追加します。 (ちょっとしたコツ: ドラッグアンドドロップで複数のファイルを一度にアップロードできます)"
         add: "新しい絵文字を追加"
         name: "名前"
+        group: "グループ"
         image: "画像"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
       embedding:

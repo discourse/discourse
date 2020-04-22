@@ -17,12 +17,15 @@ class Theme < ActiveRecord::Base
   has_many :parent_themes, -> { order(:name) }, through: :parent_theme_relation, source: :parent_theme
   has_many :color_schemes
   belongs_to :remote_theme, dependent: :destroy
+  has_one :theme_modifier_set, dependent: :destroy
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
   has_one :javascript_cache, dependent: :destroy
   has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
 
   validate :component_validations
+
+  after_create :update_child_components
 
   scope :user_selectable, ->() {
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
@@ -34,6 +37,10 @@ class Theme < ActiveRecord::Base
     changed_schemes << scheme if scheme
   end
 
+  def theme_modifier_set
+    super || build_theme_modifier_set
+  end
+
   after_save do
     changed_colors.each(&:save!)
     changed_schemes.each(&:save!)
@@ -43,6 +50,8 @@ class Theme < ActiveRecord::Base
 
     changed_fields.each(&:save!)
     changed_fields.clear
+
+    theme_modifier_set.save!
 
     if saved_change_to_name?
       theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!)
@@ -63,7 +72,7 @@ class Theme < ActiveRecord::Base
     notify_theme_change(with_scheme: notify_with_scheme)
   end
 
-  after_create do
+  def update_child_components
     if !component? && child_components.present?
       child_components.each do |url|
         url = ThemeStore::GitImporter.new(url.strip).url
@@ -112,8 +121,8 @@ class Theme < ActiveRecord::Base
   end
 
   def self.get_set_cache(key, &blk)
-    if val = @cache[key]
-      return val
+    if @cache.hash.key? key.to_s
+      return @cache[key]
     end
     @cache[key] = blk.call
   end
@@ -245,6 +254,15 @@ class Theme < ActiveRecord::Base
     val = resolve_baked_field(theme_ids, target, field)
 
     (@cache[cache_key] = val || "").html_safe
+  end
+
+  def self.lookup_modifier(theme_ids, modifier_name)
+    theme_ids = [theme_ids] unless Array === theme_ids
+
+    theme_ids = transform_ids(theme_ids)
+    get_set_cache("#{theme_ids.join(",")}:modifier:#{modifier_name}:#{ThemeField::COMPILER_VERSION}") do
+      ThemeModifierSet.resolve_modifier_for_themes(theme_ids, modifier_name)
+    end
   end
 
   def self.remove_from_cache!
@@ -518,6 +536,13 @@ class Theme < ActiveRecord::Base
         schemes = [self.color_scheme] + schemes if self.color_scheme
         schemes.uniq.each do |scheme|
           hash[scheme.name] = {}.tap { |colors| scheme.colors.each { |color| colors[color.name] = color.hex } }
+        end
+      end
+
+      meta[:modifiers] = {}.tap do |hash|
+        ThemeModifierSet.modifiers.keys.each do |modifier|
+          value = self.theme_modifier_set.public_send(modifier)
+          hash[modifier] = value if !value.nil?
         end
       end
 

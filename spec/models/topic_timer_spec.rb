@@ -3,22 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe TopicTimer, type: :model do
-  let(:topic_timer) {
-    # we should not need to do this but somehow
-    # fabricator is failing here
-    TopicTimer.create!(
-      user_id: -1,
-      topic: Fabricate(:topic),
-      execute_at: 1.hour.from_now,
-      status_type: TopicTimer.types[:close]
-    )
-  }
+  fab!(:topic_timer) { Fabricate(:topic_timer) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:admin) { Fabricate(:admin) }
 
-  before do
-    freeze_time Time.new(2018)
-  end
+  before { freeze_time }
 
   context "validations" do
     describe '#status_type' do
@@ -107,15 +96,7 @@ RSpec.describe TopicTimer, type: :model do
   context 'callbacks' do
     describe 'when #execute_at and #user_id are not changed' do
       it 'should not schedule another to update topic' do
-        Jobs.expects(:enqueue_at).with(
-          topic_timer.execute_at,
-          :toggle_topic_closed,
-          topic_timer_id: topic_timer.id,
-          state: true
-        ).once
-
-        topic_timer
-
+        Jobs.expects(:enqueue_at).never
         Jobs.expects(:cancel_scheduled_job).never
 
         topic_timer.update!(topic: Fabricate(:topic))
@@ -124,9 +105,6 @@ RSpec.describe TopicTimer, type: :model do
 
     describe 'when #execute_at value is changed' do
       it 'reschedules the job' do
-        freeze_time
-        topic_timer
-
         Jobs.expects(:cancel_scheduled_job).with(
           :toggle_topic_closed, topic_timer_id: topic_timer.id
         )
@@ -142,9 +120,6 @@ RSpec.describe TopicTimer, type: :model do
 
       describe 'when execute_at is smaller than the current time' do
         it 'should enqueue the job immediately' do
-          freeze_time
-          topic_timer
-
           Jobs.expects(:enqueue_at).with(
             Time.zone.now, :toggle_topic_closed,
             topic_timer_id: topic_timer.id,
@@ -161,14 +136,9 @@ RSpec.describe TopicTimer, type: :model do
 
     describe 'when user is changed' do
       it 'should update the job' do
-        freeze_time
-        topic_timer
-
         Jobs.expects(:cancel_scheduled_job).with(
           :toggle_topic_closed, topic_timer_id: topic_timer.id
         )
-
-        admin = Fabricate(:admin)
 
         Jobs.expects(:enqueue_at).with(
           topic_timer.execute_at,
@@ -183,8 +153,7 @@ RSpec.describe TopicTimer, type: :model do
 
     describe 'when a open topic status update is created for an open topic' do
       fab!(:topic) { Fabricate(:topic, closed: false) }
-
-      let(:topic_timer) do
+      fab!(:topic_timer) do
         Fabricate(:topic_timer,
           status_type: described_class.types[:open],
           topic: topic
@@ -212,8 +181,7 @@ RSpec.describe TopicTimer, type: :model do
 
     describe 'when a close topic status update is created for a closed topic' do
       fab!(:topic) { Fabricate(:topic, closed: true) }
-
-      let(:topic_timer) do
+      fab!(:topic_timer) do
         Fabricate(:topic_timer,
           status_type: described_class.types[:close],
           topic: topic

@@ -222,11 +222,10 @@ fa_IR:
   bookmarks:
     reminders:
       at_desktop: "بار آینده من پشت میزم هستم"
-      later_today: "امروز کمی بعد <br/>{{date}}"
-      next_business_day: "روز کاری آینده <br/>{{date}}"
-      tomorrow: "فردا <br/>{{date}}"
-      next_week: "هفته ی آینده <br/>{{date}}"
-      next_month: "ماه آینده <br/>{{date}}"
+      later_today: "امروز"
+      tomorrow: "فردا"
+      next_week: "هفته بعد"
+      next_month: "ماه بعد"
       custom: "درج تاریخ و ساعت"
   groups:
     errors:
@@ -889,8 +888,6 @@ fa_IR:
     force_https: "اجبار به استفاده از HTTPS ، تا زمانی که HTTPS را کامل تنظیم نکرده‌اید این گزینه را فعال نکنید. آیا تمام CDN ها و شبکه‌های اجتماعی جهت ورود را بررسی کردید و تمام لوگو‌ها و وابستگی‌ها بدون مشکل با HTTPS کار می‌کنند؟"
     same_site_cookies: "استفاده از همان کوکی ها، آن‌ها از تمام درخواست های vector cross site جلوگیری می‌کنند(Lax یا Strict). توجه: این کار سختگیرانه فقط در سایت‌هایی که ورود اجباری دارند و از SSO استفاده می‌کنند قابل استفاده است."
     summary_score_threshold: "حداقل امتیاز برای یک نوشته که بتواند شامل \" خلاصه این موضوع\" شود"
-    summary_posts_required: "حداقل نوشته‌ها در این جستار قبل از اینکه \" خلاصه این موضوع\" فعال شود"
-    summary_likes_required: "حداقل پسندها در این جستار قبل از اینکه \" خلاصه این موضوع\" فعال شود"
     summary_percent_filter: "وقتی کاربر بر روی ' خلاصه این موضوع' کلیک کرد٬‌ % بهترین نوشته‌ها را نشان بده"
     enable_personal_messages: "اجازه ارسال پیام به کاربران سطح اعتماد 1 (قابل تنظیم با حداقل سطح اعتماد برای ارسال پیام). توجه کنید که همکاران در هر شرایطی می‌توانند پیام ارسال کنند."
     enable_long_polling: "message bus استفاده شده برای آگاه سازی می تواند برای رای گیری طولانی استفاده شود. "
@@ -960,7 +957,6 @@ fa_IR:
     enable_instagram_logins: "فعالسازی ورود با اینستاگرام، نیازمند \ninstagram_consumer_key and instagram_consumer_secret"
     instagram_consumer_key: "Consumer key اینستاگرام"
     instagram_consumer_secret: "Consumer secret اینستاگرام"
-    readonly_mode_during_backup: "فعالسازی حالت فقط خواندنی برای گرفتن نسخه پشتیبان"
     allow_restore: "اجازه بازیابی بده، که می‌تواند تمام اطلاعات سایت را جایگزین کند! نادرست را رها کن مگر اینکه قصد بازیابی نسخه پشتیبان را داری "
     maximum_backups: "حداکثر تعداد پشتیبان برای نگه داری بر روی دیسک. نسخه های پشتیبان قدیمی بطور خودکار پاک شده است"
     automatic_backups_enabled: "فعالسازی پشتیبان‌گیری خودکار در بازه زمانی مشخص"
@@ -1290,6 +1286,10 @@ fa_IR:
     existing_topic_moderator_post:
       one: "یک نوشته به مبحث موجود منتقل شد: %{topic_link}"
       other: "%{count} نوشته به مبحث موجود منتقل شد: %{topic_link}"
+  publish_page:
+    slug_errors:
+      blank: "نمی‌تواند خالی باشد"
+      invalid: "شامل نویسه‌های نامعتبر است"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "این پیام بعد از رسیدن به حداکثر تعداد پاسخ‌ها %{count} بسته شد."
@@ -1842,7 +1842,6 @@ fa_IR:
       why: "یک گزارش کوتاه از %{site_link} از آخرین باری که بازدید کردید در %{last_seen_at}"
       since_last_visit: "از آخرین بازدید شما"
       new_topics: "موضوعات جدید"
-      unread_messages: "پیام‌های خوانده نشده"
       unread_notifications: "اطلاعیه‌های خوانده نشده"
       liked_received: "پسند‌های دریافت شده"
       new_users: "کاربران جدید"

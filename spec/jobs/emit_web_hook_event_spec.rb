@@ -17,13 +17,13 @@ describe Jobs::EmitWebHookEvent do
 
   it 'raises an error when there is no event type' do
     expect do
-      subject.execute(web_hook_id: 1, payload: {})
+      subject.execute(web_hook_id: post_hook.id, payload: {})
     end.to raise_error(Discourse::InvalidParameters)
   end
 
   it 'raises an error when there is no payload' do
     expect do
-      subject.execute(web_hook_id: 1, event_type: 'post')
+      subject.execute(web_hook_id: post_hook.id, event_type: 'post')
     end.to raise_error(Discourse::InvalidParameters)
   end
 
@@ -239,17 +239,16 @@ describe Jobs::EmitWebHookEvent do
       stub_request(:post, post_hook.payload_url)
         .to_return(body: 'OK', status: 200)
 
-      WebHookEventType.all.pluck(:name).each do |name|
-        web_hook_id = Fabricate("#{name}_web_hook").id
+      topic_event_type = WebHookEventType.all.first
+      web_hook_id = Fabricate("#{topic_event_type.name}_web_hook").id
 
-        expect do
-          subject.execute(
-            web_hook_id: web_hook_id,
-            event_type: name,
-            payload: { test: "some payload" }.to_json
-          )
-        end.to change(WebHookEvent, :count).by(1)
-      end
+      expect do
+        subject.execute(
+          web_hook_id: web_hook_id,
+          event_type: topic_event_type.name,
+          payload: { test: "some payload" }.to_json
+        )
+      end.to change(WebHookEvent, :count).by(1)
     end
 
     it 'sets up proper request headers' do

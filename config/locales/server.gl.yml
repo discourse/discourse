@@ -475,6 +475,10 @@ gl:
   frequent_poster: "Publicador frecuente"
   redirected_to_top_reasons:
     new_user: "Benvido/a á nosa comunidade. Estes son os temas recentes máis populares."
+  publish_page:
+    slug_errors:
+      blank: "non pode quedar baleiro"
+      invalid: "contén caracteres incorrectos"
   login:
     admin_not_allowed_from_ip_address: "Non podes acceder como administrador desde este enderezo IP."
     new_registrations_disabled: "Neste momento non se permite o rexistro de novas contas."

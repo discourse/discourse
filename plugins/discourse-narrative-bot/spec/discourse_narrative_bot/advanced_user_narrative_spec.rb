@@ -725,7 +725,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
                                                "topic_id" => topic.id,
                                                "track" => described_class.to_s)
 
-        expect(user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME).exists?)
+        expect(user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative.badge_name).exists?)
           .to eq(true)
       end
     end

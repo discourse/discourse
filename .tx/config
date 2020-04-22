@@ -62,12 +62,6 @@ source_file = plugins/discourse-details/config/locales/server.en.yml
 source_lang = en
 type = YML
 
-[discourse-org.corepluginnginx-performance-reportserveryml]
-file_filter = plugins/discourse-nginx-performance-report/config/locales/server.<lang>.yml
-source_file = plugins/discourse-nginx-performance-report/config/locales/server.en.yml
-source_lang = en
-type = YML
-
 [discourse-org.core-plugin-local-dates-client-yml]
 file_filter = plugins/discourse-local-dates/config/locales/client.<lang>.yml
 source_file = plugins/discourse-local-dates/config/locales/client.en.yml

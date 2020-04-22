@@ -233,7 +233,7 @@ sv:
         instructions: |-
           Om du vill lära dig mer, välj <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> nedanför och <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bokmärk detta personliga meddelande**. Gör du det så väntar kanske en :gift: i framtiden!
         reply: |-
-          Utmärkt! Nu kan du enkelt hitta tillbaka till vår konversation när du vill, direkt från [fliken bokmärken under din profil](%{profile_page_url}/activity/bookmarks). Klicka bara på din profilbild uppe till höger. &#8599;
+          Utmärkt! Nu kan du enkelt hitta tillbaka till vår privata konversation när du vill, direkt från [fliken bokmärken under din profil](%{bookmark_url}). Klicka bara på din profilbild uppe till höger. &#8599;
         not_found: |-
           Ooops, jag ser inget bokmärke i detta ämne. Hittade du bokmärket under varje inlägg? Använd visa mer <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> för att synliggöra ytterligare funktioner vid behov.
       emoji:

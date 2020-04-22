@@ -23,6 +23,7 @@
         <div class="date-time-control from {{if fromSelected 'is-selected'}} {{if fromFilled 'is-filled'}}">
           {{d-icon "calendar-alt"}}
           {{d-button
+            id="from-date-time"
             action=(action "focusFrom")
             translatedLabel=formattedFrom
             class="date-time"}}
@@ -55,7 +56,7 @@
         {{#if fromSelected}}
           <div class="time-pickers">
             {{d-icon "far-clock"}}
-            {{input maxlength=5 placeholder="hh:mm" input=(action "setTime") type="time" value=(unbound time) class="time-picker"}}
+            {{input maxlength=5 placeholder="hh:mm" input=(action "setTime") type="time" value=time class="time-picker"}}
           </div>
         {{/if}}
 
@@ -63,7 +64,7 @@
         {{#if toDate}}
           <div class="time-pickers">
             {{d-icon "far-clock"}}
-            {{input maxlength=5 placeholder="hh:mm" input=(action "setToTime") type="time" value=(unbound toTime) class="time-picker"}}
+            {{input maxlength=5 placeholder="hh:mm" input=(action "setToTime") type="time" value=toTime class="time-picker"}}
           </div>
         {{/if}}
         {{/if}}
@@ -85,7 +86,7 @@
             <label class="control-label">
               {{i18n "discourse_local_dates.create.form.recurring_title"}}
             </label>
-            <p>{{{i18n "discourse_local_dates.create.form.recurring_description"}}}</p>
+            <p>{{html-safe (i18n "discourse_local_dates.create.form.recurring_description")}}</p>
             <div class="controls">
               {{combo-box
                 content=recurringOptions

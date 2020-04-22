@@ -95,6 +95,33 @@ RSpec.describe Admin::GroupsController do
       expect(group.group_users.where(owner: true).map(&:user))
         .to contain_exactly(user, admin)
     end
+
+    it 'returns not-found error when there is no group' do
+      group.destroy!
+
+      put "/admin/groups/#{group.id}/owners.json", params: {
+        group: {
+          usernames: user.username
+        }
+      }
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does not allow adding owners to an automatic group' do
+      group.update!(automatic: true)
+
+      expect do
+        put "/admin/groups/#{group.id}/owners.json", params: {
+          group: {
+            usernames: user.username
+          }
+        }
+      end.to_not change { group.group_users.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
+    end
   end
 
   describe '#remove_owner' do
@@ -107,6 +134,27 @@ RSpec.describe Admin::GroupsController do
 
       expect(response.status).to eq(200)
       expect(group.group_users.where(owner: true)).to eq([])
+    end
+
+    it 'returns not-found error when there is no group' do
+      group.destroy!
+
+      delete "/admin/groups/#{group.id}/owners.json", params: {
+        user_id: user.id
+      }
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does not allow removing owners from an automatic group' do
+      group.update!(automatic: true)
+
+      delete "/admin/groups/#{group.id}/owners.json", params: {
+        user_id: user.id
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
     end
   end
 

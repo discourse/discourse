@@ -32,6 +32,11 @@ RSpec.describe Jobs::CleanUpUnusedStagedUsers do
         before { staged_user.update!(moderator: true) }
         include_examples "does not delete"
       end
+
+      context "when job is disabled" do
+        before { SiteSetting.clean_up_unused_staged_users_after_days = 0 }
+        include_examples "does not delete"
+      end
     end
 
     context 'when staged user is not old enough' do

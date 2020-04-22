@@ -67,6 +67,7 @@ class TrustLevel3Requirements
 
   def requirements_lost?
     return false if trust_level_locked
+    return false if SiteSetting.default_trust_level > 2
 
     @user.suspended? ||
       @user.silenced? ||
@@ -142,7 +143,11 @@ class TrustLevel3Requirements
   end
 
   def num_topics_replied_to
-    @user.posts.select('distinct topic_id').where('created_at > ? AND post_number > 1', time_period.days.ago).count
+    @user.posts
+      .public_posts
+      .where("posts.created_at > ? AND posts.post_number > 1", time_period.days.ago)
+      .select("distinct topic_id")
+      .count
   end
 
   def min_topics_replied_to
@@ -150,7 +155,10 @@ class TrustLevel3Requirements
   end
 
   def topics_viewed_query
-    TopicViewItem.where(user_id: @user.id).select('topic_id')
+    TopicViewItem.where(user_id: @user.id)
+      .joins(:topic)
+      .where("topics.archetype <> ?", Archetype.private_message)
+      .select("topic_id")
   end
 
   def topics_viewed
@@ -218,7 +226,11 @@ class TrustLevel3Requirements
   end
 
   def num_likes_given
-    UserAction.where(user_id: @user.id, action_type: UserAction::LIKE).where('created_at > ?', time_period.days.ago).count
+    UserAction.where(user_id: @user.id, action_type: UserAction::LIKE)
+      .where("user_actions.created_at > ?", time_period.days.ago)
+      .joins(:target_topic)
+      .where("topics.archetype <> ?", Archetype.private_message)
+      .count
   end
 
   def min_likes_given
@@ -226,7 +238,10 @@ class TrustLevel3Requirements
   end
 
   def num_likes_received_query
-    UserAction.where(user_id: @user.id, action_type: UserAction::WAS_LIKED).where('created_at > ?', time_period.days.ago)
+    UserAction.where(user_id: @user.id, action_type: UserAction::WAS_LIKED)
+      .where("user_actions.created_at > ?", time_period.days.ago)
+      .joins(:target_topic)
+      .where("topics.archetype <> ?", Archetype.private_message)
   end
 
   def num_likes_received
@@ -239,7 +254,7 @@ class TrustLevel3Requirements
 
   def num_likes_received_days
     # don't do a COUNT(DISTINCT date(created_at)) here!
-    num_likes_received_query.pluck('date(created_at)').uniq.size
+    num_likes_received_query.pluck('date(user_actions.created_at)').uniq.size
   end
 
   def min_likes_received_days

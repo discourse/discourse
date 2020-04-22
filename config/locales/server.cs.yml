@@ -225,6 +225,12 @@ cs:
   too_late_to_edit: "Tento příspěvek byl vytvořen velmi dávno. Už ho není možné smazat ani upravovat."
   revert_version_same: "Aktuální verze je stejná jako verze, na kterou se pokoušíte vrátit."
   excerpt_image: "obrázek"
+  bookmarks:
+    reminders:
+      later_today: "Později během dnešního dne"
+      tomorrow: "Zítra"
+      next_week: "Další týden"
+      next_month: "Další měsíc"
   groups:
     errors:
       can_not_modify_automatic: "Nelze měnit automatické skupiny"
@@ -883,6 +889,10 @@ cs:
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
+  publish_page:
+    slug_errors:
+      blank: "nemůže zůstat prázdné"
+      invalid: "obsahuje neplatné znaky"
   topic_statuses:
     autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     autoclosed_disabled_lastpost: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
@@ -960,7 +970,6 @@ cs:
       why: "Krátký souhrn z webu %{site_link} od poslední návštěvy v %{last_seen_at}"
       since_last_visit: "Od poslední návštěvy"
       new_topics: "Nová témata"
-      unread_messages: "Nepřečtené zprávy"
       liked_received: "Obdržených 'líbí se'"
       new_users: "Noví uživatelé"
       popular_topics: "Populární témata"

@@ -4,7 +4,7 @@ if github.pr_json && (github.pr_json["additions"] || 0) > 250 || (github.pr_json
   warn("This pull request is big! We prefer smaller PRs whenever possible, as they are easier to review. Can this be split into a few smaller PRs?")
 end
 
-prettier_offenses = `yarn --silent prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"`.split("\n")
+prettier_offenses = `yarn --silent prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"`.split("\n")
 
 unless prettier_offenses.empty?
   fail(%{
@@ -22,9 +22,9 @@ end
 
 files = (git.added_files + git.modified_files)
   .select { |path| !path.start_with?("plugins/") }
-  .select { |path| path.end_with?("es6") || path.end_with?("rb") }
+  .select { |path| path.end_with?("es6") || path.end_with?("js") || path.end_with?("rb") }
 
-js_files = files.select { |path| path.end_with?(".js.es6") }
+js_files = files.select { |path| path.end_with?(".js.es6") || path.end_with?(".js") }
 js_test_files = js_files.select { |path| path.end_with?("-test.js.es6") }
 
 super_offenses = []

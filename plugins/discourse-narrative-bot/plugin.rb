@@ -178,7 +178,7 @@ after_initialize do
   self.on(:post_created) do |post, options|
     user = post.user
 
-    if user.enqueue_narrative_bot_job? && !options[:skip_bot]
+    if user&.enqueue_narrative_bot_job? && !options[:skip_bot]
       Jobs.enqueue(:bot_input,
         user_id: user.id,
         post_id: post.id,
@@ -188,7 +188,7 @@ after_initialize do
   end
 
   self.on(:post_edited) do |post|
-    if post.user.enqueue_narrative_bot_job?
+    if post.user&.enqueue_narrative_bot_job?
       Jobs.enqueue(:bot_input,
         user_id: post.user.id,
         post_id: post.id,
@@ -198,7 +198,7 @@ after_initialize do
   end
 
   self.on(:post_destroyed) do |post, options, user|
-    if user.enqueue_narrative_bot_job? && !options[:skip_bot]
+    if user&.enqueue_narrative_bot_job? && !options[:skip_bot]
       Jobs.enqueue(:bot_input,
         user_id: user.id,
         post_id: post.id,
@@ -209,7 +209,7 @@ after_initialize do
   end
 
   self.on(:post_recovered) do |post, _, user|
-    if user.enqueue_narrative_bot_job?
+    if user&.enqueue_narrative_bot_job?
       Jobs.enqueue(:bot_input,
         user_id: user.id,
         post_id: post.id,
@@ -237,6 +237,12 @@ after_initialize do
           input: input
         )
       end
+    end
+  end
+
+  self.add_model_callback(Bookmark, :after_commit, on: :create) do
+    if self.post && self.user.enqueue_narrative_bot_job?
+      Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: :bookmark)
     end
   end
 

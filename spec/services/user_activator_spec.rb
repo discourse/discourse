@@ -16,6 +16,8 @@ describe UserActivator do
     end
 
     it 'creates and send new email token if the existing token expired' do
+      now = freeze_time
+
       SiteSetting.email_token_valid_hours = 24
       user = Fabricate(:user)
       email_token = user.email_tokens.first
@@ -27,7 +29,7 @@ describe UserActivator do
       activator.activate
 
       user.reload
-      expect(user.email_tokens.last.created_at).to be_within_one_second_of(Time.zone.now)
+      expect(user.email_tokens.last.created_at).to eq_time(now)
     end
 
   end

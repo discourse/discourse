@@ -1,7 +1,7 @@
 {{#if showBackupStats}}
   <div class="backups">
     <h3 class="storage-stats-title">
-      <a href="{{get-url '/admin/backups'}}">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
+      <a href={{get-url "/admin/backups"}}>{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
     </h3>
     <p>
       {{#if backupStats.free_bytes}}
@@ -15,7 +15,7 @@
 
       {{#if backupStats.last_backup_taken_at}}
         <br>
-        {{{i18n "admin.dashboard.lastest_backup" date=(format-date backupStats.last_backup_taken_at leaveAgo="true")}}}
+        {{html-safe (i18n "admin.dashboard.lastest_backup" date=(format-date backupStats.last_backup_taken_at leaveAgo="true"))}}
       {{/if}}
     </p>
   </div>

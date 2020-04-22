@@ -4,22 +4,22 @@
 
     <pre class="badge-errors">{{errors}}</pre>
 
-    <!--
-    TODO we want some help pages for this, link to those instead
-    <p>
-      {{i18n "admin.badges.preview.error_help"}}
-    </p>
-    <ul>
-      <li><a href="https://meta.discourse.org/t/triggered-custom-badge-queries/19336">https://meta.discourse.org/t/triggered-custom-badge-queries/19336</a></li>
-    </ul>
-    -->
+    {{!--
+      TODO we want some help pages for this, link to those instead
+      <p>
+        {{i18n "admin.badges.preview.error_help"}}
+      </p>
+      <ul>
+        <li><a href="https://meta.discourse.org/t/triggered-custom-badge-queries/19336">https://meta.discourse.org/t/triggered-custom-badge-queries/19336</a></li>
+      </ul>
+    --}}
 
   {{else}}
     <p class="grant-count">
       {{#if count}}
-        {{{i18n "admin.badges.preview.grant_count" count=count}}}
+        {{html-safe (i18n "admin.badges.preview.grant_count" count=count)}}
       {{else}}
-        {{{i18n "admin.badges.preview.no_grant_count"}}}
+        {{html-safe (i18n "admin.badges.preview.no_grant_count")}}
       {{/if}}
     </p>
 
@@ -41,14 +41,14 @@
       </p>
       <ul>
         {{#each processedSample as |html|}}
-          <li>{{{html}}}</li>
+          <li>{{html-safe html}}</li>
         {{/each}}
       </ul>
     {{/if}}
 
     {{#if hasQueryPlan}}
       <div class="badge-query-plan">
-        {{{queryPlanHtml}}}
+        {{html-safe queryPlanHtml}}
       </div>
     {{/if}}
   {{/if}}

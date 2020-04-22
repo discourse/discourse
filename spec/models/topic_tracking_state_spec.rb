@@ -458,6 +458,7 @@ describe TopicTrackingState do
   end
 
   it "correctly handles seen categories" do
+    freeze_time 1.minute.ago
     user = Fabricate(:user)
     post
 
@@ -473,6 +474,7 @@ describe TopicTrackingState do
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(0)
 
+    unfreeze_time
     post.topic.touch(:created_at)
 
     report = TopicTrackingState.report(user)

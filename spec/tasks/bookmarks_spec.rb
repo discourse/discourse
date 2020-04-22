@@ -38,9 +38,15 @@ RSpec.describe "bookmarks tasks" do
     expect(Bookmark.where(post: post1, user: user1).count).to eq(1)
   end
 
-  it "respects the sync_limit if provided and stops creating bookmarks at the limit (so this can be run progrssively" do
-    invoke_task(1)
-    expect(Bookmark.all.count).to eq(1)
+  it "skips post actions where the post topic no longer exists and does not error" do
+    post1.topic.delete
+    post1.reload
+    expect { invoke_task }.not_to raise_error
+  end
+
+  it "skips post actions where the post no longer exists and does not error" do
+    post1.delete
+    expect { invoke_task }.not_to raise_error
   end
 
   def create_post_actions_and_existing_bookmarks

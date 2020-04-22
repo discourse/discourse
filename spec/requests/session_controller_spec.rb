@@ -252,6 +252,14 @@ RSpec.describe SessionController do
         end
       end
 
+      context "when timezone param is provided" do
+        it "sets the user_option timezone for the user" do
+          post "/session/email-login/#{email_token.token}.json", params: { timezone: "Australia/Melbourne" }
+          expect(response.status).to eq(200)
+          expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
+        end
+      end
+
       it "fails when user is suspended" do
         user.update!(
           suspended_till: 2.days.from_now,
@@ -563,9 +571,13 @@ RSpec.describe SessionController do
       sso.external_id = '   '
       sso.username = 'sam'
 
-      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      messages = track_log_messages(level: Logger::WARN) do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      end
 
+      expect(messages.length).to eq(0)
       expect(response.status).to eq(500)
+      expect(response.body).to include(I18n.t('sso.blank_id_error'))
     end
 
     it 'can handle invalid sso external ids due to banned word' do
@@ -580,8 +592,9 @@ RSpec.describe SessionController do
     end
 
     it 'can take over an account' do
+      user = Fabricate(:user, email: 'bill@bill.com')
+
       sso = get_sso("/")
-      user = Fabricate(:user)
       sso.email = user.email
       sso.external_id = 'abc'
       sso.username = 'sam'
@@ -593,6 +606,25 @@ RSpec.describe SessionController do
       expect(logged_on_user.email).to eq(user.email)
       expect(logged_on_user.single_sign_on_record.external_id).to eq("abc")
       expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+
+      # we are updating the email ... ensure auto group membership works
+
+      sign_out
+
+      SiteSetting.email_editable = false
+      SiteSetting.sso_overrides_email = true
+
+      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'jane.com')
+      sso = get_sso("/")
+      sso.email = "hello@jane.com"
+      sso.external_id = 'abc'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+      expect(logged_on_user.email).to eq('hello@jane.com')
+      expect(group.users.count).to eq(1)
     end
 
     def sso_for_ip_specs
@@ -718,6 +750,8 @@ RSpec.describe SessionController do
     end
 
     it 'allows you to create an account' do
+      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'bob.com')
+
       sso = get_sso('/a/')
       sso.external_id = '666' # the number of the beast
       sso.email = 'bob@bob.com'
@@ -737,6 +771,8 @@ RSpec.describe SessionController do
       expect(response).to redirect_to('/a/')
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+      expect(group.users.where(id: logged_on_user.id).count).to eq(1)
 
       # ensure nothing is transient
       logged_on_user = User.find(logged_on_user.id)
@@ -1165,12 +1201,9 @@ RSpec.describe SessionController do
         SiteSetting.enable_local_logins_via_email = false
       end
       it 'doesnt matter, logs in correctly' do
-        events = DiscourseEvent.track_events do
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
-        end
-
+        post "/session.json", params: {
+          login: user.username, password: 'myawesomepassword'
+        }
         expect(response.status).to eq(200)
       end
     end

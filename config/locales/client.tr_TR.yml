@@ -29,7 +29,6 @@ tr_TR:
       time: "h:mm a"
       time_short_day: "ggg, SS:dd"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM, YYYY h:mm a"
@@ -263,18 +262,17 @@ tr_TR:
     bookmarks:
       created: "bu gönderiyi işaretledin"
       not_bookmarked: "bu yazıya yer işareti koy"
-      created_with_reminder: "bu gönderiyi %{date} adresinde bir hatırlatıcı ile yer işaretlerine eklediniz"
       remove: "İşareti Kaldır"
       confirm_clear: "Bu konudaki tüm yer işaretlerinizi silmek istediğinizden emin misiniz?"
       save: "Kaydet"
       no_timezone: 'Henüz bir saat dilimi belirlemediniz. Hatırlatıcı ayarlayamazsınız. <a href="%{basePath}/my/preferences/profile">Profilinizde</a> bir tane oluşturun.'
       reminders:
         at_desktop: "Bir dahaki sefere masaüstümdeyim"
-        later_today: "Bugün daha sonra <br/> {{date}}"
-        next_business_day: "Bir sonraki iş günü <br/> {{date}}"
-        tomorrow: "Yarın <br/> {{date}}"
-        next_week: "Gelecek hafta <br/> {{date}}"
-        next_month: "Gelecek ay <br/> {{date}}"
+        later_today: "Bugün ilerleyen saatlerde"
+        tomorrow: "Yarın"
+        next_week: "Gelecek hafta"
+        later_this_week: "Bu hafta içinde"
+        next_month: "Gelecek ay"
         custom: "Özel tarih ve saat"
     drafts:
       resume: "Sürdür"
@@ -538,6 +536,7 @@ tr_TR:
         deny: "Reddet"
         denied: "reddedildi"
         undone: "istek reddedildi"
+        handle: "üyelik isteğini yerine getir"
       manage:
         title: "Yönet"
         name: "İsim"
@@ -964,10 +963,6 @@ tr_TR:
         success_staff: "Şu anki adresine bir e-posta gönderdik. Lütfen doğrulama bilgilendirmelerini takip et."
       change_avatar:
         title: "Profil resmini değiştir"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baz alındı"
-        gravatar_title: "Profil görselini \"Gravatar web sitesi\"nde değiştir"
-        gravatar_failed: "Bu e-posta adresine sahip bir Gravatar bulamadık."
-        refresh_gravatar_title: "Gravatar profil görselini yenile"
         letter_based: "Sistem profil görseli atadı"
         uploaded_avatar: "Kişisel resim"
         uploaded_avatar_empty: "Kişisel bir resim ekle"
@@ -1250,6 +1245,8 @@ tr_TR:
         back: "Geri Dön"
         again: "Tekrar Dene"
         fixed: "Sayfayı Yükle"
+    modal:
+      close: "kapat"
     close: "Kapat"
     assets_changed_confirm: "Bu site henüz güncellendi. Son hali için sayfayı yenilemek ister misin?"
     logout: "Çıkış yaptın."
@@ -1477,7 +1474,6 @@ tr_TR:
       objects: Nesneler
       symbols: Semboller
       flags: Bayraklar
-      custom: Özel emojiler
       recent: Son zamanlarda kullanılmış
       default_tone: Görünüm rengi yok
       light_tone: Açık görünüm tonu
@@ -1485,6 +1481,7 @@ tr_TR:
       medium_tone: Orta görünüm tonu
       medium_dark_tone: Orta koyu görünüm tonu
       dark_tone: Koyu görünüm tonu
+      default: Özel emojiler
     shared_drafts:
       title: "Paylaşılan taslaklar"
       notice: "Bu konu, yalnızca <b>{{category}}</b> kategorisini görebilen kişiler tarafından görülebilir."
@@ -1634,6 +1631,7 @@ tr_TR:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2410,9 +2408,8 @@ tr_TR:
             button: "HTML"
       bookmarks:
         create: "Yer işareti oluştur"
+        created: "Oluşturuldu"
         name: "İsim"
-        name_placeholder: "Daha kolay hatırlayabilmeniz için yer işaretini adlandırın"
-        set_reminder: "Hatırlatıcı kur"
     category:
       can: "yapabilir&hellip;"
       none: "(kategori yok)"
@@ -3839,7 +3836,6 @@ tr_TR:
           staff: "Görevli"
           suspended: "Askıya Alınmış"
           silenced: "Susturuldu"
-          suspect: "Şüpheli"
           staged: "Aşamalı"
         approved: "Onaylanmış mı?"
         titles:
@@ -3856,7 +3852,6 @@ tr_TR:
           moderators: "Moderatörler"
           silenced: "Susturulmuş Kullanıcılar"
           suspended: "Askıya Alınan Kullanıcılar"
-          suspect: "Şüpheli Kullanıcılar"
           staged: "Aşamalı Kullanıcılar"
         not_verified: "Doğrulanmadı"
         check_email:
@@ -4214,6 +4209,7 @@ tr_TR:
         help: "Herkese açık yeni bir emoji ekle. (PROTIP: birden çok dosyayı tek seferde sürükleyip bırakabilirsin)"
         add: "Yeni Emoji Ekle"
         name: "İsim"
+        group: "Grup"
         image: "Resim"
         delete_confirm: ":%{name}: emojisini silmek istediğine emin misin?"
       embedding:
@@ -4240,7 +4236,6 @@ tr_TR:
         save: "Gömme Ayarlarını Kaydet"
       permalink:
         title: "Kalıcı Bağlantılar"
-        description: "Lütfen bunun yalnızca harici kaynaklar için geçerli olduğunu unutmayın, forumunuzda yayınlanan bağlantılar yönlendirilmeyecektir."
         url: "URL"
         topic_id: "Konu ID"
         topic_title: "Konu"

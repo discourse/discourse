@@ -155,7 +155,7 @@ class Wizard
           id: 'theme_previews',
           type: 'component',
           required: !default_theme_override,
-          value: scheme_id
+          value: scheme_id || ColorScheme::LIGHT_THEME_ID
         )
 
         # fix for the case when base_scheme is nil
@@ -181,11 +181,16 @@ class Wizard
           next unless scheme_name.present? && ColorScheme.is_base?(scheme_name)
 
           name = I18n.t("color_schemes.#{scheme_name.downcase.gsub(' ', '_')}_theme_name")
-
           theme = nil
           scheme = ColorScheme.find_by(base_scheme_id: scheme_name, via_wizard: true)
+          is_light_theme = (scheme_name == ColorScheme::LIGHT_THEME_ID)
           scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: scheme_name)
+
           themes = Theme.where(color_scheme_id: scheme.id).order(:id).to_a
+          if is_light_theme
+            themes = (themes || []).concat(Theme.where(color_scheme_id: nil).order(:id).to_a)
+            themes.sort_by(&:id)
+          end
           theme = themes.find(&:default?)
           theme ||= themes.first
 

@@ -29,7 +29,6 @@ fi:
       time: "H:mm"
       time_short_day: "ddd HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMMM[ta] H:mm"
       long_no_year_no_time: "D. MMMM[ta]"
       full_no_year_no_time: "Do MMMM[ta]"
       long_with_year: "D. MMMM[ta] YYYY H:mm"
@@ -264,19 +263,23 @@ fi:
     bookmarks:
       created: "olet lisännyt tämän viestin kirjanmerkkeihisi"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
-      created_with_reminder: "olet kirjanmerkinnyt tämän viestin ja siitä muistutetaan %{date}"
+      created_with_at_desktop_reminder: "kirjanmerkitsit tämän viestin ja sinua muistutetaan siitä kun seuraavan kerran olet työpöytäympäristössäsi"
       remove: "Poista kirjanmerkki"
       confirm_clear: "Haluatko varmasti poistaa kaikki kirjanmerkkisi tästä ketjusta?"
       save: "Tallenna"
       no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se  <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
+      invalid_custom_datetime: "Antamasi päivämäärä ja kellonaika ei kelpaa, yritä uudelleen."
+      list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
       reminders:
         at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
-        later_today: "Myöhemmin tänään  <br/>{{date}}"
-        next_business_day: "Seuraavana arkipäivänä <br/>{{date}}"
-        tomorrow: "Huomenna <br/>{{date}}"
-        next_week: "Ensi viikolla <br/>{{date}}"
-        next_month: "Ensi kuussa <br/>{{date}}"
+        later_today: "Myöhemmin tänään"
+        next_business_day: "Seuraavana arkipäivänä"
+        tomorrow: "Huomenna"
+        next_week: "Ensi viikolla"
+        later_this_week: "Myöhemmin tällä viikolla"
+        next_month: "Ensi kuussa"
         custom: "Valitse päivämäärä ja kellonaika"
+        none: "Muistutus ei tarpeen"
     drafts:
       resume: "Jatka"
       remove: "Poista"
@@ -539,6 +542,7 @@ fi:
         deny: "Hylkää"
         denied: "hylättiin"
         undone: "pyyntö peruttu"
+        handle: "käsittele jäsenyyshakemus"
       manage:
         title: "Hallinnoi"
         name: "Nimi"
@@ -866,6 +870,7 @@ fi:
         deleted_posts: "poistettua viestiä"
         suspensions: "hyllytyksiä"
         warnings_received: "varoituksia"
+        rejected_posts: "hylättyjä viestejä"
       messages:
         all: "Kaikki"
         inbox: "Saapuneet"
@@ -967,10 +972,6 @@ fi:
         success_staff: "Lähetimme sähköpostia nykyiseen osoitteeseesi. Noudata vahvistusohjeita."
       change_avatar:
         title: "Vaihda profiilikuvasi"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, osoitteesta"
-        gravatar_title: "Vaihda profiilikuvasi Gravatar-sivustolla"
-        gravatar_failed: "Tällä sähköpostiosoitteella ei löytynyt Gravataria."
-        refresh_gravatar_title: "Päivitä Gravatar"
         letter_based: "Sivuston luoma profiilikuva"
         uploaded_avatar: "Oma kuva"
         uploaded_avatar_empty: "Lisää oma kuva"
@@ -1252,6 +1253,8 @@ fi:
         back: "Mene takaisin"
         again: "Yritä uudestaan"
         fixed: "Lataa sivu"
+    modal:
+      close: "sulje"
     close: "Sulje"
     assets_changed_confirm: "Sivustolla on tehty päivityksiä. Ladataanko uudelleen?"
     logout: "Sinut kirjattiin ulos."
@@ -1481,7 +1484,6 @@ fi:
       objects: Esineet
       symbols: Symbolit
       flags: Liputukset
-      custom: Mukautetut emojit
       recent: Hiljattain käytetyt
       default_tone: Ei ihonsävyä
       light_tone: Vaalea ihonväri
@@ -1489,6 +1491,7 @@ fi:
       medium_tone: Ruskea ihonväri
       medium_dark_tone: Tummanruskea ihonväri
       dark_tone: Tumma ihonväri
+      default: Mukautetut emojit
     shared_drafts:
       title: "Jaetut luonnokset"
       notice: "Tämä ketju näkyy vain niille, jotka näkevät <b>{{category}}</b> -alueen."
@@ -1638,6 +1641,7 @@ fi:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2414,9 +2418,8 @@ fi:
             button: "HTML"
       bookmarks:
         create: "Luo kirjanmerkki"
+        created: "Luotu"
         name: "Nimi"
-        name_placeholder: "Anna kirjanmerkille nimi muistisi virkistämiseksi"
-        set_reminder: "Aseta muistutus"
         actions:
           delete_bookmark:
             name: "Poista kirjanmerkki"
@@ -3847,7 +3850,6 @@ fi:
           staff: "Henkilökunta"
           suspended: "Hyllytetyt"
           silenced: "Hiljennetty"
-          suspect: "Epäilty"
           staged: "Esikäyttäjät"
         approved: "Hyväksytty?"
         titles:
@@ -3864,7 +3866,6 @@ fi:
           moderators: "Valvojat"
           silenced: "Hiljennetyt käyttäjät"
           suspended: "Hyllytetyt käyttäjät"
-          suspect: "Epäillyt käyttäjät"
           staged: "Esikäyttäjät"
         not_verified: "Todentamaton"
         check_email:
@@ -4222,6 +4223,7 @@ fi:
         help: "Lisää uusi emoji joka on kaikkien käytettävissä. (Voit raahata useita tiedostoja kerralla)"
         add: "Lisää uusi emoji"
         name: "Nimi"
+        group: "Ryhmä"
         image: "Kuva"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
       embedding:
@@ -4248,7 +4250,6 @@ fi:
         save: "Tallenna upotusasetukset"
       permalink:
         title: "Ikilinkit"
-        description: "Huomioi että tämä vaikuttaa vain ulkoisiin lähteisiin, palstallesi laitettuja linkkejä ei uudelleenohjata."
         url: "URL"
         topic_id: "Ketjun ID"
         topic_title: "Ketju"

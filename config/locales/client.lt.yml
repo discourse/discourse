@@ -30,7 +30,6 @@ lt:
     dates:
       time: "H:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMMM D H:mm"
       long_no_year_no_time: "MMMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "YYYY MMMM D H:mm"
@@ -287,6 +286,12 @@ lt:
       created: "jūs pažymėjot šį įrašą"
       remove: "Pašalinti Žymę"
       save: "Saugoti"
+      reminders:
+        later_today: "Šiandien vėliau"
+        tomorrow: "Rytoj"
+        next_week: "Kitą savaitę"
+        later_this_week: "Šia savaitę vėliau"
+        next_month: "Kitą mėnesį"
     drafts:
       resume: "Grįžti"
       remove: "Pašalinti"
@@ -755,9 +760,6 @@ lt:
         success: "Mes išsiunteme laišką nurodytu el. pašto adresu. Prašome sekti patvirtinimo instrukcijas."
       change_avatar:
         title: "Pakeisti profilio nuotrauką"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, paremtas"
-        gravatar_title: "Pakeisti paskyrą Gravatar'o puslapyje"
-        refresh_gravatar_title: "Atnaujinti Gravatar'ą"
         letter_based: "Sistema pridėjo profilio nuotrauką"
         uploaded_avatar: "Paveiksliukas"
         uploaded_avatar_empty: "Pridėti paveiksliuką"
@@ -974,6 +976,8 @@ lt:
         back: "Grįžti Atgal"
         again: "Bandyti dar kartą"
         fixed: "Užkrauti Puslapį"
+    modal:
+      close: "uždaryti"
     close: "Uždaryti"
     assets_changed_confirm: "Ši svetainė ka tik buvo atnaujinta. Perkrauti, kad matytumėte naujausią versiją?"
     logout: "Jūs buvote atjungtas nuo sistemos."
@@ -1246,6 +1250,7 @@ lt:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1872,6 +1877,7 @@ lt:
           html_part:
             button: "HTML"
       bookmarks:
+        created: "Sukurta"
         name: "Vardas"
     category:
       can: "galimas&hellip;"
@@ -2821,7 +2827,6 @@ lt:
           active: "Aktyvūs"
           staff: "Komanda"
           suspended: "Sustabdyti"
-          suspect: "Įtartini"
         approved: "Patvirtinta?"
         titles:
           active: "Aktyvūs vartotojai"
@@ -2837,7 +2842,6 @@ lt:
           moderators: "Moderatoriai"
           silenced: "Nutildyti nariai"
           suspended: "Sustabdyti vartotojai"
-          suspect: "Įtartini Vartotojai"
         not_verified: "Nepatvirtinta"
         check_email:
           title: "Atskleisk šio vartotojo el. pašto adresą"
@@ -3130,6 +3134,7 @@ lt:
         help: "Pridėti naują šypsenėlę, kurią galės matyti visi (patarimas: kelis failus kelk tuo pačiu metu)"
         add: "Pridėti Naują Šypsenėlę"
         name: "Vardas"
+        group: "Grupė"
         image: "Paveiksliukas"
         delete_confirm: "Ar tikrai nori ištrinti :%{name}: šypsenėlę?"
       embedding:

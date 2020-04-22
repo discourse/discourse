@@ -416,12 +416,17 @@ describe CookedPostProcessor do
       end
 
       context "with unsized images" do
+        fab!(:upload) { Fabricate(:image_upload, width: 123, height: 456) }
 
-        fab!(:post) { Fabricate(:post_with_unsized_images) }
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}">
+          HTML
+        end
+
         let(:cpp) { CookedPostProcessor.new(post) }
 
         it "adds the width and height to images that don't have them" do
-          FastImage.expects(:size).returns([123, 456])
           cpp.post_process
           expect(cpp.html).to match(/width="123" height="456"/)
           expect(cpp).to be_dirty
@@ -430,6 +435,8 @@ describe CookedPostProcessor do
       end
 
       context "with large images" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -441,13 +448,9 @@ describe CookedPostProcessor do
         before do
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
         end
 
         it "generates overlay information" do
-          OptimizedImage.expects(:resize).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
@@ -468,6 +471,8 @@ describe CookedPostProcessor do
           end
 
           it 'should not add lightbox' do
+            FastImage.expects(:size).returns([1750, 2000])
+
             cpp.post_process
 
             expect(cpp.html).to match_html <<~HTML
@@ -482,6 +487,8 @@ describe CookedPostProcessor do
           end
 
           it 'should not add lightbox' do
+            FastImage.expects(:size).returns([1750, 2000])
+
             cpp.post_process
 
             expect(cpp.html).to match_html <<~HTML
@@ -495,6 +502,8 @@ describe CookedPostProcessor do
             end
 
             it 'should not add lightbox' do
+              FastImage.expects(:size).returns([1750, 2000])
+
               SiteSetting.crawl_images = true
               cpp.post_process
 
@@ -537,8 +546,8 @@ describe CookedPostProcessor do
 
           context "when the upload is attached to the correct post" do
             before do
+              FastImage.expects(:size).returns([1750, 2000])
               OptimizedImage.expects(:resize).returns(true)
-              FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
               Discourse.store.class.any_instance.expects(:has_been_uploaded?).at_least_once.returns(true)
               upload.update(secure: true, access_control_post: post)
             end
@@ -568,6 +577,8 @@ describe CookedPostProcessor do
       end
 
       context "with tall images" do
+        fab!(:upload) { Fabricate(:image_upload, width: 860, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -578,10 +589,6 @@ describe CookedPostProcessor do
 
         before do
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([860, 2000])
-          OptimizedImage.expects(:resize).never
-          OptimizedImage.expects(:crop).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "crops the image" do
@@ -594,6 +601,8 @@ describe CookedPostProcessor do
       end
 
       context "with iPhone X screenshots" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1125, height: 2436) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -604,10 +613,6 @@ describe CookedPostProcessor do
 
         before do
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1125, 2436])
-          OptimizedImage.expects(:resize).returns(true)
-          OptimizedImage.expects(:crop).never
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "crops the image" do
@@ -625,6 +630,8 @@ describe CookedPostProcessor do
       end
 
       context "with large images when using subfolders" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="/subfolder#{upload.url}">
@@ -635,13 +642,10 @@ describe CookedPostProcessor do
 
         before do
           set_subfolder "/subfolder"
+          stub_request(:get, "http://#{Discourse.current_hostname}/subfolder#{upload.url}").to_return(status: 200, body: File.new(Discourse.store.path_for(upload)))
 
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
-          OptimizedImage.expects(:resize).returns(true)
-
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "generates overlay information" do
@@ -670,6 +674,8 @@ describe CookedPostProcessor do
       end
 
       context "with title and alt" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" title="WAT" alt="RED">
@@ -681,9 +687,6 @@ describe CookedPostProcessor do
         before do
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
-          OptimizedImage.expects(:resize).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "generates overlay information using image title and ignores alt" do
@@ -701,6 +704,8 @@ describe CookedPostProcessor do
       end
 
       context "with title only" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" title="WAT">
@@ -712,9 +717,6 @@ describe CookedPostProcessor do
         before do
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
-          OptimizedImage.expects(:resize).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "generates overlay information using image title" do
@@ -732,6 +734,8 @@ describe CookedPostProcessor do
       end
 
       context "with alt only" do
+        fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" alt="RED">
@@ -743,9 +747,6 @@ describe CookedPostProcessor do
         before do
           SiteSetting.max_image_height = 2000
           SiteSetting.create_thumbnails = true
-          FastImage.expects(:size).returns([1750, 2000])
-          OptimizedImage.expects(:resize).returns(true)
-          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
         end
 
         it "generates overlay information using image alt" do
@@ -1512,7 +1513,7 @@ describe CookedPostProcessor do
 
       context "and there is enough disk space" do
 
-        before { cpp.expects(:disable_if_low_on_disk_space).returns(false) }
+        before { cpp.expects(:disable_if_low_on_disk_space) }
 
         it "does not run when the system user updated the post" do
           post.last_editor_id = Discourse.system_user.id
@@ -1528,7 +1529,7 @@ describe CookedPostProcessor do
             Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
 
             delay = SiteSetting.editing_grace_period + 1
-            Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
+            Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id).once
 
             cpp.pull_hotlinked_images
           end
@@ -1554,7 +1555,7 @@ describe CookedPostProcessor do
 
     it "does nothing when there's enough disk space" do
       SiteSetting.expects(:download_remote_images_to_local=).never
-      expect(cpp.disable_if_low_on_disk_space).to eq(false)
+      cpp.disable_if_low_on_disk_space
     end
 
     context "when there's not enough disk space" do
@@ -1564,7 +1565,8 @@ describe CookedPostProcessor do
       it "disables download_remote_images_threshold and send a notification to the admin" do
         StaffActionLogger.any_instance.expects(:log_site_setting_change).once
         SystemMessage.expects(:create_from_system_user).with(Discourse.site_contact_user, :download_remote_images_disabled).once
-        expect(cpp.disable_if_low_on_disk_space).to eq(true)
+        cpp.disable_if_low_on_disk_space
+
         expect(SiteSetting.download_remote_images_to_local).to eq(false)
       end
 
@@ -1572,7 +1574,8 @@ describe CookedPostProcessor do
         SiteSetting.s3_access_key_id = "s3-access-key-id"
         SiteSetting.s3_secret_access_key = "s3-secret-access-key"
         SiteSetting.enable_s3_uploads = true
-        expect(cpp.disable_if_low_on_disk_space).to eq(false)
+        cpp.disable_if_low_on_disk_space
+
         expect(SiteSetting.download_remote_images_to_local).to eq(true)
       end
 
@@ -1602,7 +1605,7 @@ describe CookedPostProcessor do
       Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
 
       delay = SiteSetting.editing_grace_period + 1
-      Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
+      Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id).once
 
       cpp.pull_hotlinked_images
     end
@@ -1777,14 +1780,14 @@ describe CookedPostProcessor do
       small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
       reply = Fabricate(:post, topic: topic, raw: raw)
 
-      freeze_time Time.zone.now do
+      freeze_time do
         topic.bumped_at = 1.day.ago
         CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
 
         expect(topic.ordered_posts.pluck(:id))
           .to eq([post.id, hidden.id, small_action.id, reply.id])
 
-        expect(topic.bumped_at).to eq(1.day.ago)
+        expect(topic.bumped_at).to eq_time(1.day.ago)
         expect(reply.raw).to eq("and this is the third reply")
         expect(reply.revisions.count).to eq(1)
         expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])

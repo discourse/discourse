@@ -18,15 +18,17 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.0.1'
-  gem 'actionpack', '6.0.1'
-  gem 'actionview', '6.0.1'
-  gem 'activemodel', '6.0.1'
-  gem 'activerecord', '6.0.1'
-  gem 'activesupport', '6.0.1'
-  gem 'railties', '6.0.1'
+  gem 'actionmailer', '6.0.2.2'
+  gem 'actionpack', '6.0.2.2'
+  gem 'actionview', '6.0.2.2'
+  gem 'activemodel', '6.0.2.2'
+  gem 'activerecord', '6.0.2.2'
+  gem 'activesupport', '6.0.2.2'
+  gem 'railties', '6.0.2.2'
   gem 'sprockets-rails'
 end
+
+gem 'json'
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # This is a desired upgrade we should get to.
@@ -120,9 +122,6 @@ gem 'sanitize'
 gem 'sidekiq'
 gem 'mini_scheduler'
 
-# for sidekiq web
-gem 'tilt', require: false
-
 gem 'execjs', require: false
 gem 'mini_racer'
 
@@ -161,10 +160,7 @@ group :test, :development do
   gem 'listen', require: false
   gem 'certified', require: false
   gem 'fabrication', require: false
-
-  # TODO: upgrading to 1.10.1 cause it breaks our test suite.
-  # We want our test suite fixed though to support this upgrade.
-  gem 'mocha', '1.8.0', require: false
+  gem 'mocha', require: false
 
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
 
@@ -181,6 +177,7 @@ group :test, :development do
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
   gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
+  gem "rubocop-rspec", require: false
   gem 'parallel_tests'
 end
 
@@ -208,7 +205,7 @@ gem 'htmlentities', require: false
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
 gem 'flamegraph', require: false
-gem 'rack-mini-profiler', require: false
+gem 'rack-mini-profiler', require: ['enable_rails_patches']
 
 gem 'unicorn', require: false, platform: :mri
 gem 'puma', require: false
@@ -258,3 +255,10 @@ end
 gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
+
+# These are not direct dependencies, but we need to restrict
+# versions for compatibility with https://github.com/discourse/discourse-zendesk-plugin
+# These restrictions can be removed once the zendesk_api gem is updated
+# for newer versions of hashie and faraday
+gem 'hashie', '< 4.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/422
+gem 'faraday', '< 1.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/421

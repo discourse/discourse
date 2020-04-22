@@ -1,0 +1,29 @@
+import DiscourseRoute from "discourse/routes/discourse";
+import showModal from "discourse/lib/show-modal";
+
+export default DiscourseRoute.extend({
+  // TODO: make this automatic using an `{{outlet}}`
+  renderTemplate: function() {
+    this.render("admin/templates/logs/staff-action-logs", {
+      into: "adminLogs"
+    });
+  },
+
+  activate() {
+    let controller = this.controllerFor("admin-logs-staff-action-logs");
+    if (controller.filters === null) controller.resetFilters();
+  },
+
+  actions: {
+    showDetailsModal(model) {
+      showModal("admin-staff-action-log-details", { model, admin: true });
+      this.controllerFor("modal").set("modalClass", "log-details-modal");
+    },
+
+    showCustomDetailsModal(model) {
+      let modal = showModal("admin-theme-change", { model, admin: true });
+      this.controllerFor("modal").set("modalClass", "history-modal");
+      modal.loadDiff();
+    }
+  }
+});

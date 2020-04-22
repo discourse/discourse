@@ -1,10 +1,18 @@
 {{#d-section pageClass="users"}}
   {{#load-more selector=".directory tbody tr" action=(action "loadMore")}}
     <div class="container">
-      <div class='directory'>
-        {{plugin-outlet name="users-top" connectorTagName='div' args=(hash model=model)}}
-        <div class='clearfix'>
-          {{period-chooser period=period onChange=(action (mut period))}}
+      <div class="users-directory directory">
+        {{plugin-outlet name="users-top" connectorTagName="div" args=(hash model=model)}}
+        <div class="directory-controls">
+          <div class="period-controls">
+            {{period-chooser period=period onChange=(action (mut period)) fullDay=false}}
+            {{#if lastUpdatedAt}}
+              <div class="directory-last-updated">
+                {{i18n "directory.last_updated"}}
+                {{lastUpdatedAt}}
+              </div>
+            {{/if}}
+          </div>
           {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
         </div>
 
@@ -34,7 +42,7 @@
 
             {{conditional-loading-spinner condition=model.loadingMore}}
           {{else}}
-            <div class='clearfix'></div>
+            <div class="clearfix"></div>
             <p>{{i18n "directory.no_results"}}</p>
           {{/if}}
         {{/conditional-loading-spinner}}

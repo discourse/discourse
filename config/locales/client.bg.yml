@@ -26,9 +26,9 @@ bg:
         thousands: "{{number}}k "
         millions: "{{number}}M "
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -260,11 +260,11 @@ bg:
       remove: "Премахнете отметката"
       save: "Запази"
       reminders:
-        later_today: "По-късно днес <br/>{{date}}"
-        next_business_day: "Следващият работен ден <br/>{{date}}"
-        tomorrow: "Утре <br/>{{date}}"
-        next_week: "Следващата седмица <br/>{{date}}"
-        next_month: "Следващият месец <br/>{{date}}"
+        later_today: "По-късно днес"
+        tomorrow: "Утре"
+        next_week: "Следваща седмица"
+        later_this_week: "По-късно тази седмица"
+        next_month: "Следващия месец"
     drafts:
       resume: "Продължи"
       remove: "Премахване"
@@ -746,9 +746,6 @@ bg:
         success_staff: "Изпратихме съобщение на този адрес. Моля, следвайте инструкциите за потвърждаване."
       change_avatar:
         title: "Сменете аватара на вашия профил "
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, базиран на"
-        gravatar_title: "Промени вашият аватар на сайта на Граватар"
-        refresh_gravatar_title: "Опреснете Gravatar"
         letter_based: "Системен аватар"
         uploaded_avatar: "Собствено изображение"
         uploaded_avatar_empty: "Добавете собствено изображение"
@@ -967,6 +964,8 @@ bg:
         back: "Назад"
         again: "Опитайте отново"
         fixed: "Заредете страницата"
+    modal:
+      close: "затвори"
     close: "Затвори"
     assets_changed_confirm: "Страницата беше обновена. Презаредете, за да видите последната версия."
     logout: "Вие бяхте отписан."
@@ -1679,6 +1678,7 @@ bg:
           side_by_side_markdown:
             title: "Покажи разликите на неподправения източник side-by-side "
       bookmarks:
+        created: "Създадени"
         name: "Име"
     category:
       can: "can&hellip;"
@@ -2541,7 +2541,6 @@ bg:
           active: "Активни"
           staff: "Персонал"
           suspended: "Отстранени"
-          suspect: "Съмнителен "
         approved: "Одобрен?"
         titles:
           active: "Активни потребители"
@@ -2556,7 +2555,6 @@ bg:
           admins: "Админи"
           moderators: "Модератори"
           suspended: "Отстранени"
-          suspect: "Съмнителни потребители "
         not_verified: "Непроверен "
         check_email:
           title: "Разкрий имейла на този потребител"
@@ -2834,6 +2832,7 @@ bg:
         help: "Добави нови емотикони, които ще бъдат достъпни до всички. (Съвет: Може да дръпнете и пуснете много файлове наведнъж). "
         add: "Добави нова емотикона "
         name: "Име "
+        group: "Група"
         image: "Изображение "
         delete_confirm: "Сигурни ли сте че искате да изтриете тази :%{name}% емотикона? "
       embedding:

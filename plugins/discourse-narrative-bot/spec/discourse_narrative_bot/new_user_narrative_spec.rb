@@ -247,7 +247,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      it 'should create the right reply' do
+      it 'should create the right reply when bookmarks with reminders are enabled' do
         post.update!(user: discobot_user)
         narrative.expects(:enqueue_timeout_job).with(user)
 
@@ -256,7 +256,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         profile_page_url = "#{Discourse.base_url}/u/#{user.username}"
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', profile_page_url: profile_page_url, base_uri: '')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', bookmark_url: "#{profile_page_url}/activity/bookmarks-with-reminders", base_uri: '')}
 
           #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.instructions', base_uri: '')}
         RAW
@@ -988,7 +988,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           )
 
           expect(user.badges.where(
-            name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
+            name: DiscourseNarrativeBot::NewUserNarrative.badge_name).exists?
           ).to eq(true)
         end
       end

@@ -47,6 +47,7 @@ sv:
       generic: Det uppstod ett fel vid import av det temat
       about_json: "Importfel: about.json finns inte eller är ogiltig"
       about_json_values: "about.json innehåller ogiltiga värden: %{errors}"
+      modifier_values: "about.json modifierare innehåller ogiltiga värden: %{errors}"
       git: "Fel vid kloning av git-lagringsplats, åtkomst nekas eller lagringsplatsen finns inte"
       unpack_failed: "Det gick inte att packa upp filen"
       file_too_big: "Den okomprimerade filen är för stor."
@@ -59,7 +60,7 @@ sv:
       optimized_link: Optimerade bildlänkar är flyktiga och bör inte inkluderas i temakällkoden.
     settings_errors:
       invalid_yaml: "Angivet YAML är ogiltigt."
-      data_type_not_a_number: "Det går inte att ställa in typen `%{name}` %{name}. Typer som stöds är `integer`, `bool`, `list` och `enum`"
+      data_type_not_a_number: "Det går inte att ställa in typen `%{name}`. Typer som stöds är `integer`, `bool`, `list` , `enum` och `upload`"
       name_too_long: "En inställning har ett namn som är för långt. Maximal längd är 255"
       default_value_missing: "Inställningen `%{name}` har inget standardvärde"
       default_not_match_type: "Standardvärdestypen i inställningen `%{name}` överensstämmer inte med inställningstypen."
@@ -329,14 +330,16 @@ sv:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kan inte bokmärka samma inlägg två gånger."
+      cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
+      cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
       time_must_be_provided: "tid måste tillhandahållas för alla påminnelser utom '%{reminder_type}'"
     reminders:
       at_desktop: "Nästa gång är jag vid datorn"
-      later_today: "Senare idag <br/>{{date}}"
-      next_business_day: "Nästa arbetsdag <br/>{{date}}"
-      tomorrow: "Imorgon <br/>{{date}}"
-      next_week: "Nästa vecka <br/>{{date}}"
-      next_month: "Nästa månad <br/>{{date}}"
+      later_today: "Senare idag"
+      next_business_day: "Nästa vardag"
+      tomorrow: "Imorgon"
+      next_week: "Nästa vecka"
+      next_month: "Nästa månad"
       custom: "Anpassa datum och tid"
   groups:
     success:
@@ -367,7 +370,6 @@ sv:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Begäran om medlemskap i @%{group_name}"
-      handle: "hantera begäran om medlemskap"
     view_hidden_topic_request_reason: "Jag skulle vilja gå med i gruppen '%{group_name}', så att jag kan gå till [detta ämne](%{topic_url})"
   education:
     until_posts:
@@ -477,6 +479,10 @@ sv:
               same_as_password: "är samma som ditt lösenord."
             ip_address:
               signup_not_allowed: "Registrering är inte tillåtet från detta konto."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "Detta ämne kan inte presenteras på din profil."
         user_email:
           attributes:
             user_id:
@@ -1246,7 +1252,6 @@ sv:
   dashboard:
     rails_env_warning: "Din server kör i %{env} läge."
     host_names_warning: "Din config/database.yml fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
-    gc_warning: 'Din server använder ruby standardparametrar för skräpinsamling, vilket inte ger dig bästa prestanda. Läs detta ämne om prestandajustering: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>. '
     sidekiq_warning: 'Sidekiq körs inte. Många uppgifter, sm att skicka e-post, utförs asynkront av sidekiq. Var vänlig se till att minst en sidekiqprocess körs. <a href="https://github.com/mperham/sidekiq">Läs mer om Sidekiq här</a>.'
     queue_size_warning: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq process(er), eller så kanske du behöver lägga till fler Sidekiqarbetare."
     memory_warning: "Din server körs med mindre än 1 GB minne. Minne på minst 1 GB är rekommenderat."
@@ -1357,8 +1362,8 @@ sv:
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper / beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
     same_site_cookies: "Använd samma webbplatskakor, detta eliminerar alla vektorer för Cross Site Request Forgery på stödda webbläsare (Löst eller Strikt). Varning: Strikt fungerar bara på webbplatser som tvingar inloggning och använder SSO."
     summary_score_threshold: "Minsta poäng för att ett inlägg ska inkluderas i 'Sammanfatta det här ämnet'"
-    summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
-    summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
+    summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
+    summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne' "
     enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen oavsett alltid kan skicka meddelanden. "
@@ -1390,7 +1395,8 @@ sv:
     markdown_typographer_quotation_marks: "Lista med ersättningspar för dubbla och enkla citat"
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva handlingar på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
     must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen."
-    approve_suspect_users: "Personal måste godkänna alla misstänkta konton"
+    invite_code: "Användare måste ange denna kod för att ha tillåtelse att registrera ett konto, ignoreras om det lämnas tomt (ej skiftlägeskänslig)"
+    approve_suspect_users: "Lägg till misstänka användare i kön för granskning. Misstänkta användare har angett en bio/webbsida men har ingen läsaktivitet."
     pending_users_reminder_delay: "Notifiera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera notifikationer. "
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) spårningskods ID, exempelvis UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
@@ -1439,6 +1445,8 @@ sv:
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
     email_domains_whitelist: "En pipe-avgränsad lista av alla e-postdomän som användare MÅSTE registrera konton med. VARNING: Användare med e-postdomän som inte finns på listan kommer inte att tillåtas!"
+    enforce_canonical_emails: "Innan användarna skapas rensas e-postadress till kanonisk form vilket garanterar unikhet. Inställningen kommer endast att gälla vid nya kontoregistreringar. Om aktiverad kommer användare+1@domän.se inte att tillåtas registrera sig om användare+2@domän.se redan är registrerad."
+    auto_approve_email_domains: "Användare med e-postadresser som finns i denna lista av domäner kommer automatiskt att godkännas."
     hide_email_address_taken: "Informera inte användare om att det finns ett konto med en given e-postadress vid registreringen eller från det glömda lösenordsformuläret."
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
     version_checks: "Pinga Discourse Hub för versionuppdateringar och visa nya versionmeddelanden på instrumentpanelen <a href='%{base_path}/admin' target='_blank'>/admin</a> "
@@ -1496,7 +1504,6 @@ sv:
     discord_client_id: 'Discord Klient-ID (behöver du ett? Besök <a href="https://discordapp.com/developers/applications/me">utvecklarportalen för Discord</a>)'
     discord_secret: "Discord hemlig nyckel"
     discord_trusted_guilds: 'Tillåt bara medlemmar i dessa Discord-grupperingar att logga in via Discord. Använd det numeriska ID för grupperingen. För mer information, se instruktionerna <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">här</a>. Lämna tomt för att tilllåta alla grupperingar.'
-    readonly_mode_during_backup: "Aktivera skrivskyddat läge vid säkerhetskopiering"
     enable_backups: " Tillåt administratörer att skapa säkerhetskopior av forumet"
     allow_restore: "Tillåt återställning, vilket kan ersätta ALL data på webbplatsen! Lämna avbockad om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
@@ -1731,6 +1738,7 @@ sv:
     relative_date_duration: "Antal dagar efter att ett inlägg skrivits som datummarkeringen som visas för inlägget är relativ (7d) istället för absolut (20 Feb). "
     delete_user_max_post_age: "Tillåt inte raderande av användare vars äldsta inlägg är äldre än (x) dagar."
     delete_all_posts_max: "Högsta antal inlägg som kan raderas på samma gång med Radera Alla Inlägg-knappen. Om en användare har fler än så många inlägg så kan inläggen inte raderas på samma gång och användaren kan inte raderas."
+    delete_user_self_max_post_count: "Maximalt antal inlägg en användare kan ha medans själv-hantering av kontoradering tillåts. Sätt till -1 för att stänga av själv-hantering av kontoradering."
     username_change_period: "Det maximala antalet dagar efter registrering som konton kan ändra användarnamn (0 för att inte tillåta ändring av användarnamn)."
     email_editable: "Tillåt användare att ändra deras e-postadress efter registrering."
     logout_redirect: "Plats att omdirigera webbläsaren till efter utloggning (egentligen: https://exempel.se/logout)"
@@ -1769,6 +1777,7 @@ sv:
     ignored_users_count_message_threshold: "Meddela moderatorer om en viss användare ignoreras av många andra användare."
     ignored_users_message_gap_days: "Hur lång tid att vänta innan moderatorer meddelas igen om en användare som ignorerats av många andra."
     clean_up_inactive_users_after_days: "Antal dagar innan en inaktiv användare (förtroendenivå 0 utan några inlägg) tas bort. Ställ in till 0 för att inaktivera rensning."
+    clean_up_unused_staged_users_after_days: "Antal dagar innan en fiktiv användare (utan några inlägg) tas bort. Sätt till 0 för att inaktivera rensning."
     user_selected_primary_groups: "Tillåt användare att ställa in sin egna primära grupp"
     max_notifications_per_user: "Maximalt antal notifikationer per användare, om detta värde överskrids kommer äldre notifikationer att raderas. Verkställs veckovis. Sätt till 0 för att inaktivera."
     user_website_domains_whitelist: "Användare websidor kommer att verifieras mot dessa domäner. Pipe- avgränsad lista."
@@ -1807,7 +1816,9 @@ sv:
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
     embed_topics_list: "Stöd HTML-inbäddning av ämneslistor"
+    embed_set_canonical_url: "Sätt den kanoniska URL:n för inbäddade ämnen till det inbäddade innehållets URL."
     embed_truncate: "Trunkera de inbäddade inläggen."
+    embed_unlisted: "Importerade ämnen kommer att vara olistade tills dess att en användare svarar."
     embed_support_markdown: "Stöd Markdown-formatering för inbäddade inlägg."
     embed_whitelist_selector: "En kommaseparerad lista över CSS-element som tillåts i inbäddningar."
     allowed_href_schemes: "System tillåtna i länkar i motsatsen till http och https."
@@ -1818,7 +1829,7 @@ sv:
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra anonyma användare från att ladda ned bilagor. VARNING: det kommer att förhindra alla webbplatsens tillgångar som inte är bilder och som lagts upp som bilagor från att fungera."
-    secure_media: 'Begränsar åtkomst till mediauppladdningar (bilder, video, ljud). Om "inloggning krävs" har aktiverats kan endast inloggade användare komma åt mediauppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden. Obs: S3-uppladdningar måste ha aktiverats innan den här inställningen aktiveras.'
+    secure_media: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf:er, zipp med flera). Om "inloggning krävs" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Besök <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ämnet för säkra media i Meta</a> för detaljer.'
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
     enable_emoji: "Aktivera emoji"
     enable_emoji_shortcuts: "Vanlig smileytext som :): p :( kommer att konverteras till emojier"
@@ -1839,6 +1850,7 @@ sv:
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar bör gå innan en användare anses återkomma."
+    enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar e-postsammanfattningar."
     default_include_tl0_in_digests: "Standardinställning för hur ofta nya användare får e-postsammanfattningar. Användare kan ändra det i sina inställningar."
     default_email_level: "Ställ in standardnivå för e-postmeddelanden för vanliga ämnen."
@@ -1901,6 +1913,9 @@ sv:
     push_notifications_icon: "Utmärkelseikonen som visas i notifieringshörnet. Obligatorisk storlek är 96 x 96."
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Det bör begränsas till 12 tecken."
     dashboard_general_tab_activity_metrics: "Välj rapporter som ska visas som aktivitetsmätningar på fliken allmänt."
+    gravatar_name: "Namn på Gravatar leverantören"
+    gravatar_base_url: "Url till Gravatar leverantörens API mål"
+    gravatar_login_url: "Url relaterande till gravatar_base_url, vilken tillhandahåller inloggning för användaren hos Gravatar tjänsten"
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -2000,6 +2015,11 @@ sv:
       other: "%{count} inlägg har sammanfogats med ett existerande meddelande: %{topic_link}"
   change_owner:
     post_revision_text: "Ägarskap överfört"
+  publish_page:
+    slug_errors:
+      blank: "kan inte vara tomt"
+      unavailable: "är inte tillgänglig"
+      invalid: "innehåller otillåtna tecken"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av %{count} inlägg."
@@ -2082,6 +2102,7 @@ sv:
     new_registrations_disabled: "Nya kontoregistreringar är för närvarande inte tillåtna."
     password_too_long: "Lösenord har en gräns på 200 tecken."
     email_too_long: "E-postadressen du tillhandahöll är för lång. E-postadresser kan på sin höjd vara 254 tecken och domännamn inte mer än 253 tecken."
+    wrong_invite_code: "Inbjudningskoden som du har angett var felaktig."
     reserved_username: "Användarnamnet är inte tillåtet."
     missing_user_field: "Du har inte fyllt i alla användarfält"
     auth_complete: "Autentisering är färdig."
@@ -2093,6 +2114,8 @@ sv:
     second_factor_backup_title: "Två faktorig reservkod"
     invalid_second_factor_code: "Ogiltig autentiseringskod. Varje kod kan bara användas en gång."
     invalid_security_key: "Ogiltig säkerhetsnyckel."
+    missing_second_factor_name: "Vänligen ange ett namn."
+    missing_second_factor_code: "Vänligen ange en kod."
     second_factor_toggle:
       totp: "Använd en autentiseringsapp eller säkerhetsnyckel istället"
       backup_code: "Använd en reservkod istället"
@@ -2967,8 +2990,8 @@ sv:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
       since_last_visit: "Sedan ditt senaste besök"
       new_topics: "Nya ämnen"
-      unread_messages: "olästa meddelanden"
       unread_notifications: "Olästa notifikationer"
+      unread_high_priority: "Olästa notifikationer med hög prioritet"
       liked_received: "Gillanden mottagna"
       new_users: "Nya användare"
       popular_topics: "Populära ämnen"
@@ -3092,6 +3115,7 @@ sv:
     file_missing: "Tyvärr, du måste tillhandahålla en fil för uppladdning. "
     empty: "Tyvärr, men filen du angav är tom."
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
+    optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     attachments:
       too_large: "Tyvärr, filen du försöker ladda upp är för stor (maxstorlek är %{max_size_kb}kb)."
     images:
@@ -3127,6 +3151,7 @@ sv:
     sender_body_blank: "body är tom"
     sender_post_deleted: "inlägg har raderats"
     sender_message_to_invalid: "mottagaren har ogiltig e-postadress"
+    sender_topic_deleted: "ämne har raderats"
   color_schemes:
     base_theme_name: "Bas"
     light: "Ljus"
@@ -3730,7 +3755,7 @@ sv:
       invite_only: "Alla nya användare ska bjudas in. Se `invite_only`."
       email_auth_res_enqueue: "Det här e-postmeddelandet misslyckades med en DMARC-kontroll, det kommer sannolikt inte från den som det verkar komma från. Mer information finns i rubrikerna för e-postens rådata."
       email_spam: "Det här e-postmeddelandet flaggades som skräppost av rubriken definierad i `email_in_spam_header."
-      suspect_user: "Användare i listan över misstänkta måste undersökas av personal. Se `approve_suspect_users`."
+      suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket starkt indikerar att det kan röra sig om en skräppostare. Se `approve_suspect_users`."
     actions:
       agree:
         title: "Godkänn..."

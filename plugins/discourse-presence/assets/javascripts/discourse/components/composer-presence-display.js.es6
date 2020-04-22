@@ -1,7 +1,7 @@
-import { once } from "@ember/runloop";
-import { debounce } from "@ember/runloop";
-import { cancel } from "@ember/runloop";
+import { cancel, debounce, once } from "@ember/runloop";
 import Component from "@ember/component";
+import { equal, gt } from "@ember/object/computed";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import computed, { observes, on } from "discourse-common/utils/decorators";
 
@@ -21,6 +21,9 @@ export default Component.extend({
   currentState: null,
   presenceUsers: null,
   channel: null,
+
+  isReply: equal("action", "reply"),
+  shouldDisplay: gt("users.length", 0),
 
   @on("didInsertElement")
   composerOpened() {
@@ -113,7 +116,7 @@ export default Component.extend({
 
     // Don't publish presence if disabled
     if (this.currentUser.hide_profile_and_presence) {
-      return Ember.RSVP.Promise.resolve();
+      return Promise.resolve();
     }
 
     return ajax("/presence/publish", { type: "POST", data });
@@ -122,8 +125,5 @@ export default Component.extend({
   @computed("presenceUsers", "currentUser.id")
   users(users, currentUserId) {
     return (users || []).filter(user => user.id !== currentUserId);
-  },
-
-  isReply: Ember.computed.equal("action", "reply"),
-  shouldDisplay: Ember.computed.gt("users.length", 0)
+  }
 });

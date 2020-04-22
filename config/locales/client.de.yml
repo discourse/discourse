@@ -29,7 +29,6 @@ de:
       time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMM [um] HH:mm"
       long_no_year_no_time: "D. MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. MMM YYYY [um] HH:mm"
@@ -264,18 +263,17 @@ de:
     bookmarks:
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
       not_bookmarked: "Lesezeichen auf diesen Beitrag setzen"
-      created_with_reminder: "Du hast diesem Beitrag ein Lesezeichen hinzugefügt mit einer Erinnerung am %{date}"
       remove: "Lesezeichen entfernen"
       confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest? "
       save: "Speichern"
       no_timezone: 'Du hast noch keine Zeitzone ausgewählt. Du wirst keine Erinnerungen erstellen können. Stelle eine <a href="%{basePath}/my/preferences/profile">in deinem Profil</a> ein.'
       reminders:
         at_desktop: "Nächstes mal wenn ich an meinem PC bin"
-        later_today: "Im Laufe des Tages <br/>{{date}}"
-        next_business_day: "Nächster Geschäftstag <br/>{{date}}"
-        tomorrow: "Morgen <br/>{{date}}"
-        next_week: "Nächste Woche <br/>{{date}}"
-        next_month: "Nächster Monat <br/>{{date}}"
+        later_today: "Im Laufe des Tages"
+        tomorrow: "Morgen"
+        next_week: "Nächste Woche"
+        later_this_week: "Später in dieser Woche"
+        next_month: "Nächster Monat"
         custom: "Eigenes Datum und Zeit"
     drafts:
       resume: "Fortsetzen"
@@ -539,6 +537,7 @@ de:
         deny: "ablehnen"
         denied: "abgelehnt"
         undone: "Anfrage zurückgenommen"
+        handle: "Mitgliedschaftsanfrage bearbeiten"
       manage:
         title: "Verwalten"
         name: "Name"
@@ -816,7 +815,7 @@ de:
           Diese Einstellung überschreibt die Aktivitäts-Übersicht.<br />
           Stummgeschaltete Themen und Kategorien werden in diese E-Mails nicht eingeschlossen.
         individual: "Für jeden Beitrag eine E-Mail senden"
-        individual_no_echo: "Sende für alle fremden Beträge eine Email"
+        individual_no_echo: "Sende für alle fremden Beträge eine E-Mail"
         many_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa {{dailyEmailEstimate}} pro Tag)"
         few_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa 2 pro Tag)"
         warning: "Mailinglisten-Modus aktiviert. Einstellungen zur Benachrichtigung per E-Mail werden nicht berücksichtigt."
@@ -967,10 +966,6 @@ de:
         success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
       change_avatar:
         title: "Ändere dein Profilbild"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
-        gravatar_title: "Ändere deinen Avatar auf der Gravatar-Webseite"
-        gravatar_failed: "Wir konnten kein Gravatar für diese E-Mail-Adresse finden."
-        refresh_gravatar_title: "Deinen Gravatar aktualisieren"
         letter_based: "ein vom System zugewiesenes Profilbild"
         uploaded_avatar: "Eigenes Bild"
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
@@ -1231,7 +1226,7 @@ de:
       stream:
         posted_by: "Verfasst von"
         sent_by: "Gesendet von"
-        private_message: "Nachricht"
+        private_message: "Senden"
         the_topic: "das Thema"
     loading: "Wird geladen…"
     errors:
@@ -1253,6 +1248,8 @@ de:
         back: "Zurück"
         again: "Erneut versuchen"
         fixed: "Seite laden"
+    modal:
+      close: "Schließen"
     close: "Schließen"
     assets_changed_confirm: "Diese Website wurde gerade aktualisiert. Neu laden für die neuste Version?"
     logout: "Du wurdest abgemeldet."
@@ -1484,7 +1481,6 @@ de:
       objects: Objekte
       symbols: Symbole
       flags: Flaggen
-      custom: Benutzerdefinierte Emojis
       recent: Zuletzt verwendet
       default_tone: Keine Hautfarbe
       light_tone: Helle Hautfarbe
@@ -1492,6 +1488,7 @@ de:
       medium_tone: Mittlere Hautfarbe
       medium_dark_tone: Mittel-dunkle Hautfarbe
       dark_tone: Dunkle Hautfarbe
+      default: Benutzerdefinierte Emojis
     shared_drafts:
       title: "Gemeinsame Vorlagen"
       notice: "Das Thema ist nur sichtbar für die, die die <b>{{category}}</b>-Kategorie sehen können."
@@ -1641,6 +1638,7 @@ de:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2417,9 +2415,8 @@ de:
             button: "HTML"
       bookmarks:
         create: "Lesezeichen erstellen"
+        created: "Erstellt"
         name: "Name"
-        name_placeholder: "Gib dem Lesezeichen einen Namen, um dein Gedächtnis zu unterstützen"
-        set_reminder: "Erstelle eine Erinnerung"
         actions:
           delete_bookmark:
             name: "Lesezeichen löschen"
@@ -3585,7 +3582,7 @@ de:
         refresh: "Aktualisieren"
         send_digest_label: "Sende das Ergebnis an:"
         send_digest: "Senden"
-        sending_email: "Sende Email..."
+        sending_email: "Sende E-Mail..."
         format: "Format"
         html: "HTML"
         text: "Text"
@@ -3846,7 +3843,6 @@ de:
           staff: "Team"
           suspended: "Gesperrt"
           silenced: "Stummgeschaltet"
-          suspect: "Verdächtig"
           staged: "Vorbereitet"
         approved: "Genehmigt?"
         titles:
@@ -3863,7 +3859,6 @@ de:
           moderators: "Moderatoren"
           silenced: "Stummgeschaltete Benutzer"
           suspended: "Gesperrte Benutzer"
-          suspect: "Verdächtige Benutzer"
           staged: "Vorbereite Benutzer"
         not_verified: "Nicht überprüft"
         check_email:
@@ -4222,6 +4217,7 @@ de:
         help: "Neues Emoji hinzufügen, das für alle verfügbar sein wird. (Tipp: per Drag & Drop kannst du gleichzeitig mehrere Dateien hinzufügen)"
         add: "Neues Emoji hinzufügen"
         name: "Name"
+        group: "Gruppe"
         image: "Bild"
         delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
       embedding:
@@ -4248,7 +4244,6 @@ de:
         save: "Einbettungseinstellungen speichern"
       permalink:
         title: "Permanentlinks"
-        description: "Bitte beachte: dies trifft nur auf externe Quellen zu, in deinem Forum gepostete Links werden nicht umgeleitet."
         url: "URL"
         topic_id: "Themen-ID"
         topic_title: "Thema"

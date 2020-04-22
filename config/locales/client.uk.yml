@@ -31,7 +31,6 @@ uk:
       time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY, HH:mm"
@@ -312,18 +311,17 @@ uk:
     bookmarks:
       created: "ви додали цей допис до закладок"
       not_bookmarked: "додати цей допис до закладок"
-      created_with_reminder: "ви додали закладку на цю публікацію з нагадуванням на %{date}"
       remove: "Вилучити закладку"
       confirm_clear: "Ви впевнені, що хочете вилучити всі закладки з цієї теми?"
       save: "Зберегти"
       no_timezone: 'Ви ще не встановили часовий пояс. Ви не зможете встановити нагадування. Налаштуйте його <a href="%{basePath}/my/preferences/profile">у своєму профілі</a> .'
       reminders:
         at_desktop: "Наступного разу на мій робочий стіл"
-        later_today: "Пізніше сьогодні <br/> {{date}}"
-        next_business_day: "Наступний робочий день <br/> {{date}}"
-        tomorrow: "Завтра <br/> {{date}}"
-        next_week: "Наступного тижня <br/> {{date}}"
-        next_month: "Наступного місяця <br/> {{date}}"
+        later_today: "Пізніше сьогодні"
+        tomorrow: "Завтра"
+        next_week: "На наступному тижні"
+        later_this_week: "Пізніше на цьому тижні"
+        next_month: "В наступному місяці"
         custom: "Вибрана дата та час"
     drafts:
       resume: "Продовжити"
@@ -611,6 +609,7 @@ uk:
         deny: "Відмовити"
         denied: "відмовлено"
         undone: "запит скасовано"
+        handle: "обробляти запит на вступ"
       manage:
         title: "Керувати"
         name: "Ім'я"
@@ -1047,10 +1046,6 @@ uk:
         success_staff: "Ми надіслали листа на вашу поточну скриньку. Будь ласка, виконайте інструкції щодо підтвердження."
       change_avatar:
         title: "Змінити своє зображення профілю"
-        gravatar: "На основі <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
-        gravatar_title: "Змінити аватарку на сайті Gravatar"
-        gravatar_failed: "Не вдалося знайти Gravatar за цією електронною поштою."
-        refresh_gravatar_title: "Оновити мій Gravatar"
         letter_based: "Ваше зображення додане автоматично"
         uploaded_avatar: "Інше зображення"
         uploaded_avatar_empty: "Додати інше зображення"
@@ -1353,6 +1348,8 @@ uk:
         back: "Повернутися"
         again: "Спробувати ще раз"
         fixed: "Завантаження Сторінки"
+    modal:
+      close: "сховати"
     close: "Закрити"
     assets_changed_confirm: "Сайт тільки що був оновлений. Перезавантажити сторінку для переходу до нової версії?"
     logout: "Ви вийшли."
@@ -1588,7 +1585,6 @@ uk:
       objects: Objects
       symbols: Атрибутика
       flags: Скарги
-      custom: Призначені для користувача смайли
       recent: Нещодавно використані
       default_tone: Немає скіна
       light_tone: Світлий тон скіна
@@ -1596,6 +1592,7 @@ uk:
       medium_tone: Середній тон скіна
       medium_dark_tone: Середній темний тон скіна
       dark_tone: Темний відтінок скіна
+      default: Призначені для користувача смайли
     shared_drafts:
       title: "загальні Чернетки"
       notice: "Ці теми видно тільки тим, хто може бачити <b>{{category}}</b> категорію."
@@ -1751,6 +1748,7 @@ uk:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2601,9 +2599,8 @@ uk:
             button: "HTML"
       bookmarks:
         create: "Створити закладку"
+        created: "Створено"
         name: "Назва"
-        name_placeholder: "Назва закладки, яка допоможе знайти та згадати"
-        set_reminder: "Створити нагадування"
         actions:
           delete_bookmark:
             name: "Видалити закладку"
@@ -4096,7 +4093,6 @@ uk:
           staff: "Персонал"
           suspended: "Призупинені"
           silenced: "Відключені"
-          suspect: "Підозрілі"
           staged: "Недокористувач"
         approved: "Схвалено?"
         titles:
@@ -4113,7 +4109,6 @@ uk:
           moderators: "Модератори"
           silenced: "Відключені користувачі"
           suspended: "Призупинені користувачі"
-          suspect: "Підозрілі користувачі"
           staged: "Недокористувачі"
         not_verified: "Не підтверджений"
         check_email:
@@ -4481,6 +4476,7 @@ uk:
         help: "Додати нові смайли-emoji, які будуть доступні всім. (Підказка: можна перетягувати кілька файлів за раз)"
         add: "Додати нову іконку"
         name: "Ім'я"
+        group: "Група"
         image: "Зображення"
         delete_confirm: "Ви впевнені, що хочете видалити іконку :%{name}:?"
       embedding:
@@ -4507,7 +4503,6 @@ uk:
         save: "Зберегти налаштування вбудовування"
       permalink:
         title: "Постійні посилання"
-        description: "Зверніть увагу, що це стосується лише зовнішніх джерел, посилання, розміщені на вашому форумі, не будуть перенаправлені."
         url: "Посилання"
         topic_id: "ID теми"
         topic_title: "Тема"

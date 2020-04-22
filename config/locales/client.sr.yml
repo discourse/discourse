@@ -29,7 +29,6 @@ sr:
     dates:
       time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM YYYY HH:mm"
@@ -538,8 +537,6 @@ sr:
         success: "Poslali smo e-mail na tu adresu. Molimo vas sledite uputstva za potvrdu."
       change_avatar:
         title: "Promeni tvoju profilnu sliku"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baziran na"
-        refresh_gravatar_title: "Obnovi svoj Gravatar"
         letter_based: "Sistemski dodata profilna slika"
         uploaded_avatar: "Vaša slika"
         uploaded_avatar_empty: "Dodajte vašu sliku"
@@ -745,6 +742,8 @@ sr:
         back: "Idi nazad"
         again: "Pokušaj ponovno"
         fixed: "Učitaj stranicu"
+    modal:
+      close: "zatvori"
     close: "Zatvori"
     assets_changed_confirm: "Ova stranica je upravo ažurirana. Osveži sada za najnoviju verziju?"
     logout: "Odjavljeni ste."
@@ -1281,6 +1280,7 @@ sr:
           side_by_side_markdown:
             title: "Prikaži razlike u sirovom izvoru jednu nasuprot druge."
       bookmarks:
+        created: "Napravljeno"
         name: "Ime foruma"
     category:
       can: "može&hellip"
@@ -1949,7 +1949,6 @@ sr:
           active: "Aktivno"
           staff: "Osoblje"
           suspended: "Suspendovani"
-          suspect: "Sumnjivi"
         approved: "Potvrđenji?"
         titles:
           active: "Aktivni Korisnici"
@@ -1964,7 +1963,6 @@ sr:
           admins: "Administratori"
           moderators: "Moderatori"
           suspended: "Suspendovani Korisnici"
-          suspect: "Sumnjivi korisnici"
         not_verified: "Nije verifikovano"
         check_email:
           title: "Otkrij korisnikovu email adresu"
@@ -2211,6 +2209,7 @@ sr:
         help: "Dodajte nove Emoji-e koji će biti dostupni svima. (Savet: povuci i ispusti više datoteka odjednom)"
         add: "Dodaj Novi Emoji"
         name: "Ime"
+        group: "Grupa"
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
       embedding:

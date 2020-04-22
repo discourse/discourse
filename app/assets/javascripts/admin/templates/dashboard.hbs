@@ -3,12 +3,18 @@
 {{#if showVersionChecks}}
   <div class="section-top">
     <div class="version-checks">
-      {{partial "admin/templates/version-checks"}}
+      {{version-checks versionCheck=versionCheck}}
     </div>
   </div>
 {{/if}}
 
-{{partial "admin/templates/dashboard-problems"}}
+{{dashboard-problems
+  loadingProblems=loadingProblems
+  foundProblems=foundProblems
+  problems=problems
+  problemsTimestamp=problemsTimestamp
+  refreshProblems=(action "refreshProblems")
+}}
 
 <ul class="navigation">
   <li class="navigation-item general">

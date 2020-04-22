@@ -3,14 +3,14 @@
     {{d-button action=(action "displayRaw")
                label="post.raw_email.displays.raw.button"
                title="post.raw_email.displays.raw.title"
-               class=(if showRawEmail 'active')
+               class=(if showRawEmail "active")
     }}
 
     {{#if textPart}}
       {{d-button action=(action "displayTextPart")
                  label="post.raw_email.displays.text_part.button"
                  title="post.raw_email.displays.text_part.title"
-                 class=(if showTextPart 'active')
+                 class=(if showTextPart "active")
       }}
     {{/if}}
 
@@ -18,7 +18,7 @@
       {{d-button action=(action "displayHtmlPart")
                  label="post.raw_email.displays.html_part.button"
                  title="post.raw_email.displays.html_part.title"
-                 class=(if showHtmlPart 'active')
+                 class=(if showHtmlPart "active")
       }}
     {{/if}}
   </div>
@@ -28,7 +28,7 @@
       {{#if rawEmail}}
         {{textarea value=rawEmail}}
       {{else}}
-        {{i18n 'raw_email.not_available'}}
+        {{i18n "raw_email.not_available"}}
       {{/if}}
     {{/if}}
 

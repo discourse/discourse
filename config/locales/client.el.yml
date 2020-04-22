@@ -28,7 +28,6 @@ el:
     dates:
       time: "ΗΗ:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "DD MMM HH:mm"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY HH:mm"
@@ -231,6 +230,12 @@ el:
       created: "έχεις προσθέσει σελιδοδείκτη σε αυτή την ανάρτηση"
       remove: "Αφαίρεση Σελιδοδείκτη"
       save: "Αποθήκευση"
+      reminders:
+        later_today: "Αργότερα σήμερα"
+        tomorrow: "Αύριο"
+        next_week: "Την άλλη εβδομάδα"
+        later_this_week: "Αργότερα αυτή την εβδομάδα"
+        next_month: "Τον άλλο μήνα"
     drafts:
       remove: "Αναίρεση Πρόσκλησης"
       abandon:
@@ -661,9 +666,6 @@ el:
         success_staff: "Στείλαμε ένα email στην τρέχουσα διεύθυνσή σας. Παρακαλούμε ακολουθήστε τις οδηγίες επικύρωσης."
       change_avatar:
         title: "Αλλαγή της φωτογραφίας του προφίλ σου"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, που βασίζεται σε"
-        gravatar_title: "Άλλαξε το άβατάρ σου στην ιστοσελίδα Gravatar "
-        refresh_gravatar_title: "Ανανέωσε το Gravatar σου"
         letter_based: "Εικόνα προφίλ που ανέθεσε το σύστημα"
         uploaded_avatar: "Προσαρμοσμένη εικόνα"
         uploaded_avatar_empty: "Πρόσθεσε μια δική σου εικόνα"
@@ -895,6 +897,8 @@ el:
         back: "Πίσω"
         again: "Δοκίμασε ξανά"
         fixed: "Φόρτωση Σελίδας"
+    modal:
+      close: "κλείσιμο"
     close: "Κλείσιμο"
     assets_changed_confirm: "Αυτή η ιστοσελίδα μόλις ενημερώθηκε. Να ανανεωθεί τώρα για να φανεί η τελευταία έκδοση;"
     logout: "Αποσυνδέθηκες."
@@ -1055,7 +1059,6 @@ el:
       filter_placeholder: Αναζήτηση για emoji
       objects: Αντικείμενα
       flags: Σημάνσεις
-      custom: Προσαρμοσμένα emojis
       recent: Πρόσφατα χρησιμοποιημένα
       default_tone: Χωρίς απόχρωση επιδερμίδας
       light_tone: Λευκή απόχρωση επιδερμίδας
@@ -1063,6 +1066,7 @@ el:
       medium_tone: Μέτρια απόχρωση επιδερμίδας
       medium_dark_tone: Σκουρόχρωμη απόχρωση επιδερμίδας
       dark_tone: Σκούρη απόχρωση επιδερμίδας
+      default: Προσαρμοσμένα emojis
     composer:
       emoji: "Emoji :)"
       more_emoji: "περισσότερα..."
@@ -1152,6 +1156,7 @@ el:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1769,6 +1774,7 @@ el:
             title: "Εμφάνιση του τμήματος html του email"
             button: "HTML"
       bookmarks:
+        created: "Δημιουργήθηκε"
         name: "Όνομα"
     category:
       can: "μπορεί&hellip; "
@@ -2818,7 +2824,6 @@ el:
           staff: "Συνεργάτες"
           suspended: "Αποβλημένοι"
           silenced: "Σιγήθηκαν"
-          suspect: "Ύποπτο"
         approved: "Εγκεκριμένο;"
         titles:
           active: "Ενεργοί Χρήστες"
@@ -2834,7 +2839,6 @@ el:
           moderators: "Συντονιστές"
           silenced: "Σιγημένοι Χρήστες"
           suspended: "Αποβλημένοι Χρήστες"
-          suspect: "Ύποπτοι χρήστες"
         not_verified: "Μη επαληθευμένος"
         check_email:
           title: "Εμφάνισε το email αυτού του χρήστη"
@@ -3146,6 +3150,7 @@ el:
         help: "Πρόσθεσε ένα νέο emoji που θα είναι διαθέσιμο σε όλους. (Συμβουλή: μπορείς να σύρεις πολλά αρχεία ταυτόχρονα)"
         add: "Προσθήκη νέου emoji"
         name: "Όνομα"
+        group: "Ομάδα"
         image: "Εικόνα"
         delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις το emoji :%{name}:;"
       embedding:

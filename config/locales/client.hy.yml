@@ -28,7 +28,6 @@ hy:
     dates:
       time: "h:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -262,6 +261,12 @@ hy:
       remove: "Հեռացնել էջանշանը"
       confirm_clear: "Դուք համոզվա՞ծ եք, որ ցանկանում եք հեռացնել այս թեմայի բոլոր էջանշանները:"
       save: "Պահպանել"
+      reminders:
+        later_today: "Այսօր, մի փոքր ուշ"
+        tomorrow: "Վաղը"
+        next_week: "Հաջորդ շաբաթ"
+        later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
+        next_month: "Հաջորդ ամիս"
     drafts:
       resume: "Վերսկսել"
       remove: "Ջնջել"
@@ -790,10 +795,6 @@ hy:
         success_staff: "Մենք ուղարկել ենք էլ. նամակ Ձեր ընթացիկ հասցեին: Խնդրում ենք հետևել հաստատման հրահանգներին:"
       change_avatar:
         title: "Փոխել Ձեր պրոֆիլի նկարը"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, հիմնված"
-        gravatar_title: "Փոխեք Ձեր անձնապատրկեը Gravatar-ի կայքում"
-        gravatar_failed: "Մենք չկարողացանք գտնել Gravatar այդ էլ. հասցեով:"
-        refresh_gravatar_title: "Թարմացնել Ձեր Gravatar-ը"
         letter_based: "Համակարգի կողմից դրված պրոֆիլի նկար"
         uploaded_avatar: "Անհատական նկար"
         uploaded_avatar_empty: "Ավելացնել անհատական նկար"
@@ -1061,6 +1062,8 @@ hy:
         back: "Վերադառնալ"
         again: "Կրկին Փորձել"
         fixed: "Բեռնել էջը"
+    modal:
+      close: "փակել"
     close: "Փակել"
     assets_changed_confirm: "Այս կայքը հենց նոր թարմացվել է: Թարմացնե՞լ էջը հիմա՝ ամենավերջին տարբերակն ստանալու համար:"
     logout: "Դուք դուրս եք գրվել:"
@@ -1263,7 +1266,6 @@ hy:
       objects: Օբյեկտներ
       symbols: Նշաններ
       flags: Դրոշներ
-      custom: Մասնավոր էմոջիներ
       recent: Վերջերս օգտագործված
       default_tone: Առանց շերտի գույնի
       light_tone: Շերտի բաց գույնով
@@ -1271,6 +1273,7 @@ hy:
       medium_tone: Շերտի միջին գույն
       medium_dark_tone: Շերտի միջինից մուգ գույն
       dark_tone: Շերտի մուգ գույն
+      default: Մասնավոր էմոջիներ
     shared_drafts:
       title: "Կիսված Սևագրեր"
       notice: "Այս թեման տեսանելի է միայն նրանց, ովքեր կարող են տեսնել <b>{{category}}</b> կատեգորիան:"
@@ -1411,6 +1414,7 @@ hy:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2119,6 +2123,7 @@ hy:
             title: "Ցուցադրել էլ. նամակի html մասը"
             button: "HTML"
       bookmarks:
+        created: "Ստեղծված"
         name: "Անուն"
     category:
       can: "կարող է&hellip; "
@@ -3405,7 +3410,6 @@ hy:
           staff: "Անձնակազմ"
           suspended: "Սառեցված"
           silenced: "Լռեցված"
-          suspect: "Կասկացել"
           staged: "Աստիճանավորված (Staged)"
         approved: "Հաստատվա՞ծ"
         titles:
@@ -3422,7 +3426,6 @@ hy:
           moderators: "Մոդերատորներ"
           silenced: "Լռեցված Օգտատերեր"
           suspended: "Սառեցված Օգտատերեր"
-          suspect: "Կասկածել Օգտատերերին(Suspect Users)"
           staged: "Աստիճանավորված Օգտատերեր"
         not_verified: "Չհաստատված"
         check_email:
@@ -3765,6 +3768,7 @@ hy:
         help: "Ավելացրեք նոր էմոջի, որը հասանելի կլինի բոլորին: (ՀՈՒՇՈՒՄ՝ քաշեք և գցեք բազմակի ֆայլեր միանգամից)"
         add: "Ավելացնել Նոր Էմոջի"
         name: "Անուն"
+        group: "Խումբ"
         image: "Նկար"
         delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել :%{name}: էմոջին:"
       embedding:

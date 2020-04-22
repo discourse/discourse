@@ -577,7 +577,11 @@ RSpec.describe TopicsController do
     end
 
     describe 'changing timestamps' do
-      before { sign_in(moderator) }
+      before do
+        freeze_time
+        sign_in(moderator)
+      end
+
       let(:old_timestamp) { Time.zone.now }
       let(:new_timestamp) { old_timestamp - 1.day }
       let!(:topic) { Fabricate(:topic, created_at: old_timestamp) }
@@ -594,9 +598,9 @@ RSpec.describe TopicsController do
         }
 
         expect(response.status).to eq(200)
-        expect(topic.reload.created_at).to be_within_one_second_of(new_timestamp)
-        expect(p1.reload.created_at).to be_within_one_second_of(new_timestamp)
-        expect(p2.reload.created_at).to be_within_one_second_of(old_timestamp)
+        expect(topic.reload.created_at).to eq_time(new_timestamp)
+        expect(p1.reload.created_at).to eq_time(new_timestamp)
+        expect(p2.reload.created_at).to eq_time(old_timestamp)
       end
 
       it 'should create a staff log entry' do
@@ -713,7 +717,6 @@ RSpec.describe TopicsController do
     end
 
     context 'for last post only' do
-
       it 'should allow you to retain topic timing but remove last post only' do
         freeze_time
 
@@ -777,9 +780,7 @@ RSpec.describe TopicsController do
 
         expect(PostTiming.where(topic: topic, user: user, post_number: 1).exists?).to eq(false)
         expect(TopicUser.where(topic: topic, user: user, last_read_post_number: nil, highest_seen_post_number: nil).exists?).to eq(true)
-
       end
-
     end
 
     context 'when logged in' do
@@ -945,6 +946,9 @@ RSpec.describe TopicsController do
       end
 
       describe 'with permission' do
+        fab!(:post_hook) { Fabricate(:post_web_hook) }
+        fab!(:topic_hook) { Fabricate(:topic_web_hook) }
+
         it 'succeeds' do
           put "/t/#{topic.slug}/#{topic.id}.json"
 
@@ -970,6 +974,13 @@ RSpec.describe TopicsController do
 
           topic.reload
           expect(topic.title).to eq('This is a new title for the topic')
+
+          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(2)
+          job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
+
+          expect(job_args["event_name"]).to eq("post_edited")
+          payload = JSON.parse(job_args["payload"])
+          expect(payload["topic_title"]).to eq('This is a new title for the topic')
         end
 
         it "returns errors with invalid titles" do
@@ -978,7 +989,7 @@ RSpec.describe TopicsController do
           }
 
           expect(response.status).to eq(422)
-          expect(JSON.parse(response.body)['errors']).to be_present
+          expect(response.parsed_body['errors']).to match_array([/Title is too short/, /Title seems unclear/])
         end
 
         it "returns errors when the rate limit is exceeded" do
@@ -1025,6 +1036,32 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
+          it "can create a tag" do
+            SiteSetting.min_trust_to_create_tag = 0
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                tags: ["newtag"]
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
+          end
+
+          it "can change the category and create a new tag" do
+            SiteSetting.min_trust_to_create_tag = 0
+            category = Fabricate(:category)
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                tags: ["newtag"],
+                category_id: category.id
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
           end
 
           it "can add a tag to wiki topic" do
@@ -1694,7 +1731,7 @@ RSpec.describe TopicsController do
       sign_in(user)
       get "/t/#{topic.slug}/#{topic.id}"
       topic_user = TopicUser.where(user: user, topic: topic).first
-      expect(topic_user.last_visited_at).to eq(topic_user.first_visited_at)
+      expect(topic_user.last_visited_at).to eq_time(topic_user.first_visited_at)
     end
 
     context 'consider for a promotion' do
@@ -2072,6 +2109,10 @@ RSpec.describe TopicsController do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
+    after do
+      Discourse.redis.flushall
+    end
+
     it 'returns first post of the topic' do
       # we need one for suggested
       create_post
@@ -2305,19 +2346,15 @@ RSpec.describe TopicsController do
 
   describe '#remove_bookmarks' do
     it "should remove bookmarks properly from non first post" do
-      bookmark = PostActionType.types[:bookmark]
       sign_in(user)
 
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
-
-      PostActionCreator.new(user, post2, bookmark).perform
-
-      put "/t/#{post.topic_id}/bookmark.json"
-      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(2)
+      Fabricate(:bookmark, user: user, post: post)
+      Fabricate(:bookmark, user: user, post: post2)
 
       put "/t/#{post.topic_id}/remove_bookmarks.json"
-      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
+      expect(Bookmark.where(user: user).count).to eq(0)
     end
 
     it "should disallow bookmarks on posts you have no access to" do
@@ -2328,10 +2365,7 @@ RSpec.describe TopicsController do
       expect(response).to be_forbidden
     end
 
-    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = true
-      end
+    context "bookmarks with reminders" do
       it "deletes all the bookmarks for the user in the topic" do
         sign_in(user)
         post = create_post
@@ -2347,30 +2381,28 @@ RSpec.describe TopicsController do
       sign_in(user)
     end
 
-    it "should create a new post action for the bookmark on the first post of the topic" do
+    it "should create a new bookmark on the first post of the topic" do
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
       put "/t/#{post.topic_id}/bookmark.json"
 
-      expect(PostAction.find_by(user_id: user.id, post_action_type: PostActionType.types[:bookmark]).post_id).to eq(post.id)
+      expect(Bookmark.find_by(user_id: user.id).post_id).to eq(post.id)
     end
 
     it "errors if the topic is already bookmarked for the user" do
       post = create_post
-      PostActionCreator.new(user, post, PostActionType.types[:bookmark]).perform
+      Bookmark.create(post: post, user: user, topic: post.topic)
 
       put "/t/#{post.topic_id}/bookmark.json"
-      expect(response).to be_forbidden
+      expect(response.status).to eq(400)
     end
 
-    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = true
-      end
+    context "bookmarks with reminders" do
       it "should create a new bookmark on the first post of the topic" do
         post = create_post
         post2 = create_post(topic_id: post.topic_id)
         put "/t/#{post.topic_id}/bookmark.json"
+        expect(response.status).to eq(200)
 
         bookmarks_for_topic = Bookmark.where(topic: post.topic, user: user)
         expect(bookmarks_for_topic.count).to eq(1)
@@ -2382,7 +2414,7 @@ RSpec.describe TopicsController do
         Bookmark.create(post: post, topic: post.topic, user: user)
 
         put "/t/#{post.topic_id}/bookmark.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(400)
       end
     end
   end
@@ -2594,6 +2626,7 @@ RSpec.describe TopicsController do
 
     context 'when logged in as an admin' do
       before do
+        freeze_time
         sign_in(admin)
       end
 
@@ -2608,14 +2641,12 @@ RSpec.describe TopicsController do
         topic_status_update = TopicTimer.last
 
         expect(topic_status_update.topic).to eq(topic)
-
-        expect(topic_status_update.execute_at)
-          .to be_within(1.second).of(24.hours.from_now)
+        expect(topic_status_update.execute_at).to eq_time(24.hours.from_now)
 
         json = JSON.parse(response.body)
 
         expect(DateTime.parse(json['execute_at']))
-          .to be_within(1.seconds).of(DateTime.parse(topic_status_update.execute_at.to_s))
+          .to eq_time(DateTime.parse(topic_status_update.execute_at.to_s))
 
         expect(json['duration']).to eq(topic_status_update.duration)
         expect(json['closed']).to eq(topic.reload.closed)
@@ -2639,6 +2670,28 @@ RSpec.describe TopicsController do
         expect(json['closed']).to eq(topic.closed)
       end
 
+      it 'should be able to create a topic status update with duration' do
+        post "/t/#{topic.id}/timer.json", params: {
+          duration: 5,
+          status_type: TopicTimer.types[7]
+        }
+
+        expect(response.status).to eq(200)
+
+        topic_status_update = TopicTimer.last
+
+        expect(topic_status_update.topic).to eq(topic)
+        expect(topic_status_update.execute_at).to eq_time(5.days.from_now)
+        expect(topic_status_update.duration).to eq(5)
+
+        json = JSON.parse(response.body)
+
+        expect(DateTime.parse(json['execute_at']))
+          .to eq_time(DateTime.parse(topic_status_update.execute_at.to_s))
+
+        expect(json['duration']).to eq(topic_status_update.duration)
+      end
+
       describe 'publishing topic to category in the future' do
         it 'should be able to create the topic status update' do
           post "/t/#{topic.id}/timer.json", params: {
@@ -2652,10 +2705,7 @@ RSpec.describe TopicsController do
           topic_status_update = TopicTimer.last
 
           expect(topic_status_update.topic).to eq(topic)
-
-          expect(topic_status_update.execute_at)
-            .to be_within(1.second).of(24.hours.from_now)
-
+          expect(topic_status_update.execute_at).to eq_time(24.hours.from_now)
           expect(topic_status_update.status_type)
             .to eq(TopicTimer.types[:publish_to_category])
 
@@ -3072,6 +3122,22 @@ RSpec.describe TopicsController do
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
       end
 
+      context "canonical_url" do
+        fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
+        let(:user_agent) { "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" }
+
+        it "set to topic.url when embed_set_canonical_url is false" do
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          expect(response.body).to include('<link rel="canonical" href="' + topic_embed.topic.url)
+        end
+
+        it "set to topic_embed.embed_url when embed_set_canonical_url is true" do
+          SiteSetting.embed_set_canonical_url = true
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          expect(response.body).to include('<link rel="canonical" href="' + topic_embed.embed_url)
+        end
+      end
+
       context "wayback machine" do
         it "renders crawler layout" do
           get topic.url, env: { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "HTTP_VIA" => "HTTP/1.0 web.archive.org (Wayback Save Page)" }
@@ -3118,7 +3184,7 @@ RSpec.describe TopicsController do
 
         put "/t/#{topic.id}/reset-bump-date.json"
         expect(response.status).to eq(200)
-        expect(topic.reload.bumped_at).to be_within_one_second_of(timestamp)
+        expect(topic.reload.bumped_at).to eq_time(timestamp)
       end
     end
   end

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 Report.add_report('post_edits') do |report|
-  category_filter = report.filters.dig(:category)
-  report.add_filter('category', default: category_filter)
+  category_id, include_subcategories = report.add_category_filter
 
   report.modes = [:table]
 
@@ -77,13 +76,13 @@ Report.add_report('post_edits') do |report|
   /*limit*/
   SQL
 
-  if category_filter
+  if category_id
     builder.join "topics t ON t.id = p.topic_id"
-    builder.where("t.category_id = :category_id
-      OR t.category_id IN (
-        SELECT id FROM categories
-        WHERE categories.parent_category_id = :category_id
-      )", category_id: category_filter)
+    if include_subcategories
+      builder.where("t.category_id IN (?)", Category.subcategory_ids(category_id))
+    else
+      builder.where("t.category_id = ?", category_id)
+    end
   end
 
   builder.where("editor.id > 0 AND editor.id != author.id")
