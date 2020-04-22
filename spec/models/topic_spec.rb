@@ -2359,7 +2359,7 @@ describe Topic do
       Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 3.hours.ago)
       Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
 
-      expect(Topic.time_to_first_response_total(category_id: category.id)).to eq(1)
+      expect(Topic.time_to_first_response_total(category_id: category.id, include_subcategories: true)).to eq(1)
     end
 
     it "should only count regular posts as the first response" do

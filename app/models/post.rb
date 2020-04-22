@@ -765,10 +765,19 @@ class Post < ActiveRecord::Base
     DiscourseEvent.trigger(:after_trigger_post_process, self)
   end
 
-  def self.public_posts_count_per_day(start_date, end_date, category_id = nil)
-    result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
+  def self.public_posts_count_per_day(start_date, end_date, category_id = nil, include_subcategories = false)
+    result = public_posts
+      .where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
       .where(post_type: Post.types[:regular])
-    result = result.where('topics.category_id IN (?)', Category.subcategory_ids(category_id.to_i)) if category_id
+
+    if category_id
+      if include_subcategories
+        result = result.where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
+      else
+        result = result.where('topics.category_id = ?', category_id)
+      end
+    end
+
     result
       .group('date(posts.created_at)')
       .order('date(posts.created_at)')
