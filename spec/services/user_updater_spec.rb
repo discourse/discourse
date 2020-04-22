@@ -416,6 +416,15 @@ describe UserUpdater do
       end
     end
 
+    context 'when website is invalid' do
+      it 'returns an error' do
+        user = Fabricate(:user)
+        updater = UserUpdater.new(acting_user, user)
+
+        expect(updater.update(website: 'ʔ<')).to eq nil
+      end
+    end
+
     context 'when custom_fields is empty string' do
       it "update is successful" do
         user = Fabricate(:user)
