@@ -832,6 +832,8 @@ export default Component.extend(
           placementStrategy = inModal ? "fixed" : "absolute";
         }
 
+        const verticalOffset = this.multiSelect ? 0 : 2;
+
         /* global Popper:true */
         this.popper = Popper.createPopper(anchor, popper, {
           eventsEnabled: false,
@@ -841,7 +843,7 @@ export default Component.extend(
             {
               name: "offset",
               options: {
-                offset: [0, 2]
+                offset: [0, verticalOffset]
               }
             },
             {
@@ -853,7 +855,7 @@ export default Component.extend(
                   ".select-kit-wrapper"
                 );
                 if (wrapper) {
-                  let height = this.element.offsetHeight;
+                  let height = this.element.offsetHeight + verticalOffset;
 
                   const body = this.element.querySelector(".select-kit-body");
                   if (body) {
@@ -873,7 +875,8 @@ export default Component.extend(
                     this.element.classList.add("is-under");
                   }
 
-                  wrapper.style.width = `${this.element.offsetWidth}px`;
+                  // - 1 accounts for any rounding error
+                  wrapper.style.width = `${this.element.offsetWidth - 1}px`;
                   wrapper.style.height = `${height}px`;
                 }
               }
