@@ -291,7 +291,7 @@ basic:
     default: false
   enable_bookmarks_with_reminders:
     client: true
-    default: false
+    default: true
     hidden: true
   enable_bookmark_at_desktop_reminders:
     client: true

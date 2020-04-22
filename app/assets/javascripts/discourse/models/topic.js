@@ -400,10 +400,8 @@ const Topic = RestModel.extend({
   afterTopicBookmarked(firstPost) {
     if (firstPost) {
       firstPost.set("bookmarked", true);
-      if (this.siteSettings.enable_bookmarks_with_reminders) {
-        this.set("bookmark_reminder_at", firstPost.bookmark_reminder_at);
-        firstPost.set("bookmarked_with_reminder", true);
-      }
+      firstPost.set("bookmarked_with_reminder", true);
+      this.set("bookmark_reminder_at", firstPost.bookmark_reminder_at);
       return [firstPost.id];
     }
   },
@@ -438,24 +436,10 @@ const Topic = RestModel.extend({
     return this.firstPost().then(firstPost => {
       const toggleBookmarkOnServer = () => {
         if (bookmark) {
-          if (this.siteSettings.enable_bookmarks_with_reminders) {
-            return firstPost.toggleBookmarkWithReminder().then(response => {
-              this.set("bookmarking", false);
-              if (response && response.closedWithoutSaving) {
-                this.set("bookmarked", false);
-              } else {
-                return this.afterTopicBookmarked(firstPost);
-              }
-            });
-          } else {
-            return ajax(`/t/${this.id}/bookmark`, { type: "PUT" })
-              .then(() => {
-                this.toggleProperty("bookmarked");
-                return this.afterTopicBookmarked(firstPost);
-              })
-              .catch(popupAjaxError)
-              .finally(() => this.set("bookmarking", false));
-          }
+          return firstPost.toggleBookmarkWithReminder().then(() => {
+            this.set("bookmarking", false);
+            return this.afterTopicBookmarked(firstPost);
+          });
         } else {
           return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" })
             .then(() => {
@@ -474,10 +458,7 @@ const Topic = RestModel.extend({
                     post.set("bookmarked", false);
                     updated.push(post.id);
                   }
-                  if (
-                    this.siteSettings.enable_bookmarks_with_reminders &&
-                    post.bookmarked_with_reminder
-                  ) {
+                  if (post.bookmarked_with_reminder) {
                     post.setProperties(clearedBookmarkProps);
                     updated.push(post.id);
                   }

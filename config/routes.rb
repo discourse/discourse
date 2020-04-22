@@ -585,7 +585,6 @@ Discourse::Application.routes.draw do
   put "admin/groups/:id/members" => "groups#add_members", constraints: AdminConstraint.new
 
   resources :posts do
-    put "bookmark"
     delete "bookmark", to: "posts#destroy_bookmark"
     put "wiki"
     put "post_type"

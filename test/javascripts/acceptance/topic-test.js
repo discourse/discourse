@@ -397,10 +397,7 @@ QUnit.test(
 );
 
 acceptance("Topic + Post Bookmarks with Reminders", {
-  loggedIn: true,
-  settings: {
-    enable_bookmarks_with_reminders: true
-  }
+  loggedIn: true
 });
 
 QUnit.test("Bookmarks Modal", async assert => {

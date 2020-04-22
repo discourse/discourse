@@ -27,7 +27,7 @@
         </li>
         {{#if model.bookmark_count}}
           <li class="linked-stat">
-            {{#link-to "userActivity.bookmarks"}}
+            {{#link-to "userActivity.bookmarksWithReminders"}}
               {{user-stat value=model.bookmark_count label="user.summary.bookmark_count"}}
             {{/link-to}}
           </li>

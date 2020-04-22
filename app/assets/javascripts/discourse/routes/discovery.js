@@ -17,10 +17,7 @@ export default DiscourseRoute.extend(OpenComposer, {
     // including being able to show links to multiple posts to the same topic
     // and being based on a different model. better to just redirect
     const url = transition.intent.url;
-    if (
-      this.siteSettings.enable_bookmarks_with_reminders &&
-      url === "/bookmarks"
-    ) {
+    if (url === "/bookmarks") {
       this.transitionTo(
         "userActivity.bookmarksWithReminders",
         this.currentUser
