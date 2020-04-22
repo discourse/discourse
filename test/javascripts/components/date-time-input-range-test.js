@@ -31,6 +31,6 @@ componentTest("default", {
     assert.equal(fromDateInput().value, "January 29, 2019");
     assert.equal(fromTimeInput().dataset.name, "14:45");
     assert.equal(toDateInput().value, "");
-    assert.equal(toTimeInput().dataset.name, "00:00");
+    assert.equal(toTimeInput().dataset.name, "--:--");
   }
 });
