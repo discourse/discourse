@@ -133,7 +133,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   }
 });
 
-export const openNewCategoryModal = context => {
+export function openNewCategoryModal(context) {
   const groups = context.site.groups,
     everyoneName = groups.findBy("id", 0).name;
 
@@ -149,6 +149,6 @@ export const openNewCategoryModal = context => {
   });
 
   showModal("edit-category", { model }).set("selectedTab", "general");
-};
+}
 
 export default DiscoveryCategoriesRoute;
