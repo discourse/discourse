@@ -336,20 +336,6 @@ const Post = RestModel.extend({
   },
 
   toggleBookmarkWithReminder() {
-    // if we are talking to discobot then any bookmarks should just
-    // be created without reminder options, to streamline the new user
-    // narrative.
-    if (this.username === "discobot" && !this.bookmarked_with_reminder) {
-      return ajax("/bookmarks", { type: "POST", data: { post_id: this.id } }).then((response) => {
-        this.setProperties({
-          "topic.bookmarked": true,
-          bookmarked_with_reminder: true,
-          bookmark_id: response.id
-        });
-        this.appEvents.trigger("post-stream:refresh", { id: this.id });
-      });
-    }
-
     return new Promise(resolve => {
       let controller = showModal("bookmark", {
         model: {
