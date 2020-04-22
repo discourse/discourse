@@ -652,10 +652,7 @@ export default Controller.extend(bufferedProperty("model"), {
       if (!this.currentUser) {
         return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
       } else if (post) {
-        if (this.siteSettings.enable_bookmarks_with_reminders) {
-          return post.toggleBookmarkWithReminder();
-        }
-        return post.toggleBookmark().catch(popupAjaxError);
+        return post.toggleBookmarkWithReminder();
       } else {
         return this.model.toggleBookmark().then(changedIds => {
           if (!changedIds) {

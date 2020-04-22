@@ -56,16 +56,13 @@ createWidget("user-menu-links", {
   },
 
   bookmarksGlyph() {
-    let path = this.siteSettings.enable_bookmarks_with_reminders
-      ? "bookmarks-with-reminders"
-      : "bookmarks";
     return {
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.BOOKMARKS,
       label: "user.bookmarks",
       className: "user-bookmarks-link",
       icon: "bookmark",
-      href: `${this.attrs.path}/activity/${path}`
+      href: `${this.attrs.path}/activity/bookmarks-with-reminders`
     };
   },
 

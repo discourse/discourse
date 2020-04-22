@@ -124,11 +124,11 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#suspend' do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:created_post) { Fabricate(:post) }
     let(:suspend_params) do
       { suspend_until: 5.hours.from_now,
         reason: "because of this post",
-        post_id: post.id }
+        post_id: created_post.id }
     end
 
     it "works properly" do
@@ -156,13 +156,13 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
 
         log = UserHistory.where(target_user_id: user.id).order('id desc').first
-        expect(log.post_id).to eq(post.id)
+        expect(log.post_id).to eq(created_post.id)
       end
 
       it "can delete an associated post" do
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params.merge(post_action: 'delete')
-        post.reload
-        expect(post.deleted_at).to be_present
+        created_post.reload
+        expect(created_post.deleted_at).to be_present
         expect(response.status).to eq(200)
       end
 
@@ -200,17 +200,17 @@ RSpec.describe Admin::UsersController do
         reply = PostCreator.create(
           Fabricate(:user),
           raw: 'this is the reply text',
-          reply_to_post_number: post.post_number,
-          topic_id: post.topic_id
+          reply_to_post_number: created_post.post_number,
+          topic_id: created_post.topic_id
         )
         nested_reply = PostCreator.create(
           Fabricate(:user),
           raw: 'this is the reply text2',
           reply_to_post_number: reply.post_number,
-          topic_id: post.topic_id
+          topic_id: created_post.topic_id
         )
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params.merge(post_action: 'delete_replies')
-        expect(post.reload.deleted_at).to be_present
+        expect(created_post.reload.deleted_at).to be_present
         expect(reply.reload.deleted_at).to be_present
         expect(nested_reply.reload.deleted_at).to be_present
         expect(response.status).to eq(200)
@@ -223,9 +223,9 @@ RSpec.describe Admin::UsersController do
         )
 
         expect(response.status).to eq(200)
-        post.reload
-        expect(post.deleted_at).to be_blank
-        expect(post.raw).to eq("this is the edited content")
+        created_post.reload
+        expect(created_post.deleted_at).to be_blank
+        expect(created_post.raw).to eq("this is the edited content")
         expect(response.status).to eq(200)
       end
     end
@@ -252,9 +252,8 @@ RSpec.describe Admin::UsersController do
 
     it "also prevents use of any api keys" do
       api_key = Fabricate(:api_key, user: user)
-
-      put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
-        bookmarked: "true"
+      post "/bookmarks.json", params: {
+        post_id: Fabricate(:post).id
       }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(200)
 
@@ -264,10 +263,9 @@ RSpec.describe Admin::UsersController do
       user.reload
       expect(user).to be_suspended
 
-      put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
-        bookmarked: "true",
-        api_key: api_key.key
-      }
+      post "/bookmarks.json", params: {
+        post_id: Fabricate(:post).id
+      }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(403)
     end
   end

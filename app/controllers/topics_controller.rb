@@ -97,9 +97,9 @@ class TopicsController < ApplicationController
       Notification.remove_for(current_user.id, params[:topic_id]) if current_user
 
       deleted = guardian.can_see_topic?(ex.obj, false) ||
-                (!guardian.can_see_topic?(ex.obj) &&
-                 ex.obj&.access_topic_via_group &&
-                 ex.obj.deleted_at)
+        (!guardian.can_see_topic?(ex.obj) &&
+         ex.obj&.access_topic_via_group &&
+         ex.obj.deleted_at)
 
       if SiteSetting.detailed_404
         if deleted
@@ -231,11 +231,14 @@ class TopicsController < ApplicationController
 
     fetch_topic_view(options)
 
-    render_json_dump(TopicViewPostsSerializer.new(@topic_view,
-      scope: guardian,
-      root: false,
-      include_raw: !!params[:include_raw]
-    ))
+    render_json_dump(
+      TopicViewPostsSerializer.new(
+        @topic_view,
+        scope: guardian,
+        root: false,
+        include_raw: !!params[:include_raw]
+      )
+    )
   end
 
   def excerpts
@@ -261,12 +264,12 @@ class TopicsController < ApplicationController
       .joins("LEFT JOIN users u on u.id = posts.user_id")
       .pluck(:id, :cooked, :username)
       .map do |post_id, cooked, username|
-        {
-          post_id: post_id,
-          username: username,
-          excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true)
-        }
-      end
+      {
+        post_id: post_id,
+        username: username,
+        excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true)
+      }
+    end
 
     render json: @posts.to_json
   end
@@ -490,18 +493,7 @@ class TopicsController < ApplicationController
 
   def remove_bookmarks
     topic = Topic.find(params[:topic_id].to_i)
-
-    if SiteSetting.enable_bookmarks_with_reminders?
-      BookmarkManager.new(current_user).destroy_for_topic(topic)
-    else
-      PostAction.joins(:post)
-        .where(user_id: current_user.id)
-        .where('topic_id = ?', topic.id).each do |pa|
-
-        PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
-      end
-    end
-
+    BookmarkManager.new(current_user).destroy_for_topic(topic)
     render body: nil
   end
 
@@ -552,16 +544,11 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
 
-    if SiteSetting.enable_bookmarks_with_reminders?
-      bookmark_manager = BookmarkManager.new(current_user)
-      bookmark_manager.create(post_id: first_post.id)
+    bookmark_manager = BookmarkManager.new(current_user)
+    bookmark_manager.create(post_id: first_post.id)
 
-      if bookmark_manager.errors.any?
-        return render_json_error(bookmark_manager, status: 400)
-      end
-    else
-      result = PostActionCreator.create(current_user, first_post, :bookmark)
-      return render_json_error(result) if result.failed?
+    if bookmark_manager.errors.any?
+      return render_json_error(bookmark_manager, status: 400)
     end
 
     render body: nil
@@ -628,9 +615,9 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     unless pm_has_slots?(topic)
-      return render_json_error(I18n.t("pm_reached_recipients_limit",
-        recipients_limit: SiteSetting.max_allowed_message_recipients
-      ))
+      return render_json_error(
+        I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
+      )
     end
 
     if topic.private_message?
@@ -654,9 +641,9 @@ class TopicsController < ApplicationController
     )
 
     unless pm_has_slots?(topic)
-      return render_json_error(I18n.t("pm_reached_recipients_limit",
-        recipients_limit: SiteSetting.max_allowed_message_recipients
-      ))
+      return render_json_error(
+        I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
+      )
     end
 
     guardian.ensure_can_invite_to!(topic)
@@ -683,7 +670,8 @@ class TopicsController < ApplicationController
 
           if group_names.present?
             json.merge!(errors: [
-              I18n.t("topic_invite.failed_to_invite",
+              I18n.t(
+                "topic_invite.failed_to_invite",
                 group_names: group_names
               )
             ])
@@ -1011,7 +999,8 @@ class TopicsController < ApplicationController
       return
     end
 
-    topic_view_serializer = TopicViewSerializer.new(@topic_view,
+    topic_view_serializer = TopicViewSerializer.new(
+      @topic_view,
       scope: guardian,
       root: false,
       include_raw: !!params[:include_raw]

@@ -2346,19 +2346,15 @@ RSpec.describe TopicsController do
 
   describe '#remove_bookmarks' do
     it "should remove bookmarks properly from non first post" do
-      bookmark = PostActionType.types[:bookmark]
       sign_in(user)
 
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
-
-      PostActionCreator.new(user, post2, bookmark).perform
-
-      put "/t/#{post.topic_id}/bookmark.json"
-      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(2)
+      Fabricate(:bookmark, user: user, post: post)
+      Fabricate(:bookmark, user: user, post: post2)
 
       put "/t/#{post.topic_id}/remove_bookmarks.json"
-      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
+      expect(Bookmark.where(user: user).count).to eq(0)
     end
 
     it "should disallow bookmarks on posts you have no access to" do
@@ -2369,10 +2365,7 @@ RSpec.describe TopicsController do
       expect(response).to be_forbidden
     end
 
-    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = true
-      end
+    context "bookmarks with reminders" do
       it "deletes all the bookmarks for the user in the topic" do
         sign_in(user)
         post = create_post
@@ -2388,26 +2381,23 @@ RSpec.describe TopicsController do
       sign_in(user)
     end
 
-    it "should create a new post action for the bookmark on the first post of the topic" do
+    it "should create a new bookmark on the first post of the topic" do
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
       put "/t/#{post.topic_id}/bookmark.json"
 
-      expect(PostAction.find_by(user_id: user.id, post_action_type: PostActionType.types[:bookmark]).post_id).to eq(post.id)
+      expect(Bookmark.find_by(user_id: user.id).post_id).to eq(post.id)
     end
 
     it "errors if the topic is already bookmarked for the user" do
       post = create_post
-      PostActionCreator.new(user, post, PostActionType.types[:bookmark]).perform
+      Bookmark.create(post: post, user: user, topic: post.topic)
 
       put "/t/#{post.topic_id}/bookmark.json"
-      expect(response).to be_forbidden
+      expect(response.status).to eq(400)
     end
 
-    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = true
-      end
+    context "bookmarks with reminders" do
       it "should create a new bookmark on the first post of the topic" do
         post = create_post
         post2 = create_post(topic_id: post.topic_id)
