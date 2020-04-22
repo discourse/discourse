@@ -476,7 +476,7 @@ class Admin::UsersController < Admin::AdminController
     target_username = params.require(:target_username)
     target_user = User.find_by_username(target_username)
 
-    guardian.ensure_can_merge_user!(@user, target_user)
+    guardian.ensure_can_merge_users!(@user, target_user)
 
     if user = UserMerger.new(@user, target_user, current_user).merge!
       render json: success_json.merge(merged: true, user: user)
