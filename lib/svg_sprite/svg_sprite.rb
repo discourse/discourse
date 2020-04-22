@@ -63,6 +63,7 @@ module SvgSprite
     "discourse-bell-slash",
     "discourse-compress",
     "discourse-comment",
+    "discourse-comment-plus",
     "discourse-comment-slash",
     "discourse-expand",
     "download",
