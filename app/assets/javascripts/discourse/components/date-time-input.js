@@ -1,44 +1,63 @@
 import Component from "@ember/component";
-import { computed } from "@ember/object";
+import { computed, action } from "@ember/object";
 
 export default Component.extend({
   classNames: ["d-date-time-input"],
   date: null,
+  relativeDate: null,
   showTime: true,
   clearable: false,
 
-  _hours: computed("date", function() {
-    return this.date && this.showTime ? new Date(this.date).getHours() : null;
+  hours: computed("date", "showTime", function() {
+    return this.date && this.get("showTime") ? this.date.hours() : null;
   }),
 
-  _minutes: computed("date", function() {
-    return this.date && this.showTime ? new Date(this.date).getMinutes() : null;
+  minutes: computed("date", "showTime", function() {
+    return this.date && this.get("showTime") ? this.date.minutes() : null;
   }),
 
-  actions: {
-    onClear() {
-      this.onChange(null);
-    },
+  @action
+  onClear() {
+    this.onChange(null);
+  },
 
-    onChangeTime(time) {
-      if (this.onChange) {
-        const date = new Date(this.date);
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
-        this.onChange(new Date(year, month, day, time.hours, time.minutes));
-      }
-    },
+  @action
+  onChangeTime(time) {
+    if (this.onChange) {
+      const date = this.date
+        ? this.date
+        : this.relativeDate
+        ? this.relativeDate
+        : moment();
 
-    onChangeDate(date) {
-      if (this.onChange) {
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
-        this.onChange(
-          new Date(year, month, day, this._hours || 0, this._minutes || 0)
-        );
-      }
+      this.onChange(
+        moment({
+          year: date.year(),
+          month: date.month(),
+          day: date.date(),
+          hours: time.hours,
+          minutes: time.minutes
+        })
+      );
     }
+  },
+
+  @action
+  onChangeDate(date) {
+    if (!date) {
+      this.onClear();
+      return;
+    }
+
+    this.onChange &&
+      this.onChange(
+        moment({
+          year: date.year(),
+          month: date.month(),
+          day: date.date(),
+          hours: this.hours || 0,
+          minutes: this.minutes || 0
+        })
+      );
   }
 });
