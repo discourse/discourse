@@ -18,7 +18,8 @@ function initialize(api) {
       // if we are talking to discobot then any bookmarks should just
       // be created without reminder options, to streamline the new user
       // narrative.
-      if (this.username === "discobot" && !this.bookmarked_with_reminder) {
+      const discobotUserId = -2;
+      if (this.user_id === discobotUserId && !this.bookmarked_with_reminder) {
         return ajax("/bookmarks", {
           type: "POST",
           data: { post_id: this.id }
