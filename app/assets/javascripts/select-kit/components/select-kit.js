@@ -813,19 +813,7 @@ export default Component.extend(
           `[data-select-kit-id=${this.selectKit.uniqueID}-body]`
         );
 
-        if (
-          this.site &&
-          !this.site.mobileView &&
-          popper.offsetWidth < anchor.offsetWidth
-        ) {
-          popper.style.minWidth = `${anchor.offsetWidth}px`;
-        }
-
         const inModal = $(this.element).parents("#discourse-modal").length;
-
-        if (this.site && !this.site.mobileView && inModal) {
-          popper.style.width = `${anchor.offsetWidth}px`;
-        }
 
         let placementStrategy = this.selectKit.options.placementStrategy;
         if (!placementStrategy) {
