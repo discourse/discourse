@@ -247,7 +247,9 @@ class S3Helper
   end
 
   def multisite_upload_path
-    File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
+    path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
+    return path unless Discourse.is_parallel_test?
+    File.join(path, ENV['TEST_ENV_NUMBER'].presence || '1', "/")
   end
 
   def s3_resource
