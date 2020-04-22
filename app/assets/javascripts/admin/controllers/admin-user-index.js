@@ -220,13 +220,13 @@ export default Controller.extend(CanCheckEmails, {
         admin: true,
         model: {
           username: this.model.username,
-          targetUsername: targetUsername
+          targetUsername
         }
       });
     },
 
     merge(targetUsername) {
-      return this.model.merge({ targetUsername: targetUsername });
+      return this.model.merge({ targetUsername });
     },
 
     viewActionLogs() {
