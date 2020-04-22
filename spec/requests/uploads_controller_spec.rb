@@ -405,17 +405,6 @@ describe UploadsController do
           get upload.short_path
           expect(response.code).to eq("403")
         end
-
-        context "when running on a multisite connection" do
-          before do
-            Rails.configuration.multisite = true
-          end
-          it "redirects to the signed_url_for_path with the multisite DB name in the url" do
-            freeze_time
-            get upload.short_path
-            expect(response.body).to include(RailsMultisite::ConnectionManagement.current_db)
-          end
-        end
       end
     end
   end

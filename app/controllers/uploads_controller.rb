@@ -157,12 +157,6 @@ class UploadsController < ApplicationController
       return redirect_to Discourse.store.url_for(upload)
     end
 
-    # url_for figures out the full URL, handling multisite DBs,
-    # and will return a presigned URL for the upload
-    if path_with_ext.blank?
-      return redirect_to Discourse.store.url_for(upload)
-    end
-
     redirect_to Discourse.store.signed_url_for_path(path_with_ext)
   end
 
