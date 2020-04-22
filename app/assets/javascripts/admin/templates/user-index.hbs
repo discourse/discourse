@@ -680,9 +680,13 @@
 
     {{#if model.canBeDeleted}}
       {{d-button label="admin.user.delete"
-                 icon="exclamation-triangle"
+                 icon="trash-alt"
                  class="btn-danger"
                  action=(action "destroy")}}
+      {{d-button label="admin.user.merge.transfer_and_delete"
+                 icon="trash-alt"
+                 class="btn-danger"
+                 action=(action "promptTargetUser")}}
     {{/if}}
   </div>
 
