@@ -4,12 +4,6 @@
       margin-bottom: 5px;
       margin-left: 5px;
 
-      &.is-expanded {
-        .select-kit-header {
-          border: 1px solid $tertiary;
-        }
-      }
-
       &.no-tags {
         .select-kit-header .selected-name {
           color: $primary-medium;

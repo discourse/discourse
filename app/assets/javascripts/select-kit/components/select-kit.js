@@ -839,6 +839,12 @@ export default Component.extend(
           placement: this.selectKit.options.placement,
           modifiers: [
             {
+              name: "offset",
+              options: {
+                offset: [0, 2]
+              }
+            },
+            {
               name: "positionWrapper",
               phase: "afterWrite",
               enabled: true,
