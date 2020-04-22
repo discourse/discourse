@@ -482,10 +482,7 @@ export default Component.extend(
         this.selectKit.options.allowAny &&
         !this.selectKit.isExpanded
       ) {
-        return this.defaultItem(
-          null,
-          I18n.t("select_kit.filter_placeholder_with_any")
-        );
+        return null;
       }
 
       let item;
@@ -754,8 +751,6 @@ export default Component.extend(
     },
 
     _onCloseWrapper(event) {
-      this._focusFilter(this.multiSelect);
-
       this.set("selectKit.highlighted", null);
 
       let boundaryAction = this._boundaryActionHandler("onClose");

@@ -126,6 +126,7 @@
       width: inherit;
       border: none;
       padding: 0;
+      flex-direction: column;
 
       .d-date-input {
         flex: 1 1 auto;
