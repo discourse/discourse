@@ -24,6 +24,8 @@ class UserMerger
     delete_source_user
     delete_source_user_references
     log_merge
+
+    @target_user.reload
   end
 
   protected

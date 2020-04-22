@@ -137,6 +137,7 @@ Discourse::Application.routes.draw do
       get "leader_requirements" => "users#tl3_requirements"
       get "tl3_requirements"
       put "anonymize"
+      post "merge"
       post "reset_bounce_score"
       put "disable_second_factor"
     end

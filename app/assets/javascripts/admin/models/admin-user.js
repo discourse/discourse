@@ -523,7 +523,9 @@ const AdminUser = User.extend({
           if (/^\/admin\/users\/list\//.test(location)) {
             document.location = location;
           } else {
-            document.location = Discourse.getURL("/admin/users/list/active");
+            document.location = Discourse.getURL(
+              `/admin/users/${data.user.id}/${data.user.username}`
+            );
           }
         } else {
           bootbox.alert(I18n.t("admin.user.merge_failed"));

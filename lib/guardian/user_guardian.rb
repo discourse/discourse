@@ -76,6 +76,10 @@ module UserGuardian
     is_staff? && !user.nil? && !user.staff?
   end
 
+  def can_merge_user?(source_user, target_user)
+    is_admin? && !source_user.nil? && !source_user.staff? && !target_user.nil?
+  end
+
   def can_reset_bounce_score?(user)
     user && is_staff?
   end
