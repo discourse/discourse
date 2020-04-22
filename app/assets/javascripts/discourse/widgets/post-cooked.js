@@ -11,8 +11,8 @@ import {
 let _decorators = [];
 
 // Don't call this directly: use `plugin-api/decorateCooked`
-export function addDecorator(cb) {
-  _decorators.push(cb);
+export function addDecorator(callback, { afterAdopt = false } = {}) {
+  _decorators.push({ callback, afterAdopt });
 }
 
 export function resetDecorators() {
@@ -41,14 +41,31 @@ export default class PostCooked {
   }
 
   init() {
-    const $html = this._computeCooked();
-    this._insertQuoteControls($html);
-    this._showLinkCounts($html);
-    this._fixImageSizes($html);
-    this._applySearchHighlight($html);
+    const cookedDiv = this._computeCooked();
+    const $cookedDiv = $(cookedDiv);
 
-    _decorators.forEach(cb => cb($html, this.decoratorHelper));
-    return $html[0];
+    this._insertQuoteControls($cookedDiv);
+    this._showLinkCounts($cookedDiv);
+    this._fixImageSizes($cookedDiv);
+    this._applySearchHighlight($cookedDiv);
+
+    this._decorateAndAdopt(cookedDiv);
+
+    return cookedDiv;
+  }
+
+  _decorateAndAdopt(cooked) {
+    const $cooked = $(cooked);
+
+    _decorators
+      .filter(d => !d.afterAdopt)
+      .forEach(d => d.callback($cooked, this.decoratorHelper));
+
+    document.adoptNode(cooked);
+
+    _decorators
+      .filter(d => d.afterAdopt)
+      .forEach(d => d.callback($cooked, this.decoratorHelper));
   }
 
   _applySearchHighlight($html) {
@@ -175,12 +192,14 @@ export default class PostCooked {
           quotedPosts[result.id] = result;
           post.set("quoted", quotedPosts);
 
-          const div = $("<div class='expanded-quote'></div>");
-          div.data("post-id", result.id);
-          div.html(result.cooked);
-          _decorators.forEach(cb => cb(div, this.decoratorHelper));
+          const div = this._createDetachedElement("div");
+          div.classList.add("expanded-quote");
+          div.dataset.postId = result.id;
+          div.innerHTML = result.cooked;
 
-          highlightHTML(div[0], originalText, {
+          this._decorateAndAdopt(div);
+
+          highlightHTML(div, originalText, {
             matchCase: true
           });
           $blockQuote.showHtml(div, "fast", finished);
@@ -273,19 +292,29 @@ export default class PostCooked {
     });
   }
 
+  _createDetachedElement(nodeName) {
+    return document.implementation
+      .createHTMLDocument("temp")
+      .createElement(nodeName);
+  }
+
   _computeCooked() {
+    const cookedDiv = this._createDetachedElement("div");
+    cookedDiv.classList.add("cooked");
+
     if (
       (this.attrs.firstPost || this.attrs.embeddedPost) &&
       this.ignoredUsers &&
       this.ignoredUsers.length > 0 &&
       this.ignoredUsers.includes(this.attrs.username)
     ) {
-      return $(
-        `<div class='cooked post-ignored'>${I18n.t("post.ignored")}</div>`
-      );
+      cookedDiv.classList.add("post-ignored");
+      cookedDiv.innerHTML = I18n.t("post.ignored");
+    } else {
+      cookedDiv.innerHTML = this.attrs.cooked;
     }
 
-    return $(`<div class='cooked'>${this.attrs.cooked}</div>`);
+    return cookedDiv;
   }
 }
 
