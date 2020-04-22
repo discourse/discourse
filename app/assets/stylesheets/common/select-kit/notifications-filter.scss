@@ -1,0 +1,52 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.notifications-filter {
+      // width: 100%;
+      display: inline-flex;
+      position: relative;
+      // border-bottom: 1px solid $primary-low;
+      .period-chooser-header {
+        padding: 0 0.5em 0 0.5em;
+        background: none;
+        border: none;
+        justify-content: flex-start;
+        width: auto;
+        height: auto;
+        span.filter-text{ 
+          margin-right: 15px;
+          color: $primary-medium;
+        }
+        span.header-text{
+          color: dark-light-choose($tertiary, $tertiary);
+        }
+
+        .d-icon {
+          color: $primary-medium;
+          opacity: 1;
+          margin: 5px 0 10px 5px;
+          font-size: $font-up-3;
+        }
+
+        &.is-focused,
+        &:hover {
+          background: none;
+          border: none;
+          outline: none;
+        }
+      }
+      .period-chooser-row {
+        font-weight: bold;
+        padding: 0.5em;
+        font-size: $font-up-1;
+        align-items: center;
+        display: flex;
+        width: auto;
+        height: auto;
+
+        span.period-title {
+          flex: 1 0 0px;
+        }
+      }
+    } 
+  }
+}
