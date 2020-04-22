@@ -495,14 +495,10 @@ module ApplicationHelper
 
   def get_absolute_image_url(link)
     absolute_url = link
-    if link.start_with?("//")
+    if link.start_with?('//')
       uri = URI(Discourse.base_url)
       absolute_url = "#{uri.scheme}:#{link}"
-    elsif link.start_with?("/uploads/")
-      absolute_url = "#{Discourse.base_url}#{link}"
-    elsif link.start_with?("/images/")
-      absolute_url = "#{Discourse.base_url}#{link}"
-    elsif link.start_with?("/user_avatar/")
+    elsif link.start_with?('/uploads/', '/images/', '/user_avatar/')
       absolute_url = "#{Discourse.base_url}#{link}"
     elsif GlobalSetting.relative_url_root && link.start_with?(GlobalSetting.relative_url_root)
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
