@@ -186,22 +186,13 @@ QUnit.test("mute topic", function(assert) {
 
   const state = TopicTrackingState.create({ currentUser });
 
-  state.trackMutedTopics({
-    message_type: "muted",
-    topic_id: 1
-  });
+  state.trackMutedTopic(1);
   assert.equal(currentUser.muted_topics[0].topicId, 1);
 
-  state.trackMutedTopics({
-    message_type: "latest",
-    topic_id: 1
-  });
-  assert.equal(currentUser.muted_topics.length, 1);
+  state.pruneOldMutedTopics();
+  assert.equal(state.isMutedTopic(1), true);
 
   this.clock.tick(60000);
-  state.trackMutedTopics({
-    message_type: "latest",
-    topic_id: 1
-  });
-  assert.equal(currentUser.muted_topics.length, 0);
+  state.pruneOldMutedTopics();
+  assert.equal(state.isMutedTopic(1), false);
 });
