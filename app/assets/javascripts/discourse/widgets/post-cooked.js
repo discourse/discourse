@@ -8,15 +8,27 @@ import {
   unhighlightHTML
 } from "discourse/lib/highlight-html";
 
-let _decorators = [];
+let _beforeAdoptDecorators = [];
+let _afterAdoptDecorators = [];
 
 // Don't call this directly: use `plugin-api/decorateCooked`
 export function addDecorator(callback, { afterAdopt = false } = {}) {
-  _decorators.push({ callback, afterAdopt });
+  if (afterAdopt) {
+    _afterAdoptDecorators.push(callback);
+  } else {
+    _beforeAdoptDecorators.push(callback);
+  }
 }
 
 export function resetDecorators() {
-  _decorators = [];
+  _beforeAdoptDecorators = [];
+  _afterAdoptDecorators = [];
+}
+
+let detachedDocument = document.implementation.createHTMLDocument("detached");
+
+function createDetachedElement(nodeName) {
+  return detachedDocument.createElement(nodeName);
 }
 
 export default class PostCooked {
@@ -57,15 +69,11 @@ export default class PostCooked {
   _decorateAndAdopt(cooked) {
     const $cooked = $(cooked);
 
-    _decorators
-      .filter(d => !d.afterAdopt)
-      .forEach(d => d.callback($cooked, this.decoratorHelper));
+    _beforeAdoptDecorators.forEach(d => d($cooked, this.decoratorHelper));
 
     document.adoptNode(cooked);
 
-    _decorators
-      .filter(d => d.afterAdopt)
-      .forEach(d => d.callback($cooked, this.decoratorHelper));
+    _afterAdoptDecorators.forEach(d => d($cooked, this.decoratorHelper));
   }
 
   _applySearchHighlight($html) {
@@ -192,7 +200,7 @@ export default class PostCooked {
           quotedPosts[result.id] = result;
           post.set("quoted", quotedPosts);
 
-          const div = this._createDetachedElement("div");
+          const div = createDetachedElement("div");
           div.classList.add("expanded-quote");
           div.dataset.postId = result.id;
           div.innerHTML = result.cooked;
@@ -292,14 +300,8 @@ export default class PostCooked {
     });
   }
 
-  _createDetachedElement(nodeName) {
-    return document.implementation
-      .createHTMLDocument("temp")
-      .createElement(nodeName);
-  }
-
   _computeCooked() {
-    const cookedDiv = this._createDetachedElement("div");
+    const cookedDiv = createDetachedElement("div");
     cookedDiv.classList.add("cooked");
 
     if (
