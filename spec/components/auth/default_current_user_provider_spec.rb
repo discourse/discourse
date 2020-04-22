@@ -769,7 +769,6 @@ describe Auth::DefaultCurrentUserProvider do
         application_name: 'my app',
         client_id: '1234',
         scopes: ['read'],
-        key: SecureRandom.hex,
         user_id: user.id
       )
     end
@@ -779,7 +778,6 @@ describe Auth::DefaultCurrentUserProvider do
         application_name: 'my app',
         client_id: '12345',
         scopes: ['read'],
-        key: SecureRandom.hex,
         user_id: user.id
       )
 
