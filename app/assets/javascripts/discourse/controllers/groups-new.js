@@ -12,7 +12,7 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
   data["automatic_membership_email_domains"] = email_domains;
 
   if (group_id) {
-    data["id"] = group_id;
+    data.id = group_id;
   }
 
   ajax(`/admin/groups/automatic_membership_count.json`, {
