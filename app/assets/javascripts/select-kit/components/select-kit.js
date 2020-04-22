@@ -257,7 +257,7 @@ export default Component.extend(
       autoFilterable: "autoFilterable",
       filterIcon: "search",
       filterPlaceholder: "filterPlaceholder",
-      translatedfilterPlaceholder: null,
+      translatedFilterPlaceholder: null,
       icon: null,
       icons: null,
       maximum: null,
