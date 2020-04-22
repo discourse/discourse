@@ -51,7 +51,7 @@ class ThemeModifierSet < ActiveRecord::Base
   end
 
   def topic_thumbnail_sizes
-    array = super
+    array = read_attribute(:topic_thumbnail_sizes)
 
     return if array.nil?
 
@@ -63,9 +63,9 @@ class ThemeModifierSet < ActiveRecord::Base
   end
 
   def topic_thumbnail_sizes=(val)
-    return super(val) if val.nil?
-    return super(val) if !val.is_a?(Array)
-    return super(val) if !val.all? { |v| v.is_a?(Array) && v.length == 2 }
+    return write_attribute(:topic_thumbnail_sizes, val) if val.nil?
+    return write_attribute(:topic_thumbnail_sizes, val) if !val.is_a?(Array)
+    return write_attribute(:topic_thumbnail_sizes, val) if !val.all? { |v| v.is_a?(Array) && v.length == 2 }
 
     super(val.map { |dim| "#{dim[0]}x#{dim[1]}" })
   end
