@@ -1,4 +1,4 @@
-import { TextArea } from "@ember/component";
+import TextArea from "@ember/component/text-area";
 import { schedule } from "@ember/runloop";
 import { on, observes } from "discourse-common/utils/decorators";
 import autosize from "discourse/lib/autosize";
