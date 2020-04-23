@@ -39,13 +39,13 @@ export default EmberObject.extend({
 
     if (topic.get("closed") && topic.get("archived")) {
       results.push({
-        icon: "discourse-comment-slash",
+        icon: "discourse-comment-close",
         key: "locked_and_archived"
       });
     } else if (topic.get("closed")) {
-      results.push({ icon: "discourse-comment-slash", key: "locked" });
+      results.push({ icon: "discourse-comment-close", key: "locked" });
     } else if (topic.get("archived")) {
-      results.push({ icon: "discourse-comment-slash", key: "archived" });
+      results.push({ icon: "discourse-comment-close", key: "archived" });
     }
 
     if (topic.get("pinned")) {

@@ -32,9 +32,9 @@ export function actionDescription(actionCode, createdAt, username) {
 }
 
 const icons = {
-  "closed.enabled": "discourse-comment-slash",
+  "closed.enabled": "discourse-comment-close",
   "closed.disabled": "discourse-comment-plus",
-  "autoclosed.enabled": "discourse-comment-slash",
+  "autoclosed.enabled": "discourse-comment-close",
   "autoclosed.disabled": "discourse-comment-plus",
   "archived.enabled": "folder",
   "archived.disabled": "folder-open",
