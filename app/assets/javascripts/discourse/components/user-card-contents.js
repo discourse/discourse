@@ -38,7 +38,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showMoreBadges: gt("moreBadgesCount", 0),
   showDelete: and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: not("user.isBasic"),
-  hasLocationOrWebsite: or(
+  hasLocaleOrWebsite: or(
     "user.location",
     "user.website_name",
     "user._timezone"
