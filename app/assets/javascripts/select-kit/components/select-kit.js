@@ -858,8 +858,7 @@ export default Component.extend(
                     this.element.classList.add("is-under");
                   }
 
-                  // - 1 accounts for any rounding error
-                  wrapper.style.width = `${this.element.offsetWidth - 1}px`;
+                  wrapper.style.width = `${this.element.offsetWidth}px`;
                   wrapper.style.height = `${height}px`;
                 }
               }
