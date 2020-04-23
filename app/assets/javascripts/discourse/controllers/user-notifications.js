@@ -20,9 +20,8 @@ export default Controller.extend({
       return this.model.filterBy("read",true).length > 0;
     }else if(filter=="unread"){
       return this.model.filterBy("read",false).length > 0;
-    }else{
-      return length > 0;
     }
+    return length > 0;
   },
 
   @discourseComputed("model.content.@each.read")

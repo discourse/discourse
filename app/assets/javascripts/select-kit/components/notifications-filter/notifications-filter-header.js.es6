@@ -5,7 +5,7 @@ export default DropdownSelectBoxHeaderComponent.extend({
   layoutName:
     "select-kit/templates/components/notifications-filter/notifications-filter-header",
   classNames: ["notifications-filter-header"],
-  
+
   @discourseComputed("selectKit.isExpanded")
   caretIcon(isExpanded) {
     return isExpanded ? "caret-up" : "caret-down";

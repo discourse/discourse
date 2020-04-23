@@ -1,4 +1,3 @@
-// import { oneWay, readOnly } from "@ember/object/computed";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({
@@ -23,15 +22,12 @@ export default DropdownSelectBoxComponent.extend({
   },
   isVisible: true,
   valueProperty: null,
-  nameProperty: null,
 
   modifyComponentForRow() {
     return "notifications-filter/notifications-filter-row";
   },
 
   selectKitOptions: {
-    filterable: false,
-    autoFilterable: false,
     headerComponent: "notifications-filter/notifications-filter-header"
   },
 
