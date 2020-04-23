@@ -185,22 +185,6 @@ describe Jobs::PullHotlinkedImages do
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
             .to change { Upload.count }.by(1)
         end
-
-        context "when the user who created the post does not have access to the original upload" do
-          it "doesnt redownload the secure upload" do
-            enable_secure_media
-            upload = Fabricate(:secure_upload_s3, secure: true)
-            stub_s3(upload)
-            url = Upload.secure_media_url_from_upload_url(upload.url)
-            url = Discourse.base_url + url
-            topic = Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
-            access_control_post = Fabricate(:post, topic: topic)
-            post = Fabricate(:post, raw: "<img src='#{url}'>")
-            upload.update(access_control_post: access_control_post)
-            expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
-              .not_to change { Upload.count }
-          end
-        end
       end
     end
 
@@ -318,27 +302,25 @@ describe Jobs::PullHotlinkedImages do
   end
 
   describe '#should_download_image?' do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:post) { Fabricate(:post, topic: Fabricate(:topic, title: "A test of downloads", user: user), user: user) }
     subject { described_class.new }
 
     describe 'when url is invalid' do
       it 'should return false' do
-        expect(subject.should_download_image?("null", post)).to eq(false)
-        expect(subject.should_download_image?("meta.discourse.org", post)).to eq(false)
+        expect(subject.should_download_image?("null")).to eq(false)
+        expect(subject.should_download_image?("meta.discourse.org")).to eq(false)
       end
     end
 
     describe 'when url is valid' do
       it 'should return true' do
-        expect(subject.should_download_image?("http://meta.discourse.org", post)).to eq(true)
-        expect(subject.should_download_image?("//meta.discourse.org", post)).to eq(true)
+        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(true)
+        expect(subject.should_download_image?("//meta.discourse.org")).to eq(true)
       end
     end
 
     describe 'when url is an upload' do
       it 'should return false for original' do
-        expect(subject.should_download_image?(Fabricate(:upload, user: user).url, post)).to eq(false)
+        expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
       end
 
       context "when secure media enabled" do
@@ -347,13 +329,13 @@ describe Jobs::PullHotlinkedImages do
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           url = Upload.secure_media_url_from_upload_url(upload.url)
-          expect(subject.should_download_image?(url, post)).to eq(false)
+          expect(subject.should_download_image?(url)).to eq(false)
         end
       end
 
       it 'should return true for optimized' do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
-        expect(subject.should_download_image?(src, post)).to eq(true)
+        expect(subject.should_download_image?(src)).to eq(true)
       end
     end
 
@@ -364,16 +346,16 @@ describe Jobs::PullHotlinkedImages do
 
       it "still returns true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
-        expect(subject.should_download_image?(src, post)).to eq(true)
+        expect(subject.should_download_image?(src)).to eq(true)
       end
 
       it "returns false for emoji" do
         src = Emoji.url_for("testemoji.png")
-        expect(subject.should_download_image?(src, post)).to eq(false)
+        expect(subject.should_download_image?(src)).to eq(false)
       end
 
       it 'returns false for valid remote URLs' do
-        expect(subject.should_download_image?("http://meta.discourse.org", post)).to eq(false)
+        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(false)
       end
     end
   end

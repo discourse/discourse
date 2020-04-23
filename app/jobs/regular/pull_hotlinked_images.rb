@@ -63,15 +63,11 @@ module Jobs
 
             unless downloaded_images.include?(schemeless_src) || large_images.include?(schemeless_src) || broken_images.include?(schemeless_src)
 
-              download_url = src
-
               # secure-media-uploads endpoint prevents anonymous downloads, so we
               # need the presigned S3 URL here
-              if Upload.secure_media_url?(src)
-                download_url = Upload.signed_url_from_secure_media_url(src)
-              end
+              src = Upload.signed_url_from_secure_media_url(src) if Upload.secure_media_url?(src)
 
-              if hotlinked = download(download_url)
+              if hotlinked = download(src)
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
                   filename << File.extname(hotlinked.path) unless filename["."]
@@ -168,7 +164,7 @@ module Jobs
         doc.css(".lightbox img[src]")
     end
 
-    def should_download_image?(src, post)
+    def should_download_image?(src, post = nil)
       # make sure we actually have a url
       return false unless src.present?
 
@@ -185,22 +181,9 @@ module Jobs
         # media was enabled, then we definitely want to redownload again otherwise
         # we end up reusing existing uploads which may be linked to many posts
         # already.
-        upload = Upload.get_from_url(src)
-        return true if upload.blank?
+        upload = Upload.consider_for_reuse(Upload.get_from_url(src), post)
 
-        if SiteSetting.secure_media && upload.access_control_post_id.present?
-          if upload.copied_from_other_post?(post)
-            # only redownload if the person making this post can access the
-            # upload in the original post. this is to stop the loophole of
-            # having a URL for a post that you should not have and copying it
-            # into a public post to redownload that upload
-            return Guardian.new(post.user).can_see?(upload.access_control_post)
-          end
-
-          return true if upload.uploaded_before_secure_media_enabled?
-        end
-
-        return false
+        return !upload.present?
       end
 
       # Don't download non-local images unless site setting enabled
