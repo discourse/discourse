@@ -1,4 +1,4 @@
-import { TextField } from "@ember/component";
+import TextField from "discourse/components/text-field";
 import { on } from "discourse-common/utils/decorators";
 
 export default TextField.extend({
