@@ -185,6 +185,22 @@ describe Jobs::PullHotlinkedImages do
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
             .to change { Upload.count }.by(1)
         end
+
+        context "when the user who created the post does not have access to the original upload" do
+          it "doesnt redownload the secure upload" do
+            enable_secure_media
+            upload = Fabricate(:secure_upload_s3, secure: true)
+            stub_s3(upload)
+            url = Upload.secure_media_url_from_upload_url(upload.url)
+            url = Discourse.base_url + url
+            topic = Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+            access_control_post = Fabricate(:post, topic: topic)
+            post = Fabricate(:post, raw: "<img src='#{url}'>")
+            upload.update(access_control_post: access_control_post)
+            expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+              .not_to change { Upload.count }
+          end
+        end
       end
     end
 

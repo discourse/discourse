@@ -63,11 +63,15 @@ module Jobs
 
             unless downloaded_images.include?(schemeless_src) || large_images.include?(schemeless_src) || broken_images.include?(schemeless_src)
 
+              download_url = src
+
               # secure-media-uploads endpoint prevents anonymous downloads, so we
               # need the presigned S3 URL here
-              src = Upload.signed_url_from_secure_media_url(src) if Upload.secure_media_url?(src)
+              if Upload.secure_media_url?(src)
+                download_url = Upload.signed_url_from_secure_media_url(src)
+              end
 
-              if hotlinked = download(src)
+              if hotlinked = download(download_url)
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
                   filename << File.extname(hotlinked.path) unless filename["."]
@@ -185,7 +189,15 @@ module Jobs
         return true if upload.blank?
 
         if SiteSetting.secure_media && upload.access_control_post_id.present?
-          return true if upload.copied_from_other_post?(post) || upload.uploaded_before_secure_media_enabled?
+          if upload.copied_from_other_post?(post)
+            # only redownload if the person making this post can access the
+            # upload in the original post. this is to stop the loophole of
+            # having a URL for a post that you should not have and copying it
+            # into a public post to redownload that upload
+            return Guardian.new(post.user).can_see?(upload.access_control_post)
+          end
+
+          return true if upload.uploaded_before_secure_media_enabled?
         end
 
         return false
