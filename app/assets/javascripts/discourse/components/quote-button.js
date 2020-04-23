@@ -188,10 +188,16 @@ export default Component.extend({
       .on("mouseup.quote-button", () => {
         this._prevSelection = null;
         this._isMouseDown = false;
-        onSelectionChanged();
+        if (document.activeElement === document.body) {
+          onSelectionChanged();
+        }
       })
       .on("selectionchange.quote-button", () => {
-        if (!this._isMouseDown && !this._reselected) {
+        if (
+          !this._isMouseDown &&
+          !this._reselected &&
+          document.activeElement === document.body
+        ) {
           onSelectionChanged();
         }
       });
