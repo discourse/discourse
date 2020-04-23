@@ -64,7 +64,7 @@ module SvgSprite
     "discourse-compress",
     "discourse-comment",
     "discourse-comment-plus",
-    "discourse-comment-slash",
+    "discourse-comment-close",
     "discourse-expand",
     "download",
     "ellipsis-h",
