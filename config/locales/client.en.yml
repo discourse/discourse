@@ -1032,28 +1032,28 @@ en:
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
         use: "Use Authenticator app"
         enforced_notice: "You are required to enable two factor authentication before accessing this site."
-        disable: "disable"
-        disable_title: "Disable Second Factor"
+        disable: "Disable"
         disable_confirm: "Are you sure you want to disable all second factors?"
-        edit: "Edit"
+        save: "Save"
         edit_title: "Edit Second Factor"
         edit_description: "Second Factor Name"
-        enable_security_key_description: "When you have your physical security key prepared press the Register button below."
+        enable_security_key_description: |
+          When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> prepared, press the Register button below.
         totp:
           title: "Token-Based Authenticators"
-          add: "New Authenticator"
+          add: "Add Authenticator"
           default_name: "My Authenticator"
           name_and_code_required_error: "You must provide a name and the code from your authenticator app."
         security_key:
           register: "Register"
           title: "Security Keys"
-          add: "Register Security Key"
+          add: "Add Security Key"
           default_name: "Main Security Key"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
           edit: "Edit Security Key"
+          save: "Save"
           edit_description: "Security Key Name"
-          delete: "Delete"
           name_required_error: "You must provide a name for your security key."
 
       change_about:

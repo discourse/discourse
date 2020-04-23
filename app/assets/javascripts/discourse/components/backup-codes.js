@@ -42,16 +42,33 @@ export default Component.extend({
     return backupCodes.join("\n").trim();
   },
 
+  @discourseComputed()
+  siteTitleLowerCase() {
+    let title = this.siteSettings.title;
+
+    if (/^[\000-\177]*$/.test(title)) {
+      return title
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "")
+        .replace(/\-\-+/g, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "")
+        .toLowerCase();
+    }
+
+    return "discourse";
+  },
+
   actions: {
     copyToClipboard() {
       this._selectAllBackupCodes();
       this.copyBackupCode(document.execCommand("copy"));
-    }
+    },
   },
 
   _selectAllBackupCodes() {
     const textArea = this.element.querySelector("#backupCodes");
     textArea.focus();
     textArea.setSelectionRange(0, this.formattedBackupCodes.length);
-  }
+  },
 });

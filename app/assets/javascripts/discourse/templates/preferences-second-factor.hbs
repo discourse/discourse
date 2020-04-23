@@ -31,6 +31,7 @@
             <h2>{{i18n "user.second_factor.totp.title"}}</h2>
             {{d-button action=(action "createTotp")
               class="btn-primary new-totp"
+              icon="plus"
               disabled=loading
               label="user.second_factor.totp.add"}}
             {{#each totps as |totp|}}
@@ -58,6 +59,7 @@
             <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
             {{d-button action=(action "createSecurityKey")
               class="btn-primary new-security-key"
+              icon="plus"
               disabled=loading
               label="user.second_factor.security_key.add"}}
             {{#each security_keys as |security_key|}}
@@ -107,9 +109,9 @@
           {{#unless showEnforcedNotice}}
             <div class="control-group">
               <div class="controls">
-                <h2>{{i18n "user.second_factor.disable_title"}}</h2>
                 {{d-button
                   class="btn-danger"
+                  icon="ban"
                   action=(action "disableAllSecondFactors")
                   disabled=loading
                   label="disable"}}
