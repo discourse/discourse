@@ -26,6 +26,7 @@ vi:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"

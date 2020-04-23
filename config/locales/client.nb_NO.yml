@@ -27,6 +27,7 @@ nb_NO:
         millions: "{{number}}M"
     dates:
       time: "LT"
+      time_with_zone: "LT (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D. MMMM"

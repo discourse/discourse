@@ -26,6 +26,7 @@ ja:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
+      time_with_zone: "H:mm (z)"
       timeline_date: "YYYY年M月"
       long_no_year_no_time: "M月D日"
       full_no_year_no_time: "M月D日"

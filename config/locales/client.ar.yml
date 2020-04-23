@@ -31,6 +31,7 @@ ar:
         millions: "{{number}} مليون"
     dates:
       time: "h:mm a"
+      time_with_zone: "h:mm a (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"

@@ -1407,6 +1407,7 @@ en:
     watched_word_regexp_error: "The regular expression for %{action} watched words is invalid. Please check your <a href='%{base_path}/admin/logs/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
 
   site_settings:
+    display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text</a>."
