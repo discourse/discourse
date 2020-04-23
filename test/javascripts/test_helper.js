@@ -189,16 +189,9 @@ QUnit.testDone(function() {
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
-  var appEvents = window.Discourse.__container__.lookup("service:app-events");
-  var events = appEvents.__proto__._events;
-  Object.keys(events).forEach(function(eventKey) {
-    var event = events[eventKey];
-    event.forEach(function(listener) {
-      if (appEvents.has(eventKey)) {
-        appEvents.off(eventKey, listener.target, listener.fn);
-      }
-    });
-  });
+  require("discourse/services/app-events").clearAppEventsCache(
+    window.Discourse.__container__
+  );
 
   window.MessageBus.unsubscribe("*");
   delete window.server;

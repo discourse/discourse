@@ -179,7 +179,10 @@ class CategoriesController < ApplicationController
 
     custom_slug = params[:slug].to_s
 
-    if custom_slug.present? && @category.update(slug: custom_slug)
+    if custom_slug.blank?
+      error = @category.errors.full_message(:slug, I18n.t('errors.messages.blank'))
+      render_json_error(error)
+    elsif @category.update(slug: custom_slug)
       render json: success_json
     else
       render_json_error(@category)

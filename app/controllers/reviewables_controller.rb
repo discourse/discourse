@@ -227,11 +227,12 @@ protected
     return if SiteSetting.reviewable_claiming == "disabled" || reviewable.topic_id.blank?
 
     claimed_by_id = ReviewableClaimedTopic.where(topic_id: reviewable.topic_id).pluck(:user_id)[0]
-    if SiteSetting.reviewable_claiming == "required" && claimed_by_id.blank?
-      return I18n.t('reviewables.must_claim')
-    end
 
-    claimed_by_id.present? && claimed_by_id != current_user.id
+    if SiteSetting.reviewable_claiming == "required" && claimed_by_id.blank?
+      I18n.t('reviewables.must_claim')
+    elsif claimed_by_id.present? && claimed_by_id != current_user.id
+      I18n.t('reviewables.user_claimed')
+    end
   end
 
   def find_reviewable

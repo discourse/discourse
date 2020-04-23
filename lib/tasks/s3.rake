@@ -21,8 +21,7 @@ def upload(path, remote_path, content_type, content_encoding = nil)
   options = {
     cache_control: 'max-age=31556952, public, immutable',
     content_type: content_type,
-    acl: 'public-read',
-    tagging: ''
+    acl: 'public-read'
   }
 
   if content_encoding

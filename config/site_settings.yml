@@ -291,7 +291,7 @@ basic:
     default: false
   enable_bookmarks_with_reminders:
     client: true
-    default: false
+    default: true
     hidden: true
   enable_bookmark_at_desktop_reminders:
     client: true
@@ -850,6 +850,9 @@ posting:
     type: list
     client: true
     list_type: compact
+  show_copy_button_on_codeblocks:
+    client: true
+    default: false
   delete_old_hidden_posts: true
   enable_emoji:
     default: true

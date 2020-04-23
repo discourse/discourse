@@ -381,11 +381,7 @@ class Search
 
   advanced_filter(/^in:(bookmarks)$/) do |posts, match|
     if @guardian.user
-      if SiteSetting.enable_bookmarks_with_reminders
-        posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
-      else
-        post_action_type_filter(posts, PostActionType.types[:bookmark])
-      end
+      posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
     end
   end
 

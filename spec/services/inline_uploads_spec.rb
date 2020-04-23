@@ -712,4 +712,17 @@ RSpec.describe InlineUploads do
       end
     end
   end
+
+  describe ".match_md_inline_img" do
+    it "matches URLs with various characters" do
+      md = <<~MD
+      ![test](https://some-site.com/a_test?q=1&b=hello%20there)
+      MD
+
+      url = nil
+      InlineUploads.match_md_inline_img(md, external_src: true) { |_match, src| url = src }
+
+      expect(url).to eq("https://some-site.com/a_test?q=1&b=hello%20there")
+    end
+  end
 end

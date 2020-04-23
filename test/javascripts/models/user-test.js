@@ -104,3 +104,10 @@ QUnit.test("resolvedTimezone", assert => {
   );
   stub.restore();
 });
+
+QUnit.test("muted ids", assert => {
+  let user = User.create({ username: "chuck", muted_category_ids: [] });
+
+  assert.deepEqual(user.calculateMutedIds(0, 1, "muted_category_ids"), [1]);
+  assert.deepEqual(user.calculateMutedIds(1, 1, "muted_category_ids"), []);
+});

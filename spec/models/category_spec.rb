@@ -403,6 +403,16 @@ describe Category do
       expect(@category.topics_year).to eq(0)
     end
 
+    it "cooks the definition" do
+      category = Category.create(
+        name: 'little-test',
+        user_id: Discourse.system_user.id,
+        description: "click the link [here](https://fakeurl.com)"
+      )
+      expect(category.description.include?("[here]")).to eq(false)
+      expect(category.description).to eq(category.topic.first_post.cooked)
+    end
+
     it "renames the definition when renamed" do
       @category.update(name: 'Troutfishing')
       @topic.reload

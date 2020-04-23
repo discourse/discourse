@@ -241,7 +241,7 @@ componentTest("selected value can be 0", {
 
 componentTest("prevents propagating click event on header", {
   template:
-    "{{#d-button icon='times' action=onClick}}{{single-select value=value content=content}}{{/d-button}}",
+    "{{#d-button icon='times' action=onClick}}{{single-select options=(hash preventsClickPropagation=true) value=value content=content}}{{/d-button}}",
 
   beforeEach() {
     this.setProperties({

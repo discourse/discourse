@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Group < ActiveRecord::Base
+  self.ignored_columns = %w{
+    automatic_membership_retroactive
+  }
+
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
@@ -770,12 +774,10 @@ class Group < ActiveRecord::Base
   def automatic_membership_email_domains_format_validator
     return if self.automatic_membership_email_domains.blank?
 
-    domains = self.automatic_membership_email_domains.split("|")
-    domains.each do |domain|
-      domain.sub!(/^https?:\/\//, '')
-      domain.sub!(/\/.*$/, '')
+    domains = Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
       self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
     end
+
     self.automatic_membership_email_domains = domains.join("|")
   end
 
@@ -791,7 +793,7 @@ class Group < ActiveRecord::Base
   end
 
   def automatic_group_membership
-    if self.automatic_membership_retroactive
+    if self.automatic_membership_email_domains.present?
       Jobs.enqueue(:automatic_group_membership, group_id: self.id)
     end
   end
@@ -842,6 +844,32 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.automatic_membership_users(domains, group_id = nil)
+    pattern = "@(#{domains.gsub('.', '\.')})$"
+
+    users = User.joins(:user_emails).where("user_emails.email ~* ?", pattern).activated.where(staged: false)
+    users = users.where("users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)", group_id) if group_id.present?
+
+    users
+  end
+
+  def self.get_valid_email_domains(value)
+    valid_domains = []
+
+    value.split("|").each do |domain|
+      domain.sub!(/^https?:\/\//, '')
+      domain.sub!(/\/.*$/, '')
+
+      if domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+        valid_domains << domain
+      else
+        yield domain
+      end
+    end
+
+    valid_domains
+  end
+
   private
 
   def validate_grant_trust_level
@@ -887,7 +915,6 @@ end
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
 #  automatic_membership_email_domains :text
-#  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
 #  title                              :string
 #  grant_trust_level                  :integer

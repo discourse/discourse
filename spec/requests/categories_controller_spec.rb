@@ -452,8 +452,9 @@ describe CategoriesController do
       end
 
       it 'rejects blank' do
-        put "/category/#{category.id}/slug.json", params: { slug: nil }
+        put "/category/#{category.id}/slug.json", params: { slug: '   ' }
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["Slug can't be blank"])
       end
 
       it 'accepts valid custom slug' do
@@ -480,8 +481,9 @@ describe CategoriesController do
       end
 
       it 'rejects invalid custom slug' do
-        put "/category/#{category.id}/slug.json", params: { slug: '  ' }
+        put "/category/#{category.id}/slug.json", params: { slug: '.' }
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["Slug is invalid"])
       end
     end
   end

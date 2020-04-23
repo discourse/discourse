@@ -20,6 +20,7 @@ class Admin::UsersController < Admin::AdminController
                                     :remove_group,
                                     :primary_group,
                                     :anonymize,
+                                    :merge,
                                     :reset_bounce_score,
                                     :disable_second_factor,
                                     :delete_posts_batch]
@@ -197,7 +198,9 @@ class Admin::UsersController < Admin::AdminController
 
   def add_group
     group = Group.find(params[:group_id].to_i)
-    return render_json_error group unless group && !group.automatic
+
+    raise Discourse::NotFound unless group
+    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
 
     group.add(@user)
     GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
@@ -207,7 +210,9 @@ class Admin::UsersController < Admin::AdminController
 
   def remove_group
     group = Group.find(params[:group_id].to_i)
-    return render_json_error group unless group && !group.automatic
+
+    raise Discourse::NotFound unless group
+    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
 
     group.remove(@user)
     GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
@@ -464,6 +469,19 @@ class Admin::UsersController < Admin::AdminController
       render json: success_json.merge(username: user.username)
     else
       render json: failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
+    end
+  end
+
+  def merge
+    target_username = params.require(:target_username)
+    target_user = User.find_by_username(target_username)
+
+    guardian.ensure_can_merge_users!(@user, target_user)
+
+    if user = UserMerger.new(@user, target_user, current_user).merge!
+      render json: success_json.merge(merged: true, user: user)
+    else
+      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, root: false).as_json)
     end
   end
 

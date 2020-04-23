@@ -5,10 +5,9 @@ Report.add_report('top_uploads') do |report|
 
   extension_filter = report.filters.dig(:"file-extension")
   report.add_filter('file-extension',
+    type: 'list',
     default: extension_filter || 'any',
-    choices: (
-      SiteSetting.authorized_extensions.split('|') + Array(extension_filter)
-    ).uniq
+    choices: (SiteSetting.authorized_extensions.split('|') + Array(extension_filter)).uniq
   )
 
   report.labels = [

@@ -287,6 +287,7 @@ class Category < ActiveRecord::Base
       update_column(:topic_id, t.id)
       post = t.posts.build(raw: description || post_template, user: user)
       post.save!(validate: false)
+      update_column(:description, post.cooked) if description.present?
 
       t
     end
@@ -342,7 +343,12 @@ class Category < ActiveRecord::Base
       slug = SiteSetting.slug_generation_method == 'encoded' ? CGI.unescape(self.slug) : self.slug
       # sanitize the custom slug
       self.slug = Slug.sanitize(slug)
-      errors.add(:slug, 'is already in use') if duplicate_slug?
+
+      if self.slug.blank?
+        errors.add(:slug, :invalid)
+      elsif duplicate_slug?
+        errors.add(:slug, 'is already in use')
+      end
     else
       # auto slug
       self.slug = Slug.for(name, '')
@@ -771,22 +777,29 @@ class Category < ActiveRecord::Base
     end
   end
 
-  def self.find_by_slug(category_slug, parent_category_slug = nil)
-
-    return nil if category_slug.nil?
+  def self.find_by_slug_path(slug_path)
+    return nil if slug_path.empty?
+    return nil if slug_path.size > SiteSetting.max_category_nesting
 
     if SiteSetting.slug_generation_method == "encoded"
-      parent_category_slug = CGI.escape(parent_category_slug) unless parent_category_slug.nil?
-      category_slug = CGI.escape(category_slug)
+      slug_path.map! { |slug| CGI.escape(slug) }
     end
 
-    if parent_category_slug
-      parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).select(:id)
+    query =
+      slug_path.inject(nil) do |parent_id, slug|
+        Category.where(
+          slug: slug,
+          parent_category_id: parent_id,
+        ).select(:id)
+      end
 
-      self.where(slug: category_slug, parent_category_id: parent_category_id).first
-    else
-      self.where(slug: category_slug, parent_category_id: nil).first
-    end
+    Category.find_by_id(query)
+  end
+
+  def self.find_by_slug(category_slug, parent_category_slug = nil)
+    return nil if category_slug.nil?
+
+    find_by_slug_path([parent_category_slug, category_slug].compact)
   end
 
   def subcategory_list_includes_topics?

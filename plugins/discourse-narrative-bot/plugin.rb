@@ -241,10 +241,8 @@ after_initialize do
   end
 
   self.add_model_callback(Bookmark, :after_commit, on: :create) do
-    if SiteSetting.enable_bookmarks_with_reminders?
-      if self.post && self.user.enqueue_narrative_bot_job?
-        Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: :bookmark)
-      end
+    if self.post && self.user.enqueue_narrative_bot_job?
+      Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: :bookmark)
     end
   end
 

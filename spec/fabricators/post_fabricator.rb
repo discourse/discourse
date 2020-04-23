@@ -20,7 +20,7 @@ end
 
 Fabricator(:old_post, from: :post) do
   topic { |attrs| Fabricate(:topic, user: attrs[:user], created_at: (DateTime.now - 100)) }
-  created_at (DateTime.now - 100)
+  created_at { 100.days.ago }
 end
 
 Fabricator(:moderator_post, from: :post) do

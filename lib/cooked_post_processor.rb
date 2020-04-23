@@ -32,7 +32,7 @@ class CookedPostProcessor
     @omit_nofollow = post.omit_nofollow?
   end
 
-  def post_process(bypass_bump: false, new_post: false)
+  def post_process(new_post: false)
     DistributedMutex.synchronize("post_process_#{@post.id}", validity: 10.minutes) do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       remove_full_quote_on_direct_reply if new_post
@@ -43,7 +43,7 @@ class CookedPostProcessor
       remove_user_ids
       update_post_image
       enforce_nofollow
-      pull_hotlinked_images(bypass_bump)
+      pull_hotlinked_images
       grant_badges
       @post.link_post_uploads(fragments: @doc)
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
@@ -655,7 +655,7 @@ class CookedPostProcessor
     end
   end
 
-  def pull_hotlinked_images(bypass_bump = false)
+  def pull_hotlinked_images
     # have we enough disk space?
     disable_if_low_on_disk_space # But still enqueue the job
     # don't download remote images for posts that are more than n days old
@@ -666,15 +666,16 @@ class CookedPostProcessor
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job
     delay = SiteSetting.editing_grace_period + 1
-    Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id, bypass_bump: bypass_bump)
+    Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id)
   end
 
   def disable_if_low_on_disk_space
-    return false if Discourse.store.external?
-    return false if !SiteSetting.download_remote_images_to_local
-    return false if available_disk_space >= SiteSetting.download_remote_images_threshold
+    return if Discourse.store.external?
+    return if !SiteSetting.download_remote_images_to_local
+    return if available_disk_space >= SiteSetting.download_remote_images_threshold
 
     SiteSetting.download_remote_images_to_local = false
+
     # log the site setting change
     reason = I18n.t("disable_remote_images_download_reason")
     staff_action_logger = StaffActionLogger.new(Discourse.system_user)
@@ -682,8 +683,6 @@ class CookedPostProcessor
 
     # also send a private message to the site contact user
     notify_about_low_disk_space
-
-    true
   end
 
   def notify_about_low_disk_space

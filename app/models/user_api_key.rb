@@ -28,7 +28,6 @@ class UserApiKey < ActiveRecord::Base
   def generate_key
     if !self.key_hash
       @key ||= SecureRandom.hex
-      self.key = @key
       self.key_hash = ApiKey.hash_key(@key)
     end
   end
@@ -102,7 +101,6 @@ end
 #  id               :integer          not null, primary key
 #  user_id          :integer          not null
 #  client_id        :string           not null
-#  key              :string           not null
 #  application_name :string           not null
 #  push_url         :string
 #  created_at       :datetime         not null
@@ -115,7 +113,6 @@ end
 # Indexes
 #
 #  index_user_api_keys_on_client_id  (client_id) UNIQUE
-#  index_user_api_keys_on_key        (key) UNIQUE
 #  index_user_api_keys_on_key_hash   (key_hash) UNIQUE
 #  index_user_api_keys_on_user_id    (user_id)
 #

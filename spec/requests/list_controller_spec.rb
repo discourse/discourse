@@ -376,14 +376,9 @@ RSpec.describe ListController do
         # One category has another category's id at the beginning of its name
         let!(:other_category) {
           # Our validations don't allow this to happen now, but did historically
-          Fabricate(:category_with_definition, name: "#{category.id} name", slug: '-').tap { |c|
-            DB.exec <<~SQL
-              UPDATE categories
-              SET slug = '#{category.id}-name'
-              WHERE id = #{c.id}
-            SQL
-            c.reload
-          }
+          Fabricate(:category_with_definition, name: "#{category.id} name", slug: 'will-be-changed').tap do |category|
+            category.update_column(:slug, "#{category.id}-name")
+          end
         }
 
         it 'uses the correct category' do

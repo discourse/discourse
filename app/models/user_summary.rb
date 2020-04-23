@@ -117,14 +117,7 @@ class UserSummary
   end
 
   def bookmark_count
-    if SiteSetting.enable_bookmarks_with_reminders
-      Bookmark.where(user: @user).count
-    else
-      UserAction
-        .where(user: @user)
-        .where(action_type: UserAction::BOOKMARK)
-        .count
-    end
+    Bookmark.where(user: @user).count
   end
 
   def recent_time_read

@@ -24,6 +24,8 @@ class PublishedPage < ActiveRecord::Base
   end
 
   def self.publish!(publisher, topic, slug)
+    pp = nil
+
     transaction do
       pp = find_or_initialize_by(topic: topic)
       pp.slug = slug.strip

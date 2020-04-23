@@ -254,11 +254,7 @@ describe PostSerializer do
     context "when a Bookmark record exists for the user on the post" do
       let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: current_user, post: post) }
 
-      context "when the site setting for bookmarks with reminders is enabled" do
-        before do
-          SiteSetting.enable_bookmarks_with_reminders = true
-        end
-
+      context "bookmarks with reminders" do
         it "returns true" do
           expect(serialized.as_json[:bookmarked_with_reminder]).to eq(true)
         end
@@ -273,16 +269,6 @@ describe PostSerializer do
           it "does not return the bookmarked_with_reminder attribute" do
             expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
           end
-        end
-      end
-
-      context "when the site setting for bookmarks with reminders is disabled" do
-        it "does not return the bookmarked_with_reminder attribute" do
-          expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
-        end
-
-        it "does not return the bookmark_reminder_at attribute" do
-          expect(serialized.as_json.key?(:bookmark_reminder_at)).to eq(false)
         end
       end
     end

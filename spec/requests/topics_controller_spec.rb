@@ -956,6 +956,16 @@ RSpec.describe TopicsController do
           expect(::JSON.parse(response.body)['basic_topic']).to be_present
         end
 
+        it "throws an error if it could not be saved" do
+          PostRevisor.any_instance.stubs(:should_revise?).returns(false)
+          put "/t/#{topic.slug}/#{topic.id}.json", params: { title: "brand new title" }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body['errors'].first).to eq(
+            I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_update")
+          )
+        end
+
         it "can update a topic to an uncategorized topic" do
           topic.update!(category: Fabricate(:category))
 
@@ -989,7 +999,7 @@ RSpec.describe TopicsController do
           }
 
           expect(response.status).to eq(422)
-          expect(JSON.parse(response.body)['errors']).to be_present
+          expect(response.parsed_body['errors']).to match_array([/Title is too short/, /Title seems unclear/])
         end
 
         it "returns errors when the rate limit is exceeded" do
@@ -2346,19 +2356,15 @@ RSpec.describe TopicsController do
 
   describe '#remove_bookmarks' do
     it "should remove bookmarks properly from non first post" do
-      bookmark = PostActionType.types[:bookmark]
       sign_in(user)
 
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
-
-      PostActionCreator.new(user, post2, bookmark).perform
-
-      put "/t/#{post.topic_id}/bookmark.json"
-      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(2)
+      Fabricate(:bookmark, user: user, post: post)
+      Fabricate(:bookmark, user: user, post: post2)
 
       put "/t/#{post.topic_id}/remove_bookmarks.json"
-      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
+      expect(Bookmark.where(user: user).count).to eq(0)
     end
 
     it "should disallow bookmarks on posts you have no access to" do
@@ -2369,10 +2375,7 @@ RSpec.describe TopicsController do
       expect(response).to be_forbidden
     end
 
-    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = true
-      end
+    context "bookmarks with reminders" do
       it "deletes all the bookmarks for the user in the topic" do
         sign_in(user)
         post = create_post
@@ -2388,26 +2391,23 @@ RSpec.describe TopicsController do
       sign_in(user)
     end
 
-    it "should create a new post action for the bookmark on the first post of the topic" do
+    it "should create a new bookmark on the first post of the topic" do
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
       put "/t/#{post.topic_id}/bookmark.json"
 
-      expect(PostAction.find_by(user_id: user.id, post_action_type: PostActionType.types[:bookmark]).post_id).to eq(post.id)
+      expect(Bookmark.find_by(user_id: user.id).post_id).to eq(post.id)
     end
 
     it "errors if the topic is already bookmarked for the user" do
       post = create_post
-      PostActionCreator.new(user, post, PostActionType.types[:bookmark]).perform
+      Bookmark.create(post: post, user: user, topic: post.topic)
 
       put "/t/#{post.topic_id}/bookmark.json"
-      expect(response).to be_forbidden
+      expect(response.status).to eq(400)
     end
 
-    context "when SiteSetting.enable_bookmarks_with_reminders is true" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = true
-      end
+    context "bookmarks with reminders" do
       it "should create a new bookmark on the first post of the topic" do
         post = create_post
         post2 = create_post(topic_id: post.topic_id)
