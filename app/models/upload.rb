@@ -140,6 +140,12 @@ class Upload < ActiveRecord::Base
     self.class.short_path(sha1: self.sha1, extension: self.extension)
   end
 
+  def self.consider_for_reuse(upload, post)
+    return upload if !SiteSetting.secure_media? || upload.blank? || post.blank?
+    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_media_enabled?
+    upload
+  end
+
   def self.secure_media_url?(url)
     # we do not want to exclude topic links that for whatever reason
     # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
