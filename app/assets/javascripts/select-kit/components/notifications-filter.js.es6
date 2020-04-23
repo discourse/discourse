@@ -3,8 +3,24 @@ import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-bo
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["notifications-filter"],
-  content: ["All","Read","Unread"],
-  value: "All",
+  content: [
+    {
+      type: "all",
+      value: I18n.t('user.user_notifications.filters.all')
+    },
+    {
+      type: "read",
+      value: I18n.t('user.user_notifications.filters.read')
+    },
+    {
+      type: "unread",
+      value: I18n.t('user.user_notifications.filters.unread')
+    }
+  ],
+  value:{
+    type: "all",
+    value: I18n.t('user.user_notifications.filters.all')
+  },
   isVisible: true,
   valueProperty: null,
   nameProperty: null,
@@ -20,9 +36,9 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   actions: {
-    onChange(value) {
-      this.set('value',value);
-      this.attrs.action(value);
+    onChange(filter) {
+      this.set('value',filter);
+      this.attrs.action && this.attrs.action(filter.type);
     }
   }
 });

@@ -32,9 +32,9 @@ export default createWidget("user-notifications-large", {
   html(attrs) {
     let notifications = attrs.notifications;
     const username = notifications.findArgs.username;
-    if(attrs.filters == "Read"){
+    if(attrs.filter == 'read'){
       notifications = notifications.filterBy("read",true);
-    }else if(attrs.filters == "Unread"){
+    }else if(attrs.filter == 'unread'){
       notifications = notifications.filterBy("read",false);
     }
     return notifications.map(n => {

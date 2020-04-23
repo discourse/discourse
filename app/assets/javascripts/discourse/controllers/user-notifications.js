@@ -8,7 +8,6 @@ export default Controller.extend({
   application: controller(),
   router: service(),
   currentPath: readOnly("router._router.currentPath"),
-  filter: "All",
 
   @observes("model.canLoadMore")
   _showFooter() {
@@ -17,9 +16,9 @@ export default Controller.extend({
 
   @discourseComputed("model.content.length","filter")
   hasNotifications(length, filter) {
-    if(filter=="Read"){
+    if(filter=="read"){
       return this.model.filterBy("read",true).length > 0;
-    }else if(filter=="Unread"){
+    }else if(filter=="unread"){
       return this.model.filterBy("read",false).length > 0;
     }else{
       return length > 0;

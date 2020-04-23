@@ -12,7 +12,7 @@
 <span class="user-notifications-filter-separator"></span>
 
 {{#if hasNotifications}}
-  {{user-notifications-large notifications=model filters=filter}}
+  {{user-notifications-large notifications=model filter=filter}}
   {{conditional-loading-spinner condition=loading}}
 {{else}}
   <div class='alert alert-info'>{{i18n 'notifications.empty'}}</div>

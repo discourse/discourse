@@ -1,22 +1,26 @@
 .select-kit {
   &.dropdown-select-box {
     &.notifications-filter {
-      // width: 100%;
       display: inline-flex;
       position: relative;
-      // border-bottom: 1px solid $primary-low;
-      .period-chooser-header {
+
+      .select-kit-collection {
+        padding: 5px;
+      }
+
+      .notifications-filter-header {
         padding: 0 0.5em 0 0.5em;
         background: none;
         border: none;
         justify-content: flex-start;
         width: auto;
         height: auto;
-        span.filter-text{ 
+        span.filter-text { 
           margin-right: 15px;
           color: $primary-medium;
         }
-        span.header-text{
+
+        span.header-text {
           color: dark-light-choose($tertiary, $tertiary);
         }
 
@@ -34,7 +38,7 @@
           outline: none;
         }
       }
-      .period-chooser-row {
+      .notifications-filter-row {
         font-weight: bold;
         padding: 0.5em;
         font-size: $font-up-1;
@@ -43,7 +47,7 @@
         width: auto;
         height: auto;
 
-        span.period-title {
+        span.filter-option {
           flex: 1 0 0px;
         }
       }

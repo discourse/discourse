@@ -4,11 +4,5 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default DropdownSelectBoxRowComponent.extend({
   layoutName:
     "select-kit/templates/components/notifications-filter/notifications-filter-row",
-  classNames: ["period-chooser-row"],
-
-  @discourseComputed("rowName")
-  title(rowName) {
-    return rowName;
-    // return I18n.t(`filters.top.${rowName || "this_week"}`).title;
-  }
+  classNames: ["notifications-filter-row"],
 });
