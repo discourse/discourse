@@ -42,7 +42,7 @@ class PluginTxUpdater
     PLUGINS.each do |plugin_name|
       plugin_dir = File.join(@base_dir, plugin_name)
       Bundler.with_clean_env do
-        Dir.chdir(plugin_dir) do # rubocop:disable DiscourseCops/NoChdir because this is not part of the app
+        Dir.chdir(plugin_dir) do # rubocop:disable Discourse/NoChdir because this is not part of the app
           puts '', plugin_dir, '-' * 80, ''
 
           begin

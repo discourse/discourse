@@ -51,7 +51,9 @@ class PostSerializer < BasicPostSerializer
              :bookmarked,
              :bookmarked_with_reminder,
              :bookmark_reminder_at,
+             :bookmark_id,
              :bookmark_reminder_type,
+             :bookmark_name,
              :raw,
              :actions_summary,
              :moderator?,
@@ -334,8 +336,16 @@ class PostSerializer < BasicPostSerializer
     include_bookmarked_with_reminder?
   end
 
+  def include_bookmark_name?
+    include_bookmarked_with_reminder?
+  end
+
+  def include_bookmark_id?
+    include_bookmarked_with_reminder?
+  end
+
   def post_bookmark
-    return nil if !SiteSetting.enable_bookmarks_with_reminders? || @topic_view.blank?
+    return nil if @topic_view.blank?
     @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id }
   end
 
@@ -346,6 +356,14 @@ class PostSerializer < BasicPostSerializer
   def bookmark_reminder_type
     return if post_bookmark.blank?
     Bookmark.reminder_types[post_bookmark.reminder_type].to_s
+  end
+
+  def bookmark_name
+    post_bookmark&.name
+  end
+
+  def bookmark_id
+    post_bookmark&.id
   end
 
   def include_display_username?

@@ -29,7 +29,6 @@ fr:
       time: "HH:mm"
       time_short_day: "ddd [à] HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "DD MMM H:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "DD MMM YYYY H:mm"
@@ -264,18 +263,18 @@ fr:
     bookmarks:
       created: "vous avez mis un signet à ce message"
       not_bookmarked: "mettre un signet à ce message"
-      created_with_reminder: "Vous avez épinglé cette contribution avec un rappel au %{date}"
       remove: "Retirer le signet"
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
       save: "Sauvegarder"
       no_timezone: 'Vous n&#39;avez pas encore défini de fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       reminders:
         at_desktop: "La prochaine fois je suis à mon bureau"
-        later_today: "Plus tard dans la journée<br/>{{date}}"
-        next_business_day: "Prochain jour ouvré<br/>{{date}}"
-        tomorrow: "Demain<br/>{{date}}"
-        next_week: "La semaine prochaine<br/>{{date}}"
-        next_month: "Le mois prochain<br/>{{date}}"
+        later_today: "Plus tard aujourd'hui"
+        tomorrow: "Demain"
+        next_week: "Semaine prochaine"
+        later_this_week: "Plus tard cette semaine"
+        start_of_next_business_week: "Lundi prochain"
+        next_month: "Mois prochai"
         custom: "Date et heure personnalisés"
     drafts:
       resume: "Reprendre"
@@ -539,6 +538,7 @@ fr:
         deny: "Refuser"
         denied: "refusé"
         undone: "requête annulée"
+        handle: "Gérer demande d'adhésion"
       manage:
         title: "Gérer"
         name: "Nom"
@@ -968,10 +968,6 @@ fr:
         success_staff: "Nous avons envoyé un courriel à votre adresse actuelle. Merci de suivre les instructions."
       change_avatar:
         title: "Modifier votre image de profil"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
-        gravatar_title: "Modifier votre avatar sur le site de Gravatar"
-        gravatar_failed: "Impossible de récupérer le Gravatar associé à cette adresse courriel."
-        refresh_gravatar_title: "Actualiser votre Gravatar"
         letter_based: "Image de profil attribuée par le système"
         uploaded_avatar: "Avatar personnalisé"
         uploaded_avatar_empty: "Ajouter un avatar personnalisé"
@@ -1254,6 +1250,8 @@ fr:
         back: "Retour"
         again: "Réessayer"
         fixed: "Charger la page"
+    modal:
+      close: "fermer"
     close: "Fermer"
     assets_changed_confirm: "Ce site vient d'être mis à jour. Rafraîchir maintenant pour accéder à la nouvelle version ?"
     logout: "Vous avez été déconnecté."
@@ -1483,7 +1481,6 @@ fr:
       objects: Objets
       symbols: Symboles
       flags: Drapeaux
-      custom: Emojis personnalisés
       recent: Utilisés récemment
       default_tone: Aucun teint
       light_tone: Teint clair
@@ -1491,6 +1488,7 @@ fr:
       medium_tone: Teint moyen
       medium_dark_tone: Teint légèrement foncé
       dark_tone: Teint foncé
+      default: Emojis personnalisés
     shared_drafts:
       title: "Ébauches partagées"
       notice: "Ce sujet n'est visible que pour ceux qui peuvent voir la catégorie <b>{{category}}</b>."
@@ -1639,6 +1637,7 @@ fr:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2415,9 +2414,8 @@ fr:
             button: "HTML"
       bookmarks:
         create: "Ajouter un signet"
+        created: "Créé"
         name: "Nom"
-        name_placeholder: "Nommez le signet pour alléger votre mémoire"
-        set_reminder: "Ajouter un rappel"
         actions:
           delete_bookmark:
             name: "Supprimer le signet"
@@ -3849,7 +3847,6 @@ fr:
           staff: "Responsables"
           suspended: "Suspendus"
           silenced: "Sous silence"
-          suspect: "Suspects"
           staged: "Distant"
         approved: "Approuvé ?"
         titles:
@@ -3866,7 +3863,6 @@ fr:
           moderators: "Modérateurs"
           silenced: "Utilisateurs sous silence"
           suspended: "Utilisateurs suspendus"
-          suspect: "Utilisateurs suspects"
           staged: "Utilisateurs distants"
         not_verified: "Non verifié"
         check_email:
@@ -4223,6 +4219,7 @@ fr:
         help: "Ajouter un nouvel emoji qui sera disponible pour tout le monde. (Conseil : glisser-déposer plusieurs fichiers en même temps)"
         add: "Ajouter un nouvel emoji"
         name: "Nom"
+        group: "Groupe"
         image: "Image"
         delete_confirm: "Êtes-vous sûr de vouloir supprimer l'emoji :%{name}: ?"
       embedding:
@@ -4249,7 +4246,6 @@ fr:
         save: "Sauvegarder les paramètres d'intégration"
       permalink:
         title: "Permaliens"
-        description: "Veuillez noter que ceci s'applique uniquement aux sources externes, les liens postés sur votre forum ne seront pas redirigés."
         url: "URL"
         topic_id: "ID sujet"
         topic_title: "Sujet"

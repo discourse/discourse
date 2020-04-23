@@ -7,7 +7,7 @@ module Jobs
   class ProcessPost < ::Jobs::Base
 
     def execute(args)
-      DistributedMutex.synchronize("process_post_#{args[:post_id]}") do
+      DistributedMutex.synchronize("process_post_#{args[:post_id]}", validity: 10.minutes) do
         post = Post.find_by(id: args[:post_id])
         # two levels of deletion
         return unless post.present? && post.topic.present?
@@ -23,7 +23,7 @@ module Jobs
         end
 
         cp = CookedPostProcessor.new(post, args)
-        cp.post_process(bypass_bump: args[:bypass_bump], new_post: args[:new_post])
+        cp.post_process(new_post: args[:new_post])
 
         # If we changed the document, save it
         cooked = cp.html

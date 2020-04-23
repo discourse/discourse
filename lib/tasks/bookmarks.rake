@@ -9,55 +9,53 @@ require_dependency "rake_helpers"
 # You can provide a sync_limit for a smaller batch run.
 #
 desc "migrates old PostAction bookmarks to the new Bookmark model & table"
-task "bookmarks:sync_to_table", [:sync_limit] => :environment do |_t, args|
-  sync_limit = args[:sync_limit] || 0
-  post_action_bookmarks = PostAction
-    .select('post_actions.id', 'post_actions.post_id', 'posts.topic_id', 'post_actions.user_id')
-    .where(post_action_type_id: PostActionType.types[:bookmark])
-    .joins(:post)
-    .where(deleted_at: nil)
-    .joins('LEFT JOIN bookmarks ON bookmarks.post_id = post_actions.post_id AND bookmarks.user_id = post_actions.user_id')
-    .joins('INNER JOIN topics ON topics.id = posts.topic_id')
-    .where('bookmarks.id IS NULL')
+task "bookmarks:sync_to_table" => :environment do |_t, args|
+  bookmarks_to_create = []
+  loop do
+    # post action type id 1 is :bookmark. we do not need to OFFSET here for
+    # paging because the WHERE bookmarks.id IS NULL clause handles this effectively,
+    # because we do not get bookmarks back that have already been inserted
+    post_action_bookmarks = DB.query(
+      <<~SQL, type_id: 1
+        SELECT post_actions.id, post_actions.post_id, posts.topic_id, post_actions.user_id
+        FROM post_actions
+        INNER JOIN posts ON posts.id = post_actions.post_id
+        LEFT JOIN bookmarks ON bookmarks.post_id = post_actions.post_id AND bookmarks.user_id = post_actions.user_id
+        INNER JOIN topics ON topics.id = posts.topic_id
+        WHERE bookmarks.id IS NULL AND post_action_type_id = :type_id AND post_actions.deleted_at IS NULL AND posts.deleted_at IS NULL
+        LIMIT 2000
+      SQL
+    )
+    break if post_action_bookmarks.count.zero?
 
-  # if sync_limit is provided as an argument this will cap
-  # the number of bookmarks that will be created in a run of
-  # this task (for huge bookmark count communities)
-  if sync_limit > 0
-    post_action_bookmarks = post_action_bookmarks.limit(sync_limit)
-  end
-
-  post_action_bookmark_count = post_action_bookmarks.count('post_actions.id')
-  i = 0
-
-  post_action_bookmarks.find_each(batch_size: 2000) do |pab|
-    # clear at start of each batch to only insert X at a time
-    bookmarks_to_create = []
-
-    Bookmark.transaction do
-      RakeHelpers.print_status_with_label("Creating post new bookmarks.......", i, post_action_bookmark_count)
+    post_action_bookmarks.each do |pab|
       now = Time.zone.now
-      bookmarks_to_create << {
-        topic_id: pab.topic_id,
-        post_id: pab.post_id,
-        user_id: pab.user_id,
-        created_at: now,
-        updated_at: now
-      }
-
-      i += 1
-
-      # this will ignore conflicts in the bookmarks table so
-      # if the user already has a post bookmarked in the new way,
-      # then we don't error and keep on truckin'
-      #
-      # we shouldn't have duplicates here at any rate because of
-      # the above LEFT JOIN but best to be safe knowing this
-      # won't blow up
-      Bookmark.insert_all(bookmarks_to_create)
+      bookmarks_to_create << "(#{pab.topic_id}, #{pab.post_id}, #{pab.user_id}, '#{now}', '#{now}')"
     end
-  end
 
-  RakeHelpers.print_status_with_label("Bookmark creation complete!            ", i, post_action_bookmark_count)
-  puts ""
+    create_bookmarks(bookmarks_to_create)
+    bookmarks_to_create = []
+  end # loop
+
+  puts "Bookmark creation complete!"
+end
+
+def create_bookmarks(bookmarks_to_create)
+  return if bookmarks_to_create.empty?
+
+  # this will ignore conflicts in the bookmarks table so
+  # if the user already has a post bookmarked in the new way,
+  # then we don't error and keep on truckin'
+  #
+  # we shouldn't have duplicates here at any rate because of
+  # the above LEFT JOIN but best to be safe knowing this
+  # won't blow up
+  #
+  DB.exec(
+    <<~SQL
+      INSERT INTO bookmarks (topic_id, post_id, user_id, created_at, updated_at)
+      VALUES #{bookmarks_to_create.join(",\n")}
+      ON CONFLICT DO NOTHING
+    SQL
+  )
 end

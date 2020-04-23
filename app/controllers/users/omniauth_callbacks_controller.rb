@@ -76,7 +76,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       cookies['_bypass_cache'] = true
       cookies[:authentication_data] = {
         value: @auth_result.to_client_hash.to_json,
-        path: Discourse.base_uri
+        path: Discourse.base_uri("/")
       }
       redirect_to @origin
     end

@@ -14,6 +14,8 @@ module Jobs
       @web_hook = WebHook.find_by(id: @arguments[:web_hook_id])
       validate_arguments!
 
+      return if @web_hook.blank? # Web Hook was deleted
+
       unless ping_event?(@arguments[:event_type])
         validate_argument!(:payload)
 
@@ -31,7 +33,6 @@ module Jobs
     def validate_arguments!
       validate_argument!(:web_hook_id)
       validate_argument!(:event_type)
-      raise Discourse::InvalidParameters.new(:web_hook_id) if @web_hook.blank?
     end
 
     def validate_argument!(key)

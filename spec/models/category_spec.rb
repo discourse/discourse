@@ -403,6 +403,16 @@ describe Category do
       expect(@category.topics_year).to eq(0)
     end
 
+    it "cooks the definition" do
+      category = Category.create(
+        name: 'little-test',
+        user_id: Discourse.system_user.id,
+        description: "click the link [here](https://fakeurl.com)"
+      )
+      expect(category.description.include?("[here]")).to eq(false)
+      expect(category.description).to eq(category.topic.first_post.cooked)
+    end
+
     it "renames the definition when renamed" do
       @category.update(name: 'Troutfishing')
       @topic.reload
@@ -661,36 +671,68 @@ describe Category do
   end
 
   describe "#url" do
-    it "builds a url for normal categories" do
-      category = Fabricate(:category_with_definition, name: "cats")
-      expect(category.url).to eq "/c/cats"
+    before_all do
+      SiteSetting.max_category_nesting = 3
+    end
+
+    fab!(:category) { Fabricate(:category, name: "root") }
+
+    fab!(:sub_category) do
+      Fabricate(
+        :category,
+        name: "child",
+        parent_category_id: category.id,
+      )
+    end
+
+    fab!(:sub_sub_category) do
+      Fabricate(
+        :category,
+        name: "child_of_child",
+        parent_category_id: sub_category.id,
+      )
+    end
+
+    describe "for normal categories" do
+      it "builds a url" do
+        expect(category.url).to eq("/c/root")
+      end
     end
 
     describe "for subcategories" do
-      it "includes the parent category" do
-        parent_category = Fabricate(:category_with_definition, name: "parent")
+      it "builds a url" do
+        expect(sub_category.url).to eq("/c/root/child")
+      end
+    end
 
-        subcategory =
-          Fabricate(
-            :category_with_definition,
-            name: "child",
-            parent_category_id: parent_category.id
-          )
-
-        expect(subcategory.url).to eq "/c/parent/child"
+    describe "for sub-sub-categories" do
+      it "builds a url" do
+        expect(sub_sub_category.url)
+          .to eq("/c/root/child/child-of-child")
       end
     end
   end
 
   describe "#url_with_id" do
-    fab!(:category) { Fabricate(:category_with_definition, name: 'cats') }
+    fab!(:category) do
+      Fabricate(
+        :category_with_definition,
+        name: 'cats',
+      )
+    end
 
     it "includes the id in the URL" do
       expect(category.url_with_id).to eq("/c/cats/#{category.id}")
     end
 
     context "child category" do
-      fab!(:child_category) { Fabricate(:category_with_definition, parent_category_id: category.id, name: 'dogs') }
+      fab!(:child_category) do
+        Fabricate(
+          :category,
+          parent_category_id: category.id,
+          name: 'dogs',
+        )
+      end
 
       it "includes the id in the URL" do
         expect(child_category.url_with_id).to eq("/c/cats/dogs/#{child_category.id}")

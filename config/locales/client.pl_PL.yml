@@ -29,8 +29,9 @@ pl_PL:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
+      time_short_day: "ddd, GG: mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM H:mm"
+      long_no_year: "D MMM, GG: mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM YYYY H:mm"
@@ -196,6 +197,8 @@ pl_PL:
       banner:
         enabled: "ustawił ten baner %{when}. Będzie widoczny na górze każdej strony, póki nie zostanie ukryty przez użytkownika."
         disabled: "Ten temat nie jest już banerem. Nie będzie dalej wyświetlany na górze każdej strony."
+      forwarded: "przekazano powyższy email"
+    topic_admin_menu: "akcje tematu"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
     bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{min_users} osób dołączy."
@@ -309,9 +312,25 @@ pl_PL:
     bookmarks:
       created: "zakładka dodana"
       not_bookmarked: "dodaj do zakładek"
+      created_with_at_desktop_reminder: "zakładka tego posta została dodana do zakładek, a następnym razem zostaniesz o tym powiadomiony"
       remove: "Usuń zakładkę"
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
       save: "Zapisz"
+      no_timezone: 'Nie ustawiłeś jeszcze strefy czasowej. Nie będziesz mógł ustawić przypomnień. Skonfiguruj jeden <a href="%{basePath}/my/preferences/profile">w swoim profilu</a> .'
+      invalid_custom_datetime: "Podana data i godzina są nieprawidłowe, spróbuj ponownie."
+      list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
+      reminders:
+        at_desktop: "Następnym razem będę na swoim pulpicie"
+        later_today: "Później dzisiaj"
+        next_business_day: "Następny dzień roboczy"
+        tomorrow: "Jutro"
+        next_week: "Następny tydzień"
+        later_this_week: "Później w tym tygodniu"
+        start_of_next_business_week: "Następny poniedziałek"
+        next_month: "Następny miesiąc"
+        custom: "Niestandardowa data i godzina"
+        last_custom: "Ostatni, ubiegły, zeszły"
+        none: "Przypomnienie nie jest potrzebne"
     drafts:
       resume: "Kontynuuj"
       remove: "Usuń"
@@ -363,8 +382,14 @@ pl_PL:
       install_banner: "Czy chcesz <a href>zainstalować %{title} na tym urządzeniu?</a>"
     choose_topic:
       none_found: "Nie znaleziono tematów."
+      title:
+        search: "Wyszukaj temat"
+        placeholder: "wpisz tytuł tematu, adres URL lub identyfikator tutaj"
     choose_message:
       none_found: "Nie znaleziono wiadomości."
+      title:
+        search: "Wyszukaj wiadomość"
+        placeholder: "wpisz tutaj tytuł wiadomości, adres URL lub identyfikator"
     review:
       order_by: "Segreguj według:"
       in_reply_to: "w odpowiedzi na"
@@ -387,7 +412,9 @@ pl_PL:
           title: "Przedmioty, które można przeglądać, tworzone przez użytkowników o wyższym poziomie zaufania, mają wyższy wynik."
         type_bonus:
           name: "bonus typu"
+          title: "Niektóre rodzaje przeglądalne mogą otrzymać premię od pracowników, aby nadać im wyższy priorytet."
       claim_help:
+        optional: "Możesz zgłosić roszczenie do tego elementu, aby uniemożliwić innym jego sprawdzenie."
         required: "Musisz przejąć tę pozycję, zanim będziesz mógł je przejrzeć."
         claimed_by_you: "Przejąłeś tę pozycję i możesz ją teraz przejrzeć."
         claimed_by_other: "Ten przedmiot może być sprawdzony tylko przez <b>{{username}}</b> ."
@@ -422,11 +449,17 @@ pl_PL:
       deleted_user: "(użytkownik usunięty)"
       user:
         bio: "Biografia"
+        website: "Stronie internetowej"
         username: "Nazwa użytkownika"
         email: "Email"
         name: "Imię"
         fields: "Pola"
       user_percentage:
+        summary:
+          one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} flaga ogółem)"
+          few: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} flagi ogółem)"
+          many: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} flagi ogółem)"
+          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} flagi ogółem)"
         agreed:
           one: "{{count}}% zgadza się"
           few: "{{count}}% zgadza się"
@@ -557,6 +590,7 @@ pl_PL:
       days_visited_long: "Dni Odwiedzin"
       posts_read: "Przeczytane"
       posts_read_long: "Przeczytane wpisy"
+      last_updated: "Ostatnio zaktualizowany:"
       total_rows:
         one: "%{count} użytkownik"
         few: "%{count} użytkownicy"
@@ -584,6 +618,7 @@ pl_PL:
         deny: "Odrzuć"
         denied: "odrzucony"
         undone: "prośba cofnięta"
+        handle: "obsłuż prośby o członkostwo "
       manage:
         title: "Zarządzaj"
         name: "Nazwa"
@@ -624,6 +659,8 @@ pl_PL:
       leave: "Opuść"
       request: "Wniosek"
       message: "Wiadomość"
+      confirm_leave: "Czy na pewno chcesz opuścić tę grupę?"
+      allow_membership_requests: "Zezwalaj użytkownikom na wysyłanie wniosków o członkostwo do właścicieli grup (wymaga publicznie widocznej grupy)"
       membership_request_template: "Wyświetl niestandardowy szablon użytkownikom, w momencie wysyłania wniosku o członkostwo."
       membership_request:
         submit: "Złóż wniosek"
@@ -797,18 +834,27 @@ pl_PL:
         ignore_duration_username: "Nazwa użytkownika"
         ignore_duration_when: "Oczekiwanie"
         ignore_duration_save: "Ignoruj"
+        ignore_duration_note: "Pamiętaj, że wszystkie ignorowania są automatycznie usuwane po upływie czasu ignorowania."
         ignore_duration_time_frame_required: "Wybierz przedział czasowy"
         ignore_no_users: "Nie posiadasz ignorowanych użytkowników."
         ignore_option: "Zignorowany"
+        ignore_option_title: "Nie będziesz otrzymywać powiadomień związanych z tym użytkownikiem, a wszystkie ich tematy i odpowiedzi będą ukryte."
         add_ignored_user: "Dodaj..."
         mute_option: "Wyciszenie"
+        mute_option_title: "Nie będziesz otrzymywać żadnych powiadomień związanych z tym użytkownikiem."
         normal_option: "Normalny"
+        normal_option_title: "Zostaniesz powiadomiony, jeśli ten użytkownik odpowie ci, zacytuje lub o tobie wspomni."
       activity_stream: "Aktywność"
       preferences: "Ustawienia"
       feature_topic_on_profile:
+        open_search: "Wybierz nowy temat"
+        title: "Wybierz temat"
+        search_label: "Wyszukaj temat według tytułu"
         save: "Zapisz"
         clear:
           title: "Wyczyść"
+          warning: "Czy na pewno chcesz wyczyścić polecany temat?"
+      use_current_timezone: "Użyj aktualnej strefy czasowej"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
       expand_profile: "Rozwiń"
       collapse_profile: "Zwiń"
@@ -841,6 +887,7 @@ pl_PL:
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_defer: "Włącz odroczenie, aby oznaczyć tematy jako nieprzeczytane"
       change: "zmień"
+      featured_topic: "Wyróżniony temat"
       moderator: "{{user}} jest moderatorem"
       admin: "{{user}} jest adminem"
       moderator_tooltip: "Ten użytkownik jest moderatorem"
@@ -907,6 +954,7 @@ pl_PL:
         deleted_posts: "usunięte wpisy"
         suspensions: "zawieszone"
         warnings_received: "otrzymanych ostrzeżeń"
+        rejected_posts: "odrzucone posty"
       messages:
         all: "Wszystkie"
         inbox: "Skrzynka odbiorcza"
@@ -943,11 +991,15 @@ pl_PL:
         disable: "Wyłącz"
         enable: "Włącz"
         enable_long: "Włącz kody zapasowe"
+        manage: "Zarządzaj kodami zapasowymi. Pozostały Ci kody zapasowe <strong>{{count}}</strong> ."
         copied_to_clipboard: "Skopiowane do schowka"
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
+        remaining_codes: "Pozostały Ci kody zapasowe <strong>{{count}}</strong> ."
         use: "Używaj kodu zapasowego"
+        enable_prerequisites: "Przed wygenerowaniem kodów zapasowych należy włączyć główny drugi czynnik."
         codes:
           title: "Wygenerowano kody zapasowe"
+          description: "Każdy z tych kodów zapasowych można użyć tylko raz. Trzymaj je w bezpiecznym, ale dostępnym miejscu."
       second_factor:
         title: "Dwuskładnikowe uwierzytelnianie"
         enable: "Zarządzaj autentykacją dwuetapową"
@@ -967,19 +1019,27 @@ pl_PL:
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
         disable_title: "Wyłącz drugi czynnik"
+        disable_confirm: "Czy na pewno chcesz wyłączyć wszystkie drugie czynniki?"
         edit: "Edytuj"
+        edit_title: "Edytuj drugi czynnik"
+        edit_description: "Nazwa drugiego czynnika"
+        enable_security_key_description: "Po przygotowaniu fizycznego klucza bezpieczeństwa naciśnij przycisk Zarejestruj poniżej."
         totp:
           title: "Uwierzytelnianie oparte na tokenach"
           add: "Nowy Authenticator"
           default_name: "Mój Authenticator"
+          name_and_code_required_error: "Musisz podać nazwę i kod z aplikacji uwierzytelniającej."
         security_key:
           register: "Zarejestruj"
           title: "Klucze bezpieczeństwa"
           add: "Zarejestruj klucz bezpieczeństwa"
           default_name: "Główny klucz bezpieczeństwa"
+          not_allowed_error: "Upłynął limit czasu procesu rejestracji klucza bezpieczeństwa lub został on anulowany."
+          already_added_error: "Ten klucz bezpieczeństwa został już zarejestrowany. Nie musisz go ponownie rejestrować."
           edit: "Edytuj Klucz Bezpieczeństwa"
           edit_description: "Nazwa klucza bezpieczeństwa"
           delete: "Usuń"
+          name_required_error: "Musisz podać nazwę swojego klucza bezpieczeństwa."
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -996,9 +1056,10 @@ pl_PL:
         success_staff: "Wysłaliśmy wiadomość na bieżący adres. Proszę przestrzegać informacji dotyczących potwierdzenia adresu."
       change_avatar:
         title: "Zmień swój awatar"
-        gravatar: "bazujący na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
-        gravatar_title: "Zmień swój awatar na stronie serwisu Gravatar"
-        refresh_gravatar_title: "Zaktualizuj swój Gravatar"
+        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a> , na podstawie"
+        gravatar_title: "Zmień swój awatar na stronie {{gravatarName}}"
+        gravatar_failed: "Nie mogliśmy znaleźć {{gravatarName}} z tym adresem e-mail."
+        refresh_gravatar_title: "Odśwież swój {{gravatarName}}"
         letter_based: "Awatar przyznany przez system"
         uploaded_avatar: "Zwyczajny obrazek"
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
@@ -1006,9 +1067,13 @@ pl_PL:
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
       change_profile_background:
         title: "Nagłówek profilu"
+        instructions: "Nagłówki profilu zostaną wyśrodkowane i będą miały domyślną szerokość 1110 pikseli."
       change_card_background:
         title: "Tło karty użytkownika"
         instructions: "Tło karty użytkownika est wycentrowane i posiada domyślną szerokość 590px."
+      change_featured_topic:
+        title: "Wyróżniony temat"
+        instructions: "Link do tego tematu będzie na twojej karcie użytkownika i profilu."
       email:
         title: "Email"
         primary: "Podstawowy adres email"
@@ -1059,6 +1124,9 @@ pl_PL:
         any: "każdy"
       password_confirmation:
         title: "Powtórz hasło"
+      invite_code:
+        title: "Zaproś kod"
+        instructions: "Rejestracja konta wymaga kodu zaproszenia"
       auth_tokens:
         title: "Ostatnio używane urządzenia"
         ip: "IP"
@@ -1146,6 +1214,7 @@ pl_PL:
         search: "wpisz aby szukać zaproszeń…"
         title: "Zaproszenia"
         user: "Zaproszony(-a) użytkownik(-czka)"
+        sent: "Ostatni wysłany"
         none: "Brak zaproszeń do wyświetlenia."
         truncated:
           one: "Wyświetlanie pierwszego zaproszenia."
@@ -1296,6 +1365,9 @@ pl_PL:
         back: "Cofnij"
         again: "Spróbuj ponownie"
         fixed: "Załaduj stronę"
+    modal:
+      close: "zamknij"
+      dismiss_error: "Odrzuć błąd"
     close: "Zamknij"
     assets_changed_confirm: "Serwis został zmieniony, czy pozwolisz na przeładowanie strony w celu aktualizacji do najnowszej wersji?"
     logout: "Nastąpiło wylogowanie."
@@ -1304,6 +1376,17 @@ pl_PL:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, lajkowanie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
+    too_few_topics_and_posts_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Rozpocznijmy dyskusję!</a> Jest {currentTopics, liczba mnoga, jeden {jest <strong>#</strong> tematem} inny {are <strong>#</strong> topics}} i {currentPosts, liczba mnoga, jeden { <strong>#</strong> post} inne { <strong>#</strong> posty}}. Odwiedzający potrzebują więcej do przeczytania i odpowiedzi - zalecamy co najmniej {wymaganeTopiki, liczba mnoga, jeden { <strong>#</strong> temat} inne { <strong>#</strong> tematy}} i {wymaganePosty, liczba mnoga, jeden { <strong>#</strong> post} inne { <strong>#</strong> posty}}. Tylko pracownicy mogą zobaczyć tę wiadomość.
+    too_few_topics_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Rozpocznijmy dyskusję!</a> Jest {currentTopics, liczba mnoga, jeden {is <strong>#</strong> topic} other {are <strong>#</strong> topics}}. Odwiedzający potrzebują więcej do przeczytania i udzielenia odpowiedzi - zalecamy co najmniej {wymaganeTopiki, liczba mnoga, jeden { <strong>#</strong> temat} inny { <strong>#</strong> tematy}}. Tylko pracownicy mogą zobaczyć tę wiadomość.
+    too_few_posts_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Rozpocznijmy dyskusję!</a> Jest {currentPosts, liczba mnoga, jeden {is <strong>#</strong> post} other {are <strong>#</strong> posts}}. Odwiedzający potrzebują więcej do przeczytania i odpowiedzi - zalecamy co najmniej {wymaganePosty, liczba mnoga, jeden { <strong>#</strong> post} inny { <strong>#</strong> posty}}. Tylko pracownicy mogą zobaczyć tę wiadomość.
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{stopa, liczba mnoga, jeden {# błąd / godzina} inne {# błędy / godzina}}</a> osiągnęła limit ustawienia witryny w wysokości {limit, liczba mnoga, jeden {# błąd / godzina} inne {# błędy / godzina}}."
+      reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{stopa, liczba mnoga, jeden {# błąd / minuta} inna {# błędy / minuta}}</a> osiągnęła limit ustawienia witryny w wysokości {limit, liczba mnoga, jeden {# błąd / minuta} inne {# błędy / minuta}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{stopa, liczba mnoga, jeden {# błąd / godzina} inny {# błędy / godzina}}</a> przekroczył limit ustawienia witryny o {limit, liczba mnoga, jeden {# błąd / godzina} inne {# błędy / godzina}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{stopa, liczba mnoga, jeden {# błąd / minuta} inna {# błędy / minuta}}</a> przekroczyła limit ustawienia witryny o {limit, liczba mnoga, jeden {# błąd / minuta} inne {# błędy / minuta}}."
     learn_more: "dowiedz się więcej…"
     all_time: "łącznie"
     all_time_desc: "łącznie utworzonych tematów"
@@ -1371,6 +1454,8 @@ pl_PL:
       reset: "Resetuj hasło"
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
+      complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b> . Powinieneś otrzymać wiadomość e-mail z instrukcjami, jak szybko zresetować hasło."
+      complete_email_found: "Znaleźliśmy konto pasujące do <b>%{email}</b> . Powinieneś otrzymać wiadomość e-mail z instrukcjami, jak szybko zresetować hasło."
       complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
       complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
       help: "Email nie dotarł? Upewnij się najpierw czy sprawdziłeś folder spam.<p>Nie jesteś pewny jaki email został użyty? Wprowadz adres tutaj, a dowiemy się czy taki istnieje.</p><p>Jeśli nie masz już dostępu do adresu email zapisanego na twoim koncie, skontaktuj się z <a href='%{basePath}/about'>naszym pomocnym zespołem.</a></p>"
@@ -1381,6 +1466,8 @@ pl_PL:
       button_label: "z e-mailem"
       complete_username: "Jeśli konto pasuje do nazwy użytkownika <b>%{username}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_email: "Jeśli konto pasuje do <b>%{email}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
+      complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
+      complete_email_found: "Znaleźliśmy konto pasujące do <b>%{email}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
       complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
       confirm_title: "Przejdź do %{site_name}"
@@ -1396,12 +1483,16 @@ pl_PL:
       second_factor_backup_title: "Kod zapasowy weryfikacji dwuskładnikowej"
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
       second_factor: "Zaloguj się przy użyciu aplikacji Authenticator"
+      security_key_description: "Po przygotowaniu fizycznego klucza bezpieczeństwa naciśnij przycisk Uwierzytelnij za pomocą klucza bezpieczeństwa poniżej."
       security_key_alternative: "Spróbuj w inny sposób"
       security_key_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa"
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
+      security_key_no_matching_credential_error: "W podanym kluczu zabezpieczeń nie znaleziono zgodnych poświadczeń."
+      security_key_support_missing_error: "Twoje obecne urządzenie lub przeglądarka nie obsługuje używania kluczy bezpieczeństwa. Proszę użyć innej metody."
       email_placeholder: "adres email lub nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
       error: "Nieznany błąd"
+      cookies_error: "Wygląda na to, że masz wyłączoną obsługę plików cookie. Możesz nie być w stanie zalogować się bez uprzedniego włączenia ich."
       rate_limit: "Poczekaj, zanim ponowisz próbę logowania."
       blank_username: "Podaj swój adres e-mail lub nazwę użytkownika."
       blank_username_or_password: "Podaj swój email lub nazwę użytkownika i hasło"
@@ -1416,11 +1507,13 @@ pl_PL:
       not_allowed_from_ip_address: "Nie możesz się zalogować z tego adresu IP."
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
+      omniauth_disallow_totp: "Twoje konto ma włączone uwierzytelnianie dwuskładnikowe. Zaloguj się za pomocą swojego hasła."
       resend_title: "Wyślij ponownie Email aktywacyjny"
       change_email: "Zmień Adres Email"
       provide_new_email: "Wprowadź nowy adres Email. Wyślemy na niego mail potwierdzający."
       submit_new_email: "Zaktualizuj adres Email"
       sent_activation_email_again: "Wysłaliśmy do ciebie kolejny email z aktywacją konta na <b>{{currentEmail}}</b>. Zanim dotrze, może minąć kilka minut; pamiętaj, żeby sprawdzić folder ze spamem."
+      sent_activation_email_again_generic: "Wysłaliśmy kolejny e-mail aktywacyjny. Przybycie może potrwać kilka minut; koniecznie sprawdź folder ze spamem."
       to_continue: "Zaloguj się"
       preferences: "Musisz się zalogować, aby zmieniać swoje ustawienia."
       forgot: "Nie pamiętam konta"
@@ -1463,6 +1556,7 @@ pl_PL:
       apple_international: "Apple/Międzynarodowy"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (wcześniej EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1471,6 +1565,8 @@ pl_PL:
       categories_with_featured_topics: "Kategorie z wybranymi tematami"
       categories_and_latest_topics: "Kategorie i ostatnie tematy"
       categories_and_top_topics: "Kategorie i najlepsze tematy"
+      categories_boxes: "Pudełka z podkategoriami"
+      categories_boxes_with_topics: "Pudełka z polecanymi tematami"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1496,9 +1592,12 @@ pl_PL:
         few: "Wybierz co najmniej {{count}} elementy."
         many: "Wybierz co najmniej {{count}} elementów."
         other: "Wybierz co najmniej {{count}} elementów."
+      invalid_selection_length: "Zaznaczenie musi zawierać co najmniej {{count}} znaków."
     date_time_picker:
       from: Od
       to: Do
+      errors:
+        to_before_from: "Do daty musi być późniejsza niż data."
     emoji_picker:
       filter_placeholder: Szukaj emoji
       smileys_&_emotion: Emotikony i emocje
@@ -1510,7 +1609,6 @@ pl_PL:
       objects: Obiekty
       symbols: Symbolika
       flags: Flagi
-      custom: Spersonalizowane emoji
       recent: Ostatnio używane
       default_tone: Brak koloru skóry
       light_tone: Jasny kolor skóry
@@ -1518,6 +1616,7 @@ pl_PL:
       medium_tone: Średni kolor skóry
       medium_dark_tone: Średnio ciemny kolor skóry
       dark_tone: Ciemny kolor skóry
+      default: Spersonalizowane emoji
     shared_drafts:
       title: "Udostępnione projekty"
       notice: "Ten temat jest widoczny tylko użytkowników mających dostęp do kategorii <b>{{category}}</b>."
@@ -1539,6 +1638,8 @@ pl_PL:
       saved_local_draft_tip: "zapisano lokalnie"
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
+      edit_conflict: "edytuj konflikt"
+      group_mentioned_limit: "<b>Ostrzeżenie!</b> Wspomniałeś o <a href='{{group_link}}'>{{group}}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników {{max}}. Nikt nie zostanie powiadomiony."
       group_mentioned:
         one: "Wspominając {{group}}, powiadomisz <a href='{{group_link}}'>%{count} osobę</a> – czy jesteś pewien?"
         few: "Wspominając {{group}}, powiadomisz <a href='{{group_link}}'>{{count}} osoby</a> – czy jesteś pewien?"
@@ -1558,7 +1659,9 @@ pl_PL:
         try_like: "Czy wypróbowałeś przycisk {{heart}}?"
         category_missing: "Musisz wybrać kategorię"
         tags_missing: "Musisz wybrać co najmniej {{count}} tagów"
+        topic_template_not_modified: "Dodaj szczegóły i szczegóły do swojego tematu, edytując szablon tematu."
       save_edit: "Zapisz zmiany"
+      overwrite_edit: "Zastąp edycję"
       reply_original: "Odpowiedz na Oryginalny Temat"
       reply_here: "Odpowiedz tutaj"
       reply: "Odpowiedz"
@@ -1581,6 +1684,7 @@ pl_PL:
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisywanie"
       saved: "Zapisano!"
+      saved_draft: "Publikowanie wersji roboczej w toku. Stuknij, aby wznowić."
       uploading: "Wczytuję…"
       show_preview: "pokaż podgląd &raquo;"
       hide_preview: "&laquo; schowaj podgląd"
@@ -1608,6 +1712,11 @@ pl_PL:
       list_item: "Element listy"
       toggle_direction: "Zmień kierunek"
       help: "Pomoc formatowania Markdown"
+      collapse: "zminimalizuj panel kompozytora"
+      open: "otwórz panel kompozytora"
+      abandon: "zamknij kompozytora i odrzuć wersję roboczą"
+      enter_fullscreen: "wprowadź kompozytora na pełnym ekranie"
+      exit_fullscreen: "zamknij kompozytora na pełnym ekranie"
       modal_ok: "OK"
       modal_cancel: "Anuluj"
       cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości do %{username}."
@@ -1617,12 +1726,15 @@ pl_PL:
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
         reply: Odpowiedź
+        draft: Wersja robocza
         edit: Edycja
         reply_to_post:
+          label: "Odpowiedz na post %{postNumber} przez %{postUsername}"
           desc: Odpowiedz na określony post
         reply_as_new_topic:
           label: Odpowiedz jako powiązany temat
           desc: Utwórz nowy temat powiązany z tym tematem
+          confirm: "Zapisano nową wersję roboczą tematu, która zostanie zastąpiona, jeśli utworzysz połączony temat."
         reply_as_private_message:
           label: Nowa wiadomość
           desc: Utwórz nową osobistą wiadomość
@@ -1634,6 +1746,12 @@ pl_PL:
           desc: Szepty są widoczne tylko dla pracowników
         create_topic:
           label: "Nowy temat"
+        shared_draft:
+          label: "Udostępniony projekt"
+          desc: "Opracuj temat, który będzie widoczny tylko dla personelu"
+        toggle_topic_bump:
+          label: "Przełącz wypukłość tematu"
+          desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
     notifications:
       tooltip:
         regular:
@@ -1646,12 +1764,20 @@ pl_PL:
           few: "Nieodczytane wiadomości: {{count}}"
           many: "Nieodczytane wiadomości: {{count}}"
           other: "Nieodczytane wiadomości: 1"
+        high_priority:
+          one: "%{count} nieprzeczytane powiadomienie o wysokim priorytecie"
+          few: "%{count} nieprzeczytane powiadomienie o wysokim priorytecieis"
+          many: "%{count} nieprzeczytane powiadomienie o wysokim priorytecieis"
+          other: "%{count} nieprzeczytane powiadomienie o wysokim priorytecieis"
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
       empty: "Nie znaleziono powiadomień."
+      post_approved: "Twój post został zatwierdzony"
+      reviewable_items: "przedmioty wymagające przeglądu"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1678,6 +1804,7 @@ pl_PL:
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Nowy temat</span> {{description}}"
       membership_request_accepted: "Członkostwo zaakceptowane w „{{group_name}}”"
+      membership_request_consolidated: "{{count}} otwarte wnioski o członkostwo dla „{{group_name}}”"
       group_message_summary:
         one: "masz {{count}} wiadomość w skrzynce odbiorczej {{group_name}}"
         few: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
@@ -1696,15 +1823,19 @@ pl_PL:
         confirm_body: "Powodzenie! Powiadomienia zostały włączone."
         custom: "Powiadomienie od {{username}} na %{site_title}"
       titles:
+        mentioned: "wzmiankowany"
         replied: "nowa odpowiedź"
         quoted: "zacytowany"
         edited: "edytowane"
         liked: "nowe polubienie"
         private_message: "nowa prywatna wiadomość"
+        invited_to_private_message: "zaproszony na prywatną wiadomość"
         invitee_accepted: "zaproszenie przyjęte"
         posted: "nowy post"
         moved_post: "post został przeniesiony"
         linked: "połączony"
+        bookmark_reminder: "przypomnienie o zakładce"
+        bookmark_reminder_with_name: "przypomnienie o zakładce - %{name}"
         granted_badge: "przyznana odznaka"
         invited_to_topic: "zaproszony do tematu"
         group_mentioned: "wspomniana grupa"
@@ -1713,6 +1844,7 @@ pl_PL:
         topic_reminder: "przypomnienie tematu"
         liked_consolidated: "nowe polubienia"
         post_approved: "post zatwierdzony"
+        membership_request_consolidated: "nowe wnioski o członkostwo"
     upload_selector:
       title: "Dodaj obraz"
       title_with_attachments: "Dodaj obraz lub plik"
@@ -1759,6 +1891,7 @@ pl_PL:
       context:
         user: "Szukaj wpisów @{{username}}"
         category: "Szukaj w kategorii #{{category}}"
+        tag: "Wyszukaj znacznik # {{tag}}"
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
       advanced:
@@ -1778,6 +1911,7 @@ pl_PL:
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w
+          created: ja stworzyłem
           watching: Obserwuję
           tracking: Śledzę
           private: W moich wiadomościach
@@ -1794,6 +1928,7 @@ pl_PL:
           label: Tematy gdzie
           open: są otwarte
           closed: są zamknięte
+          public: są publiczne
           archived: są archiwizowane
           noreplies: ma zero odpowiedzi
           single_user: zawierają użytkownika
@@ -1885,6 +2020,13 @@ pl_PL:
       defer:
         help: "Oznacz jako nieprzeczytane"
         title: "Zignoruj"
+      feature_on_profile:
+        help: "Dodaj link do tego tematu na karcie użytkownika i profilu"
+        title: "Funkcja na profilu"
+      remove_from_profile:
+        warning: "Twój profil ma już polecany temat. Jeśli będziesz kontynuować, ten temat zastąpi istniejący."
+        help: "Usuń link do tego tematu w swoim profilu użytkownika"
+        title: "Usuń z profilu"
       list: "Tematy"
       new: "nowy temat"
       unread: "nieprzeczytane"
@@ -1940,6 +2082,7 @@ pl_PL:
       group_request_sent: "Twoja prośba o członkostwo w grupie została wysłana. Zostaniesz poinformowany, kiedy zostanie zaakceptowane."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
       read_more_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 nieprzeczytany</a> } other { are <a href='{basePath}/unread'># nieprzeczytanych</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nowy</a> temat} other { {BOTH, select, true{and } false {} other{}} <a href='{basePath}/new'># nowych</a> tematów} }, lub {CATEGORY, select, true {przeglądaj inne tematy w {catLink}} false {{latestLink}} other {}}"
+      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT} {LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Przeglądaj wszystkie kategorie
       view_latest_topics: pokaż aktualne tematy
       suggest_create_topic: "Może rozpoczniesz temat?"
@@ -1947,11 +2090,14 @@ pl_PL:
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
       topic_status_update:
+        title: "Timer tematów"
         save: "Ustaw czas"
         num_of_hours: "Liczba godzin:"
+        num_of_days: "Liczba dni:"
         remove: "Usuń czas"
         publish_to: "Opublikuj do:"
         when: "Kiedy:"
+        public_timer_types: Timery tematów
         time_frame_required: Wybierz przedział czasowy
       auto_update_input:
         none: "Wybierz przedział czasowy"
@@ -2449,6 +2595,7 @@ pl_PL:
             title: "Pokaż część html emaila"
             button: "HTML"
       bookmarks:
+        created: "Utworzono"
         name: "Imię"
     category:
       can: "może&hellip; "
@@ -3854,7 +4001,6 @@ pl_PL:
           staff: "Zespół"
           suspended: "Zawieszeni"
           silenced: "Wyciszony"
-          suspect: "Podejrzani"
           staged: "Wystawiany na scenie"
         approved: "Zatwierdzam?"
         titles:
@@ -3871,7 +4017,6 @@ pl_PL:
           moderators: "Moderatoratorzy"
           silenced: "Wyciszeni użytkownicy"
           suspended: "Zawieszone konta"
-          suspect: "Podejrzani użytkownicy"
           staged: "Wystawieni użytkownicy"
         not_verified: "Niezweryfikowany"
         check_email:
@@ -4228,6 +4373,7 @@ pl_PL:
         help: "Dodawanie nowych emoji. (PROTIP: przeciągnij i upuść wiele plików)"
         add: "Dodaj nowe Emoji"
         name: "Nazwa"
+        group: "Grupa"
         image: "Grafika"
         delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}: ?"
       embedding:
@@ -4254,7 +4400,6 @@ pl_PL:
         save: "Zapisz"
       permalink:
         title: "Permalinki"
-        description: "Zwróć uwagę na to, że to ustawienie zastosowane zostanie wyłącznie do zewnętrznych źródeł, linki umieszczone na forum nie ulegną przekierowaniu."
         url: "URL"
         topic_id: "ID tematu"
         topic_title: "Temat"

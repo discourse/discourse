@@ -19,8 +19,6 @@ class SpamRule::FlagSockpuppets
 
   def reply_is_from_sockpuppet?
     return false if @post.try(:post_number) == 1
-
-    first_post = @post.topic.posts.by_post_number.first
     return false if first_post.user.nil?
 
     !first_post.user.staff? &&
@@ -41,11 +39,22 @@ class SpamRule::FlagSockpuppets
       locale: SiteSetting.default_locale
     )
 
-    PostActionCreator.create(Discourse.system_user, @post, :spam, message: message)
+    flag_post(@post, message)
 
-    if (first_post = @post.topic.posts.by_post_number.first).try(:user).try(:new_user?)
-      PostActionCreator.create(Discourse.system_user, first_post, :spam, message: message)
-    end
+    flag_post(first_post, message) if first_post&.user&.new_user?
+  end
+
+  private
+
+  def flag_post(post, message)
+    can_trust_user = ReviewableFlaggedPost.where(status: Reviewable.statuses[:rejected], target_created_by: post.user).exists?
+    return if can_trust_user
+
+    PostActionCreator.create(Discourse.system_user, post, :spam, message: message)
+  end
+
+  def first_post
+    @first_post ||= @post.topic.posts.by_post_number.first
   end
 
 end

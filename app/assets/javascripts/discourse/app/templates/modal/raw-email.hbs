@@ -1,0 +1,43 @@
+{{#d-modal-body title="raw_email.title" class="incoming-email-modal" maxHeight="80%"}}
+  <div class="incoming-email-tabs">
+    {{d-button action=(action "displayRaw")
+               label="post.raw_email.displays.raw.button"
+               title="post.raw_email.displays.raw.title"
+               class=(if showRawEmail "active")
+    }}
+
+    {{#if textPart}}
+      {{d-button action=(action "displayTextPart")
+                 label="post.raw_email.displays.text_part.button"
+                 title="post.raw_email.displays.text_part.title"
+                 class=(if showTextPart "active")
+      }}
+    {{/if}}
+
+    {{#if htmlPart}}
+      {{d-button action=(action "displayHtmlPart")
+                 label="post.raw_email.displays.html_part.button"
+                 title="post.raw_email.displays.html_part.title"
+                 class=(if showHtmlPart "active")
+      }}
+    {{/if}}
+  </div>
+
+  <div class="incoming-email-content">
+    {{#if showRawEmail}}
+      {{#if rawEmail}}
+        {{textarea value=rawEmail}}
+      {{else}}
+        {{i18n "raw_email.not_available"}}
+      {{/if}}
+    {{/if}}
+
+    {{#if showTextPart}}
+      {{textarea value=textPart}}
+    {{/if}}
+
+    {{#if showHtmlPart}}
+      {{iframed-html html=htmlPart className="incoming-email-html-part"}}
+    {{/if}}
+  </div>
+{{/d-modal-body}}

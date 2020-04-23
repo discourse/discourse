@@ -28,7 +28,6 @@ vi:
       time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY HH:mm"
@@ -239,18 +238,15 @@ vi:
     bookmarks:
       created: "bạn đã đánh dấu bài viết này"
       not_bookmarked: "đánh dấu bài viết này"
-      created_with_reminder: "bạn đã đánh dấu bài đăng này bằng một lời nhắc tại %{date}"
       remove: "Xóa dấu trang"
       confirm_clear: "Bạn có chắc muốn xóa toàn bộ đánh dấu trong chủ đề này?"
       save: "Lưu"
       no_timezone: 'Bạn chưa đặt múi giờ. Bạn sẽ không thể đặt lời nhắc. Thiết lập một <a href="%{basePath}/my/preferences/profile">trong hồ sơ của bạn</a> .'
       reminders:
         at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
-        later_today: "Sau ngày hôm nay <br/> {{date}}"
-        next_business_day: "Ngày làm việc tiếp theo <br/> {{date}}"
-        tomorrow: "Ngày mai <br/> {{date}}"
-        next_week: "Tuần tới <br/> {{date}}"
-        next_month: "Tháng tiếp theo <br/> {{date}}"
+        tomorrow: "Ngày mai"
+        next_week: "Tuần tới"
+        next_month: "Tháng t"
         custom: "Ngày giờ tùy chỉnh"
     drafts:
       resume: "Làm lại"
@@ -867,9 +863,6 @@ vi:
         success: "Chúng tôi đã gửi email tới địa chỉ đó. Vui lòng làm theo chỉ dẫn để xác nhận lại."
       change_avatar:
         title: "Đổi ảnh đại diện"
-        gravatar: "dựa trên <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
-        gravatar_title: "Đổi ảnh đại diện của bạn trên website Gravatar"
-        refresh_gravatar_title: "Làm mới Gravatar của bạn"
         letter_based: "Hệ thống xác định ảnh đại diện"
         uploaded_avatar: "Chính sửa hình ảnh"
         uploaded_avatar_empty: "Thêm một ảnh chỉnh sửa"
@@ -1116,6 +1109,8 @@ vi:
         back: "Quay trở lại"
         again: "Thử lại"
         fixed: "Load lại trang"
+    modal:
+      close: "đóng"
     close: "Đóng lại"
     assets_changed_confirm: "Website đã được cập nhật bản mới. Bạn có thể làm mới lại trang để có thể sử dụng bản mới được cập nhật"
     logout: "Bạn đã đăng xuất"
@@ -1878,6 +1873,7 @@ vi:
           html_part:
             button: "HTML"
       bookmarks:
+        created: "Tạo bởi"
         name: "Tên"
     category:
       can: "can&hellip;"
@@ -2726,7 +2722,6 @@ vi:
           active: "Kích hoạt"
           staff: "Nhân viên"
           suspended: "Đã tạm khóa"
-          suspect: "Nghi ngờ"
         approved: "Đã duyệt?"
         titles:
           active: "Thành viên kích hoạt"
@@ -2741,7 +2736,6 @@ vi:
           admins: "Tài khoản Quản trị"
           moderators: "Điều hành viên"
           suspended: "Tài khoản Tạm khóa"
-          suspect: "Tài khoản đáng ngờ"
         not_verified: "Chưa xác thực"
         check_email:
           title: "Khám phá email của tài khoản này"
@@ -3013,6 +3007,7 @@ vi:
         help: "Thêm emoji mới có sẵn cho tất cả mọi người. (MẸO: kéo & thả nhiều file cùng lúc)"
         add: "Thêm emoji mới"
         name: "Tên"
+        group: "Nhóm"
         image: "Hình ảnh"
         delete_confirm: "Bạn có chắc chắn muốn xóa emoji :%{name}:?"
       embedding:

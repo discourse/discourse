@@ -23,6 +23,9 @@ module PrettyText
 
     erb_name = "#{filename}.js.es6.erb"
     return erb_name if File.file?("#{root}#{erb_name}")
+
+    erb_name = "#{filename}.js.erb"
+    return erb_name if File.file?("#{root}#{erb_name}")
   end
 
   def self.apply_es6_file(ctx, root_path, part_name)
@@ -55,7 +58,7 @@ module PrettyText
       elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
         path = Regexp.last_match[2]
         Dir["#{root_path}/#{path}/**"].sort.each do |f|
-          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js.es6$/, ''))
+          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js(.es6)?$/, ''))
         end
       end
     end
@@ -78,8 +81,8 @@ module PrettyText
     ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
-    apply_es6_file(ctx, root_path, "discourse/lib/to-markdown")
-    apply_es6_file(ctx, root_path, "discourse/lib/utilities")
+    apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
+    apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
     PrettyText::Helpers.instance_methods.each do |method|
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
@@ -94,7 +97,7 @@ module PrettyText
     to_load.uniq.each do |f|
       if f =~ /^.+assets\/javascripts\//
         root = Regexp.last_match[0]
-        apply_es6_file(ctx, root, f.sub(root, '').sub(/\.js\.es6$/, ''))
+        apply_es6_file(ctx, root, f.sub(root, '').sub(/\.js(\.es6)?$/, ''))
       end
     end
 

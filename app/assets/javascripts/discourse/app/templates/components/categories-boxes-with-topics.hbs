@@ -1,0 +1,39 @@
+{{#each categories as |c|}}
+  <div data-notification-level={{c.notificationLevelString}} style={{unless noCategoryStyle (border-color c.color)}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
+    <div class="category-box-inner">
+      <div class="category-box-heading">
+        <a href={{c.url}}>
+          {{#unless c.isMuted}}
+            {{#if c.uploaded_logo.url}}
+              {{cdn-img
+                src=c.uploaded_logo.url
+                class="logo"
+                width=c.uploaded_logo.width
+                height=c.uploaded_logo.height
+              }}
+            {{/if}}
+          {{/unless}}
+          <h3>
+            {{category-title-before category=c}}
+            {{#if c.read_restricted}}
+              {{d-icon "lock"}}
+            {{/if}}
+            {{c.name}}
+          </h3>
+        </a>
+      </div>
+
+      {{#unless c.isMuted}}
+        <div class="featured-topics">
+          {{#if c.topics}}
+            <ul>
+              {{#each c.topics as |topic|}}
+                {{categories-boxes-topic topic=topic}}
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div>
+      {{/unless}}
+    </div>
+  </div>
+{{/each}}

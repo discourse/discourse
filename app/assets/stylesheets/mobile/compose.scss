@@ -26,9 +26,10 @@
 
   body.ios-safari-composer-hacks &.open {
     height: calc(var(--composer-vh, 1vh) * 100);
-    .reply-area {
-      padding-bottom: 0px;
-    }
+  }
+
+  .keyboard-visible body.ios-safari-composer-hacks &.open .reply-area {
+    padding-bottom: 0px;
   }
 
   .reply-to {

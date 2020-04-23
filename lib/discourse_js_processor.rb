@@ -4,6 +4,10 @@ require 'mini_racer'
 
 class DiscourseJsProcessor
 
+  def self.plugin_transpile_paths
+    @@plugin_transpile_paths ||= Set.new
+  end
+
   def self.call(input)
     root_path = input[:load_path] || ''
     logical_path = (input[:filename] || '').sub(root_path, '').gsub(/\.(js|es6).*$/, '').sub(/^\//, '')
@@ -36,8 +40,30 @@ class DiscourseJsProcessor
     return false unless filename.end_with?(".js") || filename.end_with?(".js.erb")
 
     relative_path = filename.sub(Rails.root.to_s, '').sub(/^\/*/, '')
-    relative_path.start_with?("app/assets/javascripts/discourse/") ||
-      relative_path.start_with?("app/assets/javascripts/admin/")
+
+    js_root = "app/assets/javascripts"
+    test_root = "test/javascripts"
+
+    return false if relative_path.start_with?("#{js_root}/locales/")
+    return false if relative_path.start_with?("#{js_root}/plugins/")
+
+    return true if %w(
+      preload-store
+      preload-application-data
+      wizard-start
+      onpopstate-handler
+      discourse
+      google-tag-manager
+      google-universal-analytics
+      activate-account
+      auto-redirect
+      embed-application
+    ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
+
+    return true if plugin_transpile_paths.any? { |prefix| relative_path.start_with?(prefix) }
+
+    !!(relative_path =~ /^#{js_root}\/[^\/]+\// ||
+      relative_path =~ /^#{test_root}\/[^\/]+\//)
   end
 
   def self.skip_module?(data)
@@ -68,7 +94,7 @@ class DiscourseJsProcessor
       }
 
 JS
-      source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js.es6")
+      source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
       js_source = ::JSON.generate(source, quirks_mode: true)
       js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex'] }).code")
       ctx.eval(js)
@@ -135,7 +161,8 @@ JS
         path = "discourse/plugins/#{plugin.name}/#{logical_path.sub(/javascripts\//, '')}" if plugin
       end
 
-      path || logical_path
+      # We need to strip the app subdirectory to replicate how ember-cli works.
+      path || logical_path&.gsub('app/', '')
     end
 
   end

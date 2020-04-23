@@ -28,7 +28,6 @@ ca:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM YYYY HH:mm"
@@ -152,6 +151,7 @@ ca:
       banner:
         enabled: "convertit en bàner %{when}. Apareixerà a dalt de cada pàgina fins que sigui descartat per l'usuari."
         disabled: "ha suprimit aquest bàner %{when}. No apareixerà més a dalt de cada pàgina."
+    topic_admin_menu: "accions del tema"
     wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     bootstrap_mode_enabled: "Per a facilitar el llançament del vostre lloc web nou, esteu en mode d'arrencada. Tots els usuaris nous tindran el nivell de confiança 1 i tindran activitats els correus de resum diari. Això es desactivarà automàticament quan s'hi hagin unit %{min_users} usuaris."
@@ -264,6 +264,12 @@ ca:
       remove: "Elimina preferit"
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
       save: "Desa"
+      reminders:
+        later_today: "Més tard avui"
+        tomorrow: "Demà"
+        next_week: "La setmana que ve"
+        later_this_week: "Més avant aquesta setmana"
+        next_month: "El mes que ve"
     drafts:
       resume: "Reprèn"
       remove: "Elimina"
@@ -309,6 +315,9 @@ ca:
       install_banner: "Voleu <a href>instal·lar %{title} en aquest dispositiu?</a>"
     choose_topic:
       none_found: "No s'ha trobat temes."
+      title:
+        search: "Cerca un tema"
+        placeholder: "escriviu el títol, l’URL o l’identificador del tema aquí"
     choose_message:
       none_found: "No s'han trobat missatges."
     review:
@@ -519,6 +528,7 @@ ca:
         deny: "Denega"
         denied: "denegat"
         undone: "sol·licitud revertida"
+        handle: "gestiona la sol·licitud d'afiliació"
       manage:
         title: "Gestiona"
         name: "Nom"
@@ -559,6 +569,7 @@ ca:
       leave: "Abandona"
       request: "Sol·licita"
       message: "Missatge"
+      allow_membership_requests: "Permet als usuaris d'enviar sol·licituds d'afiliació als propietaris del grup (requereix un grup visible públicament)"
       membership_request_template: "Plantilla personalitzada que es mostra als usuaris quan envien una sol·licitud d'afiliació"
       membership_request:
         submit: "Envia sol·licitud"
@@ -940,10 +951,10 @@ ca:
         success_staff: "S'ha enviat un missatge a la vostra adreça actual. Seguiu les instruccions de confirmació."
       change_avatar:
         title: "Canvia la foto de perfil"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basat en"
-        gravatar_title: "Canvieu l'avatar en el lloc web de Gravatar"
-        gravatar_failed: "No s'ha pogut trobar un Gravatar amb aquesta adreça de correu."
-        refresh_gravatar_title: "Actualitza el Gravatar"
+        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a>, basat en"
+        gravatar_title: "Canvieu el vostre avatar en el lloc web de {{gravatarName}}"
+        gravatar_failed: "No hem trobat un {{gravatarName}} amb aquesta adreça de correu electrònic."
+        refresh_gravatar_title: "Actualitzeu el vostre {{gravatarName}}"
         letter_based: "Foto de perfil assignada pel sistema"
         uploaded_avatar: "Foto personalitzada"
         uploaded_avatar_empty: "Afegeix una foto personalitzada"
@@ -1090,6 +1101,7 @@ ca:
         search: "escriu aquí per a cercar invitacions..."
         title: "Invitacions"
         user: "Usuari convidat"
+        sent: "Darrer enviat"
         none: "Cap invitació per a mostrar."
         truncated:
           one: "Mostrant la primera invitació."
@@ -1222,6 +1234,8 @@ ca:
         back: "Vés enrere"
         again: "Torna-ho a intentar"
         fixed: "Carrega la pàgina"
+    modal:
+      close: "tanca"
     close: "Tanca"
     assets_changed_confirm: "El lloc web s'ha actualitzat. Voleu tornar a carregar la pàgina per a la versió més recent?"
     logout: "Heu tancat la sessió."
@@ -1300,6 +1314,8 @@ ca:
       reset: "Restableix la contrasenya"
       complete_username: "Si hi ha algun compte que correspongui a l'usuari <b>%{username}</b>, hauríeu de rebre aviat un correu amb instruccions per a restablir la contrasenya."
       complete_email: "Si hi ha algun compte que correspon a l'adreça <b>%{email}</b>, hauríeu de rebre aviat un correu amb instruccions per a restablir la contrasenya."
+      complete_username_found: "Hem trobat un compte que correspon al nom d'usuari <b>%{username}</b>. Hauríeu de rebre un correu amb instruccions per a restablir la contrasenya."
+      complete_email_found: "Hem trobat un compte que correspon a l'adreça <b>%{email}</b>. Hauríeu de rebre aviat un correu amb instruccions per a restablir la contrasenya."
       complete_username_not_found: "No hi ha cap compte que coincideixi amb el nom d'usuari <b>%{username}</b>"
       complete_email_not_found: "Cap compte no coincideix amb <b>%{email}</b>"
       help: "No arriba el correu? Comproveu primer la carpeta de correu brossa. <p>No esteu segur de quina adreça heu fet servir? Introduïu una adreça i us farem saber si existeix.</p> <p>Si ja no teniu accés a l'adreça del vostre compte, poseu-vos en contacte amb <a href='%{basePath}/about'>el nostre equip responsable</a></p>."
@@ -1448,7 +1464,6 @@ ca:
       objects: Objectes
       symbols: Símbols
       flags: Banderes
-      custom: Emojis personalitzats
       recent: Usats recentment
       default_tone: Sense to de pell
       light_tone: To de pell clar
@@ -1456,6 +1471,7 @@ ca:
       medium_tone: To de pell mitjà
       medium_dark_tone: To de pell fosc mitjà
       dark_tone: To de pell fosc
+      default: Emojis personalitzats
     shared_drafts:
       title: "Esborranys compartits"
       notice: "Aquest tema sols és visible per als qui poden veure la categoria <b>{{category}}</b>."
@@ -1521,6 +1537,7 @@ ca:
       view_new_post: "Mostra la nova publicació."
       saving: "Desant"
       saved: "Desat!"
+      saved_draft: "Publica l'esborrany en curs. Toqueu per a continuar."
       uploading: "Carregant..."
       show_preview: "mostra la previsualització &raquo; "
       hide_preview: "&laquo; amaga la previsualització"
@@ -1603,6 +1620,7 @@ ca:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2305,6 +2323,9 @@ ca:
           notify_moderators: "s'ha notificat els moderadors"
           notify_user: "ha enviat un missatge"
           bookmark: "marcat com a preferit"
+          like:
+            one: "ha fet 'M'agrada' "
+            other: "han fet 'M'agrada' "
           like_capped:
             one: "i {{count}}més han dit que els agrada"
             other: "i {{count}}més han dit que els agrada"
@@ -2358,6 +2379,7 @@ ca:
             title: "Mostra la part HTML del correu electrònic"
             button: "HTML"
       bookmarks:
+        created: "Creat"
         name: "Nom"
     category:
       can: "pot&hellip; "
@@ -3750,7 +3772,6 @@ ca:
           staff: "Equip responsable"
           suspended: "Suspesos"
           silenced: "Silenciat"
-          suspect: "Sospitós"
           staged: "Fictici"
         approved: "Aprovat?"
         titles:
@@ -3767,7 +3788,6 @@ ca:
           moderators: "Moderadors"
           silenced: "Usuaris silenciats"
           suspended: "Usuaris suspesos"
-          suspect: "Usuaris sospitosos"
           staged: "Usuaris ficticis"
         not_verified: "No verificat"
         check_email:
@@ -4118,6 +4138,7 @@ ca:
         help: "Afegeix un nou emoji que estarà disponible per a tothom. (CONSELL: arrossegueu i deixeu anar molts fitxers de cop)"
         add: "Afegeix emoji nou"
         name: "Nom"
+        group: "Grup"
         image: "Imatge"
         delete_confirm: "Esteu segur que voleu suprimir l'emoji :%{name}:?"
       embedding:
@@ -4144,7 +4165,6 @@ ca:
         save: "Desa la configuració d'incrustacions"
       permalink:
         title: "Enllaços permanents"
-        description: "Tingueu en compte que sols s'aplica a fonts externes. Els enllaços publicats en el vostre fòrum no seran redirigits."
         url: "URL"
         topic_id: "ID de tema"
         topic_title: "Tema"

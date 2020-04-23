@@ -1,0 +1,22 @@
+<label for="choose-message-title">{{i18n "choose_message.title.search"}}</label>
+
+{{text-field value=messageTitle placeholderKey="choose_message.title.placeholder" id="choose-message-title"}}
+
+{{#if loading}}
+  <p>{{i18n "loading"}}</p>
+{{else}}
+  {{#if noResults}}
+    <p>{{i18n "choose_message.none_found"}}</p>
+  {{else}}
+    {{#each messages as |m|}}
+      <div class="controls existing-message">
+        <label class="radio">
+          <input id="choose-message-{{m.id}}" {{action "chooseMessage" m}} type="radio" name="choose_message_id">
+          <span class="message-title">
+            {{m.title}}
+          </span>
+        </label>
+      </div>
+    {{/each}}
+  {{/if}}
+{{/if}}

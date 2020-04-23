@@ -24,7 +24,6 @@ te:
             tb: టీబీ
     dates:
       time: "h:mm a"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
@@ -165,6 +164,10 @@ te:
       created: "ఈ టపాకు పేజీక ఉంచారు"
       remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
+      reminders:
+        tomorrow: "రేపు"
+        next_week: "వచ్చే వారం"
+        next_month: "వచ్చే నెల"
     drafts:
       remove: "తొలగించు"
       abandon:
@@ -433,8 +436,6 @@ te:
         success: "ఆ చిరునామాకు మేము వేగు పంపాము. అందులోని సూచనలు అనుసరించండి. "
       change_avatar:
         title: "మీ ప్రవర బొమ్మ మార్చండి."
-        gravatar: "ఆధారపడిన <a href='//gravatar.com/emails' target='_blank'>గ్రావతారం</a>"
-        refresh_gravatar_title: "మీ గ్రావతారం తాజాపరుచు"
         letter_based: "వ్యవస్థ కేటాయించిన ప్రవర బొమ్మ"
         uploaded_avatar: "అనురూప బొమ్మ"
         uploaded_avatar_empty: "అనురూప బొమ్మను కలపండి"
@@ -574,6 +575,8 @@ te:
         back: "వెనక్కు వెళ్లండి"
         again: "మళ్ళీ ప్రయత్నించండి"
         fixed: "పుట ఎక్కించండి"
+    modal:
+      close: "మూసివేయి"
     close: "మూసివేయి"
     assets_changed_confirm: "ఈ సైటు ఇప్పుడే ఉన్నతీకరించబడింది. కొత్త రూపాంతరం చూడటానికి తాజాపరచండి?"
     logout: "మీరు లాగవుట్ అయ్యారు."
@@ -1061,6 +1064,7 @@ te:
           side_by_side_markdown:
             title: "ముడి మూల తేడాను పక్కపక్కన చూపు"
       bookmarks:
+        created: "సృష్టించిన"
         name: "పేరు"
     category:
       can: "can&hellip;"
@@ -1704,7 +1708,6 @@ te:
           active: "క్రియాశీల"
           staff: "సిబ్బంది"
           suspended: "సస్పెడయ్యాడు"
-          suspect: "అనుమానించు"
         approved: "అంగీకరించు"
         titles:
           active: "క్రియాశీల సభ్యులు"
@@ -1719,7 +1722,6 @@ te:
           admins: "అధికారి సభ్యులు"
           moderators: "నిర్వాహకులు"
           suspended: "సస్పెండయిన సభ్యులు"
-          suspect: "అనుమానిత సభ్యులు"
         not_verified: "ద్రువీకరించలేదు"
         check_email:
           title: "ఈ సభ్యుని ఈమెయిల్ చూపు"
@@ -1950,6 +1952,7 @@ te:
         title: "ఇమోజి"
         add: "కొత్త ఇమోజి కలుపు"
         name: "పేరు"
+        group: "సమూహం"
         image: "బొమ్మ"
         delete_confirm: "మీరు నిజంగా %{name}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
       embedding:

@@ -1,0 +1,7 @@
+<div class="ac-message">
+  {{#if email}}
+    {{html-safe (i18n "login.sent_activation_email_again" currentEmail=email)}}
+  {{else}}
+    {{i18n "login.sent_activation_email_again_generic"}}
+  {{/if}}
+</div>

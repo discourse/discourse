@@ -28,7 +28,6 @@ id:
       time: "h:mm a"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "BBB D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -240,18 +239,12 @@ id:
     bookmarks:
       created: "Anda telah menandai post ini"
       not_bookmarked: "tandai pos ini"
-      created_with_reminder: "anda telah menandai pos ini dengan pengingat pada %{date}"
       remove: "Hilangkan penandaan"
       confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
       reminders:
         at_desktop: "Lain kali saat saya di depan komputer"
-        later_today: "Nanti <br/> {{date}}"
-        next_business_day: "Hari kerja berikutnya <br/> {{date}}"
-        tomorrow: "Besok <br/> {{date}}"
-        next_week: "Minggu depan <br/> {{date}}"
-        next_month: "Bulan depan <br/> {{date}}"
         custom: "Tanggal dan waktu tersuai"
     drafts:
       resume: "Lanjut"
@@ -836,9 +829,6 @@ id:
         success: "Kami telah mengirimkan surel kepada alamat itu. Silahkan mengikuti petunjuk konfirmasi didalamnya."
       change_avatar:
         title: "Ganti gambar profil anda"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, berdasarkan "
-        gravatar_title: "Ganti avatar anda di website Gravatar"
-        refresh_gravatar_title: "Segarkan Gravatas kamu"
         uploaded_avatar: "Gambar kustom"
         uploaded_avatar_empty: "Tambah gambar kustom"
         upload_title: "Unggah gambar anda"
@@ -1052,6 +1042,8 @@ id:
         back: "Kembali"
         again: "Coba Lagi"
         fixed: "Mengakses Halaman"
+    modal:
+      close: "tutup"
     close: "Tutup"
     logout: "Anda telah keluar."
     refresh: "Segarkan"
@@ -1419,6 +1411,7 @@ id:
         controls:
           first: "Revisi pertama"
       bookmarks:
+        created: "Dibuat"
         name: "Nama"
     category:
       edit: "Ubah"

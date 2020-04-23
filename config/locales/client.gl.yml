@@ -28,7 +28,6 @@ gl:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMMM"
       long_with_year: "D MMM, YYYY h:mm a"
@@ -528,9 +527,6 @@ gl:
         success: "Enviamos un correo electrónico a ese enderezo. Sigue as instrucións de confirmación."
       change_avatar:
         title: "Cambia a foto do perfil"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado en"
-        gravatar_title: "Cambia o avatar no sitio web de Gravatar"
-        refresh_gravatar_title: "Actualiza o teu Gravatar"
         letter_based: "Imaxe do perfil asignada polo sistema"
         uploaded_avatar: "Imaxe personalizada"
         uploaded_avatar_empty: "Engadir unha imaxe personalizada"
@@ -714,6 +710,8 @@ gl:
         back: "Volver"
         again: "Tentar de novo"
         fixed: "Cargar páxina"
+    modal:
+      close: "pechar"
     close: "Pechar"
     assets_changed_confirm: "Este sitio acaba de actualizarse. Queres recargar a páxina para ter a última versión?"
     logout: "Fuches desconectado."
@@ -1349,6 +1347,7 @@ gl:
           side_by_side_markdown:
             title: "Amosar a fonte crúa coas diferenzas comparadas"
       bookmarks:
+        created: "Creado"
         name: "Nome"
     category:
       can: "podes&hellip; "
@@ -2114,7 +2113,6 @@ gl:
           active: "Activo"
           staff: "Equipo"
           suspended: "Suspendido"
-          suspect: "Sospeitoso"
         approved: "Aprobado?"
         titles:
           active: "Usuarios activos"
@@ -2129,7 +2127,6 @@ gl:
           admins: "Usuarios administradores"
           moderators: "Moderadores"
           suspended: "Usuarios suspendidos"
-          suspect: "Usuarios sospeitosos"
         not_verified: "Sen verificar"
         check_email:
           title: "Amosar o enderezo de correo-e deste usuario"
@@ -2396,6 +2393,7 @@ gl:
         help: "Engade novo emoji que estará dispoñíbel para todos. (Suxestión: arrastra e solta múltiples ficheiros dunha vez)"
         add: "Engadir novo Emoji"
         name: "Nome"
+        group: "Grupo"
         image: "Imaxe"
         delete_confirm: "Confirmas a eliminación do emoji :%{name}:?"
       embedding:

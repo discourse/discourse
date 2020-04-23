@@ -59,7 +59,6 @@ pt_BR:
       optimized_link: Links otimizados de imagem são efêmeros e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido."
-      data_type_not_a_number: "Definindo`%{name}` tipo não é suportado. Tipos suportados são `integer`,` bool`, `list` e` enum`"
       name_too_long: "Aqui está uma configuração com um nome muito longo. Comprimento máximo é de 255"
       default_value_missing: "Definindo `%{name}` não tem valor padrão"
       default_not_match_type: "Definindo `%{name}` o tipo de valor padrão não corresponde ao tipo de configuração."
@@ -316,11 +315,10 @@ pt_BR:
   bookmarks:
     reminders:
       at_desktop: "Da próxima vez que estiver na minha área de trabalho"
-      later_today: "Hoje mais tarde <br/>{{date}}"
-      next_business_day: "Próximo dia comercial <br/>{{date}}"
-      tomorrow: "Amanhã <br/>{{date}}"
-      next_week: "Próxima semana <br/>{{date}}"
-      next_month: "Próximo mês <br/>{{date}}"
+      later_today: "Mais tarde hoje"
+      tomorrow: "Amanhã"
+      next_week: "Próxima semana"
+      next_month: "Próximo mês"
       custom: "Data e hora personalizadas"
   groups:
     success:
@@ -351,7 +349,6 @@ pt_BR:
       trust_level_4: "nivel_de_confianca_4"
     request_membership_pm:
       title: "Pedido de associação para @%{group_name}"
-      handle: "tratar pedido de associação"
   education:
     until_posts:
       one: "%{count} mensagem"
@@ -1219,7 +1216,6 @@ pt_BR:
   dashboard:
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
     host_names_warning: "O arquivo config/database.yml está usando hostname padrão localhost. Modifique para usar o hostname do seu site."
-    gc_warning: 'Seu servidor está usando os parâmetros padrão de coleta de lixo ruby, o que não lhe dará o melhor desempenho. Leia este tópico sobre ajuste de desempenho: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Ajustando Ruby and Rails para Discourse</a>.'
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
     queue_size_warning: "O número de processos na fila é %{queue_size}, o que é alto. Isso pode ser indicação de um problema com o(s) processo(s) do Sidekiq, ou você pode ter que adicionar mais Sidekiq workers."
     memory_warning: "Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada."
@@ -1322,8 +1318,6 @@ pt_BR:
     force_https: "Force seu site a usar apenas HTTPS. AVISO: NÃO ative até que você tenha verificado que o HTTPS está completamente configurado e funcionando em absolutamente todos os lugares! Você verificou se seu CDN, todos os logins sociais e quaisquer logos e dependências externos são todos compatíveis com HTTPS, também?"
     same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos os vetores Cross Site Request Forgery nos navegadores suportados (Lax ou Strict). Aviso: o Strict funcionará apenas em sites que forçam o login e usem o SSO."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída no \"Resuma este tópico\" "
-    summary_posts_required: "Mensagens mínimas em um tópico antes de 'Resumir este tópico' ficar habilitado"
-    summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     summary_max_results: "Número máximo de postagens retornadas por 'Resumir Este Tópico'"
     enable_personal_messages: "Permitir que o nível de confiança 1 (configurável por meio do nível mínimo de confiança para enviar mensagens) os usuários criem mensagens e respondam a mensagens. Note que a equipe sempre pode enviar mensagens, não importa o quê."
@@ -1454,7 +1448,6 @@ pt_BR:
     github_client_id: "ID do cliente para autenticação do Github, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Segredo do cliente para autenticação do Github, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     discord_secret: "Chave Secreta do Discord"
-    readonly_mode_during_backup: "Habilitar modo de apenas leitura quando estiver realizando um backup"
     enable_backups: "Permitir que administradores criem backups do fórum"
     allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe falsa, a menos que você pretenda restaurar um backup"
     maximum_backups: "A quantidade máxima de backups para manter no disco. Backups mais antigos são excluídos automaticamente"
@@ -1921,6 +1914,10 @@ pt_BR:
       other: "%{count} postagens foram mescladas em uma mensagem existente: %{topic_link}"
   change_owner:
     post_revision_text: "Propriedade transferida"
+  publish_page:
+    slug_errors:
+      blank: "não pode estar em branco"
+      invalid: "contém caracteres inválidos"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Esta mensagem foi fechada automaticamente depois de atingir o limite máximo de %{count} resposta."
@@ -2832,7 +2829,6 @@ pt_BR:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos Tópicos"
-      unread_messages: "Mensagens Não-lidas"
       unread_notifications: "Notificações Não-lidas"
       liked_received: "Curtidas Recebidas"
       new_users: "Usuários Novos"

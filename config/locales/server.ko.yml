@@ -220,6 +220,12 @@ ko:
   too_late_to_edit: "이 글은 작성된 지 너무 오랜 기간이 지났습니다. 수정 또는 삭제할 수 없습니다."
   revert_version_same: "복구하려는 버전과 현재 버전이 똑같습니다."
   excerpt_image: "이미지"
+  bookmarks:
+    reminders:
+      later_today: "오늘 늦게"
+      tomorrow: "내일"
+      next_week: "다음 주"
+      next_month: "다음 달"
   groups:
     errors:
       can_not_modify_automatic: "자동 설정 그룹은 수정할 수 없습니다."
@@ -943,8 +949,6 @@ ko:
     force_https: "사이트가 HTTPS를 사용하도록 강제합니다. 경고: HTTPS가 완벽히 적용되어 있는 것을 확인하기 전까지는 이 옵션을 켜지마세요. CDN, 소셜 로그인, 외부 링크로 가져오는 자료, 로고들이 HTTPS호환성이 있는지 확인하셨나요?"
     same_site_cookies: "동일 사이트 쿠키를 사용합니다. 지원되는 브라우저에서 사이트 간 요청 위조의 가능성이 있는 모든 매개체를 (관대 또는 엄격하게) 제거합니다. 경고: 엄격한 통제는 로그인을 강제하거나 SSO를 사용하는 경우에만 적용됩니다."
     summary_score_threshold: "요약본에 포함되기 위한 글의 최소 점수 값"
-    summary_posts_required: "하나의 글타래에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 글 수"
-    summary_likes_required: "하나의 글타래에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 좋아요 수"
     summary_percent_filter: "요약본 보기를 클릭시, 글 중에 몇 %의 상위 글을 보여줄 것인가?"
     enable_personal_messages: "신뢰도 1 사용자(메시지 전송을 위한 최소 신뢰도로 설정가능)가 메시지를 작성하고 답장을 쓸 수 있도록 허용합니다. 운영진은 언제나 메시지를 보낼 수 있음을 참고하세요."
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -1016,7 +1020,6 @@ ko:
     enable_instagram_logins: "인스타그램 인증 켜기, instagram_consumer_key 와 instagram_consumer_secret 필요"
     instagram_consumer_key: "인스타그램 인증을 위한 Consumer key "
     instagram_consumer_secret: "인스타그램 인증을 위한 Consumer secret"
-    readonly_mode_during_backup: "백업 받을 때, 읽기 전용 모드 켜기"
     allow_restore: "데이터 복원을 허용합니다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둡니다."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
     automatic_backups_enabled: "설정된 백업 주기로 자동 백업 실행"
@@ -1276,6 +1279,10 @@ ko:
   redirected_to_top_reasons:
     new_user: "우리 커뮤니티에 오신 것을 환영합니다! 다음은 우리 사이트에서 가장 인기 많은 최근 글타래들입니다."
     not_seen_in_a_month: "잘 돌아오셨습니다. 다음은 당신이 오지 않은 동안 가장 인기있던 글타래들입니다."
+  publish_page:
+    slug_errors:
+      blank: "비어있으면 안됨"
+      invalid: "사용할 수 없는 문자를 포함하고 있습니다."
   topic_statuses:
     autoclosed_enabled_days:
       other: "이 글타래는 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
@@ -1548,7 +1555,6 @@ ko:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       since_last_visit: "마지막 방문 후 경과시간"
       new_topics: "새로운 토픽"
-      unread_messages: "읽지않은 메시지"
       unread_notifications: "읽지않은 알림"
       liked_received: "받은 좋아요 수"
       new_users: "새로운 사용자"

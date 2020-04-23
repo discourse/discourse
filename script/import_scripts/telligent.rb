@@ -42,10 +42,48 @@ class ImportScripts::Telligent < ImportScripts::Base
   BATCH_SIZE ||= 1000
   LOCAL_AVATAR_REGEX ||= /\A~\/.*(?<directory>communityserver-components-(?:selectable)?avatars)\/(?<path>[^\/]+)\/(?<filename>.+)/i
   REMOTE_AVATAR_REGEX ||= /\Ahttps?:\/\//i
-  EMBEDDED_ATTACHMENT_REGEX ||= /<a href="\/cfs-file(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename1>.+?)".*?>(?<filename2>.*?)<\/a>/i
+  ATTACHMENT_REGEXES ||= [
+    /<a[^>]*\shref="[^"]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)".*?>.*?<\/a>/i,
+    /<img[^>]*\ssrc="[^"]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)".*?>/i,
+    /\[View:[^\]]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)(?:\:[:\d\s]*?)?\]/i,
+    /\[(?<tag>img|url)\][^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)\[\/\k<tag>\]/i,
+    /\[(?<tag>img|url)=[^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)\][^\[]*?\[\/\k<tag>\]/i
+  ]
+  PROPERTY_NAMES_REGEX ||= /(?<name>\w+):S:(?<start>\d+):(?<length>\d+):/
+  INTERNAL_LINK_REGEX ||= /\shref=".*?\/f\/\d+(?:(\/t\/(?<topic_id>\d+))|(?:\/p\/\d+\/(?<post_id>\d+))|(?:\/p\/(?<post_id>\d+)\/reply))\.aspx[^"]*?"/i
 
   CATEGORY_LINK_NORMALIZATION = '/.*?(f\/\d+)$/\1'
   TOPIC_LINK_NORMALIZATION = '/.*?(f\/\d+\/t\/\d+)$/\1'
+
+  UNICODE_REPLACEMENTS = {
+    "5F00" => "_",
+    "2800" => "(",
+    "2900" => ")",
+    "2D00" => "-",
+    "2C00" => ",",
+    "2700" => "'",
+    "5B00" => "[",
+    "5D00" => "]",
+    "3D00" => "=",
+    "2600" => "&",
+    "2100" => "!",
+    "2300" => "#",
+    "7E00" => "~",
+    "2500" => "%",
+    "2E00" => ".",
+    "4000" => "@",
+    "2B00" => "+",
+    "2400" => "$",
+    "1920" => "’",
+    "E900" => "é",
+    "E000" => "à",
+    "F300" => "ó",
+    "1C20" => "“",
+    "1D20" => "”",
+    "B000" => "°",
+    "0003" => ["0300".to_i(16)].pack("U"),
+    "0103" => ["0301".to_i(16)].pack("U")
+  }
 
   def initialize
     super()
@@ -58,16 +96,27 @@ class ImportScripts::Telligent < ImportScripts::Base
       timeout: 60 # the user query is very slow
     )
 
+    @filestore_root_directory = ENV["FILE_BASE_DIR"]
+    @files = {}
+
     SiteSetting.tagging_enabled = true
   end
 
   def execute
     add_permalink_normalizations
+    index_filestore
+
     import_categories
     import_users
     import_topics
     import_posts
+    import_messages
     mark_topics_as_solved
+  end
+
+  def index_filestore
+    puts "", "Indexing filestore..."
+    index_directory(@filestore_root_directory)
   end
 
   def import_users
@@ -80,7 +129,12 @@ class ImportScripts::Telligent < ImportScripts::Base
                WHERE t.UserId = u.UserID) OR
         EXISTS(SELECT 1
                FROM te_Forum_ThreadReplies r
-               WHERE r.UserId = u.UserID)
+               WHERE r.UserId = u.UserID) OR
+        EXISTS(SELECT 1
+               FROM cs_Messaging_ConversationParticipants p
+                 JOIN cs_Messaging_ConversationMessages cm ON p.ConversationId = cm.ConversationId
+                 JOIN cs_Messaging_Messages m ON m.MessageId = cm.MessageId
+               WHERE p.ParticipantId = u.UserID)
       )
     SQL
 
@@ -94,32 +148,14 @@ class ImportScripts::Telligent < ImportScripts::Base
 
     loop do
       rows = query(<<~SQL)
-        SELECT *
-        FROM (
-            SELECT TOP #{BATCH_SIZE}
-              u.UserID, u.Email, u.UserName,u.CreateDate, p.PropertyName, p.PropertyValue
-            FROM cs_Users u
-              LEFT OUTER JOIN (
-                SELECT NULL AS UserID, ap.UserId AS MembershipID, x.PropertyName, x.PropertyValue
-                FROM aspnet_Profile ap
-                  CROSS APPLY dbo.GetProperties(ap.PropertyNames, ap.PropertyValuesString) x
-                WHERE ap.PropertyNames NOT LIKE '%:-1%' AND
-                      x.PropertyName IN ('bio', 'commonName', 'location', 'webAddress')
-                UNION
-                SELECT up.UserID, NULL AS MembershipID, x.PropertyName, CAST(x.PropertyValue AS NVARCHAR) AS PropertyValue
-                  FROM cs_UserProfile up
-                    CROSS APPLY dbo.GetProperties(up.PropertyNames, up.PropertyValues) x
-                  WHERE up.PropertyNames NOT LIKE '%:-1%' AND
-                        x.PropertyName IN ('avatarUrl', 'BannedUntil', 'UserBanReason')
-              ) p ON p.UserID = u.UserID OR p.MembershipID = u.MembershipID
-            WHERE u.UserID > #{last_user_id} AND #{user_conditions}
-            ORDER BY u.UserID
-        ) x
-          PIVOT (
-            MAX(PropertyValue)
-            FOR PropertyName
-            IN (bio, commonName, location, webAddress, avatarUrl, BannedUntil, UserBanReason)
-          ) Y
+        SELECT TOP #{BATCH_SIZE}
+            u.UserID, u.Email, u.UserName, u.CreateDate,
+            ap.PropertyNames AP_PropertyNames, ap.PropertyValuesString AS AP_PropertyValues,
+            up.PropertyNames UP_PropertyNames, up.PropertyValues AS UP_PropertyValues
+        FROM cs_Users u
+            LEFT OUTER JOIN aspnet_Profile ap ON ap.UserId = u.MembershipID
+            LEFT OUTER JOIN cs_UserProfile up ON up.UserID = u.UserID
+        WHERE u.UserID > #{last_user_id} AND #{user_conditions}
         ORDER BY UserID
       SQL
 
@@ -132,18 +168,21 @@ class ImportScripts::Telligent < ImportScripts::Base
       end
 
       create_users(rows, total: total_count, offset: import_count) do |row|
+        ap_properties = parse_properties(row["AP_PropertyNames"], row["AP_PropertyValues"])
+        up_properties = parse_properties(row["UP_PropertyNames"], row["UP_PropertyValues"])
+
         {
           id: row["UserID"],
           email: row["Email"],
           username: row["UserName"],
-          name: row["commonName"],
+          name: ap_properties["commonName"],
           created_at: row["CreateDate"],
-          bio_raw: html_to_markdown(row["bio"]),
-          location: row["location"],
-          website: row["webAddress"],
+          bio_raw: html_to_markdown(ap_properties["bio"]),
+          location: ap_properties["location"],
+          website: ap_properties["webAddress"],
           post_create_action: proc do |user|
-            import_avatar(user, row["avatarUrl"])
-            suspend_user(user, row["BannedUntil"], row["UserBanReason"])
+            import_avatar(user, up_properties["avatarUrl"])
+            suspend_user(user, up_properties["BannedUntil"], up_properties["UserBanReason"])
           end
         }
       end
@@ -154,10 +193,10 @@ class ImportScripts::Telligent < ImportScripts::Base
 
   # TODO move into base importer (create_user) and use consistent error handling
   def import_avatar(user, avatar_url)
-    return if ENV["FILE_BASE_DIR"].blank? || avatar_url.blank? || avatar_url.include?("anonymous")
+    return if @filestore_root_directory.blank? || avatar_url.blank? || avatar_url.include?("anonymous")
 
     if match_data = avatar_url.match(LOCAL_AVATAR_REGEX)
-      avatar_path = File.join(ENV["FILE_BASE_DIR"],
+      avatar_path = File.join(@filestore_root_directory,
                               match_data[:directory].gsub("-", "."),
                               match_data[:path].split("-"),
                               match_data[:filename])
@@ -333,7 +372,7 @@ class ImportScripts::Telligent < ImportScripts::Base
     batches do |offset|
       rows = query(<<~SQL)
         SELECT TOP #{BATCH_SIZE}
-          t.ThreadId, t.ForumId, t.UserId, t.TotalViews,
+          t.ThreadId, t.ForumId, t.UserId, t.TotalViews, t.ContentID AS TopicContentId,
           t.Subject, t.Body, t.DateCreated, t.IsLocked, t.StickyDate,
           a.ApplicationTypeId, a.ApplicationId, a.ApplicationContentTypeId, a.ContentId, a.FileName, a.IsRemote
         FROM te_Forum_Threads t
@@ -365,6 +404,7 @@ class ImportScripts::Telligent < ImportScripts::Base
             Jobs.enqueue_at(topic.pinned_until, :unpin_topic, topic_id: topic.id) if topic.pinned_until
             url = "f/#{row['ForumId']}/t/#{row['ThreadId']}"
             Permalink.create(url: url, topic_id: topic.id) unless Permalink.exists?(url: url)
+            import_topic_views(topic, row["TopicContentId"])
           end
         }
 
@@ -380,6 +420,29 @@ class ImportScripts::Telligent < ImportScripts::Base
 
   def import_topic_id(topic_id)
     "T#{topic_id}"
+  end
+
+  def import_topic_views(topic, content_id)
+    last_user_id = -1
+
+    batches do |_|
+      rows = query(<<~SQL)
+        SELECT TOP #{BATCH_SIZE}
+          UserId, MAX(CreatedUtcDate) AS ViewDate
+        FROM te_Content_Views
+        WHERE ContentId = '#{content_id}' AND UserId > #{last_user_id}
+        GROUP BY UserId
+        ORDER BY UserId
+      SQL
+
+      break if rows.blank?
+      last_user_id = rows[-1]["UserId"]
+
+      rows.each do |row|
+        user_id = user_id_from_imported_user_id(row["UserId"])
+        TopicViewItem.add(topic.id, "127.0.0.1", user_id, row["ViewDate"], true) if user_id
+      end
+    end
   end
 
   def ignored_forum_sql_condition
@@ -452,28 +515,152 @@ class ImportScripts::Telligent < ImportScripts::Base
     end
   end
 
+  def import_messages
+    puts "", "Importing messages..."
+
+    current_conversation_id = ""
+    current_topic_import_id = ""
+
+    last_conversation_id = ""
+
+    total_count = count(<<~SQL)
+      SELECT COUNT(1) AS count
+      FROM cs_Messaging_Messages m
+        JOIN cs_Messaging_ConversationMessages cm ON m.MessageId = cm.MessageId
+    SQL
+
+    batches do |offset|
+      if last_conversation_id.blank?
+        conditions = ""
+      else
+        conditions = <<~SQL
+          WHERE cm.ConversationId > '#{last_conversation_id}'
+        SQL
+      end
+
+      rows = query(<<~SQL)
+        SELECT TOP #{BATCH_SIZE}
+          cm.ConversationId, m.MessageId, m.AuthorId, m.Subject, m.Body, m.DateCreated,
+          STUFF((SELECT ';' + CONVERT(VARCHAR, p.ParticipantId)
+                 FROM cs_Messaging_ConversationParticipants p
+                 WHERE p.ConversationId = cm.ConversationId
+                 ORDER BY p.ParticipantId
+                 FOR XML PATH('')), 1, 1, '') AS ParticipantIds
+        FROM cs_Messaging_Messages m
+          JOIN cs_Messaging_ConversationMessages cm ON m.MessageId = cm.MessageId
+        #{conditions}
+        ORDER BY cm.ConversationId, m.DateCreated, m.MessageId
+      SQL
+
+      break if rows.blank?
+
+      last_row = rows[-1]
+      last_conversation_id = last_row["ConversationId"]
+      next if all_records_exist?(:post, rows.map { |row| row["MessageId"] })
+
+      create_posts(rows, total: total_count, offset: offset) do |row|
+        user_id = user_id_from_imported_user_id(row["AuthorId"]) || Discourse::SYSTEM_USER_ID
+
+        post = {
+          id: row["MessageId"],
+          raw: raw_with_attachment(row, user_id, :message),
+          user_id: user_id,
+          created_at: row["DateCreated"]
+        }
+
+        if current_conversation_id == row["ConversationId"]
+          parent_post = topic_lookup_from_imported_post_id(current_topic_import_id)
+
+          if parent_post
+            post[:topic_id] = parent_post[:topic_id]
+          else
+            puts "Failed to import message #{row['MessageId']}. Parent was not found."
+            post = nil
+          end
+        else
+          post[:title] = CGI.unescapeHTML(row["Subject"])
+          post[:archetype] = Archetype.private_message
+          post[:target_usernames] = get_recipient_usernames(row)
+
+          if post[:target_usernames].empty?
+            puts "Private message without recipients. Skipping #{row['MessageId']}"
+            post = nil
+          end
+
+          current_topic_import_id = row["MessageId"]
+        end
+
+        current_conversation_id = row["ConversationId"]
+        post
+      end
+    end
+
+    # Mark all imported messages as read
+    DB.exec(<<~SQL)
+      UPDATE topic_users tu
+      SET last_read_post_number = t.highest_post_number,
+          highest_seen_post_number = t.highest_post_number
+      FROM topics t
+        JOIN topic_custom_fields tcf ON t.id = tcf.topic_id
+      WHERE tu.topic_id = t.id
+        AND tu.user_id > 0
+        AND t.archetype = 'private_message'
+        AND tcf.name = 'import_id'
+    SQL
+  end
+
+  def get_recipient_user_ids(participant_ids)
+    return [] if participant_ids.blank?
+
+    user_ids = participant_ids.split(';')
+    user_ids.uniq!
+    user_ids.map!(&:strip)
+  end
+
+  def get_recipient_usernames(row)
+    import_user_ids = get_recipient_user_ids(row["ParticipantIds"])
+
+    import_user_ids.map! do |import_user_id|
+      find_user_by_import_id(import_user_id).try(:username)
+    end.compact
+  end
+
+  def index_directory(root_directory)
+    Dir.foreach(root_directory) do |directory_name|
+      next if directory_name == "." || directory_name == ".."
+
+      path = File.join(root_directory, directory_name)
+      if File.directory?(path)
+        index_directory(path)
+      else
+        path.delete_prefix!(@filestore_root_directory)
+        path.delete_prefix!("/")
+        @files[path.downcase] = path
+      end
+    end
+  end
+
   def raw_with_attachment(row, user_id, type)
-    raw, embedded_paths, upload_ids = replace_embedded_attachments(row["Body"], user_id)
+    raw, embedded_paths, upload_ids = replace_embedded_attachments(row, user_id, type)
     raw = html_to_markdown(raw) || ""
 
     filename = row["FileName"]
-    return raw if ENV["FILE_BASE_DIR"].blank? || filename.blank?
+    return raw if @filestore_root_directory.blank? || filename.blank?
 
     if row["IsRemote"]
       return "#{raw}\n#{filename}"
     end
 
     path = File.join(
-      ENV["FILE_BASE_DIR"],
       "telligent.evolution.components.attachments",
       "%02d" % row["ApplicationTypeId"],
       "%02d" % row["ApplicationId"],
       "%02d" % row["ApplicationContentTypeId"],
-      ("%010d" % row["ContentId"]).scan(/.{2}/),
-      clean_filename(filename)
+      ("%010d" % row["ContentId"]).scan(/.{2}/)
     )
+    path = fix_attachment_path(path, filename)
 
-    unless embedded_paths.include?(path)
+    if path && !embedded_paths.include?(path)
       if File.file?(path)
         upload = @uploader.create_upload(user_id, path, filename)
 
@@ -481,113 +668,180 @@ class ImportScripts::Telligent < ImportScripts::Base
           raw = "#{raw}\n#{@uploader.html_for_upload(upload, filename)}"
         end
       else
-        id = type == :topic ? row['ThreadId'] : row['ThreadReplyId']
-        STDERR.puts "Could not find file for #{type} #{id}: #{path}"
+        print_file_not_found_error(type, path, row)
       end
     end
 
     raw
   end
 
-  def replace_embedded_attachments(raw, user_id)
+  def print_file_not_found_error(type, path, row)
+    case type
+    when :topic
+      id = row['ThreadId']
+    when :post
+      id = row['ThreadReplyId']
+    when :message
+      id = row['MessageId']
+    end
+
+    STDERR.puts "Could not find file for #{type} #{id}: #{path}"
+  end
+
+  def replace_embedded_attachments(row, user_id, type)
+    raw = row["Body"]
     paths = []
     upload_ids = []
 
-    return [raw, paths, upload_ids] if ENV["FILE_BASE_DIR"].blank?
+    return [raw, paths, upload_ids] if @filestore_root_directory.blank?
 
-    raw = raw.gsub(EMBEDDED_ATTACHMENT_REGEX) do
-      filename, path = attachment_path(Regexp.last_match)
+    ATTACHMENT_REGEXES.each do |regex|
+      raw = raw.gsub(regex) do
+        match_data = Regexp.last_match
 
-      if File.file?(path)
-        upload = @uploader.create_upload(user_id, path, filename)
+        path = File.join(match_data[:directory], match_data[:path])
+        fixed_path = fix_attachment_path(path, match_data[:filename])
 
-        if upload.present? && upload.persisted?
-          paths << path
-          upload_ids << upload.id
-          @uploader.html_for_upload(upload, filename)
+        if fixed_path && File.file?(fixed_path)
+          filename = File.basename(fixed_path)
+          upload = @uploader.create_upload(user_id, fixed_path, filename)
+
+          if upload.present? && upload.persisted?
+            paths << fixed_path
+            upload_ids << upload.id
+            @uploader.html_for_upload(upload, filename)
+          end
+        else
+          path = File.join(path, match_data[:filename])
+          print_file_not_found_error(type, path, row)
+          match_data[0]
         end
-      else
-        STDERR.puts "Could not find file: #{path}"
       end
     end
 
     [raw, paths, upload_ids]
   end
 
-  def clean_filename(filename)
+  def fix_attachment_path(base_path, filename)
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
+
+    base_path.downcase!
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
+
     filename = CGI.unescapeHTML(filename)
-    filename.gsub!(/[\x00\/\\:\*\?\"<>\|]/, '_')
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
 
-    %w|( ) # % - _ [ ] = , ' ~ ! + { } & @ #|.each do |c|
-      number = "#{c.ord.to_s(16).upcase}00"
-      filename.gsub!("_#{number}_", c)
-      filename.gsub!("_#{number}#{number}_", c * 2)
-    end
+    filename.gsub!("-", " ")
+    filename.strip!
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
 
-    filename
+    directories = base_path.split(File::SEPARATOR)
+    first_directory = directories.shift
+    first_directory.gsub!("-", ".")
+    base_path = File.join(first_directory, directories)
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
+
+    directories.map! { |d| File.join(d.split(/[\.\-]/).map(&:strip)) }
+    base_path = File.join(first_directory, directories)
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
+
+    directories = base_path.split(File::SEPARATOR)
+    directories.map! { |d| d.gsub("+", " ").strip }
+    base_path = File.join(directories)
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
+
+    replace_codes!(filename)
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
+
+    replace_codes!(base_path)
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
+
+    filename.gsub!(/(?:\:\d+)+$/, "")
+    path = find_correct_path(base_path, filename)
+    return path if attachment_exists?(path)
+
+    path = File.join(base_path, filename)
+    path_regex = Regexp.new("^#{Regexp.escape(path)}-\\d+x\\d+\\.\\w+$", Regexp::IGNORECASE)
+    path = find_correct_path_with_regex(path_regex)
+    return path if attachment_exists?(path)
+
+    nil
   end
 
-  def attachment_path(match_data)
-    filename, path = join_attachment_path(match_data, filename_index: 2)
-    filename, path = join_attachment_path(match_data, filename_index: 1) unless File.file?(path)
-    [filename, path]
+  def find_correct_path(base_path, filename)
+    path = File.join(base_path, filename)
+    path = @files[path.downcase]
+    path ? File.join(@filestore_root_directory, path) : nil
   end
 
-  # filenames are a total mess - try to guess the correct filename
-  # works for 70% of all files
-  def join_attachment_path(match_data, filename_index:)
-    filename = clean_filename(match_data[:"filename#{filename_index}"])
-    base_path = File.join(
-      ENV["FILE_BASE_DIR"],
-      match_data[:directory].gsub("-", ".").downcase,
-      match_data[:path].gsub("+", " ").gsub(/_\h{4}_/, "?").split(/[\.\-]/).map(&:strip)
-    )
+  def find_correct_path_with_regex(regex)
+    keys = @files.keys.filter { |key| regex =~ key }
+    keys.size == 1 ? File.join(@filestore_root_directory, @files[keys.first]) : nil
+  end
 
-    original_filename = filename.dup
+  def attachment_exists?(path)
+    path.present? && File.file?(path)
+  end
 
-    filename.gsub!(/[_\- ]/, "?")
-    path = File.join(base_path, filename)
-    paths = Dir.glob(path, File::FNM_CASEFOLD)
-    if (path = paths.first) && paths.size == 1
-      filename = File.basename(path)
-      return [filename, path]
+  def replace_codes!(text)
+    text.gsub!(/_(\h{4}+)_/i) do
+      codes = Regexp.last_match[1].upcase.scan(/.{4}/)
+      mapped_codes = codes.map { |c| UNICODE_REPLACEMENTS[c] }
+      mapped_codes.any? { |c| c.nil? } ? Regexp.last_match[0] : mapped_codes.join("")
     end
-
-    filename = original_filename.dup
-    filename.gsub!(/_\h{2}00_/, "?")
-    filename.gsub!(/_\h{2}00\h{2}00_/, "??")
-    filename.gsub!(/_\h{2}00\h{2}00\h{2}00_/, "???")
-    filename.gsub!(/[_\- ]/, "?")
-    path = File.join(base_path, filename)
-    paths = Dir.glob(path, File::FNM_CASEFOLD)
-    if (path = paths.first) && paths.size == 1
-      filename = File.basename(path)
-      return [filename, path]
-    end
-
-    filename = original_filename.dup
-    filename.gsub!(/_\h{4}_/, "?")
-    filename.gsub!(/_\h{4}\h{4}_/, "??")
-    filename.gsub!(/_\h{4}\h{4}\h{4}_/, "???")
-    filename.gsub!(/[_\- ]/, "?")
-    path = File.join(base_path, filename)
-    paths = Dir.glob(path, File::FNM_CASEFOLD)
-    if (path = paths.first) && paths.size == 1
-      filename = File.basename(path)
-      return [filename, path]
-    end
-
-    [original_filename, File.join(base_path, original_filename)]
   end
 
   def html_to_markdown(html)
     return html if html.blank?
 
+    html = fix_internal_links(html)
+
     md = HtmlToMarkdown.new(html).to_markdown
     md.gsub!(/\[quote.*?\]/, "\n" + '\0' + "\n")
     md.gsub!(/(?<!^)\[\/quote\]/, "\n[/quote]\n")
+    md.gsub!(/\[\/quote\](?!$)/, "\n[/quote]\n")
+    md.gsub!(/\[View:(http.*?)[:\d\s]*?(?:\]|\z)/i, '\1')
     md.strip!
     md
+  end
+
+  def fix_internal_links(html)
+    html.gsub(INTERNAL_LINK_REGEX) do
+      match_data = Regexp.last_match
+
+      if match_data[:topic_id].present?
+        imported_id = import_topic_id(match_data[:topic_id])
+      else
+        imported_id = match_data[:post_id]
+      end
+
+      post = topic_lookup_from_imported_post_id(imported_id) if imported_id
+      post ? %Q| href="#{Discourse.base_url}#{post[:url]}"| : match_data[0]
+    end
+  end
+
+  def parse_properties(names, values)
+    properties = {}
+    return properties if names.blank? || values.blank?
+
+    names.scan(PROPERTY_NAMES_REGEX).each do |property|
+      name = property[0]
+      start_index = property[1].to_i
+      end_index = start_index + property[2].to_i - 1
+
+      properties[name] = values[start_index..end_index]
+    end
+
+    properties
   end
 
   def mark_topics_as_solved
@@ -599,6 +853,11 @@ class ImportScripts::Telligent < ImportScripts::Base
         FROM post_custom_fields pcf
         JOIN posts p ON p.id = pcf.post_id
        WHERE pcf.name = 'is_accepted_answer' AND pcf.value = 'true'
+         AND NOT EXISTS (
+           SELECT 1
+           FROM topic_custom_fields x
+           WHERE x.topic_id = p.topic_id AND x.name = 'accepted_answer_post_id'
+         )
     SQL
   end
 

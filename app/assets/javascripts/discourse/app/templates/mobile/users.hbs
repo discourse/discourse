@@ -1,0 +1,33 @@
+{{#load-more selector=".directory .user" action=(action "loadMore")}}
+  <div class="container">
+    <div class="users-directory directory">
+      {{plugin-outlet name="users-top" connectorTagName="div" args=(hash model=model)}}
+
+      <div class="directory-controls">
+        {{period-chooser period=period onChange=(action (mut period)) fullDay=false}}
+        {{#if lastUpdatedAt}}
+          <div class="directory-last-updated">
+            {{i18n "directory.last_updated"}}
+            {{lastUpdatedAt}}
+          </div>
+        {{/if}}
+        {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+      </div>
+
+      {{#conditional-loading-spinner condition=model.loading}}
+        {{#if model.length}}
+          <div class="total-rows">{{i18n "directory.total_rows" count=model.totalRows}}</div>
+          {{#each model as |item|}}
+            {{directory-item tagName="div" class="user" item=item showTimeRead=showTimeRead}}
+          {{/each}}
+
+          {{conditional-loading-spinner condition=model.loadingMore}}
+        {{else}}
+          <div class="clearfix"></div>
+          <p>{{i18n "directory.no_results"}}</p>
+        {{/if}}
+      {{/conditional-loading-spinner}}
+
+    </div>
+  </div>
+{{/load-more}}

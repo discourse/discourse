@@ -65,7 +65,7 @@ export default Controller.extend(ModalFunctionality, {
 
       ajax("/admin/badges/badge_groupings", {
         data: { ids: groupIds, names },
-        method: "POST"
+        type: "POST"
       }).then(
         data => {
           items = this.model;

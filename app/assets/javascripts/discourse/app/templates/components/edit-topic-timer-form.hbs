@@ -1,0 +1,38 @@
+<form>
+  <div class="control-group">
+    {{combo-box
+      class="timer-type"
+      onChange=onChangeStatusType
+      content=timerTypes
+      value=selection
+    }}
+  </div>
+  {{#if publishToCategory}}
+    <div class="control-group">
+      <label>{{i18n "topic.topic_status_update.publish_to"}}</label>
+      {{category-chooser
+        value=topicTimer.category_id
+        excludeCategoryId=excludeCategoryId
+        onChange=(action (mut topicTimer.category_id))
+      }}
+    </div>
+  {{/if}}
+  {{#if showFutureDateInput}}
+    <div class="control-group">
+      {{future-date-input
+        input=(readonly topicTimer.updateTime)
+        duration=(readonly topicTimer.duration)
+        label="topic.topic_status_update.when"
+        statusType=selection
+        includeWeekend=true
+        basedOnLastPost=topicTimer.based_on_last_post
+        onChangeInput=onChangeInput
+        onChangeDuration=onChangeDuration
+        categoryId=topicTimer.category_id
+        lastPostedAt=model.last_posted_at
+        isBasedOnDuration=autoDeleteReplies
+        durationType=durationType
+      }}
+    </div>
+  {{/if}}
+</form>

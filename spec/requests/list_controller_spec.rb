@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe ListController do
-  let(:topic) { Fabricate(:topic, user: user) }
-  let(:group) { Fabricate(:group) }
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     admin  # to skip welcome wizard at home page `/`
@@ -73,12 +73,12 @@ RSpec.describe ListController do
     end
 
     it "shows correct title if topic list is set for homepage" do
-      get "/"
+      get "/latest"
 
       expect(response.body).to have_tag "title", text: "Discourse"
 
       SiteSetting.short_site_description = "Best community"
-      get "/"
+      get "/latest"
 
       expect(response.body).to have_tag "title", text: "Discourse - Best community"
     end
@@ -95,7 +95,7 @@ RSpec.describe ListController do
 
       get "/categories_and_latest.json"
       data = JSON.parse(response.body)
-      expect(data["topic_list"]["topics"].length).to eq(1)
+      expect(data["topic_list"]["topics"].length).to eq(2)
     end
   end
 
@@ -305,12 +305,11 @@ RSpec.describe ListController do
 
     it 'renders links correctly with subfolder' do
       set_subfolder "/forum"
-      post = Fabricate(:post, topic: topic, user: user)
+      _post = Fabricate(:post, topic: topic, user: user)
       get "/latest.rss"
       expect(response.status).to eq(200)
       expect(response.body).to_not include("/forum/forum")
       expect(response.body).to include("http://test.localhost/forum/t/#{topic.slug}")
-      expect(response.body).to include("http://test.localhost/forum/u/#{post.user.username}")
     end
 
     it 'renders top RSS' do
@@ -377,14 +376,9 @@ RSpec.describe ListController do
         # One category has another category's id at the beginning of its name
         let!(:other_category) {
           # Our validations don't allow this to happen now, but did historically
-          Fabricate(:category_with_definition, name: "#{category.id} name", slug: '-').tap { |c|
-            DB.exec <<~SQL
-              UPDATE categories
-              SET slug = '#{category.id}-name'
-              WHERE id = #{c.id}
-            SQL
-            c.reload
-          }
+          Fabricate(:category_with_definition, name: "#{category.id} name", slug: 'will-be-changed').tap do |category|
+            category.update_column(:slug, "#{category.id}-name")
+          end
         }
 
         it 'uses the correct category' do
@@ -498,16 +492,18 @@ RSpec.describe ListController do
   end
 
   describe "topics_by" do
+    fab!(:topic2) { Fabricate(:topic, user: user) }
+    fab!(:user2) { Fabricate(:user) }
+
     before do
-      sign_in(Fabricate(:user))
-      Fabricate(:topic, user: user)
+      sign_in(user2)
     end
 
     it "should respond with a list" do
       get "/topics/created-by/#{user.username}.json"
       expect(response.status).to eq(200)
       json = JSON.parse(response.body)
-      expect(json["topic_list"]["topics"].size).to eq(1)
+      expect(json["topic_list"]["topics"].size).to eq(2)
     end
 
     it "should work with period in username" do
@@ -515,7 +511,7 @@ RSpec.describe ListController do
       get "/topics/created-by/#{user.username}", xhr: true
       expect(response.status).to eq(200)
       json = JSON.parse(response.body)
-      expect(json["topic_list"]["topics"].size).to eq(1)
+      expect(json["topic_list"]["topics"].size).to eq(2)
     end
   end
 

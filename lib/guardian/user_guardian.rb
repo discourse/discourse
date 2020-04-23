@@ -62,7 +62,7 @@ module UserGuardian
     return false if user.nil? || user.admin?
     if is_me?(user)
       !SiteSetting.enable_sso &&
-      !user.has_more_posts_than?(User::MAX_SELF_DELETE_POST_COUNT)
+      !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
     else
       is_staff? && (
         user.first_post_created_at.nil? ||
@@ -74,6 +74,14 @@ module UserGuardian
 
   def can_anonymize_user?(user)
     is_staff? && !user.nil? && !user.staff?
+  end
+
+  def can_merge_user?(user)
+    is_admin? && !user.nil? && !user.staff?
+  end
+
+  def can_merge_users?(source_user, target_user)
+    can_merge_user?(source_user) && !target_user.nil?
   end
 
   def can_reset_bounce_score?(user)

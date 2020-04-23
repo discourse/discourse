@@ -1,0 +1,30 @@
+<div class="clearfix info">
+  <a href={{post.user.userUrl}} data-user-card={{post.user.username}} class="avatar-link">
+    {{avatar post.user imageSize="large" extraClasses="actor" ignoreTitle="true"}}
+  </a>
+  <span class="time">{{format-date post.created_at leaveAgo="true"}}</span>
+  {{expand-post item=post}}
+
+  <div class="stream-topic-details">
+    <div class="stream-topic-title">
+      <span class="title">
+        <a href={{postUrl}}>{{html-safe post.topic.fancyTitle}}</a>
+      </span>
+    </div>
+    <div class="group-post-category">{{category-link post.category}}</div>
+    {{#if post.user.name}}
+      <div class="group-member-info">
+        <span class="name">{{post.user.name}}</span>
+        {{#if post.user.title}}<span class="title">, {{post.user.title}}</span>{{/if}}
+      </div>
+    {{/if}}
+  </div>
+</div>
+
+<div class="excerpt">
+  {{#if post.expandedExcerpt}}
+    {{html-safe post.expandedExcerpt}}
+  {{else}}
+    {{html-safe post.excerpt}}
+  {{/if}}
+</div>

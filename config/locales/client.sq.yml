@@ -28,7 +28,6 @@ sq:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -592,9 +591,6 @@ sq:
         success_staff: "Ju dërguam një email tek adresa që shkruajtët. Ju ftojmë të ndiqni udhëzimet e konfirmimit."
       change_avatar:
         title: "Ndrysho fotografinë e profilit"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, bazur në"
-        gravatar_title: "Ndryshoni avatarin tuaj në faqen web të shërbimit Gravatar"
-        refresh_gravatar_title: "Rifreskoni Gravatarin tuaj"
         letter_based: "Foto e profilit e caktuar nga sistemi"
         uploaded_avatar: "Foto e personalizuar"
         uploaded_avatar_empty: "Shto një foto të personalizuar"
@@ -813,6 +809,8 @@ sq:
         back: "Kthehu mbrapa"
         again: "Provo përsëri"
         fixed: "Ngarko faqen"
+    modal:
+      close: "mbylle"
     close: "Mbyll"
     assets_changed_confirm: "Faqja u azhornua. Doni t'a rifreskoni tani për versionin e fundit?"
     logout: "Ju jeni shkëputur!"
@@ -1522,6 +1520,7 @@ sq:
           html_part:
             button: "HTML"
       bookmarks:
+        created: "Krijuar"
         name: "Emri"
     category:
       can: "mund&hellip; "
@@ -2382,7 +2381,6 @@ sq:
           active: "Aktiv"
           staff: "Stafi"
           suspended: "Të pezulluar"
-          suspect: "Të dyshimtë"
         approved: "Aprovuar?"
         titles:
           active: "Përdorues Aktivë"
@@ -2397,7 +2395,6 @@ sq:
           admins: "Administratorë"
           moderators: "Moderatorë"
           suspended: "Përdorues të Pezulluar"
-          suspect: "Përdorues të Dyshimtë"
         not_verified: "I pa verifikuar"
         check_email:
           title: "Shfaq adresën email të këtij përdoruesi."
@@ -2674,6 +2671,7 @@ sq:
         help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
         add: "Add New Emoji"
         name: "Emri"
+        group: "Grupi"
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
       embedding:

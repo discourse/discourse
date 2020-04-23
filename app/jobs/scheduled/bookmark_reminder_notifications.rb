@@ -21,8 +21,6 @@ module Jobs
     end
 
     def execute(args = nil)
-      return if !SiteSetting.enable_bookmarks_with_reminders?
-
       bookmarks = Bookmark.pending_reminders
         .where.not(reminder_type: Bookmark.reminder_types[:at_desktop])
         .includes(:user).order('reminder_at ASC')

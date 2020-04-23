@@ -6,21 +6,29 @@ require_dependency 'plugin/metadata'
 require_dependency 'auth'
 
 class Plugin::CustomEmoji
+  CACHE_KEY ||= "plugin-emoji"
   def self.cache_key
-    @@cache_key ||= "plugin-emoji"
+    @@cache_key ||= CACHE_KEY
   end
 
   def self.emojis
     @@emojis ||= {}
   end
 
-  def self.register(name, url)
-    @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
-    emojis[name] = url
+  def self.clear_cache
+    @@cache_key = CACHE_KEY
+    @@emojis = {}
   end
 
-  def self.unregister(name)
-    emojis.delete(name)
+  def self.register(name, url, group = Emoji::DEFAULT_GROUP)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + name + group)[0..10]
+    new_group = emojis[group] || {}
+    new_group[name] = url
+    emojis[group] = new_group
+  end
+
+  def self.unregister(name, group = Emoji::DEFAULT_GROUP)
+    emojis[group].delete(name)
   end
 
   def self.translations
@@ -56,6 +64,13 @@ class Plugin::Instance
         @#{att} ||= []
       end
     }
+  end
+
+  # If plugins provide `transpile_js: true` in their metadata we will
+  # transpile regular JS files in the assets folders. Going forward,
+  # all plugins should do this.
+  def transpile_js
+    metadata.try(:transpile_js) == "true"
   end
 
   def seed_data
@@ -471,8 +486,9 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_seed_path_builder(&block)
   end
 
-  def register_emoji(name, url)
-    Plugin::CustomEmoji.register(name, url)
+  def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
+    Plugin::CustomEmoji.register(name, url, group)
+    Emoji.clear_cache
   end
 
   def translate_emoji(from, to)
@@ -502,16 +518,22 @@ class Plugin::Instance
   def activate!
 
     if @path
+      root_dir_name = File.dirname(@path)
+
       # Automatically include all ES6 JS and hbs files
-      root_path = "#{File.dirname(@path)}/assets/javascripts"
+      root_path = "#{root_dir_name}/assets/javascripts"
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
       DiscoursePluginRegistry.register_glob(root_path, 'hbr')
 
-      admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
+      admin_path = "#{root_dir_name}/admin/assets/javascripts"
       DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbr', admin: true)
+
+      if transpile_js
+        DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+      end
     end
 
     self.instance_eval File.read(path), path
@@ -654,9 +676,12 @@ class Plugin::Instance
       root_path = "#{File.dirname(@path)}/assets/javascripts"
 
       Dir.glob("#{root_path}/**/*") do |f|
+        f_str = f.to_s
         if File.directory?(f)
           yield [f, true]
-        elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs") || f.to_s.ends_with?(".hbr")
+        elsif f_str.ends_with?(".js.es6") || f_str.ends_with?(".hbs") || f_str.ends_with?(".hbr")
+          yield [f, false]
+        elsif transpile_js && f_str.ends_with?(".js")
           yield [f, false]
         end
       end

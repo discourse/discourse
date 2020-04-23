@@ -29,7 +29,6 @@ bs_BA:
     dates:
       time: "HH: mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -287,18 +286,17 @@ bs_BA:
     bookmarks:
       created: "zabilježili ste ovu stranicu"
       not_bookmarked: "sačuvaj ovaj post"
-      created_with_reminder: "postavili ste zabilješku na ovu objavu s podsjetnikom %{date}"
       remove: "Ukloni zabilješku"
       confirm_clear: "Dali ste sigurni dali želite izbrisati sve sačuvane stvari iz ove teme?"
       save: "Sačuvaj"
       no_timezone: 'Još uvijek niste postavili vremensku zonu, tako da nećete biti u mogućnosti koristiti podsjetnike. Postavite vremensku zonu <a href="%{basePath}/my/preferences/profile">na vašem profilu</a>.'
       reminders:
         at_desktop: "Sljedeći put sam za svojim desktop kompjuterom"
-        later_today: "Danas, malo kasnije <br/>{{date}}"
-        next_business_day: "Sljedeći radni dan <br/>{{date}}"
-        tomorrow: "Sutradan <br/>{{date}}"
-        next_week: "Sljedeće sedmice <br/>{{date}}"
-        next_month: "Sljedeći mjesec <br/>{{date}}"
+        later_today: "Kasnije danas"
+        tomorrow: "Sutra"
+        next_week: "Sljedeće sedmice"
+        later_this_week: "Kasnije ove sedmice"
+        next_month: "Sljedeći mjesec"
         custom: "Precizno vrijeme i datum"
     drafts:
       resume: "Nastavi"
@@ -1006,10 +1004,6 @@ bs_BA:
         success_staff: "Poslali smo email na vašu trenutnu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
       change_avatar:
         title: "Promjeni sliku"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baziran na"
-        gravatar_title: "Promjenite vaš avatar na Gravatar web stranici."
-        gravatar_failed: "Nismo mogli pronaći Gravatar s tom adresom e-pošte."
-        refresh_gravatar_title: "Osvježi Gravatar"
         letter_based: "Avatar dodjeljen od sistema"
         uploaded_avatar: "Vaša slika"
         uploaded_avatar_empty: "Dodajte vašu sliku"
@@ -1302,6 +1296,8 @@ bs_BA:
         back: "Idi nazad"
         again: "Pokušaj ponovo"
         fixed: "Učitaj stranicu"
+    modal:
+      close: "zatvori"
     close: "Zatvori"
     assets_changed_confirm: "Ovaj sajt je upravo unaprijeđen. Osvježiti odmah stranicu za novu verziju?"
     logout: "Izlogovani ste."
@@ -1523,7 +1519,6 @@ bs_BA:
       objects: Objekti
       symbols: Simboli
       flags: Prijave
-      custom: Sopstveni emotikoni
       recent: Skoro korišteno
       default_tone: Bez tona
       light_tone: Svijetli ton
@@ -1531,6 +1526,7 @@ bs_BA:
       medium_tone: Srednji ton
       medium_dark_tone: Srednje tamni ton
       dark_tone: Tamni ton
+      default: Sopstveni emotikoni
     shared_drafts:
       title: "Dijeljene skice"
       notice: "Ova tema je vidljiva onima koji mogu da vide <b>{{category}}</b> kategoriju."
@@ -1681,6 +1677,7 @@ bs_BA:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2463,6 +2460,7 @@ bs_BA:
             title: "Prikažite html dio e-maila"
             button: "HTML"
       bookmarks:
+        created: "Kreiran"
         name: "Ime"
     category:
       can: "can&hellip; "
@@ -3841,7 +3839,6 @@ bs_BA:
           staff: "Staff"
           suspended: "Suspended"
           silenced: "Stišano"
-          suspect: "Osumnjičeni"
           staged: "Priređen"
         approved: "Approved?"
         titles:
@@ -3858,7 +3855,6 @@ bs_BA:
           moderators: "Moderators"
           silenced: "Stišani korisnici"
           suspended: "Suspended Users"
-          suspect: "Osumnjičeni korisnici"
           staged: "Upućeni korisnici"
         not_verified: "Not verified"
         check_email:
@@ -4201,6 +4197,7 @@ bs_BA:
         help: "Dodajte novi emotikon koji će biti dostupan svima. (PROTIP: povlačenje i ispuštanje više datoteka odjednom)"
         add: "Dodaj novi emoji"
         name: "Ime"
+        group: "Grupa"
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati: %{name}: emoji?"
       embedding:

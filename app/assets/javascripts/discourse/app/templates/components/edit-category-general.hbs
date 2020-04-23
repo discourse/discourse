@@ -1,0 +1,74 @@
+{{#if category.isUncategorizedCategory}}
+  <p class="warning">
+    {{d-icon "exclamation-triangle"}}
+    {{html-safe (i18n "category.uncategorized_general_warning" settingLink=uncategorizedSiteSettingLink customizeLink=customizeTextContentLink)}}
+  </p>
+{{/if}}
+
+<form>
+  {{category-name-fields category=category tagName=""}}
+
+  {{#if canSelectParentCategory}}
+    <section class="field">
+      <label>{{i18n "category.parent"}}</label>
+      {{category-chooser
+        rootNone=true
+        value=category.parent_category_id
+        excludeCategoryId=category.id
+        categories=parentCategories
+        allowSubCategories=true
+        allowUncategorized=false
+        onChange=(action (mut category.parent_category_id))
+      }}
+    </section>
+  {{/if}}
+
+  {{#if subCategories}}
+    <section class="field">
+      <label>{{i18n "categories.subcategories"}}</label>
+      {{#each subCategories as |s|}}
+        {{category-badge s hideParent="true"}}
+      {{/each}}
+    </section>
+  {{/if}}
+
+  {{#if showDescription}}
+    <section class="field">
+      <label>{{i18n "category.description"}}</label>
+      {{#if category.description}}
+        {{html-safe category.description}}
+      {{else}}
+        {{i18n "category.no_description"}}
+      {{/if}}
+      {{#if category.topic_url}}
+        <br>
+        {{d-button class="btn-default edit-category-description" action=(action "showCategoryTopic") icon="pencil-alt" label="category.change_in_category_topic"}}
+      {{/if}}
+    </section>
+  {{/if}}
+
+  {{#unless noCategoryStyle}}
+    <section class="field">
+      <label>{{i18n "category.badge_colors"}}</label>
+      <div class="category-color-editor">
+        {{html-safe categoryBadgePreview}}
+
+        <div style="margin-top: 10px;" class="input-prepend input-append">
+          <span class="color-title">{{i18n "category.background_color"}}:</span>
+          <div class="colorpicker-wrapper">
+            <span class="add-on">#</span>{{text-field value=category.color placeholderKey="category.color_placeholder" maxlength="6"}}
+            {{color-picker colors=backgroundColors usedColors=usedBackgroundColors value=category.color}}
+          </div>
+        </div>
+
+        <div class="input-prepend input-append">
+          <span class="color-title">{{i18n "category.foreground_color"}}:</span>
+          <div class="colorpicker-wrapper">
+            <span class="add-on">#</span>{{text-field value=category.text_color placeholderKey="category.color_placeholder" maxlength="6"}}
+            {{color-picker colors=foregroundColors value=category.text_color id="edit-text-color"}}
+          </div>
+        </div>
+      </div>
+    </section>
+  {{/unless}}
+</form>

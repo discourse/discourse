@@ -84,7 +84,7 @@ export default Controller.extend(ModalFunctionality, {
     const checked = this.privateChecked;
     if (checked && !this._keyLoading) {
       this._keyLoading = true;
-      ajax(this.keyGenUrl, { method: "POST" })
+      ajax(this.keyGenUrl, { type: "POST" })
         .then(pair => {
           this.setProperties({
             privateKey: pair.private_key,

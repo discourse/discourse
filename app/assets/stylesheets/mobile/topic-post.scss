@@ -237,7 +237,8 @@ a.reply-to-tab {
 #topic-footer-buttons {
   @include clearfix;
   padding: 20px 0 0 0;
-  .d-icon-bookmark.bookmarked {
+  .d-icon-bookmark.bookmarked,
+  .d-icon-discourse-bookmark-clock.bookmarked {
     color: $tertiary;
   }
   .combobox {
@@ -394,6 +395,10 @@ blockquote {
   /* leave browser defaults for top and bottom here */
   margin-left: 0;
   margin-right: 0;
+}
+
+pre.copy-codeblocks code {
+  padding-right: 2.75em;
 }
 
 .gap {

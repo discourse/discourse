@@ -1,3 +1,5 @@
+// discourse-skip-module
+
 /*global document, sinon, QUnit, Logster */
 //= require env
 //= require jquery.debug
@@ -41,6 +43,9 @@
 //= require_self
 //
 //= require jquery.magnific-popup.min.js
+
+const buildResolver = require("discourse-common/resolver").buildResolver;
+window.setResolver(buildResolver("discourse").create({ namespace: Discourse }));
 
 sinon.config = {
   injectIntoThis: false,
@@ -103,7 +108,7 @@ function resetSite(siteSettings, extras) {
 QUnit.testStart(function(ctx) {
   server = createPretender.default;
   createPretender.applyDefaultHandlers(server);
-  server.handlers = []
+  server.handlers = [];
 
   server.prepareBody = function(body) {
     if (body && typeof body === "object") {
@@ -112,7 +117,17 @@ QUnit.testStart(function(ctx) {
     return body;
   };
 
+  if (QUnit.config.logAllRequests) {
+    server.handledRequest = function(verb, path, request) {
+      console.log("REQ: " + verb + " " + path);
+    };
+  }
+
   server.unhandledRequest = function(verb, path) {
+    if (QUnit.config.logAllRequests) {
+      console.log("REQ: " + verb + " " + path + " missing");
+    }
+
     const error =
       "Unhandled request in test environment: " + path + " (" + verb + ")";
     window.console.error(error);
@@ -174,18 +189,13 @@ QUnit.testDone(function() {
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
-  var appEvents = window.Discourse.__container__.lookup("service:app-events");
-  var events = appEvents.__proto__._events;
-  Object.keys(events).forEach(function(eventKey) {
-    var event = events[eventKey];
-    event.forEach(function(listener) {
-      if (appEvents.has(eventKey)) {
-        appEvents.off(eventKey, listener.target, listener.fn);
-      }
-    });
-  });
+  require("discourse/services/app-events").clearAppEventsCache(
+    window.Discourse.__container__
+  );
 
   window.MessageBus.unsubscribe("*");
+  delete window.server;
+  window.Mousetrap.reset();
 });
 
 // Load ES6 tests

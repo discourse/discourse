@@ -149,25 +149,30 @@ class UserUpdater
 
     saved = nil
 
-    User.transaction do
-      if attributes.key?(:muted_usernames)
-        update_muted_users(attributes[:muted_usernames])
-      end
+    begin
+      User.transaction do
+        if attributes.key?(:muted_usernames)
+          update_muted_users(attributes[:muted_usernames])
+        end
 
-      if attributes.key?(:ignored_usernames)
-        update_ignored_users(attributes[:ignored_usernames])
-      end
+        if attributes.key?(:ignored_usernames)
+          update_ignored_users(attributes[:ignored_usernames])
+        end
 
-      name_changed = user.name_changed?
-      if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
-         (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
+        name_changed = user.name_changed?
+        if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
+           (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
 
-        StaffActionLogger.new(@actor).log_name_change(
-          user.id,
-          old_user_name,
-          attributes.fetch(:name) { '' }
-        )
+          StaffActionLogger.new(@actor).log_name_change(
+            user.id,
+            old_user_name,
+            attributes.fetch(:name) { '' }
+          )
+        end
       end
+    rescue Addressable::URI::InvalidURIError => e
+      # Prevent 500 for crazy url input
+      return saved
     end
 
     DiscourseEvent.trigger(:user_updated, user) if saved

@@ -1,14 +1,14 @@
-<div class='setting-label'>
-   <h3>{{settingName}}</h3>
-   {{#if defaultIsAvailable}}
-     <a href onClick={{action 'setDefaultValues'}}>{{setting.setDefaultValuesLabel}}</a>
-   {{/if}}
+<div class="setting-label">
+  <h3>{{settingName}}</h3>
+  {{#if defaultIsAvailable}}
+    <a href onClick={{action "setDefaultValues"}}>{{setting.setDefaultValuesLabel}}</a>
+  {{/if}}
 </div>
 <div class="setting-value">
   {{component componentName setting=setting value=buffered.value validationMessage=validationMessage preview=preview isSecret=isSecret allowAny=allowAny}}
 </div>
 {{#if dirty}}
-  <div class='setting-controls'>
+  <div class="setting-controls">
     {{d-button class="ok" action=(action "update") icon="check"}}
     {{d-button class="cancel" action=(action "cancel") icon="times"}}
   </div>

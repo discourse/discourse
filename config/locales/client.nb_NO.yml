@@ -28,7 +28,6 @@ nb_NO:
     dates:
       time: "LT"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM LT"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D MMM YYYY LT"
@@ -95,6 +94,12 @@ nb_NO:
         x_days:
           one: "%{count} dag siden"
           other: "%{count} dager siden"
+        x_months:
+          one: "%{count} måned siden"
+          other: "%{count} måneder siden"
+        x_years:
+          one: "%{count} år siden"
+          other: "%{count} år siden"
       later:
         x_days:
           one: "%{count} dag senere"
@@ -146,12 +151,15 @@ nb_NO:
       banner:
         enabled: "gjorde dette til et banner %{when}. Det vil vises på toppen av hver side inntil brukeren lukker det."
         disabled: "fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
+      forwarded: "videresendte e-posten voer"
+    topic_admin_menu: "handlinger for tråd"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     bootstrap_mode_enabled: "For å gjøre lansering av siden enklere er den nå i oppstartsmodus. Alle nye brukere tildeles tillitsnivå 1 og får daglige oppsummeringer på e-post aktivert. Oppstartsmodus vil bli automatisk slått av når %{min_users} brukere har registrert seg."
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
     themes:
       default_description: "Forvalg"
+      broken_theme_alert: "Du kan oppleve at siden din ikke fungerer fordi temaet eller komponenten %{theme} har feil. Deaktiver temaet eller komponenten her: %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia/Stillehavsregionen (Tokyo)"
@@ -159,6 +167,7 @@ nb_NO:
         ap_south_1: "Asia/Stillehavsregionen (Mumbai)"
         ap_southeast_1: "Asia/Stillehavsregionen (Singapore)"
         ap_southeast_2: "Asia/Stillehavsregionen (Sydney)"
+        ca_central_1: "Kanada (sentralregion)"
         cn_north_1: "Kina (Beijing)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irland)"
@@ -248,7 +257,17 @@ nb_NO:
       created: "du har bokmerket dette innlegget"
       not_bookmarked: "bokmerk dette innlegget"
       remove: "Fjern bokmerke"
+      confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
       save: "Lagre"
+      no_timezone: 'Du har ikke ennå satt tidssone. Du vil ikke kunne sette påminnelser. Sett tidssone <a href="%{basePath}/my/preferences/profile">i profilen din</a>.'
+      reminders:
+        at_desktop: "Neste gang jeg er på datamaskinen min"
+        later_today: "Senere i dag"
+        tomorrow: "I morgen"
+        next_week: "Neste uke"
+        later_this_week: "Senere denne uken"
+        next_month: "Neste måned"
+        custom: "Egendefinert dato og tid"
     drafts:
       resume: "Fortsett"
       remove: "Fjern"
@@ -256,6 +275,7 @@ nb_NO:
       new_private_message: "Nytt privat emneutkast"
       topic_reply: "Svarutkast"
       abandon:
+        confirm: "Du har allerede åpnet et annet utkast i dette emnet. Er du sikker på at du vil forkaste utkastet?"
         yes_value: "Ja"
         no_value: "Nei"
     topic_count_latest:
@@ -293,13 +313,33 @@ nb_NO:
       install_banner: "Ønsker du å <a href>installere %{title} på denne enheten</a>?"
     choose_topic:
       none_found: "Ingen emner funnet."
+      title:
+        search: "Søk etter emne"
+        placeholder: "skriv tittel, URL eller ID her"
     choose_message:
       none_found: "Ingen meldinger funnet."
+      title:
+        search: "Søk etter melding"
+        placeholder: "Skriv tittel, URL eller ID her"
     review:
       order_by: "Sorter etter"
       in_reply_to: "i svar til"
       explain:
+        why: "forklar hvorfor dette elementet ble plassert i køen"
+        formula: "Formel"
+        subtotal: "Delsum"
         total: "Total"
+        min_score_visibility: "Minimal score for synlighet"
+        score_to_hide: "Score for å skjule innlegg"
+        take_action_bonus:
+          name: "gjøre handling"
+          title: "Når en administrator velger å gjøre en handling, får flagget en bonus."
+        user_accuracy_bonus:
+          name: "nøyaktighet for bruker"
+          title: "Brukere som historisk gir gode flagg får bonus."
+        trust_level_bonus:
+          name: "tillitsnivå"
+          title: "Elementer opprettet av brukere med høyere tillitsrangering har høyere score"
       awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
@@ -775,9 +815,6 @@ nb_NO:
         success_staff: "Vi har sendt en e-post til den gjeldende adressen. Følg bekreftelsesinstruksjonene."
       change_avatar:
         title: "Bytt profilbilde"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
-        gravatar_title: "Endre din avatar på Gravatars nettside"
-        refresh_gravatar_title: "Oppdater din Gravatar"
         letter_based: "Systemtildelt profilbilde"
         uploaded_avatar: "Egendefinert bilde"
         uploaded_avatar_empty: "Legg til egendefinert bilde"
@@ -1021,6 +1058,8 @@ nb_NO:
         back: "Gå tilbake"
         again: "Prøv igjen"
         fixed: "Last side"
+    modal:
+      close: "lukk"
     close: "Lukk"
     assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Last inn siden på nytt nå for siste versjon?"
     logout: "Du ble logget ut"
@@ -1203,7 +1242,6 @@ nb_NO:
       filter_placeholder: Søk etter emoji
       objects: Objekter
       flags: Flagg
-      custom: Egendefinerte emoji-er
       recent: Nylig brukt
       default_tone: Ingen hudtone
       light_tone: Lys hudtone
@@ -1211,6 +1249,7 @@ nb_NO:
       medium_tone: Middels hudtone
       medium_dark_tone: Middels mørk hudtone
       dark_tone: Mørk hudtone
+      default: Egendefinerte emoji-er
     shared_drafts:
       title: "Delte kladder"
       notice: "Dette emnet er kun synlig for dem som kan se <b>{{category}}</b>-kategorien."
@@ -1345,6 +1384,7 @@ nb_NO:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2018,6 +2058,7 @@ nb_NO:
             title: "Vis HTML-delen av e-posten"
             button: "HTML"
       bookmarks:
+        created: "Opprettet"
         name: "Navn"
     category:
       can: "kan&hellip;"
@@ -3192,7 +3233,6 @@ nb_NO:
           staff: "Stab"
           suspended: "Utestengt"
           silenced: "Dempet"
-          suspect: "Mistenkt"
           staged: "Arrangert"
         approved: "Godkjent?"
         titles:
@@ -3209,7 +3249,6 @@ nb_NO:
           moderators: "Moderatorer"
           silenced: "Dempede brukere"
           suspended: "Utestengte brukere"
-          suspect: "Mistenkte brukere"
           staged: "Arrangerte brukere"
         not_verified: "Uverifisert"
         check_email:
@@ -3542,6 +3581,7 @@ nb_NO:
         help: "Legg til en ny emoji som vil være tilgjengelig for alle. (PROFFTIPS: Dra og slipp flere filer samtidig)"
         add: "Legg til ny Emoji"
         name: "Navn"
+        group: "Gruppe"
         image: "Bilde"
         delete_confirm: "Sikker på at du vil slette: %{name}: emoji?"
       embedding:

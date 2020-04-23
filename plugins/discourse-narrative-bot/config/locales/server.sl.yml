@@ -215,8 +215,6 @@ sl:
       bookmark:
         instructions: |-
           Da se naučite kaj novega, kliknite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> spodaj in <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **zaznamujte to zasebno sporočilo**. Če to storite se vam v prihodnje mogoče obeta :gift:!
-        reply: |-
-          Enkratno! Sedaj lahko kadarkoli najdete pot nazaj na najin zaseben pogovor, enostavno preko [Zaznamki zavihka v vašem profilu](%{profile_page_url}/activity/bookmarks). Samo izberite vašo profilno sliko zgoraj desno &#8599;
         not_found: |-
           Oh, ne vidim nobenega zaznamka v tej temi. Ali ste našli zaznamek pod vsakim prispevkom? Uporabite prikaži več <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> za prikaz ostalih akcij.
       emoji:

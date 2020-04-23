@@ -19,9 +19,7 @@ var define, requirejs;
         default: Ember.ArrayProxy
       },
       "@ember/component": {
-        default: Ember.Component,
-        TextArea: Ember.TextArea,
-        TextField: Ember.TextField
+        default: Ember.Component
       },
       "@ember/controller": {
         default: Ember.Controller,
@@ -77,6 +75,7 @@ var define, requirejs;
       },
       "@ember/object/mixin": { default: Ember.Mixin },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
+      "@ember/object/promise-proxy-mixin": { default: Ember.PromiseProxyMixin },
       "@ember/object/evented": {
         default: Ember.Evented,
         on: Ember.on
@@ -107,7 +106,6 @@ var define, requirejs;
       },
       rsvp: {
         default: Ember.RSVP,
-        EventTarget: Ember.RSVP.EventTarget,
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
         all: Ember.RSVP.all
@@ -128,6 +126,12 @@ var define, requirejs;
       },
       "@ember/component/helper": {
         default: Ember.Helper
+      },
+      "@ember/component/text-field": {
+        default: Ember.TextField
+      },
+      "@ember/component/text-area": {
+        default: Ember.TextArea
       },
       "@ember/error": {
         default: Ember.error

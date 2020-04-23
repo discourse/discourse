@@ -100,6 +100,10 @@ class DiscourseSingleSignOn < SingleSignOn
     user.user_avatar.save! if user.user_avatar
     user.save!
 
+    if @email_changed && user.active
+      user.set_automatic_groups
+    end
+
     # The user might require approval
     user.create_reviewable
 
@@ -251,9 +255,12 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def change_external_attributes_and_override(sso_record, user)
+    @email_changed = false
+
     if SiteSetting.sso_overrides_email && user.email != Email.downcase(email)
       user.email = email
       user.active = false if require_activation
+      @email_changed = true
     end
 
     if SiteSetting.sso_overrides_username? && username.present?

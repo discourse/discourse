@@ -11,7 +11,7 @@ class Barber::Precompiler
   def precompiler
     if !@precompiler
 
-      source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/lib/raw-handlebars.js.es6")
+      source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/lib/raw-handlebars.js")
       transpiler = DiscourseJsProcessor::Transpiler.new(skip_module: true)
       transpiled = transpiler.perform(source)
 
@@ -65,7 +65,11 @@ class Ember::Handlebars::Template
   end
 
   def global_template_target(namespace, module_name, config)
-    "#{namespace}[#{template_path(module_name, config).inspect}]"
+    # We need this for backward-compatibility reasons.
+    # Plugins may not have an app subdirectory.
+    path = template_path(module_name, config).inspect.gsub('discourse/templates/', '')
+
+    "#{namespace}[#{path}]"
   end
 
   # FIXME: Previously, ember-handlebars-templates uses the logical path which incorrectly

@@ -1,0 +1,5 @@
+<div class="bulk-buttons">
+  {{#each buttons as |button|}}
+    {{d-button action=(action button.action) label=button.label icon=button.icon class=button.class}}
+  {{/each}}
+</div>

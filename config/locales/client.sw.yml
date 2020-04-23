@@ -28,7 +28,6 @@ sw:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -238,6 +237,12 @@ sw:
       remove: "Ondoa Alamisho"
       confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
       save: "hifadhi"
+      reminders:
+        later_today: "Baada ya mda leo"
+        tomorrow: "Kesho"
+        next_week: "Wiki Ijayo"
+        later_this_week: "Baada ya mda ndani ya wiki hii"
+        next_month: "Mwezi ujao"
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
@@ -716,9 +721,6 @@ sw:
         success_staff: "Tumekutumia barua kwenye barua pepe uliyotumia. Tafadhali fuata maelezo tuliyokutumia."
       change_avatar:
         title: "Badilisha Picha yako"
-        gravatar: "imetoka kwa <a href='//gravatar.com/emails' target='_blank'>Ishara</a>"
-        gravatar_title: "Badilisha Ishara kwenye Mtandao wa Ishara"
-        refresh_gravatar_title: "Onesha Upya Ishara Yako"
         letter_based: "Mfumo imekabidhi Picha"
         uploaded_avatar: "Picha Binafsi"
         uploaded_avatar_empty: "Ongeza picha yako binafsi"
@@ -957,6 +959,8 @@ sw:
         back: "Rudi Nyuma"
         again: "Jaribu Tena"
         fixed: "Pakua Ukurasa"
+    modal:
+      close: "funga"
     close: "Funga"
     assets_changed_confirm: "Tovuti hii imesasishwa hivi karibuni. Rudisha tena kupata toleo la hivi karibuni?"
     logout: "Ulitolewa."
@@ -1141,7 +1145,6 @@ sw:
       filter_placeholder: Tafuta picha-hisia
       objects: Vitu
       flags: Bendera
-      custom: Ishara binafsi
       recent: Imetumika hivi karibuni
       default_tone: Mwonekano usio na toni
       light_tone: Mwonekano wenye toni nyepesi
@@ -1149,6 +1152,7 @@ sw:
       medium_tone: Mwonekano wenye toni ya katikati
       medium_dark_tone: Mwonekano mweusi wenye toni ya katikati
       dark_tone: Mwonekano wenye toni nyeusi
+      default: Ishara binafsi
     shared_drafts:
       title: "Maswadajaribio Gawiza"
       notice: "Mada hii inapatikana kwa watu wanaoweza kuona kategoria <b>{{category}}</b>."
@@ -1279,6 +1283,7 @@ sw:
       mentioned: "<span>{{jina la mtumiaji}} </span>{{maelezo}}"
       group_mentioned: "<span>{{jina la mtumiaji}} </span>{{maelezo}}"
       quoted: "<span>{{jina la mtumiaji}}</span> {{maelezo}}"
+      bookmark_reminder: "<span>{{jina la mtumiaji}}</span> {{maelezo}}"
       replied: "<span>{{jina la mtumiaji}} </span> {{maelezo}}"
       posted: "<span>{{jina la mtumiaji}} </span> {{maelezo}}"
       edited: "<span>{{jina la mtumiaji}} </span> {{maelezo}}"
@@ -1908,6 +1913,7 @@ sw:
             title: "Onyesha sehemu yenye html kwenye barua pepe."
             button: "HTML"
       bookmarks:
+        created: "Imetengenezwa"
         name: "Jina"
     category:
       can: "can&hellip; "
@@ -2938,7 +2944,6 @@ sw:
           staff: "Wasaidizi"
           suspended: "Alisitishwa"
           silenced: "Amenyamazishwa"
-          suspect: "Mshukiwa"
           staged: "Sehemu ya kujaribu"
         approved: "Wamekubaliwa?"
         titles:
@@ -2955,7 +2960,6 @@ sw:
           moderators: "Wasimamizi"
           silenced: "Watumiaji Walionyamazishwa"
           suspended: "Watumiaji Waliositishwa"
-          suspect: "Sitisha Watumiaji"
         not_verified: "Haijathibitishwa"
         check_email:
           title: "Onyesha barua pepe ya mtumiaji"
@@ -3267,6 +3271,7 @@ sw:
         help: "Ongeza emoji mpya ambayo itapatikana kwa kila mtu. (USHAURI: unaweza kuweka zaidi ya faili moja mara moja)"
         add: "Ongeza Emoji Mpya"
         name: "Jina"
+        group: "Kikundi"
         image: "Picha"
         delete_confirm: "Una uhakika unataka kufuta emoji ya :%{name}: ?"
       embedding:

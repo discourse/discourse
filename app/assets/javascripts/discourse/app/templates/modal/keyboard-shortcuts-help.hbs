@@ -1,0 +1,105 @@
+{{#d-modal-body id="keyboard-shortcuts-help"}}
+  <div class="column">
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.jump_to.title"}}</h4>
+      <ul>
+        <li>{{html-safe shortcuts.jump_to.home}}</li>
+        <li>{{html-safe shortcuts.jump_to.latest}}</li>
+        <li>{{html-safe shortcuts.jump_to.new}}</li>
+        <li>{{html-safe shortcuts.jump_to.unread}}</li>
+        <li>{{html-safe shortcuts.jump_to.categories}}</li>
+        <li>{{html-safe shortcuts.jump_to.top}}</li>
+        <li>{{html-safe shortcuts.jump_to.bookmarks}}</li>
+        <li>{{html-safe shortcuts.jump_to.profile}}</li>
+        {{#if siteSettings.enable_personal_messages}}
+          <li>{{html-safe shortcuts.jump_to.messages}}</li>
+        {{/if}}
+        <li>{{html-safe shortcuts.jump_to.drafts}}</li>
+      </ul>
+    </section>
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.navigation.title"}}</h4>
+      <ul>
+        <li>{{html-safe shortcuts.navigation.back}}</li>
+        <li>{{html-safe shortcuts.navigation.jump}}</li>
+        <li>{{html-safe shortcuts.navigation.up_down}}</li>
+        <li>{{html-safe shortcuts.navigation.open}}</li>
+        <li>{{html-safe shortcuts.navigation.next_prev}}</li>
+        <li>{{html-safe shortcuts.navigation.go_to_unread_post}}</li>
+      </ul>
+    </section>
+  </div>
+  <div class="column">
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.application.title"}}</h4>
+      <ul>
+        <li>{{html-safe shortcuts.application.hamburger_menu}}</li>
+        <li>{{html-safe shortcuts.application.user_profile_menu}}</li>
+        <li>{{html-safe shortcuts.application.show_incoming_updated_topics}}</li>
+        <li>{{html-safe shortcuts.application.search}}</li>
+        <li>{{html-safe shortcuts.application.help}}</li>
+        <li>{{html-safe shortcuts.application.dismiss_new_posts}}</li>
+        <li>{{html-safe shortcuts.application.dismiss_topics}}</li>
+        <li>{{html-safe shortcuts.application.log_out}}</li>
+      </ul>
+    </section>
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.composing.title"}}</h4>
+      <ul>
+        <li>{{html-safe shortcuts.composing.return}}</li>
+        <li>{{html-safe shortcuts.composing.fullscreen}}</li>
+        <li>{{html-safe shortcuts.application.create}}</li>
+        <li>{{html-safe shortcuts.actions.reply_as_new_topic}}</li>
+        <li>{{html-safe shortcuts.actions.reply_topic}}</li>
+        <li>{{html-safe shortcuts.actions.reply_post}}</li>
+        <li>{{html-safe shortcuts.actions.quote_post}}</li>
+      </ul>
+    </section>
+    <section class="keyboard-shortcuts-bookmark-section">
+      <h4>{{i18n "keyboard_shortcuts_help.bookmarks.title"}}</h4>
+      <ul>
+        <li>{{html-safe shortcuts.bookmarks.enter}}</li>
+        <li>{{html-safe shortcuts.bookmarks.later_today}}</li>
+        <li>{{html-safe shortcuts.bookmarks.later_this_week}}</li>
+        <li>{{html-safe shortcuts.bookmarks.tomorrow}}</li>
+        <li>{{html-safe shortcuts.bookmarks.next_week}}</li>
+        <li>{{html-safe shortcuts.bookmarks.next_month}}</li>
+        <li>{{html-safe shortcuts.bookmarks.next_business_week}}</li>
+        <li>{{html-safe shortcuts.bookmarks.next_business_day}}</li>
+        <li>{{html-safe shortcuts.bookmarks.custom}}</li>
+        <li>{{html-safe shortcuts.bookmarks.none}}</li>
+        <li>{{html-safe shortcuts.bookmarks.delete}}</li>
+      </ul>
+    </section>
+  </div>
+  <div class="column">
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.actions.title"}}</h4>
+      <ul>
+        <li>{{html-safe shortcuts.actions.bookmark_topic}}</li>
+        <li>{{html-safe shortcuts.actions.pin_unpin_topic}}</li>
+        <li>{{html-safe shortcuts.actions.share_topic}}</li>
+        <li>{{html-safe shortcuts.actions.share_post}}</li>
+        <li>{{html-safe shortcuts.actions.like}}</li>
+        <li>{{html-safe shortcuts.actions.flag}}</li>
+        <li>{{html-safe shortcuts.actions.bookmark}}</li>
+        <li>{{html-safe shortcuts.actions.edit}}</li>
+        <li>{{html-safe shortcuts.actions.delete}}</li>
+        <li>{{html-safe shortcuts.actions.mark_muted}}</li>
+        <li>{{html-safe shortcuts.actions.mark_regular}}</li>
+        <li>{{html-safe shortcuts.actions.mark_tracking}}</li>
+        <li>{{html-safe shortcuts.actions.mark_watching}}</li>
+        <li>{{html-safe shortcuts.actions.defer}}</li>
+        <li>{{html-safe shortcuts.actions.print}}</li>
+        <li>{{html-safe shortcuts.actions.topic_admin_actions}}</li>
+      </ul>
+    </section>
+    <section>
+      <h4>{{i18n "keyboard_shortcuts_help.search_menu.title"}}</h4>
+      <ul>
+        <li>{{html-safe shortcuts.search_menu.prev_next}}</li>
+        <li>{{html-safe shortcuts.search_menu.insert_url}}</li>
+      </ul>
+    </section>
+  </div>
+{{/d-modal-body}}

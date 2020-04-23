@@ -62,6 +62,9 @@ module SvgSprite
     "discourse-bell-one",
     "discourse-bell-slash",
     "discourse-compress",
+    "discourse-comment",
+    "discourse-comment-plus",
+    "discourse-comment-slash",
     "discourse-expand",
     "download",
     "ellipsis-h",
@@ -198,7 +201,8 @@ module SvgSprite
     "user-shield",
     "user-times",
     "users",
-    "wrench"
+    "wrench",
+    "spinner"
   ])
 
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fas fa-' => '', 'fa-' => '' }

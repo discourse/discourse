@@ -1,13 +1,21 @@
 .directory {
-  .select-kit.dropdown-select-box.period-chooser
-    .period-chooser-header
-    h2.selected-name {
+  .period-chooser .period-chooser-header h2.selected-name {
     font-size: $font-up-1;
-    margin-bottom: 0.25em;
   }
 
-  .filter-name {
-    float: left;
+  &.users-directory {
+    .filter-name {
+      width: 100%;
+      margin-bottom: 1em;
+    }
+
+    .directory-last-updated {
+      margin-bottom: 1em;
+    }
+  }
+
+  .directory-controls {
+    display: block;
   }
 
   .total-rows {

@@ -29,7 +29,6 @@ es:
       time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY HH:mm"
@@ -264,19 +263,22 @@ es:
     bookmarks:
       created: "has marcado esta publicación"
       not_bookmarked: "marcar esta publicación"
-      created_with_reminder: "Guardaste esta publicación en marcadores con un recordatorio el %{date}"
+      created_with_at_desktop_reminder: "guardaste esta publicación en marcadores y se te recordará la próxima vez que estés en tu computadora"
       remove: "Eliminar marcador"
       confirm_clear: "¿Estás seguro de que deseas eliminar todos tus marcadores en este tema?"
       save: "Guardar"
       no_timezone: 'No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes elegir una <a href="%{basePath}/my/preferences/profile">en tu perfil</a>.'
+      invalid_custom_datetime: "La fecha y hora que suministraste es inválida. Por favor, intenta de nuevo."
+      list_permission_denied: "No tienes permiso para ver los marcadores de este usuario."
       reminders:
         at_desktop: "La próxima vez que esté en mi ordenador"
-        later_today: "Más tarde hoy <br/>{{date}}"
-        next_business_day: "El próximo día hábil <br/>{{date}}"
-        tomorrow: "Mañana <br/>{{date}}"
-        next_week: "La próxima semana <br/>{{date}}"
-        next_month: "El mes que viene <br/>{{date}}"
+        later_today: "Más tarde durante el día de hoy"
+        tomorrow: "Mañana"
+        next_week: "Próxima semana"
+        later_this_week: "Esta misma semana"
+        next_month: "Próximo mes"
         custom: "Fecha y hora personalizadas"
+        none: "No se necesita recordatorio"
     drafts:
       resume: "Reanudar"
       remove: "Eliminar"
@@ -539,6 +541,7 @@ es:
         deny: "Denegar"
         denied: "denegado"
         undone: "solicitud deshecha"
+        handle: "atender solicitud de membresía"
       manage:
         title: "Gestionar"
         name: "Nombre"
@@ -766,6 +769,7 @@ es:
         clear:
           title: "Quitar filtros"
           warning: "¿Estás seguro de que quieres eliminar tu tema destacado?"
+      use_current_timezone: "Usar zona horaria actual"
       profile_hidden: "El perfil público de este usuario está oculto."
       expand_profile: "Expandir"
       collapse_profile: "Contraer"
@@ -866,6 +870,7 @@ es:
         deleted_posts: "publicaciones eliminadas"
         suspensions: "suspensiones"
         warnings_received: "avisos"
+        rejected_posts: "publicaciones rechazadas"
       messages:
         all: "Todos"
         inbox: "Bandeja de entrada"
@@ -941,6 +946,7 @@ es:
           title: "Autenticación basada en tokens"
           add: "Nuevo autenticador"
           default_name: "Mi autenticador"
+          name_and_code_required_error: "Debes introducir un nombre y un código de tu aplicación de autentificación."
         security_key:
           register: "Registrar"
           title: "Claves de seguridad"
@@ -951,6 +957,7 @@ es:
           edit: "Editar clave de seguridad"
           edit_description: "Nombre de la clave de seguridad"
           delete: "Eliminar"
+          name_required_error: "Debes introducir un nombre para tu llave de seguridad."
       change_about:
         title: "Cambiar «Acerca de mí»"
         error: "Ha ocurrido un error al cambiar este valor."
@@ -967,10 +974,10 @@ es:
         success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Por favor, sigue las instrucciones de confirmación."
       change_avatar:
         title: "Cambiar tu imagen de perfil"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basado en"
-        gravatar_title: "Cambia tu avatar en el sitio web de Gravatar"
-        gravatar_failed: "No hemos encontrado ningún Gravatar con esta dirección de correo electrónico."
-        refresh_gravatar_title: "Actualizar tu Gravatar"
+        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a>, basado en"
+        gravatar_title: "Cambia tu avatar en la pagina web de {{gravatarName}}"
+        gravatar_failed: "No pudimos encontrar un {{gravatarName}} con esa dirección de correo electrónico."
+        refresh_gravatar_title: "Actualiza tu {{gravatarName}}"
         letter_based: "Imagen de perfil asignada por el sistema"
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Agrega una foto personalizada"
@@ -1033,6 +1040,9 @@ es:
         any: "cualquiera"
       password_confirmation:
         title: "Ingresa de nuevo la contraseña"
+      invite_code:
+        title: "Código de invitación"
+        instructions: "El registro de la cuenta requiere un código de invitación"
       auth_tokens:
         title: "Dispositivos utilizados recientemente"
         ip: "IP"
@@ -1253,6 +1263,8 @@ es:
         back: "Volver atrás"
         again: "Intentar de nuevo"
         fixed: "Cargar página"
+    modal:
+      close: "cerrar"
     close: "Cerrar"
     assets_changed_confirm: "Este sitio acaba de ser actualizado. ¿Quieres cargar la página de nuevo para ver la última versión?"
     logout: "Has cerrado sesión."
@@ -1261,6 +1273,12 @@ es:
       enabled: "Este sitio está en modo de solo lectura. Puedes continuar navegando pero algunas acciones como responder o dar me gusta no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro se encuentre en modo de solo lectura."
       logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de solo lectura."
+    too_few_topics_and_posts_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentTopics, plural, un {<strong>#</strong> tema} otros {<strong>#</strong> temas}} y {currentPosts, plural, una {<strong>#</strong> publicación} otras {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredTopics, plural, un {<strong>#</strong> tema} otros {<strong>#</strong> temas}} y {requiredPosts, plural, una {<strong>#</strong> publicación} otras {<strong>#</strong> publicaciones}}. Solo los miembros del staff pueden ver este mensaje.
+    too_few_topics_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentTopics, plural, un {<strong>#</strong> tema} otros {<strong>#</strong> temas}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredTopics, plural, un {<strong>#</strong> tema} otros {<strong>#</strong> temas}}. Solo los miembros del staff pueden ver este mensaje.
+    too_few_posts_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentPosts, plural, una {<strong>#</strong> publicación} otras {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredPosts, plural, una {<strong>#</strong> publicación} otras {<strong>#</strong> publicaciones}}. Solo los miembros del staff pueden ver este mensaje.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hour} otros {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/minute} otros {# errors/minute}}."
@@ -1482,7 +1500,6 @@ es:
       objects: Objetos
       symbols: Símbolos
       flags: Banderas
-      custom: Emojis personalizados
       recent: "Usados recientemente "
       default_tone: Sin tono de piel
       light_tone: Tono de piel claro
@@ -1490,6 +1507,7 @@ es:
       medium_tone: Tono de piel medio
       medium_dark_tone: Tono de piel medio oscuro
       dark_tone: Tono de piel oscuro
+      default: Emojis personalizados
     shared_drafts:
       title: "Borradores Compartidos"
       notice: "Este tema es visible solamente por quienes pueden ver la categoría <b>{{category}}</b>."
@@ -1639,6 +1657,7 @@ es:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1689,6 +1708,7 @@ es:
         posted: "nueva publicación"
         moved_post: "publicación movida"
         linked: "enlazado"
+        bookmark_reminder: "recordatorio de marcador"
         granted_badge: "medalla concedida"
         invited_to_topic: "invitado al tema"
         group_mentioned: "grupo mencionado"
@@ -1917,6 +1937,7 @@ es:
       group_request_sent: "Tu solicitud de membresía al grupo fue enviada. Se te informará cuando seas aceptado."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
       read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no leído</a> } other { <a href='{basePath}/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
+      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Ver todas las categorías
       view_latest_topics: ver los temas recientes
       suggest_create_topic: "¿Por qué no creas un tema?"
@@ -1927,6 +1948,7 @@ es:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
         num_of_hours: "Número de horas:"
+        num_of_days: "Número de días:"
         remove: "Quitar temporizador"
         publish_to: "Publicar en:"
         when: "Cuando:"
@@ -1969,6 +1991,8 @@ es:
         title: "Hacer bump al tema automaticamente"
       reminder:
         title: "Recordarme"
+      auto_delete_replies:
+        title: "Eliminar respuestas automáticamente"
       status_update_notice:
         auto_open: "Este tema se abrirá automáticamente %{timeLeft}."
         auto_close: "Este tema se cerrará automáticamente %{timeLeft}."
@@ -1977,6 +2001,7 @@ es:
         auto_delete: "Este tema se eliminará automáticamente %{timeLeft}."
         auto_bump: "La fecha de este tema se actualizará %{timeLeft}."
         auto_reminder: "Te recordaremos sobre este tema %{timeLeft}."
+        auto_delete_replies: "Respuestas en este tema serán eliminadas automáticamente después de %{duration}."
       auto_close_title: "Configuración de cierre automático"
       auto_close_immediate:
         one: "El último post se publicó hace %{count} hora, por lo que el tema se cerrará inmediatamente."
@@ -2196,6 +2221,9 @@ es:
         instructions:
           one: "Por favor escoge el nuevo dueño del post de <b>@{{old_user}}</b>"
           other: "Por favor, escoge el nuevo dueño de las {{count}} publicaciones de <b>@{{old_user}}</b>"
+        instructions_without_old_user:
+          one: "Por favor, escoge un nuevo propietario para la publicación."
+          other: "Por favor, escoge un nuevo propietario para las {{count}} publicaciones"
       change_timestamp:
         title: "Cambiar marca horaria..."
         action: "cambiar marca horaria"
@@ -2415,9 +2443,10 @@ es:
             button: "HTML"
       bookmarks:
         create: "Crear marcador"
+        created: "Creado"
         name: "Nombre"
-        name_placeholder: "Ponle un nombre a la publicación que has guardado en marcadores para ayudarte a recordarla"
-        set_reminder: "Establecer un recordatorio"
+        name_placeholder: "¿Para qué es este marcador?"
+        set_reminder: "Recuérdame"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -2805,6 +2834,10 @@ es:
         print: "%{shortcut} Imprimir tema"
         defer: "%{shortcut} Aplazar el tema"
         topic_admin_actions: "%{shortcut} Abrir acciones de administrador del tema"
+      search_menu:
+        title: "Buscar Menu"
+        prev_next: "%{shortcut} Mover selección arriba y abajo"
+        insert_url: "%{shortcut} Insertar selección dentro del editor abierto"
     badges:
       earned_n_times:
         one: "Ganó esta medalla %{count} vez"
@@ -3848,7 +3881,6 @@ es:
           staff: "Staff"
           suspended: "Suspendidos"
           silenced: "Silenciados"
-          suspect: "Sospechosos"
           staged: "Temporal"
         approved: "¿Aprobado/s?"
         titles:
@@ -3865,7 +3897,6 @@ es:
           moderators: "Moderadores"
           silenced: "Usuarios silenciados"
           suspended: "Usuarios suspendidos"
-          suspect: "Usuarios sospechosos"
           staged: "Usuarios temporales"
         not_verified: "No verificado"
         check_email:
@@ -3996,6 +4027,7 @@ es:
           threshold_reached: "Se recibieron demasiados rebotes desde ese correo electrónico."
         trust_level_change_failed: "Hubo un problema al cambiar el nivel de confianza del usuario."
         suspend_modal_title: "Suspender Usuario"
+        confirm_cancel_penalty: "¿Seguro que quieres descartar la falta?"
         trust_level_2_users: "Usuarios con nivel de confianza 2"
         trust_level_3_requirements: "Requerimientos para nivel de confianza 3"
         trust_level_locked_tip: "el nivel de confianza esta bloqueado, el sistema no promoverá o degradara al usuario."
@@ -4225,6 +4257,7 @@ es:
         help: "Añade emojis nuevos que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"
         add: "Añadir emoji nuevo"
         name: "Nombre"
+        group: "Grupo"
         image: "Imagen"
         delete_confirm: "¿Estás seguro de que quieres eliminar el emoji :%{name}:?"
       embedding:
@@ -4251,7 +4284,7 @@ es:
         save: "Guardar ajustes de insertado"
       permalink:
         title: "Enlaces permanentes"
-        description: "Ten en cuenta que esto solo se aplica a fuentes externas, los enlaces publicados en tu foro no se redirigirán."
+        description: "Redirecciones para solicitar URL no conocidas por el foro."
         url: "URL"
         topic_id: "ID del tema"
         topic_title: "Tema"
@@ -4260,6 +4293,7 @@ es:
         category_id: "ID de la categoría"
         category_title: "Categoría"
         external_url: "URL externa"
+        destination: "Destino"
         delete_confirm: "¿Estás seguro de que quieres eliminar este enlace permanente?"
         form:
           label: "Nuevo:"

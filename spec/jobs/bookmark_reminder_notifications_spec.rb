@@ -18,7 +18,6 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   end
 
   before do
-    SiteSetting.enable_bookmarks_with_reminders = true
     # this is done to avoid model validations on Bookmark
     bookmark1.update_column(:reminder_at, five_minutes_ago - 10.minutes)
     bookmark2.update_column(:reminder_at, five_minutes_ago - 5.minutes)
@@ -61,14 +60,6 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     expect(Discourse.redis.get(described_class::JOB_RUN_NUMBER_KEY)).to eq('6')
     subject.execute
     expect(Discourse.redis.get(described_class::JOB_RUN_NUMBER_KEY)).to eq('1')
-  end
-
-  context "when the bookmark with reminder site setting is disabled" do
-    it "does nothing" do
-      Bookmark.expects(:where).never
-      SiteSetting.enable_bookmarks_with_reminders = false
-      subject.execute
-    end
   end
 
   context "when one of the bookmark reminder types is at_desktop" do

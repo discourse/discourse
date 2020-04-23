@@ -67,8 +67,20 @@ class Bookmark < ActiveRecord::Base
       tomorrow: 3,
       next_week: 4,
       next_month: 5,
-      custom: 6
+      custom: 6,
+      start_of_next_business_week: 7,
+      later_this_week: 8
     )
+  end
+
+  def self.count_per_day(opts = nil)
+    opts ||= {}
+    result = where('bookmarks.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
+    result = result.where('bookmarks.created_at <= ?', opts[:end_date]) if opts[:end_date]
+    result = result.joins(:topic).merge(Topic.in_category_and_subcategories(opts[:category_id])) if opts[:category_id]
+    result.group('date(bookmarks.created_at)')
+      .order('date(bookmarks.created_at)')
+      .count
   end
 end
 

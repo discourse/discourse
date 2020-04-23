@@ -1,0 +1,74 @@
+<section class="tag-info">
+  {{#if tagInfo}}
+    <div class="tag-name">
+      {{discourse-tag tagInfo.name tagName="div" size="large"}}
+      {{#if canAdminTag}}
+        {{d-button class="btn-default" action=(action "renameTag") icon="pencil-alt" label="tagging.rename_tag" id="rename-tag"}}
+        {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms" id="edit-synonyms"}}
+        {{#if deleteAction}}
+          {{d-button class="btn-danger delete-tag" action=(action "deleteTag") icon="far-trash-alt" label="tagging.delete_tag" id="delete-tag"}}
+        {{/if}}
+      {{/if}}
+    </div>
+    <div class="tag-associations">
+      {{#if tagInfo.tag_group_names}}
+        {{tagGroupsInfo}}
+      {{/if}}
+      {{#if tagInfo.categories}}
+        {{categoriesInfo}}
+        <br>
+        {{#each tagInfo.categories as |category|}}
+          {{category-link category}}
+        {{/each}}
+      {{/if}}
+      {{#if nothingToShow}}
+        {{#if tagInfo.category_restricted}}
+          {{i18n "tagging.category_restricted"}}
+        {{else}}
+          {{i18n "tagging.default_info"}}
+        {{/if}}
+      {{/if}}
+    </div>
+    {{#if tagInfo.synonyms}}
+      <div class="synonyms-list">
+        <h3>{{i18n "tagging.synonyms"}}</h3>
+        <div>{{html-safe (i18n "tagging.synonyms_description" base_tag_name=tagInfo.name)}}</div>
+        <div class="tag-list">
+          {{#each tagInfo.synonyms as |tag|}}
+            <div class="tag-box">
+              {{discourse-tag tag.id pmOnly=tag.pmOnly tagName="div"}}
+              {{#if editSynonymsMode}}
+                <a href {{action "unlinkSynonym" tag}} class="unlink-synonym">
+                  {{d-icon "unlink" title="tagging.remove_synonym"}}
+                </a>
+                <a href {{action "deleteSynonym" tag}} class="delete-synonym">
+                  {{d-icon "far-trash-alt" title="tagging.delete_tag"}}
+                </a>
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+    {{#if editSynonymsMode}}
+      <section class="add-synonyms field">
+        <label for="add-synonyms">{{i18n "tagging.add_synonyms_label"}}</label>
+        {{tag-chooser
+          id="add-synonyms"
+          tags=newSynonyms
+          everyTag=true
+          excludeSynonyms=true
+          excludeHasSynonyms=true
+          unlimitedTagCount=true}}
+      </section>
+      {{d-button
+        class="btn-default"
+        action=(action "addSynonyms")
+        disabled=addSynonymsDisabled
+        label="tagging.add_synonyms"}}
+    {{/if}}
+  {{/if}}
+  {{#if loading}}
+    <div>{{i18n "loading"}}</div>
+  {{/if}}
+</section>

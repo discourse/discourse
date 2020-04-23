@@ -13,11 +13,11 @@
       </span>
     {{else}}
       {{#if selectKit.filter}}
-      {{#if selectKit.hasNoContent}}
-        <span class="no-content">
-          {{i18n "select_kit.no_content"}}
-        </span>
-      {{/if}}
+        {{#if selectKit.hasNoContent}}
+          <span class="no-content">
+            {{i18n "select_kit.no_content"}}
+          </span>
+        {{/if}}
       {{/if}}
 
       {{#each collections as |collection|}}

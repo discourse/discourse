@@ -1,0 +1,31 @@
+{{#d-modal-body class="reorder-categories full-height-modal" title="categories.reorder.title"}}
+  <div id="rc-scroll-anchor"></div>
+  <table>
+    <thead>
+      <th class="th-cat">{{i18n "categories.category"}}</th>
+      <th class="th-pos">{{i18n "categories.reorder.position"}}</th>
+    </thead>
+    <tbody>
+      {{#each categoriesOrdered as |cat|}}
+        <tr data-category-id={{cat.id}}>
+          <td>
+            <div class={{concat "reorder-categories-depth-" cat.depth}}>
+              {{category-badge cat allowUncategorized="true"}}
+            </div>
+          </td>
+
+          <td>
+            {{number-field number=(readonly cat.position) change=(action "change" cat)}}
+            {{d-button class="btn-default no-text" action=(action "moveUp") actionParam=cat icon="arrow-up"}}
+            {{d-button class="btn-default no-text" action=(action "moveDown") actionParam=cat icon="arrow-down"}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div id="rc-scroll-bottom"></div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button class="btn-primary" action=(action "save") label="categories.reorder.save"}}
+</div>

@@ -473,145 +473,11 @@ describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: topic)
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: post.topic)
       end
       it "marks topic_bookmaked as true" do
         delete "/posts/#{post.id}/bookmark.json"
         expect(JSON.parse(response.body)['topic_bookmarked']).to eq(true)
-      end
-    end
-  end
-
-  describe '#bookmark' do
-    include_examples 'action requires login', :put, "/posts/2/bookmark.json"
-    let!(:post) { post_by_user }
-
-    describe 'when logged in' do
-      before do
-        sign_in(user)
-      end
-
-      fab!(:private_message) { Fabricate(:private_message_post) }
-
-      it "raises an error if the user doesn't have permission to see the post" do
-        put "/posts/#{private_message.id}/bookmark.json", params: { bookmarked: "true" }
-        expect(response).to be_forbidden
-      end
-
-      it 'creates a bookmark' do
-        put "/posts/#{post.id}/bookmark.json", params: { bookmarked: "true" }
-        expect(response.status).to eq(200)
-
-        post_action = PostAction.find_by(user: user, post: post)
-        expect(post_action.post_action_type_id).to eq(PostActionType.types[:bookmark])
-      end
-
-      context "removing a bookmark" do
-        let(:post_action) { PostActionCreator.create(user, post, :bookmark).post_action }
-
-        it "returns the right response when post is not bookmarked" do
-          put "/posts/#{post_by_user.id}/bookmark.json"
-          expect(response.status).to eq(404)
-        end
-
-        it "should be able to remove a bookmark" do
-          post_action
-          put "/posts/#{post.id}/bookmark.json"
-
-          expect(PostAction.find_by(id: post_action.id)).to eq(nil)
-        end
-
-        describe "when user doesn't have permission to see bookmarked post" do
-          it "should still be able to remove a bookmark" do
-            post_action
-            post = post_action.post
-            topic = post.topic
-            topic.convert_to_private_message(admin)
-            topic.remove_allowed_user(admin, user.username)
-
-            expect(Guardian.new(user).can_see_post?(post.reload)).to eq(false)
-
-            put "/posts/#{post.id}/bookmark.json"
-
-            expect(PostAction.find_by(id: post_action.id)).to eq(nil)
-          end
-        end
-
-        describe "when post has been deleted" do
-          it "should still be able to remove a bookmark" do
-            post = post_action.post
-            post.trash!
-
-            put "/posts/#{post.id}/bookmark.json"
-
-            expect(PostAction.find_by(id: post_action.id)).to eq(nil)
-          end
-        end
-      end
-    end
-
-    context "api" do
-      let(:api_key) { Fabricate(:api_key, user: user) }
-      let(:master_key) { Fabricate(:api_key, user: nil) }
-
-      # choosing an arbitrarily easy to mock trusted activity
-      it 'allows users with api key to bookmark posts' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: api_key.key
-        }
-
-        expect(response.status).to eq(200)
-        expect(PostAction.where(
-          post: post,
-          user: user,
-          post_action_type_id: PostActionType.types[:bookmark]
-        ).count).to eq(1)
-      end
-
-      it 'raises an error with a user key that does not match an optionally specified username' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: api_key.key,
-          api_username: 'made_up'
-        }
-
-        expect(response.status).to eq(403)
-      end
-
-      it 'allows users with a master api key to bookmark posts' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: master_key.key,
-          api_username: user.username
-        }
-
-        expect(response.status).to eq(200)
-        expect(PostAction.where(
-          post: post,
-          user: user,
-          post_action_type_id: PostActionType.types[:bookmark]
-        ).count).to eq(1)
-      end
-
-      it 'disallows phonies to bookmark posts' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: SecureRandom.hex(32),
-          api_username: user.username
-        }
-
-        expect(response.status).to eq(403)
-      end
-
-      it 'disallows blank api' do
-        put "/posts/#{post.id}/bookmark.json", params: {
-          bookmarked: "true",
-          api_key: "",
-          api_username: user.username
-        }
-
-        expect(response.status).to eq(403)
       end
     end
   end
@@ -740,24 +606,16 @@ describe PostsController do
 
         master_key = Fabricate(:api_key).key
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          raw: raw,
-          title: title,
-          wpid: 1
-        }
+        post "/posts.json",
+          params: { raw: raw, title: title, wpid: 1 },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         original = response.body
 
-        post "/posts.json", params: {
-          api_username: user.username_lower,
-          api_key: master_key,
-          raw: raw,
-          title: title,
-          wpid: 2
-        }
+        post "/posts.json",
+          params: { raw: raw, title: title, wpid: 2 },
+          headers: { HTTP_API_USERNAME: user.username_lower, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         expect(response.body).to eq(original)
@@ -769,38 +627,24 @@ describe PostsController do
         post_1 = Fabricate(:post)
         master_key = Fabricate(:api_key).key
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          raw: 'this is test reply 1',
-          topic_id: post_1.topic.id,
-          reply_to_post_number: 1
-        }
+        post "/posts.json",
+          params: { raw: 'this is test reply 1', topic_id: post_1.topic.id, reply_to_post_number: 1 },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(1)
         post_1.topic.user.notifications.destroy_all
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          raw: 'this is test reply 2',
-          topic_id: post_1.topic.id,
-          reply_to_post_number: 1,
-          import_mode: true
-        }
+        post "/posts.json",
+          params: { raw: 'this is test reply 2', topic_id: post_1.topic.id, reply_to_post_number: 1, import_mode: true },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(0)
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          raw: 'this is test reply 3',
-          topic_id: post_1.topic.id,
-          reply_to_post_number: 1,
-          import_mode: false
-        }
+        post "/posts.json",
+          params: { raw: 'this is test reply 3', topic_id: post_1.topic.id, reply_to_post_number: 1, import_mode: false },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(1)
@@ -810,14 +654,10 @@ describe PostsController do
         post_1 = Fabricate(:post)
         user_key = ApiKey.create!(user: user).key
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: user_key,
-          raw: 'this is test whisper',
-          topic_id: post_1.topic.id,
-          reply_to_post_number: 1,
-          whisper: true
-        }
+        post "/posts.json",
+          params: { raw: 'this is test whisper', topic_id: post_1.topic.id, reply_to_post_number: 1, whisper: true },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: user_key }
+
         expect(response.status).to eq(403)
       end
 
@@ -825,13 +665,9 @@ describe PostsController do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          title: 'this is a test title',
-          raw: 'this is test body',
-          category: 'invalid'
-        }
+        post "/posts.json",
+          params: { title: 'this is a test title', raw: 'this is test body', category: 'invalid' },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
 
         expect(response.status).to eq(400)
 

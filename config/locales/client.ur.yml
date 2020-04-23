@@ -28,7 +28,6 @@ ur:
     dates:
       time: "h:mm a"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -264,6 +263,12 @@ ur:
       remove: "بُک مارک ہٹائیں"
       confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس ٹاپک سے اپنے تمام بُک مارکس ہٹانا چاہتے ہیں؟"
       save: "محفوظ کریں"
+      reminders:
+        later_today: "آج بعد میں"
+        tomorrow: "کَل"
+        next_week: "اگلے ہفتے"
+        later_this_week: "اِس ہفتے بعد میں"
+        next_month: "اگلے ماہ"
     drafts:
       resume: "جاری رکھیں"
       remove: "خارج کریں"
@@ -519,6 +524,7 @@ ur:
         deny: "انکار"
         denied: "انکار کر دیا"
         undone: "درخواست کالعدم"
+        handle: "رکنیت کی درخواست سے نمٹیں"
       manage:
         title: "مَینَیج"
         name: "نام"
@@ -929,10 +935,6 @@ ur:
         success_staff: "ہم نے آپ کے موجودہ ایڈریس پر ایک اِی میل بھیج دی ہے۔ براہ کرم، تصدیق کی ہدایات پر عمل کریں۔"
       change_avatar:
         title: "اپنے پروفائل کی تصویر تبدیل کریں"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>گَرِیوَّٹار</a>، کی بنیاد پر"
-        gravatar_title: "گَرِیوَّٹار کی ویب سائٹ پر اپنے اوتار کو تبدیل کریں"
-        gravatar_failed: "ہم اِس ایمیل ایڈریس کے ساتھ گَرَیوَٹار نہیں تلاش کرسکے۔"
-        refresh_gravatar_title: "اپنے گَرِیوَّٹار کو رِیفریش کریں"
         letter_based: "سسٹم تفویض کردہ پروفائل تصویر"
         uploaded_avatar: "اپنی مرضی کی تصویر"
         uploaded_avatar_empty: "اپنی مرضی کی تصویر شامل کریں"
@@ -1208,6 +1210,8 @@ ur:
         back: "واپس جائیں"
         again: "دوبارہ کوشش کریں"
         fixed: "پیج لوڈ کریں"
+    modal:
+      close: "بند کریں"
     close: "بند کریں"
     assets_changed_confirm: "یہ ویب سائٹ ابھی ابھی اَپ ڈیٹ کی گئی ہے۔ تازہ ترین ورژن کے لئے ابھی رِیفریش کریں؟"
     logout: "آپ لاگ آؤٹ ہو گئے تھے۔"
@@ -1420,7 +1424,6 @@ ur:
       objects: اشیاء
       symbols: علامات
       flags: فلَیگز
-      custom: اپنی مرضی کے اِیمَوجی
       recent: حال ہی میں استعمال کیے گئے
       default_tone: کوئی جِلد رنگ نہیں
       light_tone: ہلکا جِلد رنگ
@@ -1428,6 +1431,7 @@ ur:
       medium_tone: درمیانا جِلد رنگ
       medium_dark_tone: درمیانا سیاہ جِلد رنگ
       dark_tone: سیاہ جِلد رنگ
+      default: اپنی مرضی کے اِیمَوجی
     shared_drafts:
       title: "مشترکہ ڈرافٹس"
       notice: "یہ ٹاپک صرف اُن لوگوں کیلئے نظر آتا ہے جو <b>{{category}}</b> زُمرَہ کو دیکھ سکتے ہیں۔"
@@ -1574,6 +1578,7 @@ ur:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2326,6 +2331,7 @@ ur:
             title: "ای میل کے متن کا html حصہ دکھائیں"
             button: "HTML"
       bookmarks:
+        created: "بنایا گیا"
         name: "نام"
     category:
       can: "کر سکتا ہے&hellip; "
@@ -3693,7 +3699,6 @@ ur:
           staff: "سٹاف"
           suspended: "معطل کردہ"
           silenced: "خاموش کیو ہوئے"
-          suspect: "مشتبہ"
           staged: "سٹَیجڈ"
         approved: "منظورشدہ؟"
         titles:
@@ -3710,7 +3715,6 @@ ur:
           moderators: "ماڈریٹرز"
           silenced: "خاموش کردہ صارفین"
           suspended: "معطل کردہ صارفین"
-          suspect: "مشتبہ صارفین"
           staged: "سٹَیجڈ صارفین"
         not_verified: "غیر تصدیق شدہ"
         check_email:
@@ -4059,6 +4063,7 @@ ur:
         help: "نئی اِیمَوجی شامل کریں جو سب کے لئے دستیاب ہوگی۔ (پیشہ وَرَانہ ٹِپ: ایک بار میں ایک سے زیادہ فائلوں کو ڈرَیگ & ڈراپ کریں)"
         add: "نئی اِیمَوجی شامل کریں"
         name: "نام"
+        group: "گروپ"
         image: "تصویر"
         delete_confirm: "کیا آپ واقعی :%{name}: اِیمَوجی حذف کرنا چاہتے ہیں؟"
       embedding:
@@ -4085,7 +4090,6 @@ ur:
         save: "اَیمبَیڈ کرنے کی سیٹِنگ محفوظ کریں"
       permalink:
         title: "دائمی لِنکس"
-        description: "براہ کرم نوٹ کریں کہ یہ صرف بیرونی ذرائع پر لاگو ہوتا ہے، آپ کے فورم پر شائع کردہ لنکس کو ری ڈائریکٹ نہیں کیا جائے گا۔"
         url: "URL"
         topic_id: "ٹاپک ID"
         topic_title: "ٹاپک"

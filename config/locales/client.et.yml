@@ -28,7 +28,6 @@ et:
     dates:
       time: "hh:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMMM hh:mm"
       long_no_year_no_time: "D. MMMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D. MMMM, YYYY hh:mm"
@@ -234,6 +233,12 @@ et:
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       remove: "Eemalda järjehoidja"
       save: "Salvesta"
+      reminders:
+        later_today: "Täna hiljem"
+        tomorrow: "Homme"
+        next_week: "Järgmisel nädalal"
+        later_this_week: "iljem sel nädalal"
+        next_month: "Järgmisel kuul"
     drafts:
       resume: "Taasta"
       remove: "Eemalda"
@@ -702,10 +707,6 @@ et:
         success: "Saatsime sellele aadressile meili. Palun järgi seal olevaid juhiseid."
       change_avatar:
         title: "Muuda oma profiilipilti"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseerub"
-        gravatar_title: "Oma avatari muuda Gravatar'i veebilehel"
-        gravatar_failed: "Selle e-posti aadressi küljest Gravatari ei leitud."
-        refresh_gravatar_title: "Värskenda oma Gravatar'i"
         letter_based: "Süsteemi poolt määratud profiilipilt"
         uploaded_avatar: "Individuaalne pilt"
         uploaded_avatar_empty: "Lisage individuaalne pilt"
@@ -955,6 +956,8 @@ et:
         back: "Mine tagasi"
         again: "Proovi uuesti"
         fixed: "Lae lehekülg"
+    modal:
+      close: "Sulge"
     close: "Sulge"
     assets_changed_confirm: "See sait on just uuendatud. Värskendan nüüd viimasele versioonile?"
     logout: "Sind logiti välja."
@@ -1115,7 +1118,6 @@ et:
       filter_placeholder: Otsi emojit
       objects: Objektid
       flags: Tähised
-      custom: Kohandatud emoji
       recent: Viimati kasutatud
       default_tone: Nahatooni pole
       light_tone: Hele nahatoon
@@ -1123,6 +1125,7 @@ et:
       medium_tone: Keskmine nahatoon
       medium_dark_tone: Keskmiselt tume nahatoon
       dark_tone: Tume nahatoon
+      default: Kohandatud emoji
     shared_drafts:
       destination_category: "Sihtkategooria"
       publishing: "Teema avaldamine..."
@@ -1236,6 +1239,7 @@ et:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1842,6 +1846,7 @@ et:
           html_part:
             button: "HTML"
       bookmarks:
+        created: "Loodud"
         name: "Nimi"
     category:
       can: "saab&hellip; "
@@ -2875,7 +2880,6 @@ et:
           staff: "Meeskond"
           suspended: "Peatatud"
           silenced: "Vaigistatud"
-          suspect: "Kahtlane"
         approved: "Heakskiidetud?"
         titles:
           active: "Aktiivsed kasutajad"
@@ -2891,7 +2895,6 @@ et:
           moderators: "Moderaatorid"
           silenced: "Vaigistatud kasutajad"
           suspended: "Peatatud kasutajad"
-          suspect: "Kahtlased kasutajad"
         not_verified: "Ei ole kontrollitud"
         check_email:
           title: "Näita selle kasutaja meiliaadressi"
@@ -3190,6 +3193,7 @@ et:
         help: "Lisa uued emotikonid kõigile kasutamiseks. (PRO-vihje: pukseeri korraga mitu faili)"
         add: "Lisa uus emotikon"
         name: "Nimi"
+        group: "Grupp"
         image: "Pilt"
         delete_confirm: "Oled Sa kindel, et soovid kustutada :%{name}: emotikoni?"
       embedding:

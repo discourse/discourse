@@ -8,12 +8,17 @@ describe TrustLevel3Requirements do
   subject(:tl3_requirements) { described_class.new(user) }
   fab!(:moderator) { Fabricate(:moderator) }
 
+  fab!(:topic1) { Fabricate(:topic) }
+  fab!(:topic2) { Fabricate(:topic) }
+  fab!(:topic3) { Fabricate(:topic) }
+  fab!(:topic4) { Fabricate(:topic) }
+
   before do
     described_class.clear_cache
   end
 
-  def make_view(id, at, user_id)
-    TopicViewItem.add(id, '11.22.33.44', user_id, at, _skip_redis = true)
+  def make_view(topic, at, user_id)
+    TopicViewItem.add(topic.id, '11.22.33.44', user_id, at, _skip_redis = true)
   end
 
   def like_at(created_by, post, created_at)
@@ -250,27 +255,54 @@ describe TrustLevel3Requirements do
 
       expect(tl3_requirements.num_topics_replied_to).to eq(1)
     end
+
+    it "excludes private messages" do
+      user.save!
+
+      private_topic = create_post(
+        user: moderator,
+        archetype: Archetype.private_message,
+        target_usernames: [user.username, moderator.username]
+      ).topic
+
+      _reply1 = create_post(topic: private_topic, user: user)
+
+      expect(tl3_requirements.num_topics_replied_to).to eq(0)
+    end
   end
 
   describe "topics_viewed" do
     it "counts topics views within last 100 days (default time period), not counting a topic more than once" do
       user.save
-      make_view(9, 1.day.ago,    user.id)
-      make_view(9, 3.days.ago,   user.id) # same topic, different day
-      make_view(3, 4.days.ago,   user.id)
-      make_view(2, 101.days.ago, user.id) # too long ago
+      make_view(topic1, 1.day.ago,    user.id)
+      make_view(topic1, 3.days.ago,   user.id) # same topic, different day
+      make_view(topic2, 4.days.ago,   user.id)
+      make_view(topic3, 101.days.ago, user.id) # too long ago
       expect(tl3_requirements.topics_viewed).to eq(2)
     end
 
     it "counts topics views within last 200 days, respecting tl3_time_period setting" do
       SiteSetting.tl3_time_period = 200
       user.save
-      make_view(9, 1.day.ago,    user.id)
-      make_view(9, 3.days.ago,   user.id) # same topic, different day
-      make_view(3, 4.days.ago,   user.id)
-      make_view(2, 101.days.ago, user.id)
-      make_view(4, 201.days.ago, user.id) # too long ago
+      make_view(topic1, 1.day.ago,    user.id)
+      make_view(topic1, 3.days.ago,   user.id) # same topic, different day
+      make_view(topic2, 4.days.ago,   user.id)
+      make_view(topic3, 101.days.ago, user.id)
+      make_view(topic4, 201.days.ago, user.id) # too long ago
       expect(tl3_requirements.topics_viewed).to eq(3)
+    end
+
+    it "excludes private messages" do
+      user.save
+      private_topic = create_post(
+        user: moderator,
+        archetype: Archetype.private_message,
+        target_usernames: [user.username, moderator.username]
+      ).topic
+
+      make_view(topic1, 1.day.ago, user.id)
+      make_view(private_topic, 1.day.ago, user.id)
+      expect(tl3_requirements.topics_viewed).to eq(1)
     end
   end
 
@@ -288,9 +320,25 @@ describe TrustLevel3Requirements do
   describe "topics_viewed_all_time" do
     it "counts topics viewed at any time" do
       user.save
-      make_view(10, 1.day.ago,    user.id)
-      make_view(9,  100.days.ago, user.id)
-      make_view(8,  101.days.ago, user.id)
+      make_view(topic1, 1.day.ago,    user.id)
+      make_view(topic2,  100.days.ago, user.id)
+      make_view(topic3,  101.days.ago, user.id)
+      expect(tl3_requirements.topics_viewed_all_time).to eq(3)
+    end
+
+    it "excludes private messages" do
+      user.save
+      private_topic = create_post(
+        user: moderator,
+        archetype: Archetype.private_message,
+        target_usernames: [user.username, moderator.username]
+      ).topic
+
+      make_view(topic1, 1.day.ago,    user.id)
+      make_view(topic2,  100.days.ago, user.id)
+      make_view(topic3,  101.days.ago, user.id)
+      make_view(private_topic, 1.day.ago, user.id)
+      make_view(private_topic, 100.days.ago, user.id)
       expect(tl3_requirements.topics_viewed_all_time).to eq(3)
     end
   end
@@ -336,37 +384,65 @@ describe TrustLevel3Requirements do
   end
 
   describe "num_likes_given" do
-    it "counts likes given in the last 100 days" do
+    before do
       UserActionManager.enable
-
-      recent_post1 = create_post(created_at: 1.hour.ago)
-      recent_post2 = create_post(created_at: 10.days.ago)
-      old_post     = create_post(created_at: 102.days.ago)
-
       user.save
+    end
+
+    let(:recent_post1) { create_post(created_at: 1.hour.ago) }
+    let(:recent_post2) { create_post(created_at: 10.days.ago) }
+    let(:old_post) { create_post(created_at: 102.days.ago) }
+    let(:private_post) do
+      create_post(
+        user: moderator,
+        archetype: Archetype.private_message,
+        target_usernames: [user.username, moderator.username]
+      )
+    end
+
+    it "counts likes given in the last 100 days" do
       like_at(user, recent_post1, 2.hours.ago)
       like_at(user, recent_post2, 5.days.ago)
       like_at(user, old_post, 101.days.ago)
 
       expect(tl3_requirements.num_likes_given).to eq(2)
     end
+
+    it "excludes private messages" do
+      like_at(user, recent_post1, 2.hours.ago)
+      like_at(user, private_post, 2.hours.ago)
+
+      expect(tl3_requirements.num_likes_given).to eq(1)
+    end
   end
 
   describe "num_likes_received" do
-    it "counts likes received in the last 100 days" do
+    before do
       UserActionManager.enable
+    end
 
-      t = Fabricate(:topic, user: user, created_at: 102.days.ago)
-      old_post = create_post(topic: t, user: user, created_at: 102.days.ago)
-      recent_post2 = create_post(topic: t, user: user, created_at: 10.days.ago)
-      recent_post1 = create_post(topic: t, user: user, created_at: 1.hour.ago)
+    let(:topic) { Fabricate(:topic, user: user, created_at: 102.days.ago) }
+    let(:old_post) { create_post(topic: topic, user: user, created_at: 102.days.ago) }
+    let(:recent_post1) { create_post(topic: topic, user: user, created_at: 1.hour.ago) }
+    let(:recent_post2) { create_post(topic: topic, user: user, created_at: 10.days.ago) }
+    let(:private_post) do
+      create_post(
+        user: user,
+        archetype: Archetype.private_message,
+        target_usernames: [liker.username, liker2.username]
+      )
+    end
 
-      liker = Fabricate(:user)
-      liker2 = Fabricate(:user)
+    let(:liker) { Fabricate(:user) }
+    let(:liker2) { Fabricate(:user) }
+
+    it "counts likes received in the last 100 days" do
       like_at(liker, recent_post1, 2.hours.ago)
       like_at(liker2, recent_post1, 2.hours.ago)
       like_at(liker, recent_post2, 5.days.ago)
       like_at(liker, old_post, 101.days.ago)
+      like_at(liker, private_post, 2.hours.ago)
+      like_at(liker2, private_post, 5.days.ago)
 
       expect(tl3_requirements.num_likes_received).to eq(3)
       expect(tl3_requirements.num_likes_received_days).to eq(2)
@@ -513,6 +589,14 @@ describe TrustLevel3Requirements do
     it "are lost if silenced" do
       user.silenced_till = 4.weeks.from_now
       expect(tl3_requirements.requirements_lost?).to eq(true)
+    end
+
+    [3, 4].each do |default_tl|
+      it "is not lost if default_trust_level is #{default_tl}" do
+        SiteSetting.default_trust_level = default_tl
+        tl3_requirements.stubs(:days_visited).returns(1)
+        expect(tl3_requirements.requirements_lost?).to eq(false)
+      end
     end
   end
 

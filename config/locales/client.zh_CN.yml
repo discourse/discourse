@@ -10,7 +10,7 @@ zh_CN:
     number:
       format:
         separator: "."
-        delimiter: "，"
+        delimiter: ","
       human:
         storage_units:
           format: "%n %u"
@@ -29,16 +29,16 @@ zh_CN:
       time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY[年]M[月]"
       long_no_year: "M[月]D[日] HH:mm"
-      long_no_year_no_time: "M月D日"
-      full_no_year_no_time: "M月D日"
-      long_with_year: "YYYY年M月D日 HH:mm"
-      long_with_year_no_time: "YYYY年M月D日"
-      full_with_year_no_time: "YYYY年M月D日"
-      long_date_with_year: "YY年M月D日 LT"
-      long_date_without_year: "M月D日 LT"
-      long_date_with_year_without_time: "YY年M月D日"
-      long_date_without_year_with_linebreak: "M月D日 <br/>LT"
-      long_date_with_year_with_linebreak: "YY年M月D日 <br/>LT"
+      long_no_year_no_time: "M[月]D[日]"
+      full_no_year_no_time: "M[月]D[日]"
+      long_with_year: "YYYY[年]M[月]D[日] HH:mm"
+      long_with_year_no_time: "YYYY[年]M[月]D[日]"
+      full_with_year_no_time: "YYYY[年]M[月]D[日]"
+      long_date_with_year: "YY[年]M[月]D[日] LT"
+      long_date_without_year: "M[月]D[日] LT"
+      long_date_with_year_without_time: "YY[年]M[月]D[日]"
+      long_date_without_year_with_linebreak: "M[月]D[日] <br/>LT"
+      long_date_with_year_with_linebreak: "YY[年]M[月]D[日] <br/>LT"
       wrap_ago: "%{date} 前"
       tiny:
         half_a_minute: "< 1 分钟"
@@ -62,8 +62,8 @@ zh_CN:
           other: "> %{count} 年"
         almost_x_years:
           other: "近 %{count} 年"
-        date_month: "M月D日"
-        date_year: "YY年M月"
+        date_month: "M[月]D[日]"
+        date_year: "YY[年]M[月]"
       medium:
         x_minutes:
           other: "%{count} 分钟"
@@ -71,7 +71,7 @@ zh_CN:
           other: "%{count} 小时"
         x_days:
           other: "%{count} 天"
-        date_year: "YY年M月"
+        date_year: "YY[年]M[月]D[日]"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -102,7 +102,7 @@ zh_CN:
       email: "通过电子邮件分享此链接"
     action_codes:
       public_topic: "于%{when}将此主题设为公开"
-      private_topic: "于%{when}将该次主题转换为私信"
+      private_topic: "于%{when}将该主题转换为私信"
       split_topic: "于%{when}拆分了此主题"
       invited_user: "于%{when}邀请了 %{who}"
       invited_group: "于%{when}邀请了 %{who}"
@@ -127,19 +127,19 @@ zh_CN:
         disabled: "于%{when}解除全站置顶"
       visible:
         enabled: "于%{when}列出"
-        disabled: "于%{when}除名"
+        disabled: "于%{when}隐藏"
       banner:
         enabled: "于%{when}将此设置为横幅。用户关闭横幅前，横幅将显示在每一页的顶部。"
         disabled: "于%{when}移除了该横幅。横幅将不再显示在每一页的顶部。"
       forwarded: "转发上述邮件"
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你新安装的 Discourse！让我们开始<a href='%{url}' data-auto-route='true'>设置向导</a>✨"
-    emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
-    bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级 1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过%{min_users}个时关闭。"
-    bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
+    emails_are_disabled: "出站邮件已经被管理员全局禁用。将不会发送任何邮件提醒。"
+    bootstrap_mode_enabled: "为方便新站点的冷启动，现正处于初始化模式中。所有新用户将被授予信任等级 1，并为他们启用每日邮件摘要。初始化模式会在用户数超过%{min_users}个时关闭。"
+    bootstrap_mode_disabled: "初始化模式将会在24小时内关闭。"
     themes:
       default_description: "默认"
-      broken_theme_alert: "你的网站可能无法正常运行，因为主题/组件%{theme}有错误。 在%{path}禁用它。"
+      broken_theme_alert: "因为主题或组件%{theme}有错误，你的网站可能无法正常运行。 在%{path}禁用它。"
     s3:
       regions:
         ap_northeast_1: "亚太地区（Tokyo）"
@@ -162,7 +162,7 @@ zh_CN:
         us_gov_west_1: "AWS 政府云（US-West）"
         us_west_1: "美国西部（N. California）"
         us_west_2: "美国西部（Oregon）"
-    edit: "编辑标题和分类"
+    edit: "编辑该主题的标题和分类"
     expand: "展开"
     not_implemented: "非常抱歉，这个功能仍在开发中！"
     no_value: "否"
@@ -237,22 +237,33 @@ zh_CN:
       help:
         bookmark: "点击收藏该主题的第一个帖子"
         unbookmark: "点击删除本主题的所有收藏"
+        unbookmark_with_reminder: "点击以移除该主题上的所有收藏和提醒。你在该主题中设定了一个于%{reminder_at}的提醒。"
     bookmarks:
       created: "你已经收藏了此帖"
       not_bookmarked: "收藏此帖"
-      created_with_reminder: "你已收藏此帖并添加了一个于%{date}的提醒"
+      created_with_reminder: "你已经收藏该帖并且设定了一个于%{date}的提醒"
+      created_with_at_desktop_reminder: "你所收藏的此帖将会在你下次使用桌面设备时被提醒。"
       remove: "取消收藏"
       confirm_clear: "你确定要清空这个主题中的所有收藏？"
       save: "保存"
       no_timezone: '你尚未设置时区。您将无法设置提醒。在 <a href="%{basePath}/my/preferences/profile">你的个人资料中</a>设置。'
+      invalid_custom_datetime: "你所提供的日期和时间无效，请重试。"
+      list_permission_denied: "你没有权限查看该用户的收藏。"
       reminders:
         at_desktop: "下次我使用桌面设备时"
-        later_today: "今天晚些时候<br/> {{date}}"
-        next_business_day: "下个工作日<br/>{{date}}"
-        tomorrow: "明天<br/>{{date}}"
-        next_week: "下周<br/>{{date}}"
-        next_month: "下个月<br/> {{date}}"
+        later_today: "今天的某个时候"
+        next_business_day: "下一个工作日"
+        tomorrow: "明天"
+        next_week: "下个星期"
+        later_this_week: "这周的某个时候"
+        start_of_next_business_week: "下周一"
+        next_month: "下个月"
         custom: "自定义日期和时间"
+        last_custom: "最近"
+        none: "无需提醒"
+        today_with_time: "今天%{time}"
+        tomorrow_with_time: "明天%{time}"
+        at_time: "于%{date_time}"
     drafts:
       resume: "复位"
       remove: "移除"
@@ -260,8 +271,8 @@ zh_CN:
       new_private_message: "新私信草稿"
       topic_reply: "草稿回复"
       abandon:
-        confirm: "您已在此主题中打开了另一个草稿。 你确定要放弃吗？"
-        yes_value: "是的，放弃"
+        confirm: "你已在此主题中打开了另一个草稿。 你确定要舍弃它吗？"
+        yes_value: "是的，舍弃"
         no_value: "不，保持"
     topic_count_latest:
       other: "有 {{count}} 个更新或新主题"
@@ -301,8 +312,8 @@ zh_CN:
     choose_message:
       none_found: "无符合的结果"
       title:
-        search: "搜索消息"
-        placeholder: "在此处输入消息标题、URL或ID"
+        search: "搜索私信"
+        placeholder: "在此处输入私信的标题、URL或ID"
     review:
       order_by: "排序依据"
       in_reply_to: "回复给"
@@ -312,24 +323,24 @@ zh_CN:
         formula: "公式"
         subtotal: "小计"
         total: "总计"
-        min_score_visibility: "可见时的最低分数"
+        min_score_visibility: "可见的最低分数"
         score_to_hide: "隐藏帖子的分数"
         take_action_bonus:
           name: "立即执行"
           title: "当工作人员选择采取行动时，会给标记加分。"
         user_accuracy_bonus:
           name: "用户准确性"
-          title: "历史上已同意其标记的用户将获得奖励。"
+          title: "先前已同意其标记的用户将获得奖励。"
         trust_level_bonus:
           name: "信任等级"
           title: "待审阅项目由较高信任级别且具有较高分数的用户创建的。"
         type_bonus:
           name: "奖励类型"
-          title: "某些可审核的类型可以由管理人员加权，以使其具有更高的优先级。"
+          title: "某些可审核类型可以由管理人员加权，以使其具有更高的优先级。"
       claim_help:
-        optional: "你可以认领此条目以防止他人审核。"
+        optional: "你可以认领此条目以避免被他人审核。"
         required: "在你审核之前你必须认领此条目。"
-        claimed_by_you: "你已认领此条目并可审核。"
+        claimed_by_you: "你已认领此条目现在可以审核了。"
         claimed_by_other: "此条目仅可被<b>{{username}}</b>审核。"
       claim:
         title: "认领该主题"
@@ -349,14 +360,14 @@ zh_CN:
       none: "没有项目需要审核"
       view_pending: "查看待审核"
       topic_has_pending:
-        other: "这个主题有 <b>{{count}}</b> 个帖子等待审核"
+        other: "该主题中有 <b>{{count}}</b> 个帖等待审核中"
       title: "审核"
       topic: "主题："
       filtered_topic: "您正在选择性地查看这一主题中的可审核内容。"
       filtered_user: "用户"
       show_all_topics: "显示所有主题"
-      deleted_post: "(帖子已删除)"
-      deleted_user: "(用户已删除)"
+      deleted_post: "(已删除的帖子)"
+      deleted_user: "(已删除的用户)"
       user:
         bio: "简介"
         website: "网站"
@@ -378,7 +389,7 @@ zh_CN:
         reviewable_count: "计数"
         reported_by: "报告人"
         deleted: "[已删除的主题]"
-        original: "（原始主题）"
+        original: "（原主题）"
         details: "详情"
         unique_users:
           other: "{{count}} 位用户"
@@ -405,12 +416,12 @@ zh_CN:
         priority:
           title: "最低优先级"
           low: "（所有）"
-          medium: "中等"
+          medium: "中"
           high: "高"
       conversation:
-        view_full: "查看所有对话"
+        view_full: "查看完整对话"
       scores:
-        about: "该分数是通过举报者的信任等级、该用户以往举报的准确性以及被举报项目的优先级计算得出。"
+        about: "该分数是根据报告者的信任等级、该用户以往举报的准确性以及被举报条目的优先级计算得出的。"
         score: "评分"
         date: "日期"
         type: "类型"
@@ -444,9 +455,9 @@ zh_CN:
           title: "用户"
       approval:
         title: "等待审核中"
-        description: "我们已经保存了你的帖子，不过帖子需要由管理员先审核才能显示。请耐心。"
+        description: "我们已经收到了你的发帖，不过帖子需要由版主审核才能显示。请耐心等待。"
         pending_posts:
-          other: "你有 <strong>{{count}}</strong> 个帖子待审核。"
+          other: "你有 <strong>{{count}}</strong> 个帖子在等待审核中。"
         ok: "确认"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>发表了<a href='{{topicUrl}}'>该主题</a>"
@@ -465,7 +476,7 @@ zh_CN:
     directory:
       filter_name: "按用户名筛选"
       title: "用户"
-      likes_given: "送出赞"
+      likes_given: "点赞"
       likes_received: "获得赞"
       topics_entered: "浏览"
       topics_entered_long: "浏览主题"
@@ -478,7 +489,8 @@ zh_CN:
       days_visited: "访问"
       days_visited_long: "访问天数"
       posts_read: "阅读"
-      posts_read_long: "阅读帖子"
+      posts_read_long: "看帖"
+      last_updated: "最近更新："
       total_rows:
         other: "%{count} 位用户"
     group_histories:
@@ -503,6 +515,7 @@ zh_CN:
         deny: "拒绝"
         denied: "已拒绝"
         undone: "撤销请求"
+        handle: "处理成员请求"
       manage:
         title: "管理"
         name: "名字"
@@ -533,7 +546,7 @@ zh_CN:
       empty:
         posts: "群组成员没有发布帖子。"
         members: "群组没有成员。"
-        requests: "没有用户请求成为此群组的成员"
+        requests: "没有请求加入此群组的请求。"
         mentions: "群组从未被提及过。"
         messages: "群组从未发送过私信。"
         topics: "群组的成员从未发表主题。"
@@ -543,7 +556,7 @@ zh_CN:
       leave: "离开"
       request: "请求"
       message: "私信"
-      confirm_leave: "你确定你要离开这个团队吗？"
+      confirm_leave: "你确定要离开这个群组吗？"
       allow_membership_requests: "允许用户向群组所有者发送成员资格请求（需要公开可见的群组）"
       membership_request_template: "用户发送会员请求时向其显示的自定义模板"
       membership_request:
@@ -551,7 +564,7 @@ zh_CN:
         title: "申请加入%{group_name}"
         reason: "向群组拥有者说明你为何属于这个群组"
       membership: "成员资格"
-      name: "群组ID"
+      name: "名称"
       group_name: "群组名"
       user_count: "用户"
       bio: "关于群组"
@@ -563,14 +576,14 @@ zh_CN:
         empty: "没有可见的群组。"
         filter: "根据群组类型筛选"
         owner_groups: "拥有的群组"
-        close_groups: "封闭群组"
+        close_groups: "关闭的群组"
         automatic_groups: "自动分组"
         automatic: "自动"
         closed: "已关闭"
         public: "公开"
         private: "私密"
-        public_groups: "公开群组"
-        automatic_group: 自动群组
+        public_groups: "公开的群组"
+        automatic_group: 自动分组
         close_group: 关闭群组
         my_groups: "我的群组"
         group_type: "群组类别"
@@ -601,7 +614,7 @@ zh_CN:
         messageable: "谁能私信此群组"
         nobody: "没有人"
         only_admins: "管理员"
-        mods_and_admins: "版主与管理员"
+        mods_and_admins: "仅版主和管理员"
         members_mods_and_admins: "组员、版主与管理员"
         owners_mods_and_admins: "仅群组成员、版主与管理员"
         everyone: "任何人"
@@ -610,7 +623,7 @@ zh_CN:
           title: "跟踪"
           description: "你将会在该私信中的每个新帖子发布后收到通知，并且会显示新回复数量。"
         watching_first_post:
-          title: "监看头一帖"
+          title: "监看新主题"
           description: "你将收到有关此组中新消息的通知，但不会回复消息。"
         tracking:
           title: "跟踪"
@@ -631,13 +644,13 @@ zh_CN:
       flair_preview_icon: "预览图标"
       flair_preview_image: "预览图片"
     user_action_groups:
-      "1": "送出赞"
+      "1": "点赞赞"
       "2": "获得赞"
       "3": "收藏"
       "4": "主题"
       "5": "回复"
       "6": "回应"
-      "7": "@我的"
+      "7": "提及"
       "9": "引用"
       "11": "编辑"
       "12": "发送"
@@ -665,9 +678,9 @@ zh_CN:
       topic_sentence:
         other: "%{count} 主题"
       topic_stat_sentence_week:
-        other: "%{count}上周新帖。"
+        other: "过去一周有%{count}个新主题。"
       topic_stat_sentence_month:
-        other: "%{count}上月新帖。"
+        other: "过去一个月有%{count}个新主题。"
       n_more: "分类 (还有%{count}个分类) ..."
     ip_lookup:
       title: IP 地址查询
@@ -726,6 +739,7 @@ zh_CN:
         clear:
           title: "清除"
           warning: "你确定要清除精选主题吗？"
+      use_current_timezone: "使用现在的时区"
       profile_hidden: "此用户公共信息已被隐藏。"
       expand_profile: "展开"
       collapse_profile: "折叠"
@@ -782,22 +796,22 @@ zh_CN:
         warning: "邮件列表模式启用。邮件通知设置被覆盖。"
       tag_settings: "标签"
       watched_tags: "关注"
-      watched_tags_instructions: "你将自动关注有这些标签的所有主题。所有新帖子和新主题会通知你，新帖数量也会显示在主题旁边。"
+      watched_tags_instructions: "你将自动关注所有含有这些标签的主题。你会收到所有新帖子和主题的通知，且新帖子的数量也会显示在主题旁边。"
       tracked_tags: "跟踪"
-      tracked_tags_instructions: "你将自动跟踪这些标签的所有主题，新帖数量将会显示在主题旁边。"
+      tracked_tags_instructions: "你将自动跟踪所有含有这些标签的主题，新帖数量将会显示在主题旁边。"
       muted_tags: "静音"
       muted_tags_instructions: "你将不会收到有这些标签的新主题任何通知，它们也不会出现在“最新”主题列表。"
       watched_categories: "监看"
-      watched_categories_instructions: "你将自动关注这些分类中的所有主题。所有新帖子和新主题会通知你，新帖数量也将显示在主题旁边。"
+      watched_categories_instructions: "你将自动关注这些分类中的所有主题。你会收到所有新帖子和新主题的通知，新帖数量也会显示在主题旁边。"
       tracked_categories: "跟踪"
       tracked_categories_instructions: "你将自动跟踪这些分类中的所有主题。新帖数量将会显示在主题旁边。"
-      watched_first_post_categories: "监看头一帖"
+      watched_first_post_categories: "监看新主题"
       watched_first_post_categories_instructions: "在这些分类里面，每一个新主题的第一帖会通知你。"
-      watched_first_post_tags: "监看头一帖"
+      watched_first_post_tags: "监看新主题"
       watched_first_post_tags_instructions: "在有了这些标签的每一个新主题，第一帖会通知你。"
       muted_categories: "静音"
       muted_categories_instructions: "你不会收到有关这些分类中新主题的任何通知，也不会出现在类别或最新页面上。"
-      muted_categories_instructions_dont_hide: "你不会收到这些组内关于新主题中的通知。"
+      muted_categories_instructions_dont_hide: "你将不会收到在这些分类中的新主题通知。"
       no_category_access: "无法保存，作为审核人你仅具有受限的 分类 访问权限"
       delete_account: "删除我的账户"
       delete_account_confirm: "你真的要永久删除自己的账户吗？删除之后无法恢复！"
@@ -808,8 +822,8 @@ zh_CN:
       users: "用户"
       muted_users: "静音"
       muted_users_instructions: "抑制来自这些用户的所有通知。"
-      ignored_users: "忽略"
-      ignored_users_instructions: "取消所有帖子和来自这些用户的通知。"
+      ignored_users: "忽视"
+      ignored_users_instructions: "封禁所有来自这些用户的帖子和通知。"
       tracked_topics_link: "显示"
       automatically_unpin_topics: "当我完整阅读了主题时自动解除置顶。"
       apps: "应用"
@@ -826,6 +840,7 @@ zh_CN:
         deleted_posts: "已删除"
         suspensions: "封禁"
         warnings_received: "警告"
+        rejected_posts: "被驳回的帖子"
       messages:
         all: "所有"
         inbox: "收件箱"
@@ -875,7 +890,7 @@ zh_CN:
         title: "双重验证"
         enable: "管理两步验证"
         forgot_password: "忘记密码？"
-        confirm_password_description: "确认密码以继续"
+        confirm_password_description: "请确认密码后继续"
         name: "名称"
         label: "编码"
         rate_limit: "请等待另一个验证码。"
@@ -884,11 +899,11 @@ zh_CN:
         disable_description: "请输入来自 app 的验证码"
         show_key_description: "手动输入"
         short_description: |
-          使用一次性安全码保护你的帐户。
+          使用一次性安全码保护你的账户。
         extended_description: |
-          双重身份验证除了你的密码之外还需要一次性令牌，从而为你的帐户增加了额外的安全性。 可以在<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>和<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>设备。
-        oauth_enabled_warning: "请注意，一旦你的帐户启用了双重身份验证，系统就会停用社交登录。"
-        use: "使用身份验证器app"
+          双重验证要求你的密码之外的一次性令牌，从而为你的账户增加了额外的安全性。可以在<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>和<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>设备上生成令牌。
+        oauth_enabled_warning: "请注意，一旦你的账户启用了双重验证，社交登录将被停用。"
+        use: "使用身份验证器应用"
         enforced_notice: "在访问此站点之前，你需要启用双重身份验证。"
         disable: "停用"
         disable_title: "禁用次要身份验证器"
@@ -901,6 +916,7 @@ zh_CN:
           title: "基于凭证的身份验证器"
           add: "新增身份验证器"
           default_name: "我的身份验证器"
+          name_and_code_required_error: "你必须提供你的身份验证器应用的名称和代码。"
         security_key:
           register: "注册"
           title: "安全密钥"
@@ -911,6 +927,7 @@ zh_CN:
           edit: "编辑安全密钥"
           edit_description: "安全密钥名称"
           delete: "删除"
+          name_required_error: "你必须提供安全密钥的名称。"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -927,10 +944,10 @@ zh_CN:
         success_staff: "我们已经发送了一封确认信到你现在的邮箱，请按照邮件内指示完成确认。"
       change_avatar:
         title: "更换头像"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
-        gravatar_title: "在 Gravatar 网站上更改你的头像"
-        gravatar_failed: "我们找不到包含该电子邮件地址的Gravatar。"
-        refresh_gravatar_title: "刷新你的 Gravatar 头像"
+        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a>，基于"
+        gravatar_title: "在{{gravatarName}}网站修改你的头像"
+        gravatar_failed: "我们无法找到此电子邮件的{{gravatarName}}。"
+        refresh_gravatar_title: "刷新你的{{gravatarName}}"
         letter_based: "默认头像"
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "上传自定义图片"
@@ -951,10 +968,10 @@ zh_CN:
         secondary: "次邮箱"
         no_secondary: "没有次邮箱"
         sso_override_instructions: "电子邮件地址可以通过SSO登录来更新。"
-        instructions: "绝不会被公开显示。"
+        instructions: "绝不会被公开显示"
         ok: "将通过邮件验证确认"
         invalid: "请填写正确的邮箱地址"
-        authenticated: "邮箱已经由 {{provider}} 验证了。"
+        authenticated: "你的邮箱已被{{provider}}验证过了"
         frequency_immediately: "如果你没有阅读过摘要邮件中的相关内容，将立即发送电子邮件给你。"
         frequency:
           other: "仅在 {{count}} 分钟内没有访问时发送邮件给你。"
@@ -992,6 +1009,9 @@ zh_CN:
         any: "任意"
       password_confirmation:
         title: "请再次输入密码"
+      invite_code:
+        title: "邀请码"
+        instructions: "账户注册需要邀请码"
       auth_tokens:
         title: "最近使用的设备"
         ip: "IP"
@@ -1004,7 +1024,7 @@ zh_CN:
         was_this_you: "这是你吗？"
         was_this_you_description: "如果不是你，我们建议你更改密码并在任何地方注销。"
         browser_and_device: "{{browser}}在{{device}}"
-        secure_account: "保护我的帐户"
+        secure_account: "保护我的账户"
         latest_post: "你上次发布了......"
       last_posted: "最后发帖"
       last_emailed: "最后邮寄"
@@ -1046,13 +1066,13 @@ zh_CN:
         every_month: "每月"
         every_six_months: "每6个月"
       email_level:
-        title: "当有人引用和回复我的帖子、@我或邀请我至主题时，发送邮件提醒"
+        title: "当有人引用和回复我的帖子、@我或邀请我至主题时，给我发送邮件"
         always: "始终"
         only_when_away: "只在离开时"
         never: "从不"
-      email_messages_level: "有人发私信给我时邮件提醒"
+      email_messages_level: "有人给我发送消息时给我发送邮件"
       include_tl0_in_digests: "摘要邮件中包含新用户的内容"
-      email_in_reply_to: "邮件中包含回复你的内容节选"
+      email_in_reply_to: "在邮件中包含回复内容的节选"
       other_settings: "其它"
       categories_settings: "分类"
       new_topic_duration:
@@ -1115,15 +1135,15 @@ zh_CN:
           text: "通过文件批量邀请"
           success: "文件上传成功，当操作完成时将通过私信通知你。"
           error: "抱歉，文件必须是CSV格式。"
-          confirmation_message: "你将发邮件邀请上传的文件中的所有人。"
+          confirmation_message: "你将通过电子邮件将邀请发送给在上传的文件中的每一个人。"
       password:
         title: "密码"
         too_short: "密码过短"
-        common: "密码过于简单"
+        common: "密码过于常见"
         same_as_username: "密码不能与用户名相同"
         same_as_email: "密码不能与邮箱相同"
         ok: "密码符合要求"
-        instructions: "至少%{count}个字母。"
+        instructions: "至少%{count}个字符"
       summary:
         title: "概要"
         stats: "统计"
@@ -1156,7 +1176,7 @@ zh_CN:
         more_badges: "更多徽章"
         top_links: "热门链接"
         no_links: "暂无链接。"
-        most_liked_by: "谁赞最多"
+        most_liked_by: "谁赞得最多"
         most_liked_users: "赞谁最多"
         most_replied_to_users: "最多回复至"
         no_likes: "暂无赞。"
@@ -1203,6 +1223,9 @@ zh_CN:
         back: "返回"
         again: "重试"
         fixed: "载入"
+    modal:
+      close: "关闭"
+      dismiss_error: "忽略错误"
     close: "关闭"
     assets_changed_confirm: "网站刚更新了，刷新使用新版本？"
     logout: "你已登出用户。"
@@ -1211,6 +1234,12 @@ zh_CN:
       enabled: "站点正处于只读模式。你可以继续浏览，但是回复、赞和其他操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
       logout_disabled: "站点在只读模式下无法登出。"
+    too_few_topics_and_posts_notice_MF: >-
+      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论吧！</a>现{currentTopics, plural, one {仅有<strong>#</strong>个主题} other {共有 <strong>#</strong>个主题}}和{currentPosts, plural, one {<strong>#</strong>个帖子} other {<strong>#</strong>个帖子}}。访客需要更多的阅读和回复——我们建议至少 {requiredTopics, plural, one {<strong>#</strong>个主题} other {<strong>#</strong>个主题}}和{requiredPosts, plural, one {<strong>#</strong>个帖子} other {<strong>#</strong>个帖子}}。此消息仅管理人员可见。
+    too_few_topics_notice_MF: >-
+      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论吧！</a>现{currentTopics, plural, one {仅有<strong>#</strong>个主题} other { 共有 <strong>#</strong>个主题}}。访客需要更多的阅读和回复——我们建议至少{requiredTopics, plural, one {<strong>#</strong>个主题} other {<strong>#</strong>个主题}}。此消息仅管理人员可见。
+    too_few_posts_notice_MF: >-
+      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论吧！</a>现 {currentPosts, plural, one {仅有<strong>#</strong>个帖子} other {共有<strong>#</strong>个帖子}}。访客需要更多的阅读和回复——我们建议至少{requiredPosts, plural, one {<strong>#</strong>个帖子} other {<strong>#</strong>个帖子}}。此消息仅管理人员可见。
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>达到了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
       reached_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经达到站点设置限制 {limit, plural, one {# error/minute} other {# errors/minute}}。"
@@ -1242,8 +1271,8 @@ zh_CN:
       hide_session: "明天提醒我"
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
-      intro: "你好！看起来你正在享受讨论，但你尚未注册帐户。"
-      value_prop: "当你创建了账户，我们就可以准确地记录你的阅读进度。这样你再次访问时就可以回到上次离开的地方。只要有人回复你，你也可以通过此处和电子邮件收到通知。而且你还可以赞帖子，向他人分享感激之情。:heartbeat:"
+      intro: "你好！看起来你正在享受讨论，但还没有注册一个账户。"
+      value_prop: "当你创建了账户，我们就可以准确地记录你的阅读进度，你再次访问时就可以回到之前离开的地方。当有人回复你，你可以通过这里或电子邮件收到通知。并且你还可以通过点赞帖子向他人分享你的喜爱之情。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"
@@ -1290,12 +1319,12 @@ zh_CN:
     email_login:
       link_label: "给我通过邮件发送一个登录链接"
       button_label: "通过邮件"
-      complete_username: "如果帐户与用户名<b>%{username}</b>匹配，你很快就会收到一封带有登录链接的电子邮件。"
-      complete_email: "如果帐户与<b>%{email}</b>匹配，你很快就会收到一封带有登录链接的电子邮件。"
-      complete_username_found: "我们找到了一个与用户名<b>%{username}</b>匹配的帐户，你很快就会收到一封带有登录链接的电子邮件。"
-      complete_email_found: "我们发现了一个与<b>%{email}</b>相匹配的帐户，你很快就会收到一封带有登录链接的电子邮件。"
-      complete_username_not_found: "没有帐户与用户名<b>%{username}</b>匹配"
-      complete_email_not_found: "没有帐户匹配<b>%{email}</b>"
+      complete_username: "如果有一个与用户名<b>%{username}</b>相匹配的账户，你很快就会收到一封带有登录链接的电子邮件。"
+      complete_email: "如果<b>%{email}</b>与账户相匹配，你很快就会收到一封带有登录链接的电子邮件。"
+      complete_username_found: "我们找到了一个与用户名<b>%{username}</b>相匹配的账户，你很快就会收到一封带有登录链接的电子邮件。"
+      complete_email_found: "我们发现了一个与<b>%{email}</b>相匹配的账户，你很快就会收到一封带有登录链接的电子邮件。"
+      complete_username_not_found: "没有与用户名<b>%{username}</b>相匹配的账户"
+      complete_email_not_found: "没有账户匹配<b>%{email}</b>"
       confirm_title: "转入到%{site_name}"
       logging_in_as: "用%{email}登录"
       confirm_button: 登录完成
@@ -1370,7 +1399,7 @@ zh_CN:
       welcome_to: "欢迎来到%{site_name}！"
       invited_by: "邀请你的是："
       social_login_available: "你也可以通过任何使用这个邮箱的社交网站登录。"
-      your_email: "你的帐户邮箱地址是<b>%{email}</b>。"
+      your_email: "你的账户的邮箱地址为<b>%{email}</b>。"
       accept_invite: "接受邀请"
       success: "已创建你的账户，你现在可以登录了。"
       name_label: "昵称"
@@ -1420,7 +1449,7 @@ zh_CN:
         to_before_from: "截至日期必须晚于开始日期。"
     emoji_picker:
       filter_placeholder: 查找表情符号
-      smileys_&_emotion: 笑脸与表情
+      smileys_&_emotion: 笑脸与情感
       people_&_body: 人与身体
       animals_&_nature: 动物与自然
       food_&_drink: 饮食
@@ -1429,7 +1458,6 @@ zh_CN:
       objects: 物品
       symbols: 符号
       flags: 标记
-      custom: 自定义表情符号
       recent: 近期使用
       default_tone: 无肤色
       light_tone: 浅肤色
@@ -1437,6 +1465,7 @@ zh_CN:
       medium_tone: 中间肤色
       medium_dark_tone: 中深肤色
       dark_tone: 深肤色
+      default: 自定义表情符号
     shared_drafts:
       title: "共享草稿"
       notice: "只有那些可以看到<b>{{category}}</b>分类的人才能看到此主题。"
@@ -1472,7 +1501,7 @@ zh_CN:
         title_too_short: "标题过短，至少 {{min}} 个字"
         title_too_long: "标题过长，最多 {{max}} 个字"
         post_missing: "帖子不能为空"
-        post_length: "帖子至少应有 {{min}} 个字"
+        post_length: "帖子至少要有{{min}} 个字符"
         try_like: "试试{{heart}}按钮？"
         category_missing: "未选择分类"
         tags_missing: "你必须至少选择{{count}}个标签"
@@ -1575,6 +1604,8 @@ zh_CN:
           other: "{{count}} 个未读通知"
         message:
           other: "{{count}} 条未读私信"
+        high_priority:
+          other: "%{count}个未读的高优先级通知"
       title: "使用@提到你，回复你的内容、私信以及其他的通知"
       none: "现在无法载入通知"
       empty: "未发现通知"
@@ -1583,6 +1614,7 @@ zh_CN:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span>{{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -1630,6 +1662,8 @@ zh_CN:
         posted: "新帖子"
         moved_post: "帖子已移动"
         linked: "链接"
+        bookmark_reminder: "收藏提醒"
+        bookmark_reminder_with_name: "收藏提醒 - %{name}"
         granted_badge: "勋章授予"
         invited_to_topic: "邀请到主题"
         group_mentioned: "群组提及"
@@ -1700,7 +1734,7 @@ zh_CN:
         filters:
           label: 只返回主题/帖子……
           title: 仅在标题中匹配
-          likes: 我给了赞的
+          likes: 我赞过的
           posted: 我参与发帖
           created: 我创建的
           watching: 我正在监看
@@ -1826,14 +1860,14 @@ zh_CN:
         login_required: "此主题需要登录后浏览。"
       server_error:
         title: "载入主题失败"
-        description: "抱歉，无法载入主题。网络连接可能出问题了。请重试一次。如果始终无法加载，请联系我们。"
+        description: "抱歉，无法加载该主题，有可能是网络连接出现了问题。请重试。如果问题依然存在，请联系我们。"
       not_found:
         title: "未找到主题"
         description: "抱歉，无法找到此主题。可能已经被删除了。"
       total_unread_posts:
         other: "这个主题中，你有 {{count}} 条未读的帖子"
       unread_posts:
-        other: "这个主题中，你有 {{count}} 条未读的帖子"
+        other: "这个主题中，你有 {{count}} 个未读的帖子"
       new_posts:
         other: "自你上一次阅读此主题后，又有 {{count}} 个新帖子发表了"
       likes:
@@ -1849,6 +1883,7 @@ zh_CN:
       group_request_sent: "你加入群组的请求已发送。当被接受时你会收到通知。"
       unread_indicator: "还没有成员读过此主题的最新帖子。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
+      bumped_at_title_MF: "{首帖}：{创建于}\n{末帖}：{顶起于}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 查阅最新主题
       suggest_create_topic: 创建一个新的主题吧！
@@ -1859,12 +1894,13 @@ zh_CN:
         title: "主题计时器"
         save: "设置计时器"
         num_of_hours: "小时数："
+        num_of_days: "天数"
         remove: "撤销计时器"
         publish_to: "发布至："
         when: "时间："
         public_timer_types: 主题计时器
         private_timer_types: 用户主题计时器
-        time_frame_required: 请选择时间范围
+        time_frame_required: 请选择一个时间范围
       auto_update_input:
         none: "选择时间范围"
         later_today: "今天的某个时候"
@@ -1901,6 +1937,8 @@ zh_CN:
         title: "自动顶帖"
       reminder:
         title: "提醒我"
+      auto_delete_replies:
+        title: "自动删除回复"
       status_update_notice:
         auto_open: "本主题将在%{timeLeft}自动开启。"
         auto_close: "本主题将在%{timeLeft}自动关闭。"
@@ -1909,6 +1947,7 @@ zh_CN:
         auto_delete: "主题在%{timeLeft}后将被自动删除。"
         auto_bump: "此主题将在%{timeLeft}后自动顶起。"
         auto_reminder: "你将在%{timeLeft}后收到该主题的提醒。"
+        auto_delete_replies: "此主题的回复会在%{duration}后自动删除。"
       auto_close_title: "自动关闭设置"
       auto_close_immediate:
         other: "主题中的最后一帖是 %{hours} 小时前发出的，所以主题将会立即关闭。"
@@ -1935,16 +1974,16 @@ zh_CN:
         reasons:
           mailing_list_mode: "邮件列表模式已启用，将以邮件通知你关于该主题的回复。"
           "3_10": "因为你正监看该主题上的标签，你将会收到通知。"
-          "3_6": "因为你正在关注该分类，你将会收到通知。"
-          "3_5": "因为你开始自动监看该主题，你将会收到通知。"
-          "3_2": "因为你正在关注该主题，你将会收到通知。"
+          "3_6": "因为你正在监看该分类，你将会收到通知。"
+          "3_5": "因为你自动地开始监看该主题，你将会收到通知。"
+          "3_2": "因为你正在监看该主题，你将会收到通知。"
           "3_1": "因为你创建了这个主题，你将会收到通知。"
-          "3": "因为你正在关注该主题，你将会收到通知。"
+          "3": "因为你正在监看该主题，你将会收到通知。"
           "2_8": "因为你追踪了该分类，所以你会看到新回复的数量。"
-          "2_4": "因为你回复过该主题，所以你会看到新回复的数量。"
-          "2_2": "因为你追踪了该主题，所以你会看到新回复的数量。"
-          "2": '因为你<a href="{{basePath}}/u/{{username}}/preferences">读过该主题</a>，所以你会看到新回复的数量。'
-          "1_2": "如果有人@你或回复你，将通知你。"
+          "2_4": "你会看到新回复的数量的原因是你曾经回复过该主题。"
+          "2_2": "你会看到新回复数量的原因是你正在追踪该主题。"
+          "2": '你会看到新回复数量的原因是你<a href="{{basePath}}/u/{{username}}/preferences">阅读过该主题</a>。'
+          "1_2": "有人@你或回复你时会通知你。"
           "1": "如果有人@你或回复你，将通知你。"
           "0_7": "你将忽略关于该分类的所有通知。"
           "0_2": "你将忽略关于该主题的所有通知。"
@@ -1954,13 +1993,13 @@ zh_CN:
           description: "私信有新回复时提醒我，并显示新回复数量。"
         watching:
           title: "监看"
-          description: "在此主题里，每一个新回复将通知你，还将显示新回复的数量。"
+          description: "你将收到该主题所有新回复的通知，还会显示新回复的数量。"
         tracking_pm:
           title: "跟踪"
           description: "在私信标题后显示新回复数量。你只会在别人@你或回复你的帖子时才会收到通知。"
         tracking:
           title: "跟踪"
-          description: "将为该主题显示新回复的数量。如果有人@你或回复你，将通知你。"
+          description: "将为该主题显示新回复的数量。你会在有人@你或回复你的时候收到通知。"
         regular:
           title: "普通"
           description: "如果有人@你或回复你，将通知你。"
@@ -1969,10 +2008,10 @@ zh_CN:
           description: "如果有人@你或回复你，将通知你。"
         muted_pm:
           title: "静音"
-          description: "不会收到该私信的任何通知。"
+          description: "你永远都不会收到任何关于此私信的通知。"
         muted:
           title: "静音"
-          description: "你不会收到此主题的任何通知，它也不会出现在“最新”主题列表。"
+          description: "你不会收到关于此主题的任何通知，它也不会出现在“最新”主题列表中。"
       actions:
         title: "动作"
         recover: "撤销删除主题"
@@ -2077,7 +2116,7 @@ zh_CN:
       move_to:
         title: "移动到"
         action: "移动到"
-        error: "移动话题时发生了错误。"
+        error: "移动帖子时发生了错误。"
       split_topic:
         title: "拆分主题"
         action: "拆分主题"
@@ -2090,28 +2129,39 @@ zh_CN:
         title: "合并主题"
         action: "合并主题"
         error: "合并主题时发生错误。"
-        radio_label: "已存在的主题"
+        radio_label: "现存的主题"
         instructions:
           other: "请选择一个主题以便移动这 <b>{{count}}</b> 个帖子。"
       move_to_new_message:
         title: "移动到新的即时信息"
-        action: "移动到新的即时信息"
-        message_title: "新信息的标题"
-        radio_label: "发新私信"
+        action: "移动到新的私信"
+        message_title: "新私信的标题"
+        radio_label: "创建新私信"
         participants: "参与者"
         instructions:
           other: "你正在发送<b>{{count}}</b>篇帖子到一条新的私信/消息。"
       move_to_existing_message:
-        title: "移动到已有私信/消息"
-        action: "移动到已有私信/消息"
-        radio_label: "已有私信/消息"
+        title: "移动到现存的私信"
+        action: "移动到已存在的私信"
+        radio_label: "现存的私信"
         participants: "参与者"
         instructions:
-          other: "请你选择一个私信/消息以便移动到<b>{{count}}</b>。"
+          other: "请选择你要将<b>{{count}}</b>个帖子所移动到的私信。"
       merge_posts:
         title: "合并选择的帖子"
         action: "合并选择的帖子"
         error: "合并帖子时发生了错误。"
+      publish_page:
+        publish: "出版"
+        description: "当一个主题被出版为一个页面时，其链接是共享的，并且会以自定义的样式显示。"
+        slug: "Slug"
+        publish_url: "你的页面已出版于："
+        topic_published: "你的主题已出版于："
+        preview_url: "你的页面将出版于："
+        invalid_slug: "抱歉，您不能出版此页面。"
+        unpublish: "取消出版"
+        unpublished: "你的页面已经取消出版并且不再可用。"
+        publishing_settings: "出版设置"
       change_owner:
         title: "更改所有者"
         action: "更改作者"
@@ -2119,6 +2169,8 @@ zh_CN:
         placeholder: "新作者的用户名"
         instructions:
           other: "请选择<b>@{{old_user}}</b>创建的{{count}}个帖子的新作者。"
+        instructions_without_old_user:
+          other: "请为此{{count}}个帖子选择一个新的拥有者。"
       change_timestamp:
         title: "修改时间"
         action: "修改时间"
@@ -2140,7 +2192,7 @@ zh_CN:
         select_below:
           label: "选择 +以下"
           title: "选择帖子及其后的所有内容"
-        delete: 删除所选
+        delete: 删除所选项
         cancel: 取消选择
         select_all: 全选
         deselect_all: 全不选
@@ -2210,7 +2262,7 @@ zh_CN:
       few_likes_left: "谢谢你的热情！你今天的赞快用完了。"
       controls:
         reply: "开始撰写本帖的回复"
-        like: "赞一下此帖"
+        like: "点赞此帖"
         has_liked: "已赞"
         read_indicator: "阅读了帖子的用户"
         undo_like: "取消赞"
@@ -2322,13 +2374,18 @@ zh_CN:
             button: "HTML"
       bookmarks:
         create: "创建收藏夹"
+        edit: "编辑收藏"
+        created: "创建日期"
         name: "名称"
-        name_placeholder: "命名收藏夹以帮助你记忆"
-        set_reminder: "设置一个提醒"
+        name_placeholder: "这个收藏是做什么用的？"
+        set_reminder: "提醒我"
         actions:
           delete_bookmark:
             name: "删除收藏"
             description: "从你的个人资料中删除收藏并停止所有有关该收藏的提醒"
+          edit_bookmark:
+            name: "编辑收藏"
+            description: "编辑收藏名称或修改提醒的日期和时间"
     category:
       can: "能够&hellip; "
       none: "（未分类）"
@@ -2344,13 +2401,13 @@ zh_CN:
       tags_allowed_tags: "限制这些标签只能用在此分类"
       tags_allowed_tag_groups: "限制这些标签组只能用在此分类"
       tags_placeholder: "（可选）允许使用的标签列表"
-      tags_tab_description: "上面指定的标签和标签组仅在此分类以及其它也指定了的类别中可用。它们将无法在其它类别中使用。"
+      tags_tab_description: "上面所指定的标签和标签组仅在此分类以及其它也指定了它们的分类中可用。它们将无法在其它分类中使用。"
       tag_groups_placeholder: "（可选）允许使用的标签组列表"
       manage_tag_groups_link: "管理这里的标签组。"
-      allow_global_tags_label: "总是允许其它标题"
+      allow_global_tags_label: "也允许其它标签"
       tag_group_selector_placeholder: "（可选）标签组"
       required_tag_group_description: "要求新主题包含标签组中的标签："
-      min_tags_from_required_group_label: "Num标签:"
+      min_tags_from_required_group_label: "标签数量："
       required_tag_group_label: "标签组："
       topic_featured_link_allowed: "允许在该分类中发布特色链接标题"
       delete: "删除分类"
@@ -2370,7 +2427,7 @@ zh_CN:
       background_color: "背景色"
       foreground_color: "前景色"
       name_placeholder: "应该简明扼要。"
-      color_placeholder: "任何网页颜色"
+      color_placeholder: "任意网页颜色"
       delete_confirm: "你确定要删除此分类吗？"
       delete_error: "在删除此分类时发生了错误。"
       list: "列出分类"
@@ -2378,9 +2435,9 @@ zh_CN:
       change_in_category_topic: "访问分类主题来编辑描述信息"
       already_used: "此色彩已经被另一个分类使用"
       security: "安全性"
-      special_warning: "警告：这个分类是已经自动建立好的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
+      special_warning: "警告：这是一个预设的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
       uncategorized_security_warning: "这是个特殊的分类。如果不知道应该话题属于哪个分类，那么请使用这个分类。这个分类没有安全设置。"
-      uncategorized_general_warning: '这个分类很特别。它用作未选择分类的新主题的默认分类。如果要阻止此行为并强制选择分类，<a href="%{settingLink}">请在此处禁用此设置</a>。如果要更改名称或说明，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
+      uncategorized_general_warning: '这个分类是特殊的。它用作未选择分类的新主题的默认分类。如果你想要避免此行为并强制选择分类，<a href="%{settingLink}">请在此处禁用该设置</a>。如果你要修改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
       pending_permission_change_alert: "你还没有添加%{group}到此分类；点击此按钮添加。"
       images: "图片"
       email_in: "自定义进站电子邮件地址："
@@ -2398,7 +2455,7 @@ zh_CN:
       default_top_period: "默认热门时长："
       allow_badges_label: "允许在此分类中授予徽章"
       edit_permissions: "编辑权限"
-      reviewable_by_group: "除了工作人员之外，也可以审核该分类中的帖子和标记的人："
+      reviewable_by_group: "管理人员之外，可以审核该分类中的帖子和标记的人："
       review_group_name: "群组名"
       require_topic_approval: "所有新主题需要版主审批"
       require_reply_approval: "所有新回复需要版主审批"
@@ -2407,19 +2464,19 @@ zh_CN:
       default_position: "默认位置"
       position_disabled: "分类按照其活跃程度的顺序显示。要固定分类列表的显示顺序，"
       position_disabled_click: '启用“固定分类位置”设置。'
-      minimum_required_tags: "在一个主题中允许的最少标签数量："
+      minimum_required_tags: "在一个主题中至少含有多少个标签："
       parent: "上级分类"
       num_auto_bump_daily: "每天自动碰撞的主题的数量"
       navigate_to_first_post_after_read: "阅读主题后导航到第一个帖子"
       notifications:
         watching:
-          title: "关注"
-          description: "你将自动关注这些分类中的所有主题。每一个主题的每一个新帖，将通知你，还将显示新回复的数量。"
+          title: "监看"
+          description: "你将自动关注这些分类中的所有主题。你会收到所有新主题中的每一个新帖的通知，还会显示新回复的数量。"
         watching_first_post:
-          title: "监看头一帖"
-          description: "您将收到此类别中的新主题的通知，但别人回复主题不会给您发送通知。"
+          title: "监看新主题"
+          description: "你将收到此分类中的新主题通知，不包括回复。"
         tracking:
-          title: "跟踪"
+          title: "追踪"
           description: "你将自动跟踪这些分类中的所有主题。如果有人@你或回复你，将通知你，还将显示新回复的数量。"
         regular:
           title: "普通"
@@ -2431,7 +2488,7 @@ zh_CN:
         label: "搜索优先级"
         options:
           normal: "普通"
-          ignore: "忽略"
+          ignore: "忽视"
           very_low: "非常低"
           low: "低"
           high: "高"
@@ -2605,7 +2662,7 @@ zh_CN:
         yearly:
           title: "年度"
         quarterly:
-          title: "季度的"
+          title: "季度"
         monthly:
           title: "月度"
         weekly:
@@ -2614,7 +2671,7 @@ zh_CN:
           title: "每天"
         all_time: "不限时间"
         this_year: "年"
-        this_quarter: "季度"
+        this_quarter: "季"
         this_month: "月"
         this_week: "周"
         today: "今天"
@@ -2626,8 +2683,8 @@ zh_CN:
       readonly: "阅读"
     lightbox:
       download: "下载"
-      previous: "之前的（左方向键）"
-      next: "继续（右方向键）"
+      previous: "上一个（左方向键）"
+      next: "下一个（右方向键）"
       counter: "%curr% / %total%"
       close: "关闭(Esc)"
       content_load_error: '<a href="%url%">内容</a>无法加载'
@@ -2675,6 +2732,18 @@ zh_CN:
         title: "编辑"
         return: "%{shortcut}返回编辑器"
         fullscreen: "%{shortcut}全屏编辑器"
+      bookmarks:
+        title: "收藏"
+        enter: "%{shortcut} 保存并关闭"
+        later_today: "%{shortcut} 今天晚些时候"
+        later_this_week: "%{shortcut} 本周的晚些时候"
+        tomorrow: "%{shortcut} 明天"
+        next_week: "%{shortcut} 下周"
+        next_month: "%{shortcut} 下个月"
+        next_business_week: "%{shortcut} 下周开始"
+        next_business_day: "%{shortcut} 下个工作日"
+        custom: "%{shortcut} 自定义日期和时间"
+        none: "%{shortcut} 没有提醒"
       actions:
         title: "动作"
         bookmark_topic: "%{shortcut} 切换主题收藏状态"
@@ -2697,6 +2766,10 @@ zh_CN:
         print: "%{shortcut} 打印主题"
         defer: "%{shortcut}延迟主题"
         topic_admin_actions: "%{shortcut}打开主题管理"
+      search_menu:
+        title: "搜索菜单"
+        prev_next: "%{shortcut}上下移动所选内容"
+        insert_url: "%{shortcut}将选定内容插入到打开的编辑器"
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
@@ -2782,19 +2855,19 @@ zh_CN:
       notifications:
         watching:
           title: "监看"
-          description: "你将自动监看该标签中的所有主题。你将收到所有新帖子和主题的通知，此外，主题旁边还会显示未读和新帖子的数量。"
+          description: "你将自动监看所有含有此标签的主题。你将收到所有新帖子和主题的通知，此外，主题旁边还会显示未读和新帖子的数量。"
         watching_first_post:
-          title: "关注第一条帖子"
-          description: "您将收到此标签中的新主题的通知，但对主题的回复不会再给您发送通知。"
+          title: "监控新主题"
+          description: "你将会收到此标签中的新主题的通知，但对主题的回复则不会。"
         tracking:
           title: "跟踪"
-          description: "你将使用此标签自动跟踪所有主题。未读和新帖计数将显示在主题旁。"
+          description: "你将自动监看所有含有此标签的主题。未读和新帖的计数将显示在主题旁边。"
         regular:
           title: "普通"
-          description: "如果有人@你或回复你的帖子，将通知你。"
+          description: "有人@你或回复你的帖子时将会通知你"
         muted:
           title: "静音"
-          description: "你不会收到有关此标签的新主题的任何通知，也不会显示在未读标签上。"
+          description: "你不会收到任何含有此标签的新主题的通知，也不会在未读栏。"
       groups:
         title: "标签组"
         about: "将标签分组以便管理。"
@@ -2833,7 +2906,7 @@ zh_CN:
     invite:
       custom_message: "通过编写<a href>自定义消息</a>，使你的邀请更个性化。"
       custom_message_placeholder: "输入留言"
-      custom_message_template_forum: "你好，你应该来我们这个论坛！"
+      custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于极端负载，暂时向所有人显示，已注销用户会看到它。"
     safe_mode:
@@ -2846,7 +2919,7 @@ zh_CN:
       tags:
         remove_muted_tags_from_latest:
           always: "始终"
-          only_muted: "单独使用或与其他静音标签一起使用时"
+          only_muted: "单独或与其它静音的标签一起使用时"
           never: "从不"
       reports:
         title: "可用报告列表"
@@ -3096,6 +3169,9 @@ zh_CN:
         notification_event:
           name: "通知事件"
           details: "当用户在其feed中收到通知时。"
+        user_badge_event:
+          name: "徽章授予事件"
+          details: "当一个用户收到一个徽章时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"
@@ -3243,6 +3319,7 @@ zh_CN:
           theme_name: "主题名称"
           component_name: "组件名称"
           themes_intro: "选择现有主题或安装新主题即可开始使用"
+          themes_intro_emoji: "女艺术家表情符号"
           beginners_guide_title: "使用Discourse主题的初学者指导"
           developers_guide_title: "Discourse主题的开发者指导"
           browse_themes: "浏览社区主题"
@@ -3318,7 +3395,7 @@ zh_CN:
           install: "安装"
           installed: "已安装"
           install_popular: "热门"
-          install_upload: "来自您的设备"
+          install_upload: "来自你的设备"
           install_git_repo: "从 git 仓库"
           install_create: "创建新的"
           about_theme: "关于"
@@ -3468,6 +3545,7 @@ zh_CN:
         format: "格式"
         html: "html"
         text: "text"
+        html_preview: "预览邮件内容"
         last_seen_user: "用户最后登录时间:"
         no_result: "没有找到摘要信息。"
         reply_key: "回复关键字"
@@ -3483,7 +3561,7 @@ zh_CN:
             title: "进站邮件详情"
             error: "错误"
             headers: "头部"
-            subject: "主题"
+            subject: "标题"
             body: "内容"
             rejection_message: "拒绝邮件"
           filters:
@@ -3562,7 +3640,7 @@ zh_CN:
             delete_topic: "删除主题"
             recover_topic: "撤销删除帖子"
             delete_post: "删除帖子"
-            impersonate: "检视"
+            impersonate: "模拟用户"
             anonymize_user: "匿名用户"
             roll_up: "回退 IP 封禁"
             change_category_settings: "更改分类设置"
@@ -3622,6 +3700,8 @@ zh_CN:
             api_key_update: "更新api密钥"
             api_key_destroy: "销毁api密钥"
             override_upload_secure_status: "覆盖上传安全状态"
+            page_published: "页面已出版"
+            page_unpublished: "页面未出版"
         screened_emails:
           title: "已屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -3637,7 +3717,7 @@ zh_CN:
           title: "已屏蔽的 IP"
           description: '受监视的 IP 地址，使用“放行”可将 IP 地址加入白名单。'
           delete_confirm: "确定要撤销对 IP 地址为 %{ip_address} 的规则？"
-          roll_up_confirm: "你确定要将常用的已屏蔽的 IP 地址归类为子网地址吗？"
+          roll_up_confirm: "你确定要将常用屏蔽 IP 地址归类为子网地址吗？"
           rolled_up_some_subnets: "成功地折叠了 IP 封禁记录至这些子网： %{subnets}。"
           rolled_up_no_subnet: "没有可折叠内容。"
           actions:
@@ -3683,7 +3763,7 @@ zh_CN:
           block: "封禁"
           censor: "审查"
           require_approval: "需要审核"
-          flag: "旗标"
+          flag: "标记"
         action_descriptions:
           block: "防止发布包含这些敏感词的帖子。用户提交帖子时会收到错误提示。"
           censor: "允许包含这些敏感词的帖子，但将其替换为隐藏敏感词的字符。"
@@ -3705,10 +3785,10 @@ zh_CN:
           found_matches: "发现匹配："
           no_matches: "无符合的结果"
       impersonate:
-        title: "检视用户视角"
-        help: "使用此工具来检视其他用户的账户以方便调试。你应该在完成后立即退出。"
+        title: "模拟用户"
+        help: "使用此工具来模拟一个用户账户以方便调试。你应该在完成后立即注销。"
         not_found: "无法找到该用户。"
-        invalid: "抱歉，你不能以此用户角度检视。"
+        invalid: "抱歉，你不能模拟此用户。"
       users:
         title: "用户"
         create: "添加管理员用户"
@@ -3724,7 +3804,6 @@ zh_CN:
           staff: "管理人员"
           suspended: "禁止登录"
           silenced: "已禁言"
-          suspect: "怀疑"
           staged: "暂存"
         approved: "已批准？"
         titles:
@@ -3741,7 +3820,6 @@ zh_CN:
           moderators: "版主"
           silenced: "已禁言的用户"
           suspended: "已封禁的用户"
-          suspect: "嫌疑用户"
           staged: "暂存用户"
         not_verified: "未验证"
         check_email:
@@ -3790,7 +3868,7 @@ zh_CN:
         staged: "暂存？"
         show_admin_profile: "管理员"
         show_public_profile: "显示公开介绍"
-        impersonate: "检视角度"
+        impersonate: "模拟用户"
         action_logs: "操作日志"
         ip_lookup: "IP 查询"
         log_out: "退出"
@@ -3808,7 +3886,7 @@ zh_CN:
         reputation: 声誉
         permissions: 权限
         activity: 活动
-        like_count: 送出赞 / 获得赞
+        like_count: 点赞 / 获赞
         last_100_days: "在最近 100 天"
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
@@ -3869,6 +3947,7 @@ zh_CN:
           threshold_reached: "近期该邮箱有过多退信。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
         suspend_modal_title: "封禁用户"
+        confirm_cancel_penalty: "你确定要放弃惩罚吗？"
         trust_level_2_users: "信任等级2用户"
         trust_level_3_requirements: "信任等级 3 要求"
         trust_level_locked_tip: "信任等级已经被锁定，系统将不会升降用户的信任等级"
@@ -3890,7 +3969,7 @@ zh_CN:
           posts_read_all_time: "已读的帖子（全部）"
           flagged_posts: "被标记的帖子"
           flagged_by_users: "标记其的用户"
-          likes_given: "送出赞"
+          likes_given: "点赞"
           likes_received: "获得赞"
           likes_received_days: "获得赞：独立天数"
           likes_received_users: "获得赞：每用户"
@@ -4079,7 +4158,8 @@ zh_CN:
             with_post_time: "<span class=\"username\">%{username}</span> 因在 <span class=\"time\">%{time}</span> 时的 %{link} 帖子"
             with_time: "<span class=\"username\">%{username}</span> 在 <span class=\"time\">%{time}</span>"
         badge_intro:
-          title: "选择现有徽章或创建新徽章来开始"
+          title: "选择现一个现有的徽章或创建一个新的徽章来开始使用"
+          emoji: "女学生表情符号"
           what_are_badges_title: "什么是徽章？"
           badge_query_examples_title: "徽章查询示例"
         mass_award:
@@ -4096,7 +4176,9 @@ zh_CN:
         help: "增加所有人可用的 emoji。（高端技巧：一次性拖进多个文件）"
         add: "增加新的 Emoji"
         name: "名称"
+        group: "群组"
         image: "图片"
+        alt: "自定义表情符号预览"
         delete_confirm: "你确定要删除 :%{name}: emoji 么？"
       embedding:
         get_started: "如果你想要将 Discourse 嵌入至其他网站，添加他们的主机地址。"
@@ -4104,7 +4186,7 @@ zh_CN:
         sample: "使用下列 HTML 代码至你的站点创建和嵌入 Discourse 主题。把<b>REPLACE_ME</b> 替换成你将嵌入至的网址。"
         title: "嵌入"
         host: "允许的主机"
-        class_name: "class 名"
+        class_name: "类名"
         path_whitelist: "路径白名单"
         edit: "编辑"
         category: "发布到分类"
@@ -4116,13 +4198,14 @@ zh_CN:
         embed_post_limit: "嵌入的最大帖子数量。"
         embed_title_scrubber: "从帖子中提取标题的正则表达式"
         embed_truncate: "截断嵌入的帖子"
+        embed_unlisted: "直到有一个回复前，导入的主题不会被列出。"
         embed_whitelist_selector: "允许嵌入的CSS选择器"
         embed_blacklist_selector: "移除嵌入的CSS选择器"
         embed_classname_whitelist: "允许CSS类名"
         save: "保存嵌入设置"
       permalink:
         title: "永久链接"
-        description: "请注意，这仅适用于外部资源，论坛上发布的链接不会被重定向。"
+        description: "所应用的重定向链接无法被论坛识别。"
         url: "URL"
         topic_id: "主题 ID"
         topic_title: "主题"
@@ -4131,6 +4214,7 @@ zh_CN:
         category_id: "分类 ID"
         category_title: "分类"
         external_url: "外部 URL"
+        destination: "目标"
         delete_confirm: 你确定要删除该永久链接？
         form:
           label: "新："
@@ -4144,7 +4228,7 @@ zh_CN:
           title: "替换文本"
           subtitle: "用最新的翻译替换系统生成的类别和主题的文本"
           categories: "分类"
-          topics: "话题"
+          topics: "主题"
           replace: "替换"
   wizard_js:
     wizard:

@@ -30,6 +30,10 @@ module IntegrationHelpers
     user
   end
 
+  def sign_out
+    delete "/session"
+  end
+
   def read_secure_session
     SecureSession.new(session[:secure_session_id])
   end

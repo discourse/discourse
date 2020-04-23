@@ -28,7 +28,6 @@ da:
     dates:
       time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMM HH:mm"
       long_no_year_no_time: "D. MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. MMM YYYY HH:mm"
@@ -265,9 +264,11 @@ da:
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
       save: "Gem"
       reminders:
-        tomorrow: "I morgen <br/>{{date}}"
-        next_week: "Næste uge <br/>{{date}}"
-        next_month: "Næste måned <br/>{{date}}"
+        later_today: "Senere i dag"
+        tomorrow: "I morgen"
+        next_week: "Næste uge"
+        later_this_week: "Senere på ugen"
+        next_month: "Næste Månede"
         custom: "Valgfri dato og tid"
     drafts:
       resume: "Genoptag"
@@ -947,10 +948,6 @@ da:
         success_staff: "Vi har sendt en email til din nuværende adresse. Følg bekræftelsesinstruktionerne."
       change_avatar:
         title: "Skift dit profilbillede"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseret på"
-        gravatar_title: "Skift din avatar på Gravatar's site"
-        gravatar_failed: "Vi kunne ikke finde en Gravatar med den emailadresse"
-        refresh_gravatar_title: "Gendindlæs dit profil billede"
         letter_based: "System tildelt profilbillede"
         uploaded_avatar: "Brugerdefineret profil billede"
         uploaded_avatar_empty: "Tilføj et brugerdefineret profil billede"
@@ -1226,6 +1223,8 @@ da:
         back: "Gå tilbage"
         again: "Prøv igen"
         fixed: "Indlæs side"
+    modal:
+      close: "luk"
     close: "Luk"
     assets_changed_confirm: "Dette site er lige blevet opdateret. Vil du opdatere nu til den seneste version?"
     logout: "Du er blevet logget ud."
@@ -1440,7 +1439,6 @@ da:
       objects: Objekter
       symbols: Symboler
       flags: Markeringer
-      custom: Brugerdefineret humørikoner
       recent: For nylig brugt
       default_tone: Ingen hudfarve
       light_tone: Lys hudfarve
@@ -1448,6 +1446,7 @@ da:
       medium_tone: Medium hudfarve
       medium_dark_tone: Medium mørk hudfarve
       dark_tone: Mørk skin tone
+      default: Brugerdefineret humørikoner
     shared_drafts:
       title: "Delte kladder"
       notice: "Dette emne er kun synligt for dem, der kan se kategorien <b>{{category}}</b> ."
@@ -1593,6 +1592,7 @@ da:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2343,6 +2343,7 @@ da:
             title: "Vis html-delen af e-mailen"
             button: "HTML"
       bookmarks:
+        created: "Oprettet"
         name: "Navn"
     category:
       can: "kan&hellip; "
@@ -3695,7 +3696,6 @@ da:
           staff: "Personale"
           suspended: "Suspenderet"
           silenced: "Mådeholdt (silenced)"
-          suspect: "Mistænkt"
           staged: "Iscenesat"
         approved: "Godkendt?"
         titles:
@@ -3712,7 +3712,6 @@ da:
           moderators: "Moderatorer"
           silenced: "Mådeholdte (silenced) brugere "
           suspended: "Suspenderede brugere"
-          suspect: "Mistænkte brugere"
           staged: "Iscenesatte brugere"
         not_verified: "Ikke verificeret"
         check_email:
@@ -4061,6 +4060,7 @@ da:
         help: "Tilføj en ny emoji, som vil være tilgængelig for alle. (PROTIP: drag & drop flere filer på én gang)"
         add: "Tilføj ny emoji"
         name: "Navn"
+        group: "Gruppe"
         image: "Billede"
         delete_confirm: "Er du sikker på du vil slette emojien: %{name} ?"
       embedding:
@@ -4087,7 +4087,6 @@ da:
         save: "Gem indlejrings-indstillinger"
       permalink:
         title: "Permalinks"
-        description: "Bemærk, at dette kun gælder for eksterne kilder. Links, der er lagt ud på dit forum, bliver ikke omdirigeret."
         url: "URL"
         topic_id: "Emne ID"
         topic_title: "Emne"

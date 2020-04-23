@@ -74,7 +74,7 @@ module DiscourseNarrativeBot
               cancel_timeout_job(user)
 
               BadgeGranter.grant(
-                Badge.find_by(name: self.class::BADGE_NAME),
+                Badge.find_by(name: self.class.badge_name),
                 user
               )
 

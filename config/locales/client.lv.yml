@@ -29,7 +29,6 @@ lv:
     dates:
       time: "hh:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D hh:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY hh:mm"
@@ -252,6 +251,12 @@ lv:
       created: "tu esi pievienojies šim ierakstam grāmatzīmi"
       remove: "Noņemt grāmatzīmi"
       save: "Saglabāt"
+      reminders:
+        later_today: "Vēlāk šodien"
+        tomorrow: "Rītdien"
+        next_week: "Nākamā nedēļā"
+        later_this_week: "Vēlāk šonedēļ"
+        next_month: "Nākamā mēnesī"
     drafts:
       resume: "Turpināt"
       remove: "Atcelt"
@@ -679,9 +684,6 @@ lv:
         success: "Mēs aizsūtījām e-pastu uz šo adresi. Lūdzu sekojiet apstiprināšanas instrukcijām vēstulē."
       change_avatar:
         title: "Nomainīt savu profila bildi"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, balstīts uz"
-        gravatar_title: "Nomainiet jūsu avatāra attēlu Gravatar lapā"
-        refresh_gravatar_title: "Atjaunot jūsu Gravatar attēlu"
         letter_based: "Sistēmas piešķirtais profila attēls"
         uploaded_avatar: "Savs attēls"
         uploaded_avatar_empty: "Pievienot savu attēlu"
@@ -917,6 +919,8 @@ lv:
         back: "Atgriezties"
         again: "Mēģināt vēlreiz"
         fixed: "Ielādēt lapu"
+    modal:
+      close: "aizvērt"
     close: "Aizvērt"
     assets_changed_confirm: "Šī vietne tikko bija atjaunota. Pārlādēt lapu, lai pārietu uz jaunāko versiju?"
     logout: "Jūs izgājāt."
@@ -1077,7 +1081,6 @@ lv:
       objects: Priekšmeti
       symbols: Simboli
       flags: Sūdzības
-      custom: Lietotāja emoji
       recent: Nesen izmantotie
       default_tone: Noklusējuma ādas krāsa
       light_tone: Gaiša ādas krāsa
@@ -1085,6 +1088,7 @@ lv:
       medium_tone: Vidēja ādas krāsa
       medium_dark_tone: Vidēji tumša ādas krāsa
       dark_tone: Tumša ādas krāsa
+      default: Lietotāja emoji
     composer:
       emoji: "Emoji :)"
       more_emoji: "vairāk..."
@@ -1763,6 +1767,7 @@ lv:
             title: "Parādīt e-pasta html daļu"
             button: "HTML"
       bookmarks:
+        created: "Radīts"
         name: "Vārds"
     category:
       can: "var&hellip;"
@@ -2713,7 +2718,6 @@ lv:
           active: "Aktīvi"
           staff: "Personāls"
           suspended: "Apturēts"
-          suspect: "Novērot"
         approved: "Apstiprināt?"
         titles:
           active: "Aktīvi lietotāji"
@@ -2728,7 +2732,6 @@ lv:
           admins: "Administratori"
           moderators: "Moderātori"
           suspended: "Atceltie lietotāji"
-          suspect: "Novēroti (suspect) lietotāji"
         not_verified: "Nav apstiprināts"
         check_email:
           title: "Atklāt šī lietotāja e-pasta adresi"
@@ -3024,6 +3027,7 @@ lv:
         help: "Pievienot jaunu smaidiņu, kas būs pieejams visiem."
         add: "Pievienot Jaunu Smaidiņu"
         name: "Nosaukums"
+        group: "Grupa"
         image: "Attēls"
         delete_confirm: "Vai tiešām vēlies dzēst šo :%{name}: smaidiņu?"
       embedding:

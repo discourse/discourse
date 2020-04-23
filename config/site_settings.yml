@@ -291,7 +291,7 @@ basic:
     default: false
   enable_bookmarks_with_reminders:
     client: true
-    default: false
+    default: true
     hidden: true
   enable_bookmark_at_desktop_reminders:
     client: true
@@ -459,6 +459,10 @@ login:
   email_domains_whitelist:
     default: ""
     type: list
+  enforce_canonical_emails: false
+  auto_approve_email_domains:
+    default: ""
+    type: list
   hide_email_address_taken: false
   log_out_strict: true
   pending_users_reminder_delay:
@@ -539,6 +543,9 @@ users:
     client: true
     default: 15
     min: 1
+  delete_user_self_max_post_count:
+    default: 1
+    min: -1
   redirect_users_to_top_page: true
   prioritize_username_in_ux:
     client: true
@@ -843,6 +850,9 @@ posting:
     type: list
     client: true
     list_type: compact
+  show_copy_button_on_codeblocks:
+    client: true
+    default: false
   delete_old_hidden_posts: true
   enable_emoji:
     default: true
@@ -895,12 +905,10 @@ posting:
   embed_any_origin: false
   embed_topics_list: false
   embed_set_canonical_url: false
-  embed_truncate:
-    default: true
-  embed_support_markdown:
-    default: false
-  embed_whitelist_selector:
-    default: ""
+  embed_unlisted: false
+  embed_truncate: true
+  embed_support_markdown: false
+  embed_whitelist_selector: ""
   allowed_href_schemes:
     client: true
     default: ""
@@ -927,6 +935,8 @@ posting:
     enum: "TrustLevelSetting"
   returning_users_days:
     default: 120
+  enable_page_publishing:
+    default: false
 
 email:
   email_time_window_mins:
@@ -1371,7 +1381,8 @@ security:
       - Lax
       - Strict
       - Disabled
-    regex: "^(Lax|Strict|Disabled)$"
+      - None
+    regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   moderators_create_categories: false
@@ -1969,7 +1980,7 @@ uncategorized:
     hidden: true
 
   pwa_display_browser_regex:
-    default: "iPad|iPhone"
+    default: "a^"
     hidden: true
 
   app_association_android:
@@ -2002,11 +2013,6 @@ uncategorized:
 
   overridden_robots_txt:
     default: ""
-    hidden: true
-
-  enable_new_user_card_route:
-    default: false
-    client: true
     hidden: true
 
 user_preferences:

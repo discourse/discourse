@@ -152,6 +152,18 @@ describe TopicConverter do
         expect(Notification.exists?(user_notification.id)).to eq(false)
         expect(Notification.exists?(admin_notification.id)).to eq(true)
       end
+
+      it "limits PM participants" do
+        SiteSetting.max_allowed_message_recipients = 2
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: topic)
+
+        private_message = topic.convert_to_private_message(post.user)
+
+        # Skips posters and just adds the acting user
+        expect(private_message.topic_allowed_users.count).to eq(1)
+      end
+
     end
 
     context 'topic has replies' do

@@ -1,0 +1,26 @@
+<div class="flagged-post-header">
+  {{reviewable-topic-link reviewable=reviewable tagName=""}}
+  {{#if hasEdits}}
+    <a href {{action "showEditHistory"}}
+      class="has-edits {{historyClass}}"
+      title="{{i18n "post.last_edited_on"}} {{editedDate}}">
+      {{d-icon "pencil-alt"}}
+    </a>
+  {{/if}}
+</div>
+
+<div class="post-contents-wrapper">
+  {{reviewable-created-by user=reviewable.target_created_by tagName=""}}
+  <div class="post-contents">
+    {{reviewable-post-header reviewable=reviewable createdBy=reviewable.target_created_by tagName=""}}
+    <div class="post-body">
+      {{#if reviewable.blank_post}}
+        <p>{{i18n "review.deleted_post"}}</p>
+      {{else}}
+        {{html-safe reviewable.cooked}}
+      {{/if}}
+    </div>
+    {{plugin-outlet name="after-reviewable-flagged-post-body" args=(hash model=reviewable)}}
+    {{yield}}
+  </div>
+</div>

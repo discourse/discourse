@@ -57,7 +57,6 @@ da:
       no_multilevels_components: "Temaer med børnetemaer kan ikke selv være børn af andre temaer"
     settings_errors:
       invalid_yaml: "Forsynet YAML er ugyldig."
-      data_type_not_a_number: "Indstillingen `%{name}`s type er ikke understøttet. Understøttede typer er `integer`, `bool`, `list` og `enum`"
       name_too_long: "Der er en indstilling med et for langt navn. Maksimal længde er 255"
       default_value_missing: "Indstilling af `%{name}` har ingen standard værdi"
       default_not_match_type: "Indstilling af `%{name}`s standard værdi's type stemmer ikke overens med den type fundet i indstillingerne."
@@ -221,7 +220,7 @@ da:
     in_reply_to: "▶ %{username}"
     replies:
       one: "%{count} svar"
-      other: "%{count} svarer"
+      other: "%{count} svar"
     last_reply: "Sidste svar"
     created: "Oprettet"
   no_mentions_allowed: "Beklager, du kan ikke nævne andre brugere."
@@ -293,9 +292,10 @@ da:
   excerpt_image: "billede"
   bookmarks:
     reminders:
-      tomorrow: "I morgen <br/>{{date}}"
-      next_week: "Næste uge <br/>{{date}}"
-      next_month: "Næste måned <br/>{{date}}"
+      later_today: "Senere i dag"
+      tomorrow: "I morgen"
+      next_week: "Næste uge"
+      next_month: "Næste Månede"
       custom: "Valgfri dato og tid"
   groups:
     success:
@@ -967,8 +967,6 @@ da:
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
     summary_score_threshold: "Påkrævet minimum score for et indlæg til at blive inkluderet i 'opsummering af emne'"
-    summary_posts_required: "Minimum antal indlæg i et emne, før 'opsummer dette emne' er aktiveret"
-    summary_likes_required: "Minimum antal likes på et emne før 'opsummer dette emne' er aktiveret"
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
     enable_personal_messages: "Tillad Trust Level 1 (kan konfigureres minimum trust level til at sende beskeder), brugere til at sende og svare på beskeder. Bemærk at moderatorer beskeder, uanset hvad."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
@@ -1009,7 +1007,6 @@ da:
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_instagram_logins: "Aktivér Instagram-login, kræver instagram_consumer_key og instagram_consumer_secret"
-    readonly_mode_during_backup: "Slå \"read-only\" tilstand til mens der foretages backup"
     active_user_rate_limit_secs: "Hvor ofte vi opdaterer feltet 'last_seen_at', i sekunder."
     previous_visit_timeout_hours: "Hvor lang tid et besøg varer før vi regner det med i det 'forrige' besøg, i timer."
     max_likes_per_day: "Maksimalt antal likes per bruger per dag."
@@ -1113,6 +1110,10 @@ da:
   frequent_poster: "Hyppig forfatter"
   redirected_to_top_reasons:
     new_user: "Velkommen til fællesskabet! Dette er de seneste mest populære emner."
+  publish_page:
+    slug_errors:
+      blank: "kan ikke være tom"
+      invalid: "indeholder ugyldige tegn"
   topic_statuses:
     autoclosed_enabled_days:
       one: "Dette emne blev automatisk lukket efter %{count} dag. Nye svar er ikke længere tilladt."
@@ -1485,7 +1486,6 @@ da:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"
       new_topics: "Nye emner"
-      unread_messages: "Ulæste beskeder"
       unread_notifications: "Ulæste beskeder"
       liked_received: "Modtagne \"Synes om\""
       new_users: "Nye brugere"

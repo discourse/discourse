@@ -26,15 +26,14 @@ pt_BR:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      time: "H:mm"
+      time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM H:mm"
       long_no_year_no_time: "D MMM"
-      full_no_year_no_time: "D de MMMM"
+      full_no_year_no_time: "D [de] MMMM"
       long_with_year: "D MMM, YYYY H:mm"
       long_with_year_no_time: "D MMM, YYYY"
-      full_with_year_no_time: "D de MMMM, YYYY"
+      full_with_year_no_time: "D [de] MMMM, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
@@ -153,6 +152,7 @@ pt_BR:
       banner:
         enabled: "tornou isto um banner %{when}. Isto será mostrado no topo de todas as páginas até que seja descartado pelo usuário."
         disabled: "removeu este banner %{when}. Ele não vai mais aparecer no topo de todas as páginas."
+      forwarded: "encaminhado o e-mail acima"
     topic_admin_menu: "ações de tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de e-mail foi globalmente desabilitado por um administrador. Nenhum e-mail de notificações de qualquer tipo será enviado."
@@ -263,19 +263,22 @@ pt_BR:
     bookmarks:
       created: "você marcou esta postagem como favorita"
       not_bookmarked: "marcar postagem como favorita"
-      created_with_reminder: "você marcou esta postagem como favorito com um lembrete em %{date}"
+      created_with_at_desktop_reminder: "você marcou esta postagem como favorita e será lembrado na próxima vez em que estiver em sua área de trabalho"
       remove: "Remover Favorito"
       confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
       save: "Salvar"
       no_timezone: 'Você ainda não definiu um fuso horário. VOcê não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
+      invalid_custom_datetime: "A data e a hora que você forneceu são inválidas, por favor tente novamente."
+      list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário."
       reminders:
         at_desktop: "Da próxima vez que estiver na minha área de trabalho"
-        later_today: "Hoje mais tarde <br/>{{date}}"
-        next_business_day: "Próximo dia comercial <br/>{{date}}"
-        tomorrow: "Amanhã <br/>{{date}}"
-        next_week: "Próxima semana <br/>{{date}}"
-        next_month: "Próximo mês <br/>{{date}}"
+        later_today: "Mais tarde hoje"
+        tomorrow: "Amanhã"
+        next_week: "Próxima semana"
+        later_this_week: "Mais tarde nesta semana"
+        next_month: "Próximo mês"
         custom: "Data e hora personalizadas"
+        none: "Nenhum lembrete necessário"
     drafts:
       resume: "Resumir"
       remove: "Remova"
@@ -386,6 +389,7 @@ pt_BR:
       deleted_user: "(usuário excluído)"
       user:
         bio: "Bio"
+        website: "Website"
         username: "Nome de Usuário"
         email: "E-mail"
         name: "Nome"
@@ -537,6 +541,7 @@ pt_BR:
         deny: "Negar"
         denied: "negado"
         undone: "solicitação desfeita"
+        handle: "tratar pedido de associação"
       manage:
         title: "Gerenciar"
         name: "Nome"
@@ -577,6 +582,8 @@ pt_BR:
       leave: "Sair"
       request: "Solicitar"
       message: "Mensagem"
+      confirm_leave: "Tem certeza de que deseja sair desse grupo?"
+      allow_membership_requests: "Permitir que usuários enviem pedidos de adesão a donos do grupo (Requer grupo visível ao público)"
       membership_request_template: "Modelo personalizado para exibir aos usuários ao enviar uma solicitação de associação"
       membership_request:
         submit: "Enviar Solicitação"
@@ -862,6 +869,7 @@ pt_BR:
         deleted_posts: "postagens excluídas"
         suspensions: "suspensões"
         warnings_received: "avisos"
+        rejected_posts: "postagens rejeitadas"
       messages:
         all: "Todas"
         inbox: "Caixa de entrada"
@@ -937,6 +945,7 @@ pt_BR:
           title: "Autenticadores Baseados em Token"
           add: "Novo Autenticador"
           default_name: "Meu Autenticador"
+          name_and_code_required_error: "Você deve fornecer um nome e o código do seu aplicativo de autenticação."
         security_key:
           register: "Registro"
           title: "Chaves de Segurança"
@@ -947,6 +956,7 @@ pt_BR:
           edit: "Editar Chave de Segurança"
           edit_description: "Nome da Chave de Segurança"
           delete: "Excluir"
+          name_required_error: "Você deve fornecer um nome para sua chave de segurança."
       change_about:
         title: "Modificar Sobre Mim"
         error: "Houve um erro ao alterar este valor."
@@ -963,10 +973,6 @@ pt_BR:
         success_staff: "Enviamos um e-mail para o seu endereço atual. Por favor, siga as instruções de confirmação."
       change_avatar:
         title: "Alterar sua imagem de perfil"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
-        gravatar_title: "Alterar seu avatar no site do Gravatar"
-        gravatar_failed: "Não conseguimos encontrar um Gravatar com este endereço de e-mail."
-        refresh_gravatar_title: "Atualizar seu Gravatar"
         letter_based: "Imagem de perfil atribuída pelo sistema"
         uploaded_avatar: "Imagem personalizada"
         uploaded_avatar_empty: "Adicionar uma imagem personalizada"
@@ -1029,6 +1035,8 @@ pt_BR:
         any: "qualquer"
       password_confirmation:
         title: "Senha Novamente"
+      invite_code:
+        title: "Código de convite"
       auth_tokens:
         title: "Dispositivos Usados Recentemente"
         ip: "IP"
@@ -1249,6 +1257,8 @@ pt_BR:
         back: "Voltar"
         again: "Tentar Novamente"
         fixed: "Carregar Página"
+    modal:
+      close: "fechar"
     close: "Fechar"
     assets_changed_confirm: "Este site acabou de ser atualizado. Atualizar a página agora para ver a última versão?"
     logout: "Você foi desconectado."
@@ -1475,7 +1485,6 @@ pt_BR:
       objects: Objetos
       symbols: Símbolos
       flags: Sinalizações
-      custom: Emojis personalizados
       recent: Usados recentemente
       default_tone: Sem tom de pele
       light_tone: Tom de pele claro
@@ -1483,6 +1492,7 @@ pt_BR:
       medium_tone: Tom de pele médio
       medium_dark_tone: Tom de pele médio escuro
       dark_tone: Tom de pele escuro
+      default: Emojis personalizados
     shared_drafts:
       title: "Rascunhos Compartilhados"
       notice: "Este tópico só é visível para aqueles que podem ver a categoria <b>{{category}}</b>."
@@ -1630,6 +1640,7 @@ pt_BR:
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
+      bookmark_reminder: "<span>{{username}}</span> {{description}}"
       replied: "<span>{{username}}</span> {{description}}"
       posted: "<span>{{username}}</span> {{description}}"
       edited: "<span>{{username}}</span> {{description}}"
@@ -2406,9 +2417,8 @@ pt_BR:
             button: "HTML"
       bookmarks:
         create: "Criar marcador"
+        created: "Criado"
         name: "Nome"
-        name_placeholder: "Nomeie o marcador para ajudar a melhorar sua memória"
-        set_reminder: "Definir um lembrete"
     category:
       can: "pode&hellip; "
       none: "(sem categoria)"
@@ -3831,7 +3841,6 @@ pt_BR:
           staff: "Equipe"
           suspended: "Suspenso"
           silenced: "Silenciado"
-          suspect: "Suspeito"
           staged: "Encenado"
         approved: "Aprovado?"
         titles:
@@ -3848,7 +3857,6 @@ pt_BR:
           moderators: "Moderadores"
           silenced: "Usuários Silenciados"
           suspended: "Usuários Suspensos"
-          suspect: "Usuários suspeitos"
           staged: "Usuários em etapas"
         not_verified: "Não verificado"
         check_email:
@@ -4199,6 +4207,7 @@ pt_BR:
         help: "Adicionar novo emoji que estará disponível para todos. (DICA: arraste & solte diversos arquivos de uma vez)"
         add: "Adicionar Novo Emoji"
         name: "Nome"
+        group: "Grupo"
         image: "Imagem"
         delete_confirm: "Tem certeza que deseja excluir o emoji :%{name}: ?"
       embedding:
@@ -4225,7 +4234,6 @@ pt_BR:
         save: "Salvar Configurações de Incorporação"
       permalink:
         title: "Links permanentes"
-        description: "Por favor note que isto só se aplica a fontes externas, links postados no seu fórum não serão redirecionados."
         url: "URL"
         topic_id: "ID do Tópico"
         topic_title: "Tópico"

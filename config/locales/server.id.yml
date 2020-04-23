@@ -172,11 +172,6 @@ id:
   bookmarks:
     reminders:
       at_desktop: "Lain kali saat saya di depan komputer"
-      later_today: "Nanti <br/> {{date}}"
-      next_business_day: "Hari kerja berikutnya <br/> {{date}}"
-      tomorrow: "Besok <br/> {{date}}"
-      next_week: "Minggu depan <br/> {{date}}"
-      next_month: "Bulan depan <br/> {{date}}"
       custom: "Tanggal dan waktu tersuai"
   groups:
     errors:
@@ -541,6 +536,10 @@ id:
     types:
       category: "Kategori"
       user: "Pengguna"
+  publish_page:
+    slug_errors:
+      blank: "tidak boleh kosong"
+      invalid: "memuat karakter yang tidak valid"
   topic_statuses:
     autoclosed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
     autoclosed_disabled_lastpost: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
