@@ -40,3 +40,6 @@ b66b277dc44bcd2122dc21965dab209c30636214
 
 # DEV: enforces double quotes ember-template-lint
 c4644c61d97c823b7dd940ffaf0967a104f4b58c
+
+# Migrate to app directory
+7a2e8d3ead63c7d99e1069fc7823e933f931ba85

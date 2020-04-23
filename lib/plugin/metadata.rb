@@ -15,7 +15,6 @@ class Plugin::Metadata
     "discourse-akismet",
     "discourse-assign",
     "discourse-auto-deactivate",
-    "discourse-backup-uploads-to-s3",
     "discourse-bbcode",
     "discourse-bbcode-color",
     "discourse-cakeday",

@@ -45,7 +45,6 @@ TEXT
     official("customer-flair")
     official("discourse-adplugin")
     official("discourse-akismet")
-    official("discourse-backup-uploads-to-s3")
     official("discourse-cakeday")
     official("Canned Replies")
     official("discourse-data-explorer")

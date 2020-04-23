@@ -116,11 +116,9 @@
     flex-direction: column;
 
     #search-min-post-count,
-    .date-picker,
     .combo-box,
     .ac-wrap,
     .control-group,
-    .date-picker-wrapper,
     .search-advanced-category-chooser {
       box-sizing: border-box;
       width: 100%;
@@ -131,15 +129,9 @@
       }
     }
 
-    .date-picker-wrapper {
+    .d-date-input {
       margin-top: 0.5em;
-    }
-
-    .date-picker {
-      box-sizing: border-box;
-      text-align: left;
-      padding: 4px;
-      margin-bottom: 0;
+      width: 100%;
     }
 
     .search-advanced-title {

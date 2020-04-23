@@ -161,13 +161,9 @@
         width: 100%;
       }
 
-      .date-picker-wrapper {
+      .d-date-time-input-range {
+        flex-direction: column;
         width: 100%;
-        .date-picker {
-          box-sizing: border-box;
-          width: 100%;
-          margin: 0;
-        }
       }
     }
   }

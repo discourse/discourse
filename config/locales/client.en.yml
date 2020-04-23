@@ -304,7 +304,6 @@ en:
         unbookmark: "Click to remove all bookmarks in this topic"
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
 
-
     bookmarks:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
@@ -3393,8 +3392,7 @@ en:
           view_table: "table"
           view_graph: "graph"
           refresh_report: "Refresh Report"
-          start_date: "Start Date (UTC)"
-          end_date: "End Date (UTC)"
+          dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
