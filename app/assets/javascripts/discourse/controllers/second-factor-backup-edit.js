@@ -87,10 +87,10 @@ export default Controller.extend(ModalFunctionality, {
         })
         .finally(() => {
           this.setProperties({
-            loading: false,
+            loading: false
           });
         });
-    },
+    }
   },
 
   _hideCopyMessage() {
