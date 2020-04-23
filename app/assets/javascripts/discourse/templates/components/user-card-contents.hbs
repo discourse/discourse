@@ -158,6 +158,12 @@
                 <span>{{this.user.location}}</span>
               </span>
             {{/if}}
+            {{#if showUserLocalTime}}
+              <span class="local-time">
+                {{d-icon "far-clock"}}
+                <span>{{this.formattedUserLocalTime}}</span>
+              </span>
+            {{/if}}
             {{#if this.user.website_name}}
               <span class="website-name">
                 {{d-icon "globe"}}

@@ -38,7 +38,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showMoreBadges: gt("moreBadgesCount", 0),
   showDelete: and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: not("user.isBasic"),
-  hasLocationOrWebsite: or("user.location", "user.website_name"),
+  hasLocationOrWebsite: or(
+    "user.location",
+    "user.website_name",
+    "user._timezone"
+  ),
   isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_excerpt"),
   showCheckEmail: and("user.staged", "canCheckEmails"),
 
@@ -52,6 +56,8 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     "siteSettings.allow_featured_topic_on_user_profiles"
   ),
 
+  showUserLocalTime: setting("display_local_time_in_user_card"),
+
   @discourseComputed("user.staff")
   staff: isStaff => (isStaff ? "staff" : ""),
 
@@ -61,6 +67,12 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   @discourseComputed("user.name")
   nameFirst(name) {
     return prioritizeNameInUx(name, this.siteSettings);
+  },
+
+  @discourseComputed("user")
+  formattedUserLocalTime(user) {
+    const timezone = user.resolvedTimezone();
+    return moment.tz(timezone).format(I18n.t("dates.time_with_zone"));
   },
 
   @discourseComputed("username")

@@ -212,7 +212,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       @include ellipsis;
       color: $primary;
     }
-    .location {
+    .location,
+    .local-time {
       margin-right: 0.5em;
     }
     .website-name a {
