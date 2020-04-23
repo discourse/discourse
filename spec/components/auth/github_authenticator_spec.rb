@@ -60,6 +60,17 @@ describe Auth::GithubAuthenticator do
       expect(result.email_valid).to eq(true)
     end
 
+    it 'can authenticate and update GitHub screen_name for existing user' do
+      GithubUserInfo.create!(user_id: user.id, github_user_id: 100, screen_name: "boris")
+
+      result = authenticator.after_authenticate(data)
+
+      expect(result.user.id).to eq(user.id)
+      expect(result.email).to eq(user.email)
+      expect(result.email_valid).to eq(true)
+      expect(GithubUserInfo.where(user_id: user.id).pluck(:screen_name)).to eq([user.username])
+    end
+
     it 'should use primary email for new user creation over other available emails' do
       hash = {
         extra: {
