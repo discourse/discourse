@@ -28,7 +28,6 @@ class GroupActionLogger
   def log_add_user_to_group(target_user)
     (target_user == @acting_user && @group.public_admission) || can_edit?
 
-    DiscourseEvent.trigger(:user_added_to_group, target_user, @group)
     GroupHistory.create!(default_params.merge(
       action: GroupHistory.actions[:add_user_to_group],
       target_user: target_user
@@ -38,7 +37,6 @@ class GroupActionLogger
   def log_remove_user_from_group(target_user)
     (target_user == @acting_user && @group.public_exit) || can_edit?
 
-    DiscourseEvent.trigger(:user_removed_from_group, target_user, @group)
     GroupHistory.create!(default_params.merge(
       action: GroupHistory.actions[:remove_user_from_group],
       target_user: target_user
