@@ -10,10 +10,10 @@ export default ArrayProxy.extend({
     };
 
     if (topic.get("closed") && topic.get("archived")) {
-      renderIcon("discourse-comment-slash", "locked_and_archived");
+      renderIcon("discourse-comment-close", "locked_and_archived");
     } else {
-      renderIconIf("closed", "discourse-comment-slash", "locked");
-      renderIconIf("archived", "discourse-comment-slash", "archived");
+      renderIconIf("closed", "discourse-comment-close", "locked");
+      renderIconIf("archived", "discourse-comment-close", "archived");
     }
 
     this.forEach(args => renderIconIf(...args));

@@ -2,8 +2,17 @@ import TopicTrackingState from "discourse/models/topic-tracking-state";
 import createStore from "helpers/create-store";
 import Category from "discourse/models/category";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import User from "discourse/models/user";
 
-QUnit.module("model:topic-tracking-state");
+QUnit.module("model:topic-tracking-state", {
+  beforeEach() {
+    this.clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
+  },
+
+  afterEach() {
+    this.clock.restore();
+  }
+});
 
 QUnit.test("sync", function(assert) {
   const state = TopicTrackingState.create();
@@ -167,4 +176,23 @@ QUnit.test("countNew", assert => {
   assert.equal(state.countNew(1), 3);
   assert.equal(state.countNew(2), 2);
   assert.equal(state.countNew(3), 1);
+});
+
+QUnit.test("mute topic", function(assert) {
+  let currentUser = User.create({
+    username: "chuck",
+    muted_category_ids: []
+  });
+
+  const state = TopicTrackingState.create({ currentUser });
+
+  state.trackMutedTopic(1);
+  assert.equal(currentUser.muted_topics[0].topicId, 1);
+
+  state.pruneOldMutedTopics();
+  assert.equal(state.isMutedTopic(1), true);
+
+  this.clock.tick(60000);
+  state.pruneOldMutedTopics();
+  assert.equal(state.isMutedTopic(1), false);
 });

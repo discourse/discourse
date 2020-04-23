@@ -54,7 +54,7 @@ import { on } from "@ember/object/evented";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.40";
+const PLUGIN_API_VERSION = "0.8.41";
 
 class PluginApi {
   constructor(version, container) {
@@ -200,6 +200,9 @@ class PluginApi {
    * Use `options.onlyStream` if you only want to decorate posts within a topic,
    * and not in other places like the user stream.
    *
+   * Decoration normally happens in a detached DOM. Use `options.afterAdopt`
+   * to decorate html content after it is adopted by the main `document`.
+   *
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
@@ -215,7 +218,7 @@ class PluginApi {
   decorateCooked(callback, opts) {
     opts = opts || {};
 
-    addDecorator(callback);
+    addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
 
     if (!opts.onlyStream) {
       decorate(ComposerEditor, "previewRefreshed", callback, opts.id);

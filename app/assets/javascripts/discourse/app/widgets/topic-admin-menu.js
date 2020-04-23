@@ -173,7 +173,7 @@ export default createWidget("topic-admin-menu", {
           className: "topic-admin-close",
           buttonClass: "btn-default",
           action: "toggleClosed",
-          icon: "discourse-comment-slash",
+          icon: "discourse-comment-close",
           label: "actions.close"
         });
       }
