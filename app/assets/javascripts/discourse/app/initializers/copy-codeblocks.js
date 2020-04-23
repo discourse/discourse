@@ -113,9 +113,15 @@ export default {
           return;
         }
 
-        const commands = postElements[0].querySelectorAll(
-          ":scope > pre > code, :scope :not(article):not(blockquote) > pre > code"
-        );
+        let commands = [];
+        try {
+          commands = postElements[0].querySelectorAll(
+            ":scope > pre > code, :scope :not(article):not(blockquote) > pre > code"
+          );
+        } catch (e) {
+          // :scope is probably not supported by this browser
+          commands = [];
+        }
 
         const post = helper.getModel();
 
