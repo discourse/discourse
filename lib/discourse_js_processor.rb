@@ -161,7 +161,8 @@ JS
         path = "discourse/plugins/#{plugin.name}/#{logical_path.sub(/javascripts\//, '')}" if plugin
       end
 
-      path || logical_path
+      # We need to strip the app subdirectory to replicate how ember-cli works.
+      path || logical_path&.gsub('app/', '')
     end
 
   end
