@@ -9,7 +9,7 @@ class BookmarkManager
 
   def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil)
     post = Post.unscoped.includes(:topic).find(post_id)
-    reminder_type = Bookmark.reminder_types[reminder_type.to_sym] if reminder_type.present?
+    reminder_type = parse_reminder_type(reminder_type)
 
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_see_post?(post)
 
@@ -74,16 +74,20 @@ class BookmarkManager
     raise Discourse::NotFound if bookmark.blank?
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_edit?(bookmark)
 
-    if bookmark.errors.any?
-      return add_errors_from(bookmark)
-    end
+    reminder_type = parse_reminder_type(reminder_type)
 
-    bookmark.update(
+    success = bookmark.update(
       name: name,
       reminder_at: reminder_at,
       reminder_type: reminder_type,
       reminder_set_at: Time.zone.now
     )
+
+    if bookmark.errors.any?
+      return add_errors_from(bookmark)
+    end
+
+    success
   end
 
   private
@@ -99,5 +103,10 @@ class BookmarkManager
 
   def update_topic_user_bookmarked(topic:, bookmarked:)
     TopicUser.change(@user.id, topic, bookmarked: bookmarked)
+  end
+
+  def parse_reminder_type(reminder_type)
+    return if reminder_type.blank?
+    reminder_type.is_a?(Integer) ? reminder_type : Bookmark.reminder_types[reminder_type.to_sym]
   end
 end

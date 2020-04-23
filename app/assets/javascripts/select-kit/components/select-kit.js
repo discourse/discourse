@@ -122,6 +122,12 @@ export default Component.extend(
       );
     },
 
+    click(event) {
+      if (this.selectKit.options.preventsClickPropagation) {
+        event.stopPropagation();
+      }
+    },
+
     _modifyComponentForRowWrapper(collection, item) {
       let component = this.modifyComponentForRow(collection, item);
       return component || "select-kit/select-kit-row";
@@ -251,7 +257,7 @@ export default Component.extend(
       autoFilterable: "autoFilterable",
       filterIcon: "search",
       filterPlaceholder: "filterPlaceholder",
-      translatedfilterPlaceholder: null,
+      translatedFilterPlaceholder: null,
       icon: null,
       icons: null,
       maximum: null,
@@ -266,7 +272,8 @@ export default Component.extend(
       placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
-      castInteger: false
+      castInteger: false,
+      preventsClickPropagation: false
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -475,10 +482,7 @@ export default Component.extend(
         this.selectKit.options.allowAny &&
         !this.selectKit.isExpanded
       ) {
-        return this.defaultItem(
-          null,
-          I18n.t("select_kit.filter_placeholder_with_any")
-        );
+        return null;
       }
 
       let item;
@@ -747,8 +751,6 @@ export default Component.extend(
     },
 
     _onCloseWrapper(event) {
-      this._focusFilter(this.multiSelect);
-
       this.set("selectKit.highlighted", null);
 
       let boundaryAction = this._boundaryActionHandler("onClose");
@@ -806,24 +808,14 @@ export default Component.extend(
           `[data-select-kit-id=${this.selectKit.uniqueID}-body]`
         );
 
-        if (
-          this.site &&
-          !this.site.mobileView &&
-          popper.offsetWidth < anchor.offsetWidth
-        ) {
-          popper.style.minWidth = `${anchor.offsetWidth}px`;
-        }
-
         const inModal = $(this.element).parents("#discourse-modal").length;
-
-        if (this.site && !this.site.mobileView && inModal) {
-          popper.style.width = `${anchor.offsetWidth}px`;
-        }
 
         let placementStrategy = this.selectKit.options.placementStrategy;
         if (!placementStrategy) {
           placementStrategy = inModal ? "fixed" : "absolute";
         }
+
+        const verticalOffset = this.multiSelect ? 0 : 2;
 
         /* global Popper:true */
         this.popper = Popper.createPopper(anchor, popper, {
@@ -831,6 +823,12 @@ export default Component.extend(
           strategy: placementStrategy,
           placement: this.selectKit.options.placement,
           modifiers: [
+            {
+              name: "offset",
+              options: {
+                offset: [0, verticalOffset]
+              }
+            },
             {
               name: "positionWrapper",
               phase: "afterWrite",
@@ -840,7 +838,7 @@ export default Component.extend(
                   ".select-kit-wrapper"
                 );
                 if (wrapper) {
-                  let height = this.element.offsetHeight;
+                  let height = this.element.offsetHeight + verticalOffset;
 
                   const body = this.element.querySelector(".select-kit-body");
                   if (body) {
@@ -860,7 +858,8 @@ export default Component.extend(
                     this.element.classList.add("is-under");
                   }
 
-                  wrapper.style.width = `${this.element.offsetWidth}px`;
+                  // - 1 accounts for any rounding error
+                  wrapper.style.width = `${this.element.offsetWidth - 1}px`;
                   wrapper.style.height = `${height}px`;
                 }
               }
@@ -879,8 +878,29 @@ export default Component.extend(
 
       this._safeAfterRender(() => {
         this._focusFilter();
+        this._scrollToCurrent();
         this.popper && this.popper.update();
       });
+    },
+
+    _scrollToCurrent() {
+      if (this.value && this.mainCollection) {
+        let highlighted;
+        if (this.valueProperty) {
+          highlighted = this.mainCollection.findBy(
+            this.valueProperty,
+            this.value
+          );
+        } else {
+          const index = this.mainCollection.indexOf(this.value);
+          highlighted = this.mainCollection.objectAt(index);
+        }
+
+        if (highlighted) {
+          this._scrollToRow(highlighted);
+          this.set("selectKit.highlighted", highlighted);
+        }
+      }
     },
 
     _focusFilter(forceHeader = false) {

@@ -18,15 +18,9 @@
       {{#link-to "userActivity.likesGiven"}}{{i18n "user_action_groups.1"}}{{/link-to}}
     </li>
     {{#if user.showBookmarks}}
-      {{#if bookmarksWithRemindersEnabled}}
-        <li>
-          {{#link-to "userActivity.bookmarksWithReminders"}}{{i18n "user_action_groups.3"}}{{/link-to}}
-        </li>
-      {{else}}
-        <li>
-          {{#link-to "userActivity.bookmarks"}}{{i18n "user_action_groups.3"}}{{/link-to}}
-        </li>
-      {{/if}}
+      <li>
+        {{#link-to 'userActivity.bookmarksWithReminders'}}{{i18n 'user_action_groups.3'}}{{/link-to}}
+      </li>
     {{/if}}
     {{plugin-outlet
       name="user-activity-bottom"

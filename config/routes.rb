@@ -94,6 +94,7 @@ Discourse::Application.routes.draw do
         get 'bulk'
         get 'bulk-complete' => 'groups#bulk'
         put 'bulk' => 'groups#bulk_perform'
+        put "automatic_membership_count" => "groups#automatic_membership_count"
       end
       member do
         put "owners" => "groups#add_owners"
@@ -137,6 +138,7 @@ Discourse::Application.routes.draw do
       get "leader_requirements" => "users#tl3_requirements"
       get "tl3_requirements"
       put "anonymize"
+      post "merge"
       post "reset_bounce_score"
       put "disable_second_factor"
     end
@@ -585,7 +587,6 @@ Discourse::Application.routes.draw do
   put "admin/groups/:id/members" => "groups#add_members", constraints: AdminConstraint.new
 
   resources :posts do
-    put "bookmark"
     delete "bookmark", to: "posts#destroy_bookmark"
     put "wiki"
     put "post_type"

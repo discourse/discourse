@@ -83,5 +83,15 @@ describe TopicListItemSerializer do
 
       expect(json[:tags]).to eq([])
     end
+
+    it 'return posters' do
+      json = TopicListItemSerializer.new(topic,
+        scope: Guardian.new(user),
+        hidden_tag_names: [hidden_tag.name],
+        root: false
+      ).as_json
+
+      expect(json[:posters].length).to eq(1)
+    end
   end
 end

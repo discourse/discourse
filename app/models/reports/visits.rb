@@ -2,7 +2,7 @@
 
 Report.add_report('visits') do |report|
   group_filter = report.filters.dig(:group)
-  report.add_filter('group', default: group_filter)
+  report.add_filter('group', type: 'group', default: group_filter)
 
   report.icon = 'user'
 

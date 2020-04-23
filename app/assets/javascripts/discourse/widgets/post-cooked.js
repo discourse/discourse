@@ -241,6 +241,7 @@ export default class PostCooked {
         .slice(0, -1);
       if (username.length > 0 && this.ignoredUsers.includes(username)) {
         $aside.find("p").remove();
+        $aside.addClass("ignored-user");
       }
     }
     $(".quote-controls", $aside).html(expandContract + navLink);

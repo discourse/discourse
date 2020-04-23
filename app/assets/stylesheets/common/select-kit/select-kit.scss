@@ -111,6 +111,7 @@
       margin-left: auto;
       padding-left: 5px;
       pointer-events: none;
+      color: inherit;
     }
 
     .d-button-label {
@@ -132,6 +133,7 @@
     background: $secondary;
     box-sizing: border-box;
     min-width: inherit;
+    width: auto;
   }
 
   .select-kit-row {

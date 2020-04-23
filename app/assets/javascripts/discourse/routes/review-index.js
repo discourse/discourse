@@ -1,4 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { isPresent } from "@ember/utils";
 
 export default DiscourseRoute.extend({
   model(params) {
@@ -23,8 +24,8 @@ export default DiscourseRoute.extend({
       filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
       filterUsername: meta.username,
-      filterFromDate: meta.from_date,
-      filterToDate: meta.to_date,
+      filterFromDate: isPresent(meta.from_date) ? moment(meta.from_date) : null,
+      filterToDate: isPresent(meta.to_date) ? moment(meta.to_date) : null,
       filterSortOrder: meta.sort_order,
       additionalFilters: meta.additional_filters || {}
     });

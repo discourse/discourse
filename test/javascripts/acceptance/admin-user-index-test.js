@@ -15,7 +15,6 @@ acceptance("Admin - User Index", {
           alias_level: 99,
           visible: true,
           automatic_membership_email_domains: "",
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -38,7 +37,9 @@ acceptance("Admin - User Index", {
 QUnit.test("can edit username", async assert => {
   pretender.put("/users/sam/preferences/username", () => [
     200,
-    { "Content-Type": "application/json" },
+    {
+      "Content-Type": "application/json"
+    },
     { id: 2, username: "new-sam" }
   ]);
 

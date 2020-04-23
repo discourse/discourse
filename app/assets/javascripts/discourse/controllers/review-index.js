@@ -1,5 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
+import { isPresent } from "@ember/utils";
 
 export default Controller.extend({
   queryParams: [
@@ -86,12 +87,7 @@ export default Controller.extend({
   },
 
   setRange(range) {
-    if (range.from) {
-      this.set("from", new Date(range.from).toISOString().split("T")[0]);
-    }
-    if (range.to) {
-      this.set("to", new Date(range.to).toISOString().split("T")[0]);
-    }
+    this.setProperties(range);
   },
 
   actions: {
@@ -118,8 +114,12 @@ export default Controller.extend({
         status: this.filterStatus,
         category_id: this.filterCategoryId,
         username: this.filterUsername,
-        from_date: this.filterFromDate,
-        to_date: this.filterToDate,
+        from_date: isPresent(this.filterFromDate)
+          ? this.filterFromDate.toISOString(true).split("T")[0]
+          : null,
+        to_date: isPresent(this.filterToDate)
+          ? this.filterToDate.toISOString(true).split("T")[0]
+          : null,
         sort_order: this.filterSortOrder,
         additional_filters: JSON.stringify(this.additionalFilters)
       });

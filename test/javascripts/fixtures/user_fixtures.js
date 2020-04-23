@@ -204,7 +204,6 @@ export default {
           alias_level: 0,
           visible: true,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null
         },
@@ -216,7 +215,6 @@ export default {
           alias_level: 0,
           visible: true,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null
         }
@@ -395,6 +393,34 @@ export default {
       website: "http://eviltrout.com",
       location: "Toronto",
       featured_user_badge_ids: [5870, 40673, 5868]
+    }
+  },
+  "/u/eviltrout/bookmarks.json": {
+    user_bookmark_list: {
+      bookmarks: [
+        {
+          excerpt: "Here this is my new topic where I yell.",
+          tags: [],
+          id: 576,
+          created_at: "2020-04-07T05:30:40.446Z",
+          topic_id: 119,
+          linked_post_number: 1,
+          post_id: 281,
+          name: "test",
+          reminder_at: null,
+          title: "Yelling topic title :/",
+          deleted: false,
+          hidden: false,
+          category_id: 1,
+          closed: false,
+          archived: false,
+          archetype: "regular",
+          highest_post_number: 5,
+          bumped_at: "2020-04-06T05:20:00.172Z",
+          slug: "yelling-topic-title",
+          username: "someguy"
+        }
+      ]
     }
   },
   "/user_actions.json": {
@@ -2222,7 +2248,11 @@ export default {
             { extras: null, description: "Most Posts", user_id: 5460 },
             { extras: null, description: "Frequent Poster", user_id: 402 },
             { extras: null, description: "Frequent Poster", user_id: 5707 },
-            { extras: "latest", description: "Most Recent Poster", user_id: 32 }
+            {
+              extras: "latest",
+              description: "Most Recent Poster",
+              user_id: 32
+            }
           ]
         },
         {
@@ -2511,7 +2541,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2539,7 +2568,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2567,7 +2595,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,
@@ -2595,7 +2622,6 @@ export default {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: null,
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: null,
           grant_trust_level: null,

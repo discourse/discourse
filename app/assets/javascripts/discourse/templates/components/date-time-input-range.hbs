@@ -1,35 +1,16 @@
-<ul class="panels {{currentPanel}}">
-  <li>
-    {{d-button
-      label="date_time_picker.from"
-      class="from-panel"
-      action=(action "onChangePanel" "from")}}
-  </li>
-  <li>
-    {{d-button
-      label="date_time_picker.to"
-      class="to-panel"
-      action=(action "onChangePanel" "to")}}
-  </li>
-</ul>
+{{date-time-input
+  date=from
+  onChange=(action "onChangeRanges" (hash prop="from"))
+  showTime=showFromTime
+  class="from"
+}}
 
-{{#if error}}
-  <div class="alert error">{{error}}</div>
-{{/if}}
-
-<div class="panel from {{if fromPanelActive "visible"}}">
-  {{date-time-input
-    date=from
-    onChange=(action "_onChange" (hash prop="from"))
-    showTime=showFromTime
-  }}
-</div>
-
-<div class="panel to {{if toPanelActive "visible"}}">
-  {{date-time-input
-    date=to
-    onChange=(action "_onChange" (hash prop="to"))
-    showTime=showToTime
-    clearable=true
-  }}
-</div>
+{{date-time-input
+  date=to
+  relativeDate=from
+  onChange=(action "onChangeRanges" (hash prop="to"))
+  timeFirst=toTimeFirst
+  showTime=showToTime
+  clearable=clearable
+  class="to"
+}}

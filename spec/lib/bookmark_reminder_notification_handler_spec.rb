@@ -8,7 +8,6 @@ RSpec.describe BookmarkReminderNotificationHandler do
   fab!(:user) { Fabricate(:user) }
 
   before do
-    SiteSetting.enable_bookmarks_with_reminders = true
     Discourse.redis.flushall
   end
 
@@ -85,17 +84,6 @@ RSpec.describe BookmarkReminderNotificationHandler do
     context "when there are no pending bookmark at desktop reminders" do
       it "does nothing" do
         DistributedMutex.expects(:synchronize).never
-        send_reminder
-      end
-    end
-
-    context "when enable bookmarks with reminders is disabled" do
-      before do
-        SiteSetting.enable_bookmarks_with_reminders = false
-      end
-
-      it "does nothing" do
-        BrowserDetection.expects(:device).never
         send_reminder
       end
     end

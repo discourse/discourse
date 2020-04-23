@@ -145,11 +145,9 @@ widgetTest("bookmarks", {
     const bookmark = find(".quick-access-panel li a")[0];
     assert.ok(bookmark);
 
+    assert.ok(bookmark.href.includes("/t/yelling-topic-title/119"));
     assert.ok(
-      bookmark.href.includes("/t/how-to-check-the-user-level-via-ajax/11993")
-    );
-    assert.ok(
-      bookmark.innerHTML.includes("Abhishek_Gupta"),
+      bookmark.innerHTML.includes("someguy"),
       "should include the last poster's username"
     );
     assert.ok(

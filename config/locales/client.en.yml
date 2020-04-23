@@ -304,7 +304,6 @@ en:
         unbookmark: "Click to remove all bookmarks in this topic"
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
 
-
     bookmarks:
       created: "you've bookmarked this post"
       not_bookmarked: "bookmark this post"
@@ -3393,8 +3392,7 @@ en:
           view_table: "table"
           view_graph: "graph"
           refresh_report: "Refresh Report"
-          start_date: "Start Date (UTC)"
-          end_date: "End Date (UTC)"
+          dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
@@ -3411,6 +3409,8 @@ en:
               label: Group
             category:
               label: Category
+            include-subcategories:
+              label: "Include Subcategories"
 
       commits:
         latest_changes: "Latest changes: please update often!"
@@ -3458,7 +3458,7 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-            automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
+            automatic_membership_user_count: "%{count} users have the new email domains and will be added to the group."
             primary_group: "Automatically set as primary group"
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
@@ -4334,6 +4334,32 @@ en:
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
+        merge:
+          transfer_and_delete: "Transfer & Delete"
+          prompt:
+            title: "Transfer & Delete @%{username}"
+            description: |
+              <p>Please choose a new owner for <b>@%{username}'s</b> content.</p>
+
+              <p>All topics, posts, messages and other content created by <b>@%{username}</b> will be transferred.</p>
+
+            target_username_placeholder: "Username of new owner"
+            transfer_and_delete: "Transfer & Delete @%{username}"
+            cancel: "Cancel"
+          confirmation:
+            title: "Transfer & Delete @%{username}"
+            description: |
+              <p>All of <b>@%{username}'s</b> content will be transferred and attributed to <b>@%{targetUsername}</b>. After the content is transferred, <b>@%{username}'s</b> account will be deleted.</p>
+
+              <p><b>This can not be undone!</b></p>
+
+              <p>To continue type: <code>%{text}</code></p>
+
+            transfer_and_delete: "Transfer & Delete @%{username}"
+            cancel: "Cancel"
+
+        merging_user: "Merging user..."
+        merge_failed: "There was an error while merging the users."
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
         delete_forbidden:
