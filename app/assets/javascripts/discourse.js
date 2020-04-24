@@ -56,12 +56,6 @@ const Discourse = Application.extend(FocusEvent, {
   _titleChanged() {
     let title = this._docTitle || Discourse.SiteSettings.title;
 
-    // if we change this we can trigger changes on document.title
-    // only set if changed.
-    if ($("title").text() !== title) {
-      $("title").text(title);
-    }
-
     let displayCount = this.displayCount;
     let dynamicFavicon = this.currentUser && this.currentUser.dynamic_favicon;
     if (displayCount > 0 && !dynamicFavicon) {
