@@ -454,10 +454,10 @@ class Topic < ActiveRecord::Base
     ((Time.zone.now - created_at) / 1.minute).round
   end
 
-  def self.listable_count_per_day(start_date, end_date, category_id = nil)
+  def self.listable_count_per_day(start_date, end_date, category_id = nil, include_subcategories = false)
     result = listable_topics.where("topics.created_at >= ? AND topics.created_at <= ?", start_date, end_date)
     result = result.group('date(topics.created_at)').order('date(topics.created_at)')
-    result = result.where(category_id: category_id) if category_id
+    result = result.where(category_id: include_subcategories ? Category.subcategory_ids(category_id) : category_id) if category_id
     result.count
   end
 
@@ -1294,7 +1294,13 @@ class Topic < ActiveRecord::Base
     builder = DB.build(sql)
     builder.where("t.created_at >= :start_date", start_date: opts[:start_date]) if opts[:start_date]
     builder.where("t.created_at < :end_date", end_date: opts[:end_date]) if opts[:end_date]
-    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(opts[:category_id].to_i)) if opts[:category_id]
+    if opts[:category_id]
+      if opts[:include_subcategories]
+        builder.where("t.category_id IN (?)", Category.subcategory_ids(opts[:category_id]))
+      else
+        builder.where("t.category_id = ?", opts[:category_id])
+      end
+    end
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.where("p.deleted_at IS NULL")
@@ -1329,11 +1335,17 @@ class Topic < ActiveRecord::Base
     ORDER BY tt.created_at
   SQL
 
-  def self.with_no_response_per_day(start_date, end_date, category_id = nil)
+  def self.with_no_response_per_day(start_date, end_date, category_id = nil, include_subcategories = nil)
     builder = DB.build(WITH_NO_RESPONSE_SQL)
     builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
     builder.where("t.created_at < :end_date", end_date: end_date) if end_date
-    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(category_id.to_i)) if category_id
+    if category_id
+      if include_subcategories
+        builder.where("t.category_id IN (?)", Category.subcategory_ids(category_id))
+      else
+        builder.where("t.category_id = ?", category_id)
+      end
+    end
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.query_hash
@@ -1353,7 +1365,13 @@ class Topic < ActiveRecord::Base
 
   def self.with_no_response_total(opts = {})
     builder = DB.build(WITH_NO_RESPONSE_TOTAL_SQL)
-    builder.where("t.category_id IN (:subcategory_ids)", subcategory_ids: Category.subcategory_ids(opts[:category_id].to_i)) if opts[:category_id]
+    if opts[:category_id]
+      if opts[:include_subcategories]
+        builder.where("t.category_id IN (?)", Category.subcategory_ids(opts[:category_id]))
+      else
+        builder.where("t.category_id = ?", opts[:category_id])
+      end
+    end
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.query_single.first.to_i

@@ -3,9 +3,9 @@
 
 
 "@arkweid/lefthook@^0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@arkweid/lefthook/-/lefthook-0.6.3.tgz#59ed1e2861ec924181b40c4edd8f60c720df42f6"
-  integrity sha512-mKtMBRAs2YgH9J49KogVSAJWI9WJQdJkoH8LfMfHNs+foDOgLqFLEngPI8XiekHupHDH6YF5ZInbvm2ndc2uug==
+  version "0.6.7"
+  resolved "https://registry.yarnpkg.com/@arkweid/lefthook/-/lefthook-0.6.7.tgz#a3509532830c58319f88ec9264c49190b56bb8fb"
+  integrity sha512-UAsXrRpiRRlOC5B2E6Lfg8QpvPouBrtOsLGlUXRHkJNkrDX69ouh+rUwj+o1N/Nf0lCgvOlj04NFayQyu3u4ew==
 
 "@babel/code-frame@7.0.0-beta.44":
   version "7.0.0-beta.44"

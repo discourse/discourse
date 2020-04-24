@@ -488,26 +488,6 @@ class PostsController < ApplicationController
     render body: nil
   end
 
-  def bookmark
-    if params[:bookmarked] == "true"
-      post = find_post_from_params
-      result = PostActionCreator.create(current_user, post, :bookmark)
-      return render_json_error(result) if result.failed?
-    else
-      post_action = PostAction.find_by(post_id: params[:post_id], user_id: current_user.id)
-      raise Discourse::NotFound unless post_action
-
-      post = Post.with_deleted.find_by(id: post_action&.post_id)
-      raise Discourse::NotFound unless post
-
-      result = PostActionDestroyer.destroy(current_user, post, :bookmark)
-      return render_json_error(result) if result.failed?
-    end
-
-    topic_user = TopicUser.get(post.topic, current_user)
-    render_json_dump(topic_bookmarked: topic_user.try(:bookmarked))
-  end
-
   def destroy_bookmark
     params.require(:post_id)
 

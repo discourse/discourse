@@ -681,7 +681,6 @@ describe PostAlerter do
       2.times do |i|
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
-                           key: "yyy#{i}",
                            application_name: "iPhone#{i}",
                            scopes: ['notifications'],
                            push_url: "https://site2.com/push")
@@ -697,7 +696,6 @@ describe PostAlerter do
       2.times do |i|
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
-                           key: "yyy#{i}",
                            application_name: "iPhone#{i}",
                            scopes: ['notifications'],
                            push_url: "https://site2.com/push")

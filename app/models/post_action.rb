@@ -67,7 +67,13 @@ class PostAction < ActiveRecord::Base
     result = unscoped.where(post_action_type_id: post_action_type)
     result = result.where('post_actions.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
     result = result.where('post_actions.created_at <= ?', opts[:end_date]) if opts[:end_date]
-    result = result.joins(post: :topic).merge(Topic.in_category_and_subcategories(opts[:category_id])) if opts[:category_id]
+    if opts[:category_id]
+      if opts[:include_subcategories]
+        result = result.joins(post: :topic).where('topics.category_id IN (?)', Category.subcategory_ids(opts[:category_id]))
+      else
+        result = result.joins(post: :topic).where('topics.category_id = ?', opts[:category_id])
+      end
+    end
     result.group('date(post_actions.created_at)')
       .order('date(post_actions.created_at)')
       .count

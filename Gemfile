@@ -160,10 +160,7 @@ group :test, :development do
   gem 'listen', require: false
   gem 'certified', require: false
   gem 'fabrication', require: false
-
-  # TODO: upgrading to 1.10.1 cause it breaks our test suite.
-  # We want our test suite fixed though to support this upgrade.
-  gem 'mocha', '1.8.0', require: false
+  gem 'mocha', require: false
 
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
 

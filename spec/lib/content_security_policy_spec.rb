@@ -212,6 +212,19 @@ describe ContentSecurityPolicy do
       expect(parse(theme_policy)['script-src']).to_not include('https://from-theme-flag.script')
       expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
     end
+
+    it 'is extended automatically when themes reference external scripts' do
+      policy # call this first to make sure further actions clear the cache
+
+      theme.set_field(target: :common, name: "header", value: "<script src='https://example.com/myscript.js'/>")
+      theme.save!
+
+      expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript.js')
+
+      theme.destroy!
+
+      expect(parse(theme_policy)['script-src']).to_not include('https://example.com/myscript.js')
+    end
   end
 
   it 'can be extended by site setting' do

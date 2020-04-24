@@ -102,7 +102,7 @@ QUnit.test("reports tab", async assert => {
 
 QUnit.test("report filters", async assert => {
   await visit(
-    '/admin/reports/signups?end_date=2018-07-16&filters=%7B"group"%3A88%7D&start_date=2018-06-16'
+    '/admin/reports/signups_with_groups?end_date=2018-07-16&filters=%7B"group"%3A88%7D&start_date=2018-06-16'
   );
 
   const groupFilter = selectKit(".group-filter .combo-box");

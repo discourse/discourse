@@ -19,9 +19,7 @@ var define, requirejs;
         default: Ember.ArrayProxy
       },
       "@ember/component": {
-        default: Ember.Component,
-        TextArea: Ember.TextArea,
-        TextField: Ember.TextField
+        default: Ember.Component
       },
       "@ember/controller": {
         default: Ember.Controller,
@@ -128,6 +126,12 @@ var define, requirejs;
       },
       "@ember/component/helper": {
         default: Ember.Helper
+      },
+      "@ember/component/text-field": {
+        default: Ember.TextField
+      },
+      "@ember/component/text-area": {
+        default: Ember.TextArea
       },
       "@ember/error": {
         default: Ember.error

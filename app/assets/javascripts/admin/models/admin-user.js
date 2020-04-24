@@ -503,6 +503,43 @@ const AdminUser = User.extend({
     bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
   },
 
+  merge(opts) {
+    const user = this;
+    const location = document.location.pathname;
+
+    bootbox.dialog(I18n.t("admin.user.merging_user"));
+    let formData = { context: location };
+
+    if (opts && opts.targetUsername) {
+      formData["target_username"] = opts.targetUsername;
+    }
+
+    return ajax(`/admin/users/${user.get("id")}/merge.json`, {
+      type: "POST",
+      data: formData
+    })
+      .then(function(data) {
+        if (data.merged) {
+          if (/^\/admin\/users\/list\//.test(location)) {
+            document.location = location;
+          } else {
+            document.location = Discourse.getURL(
+              `/admin/users/${data.user.id}/${data.user.username}`
+            );
+          }
+        } else {
+          bootbox.alert(I18n.t("admin.user.merge_failed"));
+          if (data.user) {
+            user.setProperties(data.user);
+          }
+        }
+      })
+      .catch(function() {
+        AdminUser.find(user.get("id")).then(u => user.setProperties(u));
+        bootbox.alert(I18n.t("admin.user.merge_failed"));
+      });
+  },
+
   loadDetails() {
     if (this.loadedDetails) {
       return Promise.resolve(this);

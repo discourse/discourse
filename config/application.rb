@@ -153,7 +153,7 @@ module Discourse
       auto-redirect.js
       wizard-start.js
       locales/i18n.js
-      discourse/lib/webauthn.js
+      discourse/app/lib/webauthn.js
       confirm-new-email/confirm-new-email.js
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
@@ -238,8 +238,8 @@ module Discourse
     require 'middleware/discourse_public_exceptions'
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
-    # Our templates shouldn't start with 'discourse/templates'
-    config.handlebars.templates_root = 'discourse/templates'
+    # Our templates shouldn't start with 'discourse/app/templates'
+    config.handlebars.templates_root = 'discourse/app/templates'
     config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
     Sprockets.register_mime_type 'text/x-handlebars', extensions: ['.hbr']
     Sprockets.register_transformer 'text/x-handlebars', 'application/javascript', Ember::Handlebars::Template

@@ -168,6 +168,9 @@ class UserUpdater
           attributes.fetch(:name) { '' }
         )
       end
+    rescue Addressable::URI::InvalidURIError => e
+      # Prevent 500 for crazy url input
+      return saved
     end
 
     DiscourseEvent.trigger(:user_updated, user) if saved

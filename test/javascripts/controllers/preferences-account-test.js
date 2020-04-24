@@ -12,7 +12,7 @@ QUnit.test("updating of associated accounts", function(assert) {
       is_anonymous: true
     }),
     currentUser: EmberObject.create({
-      id: 1234,
+      id: 1234
     }),
     site: EmberObject.create({
       isMobileDevice: false

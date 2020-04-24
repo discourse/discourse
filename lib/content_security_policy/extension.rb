@@ -42,13 +42,30 @@ class ContentSecurityPolicy
     def find_theme_extensions(theme_ids)
       extensions = []
 
-      Theme.where(id: Theme.transform_ids(theme_ids)).find_each do |theme|
+      resolved_ids = Theme.transform_ids(theme_ids)
+
+      Theme.where(id: resolved_ids).find_each do |theme|
         theme.cached_settings.each do |setting, value|
           extensions << build_theme_extension(value.split("|")) if setting.to_s == THEME_SETTING
         end
       end
 
       extensions << build_theme_extension(ThemeModifierHelper.new(theme_ids: theme_ids).csp_extensions)
+
+      html_fields = ThemeField.where(
+        theme_id: resolved_ids,
+        target_id: ThemeField.basic_targets.map { |target| Theme.targets[target.to_sym] },
+        name: ThemeField.html_fields
+      )
+
+      auto_script_src_extension = { script_src: [] }
+      html_fields.each(&:ensure_baked!)
+      doc = html_fields.map(&:value_baked).join("\n")
+      Nokogiri::HTML.fragment(doc).css('script[src]').each do |node|
+        auto_script_src_extension[:script_src] << node['src']
+      end
+
+      extensions << auto_script_src_extension
 
       extensions
     end

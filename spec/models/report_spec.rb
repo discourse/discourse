@@ -771,7 +771,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('flags', filters: { category: c0.id }) }
+          let(:report) { Report.find('flags', filters: { category: c0.id, 'include-subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -801,7 +801,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics', filters: { category: c0.id }) }
+          let(:report) { Report.find('topics', filters: { category: c0.id, 'include-subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -892,7 +892,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('posts', filters: { category: c0.id }) }
+          let(:report) { Report.find('posts', filters: { category: c0.id, 'include-subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -924,7 +924,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics_with_no_response', filters: { category: c0.id }) }
+          let(:report) { Report.find('topics_with_no_response', filters: { category: c0.id, 'include-subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -960,7 +960,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('likes', filters: { category: c0.id }) }
+          let(:report) { Report.find('likes', filters: { category: c0.id, 'include-subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end

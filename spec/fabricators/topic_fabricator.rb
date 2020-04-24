@@ -9,7 +9,7 @@ Fabricator(:topic) do
 end
 
 Fabricator(:deleted_topic, from: :topic) do
-  deleted_at Time.now
+  deleted_at { 1.minute.ago }
 end
 
 Fabricator(:closed_topic, from: :topic) do

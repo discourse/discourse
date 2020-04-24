@@ -319,9 +319,7 @@ class ListController < ApplicationController
     if id.present?
       @category = Category.find_by_id(id)
     elsif slug_path.present?
-      if (1..2).include?(slug_path.size)
-        @category = Category.find_by_slug(*slug_path.reverse)
-      end
+      @category = Category.find_by_slug_path(slug_path)
 
       # Legacy paths
       if @category.nil? && parts.last =~ /\A\d+-category/
