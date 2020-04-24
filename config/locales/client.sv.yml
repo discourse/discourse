@@ -268,6 +268,8 @@ sv:
       created_with_reminder: "du har bokmärkt detta inlägg med en påminnelse %{date}"
       created_with_at_desktop_reminder: "du har bokmärkt detta inlägg och kommer att påminnas nästa gång du är vid din dator"
       remove: "Ta bort bokmärke"
+      delete: "Radera bokmärke"
+      confirm_delete: "Är du säker på att du vill radera det här bokmärket? Påminnelsen kommer också att raderas."
       confirm_clear: "Är du säker på att du vill radera alla dina bokmärken från ämnet?"
       save: "Spara"
       no_timezone: 'Du har ännu inte valt tidszon. Du kommer därför inte kunna sätta påminnelser. Ange en <a href="%{basePath}/my/preferences/profile">i din profil</a>.'
@@ -2860,6 +2862,7 @@ sv:
         next_business_day: "%{shortcut} Nästa vardag"
         custom: "%{shortcut} Anpassa datum och tid"
         none: "%{shortcut} Ingen påminnelse"
+        delete: "%{shortcut} Radera bokmärke"
       actions:
         title: "Åtgärder"
         bookmark_topic: "%{shortcut} Växla bokmärkning av ämne"
@@ -3117,8 +3120,7 @@ sv:
           view_table: "tabell"
           view_graph: "graf"
           refresh_report: "Uppdatera rapport"
-          start_date: "Startdatum (UTC)"
-          end_date: "Slutdatum (UTC)"
+          dates: "Datum (UTC)"
           groups: "Alla grupper"
           disabled: "Denna rapport är avstängd"
           totals_for_sample: "Totalt för prov"
@@ -3135,6 +3137,8 @@ sv:
               label: Grupp
             category:
               label: Kategori
+            include-subcategories:
+              label: "Inkludera underkategorier"
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
         by: "av"
@@ -3179,7 +3183,7 @@ sv:
             effects: Effekter
             trust_levels_none: "Inga"
             automatic_membership_email_domains: "Användare som registrerar sig med en e-post vars domän exakt matchar en domän i den här listan kommer automatiskt att bli tillagd i den här gruppen:"
-            automatic_membership_retroactive: "Använd samma regel för e-postdomän för att lägga till nya användare"
+            automatic_membership_user_count: "%{count} användarna har de nya e-postdomänerna och kommer att läggas till i gruppen."
             primary_group: "Automatiskt inställd som primär grupp"
         name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         primary: "Primär grupp"
@@ -4039,6 +4043,29 @@ sv:
         anonymize_yes: "Ja, anonymisera detta konto"
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"
         delete: "Radera användare"
+        merge:
+          transfer_and_delete: "Överför & radera"
+          prompt:
+            title: "Överför & radera @%{username}"
+            description: |
+              <p>Vänligen välj en ny ägare för <b>@%{username}s</b> innehåll.</p>
+
+              <p>Alla ämnen, inlägg, meddelanden och annat innehåll skapat av <b>@%{username}</b> kommer föras över.</p>
+            target_username_placeholder: "Användarnamn på den nya ägaren"
+            transfer_and_delete: "Överför & radera @%{username}"
+            cancel: "Avbryt"
+          confirmation:
+            title: "Överför & radera @%{username}"
+            description: |
+              <p>Allt av <b>@%{username}s</b> innehåll kommer att överföras och hänföras till <b>@%{targetUsername}</b>. Efter att innehållet är överfört kommer <b>@%{username}s</b> konto att raderas.</p>
+
+              <p><b>Detta kan inte ångras!</b></p>
+
+              <p>För att fortsätta skriv: <code>%{text}</code></p>
+            transfer_and_delete: "Överför & radera @%{username}"
+            cancel: "Avbryt"
+        merging_user: "Slår samman användare..."
+        merge_failed: "Det uppstod ett fel vid sammanslagningen av användarna."
         delete_forbidden_because_staff: "Administratörer och moderatorer kan inte tas bort."
         delete_posts_forbidden_because_staff: "Kan inte ta bort alla inlägg för administratörer och moderatorer."
         delete_forbidden:

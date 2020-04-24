@@ -254,9 +254,6 @@ zh_TW:
   topics_in_category: "分類 '%{category}' 中的討論話題"
   rss_posts_in_topic: "'%{topic}' 的 RSS feed"
   rss_topics_in_category: "分類 '%{category}' 中討論話題的 RSS feed"
-  author_wrote: "%{author}說:"
-  num_posts: "貼文："
-  num_participants: "參與者："
   read_full_topic: "閱讀整個話題"
   private_message_abbrev: "消息"
   rss_description:

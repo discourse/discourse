@@ -2971,8 +2971,6 @@ ca:
           view_table: "taula"
           view_graph: "gràfica"
           refresh_report: "Actualitza el report"
-          start_date: "Data d'inici (UTC)"
-          end_date: "Data de finalització (UTC)"
           groups: "Tots els grups"
           disabled: "Aquest report és desactivat."
           totals_for_sample: "Totals per mostra"
@@ -3033,7 +3031,6 @@ ca:
             effects: Efectes
             trust_levels_none: "Cap"
             automatic_membership_email_domains: "Els usuaris registrats amb un domini de correu que coincideix amb un de la llista s'afegiran automàticament a aquest grup:"
-            automatic_membership_retroactive: "Aplica la mateixa regla de domini de correu per a afegir usuaris registrats existents."
             primary_group: "Estableix automàticament com a grup primari"
         name_placeholder: "Nom del grup, sense espais, igual que la regla del nom d'usuari"
         primary: "Grup primari"
@@ -3875,6 +3872,11 @@ ca:
         anonymize_yes: "Sí, fes anònim aquest compte"
         anonymize_failed: "Hi ha hagut un problema en fer anònim aquest compte."
         delete: "Suprimeix l'usuari"
+        merge:
+          prompt:
+            cancel: "Cancel·la"
+          confirmation:
+            cancel: "Cancel·la"
         delete_forbidden_because_staff: "No es poden suprimir administradors i moderadors. "
         delete_posts_forbidden_because_staff: "No es poden suprimir totes les publicacions d'administradores i moderadors."
         delete_forbidden:

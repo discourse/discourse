@@ -195,9 +195,6 @@ sk:
   topics_in_category: " '%{category}' tém v tejto kategórii"
   rss_posts_in_topic: "RSS kanál témy '%{topic}'"
   rss_topics_in_category: "RSS kanál tém v kategórii '%{category}'"
-  author_wrote: "%{author} napísal:"
-  num_posts: "Príspevky:"
-  num_participants: "Prispievatelia:"
   read_full_topic: "Čítať celý príspevok"
   private_message_abbrev: "Správa"
   rss_description:

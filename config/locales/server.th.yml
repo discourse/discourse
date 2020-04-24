@@ -60,7 +60,6 @@ th:
   next_page: "หน้าถัดไป →"
   prev_page: "← หน้าก่อนหน้า"
   page_num: "หน้า %{num}"
-  num_posts: "โพส"
   groups:
     default_names:
       everyone: "ทุกคน"

@@ -200,9 +200,6 @@ be:
   page_num: "Старонка %{num}"
   home_title: "дома"
   topics_in_category: "Тэмы ў '%{category}' катэгорыі"
-  author_wrote: "%{author}пісаў:"
-  num_posts: "Паведамлення:"
-  num_participants: "Удзельнікі:"
   read_full_topic: "Чытаць тэму цалкам"
   private_message_abbrev: "Паведамленне"
   rss_description:

@@ -195,9 +195,6 @@ fa_IR:
   topics_in_category: "موضوعات دسته‌بندی '%{category}'"
   rss_posts_in_topic: "خوراک '%{topic}'"
   rss_topics_in_category: "خوارک موضوعات دسته‌‌بندی '%{category}'"
-  author_wrote: "%{author} نوشت:"
-  num_posts: "فرسته‌ها:"
-  num_participants: "شرکت کنندگان :"
   read_full_topic: "مشاهده متن کامل موضوع"
   private_message_abbrev: "پیام"
   rss_description:

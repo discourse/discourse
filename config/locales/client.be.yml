@@ -1685,6 +1685,11 @@ be:
         anonymize: "ананімны карыстальнік"
         anonymize_yes: "Так, схаваць гэты рахунак"
         delete: "выдаліць карыстальніка"
+        merge:
+          prompt:
+            cancel: "адмяніць"
+          confirmation:
+            cancel: "адмяніць"
         delete_forbidden_because_staff: "Адмінаў і мадэратараў выдаляць нельга."
         delete_dont_block: "толькі выдаленне"
         deleted: "Карыстальніка быў выдалены."
