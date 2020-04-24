@@ -38,11 +38,12 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showMoreBadges: gt("moreBadgesCount", 0),
   showDelete: and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: not("user.isBasic"),
-  hasLocaleOrWebsite: or(
-    "user.location",
-    "user.website_name",
-    "user._timezone"
-  ),
+
+  @discourseComputed("user")
+  hasLocaleOrWebsite(user) {
+    return user.location || user.website_name || this.userTimezone;
+  },
+
   isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_excerpt"),
   showCheckEmail: and("user.staged", "canCheckEmails"),
 
@@ -70,8 +71,13 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   },
 
   @discourseComputed("user")
-  formattedUserLocalTime(user) {
-    const timezone = user.resolvedTimezone();
+  userTimezone(user) {
+    return user.resolvedTimezone();
+  },
+
+  @discourseComputed()
+  formattedUserLocalTime() {
+    const timezone = this.userTimezone;
     return moment.tz(timezone).format(I18n.t("dates.time_with_zone"));
   },
 
