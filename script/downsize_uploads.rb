@@ -43,12 +43,10 @@ def downsize_upload(upload, path)
   # Neither #dup or #clone provide a complete copy
   original_upload = Upload.find(upload.id)
   ww, hh = ImageSizer.resize(w, h)
-  new_file = true
 
-  if existing_upload = Upload.find_by(sha1: sha1)
-    upload = existing_upload
-    new_file = false
-  end
+  # A different upload record that matches the sha1 of the downsized image
+  existing_upload = Upload.find_by(sha1: sha1)
+  upload = existing_upload if existing_upload
 
   before = upload.filesize
   upload.filesize = File.size(path)
@@ -66,7 +64,7 @@ def downsize_upload(upload, path)
     thumbnail_height: hh
   }
 
-  if new_file
+  unless existing_upload
     url = Discourse.store.store_upload(File.new(path), upload)
 
     unless url
@@ -80,7 +78,7 @@ def downsize_upload(upload, path)
   if ENV["VERBOSE"]
     puts "base62: #{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
     puts "sha: #{original_upload.sha1} -> #{sha1}"
-    puts "Is a new file: #{new_file}"
+    puts "(an exisiting upload)" if existing_upload
   end
 
   success = true
@@ -140,8 +138,8 @@ def downsize_upload(upload, path)
       STDIN.beep
       STDIN.getch
       puts " k"
-    elsif new_file && !Upload.where(url: upload.url).exist?
-      # Clean up if we bail
+    elsif !existing_upload && !Upload.where(url: upload.url).exist?
+      # We're bailing, so clean up the just uploaded file
       Discourse.store.remove_upload(upload)
 
       puts "Skipping" if ENV["VERBOSE"]
@@ -151,9 +149,7 @@ def downsize_upload(upload, path)
 
   upload.save!
 
-  if new_file
-    upload.optimized_images.each(&:destroy!)
-  else
+  if existing_upload
     begin
       PostUpload.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
     rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
@@ -168,6 +164,8 @@ def downsize_upload(upload, path)
     Category.where(uploaded_background_id: original_upload.id).update_all(uploaded_background_id: upload.id)
     CustomEmoji.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
     ThemeField.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
+  else
+    upload.optimized_images.each(&:destroy!)
   end
 
   posts.each do |post|
@@ -191,10 +189,10 @@ def downsize_upload(upload, path)
     end
   end
 
-  if new_file
-    Discourse.store.remove_upload(original_upload)
-  else
+  if existing_upload
     original_upload.reload.destroy!
+  else
+    Discourse.store.remove_upload(original_upload)
   end
 
   true
