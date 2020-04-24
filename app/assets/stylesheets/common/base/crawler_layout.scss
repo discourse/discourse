@@ -21,12 +21,6 @@ body.crawler {
     }
   }
 
-  .raw-topic-link {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.25em;
-  }
-
   .topic-list {
     margin-bottom: 1em;
   }
@@ -35,23 +29,12 @@ body.crawler {
     margin-top: 4em;
   }
 
-  .breadcrumbs,
-  .discourse-tags {
-    display: inline;
-    font-size: $font-down-1;
-    // margin-bottom: 0.5em;
-    > div {
-      display: inline;
-      // margin-bottom: 0.15em;
-    }
-  }
-
-  .badge-category-bg {
-    background-color: $secondary-high;
-  }
-
   .category-title {
     color: $primary;
+  }
+
+  .discourse-tags {
+    color: $tag-color;
   }
 }
 
@@ -67,10 +50,6 @@ body.crawler {
 #noscript-footer {
   padding: 0 10px;
   text-align: center;
-}
-
-.crawler-topic-title {
-  margin-top: 0.5em;
 }
 
 .crawler-post {
@@ -103,13 +82,6 @@ body.crawler {
   [itemprop="position"] {
     float: left;
     margin-right: 0.5em;
-  }
-}
-
-.crawler-tags-list {
-  span {
-    display: block;
-    margin-bottom: 0.15em;
   }
 }
 

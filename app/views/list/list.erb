@@ -54,17 +54,17 @@
     <tbody>
       <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
       <% @list.topics.each_with_index do |t,i| %>
-        <tr>
-          <td itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+        <tr class="topic-list-item">
+          <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
             <meta itemprop='name' content='<%= t.title %>'>
             <meta itemprop='url' content='<%= t.url %>'>
             <% if t.image_url.present? %>
               <meta itemprop='image' content='<%= t.image_url %>'>
             <% end %>
             <meta itemprop='position' content='<%= i + 1 %>'>
-            <a href='<%= t.url %>' class='title raw-link raw-topic-link'>
-              <span><%= t.title %></span>
-            </a>
+            <span class="link-top-line">
+              <a href='<%= t.url %>' class='title raw-link raw-topic-link'><%= t.title %></a>
+            </span>
             <div class="link-bottom-line">
               <% if (!@category || @category.has_children?) && t.category %>
                 <a href='<%= t.category.url %>' class='badge-wrapper bullet'>
@@ -75,9 +75,8 @@
               <% if t.tags %>
                 <div class="discourse-tags">
                   <% t.tags.each_with_index do |tag, index| %>
-                    <a href='<%= tag.full_url %>' class='discourse-tag'>
-                      <%= tag.name %><% if index < t.tags.size - 1 %>,<% end %>
-                    </a>
+                    <a href='<%= tag.full_url %>' class='discourse-tag'><%= tag.name %></a>
+                    <% if index < t.tags.size - 1 %>,&nbsp;<% end %>
                   <% end %>
                 </div>
               <% end %>
