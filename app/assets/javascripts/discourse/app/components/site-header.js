@@ -205,6 +205,29 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.dispatch("search-autocomplete:after-complete", "search-term");
 
     this.appEvents.on("dom:clean", this, "_cleanDom");
+
+    // Allow first notification to be dismissed on a click anywhere
+    if (
+      !this.get("currentUser.read_first_notification") &&
+      !this.get("currentUser.enforcedSecondFactor")
+    ) {
+      this._dismissFirstNotification = e => {
+        if (
+          !e.target.closest("#current-user") &&
+          !e.target.closest(".ring-backdrop") &&
+          !this.currentUser.get("read_first_notification") &&
+          !this.currentUser.get("enforcedSecondFactor")
+        ) {
+          this.eventDispatched(
+            "header:dismiss-first-notification-mask",
+            "header"
+          );
+        }
+      };
+      document.addEventListener("click", this._dismissFirstNotification, {
+        once: true
+      });
+    }
   },
 
   _cleanDom() {
@@ -225,6 +248,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
     cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
+
+    document.removeEventListener("click", this._dismissFirstNotification);
   },
 
   buildArgs() {
