@@ -43,18 +43,18 @@ span.badge-posts {
           flex: 1 1 auto;
         }
         &.button-count {
-          padding: s(2 1 2 2);
+          padding: 8px 4px 8px 8px;
           + .toggle-like,
           + .create-flag {
-            padding: s(2 2 2 1);
+            padding: 8px 8px 8px 4px;
           }
           &.my-likes,
           &.regular-likes {
             display: flex;
             max-width: unset;
-            padding: s(2);
+            padding: 8px;
             .d-icon {
-              padding-left: s(2);
+              padding-left: 8px;
             }
           }
         }

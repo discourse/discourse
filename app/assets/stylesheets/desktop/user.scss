@@ -50,8 +50,8 @@
 }
 
 .user-content {
-  padding-bottom: s(3);
-  margin-bottom: s(3);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
   background-color: $secondary;
   box-sizing: border-box;
 
@@ -118,7 +118,7 @@
 
       .primary {
         .primary-textual {
-          padding: s(0 1 1);
+          padding: 0 4px 4px;
           a[href] {
             text-decoration: underline;
           }
@@ -146,7 +146,7 @@
       }
 
       .secondary {
-        margin-top: s(4);
+        margin-top: 16px;
       }
     }
 
@@ -183,7 +183,7 @@
           display: inline-flex;
           > li {
             display: inline;
-            margin-left: s(3);
+            margin-left: 12px;
             .d-button-label {
               line-height: 1;
             }
@@ -246,7 +246,7 @@
 
   .instructions {
     display: inline-block;
-    margin-top: s(1);
+    margin-top: 4px;
   }
 }
 

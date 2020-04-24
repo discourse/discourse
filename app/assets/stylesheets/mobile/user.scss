@@ -4,8 +4,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto;
-  grid-row-gap: s(5);
-  grid-column-gap: s(4);
+  grid-row-gap: 20px;
+  grid-column-gap: 16px;
   .user-primary-navigation {
     grid-column-start: 1;
     grid-row-start: 1;
@@ -31,14 +31,14 @@
 }
 
 .user-main {
-  margin-top: s(3);
+  margin-top: 12px;
 
   .user-content {
     box-sizing: border-box;
     background-color: $secondary;
     table {
       width: 100%;
-      margin-top: s(3);
+      margin-top: 12px;
     }
   }
 
@@ -48,12 +48,12 @@
 
     .secondary {
       dl {
-        padding: s(2) 0;
+        padding: 8px 0;
       }
     }
 
     .details {
-      margin-bottom: s(3);
+      margin-bottom: 12px;
 
       h1 {
         line-height: $line-height-small;
@@ -69,7 +69,7 @@
         }
         display: block;
         float: none;
-        margin: s(2 auto);
+        margin: 8px auto;
         img.avatar {
           float: none;
         }
@@ -117,7 +117,7 @@
       color: $primary;
 
       .avatar {
-        margin: 0 0 s(3);
+        margin: 0 0 12px;
       }
 
       .primary-textual {
@@ -129,7 +129,7 @@
 
       .bio {
         color: $primary;
-        margin: 0 auto s(2);
+        margin: 0 auto 8px;
         max-width: 700px;
         text-align: center;
 
@@ -155,7 +155,7 @@
         height: 200px;
       }
       .user-profile-avatar {
-        margin-top: s(-15);
+        margin-top: -60px;
       }
     }
 
@@ -267,11 +267,11 @@
   padding-bottom: 2em;
 
   .instructions {
-    margin-top: s(1);
+    margin-top: 4px;
   }
 
   .controls-dropdown {
-    margin-bottom: s(4);
+    margin-bottom: 16px;
   }
 
   .delete-account {
