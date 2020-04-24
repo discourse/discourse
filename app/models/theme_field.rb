@@ -317,6 +317,7 @@ class ThemeField < ActiveRecord::Base
       self.value_baked, self.error = translation_field? ? process_translation : process_html(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = COMPILER_VERSION
+      CSP::Extension.clear_theme_extensions_cache!
     elsif extra_js_field?
       self.value_baked, self.error = process_extra_js(self.value)
       self.error = nil unless self.error.present?
