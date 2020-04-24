@@ -56,15 +56,21 @@
       <% @list.topics.each_with_index do |t,i| %>
         <tr>
           <td itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-            <meta itemprop='position' content='<%= i %>'>
-            <meta itemprop='url' content='<%= t.url %>'>
             <meta itemprop='name' content='<%= t.title %>'>
+            <meta itemprop='url' content='<%= t.url %>'>
+            <% if t.image_url.present? %>
+              <meta itemprop='image' content='<%= t.image_url %>'>
+            <% end %>
+            <meta itemprop='position' content='<%= i + 1 %>'>
             <a href='<%= t.url %>' class='title raw-link raw-topic-link'>
               <span><%= t.title %></span>
             </a>
             <div class="link-bottom-line">
               <% if (!@category || @category.has_children?) && t.category %>
-                <a href='<%= t.category.url %>' class='category-name'><%= t.category.name %></a>
+                <a href='<%= t.category.url %>' class='badge-wrapper bullet'>
+                  <span class='badge-category-bg' style='background-color: #<%= t.category.color %>'></span>
+                  <span class='category-title'><%= t.category.name %></span>
+                </a>
               <% end %>
               <% if t.tags %>
                 <div class="discourse-tags">

@@ -34,6 +34,25 @@ body.crawler {
   footer {
     margin-top: 4em;
   }
+
+  .breadcrumbs,
+  .discourse-tags {
+    display: inline;
+    font-size: $font-down-1;
+    // margin-bottom: 0.5em;
+    > div {
+      display: inline;
+      // margin-bottom: 0.15em;
+    }
+  }
+
+  .badge-category-bg {
+    background-color: $secondary-high;
+  }
+
+  .category-title {
+    color: $primary;
+  }
 }
 
 .noscript-footer-nav {
@@ -84,20 +103,6 @@ body.crawler {
   [itemprop="position"] {
     float: left;
     margin-right: 0.5em;
-  }
-}
-
-#breadcrumbs {
-  margin-bottom: 0.5em;
-  font-size: $font-up-1;
-  > div {
-    margin-bottom: 0.15em;
-  }
-  .badge-category-bg {
-    background-color: $secondary-high;
-  }
-  .category-title {
-    color: $primary;
   }
 }
 
