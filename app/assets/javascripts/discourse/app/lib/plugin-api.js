@@ -54,7 +54,7 @@ import { on } from "@ember/object/evented";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.41";
+const PLUGIN_API_VERSION = "0.8.42";
 
 class PluginApi {
   constructor(version, container) {
@@ -192,10 +192,23 @@ class PluginApi {
   }
 
   /**
-   * Used for decorating the `cooked` content of a post after it is rendered using
-   * jQuery.
+   * Method for decorating the `cooked` content of a post using JQuery
    *
-   * `callback` will be called when it is time to decorate with a jQuery selector.
+   * You should use decorateCookedElement instead, which works without JQuery
+   *
+   * This method will be deprecated in future
+   **/
+  decorateCooked(callback, opts) {
+    this.decorateCookedElement(
+      (element, decoratorHelper) => callback($(element), decoratorHelper),
+      opts
+    );
+  }
+
+  /**
+   * Used for decorating the `cooked` content of a post after it is rendered
+   *
+   * `callback` will be called when it is time to decorate with an DOM node.
    *
    * Use `options.onlyStream` if you only want to decorate posts within a topic,
    * and not in other places like the user stream.
@@ -206,8 +219,8 @@ class PluginApi {
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
-   * api.decorateCooked(
-   *   $elem => $elem.css({ backgroundColor: 'yellow' }),
+   * api.decorateCookedElement(
+   *   elem => { elem.style.backgroundColor = 'yellow' },
    *   { id: 'yellow-decorator' }
    * );
    * ```
@@ -215,7 +228,7 @@ class PluginApi {
    * NOTE: To avoid memory leaks, it is highly recommended to pass a unique `id` parameter.
    * You will receive a warning if you do not.
    **/
-  decorateCooked(callback, opts) {
+  decorateCookedElement(callback, opts) {
     opts = opts || {};
 
     addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
@@ -1114,10 +1127,10 @@ function decorate(klass, evt, cb, id) {
   }
 
   const mixin = {};
-  mixin["_decorate_" + _decorateId++] = on(evt, function($elem) {
-    $elem = $elem || $(this.element);
-    if ($elem) {
-      cb($elem);
+  mixin["_decorate_" + _decorateId++] = on(evt, function(elem) {
+    elem = elem || this.element;
+    if (elem) {
+      cb(elem);
     }
   });
   klass.reopen(mixin);

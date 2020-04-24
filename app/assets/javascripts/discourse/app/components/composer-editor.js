@@ -1019,7 +1019,7 @@ export default Component.extend({
 
       this._registerImageScaleButtonClick($preview);
 
-      this.trigger("previewRefreshed", $preview);
+      this.trigger("previewRefreshed", $preview[0]);
       this.afterRefresh($preview);
     }
   }

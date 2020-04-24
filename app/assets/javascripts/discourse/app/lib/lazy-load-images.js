@@ -84,8 +84,8 @@ function show(image) {
   }
 }
 
-function forEachImage($post, callback) {
-  $post[0].querySelectorAll("img").forEach(img => {
+function forEachImage(post, callback) {
+  post.querySelectorAll("img").forEach(img => {
     if (img.width >= MINIMUM_SIZE && img.height >= MINIMUM_SIZE) {
       callback(img);
     }
@@ -104,7 +104,7 @@ export function setupLazyLoading(api) {
     });
   }, OBSERVER_OPTIONS);
 
-  api.decorateCooked($post => forEachImage($post, img => hide(img)), {
+  api.decorateCookedElement(post => forEachImage(post, img => hide(img)), {
     onlyStream: true,
     id: "discourse-lazy-load"
   });
@@ -112,8 +112,8 @@ export function setupLazyLoading(api) {
   // IntersectionObserver.observe must be called after the cooked
   // content is adopted by the document element in chrome
   // https://bugs.chromium.org/p/chromium/issues/detail?id=1073469
-  api.decorateCooked(
-    $post => forEachImage($post, img => observer.observe(img)),
+  api.decorateCookedElement(
+    post => forEachImage(post, img => observer.observe(img)),
     {
       onlyStream: true,
       id: "discourse-lazy-load-after-adopt",
