@@ -48,21 +48,19 @@ def downsize_upload(upload, path)
   existing_upload = Upload.find_by(sha1: sha1)
   upload = existing_upload if existing_upload
 
-  before = upload.filesize
-  upload.filesize = File.size(path)
-
-  if upload.filesize > before
-    puts "No filesize reduction" if ENV["VERBOSE"]
-    return
-  end
-
   upload.attributes = {
     sha1: sha1,
     width: w,
     height: h,
     thumbnail_width: ww,
-    thumbnail_height: hh
+    thumbnail_height: hh,
+    filesize: File.size(path)
   }
+
+  if upload.filesize > upload.filesize_was
+    puts "No filesize reduction" if ENV["VERBOSE"]
+    return
+  end
 
   unless existing_upload
     url = Discourse.store.store_upload(File.new(path), upload)
