@@ -658,17 +658,10 @@ export default Component.extend(
       );
 
       if (rowContainer) {
-        const $collection = $(
-          this.element.querySelector(".select-kit-collection")
-        );
+        const collectionContainer = rowContainer.parentNode;
 
-        const collectionTop = $collection.position().top;
-
-        $collection.scrollTop(
-          $collection.scrollTop() +
-            $(rowContainer).position().top -
-            collectionTop
-        );
+        collectionContainer.scrollTop =
+          rowContainer.offsetTop - collectionContainer.offsetTop;
       }
     },
 
