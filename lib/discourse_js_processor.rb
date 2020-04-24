@@ -52,7 +52,6 @@ class DiscourseJsProcessor
       preload-application-data
       wizard-start
       onpopstate-handler
-      discourse
       google-tag-manager
       google-universal-analytics
       activate-account
