@@ -154,7 +154,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     // Close the current modal, and destroy its state.
-    closeModal() {
+    closeModal(initiatedBy) {
       const route = getOwner(this).lookup("route:application");
       let modalController = route.controllerFor("modal");
       const controllerName = modalController.get("name");
@@ -177,7 +177,10 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
           `controller:${controllerName}`
         );
         if (controller && controller.onClose) {
-          controller.onClose();
+          controller.onClose({
+            initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
+            initiatedByClickOut: initiatedBy === "initiatedByClickOut"
+          });
         }
         modalController.set("name", null);
       }
