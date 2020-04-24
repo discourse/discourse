@@ -672,32 +672,4 @@ describe Jobs::UserEmail do
     end
 
   end
-
-  context "canonical emails" do
-    it "correctly creates canonical emails" do
-      expect(UserEmail.canonical('s.a.m+1@gmail.com')).to eq('sam@gmail.com')
-      expect(UserEmail.canonical('sa.m+1@googlemail.com')).to eq('sam@googlemail.com')
-      expect(UserEmail.canonical('sa.m+1722@sam.com')).to eq('sa.m@sam.com')
-      expect(UserEmail.canonical('sa.m@sam.com')).to eq('sa.m@sam.com')
-    end
-
-    it "correctly bans non canonical emails" do
-
-      email = UserEmail.create!(email: 'sam@sam.com', user_id: user.id)
-      expect(email.canonical_email).to eq(nil)
-
-      email = UserEmail.create!(email: 'sam+1@sam.com', user_id: user.id)
-      expect(email.canonical_email).to eq(nil)
-
-      SiteSetting.enforce_canonical_emails = true
-
-      email = UserEmail.create!(email: 'Sam+5@sam.com', user_id: user.id)
-      expect(email.canonical_email).to eq('sam@sam.com')
-
-      expect do
-        UserEmail.create!(email: 'saM+3@sam.com', user_id: user.id)
-      end.to raise_error(ActiveRecord::RecordInvalid)
-
-    end
-  end
 end
