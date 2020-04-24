@@ -158,6 +158,8 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (2.3.0)
+    json-schema (2.8.1)
+      addressable (>= 2.4)
     jwt (2.2.1)
     kgio (2.11.3)
     libv8 (7.3.492.27.1)
@@ -337,6 +339,10 @@ GEM
       rspec-mocks (~> 3.8)
       rspec-support (~> 3.8)
     rspec-support (3.9.2)
+    rswag-specs (2.3.1)
+      activesupport (>= 3.1, < 7.0)
+      json-schema (~> 2.2)
+      railties (>= 3.1, < 7.0)
     rtlit (0.0.5)
     rubocop (0.82.0)
       jaro_winkler (~> 1.5.1)
@@ -524,6 +530,7 @@ DEPENDENCIES
   rspec
   rspec-html-matchers
   rspec-rails (= 4.0.0.beta2)
+  rswag-specs
   rtlit
   rubocop
   rubocop-discourse

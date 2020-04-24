@@ -132,3 +132,6 @@ vendor/bundle/*
 
 # ignore auto-generated plugin js assets
 /app/assets/javascripts/plugins/*
+
+# ignore generated api documentation files
+openapi/*
