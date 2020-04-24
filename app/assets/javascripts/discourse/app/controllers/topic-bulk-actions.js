@@ -30,7 +30,7 @@ addBulkButton("showChangeCategory", "change_category", {
   class: "btn-default"
 });
 addBulkButton("closeTopics", "close_topics", {
-  icon: "discourse-comment-close",
+  icon: "discourse-no-entry",
   class: "btn-default"
 });
 addBulkButton("archiveTopics", "archive_topics", {

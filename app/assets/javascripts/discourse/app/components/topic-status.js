@@ -23,21 +23,17 @@ export default Component.extend({
   @discourseComputed("topic.closed", "topic.archived")
   topicClosedArchived(closed, archived) {
     if (closed && archived) {
-      this._set(
-        "closedArchived",
-        "discourse-comment-close",
-        "locked_and_archived"
-      );
+      this._set("closedArchived", "discourse-no-entry", "locked_and_archived");
       this._reset("closed");
       this._reset("archived");
       return true;
     } else {
       this._reset("closedArchived");
       closed
-        ? this._set("closed", "discourse-comment-close", "locked")
+        ? this._set("closed", "discourse-no-entry", "locked")
         : this._reset("closed");
       archived
-        ? this._set("archived", "discourse-comment-close", "archived")
+        ? this._set("archived", "discourse-no-entry", "archived")
         : this._reset("archived");
       return false;
     }
