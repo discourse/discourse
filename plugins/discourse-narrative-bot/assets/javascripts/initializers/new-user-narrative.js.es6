@@ -32,7 +32,7 @@ function initialize(api) {
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         });
       }
-      this._super();
+      return this._super();
     }
   });
 
