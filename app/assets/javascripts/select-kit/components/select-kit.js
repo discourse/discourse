@@ -658,9 +658,7 @@ export default Component.extend(
       );
 
       if (rowContainer) {
-        const collectionContainer = this.element.querySelector(
-          ".select-kit-collection"
-        );
+        const collectionContainer = rowContainer.parentNode;
 
         collectionContainer.scrollTop =
           rowContainer.offsetTop - collectionContainer.offsetTop;
