@@ -82,7 +82,7 @@ class Topic < ActiveRecord::Base
 
     thumbnail = original.optimized_images.detect { |oi| oi.height == target_height && oi.width == target_width }
 
-    if thumbnail.nil? && generate_sync
+    if thumbnail.nil? && generate_sync && SiteSetting.create_thumbnails?
       thumbnail = original.get_optimized_image(target_width, target_height, {})
     end
 

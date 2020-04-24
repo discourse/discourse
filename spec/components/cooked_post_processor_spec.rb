@@ -810,8 +810,9 @@ describe CookedPostProcessor do
         end
 
         it "generates thumbnails correctly" do
-          topic = post.topic
+          FastImage.expects(:size).returns([1750, 2000])
 
+          topic = post.topic
           cpp.post_process
           topic.reload
           expect(topic.image_upload_id).to be_present

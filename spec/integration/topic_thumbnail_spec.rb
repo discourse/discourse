@@ -2,6 +2,8 @@
 require 'rails_helper'
 
 describe "Topic Thumbnails" do
+  before { SiteSetting.create_thumbnails = true }
+
   fab!(:image) { Fabricate(:image_upload, width: 5000, height: 5000) }
   fab!(:topic) { Fabricate(:topic, image_upload_id: image.id) }
   fab!(:user) { Fabricate(:user) }
