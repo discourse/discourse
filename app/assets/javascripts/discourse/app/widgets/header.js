@@ -532,6 +532,24 @@ export default createWidget("header", {
     }
   },
 
+  headerDismissFirstNotificationMask() {
+    // Dismiss notifications
+    this.store
+      .findStale(
+        "notification",
+        {
+          recent: true,
+          silent: this.currentUser.enforcedSecondFactor,
+          limit: 5
+        },
+        { cacheKey: "recent-notifications" }
+      )
+      .refresh();
+    // Update UI
+    this.state.ringBackdrop = false;
+    this.scheduleRerender();
+  },
+
   headerKeyboardTrigger(msg) {
     switch (msg.type) {
       case "search":
