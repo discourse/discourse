@@ -213,7 +213,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       color: $primary;
     }
     .location,
-    .local-time {
+    .local-time,
+    .website-name {
       margin-right: 0.5em;
     }
     .website-name a {
