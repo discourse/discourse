@@ -2929,8 +2929,6 @@ da:
           view_table: "tabel"
           view_graph: "graf"
           refresh_report: "Genopfrisk rapporten"
-          start_date: "Startdato (UTC)"
-          end_date: "Slutdato (UTC)"
           groups: "Alle grupper"
           disabled: "Denne rapport er deaktiveret"
           totals_for_sample: "Totaler for prøve"
@@ -2989,7 +2987,6 @@ da:
             trust_levels_title: "Tillidsniveau der automatisk tildeles medlemmer når de oprettes:"
             trust_levels_none: "Ingen"
             automatic_membership_email_domains: "Brugere der registrerer med et email domæne der præcist matcher et på denne liste, vil automatisk blive tilføjet til denne gruppe:"
-            automatic_membership_retroactive: "Brug denne email domæne regel til at tilføje brugere der allerede er registrerede brugere"
             primary_group: "Sæt automatisk som primær gruppe"
         name_placeholder: "Gruppenavn uden mellemrum, samme som reglen for brugernavn"
         primary: "Primær gruppe"
@@ -3799,6 +3796,11 @@ da:
         anonymize_yes: "Ja, anonymiser denne konto"
         anonymize_failed: "Der var problemer med at anonymisere denne konto."
         delete: "Slet bruger"
+        merge:
+          prompt:
+            cancel: "Afbryd"
+          confirmation:
+            cancel: "Afbryd"
         delete_forbidden_because_staff: "Admins og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle indlæg fra administratorer og moderatorer."
         delete_forbidden:

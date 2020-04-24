@@ -324,9 +324,6 @@ pl_PL:
   topics_in_category: "Tematy w kategorii '%{category}'"
   rss_posts_in_topic: "Kanał RSS tematu '%{topic}'"
   rss_topics_in_category: "Kanał RSS tematów z kategorii '%{category}'"
-  author_wrote: "%{author} pisze:"
-  num_posts: "Wpisy:"
-  num_participants: "Uczestnicy:"
   read_full_topic: "Przeczytaj cały temat"
   private_message_abbrev: "Wiad."
   rss_description:

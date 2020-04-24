@@ -90,9 +90,6 @@ gl:
   page_num: "Páxina %{num}"
   home_title: "Inicio"
   rss_posts_in_topic: "Fonte RSS de '%{topic}»"
-  author_wrote: "%{author} escribiu:"
-  num_posts: "Publicacións:"
-  num_participants: "Participantes:"
   read_full_topic: "Ler todo o tema"
   private_message_abbrev: "Msx."
   rss_description:

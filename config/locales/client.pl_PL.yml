@@ -3198,8 +3198,6 @@ pl_PL:
           view_table: "tabela"
           view_graph: "wykres"
           refresh_report: "Odśwież raport"
-          start_date: "Data startowa (UTC)"
-          end_date: "Data końcowa (UTC)"
           groups: "Wszystkie grupy"
           disabled: "Ten raport jest nieaktywny"
           totals_for_sample: "Całkowite na próbkowanie"
@@ -3259,7 +3257,6 @@ pl_PL:
             effects: Efekty
             trust_levels_none: "Brak"
             automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
-            automatic_membership_retroactive: "Zastosuj tę regułę domenową do już istniejących użytkowników."
             primary_group: "Automatycznie ustawiaj jako główną grupę"
         name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
         primary: "Główna grupa"
@@ -4103,6 +4100,11 @@ pl_PL:
         anonymize_yes: "Tak, anonimizuj to konto."
         anonymize_failed: "Wystąpił problem podczas anonimizacji konta."
         delete: "Usuń użytkownika"
+        merge:
+          prompt:
+            cancel: "Anuluj"
+          confirmation:
+            cancel: "Anuluj"
         delete_forbidden_because_staff: "Administratorzy i moderatorzy nie mogą zostać usunięci."
         delete_posts_forbidden_because_staff: "Nie można usunąć wszystkich wpisów administratorów i moderatorów."
         delete_forbidden:

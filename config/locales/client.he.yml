@@ -316,6 +316,8 @@ he:
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}"
       created_with_at_desktop_reminder: "סימנת את הפוסט הזה ותישלח לך תזכורת בעת השימוש הבא בשולחן העבודה שלך"
       remove: "הסרה מהסימניות"
+      delete: "מחיקת סימנייה"
+      confirm_delete: "למחוק את הסימנייה הזאת? גם התזכורת תימחק."
       confirm_clear: "לנקות את כל הסימניות מנושא זה?"
       save: "שמירה"
       no_timezone: 'עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href="%{basePath}/my/preferences/profile">בפרופיל שלך</a>.'
@@ -3080,6 +3082,7 @@ he:
         next_business_day: "%{shortcut} יום העסקים הבא"
         custom: "%{shortcut} בחירת שעה ותאריך"
         none: "%{shortcut} ללא תזכורת"
+        delete: "%{shortcut} מחיקת סימנייה"
       actions:
         title: "פעולות"
         bookmark_topic: "%{shortcut} סמנו/בטלו-סימנייה של נושא"
@@ -3361,8 +3364,7 @@ he:
           view_table: "טבלה"
           view_graph: "גרף"
           refresh_report: "רענון דו\"ח"
-          start_date: "תאריך התחלה (UTC)"
-          end_date: "תאריך סיום (UTC)"
+          dates: "תאריכים (UTC)"
           groups: "כל הקבוצות"
           disabled: "דוח זה מנוטרל"
           totals_for_sample: "סיכומים לדוגמה"
@@ -3379,6 +3381,8 @@ he:
               label: קבוצה
             category:
               label: קטגוריה
+            include-subcategories:
+              label: "לכלול תת־קטגוריות"
       commits:
         latest_changes: "שינויים אחרונים: בבקשה עדכן תכופות!"
         by: "על ידי"
@@ -3423,7 +3427,7 @@ he:
             effects: אפקטים
             trust_levels_none: "ללא"
             automatic_membership_email_domains: "משתמשים שנרשמים עם שם תחום (דומיין) דוא״ל שתואם בדיוק לאחד מהרשימה, יתווספו באופן אוטומטי לקבוצה זו:"
-            automatic_membership_retroactive: "להחיל את אותו כלל שם תחום הדוא״ל כדי להוסיף משתמשים רשומים"
+            automatic_membership_user_count: "ל־%{count} משתמשים יש את כתובות הדוא״ל בשם התחום החדש ויתווספו לקבוצה."
             primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
         name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
         primary: "קבוצה ראשית"
@@ -4291,6 +4295,29 @@ he:
         anonymize_yes: "כן, נא להפוך חשבון זה לאלמוני"
         anonymize_failed: "אירעה תקלה בהפיכת חשבון זה לאלמוני."
         delete: "מחיקת משתמש"
+        merge:
+          transfer_and_delete: "העברה ומחיקה"
+          prompt:
+            title: "העברה ומחיקה של ‎@%{username}‎"
+            description: |
+              <p>נא לבחור בעלות חדשה על התוכן של <b>‎@%{username}‎</b> .</p>
+
+              <p>כל הנושאים, הפוסטים, ההודעות ושאר התוכן שנוצר על ידי <b>‎@%{username}‎</b> יועבר.</p>
+            target_username_placeholder: "שם המשתמש של הבעלים החדשים"
+            transfer_and_delete: "העברה ומחיקה של ‎@%{username}‎"
+            cancel: "ביטול"
+          confirmation:
+            title: "העברה ומחיקה של ‎@%{username}‎"
+            description: |
+              <p>כל התוכן של <b>‎@%{username}‎</b> יועבר וישויך אל <b>‎@%{targetUsername}‎</b>. לאחר העברת התוכן, החשבון של <b>‎@%{username}‎</b> יימחק.</p>
+
+              <p><b>מדובר בפעולה בלתי הפיכה!</b></p>
+
+              <p>כדי להמשיך עליך להקליד: <code>%{text}</code></p>
+            transfer_and_delete: "העברה ומחיקה של ‎@%{username}‎"
+            cancel: "ביטול"
+        merging_user: "המשתמש ממוזג…"
+        merge_failed: "אירעה שגיאה במיזוג המשתמשים."
         delete_forbidden_because_staff: "לא ניתן למחוק מנהלים ומפקחים."
         delete_posts_forbidden_because_staff: "לא ניתן להסיר את כל הפוסטים של מנהלי מערכת ומפקחים."
         delete_forbidden:

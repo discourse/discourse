@@ -2888,8 +2888,6 @@ fa_IR:
           view_table: "جدول"
           view_graph: "نمودار"
           refresh_report: "تازه کردن گزارش"
-          start_date: "زمان شروع (UTC)"
-          end_date: "زمان پایان (UTC)"
           groups: "همه گروه‌ها"
           disabled: "این گزارش غیرفعال شده"
           totals_for_sample: "کل نمونه‌ها"
@@ -2938,7 +2936,6 @@ fa_IR:
             trust_levels_title: "سطح اعتماد به صورت خودکار به اعضایی که اضافه می‌شوند داده می‌شود:"
             trust_levels_none: "هیچ کدام"
             automatic_membership_email_domains: " کاربرانی که با ایمیل دامنه ثبت نام کرده اند،دقیقا شبیه دامنه های لیست، بصورت خودکار به این گروه اضافه می شوند :"
-            automatic_membership_retroactive: "درخواست همان قاعده دامنه ایمیل برای اضافه کردن برای کاربران ثبت نام کرده"
             primary_group: "بطور خودکار به گروه اصلی تبدیل شد"
         name_placeholder: "در نام گروه نمی توان از فاصله استفاده کرد، مانند قوانین نامگذاری نام کاربری"
         primary: "گروه اصلی"
@@ -3609,6 +3606,11 @@ fa_IR:
         anonymize_yes: "بله، حساب‌کاربری را بینام کن"
         anonymize_failed: "یک مشکل با حساب‌کاربری بینام وجود دارد"
         delete: "حذف کاربر"
+        merge:
+          prompt:
+            cancel: "لغو کردن"
+          confirmation:
+            cancel: "لغو کردن"
         delete_forbidden_because_staff: "مدیران ارشد و مدیران را نمی‌توانید پاک کنید"
         delete_posts_forbidden_because_staff: "نمی توان همه‌ی نوشته‌های مدیران ارشد و مدیران را حذف کرد"
         delete_forbidden:

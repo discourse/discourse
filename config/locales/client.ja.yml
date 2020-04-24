@@ -2432,7 +2432,6 @@ ja:
             trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与されるトラストレベル："
             trust_levels_none: "なし"
             automatic_membership_email_domains: "このリストにあるものと完全に一致するメー​​ルドメインで登録したユーザーは、自動的にこのグループに追加されます。"
-            automatic_membership_retroactive: "既存の登録ユーザーを追加するため、同じメールドメインにルールを適用する"
             primary_group: "自動的にプライマリーグループとして設定する"
         name_placeholder: "グループ名、スペースなし、ユーザー名のルールと同じ"
         primary: "プライマリーグループ"
@@ -2930,6 +2929,11 @@ ja:
         anonymize_yes: "はい。アカウントを匿名化してください"
         anonymize_failed: "アカウントの匿名化中に問題が発生しました"
         delete: "ユーザを削除"
+        merge:
+          prompt:
+            cancel: "キャンセル"
+          confirmation:
+            cancel: "キャンセル"
         delete_forbidden_because_staff: "管理者およびモデレータアカウントは削除できません。"
         delete_posts_forbidden_because_staff: "管理者、モデレータの全ての投稿は削除できません"
         delete_forbidden:

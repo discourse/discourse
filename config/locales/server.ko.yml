@@ -195,9 +195,6 @@ ko:
   topics_in_category: "'%{category}' 카테고리의 토픽"
   rss_posts_in_topic: "'%{topic}' 의 RSS 피드"
   rss_topics_in_category: "'%{category}' 카테고리의 RSS 피드 "
-  author_wrote: "%{author} 게시:"
-  num_posts: "포스트 수:"
-  num_participants: "참여자:"
   read_full_topic: "전체 토픽 읽기"
   private_message_abbrev: "메시지"
   rss_description:

@@ -289,9 +289,6 @@ ca:
   topics_in_category: "Temes en la categoria '%{category}' "
   rss_posts_in_topic: "Sindicació RSS del tema '%{topic}'"
   rss_topics_in_category: "Sindicació RSS de temes de la categoria '%{category}' "
-  author_wrote: "%{author} ha escrit:"
-  num_posts: "Publicacions:"
-  num_participants: "Participants:"
   read_full_topic: "Llegeix tot el tema"
   private_message_abbrev: "Missatge"
   rss_description:

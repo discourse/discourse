@@ -2634,7 +2634,6 @@ nb_NO:
             trust_levels_title: "Tillitsnivå som automatisk gis til nye medlemmer når de legges til:"
             trust_levels_none: "Ingen"
             automatic_membership_email_domains: "Brukere som registreres med et e-postdomene identisk med et fra denne listen vil automatisk legges til i denne gruppen:"
-            automatic_membership_retroactive: "Bruk den samme regelen på eksisterende brukere med matchende e-postdomener"
             primary_group: "Sett som primærgruppe automatisk"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme som regel for brukernavn"
         primary: "Primærgruppe"
@@ -3333,6 +3332,11 @@ nb_NO:
         anonymize_yes: "Ja, anonymiser denne kontoen"
         anonymize_failed: "Det oppstod en feil ved anonymisering av denne kontoen."
         delete: "Slett bruker"
+        merge:
+          prompt:
+            cancel: "Avbryt"
+          confirmation:
+            cancel: "Avbryt"
         delete_forbidden_because_staff: "Administratorer og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:

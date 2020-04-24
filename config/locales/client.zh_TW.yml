@@ -2739,7 +2739,6 @@ zh_TW:
             trust_levels_title: "當這些成員加入時，自動提升信任等級："
             trust_levels_none: "無"
             automatic_membership_email_domains: "當註冊使用者的電子郵件所屬網域，完全符合列表裡某項時，將會自動加進這個群組裡："
-            automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的使用者上："
             primary_group: "自動設為主要群組"
         name_placeholder: "群組名稱：不可含有空白字元，和使用者名稱的規則相同"
         primary: "主要群組"
@@ -3526,6 +3525,11 @@ zh_TW:
         anonymize_yes: "是，將這個帳戶變成匿名"
         anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除使用者"
+        merge:
+          prompt:
+            cancel: "取消"
+          confirmation:
+            cancel: "取消"
         delete_forbidden_because_staff: "管理員與板主不可刪除。"
         delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有貼文。"
         delete_forbidden:

@@ -286,9 +286,6 @@ pt_BR:
   topics_in_category: "Tópicos na categoria '%{category}'"
   rss_posts_in_topic: "RSS feed de '%{topic}'"
   rss_topics_in_category: "RSS feed dos tópicos da categoria '%{category}'"
-  author_wrote: "%{author} escreveu:"
-  num_posts: "Mensagens:"
-  num_participants: "Participantes:"
   read_full_topic: "Ler tópico completo"
   private_message_abbrev: "Msg"
   rss_description:
