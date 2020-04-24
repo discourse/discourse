@@ -11,7 +11,7 @@ import {
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
 
-// Don't call this directly: use `plugin-api/decorateCooked`
+// Don't call this directly: use `plugin-api/decorateCookedElement`
 export function addDecorator(callback, { afterAdopt = false } = {}) {
   if (afterAdopt) {
     _afterAdoptDecorators.push(callback);
@@ -67,13 +67,11 @@ export default class PostCooked {
   }
 
   _decorateAndAdopt(cooked) {
-    const $cooked = $(cooked);
-
-    _beforeAdoptDecorators.forEach(d => d($cooked, this.decoratorHelper));
+    _beforeAdoptDecorators.forEach(d => d(cooked, this.decoratorHelper));
 
     document.adoptNode(cooked);
 
-    _afterAdoptDecorators.forEach(d => d($cooked, this.decoratorHelper));
+    _afterAdoptDecorators.forEach(d => d(cooked, this.decoratorHelper));
   }
 
   _applySearchHighlight($html) {
