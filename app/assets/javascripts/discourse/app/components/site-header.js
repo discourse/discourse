@@ -211,23 +211,20 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       !this.get("currentUser.read_first_notification") &&
       !this.get("currentUser.enforcedSecondFactor")
     ) {
-      document.addEventListener(
-        "click",
-        e => {
-          if (
-            !e.target.closest("#current-user") &&
-            !e.target.closest(".ring-backdrop") &&
-            !this.currentUser.get("read_first_notification") &&
-            !this.currentUser.get("enforcedSecondFactor")
-          ) {
-            this.eventDispatched(
-              "header:dismiss-first-notification-mask",
-              "header"
-            );
-          }
-        },
-        { once: true }
-      );
+      document.addEventListener("click", this._dismissFirstNotification, {
+        once: true
+      });
+    }
+  },
+
+  _dismissFirstNotification(e) {
+    if (
+      !e.target.closest("#current-user") &&
+      !e.target.closest(".ring-backdrop") &&
+      !this.currentUser.get("read_first_notification") &&
+      !this.currentUser.get("enforcedSecondFactor")
+    ) {
+      this.eventDispatched("header:dismiss-first-notification-mask", "header");
     }
   },
 
@@ -249,6 +246,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
     cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
+
+    document.removeEventListener("click", this._dismissFirstNotification);
   },
 
   buildArgs() {
