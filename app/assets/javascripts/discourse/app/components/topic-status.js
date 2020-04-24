@@ -25,7 +25,7 @@ export default Component.extend({
     if (closed && archived) {
       this._set(
         "closedArchived",
-        "discourse-comment-slash",
+        "discourse-comment-close",
         "locked_and_archived"
       );
       this._reset("closed");
@@ -34,10 +34,10 @@ export default Component.extend({
     } else {
       this._reset("closedArchived");
       closed
-        ? this._set("closed", "discourse-comment-slash", "locked")
+        ? this._set("closed", "discourse-comment-close", "locked")
         : this._reset("closed");
       archived
-        ? this._set("archived", "discourse-comment-slash", "archived")
+        ? this._set("archived", "discourse-comment-close", "archived")
         : this._reset("archived");
       return false;
     }

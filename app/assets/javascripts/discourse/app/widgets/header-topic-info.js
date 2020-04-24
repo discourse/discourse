@@ -115,7 +115,7 @@ export default createWidget("header-topic-info", {
       );
     }
 
-    this.title = [h("h1.header-title", heading)];
+    this.headerElements = [h("h1.header-title", heading)];
     const category = topic.get("category");
 
     if (loaded || category) {
@@ -133,7 +133,7 @@ export default createWidget("header-topic-info", {
         }
         categories.push(this.attach("category-link", { category }));
 
-        this.title.push(h("div.categories-wrapper", categories));
+        this.headerElements.push(h("div.categories-wrapper", categories));
       }
 
       let extra = [];
@@ -203,11 +203,10 @@ export default createWidget("header-topic-info", {
         }
       }
       if (extra.length) {
-        this.title.push(h("div.topic-header-extra", extra));
+        this.headerElements.push(h("div.topic-header-extra", extra));
       }
     }
-
-    this.contents = h("div.title-wrapper", this.title);
+    this.contents = h("div.title-wrapper", this.headerElements);
   },
 
   html() {
@@ -219,7 +218,7 @@ export default createWidget("header-topic-info", {
   },
 
   containerClassName() {
-    return this.title.length > 1 ? "two-rows" : "";
+    return this.headerElements.length > 1 ? "two-rows" : "";
   },
 
   jumpToTopPost() {

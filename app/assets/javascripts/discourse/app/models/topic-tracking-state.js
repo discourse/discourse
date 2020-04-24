@@ -53,6 +53,17 @@ const TopicTrackingState = EmberObject.extend({
     const tracker = this;
 
     const process = data => {
+      if (data.message_type === "muted") {
+        tracker.trackMutedTopic(data.topic_id);
+        return;
+      }
+
+      tracker.pruneOldMutedTopics();
+
+      if (tracker.isMutedTopic(data.topic_id)) {
+        return;
+      }
+
       if (data.message_type === "delete") {
         tracker.removeTopic(data.topic_id);
         tracker.incrementMessageCount();
@@ -130,6 +141,30 @@ const TopicTrackingState = EmberObject.extend({
       }
       tracker.incrementMessageCount();
     });
+  },
+
+  mutedTopics() {
+    return (this.currentUser && this.currentUser.muted_topics) || [];
+  },
+
+  trackMutedTopic(topicId) {
+    let mutedTopics = this.mutedTopics().concat({
+      topicId: topicId,
+      createdAt: Date.now()
+    });
+    this.currentUser && this.currentUser.set("muted_topics", mutedTopics);
+  },
+
+  pruneOldMutedTopics() {
+    const now = Date.now();
+    let mutedTopics = this.mutedTopics().filter(
+      mutedTopic => now - mutedTopic.createdAt < 60000
+    );
+    this.currentUser && this.currentUser.set("muted_topics", mutedTopics);
+  },
+
+  isMutedTopic(topicId) {
+    return !!this.mutedTopics().findBy("topicId", topicId);
   },
 
   updateSeen(topicId, highestSeen) {

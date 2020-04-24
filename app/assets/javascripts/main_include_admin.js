@@ -6,7 +6,7 @@
 //= require admin/models/tl3-requirements
 //= require admin/models/admin-user
 //= require_tree ./admin/models
-//= require discourse/lib/export-result
+//= require discourse/app/lib/export-result
 //= require_tree ./admin
 
 //= require resumable.js
