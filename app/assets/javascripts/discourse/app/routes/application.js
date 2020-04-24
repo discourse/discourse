@@ -85,6 +85,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         recipients,
         archetypeId: "private_message",
         draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+        draftSequence: 0,
         reply,
         title
       });

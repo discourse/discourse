@@ -70,7 +70,7 @@ function loadDraft(store, opts) {
 
 const _popupMenuOptionsCallbacks = [];
 
-let _checkDraftPopup = !ENV.environment === "test";
+let _checkDraftPopup = ENV.environment !== "test";
 
 export function toggleCheckDraftPopup(enabled) {
   _checkDraftPopup = enabled;
