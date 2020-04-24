@@ -16,10 +16,10 @@ export default Controller.extend({
 
   @discourseComputed("model.content.length", "filter")
   hasNotifications(length, filter) {
-    if(filter === "read"){
-      return this.model.filterBy("read",true).length > 0;
-    }else if(filter === "unread"){
-      return this.model.filterBy("read",false).length > 0;
+    if (filter === "read") {
+      return this.model.filterBy("read", true).length > 0;
+    } else if (filter === "unread") {
+      return this.model.filterBy("read", false).length > 0;
     }
     return length > 0;
   },
@@ -42,8 +42,8 @@ export default Controller.extend({
       this.model.loadMore();
     },
 
-    filterNotifications(filter){
-      this.set('filter', filter);
+    filterNotifications(filter) {
+      this.set("filter", filter);
     }
   }
 });

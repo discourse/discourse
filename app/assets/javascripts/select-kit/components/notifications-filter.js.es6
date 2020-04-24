@@ -5,20 +5,20 @@ export default DropdownSelectBoxComponent.extend({
   content: [
     {
       type: "all",
-      value: I18n.t('user.user_notifications.filters.all')
+      value: I18n.t("user.user_notifications.filters.all")
     },
     {
       type: "read",
-      value: I18n.t('user.user_notifications.filters.read')
+      value: I18n.t("user.user_notifications.filters.read")
     },
     {
       type: "unread",
-      value: I18n.t('user.user_notifications.filters.unread')
+      value: I18n.t("user.user_notifications.filters.unread")
     }
   ],
-  value:{
+  value: {
     type: "all",
-    value: I18n.t('user.user_notifications.filters.all')
+    value: I18n.t("user.user_notifications.filters.all")
   },
   isVisible: true,
   valueProperty: null,
@@ -33,7 +33,7 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onChange(filter) {
-      this.set('value',filter);
+      this.set("value", filter);
       this.attrs.action && this.attrs.action(filter.type);
     }
   }

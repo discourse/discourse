@@ -3,5 +3,5 @@ import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select
 export default DropdownSelectBoxRowComponent.extend({
   layoutName:
     "select-kit/templates/components/notifications-filter/notifications-filter-row",
-  classNames: ["notifications-filter-row"],
+  classNames: ["notifications-filter-row"]
 });
