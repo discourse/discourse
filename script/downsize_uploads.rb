@@ -85,19 +85,22 @@ def downsize_upload(upload, path)
   posts.each do |post|
     transform_post(post, original_upload, upload)
 
+    if post.custom_fields[Post::DOWNLOADED_IMAGES].present?
+      downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES])
+    end
+
     if post.raw_changed?
-      puts "Updating post #{post.id}" if ENV["VERBOSE"]
-    elsif post.cooked.include?(original_upload.sha1)
-      if post.raw.include?("#{Discourse.base_url.sub(/^https?:\/\//i, "")}/t/")
-        puts "Updating a topic onebox in post #{post.id}" if ENV["VERBOSE"]
-      else
-        puts "Updating an external onebox in post #{post.id}" if ENV["VERBOSE"]
-      end
+      puts "Updating post" if ENV["VERBOSE"]
+    elsif downloaded_images&.has_value?(original_upload.id)
+      puts "A hotlinked, unreferenced image" if ENV["VERBOSE"]
     elsif post.raw.include?(upload.short_url)
       puts "Already processed"
-    elsif !post.trashed? && post.topic
-      # Ignore issues with deleted posts and deleted topics
-      puts "Could not find the upload URL in post #{post.id}" if ENV["VERBOSE"]
+    elsif post.trashed?
+      puts "A deleted post" if ENV["VERBOSE"]
+    elsif !post.topic || post.topic.trashed?
+      puts "A deleted topic" if ENV["VERBOSE"]
+    else
+      puts "Could not find the upload URL" if ENV["VERBOSE"]
       success = false
     end
 
@@ -170,7 +173,7 @@ def downsize_upload(upload, path)
     DistributedMutex.synchronize("process_post_#{post.id}") do
       current_post = Post.unscoped.find(post.id)
 
-      # If the post got outdated, re-apply changes
+      # If the post became outdated, reapply changes
       if current_post.updated_at != post.updated_at
         transform_post(current_post, original_upload, upload)
         post = current_post
@@ -181,6 +184,17 @@ def downsize_upload(upload, path)
           raw: post.raw,
           updated_at: Time.zone.now
         )
+      end
+
+      if existing_upload && post.custom_fields[Post::DOWNLOADED_IMAGES].present?
+        downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES])
+
+        downloaded_images.transform_values! do |upload_id|
+          upload_id == original_upload.id ? upload.id : upload_id
+        end
+
+        post.custom_fields[Post::DOWNLOADED_IMAGES] = downloaded_images.to_json if downloaded_images.present?
+        post.save_custom_fields
       end
 
       post.rebake!
