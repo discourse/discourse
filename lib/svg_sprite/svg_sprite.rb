@@ -62,8 +62,6 @@ module SvgSprite
     "discourse-bell-one",
     "discourse-bell-slash",
     "discourse-compress",
-    "discourse-comment",
-    "discourse-no-entry",
     "discourse-expand",
     "download",
     "ellipsis-h",
