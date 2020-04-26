@@ -426,11 +426,9 @@ export default {
   },
 
   sendToSelectedPost(action, elem) {
-    const container = this.container;
-
     // TODO: We should keep track of the post without a CSS class
     const selectedPost =
-      elem || document.querySelector("topic-post.selected article.boxed");
+      elem || document.querySelector(".topic-post.selected article.boxed");
 
     let selectedPostId;
     if (selectedPost) {
@@ -438,7 +436,7 @@ export default {
     }
 
     if (selectedPostId) {
-      const topicController = container.lookup("controller:topic");
+      const topicController = this.container.lookup("controller:topic");
       const post = topicController
         .get("model.postStream.posts")
         .findBy("id", selectedPostId);
@@ -447,7 +445,7 @@ export default {
 
         let actionMethod = topicController.actions[action];
         if (!actionMethod) {
-          const topicRoute = container.lookup("route:topic");
+          const topicRoute = this.container.lookup("route:topic");
           actionMethod = topicRoute.actions[action];
         }
 
