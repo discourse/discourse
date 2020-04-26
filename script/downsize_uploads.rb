@@ -289,7 +289,7 @@ def process_uploads
     if upload.changed?
       if ENV["VERBOSE"]
         puts "Correcting the upload dimensions"
-        puts "Before: #{upload.read_attribute(:width)}x#{upload.read_attribute(:height)} #{upload.read_attribute(:thumbnail_width)}x#{upload.read_attribute(:thumbnail_height)}"
+        puts "Before: #{upload.width_was}x#{upload.height_was} #{upload.thumbnail_width_was}x#{upload.thumbnail_height_was}"
         puts "After:  #{w}x#{h} #{ww}x#{hh}"
       end
 
