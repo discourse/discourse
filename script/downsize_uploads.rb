@@ -25,6 +25,10 @@ MAX_IMAGE_PIXELS = [
 
 ENV["VERBOSE"] = "1" if ENV["INTERACTIVE"]
 
+def log(*args)
+  puts(*args) if ENV["VERBOSE"]
+end
+
 def transform_post(post, upload_before, upload_after)
   post.raw.gsub!(/upload:\/\/#{upload_before.base62_sha1}(\.#{upload_before.extension})?/i, upload_after.short_url)
   post.raw.gsub!(Discourse.store.cdn_url(upload_before.url), Discourse.store.cdn_url(upload_after.url))
@@ -47,14 +51,14 @@ def downsize_upload(upload, path)
   sha1 = Upload.generate_digest(path)
 
   if sha1 == upload.sha1
-    puts "No sha1 change" if ENV["VERBOSE"]
+    log "No sha1 change"
     return
   end
 
   w, h = FastImage.size(path, timeout: 15, raise_on_failure: true)
 
   if !w || !h
-    puts "Invalid image dimensions after resizing" if ENV["VERBOSE"]
+    log "Invalid image dimensions after resizing"
     return
   end
 
@@ -76,7 +80,7 @@ def downsize_upload(upload, path)
   }
 
   if upload.filesize > upload.filesize_was
-    puts "No filesize reduction" if ENV["VERBOSE"]
+    log "No filesize reduction"
     return
   end
 
@@ -84,18 +88,16 @@ def downsize_upload(upload, path)
     url = Discourse.store.store_upload(File.new(path), upload)
 
     unless url
-      puts "Couldn't store the upload" if ENV["VERBOSE"]
+      log "Couldn't store the upload"
       return
     end
 
     upload.url = url
   end
 
-  if ENV["VERBOSE"]
-    puts "base62: #{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
-    puts "sha: #{original_upload.sha1} -> #{sha1}"
-    puts "(an exisiting upload)" if existing_upload
-  end
+  log "base62: #{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
+  log "sha: #{original_upload.sha1} -> #{sha1}"
+  log "(an exisiting upload)" if existing_upload
 
   success = true
   posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
@@ -108,50 +110,50 @@ def downsize_upload(upload, path)
     end
 
     if post.raw_changed?
-      puts "Updating post" if ENV["VERBOSE"]
+      log "Updating post"
     elsif downloaded_images&.has_value?(original_upload.id)
-      puts "A hotlinked, unreferenced image" if ENV["VERBOSE"]
+      log "A hotlinked, unreferenced image"
     elsif post.raw.include?(upload.short_url)
-      puts "Already processed"
+      log "Already processed"
     elsif post.trashed?
-      puts "A deleted post" if ENV["VERBOSE"]
+      log "A deleted post"
     elsif !post.topic || post.topic.trashed?
-      puts "A deleted topic" if ENV["VERBOSE"]
+      log "A deleted topic"
     elsif post.cooked.include?(original_upload.sha1)
       if post.raw.include?("#{Discourse.base_url.sub(/^https?:\/\//i, "")}/t/")
-        puts "Updating a topic onebox" if ENV["VERBOSE"]
+        log "Updating a topic onebox"
       else
-        puts "Updating an external onebox" if ENV["VERBOSE"]
+        log "Updating an external onebox"
       end
     else
-      puts "Could not find the upload URL" if ENV["VERBOSE"]
+      log "Could not find the upload URL"
       success = false
     end
 
-    puts "#{Discourse.base_url}/p/#{post.id}" if ENV["VERBOSE"]
+    log "#{Discourse.base_url}/p/#{post.id}"
   end
 
   if posts.empty?
-    puts "Upload not used in any posts" if ENV["VERBOSE"]
+    log "Upload not used in any posts"
 
     if User.where(uploaded_avatar_id: original_upload.id).count
-      puts "Used as a User avatar" if ENV["VERBOSE"]
+      log "Used as a User avatar"
     elsif UserAvatar.where(gravatar_upload_id: original_upload.id).count
-      puts "Used as a UserAvatar gravatar" if ENV["VERBOSE"]
+      log "Used as a UserAvatar gravatar"
     elsif UserAvatar.where(custom_upload_id: original_upload.id).count
-      puts "Used as a UserAvatar custom upload" if ENV["VERBOSE"]
+      log "Used as a UserAvatar custom upload"
     elsif UserProfile.where(profile_background_upload_id: original_upload.id).count
-      puts "Used as a UserProfile profile background" if ENV["VERBOSE"]
+      log "Used as a UserProfile profile background"
     elsif UserProfile.where(card_background_upload_id: original_upload.id).count
-      puts "Used as a UserProfile card background" if ENV["VERBOSE"]
+      log "Used as a UserProfile card background"
     elsif Category.where(uploaded_logo_id: original_upload.id).count
-      puts "Used as a Category logo" if ENV["VERBOSE"]
+      log "Used as a Category logo"
     elsif Category.where(uploaded_background_id: original_upload.id).count
-      puts "Used as a Category background" if ENV["VERBOSE"]
+      log "Used as a Category background"
     elsif CustomEmoji.where(upload_id: original_upload.id).count
-      puts "Used as a CustomEmoji" if ENV["VERBOSE"]
+      log "Used as a CustomEmoji"
     elsif ThemeField.where(upload_id: original_upload.id).count
-      puts "Used as a ThemeField" if ENV["VERBOSE"]
+      log "Used as a ThemeField"
     else
       success = false
     end
@@ -167,7 +169,7 @@ def downsize_upload(upload, path)
       # We're bailing, so clean up the just uploaded file
       Discourse.store.remove_upload(upload)
 
-      puts "⏩ Skipping" if ENV["VERBOSE"]
+      log "⏩ Skipping"
       return
     end
   end
@@ -265,14 +267,14 @@ def process_uploads
   scope.find_each.with_index do |upload, index|
     progress = (index * 100.0 / total_count).round(1)
 
-    puts "\n" if ENV["VERBOSE"]
+    log "\n"
     print "\r#{progress}% Fixed dimensions: #{dimensions_count} Downsized: #{downsized_count} Skipped: #{skipped} (upload id: #{upload.id})"
-    puts "\n" if ENV["VERBOSE"]
+    log "\n"
 
     source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
 
     unless source
-      puts "No path or URL" if ENV["VERBOSE"]
+      log "No path or URL"
       skipped += 1
       next
     end
@@ -280,20 +282,20 @@ def process_uploads
     begin
       w, h = FastImage.size(source, timeout: 15, raise_on_failure: true)
     rescue FastImage::ImageFetchFailure
-      puts "Retrying image resizing" if ENV["VERBOSE"]
+      log "Retrying image resizing"
       w, h = FastImage.size(source, timeout: 15)
     rescue FastImage::UnknownImageType
-      puts "Unknown image type" if ENV["VERBOSE"]
+      log "Unknown image type"
       skipped += 1
       next
     rescue FastImage::SizeNotFound
-      puts "Size not found" if ENV["VERBOSE"]
+      log "Size not found"
       skipped += 1
       next
     end
 
     if !w || !h
-      puts "Invalid image dimensions" if ENV["VERBOSE"]
+      log "Invalid image dimensions"
       skipped += 1
       next
     end
@@ -301,7 +303,7 @@ def process_uploads
     ww, hh = ImageSizer.resize(w, h)
 
     if w == 0 || h == 0 || ww == 0 || hh == 0
-      puts "Invalid image dimensions" if ENV["VERBOSE"]
+      log "Invalid image dimensions"
       skipped += 1
       next
     end
@@ -314,18 +316,16 @@ def process_uploads
     }
 
     if upload.changed?
-      if ENV["VERBOSE"]
-        puts "Correcting the upload dimensions"
-        puts "Before: #{upload.width_was}x#{upload.height_was} #{upload.thumbnail_width_was}x#{upload.thumbnail_height_was}"
-        puts "After:  #{w}x#{h} #{ww}x#{hh}"
-      end
+      log "Correcting the upload dimensions"
+      log "Before: #{upload.width_was}x#{upload.height_was} #{upload.thumbnail_width_was}x#{upload.thumbnail_height_was}"
+      log "After:  #{w}x#{h} #{ww}x#{hh}"
 
       dimensions_count += 1
       upload.save!
     end
 
     if w * h < MAX_IMAGE_PIXELS
-      puts "Image size within allowed range" if ENV["VERBOSE"]
+      log "Image size within allowed range"
       skipped += 1
       next
     end
@@ -333,7 +333,7 @@ def process_uploads
     path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
 
     unless path
-      puts "No image path" if ENV["VERBOSE"]
+      log "No image path"
       skipped += 1
       next
     end
