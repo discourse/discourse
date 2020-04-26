@@ -240,17 +240,22 @@ def process_uploads
     scope = scope.where("id % ? = ?", ENV["WORKER_COUNT"], ENV["WORKER_ID"])
   end
 
-  puts "Uploads to process: #{scope.count}"
+  skipped = 0
+  total_count = scope.count
+  puts "Uploads to process: #{total_count}"
 
-  scope.find_each do |upload|
+  scope.find_each.with_index do |upload, index|
+    progress = (index * 100.0 / total_count).round(1)
+
     puts "\n" if ENV["VERBOSE"]
-    print "\rFixed dimensions: #{dimensions_count} Downsized: #{downsized_count} (upload id: #{upload.id})"
+    print "\r#{progress}% Fixed dimensions: #{dimensions_count} Downsized: #{downsized_count} Skipped: #{skipped} (upload id: #{upload.id})"
     puts "\n" if ENV["VERBOSE"]
 
     source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
 
     unless source
       puts "No path or URL" if ENV["VERBOSE"]
+      skipped += 1
       next
     end
 
@@ -261,14 +266,17 @@ def process_uploads
       w, h = FastImage.size(source, timeout: 15)
     rescue FastImage::UnknownImageType
       puts "Unknown image type" if ENV["VERBOSE"]
+      skipped += 1
       next
     rescue FastImage::SizeNotFound
       puts "Size not found" if ENV["VERBOSE"]
+      skipped += 1
       next
     end
 
     if !w || !h
       puts "Invalid image dimensions" if ENV["VERBOSE"]
+      skipped += 1
       next
     end
 
@@ -276,6 +284,7 @@ def process_uploads
 
     if w == 0 || h == 0 || ww == 0 || hh == 0
       puts "Invalid image dimensions" if ENV["VERBOSE"]
+      skipped += 1
       next
     end
 
@@ -299,6 +308,7 @@ def process_uploads
 
     if w * h < MAX_IMAGE_PIXELS
       puts "Image size within allowed range" if ENV["VERBOSE"]
+      skipped += 1
       next
     end
 
@@ -306,10 +316,15 @@ def process_uploads
 
     unless path
       puts "No image path" if ENV["VERBOSE"]
+      skipped += 1
       next
     end
 
-    downsized_count += 1 if downsize_upload(upload, path)
+    if downsize_upload(upload, path)
+      downsized_count += 1
+    else
+      skipped += 1
+    end
   end
 
   STDIN.beep
