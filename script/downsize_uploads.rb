@@ -132,26 +132,26 @@ def downsize_upload(upload, path)
   end
 
   if posts.empty?
-    puts "Upload not used in any posts"
+    puts "Upload not used in any posts" if ENV["VERBOSE"]
 
     if User.where(uploaded_avatar_id: original_upload.id).count
-      puts "Used as a User avatar"
+      puts "Used as a User avatar" if ENV["VERBOSE"]
     elsif UserAvatar.where(gravatar_upload_id: original_upload.id).count
-      puts "Used as a UserAvatar gravatar"
+      puts "Used as a UserAvatar gravatar" if ENV["VERBOSE"]
     elsif UserAvatar.where(custom_upload_id: original_upload.id).count
-      puts "Used as a UserAvatar custom upload"
+      puts "Used as a UserAvatar custom upload" if ENV["VERBOSE"]
     elsif UserProfile.where(profile_background_upload_id: original_upload.id).count
-      puts "Used as a UserProfile profile background"
+      puts "Used as a UserProfile profile background" if ENV["VERBOSE"]
     elsif UserProfile.where(card_background_upload_id: original_upload.id).count
-      puts "Used as a UserProfile card background"
+      puts "Used as a UserProfile card background" if ENV["VERBOSE"]
     elsif Category.where(uploaded_logo_id: original_upload.id).count
-      puts "Used as a Category logo"
+      puts "Used as a Category logo" if ENV["VERBOSE"]
     elsif Category.where(uploaded_background_id: original_upload.id).count
-      puts "Used as a Category background"
+      puts "Used as a Category background" if ENV["VERBOSE"]
     elsif CustomEmoji.where(upload_id: original_upload.id).count
-      puts "Used as a CustomEmoji"
+      puts "Used as a CustomEmoji" if ENV["VERBOSE"]
     elsif ThemeField.where(upload_id: original_upload.id).count
-      puts "Used as a ThemeField"
+      puts "Used as a ThemeField" if ENV["VERBOSE"]
     else
       success = false
     end
