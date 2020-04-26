@@ -2,8 +2,13 @@
 
 require File.expand_path("../../config/environment", __FILE__)
 
-# no less than 1 megapixel
-MAX_IMAGE_PIXELS = [ARGV[0].to_i, 1_000_000].max
+MIN_IMAGE_PIXELS = 500_000 # 0.5 megapixels
+DEFAULT_IMAGE_PIXELS = 1_000_000 # 1 megapixel
+
+MAX_IMAGE_PIXELS = [
+  ARGV[0]&.to_i || DEFAULT_IMAGE_PIXELS,
+  MIN_IMAGE_PIXELS
+].max
 
 ENV["VERBOSE"] = "1" if ENV["INTERACTIVE"]
 
