@@ -149,7 +149,7 @@ def downsize_upload(upload, path)
       # We're bailing, so clean up the just uploaded file
       Discourse.store.remove_upload(upload)
 
-      puts "Skipping" if ENV["VERBOSE"]
+      puts "⏩ Skipping" if ENV["VERBOSE"]
       return
     end
   end
