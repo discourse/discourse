@@ -257,7 +257,7 @@ def process_uploads
     begin
       w, h = FastImage.size(source, timeout: 15, raise_on_failure: true)
     rescue FastImage::ImageFetchFailure
-      puts "Retrying image resizing"
+      puts "Retrying image resizing" if ENV["VERBOSE"]
       w, h = FastImage.size(source, timeout: 15)
     rescue FastImage::UnknownImageType
       puts "Unknown image type" if ENV["VERBOSE"]
