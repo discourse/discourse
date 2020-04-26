@@ -146,7 +146,7 @@ describe EmbedController do
 
       get '/embed/comments', params: { embed_url: embed_url }, headers: headers
 
-      html = Nokogiri::HTML.fragment(response.body)
+      html = Nokogiri::HTML5.fragment(response.body)
       css_link = html.at("link[data-target=embedded_theme]").attribute("href").value
 
       get css_link

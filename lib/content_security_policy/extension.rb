@@ -61,7 +61,8 @@ class ContentSecurityPolicy
       auto_script_src_extension = { script_src: [] }
       html_fields.each(&:ensure_baked!)
       doc = html_fields.map(&:value_baked).join("\n")
-      Nokogiri::HTML.fragment(doc).css('script[src]').each do |node|
+
+      Nokogiri::HTML5.fragment(doc).css('script[src]').each do |node|
         src = node['src']
         uri = URI(src)
 

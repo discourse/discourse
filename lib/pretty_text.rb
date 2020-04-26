@@ -259,7 +259,7 @@ module PrettyText
 
     sanitized = markdown(working_text, options)
 
-    doc = Nokogiri::HTML.fragment(sanitized)
+    doc = Nokogiri::HTML5.fragment(sanitized)
 
     if !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
       add_rel_nofollow_to_user_content(doc)
@@ -282,7 +282,7 @@ module PrettyText
     doc.css("a").each do |l|
       href = l["href"].to_s
       begin
-        uri = URI(href)
+        uri = URI(URI.escape(href))
         site_uri ||= URI(Discourse.base_url)
 
         if !uri.host.present? ||
@@ -305,7 +305,7 @@ module PrettyText
 
   def self.extract_links(html)
     links = []
-    doc = Nokogiri::HTML.fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
 
     # remove href inside quotes & elided part
     doc.css("aside.quote a, .elided a").each { |a| a["href"] = "" }
@@ -338,7 +338,7 @@ module PrettyText
 
   def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
-    doc = Nokogiri::HTML.fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)
@@ -350,7 +350,7 @@ module PrettyText
     return string if string.blank?
 
     # If the user is not basic, strip links from their bio
-    fragment = Nokogiri::HTML.fragment(string)
+    fragment = Nokogiri::HTML5.fragment(string)
     fragment.css('a').each { |a| a.replace(a.inner_html) }
     fragment.to_html
   end
@@ -395,14 +395,14 @@ module PrettyText
   def self.strip_secure_media(doc)
     doc.css("a[href]").each do |a|
       if Upload.secure_media_url?(a["href"])
-        target = %w(video audio).include?(a&.parent&.parent&.name) ? a.parent.parent : a
+        target = %w(video audio).include?(a&.parent&.name) ? a.parent : a
         target.replace "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
       end
     end
   end
 
   def self.format_for_email(html, post = nil)
-    doc = Nokogiri::HTML.fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_cooked, doc, post)
     strip_secure_media(doc) if post&.with_secure_media?
     strip_image_wrapping(doc)
@@ -462,13 +462,13 @@ module PrettyText
 
         case type
         when USER_TYPE
-          element['href'] = "#{Discourse::base_uri}/u/#{name}"
+          element['href'] = "#{Discourse::base_uri}/u/#{URI.escape(name)}"
         when GROUP_MENTIONABLE_TYPE
           element['class'] = 'mention-group notify'
-          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
+          element['href'] = "#{Discourse::base_uri}/groups/#{URI.escape(name)}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
-          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
+          element['href'] = "#{Discourse::base_uri}/groups/#{URI.escape(name)}"
         end
       end
     end
