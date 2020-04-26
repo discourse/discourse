@@ -2,6 +2,19 @@
 
 require File.expand_path("../../config/environment", __FILE__)
 
+# Supported ENV arguments:
+#
+# VERBOSE=1
+# Shows debug information.
+#
+# INTERACTIVE=1
+# Shows debug information and pauses for input on issues.
+#
+# WORKER_ID/WORKER_COUNT
+# When running the script on a single forum in multiple terminals.
+# For example, if you want 4 concurrent scripts use WORKER_COUNT=4
+# and WORKER_ID from 0 to 3
+
 MIN_IMAGE_PIXELS = 500_000 # 0.5 megapixels
 DEFAULT_IMAGE_PIXELS = 1_000_000 # 1 megapixel
 
