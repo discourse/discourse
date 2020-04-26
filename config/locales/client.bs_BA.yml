@@ -3941,6 +3941,11 @@ bs_BA:
         anonymize_yes: "Da, anonimiziraj ovaj račun"
         anonymize_failed: "Došlo je do problema sa anonimizacijom računa."
         delete: "Delete User"
+        merge:
+          prompt:
+            cancel: "Otkaži"
+          confirmation:
+            cancel: "Otkaži"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_posts_forbidden_because_staff: "Ne možete obrisati sve postove administratora i moderatora."
         delete_forbidden:

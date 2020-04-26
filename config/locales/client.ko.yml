@@ -2399,7 +2399,6 @@ ko:
             trust_levels_title: "멤버들이 추가되면 회원등급이 자동으로 부여됩니다:"
             trust_levels_none: "없음"
             automatic_membership_email_domains: "이 목록의 있는 항목과 사용자들이 등록한 이메일 도메인이 일치할때 이 그룹에 포함"
-            automatic_membership_retroactive: "이미 등록된 사용자에게 같은 이메일 도메인 규칙 적용하기"
             primary_group: "기본 그룹으로 자동 설정"
         name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
         primary: "주 그룹"
@@ -3055,6 +3054,11 @@ ko:
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "사용자 삭제"
+        merge:
+          prompt:
+            cancel: "취소"
+          confirmation:
+            cancel: "취소"
         delete_forbidden_because_staff: "관리자 및 운영자 계정은 삭제할 수 없습니다."
         delete_posts_forbidden_because_staff: "관리자와 운영자의 글은 삭제할 수 없습니다."
         delete_forbidden:

@@ -47,8 +47,10 @@ hu:
       generic: Hiba történt a téma importálásákor
       about_json: "Importálási hiba: az about.json nem létezik vagy érvénytelen"
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
+      modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
       unpack_failed: "A fájl kibontása sikertelen"
+      file_too_big: "A kibontott fájl túl nagy."
       unknown_file_type: "A feltöltött fájl nem tűnik érvényes Discourse témának."
     errors:
       component_no_user_selectable: "A téma összetevőit nem választhatja ki a felhasználó"
@@ -221,9 +223,6 @@ hu:
   topics_in_category: "Témák a(z) „%{category}” kategóriában"
   rss_posts_in_topic: "A(z) „%{topic}” RSS hírcsatornája"
   rss_topics_in_category: "A(z) „%{category}” témáinak RSS hírcsatornája"
-  author_wrote: "%{author} írta:"
-  num_posts: "Bejegyzések:"
-  num_participants: "Résztvevők:"
   read_full_topic: "Teljes téma elolvasása"
   private_message_abbrev: "Üzenet"
   rss_description:

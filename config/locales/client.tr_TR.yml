@@ -3024,8 +3024,6 @@ tr_TR:
           view_table: "tablo"
           view_graph: "grafik"
           refresh_report: "Raporu Yenile"
-          start_date: "Başlangıç Tarihi (UTC)"
-          end_date: "Bitiş Tarihi (UTC)"
           groups: "Tüm gruplar"
           disabled: "Bu rapor devre dışı"
           totals_for_sample: "Örnek toplamlar"
@@ -3086,7 +3084,6 @@ tr_TR:
             effects: Etkileri
             trust_levels_none: "Hiçbiri"
             automatic_membership_email_domains: "Listede, e-posta alan adıyla tam olarak eşleşen kayıtlı kullanıcılar, otomatik olarak bu gruba eklenir:"
-            automatic_membership_retroactive: "Mevcut kayıtlı kullanıcıları eklemek için aynı e-posta alanı kuralını uygula"
             primary_group: "Otomatik olarak ana grup biçiminde ayarla"
         name_placeholder: "Grup adı, boşluksuz, kullanıcı adı kuralıyla aynı olarak"
         primary: "Ana Grup"
@@ -3939,6 +3936,11 @@ tr_TR:
         anonymize_yes: "Evet, bu hesabı anonimleştir"
         anonymize_failed: "Hesap anonimleştirilirken bir hata oluştu."
         delete: "Kullanıcıyı Sil"
+        merge:
+          prompt:
+            cancel: "İptal"
+          confirmation:
+            cancel: "İptal"
         delete_forbidden_because_staff: "Yöneticiler ve moderatörler silinemez."
         delete_posts_forbidden_because_staff: "Yöneticiler ve moderatörlerin gönderileri silinemez."
         delete_forbidden:

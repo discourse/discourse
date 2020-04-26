@@ -2918,8 +2918,6 @@ ur:
           view_table: "ٹیبل"
           view_graph: "گراف"
           refresh_report: "رپورٹ رِیفریش کریں"
-          start_date: "شروع کی تاریخ (UTC)"
-          end_date: "اختتام کی تاریخ (UTC)"
           groups: "تمام گروپس"
           disabled: "یہ رپورٹ غیر فعال ہے"
           totals_for_sample: "نمونہ کیلئے کل"
@@ -2979,7 +2977,6 @@ ur:
             trust_levels_title: "ممبران کو شامل کرتے وقت خود کار طریقے سے دیا جانے والا ٹرسٹ لَیول:"
             trust_levels_none: "کوئی نہیں"
             automatic_membership_email_domains: "جو صارفین ایک ایسے اِیمیل ڈومین کے ساتھ رجسٹر کرتے ہیں جو اِس فہرست میں سے کسی ایک سے پورا ملتا ہے، تو اُن کو خود کار طریقے سے اِس گروپ میں شامل کر دیا جائے گا:"
-            automatic_membership_retroactive: "موجودہ رجسٹرڈ صارفین کو شامل کرنے کے لئے وہی اِیمیل ڈومین اصول لاگو کریں"
             primary_group: "خود کار طریقے سے پرائمری گروپ کے طور پر مقرر کریں"
         name_placeholder: "گروپ کا نام، کوئی خالی جگہ نہیں، نامِ صارفین کے اصولوں کے مطابق"
         primary: "پرائمری گروپ"
@@ -3802,6 +3799,11 @@ ur:
         anonymize_yes: "جی ہاں، اِس اکاؤنٹ کو گمنام بنائیں"
         anonymize_failed: "اِس اکاؤنٹ کو گمنام بنانے میں ایک مسئلہ پیش آیا۔"
         delete: "صارف حذف کریں"
+        merge:
+          prompt:
+            cancel: "منسوخ"
+          confirmation:
+            cancel: "منسوخ"
         delete_forbidden_because_staff: "اَیڈمن اور ماڈریٹرز حذف نہیں کیے جا سکتے۔"
         delete_posts_forbidden_because_staff: "اَیڈمن اور ماڈریٹرز کی تمام پوسٹس حذف نہیں کی جا سکتیں۔"
         delete_forbidden:

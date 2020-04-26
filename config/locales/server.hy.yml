@@ -264,9 +264,6 @@ hy:
   topics_in_category: "'%{category}' կատեգորիայի թեմաները"
   rss_posts_in_topic: "RSS լրահոս հետևյալի համար՝ '%{topic}'"
   rss_topics_in_category: "RSS լրահոս '%{category}' կատեգորիայի թեմաների համար"
-  author_wrote: "%{author} -ը գրել է."
-  num_posts: "Գրառումներ՝"
-  num_participants: "Մասնակիցներ՝ "
   read_full_topic: "Կարդալ ամբողջական թեման"
   private_message_abbrev: "Նմկ"
   rss_description:

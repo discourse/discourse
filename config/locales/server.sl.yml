@@ -167,8 +167,6 @@ sl:
   prev_page: "← prejšnja stran"
   page_num: "Stran %{num}"
   home_title: "Domov"
-  author_wrote: "%{author} je napisal/a:"
-  num_participants: "Udeleženci:"
   read_full_topic: "Preberi celo temo"
   private_message_abbrev: "Msg"
   rss_description:

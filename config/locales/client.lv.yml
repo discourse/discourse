@@ -2283,7 +2283,6 @@ lv:
             trust_levels_title: "Uzticamības līmenis, ko automātiski piešķir visiem dalībniekiem pievienošanas brīdī:"
             trust_levels_none: "Nav"
             automatic_membership_email_domains: "Lietotāji, kas reģistrējas ar e-pasta domēnu, kas precīzi sakrīt ar kādu no šī saraksta, tiks automātiski pievienoti šai grupai:"
-            automatic_membership_retroactive: "Izmantot viena e-pasta domēna noteikumu, lai pievienotu esošus lietotājus"
             primary_group: "Automātiski padarīt par galveno grupu"
         name_placeholder: "Grupas nosaukums, bez atstarpēm, tādi paši noteikumi kā lietotāja vārdam"
         primary: "Galvenā grupa"
@@ -2787,6 +2786,11 @@ lv:
         anonymize_yes: "Jā, anonimizēt kontu. (anonymize)"
         anonymize_failed: "Radās problēma ar konta anonimizēšanu (anonymizing)."
         delete: "Dzēst lietotāju."
+        merge:
+          prompt:
+            cancel: "Atcelt"
+          confirmation:
+            cancel: "Atcelt"
         delete_forbidden_because_staff: "Administratori un moderatori nevar tikt dzēsti."
         delete_posts_forbidden_because_staff: "Nevar izdzēst visus administratoru un moderatoru ierakstus."
         delete_forbidden:

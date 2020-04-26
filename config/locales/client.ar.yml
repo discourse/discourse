@@ -2669,7 +2669,6 @@ ar:
             trust_levels_title: "مستوى الثقة الذي يُعطى للأعضاء آليا عندما يضافون:"
             trust_levels_none: "لا شيء"
             automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
-            automatic_membership_retroactive: "تطبيق نفس قاعدة عنوان البريد الإلكتروني لإضافة الاعضاء المسجلين الحاليين"
             primary_group: "تعيين تلقائيا كمجموعة أساسية"
         name_placeholder: "اسم المجموعة، بدون مسافات، كما هو الحال مع أسماء المستخدمين"
         primary: "المجموعة الأساسية"
@@ -3255,6 +3254,11 @@ ar:
         anonymize_yes: "نعم، جهّل هذا الحساب."
         anonymize_failed: "حدثت مشكلة في تجهيل الحساب."
         delete: "احذف المستخدم"
+        merge:
+          prompt:
+            cancel: "ألغِ"
+          confirmation:
+            cancel: "ألغِ"
         delete_forbidden_because_staff: "لا يمكن حذف المدراء والمشرفين."
         delete_posts_forbidden_because_staff: "لا يمكن حذف جميع المشاركات للمدراء والمشرفين. "
         delete_forbidden:

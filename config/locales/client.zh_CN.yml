@@ -244,6 +244,8 @@ zh_CN:
       created_with_reminder: "你已经收藏该帖并且设定了一个于%{date}的提醒"
       created_with_at_desktop_reminder: "你所收藏的此帖将会在你下次使用桌面设备时被提醒。"
       remove: "取消收藏"
+      delete: "删除收藏"
+      confirm_delete: "你确定要删除该收藏吗？你所设置的提醒也会被一并删除。"
       confirm_clear: "你确定要清空这个主题中的所有收藏？"
       save: "保存"
       no_timezone: '你尚未设置时区。您将无法设置提醒。在 <a href="%{basePath}/my/preferences/profile">你的个人资料中</a>设置。'
@@ -264,6 +266,7 @@ zh_CN:
         today_with_time: "今天%{time}"
         tomorrow_with_time: "明天%{time}"
         at_time: "于%{date_time}"
+        existing_reminder: "你为该收藏所设定的提醒将被发出"
     drafts:
       resume: "复位"
       remove: "移除"
@@ -577,13 +580,13 @@ zh_CN:
         filter: "根据群组类型筛选"
         owner_groups: "拥有的群组"
         close_groups: "关闭的群组"
-        automatic_groups: "自动分组"
+        automatic_groups: "自动群组"
         automatic: "自动"
         closed: "已关闭"
         public: "公开"
         private: "私密"
         public_groups: "公开的群组"
-        automatic_group: 自动分组
+        automatic_group: 自动群组
         close_group: 关闭群组
         my_groups: "我的群组"
         group_type: "群组类别"
@@ -2744,6 +2747,7 @@ zh_CN:
         next_business_day: "%{shortcut} 下个工作日"
         custom: "%{shortcut} 自定义日期和时间"
         none: "%{shortcut} 没有提醒"
+        delete: "%{shortcut} 删除收藏"
       actions:
         title: "动作"
         bookmark_topic: "%{shortcut} 切换主题收藏状态"
@@ -2989,8 +2993,7 @@ zh_CN:
           view_table: "表格"
           view_graph: "图表"
           refresh_report: "刷新报告"
-          start_date: "开始日期（UTC）"
-          end_date: "结束日期（UTC）"
+          dates: "日期（UTC）"
           groups: "所有群组"
           disabled: "此报告已禁用"
           totals_for_sample: "总计样本"
@@ -3007,6 +3010,8 @@ zh_CN:
               label: 群组
             category:
               label: 分类
+            include-subcategories:
+              label: "包括子分类"
       commits:
         latest_changes: "最近的更新：请经常升级！"
         by: "来自"
@@ -3051,7 +3056,7 @@ zh_CN:
             effects: 影响
             trust_levels_none: "无"
             automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
-            automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
+            automatic_membership_user_count: "拥有新邮件域名的 %{count} 位用户将被添加到群组中。"
             primary_group: "自动设置为主要群组"
         name_placeholder: "群组名，没有空格，和用户名一样的规则"
         primary: "主要群组"
@@ -3907,6 +3912,29 @@ zh_CN:
         anonymize_yes: "是的，匿名化该账户"
         anonymize_failed: "在匿名化该账户时遇到问题。"
         delete: "删除用户"
+        merge:
+          transfer_and_delete: "转让并删除"
+          prompt:
+            title: "转让并删除 @%{username}"
+            description: |
+              <p>请为<b>@%{username} </b>的内容选择一个新的主人。</p>
+
+              <p>所有主题、帖子、消息或其它由<b>@%{username}</b>所创作的内容将被转让。</p>
+            target_username_placeholder: "新的所有者的用户名"
+            transfer_and_delete: "转让并删除 @%{username}"
+            cancel: "取消"
+          confirmation:
+            title: "转让并删除 @%{username}"
+            description: |
+              <p><b>@%{username}</b>的所有内容将被转让到<b>%{targetUsername}</b>。在内容被转让后，<b>@%{username}</b>的账户将被删除。</p>
+
+              <p><b>该操作无法被撤销</b></p>
+
+              <p>要继续请输入：<code>%{text}</code></p>
+            transfer_and_delete: "转让并删除 @%{username}"
+            cancel: "取消"
+        merging_user: "合并用户..."
+        merge_failed: "合并用户时出错。"
         delete_forbidden_because_staff: "不能删除管理员和版主。"
         delete_posts_forbidden_because_staff: "不能完全删除管理员和版主的帖子。"
         delete_forbidden:

@@ -2362,7 +2362,6 @@ et:
             trust_levels_title: "Liikmetele peale lisamist automaatselt omistatud usaldustase:"
             trust_levels_none: "Pole"
             automatic_membership_email_domains: "Kasutajad, kes registreeruvad meiliaadressiga, mille domeen ühtib täpselt mõnega sellest loetelust, lisatakse siia gruppi automaatselt:"
-            automatic_membership_retroactive: "Olemasolevate registreeritud kasutajate lisamiseks rakenda sama meiliaadressi domeeni reeglit"
             primary_group: "Muuda automaatselt peamiseks grupiks"
         name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
         primary: "Peamine grupp"
@@ -2958,6 +2957,11 @@ et:
         anonymize_yes: "Jah, anonümiseeri see konto"
         anonymize_failed: "Viga konto anonümiseerimisel."
         delete: "Kustuta kasutaja"
+        merge:
+          prompt:
+            cancel: "Tühista"
+          confirmation:
+            cancel: "Tühista"
         delete_forbidden_because_staff: "Admine ja moderaatoreid ei saa kustutada."
         delete_posts_forbidden_because_staff: "Ei saa kustutada adminide ja moderaatorite kõiki postitusi."
         delete_forbidden:

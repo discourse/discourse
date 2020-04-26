@@ -220,9 +220,6 @@ ar:
   topics_in_category: "المواضيع في قسم '%{category}'"
   rss_posts_in_topic: "مغذي RSS لـ'%{topic}'"
   rss_topics_in_category: "تغذية RSS للموضوعات من قسم'%{category}'"
-  author_wrote: "كتب %{author}:"
-  num_posts: "المنشورات:"
-  num_participants: "المشاركون:"
   read_full_topic: "اقرأ كامل الموضوع"
   private_message_abbrev: "رسالة"
   rss_description:

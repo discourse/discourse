@@ -3029,8 +3029,6 @@ pt_BR:
           view_table: "tabela"
           view_graph: "gráfico"
           refresh_report: "Atualizar Relatório"
-          start_date: "Data de início (UTC)"
-          end_date: "Data de término (UTC)"
           groups: "Todos os grupos"
           disabled: "Este relatório está desativado"
           totals_for_sample: "Totais para amostra"
@@ -3091,7 +3089,6 @@ pt_BR:
             effects: Efeitos
             trust_levels_none: "Nenhum"
             automatic_membership_email_domains: "Os usuários que se registrarem em um domínio de e-mail que corresponda exatamente a um nesta lista serão adicionados automaticamente a este grupo:"
-            automatic_membership_retroactive: "Aplicar a mesma regra de domínio de e-mail para adicionar usuários registrados existentes"
             primary_group: "Definir automaticamente como grupo principal"
         name_placeholder: "Nome do grupo, sem espaços, igual à regra de nome de usuário"
         primary: "Grupo Primário"
@@ -3944,6 +3941,11 @@ pt_BR:
         anonymize_yes: "Sim, tornar esta conta anônima"
         anonymize_failed: "Ocorreu um problema ao tornar a conta anônima."
         delete: "Apagar Usuário"
+        merge:
+          prompt:
+            cancel: "Cancelar"
+          confirmation:
+            cancel: "Cancelar"
         delete_forbidden_because_staff: "Administradores e moderadores não podem ser excluidos."
         delete_posts_forbidden_because_staff: "Não posso excluir todas as mensagens de administradores e moderadores."
         delete_forbidden:

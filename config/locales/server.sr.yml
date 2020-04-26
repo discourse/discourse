@@ -80,8 +80,6 @@ sr:
   page_num: "Strana %{num}"
   home_title: "Home"
   topics_in_category: "Teme u '%{category}' kategoriji"
-  num_posts: "Postovi:"
-  num_participants: "Učesnici: "
   read_full_topic: "Pročitajte celu temu"
   rss_description:
     latest: "Poslednje teme"

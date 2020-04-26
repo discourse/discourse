@@ -52,8 +52,6 @@ lv:
   next_page: "nākošo lapu →"
   prev_page: "← iepriekšējo lapu"
   page_num: "Lapa %{num}"
-  num_posts: "Raksti:"
-  num_participants: "Dalībnieki:"
   read_full_topic: "Lasīt pilnu tēmu"
   rss_description:
     latest: "Jaunākās tēmas"

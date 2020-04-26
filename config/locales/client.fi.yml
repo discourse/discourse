@@ -3038,8 +3038,6 @@ fi:
           view_table: "taulukko"
           view_graph: "graafi"
           refresh_report: "Päivitä raportti"
-          start_date: "Alkamisajankohta (UTC)"
-          end_date: "Päättymisajankohta (UTC)"
           groups: "Kaikki ryhmät"
           disabled: "Raportti ei ole käytössä"
           totals_for_sample: "Otos yhteensä"
@@ -3100,7 +3098,6 @@ fi:
             effects: Vaikutukset
             trust_levels_none: "Ei mitään"
             automatic_membership_email_domains: "Käyttäjä, joka rekisteröityy sähköpostiverkkotunnuksella joka täsmää tähän luetteloon, liitetään ryhmään automaattisesti:"
-            automatic_membership_retroactive: "Liitä olemassaolevia rekisteröityneitä käyttäjiä soveltaen samaa sähköpostiverkkotunnussääntöä "
             primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
         name_placeholder: "Ryhmän nimi, ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
         primary: "Ensisijainen ryhmä"
@@ -3953,6 +3950,11 @@ fi:
         anonymize_yes: "Kyllä, anonymisoi tämä käyttäjätili"
         anonymize_failed: "Käyttäjätilin anonymisointi ei onnistunut."
         delete: "Poista käyttäjä"
+        merge:
+          prompt:
+            cancel: "Peru"
+          confirmation:
+            cancel: "Peru"
         delete_forbidden_because_staff: "Ylläpitäjiä ja valvojia ei voi poistaa."
         delete_posts_forbidden_because_staff: "Ylläpitäjien ja valvojien kaikkia viestejä ei voi poistaa."
         delete_forbidden:

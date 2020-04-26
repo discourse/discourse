@@ -300,9 +300,12 @@ es:
   topics_in_category: "Temas en la categoría «%{category}»"
   rss_posts_in_topic: "Feed RSS de «%{topic}»"
   rss_topics_in_category: "Feed RSS de los temas en la categoría «%{category}»"
-  author_wrote: "%{author} escribió:"
-  num_posts: "Publicaciones:"
-  num_participants: "Participantes:"
+  rss_num_posts:
+    one: "%{count} publicación"
+    other: "%{count} publicaciones"
+  rss_num_participants:
+    one: "%{count} participante"
+    other: "%{count} participantes"
   read_full_topic: "Leer todo el tema"
   private_message_abbrev: "Msj"
   rss_description:
@@ -335,6 +338,7 @@ es:
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
       later_today: "Más tarde durante el día de hoy"
+      next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
       next_week: "Próxima semana"
       next_month: "Próximo mes"
@@ -2029,6 +2033,7 @@ es:
   publish_page:
     slug_errors:
       blank: "no puede dejarse en blanco"
+      unavailable: "no está disponible"
       invalid: "contiene caracteres inválidos"
   topic_statuses:
     autoclosed_message_max_posts:
@@ -3147,6 +3152,7 @@ es:
       since_last_visit: "Desde tu última visita"
       new_topics: "Temas nuevos"
       unread_notifications: "Notificaciones no leídas"
+      unread_high_priority: "Notificaciones de alta prioridad sin leer"
       liked_received: "Me gusta recibidos"
       new_users: "Usuarios nuevos"
       popular_topics: "Temas destacados"

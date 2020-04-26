@@ -2350,7 +2350,6 @@ sk:
             trust_levels_title: "Stupeň dôvery automaticky udelený členom po ich pridaní:"
             trust_levels_none: "Žiadny"
             automatic_membership_email_domains: "Užívatelia, ktorí sa zaregistrovali s emailovou doménou uvedenou v zozname budú automaticky pridaní do tejto skupiny. "
-            automatic_membership_retroactive: "Použi pravidlo rovnakej emailovej domény pre pridanie registrovaných používateľov"
             primary_group: "Automaticky nastav ako hlavnú skupinu"
         name_placeholder: "Meno skupiny, bez medzier, také isté pravidlá ako pre používateľské meno"
         primary: "Hlavná skupina"
@@ -2832,6 +2831,11 @@ sk:
         anonymize_yes: "Áno, zmeň tento účet na anonymný"
         anonymize_failed: "Nastala chyba pri anonymizovaní účtu."
         delete: "Odstrániť používateľa"
+        merge:
+          prompt:
+            cancel: "Zrušiť"
+          confirmation:
+            cancel: "Zrušiť"
         delete_forbidden_because_staff: "Správcovia a moderátori nemôžu byť vymazaní."
         delete_posts_forbidden_because_staff: "Nedá sa zmazať príspevky správcov a moderátorov."
         delete_forbidden:

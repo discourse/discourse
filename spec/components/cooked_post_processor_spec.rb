@@ -552,7 +552,8 @@ describe CookedPostProcessor do
               upload.update(secure: true, access_control_post: post)
             end
 
-            it "handles secure images with the correct lightbox link href" do
+            # TODO fix this spec, it is sometimes getting CDN links when it runs concurrently
+            xit "handles secure images with the correct lightbox link href" do
               cpp.post_process
 
               expect(cpp.html).to match_html cooked_html
