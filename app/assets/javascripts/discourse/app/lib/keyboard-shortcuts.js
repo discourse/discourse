@@ -385,9 +385,7 @@ export default {
   },
 
   sendToTopicListItemView(action) {
-    const elem = document.querySelector(
-      "tr.selected.topic-list-item.ember-view"
-    );
+    const elem = document.querySelector("tr.selected.topic-list-item");
     if (elem) {
       const registry = this.container.lookup("-view-registry:main");
       if (registry) {
