@@ -182,10 +182,14 @@ export default {
     this.sendToTopicListItemView("toggleBookmark");
   },
 
-  toggleBookmarkTopic() {
+  toggleBookmarkTopic(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     const topic = this.currentTopic();
+
     // BIG hack, need a cleaner way
-    if (topic && $(".posts-wrapper").length > 0) {
+    if (topic && document.querySelectorAll(".posts-wrapper").length) {
       this.container.lookup("controller:topic").send("toggleBookmark");
     } else {
       this.sendToTopicListItemView("toggleBookmark");
@@ -381,7 +385,9 @@ export default {
   },
 
   sendToTopicListItemView(action) {
-    const elem = $("tr.selected.topic-list-item.ember-view")[0];
+    const elem = document.querySelector(
+      "tr.selected.topic-list-item.ember-view"
+    );
     if (elem) {
       const registry = this.container.lookup("-view-registry:main");
       if (registry) {
