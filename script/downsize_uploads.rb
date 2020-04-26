@@ -99,6 +99,12 @@ def downsize_upload(upload, path)
       puts "A deleted post" if ENV["VERBOSE"]
     elsif !post.topic || post.topic.trashed?
       puts "A deleted topic" if ENV["VERBOSE"]
+    elsif post.cooked.include?(original_upload.sha1)
+      if post.raw.include?("#{Discourse.base_url.sub(/^https?:\/\//i, "")}/t/")
+        puts "Updating a topic onebox" if ENV["VERBOSE"]
+      else
+        puts "Updating an external onebox" if ENV["VERBOSE"]
+      end
     else
       puts "Could not find the upload URL" if ENV["VERBOSE"]
       success = false
