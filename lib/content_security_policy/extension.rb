@@ -62,7 +62,18 @@ class ContentSecurityPolicy
       html_fields.each(&:ensure_baked!)
       doc = html_fields.map(&:value_baked).join("\n")
       Nokogiri::HTML.fragment(doc).css('script[src]').each do |node|
-        auto_script_src_extension[:script_src] << node['src']
+        src = node['src']
+        uri = URI(src)
+
+        next if GlobalSetting.cdn_url && src.starts_with?(GlobalSetting.cdn_url) # Ignore CDN urls (theme-javascripts)
+        next if uri.host.nil? # Ignore same-domain scripts (theme-javascripts)
+        next if uri.path.nil? # Ignore raw hosts
+
+        uri_string = uri.to_s.sub(/^\/\//, '') # Protocol-less CSP should not have // at beginning of URL
+
+        auto_script_src_extension[:script_src] << uri_string
+      rescue URI::Error
+        # Ignore invalid URI
       end
 
       extensions << auto_script_src_extension
