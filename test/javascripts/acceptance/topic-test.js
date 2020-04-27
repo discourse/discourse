@@ -248,10 +248,9 @@ QUnit.test("remove featured link", async assert => {
     "link to remove featured link"
   );
 
-  // this test only works in a browser:
-  // await click('.title-wrapper .remove-featured-link');
-  // await click('.title-wrapper .submit-edit');
-  // assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
+  await click('.title-wrapper .remove-featured-link');
+  await click('.title-wrapper .submit-edit');
+  assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
 });
 
 QUnit.test("Converting to a public topic", async assert => {
