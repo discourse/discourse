@@ -11,8 +11,7 @@ class SpamHandler
 
     return false if tl2_plus_accounts_with_same_ip > 0
 
-    staff_user_ids = Group[:staff].user_ids - [-1]
-    staff_members_with_same_ip = User.where(id: staff_user_ids)
+    staff_members_with_same_ip = Group[:staff].users.human_users
       .where(ip_address: ip_address.to_s)
       .count
 
