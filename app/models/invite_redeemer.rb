@@ -124,6 +124,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     new_group_ids = invite.groups.pluck(:id) - invited_user.group_users.pluck(:group_id)
     new_group_ids.each do |id|
       invited_user.group_users.create(group_id: id)
+      DiscourseEvent.trigger(:user_added_to_group, invited_user, Group.find_by(id: id), automatic: false)
     end
   end
 
