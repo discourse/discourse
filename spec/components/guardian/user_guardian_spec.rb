@@ -341,4 +341,50 @@ describe UserGuardian do
       include_examples "can_delete_user staff examples"
     end
   end
+
+  describe "#can_see_review_queue?" do
+    it 'returns true when the user is a staff member' do
+      guardian = Guardian.new(moderator)
+      expect(guardian.can_see_review_queue?).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      guardian = Guardian.new(user)
+      expect(guardian.can_see_review_queue?).to eq(false)
+    end
+
+    it "returns true when the user's group can review an item in the queue" do
+      group = Fabricate(:group)
+      group.add(user)
+      guardian = Guardian.new(user)
+      SiteSetting.enable_category_group_review = true
+
+      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: nil)
+
+      expect(guardian.can_see_review_queue?).to eq(true)
+    end
+
+    it 'returns false if category group review is disabled' do
+      group = Fabricate(:group)
+      group.add(user)
+      guardian = Guardian.new(user)
+      SiteSetting.enable_category_group_review = false
+
+      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: nil)
+
+      expect(guardian.can_see_review_queue?).to eq(false)
+    end
+
+    it 'returns false if the reviewable is under a read restricted category' do
+      group = Fabricate(:group)
+      group.add(user)
+      guardian = Guardian.new(user)
+      SiteSetting.enable_category_group_review = true
+      category = Fabricate(:category, read_restricted: true)
+
+      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: category)
+
+      expect(guardian.can_see_review_queue?).to eq(false)
+    end
+  end
 end
