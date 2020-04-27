@@ -179,6 +179,8 @@ group :test, :development do
   gem "rubocop-discourse", require: false
   gem "rubocop-rspec", require: false
   gem 'parallel_tests'
+
+  gem 'rswag-specs'
 end
 
 group :development do
