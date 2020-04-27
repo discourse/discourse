@@ -66,7 +66,6 @@ export default Controller.extend(
       "emailValidation.failed",
       "usernameValidation.failed",
       "passwordValidation.failed",
-      "userFieldsValidation.failed",
       "formSubmitted",
       "inviteCode"
     )
@@ -78,7 +77,6 @@ export default Controller.extend(
         return true;
       if (this.get("passwordValidation.failed") && this.passwordRequired)
         return true;
-      if (this.get("userFieldsValidation.failed")) return true;
 
       if (this.requireInviteCode && !this.inviteCode) return true;
 
@@ -311,6 +309,13 @@ export default Controller.extend(
       },
 
       createAccount() {
+        if (this.userFieldsValidation.failed) {
+          const userField = this.userFieldsValidation.userField;
+          this.flash(userField.field.name, "error");
+          userField.focus();
+          return;
+        }
+
         if (new Date() - this._challengeDate > 1000 * this._challengeExpiry) {
           this.fetchConfirmationValue().then(() =>
             this.performAccountCreation()

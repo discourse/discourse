@@ -6,6 +6,10 @@ export default Component.extend({
   classNameBindings: [":user-field", "field.field_type", "customFieldClass"],
   layoutName: fmt("field.field_type", "components/user-fields/%@"),
 
+  focus() {
+    this.element.getElementsByTagName("input")[0].focus();
+  },
+
   @discourseComputed
   noneLabel() {
     return "user_fields.none";
