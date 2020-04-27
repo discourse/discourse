@@ -2,7 +2,7 @@ import Session from "discourse/models/session";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Store from "discourse/models/store";
 import DiscourseLocation from "discourse/lib/discourse-location";
-import Discourse from "discourse";
+import Discourse from "discourse/app";
 import SearchService from "discourse/services/search";
 import TopicTrackingState, {
   startTracking
