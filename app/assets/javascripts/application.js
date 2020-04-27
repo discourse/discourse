@@ -5,7 +5,7 @@
 //= require ./ember-addons/fmt
 //= require ./polyfills
 //= require_tree ./select-kit
-//= require ./discourse
+//= require ./discourse/app/app
 //= require ./deprecated
 
 // Stuff we need to load first
