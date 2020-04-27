@@ -590,7 +590,7 @@ describe ReviewablesController do
     end
 
     context "#destroy" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:admin) }
 
       before do
         sign_in(user)

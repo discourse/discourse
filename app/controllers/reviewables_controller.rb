@@ -6,6 +6,7 @@ class ReviewablesController < ApplicationController
   PER_PAGE = 10
 
   before_action :version_required, only: [:update, :perform]
+  before_action :ensure_can_see
 
   def index
     offset = params[:offset].to_i
@@ -260,4 +261,7 @@ protected
     }
   end
 
+  def ensure_can_see
+    Guardian.new(current_user).ensure_can_see_review_queue!
+  end
 end

@@ -17,11 +17,9 @@ module Jobs
 
     def execute_onceoff(args)
       SETTINGS.each do |old_setting, new_setting|
+        upload = SiteSetting.get(new_setting)
 
-        if (upload = SiteSetting.get(new_setting)) && upload.id >= Upload::SEEDED_ID_THRESHOLD
-          logger.warn("Skipping migration of the Site Setting #{new_setting} to url cause upload #{upload} already exists for it")
-          next
-        end
+        next if upload && upload.id >= Upload::SEEDED_ID_THRESHOLD
 
         old_url = DB.query_single(
           "SELECT value FROM site_settings WHERE name = '#{old_setting}'"

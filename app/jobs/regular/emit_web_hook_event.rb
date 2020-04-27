@@ -103,7 +103,7 @@ module Jobs
       MessageBus.publish("/web_hook_events/#{@web_hook.id}", {
         web_hook_event_id: web_hook_event.id,
         event_type: @arguments[:event_type]
-      }, user_ids: User.human_users.staff.pluck(:id))
+      }, group_ids: [Group::AUTO_GROUPS[:staff]])
     end
 
     def ping_event?(event_type)

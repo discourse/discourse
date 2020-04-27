@@ -102,4 +102,15 @@ describe Jobs::NotifyReviewable do
       expect(group_msg.data[:reviewable_count]).to eq(0)
     end
   end
+
+  it 'skips sending notifications if user_ids is empty' do
+    reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
+    regular_user = Fabricate(:user)
+
+    messages = MessageBus.track_publish("/reviewable_counts") do
+      described_class.new.execute(reviewable_id: reviewable.id)
+    end
+
+    expect(messages.size).to eq(1)
+  end
 end

@@ -25,7 +25,7 @@
     .title {
       font-size: $font-0;
       font-weight: normal;
-      margin-bottom: s(2);
+      margin-bottom: 8px;
 
       .post-date {
         color: $primary-medium;
@@ -45,7 +45,7 @@
     }
 
     .topic-share-url {
-      margin-bottom: s(2);
+      margin-bottom: 8px;
     }
 
     .sources {
@@ -56,7 +56,7 @@
 
       .social-link {
         font-size: $font-up-6;
-        margin-right: s(2);
+        margin-right: 8px;
       }
     }
   }
@@ -65,18 +65,18 @@
 .share-and-invite.modal .invite.modal-panel {
   .error-message,
   .success-message {
-    margin-bottom: s(2);
+    margin-bottom: 8px;
   }
 
   .body {
     .invite-user-control,
     .group-access-control,
     .show-custom-message-control {
-      margin-bottom: s(4);
+      margin-bottom: 8px;
     }
 
     .instructions {
-      margin-bottom: s(2);
+      margin-bottom: 8px;
     }
 
     .email-or-username-input {
@@ -96,7 +96,7 @@
     align-items: center;
 
     .btn-primary {
-      margin-right: s(2);
+      margin-right: 8px;
 
       &:last-child {
         margin-right: 0;
