@@ -1444,6 +1444,7 @@ en:
     mute: Mute
     unmute: Unmute
     last_post: Posted
+    local_time: "Local Time"
     time_read: Read
     time_read_recently: "%{time_read} recently"
     time_read_tooltip: "%{time_read} total time read"

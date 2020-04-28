@@ -25,11 +25,10 @@ QUnit.test("user card local time", async assert => {
   assert.ok(invisible(".user-card"), "user card is invisible by default");
   await click("a[data-user-card=eviltrout]:first");
 
-  let expectedTime =
-    moment
-      .tz("Australia/Brisbane")
-      .add(-2, "hours")
-      .format("hh:mm a") + " (AWST)";
+  let expectedTime = moment
+    .tz("Australia/Brisbane")
+    .add(-2, "hours")
+    .format("h:mm a");
 
   assert.ok(visible(".user-card"), "card should appear");
   assert.equal(
@@ -51,11 +50,10 @@ QUnit.test("user card local time", async assert => {
 
   await click("a[data-user-card=charlie]:first");
 
-  expectedTime =
-    moment
-      .tz("Australia/Brisbane")
-      .add(-14, "hours")
-      .format("hh:mm a") + " (EDT)";
+  expectedTime = moment
+    .tz("Australia/Brisbane")
+    .add(-14, "hours")
+    .format("h:mm a");
 
   assert.equal(
     find(".user-card .local-time")
