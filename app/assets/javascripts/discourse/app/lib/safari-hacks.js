@@ -174,14 +174,12 @@ function positioningWorkaround($fixedElement) {
       // this tricks iOS safari into assuming input/textarea is at top of the viewport
       // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
       _this.style.transform = "translateY(-400px)";
-      setTimeout(function() {
-        _this.style.transform = "none";
-      }, 30);
+      later(() => (_this.style.transform = "none"), 30);
     }
 
     let delay = caps.isIpadOS ? 350 : 150;
 
-    setTimeout(function() {
+    later(function() {
       if (caps.isIpadOS && iOSWithVisualViewport()) {
         // disable hacks when using a hardware keyboard
         // by default, a hardware keyboard will show the keyboard accessory bar
