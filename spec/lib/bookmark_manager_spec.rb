@@ -137,10 +137,8 @@ RSpec.describe BookmarkManager do
     end
 
     context "if the bookmark is the last one bookmarked in the topic" do
-      before do
-        TopicUser.create(user: user, topic: bookmark.post.topic, bookmarked: true)
-      end
       it "marks the topic user bookmarked column as false" do
+        TopicUser.create(user: user, topic: bookmark.post.topic, bookmarked: true)
         subject.destroy(bookmark.id)
         tu = TopicUser.find_by(user: user)
         expect(tu.bookmarked).to eq(false)
