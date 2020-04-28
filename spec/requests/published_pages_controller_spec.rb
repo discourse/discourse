@@ -80,6 +80,11 @@ RSpec.describe PublishedPagesController do
         get published_page.path
         expect(response.status).to eq(200)
       end
+
+      it "defines correct css classes on body" do
+        get published_page.path
+        expect(response.body).to include("<body class=\"published-page published-page-test topic-#{published_page.topic_id} uncategorized\">")
+      end
     end
 
     context "publishing" do
