@@ -410,19 +410,22 @@ const Topic = RestModel.extend({
     const postStream = this.postStream;
     let firstPost = postStream.get("posts.firstObject");
 
-    if (firstPost.post_number === 1) {
+    if (firstPost && firstPost.post_number === 1) {
       return Promise.resolve(firstPost);
     }
 
     const postId = postStream.findPostIdForPostNumber(1);
+    if (postId) {
+      // try loading from identity map first
+      firstPost = postStream.findLoadedPost(postId);
+      if (firstPost) {
+        return Promise.resolve(firstPost);
+      }
 
-    // try loading from identity map first
-    firstPost = postStream.findLoadedPost(postId);
-    if (firstPost) {
-      return Promise.resolve(firstPost);
+      return this.postStream.loadPost(postId);
+    } else {
+      return this.postStream.loadPostByPostNumber(1);
     }
-
-    return this.postStream.loadPost(postId);
   },
 
   toggleBookmark() {
