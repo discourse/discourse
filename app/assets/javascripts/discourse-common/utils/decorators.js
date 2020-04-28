@@ -1,6 +1,8 @@
-import handleDescriptor from "ember-addons/utils/handle-descriptor";
-import isDescriptor from "ember-addons/utils/is-descriptor";
-import extractValue from "ember-addons/utils/extract-value";
+import handleDescriptor from "discourse-common/utils/handle-descriptor";
+import isDescriptor from "discourse-common/utils/is-descriptor";
+import extractValue from "discourse-common/utils/extract-value";
+import decoratorAlias from "discourse-common/utils/decorator-alias";
+import macroAlias from "discourse-common/utils/macro-alias";
 import { schedule, next } from "@ember/runloop";
 
 export default function discourseComputedDecorator(...params) {
@@ -39,16 +41,12 @@ export function readOnly(target, name, desc) {
   };
 }
 
-import decoratorAlias from "ember-addons/decorator-alias";
-
 /* eslint-disable */
 export var on = decoratorAlias(Ember.on, "Can not `on` without event names");
 export var observes = decoratorAlias(
   Ember.observer,
   "Can not `observe` without property names"
 );
-
-import macroAlias from "ember-addons/macro-alias";
 
 export var alias = macroAlias(Ember.computed.alias);
 export var and = macroAlias(Ember.computed.and);
