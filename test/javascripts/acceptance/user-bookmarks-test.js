@@ -15,13 +15,13 @@ acceptance("User's bookmarks", {
 });
 
 test("listing user bookmarks", async assert => {
-  await visit("/u/eviltrout/activity/bookmarks-with-reminders");
+  await visit("/u/eviltrout/activity/bookmarks");
 
   assert.ok(find(".bookmark-list-item").length);
 });
 
 test("removing a bookmark", async assert => {
-  await visit("/u/eviltrout/activity/bookmarks-with-reminders");
+  await visit("/u/eviltrout/activity/bookmarks");
 
   const dropdown = selectKit(".bookmark-actions-dropdown");
   await dropdown.expand();
@@ -44,7 +44,7 @@ test("listing users bookmarks - no bookmarks", async assert => {
     }
   ]);
 
-  await visit("/u/eviltrout/activity/bookmarks-with-reminders");
+  await visit("/u/eviltrout/activity/bookmarks");
 
   assert.equal(find(".alert.alert-info").text(), "no bookmarks");
 });

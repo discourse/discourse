@@ -16,7 +16,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   },
 
   showAllHref() {
-    return `${this.attrs.path}/activity/bookmarks-with-reminders`;
+    return `${this.attrs.path}/activity/bookmarks`;
   },
 
   emptyStatePlaceholderItem() {
