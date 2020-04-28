@@ -39,6 +39,31 @@ QUnit.test("user card local time", async assert => {
     expectedTime,
     "user card contains the user's local time"
   );
+
+  cardResponse = _.clone(userFixtures["/u/charlie/card.json"]);
+  cardResponse.user.timezone = "America/New_York";
+
+  pretender.get("/u/charlie/card.json", () => [
+    200,
+    { "Content-Type": "application/json" },
+    cardResponse
+  ]);
+
+  await click("a[data-user-card=charlie]:first");
+
+  expectedTime =
+    moment
+      .tz("Australia/Brisbane")
+      .add(-14, "hours")
+      .format("hh:mm a") + " (EDT)";
+
+  assert.equal(
+    find(".user-card .local-time")
+      .text()
+      .trim(),
+    expectedTime,
+    "opening another user card updates the local time in the card (no caching)"
+  );
 });
 
 acceptance("User Card", { loggedIn: true });
