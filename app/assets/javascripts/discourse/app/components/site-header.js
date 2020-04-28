@@ -215,8 +215,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         if (
           !e.target.closest("#current-user") &&
           !e.target.closest(".ring-backdrop") &&
-          !this.currentUser.get("read_first_notification") &&
-          !this.currentUser.get("enforcedSecondFactor")
+          !this.get("currentUser.read_first_notification") &&
+          !this.get("currentUser.enforcedSecondFactor")
         ) {
           this.eventDispatched(
             "header:dismiss-first-notification-mask",
