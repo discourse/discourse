@@ -76,10 +76,12 @@ export default Component.extend({
       $target.hasClass("modal-middle-container") ||
       $target.hasClass("modal-outer-container")
     ) {
-      // Delegate click to modal close if clicked outside.
-      // We do this because some CSS of ours seems to cover
-      // the backdrop and makes it unclickable.
-      $(".modal-header button.modal-close").click();
+      // Send modal close (which bubbles to ApplicationRoute) if clicked outside.
+      // We do this because some CSS of ours seems to cover the backdrop and makes
+      // it unclickable.
+      return (
+        this.attrs.closeModal && this.attrs.closeModal("initiatedByClickOut")
+      );
     }
   },
 
