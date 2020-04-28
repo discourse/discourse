@@ -10,7 +10,7 @@
       <link rel="canonical" href="<%= @canonical_url %>" />
     <%- end -%>
   </head>
-  <body class="<%= @body_classes.join(' ') %>">
+  <body class="<%= @body_classes.to_a.join(' ') %>">
     <%= yield %>
   </body>
 </html>
