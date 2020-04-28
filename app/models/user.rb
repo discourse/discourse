@@ -21,7 +21,6 @@ class User < ActiveRecord::Base
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
   has_many :email_tokens, dependent: :destroy
-  has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
   has_many :user_emails, dependent: :destroy
@@ -37,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: 'GroupHistory'
   has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
   has_many :reviewable_scores, dependent: :destroy
+  has_many :invites, foreign_key: :invited_by_id, dependent: :destroy
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_one :single_sign_on_record, dependent: :destroy
   has_one :anonymous_user_master, class_name: 'AnonymousUser', dependent: :destroy
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser', dependent: :destroy
+  has_one :invited_user, dependent: :destroy
 
   # delete all is faster but bypasses callbacks
   has_many :bookmarks, dependent: :delete_all
@@ -425,7 +426,7 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
-    used_invite = invites.where("redeemed_at is not null").includes(:invited_by).first
+    used_invite = Invite.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
     used_invite.try(:invited_by)
   end
 

@@ -235,6 +235,10 @@ en:
     max_rows: "First %{max_bulk_invites} invites has been sent. Try splitting the file in smaller parts."
     error: "There was an error uploading that file. Please try again later."
 
+  invite_link:
+    email_taken: "This email is already in use. If you already have an account please login or reset password."
+    max_redemptions_limit: "should be between 2 and %{max_limit}."
+
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
@@ -1713,6 +1717,8 @@ en:
 
     max_post_deletions_per_minute: "Maximum number of posts a user can delete per minute."
     max_post_deletions_per_day: "Maximum number of posts a user can delete per day."
+
+    invite_link_max_redemptions_limit: "Maximum redemptions allowed for invite links can't be more than this value."
 
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."

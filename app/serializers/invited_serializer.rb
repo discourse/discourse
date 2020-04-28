@@ -4,8 +4,15 @@ class InvitedSerializer < ApplicationSerializer
   attributes :invites, :can_see_invite_details
 
   def invites
+    serializer = if object.type == "pending"
+      InviteSerializer
+    else
+      InvitedUserSerializer
+    end
+
     ActiveModel::ArraySerializer.new(
       object.invite_list,
+      each_serializer: serializer,
       scope: scope,
       root: false,
       show_emails: object.show_emails

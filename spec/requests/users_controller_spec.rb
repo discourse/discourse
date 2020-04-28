@@ -1505,7 +1505,8 @@ describe UsersController do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(inviter)
       invitee = Fabricate(:user)
-      _invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+      _invite = Fabricate(:invite, invited_by: inviter)
+      Fabricate(:invited_user, invite: _invite, user: invitee)
       get "/u/#{user.username}/invited_count.json"
       expect(response.status).to eq(200)
 
@@ -1535,61 +1536,66 @@ describe UsersController do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(inviter)
 
+      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter)
+      redeemed_invite = Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter)
       invitee = Fabricate(:user)
-      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter, user: invitee)
-      Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter, user: invitee)
+      Fabricate(:invited_user, invite: redeemed_invite, user: invitee)
 
-      get "/u/#{inviter.username}/invited.json", params: { search: 'billybob' }
+      get "/u/#{inviter.username}/invited.json", params: { filter: 'pending', search: 'billybob' }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
       expect(invites.size).to eq(1)
       expect(invites.first).to include('email' => 'billybob@example.com')
 
-      get "/u/#{inviter.username}/invited.json", params: { search: invitee.username }
+      get "/u/#{inviter.username}/invited.json", params: { filter: 'redeemed', search: invitee.username }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
-      expect(invites.size).to eq(2)
-      expect(invites[0]['email']).to be_present
+      expect(invites.size).to eq(1)
+      expect(invites[0]['user']).to be_present
     end
 
     it "doesn't filter by email if another regular user" do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(Fabricate(:user, trust_level: 2))
 
+      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter)
+      redeemed_invite = Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter)
       invitee = Fabricate(:user)
-      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter, user: invitee)
-      Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter, user: invitee)
+      Fabricate(:invited_user, invite: redeemed_invite, user: invitee)
 
-      get "/u/#{inviter.username}/invited.json", params: { search: 'billybob' }
+      get "/u/#{inviter.username}/invited.json", params: { filter: 'pending', search: 'billybob' }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
       expect(invites.size).to eq(0)
 
-      get "/u/#{inviter.username}/invited.json", params: { search: invitee.username }
+      get "/u/#{inviter.username}/invited.json", params: { filter: 'redeemed', search: invitee.username }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
-      expect(invites.size).to eq(2)
-      expect(invites[0]['email']).to be_blank
+      expect(invites.size).to eq(1)
+      expect(invites[0]['user']).to be_present
     end
 
     it "filters by email if staff" do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(Fabricate(:moderator))
 
-      invitee = Fabricate(:user)
-      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter, user: invitee)
-      Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter, user: invitee)
+      invite_1 = Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter)
+      invitee_1 = Fabricate(:user)
+      Fabricate(:invited_user, invite: invite_1, user: invitee_1)
+      invite_2 = Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter)
+      invitee_2 = Fabricate(:user)
+      Fabricate(:invited_user, invite: invite_2, user: invitee_2)
 
       get "/u/#{inviter.username}/invited.json", params: { search: 'billybob' }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
       expect(invites.size).to eq(1)
-      expect(invites[0]['email']).to be_present
+      expect(invites[0]['user']).to include('id' => invitee_1.id)
     end
 
     context 'with guest' do
@@ -1604,18 +1610,19 @@ describe UsersController do
       end
 
       context 'with redeemed invites' do
-        it 'returns invites' do
+        it 'returns invited_users' do
           inviter = Fabricate(:user, trust_level: 2)
           sign_in(inviter)
           invitee = Fabricate(:user)
-          invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+          invite = Fabricate(:invite, invited_by: inviter)
+          invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
 
           get "/u/#{inviter.username}/invited.json"
           expect(response.status).to eq(200)
 
           invites = response.parsed_body['invites']
           expect(invites.size).to eq(1)
-          expect(invites.first).to include('email' => invite.email)
+          expect(invites[0]).to include('id' => invite.id)
         end
       end
     end
@@ -1641,7 +1648,6 @@ describe UsersController do
           it 'does not return invites' do
             user = sign_in(Fabricate(:user))
             inviter = Fabricate(:user)
-            _invitee = Fabricate(:user)
             Fabricate(:invite, invited_by: inviter)
             stub_guardian(user) do |guardian|
               guardian.stubs(:can_see_invite_details?).
@@ -1659,14 +1665,42 @@ describe UsersController do
           sign_in(Fabricate(:moderator))
           inviter = Fabricate(:user)
           invitee = Fabricate(:user)
-          invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+          invite = Fabricate(:invite, invited_by: inviter)
+          Fabricate(:invited_user, invite: invite, user: invitee)
 
           get "/u/#{inviter.username}/invited.json"
           expect(response.status).to eq(200)
 
           invites = response.parsed_body['invites']
           expect(invites.size).to eq(1)
-          expect(invites.first).to include('email' => invite.email)
+          expect(invites[0]).to include('id' => invite.id)
+        end
+      end
+
+      context 'with invite links' do
+        context 'with permission to see invite links' do
+          it 'returns invites' do
+            inviter = sign_in(Fabricate(:admin))
+            invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invite_links.json"
+            expect(response.status).to eq(200)
+
+            invites = response.parsed_body['invites']
+            expect(invites.size).to eq(1)
+            expect(invites.first).to include("id" => invite.id)
+          end
+        end
+
+        context 'without permission to see invite links' do
+          it 'does not return invites' do
+            user = Fabricate(:user, trust_level: 2)
+            inviter = Fabricate(:admin)
+            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invite_links.json"
+            expect(response.status).to eq(403)
+          end
         end
       end
     end

@@ -559,8 +559,8 @@ describe UsernameChanger do
         notified_user = Fabricate(:user)
         p1 = Fabricate(:post, post_number: 1, user: renamed_user)
         p2 = Fabricate(:post, post_number: 1, user: another_user)
-        Fabricate(:invite, invited_by: notified_user, user: renamed_user)
-        Fabricate(:invite, invited_by: notified_user, user: another_user)
+        Fabricate(:invited_user, invite: Fabricate(:invite, invited_by: notified_user), user: renamed_user)
+        Fabricate(:invited_user, invite: Fabricate(:invite, invited_by: notified_user), user: another_user)
 
         n01 = create_notification(:mentioned, notified_user, p1, original_and_display_username("alice"))
         n02 = create_notification(:mentioned, notified_user, p2, original_and_display_username("another_user"))

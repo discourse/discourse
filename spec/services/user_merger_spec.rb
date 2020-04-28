@@ -251,7 +251,8 @@ describe UserMerger do
   end
 
   it "updates invites" do
-    invite1 = Fabricate(:invite, invited_by: walter, user: source_user)
+    invite1 = Fabricate(:invite, invited_by: walter)
+    Fabricate(:invited_user, invite: invite1, user: source_user)
     invite2 = Fabricate(:invite, invited_by: source_user)
     invite3 = Fabricate(:invite, invited_by: source_user)
     invite3.trash!(source_user)
@@ -260,7 +261,7 @@ describe UserMerger do
 
     [invite1, invite2, invite3].each { |x| x.reload }
 
-    expect(invite1.user).to eq(target_user)
+    expect(invite1.invited_users.first.user).to eq(target_user)
     expect(invite2.invited_by).to eq(target_user)
     expect(invite3.invited_by).to eq(target_user)
     expect(invite3.deleted_by).to eq(target_user)

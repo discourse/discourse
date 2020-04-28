@@ -16,18 +16,30 @@
         <p>{{i18n "invites.invited_by"}}</p>
         <p>{{user-info user=invitedBy}}</p>
 
-        <p>
-          {{html-safe yourEmailMessage}}
-          {{#if externalAuthsEnabled}}
-            {{i18n "invites.social_login_available"}}
-          {{/if}}
-        </p>
+        {{#unless isInviteLink}}
+          <p>
+            {{html-safe yourEmailMessage}}
+            {{#if externalAuthsEnabled}}
+              {{i18n "invites.social_login_available"}}
+            {{/if}}
+          </p>
+        {{/unless}}
 
         <form>
+
+          {{#if isInviteLink}}
+            <div class="input email-input">
+              <label>{{i18n "user.email.title"}}</label>
+              {{input type="email" value=email id="new-account-email" name="email" autofocus="autofocus"}}
+              {{input-tip validation=emailValidation id="account-email-validation"}}
+              <div class="instructions">{{i18n "user.email.instructions"}}</div>
+            </div>
+          {{/if}}
+
           <div class="input username-input">
             <label>{{i18n "user.username.title"}}</label>
             {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
-            &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
+            {{input-tip validation=usernameValidation id="username-validation"}}
             <div class="instructions">{{i18n "user.username.instructions"}}</div>
           </div>
 
@@ -42,7 +54,7 @@
           <div class="input password-input">
             <label>{{i18n "invites.password_label"}}</label>
             {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-            &nbsp;{{input-tip validation=passwordValidation}}
+            {{input-tip validation=passwordValidation}}
             <div class="instructions">
               {{passwordInstructions}} {{i18n "invites.optional_description"}}
               <div class="caps-lock-warning {{unless capsLockOn "invisible"}}">
