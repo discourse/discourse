@@ -18,6 +18,23 @@ module Jobs
       end
     end
 
+    # Not called from the job because this needs to happen during the destroy request
+    def self.clear_titles_for_granted_badge(granted_badge_id)
+      ActiveRecord::Base.transaction do
+        DB.exec(<<~SQL, granted_title_badge_id: granted_badge_id, title: '', updated_at: Time.now)
+          UPDATE users AS u
+          SET title = :title, updated_at = :updated_at
+          FROM user_profiles AS up
+          WHERE up.user_id = u.id AND up.granted_title_badge_id = :granted_title_badge_id
+        SQL
+        DB.exec(<<~SQL, granted_title_badge_id: granted_badge_id, title: '', updated_at: Time.now)
+          UPDATE user_profiles AS up
+          SET badge_granted_title = false, granted_title_badge_id = NULL
+          WHERE up.granted_title_badge_id = :granted_title_badge_id
+        SQL
+      end
+    end
+
     private
 
     ##

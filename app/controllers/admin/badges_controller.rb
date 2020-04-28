@@ -131,7 +131,8 @@ class Admin::BadgesController < Admin::AdminController
   def destroy
     badge = find_badge
     StaffActionLogger.new(current_user).log_badge_deletion(badge)
-    badge.destroy
+    Jobs::BulkUserTitleUpdate.clear_titles_for_granted_badge(badge.id)
+    badge.destroy!
     render body: nil
   end
 
