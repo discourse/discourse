@@ -77,7 +77,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
   @discourseComputed("userTimezone")
   formattedUserLocalTime(timezone) {
-    return moment.tz(timezone).format(I18n.t("dates.time_with_zone"));
+    return moment.tz(timezone).format(I18n.t("dates.time"));
   },
 
   @discourseComputed("username")
