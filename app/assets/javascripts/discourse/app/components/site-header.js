@@ -7,6 +7,7 @@ import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD
 } from "discourse/mixins/pan-events";
+import { topicTitleDecorators } from "discourse/components/topic-title";
 
 const PANEL_BODY_MARGIN = 30;
 
@@ -215,8 +216,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         if (
           !e.target.closest("#current-user") &&
           !e.target.closest(".ring-backdrop") &&
-          !this.currentUser.get("read_first_notification") &&
-          !this.currentUser.get("enforcedSecondFactor")
+          !this.get("currentUser.read_first_notification") &&
+          !this.get("currentUser.enforcedSecondFactor")
         ) {
           this.eventDispatched(
             "header:dismiss-first-notification-mask",
@@ -260,6 +261,13 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   afterRender() {
+    const headerTitle = document.querySelector(".header-title .topic-link");
+    if (headerTitle && this._topic) {
+      topicTitleDecorators.forEach(cb =>
+        cb(this._topic, headerTitle, "header-title")
+      );
+    }
+
     const $menuPanels = $(".menu-panel");
     if ($menuPanels.length === 0) {
       if (this.site.mobileView) {

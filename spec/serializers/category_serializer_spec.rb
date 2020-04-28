@@ -28,4 +28,19 @@ describe CategorySerializer do
     json = described_class.new(category, scope: Guardian.new, root: false).as_json
     expect(json[:custom_fields]).to be_present
   end
+
+  it "includes the default notification level" do
+    json = described_class.new(category, scope: Guardian.new, root: false).as_json
+    expect(json[:notification_level]).to eq(CategoryUser.default_notification_level)
+  end
+
+  describe "user notification level" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "includes the user's notification level" do
+      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:watching], category.id)
+      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
+      expect(json[:notification_level]).to eq(NotificationLevels.all[:watching])
+    end
+  end
 end

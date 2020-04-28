@@ -84,7 +84,11 @@ export default Controller.extend(ModalFunctionality, {
    * We always want to save the bookmark unless the user specifically
    * clicks the save or cancel button to mimic browser behaviour.
    */
-  onClose() {
+  onClose(opts = {}) {
+    if (opts.initiatedByCloseButton) {
+      this._closeWithoutSaving = true;
+    }
+
     this._unbindKeyboardShortcuts();
     this._restoreGlobalShortcuts();
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {

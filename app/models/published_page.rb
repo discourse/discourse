@@ -46,3 +46,19 @@ class PublishedPage < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: published_pages
+#
+#  id         :bigint           not null, primary key
+#  topic_id   :bigint           not null
+#  slug       :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_published_pages_on_slug      (slug) UNIQUE
+#  index_published_pages_on_topic_id  (topic_id) UNIQUE
+#

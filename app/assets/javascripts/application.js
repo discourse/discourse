@@ -1,8 +1,4 @@
-//= require_tree ./ember-addons/utils
 //= require_tree ./discourse-common
-//= require ./ember-addons/decorator-alias
-//= require ./ember-addons/macro-alias
-//= require ./ember-addons/fmt
 //= require ./polyfills
 //= require_tree ./select-kit
 //= require ./discourse/app/app

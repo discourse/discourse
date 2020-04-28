@@ -14,9 +14,9 @@ end
 #  id         :integer          not null, primary key
 #  name       :string           not null
 #  upload_id  :integer          not null
-#  group      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  group      :string(20)
 #
 # Indexes
 #
