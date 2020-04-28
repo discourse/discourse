@@ -454,6 +454,8 @@ login:
     default: false
     client: true
   sso_overrides_profile_background: false
+  sso_overrides_location: false
+  sso_overrides_website: false
   sso_overrides_card_background: false
   sso_not_approved_url: ""
   email_domains_blacklist:

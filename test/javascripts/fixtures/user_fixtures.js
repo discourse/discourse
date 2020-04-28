@@ -187,6 +187,7 @@ export default {
       card_image_badge: "/images/avatar.png",
       card_image_badge_id: 120,
       muted_usernames: [],
+      can_change_location: true,
       ignored_usernames: [],
       invited_by: {
         id: 1,

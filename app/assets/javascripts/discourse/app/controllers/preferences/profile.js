@@ -48,6 +48,16 @@ export default Controller.extend({
     return canChangeBio;
   },
 
+  @discourseComputed("model.can_change_location")
+  canChangeLocation(canChangeLocation) {
+    return canChangeLocation;
+  },
+
+  @discourseComputed("model.can_change_website")
+  canChangeWebsite(canChangeWebsite) {
+    return canChangeWebsite;
+  },
+
   actions: {
     showFeaturedTopicModal() {
       showModal("feature-topic-on-profile", {
