@@ -1,6 +1,46 @@
 import { acceptance } from "helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
 
+import pretender from "helpers/create-pretender";
+import userFixtures from "fixtures/user_fixtures";
+import User from "discourse/models/user";
+
+acceptance("User Card - Show Local Time", {
+  loggedIn: true,
+  settings: { display_local_time_in_user_card: true }
+});
+
+QUnit.test("user card local time", async assert => {
+  User.current().changeTimezone("Australia/Brisbane");
+  let cardResponse = _.clone(userFixtures["/u/eviltrout/card.json"]);
+  cardResponse.user.timezone = "Australia/Perth";
+
+  pretender.get("/u/eviltrout/card.json", () => [
+    200,
+    { "Content-Type": "application/json" },
+    cardResponse
+  ]);
+
+  await visit("/t/internationalization-localization/280");
+  assert.ok(invisible(".user-card"), "user card is invisible by default");
+  await click("a[data-user-card=eviltrout]:first");
+
+  let expectedTime =
+    moment
+      .tz("Australia/Brisbane")
+      .add(-2, "hours")
+      .format("hh:mm a") + " (AWST)";
+
+  assert.ok(visible(".user-card"), "card should appear");
+  assert.equal(
+    find(".user-card .local-time")
+      .text()
+      .trim(),
+    expectedTime,
+    "user card contains the user's local time"
+  );
+});
+
 acceptance("User Card", { loggedIn: true });
 
 QUnit.test("user card", async assert => {
@@ -32,6 +72,11 @@ QUnit.test("user card", async assert => {
       .trim(),
     "charlie",
     "user card contains the data"
+  );
+
+  assert.ok(
+    !visible(".user-card .local-time"),
+    "local time with zone does not show by default"
   );
 
   await click(".card-content .compose-pm button");

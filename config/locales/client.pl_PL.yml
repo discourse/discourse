@@ -29,6 +29,7 @@ pl_PL:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
+      time_with_zone: "H:mm (z)"
       time_short_day: "ddd, GG: mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, GG: mm"

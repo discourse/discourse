@@ -24,6 +24,7 @@ te:
             tb: టీబీ
     dates:
       time: "h:mm a"
+      time_with_zone: "h:mm a (z)"
       long_no_year_no_time: "MMM D"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"

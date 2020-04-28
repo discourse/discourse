@@ -28,6 +28,7 @@ sr:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"

@@ -149,15 +149,9 @@
         </div>
       {{/if}}
 
-      {{#if this.hasLocationOrWebsite}}
+      {{#if this.hasLocaleOrWebsite}}
         <div class="card-row">
           <div class="location-and-website">
-            {{#if this.user.location}}
-              <span class="location">
-                {{d-icon "map-marker-alt"}}
-                <span>{{this.user.location}}</span>
-              </span>
-            {{/if}}
             {{#if this.user.website_name}}
               <span class="website-name">
                 {{d-icon "globe"}}
@@ -168,6 +162,18 @@
                 {{else}}
                   <span title={{this.user.website}}>{{this.user.website_name}}</span>
                 {{/if}}
+              </span>
+            {{/if}}
+            {{#if this.user.location}}
+              <span class="location">
+                {{d-icon "map-marker-alt"}}
+                <span>{{this.user.location}}</span>
+              </span>
+            {{/if}}
+            {{#if showUserLocalTime}}
+              <span class="local-time">
+                {{d-icon "far-clock"}}
+                <span>{{this.formattedUserLocalTime}}</span>
               </span>
             {{/if}}
             {{plugin-outlet name="user-card-location-and-website" args=(hash user=this.user)}}

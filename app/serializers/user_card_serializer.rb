@@ -60,7 +60,8 @@ class UserCardSerializer < BasicUserSerializer
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
              :primary_group_flair_color,
-             :featured_topic
+             :featured_topic,
+             :timezone
 
   untrusted_attributes :bio_excerpt,
                        :website,
@@ -192,6 +193,14 @@ class UserCardSerializer < BasicUserSerializer
 
   def featured_topic
     object.user_profile.featured_topic
+  end
+
+  def include_timezone?
+    SiteSetting.display_local_time_in_user_card?
+  end
+
+  def timezone
+    object.user_option.timezone
   end
 
   def card_background_upload_url
