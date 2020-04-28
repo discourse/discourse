@@ -86,7 +86,7 @@ function positioningWorkaround($fixedElement) {
 
   document.addEventListener("scroll", () => {
     if (!caps.isIpadOS && workaroundActive) {
-      document.documentElement.scrollTop = 0;
+      window.scrollTo(0, 0);
     }
   });
 
@@ -100,7 +100,8 @@ function positioningWorkaround($fixedElement) {
     if (workaroundActive) {
       $("body").removeClass("ios-safari-composer-hacks");
 
-      $(window).scrollTop(originalScrollTop);
+      window.scrollTo(0, originalScrollTop);
+
       if (evt && evt.target) {
         evt.target.removeEventListener("blur", blurred);
       }
@@ -164,7 +165,9 @@ function positioningWorkaround($fixedElement) {
       .find(".select-kit > button.is-focused")
       .removeClass("is-focused");
 
-    originalScrollTop = $(window).scrollTop();
+    if (window.pageYOffset > 0) {
+      originalScrollTop = window.pageYOffset;
+    }
 
     const elementRect = _this.getBoundingClientRect();
     if (elementRect.top > 100) {
@@ -195,7 +198,7 @@ function positioningWorkaround($fixedElement) {
       }
 
       $("body").addClass("ios-safari-composer-hacks");
-      $(window).scrollTop(0);
+      window.scrollTo(0, 0);
 
       if (!iOSWithVisualViewport()) {
         const height = calcHeight();
