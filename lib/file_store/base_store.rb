@@ -151,8 +151,11 @@ module FileStore
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.cp(file.path, path)
 
-      # Remove all but 500 most recent files
-      files = Dir.glob("#{CACHE_DIR}*").sort_by { |f| File.mtime(f) }[0...-500]
+      # Remove all but CACHE_MAXIMUM_SIZE most recent files
+      files = Dir.glob("#{CACHE_DIR}*")
+      files.sort_by! { |f| File.mtime(f) }
+      files.pop(CACHE_MAXIMUM_SIZE)
+
       FileUtils.rm(files, force: true)
     end
 
