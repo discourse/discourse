@@ -16,7 +16,13 @@ class PublishedPagesController < ApplicationController
     @topic = pp.topic
     @canonical_url = @topic.url
 
-    @body_classes = ['published-page', params[:slug], "topic-#{@topic.id}"]
+    @body_classes = [
+      'published-page',
+      params[:slug],
+      "topic-#{@topic.id}",
+      @topic.tags.pluck(:name)
+    ].flatten.compact
+
     if @topic.category
       @body_classes << @topic.category.slug
     end
