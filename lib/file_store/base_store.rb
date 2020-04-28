@@ -153,8 +153,8 @@ module FileStore
 
       # Remove all but CACHE_MAXIMUM_SIZE most recent files
       files = Dir.glob("#{CACHE_DIR}*")
-      files.sort_by! { |f| File.mtime(f) }
-      files.pop(CACHE_MAXIMUM_SIZE)
+        .sort_by { |f| File.mtime(f) }
+        .slice(0...-CACHE_MAXIMUM_SIZE)
 
       FileUtils.rm(files, force: true)
     end
