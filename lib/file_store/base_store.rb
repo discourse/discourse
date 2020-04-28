@@ -152,7 +152,7 @@ module FileStore
       FileUtils.cp(file.path, path)
 
       # Remove all but 500 most recent files
-      files = Dir.glob("#{CACHE_DIR}*").sort_by { |file| File.mtime(file) }[0...-500]
+      files = Dir.glob("#{CACHE_DIR}*").sort_by { |f| File.mtime(f) }[0...-500]
       FileUtils.rm(files, force: true)
     end
 
