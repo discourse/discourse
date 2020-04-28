@@ -124,6 +124,9 @@ branding:
     default: ""
 
 basic:
+  display_local_time_in_user_card:
+    client: true
+    default: false
   allow_user_locale:
     client: true
     default: false

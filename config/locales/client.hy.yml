@@ -27,6 +27,7 @@ hy:
         millions: "{{number}}մլն"
     dates:
       time: "h:mm"
+      time_with_zone: "h:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"

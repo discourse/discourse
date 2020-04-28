@@ -40,6 +40,8 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      time_with_zone: "HH:mm (z)"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time_short_day: "ddd, HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"

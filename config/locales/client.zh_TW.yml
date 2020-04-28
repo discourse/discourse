@@ -26,6 +26,7 @@ zh_TW:
         millions: "{{number}} 百萬"
     dates:
       time: "h:mm a"
+      time_with_zone: "h:mm a (z)"
       timeline_date: "YYYY年 M月"
       long_no_year_no_time: "M月 D日"
       full_no_year_no_time: "M月 D日"

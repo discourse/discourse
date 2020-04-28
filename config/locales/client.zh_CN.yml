@@ -26,6 +26,7 @@ zh_CN:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY[年]M[月]"
       long_no_year: "M[月]D[日] HH:mm"

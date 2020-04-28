@@ -597,6 +597,11 @@ const User = RestModel.extend({
         json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
+      if (!json.user._timezone) {
+        json.user._timezone = json.user.timezone;
+        delete json.user.timezone;
+      }
+
       user.setProperties(json.user);
       return user;
     });
