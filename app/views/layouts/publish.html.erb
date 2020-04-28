@@ -10,7 +10,7 @@
       <link rel="canonical" href="<%= @canonical_url %>" />
     <%- end -%>
   </head>
-  <body class="published-page">
+  <body class="<%= @body_classes.join(' ') %>">
     <%= yield %>
   </body>
 </html>
