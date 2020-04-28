@@ -62,6 +62,12 @@ task 'javascript:update' do
     }, {
       source: 'jquery.cookie/jquery.cookie.js'
     }, {
+      source: 'blueimp-file-upload/js/jquery.fileupload.js',
+    }, {
+      source: 'blueimp-file-upload/js/jquery.iframe-transport.js',
+    }, {
+      source: 'blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+    }, {
       source: 'jquery/dist/jquery.js'
     }, {
       source: 'jquery-tags-input/src/jquery.tagsinput.js'

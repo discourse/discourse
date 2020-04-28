@@ -9,6 +9,7 @@
     "@fortawesome/fontawesome-free": "5.11.2",
     "@popperjs/core": "v2.0.6",
     "ace-builds": "1.4.2",
+    "blueimp-file-upload": "10.13.0",
     "bootbox": "3.2.0",
     "bootstrap": "v3.4.1",
     "chart.js": "2.9.3",
