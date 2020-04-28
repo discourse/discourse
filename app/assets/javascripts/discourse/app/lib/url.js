@@ -28,7 +28,8 @@ const SERVER_SIDE_ONLY = [
   /\.json$/,
   /^\/admin\/upgrade$/,
   /^\/logs($|\/)/,
-  /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/
+  /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
+  /^\/pub\//
 ];
 
 export function rewritePath(path) {
