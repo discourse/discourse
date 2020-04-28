@@ -15,6 +15,18 @@ class PublishedPagesController < ApplicationController
     guardian.ensure_can_see!(pp.topic)
     @topic = pp.topic
     @canonical_url = @topic.url
+
+    @body_classes = Set.new([
+      'published-page',
+      params[:slug],
+      "topic-#{@topic.id}",
+      @topic.tags.pluck(:name)
+    ].flatten.compact)
+
+    if @topic.category
+      @body_classes << @topic.category.slug
+    end
+
     render layout: 'publish'
   end
 
