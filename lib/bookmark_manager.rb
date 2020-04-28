@@ -27,10 +27,7 @@ class BookmarkManager
       return add_errors_from(bookmark)
     end
 
-    # bookmarking the topic-level mean
-    if post.is_first_post?
-      update_topic_user_bookmarked(topic: post.topic, bookmarked: true)
-    end
+    update_topic_user_bookmarked(topic: post.topic, bookmarked: true)
 
     BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(@user)
     bookmark
@@ -45,7 +42,12 @@ class BookmarkManager
     bookmark.destroy
     clear_at_desktop_cache_if_required
 
-    { topic_bookmarked: Bookmark.exists?(topic_id: bookmark.topic_id, user: @user) }
+    bookmarks_remaining_in_topic = Bookmark.exists?(topic_id: bookmark.topic_id, user: @user)
+    if !bookmarks_remaining_in_topic
+      update_topic_user_bookmarked(topic: bookmark.topic, bookmarked: false)
+    end
+
+    { topic_bookmarked: bookmarks_remaining_in_topic }
   end
 
   def destroy_for_topic(topic)
