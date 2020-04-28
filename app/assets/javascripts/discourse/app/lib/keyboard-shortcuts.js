@@ -83,6 +83,11 @@ const DEFAULT_BINDINGS = {
 
 const animationDuration = 100;
 
+function preventKeyboardEvent(event) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
 export default {
   init(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
@@ -175,20 +180,39 @@ export default {
   },
 
   toggleBookmark(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    const selectedPost = this._getSelectedPost();
+    if (selectedPost) {
+      preventKeyboardEvent(event);
+      this.sendToSelectedPost("toggleBookmark", selectedPost);
+      return;
+    }
 
-    this.sendToSelectedPost("toggleBookmark");
-    this.sendToTopicListItemView("toggleBookmark");
+    const selectedTopicListItem = this._getSelectedTopicListItem();
+    if (selectedTopicListItem) {
+      preventKeyboardEvent(event);
+      this.sendToTopicListItemView("toggleBookmark", selectedTopicListItem);
+      return;
+    }
+
+    this._bookmarkCurrentTopic(event);
   },
 
-  toggleBookmarkTopic() {
+  toggleBookmarkTopic(event) {
+    const selectedTopicListItem = this._getSelectedTopicListItem();
+    if (selectedTopicListItem) {
+      preventKeyboardEvent(event);
+      this.sendToTopicListItemView("toggleBookmark", selectedTopicListItem);
+      return;
+    }
+
+    this._bookmarkCurrentTopic(event);
+  },
+
+  _bookmarkCurrentTopic(event) {
     const topic = this.currentTopic();
-    // BIG hack, need a cleaner way
-    if (topic && $(".posts-wrapper").length > 0) {
+    if (topic && document.querySelectorAll(".posts-wrapper").length) {
+      preventKeyboardEvent(event);
       this.container.lookup("controller:topic").send("toggleBookmark");
-    } else {
-      this.sendToTopicListItemView("toggleBookmark");
     }
   },
 
@@ -380,8 +404,8 @@ export default {
     });
   },
 
-  sendToTopicListItemView(action) {
-    const elem = $("tr.selected.topic-list-item.ember-view")[0];
+  sendToTopicListItemView(action, elem) {
+    elem = elem || document.querySelector("tr.selected.topic-list-item");
     if (elem) {
       const registry = this.container.lookup("-view-registry:main");
       if (registry) {
@@ -401,15 +425,18 @@ export default {
     }
   },
 
-  sendToSelectedPost(action) {
-    const container = this.container;
+  sendToSelectedPost(action, elem) {
     // TODO: We should keep track of the post without a CSS class
-    let selectedPostId = parseInt(
-      $(".topic-post.selected article.boxed").data("post-id"),
-      10
-    );
+    const selectedPost =
+      elem || document.querySelector(".topic-post.selected article.boxed");
+
+    let selectedPostId;
+    if (selectedPost) {
+      selectedPostId = parseInt(selectedPost.dataset.postId, 10);
+    }
+
     if (selectedPostId) {
-      const topicController = container.lookup("controller:topic");
+      const topicController = this.container.lookup("controller:topic");
       const post = topicController
         .get("model.postStream.posts")
         .findBy("id", selectedPostId);
@@ -418,7 +445,7 @@ export default {
 
         let actionMethod = topicController.actions[action];
         if (!actionMethod) {
-          const topicRoute = container.lookup("route:topic");
+          const topicRoute = this.container.lookup("route:topic");
           actionMethod = topicRoute.actions[action];
         }
 
@@ -694,6 +721,14 @@ export default {
 
   _replyToPost() {
     this.container.lookup("controller:topic").send("replyToPost");
+  },
+
+  _getSelectedPost() {
+    return document.querySelector(".topic-post.selected article[data-post-id]");
+  },
+
+  _getSelectedTopicListItem() {
+    return document.querySelector("tr.selected.topic-list-item");
   },
 
   deferTopic() {
