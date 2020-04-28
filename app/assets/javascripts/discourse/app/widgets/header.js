@@ -539,7 +539,7 @@ export default createWidget("header", {
         "notification",
         {
           recent: true,
-          silent: this.currentUser.enforcedSecondFactor,
+          silent: this.get("currentUser.enforcedSecondFactor"),
           limit: 5
         },
         { cacheKey: "recent-notifications" }
