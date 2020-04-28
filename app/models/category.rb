@@ -978,6 +978,7 @@ end
 #  reviewable_by_group_id            :integer
 #  required_tag_group_id             :integer
 #  min_tags_from_required_group      :integer          default(1), not null
+#  read_only_banner                  :string
 #
 # Indexes
 #

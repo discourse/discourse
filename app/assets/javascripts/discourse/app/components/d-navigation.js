@@ -15,6 +15,13 @@ export default Component.extend(FilterModeMixin, {
     return category && this.currentUser;
   },
 
+  @discourseComputed("category", "createTopicDisabled")
+  createTopicTitle(category, createTopicDisabled) {
+    if (category && this.currentUser && createTopicDisabled) {
+      return category.read_only_banner;
+    }
+  },
+
   @discourseComputed()
   categories() {
     return this.site.get("categoriesList");
