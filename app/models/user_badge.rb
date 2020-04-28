@@ -101,6 +101,7 @@ end
 #  notification_id :integer
 #  seq             :integer          default(0), not null
 #  featured_rank   :integer
+#  created_at      :datetime         not null
 #
 # Indexes
 #
