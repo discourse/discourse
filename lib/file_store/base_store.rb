@@ -149,22 +149,12 @@ module FileStore
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.cp(file.path, path)
 
-      # Keep latest 500 files
-      processes = Open3.pipeline(
-        ["ls -t #{CACHE_DIR}", err: "/dev/null"],
-        "tail -n +#{CACHE_MAXIMUM_SIZE + 1}",
-        "awk '$0=\"#{CACHE_DIR}\"$0'",
-        "xargs rm -f"
-      )
+      # Remove all but CACHE_MAXIMUM_SIZE most recent files
+      files = Dir.glob("#{CACHE_DIR}*")
+        .sort_by { |f| File.mtime(f) }
+        .slice(0...-CACHE_MAXIMUM_SIZE)
 
-      ls = processes.shift
-
-      # Exit status `1` in `ls` occurs when e.g. "listing a directory
-      # in which entries are actively being removed or renamed".
-      # It's safe to ignore it here.
-      if ![0, 1].include?(ls.exitstatus) || !processes.all?(&:success?)
-        raise "Error clearing old cache"
-      end
+      FileUtils.rm(files, force: true)
     end
 
     private
