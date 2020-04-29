@@ -16,9 +16,34 @@ export default Component.extend(FilterModeMixin, {
   },
 
   @discourseComputed("category", "createTopicDisabled")
-  createTopicTitle(category, createTopicDisabled) {
+  categoryReadOnlyBanner(category, createTopicDisabled) {
     if (category && this.currentUser && createTopicDisabled) {
       return category.read_only_banner;
+    }
+  },
+
+  @discourseComputed(
+    "createTopicDisabled",
+    "hasDraft",
+    "categoryReadOnlyBanner"
+  )
+  createTopicButtonDisabled(
+    createTopicDisabled,
+    hasDraft,
+    categoryReadOnlyBanner
+  ) {
+    if (categoryReadOnlyBanner && !hasDraft) {
+      return false;
+    }
+    return createTopicDisabled;
+  },
+
+  @discourseComputed("categoryReadOnlyBanner", "hasDraft")
+  createTopicClass(categoryReadOnlyBanner, hasDraft) {
+    if (categoryReadOnlyBanner && !hasDraft) {
+      return "btn-default disabled";
+    } else {
+      return "btn-default";
     }
   },
 
@@ -71,6 +96,14 @@ export default Component.extend(FilterModeMixin, {
         case "reorder":
           this.reorderCategories();
           break;
+      }
+    },
+
+    clickCreateTopicButton() {
+      if (this.categoryReadOnlyBanner && !this.hasDraft) {
+        bootbox.alert(this.categoryReadOnlyBanner);
+      } else {
+        this.createTopic();
       }
     }
   }
