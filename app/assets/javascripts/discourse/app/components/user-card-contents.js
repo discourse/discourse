@@ -177,12 +177,12 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   },
 
   _close() {
-    this._super(...arguments);
-
     this.setProperties({
       user: null,
       topicPostCount: null
     });
+
+    this._super(...arguments);
   },
 
   cleanUp() {
