@@ -518,8 +518,6 @@ export default createWidget("topic-timeline", {
 
     result.push(this.attach("timeline-controls", attrs));
 
-    const bottomAge = relativeAge(new Date(topic.last_posted_at), {
-        })
     let displayTimeLineScrollArea = true;
     if (!attrs.mobileView) {
       const streamLength = attrs.topic.get("postStream.stream.length");
