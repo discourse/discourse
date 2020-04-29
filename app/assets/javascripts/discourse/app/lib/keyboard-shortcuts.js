@@ -54,7 +54,7 @@ const DEFAULT_BINDINGS = {
       ".latest-topic-list .latest-topic-list-item.selected div.main-link a.title",
       ".top-topic-list .latest-topic-list-item.selected div.main-link a.title",
       ".latest .featured-topic.selected a.title",
-      ".search-results .search-link"
+      ".search-results .fps-result.selected .search-link"
     ].join(", "),
     anonymous: true
   }, // open selected topic on latest or categories page
