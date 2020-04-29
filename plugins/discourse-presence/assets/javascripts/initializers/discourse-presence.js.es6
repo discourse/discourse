@@ -6,7 +6,7 @@ function initializeDiscoursePresence(api) {
   const currentUser = api.getCurrentUser();
   const siteSettings = api.container.lookup("site-settings:main");
 
-  if (currentUser && !currentUser.hide_profile_and_presence) {
+  if (currentUser) {
     api.modifyClass("model:topic", {
       presenceManager: null
     });

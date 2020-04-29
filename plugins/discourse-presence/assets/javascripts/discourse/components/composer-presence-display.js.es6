@@ -24,7 +24,7 @@ export default Component.extend({
 
   @on("didInsertElement")
   subscribe() {
-    this.presenceManager && this.presenceManager.subscribe();
+    this.presenceManager.subscribe();
   },
 
   @discourseComputed(
@@ -44,21 +44,19 @@ export default Component.extend({
 
   @observes("reply", "title")
   typing() {
-    if (this.presenceManager) {
-      let action = this.action;
+    let action = this.action;
 
-      if (action !== REPLY && action !== EDIT) {
-        return;
-      }
-
-      const postId = this.get("post.id");
-
-      this._throttle = this.presenceManager.throttlePublish(
-        action === EDIT ? EDITING : REPLYING,
-        this.whisper,
-        action === EDIT ? postId : undefined
-      );
+    if (action !== REPLY && action !== EDIT) {
+      return;
     }
+
+    const postId = this.get("post.id");
+
+    this._throttle = this.presenceManager.throttlePublish(
+      action === EDIT ? EDITING : REPLYING,
+      this.whisper,
+      action === EDIT ? postId : undefined
+    );
   },
 
   @observes("whisper")
@@ -68,17 +66,15 @@ export default Component.extend({
 
   @observes("post.id")
   stopEditing() {
-    if (this.presenceManager && !this.get("post.id")) {
+    if (!this.get("post.id")) {
       this.presenceManager.publish(CLOSED, this.whisper);
     }
   },
 
   @on("willDestroyElement")
   composerClosing() {
-    if (this.presenceManager) {
-      this._cancelThrottle();
-      this.presenceManager.publish(CLOSED, this.whisper);
-    }
+    this._cancelThrottle();
+    this.presenceManager.publish(CLOSED, this.whisper);
   },
 
   _cancelThrottle() {
