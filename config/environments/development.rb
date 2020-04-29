@@ -39,6 +39,10 @@ Discourse::Application.configure do
 
   config.log_level = ENV['DISCOURSE_DEV_LOG_LEVEL'] if ENV['DISCOURSE_DEV_LOG_LEVEL']
 
+  if ENV['RAILS_VERBOSE_QUERY_LOGS']
+    config.active_record.verbose_query_logs = true
+  end
+
   if defined?(BetterErrors)
     BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
