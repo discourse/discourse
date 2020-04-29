@@ -1,5 +1,6 @@
 import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
+import Handlebars from "handlebars";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
 
