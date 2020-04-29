@@ -280,6 +280,8 @@ export default Mixin.create({
     if (this.site.mobileView) {
       this._unbindMobileScroll();
     }
+
+    this._hide();
   },
 
   willDestroyElement() {
