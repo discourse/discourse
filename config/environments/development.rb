@@ -39,7 +39,7 @@ Discourse::Application.configure do
 
   config.log_level = ENV['DISCOURSE_DEV_LOG_LEVEL'] if ENV['DISCOURSE_DEV_LOG_LEVEL']
 
-  if ENV['RAILS_VERBOSE_QUERY_LOGS']
+  if ENV['RAILS_VERBOSE_QUERY_LOGS'] != 0
     config.active_record.verbose_query_logs = true
   end
 
@@ -78,6 +78,10 @@ Discourse::Application.configure do
   end
 
   config.after_initialize do
+    if ENV["RAILS_COLORIZE_LOGGING"] != "0"
+      config.colorize_logging = true
+    end
+
     if ENV['BULLET']
       Bullet.enable = true
       Bullet.rails_logger = true
