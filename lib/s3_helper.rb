@@ -204,6 +204,7 @@ class S3Helper
     }
 
     opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
+    opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id
