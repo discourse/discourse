@@ -40,18 +40,18 @@ module Jobs
         @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
         entity[:filename] =
           if entity[:name] == "user_archive" || entity[:name] === "user_archive_profile"
-            "#{entity[:name].split('_').join('-')}-#{@current_user.username}-#{@timestamp}"
+            "#{entity[:name].dasherize}-#{@current_user.username}-#{@timestamp}"
           elsif entity[:name] == "report" && @extra[:name].present?
-            "#{@extra[:name].split('_').join('-')}-#{@timestamp}"
+            "#{@extra[:name].dasherize}-#{@timestamp}"
           else
-            "#{entity[:name].split('_').join('-')}-#{@timestamp}"
+            "#{entity[:name].dasherize}-#{@timestamp}"
           end
       end
 
       export_title = if @entity == "report" && @extra[:name].present?
         I18n.t("reports.#{@extra[:name]}.title")
       else
-        @entity.split('_').join(' ').titleize
+        @entity.gsub('_', ' ').titleize
       end
 
       filename = entities[0][:filename] # use first entity as a name for this export
