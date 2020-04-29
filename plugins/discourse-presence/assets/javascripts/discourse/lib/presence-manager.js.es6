@@ -97,6 +97,8 @@ const PresenceManager = EmberObject.extend({
   },
 
   publish(state, whisper, postId) {
+    if (this.get("currentUser.hide_profile_and_presence")) return;
+
     const data = {
       state,
       topic_id: this.get("topic.id")
