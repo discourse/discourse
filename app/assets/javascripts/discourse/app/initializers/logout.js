@@ -21,7 +21,7 @@ export default {
         bootbox.dialog(
           I18n.t("logout"),
           {
-            label: I18n.t("refresh"),
+            label: I18n.t("home"),
             callback: logout
           },
           {
