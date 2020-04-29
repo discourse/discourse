@@ -1,4 +1,5 @@
 import { createWidget } from "discourse/widgets/widget";
+import { schedule } from "@ember/runloop";
 import hbs from "discourse/widgets/hbs-compiler";
 
 /*
@@ -253,6 +254,9 @@ export const WidgetDropdownClass = {
         placement: "bottom-start",
         modifiers: [
           {
+            name: "preventOverflow"
+          },
+          {
             name: "offset",
             options: {
               offset: [0, 5]
@@ -261,6 +265,10 @@ export const WidgetDropdownClass = {
         ]
       });
     }
+
+    schedule("afterRender", () => {
+      this._popper && this._popper.update();
+    });
   }
 };
 
