@@ -1398,6 +1398,7 @@ en:
     assets_changed_confirm: "This site was just updated. Refresh now for the latest version?"
     logout: "You were logged out."
     refresh: "Refresh"
+    home: "Home"
     read_only_mode:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
