@@ -8,8 +8,8 @@ class AddImageUploadIdToPostsAndTopics < ActiveRecord::Migration[6.0]
     add_column :theme_modifier_sets, :topic_thumbnail_sizes, :string, array: true
 
     create_table :topic_thumbnails do |t|
-      t.references :upload, null: false, foreign_key: { to_table: :uploads, on_delete: :cascade }
-      t.references :optimized_image, null: true, foreign_key: { to_table: :optimized_images, on_delete: :cascade }
+      t.references :upload, null: false
+      t.references :optimized_image, null: true
       t.integer :max_width, null: false
       t.integer :max_height, null: false
     end

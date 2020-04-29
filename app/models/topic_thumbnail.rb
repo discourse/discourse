@@ -23,6 +23,23 @@ class TopicThumbnail < ActiveRecord::Base
 
     create!(upload: original, max_width: max_width, max_height: max_height, optimized_image: optimized)
   end
+
+  def self.ensure_consistency!
+    # Clean up records for broken upload links or broken optimized image links
+    TopicThumbnail
+      .joins("LEFT JOIN uploads on upload_id = uploads.id")
+      .joins("LEFT JOIN optimized_images on optimized_image_id = optimized_images.id")
+      .where(<<~SQL)
+        (optimized_image_id IS NOT NULL AND optimized_images IS NULL)
+        OR uploads IS NULL
+      SQL
+      .delete_all
+
+    # Delete records for sizes which are no longer needed
+    sizes = Topic.thumbnail_sizes + ThemeModifierHelper.new(theme_ids: Theme.pluck(:id)).topic_thumbnail_sizes
+    sizes_sql = sizes.map { |s| "(max_width = #{s[0].to_i} AND max_height = #{s[1].to_i})" }.join(" OR ")
+    TopicThumbnail.where.not(sizes_sql).delete_all
+  end
 end
 
 # == Schema Information

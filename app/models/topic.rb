@@ -73,7 +73,8 @@ class Topic < ActiveRecord::Base
     end
 
     thumbnail_sizes = Topic.thumbnail_sizes + extra_sizes
-    if enqueue_if_missing &&
+    if SiteSetting.create_thumbnails &&
+       enqueue_if_missing &&
        records.length < thumbnail_sizes.length &&
        Discourse.redis.set(thumbnail_job_redis_key(extra_sizes), 1, nx: true, ex: 1.minute)
 
@@ -84,6 +85,7 @@ class Topic < ActiveRecord::Base
   end
 
   def generate_thumbnails!(extra_sizes: [])
+    return nil unless SiteSetting.create_thumbnails
     return nil unless original = image_upload
 
     (Topic.thumbnail_sizes + extra_sizes).each do |dim|
