@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-# name: discourse-internet-explorer
-# about: Attempts to provide backward support for internt explorer
+# name: discourse-unsupported-browser
+# about: Attempts to provide support for old and unsupported browser through polyfills
 # version: 1.0
 # authors: Joffrey Jaffeux, David Taylor, Daniel Waterworth, Robin Ward
-# url: https://github.com/discourse/discourse/tree/master/plugins/discourse-internet-explorer
+# url: https://github.com/discourse/discourse/tree/master/plugins/discourse-unsupported-browser
 
-enabled_site_setting :discourse_internet_explorer_enabled
+enabled_site_setting :discourse_unsupported_browser_enabled
 hide_plugin if self.respond_to?(:hide_plugin)
 
 register_asset 'stylesheets/ie.scss'
@@ -15,8 +15,8 @@ register_asset 'stylesheets/ie.scss'
 # been activated so it can be uploaded to CDNs.
 DiscourseEvent.on(:after_plugin_activation) do ||
   polyfill_path = "#{Plugin::Instance.js_path}/#{self.directory_name}-optional.js"
-  FileUtils.cp("#{Rails.root}/public/plugins/discourse-internet-explorer/js/ie.js", polyfill_path)
-  Rails.configuration.assets.precompile << "plugins/discourse-internet-explorer-optional.js"
+  FileUtils.cp("#{Rails.root}/public/plugins/discourse-unsupported-browser/js/ie.js", polyfill_path)
+  Rails.configuration.assets.precompile << "plugins/discourse-unsupported-browser-optional.js"
 end
 
 after_initialize do
@@ -42,7 +42,7 @@ after_initialize do
   # to be loaded before other files
   register_html_builder('server:before-script-load') do |controller|
     if BrowserDetection.browser(controller.request.env['HTTP_USER_AGENT']) == :ie
-      path = controller.helpers.script_asset_path('plugins/discourse-internet-explorer-optional')
+      path = controller.helpers.script_asset_path('plugins/discourse-unsupported-browser-optional')
 
       <<~JAVASCRIPT
         <script src="#{path}"></script>

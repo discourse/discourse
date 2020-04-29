@@ -1,37 +1,36 @@
 <% if @topic_view %>
-  <h1 class="crawler-topic-title">
-    <%= render_topic_title(@topic_view.topic) %>
-  </h1>
+  <div id="topic-title">
+    <h1>
+      <%= render_topic_title(@topic_view.topic) %>
+    </h1>
 
-  <% @breadcrumbs = categories_breadcrumb(@topic_view.topic) %>
-  <% if @breadcrumbs.present? %>
-  <div id="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
-    <% @breadcrumbs.each_with_index do |c, i| %>
-      <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-        <a href="<%= Discourse.base_url %><%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
-          <span class="badge-category-bg"></span>
-          <span class="category-title" itemprop="name"><%= c[:name] %></span>
-        </a>
-        <meta itemprop="position" content="<%= i + 1 %>" />
-      </div>
-    <% end %>
-  </div>
-  <% end %>
-
-  <% if SiteSetting.tagging_enabled %>
-    <% @tags = @topic_view.topic.tags %>
-    <% if @tags.present? %>
-      <div class='crawler-tags-list' itemscope itemtype='http://schema.org/DiscussionForumPosting'>
-        <% @tags.each_with_index do |tag, i| %>
-          <div itemprop='keywords'>
-            <a href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' rel="tag">
-              <span itemprop='headline'><%= tag.name -%></span>
+    <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <% @breadcrumbs = categories_breadcrumb(@topic_view.topic) %>
+      <% if @breadcrumbs.present? %>
+        <% @breadcrumbs.each_with_index do |c, i| %>
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="<%= Discourse.base_url %><%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
+              <span class="badge-category-bg" style='background-color: #<%= c[:color] %>'></span>
+              <span class="category-title" itemprop="name"><%= c[:name] %></span>
             </a>
+            <meta itemprop="position" content="<%= i + 1 %>" />
+          </span>
+        <% end %>
+      <% end %>
+
+      <% if SiteSetting.tagging_enabled %>
+        <% @tags = @topic_view.topic.tags %>
+        <% if @tags.present? %>
+          <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
+          <div class='discourse-tags list-tags'>
+            <% @tags.each_with_index do |tag, i| %>
+              <a href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' class='discourse-tag' rel="tag"><%= tag.name -%></a><% if i < @tags.size - 1 %>, <% end %>
+            <% end %>
           </div>
         <% end %>
-      </div>
-    <% end %>
-  <% end %>
+      <% end %>
+    </div>
+  </div>
 
   <%= server_plugin_outlet "topic_header" %>
 

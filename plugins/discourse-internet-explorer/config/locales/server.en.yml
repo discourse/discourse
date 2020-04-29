@@ -1,4 +1,0 @@
-en:
-  site_settings:
-    discourse_internet_explorer_enabled: "Enable temporary Internet Explorer support. This plugin is an effort to maintain compatibility with older browsers and will be completely removed in the near future."
-    discourse_internet_explorer_deprecation_warning: "Show an Internet Explorer deprecation warning"
