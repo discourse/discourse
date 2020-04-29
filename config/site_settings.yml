@@ -1202,6 +1202,9 @@ files:
   s3_endpoint:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+  s3_http_continue_timeout:
+    default: 1
+    hidden: true
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
