@@ -1,5 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { toAsciiPrintable, slugify } from "discourse/lib/utilities";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 function b64EncodeUnicode(str) {
@@ -43,20 +44,11 @@ export default Component.extend({
   },
 
   @discourseComputed()
-  siteTitleLowerCase() {
-    let title = this.siteSettings.title;
+  siteTitleSlug() {
+    const title = this.siteSettings.title;
+    const convertedTitle = toAsciiPrintable(title, "discourse");
 
-    if (/^[\000-\177]*$/.test(title)) {
-      return title
-        .replace(/\s+/g, "-")
-        .replace(/[^\w\-]+/g, "")
-        .replace(/\-\-+/g, "-")
-        .replace(/^-+/, "")
-        .replace(/-+$/, "")
-        .toLowerCase();
-    }
-
-    return "discourse";
+    return slugify(convertedTitle);
   },
 
   actions: {

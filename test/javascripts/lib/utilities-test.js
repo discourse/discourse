@@ -9,6 +9,8 @@ import {
   setDefaultHomepage,
   caretRowCol,
   setCaretPosition,
+  toAsciiPrintable,
+  slugify,
   fillMissingDates,
   inCodeBlock
 } from "discourse/lib/utilities";
@@ -173,6 +175,39 @@ QUnit.test("caretRowCol", assert => {
   assertResult(14, 3, 2);
 
   document.body.removeChild(textarea);
+});
+
+QUnit.test("toAsciiPrintable", assert => {
+  const accentedString = "Créme Brûlée!";
+  const unicodeString = "談話";
+
+  assert.equal(
+    toAsciiPrintable(accentedString, "discourse"),
+    "Creme Brulee!",
+    "it replaces accented characters with the appropriate ASCII equivalent"
+  );
+
+  assert.equal(
+    toAsciiPrintable(unicodeString, "discourse"),
+    "discourse",
+    "it uses the fallback string when unable to convert"
+  );
+
+  assert.strictEqual(
+    typeof toAsciiPrintable(unicodeString),
+    "undefined",
+    "it returns undefined when unable to convert and no fallback is provided"
+  );
+});
+
+QUnit.test("slugify", assert => {
+  const string = "--- 0--( Some-cool Discourse Site! )--0 --- ";
+
+  assert.equal(
+    slugify(string),
+    "0-some-cool-discourse-site-0",
+    "it slugifies a string"
+  );
 });
 
 QUnit.test("fillMissingDates", assert => {
