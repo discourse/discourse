@@ -18,10 +18,7 @@ export default DiscourseRoute.extend(OpenComposer, {
     // and being based on a different model. better to just redirect
     const url = transition.intent.url;
     if (url === "/bookmarks") {
-      this.transitionTo(
-        "userActivity.bookmarksWithReminders",
-        this.currentUser
-      );
+      this.transitionTo("userActivity.bookmarks", this.currentUser);
     }
 
     if (

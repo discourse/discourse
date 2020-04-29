@@ -1,13 +1,28 @@
-import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
-import UserAction from "discourse/models/user-action";
+import DiscourseRoute from "discourse/routes/discourse";
 
-export default UserActivityStreamRoute.extend({
-  userActionType: UserAction.TYPES["bookmarks"],
+export default DiscourseRoute.extend({
   noContentHelpKey: "user_activity.no_bookmarks",
+
+  queryParams: {
+    acting_username: { refreshModel: true }
+  },
+
+  model() {
+    return this.modelFor("user").get("bookmarks");
+  },
+
+  renderTemplate() {
+    this.render("user_bookmarks");
+  },
+
+  setupController(controller, model) {
+    controller.set("model", model);
+    controller.loadItems();
+  },
 
   actions: {
     didTransition() {
-      this.controllerFor("application").set("showFooter", true);
+      this.controllerFor("user-activity")._showFooter();
       return true;
     }
   }
