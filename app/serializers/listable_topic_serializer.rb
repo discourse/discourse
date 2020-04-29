@@ -36,7 +36,7 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   def thumbnails
     extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
-    object.thumbnails(generate_async: true, extra_sizes: extra_sizes)
+    object.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
   end
 
   def include_unicode_title?

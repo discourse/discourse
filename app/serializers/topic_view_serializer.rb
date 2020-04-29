@@ -288,6 +288,6 @@ class TopicViewSerializer < ApplicationSerializer
 
   def thumbnails
     extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
-    object.topic.thumbnails(generate_async: true, extra_sizes: extra_sizes)
+    object.topic.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
   end
 end

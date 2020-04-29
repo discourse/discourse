@@ -1053,7 +1053,7 @@ class TopicQuery
   end
 
   def preload_thumbnails(result)
-    result.preload(image_upload: [:optimized_images])
+    result.preload(:image_upload, topic_thumbnails: :optimized_image)
   end
 
   private

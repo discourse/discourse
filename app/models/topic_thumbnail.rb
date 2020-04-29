@@ -1,0 +1,48 @@
+# frozen_string_literal: true
+
+# This model indicates an 'attempt' to create a topic thumbnail
+# for an upload. This means we don't keep trying to create optimized
+# images for small/invalid original images.
+#
+# Foreign keys with ON DELETE CASCADE are used to ensure unneeded data
+# is deleted automatically
+class TopicThumbnail < ActiveRecord::Base
+  belongs_to :upload
+  belongs_to :optimized_image
+
+  def self.find_or_create_for!(original, max_width: , max_height:)
+    existing = TopicThumbnail.find_by(upload: original, max_width: max_width, max_height: max_height)
+    return existing if existing
+    return nil if !SiteSetting.create_thumbnails?
+
+    target_width, target_height = ImageSizer.resize(original.width, original.height, { max_width: max_width, max_height: max_height })
+
+    if target_width < original.width && target_height < original.height
+      optimized = OptimizedImage.create_for(original, target_width, target_height)
+    end
+
+    create!(upload: original, max_width: max_width, max_height: max_height, optimized_image: optimized)
+  end
+end
+
+# == Schema Information
+#
+# Table name: topic_thumbnails
+#
+#  id                 :bigint           not null, primary key
+#  upload_id          :bigint           not null
+#  optimized_image_id :bigint
+#  max_width          :integer          not null
+#  max_height         :integer          not null
+#
+# Indexes
+#
+#  index_topic_thumbnails_on_optimized_image_id  (optimized_image_id)
+#  index_topic_thumbnails_on_upload_id           (upload_id)
+#  unique_topic_thumbnails                       (upload_id,max_width,max_height) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (optimized_image_id => optimized_images.id) ON DELETE => cascade
+#  fk_rails_...  (upload_id => uploads.id) ON DELETE => cascade
+#
