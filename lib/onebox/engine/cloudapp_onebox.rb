@@ -25,7 +25,7 @@ module Onebox
 
       def link_html(og)
         <<-HTML
-            <a href='#{og.url}' target='_blank'>
+            <a href='#{og.url}' target='_blank' rel='noopener'>
               #{og.title}
             </a>
           HTML
@@ -43,7 +43,7 @@ module Onebox
 
       def image_html(og)
         <<-HTML
-            <a href='#{og.url}' target='_blank' class='onebox'>
+            <a href='#{og.url}' target='_blank' class='onebox' rel='noopener'>
               <img src='#{og.image}' #{og.title_attr} alt='CloudApp' width='480'>
             </a>
           HTML

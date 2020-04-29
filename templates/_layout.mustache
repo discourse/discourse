@@ -4,10 +4,10 @@
       <img src="{{favicon}}" class="site-icon"/>
     {{/favicon}}
     {{#article_published_time}}
-      <a href="{{link}}" target='_blank' title="{{article_published_time_title}}">{{domain}} &ndash; {{article_published_time}}</a>
+      <a href="{{link}}" target='_blank' rel='noopener' title="{{article_published_time_title}}">{{domain}} &ndash; {{article_published_time}}</a>
     {{/article_published_time}}
     {{^article_published_time}}
-      <a href="{{link}}" target='_blank'>{{domain}}</a>
+      <a href="{{link}}" target='_blank' rel='noopener'>{{domain}}</a>
     {{/article_published_time}}
   </header>
   <article class="onebox-body">

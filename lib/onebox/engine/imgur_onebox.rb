@@ -34,7 +34,7 @@ module Onebox
 
         <<-HTML
             <div class='onebox imgur-album'>
-              <a href='#{escaped_url}' target='_blank'>
+              <a href='#{escaped_url}' target='_blank' rel='noopener'>
                 <span class='outer-box' style='width:#{og.image_width}px'>
                   <span class='inner-box'>
                     <span class='album-title'>#{album_title}</span>
@@ -57,7 +57,7 @@ module Onebox
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
 
         <<-HTML
-            <a href='#{escaped_url}' target='_blank' class="onebox">
+            <a href='#{escaped_url}' target='_blank' rel='noopener' class="onebox">
               <img src='#{og.get_secure_image}' #{og.title_attr} alt='Imgur' height='#{og.image_height}' width='#{og.image_width}'>
             </a>
           HTML

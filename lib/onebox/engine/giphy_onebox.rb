@@ -13,7 +13,7 @@ module Onebox
         oembed = get_oembed
 
         <<-HTML
-          <a href="#{oembed.url}" target="_blank" class="onebox">
+          <a href="#{oembed.url}" target="_blank" rel="noopener" class="onebox">
             <img src="#{oembed.url}" width="#{oembed.width}" height="#{oembed.height}" #{oembed.title_attr}>
           </a>
         HTML

@@ -11,7 +11,7 @@ describe Onebox::Engine::GoogleDriveOnebox do
   end
 
   it "includes title" do
-    expect(html).to include('<a href="https://drive.google.com/file/d/1FgMt06wENEUfC6_-1tImXaNCH7vM9QsA/view" target="_blank">test.txt</a>')
+    expect(html).to include('<a href="https://drive.google.com/file/d/1FgMt06wENEUfC6_-1tImXaNCH7vM9QsA/view" target="_blank" rel="noopener">test.txt</a>')
   end
 
   it "includes image" do

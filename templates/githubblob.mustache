@@ -1,4 +1,4 @@
-<h4><a href="{{link}}" target="_blank">{{title}}</a></h4>
+<h4><a href="{{link}}" target="_blank" rel="noopener">{{title}}</a></h4>
 {{^has_lines}}
 {{#model_file}}
 <iframe class="render-viewer" width="{{width}}" height="{{height}}" src="{{content}}" sandbox="allow-scripts allow-same-origin allow-top-navigation ">
@@ -40,5 +40,5 @@ pre.onebox code li.selected{
 {{/has_lines}}
 
 {{#truncated}}
-  This file has been truncated. <a href="{{link}}" target="_blank">show original</a>
+  This file has been truncated. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
 {{/truncated}}
