@@ -13,10 +13,8 @@ Discourse.SiteSettingsOriginal = {
   ga_universal_tracking_code: "",
   ga_universal_domain_name: "auto",
   top_menu: "latest|new|unread|categories|top",
-  post_menu:
-    "like|share|flag|edit|bookmark|bookmarkWithReminder|delete|admin|reply",
-  post_menu_hidden_items:
-    "flag|bookmark|bookmarkWithReminder|edit|delete|admin",
+  post_menu: "like|share|flag|edit|bookmark|delete|admin|reply",
+  post_menu_hidden_items: "flag|bookmark|edit|delete|admin",
   share_links: "twitter|facebook|email",
   category_colors:
     "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|27AA5B|B3B5B4|E45735",
