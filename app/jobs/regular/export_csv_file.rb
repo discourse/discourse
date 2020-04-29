@@ -13,7 +13,7 @@ module Jobs
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
       user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
-      user_archive_profile: ['loncation', 'website', 'bio', 'views'],
+      user_archive_profile: ['location', 'website', 'bio', 'views'],
       user_list: ['id', 'name', 'username', 'email', 'title', 'created_at', 'last_seen_at', 'last_posted_at', 'last_emailed_at', 'trust_level', 'approved', 'suspended_at', 'suspended_till', 'silenced_till', 'active', 'admin', 'moderator', 'ip_address', 'staged', 'secondary_emails'],
       user_stats: ['topics_entered', 'posts_read_count', 'time_read', 'topic_count', 'post_count', 'likes_given', 'likes_received'],
       user_profile: ['location', 'website', 'views'],
