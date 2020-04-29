@@ -39,7 +39,7 @@ Discourse::Application.configure do
 
   config.log_level = ENV['DISCOURSE_DEV_LOG_LEVEL'] if ENV['DISCOURSE_DEV_LOG_LEVEL']
 
-  if ENV['RAILS_VERBOSE_QUERY_LOGS'] != 0
+  if ENV['RAILS_VERBOSE_QUERY_LOGS'] != "0"
     config.active_record.verbose_query_logs = true
   end
 
