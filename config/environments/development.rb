@@ -25,6 +25,7 @@ Discourse::Application.configure do
   config.assets.digest = false
 
   config.assets.debug = false
+  config.assets.quiet = true
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
@@ -39,7 +40,7 @@ Discourse::Application.configure do
 
   config.log_level = ENV['DISCOURSE_DEV_LOG_LEVEL'] if ENV['DISCOURSE_DEV_LOG_LEVEL']
 
-  if ENV['RAILS_VERBOSE_QUERY_LOGS'] != "1"
+  if ENV['RAILS_VERBOSE_QUERY_LOGS'] == "1"
     config.active_record.verbose_query_logs = true
   end
 
@@ -78,7 +79,7 @@ Discourse::Application.configure do
   end
 
   config.after_initialize do
-    if ENV["RAILS_COLORIZE_LOGGING"] != "1"
+    if ENV["RAILS_COLORIZE_LOGGING"] == "1"
       config.colorize_logging = true
     end
 
