@@ -518,32 +518,46 @@ export default createWidget("topic-timeline", {
 
     result.push(this.attach("timeline-controls", attrs));
 
-    const bottomAge = relativeAge(new Date(topic.last_posted_at), {
-      addAgo: true,
-      defaultFormat: timelineDate
-    });
-    let scroller = [
-      h(
-        "div.timeline-date-wrapper",
-        this.attach("link", {
-          className: "start-date",
-          rawLabel: timelineDate(createdAt),
-          action: "jumpTop"
-        })
-      ),
-      this.attach("timeline-scrollarea", attrs),
-      h(
-        "div.timeline-date-wrapper",
-        this.attach("link", {
-          className: "now-date",
-          rawLabel: bottomAge,
-          action: "jumpBottom"
-        })
-      )
-    ];
+    let displayTimeLineScrollArea = true;
+    if (!attrs.mobileView) {
+      const streamLength = attrs.topic.get("postStream.stream.length");
 
-    result.push(h("div.timeline-scrollarea-wrapper", scroller));
-    result.push(this.attach("timeline-footer-controls", attrs));
+      if (streamLength < 2) {
+        const postsWrapper = document.querySelector(".posts-wrapper");
+        if (postsWrapper && postsWrapper.offsetHeight < 1000) {
+          displayTimeLineScrollArea = false;
+        }
+      }
+    }
+
+    if (displayTimeLineScrollArea) {
+      const bottomAge = relativeAge(new Date(topic.last_posted_at), {
+        addAgo: true,
+        defaultFormat: timelineDate
+      });
+      let scroller = [
+        h(
+          "div.timeline-date-wrapper",
+          this.attach("link", {
+            className: "start-date",
+            rawLabel: timelineDate(createdAt),
+            action: "jumpTop"
+          })
+        ),
+        this.attach("timeline-scrollarea", attrs),
+        h(
+          "div.timeline-date-wrapper",
+          this.attach("link", {
+            className: "now-date",
+            rawLabel: bottomAge,
+            action: "jumpBottom"
+          })
+        )
+      ];
+
+      result.push(h("div.timeline-scrollarea-wrapper", scroller));
+      result.push(this.attach("timeline-footer-controls", attrs));
+    }
 
     return result;
   }

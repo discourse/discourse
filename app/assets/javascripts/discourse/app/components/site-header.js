@@ -225,9 +225,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           );
         }
       };
-      document.addEventListener("click", this._dismissFirstNotification, {
-        once: true
-      });
+      // TODO: re-enable event listener
+      //      document.addEventListener("click", this._dismissFirstNotification, {
+      //        once: true
+      //      });
     }
   },
 

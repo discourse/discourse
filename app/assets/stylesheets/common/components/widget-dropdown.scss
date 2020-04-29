@@ -38,6 +38,10 @@
       padding: 0;
       background: $primary-low;
       margin: 0.25em 0;
+
+      &:hover {
+        background: $primary-low;
+      }
     }
 
     &:hover {

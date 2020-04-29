@@ -2,12 +2,12 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initializeInternetExplorerDeprecation(api) {
   const siteSettings = api.container.lookup("site-settings:main");
-  if (siteSettings.discourse_internet_explorer_deprecation_warning) {
+  if (siteSettings.browser_deprecation_warning) {
     const { isIE11 } = api.container.lookup("capabilities:main");
     if (isIE11) {
       api.addGlobalNotice(
-        I18n.t("discourse_internet_explorer.deprecation_warning"),
-        "deprecate-internet-explorer",
+        I18n.t("discourse_unsupported_browser.deprecation_warning"),
+        "browser-deprecation-warning",
         { dismissable: true, dismissDuration: moment.duration(1, "week") }
       );
     }
@@ -15,7 +15,7 @@ function initializeInternetExplorerDeprecation(api) {
 }
 
 export default {
-  name: "discourse-internet-explorer",
+  name: "discourse-unsupported-browser",
 
   initialize() {
     withPluginApi("0.8.37", initializeInternetExplorerDeprecation);

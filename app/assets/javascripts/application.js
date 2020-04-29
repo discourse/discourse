@@ -1,4 +1,4 @@
-//= require_tree ./discourse-common
+//= require_tree ./discourse-common/addon
 //= require ./polyfills
 //= require_tree ./select-kit
 //= require ./discourse/app/app

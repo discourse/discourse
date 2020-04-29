@@ -1,5 +1,7 @@
 export default {
-  shouldRender(_, ctx) {
-    return ctx.siteSettings.presence_enabled;
+  shouldRender(args, component) {
+    return (
+      component.siteSettings.presence_enabled && args.model.presenceManager
+    );
   }
 };

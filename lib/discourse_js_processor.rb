@@ -161,7 +161,7 @@ JS
       end
 
       # We need to strip the app subdirectory to replicate how ember-cli works.
-      path || logical_path&.gsub('app/', '')
+      path || logical_path&.gsub('app/', '')&.gsub('addon/', '')
     end
 
   end

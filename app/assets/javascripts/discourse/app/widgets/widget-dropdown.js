@@ -1,4 +1,5 @@
 import { createWidget } from "discourse/widgets/widget";
+import { schedule } from "@ember/runloop";
 import hbs from "discourse/widgets/hbs-compiler";
 
 /*
@@ -80,6 +81,9 @@ export const WidgetDropdownHeaderClass = {
     <span class="label">
       {{transformed.label}}
     </span>
+    {{#if attrs.caret}}
+      {{d-icon "caret-down"}}
+    {{/if}}
   `
 };
 
@@ -218,6 +222,7 @@ export const WidgetDropdownClass = {
           label=attrs.label
           translatedLabel=attrs.translatedLabel
           class=this.transformed.options.headerClass
+          caret=this.transformed.options.caret
         )
       }}
 
@@ -249,6 +254,9 @@ export const WidgetDropdownClass = {
         placement: "bottom-start",
         modifiers: [
           {
+            name: "preventOverflow"
+          },
+          {
             name: "offset",
             options: {
               offset: [0, 5]
@@ -257,6 +265,10 @@ export const WidgetDropdownClass = {
         ]
       });
     }
+
+    schedule("afterRender", () => {
+      this._popper && this._popper.update();
+    });
   }
 };
 
