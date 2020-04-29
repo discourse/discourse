@@ -6,6 +6,7 @@ import discourseComputed, {
   on
 } from "discourse-common/utils/decorators";
 import { REPLYING, CLOSED, EDITING } from "../lib/presence-manager";
+import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
   // Passed in variables
@@ -44,12 +45,18 @@ export default Component.extend({
   @observes("reply", "title")
   typing() {
     if (this.presenceManager) {
+      let action = this.action;
+
+      if (action !== REPLY && action !== EDIT) {
+        return;
+      }
+
       const postId = this.get("post.id");
 
       this._throttle = this.presenceManager.throttlePublish(
-        postId ? EDITING : REPLYING,
+        action === EDIT ? EDITING : REPLYING,
         this.whisper,
-        postId
+        action === EDIT ? postId : undefined
       );
     }
   },
