@@ -71,7 +71,12 @@ def assets
   manifest.assets.each do |_, path|
     fullpath = (Rails.root + "public/assets/#{path}").to_s
 
-    content_type = MiniMime.lookup_by_filename(fullpath).content_type
+    mime = MiniMime.lookup_by_filename(fullpath)
+    if mime.nil?
+      STDERR.puts "ERROR: could not determine mime type for #{fullpath}"
+    end
+
+    content_type = mime.content_type
 
     asset_path = "assets/#{path}"
     results << [fullpath, asset_path, content_type]
