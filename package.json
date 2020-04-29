@@ -4,7 +4,7 @@
   "main": "index.js",
   "repository": "git@github.com:discourse/discourse.git",
   "author": "Discourse",
-  "license": "MIT",
+  "license": "GPL-2.0-only",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.11.2",
     "@popperjs/core": "v2.0.6",
