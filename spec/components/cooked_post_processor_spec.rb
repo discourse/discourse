@@ -1346,15 +1346,17 @@ describe CookedPostProcessor do
             cpp = CookedPostProcessor.new(the_post.reload)
             cpp.post_process_oneboxes
 
-            expect(cpp.html).to match_html <<~HTML.rstrip
+            cpp = CookedPostProcessor.new(the_post.reload)
+            cpp.post_process_oneboxes
+
+            expect(cpp.html).to match_html <<~HTML
               <p>This post has an S3 video onebox:<br>
-                        <div class="onebox video-onebox">
+                        </p><div class="onebox video-onebox">
                           <video width="100%" height="100%" controls="">
                             <source src="#{video_upload.url}">
                             <a href="#{video_upload.url}" rel="nofollow ugc noopener">#{video_upload.url}</a>
                           </video>
                         </div>
-              </p>
             HTML
           end
 
