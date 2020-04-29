@@ -11,11 +11,11 @@ export default Component.extend({
 
   @on("didInsertElement")
   subscribe() {
-    this.get("presenceManager").subscribe();
+    this.presenceManager && this.presenceManager.subscribe();
   },
 
   @on("willDestroyElement")
   _destroyed() {
-    this.get("presenceManager").unsubscribe();
+    this.presenceManager && this.presenceManager.unsubscribe();
   }
 });

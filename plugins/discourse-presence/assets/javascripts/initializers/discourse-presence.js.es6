@@ -35,7 +35,7 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
 
-    if (siteSettings.presence_enabled) {
+    if (siteSettings.presence_enabled && ENV.environment !== "test") {
       withPluginApi("0.8.40", initializeDiscoursePresence);
     }
   }
