@@ -18,14 +18,15 @@
   },
   "dependencies": {
     "ember-cli-babel": "^7.13.0",
-    "ember-cli-htmlbars": "^4.2.0"
+    "ember-cli-htmlbars": "^4.2.0",
+    "ember-auto-import": "^1.5.3",
+    "handlebars": "^4.7.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^1.1.0",
     "@glimmer/component": "^1.0.0",
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-auto-import": "^1.5.3",
     "ember-cli": "~3.15.2",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-eslint": "^5.1.0",
