@@ -1,5 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PresenceManager from "../discourse/lib/presence-manager";
+import ENV from "discourse-common/config/environment";
 
 function initializeDiscoursePresence(api) {
   const currentUser = api.getCurrentUser();
