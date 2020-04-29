@@ -25,7 +25,6 @@ Discourse::Application.configure do
   config.assets.digest = false
 
   config.assets.debug = false
-  config.assets.quiet = true
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
