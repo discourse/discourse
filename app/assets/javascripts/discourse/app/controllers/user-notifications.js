@@ -40,10 +40,6 @@ export default Controller.extend({
 
     loadMore() {
       this.model.loadMore();
-    },
-
-    filterNotifications(filter) {
-      this.set("filter", filter);
     }
   }
 });

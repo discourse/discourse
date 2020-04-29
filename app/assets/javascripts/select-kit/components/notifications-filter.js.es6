@@ -22,11 +22,7 @@ export default DropdownSelectBoxComponent.extend({
   },
   isVisible: true,
   valueProperty: null,
-
-  modifyComponentForRow() {
-    return "notifications-filter/notifications-filter-row";
-  },
-
+  nameProperty: "value",
   selectKitOptions: {
     headerComponent: "notifications-filter/notifications-filter-header"
   },
@@ -34,7 +30,7 @@ export default DropdownSelectBoxComponent.extend({
   actions: {
     onChange(filter) {
       this.set("value", filter);
-      this.attrs.action && this.attrs.action(filter.type);
+      this.set("filter", filter.type);
     }
   }
 });
