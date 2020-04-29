@@ -302,3 +302,18 @@ widgetTest("bodyClass option", {
     assert.ok(body().classList.contains("and-yet-small"));
   }
 });
+
+widgetTest("caret option", {
+  template: TEMPLATE,
+
+  beforeEach() {
+    this.setProperties(DEFAULT_CONTENT);
+    this.set("options", { caret: true });
+  },
+
+  test(assert) {
+    assert.ok(
+      exists("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
+    );
+  }
+});
