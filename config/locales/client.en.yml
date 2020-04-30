@@ -3825,7 +3825,7 @@ en:
           license: "License"
           version: "Version:"
           authors: "Authored by:"
-          uploader: "Uploaded by:"
+          creator: "Created by:"
           source_url: "Source"
           enable: "Enable"
           disable: "Disable"
