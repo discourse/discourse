@@ -2195,6 +2195,8 @@ en:
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
+    dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
+    dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
 
     gravatar_name: "Name of the Gravatar provider"
