@@ -524,7 +524,7 @@ QUnit.test(
     );
 
     assert.ok(
-      find(".composer-fields .whisper")
+      find(".composer-fields .unlist")
         .text()
         .indexOf(I18n.t("composer.unlist")) > 0,
       "it sets the topic to unlisted"
