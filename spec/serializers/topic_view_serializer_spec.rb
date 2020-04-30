@@ -69,6 +69,10 @@ describe TopicViewSerializer do
 
         topic.generate_thumbnails!
 
+        expect do
+          json = serialize_topic(topic, user)
+        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
+
         # Original + Optimized
         expect(json[:thumbnails].length).to eq(2)
       end
