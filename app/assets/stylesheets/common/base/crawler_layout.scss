@@ -11,6 +11,10 @@ body.crawler {
     box-sizing: border-box;
   }
 
+  .header-buttons {
+    display: none;
+  }
+
   div#main-outlet {
     div.post {
       word-break: break-word;
@@ -27,10 +31,6 @@ body.crawler {
 
   footer {
     margin-top: 4em;
-  }
-
-  .category-title {
-    color: $primary;
   }
 
   .discourse-tags {
