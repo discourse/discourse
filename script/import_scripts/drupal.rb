@@ -175,14 +175,17 @@ class ImportScripts::Drupal < ImportScripts::Base
                n.uid uid,
                fi.created created,
                fi.sticky sticky,
-               f.body_value body
+               f.body_value body,
+	       nc.totalcount views
           FROM forum_index fi,
                node n,
-               field_data_body f
+               field_data_body f,
+	       node_counter nc
          WHERE n.type = 'forum'
            AND fi.nid = n.nid
            AND n.nid = f.entity_id
            AND n.status = 1
+	   AND nc.nid = n.nid
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset};
       SQL
@@ -200,7 +203,8 @@ class ImportScripts::Drupal < ImportScripts::Base
           raw: row['body'],
           created_at: Time.zone.at(row['created']),
           pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
-          title: row['title'].try(:strip)
+          title: row['title'].try(:strip),
+	  views: row['views']
         }
       end
     end
