@@ -523,6 +523,7 @@ class PostRevisor
   def bump_topic
     return if bypass_bump? || !is_last_post?
     @topic.update_column(:bumped_at, Time.now)
+    TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
