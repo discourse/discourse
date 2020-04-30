@@ -55,9 +55,11 @@ export const WidgetDropdownHeaderClass = {
   tagName: "button",
 
   transform(attrs) {
-    return {
-      label: attrs.translatedLabel ? attrs.translatedLabel : I18n.t(attrs.label)
-    };
+    return { label: this._buildLabel(attrs) };
+  },
+
+  buildAttributes(attrs) {
+    return { title: this._buildLabel(attrs) };
   },
 
   buildClasses(attrs) {
@@ -84,7 +86,11 @@ export const WidgetDropdownHeaderClass = {
     {{#if attrs.caret}}
       {{d-icon "caret-down"}}
     {{/if}}
-  `
+  `,
+
+  _buildLabel(attrs) {
+    return attrs.translatedLabel ? attrs.translatedLabel : I18n.t(attrs.label);
+  }
 };
 
 createWidget("widget-dropdown-header", WidgetDropdownHeaderClass);
