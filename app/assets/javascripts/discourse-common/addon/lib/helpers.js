@@ -1,6 +1,7 @@
 import { get } from "@ember/object";
 import Helper from "@ember/component/helper";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
+import { htmlSafe } from "@ember/template";
 
 export function makeArray(obj) {
   if (obj === null || obj === undefined) {
@@ -13,7 +14,7 @@ export function htmlHelper(fn) {
   return Helper.helper(function(...args) {
     args =
       args.length > 1 ? args[0].concat({ hash: args[args.length - 1] }) : args;
-    return new Handlebars.SafeString(fn.apply(this, args) || "");
+    return htmlSafe(fn.apply(this, args) || "");
   });
 }
 

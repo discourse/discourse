@@ -1,16 +1,17 @@
 import PreloadStore from "preload-store";
+import { htmlSafe } from "@ember/template";
 
 let _customizations = {};
 
 export function getCustomHTML(key) {
   const c = _customizations[key];
   if (c) {
-    return new Handlebars.SafeString(c);
+    return htmlSafe(c);
   }
 
   const html = PreloadStore.get("customHTML");
   if (html && html[key] && html[key].length) {
-    return new Handlebars.SafeString(html[key]);
+    return htmlSafe(html[key]);
   }
 }
 
