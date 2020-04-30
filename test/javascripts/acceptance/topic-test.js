@@ -248,9 +248,9 @@ QUnit.test("remove featured link", async assert => {
     "link to remove featured link"
   );
 
-  await click('.title-wrapper .remove-featured-link');
-  await click('.title-wrapper .submit-edit');
-  assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
+  await click(".title-wrapper .remove-featured-link");
+  await click(".title-wrapper .submit-edit");
+  assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
 });
 
 QUnit.test("Converting to a public topic", async assert => {
@@ -394,17 +394,6 @@ QUnit.test(
     );
   }
 );
-
-acceptance("Topic + Post Bookmarks with Reminders", {
-  loggedIn: true
-});
-
-QUnit.test("Bookmarks Modal", async assert => {
-  await visit("/t/internationalization-localization/280");
-  await click(".topic-post:first-child button.show-more-actions");
-  await click(".topic-post:first-child button.bookmark");
-  assert.ok(exists("#bookmark-reminder-modal"), "it shows the bookmark modal");
-});
 
 acceptance("Topic with title decorated", {
   loggedIn: true,
