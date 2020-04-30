@@ -1,4 +1,5 @@
 import { registerUnbound } from "discourse-common/lib/helpers";
+import { htmlSafe } from "@ember/template";
 
 registerUnbound("topic-link", (topic, args) => {
   const title = topic.get("fancyTitle");
@@ -14,5 +15,5 @@ registerUnbound("topic-link", (topic, args) => {
   const result = `<a href='${url}'
                      class='${classes.join(" ")}'
                      data-topic-id='${topic.id}'>${title}</a>`;
-  return new Handlebars.SafeString(result);
+  return htmlSafe(result);
 });

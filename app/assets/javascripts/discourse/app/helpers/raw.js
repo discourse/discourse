@@ -1,5 +1,6 @@
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { findRawTemplate } from "discourse/lib/raw-templates";
+import { htmlSafe } from "@ember/template";
 
 let _injections;
 
@@ -31,7 +32,7 @@ function renderRaw(ctx, container, template, templateName, params) {
     }
   }
 
-  return new Handlebars.SafeString(template(params));
+  return htmlSafe(template(params));
 }
 
 registerUnbound("raw", function(templateName, params) {
