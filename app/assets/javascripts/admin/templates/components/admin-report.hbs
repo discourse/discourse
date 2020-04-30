@@ -1,4 +1,4 @@
-{{#if isVisible}}
+{{#unless isHidden}}
   {{#if isEnabled}}
     {{#conditional-loading-section isLoading=isLoading}}
       {{#if showHeader}}
@@ -194,4 +194,4 @@
       {{html-safe disabledLabel}}
     </div>
   {{/if}}
-{{/if}}
+{{/unless}}

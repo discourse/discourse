@@ -26,44 +26,39 @@ export default Controller.extend(PeriodComputationMixin, {
     return (metrics || "").split("|").filter(Boolean);
   },
 
-  visibleReports: computed(
-    "siteSettings.dashboard_visible_reports",
-    function() {
-      return (this.siteSettings.dashboard_visible_reports || "")
-        .split("|")
-        .filter(Boolean);
-    }
-  ),
+  hiddenReports: computed("siteSettings.dashboard_hidden_reports", function() {
+    return (this.siteSettings.dashboard_hidden_reports || "")
+      .split("|")
+      .filter(Boolean);
+  }),
 
   isActivityMetricsVisible: computed(
     "activityMetrics",
-    "visibleReports",
+    "hiddenReports",
     function() {
       return (
         this.activityMetrics.length > 0 &&
-        this.activityMetrics.any(x => this.visibleReports.includes(x))
+        !this.hiddenReports.any(x => this.activityMetrics.includes(x))
       );
     }
   ),
 
-  isSearchReportsVisible: computed("visibleReports", function() {
-    return this.visibleReports.any(x =>
-      ["top_referred_topics", "trending_search"].includes(x)
-    );
+  isSearchReportsVisible: computed("hiddenReports", function() {
+    return ["top_referred_topics", "trending_search"].filter(
+      x => !this.hiddenReports.includes(x)
+    ).length;
   }),
 
-  isCommunityHealthVisible: computed("visibleReports", function() {
-    return this.visibleReports.any(x =>
-      [
-        "consolidated_page_views",
-        "signups",
-        "topics",
-        "posts",
-        "dau_by_mau",
-        "daily_engaged_users",
-        "new_contributors"
-      ].includes(x)
-    );
+  isCommunityHealthVisible: computed("hiddenReports", function() {
+    return [
+      "consolidated_page_views",
+      "signups",
+      "topics",
+      "posts",
+      "dau_by_mau",
+      "daily_engaged_users",
+      "new_contributors"
+    ].filter(x => !this.hiddenReports.includes(x)).length;
   }),
 
   @discourseComputed

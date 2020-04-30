@@ -5,8 +5,6 @@ acceptance("Dashboard", {
   loggedIn: true,
   settings: {
     dashboard_visible_tabs: "moderation|security|reports",
-    dashboard_visible_reports:
-      "signups|post|dau_by_mau|page_view_total_reqs|flags|signups_with_groups|my_report",
     dashboard_general_tab_activity_metrics: "page_view_total_reqs"
   },
   site: {
@@ -137,15 +135,15 @@ QUnit.test("visible tabs", async assert => {
   assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
 });
 
-acceptance("Dashboard: dashboard_visible_reports", {
+acceptance("Dashboard: dashboard_hidden_reports", {
   loggedIn: true,
   settings: {
     dashboard_visible_tabs: "reports",
-    dashboard_visible_reports: "signups"
+    dashboard_hidden_reports: "posts|dau_by_mau"
   }
 });
 
-QUnit.test("visible reports", async assert => {
+QUnit.test("hidden reports", async assert => {
   await visit("/admin");
 
   assert.ok(exists(".admin-report.signups.is-visible"), "signups report");

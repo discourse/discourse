@@ -1,6 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
-import { alias, or, and, equal, notEmpty } from "@ember/object/computed";
+import { alias, or, and, equal, notEmpty, not } from "@ember/object/computed";
 import EmberObject, { computed, action } from "@ember/object";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
@@ -68,6 +68,7 @@ export default Component.extend({
   showDatesOptions: alias("model.dates_filtering"),
   showRefresh: or("showDatesOptions", "model.available_filters.length"),
   shouldDisplayTrend: and("showTrend", "model.prev_period"),
+  isVisible: not("isHidden"),
 
   init() {
     this._super(...arguments);
@@ -75,8 +76,8 @@ export default Component.extend({
     this._reports = [];
   },
 
-  isVisible: computed("siteSettings.dashboard_visible_reports", function() {
-    return (this.siteSettings.dashboard_visible_reports || "")
+  isHidden: computed("siteSettings.dashboard_hidden_reports", function() {
+    return (this.siteSettings.dashboard_hidden_reports || "")
       .split("|")
       .filter(Boolean)
       .includes(this.dataSourceName);

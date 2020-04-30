@@ -15,9 +15,9 @@ export default Controller.extend(PeriodComputationMixin, {
   },
 
   isModeratorsActivityVisible: computed(
-    "siteSettings.dashboard_visible_reports",
+    "siteSettings.dashboard_hidden_reports",
     function() {
-      return (this.siteSettings.dashboard_visible_reports || "")
+      return !(this.siteSettings.dashboard_hidden_reports || "")
         .split("|")
         .filter(Boolean)
         .includes("moderators_activity");

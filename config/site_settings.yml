@@ -2202,57 +2202,12 @@ tags:
     client: true
 
 dashboard:
-  dashboard_visible_reports:
+  dashboard_hidden_reports:
     client: true
     type: list
     list_type: compact
-    default: "visits|visits_mobile|consolidated_page_views|top_ignored_users|top_uploads|moderators_activity|signups|storage_stats|suspicious_logins|new_contributors|users_by_trust_level|staff_logins|users_by_type|user_flagging_ratio|post_edits|daily_engaged_users|flags_status|trending_search|top_referrers|top_traffic_sources|top_referred_topics|notify_user_private_messages|user_to_user_private_messages|user_to_user_private_messages_with_replies|system_private_messages|moderator_warning_private_messages|notify_moderators_private_messages|flags|likes|bookmarks|dau_by_mau|profile_views|topics|posts|time_to_first_response|topics_with_no_response|emails|web_crawlers|trust_level_growth|page_view_anon_reqs|page_view_total_reqs|mobile_visits|page_view_crawler_reqs|page_view_logged_in_reqs"
-    allow_any: false
-    choices:
-      - visits
-      - visits_mobile
-      - consolidated_page_views
-      - top_ignored_users
-      - top_uploads
-      - moderators_activity
-      - signups
-      - storage_stats
-      - suspicious_logins
-      - new_contributors
-      - users_by_trust_level
-      - staff_logins
-      - users_by_type
-      - user_flagging_ratio
-      - post_edits
-      - daily_engaged_users
-      - flags_status
-      - trending_search
-      - top_referrers
-      - top_traffic_sources
-      - top_referred_topics
-      - notify_user_private_messages
-      - user_to_user_private_messages
-      - user_to_user_private_messages_with_replies
-      - system_private_messages
-      - moderator_warning_private_messages
-      - notify_moderators_private_messages
-      - flags
-      - likes
-      - bookmarks
-      - dau_by_mau
-      - profile_views
-      - topics
-      - posts
-      - time_to_first_response
-      - topics_with_no_response
-      - emails
-      - web_crawlers
-      - trust_level_growth
-      - page_view_anon_reqs
-      - page_view_total_reqs
-      - mobile_visits
-      - page_view_crawler_reqs
-      - page_view_logged_in_reqs
+    default: ""
+    allow_any: true
   dashboard_visible_tabs:
     client: true
     type: list
