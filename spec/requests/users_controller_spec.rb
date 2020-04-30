@@ -654,6 +654,30 @@ describe UsersController do
           expect(User.find_by(username: @user.username).user_option.timezone).to eq("Australia/Brisbane")
         end
       end
+
+      context "with local logins disabled" do
+        before do
+          SiteSetting.enable_local_logins = false
+          SiteSetting.enable_google_oauth2_logins = true
+        end
+
+        it "blocks registration without authenticator information" do
+          post_user
+          expect(response.status).to eq(403)
+        end
+
+        it "blocks with a regular api key" do
+          api_key = Fabricate(:api_key, user: user)
+          post "/u.json", params: post_user_params, headers: { HTTP_API_KEY: api_key.key }
+          expect(response.status).to eq(403)
+        end
+
+        it "works with an admin api key" do
+          api_key = Fabricate(:api_key, user: Fabricate(:admin))
+          post "/u.json", params: post_user_params, headers: { HTTP_API_KEY: api_key.key }
+          expect(response.status).to eq(200)
+        end
+      end
     end
 
     context 'when creating a non active user (unconfirmed email)' do
