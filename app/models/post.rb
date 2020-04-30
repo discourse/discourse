@@ -10,6 +10,9 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
+  # remove line Jan 2021
+  self.ignored_columns = ["avg_time"]
+
   cattr_accessor :plugin_permitted_create_params
   self.plugin_permitted_create_params = {}
 
@@ -1107,7 +1110,6 @@ end
 #  like_count              :integer          default(0), not null
 #  incoming_link_count     :integer          default(0), not null
 #  bookmark_count          :integer          default(0), not null
-#  avg_time                :integer
 #  score                   :float
 #  reads                   :integer          default(0), not null
 #  post_type               :integer          default(1), not null

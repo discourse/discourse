@@ -10,6 +10,9 @@ class Topic < ActiveRecord::Base
   include LimitedEdit
   extend Forwardable
 
+  # remove line Jan 2021
+  self.ignored_columns = ["avg_time"]
+
   def_delegator :featured_users, :user_ids, :featured_user_ids
   def_delegator :featured_users, :choose, :feature_topic_users
 
@@ -1567,7 +1570,6 @@ end
 #  featured_user1_id         :integer
 #  featured_user2_id         :integer
 #  featured_user3_id         :integer
-#  avg_time                  :integer
 #  deleted_at                :datetime
 #  highest_post_number       :integer          default(0), not null
 #  image_url                 :string
