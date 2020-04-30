@@ -38,15 +38,15 @@ export default Controller.extend(PeriodComputationMixin, {
     function() {
       return (
         this.activityMetrics.length &&
-        !this.hiddenReports.any(x => this.activityMetrics.includes(x))
+        this.activityMetrics.some(x => !this.hiddenReports.includes(x))
       );
     }
   ),
 
   isSearchReportsVisible: computed("hiddenReports", function() {
-    return ["top_referred_topics", "trending_search"].filter(
+    return ["top_referred_topics", "trending_search"].some(
       x => !this.hiddenReports.includes(x)
-    ).length;
+    );
   }),
 
   isCommunityHealthVisible: computed("hiddenReports", function() {
@@ -58,7 +58,7 @@ export default Controller.extend(PeriodComputationMixin, {
       "dau_by_mau",
       "daily_engaged_users",
       "new_contributors"
-    ].filter(x => !this.hiddenReports.includes(x)).length;
+    ].some(x => !this.hiddenReports.includes(x));
   }),
 
   @discourseComputed
