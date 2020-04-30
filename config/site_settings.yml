@@ -2205,6 +2205,22 @@ tags:
     client: true
 
 dashboard:
+  dashboard_hidden_reports:
+    client: true
+    type: list
+    list_type: compact
+    default: ""
+    allow_any: true
+  dashboard_visible_tabs:
+    client: true
+    type: list
+    list_type: compact
+    default: "moderation|security|reports"
+    allow_any: false
+    choices:
+      - moderation
+      - security
+      - reports
   dashboard_general_tab_activity_metrics:
     client: true
     type: list

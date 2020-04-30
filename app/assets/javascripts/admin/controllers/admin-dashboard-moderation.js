@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import PeriodComputationMixin from "admin/mixins/period-computation";
+import { computed } from "@ember/object";
 
 export default Controller.extend(PeriodComputationMixin, {
   @discourseComputed
@@ -12,6 +13,16 @@ export default Controller.extend(PeriodComputationMixin, {
       }
     };
   },
+
+  isModeratorsActivityVisible: computed(
+    "siteSettings.dashboard_hidden_reports",
+    function() {
+      return !(this.siteSettings.dashboard_hidden_reports || "")
+        .split("|")
+        .filter(Boolean)
+        .includes("moderators_activity");
+    }
+  ),
 
   @discourseComputed
   userFlaggingRatioOptions() {
