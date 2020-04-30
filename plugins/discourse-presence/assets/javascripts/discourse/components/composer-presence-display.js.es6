@@ -1,11 +1,17 @@
 import Component from "@ember/component";
+import { getOwner } from "@ember/application";
 import { cancel } from "@ember/runloop";
-import { equal, gt, readOnly } from "@ember/object/computed";
+import { equal, gt } from "@ember/object/computed";
 import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
-import { REPLYING, CLOSED, EDITING } from "../lib/presence-manager";
+import {
+  REPLYING,
+  CLOSED,
+  EDITING,
+  COMPOSER_TYPE
+} from "../lib/presence-manager";
 import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
@@ -16,15 +22,31 @@ export default Component.extend({
   reply: null,
   title: null,
   isWhispering: null,
+  presenceManager: null,
 
-  presenceManager: readOnly("topic.presenceManager"),
-  users: readOnly("presenceManager.users"),
-  editingUsers: readOnly("presenceManager.editingUsers"),
+  init() {
+    this._super(...arguments);
+
+    this.setProperties({
+      presenceManager: getOwner(this).lookup("presence-manager:main")
+    });
+  },
+
+  @discourseComputed("topic.id")
+  users(topicId) {
+    return this.presenceManager.users(topicId);
+  },
+
+  @discourseComputed("topic.id")
+  editingUsers(topicId) {
+    return this.presenceManager.editingUsers(topicId);
+  },
+
   isReply: equal("action", "reply"),
 
   @on("didInsertElement")
   subscribe() {
-    this.presenceManager.subscribe();
+    this.presenceManager.subscribe(this.get("topic.id"), COMPOSER_TYPE);
   },
 
   @discourseComputed(
@@ -44,7 +66,7 @@ export default Component.extend({
 
   @observes("reply", "title")
   typing() {
-    let action = this.action;
+    const action = this.action;
 
     if (action !== REPLY && action !== EDIT) {
       return;
@@ -53,6 +75,7 @@ export default Component.extend({
     const postId = this.get("post.id");
 
     this._throttle = this.presenceManager.throttlePublish(
+      this.get("topic.id"),
       action === EDIT ? EDITING : REPLYING,
       this.whisper,
       action === EDIT ? postId : undefined
@@ -64,20 +87,20 @@ export default Component.extend({
     this._cancelThrottle();
   },
 
-  @observes("post.id")
-  stopEditing() {
+  @observes("action", "topic.id")
+  composerState() {
     if (!this.get("post.id")) {
-      this.presenceManager.publish(CLOSED, this.whisper);
+      this.presenceManager.publish(this.get("topic.id"), CLOSED, this.whisper);
     }
   },
 
   @on("willDestroyElement")
-  composerClosing() {
+  closeComposer() {
     this._cancelThrottle();
-    this.presenceManager.publish(CLOSED, this.whisper);
+    this.presenceManager.cleanUpPresence(COMPOSER_TYPE);
   },
 
   _cancelThrottle() {
-    cancel(this._throttle);
+    if (this._throttle) cancel(this._throttle);
   }
 });
