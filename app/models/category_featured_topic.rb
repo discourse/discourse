@@ -4,7 +4,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   belongs_to :category
   belongs_to :topic
 
-  NEXT_CATEGORY_ID_KEY = 'category-featured-topic:next-category-id'.freeze
+  NEXT_CATEGORY_ID_KEY = 'category-featured-topic:next-category-id'
   DEFAULT_BATCH_SIZE = 100
 
   # Populates the category featured topics.

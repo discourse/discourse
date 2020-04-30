@@ -26,7 +26,7 @@ module BulkImport; end
 
 class BulkImport::Base
 
-  NOW ||= "now()".freeze
+  NOW ||= "now()"
   PRIVATE_OFFSET ||= 2**30
 
   # rubocop:disable Layout/HashAlignment
@@ -660,7 +660,7 @@ class BulkImport::Base
           imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
           imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
           @raw_connection.put_copy_data columns.map { |c| processed[c] }
-          print "\r%7d - %6d/sec".freeze % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
+          print "\r%7d - %6d/sec" % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
         rescue => e
           puts "\n"
           puts "ERROR: #{e.inspect}"
@@ -669,7 +669,7 @@ class BulkImport::Base
     end
 
     if imported_ids.size > 0
-      print "\r%7d - %6d/sec".freeze % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)]
+      print "\r%7d - %6d/sec" % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)]
       puts
     end
 

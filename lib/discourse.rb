@@ -42,7 +42,7 @@ module Discourse
     end
 
     def self.pretty_logs(logs)
-      logs.join("\n".freeze)
+      logs.join("\n")
     end
 
     def self.atomic_write_file(destination, contents)
@@ -811,7 +811,7 @@ module Discourse
     warning
   end
 
-  SIDEKIQ_NAMESPACE ||= 'sidekiq'.freeze
+  SIDEKIQ_NAMESPACE ||= 'sidekiq'
 
   def self.sidekiq_redis_config
     conf = GlobalSetting.redis_config.dup

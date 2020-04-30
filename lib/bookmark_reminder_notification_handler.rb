@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BookmarkReminderNotificationHandler
-  PENDING_AT_DESKTOP_KEY_PREFIX ||= 'pending_at_desktop_bookmark_reminder_user_'.freeze
+  PENDING_AT_DESKTOP_KEY_PREFIX ||= 'pending_at_desktop_bookmark_reminder_user_'
   PENDING_AT_DESKTOP_EXPIRY_DAYS ||= 20
 
   def self.send_notification(bookmark)

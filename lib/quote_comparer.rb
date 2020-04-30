@@ -2,7 +2,7 @@
 
 class QuoteComparer
   def self.whitespace
-    " \t\r\n".freeze
+    " \t\r\n"
   end
 
   def initialize(topic_id, post_number, text)

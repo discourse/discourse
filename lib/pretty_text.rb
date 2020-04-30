@@ -311,7 +311,7 @@ module PrettyText
 
     # extract all links
     doc.css("a").each do |a|
-      if a["href"].present? && a["href"][0] != "#".freeze
+      if a["href"].present? && a["href"][0] != "#"
         links << DetectedLink.new(a["href"], false)
       end
     end

@@ -4,8 +4,8 @@ require 'excon'
 
 module Jobs
   class EmitWebHookEvent < ::Jobs::Base
-    PING_EVENT = 'ping'.freeze
-    MAX_RETRY_COUNT = 4.freeze
+    PING_EVENT = 'ping'
+    MAX_RETRY_COUNT = 4
     RETRY_BACKOFF = 5
 
     def execute(args)
