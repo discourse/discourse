@@ -58,12 +58,16 @@ describe TopicViewSerializer do
       end
 
       it 'should have thumbnails' do
+        SiteSetting.create_thumbnails = true
+
         Discourse.redis.del(topic.thumbnail_job_redis_key([]))
         json = nil
 
         expect do
           json = serialize_topic(topic, user)
         end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
+
+        topic.generate_thumbnails!
 
         # Original + Optimized
         expect(json[:thumbnails].length).to eq(2)
