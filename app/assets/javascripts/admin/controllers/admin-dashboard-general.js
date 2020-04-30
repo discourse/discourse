@@ -23,8 +23,48 @@ export default Controller.extend(PeriodComputationMixin, {
 
   @discourseComputed("siteSettings.dashboard_general_tab_activity_metrics")
   activityMetrics(metrics) {
-    return (metrics || "").split("|").filter(m => m);
+    return (metrics || "").split("|").filter(Boolean);
   },
+
+  visibleReports: computed(
+    "siteSettings.dashboard_visible_reports",
+    function() {
+      return (this.siteSettings.dashboard_visible_reports || "")
+        .split("|")
+        .filter(Boolean);
+    }
+  ),
+
+  isActivityMetricsVisible: computed(
+    "activityMetrics",
+    "visibleReports",
+    function() {
+      return (
+        this.activityMetrics.length > 0 &&
+        this.activityMetrics.any(x => this.visibleReports.includes(x))
+      );
+    }
+  ),
+
+  isSearchReportsVisible: computed("visibleReports", function() {
+    return this.visibleReports.any(x =>
+      ["top_referred_topics", "trending_search"].includes(x)
+    );
+  }),
+
+  isCommunityHealthVisible: computed("visibleReports", function() {
+    return this.visibleReports.any(x =>
+      [
+        "consolidated_page_views",
+        "signups",
+        "topics",
+        "posts",
+        "dau_by_mau",
+        "daily_engaged_users",
+        "new_contributors"
+      ].includes(x)
+    );
+  }),
 
   @discourseComputed
   activityMetricsFilters() {

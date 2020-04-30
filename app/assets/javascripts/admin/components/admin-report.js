@@ -41,7 +41,12 @@ function collapseWeekly(data, average) {
 }
 
 export default Component.extend({
-  classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
+  classNameBindings: [
+    "isVisible",
+    "isEnabled",
+    "isLoading",
+    "dasherizedDataSourceName"
+  ],
   classNames: ["admin-report"],
   isEnabled: true,
   disabledLabel: I18n.t("admin.dashboard.disabled"),
@@ -69,6 +74,13 @@ export default Component.extend({
 
     this._reports = [];
   },
+
+  isVisible: computed("siteSettings.dashboard_visible_reports", function() {
+    return (this.siteSettings.dashboard_visible_reports || "")
+      .split("|")
+      .filter(Boolean)
+      .includes(this.dataSourceName);
+  }),
 
   startDate: computed("filters.startDate", function() {
     if (this.filters && isPresent(this.filters.startDate)) {

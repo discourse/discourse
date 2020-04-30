@@ -4,6 +4,9 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Dashboard", {
   loggedIn: true,
   settings: {
+    dashboard_visible_tabs: "moderation|security|reports",
+    dashboard_visible_reports:
+      "signups|post|dau_by_mau|page_view_total_reqs|flags|signups_with_groups|my_report",
     dashboard_general_tab_activity_metrics: "page_view_total_reqs"
   },
   site: {
@@ -20,8 +23,9 @@ acceptance("Dashboard", {
   }
 });
 
-QUnit.test("Dashboard", async assert => {
+QUnit.test("default", async assert => {
   await visit("/admin");
+
   assert.ok(exists(".dashboard"), "has dashboard-next class");
 });
 
@@ -57,7 +61,7 @@ QUnit.test("general tab", async assert => {
   );
 });
 
-QUnit.test("general tab - activity metrics", async assert => {
+QUnit.test("activity metrics", async assert => {
   await visit("/admin");
 
   assert.ok(exists(".admin-report.page-view-total-reqs .today-count"));
@@ -100,7 +104,7 @@ QUnit.test("reports tab", async assert => {
   );
 });
 
-QUnit.test("report filters", async assert => {
+QUnit.test("reports filters", async assert => {
   await visit(
     '/admin/reports/signups_with_groups?end_date=2018-07-16&filters=%7B"group"%3A88%7D&start_date=2018-06-16'
   );
@@ -111,5 +115,43 @@ QUnit.test("report filters", async assert => {
     groupFilter.header().value(),
     88,
     "its set the value of the filter from the query params"
+  );
+});
+
+acceptance("Dashboard: dashboard_visible_tabs", {
+  loggedIn: true,
+  settings: {
+    dashboard_visible_tabs: "general|security|reports"
+  }
+});
+
+QUnit.test("visible tabs", async assert => {
+  await visit("/admin");
+
+  assert.ok(exists(".dashboard .navigation-item.general"), "general tab");
+  assert.notOk(
+    exists(".dashboard .navigation-item.moderation"),
+    "moderation tab"
+  );
+  assert.ok(exists(".dashboard .navigation-item.security"), "security tab");
+  assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
+});
+
+acceptance("Dashboard: dashboard_visible_reports", {
+  loggedIn: true,
+  settings: {
+    dashboard_visible_tabs: "reports",
+    dashboard_visible_reports: "signups"
+  }
+});
+
+QUnit.test("visible reports", async assert => {
+  await visit("/admin");
+
+  assert.ok(exists(".admin-report.signups.is-visible"), "signups report");
+  assert.notOk(exists(".admin-report.is-visible.posts"), "posts report");
+  assert.notOk(
+    exists(".admin-report.is-visible.dau-by-mau"),
+    "dau-by-mau report"
   );
 });

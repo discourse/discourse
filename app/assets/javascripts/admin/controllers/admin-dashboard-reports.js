@@ -8,7 +8,11 @@ const { get } = Ember;
 export default Controller.extend({
   filter: null,
 
-  @discourseComputed("model.[]", "filter")
+  @discourseComputed(
+    "model.[]",
+    "filter",
+    "siteSettings.dashboard_visible_reports"
+  )
   filterReports(reports, filter) {
     if (filter) {
       filter = filter.toLowerCase();
@@ -19,6 +23,14 @@ export default Controller.extend({
         );
       });
     }
+
+    const visibleReports = (this.siteSettings.dashboard_visible_reports || "")
+      .split("|")
+      .filter(Boolean);
+    reports = reports.filter(report => {
+      return visibleReports.includes(report.type);
+    });
+
     return reports;
   },
 
