@@ -504,7 +504,7 @@ class CookedPostProcessor
       if @post.is_first_post? # topic
         @post.topic.update_column(:image_upload_id, upload.id)
         extra_sizes = ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
-        @post.topic.thumbnails(generate_sync: true, extra_sizes: extra_sizes)
+        @post.topic.generate_thumbnails!(extra_sizes: extra_sizes)
       end
     else
       @post.update_column(:image_upload_id, nil) if @post.image_upload_id
