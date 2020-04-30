@@ -69,7 +69,9 @@
               <% if (!@category || @category.has_children?) && t.category %>
                 <a href='<%= t.category.url %>' class='badge-wrapper bullet'>
                   <span class='badge-category-bg' style='background-color: #<%= t.category.color %>'></span>
-                  <span class='category-title'><%= t.category.name %></span>
+                  <span class='badge-category clear-badge'>
+                    <span class='category-name'><%= t.category.name %></span>
+                  </span>
                 </a>
               <% end %>
               <% if t.tags %>
@@ -99,10 +101,10 @@
             <% end %>
           </td>
           <td>
-            <span class='views' title='<%= t 'views' %>'><%= t.views %></span>
+            <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count %></span>
           </td>
           <td>
-            <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count %></span>
+            <span class='views' title='<%= t 'views' %>'><%= t.views %></span>
           </td>
           <td>
             <%= I18n.l(t.last_posted_at || t.created_at, format: :date_only) %>
