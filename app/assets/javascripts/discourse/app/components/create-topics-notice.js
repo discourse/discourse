@@ -3,6 +3,7 @@ import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";
 import LivePostCounts from "discourse/models/live-post-counts";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classNameBindings: ["hidden:hidden", ":create-topics-notice"],
@@ -81,7 +82,7 @@ export default Component.extend({
       msg = "too_few_posts_notice_MF";
     }
 
-    return new Handlebars.SafeString(
+    return htmlSafe(
       I18n.messageFormat(msg, {
         requiredTopics: this.requiredTopics,
         requiredPosts: this.requiredPosts,

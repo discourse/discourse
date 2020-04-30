@@ -76,6 +76,7 @@ module PrettyText
     ctx.eval("__PRETTY_TEXT = true")
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
+    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
     ctx_load_manifest(ctx, "markdown-it-bundle.js")

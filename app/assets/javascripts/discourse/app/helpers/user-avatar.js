@@ -2,6 +2,7 @@ import { get } from "@ember/object";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { avatarImg, formatUsername } from "discourse/lib/utilities";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { htmlSafe } from "@ember/template";
 
 let _customAvatarHelpers;
 
@@ -75,7 +76,7 @@ function renderAvatar(user, options) {
 }
 
 registerUnbound("avatar", function(user, params) {
-  return new Handlebars.SafeString(renderAvatar.call(this, user, params));
+  return htmlSafe(renderAvatar.call(this, user, params));
 });
 
 export { renderAvatar };

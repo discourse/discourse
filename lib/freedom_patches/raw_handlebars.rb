@@ -16,7 +16,7 @@ class Barber::Precompiler
       transpiled = transpiler.perform(source)
 
       # very hacky but lets us use ES6. I'm ashamed of this code -RW
-      transpiled = transpiled[0...transpiled.index('export ')]
+      transpiled = transpiled[transpiled.index('var RawHandlebars = ')...transpiled.index('export ')]
 
       @precompiler = StringIO.new <<~END
         var __RawHandlebars;

@@ -24,7 +24,6 @@ function escapeChar(chr) {
 }
 
 export function escape(string) {
-  // don't escape SafeStrings, since they're already safe
   if (string === null) {
     return "";
   } else if (!string) {

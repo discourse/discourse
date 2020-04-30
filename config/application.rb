@@ -171,6 +171,11 @@ module Discourse
     # the exclusion list does not include hbs so you double compile all this stuff
     initializer :fix_sprockets_loose_file_searcher, after: :set_default_precompile do |app|
       app.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
+
+      # We don't want application from node_modules, only from the root
+      app.config.assets.precompile.delete(/(?:\/|\\|\A)application\.(css|js)$/)
+      app.config.assets.precompile += ['application.js']
+
       start_path = ::Rails.root.join("app/assets").to_s
       exclude = ['.es6', '.hbs', '.hbr', '.js', '.css', '']
       app.config.assets.precompile << lambda do |logical_path, filename|
