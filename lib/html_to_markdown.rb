@@ -6,9 +6,9 @@ require "securerandom"
 class HtmlToMarkdown
 
   def initialize(html, opts = {})
-    @opts = opts || {}
+    @opts = opts
     # we're only interested in <body>
-    @doc = fix_span_elements(Nokogiri::HTML5(html).at("body"))
+    @doc = Nokogiri::HTML5(html).at("body")
 
     remove_not_allowed!(@doc)
     remove_hidden!(@doc)
