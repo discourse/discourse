@@ -10,7 +10,7 @@ describe HtmlToMarkdown do
   end
 
   it "remove whitespaces" do
-    expect(html_to_markdown(<<-HTML
+    html = <<-HTML
       <div dir="auto">Hello,
         <div dir="auto"><br></div>
         <div dir="auto">&nbsp; &nbsp; This is the 1st paragraph.&nbsp; &nbsp; </div>
@@ -20,11 +20,54 @@ describe HtmlToMarkdown do
         </div>
       </div>
     HTML
-    )).to eq("Hello,\n\nThis is the 1st paragraph.\n\nThis is another paragraph")
+
+    expect(html_to_markdown(html)).to eq("Hello,\n\nThis is the 1st paragraph.\n\nThis is another paragraph")
+
+    html = <<~HTML
+      <body text="#000000" bgcolor="#FFFFFF">
+          <p>Let me see if it happens by answering your message through
+            Thunderbird.</p>
+          <p>Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
+            Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
+            Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
+            Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
+            Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
+            Long sentence 1
+          </p>
+      </body>
+    HTML
+
+    markdown = <<~MD
+       Let me see if it happens by answering your message through Thunderbird.
+
+       Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+
+    html = <<~HTML
+      <p>    This     post
+            has             lots<br>           of
+                  space
+      </p>
+      <pre>    This     space    was   left untouched     !</pre>
+    HTML
+
+    markdown = <<~MD
+      This post has lots
+      of space
+
+      ```
+          This     space    was   left untouched     !
+      ```
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
   end
 
   it "skips hidden tags" do
     expect(html_to_markdown(%Q{<p>Hello <span style="display: none">cruel </span>World!</p>})).to eq("Hello World!")
+    expect(html_to_markdown(%Q{<p>Hello <span hidden>cruel </span>World!</p>})).to eq("Hello World!")
   end
 
   it "converts <strong>" do
@@ -37,13 +80,15 @@ describe HtmlToMarkdown do
     expect(html_to_markdown("<b>B*ld</b>")).to eq("__B*ld__")
 
     html = <<~HTML
+      Before
       <p><b>Bold
       <br>
       <br>
       </b>
       </p>
+      After
     HTML
-    expect(html_to_markdown(html)).to eq("**Bold**")
+    expect(html_to_markdown(html)).to eq("Before\n\n**Bold**\n\nAfter")
   end
 
   it "converts <em>" do
@@ -60,6 +105,11 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<a href="https://www.discourse.org">Discourse</a>})).to eq("[Discourse](https://www.discourse.org)")
   end
 
+  it "supports SiteSetting.allowed_href_schemes" do
+    SiteSetting.allowed_href_schemes = "tel|steam"
+    expect(html_to_markdown(%Q{<a href="steam://store/48000">LIMBO</a>})).to eq("[LIMBO](steam://store/48000)")
+  end
+
   it "removes empty & invalid <a>" do
     expect(html_to_markdown(%Q{<a>Discourse</a>})).to eq("Discourse")
     expect(html_to_markdown(%Q{<a href="">Discourse</a>})).to eq("Discourse")
@@ -67,7 +117,7 @@ describe HtmlToMarkdown do
   end
 
   HTML_WITH_IMG     ||= %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
-  HTML_WITH_CID_IMG ||= %Q{<img src="cid:ii_1525434659ddb4cb" alt="Discourse Logo">}
+  HTML_WITH_CID_IMG ||= %Q{<img src="cid:ii_1525434659ddb4cb" title="Discourse Logo">}
 
   it "converts <img>" do
     expect(html_to_markdown(HTML_WITH_IMG)).to eq("![Discourse Logo](https://www.discourse.org/logo.svg)")
@@ -84,8 +134,7 @@ describe HtmlToMarkdown do
   end
 
   it "keeps <img> with src='cid:' whith 'keep_cid_imgs'" do
-    expect(html_to_markdown(HTML_WITH_CID_IMG, keep_cid_imgs: true)).to eq("![Discourse Logo](cid:ii_1525434659ddb4cb)")
-    expect(html_to_markdown(HTML_WITH_CID_IMG, keep_img_tags: true, keep_cid_imgs: true)).to eq("<img src=\"cid:ii_1525434659ddb4cb\" alt=\"Discourse Logo\">")
+    expect(html_to_markdown(HTML_WITH_CID_IMG, keep_cid_imgs: true)).to eq(HTML_WITH_CID_IMG)
   end
 
   it "skips hidden <img>" do
@@ -93,6 +142,12 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height="0">})).to eq("")
     expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" style="width: 0">})).to eq("")
     expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" style="height:0px">})).to eq("")
+  end
+
+  it "supports width/height on <img>" do
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height=100>})).to eq("![](https://www.discourse.org/logo.svg)")
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" width=200>})).to eq("![](https://www.discourse.org/logo.svg)")
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height=100 width=200>})).to eq("![|200x100](https://www.discourse.org/logo.svg)")
   end
 
   (1..6).each do |n|
@@ -150,11 +205,11 @@ describe HtmlToMarkdown do
   end
 
   it "supports <s>" do
-    expect(html_to_markdown("<s>Strike Through</s>")).to eq("<s>Strike Through</s>")
+    expect(html_to_markdown("<s>Strike Through</s>")).to eq("~~Strike Through~~")
   end
 
   it "supports <strike>" do
-    expect(html_to_markdown("<strike>Strike Through</strike>")).to eq("<strike>Strike Through</strike>")
+    expect(html_to_markdown("<strike>Strike Through</strike>")).to eq("~~Strike Through~~")
   end
 
   it "supports <blockquote>" do
@@ -221,11 +276,11 @@ describe HtmlToMarkdown do
 
   it "handles <p>" do
     expect(html_to_markdown("<p>1st paragraph</p><p>2nd paragraph</p>")).to eq("1st paragraph\n\n2nd paragraph")
-    expect(html_to_markdown("<body><p>1st paragraph</p>\n    <p>    2nd paragraph\n    2nd paragraph</p>\n<p>3rd paragraph</p></body>")).to eq("1st paragraph\n\n2nd paragraph\n2nd paragraph\n\n3rd paragraph")
+    expect(html_to_markdown("<body><p>1st paragraph</p>\n    <p>    2nd paragraph\n    2nd paragraph</p>\n<p>3rd paragraph</p></body>")).to eq("1st paragraph\n\n2nd paragraph 2nd paragraph\n\n3rd paragraph")
   end
 
   it "handles <div>" do
-    expect(html_to_markdown("<div>1st div</div><div>2nd div</div>")).to eq("1st div\n\n2nd div")
+    expect(html_to_markdown("<div>1st div</div><div>2nd div</div>")).to eq("1st div\n2nd div")
   end
 
   it "swallows <span>" do
@@ -257,15 +312,19 @@ describe HtmlToMarkdown do
   context "with an oddly placed <br>" do
 
     it "handles <strong>" do
-      expect(html_to_markdown("<strong><br>Bold</strong>")).to eq("**Bold**")
-      expect(html_to_markdown("<strong>Bold<br></strong>")).to eq("**Bold**")
-      expect(html_to_markdown("<strong>Bold<br>text</strong>")).to eq("**Bold\ntext**")
+      expect(html_to_markdown("Hello <strong><br>Bold</strong> World")).to eq("Hello\n**Bold** World")
+      expect(html_to_markdown("Hello <strong>Bold<br></strong> World")).to eq("Hello **Bold**\nWorld")
+      expect(html_to_markdown("Hello <strong>Bold<br>text</strong> World")).to eq("Hello **Bold**\n**text** World")
     end
 
     it "handles <em>" do
-      expect(html_to_markdown("<em><br>Italic</em>")).to eq("*Italic*")
-      expect(html_to_markdown("<em>Italic<br></em>")).to eq("*Italic*")
-      expect(html_to_markdown("<em>Italic<br>text</em>")).to eq("*Italic\ntext*")
+      expect(html_to_markdown("Hello <em><br>Italic</em> World")).to eq("Hello\n*Italic* World")
+      expect(html_to_markdown("Hello <em>Italic<br></em> World")).to eq("Hello *Italic*\nWorld")
+      expect(html_to_markdown("Hello <em>Italic<br>text</em> World")).to eq("Hello *Italic*\n*text* World")
+    end
+
+    it "works" do
+      expect(html_to_markdown("<div>A <b> B <i> C <br> D </i> E <br> F </b> G</div>")).to eq("A __B *C*__\n__*D* E__\n**F** G")
     end
 
   end
@@ -312,6 +371,66 @@ describe HtmlToMarkdown do
       expect(html_to_markdown("Some <em>italic     </em>text")).to eq("Some *italic* text")
     end
 
+  end
+
+  it "supoorts <table>" do
+    html = <<~HTML
+      <table>
+        <thead>
+          <tr>
+            <th>This</th>
+            <th>is</th>
+            <th>the</th>
+            <th><i>headers</i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>I am</td>
+            <td>the</td>
+            <td><b>first</b></td>
+            <td>row</td>
+          </tr>
+          <tr>
+            <td>And this</td>
+            <td>is the</td>
+            <td>2<sup>nd</sup></td>
+            <td>line</td>
+          </tr>
+        </tbody>
+      </table>
+    HTML
+
+    markdown = <<~MD
+      | This | is | the | *headers* |
+      | - | - | - | - |
+      | I am | the | **first** | row |
+      | And this | is the | 2<sup>nd</sup> | line |
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+
+    expect(html_to_markdown("<table><tr><td>Hello</td><td>World</td></tr></table>")).to eq("| Hello | World |\n| - | - |")
+  end
+
+  it "doesn't swallow badly formatted <table>" do
+    html = <<~HTML
+      <table>
+        <tr>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+        </tr>
+        <tr>
+          <td>One</td>
+          <td>Two</td>
+          <td>Three</td>
+        </tr>
+      </table>
+    HTML
+
+    expect(html_to_markdown(html)).to eq("1 2 3 4 \nOne Two Three")
   end
 
 end

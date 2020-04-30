@@ -533,7 +533,6 @@ DEPENDENCIES
   ruby-prof
   ruby-readability
   rubyzip
-  sanitize
   sassc (= 2.0.1)
   sassc-rails
   seed-fu
