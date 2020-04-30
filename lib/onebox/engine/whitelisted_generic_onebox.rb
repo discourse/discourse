@@ -57,6 +57,7 @@ module Onebox
           ehow.com
           espn.go.com
           etsy.com
+          facebook.com
           findery.com
           folksy.com
           forbes.com
@@ -77,6 +78,7 @@ module Onebox
           kickstarter.com
           kinomap.com
           lessonplanet.com
+          linkedin.com
           liveleak.com
           livestream.com
           mashable.com
