@@ -26,11 +26,14 @@ export const REPLYING = "replying";
 export const EDITING = "editing";
 export const CLOSED = "closed";
 
-const PresenceManager = EmberObject.extend({
+export const TOPIC_TYPE = "topic";
+export const COMPOSER_TYPE = "composer";
+
+const Presence = EmberObject.extend({
   users: null,
   editingUsers: null,
-  subscribed: null,
-  topic: null,
+  subscribers: null,
+  topicId: null,
   currentUser: null,
   messageBus: null,
   siteSettings: null,
@@ -41,46 +44,57 @@ const PresenceManager = EmberObject.extend({
     this.setProperties({
       users: [],
       editingUsers: [],
-      subscribed: false
+      subscribers: new Set()
     });
   },
 
-  subscribe() {
-    if (this.subscribed) return;
+  subscribe(type) {
+    if (this.subscribers.size === 0) {
+      this.messageBus.subscribe(
+        this.channel,
+        message => {
+          const { user, state } = message;
+          if (this.get("currentUser.id") === user.id) return;
 
-    this.messageBus.subscribe(
-      this.channel,
-      message => {
-        const { user, state } = message;
-        if (this.get("currentUser.id") === user.id) return;
+          switch (state) {
+            case REPLYING:
+              this._appendUser(this.users, user);
+              break;
+            case EDITING:
+              this._appendUser(this.editingUsers, user, {
+                post_id: parseInt(message.post_id, 10)
+              });
+              break;
+            case CLOSED:
+              this._removeUser(user);
+              break;
+          }
+        },
+        MESSAGE_BUS_LAST_ID
+      );
+    }
 
-        switch (state) {
-          case REPLYING:
-            this._appendUser(this.users, user);
-            break;
-          case EDITING:
-            this._appendUser(this.editingUsers, user, {
-              post_id: parseInt(message.post_id, 10)
-            });
-            break;
-          case CLOSED:
-            this._removeUser(user);
-            break;
-        }
-      },
-      MESSAGE_BUS_LAST_ID
-    );
-
-    this.set("subscribed", true);
+    this.subscribers.add(type);
   },
 
-  unsubscribe() {
-    this.messageBus.unsubscribe(this.channel);
-    this._stopTimer();
-    this.set("subscribed", false);
+  unsubscribe(type) {
+    this.subscribers.delete(type);
+    const noSubscribers = this.subscribers.size === 0;
+
+    if (noSubscribers) {
+      this.messageBus.unsubscribe(this.channel);
+      this._stopTimer();
+
+      this.setProperties({
+        users: [],
+        editingUsers: []
+      });
+    }
+
+    return noSubscribers;
   },
 
-  @discourseComputed("topic.id")
+  @discourseComputed("topicId")
   channel(topicId) {
     return `/presence/${topicId}`;
   },
@@ -101,14 +115,14 @@ const PresenceManager = EmberObject.extend({
 
     const data = {
       state,
-      topic_id: this.get("topic.id")
+      topic_id: this.topicId
     };
 
     if (whisper) {
       data.is_whisper = 1;
     }
 
-    if (postId) {
+    if (postId && state === EDITING) {
       data.post_id = postId;
     }
 
@@ -197,6 +211,75 @@ const PresenceManager = EmberObject.extend({
     if (!this._timer) {
       this.set("_timer", this._scheduleTimer(callback));
     }
+  }
+});
+
+const PresenceManager = EmberObject.extend({
+  presences: null,
+  currentUser: null,
+  messageBus: null,
+  siteSettings: null,
+
+  init() {
+    this._super(...arguments);
+
+    this.setProperties({
+      presences: {}
+    });
+  },
+
+  subscribe(topicId, type) {
+    if (!topicId) return;
+    this._getPresence(topicId).subscribe(type);
+  },
+
+  unsubscribe(topicId, type) {
+    if (!topicId) return;
+    const presence = this._getPresence(topicId);
+
+    if (presence.unsubscribe(type)) {
+      delete this.presences[topicId];
+    }
+  },
+
+  users(topicId) {
+    if (!topicId) return [];
+    return this._getPresence(topicId).users;
+  },
+
+  editingUsers(topicId) {
+    if (!topicId) return [];
+    return this._getPresence(topicId).editingUsers;
+  },
+
+  throttlePublish(topicId, state, whisper, postId) {
+    if (!topicId) return;
+    return this._getPresence(topicId).throttlePublish(state, whisper, postId);
+  },
+
+  publish(topicId, state, whisper, postId) {
+    if (!topicId) return;
+    return this._getPresence(topicId).publish(state, whisper, postId);
+  },
+
+  cleanUpPresence(type) {
+    Object.keys(this.presences).forEach(key => {
+      this.publish(key, CLOSED);
+      this.unsubscribe(key, type);
+    });
+  },
+
+  _getPresence(topicId) {
+    if (!this.presences[topicId]) {
+      this.presences[topicId] = Presence.create({
+        messageBus: this.messageBus,
+        siteSettings: this.siteSettings,
+        currentUser: this.currentUser,
+        topicId
+      });
+    }
+
+    return this.presences[topicId];
   }
 });
 

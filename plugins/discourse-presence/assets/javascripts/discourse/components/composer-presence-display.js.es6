@@ -1,11 +1,17 @@
 import Component from "@ember/component";
+import { getOwner } from "@ember/application";
 import { cancel } from "@ember/runloop";
-import { equal, gt, readOnly } from "@ember/object/computed";
+import { equal, gt } from "@ember/object/computed";
 import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
-import { REPLYING, CLOSED, EDITING } from "../lib/presence-manager";
+import {
+  REPLYING,
+  CLOSED,
+  EDITING,
+  COMPOSER_TYPE
+} from "../lib/presence-manager";
 import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
@@ -16,46 +22,72 @@ export default Component.extend({
   reply: null,
   title: null,
   isWhispering: null,
+  presenceManager: null,
 
-  presenceManager: readOnly("topic.presenceManager"),
-  users: readOnly("presenceManager.users"),
-  editingUsers: readOnly("presenceManager.editingUsers"),
+  init() {
+    this._super(...arguments);
+
+    this.setProperties({
+      presenceManager: getOwner(this).lookup("presence-manager:main")
+    });
+  },
+
+  @discourseComputed("topic.id")
+  users(topicId) {
+    return this.presenceManager.users(topicId);
+  },
+
+  @discourseComputed("topic.id")
+  editingUsers(topicId) {
+    return this.presenceManager.editingUsers(topicId);
+  },
+
   isReply: equal("action", "reply"),
 
   @on("didInsertElement")
   subscribe() {
-    this.presenceManager.subscribe();
+    this.presenceManager.subscribe(this.get("topic.id"), COMPOSER_TYPE);
   },
 
   @discourseComputed(
     "post.id",
     "editingUsers.@each.last_seen",
-    "users.@each.last_seen"
+    "users.@each.last_seen",
+    "action"
   )
-  presenceUsers(postId, editingUsers, users) {
-    if (postId) {
+  presenceUsers(postId, editingUsers, users, action) {
+    if (action === EDIT) {
       return editingUsers.filterBy("post_id", postId);
-    } else {
+    } else if (action === REPLY) {
       return users;
     }
+    return [];
   },
 
   shouldDisplay: gt("presenceUsers.length", 0),
 
   @observes("reply", "title")
   typing() {
-    let action = this.action;
+    const action = this.action;
 
     if (action !== REPLY && action !== EDIT) {
       return;
     }
 
-    const postId = this.get("post.id");
+    let data = {
+      topicId: this.get("topic.id"),
+      state: action === EDIT ? EDITING : REPLYING,
+      whisper: this.whisper,
+      postId: this.get("post.id")
+    };
+
+    this._prevPublishData = data;
 
     this._throttle = this.presenceManager.throttlePublish(
-      action === EDIT ? EDITING : REPLYING,
-      this.whisper,
-      action === EDIT ? postId : undefined
+      data.topicId,
+      data.state,
+      data.whisper,
+      data.postId
     );
   },
 
@@ -64,20 +96,30 @@ export default Component.extend({
     this._cancelThrottle();
   },
 
-  @observes("post.id")
-  stopEditing() {
-    if (!this.get("post.id")) {
-      this.presenceManager.publish(CLOSED, this.whisper);
+  @observes("action", "topic.id")
+  composerState() {
+    if (this._prevPublishData) {
+      this.presenceManager.publish(
+        this._prevPublishData.topicId,
+        CLOSED,
+        this._prevPublishData.whisper,
+        this._prevPublishData.postId
+      );
+      this._prevPublishData = null;
     }
   },
 
   @on("willDestroyElement")
-  composerClosing() {
+  closeComposer() {
     this._cancelThrottle();
-    this.presenceManager.publish(CLOSED, this.whisper);
+    this._prevPublishData = null;
+    this.presenceManager.cleanUpPresence(COMPOSER_TYPE);
   },
 
   _cancelThrottle() {
-    cancel(this._throttle);
+    if (this._throttle) {
+      cancel(this._throttle);
+      this._throttle = null;
+    }
   }
 });
