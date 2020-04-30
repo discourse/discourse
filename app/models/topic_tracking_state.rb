@@ -10,9 +10,9 @@ class TopicTrackingState
   include ActiveModel::SerializerSupport
 
   CHANNEL = "/user-tracking"
-  UNREAD_MESSAGE_TYPE = "unread".freeze
-  LATEST_MESSAGE_TYPE = "latest".freeze
-  MUTED_MESSAGE_TYPE = "muted".freeze
+  UNREAD_MESSAGE_TYPE = "unread"
+  LATEST_MESSAGE_TYPE = "latest"
+  MUTED_MESSAGE_TYPE = "muted"
 
   attr_accessor :user_id,
                 :topic_id,

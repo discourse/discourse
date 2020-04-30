@@ -458,7 +458,7 @@ class TopicQuery
 
   def latest_results(options = {})
     result = default_results(options)
-    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
+    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted"
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)

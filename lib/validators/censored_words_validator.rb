@@ -29,7 +29,7 @@ class CensoredWordsValidator < ActiveModel::EachValidator
   def join_censored_words(censored_words)
     censored_words.map!(&:downcase)
     censored_words.uniq!
-    censored_words.join(", ".freeze)
+    censored_words.join(", ")
   end
 
   def censored_words_regexp
