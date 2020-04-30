@@ -15,12 +15,12 @@
         justify-content: flex-start;
         width: auto;
         height: auto;
-        span.filter-text {
+        label.filter-text {
           margin-right: 15px;
           color: $primary-medium;
         }
 
-        span.header-text {
+        label.header-text {
           color: dark-light-choose($tertiary, $tertiary);
         }
 
