@@ -1,4 +1,5 @@
 import User from "discourse/models/user";
+import { escapeExpression } from "discourse/lib/utilities";
 
 let _renderer = defaultRenderTag;
 
@@ -8,7 +9,7 @@ export function replaceTagRenderer(fn) {
 
 export function defaultRenderTag(tag, params) {
   params = params || {};
-  const visibleName = Handlebars.Utils.escapeExpression(tag);
+  const visibleName = escapeExpression(tag);
   tag = visibleName.toLowerCase();
   const classes = ["discourse-tag"];
   const tagName = params.tagName || "a";

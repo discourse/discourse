@@ -10,6 +10,7 @@ import {
   NEW_TOPIC_KEY,
   NEW_PRIVATE_MESSAGE_KEY
 } from "discourse/models/composer";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default RestModel.extend({
   loaded: false,
@@ -81,9 +82,7 @@ export default RestModel.extend({
             ) {
               draft.title = draftData.title;
             }
-            draft.title = emojiUnescape(
-              Handlebars.Utils.escapeExpression(draft.title)
-            );
+            draft.title = emojiUnescape(escapeExpression(draft.title));
             if (draft.category_id) {
               draft.category =
                 this.site.categories.findBy("id", draft.category_id) || null;

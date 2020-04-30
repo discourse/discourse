@@ -26,6 +26,7 @@ import { Promise } from "rsvp";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -483,7 +484,7 @@ const User = RestModel.extend({
           return;
         if (!this.get("stream.filter") && !this.inAllStream(ua)) return;
 
-        ua.title = emojiUnescape(Handlebars.Utils.escapeExpression(ua.title));
+        ua.title = emojiUnescape(escapeExpression(ua.title));
         const action = UserAction.collapseStream([UserAction.create(ua)]);
         stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
         stream.get("content").insertAt(0, action[0]);
@@ -810,7 +811,7 @@ const User = RestModel.extend({
       .sort()
       .map(title => {
         return {
-          name: Ember.Handlebars.Utils.escapeExpression(title),
+          name: escapeExpression(title),
           id: title
         };
       });
