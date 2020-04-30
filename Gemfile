@@ -264,3 +264,4 @@ gem 'maxminddb'
 # for newer versions of hashie and faraday
 gem 'hashie', '< 4.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/422
 gem 'faraday', '< 1.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/421
+gem 'mysql2'

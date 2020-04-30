@@ -204,6 +204,7 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     mustache (1.1.1)
+    mysql2 (0.5.3)
     nio4r (2.5.2)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
@@ -496,6 +497,7 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
+  mysql2
   nokogiri
   oj
   omniauth
