@@ -400,7 +400,6 @@ const Topic = RestModel.extend({
   afterTopicBookmarked(firstPost) {
     if (firstPost) {
       firstPost.set("bookmarked", true);
-      firstPost.set("bookmarked_with_reminder", true);
       this.set("bookmark_reminder_at", firstPost.bookmark_reminder_at);
       return [firstPost.id];
     }
@@ -439,7 +438,7 @@ const Topic = RestModel.extend({
     return this.firstPost().then(firstPost => {
       const toggleBookmarkOnServer = () => {
         if (bookmark) {
-          return firstPost.toggleBookmarkWithReminder().then(() => {
+          return firstPost.toggleBookmark().then(() => {
             this.set("bookmarking", false);
             return this.afterTopicBookmarked(firstPost);
           });
@@ -449,7 +448,7 @@ const Topic = RestModel.extend({
               this.toggleProperty("bookmarked");
               this.set("bookmark_reminder_at", null);
               let clearedBookmarkProps = {
-                bookmarked_with_reminder: false,
+                bookmarked: false,
                 bookmark_id: null,
                 bookmark_name: null,
                 bookmark_reminder_at: null
@@ -458,10 +457,6 @@ const Topic = RestModel.extend({
                 const updated = [];
                 posts.forEach(post => {
                   if (post.bookmarked) {
-                    post.set("bookmarked", false);
-                    updated.push(post.id);
-                  }
-                  if (post.bookmarked_with_reminder) {
                     post.setProperties(clearedBookmarkProps);
                     updated.push(post.id);
                   }
@@ -477,11 +472,7 @@ const Topic = RestModel.extend({
 
       const unbookmarkedPosts = [];
       if (!bookmark && posts) {
-        posts.forEach(
-          post =>
-            (post.bookmarked || post.bookmarked_with_reminder) &&
-            unbookmarkedPosts.push(post)
-        );
+        posts.forEach(post => post.bookmarked && unbookmarkedPosts.push(post));
       }
 
       return new Promise(resolve => {
