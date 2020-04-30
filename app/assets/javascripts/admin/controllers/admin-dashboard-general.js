@@ -37,7 +37,7 @@ export default Controller.extend(PeriodComputationMixin, {
     "hiddenReports",
     function() {
       return (
-        this.activityMetrics.length > 0 &&
+        this.activityMetrics.length &&
         !this.hiddenReports.any(x => this.activityMetrics.includes(x))
       );
     }
