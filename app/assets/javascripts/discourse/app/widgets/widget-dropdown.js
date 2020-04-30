@@ -49,6 +49,7 @@ import hbs from "discourse/widgets/hbs-compiler";
     - options: accepts a hash of optional attributes
       - headerClass: adds css class to the dropdown header
       - bodyClass: adds css class to the dropdown header
+      - caret: adds a caret to visually enforce this is a dropdown
 */
 
 export const WidgetDropdownHeaderClass = {
