@@ -4,6 +4,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default Mixin.create({
   elementId: null, //click detection added for data-{elementId}
@@ -27,7 +28,7 @@ export default Mixin.create({
       return false;
     }
 
-    username = Ember.Handlebars.Utils.escapeExpression(username.toString());
+    username = escapeExpression(username.toString());
 
     // Don't show if nested
     if ($target.parents(".card-content").length) {

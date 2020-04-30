@@ -1,5 +1,6 @@
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode, convertIconClass } from "discourse-common/lib/icon-library";
+import { escapeExpression } from "discourse/lib/utilities";
 
 createWidget("avatar-flair", {
   tagName: "div.avatar-flair",
@@ -32,20 +33,18 @@ createWidget("avatar-flair", {
     if (!this.isIcon(attrs)) {
       style +=
         "background-image: url(" +
-        Handlebars.Utils.escapeExpression(attrs.primary_group_flair_url) +
+        escapeExpression(attrs.primary_group_flair_url) +
         "); ";
     }
     if (attrs.primary_group_flair_bg_color) {
       style +=
         "background-color: #" +
-        Handlebars.Utils.escapeExpression(attrs.primary_group_flair_bg_color) +
+        escapeExpression(attrs.primary_group_flair_bg_color) +
         "; ";
     }
     if (attrs.primary_group_flair_color) {
       style +=
-        "color: #" +
-        Handlebars.Utils.escapeExpression(attrs.primary_group_flair_color) +
-        "; ";
+        "color: #" + escapeExpression(attrs.primary_group_flair_color) + "; ";
     }
     return { style: style };
   },

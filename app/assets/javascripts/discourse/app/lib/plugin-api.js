@@ -972,7 +972,7 @@ class PluginApi {
    * Example:
    *
    * function testTagRenderer(tag, params) {
-   *   const visibleName = Handlebars.Utils.escapeExpression(tag);
+   *   const visibleName = escapeExpression(tag);
    *   return `testing: ${visibleName}`;
    * }
    * api.replaceTagRenderer(testTagRenderer);

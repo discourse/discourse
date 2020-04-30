@@ -42,7 +42,7 @@ export default Controller.extend({
     if (grant.post_id) {
       i18nKey += "_post";
       i18nParams.link = `<a href="/p/${grant.post_id}" data-auto-route="true">
-        ${Handlebars.Utils.escapeExpression(grant.title)}
+        ${escapeExpression(grant.title)}
       </a>`;
     }
 

@@ -4,8 +4,8 @@ import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
+import { escapeExpression } from "discourse/lib/utilities";
 
-let escapeExpression = Handlebars.Utils.escapeExpression;
 let _renderer = defaultCategoryLinkRenderer;
 
 export function replaceCategoryLinkRenderer(fn) {
