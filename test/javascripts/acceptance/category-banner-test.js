@@ -1,13 +1,17 @@
 import { acceptance } from "helpers/qunit-helpers";
-import CategoryFixtures from "fixtures/category-list-fixtures";
+import DiscoveryFixtures from "fixtures/discovery_fixtures";
 
 acceptance("Category Banners", {
   pretend(server, helper) {
     server.get("/c/test-read-only-without-banner/5/l/latest.json", () => {
-      return helper.response(CategoryFixtures["/latest.json"]);
+      return helper.response(
+        DiscoveryFixtures["/latest_can_create_topic.json"]
+      );
     });
     server.get("/c/test-read-only-with-banner/6/l/latest.json", () => {
-      return helper.response(CategoryFixtures["/latest.json"]);
+      return helper.response(
+        DiscoveryFixtures["/latest_can_create_topic.json"]
+      );
     });
   },
   loggedIn: true,
