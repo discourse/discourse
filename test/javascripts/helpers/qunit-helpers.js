@@ -36,6 +36,11 @@ export function logIn() {
   User.resetCurrent(currentUser());
 }
 
+// Note: Only use if `loggedIn: true` has been used in an acceptance test
+export function loggedInUser() {
+  return User.current();
+}
+
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
 

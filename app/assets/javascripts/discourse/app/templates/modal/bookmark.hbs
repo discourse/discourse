@@ -71,11 +71,12 @@
                 {{date-picker-future
                   value=customReminderDate
                   onSelect=(action (mut customReminderDate))
+                  id="bookmark-custom-date"
                 }}
               </div>
               <div class="tap-tile-time-input">
                 {{d-icon "far-clock"}}
-                {{input placeholder="--:--" type="time" class="time-input" value=customReminderTime}}
+                {{input placeholder="--:--" id="bookmark-custom-time" type="time" class="time-input" value=customReminderTime}}
               </div>
             </div>
           {{/if}}
@@ -98,11 +99,11 @@
     </div>
 
     <div class="control-group">
-      {{d-button label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
+      {{d-button id="save-bookmark" label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
       {{d-modal-cancel close=(action "closeWithoutSavingBookmark")}}
       {{#if showDelete}}
         <div class="pull-right">
-          {{d-button icon="trash" class="btn-danger" action=(action "delete")}}
+          {{d-button id="delete-bookmark" icon="trash" class="btn-danger" action=(action "delete")}}
         </div>
       {{/if}}
     </div>
