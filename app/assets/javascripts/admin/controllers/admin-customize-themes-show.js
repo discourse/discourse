@@ -31,6 +31,7 @@ export default Controller.extend({
   availableComponentsNames: mapBy("availableChildThemes", "name"),
   availableActiveComponentsNames: mapBy("availableActiveChildThemes", "name"),
   childThemesNames: mapBy("model.childThemes", "name"),
+  extraFiles: filterBy("model.theme_fields", "target", "extra_js"),
 
   @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
