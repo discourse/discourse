@@ -269,7 +269,11 @@ module PrettyText
       add_mentions(doc, user_id: opts[:user_id])
     end
 
-    doc.to_html
+    scrubber = Loofah::Scrubber.new do |node|
+      node.remove if node.name == 'script'
+    end
+    loofah_fragment = Loofah.fragment(doc.to_html)
+    loofah_fragment.scrub!(scrubber).to_html
   end
 
   def self.add_rel_nofollow_to_user_content(doc)

@@ -7,6 +7,7 @@ class HtmlToMarkdown
 
   def initialize(html, opts = {})
     @opts = opts
+
     # we're only interested in <body>
     @doc = Nokogiri::HTML5(html).at("body")
 
