@@ -16,21 +16,10 @@ export default DropdownSelectBoxComponent.extend({
       value: I18n.t("user.user_notifications.filters.unread")
     }
   ],
-  value: {
-    type: "all",
-    value: I18n.t("user.user_notifications.filters.all")
-  },
   isVisible: true,
   valueProperty: null,
   nameProperty: "value",
   selectKitOptions: {
     headerComponent: "notifications-filter/notifications-filter-header"
-  },
-
-  actions: {
-    onChange(filter) {
-      this.set("value", filter);
-      this.set("filter", filter.type);
-    }
   }
 });

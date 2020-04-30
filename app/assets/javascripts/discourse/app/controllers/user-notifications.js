@@ -8,6 +8,10 @@ export default Controller.extend({
   application: controller(),
   router: service(),
   currentPath: readOnly("router._router.currentPath"),
+  filter: {
+    type: "all",
+    value: I18n.t("user.user_notifications.filters.all")
+  },
 
   @observes("model.canLoadMore")
   _showFooter() {
@@ -16,9 +20,9 @@ export default Controller.extend({
 
   @discourseComputed("model.content.length", "filter")
   hasNotifications(length, filter) {
-    if (filter === "read") {
+    if (filter.type === "read") {
       return this.model.filterBy("read", true).length > 0;
-    } else if (filter === "unread") {
+    } else if (filter.type === "unread") {
       return this.model.filterBy("read", false).length > 0;
     }
     return length > 0;
@@ -40,6 +44,10 @@ export default Controller.extend({
 
     loadMore() {
       this.model.loadMore();
+    },
+
+    filterNotifications(value) {
+      this.set("filter", value);
     }
   }
 });
