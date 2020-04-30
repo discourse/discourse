@@ -4363,6 +4363,7 @@ en:
 
               <p>To continue type: <code>%{text}</code></p>
 
+            text: "transfer @%{username} to @%{targetUsername}"
             transfer_and_delete: "Transfer & Delete @%{username}"
             cancel: "Cancel"
 
