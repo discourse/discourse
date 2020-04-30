@@ -56,3 +56,34 @@ QUnit.test("Displays category banners when set", async assert => {
   assert.ok(!visible(".bootbox.modal"), "it closes the modal");
   assert.ok(visible(".category-read-only-banner"), "it shows a banner");
 });
+
+acceptance("Anonymous Category Banners", {
+  pretend(server, helper) {
+    server.get("/c/test-read-only-with-banner/6/l/latest.json", () => {
+      return helper.response(
+        DiscoveryFixtures["/latest_can_create_topic.json"]
+      );
+    });
+  },
+  loggedIn: false,
+  site: {
+    categories: [
+      {
+        id: 6,
+        name: "test read only with banner",
+        slug: "test-read-only-with-banner",
+        permission: null,
+        read_only_banner:
+          "You need to video yourself doing the secret handshake to post here"
+      }
+    ]
+  }
+});
+
+QUnit.test("Does not display category banners when set", async assert => {
+  await visit("/c/test-read-only-with-banner");
+  assert.ok(
+    !visible(".category-read-only-banner"),
+    "it does not show a banner"
+  );
+});
