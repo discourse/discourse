@@ -494,7 +494,7 @@ export default {
   _globalBindToFunction(func, binding) {
     let funcToBind = typeof func === "function" ? func : this[func];
     if (typeof funcToBind === "function") {
-      this.keyTrapper.bindGlobal(binding, this[func].bind(this));
+      this.keyTrapper.bindGlobal(binding, funcToBind.bind(this));
     }
   },
 
