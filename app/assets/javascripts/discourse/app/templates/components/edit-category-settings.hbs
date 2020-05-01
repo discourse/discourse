@@ -221,6 +221,20 @@
       }}
     </section>
   {{/if}}
+
+  <section class="field category-read-only-banner">
+    <label for="category-read-only-banner">
+      {{i18n "category.read_only_banner"}}
+    </label>
+    {{text-field
+        valueProperty="value"
+        id="read-only-message"
+        value=category.read_only_banner
+        options=(hash
+        placementStrategy="absolute"
+        )
+    }}
+  </section>
 </section>
 
 <section>

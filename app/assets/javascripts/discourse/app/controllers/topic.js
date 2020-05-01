@@ -652,7 +652,7 @@ export default Controller.extend(bufferedProperty("model"), {
       if (!this.currentUser) {
         return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
       } else if (post) {
-        return post.toggleBookmarkWithReminder();
+        return post.toggleBookmark();
       } else {
         return this.model.toggleBookmark().then(changedIds => {
           if (!changedIds) {
@@ -662,16 +662,6 @@ export default Controller.extend(bufferedProperty("model"), {
             this.appEvents.trigger("post-stream:refresh", { id })
           );
         });
-      }
-    },
-
-    toggleBookmarkWithReminder(post) {
-      if (!this.currentUser) {
-        return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
-      } else if (post) {
-        return post.toggleBookmarkWithReminder();
-      } else {
-        return this.model.toggleBookmarkWithReminder();
       }
     },
 

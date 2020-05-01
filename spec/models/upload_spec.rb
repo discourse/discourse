@@ -288,53 +288,6 @@ describe Upload do
     end
   end
 
-  describe ".consider_for_reuse" do
-    let(:post) { Fabricate(:post) }
-    let(:upload) { Fabricate(:upload) }
-
-    it "returns nil when the provided upload is blank" do
-      expect(Upload.consider_for_reuse(nil, post)).to eq(nil)
-    end
-
-    it "returns the upload when secure media is disabled" do
-      expect(Upload.consider_for_reuse(upload, post)).to eq(upload)
-    end
-
-    context "when secure media enabled" do
-      before do
-        enable_secure_media
-      end
-
-      context "when the upload access control post is != to the provided post" do
-        before do
-          upload.update(access_control_post_id: Fabricate(:post).id)
-        end
-
-        it "returns nil" do
-          expect(Upload.consider_for_reuse(upload, post)).to eq(nil)
-        end
-      end
-
-      context "when the upload original_sha1 is blank (pre-secure-media upload)" do
-        before do
-          upload.update(original_sha1: nil, access_control_post: post)
-        end
-
-        it "returns nil" do
-          expect(Upload.consider_for_reuse(upload, post)).to eq(nil)
-        end
-      end
-
-      context "when the upload original_sha1 is present and access control post is correct" do
-        let(:upload) { Fabricate(:secure_upload_s3, access_control_post: post) }
-
-        it "returns the upload" do
-          expect(Upload.consider_for_reuse(upload, post)).to eq(upload)
-        end
-      end
-    end
-  end
-
   describe '.update_secure_status' do
     it "respects the secure_override_value parameter if provided" do
       upload.update!(secure: true)

@@ -301,9 +301,12 @@ sv:
   topics_in_category: "Ämnen i kategorin '%{category}'"
   rss_posts_in_topic: "RSS-flöde för '%{topic}'"
   rss_topics_in_category: "RSS-flöde för ämnen i kategorin '%{category}'"
-  author_wrote: "%{author} skrev:"
-  num_posts: "Inlägg:"
-  num_participants: "Deltagare"
+  rss_num_posts:
+    one: "%{count} inlägg"
+    other: "%{count} inlägg"
+  rss_num_participants:
+    one: "%{count}  deltagare"
+    other: "%{count} deltagare"
   read_full_topic: "Läs hela ämnet"
   private_message_abbrev: "Meddelande"
   rss_description:
@@ -461,6 +464,7 @@ sv:
               no_user_selected: "Du måste välja en giltig användare."
               reply_by_email_disabled: "Svar via e-post har inaktiverats."
               target_user_not_found: "En av användarna som du skickar detta meddelande till kunde inte hittas."
+              unable_to_update: "Det uppstod ett fel vid uppdatering av detta ämnet."
             featured_link:
               invalid: "är ogiltig. URL måste innehålla http:// eller http://."
               invalid_category: "kan inte redigeras i denna kategori"
@@ -1814,6 +1818,7 @@ sv:
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvinga applicerad syntaxmarkering på alla förformatterade kodblock även när de inte explicit har specifierat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
+    show_copy_button_on_codeblocks: "Lägg till en knapp i Codeblocks som kopierar blockinnehållet till användarens urklipp. Denna funktion stöds inte av Internet Explorer."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
     embed_topics_list: "Stöd HTML-inbäddning av ämneslistor"
     embed_set_canonical_url: "Sätt den kanoniska URL:n för inbäddade ämnen till det inbäddade innehållets URL."

@@ -212,6 +212,29 @@ describe ContentSecurityPolicy do
       expect(parse(theme_policy)['script-src']).to_not include('https://from-theme-flag.script')
       expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
     end
+
+    it 'is extended automatically when themes reference external scripts' do
+      policy # call this first to make sure further actions clear the cache
+
+      theme.set_field(target: :common, name: "header", value: <<~SCRIPT)
+        <script src='https://example.com/myscript.js'/>
+        <script src='//example2.com/protocol-less-script.js'/>
+        <script src='domain-only.com'/>
+        <script>console.log('inline script')</script>
+      SCRIPT
+
+      theme.set_field(target: :desktop, name: "header", value: "")
+      theme.save!
+
+      expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript.js')
+      expect(parse(theme_policy)['script-src']).to include('example2.com/protocol-less-script.js')
+      expect(parse(theme_policy)['script-src']).not_to include('domain-only.com')
+      expect(parse(theme_policy)['script-src']).not_to include(a_string_matching /^\/theme-javascripts/)
+
+      theme.destroy!
+
+      expect(parse(theme_policy)['script-src']).to_not include('https://example.com/myscript.js')
+    end
   end
 
   it 'can be extended by site setting' do

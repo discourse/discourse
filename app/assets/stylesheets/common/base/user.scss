@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: 1fr 5fr;
   grid-template-rows: auto auto 1fr auto;
-  grid-row-gap: s(5);
+  grid-row-gap: 20px;
   .user-primary-navigation {
     grid-column-start: 1;
     grid-column-end: 3;
@@ -46,10 +46,10 @@
 .user-content {
   .list-actions {
     display: flex;
-    margin-bottom: s(3);
+    margin-bottom: 12px;
 
     .btn {
-      margin-right: s(3);
+      margin-right: 12px;
     }
   }
 
@@ -264,7 +264,7 @@
     color: $secondary;
     display: flex;
     padding: 10px;
-    margin-bottom: s(4);
+    margin-bottom: 16px;
     > div,
     > div a {
       display: flex;

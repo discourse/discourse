@@ -113,6 +113,14 @@ describe Badge do
         expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(nil)
       end
     end
+
+    context "when translation key doesn't match its class" do
+      let(:translation_key) { "badges.licensed.long_description" }
+
+      it "returns nil" do
+        expect(Badge.find_system_badge_id_from_translation_key(translation_key)).to eq(nil)
+      end
+    end
   end
 
   context "First Quote" do

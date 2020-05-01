@@ -298,9 +298,6 @@ fi:
   topics_in_category: "Ketjut alueella '%{category}'"
   rss_posts_in_topic: "ketjun '%{topic}' RSS syöte"
   rss_topics_in_category: "RSS syötteet alueen '%{category}' ketjuista"
-  author_wrote: "%{author} kirjoitti:"
-  num_posts: "Viestit:"
-  num_participants: "Osallistujat:"
   read_full_topic: "Lue koko ketju"
   private_message_abbrev: "YV"
   rss_description:

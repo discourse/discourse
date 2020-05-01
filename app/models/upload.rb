@@ -9,7 +9,7 @@ class Upload < ActiveRecord::Base
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
-  SECURE_MEDIA_ROUTE = "secure-media-uploads".freeze
+  SECURE_MEDIA_ROUTE = "secure-media-uploads"
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -123,13 +123,26 @@ class Upload < ActiveRecord::Base
     "upload://#{short_url_basename}"
   end
 
+  def uploaded_before_secure_media_enabled?
+    original_sha1.blank?
+  end
+
+  def matching_access_control_post?(post)
+    access_control_post_id == post.id
+  end
+
+  def copied_from_other_post?(post)
+    return false if access_control_post_id.blank?
+    !matching_access_control_post?(post)
+  end
+
   def short_path
     self.class.short_path(sha1: self.sha1, extension: self.extension)
   end
 
   def self.consider_for_reuse(upload, post)
     return upload if !SiteSetting.secure_media? || upload.blank? || post.blank?
-    return nil if upload.access_control_post_id != post.id || upload.original_sha1.blank?
+    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_media_enabled?
     upload
   end
 

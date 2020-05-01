@@ -185,9 +185,6 @@ ro:
   topics_in_category: "Subiecte în categoria '%{category}'"
   rss_posts_in_topic: "RSS din '%{topic}'"
   rss_topics_in_category: "RSS de subiecte din categoria '%{category}'"
-  author_wrote: "%{author} a scris:"
-  num_posts: "Mesaje:"
-  num_participants: "Participanți:"
   read_full_topic: "Citește întregul subiect"
   private_message_abbrev: "Msg"
   rss_description:

@@ -298,9 +298,6 @@ tr_TR:
   topics_in_category: "'%{category}' kategorisindeki konular"
   rss_posts_in_topic: " '%{topic}' konusuna ait RSS akışı"
   rss_topics_in_category: "'%{category}' kategorisindeki konulara ait RSS akışı"
-  author_wrote: "%{author} yazdı:"
-  num_posts: "Gönderiler:"
-  num_participants: "Katılımcılar:"
   read_full_topic: "Konunun tamamını okuyun"
   private_message_abbrev: "İlt"
   rss_description:

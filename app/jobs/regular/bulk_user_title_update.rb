@@ -2,8 +2,8 @@
 
 module Jobs
   class BulkUserTitleUpdate < ::Jobs::Base
-    UPDATE_ACTION = 'update'.freeze
-    RESET_ACTION = 'reset'.freeze
+    UPDATE_ACTION = 'update'
+    RESET_ACTION = 'reset'
 
     def execute(args)
       new_title = args[:new_title]

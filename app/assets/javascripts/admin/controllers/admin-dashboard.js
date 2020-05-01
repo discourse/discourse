@@ -1,7 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
 import { setting } from "discourse/lib/computed";
+import { computed } from "@ember/object";
 import AdminDashboard from "admin/models/admin-dashboard";
 import VersionCheck from "admin/models/version-check";
 
@@ -17,6 +17,24 @@ export default Controller.extend({
   foundProblems(problemsLength) {
     return this.currentUser.get("admin") && (problemsLength || 0) > 0;
   },
+
+  visibleTabs: computed("siteSettings.dashboard_visible_tabs", function() {
+    return (this.siteSettings.dashboard_visible_tabs || "")
+      .split("|")
+      .filter(Boolean);
+  }),
+
+  isModerationTabVisible: computed("visibleTabs", function() {
+    return this.visibleTabs.includes("moderation");
+  }),
+
+  isSecurityTabVisible: computed("visibleTabs", function() {
+    return this.visibleTabs.includes("security");
+  }),
+
+  isReportsTabVisible: computed("visibleTabs", function() {
+    return this.visibleTabs.includes("reports");
+  }),
 
   fetchProblems() {
     if (this.isLoadingProblems) return;

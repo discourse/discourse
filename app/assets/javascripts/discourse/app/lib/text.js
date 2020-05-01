@@ -5,6 +5,7 @@ import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
+import { htmlSafe } from "@ember/template";
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
@@ -26,7 +27,7 @@ function getOpts(opts) {
 
 // Use this to easily create a pretty text instance with proper options
 export function cook(text, options) {
-  return new Handlebars.SafeString(createPrettyText(options).cook(text));
+  return htmlSafe(createPrettyText(options).cook(text));
 }
 
 // everything should eventually move to async API and this should be renamed

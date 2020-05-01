@@ -27,6 +27,7 @@ hu:
         millions: "{{number}} millió"
     dates:
       time: "h:mm a"
+      time_with_zone: "h:mm a (z)"
       timeline_date: "YYYY MMMM"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMM DD"
@@ -3008,6 +3009,11 @@ hu:
         time_read: "Olvasási idő"
         anonymize: "Felhasználó névtelenítése"
         delete: "Felhasználó törlése"
+        merge:
+          prompt:
+            cancel: "Mégse"
+          confirmation:
+            cancel: "Mégse"
         delete_dont_block: "Csak törlés"
         deleting_user: "Felhasználó törlése..."
         deleted: "A felhasználó el lett távolítva"

@@ -21,6 +21,16 @@ RSpec.describe BookmarkManager do
       expect(bookmark.topic_id).to eq(post.topic_id)
     end
 
+    it "updates the topic user bookmarked column to true if any post is bookmarked" do
+      subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+      tu = TopicUser.find_by(user: user)
+      expect(tu.bookmarked).to eq(true)
+      tu.update(bookmarked: false)
+      subject.create(post_id: Fabricate(:post, topic: post.topic).id)
+      tu.reload
+      expect(tu.bookmarked).to eq(true)
+    end
+
     context "when a reminder time + type is provided" do
       it "saves the values correctly" do
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
@@ -29,14 +39,6 @@ RSpec.describe BookmarkManager do
         expect(bookmark.reminder_at).to eq_time(reminder_at)
         expect(bookmark.reminder_set_at).not_to eq(nil)
         expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:tomorrow])
-      end
-    end
-
-    context "when bookmarking the topic level (post is OP)" do
-      it "updates the topic user bookmarked column to true" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
-        tu = TopicUser.find_by(user: user)
-        expect(tu.bookmarked).to eq(true)
       end
     end
 
@@ -132,6 +134,15 @@ RSpec.describe BookmarkManager do
       Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic))
       result = subject.destroy(bookmark.id)
       expect(result[:topic_bookmarked]).to eq(true)
+    end
+
+    context "if the bookmark is the last one bookmarked in the topic" do
+      it "marks the topic user bookmarked column as false" do
+        TopicUser.create(user: user, topic: bookmark.post.topic, bookmarked: true)
+        subject.destroy(bookmark.id)
+        tu = TopicUser.find_by(user: user)
+        expect(tu.bookmarked).to eq(false)
+      end
     end
 
     context "if the bookmark is belonging to some other user" do

@@ -13,6 +13,7 @@ module Jobs
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
       user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
+      user_archive_profile: ['location', 'website', 'bio', 'views'],
       user_list: ['id', 'name', 'username', 'email', 'title', 'created_at', 'last_seen_at', 'last_posted_at', 'last_emailed_at', 'trust_level', 'approved', 'suspended_at', 'suspended_till', 'silenced_till', 'active', 'admin', 'moderator', 'ip_address', 'staged', 'secondary_emails'],
       user_stats: ['topics_entered', 'posts_read_count', 'time_read', 'topic_count', 'post_count', 'likes_given', 'likes_received'],
       user_profile: ['location', 'website', 'views'],
@@ -29,49 +30,61 @@ module Jobs
       @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @current_user = User.find_by(id: args[:user_id])
 
-      export_method = :"#{@entity}_export"
-      raise Discourse::InvalidParameters.new(:entity) unless respond_to?(export_method)
+      entities = [{ name: @entity }]
+      entities << { name: "user_archive_profile" } if @entity === "user_archive"
 
-      file_name_prefix = if @entity == "user_archive"
-        "#{@entity.split('_').join('-')}-#{@current_user.username}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
-      elsif @entity == "report" && @extra[:name].present?
-        "#{@extra[:name].split('_').join('-')}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
-      else
-        "#{@entity.split('_').join('-')}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
+      entities.each do |entity|
+        entity[:method] = :"#{entity[:name]}_export"
+        raise Discourse::InvalidParameters.new(:entity) unless respond_to?(entity[:method])
+
+        @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
+        entity[:filename] =
+          if entity[:name] == "user_archive" || entity[:name] === "user_archive_profile"
+            "#{entity[:name].dasherize}-#{@current_user.username}-#{@timestamp}"
+          elsif entity[:name] == "report" && @extra[:name].present?
+            "#{@extra[:name].dasherize}-#{@timestamp}"
+          else
+            "#{entity[:name].dasherize}-#{@timestamp}"
+          end
       end
 
       export_title = if @entity == "report" && @extra[:name].present?
         I18n.t("reports.#{@extra[:name]}.title")
       else
-        @entity.split('_').join(' ').titleize
+        @entity.gsub('_', ' ').titleize
       end
 
-      user_export = UserExport.create(file_name: file_name_prefix, user_id: @current_user.id)
-      file_name = "#{file_name_prefix}-#{user_export.id}.csv"
-      absolute_path = "#{UserExport.base_directory}/#{file_name}"
+      filename = entities[0][:filename] # use first entity as a name for this export
+      user_export = UserExport.create(file_name: filename, user_id: @current_user.id)
+
+      filename = "#{filename}-#{user_export.id}"
+      dirname = "#{UserExport.base_directory}/#{filename}"
 
       # ensure directory exists
-      FileUtils.mkdir_p(UserExport.base_directory) unless Dir.exists?(UserExport.base_directory)
+      FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
 
       # Generate a compressed CSV file
       begin
-        CSV.open(absolute_path, "w") do |csv|
-          csv << get_header if @entity != "report"
-          public_send(export_method).each { |d| csv << d }
+        entities.each do |entity|
+          CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
+            csv << get_header(entity[:name]) if entity[:name] != "report"
+            public_send(entity[:method]).each { |d| csv << d }
+          end
         end
-        compressed_file_path = Compression::Zip.new.compress(UserExport.base_directory, file_name)
+
+        zip_filename = Compression::Zip.new.compress(UserExport.base_directory, filename)
       ensure
-        File.delete(absolute_path)
+        FileUtils.rm_rf(dirname)
       end
 
       # create upload
       upload = nil
 
-      if File.exist?(compressed_file_path)
-        File.open(compressed_file_path) do |file|
+      if File.exist?(zip_filename)
+        File.open(zip_filename) do |file|
           upload = UploadCreator.new(
             file,
-            File.basename(compressed_file_path),
+            File.basename(zip_filename),
             type: 'csv_export',
             for_export: 'true'
           ).create_for(@current_user.id)
@@ -79,11 +92,11 @@ module Jobs
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
           else
-            Rails.logger.warn("Failed to upload the file #{compressed_file_path}")
+            Rails.logger.warn("Failed to upload the file #{zip_filename}")
           end
         end
 
-        File.delete(compressed_file_path)
+        File.delete(zip_filename)
       end
     ensure
       post = notify_user(upload, export_title)
@@ -105,6 +118,17 @@ module Jobs
         .with_deleted
         .each do |user_archive|
         yield get_user_archive_fields(user_archive)
+      end
+    end
+
+    def user_archive_profile_export
+      return enum_for(:user_archive_profile_export) unless block_given?
+
+      UserProfile
+        .where(user_id: @current_user.id)
+        .select(:location, :website, :bio_raw, :views)
+        .each do |user_profile|
+        yield get_user_archive_profile_fields(user_profile)
       end
     end
 
@@ -234,8 +258,8 @@ module Jobs
       data.each { |row| yield row.values_at(*header).map(&:to_s) }
     end
 
-    def get_header
-      if @entity == 'user_list'
+    def get_header(entity)
+      if entity == 'user_list'
         header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats'] + HEADER_ATTRS_FOR['user_profile']
         header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_sso
         user_custom_fields = UserField.all
@@ -246,7 +270,7 @@ module Jobs
         end
         header_array.push("group_names")
       else
-        header_array = HEADER_ATTRS_FOR[@entity]
+        header_array = HEADER_ATTRS_FOR[entity]
       end
 
       header_array
@@ -346,6 +370,23 @@ module Jobs
       end
 
       user_archive_array
+    end
+
+    def get_user_archive_profile_fields(user_profile)
+      user_archive_profile = []
+
+      HEADER_ATTRS_FOR['user_archive_profile'].each do |attr|
+        data =
+          if attr == 'bio'
+            user_profile.attributes['bio_raw']
+          else
+            user_profile.attributes[attr]
+          end
+
+          user_archive_profile.push(data)
+      end
+
+      user_archive_profile
     end
 
     def get_staff_action_fields(staff_action)

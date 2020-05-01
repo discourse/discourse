@@ -124,6 +124,9 @@ branding:
     default: ""
 
 basic:
+  display_local_time_in_user_card:
+    client: true
+    default: false
   allow_user_locale:
     client: true
     default: false
@@ -186,7 +189,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "read|like|share|flag|edit|bookmark|bookmarkWithReminder|delete|admin|reply"
+    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
       - read
@@ -198,11 +201,10 @@ basic:
       - bookmark
       - admin
       - reply
-      - bookmarkWithReminder
   post_menu_hidden_items:
     client: true
     type: list
-    default: "flag|bookmark|bookmarkWithReminder|edit|delete|admin"
+    default: "flag|bookmark|edit|delete|admin"
     allow_any: false
     choices:
       - like
@@ -213,7 +215,6 @@ basic:
       - bookmark
       - admin
       - reply
-      - bookmarkWithReminder
   share_links:
     client: true
     type: list
@@ -451,6 +452,8 @@ login:
     default: false
     client: true
   sso_overrides_profile_background: false
+  sso_overrides_location: false
+  sso_overrides_website: false
   sso_overrides_card_background: false
   sso_not_approved_url: ""
   email_domains_blacklist:
@@ -459,7 +462,6 @@ login:
   email_domains_whitelist:
     default: ""
     type: list
-  enforce_canonical_emails: false
   auto_approve_email_domains:
     default: ""
     type: list
@@ -1200,6 +1202,9 @@ files:
   s3_endpoint:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+  s3_http_continue_timeout:
+    default: 1
+    hidden: true
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
@@ -2200,6 +2205,22 @@ tags:
     client: true
 
 dashboard:
+  dashboard_hidden_reports:
+    client: true
+    type: list
+    list_type: compact
+    default: ""
+    allow_any: true
+  dashboard_visible_tabs:
+    client: true
+    type: list
+    list_type: compact
+    default: "moderation|security|reports"
+    allow_any: false
+    choices:
+      - moderation
+      - security
+      - reports
   dashboard_general_tab_activity_metrics:
     client: true
     type: list

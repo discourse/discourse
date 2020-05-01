@@ -1,8 +1,4 @@
-//= require_tree ./ember-addons/utils
-//= require ./ember-addons/decorator-alias
-//= require ./ember-addons/macro-alias
-//= require ./discourse-common/utils/decorators
-//= require_tree ./discourse-common
+//= require_tree ./discourse-common/addon
 //= require i18n-patches
 //= require_tree ./select-kit
 //= require wizard/router

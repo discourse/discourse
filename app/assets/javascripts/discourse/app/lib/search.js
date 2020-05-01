@@ -10,6 +10,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import User from "discourse/models/user";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export function translateResults(results, opts) {
   opts = opts || {};
@@ -50,17 +51,13 @@ export function translateResults(results, opts) {
 
   results.groups = results.groups
     .map(group => {
-      const name = Handlebars.Utils.escapeExpression(group.name);
-      const fullName = Handlebars.Utils.escapeExpression(
-        group.full_name || group.display_name
-      );
+      const name = escapeExpression(group.name);
+      const fullName = escapeExpression(group.full_name || group.display_name);
       const flairUrl = isEmpty(group.flair_url)
         ? null
-        : Handlebars.Utils.escapeExpression(group.flair_url);
-      const flairColor = Handlebars.Utils.escapeExpression(group.flair_color);
-      const flairBgColor = Handlebars.Utils.escapeExpression(
-        group.flair_bg_color
-      );
+        : escapeExpression(group.flair_url);
+      const flairColor = escapeExpression(group.flair_color);
+      const flairBgColor = escapeExpression(group.flair_bg_color);
 
       return {
         id: group.id,
@@ -76,7 +73,7 @@ export function translateResults(results, opts) {
 
   results.tags = results.tags
     .map(function(tag) {
-      const tagName = Handlebars.Utils.escapeExpression(tag.name);
+      const tagName = escapeExpression(tag.name);
       return EmberObject.create({
         id: tagName,
         url: Discourse.getURL("/tag/" + tagName)

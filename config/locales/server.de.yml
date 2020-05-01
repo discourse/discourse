@@ -299,9 +299,6 @@ de:
   topics_in_category: "Themen in der Kategorie '%{category}'"
   rss_posts_in_topic: "RSS-Feed von '%{topic}'"
   rss_topics_in_category: "RSS-Feed von Themen in der Kategorie '%{category}'"
-  author_wrote: "%{author} schrieb:"
-  num_posts: "Beiträge:"
-  num_participants: "Teilnehmer:"
   read_full_topic: "Lese das vollständige Thema"
   private_message_abbrev: "Nachricht"
   rss_description:

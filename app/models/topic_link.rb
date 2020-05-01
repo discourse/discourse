@@ -119,7 +119,7 @@ class TopicLink < ActiveRecord::Base
         uri = UrlHelper.relaxed_parse(u.url)
         [u, uri]
       end
-      .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
+      .reject { |_, p| p.nil? || "mailto" == p.scheme }
       .uniq { |_, p| p }
       .each do |link, parsed|
 

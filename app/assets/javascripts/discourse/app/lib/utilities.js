@@ -1,5 +1,6 @@
 import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
+import Handlebars from "handlebars";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
 
@@ -335,14 +336,14 @@ export function toAsciiPrintable(string, fallback) {
     string = string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 
-  return /^[/\040-\0176/]*$/.test(string) ? string : fallback;
+  return /^[/\040-\176/]*$/.test(string) ? string : fallback;
 }
 
 export function slugify(string) {
   return string
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, "-") // Replace spaces with dashes
+    .replace(/\s|_+/g, "-") // Replace spaces and underscores with dashes
     .replace(/[^\w\-]+/g, "") // Remove non-word characters except for dashes
     .replace(/\-\-+/g, "-") // Replace multiple dashes with a single dash
     .replace(/^-+/, "") // Remove leading dashes

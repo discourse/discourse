@@ -26,6 +26,7 @@ th:
         millions: "{{number}}ล้าน"
     dates:
       time: "h:mm a"
+      time_with_zone: "h:mm a (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -1788,6 +1789,11 @@ th:
         time_read: "เวลาอ่าน"
         anonymize: "ผู้ใช้ที่ไม่ระบุ"
         delete: "ลบผู้ใช้"
+        merge:
+          prompt:
+            cancel: "ยกเลิก"
+          confirmation:
+            cancel: "ยกเลิก"
         delete_forbidden_because_staff: "ผู้ดูแลระบบและผู้ดูแลไม่สามารถถูกลบได้"
         delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสทั้งหมดของผู้ดูแลระบบและผู้ดูแลได้"
         delete_and_block: "ลบและ <b>บล็อก</b> อีเมลและไอพีนี้"

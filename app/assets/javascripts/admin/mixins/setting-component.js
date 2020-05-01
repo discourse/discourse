@@ -7,6 +7,7 @@ import Mixin from "@ember/object/mixin";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { htmlSafe } from "@ember/template";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -63,7 +64,7 @@ export default Mixin.create({
     }
     let preview = setting.get("preview");
     if (preview) {
-      return new Handlebars.SafeString(
+      return htmlSafe(
         "<div class='preview'>" +
           preview.replace(/\{\{value\}\}/g, value) +
           "</div>"

@@ -263,6 +263,14 @@ var define, requirejs;
   function requireFrom(name, origin) {
     name = transformForAliases(name);
 
+    if (name === "discourse") {
+      // eslint-disable-next-line no-console
+      console.log(
+        "discourse has been moved to `discourse/app` - please update your code"
+      );
+      name = "discourse/app";
+    }
+
     if (name === "discourse/models/input-validation") {
       // eslint-disable-next-line no-console
       console.log(

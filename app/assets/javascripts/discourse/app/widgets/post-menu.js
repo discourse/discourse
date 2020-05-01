@@ -287,31 +287,11 @@ registerButton("bookmark", attrs => {
     return;
   }
 
-  let className = "bookmark";
-
-  if (attrs.bookmarked) {
-    className += " bookmarked";
-  }
-
-  return {
-    id: attrs.bookmarked ? "unbookmark" : "bookmark",
-    action: "toggleBookmark",
-    title: attrs.bookmarked ? "bookmarks.created" : "bookmarks.not_bookmarked",
-    className,
-    icon: "bookmark"
-  };
-});
-
-registerButton("bookmarkWithReminder", attrs => {
-  if (!attrs.canBookmark) {
-    return;
-  }
-
   let classNames = ["bookmark", "with-reminder"];
   let title = "bookmarks.not_bookmarked";
   let titleOptions = {};
 
-  if (attrs.bookmarkedWithReminder) {
+  if (attrs.bookmarked) {
     classNames.push("bookmarked");
 
     if (attrs.bookmarkReminderAt) {
@@ -331,8 +311,8 @@ registerButton("bookmarkWithReminder", attrs => {
   }
 
   return {
-    id: attrs.bookmarkedWithReminder ? "unbookmark" : "bookmark",
-    action: "toggleBookmarkWithReminder",
+    id: attrs.bookmarked ? "unbookmark" : "bookmark",
+    action: "toggleBookmark",
     title,
     titleOptions,
     className: classNames.join(" "),
@@ -451,10 +431,7 @@ export default createWidget("post-menu", {
     const hiddenSetting = siteSettings.post_menu_hidden_items || "";
     const hiddenButtons = hiddenSetting
       .split("|")
-      .filter(s => !attrs.bookmarked || s !== "bookmark")
-      .filter(
-        s => !attrs.bookmarkedWithReminder || s !== "bookmarkWithReminder"
-      );
+      .filter(s => !attrs.bookmarked || s !== "bookmark");
 
     if (currentUser && keyValueStore) {
       const likedPostId = keyValueStore.getInt("likedPostId");
@@ -468,12 +445,7 @@ export default createWidget("post-menu", {
     let visibleButtons = [];
 
     // filter menu items based on site settings
-    const orderedButtons = this.menuItems().filter(button => {
-      if (button === "bookmark") {
-        return false;
-      }
-      return true;
-    });
+    const orderedButtons = this.menuItems();
 
     // If the post is a wiki, make Edit more prominent
     if (attrs.wiki && attrs.canEdit) {

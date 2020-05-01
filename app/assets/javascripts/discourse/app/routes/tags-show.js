@@ -9,6 +9,7 @@ import { queryParams } from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
@@ -22,14 +23,14 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
   model(params) {
     const tag = this.store.createRecord("tag", {
-      id: Handlebars.Utils.escapeExpression(params.tag_id)
+      id: escapeExpression(params.tag_id)
     });
     if (params.additional_tags) {
       this.set(
         "additionalTags",
         params.additional_tags.split("/").map(t => {
           return this.store.createRecord("tag", {
-            id: Handlebars.Utils.escapeExpression(t)
+            id: escapeExpression(t)
           }).id;
         })
       );

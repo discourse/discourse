@@ -36,6 +36,13 @@ describe Jobs::ExportCsvFile do
 
         expect(system_message.id).to eq(UserExport.last.topic_id)
         expect(system_message.closed).to eq(true)
+
+        files = []
+        Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
+          zip_file.each { |entry| files << entry.name }
+        end
+
+        expect(files.size).to eq(2)
       ensure
         user.uploads.each(&:destroy!)
       end

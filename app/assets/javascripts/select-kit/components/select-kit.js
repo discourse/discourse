@@ -658,17 +658,10 @@ export default Component.extend(
       );
 
       if (rowContainer) {
-        const $collection = $(
-          this.element.querySelector(".select-kit-collection")
-        );
+        const collectionContainer = rowContainer.parentNode;
 
-        const collectionTop = $collection.position().top;
-
-        $collection.scrollTop(
-          $collection.scrollTop() +
-            $(rowContainer).position().top -
-            collectionTop
-        );
+        collectionContainer.scrollTop =
+          rowContainer.offsetTop - collectionContainer.offsetTop;
       }
     },
 
@@ -858,8 +851,7 @@ export default Component.extend(
                     this.element.classList.add("is-under");
                   }
 
-                  // - 1 accounts for any rounding error
-                  wrapper.style.width = `${this.element.offsetWidth - 1}px`;
+                  wrapper.style.width = `${this.element.offsetWidth}px`;
                   wrapper.style.height = `${height}px`;
                 }
               }

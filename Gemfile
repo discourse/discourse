@@ -118,7 +118,6 @@ gem 'rake'
 gem 'thor', require: false
 gem 'diffy', require: false
 gem 'rinku'
-gem 'sanitize'
 gem 'sidekiq'
 gem 'mini_scheduler'
 
@@ -173,12 +172,13 @@ group :test, :development do
 
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
-  gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
   gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
   gem "rubocop-rspec", require: false
   gem 'parallel_tests'
+
+  gem 'rswag-specs'
 end
 
 group :development do
@@ -255,10 +255,3 @@ end
 gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
-
-# These are not direct dependencies, but we need to restrict
-# versions for compatibility with https://github.com/discourse/discourse-zendesk-plugin
-# These restrictions can be removed once the zendesk_api gem is updated
-# for newer versions of hashie and faraday
-gem 'hashie', '< 4.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/422
-gem 'faraday', '< 1.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/421

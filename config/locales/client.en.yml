@@ -40,6 +40,8 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      time_with_zone: "HH:mm (z)"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time_short_day: "ddd, HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
@@ -1399,6 +1401,7 @@ en:
     assets_changed_confirm: "This site was just updated. Refresh now for the latest version?"
     logout: "You were logged out."
     refresh: "Refresh"
+    home: "Home"
     read_only_mode:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
@@ -1445,6 +1448,7 @@ en:
     mute: Mute
     unmute: Unmute
     last_post: Posted
+    local_time: "Local Time"
     time_read: Read
     time_read_recently: "%{time_read} recently"
     time_read_tooltip: "%{time_read} total time read"
@@ -2794,6 +2798,7 @@ en:
       email_in_disabled_click: 'enable the "email in" setting.'
       mailinglist_mirror: "Category mirrors a mailing list"
       show_subcategory_list: "Show subcategory list above topics in this category."
+      read_only_banner: "Banner text when a user cannot create a topic in this category:"
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default"
@@ -3051,7 +3056,7 @@ en:
         today: "Today"
         other_periods: "see top"
 
-    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a>.'
+    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, login, and reply.'
 
     permission_types:
       full: "Create / Reply / See"
@@ -3758,6 +3763,9 @@ en:
           settings: "Settings"
           translations: "Translations"
           extra_scss: "Extra SCSS"
+          extra_files: "Extra files"
+          extra_files_upload: "Export theme to view these files."
+          extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
           show_advanced: "Show advanced fields"
           hide_advanced: "Hide advanced fields"
@@ -3821,6 +3829,7 @@ en:
           license: "License"
           version: "Version:"
           authors: "Authored by:"
+          creator: "Created by:"
           source_url: "Source"
           enable: "Enable"
           disable: "Disable"
@@ -4358,6 +4367,7 @@ en:
 
               <p>To continue type: <code>%{text}</code></p>
 
+            text: "transfer @%{username} to @%{targetUsername}"
             transfer_and_delete: "Transfer & Delete @%{username}"
             cancel: "Cancel"
 

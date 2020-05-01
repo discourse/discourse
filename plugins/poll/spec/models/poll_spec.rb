@@ -69,4 +69,18 @@ describe ::DiscoursePoll::Poll do
       expect(poll.can_see_results?(user)).to eq(true)
     end
   end
+
+  describe 'when post is trashed' do
+    it "maintains the association" do
+      user = Fabricate(:user)
+      post = Fabricate(:post, raw: "[poll results=staff_only]\n- A\n- B\n[/poll]", user: user)
+      poll = post.polls.first
+
+      post.trash!
+      poll.reload
+
+      expect(poll.post).to eq(post)
+    end
+
+  end
 end

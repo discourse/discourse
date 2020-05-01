@@ -62,7 +62,7 @@ createWidget("user-menu-links", {
       label: "user.bookmarks",
       className: "user-bookmarks-link",
       icon: "bookmark",
-      href: `${this.attrs.path}/activity/bookmarks-with-reminders`
+      href: `${this.attrs.path}/activity/bookmarks`
     };
   },
 

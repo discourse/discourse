@@ -5,6 +5,7 @@ import discourseComputed, {
   observes
 } from "discourse-common/utils/decorators";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { htmlSafe } from "@ember/template";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
@@ -53,7 +54,7 @@ const LogsNotice = EmberObject.extend({
 
   @discourseComputed("text")
   message(text) {
-    return new Handlebars.SafeString(text);
+    return htmlSafe(text);
   },
 
   @discourseComputed("currentUser")

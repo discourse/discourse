@@ -297,9 +297,6 @@ fr:
   topics_in_category: "Sujets dans la catégorie « %{category} »"
   rss_posts_in_topic: "Flux RSS de « %{topic} »"
   rss_topics_in_category: "Flux RSS des sujets dans la catégorie « %{category} »"
-  author_wrote: "%{author} a écrit :"
-  num_posts: "Messages :"
-  num_participants: "Participants :"
   read_full_topic: "Lire le sujet en entier"
   private_message_abbrev: "Msg"
   rss_description:

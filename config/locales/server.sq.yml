@@ -127,9 +127,6 @@ sq:
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "Burimi RSS i '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
-  author_wrote: "%{author} shkruajti:"
-  num_posts: "Postime:"
-  num_participants: "Pjesëmarrësit:"
   read_full_topic: "Lexo temën e plotë"
   private_message_abbrev: "Msg"
   rss_description:

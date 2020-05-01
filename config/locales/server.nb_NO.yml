@@ -231,9 +231,6 @@ nb_NO:
   topics_in_category: "Emner i '%{category}'-kategorien"
   rss_posts_in_topic: "RSS-strøm av '%{topic}'"
   rss_topics_in_category: "RSS-strøm av emner i '%{category}'-kategorien"
-  author_wrote: "%{author} skrev:"
-  num_posts: "Innlegg:"
-  num_participants: "Deltakere:"
   read_full_topic: "Les hele emnet"
   private_message_abbrev: "Mld"
   rss_description:

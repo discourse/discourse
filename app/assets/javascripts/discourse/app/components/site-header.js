@@ -7,6 +7,7 @@ import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD
 } from "discourse/mixins/pan-events";
+import { topicTitleDecorators } from "discourse/components/topic-title";
 
 const PANEL_BODY_MARGIN = 30;
 
@@ -205,6 +206,30 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.dispatch("search-autocomplete:after-complete", "search-term");
 
     this.appEvents.on("dom:clean", this, "_cleanDom");
+
+    // Allow first notification to be dismissed on a click anywhere
+    if (
+      !this.get("currentUser.read_first_notification") &&
+      !this.get("currentUser.enforcedSecondFactor")
+    ) {
+      this._dismissFirstNotification = e => {
+        if (
+          !e.target.closest("#current-user") &&
+          !e.target.closest(".ring-backdrop") &&
+          !this.get("currentUser.read_first_notification") &&
+          !this.get("currentUser.enforcedSecondFactor")
+        ) {
+          this.eventDispatched(
+            "header:dismiss-first-notification-mask",
+            "header"
+          );
+        }
+      };
+      // TODO: re-enable event listener
+      //      document.addEventListener("click", this._dismissFirstNotification, {
+      //        once: true
+      //      });
+    }
   },
 
   _cleanDom() {
@@ -225,6 +250,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
     cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
+
+    document.removeEventListener("click", this._dismissFirstNotification);
   },
 
   buildArgs() {
@@ -235,6 +262,13 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   afterRender() {
+    const headerTitle = document.querySelector(".header-title .topic-link");
+    if (headerTitle && this._topic) {
+      topicTitleDecorators.forEach(cb =>
+        cb(this._topic, headerTitle, "header-title")
+      );
+    }
+
     const $menuPanels = $(".menu-panel");
     if ($menuPanels.length === 0) {
       if (this.site.mobileView) {

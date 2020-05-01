@@ -331,9 +331,16 @@ he:
   topics_in_category: "נושאים בקטגוריה ‚%{category}’"
   rss_posts_in_topic: "הזנת RSS של ‚%{topic}’"
   rss_topics_in_category: "הזנת RSS של נושאים בקטגוריה ‚%{category}’"
-  author_wrote: "נכתב על ידי %{author}:"
-  num_posts: "פוסטים:"
-  num_participants: "משתתפים:"
+  rss_num_posts:
+    one: "פוסט %{count}"
+    two: "%{count} פוסטים"
+    many: "%{count} פוסטים"
+    other: "%{count} פוסטים"
+  rss_num_participants:
+    one: "משתתף %{count}"
+    two: "%{count} משתתפים"
+    many: "%{count} משתתפים"
+    other: "%{count} משתתפים"
   read_full_topic: "קריאת הנושא במלואו"
   private_message_abbrev: "הודעה"
   rss_description:
@@ -497,6 +504,7 @@ he:
               no_user_selected: "יש לבחור במשתמש תקני."
               reply_by_email_disabled: "האפשרות להגיב בדוא״ל נוטרלה."
               target_user_not_found: "אחד הנמענים לא נמצא."
+              unable_to_update: "אירעה שגיאה בעדכון הנושא הזה."
             featured_link:
               invalid: "שגוי. כתובת אמורה לכלול http://‎ או https://‎."
               invalid_category: "לא ניתן לעריכה בקטגוריה זו."
@@ -1904,6 +1912,7 @@ he:
     warn_reviving_old_topic_age: "כאשר מישהם מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. נטרלו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כללי הדגשת תחביר להכללה. (אזהרה: הכללה של שפות רבות מדי פוגעת בביצועים) להדגמה: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
+    show_copy_button_on_codeblocks: "הוספת כפתור למקטעי קוד כדי להעתיק את תוכן המקטע ללוח הגזירים של המשתמש. תכונה זו אינה נתמכת ב־Internet Explorer."
     embed_any_origin: "לאפשר תוכן עם יכולת הטמעה ללא תלות במקור. נחוץ ליישומונים לנייד עם HTML סטטי."
     embed_topics_list: "תמיכה בהטמעת רשימות נושאים ב־HTML"
     embed_set_canonical_url: "הגדרת הכתובת הקנונית לנושאים מוטמעים כדי להטמיע את כתובת התוכן."

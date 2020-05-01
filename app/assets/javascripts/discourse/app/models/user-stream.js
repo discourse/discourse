@@ -6,6 +6,7 @@ import UserAction from "discourse/models/user-action";
 import { emojiUnescape } from "discourse/lib/text";
 import { Promise } from "rsvp";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default RestModel.extend({
   loaded: false,
@@ -107,9 +108,7 @@ export default RestModel.extend({
         if (result && result.user_actions) {
           const copy = A();
           result.user_actions.forEach(action => {
-            action.title = emojiUnescape(
-              Handlebars.Utils.escapeExpression(action.title)
-            );
+            action.title = emojiUnescape(escapeExpression(action.title));
             copy.pushObject(UserAction.create(action));
           });
 

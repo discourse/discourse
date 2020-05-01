@@ -178,12 +178,12 @@ QUnit.test("caretRowCol", assert => {
 });
 
 QUnit.test("toAsciiPrintable", assert => {
-  const accentedString = "Créme Brûlée!";
+  const accentedString = "Créme_Brûlée!";
   const unicodeString = "談話";
 
   assert.equal(
     toAsciiPrintable(accentedString, "discourse"),
-    "Creme Brulee!",
+    "Creme_Brulee!",
     "it replaces accented characters with the appropriate ASCII equivalent"
   );
 
@@ -201,13 +201,23 @@ QUnit.test("toAsciiPrintable", assert => {
 });
 
 QUnit.test("slugify", assert => {
-  const string = "--- 0--( Some-cool Discourse Site! )--0 --- ";
+  const asciiString = "--- 0__( Some-cool Discourse Site! )__0 --- ";
+  const accentedString = "Créme_Brûlée!";
+  const unicodeString = "談話";
 
   assert.equal(
-    slugify(string),
+    slugify(asciiString),
     "0-some-cool-discourse-site-0",
-    "it slugifies a string"
+    "it properly slugifies an ASCII string"
   );
+
+  assert.equal(
+    slugify(accentedString),
+    "crme-brle",
+    "it removes accented characters"
+  );
+
+  assert.equal(slugify(unicodeString), "", "it removes unicode characters");
 });
 
 QUnit.test("fillMissingDates", assert => {

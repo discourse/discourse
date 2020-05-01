@@ -11,12 +11,12 @@ class Barber::Precompiler
   def precompiler
     if !@precompiler
 
-      source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/lib/raw-handlebars.js")
+      source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/addon/lib/raw-handlebars.js")
       transpiler = DiscourseJsProcessor::Transpiler.new(skip_module: true)
       transpiled = transpiler.perform(source)
 
       # very hacky but lets us use ES6. I'm ashamed of this code -RW
-      transpiled = transpiled[0...transpiled.index('export ')]
+      transpiled = transpiled[transpiled.index('var RawHandlebars = ')...transpiled.index('export ')]
 
       @precompiler = StringIO.new <<~END
         var __RawHandlebars;

@@ -180,7 +180,7 @@ class BadgeGranter
   end
 
   def self.queue_key
-    "badge_queue".freeze
+    "badge_queue"
   end
 
   # Options:
