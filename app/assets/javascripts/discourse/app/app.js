@@ -1,14 +1,9 @@
 /*global Mousetrap:true*/
 import Application from "@ember/application";
-import EmberObject, { computed } from "@ember/object";
+import { computed } from "@ember/object";
 import { buildResolver } from "discourse-common/resolver";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import FocusEvent from "discourse-common/mixins/focus-event";
-import deprecated from "discourse-common/lib/deprecated";
-
-if (window.unsupportedBrowser) {
-  throw "Unsupported browser detected";
-}
 
 const _pluginCallbacks = [];
 
@@ -203,15 +198,5 @@ const Discourse = Application.extend(FocusEvent, {
     }
   })
 }).create();
-
-Object.defineProperty(Discourse, "Model", {
-  get() {
-    deprecated("Use an `@ember/object` instead of Discourse.Model", {
-      since: "2.4.0",
-      dropFrom: "2.5.0"
-    });
-    return EmberObject;
-  }
-});
 
 export default Discourse;
