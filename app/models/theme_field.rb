@@ -119,7 +119,8 @@ class ThemeField < ActiveRecord::Base
       js_compiler.append_js_error(error)
     end
 
-    js_compiler.prepend_settings(theme.cached_settings) if js_compiler.content.present? && theme.cached_settings.present?
+    settings_hash = theme.build_settings_hash
+    js_compiler.prepend_settings(settings_hash) if js_compiler.content.present? && settings_hash.present?
     javascript_cache.content = js_compiler.content
     javascript_cache.save!
 
