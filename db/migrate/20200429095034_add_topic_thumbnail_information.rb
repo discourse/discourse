@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddImageUploadIdToPostsAndTopics < ActiveRecord::Migration[6.0]
+class AddTopicThumbnailInformation < ActiveRecord::Migration[6.0]
   def change
     add_reference :posts, :image_upload
     add_reference :topics, :image_upload
