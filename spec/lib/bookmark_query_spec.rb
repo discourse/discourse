@@ -141,17 +141,17 @@ RSpec.describe BookmarkQuery do
   end
 
   describe "#list_all ordering" do
-    let!(:bookmark1) { Fabricate(:bookmark, user: user, created_at: 1.day.ago, reminder_last_sent_at: 10.minutes.ago) }
-    let!(:bookmark2) { Fabricate(:bookmark, user: user, created_at: 2.days.ago, reminder_last_sent_at: 5.minutes.ago) }
-    let!(:bookmark3) { Fabricate(:bookmark, user: user, created_at: 6.days.ago) }
-    let!(:bookmark4) { Fabricate(:bookmark, user: user, created_at: 2.days.ago) }
-    let!(:bookmark5) { Fabricate(:bookmark, user: user, created_at: 3.days.ago) }
-    it "orders by reminder_last_sent_at, falling back to created_at" do
+    let!(:bookmark1) { Fabricate(:bookmark, user: user, updated_at: 1.day.ago) }
+    let!(:bookmark2) { Fabricate(:bookmark, user: user, updated_at: 2.days.ago) }
+    let!(:bookmark3) { Fabricate(:bookmark, user: user, updated_at: 6.days.ago) }
+    let!(:bookmark4) { Fabricate(:bookmark, user: user, updated_at: 4.days.ago) }
+    let!(:bookmark5) { Fabricate(:bookmark, user: user, updated_at: 3.days.ago) }
+    it "orders by updated_at" do
       expect(bookmark_query.list_all.map(&:id)).to eq([
-        bookmark2.id,
         bookmark1.id,
-        bookmark4.id,
+        bookmark2.id,
         bookmark5.id,
+        bookmark4.id,
         bookmark3.id
       ])
     end
