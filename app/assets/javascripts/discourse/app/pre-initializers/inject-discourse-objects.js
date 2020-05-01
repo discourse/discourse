@@ -2,7 +2,6 @@ import Session from "discourse/models/session";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Store from "discourse/models/store";
 import DiscourseLocation from "discourse/lib/discourse-location";
-import Discourse from "discourse/app";
 import SearchService from "discourse/services/search";
 import TopicTrackingState, {
   startTracking
@@ -33,7 +32,7 @@ export default {
 
     const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
-    Discourse.currentUser = currentUser;
+    app.currentUser = currentUser;
 
     const topicTrackingState = TopicTrackingState.create({
       messageBus,
@@ -46,7 +45,7 @@ export default {
       app.inject(t, "topicTrackingState", "topic-tracking-state:main")
     );
 
-    const siteSettings = Discourse.SiteSettings;
+    const siteSettings = app.SiteSettings;
     app.register("site-settings:main", siteSettings, { instantiate: false });
     ALL_TARGETS.forEach(t =>
       app.inject(t, "siteSettings", "site-settings:main")

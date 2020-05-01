@@ -57,6 +57,7 @@ class DiscourseJsProcessor
       activate-account
       auto-redirect
       embed-application
+      app-boot
     ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
 
     return true if plugin_transpile_paths.any? { |prefix| relative_path.start_with?(prefix) }
