@@ -289,7 +289,7 @@ registerButton("bookmark", attrs => {
 
   let classNames = ["bookmark", "with-reminder"];
   let title = "bookmarks.not_bookmarked";
-  let titleOptions = {};
+  let titleOptions = { name: "" };
 
   if (attrs.bookmarked) {
     classNames.push("bookmarked");
@@ -300,13 +300,15 @@ registerButton("bookmark", attrs => {
         Discourse.currentUser.resolvedTimezone()
       );
       title = "bookmarks.created_with_reminder";
-      titleOptions = {
-        date: formattedReminder
-      };
+      titleOptions.date = formattedReminder;
     } else if (attrs.bookmarkReminderType === "at_desktop") {
       title = "bookmarks.created_with_at_desktop_reminder";
     } else {
       title = "bookmarks.created";
+    }
+
+    if (attrs.bookmarkName) {
+      titleOptions.name = `. ${attrs.bookmarkName}`;
     }
   }
 
