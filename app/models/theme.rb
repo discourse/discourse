@@ -68,7 +68,7 @@ class Theme < ActiveRecord::Base
 
     remove_from_cache!
     clear_cached_settings!
-    ColorScheme.hex_cache.clear
+    DB.after_commit { ColorScheme.hex_cache.clear }
     notify_theme_change(with_scheme: notify_with_scheme)
   end
 
@@ -270,7 +270,9 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_cache!
-    @cache.clear
+    DB.after_commit do
+      @cache.clear
+    end
   end
 
   def self.targets
@@ -302,8 +304,10 @@ class Theme < ActiveRecord::Base
   end
 
   def notify_theme_change(with_scheme: false)
-    theme_ids = Theme.transform_ids([id])
-    self.class.notify_theme_change(theme_ids, with_scheme: with_scheme)
+    DB.after_commit do
+      theme_ids = Theme.transform_ids([id])
+      self.class.notify_theme_change(theme_ids, with_scheme: with_scheme)
+    end
   end
 
   def self.refresh_message_for_targets(targets, theme_ids)
@@ -474,7 +478,9 @@ class Theme < ActiveRecord::Base
   end
 
   def clear_cached_settings!
-    Discourse.cache.delete("settings_for_theme_#{self.id}")
+    DB.after_commit do
+      Discourse.cache.delete("settings_for_theme_#{self.id}")
+    end
   end
 
   def included_settings

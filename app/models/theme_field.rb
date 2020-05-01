@@ -317,23 +317,23 @@ class ThemeField < ActiveRecord::Base
       self.value_baked, self.error = translation_field? ? process_translation : process_html(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = COMPILER_VERSION
-      CSP::Extension.clear_theme_extensions_cache!
+      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
     elsif extra_js_field?
       self.value_baked, self.error = process_extra_js(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = COMPILER_VERSION
     elsif basic_scss_field?
       ensure_scss_compiles!
-      Stylesheet::Manager.clear_theme_cache!
+      DB.after_commit { Stylesheet::Manager.clear_theme_cache! }
     elsif settings_field?
       validate_yaml!
       theme.clear_cached_settings!
-      CSP::Extension.clear_theme_extensions_cache!
-      SvgSprite.expire_cache
+      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
+      DB.after_commit { SvgSprite.expire_cache }
       self.value_baked = "baked"
       self.compiler_version = COMPILER_VERSION
     elsif svg_sprite_field?
-      SvgSprite.expire_cache
+      DB.after_commit { SvgSprite.expire_cache }
       self.error = nil
       self.value_baked = "baked"
       self.compiler_version = COMPILER_VERSION
