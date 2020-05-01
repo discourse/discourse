@@ -28,7 +28,7 @@ class BookmarkQuery
 
   def list_all
     results = user_bookmarks
-      .order('bookmarks.created_at DESC')
+      .order('bookmarks.reminder_last_sent_at DESC NULLS LAST, bookmarks.created_at DESC')
 
     topics = Topic.listable_topics.secured(@guardian)
     pms = Topic.private_messages_for_user(@user)

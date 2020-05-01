@@ -4,20 +4,16 @@ require 'rails_helper'
 
 RSpec.describe BookmarkQuery do
   fab!(:user) { Fabricate(:user) }
-  fab!(:bookmark1) { Fabricate(:bookmark, user: user) }
-  fab!(:bookmark2) { Fabricate(:bookmark, user: user) }
   let(:params) { {} }
 
   def bookmark_query(user: nil, params: nil)
     BookmarkQuery.new(user: user || self.user, params: params || self.params)
   end
 
-  before do
-    TopicUser.change(user.id, bookmark1.topic_id, total_msecs_viewed: 1)
-    TopicUser.change(user.id, bookmark2.topic_id, total_msecs_viewed: 1)
-  end
-
   describe "#list_all" do
+    fab!(:bookmark1) { Fabricate(:bookmark, user: user) }
+    fab!(:bookmark2) { Fabricate(:bookmark, user: user) }
+
     it "returns all the bookmarks for a user" do
       expect(bookmark_query.list_all.count).to eq(2)
     end
@@ -141,6 +137,23 @@ RSpec.describe BookmarkQuery do
           end.topic.custom_fields['test_field']
         ).not_to eq(nil)
       end
+    end
+  end
+
+  describe "#list_all ordering" do
+    let!(:bookmark1) { Fabricate(:bookmark, user: user, created_at: 1.day.ago, reminder_last_sent_at: 10.minutes.ago) }
+    let!(:bookmark2) { Fabricate(:bookmark, user: user, created_at: 2.days.ago, reminder_last_sent_at: 5.minutes.ago) }
+    let!(:bookmark3) { Fabricate(:bookmark, user: user, created_at: 6.days.ago) }
+    let!(:bookmark4) { Fabricate(:bookmark, user: user, created_at: 2.days.ago) }
+    let!(:bookmark5) { Fabricate(:bookmark, user: user, created_at: 3.days.ago) }
+    it "orders by reminder_last_sent_at, falling back to created_at" do
+      expect(bookmark_query.list_all.map(&:id)).to eq([
+        bookmark2.id,
+        bookmark1.id,
+        bookmark4.id,
+        bookmark5.id,
+        bookmark3.id
+      ])
     end
   end
 end
