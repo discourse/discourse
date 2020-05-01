@@ -7,7 +7,7 @@ export function wantsNewWindow(e) {
     e.metaKey ||
     e.ctrlKey ||
     (e.button && e.button !== 0) ||
-    (e.target && e.target.target === "_blank")
+    (e.currentTarget && e.currentTarget.target === "_blank")
   );
 }
 
