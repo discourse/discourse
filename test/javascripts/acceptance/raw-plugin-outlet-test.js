@@ -1,10 +1,11 @@
 import { acceptance } from "helpers/qunit-helpers";
+import compile from "handlebars-compiler";
 
 const CONNECTOR =
   "javascripts/raw-test/connectors/topic-list-before-status/lala";
 acceptance("Raw Plugin Outlet", {
   beforeEach() {
-    Discourse.RAW_TEMPLATES[CONNECTOR] = Handlebars.compile(
+    Discourse.RAW_TEMPLATES[CONNECTOR] = compile(
       `<span class='topic-lala'>{{context.topic.id}}</span>`
     );
   },

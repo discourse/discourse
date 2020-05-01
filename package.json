@@ -45,7 +45,7 @@
     "chrome-launcher": "^0.12.0",
     "chrome-remote-interface": "^0.25",
     "ember-template-lint": "^2.5.2",
-    "eslint-config-discourse": "1.1.0",
+    "eslint-config-discourse": "1.1.1",
     "eslint-plugin-discourse-ember": "0.0.3",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",

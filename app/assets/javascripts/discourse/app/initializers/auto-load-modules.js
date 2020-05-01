@@ -1,6 +1,7 @@
 import { registerHelpers } from "discourse-common/lib/helpers";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
+import Handlebars from "handlebars";
 
 export function autoLoadModules(container, registry) {
   Object.keys(requirejs.entries).forEach(entry => {

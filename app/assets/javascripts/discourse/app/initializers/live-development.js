@@ -1,6 +1,7 @@
 import DiscourseURL from "discourse/lib/url";
 import { currentThemeIds, refreshCSS } from "discourse/lib/theme-selector";
 import ENV from "discourse-common/config/environment";
+import Handlebars from "handlebars";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
