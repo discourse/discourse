@@ -42,12 +42,15 @@ class Topic < ActiveRecord::Base
 
   def filtered_topic_thumbnails(extra_sizes: [])
     return nil unless original = image_upload
+    return nil unless original.width && original.height
+
     thumbnail_sizes = Topic.thumbnail_sizes + extra_sizes
     topic_thumbnails.filter { |record| thumbnail_sizes.include?([record.max_width, record.max_height]) }
   end
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
+    return nil unless original.width && original.height
 
     infos = []
     infos << { # Always add original
@@ -87,6 +90,7 @@ class Topic < ActiveRecord::Base
   def generate_thumbnails!(extra_sizes: [])
     return nil unless SiteSetting.create_thumbnails
     return nil unless original = image_upload
+    return nil unless original.width && original.height
 
     (Topic.thumbnail_sizes + extra_sizes).each do |dim|
       TopicThumbnail.find_or_create_for!(original, max_width: dim[0], max_height: dim[1])
