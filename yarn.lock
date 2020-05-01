@@ -969,10 +969,10 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-config-discourse@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.0.tgz#1f2b1ffd6064c579bc74eca63420bd3cd5732950"
-  integrity sha512-y2osWnbIi/CS2hDm61K6vdYA5vEuFJRetI2UFlEo8rQCx2t46XUd+FkgAvBy0nzLSm7ELBKru5qYKveKFF6eAg==
+eslint-config-discourse@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.1.tgz#8a7f7f6f1a388b0e88f5b79145ae2a8b4a13e3d4"
+  integrity sha512-b3dp9DOcXYWkPQpXms/bMDy0Scb6DO/nZAAsl5I9yTNhtkx96zZMTp9QEyC8QaCXOTUpIXEE6V+Mpyjtsk3gWg==
   dependencies:
     babel-eslint "^8.2"
     eslint "^4.19"

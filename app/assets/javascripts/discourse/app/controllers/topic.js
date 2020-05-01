@@ -21,6 +21,7 @@ import { userPath } from "discourse/lib/url";
 import showModal from "discourse/lib/show-modal";
 import TopicTimer from "discourse/models/topic-timer";
 import { Promise } from "rsvp";
+import { escapeExpression } from "discourse/lib/utilities";
 
 let customPostMessageCallbacks = {};
 
@@ -976,7 +977,7 @@ export default Controller.extend(bufferedProperty("model"), {
       }
 
       composerController.open(options).then(() => {
-        const title = Handlebars.escapeExpression(this.model.title);
+        const title = escapeExpression(this.model.title);
         const postUrl = `${location.protocol}//${location.host}${post.url}`;
         const postLink = `[${title}](${postUrl})`;
         const text = `${I18n.t("post.continue_discussion", {
