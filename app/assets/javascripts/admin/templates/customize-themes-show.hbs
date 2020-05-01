@@ -231,18 +231,20 @@
   {{#if extraFiles.length}}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.extra_files"}}</div>
-      <div class="description">
-        {{#if model.remote_theme}}
-          {{i18n "admin.customize.theme.extra_files_remote"}}
-        {{else}}
-          {{i18n "admin.customize.theme.extra_files_upload"}}
-        {{/if}}
-      </div>
-      <ul>
-        {{#each extraFiles as |extraFile|}}
-          <li>{{extraFile.name}}</li>
-        {{/each}}
-      </ul>
+      <details>
+        <summary>
+          {{#if model.remote_theme}}
+            {{i18n "admin.customize.theme.extra_files_remote"}}
+          {{else}}
+            {{i18n "admin.customize.theme.extra_files_upload"}}
+          {{/if}}
+        </summary>
+        <ul>
+          {{#each extraFiles as |extraFile|}}
+            <li>{{extraFile.name}}</li>
+          {{/each}}
+        </ul>
+      </details>
     </div>
   {{/if}}
 
