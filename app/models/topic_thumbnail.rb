@@ -58,8 +58,3 @@ end
 #  index_topic_thumbnails_on_upload_id           (upload_id)
 #  unique_topic_thumbnails                       (upload_id,max_width,max_height) UNIQUE
 #
-# Foreign Keys
-#
-#  fk_rails_...  (optimized_image_id => optimized_images.id) ON DELETE => cascade
-#  fk_rails_...  (upload_id => uploads.id) ON DELETE => cascade
-#

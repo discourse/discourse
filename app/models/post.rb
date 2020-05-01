@@ -1150,6 +1150,7 @@ end
 #  action_code             :string
 #  image_url               :string
 #  locked_by_id            :integer
+#  image_upload_id         :bigint
 #
 # Indexes
 #
@@ -1158,6 +1159,7 @@ end
 #  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                      (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
 #  index_posts_on_id_and_baked_version       (id DESC,baked_version) WHERE (deleted_at IS NULL)
+#  index_posts_on_image_upload_id            (image_upload_id)
 #  index_posts_on_reply_to_post_number       (reply_to_post_number)
 #  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE
