@@ -6,7 +6,7 @@
       <table class="topic-list bookmark-list">
         <thead>
           <th>{{i18n "topic.title"}}</th>
-          <th>{{i18n "post.bookmarks.created"}}</th>
+          <th>{{i18n "post.bookmarks.updated"}}</th>
           <th>{{i18n "activity"}}</th>
           <th>&nbsp;</th>
         </thead>
@@ -39,7 +39,7 @@
                   {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
                 </div>
               </td>
-              <td>{{format-date bookmark.created_at format="tiny"}}</td>
+              <td>{{format-date bookmark.updated_at format="tiny"}}</td>
               {{raw "list/activity-column" topic=bookmark class="num" tagName="td"}}
               <td>
                 {{bookmark-actions-dropdown

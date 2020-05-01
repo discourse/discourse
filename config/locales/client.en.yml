@@ -307,10 +307,10 @@ en:
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
 
     bookmarks:
-      created: "you've bookmarked this post"
+      created: "you've bookmarked this post%{name}"
       not_bookmarked: "bookmark this post"
-      created_with_reminder: "you've bookmarked this post with a reminder %{date}"
-      created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
+      created_with_reminder: "you've bookmarked this post with a reminder %{date}%{name}"
+      created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop%{name}"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
@@ -2724,6 +2724,7 @@ en:
         create: "Create bookmark"
         edit: "Edit bookmark"
         created: "Created"
+        updated: "Updated"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
         set_reminder: "Remind me"
