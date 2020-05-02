@@ -1,14 +1,17 @@
 import { acceptance, loggedInUser } from "helpers/qunit-helpers";
 import pretender from "helpers/create-pretender";
 
-acceptance("Bookmarking", {
-  loggedIn: true,
+acceptance("Bookmarking", { loggedIn: true });
 
-  beforeEach() {}
-});
+function handleRequest(assert, request) {
+  const body = request.requestBody;
+  const reminderType = body
+    .substr(0, body.indexOf("&"))
+    .replace("reminder_type=", "");
 
-function mockSuccessfulBookmarkPost() {
-  pretender.post("/bookmarks", () => [
+  assert.step(reminderType || "none");
+
+  return [
     200,
     {
       "Content-Type": "application/json"
@@ -17,15 +20,24 @@ function mockSuccessfulBookmarkPost() {
       id: 999,
       success: "OK"
     }
-  ]);
+  ];
+}
+
+function mockSuccessfulBookmarkPost(assert) {
+  pretender.post("/bookmarks", request => handleRequest(assert, request));
+  pretender.put("/bookmarks/999", request => handleRequest(assert, request));
 }
 
 async function openBookmarkModal() {
-  await click(".topic-post:first-child button.show-more-actions");
-  return await click(".topic-post:first-child button.bookmark");
+  if (exists(".topic-post:first-child button.show-more-actions")) {
+    await click(".topic-post:first-child button.show-more-actions");
+  }
+
+  await click(".topic-post:first-child button.bookmark");
 }
+
 async function openEditBookmarkModal() {
-  return await click(".topic-post:first-child button.bookmarked");
+  await click(".topic-post:first-child button.bookmarked");
 }
 
 test("Bookmarks modal opening", async assert => {
@@ -35,32 +47,45 @@ test("Bookmarks modal opening", async assert => {
 });
 
 test("Bookmarks modal selecting reminder type", async assert => {
+  mockSuccessfulBookmarkPost(assert);
+
   await visit("/t/internationalization-localization/280");
+
   await openBookmarkModal();
   await click("#tap_tile_tomorrow");
-  assert.ok(exists("#tap_tile_tomorrow.active"), "it selects tomorrow");
+
+  await openBookmarkModal();
   await click("#tap_tile_start_of_next_business_week");
-  assert.ok(
-    exists("#tap_tile_start_of_next_business_week.active"),
-    "it selects next monday"
-  );
+
+  await openBookmarkModal();
   await click("#tap_tile_next_week");
-  assert.ok(exists("#tap_tile_next_week.active"), "it selects next week");
+
+  await openBookmarkModal();
   await click("#tap_tile_next_month");
-  assert.ok(exists("#tap_tile_next_month.active"), "it selects next month");
+
+  await openBookmarkModal();
   await click("#tap_tile_custom");
   assert.ok(exists("#tap_tile_custom.active"), "it selects custom");
   assert.ok(exists(".tap-tile-date-input"), "it shows the custom date input");
   assert.ok(exists(".tap-tile-time-input"), "it shows the custom time input");
+  await click("#save-bookmark");
+
+  assert.verifySteps([
+    "tomorrow",
+    "start_of_next_business_week",
+    "next_week",
+    "next_month",
+    "custom"
+  ]);
 });
 
 test("Saving a bookmark with a reminder", async assert => {
-  mockSuccessfulBookmarkPost();
+  mockSuccessfulBookmarkPost(assert);
   await visit("/t/internationalization-localization/280");
   await openBookmarkModal();
   await fillIn("input#bookmark-name", "Check this out later");
   await click("#tap_tile_tomorrow");
-  await click("#save-bookmark");
+
   assert.ok(
     exists(".topic-post:first-child button.bookmark.bookmarked"),
     "it shows the bookmarked icon on the post"
@@ -71,13 +96,15 @@ test("Saving a bookmark with a reminder", async assert => {
     ),
     "it shows the bookmark clock icon because of the reminder"
   );
+  assert.verifySteps(["tomorrow"]);
 });
 
 test("Saving a bookmark with no reminder or name", async assert => {
-  mockSuccessfulBookmarkPost();
+  mockSuccessfulBookmarkPost(assert);
   await visit("/t/internationalization-localization/280");
   await openBookmarkModal();
   await click("#save-bookmark");
+
   assert.ok(
     exists(".topic-post:first-child button.bookmark.bookmarked"),
     "it shows the bookmarked icon on the post"
@@ -88,6 +115,7 @@ test("Saving a bookmark with no reminder or name", async assert => {
     ),
     "it shows the regular bookmark active icon"
   );
+  assert.verifySteps(["none"]);
 });
 
 test("Deleting a bookmark with a reminder", async assert => {
@@ -101,14 +129,21 @@ test("Deleting a bookmark with a reminder", async assert => {
       topic_bookmarked: false
     }
   ]);
-  mockSuccessfulBookmarkPost();
+
+  mockSuccessfulBookmarkPost(assert);
+
   await visit("/t/internationalization-localization/280");
   await openBookmarkModal();
   await click("#tap_tile_tomorrow");
-  await click("#save-bookmark");
+
+  assert.verifySteps(["tomorrow"]);
+
   await openEditBookmarkModal();
+
   assert.ok(exists("#bookmark-reminder-modal"), "it shows the bookmark modal");
+
   await click("#delete-bookmark");
+
   assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
   assert.ok(
     find(".bootbox.modal")
@@ -116,7 +151,9 @@ test("Deleting a bookmark with a reminder", async assert => {
       .includes(I18n.t("bookmarks.confirm_delete")),
     "it shows delete confirmation message"
   );
+
   await click(".bootbox.modal .btn-primary");
+
   assert.not(
     exists(".topic-post:first-child button.bookmark.bookmarked"),
     "it no longer shows the bookmarked icon on the post after bookmark is deleted"
@@ -134,14 +171,15 @@ test("Cancelling saving a bookmark", async assert => {
 });
 
 test("Editing a bookmark", async assert => {
-  mockSuccessfulBookmarkPost();
+  mockSuccessfulBookmarkPost(assert);
+
   await visit("/t/internationalization-localization/280");
   let now = moment.tz(loggedInUser().resolvedTimezone());
   let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
   await openBookmarkModal();
   await fillIn("input#bookmark-name", "Test name");
   await click("#tap_tile_tomorrow");
-  await click("#save-bookmark");
+
   await openEditBookmarkModal();
   assert.equal(
     find("#bookmark-name").val(),
@@ -158,4 +196,5 @@ test("Editing a bookmark", async assert => {
     "08:00",
     "it should prefill the bookmark time"
   );
+  assert.verifySteps(["tomorrow"]);
 });
