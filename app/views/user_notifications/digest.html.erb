@@ -50,7 +50,7 @@
             <td style="border-collapse:collapse!important;color:#0a0a0a;line-height:1.3;margin:0;padding:0;vertical-align:top;word-wrap:normal">
 
 <br/>
-<center class="header-since-last-visit with-accent-colors" style="font-size:22px;font-weight:400;"><%=t 'user_notifications.digest.since_last_visit' %></center>
+<center class="header-since-last-visit with-accent-colors" style="font-size:22px;font-weight:400;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.since_last_visit' %></center>
 
 
 
@@ -73,7 +73,7 @@
 </tbody>
 </table>
 
-<center class="header-popular-topics with-accent-colors" style="font-size:22px;font-weight:400;margin-bottom: 8px;"><%=t 'user_notifications.digest.popular_topics' %></center>
+<center class="header-popular-topics with-accent-colors" style="font-size:22px;font-weight:400;margin-bottom: 8px; mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.popular_topics' %></center>
 
 
             </td>
@@ -156,28 +156,30 @@
 </table>
 <%- end %>
 
-<table class="digest-topic-stats with-dir" style="padding:0;vertical-align:top;width:100%; margin-top:20px;">
+<table class="digest-topic-stats with-dir mso-spacing-border" style="padding:0;vertical-align:top;width:100%; margin-top:20px;">
   <tbody>
     <tr>
       <td class="digest-topic-stat" style="padding:<%= rtl? ? '0 16px 16px 8px' : '0 8px 16px 16px' %>;white-space:nowrap;vertical-align:top;width:75px">
         <img class="digest-icon" src="<%= email_image_url 'heart.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="likes">
-        <p style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;"><%= t.like_count -%></p>
+        <span style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;">&nbsp;<%= t.like_count -%></span>
       </td>
       <td class="digest-topic-stat" style="padding:0 8px 16px 8px;white-space:nowrap;vertical-align:top;width:75px">
         <img class="digest-icon" src="<%= email_image_url 'comment.png' -%>" style="clear:none;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="replies">
-        <p style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;"><%= t.posts_count - 1 -%></p>
+        <span style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;">&nbsp;<%= t.posts_count - 1 -%></span>
       </td>
       <td class="digest-topic-posters" style="padding:0 8px 16px 8px;white-space:nowrap;vertical-align:top;">
         <% t.posters_summary.each do |ps| %>
           <% if ps.user %>
-            <img src="<%= ps.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:inline-block;height:20px;width:20px;outline:0;text-decoration:none;" alt="<%= ps.user.username -%>">
+            <img src="<%= ps.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:inline-block;height:20px;width:20px;outline:0;text-decoration:none;" height="20" width="20" alt="<%= ps.user.username -%>">
           <% end %>
         <% end %>
       </td>
       <td class="digest-read-more-wrap" style="line-height:1.3;padding:<%= rtl? ? '0 8px 0 16px' : '0 16px 0 8px' %>;text-align:<%= rtl? ? 'left' : 'right' %>;white-space:nowrap;vertical-align:top;">
-        <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" class="digest-button with-accent-colors" style="width:100%;text-decoration:none;padding:8px 16px;white-space:nowrap;">
-          <%=t 'user_notifications.digest.join_the_discussion' %>
-        </a>
+        <span class="with_accent-colors mso-accent-link">
+          <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" class="digest-button with-accent-colors" style="width:100%;text-decoration:none;padding:8px 16px;white-space:nowrap;">
+            <%=t 'user_notifications.digest.join_the_discussion' %>
+          </a>
+        </span>
       </td>
     </tr>
   </tbody>
@@ -295,7 +297,7 @@
 <%= digest_custom_html("above_popular_topics") %>
 
 <% if @other_new_for_you.present? %>
-  <center class="digest-new-header" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Helvetica,Arial,sans-serif;"><%=t 'user_notifications.digest.more_new' %></center>
+<center class="digest-new-header" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Helvetica,Arial,sans-serif;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.more_new' %></center>
 
 <table class="digest-new-topics body with-dir" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
   <tr>
