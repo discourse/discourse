@@ -1,4 +1,5 @@
 import { and } from "@ember/object/computed";
+import { action } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import Controller from "@ember/controller";
 import { Promise } from "rsvp";
@@ -424,53 +425,60 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  actions: {
-    saveAndClose() {
-      if (this._saving || this._deleting) {
-        return;
-      }
+  @action
+  saveAndClose() {
+    if (this._saving || this._deleting) {
+      return;
+    }
 
-      this._saving = true;
-      this._savingBookmarkManually = true;
-      this._saveBookmark()
-        .then(() => this.send("closeModal"))
-        .catch(e => this._handleSaveError(e))
-        .finally(() => (this._saving = false));
-    },
+    this._saving = true;
+    this._savingBookmarkManually = true;
+    return this._saveBookmark()
+      .then(() => this.send("closeModal"))
+      .catch(e => this._handleSaveError(e))
+      .finally(() => (this._saving = false));
+  },
 
-    delete() {
-      this._deleting = true;
-      let deleteAction = () => {
-        this._closeWithoutSaving = true;
-        this._deleteBookmark()
-          .then(() => {
-            this._deleting = false;
-            this.send("closeModal");
-          })
-          .catch(e => this._handleSaveError(e));
-      };
-
-      if (this._existingBookmarkHasReminder()) {
-        bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
-          if (result) {
-            deleteAction();
-          }
-        });
-      } else {
-        deleteAction();
-      }
-    },
-
-    closeWithoutSavingBookmark() {
+  @action
+  delete() {
+    this._deleting = true;
+    let deleteAction = () => {
       this._closeWithoutSaving = true;
-      this.send("closeModal");
-    },
+      this._deleteBookmark()
+        .then(() => {
+          this._deleting = false;
+          this.send("closeModal");
+        })
+        .catch(e => this._handleSaveError(e));
+    };
 
-    selectReminderType(type) {
-      if (type === REMINDER_TYPES.LATER_TODAY && !this.showLaterToday) {
-        return;
-      }
-      this.set("selectedReminderType", type);
+    if (this._existingBookmarkHasReminder()) {
+      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
+        if (result) {
+          deleteAction();
+        }
+      });
+    } else {
+      deleteAction();
+    }
+  },
+
+  @action
+  closeWithoutSavingBookmark() {
+    this._closeWithoutSaving = true;
+    this.send("closeModal");
+  },
+
+  @action
+  selectReminderType(type) {
+    if (type === REMINDER_TYPES.LATER_TODAY && !this.showLaterToday) {
+      return;
+    }
+
+    this.set("selectedReminderType", type);
+
+    if (type !== REMINDER_TYPES.CUSTOM) {
+      return this.saveAndClose();
     }
   }
 });
