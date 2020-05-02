@@ -24,7 +24,7 @@ describe 'invite only' do
         HTTP_API_USERNAME: admin.username
       }
 
-      user_id = JSON.parse(response.body)["user_id"]
+      user_id = response.parsed_body["user_id"]
       expect(user_id).to be > 0
 
       # activate and approve

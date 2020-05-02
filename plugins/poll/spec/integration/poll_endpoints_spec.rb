@@ -24,7 +24,7 @@ describe "DiscoursePoll endpoints" do
 
       expect(response.status).to eq(200)
 
-      poll = JSON.parse(response.body)["voters"]
+      poll = response.parsed_body["voters"]
       option = poll[option_a]
 
       expect(option.length).to eq(1)
@@ -48,7 +48,7 @@ describe "DiscoursePoll endpoints" do
 
       expect(response.status).to eq(200)
 
-      poll = JSON.parse(response.body)["voters"]
+      poll = response.parsed_body["voters"]
 
       expect(poll[option_a]).to eq(nil)
 
@@ -112,7 +112,7 @@ describe "DiscoursePoll endpoints" do
 
         expect(response.status).to eq(200)
 
-        poll = JSON.parse(response.body)["voters"]
+        poll = response.parsed_body["voters"]
 
         expect(poll.first["id"]).to eq(user.id)
         expect(poll.first["username"]).to eq(user.username)
@@ -165,7 +165,7 @@ describe "DiscoursePoll endpoints" do
       }
 
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body).deep_symbolize_keys).to eq(
+      expect(response.parsed_body.deep_symbolize_keys).to eq(
         grouped_results: [
           { group: "Value0", options: [{ digest: option_a, html: "A", votes: 1 }, { digest: option_b, html: "B", votes: 0 }] },
           { group: "Value1", options: [{ digest: option_a, html: "A", votes: 2 }, { digest: option_b, html: "B", votes: 1 }] },

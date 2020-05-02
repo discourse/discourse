@@ -21,7 +21,7 @@ RSpec.describe MetadataController do
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       expect(response.media_type).to eq('application/manifest+json')
-      manifest = JSON.parse(response.body)
+      manifest = response.parsed_body
 
       expect(manifest["name"]).to eq(title)
 
@@ -37,7 +37,7 @@ RSpec.describe MetadataController do
       get "/manifest.webmanifest"
 
       expect(response.status).to eq(200)
-      manifest = JSON.parse(response.body)
+      manifest = response.parsed_body
       expect(manifest["icons"].first["type"]).to eq("image/jpeg")
     end
 
@@ -45,19 +45,19 @@ RSpec.describe MetadataController do
       SiteSetting.manifest_icon = upload
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
-      manifest = JSON.parse(response.body)
+      manifest = response.parsed_body
       expect(manifest["icons"].first["type"]).to eq("image/png")
     end
 
     it 'defaults to display standalone for Android' do
       get "/manifest.webmanifest", params: {}, headers: { 'USER-AGENT' => 'Mozilla/5.0 (Linux; Android 7.0; SM-G892A Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/67.0.3396.87 Mobile Safari/537.36' }
-      manifest = JSON.parse(response.body)
+      manifest = response.parsed_body
       expect(manifest["display"]).to eq("standalone")
     end
 
     it 'defaults to display standalone for iPhone' do
       get "/manifest.webmanifest", params: {}, headers: { 'USER-AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1' }
-      manifest = JSON.parse(response.body)
+      manifest = response.parsed_body
       expect(manifest["display"]).to eq("standalone")
     end
 
@@ -65,7 +65,7 @@ RSpec.describe MetadataController do
       SiteSetting.pwa_display_browser_regex = "iPhone"
 
       get "/manifest.webmanifest", params: {}, headers: { 'USER-AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1' }
-      manifest = JSON.parse(response.body)
+      manifest = response.parsed_body
       expect(manifest["display"]).to eq("browser")
     end
 
@@ -75,14 +75,14 @@ RSpec.describe MetadataController do
 
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
-      manifest = JSON.parse(response.body)
+      manifest = response.parsed_body
       expect(manifest["short_name"]).to eq("FooBarBaz")
 
       SiteSetting.short_title = "foo"
 
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
-      manifest = JSON.parse(response.body)
+      manifest = response.parsed_body
       expect(manifest["short_name"]).to eq("foo")
     end
   end

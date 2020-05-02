@@ -25,7 +25,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["poll"]["name"]).to eq("poll")
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
@@ -53,7 +53,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["poll"]["name"]).to eq("poll")
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
@@ -80,7 +80,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["poll"]["name"]).to eq("poll")
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
@@ -96,7 +96,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.requires_at_least_1_valid_option"))
     end
 
@@ -112,7 +112,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["poll"]["options"][0]["votes"]).to eq(0)
       expect(json["poll"]["options"][1]["votes"]).to eq(1)
@@ -136,7 +136,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.topic_must_be_open_to_vote"))
     end
 
@@ -148,7 +148,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
     end
 
@@ -160,7 +160,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.user_cant_post_in_topic"))
     end
 
@@ -170,7 +170,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.no_poll_with_this_name", name: "foobar"))
     end
 
@@ -182,7 +182,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.poll_must_be_open_to_vote"))
     end
 
@@ -194,7 +194,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("js.poll.results.groups.title", groups: poll.polls.first.groups))
     end
 
@@ -210,7 +210,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["poll"]["voters"]).to eq(18)
       expect(json["poll"]["options"][0]["votes"]).to eq(12)
       expect(json["poll"]["options"][1]["votes"]).to eq(6)
@@ -230,7 +230,7 @@ describe ::DiscoursePoll::PollsController do
         expect(response.status).to eq(200)
       end.first
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["poll"]["status"]).to eq("closed")
       expect(message.channel).to eq(channel)
     end
@@ -248,7 +248,7 @@ describe ::DiscoursePoll::PollsController do
         expect(response.status).to eq(200)
       end.first
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["poll"]["status"]).to eq("closed")
       expect(message.channel).to eq(channel)
     end
@@ -261,7 +261,7 @@ describe ::DiscoursePoll::PollsController do
       }, format: :json
 
       expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
     end
 
@@ -303,7 +303,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       # no user3 cause voter_limit is 2
       expect(json["voters"][first].map { |h| h["id"] }).to contain_exactly(user1.id, user2.id)
@@ -323,7 +323,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["voters"][first].size).to eq(1)
 
@@ -347,7 +347,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["voters"][first].size).to eq(1)
       expect(json["voters"][second].size).to eq(1)
@@ -378,7 +378,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["voters"][first].size).to eq(1)
     end

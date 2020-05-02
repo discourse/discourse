@@ -67,7 +67,7 @@ RSpec.describe Admin::BackupsController do
           get "/admin/backups.json"
           expect(response.status).to eq(200)
 
-          filenames = JSON.parse(response.body).map { |backup| backup["filename"] }
+          filenames = response.parsed_body.map { |backup| backup["filename"] }
           expect(filenames).to include(backup_filename)
           expect(filenames).to include(backup_filename2)
         end

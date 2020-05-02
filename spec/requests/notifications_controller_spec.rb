@@ -125,14 +125,14 @@ describe NotificationsController do
       describe '#create' do
         it "can create notification" do
           create_notification(admin.id, 200, :to_not)
-          expect(::JSON.parse(response.body)["id"]).to_not eq(nil)
+          expect(response.parsed_body["id"]).to_not eq(nil)
         end
       end
 
       describe '#update' do
         it "can update notification" do
           update_notification(8, 200, :to)
-          expect(::JSON.parse(response.body)["topic_id"]).to eq(8)
+          expect(response.parsed_body["topic_id"]).to eq(8)
         end
       end
 

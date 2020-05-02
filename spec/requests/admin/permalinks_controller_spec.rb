@@ -24,7 +24,7 @@ describe Admin::PermalinksController do
       get "/admin/permalinks.json", params: { filter: "topic" }
 
       expect(response.status).to eq(200)
-      result = JSON.parse(response.body)
+      result = response.parsed_body
       expect(result.length).to eq(2)
     end
 
@@ -37,7 +37,7 @@ describe Admin::PermalinksController do
       get "/admin/permalinks.json", params: { filter: "discourse" }
 
       expect(response.status).to eq(200)
-      result = JSON.parse(response.body)
+      result = response.parsed_body
       expect(result.length).to eq(2)
     end
 
@@ -50,7 +50,7 @@ describe Admin::PermalinksController do
       get "/admin/permalinks.json", params: { filter: "discourse" }
 
       expect(response.status).to eq(200)
-      result = JSON.parse(response.body)
+      result = response.parsed_body
       expect(result.length).to eq(3)
     end
   end

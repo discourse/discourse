@@ -36,7 +36,7 @@ describe UploadsController do
       it 'is successful with an image' do
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq 200
-        expect(JSON.parse(response.body)["id"]).to be_present
+        expect(response.parsed_body["id"]).to be_present
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
       end
 
@@ -47,7 +47,7 @@ describe UploadsController do
         expect(response.status).to eq 200
 
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
-        id = JSON.parse(response.body)["id"]
+        id = response.parsed_body["id"]
         expect(id).to be
       end
 
@@ -65,7 +65,7 @@ describe UploadsController do
           HTTP_API_USERNAME: user.username.downcase
         }
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
 
         expect(response.status).to eq(200)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
@@ -82,7 +82,7 @@ describe UploadsController do
           type: "profile_background",
         }
 
-        id = JSON.parse(response.body)["id"]
+        id = response.parsed_body["id"]
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         expect(Upload.find(id).retain_hours).to eq(100)
       end
@@ -91,7 +91,7 @@ describe UploadsController do
         post "/uploads.json", params: { type: "composer" }
 
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
-        message = JSON.parse(response.body)
+        message = response.parsed_body
         expect(response.status).to eq 422
         expect(message["errors"]).to contain_exactly(I18n.t("upload.file_missing"))
       end
@@ -104,7 +104,7 @@ describe UploadsController do
 
         expect(response.status).to eq(422)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
-        errors = JSON.parse(response.body)["errors"]
+        errors = response.parsed_body["errors"]
         expect(errors.first).to eq(I18n.t("upload.attachments.too_large", max_size_kb: 1))
       end
 
@@ -140,7 +140,7 @@ describe UploadsController do
         }
 
         expect(response.status).to eq(200)
-        id = JSON.parse(response.body)["id"]
+        id = response.parsed_body["id"]
         expect(Upload.last.id).to eq(id)
       end
 
@@ -155,7 +155,7 @@ describe UploadsController do
         }
 
         expect(response.status).to eq(200)
-        id = JSON.parse(response.body)["id"]
+        id = response.parsed_body["id"]
 
         upload = Upload.last
 
@@ -174,7 +174,7 @@ describe UploadsController do
         }
 
         expect(response.status).to eq(200)
-        data = JSON.parse(response.body)
+        data = response.parsed_body
         expect(data["id"]).to be_present
       end
 
@@ -187,7 +187,7 @@ describe UploadsController do
           type: "composer",
         }
 
-        data = JSON.parse(response.body)
+        data = response.parsed_body
         expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ''))
       end
 
@@ -196,7 +196,7 @@ describe UploadsController do
 
         expect(response.status).to eq(422)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
-        message = JSON.parse(response.body)["errors"]
+        message = response.parsed_body["errors"]
         expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
     end
@@ -214,7 +214,7 @@ describe UploadsController do
 
     expect(response.status).to eq(200)
 
-    url = JSON.parse(response.body)["url"]
+    url = response.parsed_body["url"]
     upload = Upload.get_from_url(url)
     upload
   end
@@ -465,7 +465,7 @@ describe UploadsController do
         post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
         expect(response.status).to eq(200)
 
-        result = JSON.parse(response.body)
+        result = response.parsed_body
         expect(result[0]["url"]).to match("secure-media-uploads")
       end
 
@@ -600,7 +600,7 @@ describe UploadsController do
       post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
       expect(response.status).to eq(200)
 
-      result = JSON.parse(response.body)
+      result = response.parsed_body
       expect(result[0]["url"]).to eq(upload.url)
       expect(result[0]["short_path"]).to eq(upload.short_path)
     end
@@ -623,7 +623,7 @@ describe UploadsController do
         post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
         expect(response.status).to eq(200)
 
-        result = JSON.parse(response.body)
+        result = response.parsed_body
         expect(result[0]["url"]).to match("/secure-media-uploads")
         expect(result[0]["short_path"]).to eq(upload.short_path)
       end
@@ -635,7 +635,7 @@ describe UploadsController do
         post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
         expect(response.status).to eq(200)
 
-        result = JSON.parse(response.body)
+        result = response.parsed_body
         expect(result[0]["url"]).to match("/secure-media-uploads")
         expect(result[0]["short_path"]).to eq(upload.short_path)
       end
@@ -679,7 +679,7 @@ describe UploadsController do
 
         expect(response.status).to eq(200)
 
-        result = JSON.parse(response.body)
+        result = response.parsed_body
 
         expect(result["original_filename"]).to eq(upload.original_filename)
         expect(result["width"]).to eq(upload.width)

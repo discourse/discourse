@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe TagsController do
   define_method(:get_json_body) do
-    ::JSON.parse(response.body)
+    response.parsed_body
   end
 
   let(:json) { get_json_body }
@@ -817,7 +817,7 @@ describe TagsController do
         tag3 = Fabricate(:tag)
         post "/tag/#{tag3.name}/synonyms.json", params: { synonyms: [tag.name] }
         expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['failed']).to be_present
         expect(json.dig('failed_tags', tag.name)).to be_present
       end

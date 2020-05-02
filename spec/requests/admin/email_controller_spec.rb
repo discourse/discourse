@@ -26,7 +26,7 @@ describe Admin::EmailController do
 
     it 'does not include the password in the response' do
       get "/admin/email.json"
-      mail_settings = JSON.parse(response.body)['settings']
+      mail_settings = response.parsed_body['settings']
 
       expect(
         mail_settings.select { |setting| setting['name'] == 'password' }
@@ -47,7 +47,7 @@ describe Admin::EmailController do
       get "/admin/email/sent.json"
 
       expect(response.status).to eq(200)
-      log = JSON.parse(response.body).first
+      log = response.parsed_body.first
       expect(log["id"]).to eq(email_log.id)
       expect(log["reply_key"]).to eq(nil)
 
@@ -56,7 +56,7 @@ describe Admin::EmailController do
       get "/admin/email/sent.json"
 
       expect(response.status).to eq(200)
-      log = JSON.parse(response.body).first
+      log = response.parsed_body.first
       expect(log["id"]).to eq(email_log.id)
       expect(log["reply_key"]).to eq(post_reply_key.reply_key)
     end
@@ -80,7 +80,7 @@ describe Admin::EmailController do
 
         expect(response.status).to eq(200)
 
-        logs = JSON.parse(response.body)
+        logs = response.parsed_body
 
         expect(logs.size).to eq(1)
         expect(logs.first["reply_key"]).to eq(post_reply_key_2.reply_key)
@@ -98,7 +98,7 @@ describe Admin::EmailController do
 
       expect(response.status).to eq(200)
 
-      logs = JSON.parse(response.body)
+      logs = response.parsed_body
 
       expect(logs.first["id"]).to eq(log2.id)
       expect(logs.last["id"]).to eq(log1.id)
@@ -112,7 +112,7 @@ describe Admin::EmailController do
 
         expect(response.status).to eq(200)
 
-        logs = JSON.parse(response.body)
+        logs = response.parsed_body
 
         expect(logs.count).to eq(1)
         expect(logs.first["id"]).to eq(log1.id)
@@ -147,7 +147,7 @@ describe Admin::EmailController do
           admin.email
         )
 
-        incoming = JSON.parse(response.body)
+        incoming = response.parsed_body
         expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
       end
 
@@ -160,7 +160,7 @@ describe Admin::EmailController do
           eviltrout.email
         )
 
-        incoming = JSON.parse(response.body)
+        incoming = response.parsed_body
         expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
       end
 
@@ -173,7 +173,7 @@ describe Admin::EmailController do
           eviltrout.email
         )
 
-        incoming = JSON.parse(response.body)
+        incoming = response.parsed_body
         expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
       end
     end
@@ -214,7 +214,7 @@ describe Admin::EmailController do
       Fabricate(:incoming_email, error: "")
       get "/admin/email/rejected.json"
       expect(response.status).to eq(200)
-      rejected = JSON.parse(response.body)
+      rejected = response.parsed_body
       expect(rejected.first['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
     end
   end
@@ -224,7 +224,7 @@ describe Admin::EmailController do
       incoming_email = Fabricate(:incoming_email, error: "")
       get "/admin/email/incoming/#{incoming_email.id}.json"
       expect(response.status).to eq(200)
-      incoming = JSON.parse(response.body)
+      incoming = response.parsed_body
       expect(incoming['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
     end
   end
@@ -234,7 +234,7 @@ describe Admin::EmailController do
       get "/admin/email/incoming_from_bounced/12345.json"
       expect(response.status).to eq(404)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"]).to include("Discourse::InvalidParameters")
     end
 
@@ -242,7 +242,7 @@ describe Admin::EmailController do
       get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
       expect(response.status).to eq(404)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"]).to include("Discourse::InvalidParameters")
     end
 
@@ -262,7 +262,7 @@ describe Admin::EmailController do
         get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
         expect(response.status).to eq(200)
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["error"]).to eq(error_message)
       end
 
@@ -276,7 +276,7 @@ describe Admin::EmailController do
         get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
         expect(response.status).to eq(200)
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["error"]).to eq(error_message)
       end
 
@@ -286,7 +286,7 @@ describe Admin::EmailController do
         get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
         expect(response.status).to eq(404)
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["errors"]).to include("Discourse::InvalidParameters")
       end
 
@@ -294,7 +294,7 @@ describe Admin::EmailController do
         get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
         expect(response.status).to eq(404)
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["errors"]).to include("Discourse::NotFound")
       end
     end
@@ -317,7 +317,7 @@ describe Admin::EmailController do
       EMAIL
       post "/admin/email/advanced-test.json", params: { email: email }
       expect(response.status).to eq(200)
-      incoming = JSON.parse(response.body)
+      incoming = response.parsed_body
       expect(incoming['format']).to eq(1)
       expect(incoming['text']).to eq("Hello, this is a test!")
       expect(incoming['elided']).to eq("---\n\nThis part should be elided.")
