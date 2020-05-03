@@ -218,7 +218,6 @@ module Email
       style('.lightbox-wrapper .meta', 'display: none')
       style('div.undecorated-link-footer a', "font-weight: normal;")
       style('.mso-accent-link', "mso-border-alt: 6px solid #{SiteSetting.email_accent_bg_color};")
-      style('.mso-border-top', "mso-border-top-alt: 12px solid #FEFEFE;")
 
       onebox_styles
       plugin_styles
