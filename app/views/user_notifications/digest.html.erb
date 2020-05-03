@@ -145,10 +145,10 @@
 </table>
 
 <%- if t.first_post.present? && !t.first_post.user_deleted %>
-<table class="digest-topic-body with-dir" style="border-bottom:1px solid #f3f3f3;mso-border-bottom-alt:none;padding:0;vertical-align:top;width:100%;mso-padding-alt: 16px;">
+<table class="digest-topic-body with-dir" style="border-bottom:1px solid #f3f3f3;mso-border-bottom-alt:none;padding:0;vertical-align:top;width:100%;">
   <tbody>
     <tr>
-      <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;padding:0 16px 0 16px;width:100%;font-weight:normal;">
+      <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;padding:0 16px 0 16px;width:100%;font-weight:normal;mso-padding-alt: 16px;">
         <%= @excerpts[t.first_post.id] %>
       </td>
     </tr>
