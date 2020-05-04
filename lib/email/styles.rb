@@ -217,6 +217,7 @@ module Email
       style('.whisper div.body', 'font-style: italic; color: #9c9c9c;')
       style('.lightbox-wrapper .meta', 'display: none')
       style('div.undecorated-link-footer a', "font-weight: normal;")
+      style('.mso-accent-link', "mso-border-alt: 6px solid #{SiteSetting.email_accent_bg_color}; background-color: #{SiteSetting.email_accent_bg_color};")
 
       onebox_styles
       plugin_styles
