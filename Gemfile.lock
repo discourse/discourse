@@ -317,8 +317,8 @@ GEM
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
       rspec-mocks (~> 3.9.0)
-    rspec-core (3.9.1)
-      rspec-support (~> 3.9.1)
+    rspec-core (3.9.2)
+      rspec-support (~> 3.9.3)
     rspec-expectations (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
@@ -328,15 +328,15 @@ GEM
     rspec-mocks (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
-    rspec-rails (4.0.0.beta2)
+    rspec-rails (4.0.0)
       actionpack (>= 4.2)
       activesupport (>= 4.2)
       railties (>= 4.2)
-      rspec-core (~> 3.8)
-      rspec-expectations (~> 3.8)
-      rspec-mocks (~> 3.8)
-      rspec-support (~> 3.8)
-    rspec-support (3.9.2)
+      rspec-core (~> 3.9)
+      rspec-expectations (~> 3.9)
+      rspec-mocks (~> 3.9)
+      rspec-support (~> 3.9)
+    rspec-support (3.9.3)
     rswag-specs (2.3.1)
       activesupport (>= 3.1, < 7.0)
       json-schema (~> 2.2)
@@ -525,7 +525,7 @@ DEPENDENCIES
   rqrcode
   rspec
   rspec-html-matchers
-  rspec-rails (= 4.0.0.beta2)
+  rspec-rails
   rswag-specs
   rtlit
   rubocop
