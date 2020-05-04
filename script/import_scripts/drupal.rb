@@ -372,7 +372,6 @@ class ImportScripts::Drupal < ImportScripts::Base
             FROM field_data_field_post_attachment fp 
        LEFT JOIN file_managed fm 
               ON fp.field_post_attachment_fid = fm.fid
-           WHERE fid = 8343
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
       SQL
@@ -424,7 +423,7 @@ class ImportScripts::Drupal < ImportScripts::Base
     byebug if post.user.id == nil
     upload = create_upload(post.user.id || -1, file, real_filename)
 
-    if upload.nil? || !upload.valid?
+    if upload.nil? || upload.errors.any?
       puts "Upload not valid"
       puts upload.errors.inspect if upload
       return
