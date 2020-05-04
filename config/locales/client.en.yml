@@ -4350,7 +4350,7 @@ en:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
         merge:
-          transfer_and_delete: "Transfer & Delete"
+          button: "Merge"
           prompt:
             title: "Transfer & Delete @%{username}"
             description: |
