@@ -27,22 +27,23 @@ class ImportScripts::Drupal < ImportScripts::Base
 
   def execute
 
-    import_users
-    import_categories
+    #import_users
+    #import_categories
 
 
     # "Nodes" in Drupal are divided into types. Here we import two types,
     # and will later import all the comments/replies for each node.
     # You will need to figure out what the type names are on your install and edit the queries to match.
     if ENV['DRUPAL_IMPORT_BLOG']
-      import_blog_topics
+      #import_blog_topics
     end
 
-    import_forum_topics
+    #import_forum_topics
 
-    import_replies
-    import_likes
-    mark_topics_as_solved
+    #import_replies
+    #import_likes
+    #mark_topics_as_solved
+    import_sso_records
 
     begin
       create_admin(email: 'neil.lalonde@discourse.org', username: UserNameSuggester.suggest('neil'))
@@ -321,6 +322,34 @@ class ImportScripts::Drupal < ImportScripts::Base
       PostCustomField.create!(post_id: post_id, name: "is_accepted_answer", value: true)
       TopicCustomField.create!(topic_id: topic_id, name: "accepted_answer_post_id", value: post_id)
     end
+  end
+
+  def import_sso_records
+    puts "", "importing sso records"
+
+    start_time = Time.now
+    current_count = 0
+
+    users = UserCustomField.where(name: "import_id")
+
+    total_count = users.count
+
+    return if users.empty?
+
+    users.each do |ids|
+      user_id = ids.user_id
+      external_id = ids.value
+      next unless user = User.find(user_id)
+      
+      begin
+        current_count += 1
+        print_status(current_count, total_count, start_time)
+        SingleSignOnRecord.create!(user_id: user.id, external_id: external_id, external_email: user.email, last_payload: '')
+      rescue
+        next
+      end
+    end
+
   end
 
   def mysql_query(sql)
