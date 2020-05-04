@@ -8,9 +8,10 @@
   </div>
 {{/if}}
 
-{{#if hasNotifications}}
-  {{notifications-filter value=filter onChange=(action "filterNotifications")}}
-  <span class="user-notifications-filter-separator"></span>
+{{notifications-filter value=filter onChange=(action "filterNotifications")}}
+<span class="user-notifications-filter-separator"></span>
+
+{{#if hasFilteredNotifications}}
   {{user-notifications-large notifications=model filter=filter}}
   {{conditional-loading-spinner condition=loading}}
 {{else}}
