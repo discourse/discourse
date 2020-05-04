@@ -143,11 +143,16 @@ export function selectedText() {
     }
 
     if ($codeBlockTest.length) {
-      const $pre = $("<pre>");
       const $code = $("<code>");
       $code.append(range.cloneContents());
-      $pre.append($code);
-      $div.append($pre);
+      // Even though this was a code block, produce a non-block quote if it's a single line.
+      if (/\n/.test($code.text())) {
+        const $pre = $("<pre>");
+        $pre.append($code);
+        $div.append($pre);
+      } else {
+        $div.append($code);
+      }
     } else {
       $div.append(range.cloneContents());
     }
