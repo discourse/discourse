@@ -206,6 +206,28 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(1)
     end
 
+    it 'does notify when edit right after like' do
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
+      Notification.create!(topic: post.topic,
+                           post_number: post.post_number,
+                           read: false,
+                           notification_type: Notification.types[:liked],
+                           user: evil_trout,
+                           data: { topic_title: "test topic" }.to_json
+                          )
+      post_revision = Fabricate(:post_revision, post: post)
+
+      expect {
+        described_class.new.create_notification(
+          evil_trout,
+          Notification.types[:edited],
+          post_revision.post,
+          display_username: post_revision.user.username,
+          acting_user_id: post_revision&.user_id,
+          revision_number: post_revision.number)
+      }.to change(evil_trout.notifications, :count).by(1)
+    end
+
     it 'does not collapse quote notifications' do
       expect {
         2.times do
