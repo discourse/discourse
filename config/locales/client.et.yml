@@ -27,7 +27,6 @@ et:
         millions: "{{number}}M"
     dates:
       time: "hh:mm"
-      time_with_zone: "hh:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D. MMMM"
       full_no_year_no_time: "Do MMMM"
@@ -230,7 +229,6 @@ et:
         bookmark: "Kliki selle teema esimesele postitusele järjehoidja lisamiseks"
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
-      created: "lisasid sellele postitusele järjehoidja"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       remove: "Eemalda järjehoidja"
       save: "Salvesta"
@@ -555,6 +553,10 @@ et:
       private_message: "Sõnum"
       private_messages: "Sõnumid"
       user_notifications:
+        filters:
+          all: "Kõik"
+          read: "Loe"
+          unread: "Lugemata"
         ignore_duration_username: "Kasutajanimi"
         ignore_duration_save: "Ignoreeri"
         mute_option: "Vaigistatud"
@@ -963,6 +965,7 @@ et:
     assets_changed_confirm: "See sait on just uuendatud. Värskendan nüüd viimasele versioonile?"
     logout: "Sind logiti välja."
     refresh: "Värskenda"
+    home: "Avaleht"
     read_only_mode:
       enabled: "See sait on kirjutuskaitstud režiimis. Sirvimist saab jätkata, kuid vastamine, meeldimine ja teised toimingud on hetkel blokeeritud."
       login_disabled: "Sisselogimine on blokeeritud seni, kuni sait on kirjutuskaitstud režiimis."

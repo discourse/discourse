@@ -12,6 +12,9 @@ ko:
         today: 오늘 %{time}
         tomorrow: 내일 %{time}
         yesterday: 어제 %{time}
+        countdown:
+          passed: 날짜가 지났습니다
+      title: 날짜 / 시간 삽입
       create:
         form:
           insert: 삽입
@@ -28,6 +31,7 @@ ko:
           time_title: 시간
           format_title: 날짜 형식
           timezone: 시간대
+          until: 까지...
           recurring:
             every_day: "매일"
             every_week: "매주"

@@ -27,7 +27,6 @@ sw:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      time_with_zone: "h:mm a (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -233,7 +232,6 @@ sw:
         bookmark: "Bonyeza kualamisha chapisho la kwanza kwenye mada hii"
         unbookmark: "Bofya kuondoa mialamisho yote kwenye mada hii"
     bookmarks:
-      created: "umealamisha chapisho hili"
       not_bookmarked: "alamisha chapisho hili"
       remove: "Ondoa Alamisho"
       confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
@@ -558,6 +556,10 @@ sw:
       private_message: "Ujumbe"
       private_messages: "Ujumbe"
       user_notifications:
+        filters:
+          all: "Zote"
+          read: "Soma"
+          unread: "Haijasomwa"
         ignore_duration_username: "Jina la mtumiaji"
         ignore_duration_save: "Puuzia"
         mute_option: "Imenyamazishwa"
@@ -966,6 +968,7 @@ sw:
     assets_changed_confirm: "Tovuti hii imesasishwa hivi karibuni. Rudisha tena kupata toleo la hivi karibuni?"
     logout: "Ulitolewa."
     refresh: "Rudisha Tena"
+    home: "Nyumbani"
     read_only_mode:
       enabled: "Tovuti hii ipo kwenye hali-tumizi ya usomaji tu. Tafadhali endelea kuperuzi, lakini kujibu, kupenda na vitendo vingine vimesitishwa kwa sasa."
       login_disabled: "Kuingia kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
@@ -1603,7 +1606,6 @@ sw:
           "2_8": "Utaona jumla ya majibu mapya kwa sababu unafuatilia kategoria hii."
           "2_4": "Utaweza kuona jumla ya majibu mapya kwa sababu ulichapisha jibu kwenye mada hii."
           "2_2": "Utaweza kuona jumla ya majibu mapya kwa sababu unafuatilia mada hii."
-          "2": 'Utaweza kuona jumla ya majibu mapya kwa sababu uli<a href="{{basePath}}/u/{{username}}/preferences">soma mada hii</a>.'
           "1_2": "Utajulishwa kama mtu akitaja @jina lako au akikujibu."
           "1": "Utajulishwa kama mtu akitaja @jina lako au akikujibu."
           "0_7": "Unapuuzia taarifa za kategoria hii."
@@ -2142,7 +2144,6 @@ sw:
         this_week: "Wiki"
         today: "Leo"
         other_periods: "tazama juu"
-    browser_update: 'Kwa bahati mbaya, <a href="https://www.discourse.org/faq/#browser">kivinjari unachotumia kimepita mda na hakiwezi kufungua tovuti hii</a>. Tafadhali <a href="https://browsehappy.com">sasisha kivinjari chako</a>.'
     permission_types:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"

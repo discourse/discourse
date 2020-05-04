@@ -27,7 +27,6 @@ hu:
         millions: "{{number}} millió"
     dates:
       time: "h:mm a"
-      time_with_zone: "h:mm a (z)"
       timeline_date: "YYYY MMMM"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMM DD"
@@ -260,7 +259,6 @@ hu:
         bookmark: "Kattintson a téma első bejegyzésének könyvjelzőzéséhez"
         unbookmark: "Kattintson a téma valamennyi könyvjelzőjének törléséhez"
     bookmarks:
-      created: "könyvjelzőzte ezt a bejegyzést"
       not_bookmarked: "bejegyzés könyvjelzőzése"
       remove: "Könyvjelző eltávolítása"
       confirm_clear: "Biztos, hogy törli az összes könyvjelzőjétt ebből a témából?"
@@ -718,6 +716,10 @@ hu:
       private_message: "Üzenet"
       private_messages: "Üzenetek"
       user_notifications:
+        filters:
+          all: "Mind"
+          read: "Olvasás"
+          unread: "Olvasatlan"
         ignore_duration_title: "Időzítő figyelmen kívül hagyása"
         ignore_duration_username: "Felhasználónév"
         ignore_duration_when: "Időtartam:"
@@ -1163,6 +1165,7 @@ hu:
     assets_changed_confirm: "Az oldal frissítve lett. Frissíts a legújabb verzióért "
     logout: "Kijelentkeztél."
     refresh: "Frissítés"
+    home: "Kezdőlap"
     read_only_mode:
       enabled: "Az oldal \"csak olvasható\" módban van. Kérlek, folytasd tovább a böngészést, de a válaszolás, kedvelések és más tevékenységek egyelőre le vannak tiltva."
       login_disabled: "A belépés le van tiltva, amíg az oldal \"csak olvasható\" módban van."

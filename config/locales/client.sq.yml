@@ -27,7 +27,6 @@ sq:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      time_with_zone: "h:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -215,7 +214,6 @@ sq:
         bookmark: "Kliko për të shtuar tek të preferuarat e tua postimin e parë të kësaj teme."
         unbookmark: "Kliko për të hequr të preferuarat nga kjo temë"
     bookmarks:
-      created: "ju ruajtët këtë temë tek të preferuarat tuaja"
       remove: "Hiqeni nga të prefereruarat"
       save: "Ruaj"
     drafts:
@@ -459,6 +457,10 @@ sq:
       private_message: "Mesazh"
       private_messages: "Mesazhet"
       user_notifications:
+        filters:
+          all: "Të gjitha"
+          read: "Lexo"
+          unread: "Të palexuara"
         ignore_duration_username: "Emri i përdoruesit"
         mute_option: "Pa njoftime"
         normal_option: "Normal"
@@ -816,6 +818,7 @@ sq:
     assets_changed_confirm: "Faqja u azhornua. Doni t'a rifreskoni tani për versionin e fundit?"
     logout: "Ju jeni shkëputur!"
     refresh: "Rifresko"
+    home: "Kryefaqja"
     read_only_mode:
       enabled: "Faqja lejon vetëm leximet per momentin. Mund të vazhdoni të shfletoni, por përgjigjet, pëlqimet dhe veprime të tjera janë të çaktivizuara përkohësisht."
       login_disabled: "Nuk mund të hyni në faqe sepse faqja është përkohësisht në formatin vetëm-lexim."
@@ -1234,7 +1237,6 @@ sq:
           "2_8": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë kategori. "
           "2_4": "Ju do të shikoni numrin e përgjigjeve të reja sepse ju postuat një përgjigje në këtë temë. "
           "2_2": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë temë. "
-          "2": 'Ju do të shikoni numrin e përgjigjeve të reja sepse ju <a href="{{basePath}}/u/{{username}}/preferences">lexuat këtë temë</a>.'
           "1_2": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "1": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "0_7": "Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. "

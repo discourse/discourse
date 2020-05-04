@@ -173,10 +173,13 @@ bg:
   excerpt_image: "изображение"
   bookmarks:
     reminders:
+      at_desktop: "Следващия път, когато съм на компютъра"
       later_today: "По-късно днес"
+      next_business_day: "Следващия работен ден"
       tomorrow: "Утре"
       next_week: "Следваща седмица"
       next_month: "Следващия месец"
+      custom: "Друга дата и час"
   groups:
     errors:
       invalid_domain: "'%{domain}' е невалиден домейн."
@@ -1255,6 +1258,8 @@ bg:
       description: Получени 2 харесвания на 100 публикации
     admired:
       description: Получил 5 харесвания за 300 публикации
+    out_of_love:
+      name: От любов
     crazy_in_love:
       name: Луди от любов
     thank_you:

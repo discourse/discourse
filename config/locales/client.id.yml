@@ -26,7 +26,6 @@ id:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      time_with_zone: "h:mm a (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
@@ -238,7 +237,6 @@ id:
         bookmark: "Klik untuk membuat penandaan pos pertama di topik ini"
         unbookmark: "Klik untuk menghapus semua penandaan di topik ini"
     bookmarks:
-      created: "Anda telah menandai post ini"
       not_bookmarked: "tandai pos ini"
       remove: "Hilangkan penandaan"
       confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
@@ -669,6 +667,10 @@ id:
       private_message: "pesan"
       private_messages: "Messages"
       user_notifications:
+        filters:
+          all: "Semua"
+          read: "Dibaca"
+          unread: "Belum dibaca"
         ignore_duration_title: "Abaikan Timer"
         ignore_duration_username: "Nama Pengguna"
         ignore_duration_when: "Durasi:"
@@ -1048,6 +1050,7 @@ id:
     close: "Tutup"
     logout: "Anda telah keluar."
     refresh: "Segarkan"
+    home: "Beranda"
     read_only_mode:
       logout_disabled: "Logout di-nonaktifkan saat situs dalam mode hanya-baca."
     all_time: "total"

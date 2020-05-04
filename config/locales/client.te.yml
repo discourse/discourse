@@ -24,7 +24,6 @@ te:
             tb: టీబీ
     dates:
       time: "h:mm a"
-      time_with_zone: "h:mm a (z)"
       long_no_year_no_time: "MMM D"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
@@ -162,7 +161,6 @@ te:
         bookmark: "ఈ అంశంపై మొదటి టపాకి పేజీకలను పెట్టండి"
         unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
     bookmarks:
-      created: "ఈ టపాకు పేజీక ఉంచారు"
       remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
       reminders:
@@ -350,6 +348,10 @@ te:
         rate_limit_error: "టపాలు కేవలం రోజుకు ఒకసారి మాత్రమే దిగుమతించుకోగలరు. దయచేసి రేపు ప్రయత్నించండి."
       private_messages: "సందేశాలు"
       user_notifications:
+        filters:
+          all: "అన్నీ"
+          read: "చదివిన"
+          unread: "చదవని"
         ignore_duration_username: "వాడుకరి పేరు"
         mute_option: "నిశ్శబ్దం"
       activity_stream: "కలాపం"

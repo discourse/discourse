@@ -27,7 +27,6 @@ ca:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      time_with_zone: "h:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -260,7 +259,6 @@ ca:
         bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
     bookmarks:
-      created: "heu marcat aquesta publicació com a preferit"
       not_bookmarked: "marca aquesta publicació com a preferit"
       remove: "Elimina preferit"
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
@@ -732,6 +730,10 @@ ca:
       private_message: "Missatge"
       private_messages: "Missatges"
       user_notifications:
+        filters:
+          all: "Tot"
+          read: "Llegit"
+          unread: "No llegits"
         ignore_duration_title: "Ignora el temporitzador"
         ignore_duration_username: "Nom d'usuari "
         ignore_duration_when: "Duració:"
@@ -1241,6 +1243,7 @@ ca:
     assets_changed_confirm: "El lloc web s'ha actualitzat. Voleu tornar a carregar la pàgina per a la versió més recent?"
     logout: "Heu tancat la sessió."
     refresh: "Actualitza"
+    home: "Pàgina principal"
     read_only_mode:
       enabled: "El lloc web és en mode només de lectura. Continueu navegant, però de moment estan desactivades les accions de respondre, 'm'agrada' i altres."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
@@ -1984,7 +1987,6 @@ ca:
           "2_8": "Veureu un recompte de respostes perquè seguiu aquesta categoria. "
           "2_4": "Rebreu notificacions perquè heu escrit una resposta a aquest tema."
           "2_2": "Rebreu notificacions perquè seguiu aquest tema."
-          "2": 'Rebreu notificacions perquè heu <a href="{{basePath}}/u/{{username}}/preferences">llegit aquest tema</a>.'
           "1_2": "Sereu notificat si algú menciona el vostre @nom o us respon."
           "1": "Sereu notificat si algú us @menciona o us respon."
           "0_7": "No esteu fent cas de les notificacions d'aquesta categoria."
@@ -2381,6 +2383,7 @@ ca:
             button: "HTML"
       bookmarks:
         created: "Creat"
+        updated: "Actualitzat"
         name: "Nom"
     category:
       can: "pot&hellip; "
@@ -2686,7 +2689,6 @@ ca:
         this_week: "Setmana"
         today: "Avui"
         other_periods: "mira dalt de tot"
-    browser_update: 'Malauradament, <a href="http://www.discourse.org/faq/#browser">el vostre navegador és massa antic per a treballar amb aquest lloc web</a>. <a href="http://browsehappy.com">Actualitzeu el navegador</a>.'
     permission_types:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"

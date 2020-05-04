@@ -115,11 +115,6 @@ hu:
       random_mention:
         reply: |-
           Üdv! Hogy megtudja mit tudok, mondja ezt: `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Jelenleg ezeket tudom csinálni:
-
-          `@%{discobot_username} %{reset_trigger} {oktatás-neve}`
-          > Elindítja az interaktív eligazítást. Az `{oktatás-neve}` ezek egyike lehet: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
