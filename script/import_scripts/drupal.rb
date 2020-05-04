@@ -9,6 +9,7 @@ class ImportScripts::Drupal < ImportScripts::Base
   DRUPAL_DB = ENV['DRUPAL_DB'] || "firecore"
   VID = ENV['DRUPAL_VID'] || 1
   BATCH_SIZE = 1000
+  ATTACHMENT_DIR = "/root/files/upload"
 
 
   def initialize
@@ -43,7 +44,8 @@ class ImportScripts::Drupal < ImportScripts::Base
     #import_replies
     #import_likes
     #mark_topics_as_solved
-    import_sso_records
+    #import_sso_records
+    import_attachments
 
     begin
       create_admin(email: 'neil.lalonde@discourse.org', username: UserNameSuggester.suggest('neil'))
@@ -349,7 +351,86 @@ class ImportScripts::Drupal < ImportScripts::Base
         next
       end
     end
+  end
 
+  def import_attachments
+    puts "", "importing attachments"
+
+    current_count = 0
+    success_count = 0
+    fail_count = 0
+
+    total_count = mysql_query(<<-SQL
+      SELECT count(field_post_attachment_fid) count
+        FROM field_data_field_post_attachment
+    SQL
+    ).first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      attachments = mysql_query(<<-SQL
+          SELECT * 
+            FROM field_data_field_post_attachment fp 
+       LEFT JOIN file_managed fm 
+              ON fp.field_post_attachment_fid = fm.fid
+           WHERE fid = 8343
+           LIMIT #{BATCH_SIZE}
+          OFFSET #{offset}
+      SQL
+      ).to_a
+
+      break if attachments.size < 1
+
+      attachments.each do |attachment|
+        current_count += 1
+        print_status current_count, total_count
+
+        identifier = attachment['entity_type'] == "comment" ? "cid" : "nid"
+        next unless user_id = user_id_from_imported_user_id(attachment['uid'])
+        next unless post_id = post_id_from_imported_post_id("#{identifier}:#{attachment['entity_id']}")
+        next unless user = User.find(user_id)
+        next unless post = Post.find(post_id)
+
+        begin
+        byebug if current_count == 150
+        new_raw = post.raw.dup
+        upload, filename = find_upload(post, attachment)
+
+        unless upload
+          fail_count += 1
+          next
+        end
+
+        upload_html = html_for_upload(upload, filename)
+        new_raw = "#{new_raw}\n\n#{upload_html}" unless new_raw.include?(upload_html)
+
+        if new_raw != post.raw
+          PostRevisor.new(post).revise!(post.user, {raw: new_raw}, bypass_bump: true, edit_reason: "Import attachment from Drupal")
+        end
+
+        success_count += 1
+        rescue => e
+          puts e
+        end
+      end
+    end
+  end
+
+  def find_upload(post, attachment)
+    real_filename = CGI.unescapeHTML(attachment['filename'])
+    file = File.join(ATTACHMENT_DIR, real_filename)
+
+    return unless File.exists?(file)
+
+    byebug if post.user.id == nil
+    upload = create_upload(post.user.id || -1, file, real_filename)
+
+    if upload.nil? || !upload.valid?
+      puts "Upload not valid"
+      puts upload.errors.inspect if upload
+      return
+    end
+
+    [upload, real_filename]
   end
 
   def mysql_query(sql)
