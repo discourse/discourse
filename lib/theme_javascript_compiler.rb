@@ -195,9 +195,9 @@ class ThemeJavascriptCompiler
     compiled = RawTemplatePrecompiler.new(@theme_id).compile(hbs_template)
     @content << <<~JS
       (function() {
-        if ('Discourse' in window) {
-          Discourse.RAW_TEMPLATES[#{raw_template_name(name)}] = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
-        }
+        const addRawTemplate = requirejs('discourse-common/lib/raw-templates').addRawTemplate;
+        const template = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
+        addRawTemplate(#{raw_template_name(name)}, template);
       })();
     JS
   rescue Barber::PrecompilerError => e

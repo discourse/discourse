@@ -1,5 +1,6 @@
 import Site from "discourse/models/site";
 import deprecated from "discourse-common/lib/deprecated";
+import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 
 let _connectorCache;
 let _rawConnectorCache;
@@ -82,16 +83,6 @@ function buildConnectorCache() {
   });
 }
 
-function buildRawConnectorCache() {
-  _rawConnectorCache = {};
-  findOutlets(Discourse.RAW_TEMPLATES, (outletName, resource) => {
-    _rawConnectorCache[outletName] = _rawConnectorCache[outletName] || [];
-    _rawConnectorCache[outletName].push({
-      template: Discourse.RAW_TEMPLATES[resource]
-    });
-  });
-}
-
 export function connectorsFor(outletName) {
   if (!_connectorCache) {
     buildConnectorCache();
@@ -107,7 +98,7 @@ export function renderedConnectorsFor(outletName, args, context) {
 
 export function rawConnectorsFor(outletName) {
   if (!_rawConnectorCache) {
-    buildRawConnectorCache();
+    _rawConnectorCache = buildRawConnectorCache(findOutlets);
   }
   return _rawConnectorCache[outletName] || [];
 }
