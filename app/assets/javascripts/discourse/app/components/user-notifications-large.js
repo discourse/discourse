@@ -6,11 +6,15 @@ export default MountWidget.extend({
 
   init() {
     this._super(...arguments);
-    this.args = { notifications: this.notifications };
+    this.args = { notifications: this.notifications, filter: this.filter };
   },
 
-  @observes("notifications.length", "notifications.@each.read")
+  @observes("notifications.length", "notifications.@each.read", "filter")
   _triggerRefresh() {
+    this.set("args", {
+      notifications: this.notifications,
+      filter: this.filter
+    });
     this.queueRerender();
   }
 });

@@ -835,6 +835,11 @@ en:
       private_message: "Message"
       private_messages: "Messages"
       user_notifications:
+        filters:
+          filter_by: "Filter By"
+          all: "All"
+          read: "Read"
+          unread: "Unread"
         ignore_duration_title: "Ignore Timer"
         ignore_duration_username: "Username"
         ignore_duration_when: "Duration:"

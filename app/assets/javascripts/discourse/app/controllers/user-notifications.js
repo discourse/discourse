@@ -8,14 +8,20 @@ export default Controller.extend({
   application: controller(),
   router: service(),
   currentPath: readOnly("router._router.currentPath"),
+  filter: "all",
 
   @observes("model.canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
-  @discourseComputed("model.content.length")
-  hasNotifications(length) {
+  @discourseComputed("model.content.length", "filter")
+  hasNotifications(length, filter) {
+    if (filter === "read") {
+      return this.model.filterBy("read", true).length > 0;
+    } else if (filter === "unread") {
+      return this.model.filterBy("read", false).length > 0;
+    }
     return length > 0;
   },
 
@@ -35,6 +41,10 @@ export default Controller.extend({
 
     loadMore() {
       this.model.loadMore();
+    },
+
+    filterNotifications(value) {
+      this.set("filter", value);
     }
   }
 });
