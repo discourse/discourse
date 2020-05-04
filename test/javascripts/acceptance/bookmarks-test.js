@@ -1,15 +1,12 @@
 import { acceptance, loggedInUser } from "helpers/qunit-helpers";
 import pretender from "helpers/create-pretender";
+import { parsePostData } from "helpers/create-pretender";
 
 acceptance("Bookmarking", { loggedIn: true });
 
 function handleRequest(assert, request) {
-  const body = request.requestBody;
-  const reminderType = body
-    .substr(0, body.indexOf("&"))
-    .replace("reminder_type=", "");
-
-  assert.step(reminderType || "none");
+  const data = parsePostData(request.requestBody);
+  assert.step(data.reminder_type || "none");
 
   return [
     200,
