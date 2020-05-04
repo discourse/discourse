@@ -1,6 +1,7 @@
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { htmlSafe } from "@ember/template";
+import { setOwner } from "@ember/application";
 
 let _injections;
 
@@ -16,6 +17,7 @@ function renderRaw(ctx, container, template, templateName, params) {
       session: container.lookup("session:main"),
       topicTrackingState: container.lookup("topic-tracking-state:main")
     };
+    setOwner(_injections, container);
   }
 
   if (!params.view) {
