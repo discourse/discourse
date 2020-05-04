@@ -956,6 +956,16 @@ RSpec.describe TopicsController do
           expect(::JSON.parse(response.body)['basic_topic']).to be_present
         end
 
+        it "throws an error if it could not be saved" do
+          PostRevisor.any_instance.stubs(:should_revise?).returns(false)
+          put "/t/#{topic.slug}/#{topic.id}.json", params: { title: "brand new title" }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body['errors'].first).to eq(
+            I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_update")
+          )
+        end
+
         it "can update a topic to an uncategorized topic" do
           topic.update!(category: Fabricate(:category))
 

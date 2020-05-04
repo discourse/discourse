@@ -27,6 +27,7 @@
       top: 0;
       align-items: center;
       justify-content: center;
+      max-width: 450px;
     }
 
     .select-kit-collection {
@@ -132,7 +133,7 @@
     display: none;
     background: $secondary;
     box-sizing: border-box;
-    min-width: inherit;
+    width: auto;
   }
 
   .select-kit-row {

@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <%= discourse_stylesheet_link_tag 'publish', theme_ids: nil %>
+
+    <%= render partial: "common/discourse_publish_stylesheet" %>
 
     <%- if @canonical_url -%>
       <link rel="canonical" href="<%= @canonical_url %>" />
     <%- end -%>
   </head>
-  <body>
+  <body class="<%= @body_classes.to_a.join(' ') %>">
     <%= yield %>
   </body>
 </html>

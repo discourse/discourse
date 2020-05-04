@@ -237,7 +237,6 @@ id:
         bookmark: "Klik untuk membuat penandaan pos pertama di topik ini"
         unbookmark: "Klik untuk menghapus semua penandaan di topik ini"
     bookmarks:
-      created: "Anda telah menandai post ini"
       not_bookmarked: "tandai pos ini"
       remove: "Hilangkan penandaan"
       confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
@@ -668,6 +667,10 @@ id:
       private_message: "pesan"
       private_messages: "Messages"
       user_notifications:
+        filters:
+          all: "Semua"
+          read: "Dibaca"
+          unread: "Belum dibaca"
         ignore_duration_title: "Abaikan Timer"
         ignore_duration_username: "Nama Pengguna"
         ignore_duration_when: "Durasi:"
@@ -1047,6 +1050,7 @@ id:
     close: "Tutup"
     logout: "Anda telah keluar."
     refresh: "Segarkan"
+    home: "Beranda"
     read_only_mode:
       logout_disabled: "Logout di-nonaktifkan saat situs dalam mode hanya-baca."
     all_time: "total"
@@ -1727,6 +1731,11 @@ id:
         approve: "Terima"
         time_read: "Waktu Baca"
         delete: "Hapus Pengguna"
+        merge:
+          prompt:
+            cancel: "Batal"
+          confirmation:
+            cancel: "Batal"
         delete_and_block: "Hapus dan <b>block</b> email dan alamat IP ini"
         tl3_requirements:
           visits: "mengunjungi"

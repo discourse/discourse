@@ -261,7 +261,6 @@ de:
         bookmark: "Klicke hier, um ein Lesezeichen auf den ersten Beitrag in diesem Thema zu setzen."
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
     bookmarks:
-      created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
       not_bookmarked: "Lesezeichen auf diesen Beitrag setzen"
       remove: "Lesezeichen entfernen"
       confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest? "
@@ -741,6 +740,10 @@ de:
       private_message: "Nachricht"
       private_messages: "Nachrichten"
       user_notifications:
+        filters:
+          all: "Alle"
+          read: "Gelesen"
+          unread: "Ungelesen"
         ignore_duration_title: "Zeitschaltuhr ignorieren"
         ignore_duration_username: "Benutzername"
         ignore_duration_when: "Dauer:"
@@ -1254,6 +1257,7 @@ de:
     assets_changed_confirm: "Diese Website wurde gerade aktualisiert. Neu laden für die neuste Version?"
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
+    home: "Startseite"
     read_only_mode:
       enabled: "Diese Website befindet sich im Nur-Lesen-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von Likes und Durchführen einiger weiterer Aktionen ist derzeit nicht möglich."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
@@ -2012,7 +2016,6 @@ de:
           "2_8": "Du wirst eine Anzahl neuer Antworten sehen, weil du diese Kategorie verfolgst."
           "2_4": "Du wirst eine Anzahl neuer Antworten sehen, weil du einen Beitrag in diesem Thema geschrieben hast."
           "2_2": "Du wirst eine Anzahl neuer Antworten sehen, weil du dieses Thema verfolgst."
-          "2": 'Du wirst eine Anzahl neuer Antworten sehen, weil du <a href="{{basePath}}/u/{{username}}/preferences">dieses Thema gelesen hast</a>.'
           "1_2": "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
           "1": "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
           "0_7": "Du ignorierst alle Benachrichtigungen dieser Kategorie."
@@ -2416,6 +2419,7 @@ de:
       bookmarks:
         create: "Lesezeichen erstellen"
         created: "Erstellt"
+        updated: "Aktualisiert"
         name: "Name"
         actions:
           delete_bookmark:
@@ -2722,7 +2726,6 @@ de:
         this_week: "Woche"
         today: "Heute"
         other_periods: "zeige angesagte Themen:"
-    browser_update: 'Leider <a href="https://www.discourse.org/faq/#browser">ist dein Browser zu alt, damit diese Seite richtig funktioniert</a>. Bitte <a href="https://browsehappy.com">aktualisiere deinen Browser</a>.'
     permission_types:
       full: "Erstellen / Antworten / Ansehen"
       create_post: "Antworten / Ansehen"
@@ -3031,8 +3034,6 @@ de:
           view_table: "Tabelle"
           view_graph: "Netzwerk"
           refresh_report: "Bericht aktualisieren"
-          start_date: "Startdatum (UTC)"
-          end_date: "Enddatum (UTC)"
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
           totals_for_sample: "Insgesamt für Stichprobe"
@@ -3093,7 +3094,6 @@ de:
             effects: Effekte
             trust_levels_none: "Keine"
             automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
-            automatic_membership_retroactive: "Diese Regel auch auf existierende Benutzer anwenden, um diese zur Gruppe hinzuzufügen."
             primary_group: "Automatisch als Hauptgruppe festlegen"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         primary: "Hauptgruppe"
@@ -3946,6 +3946,11 @@ de:
         anonymize_yes: "Ja, diesen Benutzer anonymisieren"
         anonymize_failed: "Beim Anonymisieren des Benutzers ist ein Fehler aufgetreten."
         delete: "Benutzer löschen"
+        merge:
+          prompt:
+            cancel: "Abbrechen"
+          confirmation:
+            cancel: "Abbrechen"
         delete_forbidden_because_staff: "Administratoren und Moderatoren können nicht gelöscht werden."
         delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
         delete_forbidden:

@@ -257,7 +257,7 @@ export default Component.extend(
       autoFilterable: "autoFilterable",
       filterIcon: "search",
       filterPlaceholder: "filterPlaceholder",
-      translatedfilterPlaceholder: null,
+      translatedFilterPlaceholder: null,
       icon: null,
       icons: null,
       maximum: null,
@@ -482,10 +482,7 @@ export default Component.extend(
         this.selectKit.options.allowAny &&
         !this.selectKit.isExpanded
       ) {
-        return this.defaultItem(
-          null,
-          I18n.t("select_kit.filter_placeholder_with_any")
-        );
+        return null;
       }
 
       let item;
@@ -661,17 +658,10 @@ export default Component.extend(
       );
 
       if (rowContainer) {
-        const $collection = $(
-          this.element.querySelector(".select-kit-collection")
-        );
+        const collectionContainer = rowContainer.parentNode;
 
-        const collectionTop = $collection.position().top;
-
-        $collection.scrollTop(
-          $collection.scrollTop() +
-            $(rowContainer).position().top -
-            collectionTop
-        );
+        collectionContainer.scrollTop =
+          rowContainer.offsetTop - collectionContainer.offsetTop;
       }
     },
 
@@ -754,8 +744,6 @@ export default Component.extend(
     },
 
     _onCloseWrapper(event) {
-      this._focusFilter(this.multiSelect);
-
       this.set("selectKit.highlighted", null);
 
       let boundaryAction = this._boundaryActionHandler("onClose");
@@ -813,19 +801,7 @@ export default Component.extend(
           `[data-select-kit-id=${this.selectKit.uniqueID}-body]`
         );
 
-        if (
-          this.site &&
-          !this.site.mobileView &&
-          popper.offsetWidth < anchor.offsetWidth
-        ) {
-          popper.style.minWidth = `${anchor.offsetWidth}px`;
-        }
-
         const inModal = $(this.element).parents("#discourse-modal").length;
-
-        if (this.site && !this.site.mobileView && inModal) {
-          popper.style.width = `${anchor.offsetWidth}px`;
-        }
 
         let placementStrategy = this.selectKit.options.placementStrategy;
         if (!placementStrategy) {
@@ -875,8 +851,7 @@ export default Component.extend(
                     this.element.classList.add("is-under");
                   }
 
-                  // - 1 accounts for any rounding error
-                  wrapper.style.width = `${this.element.offsetWidth - 1}px`;
+                  wrapper.style.width = `${this.element.offsetWidth}px`;
                   wrapper.style.height = `${height}px`;
                 }
               }

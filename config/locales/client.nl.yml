@@ -27,6 +27,7 @@ nl:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
@@ -263,11 +264,13 @@ nl:
         unbookmark: "Klik om alle bladwijzers in dit topic te verwijderen"
         unbookmark_with_reminder: "Klik om alle bladwijzers en herinneringen in dit topic te verwijderen. U hebt voor dit topic een herinnering ingesteld voor %{reminder_at}."
     bookmarks:
-      created: "u hebt een bladwijzer voor dit bericht gemaakt"
+      created: "u hebt een bladwijzer voor dit bericht gemaakt%{name}"
       not_bookmarked: "bladwijzer voor dit bericht maken"
-      created_with_reminder: "u hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}"
-      created_with_at_desktop_reminder: "u hebt een bladwijzer voor dit bericht gemaakt en wordt de volgende keer dat u uw computer gebruikt herinnerd"
+      created_with_reminder: "u hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}%{name}"
+      created_with_at_desktop_reminder: "u hebt een bladwijzer voor dit bericht gemaakt en wordt de volgende keer dat u uw computer gebruikt herinnerd%{name}"
       remove: "Bladwijzer verwijderen"
+      delete: "Bladwijzer verwijderen"
+      confirm_delete: "Weet u zeker dat u deze bladwijzer wilt verwijderen? De herinnering wordt ook verwijderd."
       confirm_clear: "Weet u zeker dat u alle bladwijzers van dit topic wilt verwijderen?"
       save: "Opslaan"
       no_timezone: 'U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href="%{basePath}/my/preferences/profile">in uw profiel</a>.'
@@ -756,6 +759,10 @@ nl:
       private_message: "Bericht"
       private_messages: "Berichten"
       user_notifications:
+        filters:
+          all: "Alle"
+          read: "Gelezen"
+          unread: "Ongelezen"
         ignore_duration_title: "Negeertimer"
         ignore_duration_username: "Gebruikersnaam"
         ignore_duration_when: "Tijdsduur:"
@@ -1282,6 +1289,7 @@ nl:
     assets_changed_confirm: "Deze website is zojuist bijgewerkt. Nu vernieuwen om de nieuwste versie te laden?"
     logout: "U bent afgemeld."
     refresh: "Vernieuwen"
+    home: "Hoofdpagina"
     read_only_mode:
       enabled: "Deze website bevindt zich in alleen-lezenmodus. U kunt doorgaan met browsen, maar berichten beantwoorden, likes geven en andere acties zijn momenteel uitgeschakeld."
       login_disabled: "Aanmelden is uitgeschakeld zolang de website zich in alleen-lezenmodus bevindt."
@@ -1311,6 +1319,7 @@ nl:
     mute: Negeren
     unmute: Tonen
     last_post: Geplaatst
+    local_time: "Lokale tijd"
     time_read: Gelezen
     time_read_recently: "%{time_read} onlangs"
     time_read_tooltip: "%{time_read} totale leestijd"
@@ -2056,7 +2065,6 @@ nl:
           "2_8": "U ziet het aantal nieuwe antwoorden, omdat u deze categorie volgt."
           "2_4": "U ziet het aantal nieuwe antwoorden, omdat u een antwoord in dit topic hebt geplaatst."
           "2_2": "U ziet het aantal nieuwe antwoorden, omdat u dit topic volgt."
-          "2": 'U ziet het aantal nieuwe antwoorden, omdat u <a href="{{basePath}}/u/{{username}}/preferences">dit topic hebt gelezen</a>.'
           "1_2": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "1": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "0_7": "U negeert alle meldingen in deze categorie."
@@ -2477,6 +2485,7 @@ nl:
         create: "Bladwijzer maken"
         edit: "Bladwijzer bewerken"
         created: "Gemaakt"
+        updated: "Bijgewerkt"
         name: "Naam"
         name_placeholder: "Waar is deze bladwijzer voor?"
         set_reminder: "Mij herinneren"
@@ -2547,6 +2556,7 @@ nl:
       email_in_disabled_click: 'schakelt u de instelling ''e-mail in'' in.'
       mailinglist_mirror: "Categorie weerspiegelt een mailinglijst"
       show_subcategory_list: "Subcategorielijsten boven topics tonen in deze categorie"
+      read_only_banner: "Bannertekst wanneer een gebruiker geen topic in deze categorie kan maken:"
       num_featured_topics: "Aantal getoonde topics op de categoriepagina:"
       subcategory_num_featured_topics: "Aantal aanbevolen topics op pagina van bovenliggende categorie:"
       all_topics_wiki: "Nieuwe topics standaard wiki's maken"
@@ -2792,7 +2802,7 @@ nl:
         this_week: "Week"
         today: "Vandaag"
         other_periods: "eerste bekijken"
-    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om met deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a>.'
+    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om op deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a> om rijke inhoud te kunnen bekijken, u aan te melden, en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
@@ -2860,6 +2870,7 @@ nl:
         next_business_day: "%{shortcut} Volgende werkdag"
         custom: "%{shortcut} Aangepaste datum en tijd"
         none: "%{shortcut} Geen herinnering"
+        delete: "%{shortcut} Bladwijzer verwijderen"
       actions:
         title: "Acties"
         bookmark_topic: "%{shortcut} Bladwijzer voor topic in-/uitschakelen"
@@ -3117,8 +3128,7 @@ nl:
           view_table: "tabel"
           view_graph: "grafiek"
           refresh_report: "Rapport vernieuwen"
-          start_date: "Startdatum (UTC)"
-          end_date: "Einddatum (UTC)"
+          dates: "Datums (UTC)"
           groups: "Alle groepen"
           disabled: "Dit rapport is uitgeschakeld"
           totals_for_sample: "Totalen voor steekproef"
@@ -3135,6 +3145,8 @@ nl:
               label: Groep
             category:
               label: Categorie
+            include-subcategories:
+              label: "Subcategorieën bijvoegen"
       commits:
         latest_changes: "Laatste wijzigingen: werk regelmatig bij!"
         by: "door"
@@ -3179,7 +3191,7 @@ nl:
             effects: Effecten
             trust_levels_none: "Geen"
             automatic_membership_email_domains: "Gebruikers die zich met een e-maildomein registeren dat precies overeenkomt met een domein in deze lijst worden automatisch aan deze groep toegevoegd:"
-            automatic_membership_retroactive: "Dezelfde e-maildomeinregel toepassen voor het toevoegen van bestaande geregistreerde gebruikers"
+            automatic_membership_user_count: "%{count} gebruikers hebben de nieuwe e-maildomeinen en worden aan de groep toegevoegd."
             primary_group: "Automatisch instellen als primaire groep"
         name_placeholder: "Groepsnaam, geen spaties, hetzelfde als gebruikersnaamregel"
         primary: "Primaire groep"
@@ -3469,6 +3481,9 @@ nl:
           settings: "Instellingen"
           translations: "Vertalingen"
           extra_scss: "Extra SCSS"
+          extra_files: "Extra bestanden"
+          extra_files_upload: "Exporteer een thema om deze bestanden te bekijken."
+          extra_files_remote: "Exporteer een thema of controleer de git-repository om deze bestanden te bekijken."
           preview: "Voorbeeld"
           show_advanced: "Geavanceerde velden tonen"
           hide_advanced: "Geavanceerde velden verbergen"
@@ -3532,6 +3547,7 @@ nl:
           license: "Licentie"
           version: "Versie:"
           authors: "Geschreven door:"
+          creator: "Gemaakt door:"
           source_url: "Bron"
           enable: "Inschakelen"
           disable: "Uitschakelen"
@@ -4039,6 +4055,30 @@ nl:
         anonymize_yes: "Ja, deze account anonimiseren"
         anonymize_failed: "Er is een probleem opgetreden bij het anonimiseren van de account."
         delete: "Gebruiker verwijderen"
+        merge:
+          transfer_and_delete: "Overdragen & verwijderen"
+          prompt:
+            title: "Overdragen & @%{username} verwijderen"
+            description: |
+              <p>Kies een nieuwe eigenaar voor de inhoud van <b>@%{username}</b>.</p>
+
+              <p>Alle topics, berichten en andere inhoud die door <b>@%{username}</b> is gemaakt, wordt overgedragen.</p>
+            target_username_placeholder: "Gebruikersnaam van nieuwe eigenaar"
+            transfer_and_delete: "Overdragen & @%{username} verwijderen"
+            cancel: "Annuleren"
+          confirmation:
+            title: "Overdragen & @%{username} verwijderen"
+            description: |
+              <p>Alle inhoud van <b>@%{username}</b> wordt overgedragen en aan <b>@%{targetUsername}</b> toegekend. Nadat de inhoud is overgezet, wordt de account van<b>@%{username}</b> verwijderd.</p>
+
+              <p><b>Dit kan niet ongedaan worden gemaakt!</b></p>
+
+              <p>Type het volgende om door te gaan: <code>%{text}</code></p>
+            text: "@%{username} naar @%{targetUsername} overdragen"
+            transfer_and_delete: "Overdragen & @%{username} verwijderen"
+            cancel: "Annuleren"
+        merging_user: "Gebruiker samenvoegen..."
+        merge_failed: "Er is een fout opgetreden tijdens het samenvoegen van de gebruikers."
         delete_forbidden_because_staff: "Beheerders en moderators kunnen niet worden verwijderd."
         delete_posts_forbidden_because_staff: "Kan niet alle berichten van beheerders en moderators verwijderen."
         delete_forbidden:

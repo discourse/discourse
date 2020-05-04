@@ -1,0 +1,93 @@
+{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id)}}
+  <div class="container">
+    {{discourse-banner user=currentUser banner=site.banner}}
+  </div>
+
+  <div class="list-controls">
+    <div class="container">
+      <section class="navigation-container">
+        {{#if showTagFilter}}
+          {{bread-crumbs
+            categories=categories
+            category=category
+            tagId=tag.id
+            noSubcategories=noSubcategories
+          }}
+          {{navigation-bar navItems=navItems filterMode=filterMode}}
+        {{else}}
+          <h2 class="tag-show-heading">
+            {{#link-to "tags"}}{{i18n "tagging.tags"}}{{/link-to}}
+            {{d-icon "angle-right"}}
+            {{discourse-tag-bound tagRecord=tag style="simple"}}
+            {{#each additionalTags as |tag|}}
+              <span>&amp;</span>
+              {{discourse-tag tag style="simple"}}
+            {{/each}}
+          </h2>
+        {{/if}}
+
+        {{#if tagNotification}}
+          {{#unless additionalTags}}
+            {{tag-notifications-button
+              onChange=(action "changeTagNotificationLevel")
+              value=tagNotification.notification_level
+            }}
+          {{/unless}}
+        {{/if}}
+
+        {{create-topic-button
+          canCreateTopic=canCreateTopic
+          disabled=createTopicDisabled
+          label=createTopicLabel
+          action=(route-action "createTopic")
+        }}
+
+        {{#if showToggleInfo}}
+          {{d-button icon="tag" class="btn-default" label="tagging.info" action=(action "toggleInfo") id="show-tag-info"}}
+        {{/if}}
+      </section>
+    </div>
+  </div>
+
+  {{#if showInfo}}
+    {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
+  {{/if}}
+
+  {{plugin-outlet name="discovery-list-container-top"}}
+
+  <div class="container list-container">
+    <div class="row">
+      <div class="full-width">
+        <div id="list-area">
+          {{#unless loading}}
+            {{#if list.topics}}
+              {{#discovery-topics-list model=list refresh=(action "refresh")}}
+                {{bulk-select-button selected=selected action=(action "refresh")}}
+                {{topic-list
+                  topics=list.topics
+                  canBulkSelect=canBulkSelect
+                  toggleBulkSelect=(action "toggleBulkSelect")
+                  bulkSelectEnabled=bulkSelectEnabled
+                  selected=selected
+                  showPosters=true
+                  order=order
+                  ascending=ascending
+                  changeSort=(action "changeSort")
+                }}
+              {{/discovery-topics-list}}
+            {{else}}
+              <footer class="topic-list-bottom">
+                <h3>
+                  {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n "topic.browse_all_categories"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
+                </h3>
+              </footer>
+            {{/if}}
+          {{/unless}}
+
+          {{conditional-loading-spinner condition=list.loadingMore}}
+        </div>
+      </div>
+    </div>
+  </div>
+  {{plugin-outlet name="discovery-below"}}
+{{/d-section}}

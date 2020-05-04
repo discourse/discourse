@@ -256,7 +256,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         profile_page_url = "#{Discourse.base_url}/u/#{user.username}"
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', bookmark_url: "#{profile_page_url}/activity/bookmarks-with-reminders", base_uri: '')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', bookmark_url: "#{profile_page_url}/activity/bookmarks", base_uri: '')}
 
           #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.instructions', base_uri: '')}
         RAW

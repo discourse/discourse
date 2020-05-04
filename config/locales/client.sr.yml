@@ -247,7 +247,6 @@ sr:
         bookmark: "Klikni da markiraš prvi post u ovoj temi"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
     bookmarks:
-      created: "markirao si ovu poruku"
       remove: "Obriši marker"
       save: "Sačuvaj"
     drafts:
@@ -449,6 +448,10 @@ sr:
       private_message: "Privatna poruka"
       private_messages: "Poruke"
       user_notifications:
+        filters:
+          all: "Sve"
+          read: "Pročitano"
+          unread: "Nepročitano"
         ignore_duration_username: "Korisničko ime"
         mute_option: "Utišano"
         normal_option: "Normalno"
@@ -748,6 +751,7 @@ sr:
     assets_changed_confirm: "Ova stranica je upravo ažurirana. Osveži sada za najnoviju verziju?"
     logout: "Odjavljeni ste."
     refresh: "Osveži"
+    home: "Home"
     read_only_mode:
       login_disabled: "Prijave su onemogućene dok je stranica u modulu \"samo čitanje\"."
     learn_more: "saznaj više..."
@@ -1635,7 +1639,6 @@ sr:
             automatic: Automatska
             trust_levels_none: "Ništa"
             automatic_membership_email_domains: "Korisnici koji se registruju sa email domenom koja tačno odgovora jednoj na ovoj listi biće automatski dodani u ovu grupu:"
-            automatic_membership_retroactive: "Primeni isto pravilo o email domeni za dodavanje postojećih registrovanih korisnika"
         name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
         primary: "Primarna Grupa"
         no_primary: "(nema primarne grupe)"
@@ -2010,6 +2013,11 @@ sr:
         approve_bulk_success: "Uspeh! Svi označeni korisnici su odobreni i obavešteni."
         time_read: "Vreme Čitanja"
         delete: "Obriši Korisnika"
+        merge:
+          prompt:
+            cancel: "Odustani"
+          confirmation:
+            cancel: "Odustani"
         delete_forbidden_because_staff: "Admini i moderatori ne mogu biti obrisani."
         delete_forbidden:
           one: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"

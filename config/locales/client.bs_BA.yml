@@ -284,7 +284,6 @@ bs_BA:
         bookmark: "Klikni kako bi dodao zabilješku na prvu objavu u temi"
         unbookmark: "Klikni da ukloniš sve zabilješke iz ove teme"
     bookmarks:
-      created: "zabilježili ste ovu stranicu"
       not_bookmarked: "sačuvaj ovaj post"
       remove: "Ukloni zabilješku"
       confirm_clear: "Dali ste sigurni dali želite izbrisati sve sačuvane stvari iz ove teme?"
@@ -779,6 +778,10 @@ bs_BA:
       private_message: "Privatne Poruke"
       private_messages: "Poruke"
       user_notifications:
+        filters:
+          all: "Sve"
+          read: "Učitaj"
+          unread: "Nepročitanih"
         ignore_duration_title: "Zanemari tajmer"
         ignore_duration_username: "Ime"
         ignore_duration_when: "Trajanje:"
@@ -2049,7 +2052,6 @@ bs_BA:
           "2_8": "Vidjeti će te broj novih odgovora jer pratite ovu kategoriju."
           "2_4": "Vidjeti će te broj novih odgovora jer ste objavili odgovor na ovu temu."
           "2_2": "Vidjeti će te broj novih odgovora jer pratite ovu temu."
-          "2": 'Vidjeti će te broj novih odgovora jer ste <a href="{{basePath}}/u/{{username}}/preferences">čitali ovu temu</a>.'
           "1_2": "Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post."
           "1": "Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post."
           "0_7": "Ignorišete sve notifikacije u ovoj kategoriji."
@@ -3941,6 +3943,11 @@ bs_BA:
         anonymize_yes: "Da, anonimiziraj ovaj račun"
         anonymize_failed: "Došlo je do problema sa anonimizacijom računa."
         delete: "Delete User"
+        merge:
+          prompt:
+            cancel: "Otkaži"
+          confirmation:
+            cancel: "Otkaži"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_posts_forbidden_because_staff: "Ne možete obrisati sve postove administratora i moderatora."
         delete_forbidden:

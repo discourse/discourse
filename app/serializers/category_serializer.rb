@@ -83,8 +83,9 @@ class CategorySerializer < SiteCategorySerializer
 
   def notification_level
     user = scope && scope.user
-   object.notification_level ||
-     (user && CategoryUser.where(user: user, category: object).first.try(:notification_level))
+    object.notification_level ||
+     (user && CategoryUser.where(user: user, category: object).first.try(:notification_level)) ||
+     CategoryUser.default_notification_level
   end
 
   def custom_fields

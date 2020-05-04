@@ -76,13 +76,14 @@ module PrettyText
     ctx.eval("__PRETTY_TEXT = true")
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
+    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
     ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
-    apply_es6_file(ctx, root_path, "discourse/lib/to-markdown")
-    apply_es6_file(ctx, root_path, "discourse/lib/utilities")
+    apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
+    apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
     PrettyText::Helpers.instance_methods.each do |method|
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
@@ -311,7 +312,7 @@ module PrettyText
 
     # extract all links
     doc.css("a").each do |a|
-      if a["href"].present? && a["href"][0] != "#".freeze
+      if a["href"].present? && a["href"][0] != "#"
         links << DetectedLink.new(a["href"], false)
       end
     end

@@ -8,10 +8,10 @@ class DiscourseRedis
   class FallbackHandler
     include Singleton
 
-    MASTER_ROLE_STATUS = "role:master".freeze
-    MASTER_LOADING_STATUS = "loading:1".freeze
-    MASTER_LOADED_STATUS = "loading:0".freeze
-    CONNECTION_TYPES = %w{normal pubsub}.each(&:freeze)
+    MASTER_ROLE_STATUS = "role:master"
+    MASTER_LOADING_STATUS = "loading:1"
+    MASTER_LOADED_STATUS = "loading:0"
+    CONNECTION_TYPES = %w{normal pubsub}
 
     def initialize
       @master = true

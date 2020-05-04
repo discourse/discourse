@@ -117,11 +117,6 @@ ca:
       random_mention:
         reply: |-
           Hola! Per a trobar què puc fer, digueu `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Ara sé com fer les coses següents:
-
-          `@ %{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Inicia un tutorial interactiu. El `{name-of-tutorial}` pot ser un dels següents: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

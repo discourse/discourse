@@ -28,7 +28,7 @@ class S3Helper
   end
 
   def self.get_bucket_and_folder_path(s3_bucket_name)
-    s3_bucket_name.downcase.split("/".freeze, 2)
+    s3_bucket_name.downcase.split("/", 2)
   end
 
   def upload(file, path, options = {})
@@ -75,7 +75,7 @@ class S3Helper
         options[:copy_source] = File.join(@s3_bucket_name, source)
       elsif @s3_bucket_folder_path
         folder, filename = begin
-          source.split("/".freeze, 2)
+          source.split("/", 2)
         end
         options[:copy_source] = File.join(@s3_bucket_name, folder, multisite_upload_path, filename)
       else
@@ -204,6 +204,7 @@ class S3Helper
     }
 
     opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
+    opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id
@@ -247,7 +248,9 @@ class S3Helper
   end
 
   def multisite_upload_path
-    File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
+    path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
+    return path if !Rails.env.test?
+    File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}", "/")
   end
 
   def s3_resource

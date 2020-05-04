@@ -19,9 +19,7 @@ var define, requirejs;
         default: Ember.ArrayProxy
       },
       "@ember/component": {
-        default: Ember.Component,
-        TextArea: Ember.TextArea,
-        TextField: Ember.TextField
+        default: Ember.Component
       },
       "@ember/controller": {
         default: Ember.Controller,
@@ -128,6 +126,12 @@ var define, requirejs;
       },
       "@ember/component/helper": {
         default: Ember.Helper
+      },
+      "@ember/component/text-field": {
+        default: Ember.TextField
+      },
+      "@ember/component/text-area": {
+        default: Ember.TextArea
       },
       "@ember/error": {
         default: Ember.error
@@ -258,6 +262,14 @@ var define, requirejs;
 
   function requireFrom(name, origin) {
     name = transformForAliases(name);
+
+    if (name === "discourse") {
+      // eslint-disable-next-line no-console
+      console.log(
+        "discourse has been moved to `discourse/app` - please update your code"
+      );
+      name = "discourse/app";
+    }
 
     if (name === "discourse/models/input-validation") {
       // eslint-disable-next-line no-console

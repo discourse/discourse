@@ -14,25 +14,25 @@ function initialize(api) {
   });
 
   api.modifyClass("model:post", {
-    toggleBookmarkWithReminder() {
+    toggleBookmark() {
       // if we are talking to discobot then any bookmarks should just
       // be created without reminder options, to streamline the new user
       // narrative.
       const discobotUserId = -2;
-      if (this.user_id === discobotUserId && !this.bookmarked_with_reminder) {
+      if (this.user_id === discobotUserId && !this.bookmarked) {
         return ajax("/bookmarks", {
           type: "POST",
           data: { post_id: this.id }
         }).then(response => {
           this.setProperties({
             "topic.bookmarked": true,
-            bookmarked_with_reminder: true,
+            bookmarked: true,
             bookmark_id: response.id
           });
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         });
       }
-      this._super();
+      return this._super();
     }
   });
 

@@ -270,13 +270,13 @@ class Admin::ThemesController < Admin::AdminController
     setting_name = params[:name].to_sym
     new_value = params[:value] || nil
 
-    previous_value = @theme.included_settings[setting_name]
+    previous_value = @theme.cached_settings[setting_name]
     @theme.update_setting(setting_name, new_value)
     @theme.save
 
     log_theme_setting_change(setting_name, previous_value, new_value)
 
-    updated_setting = @theme.included_settings.select { |key, val| key == setting_name }
+    updated_setting = @theme.cached_settings.select { |key, val| key == setting_name }
     render json: updated_setting, status: :ok
   end
 

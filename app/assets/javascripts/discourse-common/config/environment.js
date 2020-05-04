@@ -1,3 +1,5 @@
-export const INPUT_DELAY = 250;
+"use strict";
 
-export default { environment: Ember.testing ? "test" : "development" };
+module.exports = function(/* environment, appConfig */) {
+  return {};
+};

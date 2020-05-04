@@ -23,12 +23,6 @@ acc5cbdf8ecb9293a0fa9474ee73baf499c02428
 # Rename wizard from es6 -> js
 1ac02422011f89716ab27250d39b0e0212e03892
 
-# Rename discourse-common es6 -> js
-167503ca4824e37a2e93d74b3f50271556d0ba8e
-
-# Rename ember-addons es6 -> js
-16ba50bce362c1eefe1881f86c67bec66f493abb
-
 # Rename some root files
 11938d58d4b1bea1ff43306450da7b24f05db0a
 
@@ -40,3 +34,6 @@ b66b277dc44bcd2122dc21965dab209c30636214
 
 # DEV: enforces double quotes ember-template-lint
 c4644c61d97c823b7dd940ffaf0967a104f4b58c
+
+# Migrate to app directory
+7a2e8d3ead63c7d99e1069fc7823e933f931ba85

@@ -162,7 +162,6 @@ be:
         bookmark: "Націсніце каб закласці першы паведамленне ў гэтай тэме"
         unbookmark: "Націсніце каб выдаліць усе закладкі ў гэтай тэме"
     bookmarks:
-      created: "вы дадалі гэты паведамленне ў закладкі"
       remove: "выдаліць закладку"
       save: "Захаваць"
       reminders:
@@ -394,6 +393,10 @@ be:
       private_message: "паведамленне"
       private_messages: "Паведамленні"
       user_notifications:
+        filters:
+          all: "Усё"
+          read: "прачытаныя"
+          unread: "Непрачытаныя"
         ignore_duration_username: "Імя карыстальніка"
         ignore_duration_save: "ігнараваць"
         mute_option: "ігнараваць"
@@ -633,6 +636,7 @@ be:
       close: "схаваць"
     close: "зачыніць"
     refresh: "абнавіць"
+    home: "дома"
     read_only_mode:
       login_disabled: "Login is disabled while the site is in read only mode."
     learn_more: "даведацца больш ..."
@@ -1685,6 +1689,11 @@ be:
         anonymize: "ананімны карыстальнік"
         anonymize_yes: "Так, схаваць гэты рахунак"
         delete: "выдаліць карыстальніка"
+        merge:
+          prompt:
+            cancel: "адмяніць"
+          confirmation:
+            cancel: "адмяніць"
         delete_forbidden_because_staff: "Адмінаў і мадэратараў выдаляць нельга."
         delete_dont_block: "толькі выдаленне"
         deleted: "Карыстальніка быў выдалены."

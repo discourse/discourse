@@ -256,7 +256,6 @@ ro:
         bookmark: "Click pentru a adăuga semn de carte la subiectul acesta"
         unbookmark: "Click pentru a șterge semnele de carte"
     bookmarks:
-      created: "Ai pus semn de carte pe acest mesaj"
       remove: "Șterge semn de carte"
       save: "Salvează"
       reminders:
@@ -584,6 +583,10 @@ ro:
       private_message: "Mesaj"
       private_messages: "Mesaje"
       user_notifications:
+        filters:
+          all: "Toate"
+          read: "Citite"
+          unread: "Necitite"
         ignore_duration_username: "Nume utilizator"
         ignore_duration_save: "Ignoră"
         mute_option: "Setate pe silențios"
@@ -987,6 +990,7 @@ ro:
     assets_changed_confirm: "Acest site tocmai a fost actualizat. Reîmprospătați pentru cea mai nouă versiune?"
     logout: "Aţi fost deconectat."
     refresh: "Reîmprospătează"
+    home: "Acasă"
     read_only_mode:
       enabled: "Acest site se află în modul exclusiv-citire. Te rugăm să continui să răsfoiești, însă sunt dezactivate acțiunile de răspuns, apreciere și altele. "
       login_disabled: "Autentificarea este dezactivată când siteul este în modul exclusiv-citire."
@@ -1566,7 +1570,6 @@ ro:
           "3_1": "Vei primi notificări deoarece ai creat acest subiect."
           "3": "Vei primi notificări deoarece urmărești activ acest subiect."
           "2_2": "Vei vedea numărul răspunsurilor noi deoarece urmărești acest subiect."
-          "2": 'Vei vedea numărul răspunsurilor noi deoarece <a href="{{basePath}}/u/{{username}}/preferences">citești acest subiect</a>'
           "1_2": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
           "1": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
           "0_7": "Ignori toate notificările din această categorie."
@@ -2447,7 +2450,6 @@ ro:
             trust_levels_title: "Nivel de încredere acordat automat membrilor atunci când sunt adăugați:"
             trust_levels_none: "Nimeni"
             automatic_membership_email_domains: "Utilizatorii care se înregistrează cu un domeniu de email identic cu unul din lista asta vor fi adăugați automat în acest grup:"
-            automatic_membership_retroactive: "Aplică aceeaşi regulă pentru domeniul de email pentru a adauga utilizatorii existenţi"
             primary_group: "Setează automat ca grup principal"
         name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
         primary: "Grup primar"
@@ -3040,6 +3042,11 @@ ro:
         anonymize_yes: "Da, transformă acest cont în cont anonim"
         anonymize_failed: "A apărut o problemă în timpul transformării contului în cont anonim."
         delete: "Ștergere utilizator"
+        merge:
+          prompt:
+            cancel: "Anulează"
+          confirmation:
+            cancel: "Anulează"
         delete_forbidden_because_staff: "Adminii și moderatorii nu pot fi sterși."
         delete_posts_forbidden_because_staff: "Nu poți șterge mesajele administratorilor și moderatorilor."
         delete_forbidden:

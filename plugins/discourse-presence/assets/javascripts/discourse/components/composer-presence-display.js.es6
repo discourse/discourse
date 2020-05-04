@@ -1,12 +1,18 @@
-import { cancel, debounce, once } from "@ember/runloop";
 import Component from "@ember/component";
+import { getOwner } from "@ember/application";
+import { cancel } from "@ember/runloop";
 import { equal, gt } from "@ember/object/computed";
-import { Promise } from "rsvp";
-import { ajax } from "discourse/lib/ajax";
-import computed, { observes, on } from "discourse-common/utils/decorators";
-
-export const keepAliveDuration = 10000;
-export const bufferTime = 3000;
+import discourseComputed, {
+  observes,
+  on
+} from "discourse-common/utils/decorators";
+import {
+  REPLYING,
+  CLOSED,
+  EDITING,
+  COMPOSER_TYPE
+} from "../lib/presence-manager";
+import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
   // Passed in variables
@@ -15,115 +21,105 @@ export default Component.extend({
   topic: null,
   reply: null,
   title: null,
+  isWhispering: null,
+  presenceManager: null,
 
-  // Internal variables
-  previousState: null,
-  currentState: null,
-  presenceUsers: null,
-  channel: null,
+  init() {
+    this._super(...arguments);
+
+    this.setProperties({
+      presenceManager: getOwner(this).lookup("presence-manager:main")
+    });
+  },
+
+  @discourseComputed("topic.id")
+  users(topicId) {
+    return this.presenceManager.users(topicId);
+  },
+
+  @discourseComputed("topic.id")
+  editingUsers(topicId) {
+    return this.presenceManager.editingUsers(topicId);
+  },
 
   isReply: equal("action", "reply"),
-  shouldDisplay: gt("users.length", 0),
 
   @on("didInsertElement")
-  composerOpened() {
-    this._lastPublish = new Date();
-    once(this, "updateState");
+  subscribe() {
+    this.presenceManager.subscribe(this.get("topic.id"), COMPOSER_TYPE);
   },
 
-  @observes("action", "post.id", "topic.id")
-  composerStateChanged() {
-    once(this, "updateState");
+  @discourseComputed(
+    "post.id",
+    "editingUsers.@each.last_seen",
+    "users.@each.last_seen",
+    "action"
+  )
+  presenceUsers(postId, editingUsers, users, action) {
+    if (action === EDIT) {
+      return editingUsers.filterBy("post_id", postId);
+    } else if (action === REPLY) {
+      return users;
+    }
+    return [];
   },
+
+  shouldDisplay: gt("presenceUsers.length", 0),
 
   @observes("reply", "title")
   typing() {
-    if (new Date() - this._lastPublish > keepAliveDuration) {
-      this.publish({ current: this.currentState });
+    const action = this.action;
+
+    if (action !== REPLY && action !== EDIT) {
+      return;
+    }
+
+    let data = {
+      topicId: this.get("topic.id"),
+      state: action === EDIT ? EDITING : REPLYING,
+      whisper: this.whisper,
+      postId: this.get("post.id")
+    };
+
+    this._prevPublishData = data;
+
+    this._throttle = this.presenceManager.throttlePublish(
+      data.topicId,
+      data.state,
+      data.whisper,
+      data.postId
+    );
+  },
+
+  @observes("whisper")
+  cancelThrottle() {
+    this._cancelThrottle();
+  },
+
+  @observes("action", "topic.id")
+  composerState() {
+    if (this._prevPublishData) {
+      this.presenceManager.publish(
+        this._prevPublishData.topicId,
+        CLOSED,
+        this._prevPublishData.whisper,
+        this._prevPublishData.postId
+      );
+      this._prevPublishData = null;
     }
   },
 
   @on("willDestroyElement")
-  composerClosing() {
-    this.publish({ previous: this.currentState });
-    cancel(this._pingTimer);
-    cancel(this._clearTimer);
+  closeComposer() {
+    this._cancelThrottle();
+    this._prevPublishData = null;
+    this.presenceManager.cleanUpPresence(COMPOSER_TYPE);
   },
 
-  updateState() {
-    let state = null;
-    const action = this.action;
-
-    if (action === "reply" || action === "edit") {
-      state = { action };
-      if (action === "reply") state.topic_id = this.get("topic.id");
-      if (action === "edit") state.post_id = this.get("post.id");
+  _cancelThrottle() {
+    if (this._throttle) {
+      cancel(this._throttle);
+      this._throttle = null;
     }
-
-    this.set("previousState", this.currentState);
-    this.set("currentState", state);
-  },
-
-  @observes("currentState")
-  currentStateChanged() {
-    if (this.channel) {
-      this.messageBus.unsubscribe(this.channel);
-      this.set("channel", null);
-    }
-
-    this.clear();
-
-    if (!["reply", "edit"].includes(this.action)) {
-      return;
-    }
-
-    this.publish({
-      response_needed: true,
-      previous: this.previousState,
-      current: this.currentState
-    }).then(r => {
-      if (this.isDestroyed) {
-        return;
-      }
-      this.set("presenceUsers", r.users);
-      this.set("channel", r.messagebus_channel);
-
-      if (!r.messagebus_channel) {
-        return;
-      }
-
-      this.messageBus.subscribe(
-        r.messagebus_channel,
-        message => {
-          if (!this.isDestroyed) this.set("presenceUsers", message.users);
-          this._clearTimer = debounce(
-            this,
-            "clear",
-            keepAliveDuration + bufferTime
-          );
-        },
-        r.messagebus_id
-      );
-    });
-  },
-
-  clear() {
-    if (!this.isDestroyed) this.set("presenceUsers", []);
-  },
-
-  publish(data) {
-    this._lastPublish = new Date();
-
-    // Don't publish presence if disabled
-    if (this.currentUser.hide_profile_and_presence) {
-      return Promise.resolve();
-    }
-
-    return ajax("/presence/publish", { type: "POST", data });
-  },
-
-  @computed("presenceUsers", "currentUser.id")
-  users(users, currentUserId) {
-    return (users || []).filter(user => user.id !== currentUserId);
   }
 });

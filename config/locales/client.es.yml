@@ -29,6 +29,7 @@ es:
       time: "HH:mm"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY HH:mm"
@@ -260,11 +261,12 @@ es:
       help:
         bookmark: "Haz clic para marcar la primera publicación sobre este tema"
         unbookmark: "Haz clic para eliminar todos los marcadores en este tema"
+        unbookmark_with_reminder: "Haz clic para quitar todos los marcadores y recordatorios en este tema. Tienes un recordatorio puesto %{reminder_at} para este tema."
     bookmarks:
-      created: "has marcado esta publicación"
       not_bookmarked: "marcar esta publicación"
-      created_with_at_desktop_reminder: "guardaste esta publicación en marcadores y se te recordará la próxima vez que estés en tu computadora"
       remove: "Eliminar marcador"
+      delete: "Borrar marcador"
+      confirm_delete: "¿Seguro que quieres borrar este marcados? El recordatorio también se borrará."
       confirm_clear: "¿Estás seguro de que deseas eliminar todos tus marcadores en este tema?"
       save: "Guardar"
       no_timezone: 'No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes elegir una <a href="%{basePath}/my/preferences/profile">en tu perfil</a>.'
@@ -273,12 +275,19 @@ es:
       reminders:
         at_desktop: "La próxima vez que esté en mi ordenador"
         later_today: "Más tarde durante el día de hoy"
+        next_business_day: "Siguiente día hábil"
         tomorrow: "Mañana"
         next_week: "Próxima semana"
         later_this_week: "Esta misma semana"
+        start_of_next_business_week: "Lunes que viene"
         next_month: "Próximo mes"
         custom: "Fecha y hora personalizadas"
+        last_custom: "Último"
         none: "No se necesita recordatorio"
+        today_with_time: "hoy a las %{time}"
+        tomorrow_with_time: "mañana a las %{time}"
+        at_time: "a las %{date_time}"
+        existing_reminder: "Tienes un recordatorio puesto para este marcador que será enviado"
     drafts:
       resume: "Reanudar"
       remove: "Eliminar"
@@ -516,6 +525,7 @@ es:
       days_visited_long: "Días visitados"
       posts_read: "Leídos"
       posts_read_long: "Publicaciones leídas"
+      last_updated: "Última actialización:"
       total_rows:
         one: "%{count} usuario"
         other: "%{count} usuarios"
@@ -745,6 +755,10 @@ es:
       private_message: "Mensaje"
       private_messages: "Mensajes"
       user_notifications:
+        filters:
+          all: "Todo"
+          read: "Leídos"
+          unread: "Sin leer"
         ignore_duration_title: "Temporizador de ignorado"
         ignore_duration_username: "Nombre de usuario"
         ignore_duration_when: "Duración:"
@@ -897,6 +911,7 @@ es:
         success: "(correo electrónico enviado)"
         in_progress: "(enviando correo electrónico)"
         error: "(error)"
+        emoji: "emoji candado"
         action: "Enviar correo electrónico para restablecer la contraseña"
         set_password: "Establecer contraseña"
         choose_new: "Escoge una nueva contraseña"
@@ -1265,25 +1280,27 @@ es:
         fixed: "Cargar página"
     modal:
       close: "cerrar"
+      dismiss_error: "Descartar error"
     close: "Cerrar"
     assets_changed_confirm: "Este sitio acaba de ser actualizado. ¿Quieres cargar la página de nuevo para ver la última versión?"
     logout: "Has cerrado sesión."
     refresh: "Actualizar"
+    home: "Inicio"
     read_only_mode:
       enabled: "Este sitio está en modo de solo lectura. Puedes continuar navegando pero algunas acciones como responder o dar me gusta no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro se encuentre en modo de solo lectura."
       logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de solo lectura."
     too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentTopics, plural, un {<strong>#</strong> tema} otros {<strong>#</strong> temas}} y {currentPosts, plural, una {<strong>#</strong> publicación} otras {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredTopics, plural, un {<strong>#</strong> tema} otros {<strong>#</strong> temas}} y {requiredPosts, plural, una {<strong>#</strong> publicación} otras {<strong>#</strong> publicaciones}}. Solo los miembros del staff pueden ver este mensaje.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}} y {currentPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}} y {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Solo los miembros del staff pueden ver este mensaje.
     too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentTopics, plural, un {<strong>#</strong> tema} otros {<strong>#</strong> temas}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredTopics, plural, un {<strong>#</strong> tema} otros {<strong>#</strong> temas}}. Solo los miembros del staff pueden ver este mensaje.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}}. Solo los miembros del staff pueden ver este mensaje.
     too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentPosts, plural, una {<strong>#</strong> publicación} otras {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredPosts, plural, una {<strong>#</strong> publicación} otras {<strong>#</strong> publicaciones}}. Solo los miembros del staff pueden ver este mensaje.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Solo los miembros del staff pueden ver este mensaje.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hour} otros {# errors/hour}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/minute} otros {# errors/minute}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hour} otros {# errors/hour}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> excedió el límite de la configuración del sitio de {limit, plural, one {# error/minute} otros {# errors/minute}}."
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hour} other {# errors/hour}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/minute} other {# errors/minute}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hour} other {# errors/hour}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> excedió el límite de la configuración del sitio de {limit, plural, one {# error/minute} other {# errors/minute}}."
     learn_more: "saber más..."
     all_time: "total"
     all_time_desc: "total de temas creados"
@@ -1359,6 +1376,7 @@ es:
     email_login:
       link_label: "Enviarme un enlace para ingresar por correo electrónico"
       button_label: "con correo electrónico"
+      emoji: "emoji de candado"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con un enlace para ingresar a tu cuenta."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con un enlace para ingresar a tu cuenta."
       complete_username_found: "Encontramos una cuenta que coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con un enlace para ingresar a tu cuenta."
@@ -1436,6 +1454,7 @@ es:
         backup_code: "Usar un código de respaldo en su lugar"
     invites:
       accept_title: "Invitación"
+      emoji: "emoji de un sobre"
       welcome_to: "¡Bienvenido a %{site_name}!"
       invited_by: "Has sido invitado por:"
       social_login_available: "También tendrás la posibilidad de iniciar sesión mediante cualquier red social asociada a ese correo electrónico."
@@ -1649,6 +1668,9 @@ es:
         message:
           one: "%{count} mensaje sin leer"
           other: "{{count}} mensajes sin leer"
+        high_priority:
+          one: "%{count} notificación de alta prioridad sin leer"
+          other: "%{count} notificaciones de alta prioridad sin leer"
       title: "notificaciones por menciones a tu @nombre, respuestas a tus publicaciones y temas, mensajes, etc"
       none: "No se pudieron cargar las notificaciones en este momento."
       empty: "No se encontraron notificaciones."
@@ -1709,6 +1731,7 @@ es:
         moved_post: "publicación movida"
         linked: "enlazado"
         bookmark_reminder: "recordatorio de marcador"
+        bookmark_reminder_with_name: "recordatorio de marcador - %{name}"
         granted_badge: "medalla concedida"
         invited_to_topic: "invitado al tema"
         group_mentioned: "grupo mencionado"
@@ -2001,7 +2024,7 @@ es:
         auto_delete: "Este tema se eliminará automáticamente %{timeLeft}."
         auto_bump: "La fecha de este tema se actualizará %{timeLeft}."
         auto_reminder: "Te recordaremos sobre este tema %{timeLeft}."
-        auto_delete_replies: "Respuestas en este tema serán eliminadas automáticamente después de %{duration}."
+        auto_delete_replies: "Las respuestas a este tema serán eliminadas automáticamente después de %{duration}."
       auto_close_title: "Configuración de cierre automático"
       auto_close_immediate:
         one: "El último post se publicó hace %{count} hora, por lo que el tema se cerrará inmediatamente."
@@ -2037,7 +2060,6 @@ es:
           "2_8": "Verás el número de respuestas  nuevas porque estás siguiendo esta categoría."
           "2_4": "Verás el número de respuestas nuevas porque has publicado una respuesta en este tema."
           "2_2": "Verás el número de respuestas nuevas porque estás siguiendo este tema."
-          "2": 'Verás el número de respuestas nuevas porque has <a href="{{basePath}}/u/{{username}}/preferences">leído este tema</a>.'
           "1_2": "Se te notificará si alguien menciona tu @nombre o te responde."
           "1": "Se te notificará si alguien menciona tu @nombre o te responde."
           "0_7": "Estás ignorando todas las notificaciones en esta categoría."
@@ -2213,6 +2235,18 @@ es:
         title: "Fusionar las publicaciones seleccionadas"
         action: "fusionar las publicaciones seleccionadas"
         error: "Se produjo un error al fusionar las oublicaciones seleccionadas."
+      publish_page:
+        title: "Publicación de página"
+        publish: "Publicar"
+        description: "Cuando un tema se publica como página su URL se puede compartir y se mostrará con estilos personalizados."
+        slug: "Slug"
+        publish_url: "La página se ha publicado en:"
+        topic_published: "El tema se ha publicado en:"
+        preview_url: "La página será publicada en:"
+        invalid_slug: "Lo sentimos, no puedes publicar esta página."
+        unpublish: "Despublicar"
+        unpublished: "La página se ha despublicado y ya no se puede acceder a ella."
+        publishing_settings: "Ajustes de publicación"
       change_owner:
         title: "Cambiar dueño"
         action: "cambiar dueño"
@@ -2349,6 +2383,7 @@ es:
         convert_to_moderator: "Convertir en publicación del staff"
         revert_to_regular: "Revertir el formato de publicación del staff"
         rebake: "Reconstruir HTML"
+        publish_page: "Publicación de página"
         unhide: "Deshacer ocultar"
         change_owner: "Cambiar dueño"
         grant_badge: "Conceder medalla"
@@ -2443,7 +2478,9 @@ es:
             button: "HTML"
       bookmarks:
         create: "Crear marcador"
+        edit: "Editar marcador"
         created: "Creado"
+        updated: "Actualizado"
         name: "Nombre"
         name_placeholder: "¿Para qué es este marcador?"
         set_reminder: "Recuérdame"
@@ -2451,6 +2488,9 @@ es:
           delete_bookmark:
             name: "Eliminar marcador"
             description: "Elimina el marcador de tu perfil y cancela todos los recordatorios para tal marcador"
+          edit_bookmark:
+            name: "Editar marcador"
+            description: "Editar el nombre del marcador o cambia la fecha y hora del recordatorio"
     category:
       can: "puede&hellip; "
       none: "(sin categoría)"
@@ -2756,7 +2796,6 @@ es:
         this_week: "Semana"
         today: "Hoy"
         other_periods: "ver los destacados"
-    browser_update: 'Desafortunadamente <a href="https://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor, <a href="https://browsehappy.com">actualiza tu navegador</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -2812,6 +2851,19 @@ es:
         title: "Redactando"
         return: "%{shortcut} Regresar al editor"
         fullscreen: "%{shortcut} Edición en pantalla completa"
+      bookmarks:
+        title: "Marcadores"
+        enter: "%{shortcut} Guardar y cerrar"
+        later_today: "%{shortcut} Hoy más tarde"
+        later_this_week: "%{shortcut} Esta semana"
+        tomorrow: "%{shortcut} Mañana"
+        next_week: "%{shortcut} La semana que viene"
+        next_month: "%{shortcut} El mes que viene"
+        next_business_week: "%{shortcut} Principio de la semana que viene"
+        next_business_day: "%{shortcut} Siguiente día hábil"
+        custom: "%{shortcut} Fecha y hora personalizadas"
+        none: "%{shortcut} Sin recordatorio"
+        delete: "%{shortcut} Borrar marcador"
       actions:
         title: "Acciones"
         bookmark_topic: "%{shortcut} Guardar/quitar el tema de marcadores"
@@ -3069,8 +3121,7 @@ es:
           view_table: "tabla"
           view_graph: "gráfico"
           refresh_report: "Actualizar reporte"
-          start_date: "Fecha de inicio (UTC)"
-          end_date: "Fecha de finalización (UTC)"
+          dates: "Fechas (UTC)"
           groups: "Todos los grupos"
           disabled: "Este reporte está inhabilitado"
           totals_for_sample: "Total para la muestra"
@@ -3087,6 +3138,8 @@ es:
               label: Grupo
             category:
               label: Categoría
+            include-subcategories:
+              label: "Incluir subcategoría"
       commits:
         latest_changes: "Cambios recientes: ¡por favor, actualiza a menudo!"
         by: "por"
@@ -3131,7 +3184,7 @@ es:
             effects: Efectos
             trust_levels_none: "Ninguno"
             automatic_membership_email_domains: "Los usuarios que se registren con un dominio de correo electrónico que esté en esta lista se añadirán automáticamente a este grupo:"
-            automatic_membership_retroactive: "Aplicar la misma regla de dominio de correo electrónico a los usuarios registrados existentes"
+            automatic_membership_user_count: "%{count} usuarios tienen los nuevos dominios de email y serán añadidos al grupo."
             primary_group: "Establecer automáticamente como grupo principal"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que los nombres de usuarios"
         primary: "Grupo principal"
@@ -3249,6 +3302,9 @@ es:
         notification_event:
           name: "Evento de notificación"
           details: "Cuando un usuario recibe una notificación."
+        user_badge_event:
+          name: "Evento por obtención de medalla"
+          details: "Cuando un usuario recibe una medalla."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -3398,6 +3454,7 @@ es:
           theme_name: "Nombre del tema"
           component_name: "Nombre del componente"
           themes_intro: "Seleccionar un tema existente o instalar uno nuevo para empezar"
+          themes_intro_emoji: "emoji de mujer artista"
           beginners_guide_title: "Guía básica para utilizar los temas de Discourse"
           developers_guide_title: "Guía del desarrollador para los temas de Discourse"
           browse_themes: "Ver temas de la comunidad"
@@ -3624,6 +3681,7 @@ es:
         format: "Formato"
         html: "html"
         text: "texto"
+        html_preview: "Previsualización de contenido de correo electrónico"
         last_seen_user: "Último usuario visto:"
         no_result: "No se han encontrado resultados para el resumen."
         reply_key: "Clave de respuesta"
@@ -3778,6 +3836,8 @@ es:
             api_key_update: "actualizar clave API"
             api_key_destroy: "destruir clave API"
             override_upload_secure_status: "sobrescribir estado seguro de la subida"
+            page_published: "página publicada"
+            page_unpublished: "página despublicada"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
@@ -3984,6 +4044,29 @@ es:
         anonymize_yes: "Sí, hacer anónima esta cuenta."
         anonymize_failed: "Hubo un problema al hacer anónima la cuenta."
         delete: "Eliminar usuario"
+        merge:
+          transfer_and_delete: "Transferir y eliminar"
+          prompt:
+            title: "Transferir y eliminar @%{username}"
+            description: |
+              <p>Por favor, escoge un nuevo dueño para <b>el contenido de @%{username}.</b></p>
+
+              <p>Todos los temas, publicaciones, mensajes y otros contenidos creados por <b>@%{username}</b> serán transferidos.</p>
+            target_username_placeholder: "Nombre de usuario del nuevo dueño"
+            transfer_and_delete: "Transferir y eliminar @%{username}"
+            cancel: "Cancelar"
+          confirmation:
+            title: "Transferir y eliminar @%{username}"
+            description: |
+              <p>Todo el contenido de <b>@%{username}</b> será transferido y atribuido a <b>@%{targetUsername}</b>. Después de la transferencia, la cuenta <b>@%{username}</b> será eliminada.</p>
+
+              <p><b>¡No se puede deshacer!</b></p>
+
+              <p>Para continuar, escribe: <code>%{text}</code></p>
+            transfer_and_delete: "Transferir y eliminar @%{username}"
+            cancel: "Cancelar"
+        merging_user: "Juntando usuario..."
+        merge_failed: "Ha ocurrido un error al juntar los usuarios."
         delete_forbidden_because_staff: "Los administradores y moderadores no se pueden eliminar."
         delete_posts_forbidden_because_staff: "No se pueden eliminar todos las publicaciones de administradores y moderadores."
         delete_forbidden:
@@ -4241,6 +4324,7 @@ es:
             with_time: "<span class=\"username\">%{username}</span> a las <span class=\"time\">%{time}</span>"
         badge_intro:
           title: "Selecciona una medalla existente o crea una para empezar"
+          emoji: "emoji de mujer estudiante"
           what_are_badges_title: "¿Qué son las medallas?"
           badge_query_examples_title: "Ejemplos de consultas de medallas"
         mass_award:
@@ -4259,6 +4343,7 @@ es:
         name: "Nombre"
         group: "Grupo"
         image: "Imagen"
+        alt: "previsualización de emoji personalizado"
         delete_confirm: "¿Estás seguro de que quieres eliminar el emoji :%{name}:?"
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
@@ -4278,6 +4363,7 @@ es:
         embed_post_limit: "Número máximo de publicaciones que se pueden insertar"
         embed_title_scrubber: "Expresión regular utilizada para depurar el título de las publicaciones"
         embed_truncate: "Truncar las publicaciones insertadas"
+        embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
         embed_whitelist_selector: "Selector CSS para elementos permitidos en los insertados"
         embed_blacklist_selector: "Selector CSS para los elementos que se eliminan de los insertados"
         embed_classname_whitelist: "Clases CSS permitidas"

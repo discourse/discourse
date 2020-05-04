@@ -1,267 +1,365 @@
 # frozen_string_literal: true
 
-require "nokogiri"
+require "nokogumbo"
+require "securerandom"
 
 class HtmlToMarkdown
 
-  class Block < Struct.new(:name, :head, :body, :opened, :markdown)
-    def initialize(name, head = "", body = "", opened = false, markdown = +"")
-      super
-    end
-  end
-
   def initialize(html, opts = {})
-    @opts = opts || {}
-    @doc = fix_span_elements(Nokogiri::HTML(html))
+    @opts = opts
 
-    remove_whitespaces!
-  end
+    # we're only interested in <body>
+    @doc = Nokogiri::HTML5(html).at("body")
 
-  # If a `<div>` is within a `<span>` that's invalid, so let's hoist the `<div>` up
-  INLINE_ELEMENTS ||= %w{span font}
-  BLOCK_ELEMENTS ||= %w{div p}
-  def fix_span_elements(node)
-    if (INLINE_ELEMENTS.include?(node.name) && BLOCK_ELEMENTS.any? { |e| node.at(e) })
-      node.swap(node.children)
-    end
-
-    node.children.each { |c| fix_span_elements(c) }
-    node
-  end
-
-  def remove_whitespaces!
-    @doc.traverse do |node|
-      if node.is_a?(Nokogiri::XML::Text) && node.parent.name != "pre"
-        node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element&.description&.block?
-        node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && node.parent.description&.block?
-        node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element&.description&.block?
-        node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element.nil? && node.parent.description&.block?
-        node.content = node.content.gsub(/\r\n?/, "\n")
-        node.remove if node.content.empty?
-      end
-    end
+    remove_not_allowed!(@doc)
+    remove_hidden!(@doc)
+    hoist_line_breaks!(@doc)
+    remove_whitespaces!(@doc)
   end
 
   def to_markdown
-    @stack = [Block.new("root")]
-    @markdown = +""
     traverse(@doc)
-    @markdown << format_block
-    @markdown.gsub!(/\n{3,}/, "\n\n")
-    @markdown.strip!
-    @markdown
+      .gsub(/\n{2,}/, "\n\n")
+      .strip
+  end
+
+  private
+
+  def remove_not_allowed!(doc)
+    allowed = Set.new
+
+    HtmlToMarkdown.private_instance_methods.each do |m|
+      if tag = m.to_s[/^visit_(.+)/, 1]
+        allowed << tag
+      end
+    end
+
+    @doc.traverse { |node| node.remove if !allowed.include?(node.name) }
+  end
+
+  HIDDEN_STYLES ||= /(display\s*:\s*none)|(visibility\s*:\s*hidden)|(opacity\s*:\s*0)|(transform\s*:\s*scale\(0\))|((width|height)\s*:\s*0)/i
+
+  def remove_hidden!(doc)
+    @doc.css("[hidden]").remove
+    @doc.css("[style]").each { |n| n.remove if n["style"][HIDDEN_STYLES] }
+    @doc.css("img[width]").each { |n| n.remove if n["width"].to_i <= 0 }
+    @doc.css("img[height]").each { |n| n.remove if n["height"].to_i <= 0 }
+  end
+
+  # When there's a <br> inside an inline element, split the inline element around the <br>
+  def hoist_line_breaks!(doc)
+    klass = "_" + SecureRandom.hex
+    doc.css("br").each { |br| br.add_class(klass) }
+
+    loop do
+      changed = false
+
+      doc.css("br.#{klass}").each do |br|
+        parent = br.parent
+
+        if parent.description.block?
+          br.remove_class(klass)
+        else
+          before, after = parent.children.slice_when { |n| n == br }.to_a
+
+          if before.size > 1
+            b = Nokogiri::XML::Node.new(parent.name, doc)
+            before[0...-1].each { |c| b.add_child(c) }
+            parent.previous = b if b.inner_html.present?
+          end
+
+          if after.present?
+            a = Nokogiri::XML::Node.new(parent.name, doc)
+            after.each { |c| a.add_child(c) }
+            parent.next = a if a.inner_html.present?
+          end
+
+          parent.replace(br)
+
+          changed = true
+        end
+      end
+
+      break if !changed
+    end
+  end
+
+  # Removes most of the unnecessary white spaces for better markdown conversion
+  # Loosely based on the CSS' White Space Processing Rules (https://www.w3.org/TR/css-text-3/#white-space-rules)
+  def remove_whitespaces!(node)
+    return true if "pre" == node.name
+
+    node.children.chunk { |n| is_inline?(n) }.each do |inline, nodes|
+      if inline
+        collapse_spaces!(nodes) && remove_trailing_space!(nodes)
+      else
+        nodes.each { |n| remove_whitespaces!(n) }
+      end
+    end
+  end
+
+  def is_inline?(node)
+    node.text? || ("br" != node.name && node.description.inline? && node.children.all? { |n| is_inline?(n) })
+  end
+
+  def collapse_spaces!(nodes, was_space = true)
+    nodes.each do |node|
+      if node.text?
+        text = String.new
+
+        node.text.chars.each do |c|
+          if c[/[[:space:]]/]
+            text << " " if !was_space
+            was_space = true
+          else
+            text << c
+            was_space = false
+          end
+        end
+
+        node.content = text
+      else
+        node.children.each { |n| was_space = collapse_spaces!([n], was_space) }
+      end
+    end
+
+    was_space
+  end
+
+  def remove_trailing_space!(nodes)
+    last = nodes[-1]
+
+    if last.text?
+      last.content = last.content[0...-1] if last.content[-1] == " "
+    elsif last.children.present?
+      remove_trailing_space!(last.children)
+    end
   end
 
   def traverse(node)
-    node.children.each { |n| visit(n) }
+    node.children.map { |n| visit(n) }.join
   end
 
   def visit(node)
-    return if node["style"] && node["style"][/display\s*:\s*none/]
-
-    if node.description&.block? && node.parent&.description&.block? && @stack[-1].markdown.size > 0
-      block = @stack[-1].dup
-      @markdown << format_block
-      block.markdown = +""
-      block.opened = true
-      @stack << block
-    end
-
     visitor = "visit_#{node.name}"
-    respond_to?(visitor) ? send(visitor, node) : traverse(node)
+    send(visitor, node) if respond_to?(visitor, true)
   end
 
-  BLACKLISTED ||= %w{button datalist fieldset form input label legend meter optgroup option output progress select textarea style script}
-  BLACKLISTED.each do |tag|
-    class_eval <<-RUBY
-      def visit_#{tag}(node)
-        ""
-      end
-    RUBY
-  end
+  ALLOWED_IMG_SRCS ||= %w{http:// https:// www.}
 
-  def visit_pre(node)
-    code = node.children.find { |c| c.name == "code" }
-    code_class = code ? code["class"] : ""
-    lang = code_class ? code_class[/lang-(\w+)/, 1] : ""
-    pre = Block.new("pre")
-    pre.markdown = +"```#{lang}\n"
-    @stack << pre
-    traverse(node)
-    pre.markdown << "\n```\n"
-    @markdown << format_block
-  end
-
-  def visit_blockquote(node)
-    @stack << Block.new("blockquote", "> ", "> ")
-    traverse(node)
-    @markdown << format_block
-  end
-
-  BLOCK_WITH_NEWLINE ||= %w{div p}
-  BLOCK_WITH_NEWLINE.each do |tag|
-    class_eval <<-RUBY
-      def visit_#{tag}(node)
-        @stack << Block.new("#{tag}")
-        traverse(node)
-        @markdown << format_block
-        @markdown << "\n"
-      end
-    RUBY
-  end
-
-  BLOCK_LIST ||= %w{menu ol ul}
-  BLOCK_LIST.each do |tag|
-    class_eval <<-RUBY
-      def visit_#{tag}(node)
-        @stack << Block.new("#{tag}")
-        traverse(node)
-        @markdown << format_block
-      end
-    RUBY
-  end
-
-  def visit_li(node)
-    parent = @stack.reverse.find { |n| n.name[/ul|ol|menu/] }
-    prefix = parent&.name == "ol" ? "1. " : "- "
-    @stack << Block.new("li", prefix, "  ")
-    traverse(node)
-    @markdown << format_block
-  end
-
-  (1..6).each do |n|
-    class_eval <<-RUBY
-      def visit_h#{n}(node)
-        @stack << Block.new("h#{n}", "#" * #{n} + " ")
-        traverse(node)
-        @markdown << format_block
-      end
-    RUBY
-  end
-
-  WHITELISTED ||= %w{del ins kbd s small strike sub sup}
-  WHITELISTED.each do |tag|
-    class_eval <<-RUBY
-      def visit_#{tag}(node)
-        @stack[-1].markdown << "<#{tag}>"
-        traverse(node)
-        @stack[-1].markdown << "</#{tag}>"
-      end
-    RUBY
-  end
-
-  def visit_abbr(node)
-    @stack[-1].markdown << (node["title"].present? ? %Q[<abbr title="#{node["title"]}">] : "<abbr>")
-    traverse(node)
-    @stack[-1].markdown << "</abbr>"
-  end
-
-  def visit_img(node)
-    if is_valid_src?(node["src"]) && is_visible_img?(node)
-      if @opts[:keep_img_tags]
-        @stack[-1].markdown << node.to_html
-      else
-        title = node["alt"].presence || node["title"].presence
-        @stack[-1].markdown << "![#{title}](#{node["src"]})"
-      end
+  def allowed_hrefs
+    @allowed_hrefs ||= begin
+      hrefs = SiteSetting.allowed_href_schemes.split("|").map { |scheme| "#{scheme}:" }.to_set
+      ALLOWED_IMG_SRCS.each { |src| hrefs << src }
+      hrefs << "mailto:"
+      hrefs.to_a
     end
   end
 
   def visit_a(node)
-    if is_valid_href?(node["href"])
-      @stack[-1].markdown << "["
-      traverse(node)
-      @stack[-1].markdown << "](#{node["href"]})"
+    if node["href"].present? && node["href"].starts_with?(*allowed_hrefs)
+      "[#{traverse(node)}](#{node["href"]})"
     else
       traverse(node)
     end
   end
 
+  def visit_img(node)
+    return if node["src"].blank?
+
+    if @opts[:keep_img_tags]
+      node.to_html
+    elsif @opts[:keep_cid_imgs] && node["src"].starts_with?("cid:")
+      node.to_html
+    elsif node["src"].starts_with?(*ALLOWED_IMG_SRCS)
+      title = node["alt"].presence || node["title"].presence
+      width = node["width"].to_i
+      height = node["height"].to_i
+      dimensions = "|#{width}x#{height}" if width > 0 && height > 0
+      "![#{title}#{dimensions}](#{node["src"]})"
+    end
+  end
+
+  ALLOWED ||= %w{kbd del ins small big sub sup dl dd dt}
+  ALLOWED.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      "<#{tag}>#{traverse(node)}</#{tag}>"
+    end
+  end
+
+  def visit_blockquote(node)
+    text = traverse(node)
+    text.strip!
+    text.gsub!(/\n{2,}/, "\n\n")
+    text.gsub!(/^/, "> ")
+    "\n\n#{text}\n\n"
+  end
+
+  BLOCKS ||= %w{div tr}
+  BLOCKS.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      prefix = node.previous_element&.description&.block? ? "" : "\n"
+      "#{prefix}#{traverse(node)}\n"
+    end
+  end
+
+  def visit_p(node)
+    "\n\n#{traverse(node)}\n\n"
+  end
+
+  TRAVERSABLES ||= %w{aside font span thead tbody tfooter u}
+  TRAVERSABLES.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      traverse(node)
+    end
+  end
+
   def visit_tt(node)
-    @stack[-1].markdown << "`"
-    traverse(node)
-    @stack[-1].markdown << "`"
+    "`#{traverse(node)}`"
   end
 
   def visit_code(node)
-    @stack.reverse.find { |n| n.name["pre"] } ? traverse(node) : visit_tt(node)
+    node.ancestors("pre").present? ? traverse(node) : visit_tt(node)
+  end
+
+  def visit_pre(node)
+    text = traverse(node)
+    fence = text["`"] ? "~~~" : "```"
+    code = node.at("code")
+    code_class = code ? code["class"] : ""
+    lang = code_class ? code_class[/lang-(\w+)/, 1] : ""
+    "\n\n#{fence}#{lang}\n#{traverse(node)}\n#{fence}\n\n"
   end
 
   def visit_br(node)
-    return if node.previous_sibling.nil? && EMPHASIS.include?(node.parent.name)
-    return if node.parent.name == "p" && (node.next_sibling&.text || "").start_with?("\n")
-    @stack[-1].markdown << "\n"
+    "\n"
   end
 
   def visit_hr(node)
-    @stack[-1].markdown << "\n\n---\n\n"
+    "\n\n---\n\n"
   end
 
-  EMPHASIS ||= %w{b strong i em}
-  EMPHASIS.each do |tag|
-    class_eval <<-RUBY
-      def visit_#{tag}(node)
-        return if node.text.empty?
-        return @stack[-1].markdown << " " if node.text.blank?
-        times = "#{tag}" == "i" || "#{tag}" == "em" ? 1 : 2
-        delimiter = (node.text["*"] ? "_" : "*") * times
-        @stack[-1].markdown << " " if node.text[0] == " "
-        @stack[-1].markdown << delimiter
-        traverse(node)
-        @stack[-1].markdown.gsub!(/\n+$/, "")
-        if @stack[-1].markdown[-1] == " "
-          @stack[-1].markdown.chomp!(" ")
-          append_space = true
-        end
-        @stack[-1].markdown << delimiter
-        @stack[-1].markdown << " " if append_space
+  def visit_abbr(node)
+    title = node["title"].presence
+    title_attr = title ? %[ title="#{title}"] : ""
+    "<abbr#{title_attr}>#{traverse(node)}</abbr>"
+  end
+
+  def visit_acronym(node)
+    visit_abbr(node)
+  end
+
+  (1..6).each do |n|
+    define_method("visit_h#{n}") do |node|
+      "#{"#" * n} #{traverse(node)}"
+    end
+  end
+
+  CELLS ||= %w{th td}
+  CELLS.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      "#{traverse(node)} "
+    end
+  end
+
+  def visit_table(node)
+    if rows = extract_rows(node)
+      headers = rows[0].css("td, th")
+      text = "| " + headers.map { |td| traverse(td).gsub(/\n/, "<br>") }.join(" | ") + " |\n"
+      text << "| " + (["-"] * headers.size).join(" | ") + " |\n"
+      rows[1..-1].each do |row|
+        text << "| " + row.css("td").map { |td| traverse(td).gsub(/\n/, "<br>") }.join(" | ") + " |\n"
       end
-    RUBY
+      "\n\n#{text}\n\n"
+    else
+      traverse(node)
+    end
+  end
+
+  def extract_rows(table)
+    return if table.ancestors("table").present?
+    return if (rows = table.css("tr")).empty?
+    headers_count = rows[0].css("td, th").size
+    return if rows[1..-1].any? { |row| row.css("td").size != headers_count }
+    rows
+  end
+
+  LISTS ||= %w{ul ol}
+  LISTS.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      prefix = node.previous_element&.description&.block? ? "" : "\n"
+      suffix = node.ancestors("ul, ol, li").size > 0 ? "" : "\n"
+      "#{prefix}#{traverse(node)}#{suffix}"
+    end
+  end
+
+  def visit_li(node)
+    text = traverse(node)
+
+    lists = node.ancestors("ul, ol")
+    marker = "ol" == lists[0]&.name ? "1. " : "- "
+    indent = (" " * marker.size) * [1, lists.size].max
+    suffix = node == node.parent.elements[-1] ? "" : "\n"
+
+    text.gsub!(/\n{2,}/, "\n\n")
+    text.gsub!(/^(?!\s*$)/, indent)
+    text.lstrip!
+
+    "#{marker}#{text}#{suffix}"
+  end
+
+  EMPHASES ||= %w{i em}
+  EMPHASES.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      text = traverse(node)
+
+      return ""  if text.empty?
+      return " " if text.blank?
+      return "<#{tag}>#{text}</#{tag}>" if text["\n"] || (text["*"] && text["_"])
+
+      prefix = text[0][" "]
+      suffix = text[-1][" "] if text.size > 1
+      wrap = text["*"] ? "_" : "*"
+
+      "#{prefix}#{wrap}#{text.strip}#{wrap}#{suffix}"
+    end
+  end
+
+  STRONGS ||= %w{b strong}
+  STRONGS.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      text = traverse(node)
+
+      return ""  if text.empty?
+      return " " if text.blank?
+      return "<#{tag}>#{text}</#{tag}>" if text["\n"] || (text["*"] && text["_"])
+
+      prefix = text[0][" "]
+      suffix = text[-1][" "] if text.size > 1
+      wrap = text["*"] ? "__" : "**"
+
+      "#{prefix}#{wrap}#{text.strip}#{wrap}#{suffix}"
+    end
+  end
+
+  STRIKES ||= %w{s strike}
+  STRIKES.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      text = traverse(node)
+
+      return ""  if text.empty?
+      return " " if text.blank?
+      return "<#{tag}>#{text}</#{tag}>" if text["\n"] || text["~~"]
+
+      prefix = text[0][" "]
+      suffix = text[-1][" "] if text.size > 1
+
+      "#{prefix}~~#{text.strip}~~#{suffix}"
+    end
   end
 
   def visit_text(node)
-    top_block = @stack[-1]
-
-    if top_block.name == "pre"
-      top_block.markdown << node.text
-      return
-    end
-
-    node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && EMPHASIS.include?(node.parent.name)
-
-    if top_block.markdown.present? && indent = node.text[/^\s+/]
-      top_block.markdown << indent
-    end
-
-    text = node.text.gsub(/^\s+/, "").gsub(/\s{2,}/, " ")
-    top_block.markdown << text
-  end
-
-  def format_block
-    lines = @stack[-1].markdown.each_line.map do |line|
-      prefix = @stack.map { |b| b.opened ? b.body : b.head }.join
-      @stack.each { |b| b.opened = true }
-      prefix + line.rstrip
-    end
-    @stack.pop
-    (lines + [""]).join("\n")
-  end
-
-  def is_valid_href?(href)
-    href.present? && (href.start_with?("http") || href.start_with?("www."))
-  end
-
-  def is_valid_src?(src)
-    return false if src.blank?
-    return true  if @opts[:keep_cid_imgs] && src.start_with?("cid:")
-    src.start_with?("http") || src.start_with?("www.")
-  end
-
-  def is_visible_img?(img)
-    return false if img["width"].present?  && img["width"].to_i == 0
-    return false if img["height"].present? && img["height"].to_i == 0
-    return false if img["style"].present?  && img["style"][/(width|height)\s*:\s*0/]
-    true
+    node.text
   end
 
 end

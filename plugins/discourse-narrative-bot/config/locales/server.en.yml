@@ -127,7 +127,7 @@ en:
           I currently know how to do the following things:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Starts an interactive tutorial. `{name-of-tutorial}` can be one of: `%{tracks}`.
+          > Starts an interactive tutorial just for you, in a personal message. `{name-of-tutorial}` can be one of: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

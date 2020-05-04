@@ -261,9 +261,7 @@ pt_BR:
         bookmark: "Clique para adicionar o primeiro post deste tópico aos favoritos"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
     bookmarks:
-      created: "você marcou esta postagem como favorita"
       not_bookmarked: "marcar postagem como favorita"
-      created_with_at_desktop_reminder: "você marcou esta postagem como favorita e será lembrado na próxima vez em que estiver em sua área de trabalho"
       remove: "Remover Favorito"
       confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
       save: "Salvar"
@@ -745,6 +743,10 @@ pt_BR:
       private_message: "Mensagem"
       private_messages: "Mensagens"
       user_notifications:
+        filters:
+          all: "Tudo"
+          read: "Lido"
+          unread: "Não lidas"
         ignore_duration_title: "Ignorar Temporizador"
         ignore_duration_username: "Nome de Usuário"
         ignore_duration_when: "Duração:"
@@ -1263,6 +1265,7 @@ pt_BR:
     assets_changed_confirm: "Este site acabou de ser atualizado. Atualizar a página agora para ver a última versão?"
     logout: "Você foi desconectado."
     refresh: "Atualizar"
+    home: "Início"
     read_only_mode:
       enabled: "Este site está em modo de somente leitura. Por favor, continue a navegar, mas respostas, curtidas e outras ações estão desabilitadas por enquanto."
       login_disabled: "O login é desabilitado enquanto o site está em modo de somente leitura."
@@ -2014,7 +2017,6 @@ pt_BR:
           "2_8": "Você verá uma contagem de novas respostas porque está acompanhando esta categoria."
           "2_4": "Você verá uma contagem de novas respostas porque postou uma resposta a este tópico."
           "2_2": "Você verá uma contagem de novas respostas porque está acompanhando este tópico."
-          "2": 'Você verá uma contagem de novas respostas porque você <a href="{{basePath}}/u/{{username}}/preferences">leu este tópico</a>.'
           "1_2": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "1": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "0_7": "Você está ignorando todas as notificações nesta categoria."
@@ -2418,6 +2420,7 @@ pt_BR:
       bookmarks:
         create: "Criar marcador"
         created: "Criado"
+        updated: "Atualizado"
         name: "Nome"
     category:
       can: "pode&hellip; "
@@ -2724,7 +2727,6 @@ pt_BR:
         this_week: "Semana"
         today: "Hoje"
         other_periods: "Veja o topo"
-    browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">o seu navegador é muito antigo para funcionar neste site</a>. Por favor, <a href="https://browsehappy.com">atualize o seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3029,8 +3031,6 @@ pt_BR:
           view_table: "tabela"
           view_graph: "gráfico"
           refresh_report: "Atualizar Relatório"
-          start_date: "Data de início (UTC)"
-          end_date: "Data de término (UTC)"
           groups: "Todos os grupos"
           disabled: "Este relatório está desativado"
           totals_for_sample: "Totais para amostra"
@@ -3091,7 +3091,6 @@ pt_BR:
             effects: Efeitos
             trust_levels_none: "Nenhum"
             automatic_membership_email_domains: "Os usuários que se registrarem em um domínio de e-mail que corresponda exatamente a um nesta lista serão adicionados automaticamente a este grupo:"
-            automatic_membership_retroactive: "Aplicar a mesma regra de domínio de e-mail para adicionar usuários registrados existentes"
             primary_group: "Definir automaticamente como grupo principal"
         name_placeholder: "Nome do grupo, sem espaços, igual à regra de nome de usuário"
         primary: "Grupo Primário"
@@ -3944,6 +3943,11 @@ pt_BR:
         anonymize_yes: "Sim, tornar esta conta anônima"
         anonymize_failed: "Ocorreu um problema ao tornar a conta anônima."
         delete: "Apagar Usuário"
+        merge:
+          prompt:
+            cancel: "Cancelar"
+          confirmation:
+            cancel: "Cancelar"
         delete_forbidden_because_staff: "Administradores e moderadores não podem ser excluidos."
         delete_posts_forbidden_because_staff: "Não posso excluir todas as mensagens de administradores e moderadores."
         delete_forbidden:

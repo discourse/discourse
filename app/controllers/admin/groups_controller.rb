@@ -121,6 +121,28 @@ class Admin::GroupsController < Admin::AdminController
     render json: success_json
   end
 
+  def automatic_membership_count
+    domains = Group.get_valid_email_domains(params.require(:automatic_membership_email_domains))
+    group_id = params[:id]
+    user_count = 0
+
+    if domains.present?
+      if group_id.present?
+        group = Group.find_by(id: group_id)
+        raise Discourse::NotFound unless group
+
+        return can_not_modify_automatic if group.automatic
+
+        existing_domains = group.automatic_membership_email_domains.split("|")
+        domains -= existing_domains
+      end
+
+      user_count = Group.automatic_membership_users(domains.join("|")).count
+    end
+
+    render json: { user_count: user_count }
+  end
+
   protected
 
   def can_not_modify_automatic
@@ -137,7 +159,6 @@ class Admin::GroupsController < Admin::AdminController
       :visibility_level,
       :members_visibility_level,
       :automatic_membership_email_domains,
-      :automatic_membership_retroactive,
       :title,
       :primary_group,
       :grant_trust_level,

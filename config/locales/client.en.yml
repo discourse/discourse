@@ -40,6 +40,8 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      time_with_zone: "HH:mm (z)"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time_short_day: "ddd, HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
@@ -304,12 +306,11 @@ en:
         unbookmark: "Click to remove all bookmarks in this topic"
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
 
-
     bookmarks:
-      created: "you've bookmarked this post"
+      created: "you've bookmarked this post%{name}"
       not_bookmarked: "bookmark this post"
-      created_with_reminder: "you've bookmarked this post with a reminder %{date}"
-      created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop"
+      created_with_reminder: "you've bookmarked this post with a reminder %{date}%{name}"
+      created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop%{name}"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
@@ -834,6 +835,11 @@ en:
       private_message: "Message"
       private_messages: "Messages"
       user_notifications:
+        filters:
+          filter_by: "Filter By"
+          all: "All"
+          read: "Read"
+          unread: "Unread"
         ignore_duration_title: "Ignore Timer"
         ignore_duration_username: "Username"
         ignore_duration_when: "Duration:"
@@ -1397,6 +1403,7 @@ en:
     assets_changed_confirm: "This site was just updated. Refresh now for the latest version?"
     logout: "You were logged out."
     refresh: "Refresh"
+    home: "Home"
     read_only_mode:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
@@ -1443,6 +1450,7 @@ en:
     mute: Mute
     unmute: Unmute
     last_post: Posted
+    local_time: "Local Time"
     time_read: Read
     time_read_recently: "%{time_read} recently"
     time_read_tooltip: "%{time_read} total time read"
@@ -2255,7 +2263,7 @@ en:
           "2_8": "You will see a count of new replies because you are tracking this category."
           "2_4": "You will see a count of new replies because you posted a reply to this topic."
           "2_2": "You will see a count of new replies because you are tracking this topic."
-          "2": 'You will see a count of new replies because you <a href="{{basePath}}/u/{{username}}/preferences">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="{{basePath}}/u/{{username}}/preferences/notifications">read this topic</a>.'
           "1_2": "You will be notified if someone mentions your @name or replies to you."
           "1": "You will be notified if someone mentions your @name or replies to you."
           "0_7": "You are ignoring all notifications in this category."
@@ -2721,6 +2729,7 @@ en:
         create: "Create bookmark"
         edit: "Edit bookmark"
         created: "Created"
+        updated: "Updated"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
         set_reminder: "Remind me"
@@ -2792,6 +2801,7 @@ en:
       email_in_disabled_click: 'enable the "email in" setting.'
       mailinglist_mirror: "Category mirrors a mailing list"
       show_subcategory_list: "Show subcategory list above topics in this category."
+      read_only_banner: "Banner text when a user cannot create a topic in this category:"
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default"
@@ -3049,7 +3059,7 @@ en:
         today: "Today"
         other_periods: "see top"
 
-    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a>.'
+    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, login, and reply.'
 
     permission_types:
       full: "Create / Reply / See"
@@ -3393,8 +3403,7 @@ en:
           view_table: "table"
           view_graph: "graph"
           refresh_report: "Refresh Report"
-          start_date: "Start Date (UTC)"
-          end_date: "End Date (UTC)"
+          dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
@@ -3460,7 +3469,7 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-            automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
+            automatic_membership_user_count: "%{count} users have the new email domains and will be added to the group."
             primary_group: "Automatically set as primary group"
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
@@ -3757,6 +3766,9 @@ en:
           settings: "Settings"
           translations: "Translations"
           extra_scss: "Extra SCSS"
+          extra_files: "Extra files"
+          extra_files_upload: "Export theme to view these files."
+          extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
           show_advanced: "Show advanced fields"
           hide_advanced: "Hide advanced fields"
@@ -3820,6 +3832,7 @@ en:
           license: "License"
           version: "Version:"
           authors: "Authored by:"
+          creator: "Created by:"
           source_url: "Source"
           enable: "Enable"
           disable: "Disable"
@@ -4337,7 +4350,7 @@ en:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
         merge:
-          transfer_and_delete: "Transfer & Delete"
+          button: "Merge"
           prompt:
             title: "Transfer & Delete @%{username}"
             description: |
@@ -4357,6 +4370,7 @@ en:
 
               <p>To continue type: <code>%{text}</code></p>
 
+            text: "transfer @%{username} to @%{targetUsername}"
             transfer_and_delete: "Transfer & Delete @%{username}"
             cancel: "Cancel"
 

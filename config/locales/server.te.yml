@@ -106,9 +106,6 @@ te:
   page_num: "పుట %[num]"
   topics_in_category: "'%{category}' వర్గంలోని విషయాలు"
   rss_posts_in_topic: "'%{topic}' యొక్క ఆర్ యస్ యస్ వడ్డన"
-  author_wrote: "%{author} రాసారు:"
-  num_posts: "టపాలు:"
-  num_participants: "భాగస్వాములు:"
   read_full_topic: "పూర్తి విషయం చదువు"
   rss_description:
     latest: "తాజా విషయాలు"

@@ -11,7 +11,7 @@ class PostgreSQLFallbackHandler
   attr_reader :masters_down
   attr_accessor :initialized
 
-  DATABASE_DOWN_CHANNEL = '/global/database_down'.freeze
+  DATABASE_DOWN_CHANNEL = '/global/database_down'
 
   def initialize
     @masters_down = DistributedCache.new('masters_down', namespace: false)

@@ -135,7 +135,7 @@ module SiteSettingExtension
       if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
-        unless val.nil? || (val == ''.freeze)
+        unless val.nil? || (val == '')
           shadowed_val = val
           hidden_settings << name
           shadowed_settings << name

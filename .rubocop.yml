@@ -179,6 +179,8 @@ RSpec/DescribedClassModuleWrapping:
 
 RSpec/EmptyExampleGroup:
   Enabled: true
+  Exclude:
+    - 'spec/requests/api/*'
 
 RSpec/EmptyLineAfterExample:
   Enabled: false # TODO

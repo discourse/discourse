@@ -264,9 +264,6 @@ da:
   topics_in_category: "Emner i kategorien '%{category}'"
   rss_posts_in_topic: "RSS-feed for emnet '%{topic}'"
   rss_topics_in_category: "RSS-feed for emner i kategorien '%{category}'"
-  author_wrote: "%{author} skrev:"
-  num_posts: "Indlæg:"
-  num_participants: "Deltagere:"
   read_full_topic: "Læs hele emnet"
   private_message_abbrev: "Besked"
   rss_description:

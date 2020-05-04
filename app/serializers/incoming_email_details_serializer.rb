@@ -15,7 +15,7 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
     @mail = Mail.new(incoming_email.raw)
   end
 
-  EMAIL_RECEIVER_ERROR_PREFIX = "Email::Receiver::".freeze
+  EMAIL_RECEIVER_ERROR_PREFIX = "Email::Receiver::"
 
   def error
     @error_string.presence || I18n.t("emails.incoming.unrecognized_error")

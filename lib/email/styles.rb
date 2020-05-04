@@ -337,8 +337,8 @@ module Email
 
     def strip_classes_and_ids
       @fragment.css('*').each do |element|
-        element.delete('class'.freeze)
-        element.delete('id'.freeze)
+        element.delete('class')
+        element.delete('id')
       end
     end
 

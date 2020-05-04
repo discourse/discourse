@@ -475,7 +475,7 @@ describe DiscourseTagging do
 
     describe "clean_tag" do
       it "downcases new tags if setting enabled" do
-        expect(DiscourseTagging.clean_tag("HeLlO".freeze)).to eq("hello")
+        expect(DiscourseTagging.clean_tag("HeLlO")).to eq("hello")
 
         SiteSetting.force_lowercase_tags = false
         expect(DiscourseTagging.clean_tag("HeLlO")).to eq("HeLlO")

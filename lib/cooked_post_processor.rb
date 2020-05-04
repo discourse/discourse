@@ -339,12 +339,7 @@ class CookedPostProcessor
       width, height = ImageSizer.resize(width, height)
     end
 
-    # if the upload already exists and is attached to a different post,
-    # or the original_sha1 is missing meaning it was created before secure
-    # media was enabled. we want to re-thumbnail and re-optimize in this case
-    # to avoid using uploads linked to many other posts
-    upload = Upload.consider_for_reuse(Upload.get_from_url(src), @post)
-
+    upload = Upload.get_from_url(src)
     if upload.present?
       upload.create_thumbnail!(width, height, crop: crop)
 

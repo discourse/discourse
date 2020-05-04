@@ -6,7 +6,7 @@ module Jobs
   # Any leftovers will be caught in the next run, because the reminder_at column
   # is set to NULL once a reminder has been sent.
   class BookmarkReminderNotifications < ::Jobs::Scheduled
-    JOB_RUN_NUMBER_KEY ||= 'jobs_bookmark_reminder_notifications_job_run_num'.freeze
+    JOB_RUN_NUMBER_KEY ||= 'jobs_bookmark_reminder_notifications_job_run_num'
     AT_DESKTOP_CONSISTENCY_RUN_NUMBER ||= 6
 
     every 5.minutes

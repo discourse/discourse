@@ -1,97 +1,101 @@
 {{#conditional-loading-spinner condition=isLoading}}
   {{plugin-outlet name="admin-dashboard-general-top"}}
 
-  <div class="community-health section">
-    <div class="period-section">
-      <div class="section-title">
-        <h2>
-          <a href={{get-url "/admin/dashboard/reports"}}>
-            {{i18n "admin.dashboard.community_health"}}
-          </a>
-        </h2>
-        {{period-chooser period=period action=(action "changePeriod") content=availablePeriods fullDay=true}}
-      </div>
+  {{#if isCommunityHealthVisible}}
+    <div class="community-health section">
+      <div class="period-section">
+        <div class="section-title">
+          <h2>
+            <a href={{get-url "/admin/dashboard/reports"}}>
+              {{i18n "admin.dashboard.community_health"}}
+            </a>
+          </h2>
+          {{period-chooser period=period action=(action "changePeriod") content=availablePeriods fullDay=true}}
+        </div>
 
-      <div class="section-body">
-        <div class="charts">
-          {{admin-report
-            dataSourceName="consolidated_page_views"
-            forcedModes="stacked-chart"
-            filters=filters}}
+        <div class="section-body">
+          <div class="charts">
+            {{admin-report
+              dataSourceName="consolidated_page_views"
+              forcedModes="stacked-chart"
+              filters=filters}}
 
-          {{admin-report
-            dataSourceName="signups"
-            showTrend=true
-            forcedModes="chart"
-            filters=filters}}
+            {{admin-report
+              dataSourceName="signups"
+              showTrend=true
+              forcedModes="chart"
+              filters=filters}}
 
-          {{admin-report
-            dataSourceName="topics"
-            showTrend=true
-            forcedModes="chart"
-            filters=filters}}
+            {{admin-report
+              dataSourceName="topics"
+              showTrend=true
+              forcedModes="chart"
+              filters=filters}}
 
-          {{admin-report
-            dataSourceName="posts"
-            showTrend=true
-            forcedModes="chart"
-            filters=filters}}
+            {{admin-report
+              dataSourceName="posts"
+              showTrend=true
+              forcedModes="chart"
+              filters=filters}}
 
-          {{admin-report
-            dataSourceName="dau_by_mau"
-            showTrend=true
-            forcedModes="chart"
-            filters=filters}}
+            {{admin-report
+              dataSourceName="dau_by_mau"
+              showTrend=true
+              forcedModes="chart"
+              filters=filters}}
 
-          {{admin-report
-            dataSourceName="daily_engaged_users"
-            showTrend=true
-            forcedModes="chart"
-            filters=filters}}
+            {{admin-report
+              dataSourceName="daily_engaged_users"
+              showTrend=true
+              forcedModes="chart"
+              filters=filters}}
 
-          {{admin-report
-            dataSourceName="new_contributors"
-            showTrend=true
-            forcedModes="chart"
-            filters=filters}}
+            {{admin-report
+              dataSourceName="new_contributors"
+              showTrend=true
+              forcedModes="chart"
+              filters=filters}}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  {{/if}}
 
   <div class="section-columns">
     <div class="section-column">
-      {{#if activityMetrics.length}}
-        <div class="admin-report activity-metrics">
-          <div class="header">
-            <ul class="breadcrumb">
-              <li class="item report">
-                {{#link-to "adminReports" class="report-url"}}
-                  {{i18n "admin.dashboard.activity_metrics"}}
-                {{/link-to}}
-              </li>
-            </ul>
-          </div>
-          <div class="report-body">
-            <div class="counters-list">
-              <div class="counters-header">
-                <div class="counters-cell"></div>
-                <div class="counters-cell">{{i18n "admin.dashboard.reports.today"}}</div>
-                <div class="counters-cell">{{i18n "admin.dashboard.reports.yesterday"}}</div>
-                <div class="counters-cell">{{i18n "admin.dashboard.reports.last_7_days"}}</div>
-                <div class="counters-cell">{{i18n "admin.dashboard.reports.last_30_days"}}</div>
-              </div>
+      {{#if isActivityMetricsVisible}}
+        {{#if activityMetrics.length}}
+          <div class="admin-report activity-metrics">
+            <div class="header">
+              <ul class="breadcrumb">
+                <li class="item report">
+                  {{#link-to "adminReports" class="report-url"}}
+                    {{i18n "admin.dashboard.activity_metrics"}}
+                  {{/link-to}}
+                </li>
+              </ul>
+            </div>
+            <div class="report-body">
+              <div class="counters-list">
+                <div class="counters-header">
+                  <div class="counters-cell"></div>
+                  <div class="counters-cell">{{i18n "admin.dashboard.reports.today"}}</div>
+                  <div class="counters-cell">{{i18n "admin.dashboard.reports.yesterday"}}</div>
+                  <div class="counters-cell">{{i18n "admin.dashboard.reports.last_7_days"}}</div>
+                  <div class="counters-cell">{{i18n "admin.dashboard.reports.last_30_days"}}</div>
+                </div>
 
-              {{#each activityMetrics as |metric|}}
-                {{admin-report
-                  showHeader=false
-                  filters=activityMetricsFilters
-                  forcedModes="counters"
-                  dataSourceName=metric}}
-              {{/each}}
+                {{#each activityMetrics as |metric|}}
+                  {{admin-report
+                    showHeader=false
+                    filters=activityMetricsFilters
+                    forcedModes="counters"
+                    dataSourceName=metric}}
+                {{/each}}
+              </div>
             </div>
           </div>
-        </div>
+        {{/if}}
       {{/if}}
 
       <div class="user-metrics">
@@ -130,20 +134,22 @@
       </div>
     </div>
 
-    <div class="section-column">
-      {{admin-report
-        filters=topReferredTopicsFilters
-        dataSourceName="top_referred_topics"
-        reportOptions=topReferredTopicsOptions}}
+    {{#if isSearchReportsVisible}}
+      <div class="section-column">
+        {{admin-report
+          filters=topReferredTopicsFilters
+          dataSourceName="top_referred_topics"
+          reportOptions=topReferredTopicsOptions}}
 
-      {{admin-report
-        dataSourceName="trending_search"
-        reportOptions=trendingSearchOptions
-        filters=trendingSearchFilters
-        isEnabled=logSearchQueriesEnabled
-        disabledLabel=trendingSearchDisabledLabel}}
-      {{html-safe (i18n "admin.dashboard.reports.trending_search.more" basePath=basePath)}}
-    </div>
+        {{admin-report
+          dataSourceName="trending_search"
+          reportOptions=trendingSearchOptions
+          filters=trendingSearchFilters
+          isEnabled=logSearchQueriesEnabled
+          disabledLabel=trendingSearchDisabledLabel}}
+        {{html-safe (i18n "admin.dashboard.reports.trending_search.more" basePath=basePath)}}
+      </div>
+    {{/if}}
   </div>
 
   {{plugin-outlet name="admin-dashboard-general-bottom"}}

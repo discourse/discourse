@@ -27,6 +27,7 @@ sv:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
@@ -263,11 +264,13 @@ sv:
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
         unbookmark_with_reminder: "Markera för att ta bort alla bokmärken samt påminnelser för detta ämne. Du har en påminnelse inställd till %{reminder_at} för detta ämne."
     bookmarks:
-      created: "du har bokmärkt detta inlägg"
+      created: "du har bokmärkt detta inlägg %{name}"
       not_bookmarked: "bokmärk detta inlägg"
-      created_with_reminder: "du har bokmärkt detta inlägg med en påminnelse %{date}"
-      created_with_at_desktop_reminder: "du har bokmärkt detta inlägg och kommer att påminnas nästa gång du är vid din dator"
+      created_with_reminder: "du har bokmärkt detta inlägg med en påminnelse %{date}%{name}"
+      created_with_at_desktop_reminder: "du har bokmärkt detta inlägg och kommer att påminnas nästa gång du är vid din dator%{name}"
       remove: "Ta bort bokmärke"
+      delete: "Radera bokmärke"
+      confirm_delete: "Är du säker på att du vill radera det här bokmärket? Påminnelsen kommer också att raderas."
       confirm_clear: "Är du säker på att du vill radera alla dina bokmärken från ämnet?"
       save: "Spara"
       no_timezone: 'Du har ännu inte valt tidszon. Du kommer därför inte kunna sätta påminnelser. Ange en <a href="%{basePath}/my/preferences/profile">i din profil</a>.'
@@ -756,6 +759,10 @@ sv:
       private_message: "Meddelande"
       private_messages: "Meddelanden"
       user_notifications:
+        filters:
+          all: "Alla"
+          read: "Läst"
+          unread: "Olästa"
         ignore_duration_title: "Ignorera timer"
         ignore_duration_username: "Användarnamn"
         ignore_duration_when: "Varaktighet:"
@@ -1282,6 +1289,7 @@ sv:
     assets_changed_confirm: "Den här webbplatsen uppdaterades precis. Uppdatera för att se den senaste versionen?"
     logout: "Du loggades ut."
     refresh: "Uppdatera"
+    home: "Hem"
     read_only_mode:
       enabled: "Webbplatsen är i skrivskyddat läge. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra interaktioner är inaktiverade för tillfället."
       login_disabled: "Det går inte att logga in medan siten är i skrivskyddat läge."
@@ -1311,6 +1319,7 @@ sv:
     mute: Tysta
     unmute: Avtysta
     last_post: Senaste
+    local_time: "Lokal tid"
     time_read: Läst
     time_read_recently: "%{time_read} nyligen"
     time_read_tooltip: "%{time_read} total lästid"
@@ -2056,7 +2065,6 @@ sv:
           "2_8": "Du kommer se en räknare för nya svar eftersom du följer denna kategorin."
           "2_4": "Du kommer se en räknare för nya svar eftersom du postat ett svar i detta ämne."
           "2_2": "Du kommer se en räknare för nya svar eftersom du följer detta ämne."
-          "2": 'Du kommer se en räknare för nya svar eftersom du <a href="{{basePath}}/u/{{username}}/preferences">läser detta ämne</a>. '
           "1_2": "Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg."
           "1": "Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg."
           "0_7": "Du ignorerar alla notifikationer i den här kategorin."
@@ -2477,6 +2485,7 @@ sv:
         create: "Skapa bokmärke"
         edit: "Redigera bokmärke"
         created: "Skapad"
+        updated: "Uppdaterad"
         name: "Namn"
         name_placeholder: "Vad används detta bokmärke till?"
         set_reminder: "Påminn mig"
@@ -2547,6 +2556,7 @@ sv:
       email_in_disabled_click: 'aktivera "inkommande e-post" inställningen.'
       mailinglist_mirror: "Kategori speglar en e-postlista"
       show_subcategory_list: "Visa listan med underkategorier ovanför ämnen i denna kategori."
+      read_only_banner: "Banderoll text när en användare inte kan skapa ett ämne i denna kategorin:"
       num_featured_topics: "Antal ämnen som visas på sidan kategorier:"
       subcategory_num_featured_topics: "Antalet favoriserade ämnen på överordnad kategorisida:"
       all_topics_wiki: "Gör nya ämnen till wikis som standard"
@@ -2792,7 +2802,7 @@ sv:
         this_week: "Vecka"
         today: "Idag"
         other_periods: "se toppen för:"
-    browser_update: 'Tyvärr, <a href="https://www.discourse.org/faq/#browser">din webbläsare är för gammal för att fungera på den här sidan</a>. Vänligen <a href="https://browsehappy.com">uppgradera din webbläsare</a>. '
+    browser_update: 'Tyvärr, <a href="https://www.discourse.org/faq/#browser">din webbläsare är för gammal för att fungera på den här sidan</a>. Vänligen <a href="https://browsehappy.com">uppgradera din webbläsare</a> för att visa formaterat innehåll, logga in eller svara. '
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -2860,6 +2870,7 @@ sv:
         next_business_day: "%{shortcut} Nästa vardag"
         custom: "%{shortcut} Anpassa datum och tid"
         none: "%{shortcut} Ingen påminnelse"
+        delete: "%{shortcut} Radera bokmärke"
       actions:
         title: "Åtgärder"
         bookmark_topic: "%{shortcut} Växla bokmärkning av ämne"
@@ -3117,8 +3128,7 @@ sv:
           view_table: "tabell"
           view_graph: "graf"
           refresh_report: "Uppdatera rapport"
-          start_date: "Startdatum (UTC)"
-          end_date: "Slutdatum (UTC)"
+          dates: "Datum (UTC)"
           groups: "Alla grupper"
           disabled: "Denna rapport är avstängd"
           totals_for_sample: "Totalt för prov"
@@ -3135,6 +3145,8 @@ sv:
               label: Grupp
             category:
               label: Kategori
+            include-subcategories:
+              label: "Inkludera underkategorier"
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
         by: "av"
@@ -3179,7 +3191,7 @@ sv:
             effects: Effekter
             trust_levels_none: "Inga"
             automatic_membership_email_domains: "Användare som registrerar sig med en e-post vars domän exakt matchar en domän i den här listan kommer automatiskt att bli tillagd i den här gruppen:"
-            automatic_membership_retroactive: "Använd samma regel för e-postdomän för att lägga till nya användare"
+            automatic_membership_user_count: "%{count} användarna har de nya e-postdomänerna och kommer att läggas till i gruppen."
             primary_group: "Automatiskt inställd som primär grupp"
         name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         primary: "Primär grupp"
@@ -3469,6 +3481,9 @@ sv:
           settings: "Inställningar"
           translations: "Översättningar"
           extra_scss: "Extra SCSS"
+          extra_files: "Extra filer"
+          extra_files_upload: "Exportera temat för att visa dessa filer."
+          extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
           show_advanced: "Visa avancerade fält"
           hide_advanced: "Dölj avancerade fält"
@@ -3532,6 +3547,7 @@ sv:
           license: "Licens"
           version: "Version:"
           authors: "Författad av:"
+          creator: "Skapad av:"
           source_url: "Källa"
           enable: "Aktivera"
           disable: "Inaktivera"
@@ -4039,6 +4055,30 @@ sv:
         anonymize_yes: "Ja, anonymisera detta konto"
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"
         delete: "Radera användare"
+        merge:
+          transfer_and_delete: "Överför & radera"
+          prompt:
+            title: "Överför & radera @%{username}"
+            description: |
+              <p>Vänligen välj en ny ägare för <b>@%{username}s</b> innehåll.</p>
+
+              <p>Alla ämnen, inlägg, meddelanden och annat innehåll skapat av <b>@%{username}</b> kommer föras över.</p>
+            target_username_placeholder: "Användarnamn på den nya ägaren"
+            transfer_and_delete: "Överför & radera @%{username}"
+            cancel: "Avbryt"
+          confirmation:
+            title: "Överför & radera @%{username}"
+            description: |
+              <p>Allt av <b>@%{username}s</b> innehåll kommer att överföras och hänföras till <b>@%{targetUsername}</b>. Efter att innehållet är överfört kommer <b>@%{username}s</b> konto att raderas.</p>
+
+              <p><b>Detta kan inte ångras!</b></p>
+
+              <p>För att fortsätta skriv: <code>%{text}</code></p>
+            text: "överför @%{username} till @%{targetUsername}"
+            transfer_and_delete: "Överför & radera @%{username}"
+            cancel: "Avbryt"
+        merging_user: "Slår samman användare..."
+        merge_failed: "Det uppstod ett fel vid sammanslagningen av användarna."
         delete_forbidden_because_staff: "Administratörer och moderatorer kan inte tas bort."
         delete_posts_forbidden_because_staff: "Kan inte ta bort alla inlägg för administratörer och moderatorer."
         delete_forbidden:

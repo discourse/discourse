@@ -118,6 +118,8 @@ en:
           label: Allowed groups
         poll_chart_type:
           label: Chart type
+          bar: Bar
+          pie: Pie
         poll_config:
           max: Max
           min: Min

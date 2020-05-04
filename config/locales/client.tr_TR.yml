@@ -260,7 +260,6 @@ tr_TR:
         bookmark: "Bu konudaki ilk gönderiyi işaretlemek için tıkla"
         unbookmark: "Bu konudaki tüm işaretlenenleri kaldırmak için tıkla"
     bookmarks:
-      created: "bu gönderiyi işaretledin"
       not_bookmarked: "bu yazıya yer işareti koy"
       remove: "İşareti Kaldır"
       confirm_clear: "Bu konudaki tüm yer işaretlerinizi silmek istediğinizden emin misiniz?"
@@ -740,6 +739,10 @@ tr_TR:
       private_message: "Mesaj"
       private_messages: "Mesajlar"
       user_notifications:
+        filters:
+          all: "Tümü"
+          read: "Okunan"
+          unread: "Okunmamış"
         ignore_duration_title: "Zamanlayıcıyı Yoksay"
         ignore_duration_username: "Kullanıcı Adı"
         ignore_duration_when: "Süre:"
@@ -1251,6 +1254,7 @@ tr_TR:
     assets_changed_confirm: "Bu site henüz güncellendi. Son hali için sayfayı yenilemek ister misin?"
     logout: "Çıkış yaptın."
     refresh: "Yenile"
+    home: "Anasayfa"
     read_only_mode:
       enabled: "Bu site salt-okunur modda. Lütfen taramaya devam et, ancak yanıtlama, beğenme ve diğer eylemler şu an için devre dışı durumda. "
       login_disabled: "Site salt-okunur modda iken giriş işlemi devre dışı bırakılır ."
@@ -2005,7 +2009,6 @@ tr_TR:
           "2_8": "Bu kategoriyi takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
           "2_4": "Bu konuyu yanıtladığınız için yeni cevapların sayısını göreceksiniz."
           "2_2": "Bu konuyu takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
-          "2": 'Yeni cevapların sayısını göreceksiniz çünkü <a href="{{basePath}}/u/{{username}}/preferences">bu konuyu okudunuz</a>.'
           "1_2": "Birisi @isminden bahsederse ya da sana cevap verirse bildirim alacaksın."
           "1": "Birisi @isminden bahsederse veya sana cevap verirse bildirim alacaksın."
           "0_7": "Bu kategoriye ait tüm bildirimleri yok sayıyorsun."
@@ -2409,6 +2412,7 @@ tr_TR:
       bookmarks:
         create: "Yer işareti oluştur"
         created: "Oluşturuldu"
+        updated: "Güncellenmiş"
         name: "İsim"
     category:
       can: "yapabilir&hellip;"
@@ -2715,7 +2719,6 @@ tr_TR:
         this_week: "Hafta"
         today: "Bugün"
         other_periods: "yukarı bak"
-    browser_update: 'Maalesef,  <a href="https://www.discourse.org/faq/#browser">tarayıcın bu site için çok eski</a>. Lütfen <a href="https://browsehappy.com">tarayıcını güncelle</a>.'
     permission_types:
       full: "Oluştur / Cevapla / Bak"
       create_post: "Cevapla / Bak"
@@ -3024,8 +3027,6 @@ tr_TR:
           view_table: "tablo"
           view_graph: "grafik"
           refresh_report: "Raporu Yenile"
-          start_date: "Başlangıç Tarihi (UTC)"
-          end_date: "Bitiş Tarihi (UTC)"
           groups: "Tüm gruplar"
           disabled: "Bu rapor devre dışı"
           totals_for_sample: "Örnek toplamlar"
@@ -3086,7 +3087,6 @@ tr_TR:
             effects: Etkileri
             trust_levels_none: "Hiçbiri"
             automatic_membership_email_domains: "Listede, e-posta alan adıyla tam olarak eşleşen kayıtlı kullanıcılar, otomatik olarak bu gruba eklenir:"
-            automatic_membership_retroactive: "Mevcut kayıtlı kullanıcıları eklemek için aynı e-posta alanı kuralını uygula"
             primary_group: "Otomatik olarak ana grup biçiminde ayarla"
         name_placeholder: "Grup adı, boşluksuz, kullanıcı adı kuralıyla aynı olarak"
         primary: "Ana Grup"
@@ -3939,6 +3939,11 @@ tr_TR:
         anonymize_yes: "Evet, bu hesabı anonimleştir"
         anonymize_failed: "Hesap anonimleştirilirken bir hata oluştu."
         delete: "Kullanıcıyı Sil"
+        merge:
+          prompt:
+            cancel: "İptal"
+          confirmation:
+            cancel: "İptal"
         delete_forbidden_because_staff: "Yöneticiler ve moderatörler silinemez."
         delete_posts_forbidden_because_staff: "Yöneticiler ve moderatörlerin gönderileri silinemez."
         delete_forbidden:

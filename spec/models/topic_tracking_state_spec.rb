@@ -72,6 +72,46 @@ describe TopicTrackingState do
     end
   end
 
+  describe '#publish_muted' do
+    let(:user) do
+      Fabricate(:user, last_seen_at: Date.today)
+    end
+    let(:post) do
+      create_post(user: user)
+    end
+
+    it 'can correctly publish muted' do
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_muted(topic)
+      end
+
+      muted_message = messages.find { |message| message.data["message_type"] == "muted" }
+
+      expect(muted_message.data["topic_id"]).to eq(topic.id)
+      expect(muted_message.data["message_type"]).to eq(described_class::MUTED_MESSAGE_TYPE)
+    end
+
+    it 'should not publish any message when notification level is not muted' do
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_muted(topic)
+      end
+      muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
+
+      expect(muted_messages).to eq([])
+    end
+
+    it 'should not publish any message when the user was not seen in the last 7 days' do
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
+      post.user.update(last_seen_at: 8.days.ago)
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_muted(topic)
+      end
+      muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
+      expect(muted_messages).to eq([])
+    end
+  end
+
   describe '#publish_private_message' do
     fab!(:admin) { Fabricate(:admin) }
 

@@ -161,7 +161,6 @@ te:
         bookmark: "ఈ అంశంపై మొదటి టపాకి పేజీకలను పెట్టండి"
         unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
     bookmarks:
-      created: "ఈ టపాకు పేజీక ఉంచారు"
       remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
       reminders:
@@ -349,6 +348,10 @@ te:
         rate_limit_error: "టపాలు కేవలం రోజుకు ఒకసారి మాత్రమే దిగుమతించుకోగలరు. దయచేసి రేపు ప్రయత్నించండి."
       private_messages: "సందేశాలు"
       user_notifications:
+        filters:
+          all: "అన్నీ"
+          read: "చదివిన"
+          unread: "చదవని"
         ignore_duration_username: "వాడుకరి పేరు"
         mute_option: "నిశ్శబ్దం"
       activity_stream: "కలాపం"
@@ -1383,7 +1386,6 @@ te:
           membership:
             automatic: స్వీయంగా
             automatic_membership_email_domains: "వినియోగదారుడు ఏ ఈ-మెయిల్ డొమైన్ తో నమోదు చేసుకున్నాడో అది ఖచ్చితంగా ఈ జాబితాలో ఒక దానిని పోలి స్వయంసిధ్ధంగా గ్రూప్ కి కలుస్తాయి:"
-            automatic_membership_retroactive: "ఇప్పటికే నమోదిత వినియోగదారులను జోడించడానికి అదే ఇమెయిల్ డొమైన్ రూల్ వర్తిస్తుంది"
         name_placeholder: "గంపు పేరు, జాగా లేకుండా, సభ్యనామం వలె"
         primary: "ప్రాథమిక గుంపు"
         no_primary: "(ప్రాథమిక గుంపు లేదు)"
@@ -1769,6 +1771,11 @@ te:
         approve_bulk_success: "విజయవంతం! ఎంచుకున్న వినియోగదారులందరినీ ఆమోదించారు మరియు ప్రకటన చేశారు."
         time_read: "చదువు సమయం"
         delete: "సభ్యుడిని తొలగించు"
+        merge:
+          prompt:
+            cancel: "రద్దుచేయి"
+          confirmation:
+            cancel: "రద్దుచేయి"
         delete_forbidden_because_staff: "అధికారులు మరియు నిర్వాహకులను తొలగించలేరు"
         delete_posts_forbidden_because_staff: "నిర్వాహకుల మరియు పరిశీలకుల అన్ని టపాలు తొలగించలేము."
         delete_and_block: "ఈ ఈ-మెయిల్ మరియు IP అడ్రస్ ను తొలగించండి మరియు <b>నిరోధించండి</b>"

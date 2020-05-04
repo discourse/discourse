@@ -52,12 +52,12 @@ class DiscourseJsProcessor
       preload-application-data
       wizard-start
       onpopstate-handler
-      discourse
       google-tag-manager
       google-universal-analytics
       activate-account
       auto-redirect
       embed-application
+      app-boot
     ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
 
     return true if plugin_transpile_paths.any? { |prefix| relative_path.start_with?(prefix) }
@@ -161,7 +161,8 @@ JS
         path = "discourse/plugins/#{plugin.name}/#{logical_path.sub(/javascripts\//, '')}" if plugin
       end
 
-      path || logical_path
+      # We need to strip the app subdirectory to replicate how ember-cli works.
+      path || logical_path&.gsub('app/', '')&.gsub('addon/', '')
     end
 
   end

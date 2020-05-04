@@ -41,7 +41,7 @@ module Jobs
     end
 
     def self.last_notified_key
-      "last_notified_queued_post_id".freeze
+      "last_notified_queued_post_id"
     end
   end
 end

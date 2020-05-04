@@ -15,7 +15,6 @@ class Plugin::Metadata
     "discourse-akismet",
     "discourse-assign",
     "discourse-auto-deactivate",
-    "discourse-backup-uploads-to-s3",
     "discourse-bbcode",
     "discourse-bbcode-color",
     "discourse-cakeday",
@@ -75,7 +74,7 @@ class Plugin::Metadata
     "docker_manager",
     "lazy-yt",
     "poll",
-    "discourse-internet-explorer"
+    "discourse-unsupported-browser"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version, :transpile_js]

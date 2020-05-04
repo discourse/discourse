@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
+import { isPresent } from "@ember/utils";
 import { computed } from "@ember/object";
 import { not } from "@ember/object/computed";
 import UtilsMixin from "select-kit/mixins/utils";
@@ -30,14 +30,18 @@ export default Component.extend(UtilsMixin, {
 
   @discourseComputed(
     "selectKit.options.filterPlaceholder",
-    "selectKit.options.translatedfilterPlaceholder"
+    "selectKit.options.translatedFilterPlaceholder"
   )
   placeholder(placeholder, translatedPlaceholder) {
-    return isEmpty(placeholder)
-      ? translatedPlaceholder
-        ? translatedPlaceholder
-        : ""
-      : I18n.t(placeholder);
+    if (isPresent(translatedPlaceholder)) {
+      return translatedPlaceholder;
+    }
+
+    if (isPresent(placeholder)) {
+      return I18n.t(placeholder);
+    }
+
+    return "";
   },
 
   actions: {

@@ -287,7 +287,6 @@ cs:
         bookmark: "Kliknutím vložíte záložku na první příspěvek tohoto tématu"
         unbookmark: "Kliknutím odstraníte všechny záložky v tématu"
     bookmarks:
-      created: "Záložka byla přidána."
       not_bookmarked: "přidat záložku k příspěvku"
       remove: "Odstranit záložku"
       confirm_clear: "Opravdu chcete odstranit všechny své záložky z tohoto tématu?"
@@ -631,6 +630,10 @@ cs:
       private_message: "Zpráva"
       private_messages: "Zprávy"
       user_notifications:
+        filters:
+          all: "Všechny"
+          read: "Přečtená"
+          unread: "Nepřečtená"
         ignore_duration_username: "Uživatelské jméno"
         ignore_duration_save: "ignorovat"
         mute_option: "Ztišené"
@@ -1082,6 +1085,7 @@ cs:
     assets_changed_confirm: "Tento web se právě aktualizoval. Chcete obnovit stránku a mít nejnovější verzi?"
     logout: "Byli jste odhlášeni."
     refresh: "Obnovit"
+    home: "Domů"
     read_only_mode:
       enabled: "Tato stránka je v režimu jen pro čtení. Prosim pokračujte v prohlížení, ale odpovídání a ostatní operace jsou momentálně vypnuté."
       login_disabled: "Přihlášení je zakázáno jelikož je stránka v režimu jen pro čtení."
@@ -1775,7 +1779,6 @@ cs:
           "2_8": "Uvidíte počet nových odpovědí, jelikož sledujete tuto kategorii."
           "2_4": "Uvidíte počet nových odpovědí, jelikož jste přispěli do tohoto tématu."
           "2_2": "Uvidíte počet nových odpovědí, jelikož sledujete toto téma."
-          "2": 'Uvidíte počet nových odpovědí, protože <a href="{{basePath}}/u/{{username}}/preferences">jste četl(a) toto téma</a>.'
           "1_2": "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
           "1": "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
           "0_7": "Ignorujete všechna oznámení v této kategorii."
@@ -2471,7 +2474,6 @@ cs:
         this_week: "Týden"
         today: "Dnes"
         other_periods: "viz nahoře"
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">Váš prohlížeč je bohužel příliš starý a tyto stránky nebudou fungovat</a>. Prosíme <a href="https://browsehappy.com">pořiďte si novější verzi prohlížeče</a>.'
     permission_types:
       full: "Vytvářet / Odpovídat / Prohlížet"
       create_post: "Odpovídat / Prohlížet"
@@ -2757,7 +2759,6 @@ cs:
             trust_levels_title: "Automaticky přidělená věrohodnost členům když jsou přidáni: "
             trust_levels_none: "Žádná"
             automatic_membership_email_domains: "Uživatelé zaregistrovaní s emailem jehož doména se přesně shoduje s jednou z tohoto seznamu budou automaticky přidáni to této skupiny:"
-            automatic_membership_retroactive: "Aplikovat stejné doménové pravidlo na už existující uživatele"
             primary_group: "Automaticky nastavit jako hlavní skupinu"
         name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
         primary: "Hlavní skupina"
@@ -3424,6 +3425,11 @@ cs:
         anonymize_yes: "Ano, udělejte tento účet anonymním"
         anonymize_failed: "Nastal problém při anonymizování účtu."
         delete: "Smazat uživatele"
+        merge:
+          prompt:
+            cancel: "Zrušit"
+          confirmation:
+            cancel: "Zrušit"
         delete_forbidden_because_staff: "Správci ani moderátoři nemůžou být odstraněni."
         delete_posts_forbidden_because_staff: "Nemohu smazat všechny příspěvky administrátorů a moderátorů."
         delete_forbidden:

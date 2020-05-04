@@ -254,7 +254,6 @@ nb_NO:
         bookmark: "Klikk for å bokmerke det første innlegget i dette emnet"
         unbookmark: "Klikk for å fjerne alle bokmerker i dette emnet"
     bookmarks:
-      created: "du har bokmerket dette innlegget"
       not_bookmarked: "bokmerk dette innlegget"
       remove: "Fjern bokmerke"
       confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
@@ -646,6 +645,10 @@ nb_NO:
       private_message: "Melding"
       private_messages: "Meldinger"
       user_notifications:
+        filters:
+          all: "Alle"
+          read: "Lest"
+          unread: "Uleste"
         ignore_duration_username: "Brukernavn"
         ignore_duration_save: "Ignorer"
         add_ignored_user: "Legg til …"
@@ -1064,6 +1067,7 @@ nb_NO:
     assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Last inn siden på nytt nå for siste versjon?"
     logout: "Du ble logget ut"
     refresh: "Refresh"
+    home: "Hjem"
     read_only_mode:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
@@ -1713,7 +1717,6 @@ nb_NO:
           "2_8": "Du vil se antall nye svar fordi du følger denne kategorien."
           "2_4": "Du vil se antall nye svar fordi du skrev et svar i dette emnet."
           "2_2": "Du vil se antall nye svar fordi du overvåker dette emnet."
-          "2": 'Du vil se antall nye svar fordi du <a href="{{basePath}}/u/{{username}}/preferences">leste dette emnet</a>.'
           "1_2": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "1": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "0_7": "Du ignorerer alle varsler i denne kategorien."
@@ -2634,7 +2637,6 @@ nb_NO:
             trust_levels_title: "Tillitsnivå som automatisk gis til nye medlemmer når de legges til:"
             trust_levels_none: "Ingen"
             automatic_membership_email_domains: "Brukere som registreres med et e-postdomene identisk med et fra denne listen vil automatisk legges til i denne gruppen:"
-            automatic_membership_retroactive: "Bruk den samme regelen på eksisterende brukere med matchende e-postdomener"
             primary_group: "Sett som primærgruppe automatisk"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme som regel for brukernavn"
         primary: "Primærgruppe"
@@ -3333,6 +3335,11 @@ nb_NO:
         anonymize_yes: "Ja, anonymiser denne kontoen"
         anonymize_failed: "Det oppstod en feil ved anonymisering av denne kontoen."
         delete: "Slett bruker"
+        merge:
+          prompt:
+            cancel: "Avbryt"
+          confirmation:
+            cancel: "Avbryt"
         delete_forbidden_because_staff: "Administratorer og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:

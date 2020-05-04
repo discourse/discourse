@@ -176,9 +176,6 @@ et:
   topics_in_category: "Teemad '%{category}' liigis"
   rss_posts_in_topic: "'%{topic}' RSS-kanal"
   rss_topics_in_category: "Liigi '%{category}' teemade RSS-kanal"
-  author_wrote: "%{author} kirjutas:"
-  num_posts: "Postitused:"
-  num_participants: "Osalejad:"
   read_full_topic: "Loe kogu teemat"
   private_message_abbrev: "PS"
   rss_description:

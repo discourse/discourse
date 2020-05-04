@@ -1,19 +1,58 @@
 .d-date-input {
-  display: flex;
-  flex: 1;
+  display: inline-flex;
   cursor: pointer;
   flex-direction: column;
+  min-width: 140px;
 
   .date-picker {
     cursor: pointer;
     margin: 0;
     text-align: left;
     width: 100%;
-    outline: none;
     box-shadow: none !important;
+
+    &::-webkit-input-placeholder {
+      font-size: $font-0;
+      color: $primary-medium;
+    }
+
+    &::-ms-input-placeholder {
+      font-size: $font-0;
+      color: $primary-medium;
+    }
+
+    &::placeholder {
+      font-size: $font-0;
+      color: $primary-medium;
+    }
+
+    &:focus {
+      outline: 1px solid $tertiary;
+      outline-offset: 0;
+    }
   }
 
   .pika-single {
     margin-left: -1px;
+    margin-top: 1px;
+
+    .pika-row td {
+      .pika-button.pika-day {
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
   }
+}
+
+.d-date-input + .d-time-input {
+  margin-left: 1px;
+}
+
+.d-time-input + .d-date-input {
+  margin-left: 1px;
+}
+
+.d-date-input + .clear-date-time {
+  margin-left: 1px;
 }

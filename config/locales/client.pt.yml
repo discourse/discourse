@@ -249,7 +249,6 @@ pt:
         bookmark: "Clique para adicionar um marcador à primeira publicação neste tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
     bookmarks:
-      created: "adicionou esta publicação aos marcadores"
       not_bookmarked: "adicionar esta publicação aos marcadores"
       remove: "Remover Marcador"
       confirm_clear: "De certeza que pretende remover todos os marcadores deste tópico?"
@@ -600,6 +599,10 @@ pt:
       private_message: "Mensagem"
       private_messages: "Mensagens"
       user_notifications:
+        filters:
+          all: "Todos"
+          read: "Lido"
+          unread: "Não Lido"
         ignore_duration_username: "Nome de utilizador"
         ignore_duration_save: "Ignorar"
         ignore_duration_time_frame_required: "Por favor selecione um intervalo de tempo"
@@ -1054,6 +1057,7 @@ pt:
     assets_changed_confirm: "Este site acabou se ser atualizado. Recarregar agora para a versão mais recente?"
     logout: "A sua sessão foi encerrada."
     refresh: "Atualizar"
+    home: "Início"
     read_only_mode:
       enabled: "Este site está no modo só de leitura. Por favor, continue a navegar, mas responder, gostar e outras ações estão de momento desativadas."
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
@@ -1729,7 +1733,6 @@ pt:
           "2_8": "Irá ver uma contagem de novas respostas porque está a seguir esta categoria."
           "2_4": "Irá ver uma contagem de novas respostas porque publicou uma resposta a este tópico."
           "2_2": "Irá ver uma contagem de novas respostas porque está a seguir este tópico."
-          "2": 'Irá ver uma contagem de novas respostas porque <a href="{{basePath}}/u/{{username}}/preferences">leu este tópico</a>.'
           "1_2": "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
           "1": "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
           "0_7": "Está a ignorar todas as notificações nesta categoria."
@@ -2544,7 +2547,6 @@ pt:
             trust_levels_title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"
             trust_levels_none: "Nenhum"
             automatic_membership_email_domains: "Utilizadores que registem um domínio de email que corresponde exactamente a algum desta lista irão ser automaticamente adicionados a este grupo:"
-            automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar utilizadores registados existentes"
             primary_group: "Definir automaticamente como grupo primário"
         name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
         primary: "Grupo Primário"
@@ -3068,6 +3070,11 @@ pt:
         anonymize_yes: "Sim, tornar esta conta anónima"
         anonymize_failed: "Ocorreu um problema ao tornar esta conta anónima."
         delete: "Eliminar Utilizador"
+        merge:
+          prompt:
+            cancel: "Cancelar"
+          confirmation:
+            cancel: "Cancelar"
         delete_forbidden_because_staff: "Administradores e moderadores não podem ser eliminados."
         delete_posts_forbidden_because_staff: "Não é possível eliminar todas as publicações dos administradores e moderadores."
         delete_forbidden:

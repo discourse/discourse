@@ -27,6 +27,7 @@ it:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
@@ -263,11 +264,10 @@ it:
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
         unbookmark_with_reminder: "Fare clic per rimuovere tutti i segnalibri e i promemoria in questo argomento. Hai un promemoria impostato %{reminder_at} per questo argomento."
     bookmarks:
-      created: "hai inserito questo messaggio nei segnalibri"
       not_bookmarked: "aggiungi ai segnalibri"
-      created_with_reminder: "hai aggiunto un segnalibro a questo post con un promemoria %{date}"
-      created_with_at_desktop_reminder: "hai aggiunto un segnalibro a questo post e ti verrà ricordato la prossima volta che sarai sul desktop"
       remove: "Rimuovi Segnalibro"
+      delete: "Cancella Segnalibro"
+      confirm_delete: "Sicuro di voler eliminare questo segnalibro? Anche il promemoria verrà eliminato."
       confirm_clear: "Sei certo di voler rimuovere tutti i segnalibri da questo argomento?"
       save: "Salva"
       no_timezone: 'Non hai ancora impostato un fuso orario. Non sarai in grado di impostare promemoria. Creane uno <a href="%{basePath}/my/preferences/profile">nel tuo profilo</a> .'
@@ -756,6 +756,10 @@ it:
       private_message: "Messaggio"
       private_messages: "Messaggi"
       user_notifications:
+        filters:
+          all: "Tutti"
+          read: "Letti"
+          unread: "Non letti"
         ignore_duration_title: "Ignora Timer"
         ignore_duration_username: "Nome utente"
         ignore_duration_when: "Durata:"
@@ -1282,6 +1286,7 @@ it:
     assets_changed_confirm: "Questo sito è stato aggiornato. Aggiornare ora alla nuova versione?"
     logout: "Sei stato disconnesso."
     refresh: "Ricarica"
+    home: "Home"
     read_only_mode:
       enabled: "Questo sito è in modalità di sola lettura. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono per il momento disabilitate."
       login_disabled: "La connessione è disabilitata quando il sito è in modalità di sola lettura."
@@ -1311,6 +1316,7 @@ it:
     mute: Ignora
     unmute: Attiva
     last_post: Ultimo messaggio
+    local_time: "Ora Locale"
     time_read: Letti
     time_read_recently: "%{time_read} recentemente"
     time_read_tooltip: "%{time_read} tempo totale di lettura"
@@ -2056,7 +2062,6 @@ it:
           "2_8": "Vedrai un conteggio delle nuove risposte perché stai seguendo questa categoria."
           "2_4": "Vedrai un conteggio delle nuove risposte perché hai pubblicato una risposta in questo argomento."
           "2_2": "Vedrai un conteggio delle nuove risposte perché stai seguendo questo argomento."
-          "2": 'Vedrai un conteggio delle nuove risposte perché <a href="{{basePath}}/u/{{username}}/preferences">hai letto questo argomento</a>.'
           "1_2": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "1": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "0_7": "Stai ignorando tutte le notifiche di questa categoria."
@@ -2477,6 +2482,7 @@ it:
         create: "Crea un segnalibro"
         edit: "Modifica Segnalibro"
         created: "Creazione"
+        updated: "Aggiornato"
         name: "Nome"
         name_placeholder: "A cosa serve questo segnalibro?"
         set_reminder: "Ricordamelo"
@@ -2788,7 +2794,7 @@ it:
         this_week: "Settimana"
         today: "Oggi"
         other_periods: "vedi argomenti di punta"
-    browser_update: 'Sfortunatamente, <a href="https://www.discourse.org/faq/#browser">il tuo browser è troppo obsoleto per funzionare con questo sito</a>. Per favore, <a href="https://browsehappy.com">aggiorna il tuo browser</a>.'
+    browser_update: 'Sfortunatamente <a href="https://www.discourse.org/faq/#browser">il tuo browser è troppo obsoleto per funzionare su questo sito</a>. <a href="https://browsehappy.com">Aggiorna il tuo browser</a> per visualizzare contenuti multimediali, accedere e rispondere.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -2856,6 +2862,7 @@ it:
         next_business_day: "%{shortcut} Il prossimo giorno lavorativo"
         custom: "%{shortcut} Data e ora personalizzate"
         none: "%{shortcut} Nessun promemoria"
+        delete: "%{shortcut} Cancella segnalibro"
       actions:
         title: "Azioni"
         bookmark_topic: "%{shortcut} Aggiungi/togli argomento nei segnalibri"
@@ -3113,8 +3120,7 @@ it:
           view_table: "tabella"
           view_graph: "grafico"
           refresh_report: "Aggiorna Rapporto"
-          start_date: "Data di inizio (UTC)"
-          end_date: "Data di fine (UTC)"
+          dates: "Date (UTC)"
           groups: "Tutti i gruppi"
           disabled: "Il rapporto è disabilitato"
           totals_for_sample: "Totale per campione"
@@ -3131,6 +3137,8 @@ it:
               label: Gruppo
             category:
               label: Categoria
+            include-subcategories:
+              label: "Includi Sottocategorie"
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"
@@ -3175,7 +3183,7 @@ it:
             effects: Effetti
             trust_levels_none: "Nessuno"
             automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
-            automatic_membership_retroactive: "Applica la stessa regola sul dominio email per aggiungere utenti registrati esistenti"
+            automatic_membership_user_count: "%{count} utenti hanno i nuovi domini email e verranno aggiunti al gruppo."
             primary_group: "Imposta automaticamente come gruppo principale"
         name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
         primary: "Gruppo Primario"
@@ -4035,6 +4043,29 @@ it:
         anonymize_yes: "Sì, rendi anonimo questo account"
         anonymize_failed: "Si è verificato un problema nel rendere anonimo l'account."
         delete: "Cancella utente"
+        merge:
+          transfer_and_delete: "Trasferisci ed Elimina"
+          prompt:
+            title: "Trasferisci ed Elimina @%{username}"
+            description: |
+              <p>Scegli un nuovo proprietario per i contenuti di <b>@%{username}</b></p>
+
+              <p>Tutti gli argomenti, messaggi, messaggi personali e altri contenuti creati da <b>@%{username}</b> verranno trasferiti.</p>
+            target_username_placeholder: "Nome utente del nuovo proprietario"
+            transfer_and_delete: "Trasferisci ed Elimina @%{username}"
+            cancel: "Annulla"
+          confirmation:
+            title: "Trasferisci ed Elimina @%{username}"
+            description: |
+              <p>Tutto il contenuto appartenente a <b>@%{username}</b> verrà trasferito e attribuito a <b>@%{targetUsername}</b>. Dopo il trasferimento del contenuto, l'account di <b>@%{username} </b> verrà eliminato.</p>
+
+              <p><b>Questa azione non può essere annullata!</b></p>
+
+              <p>Per continuare digitare: <code>%{text}</code></p>
+            transfer_and_delete: "Trasferisci ed Elimina @%{username}"
+            cancel: "Annulla"
+        merging_user: "Unione utente in corso..."
+        merge_failed: "Si è verificato un errore durante l'unione degli utenti."
         delete_forbidden_because_staff: "Amministratori e moderatori non possono essere cancellati."
         delete_posts_forbidden_because_staff: "Impossibile cancellare tutti i messaggi degli amministratori e dei moderatori."
         delete_forbidden:

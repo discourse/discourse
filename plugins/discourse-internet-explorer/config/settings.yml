@@ -1,6 +1,0 @@
-plugins:
-  discourse_internet_explorer_enabled:
-    default: true
-  discourse_internet_explorer_deprecation_warning:
-    default: true
-    client: true
