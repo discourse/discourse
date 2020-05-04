@@ -1,5 +1,4 @@
 import MountWidget from "discourse/components/mount-widget";
-import { observes } from "discourse-common/utils/decorators";
 
 export default MountWidget.extend({
   widget: "user-notifications-large",
@@ -7,21 +6,14 @@ export default MountWidget.extend({
   filter: null,
   args: null,
 
-  init() {
+  didReceiveAttrs() {
     this._super(...arguments);
 
     this.set("args", {
       notifications: this.notifications,
       filter: this.filter
     });
-  },
 
-  @observes("notifications.length", "notifications.@each.read", "filter")
-  _triggerRefresh() {
-    this.set("args", {
-      notifications: this.notifications,
-      filter: this.filter
-    });
     this.queueRerender();
   }
 });
