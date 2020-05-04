@@ -88,6 +88,8 @@ zh_CN:
           label: 允许的群组
         poll_chart_type:
           label: 图表类型
+          bar: 条形
+          pie: 饼状
         poll_config:
           max: 最大
           min: 最小

@@ -122,10 +122,10 @@ zh_CN:
         reply: |-
           你好！想看看我能做什么吗？说 `@%{discobot_username} %{help_trigger}`。
         tracks: |-
-          我现在知道应该怎样应对下面的问题了：
+          我现在知道怎么办了：
 
-          `@ %{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > 开始交互式教程。`{name-of-tutorial}`可以是一个：`%{tracks}`。
+          `@%{discobot_username}%{reset_trigger}{name-of-tutorial}`
+          > 在私信中为你开设一个交互式的教程。`{name-of-tutorial}` 可以是以下之一： `%{tracks}`。
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

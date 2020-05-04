@@ -27,7 +27,6 @@ gl:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      time_with_zone: "h:mm a (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMMM"
@@ -215,7 +214,6 @@ gl:
         bookmark: "Preme para engadir aos marcadores a publicación inicial deste tema"
         unbookmark: "Preme para retirar todos os marcadores deste tema"
     bookmarks:
-      created: "engadiches aos marcadores esta publicación"
       remove: "Eliminar marcador"
       save: "Gardar"
     drafts:
@@ -425,6 +423,10 @@ gl:
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
       user_notifications:
+        filters:
+          all: "Todo"
+          read: "Lidos"
+          unread: "Sen ler"
         ignore_duration_username: "Nome do usuario"
         mute_option: "Silenciado"
         normal_option: "Normal"
@@ -717,6 +719,7 @@ gl:
     assets_changed_confirm: "Este sitio acaba de actualizarse. Queres recargar a páxina para ter a última versión?"
     logout: "Fuches desconectado."
     refresh: "Actualizar"
+    home: "Inicio"
     read_only_mode:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."

@@ -103,6 +103,8 @@ he:
           label: קבוצות מורשות
         poll_chart_type:
           label: סוג תרשים
+          bar: עמודות
+          pie: עוגה
         poll_config:
           max: מרבי
           min: מזערי

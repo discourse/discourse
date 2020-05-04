@@ -29,7 +29,6 @@ lt:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
-      time_with_zone: "H:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMMM D"
       full_no_year_no_time: "MMMM Do"
@@ -284,7 +283,6 @@ lt:
         bookmark: "Paspausk, kad pažymėtum pirmą įrašą šioje temoje"
         unbookmark: "Paspausk, kad pašalintum visas žymęs šioje temoje"
     bookmarks:
-      created: "jūs pažymėjot šį įrašą"
       remove: "Pašalinti Žymę"
       save: "Saugoti"
       reminders:
@@ -604,6 +602,10 @@ lt:
       private_message: "Žinutės"
       private_messages: "Žinutės"
       user_notifications:
+        filters:
+          all: "Visi"
+          read: "Skaitykite"
+          unread: "Neperskaitytos"
         ignore_duration_username: "Slapyvardis"
         ignore_duration_save: "Ignoruoti"
         mute_option: "Nutildyta"
@@ -983,6 +985,7 @@ lt:
     assets_changed_confirm: "Ši svetainė ka tik buvo atnaujinta. Perkrauti, kad matytumėte naujausią versiją?"
     logout: "Jūs buvote atjungtas nuo sistemos."
     refresh: "Atnaujinti"
+    home: "Pradinis"
     read_only_mode:
       enabled: "Puslapis veikia skaitymo (read only) režimu. Gali ieškoti, atsakinėti ar spausti \"patinka\", tačiau kitos funkcijos šiuo metu yra negalimos."
       login_disabled: "Prisijungimas yra išjungtas, kai svetainė yra skaitymo režime."
@@ -2967,6 +2970,8 @@ lt:
           likes_received: "Gauta patikimų"
           likes_received_days: "Gauta patikimų: unikalios dienos"
           likes_received_users: "Gauta patikimų: unikalūs vartotojai"
+          suspended: "Sustabdytas (6 Mėnesiai)"
+          silenced: "Užtildytas (6 Mėnesiai)"
           qualifies: "Atitinka 3 pasitikėjimo lygio reikalavimus."
           does_not_qualify: "Neatitinka 3 pasitikėjimo lygio reikalavimų."
           will_be_promoted: "Greitai bus paaukštintas."

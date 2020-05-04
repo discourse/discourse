@@ -27,7 +27,6 @@ pt:
         millions: "{{number}}M"
     dates:
       time: "hh:mm"
-      time_with_zone: "hh:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM"
@@ -250,7 +249,6 @@ pt:
         bookmark: "Clique para adicionar um marcador à primeira publicação neste tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
     bookmarks:
-      created: "adicionou esta publicação aos marcadores"
       not_bookmarked: "adicionar esta publicação aos marcadores"
       remove: "Remover Marcador"
       confirm_clear: "De certeza que pretende remover todos os marcadores deste tópico?"
@@ -601,6 +599,10 @@ pt:
       private_message: "Mensagem"
       private_messages: "Mensagens"
       user_notifications:
+        filters:
+          all: "Todos"
+          read: "Lido"
+          unread: "Não Lido"
         ignore_duration_username: "Nome de utilizador"
         ignore_duration_save: "Ignorar"
         ignore_duration_time_frame_required: "Por favor selecione um intervalo de tempo"
@@ -1055,6 +1057,7 @@ pt:
     assets_changed_confirm: "Este site acabou se ser atualizado. Recarregar agora para a versão mais recente?"
     logout: "A sua sessão foi encerrada."
     refresh: "Atualizar"
+    home: "Início"
     read_only_mode:
       enabled: "Este site está no modo só de leitura. Por favor, continue a navegar, mas responder, gostar e outras ações estão de momento desativadas."
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
@@ -1730,7 +1733,6 @@ pt:
           "2_8": "Irá ver uma contagem de novas respostas porque está a seguir esta categoria."
           "2_4": "Irá ver uma contagem de novas respostas porque publicou uma resposta a este tópico."
           "2_2": "Irá ver uma contagem de novas respostas porque está a seguir este tópico."
-          "2": 'Irá ver uma contagem de novas respostas porque <a href="{{basePath}}/u/{{username}}/preferences">leu este tópico</a>.'
           "1_2": "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
           "1": "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
           "0_7": "Está a ignorar todas as notificações nesta categoria."

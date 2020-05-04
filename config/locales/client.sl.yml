@@ -29,7 +29,6 @@ sl:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
-      time_with_zone: "H:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D. MMMM"
@@ -305,7 +304,6 @@ sl:
         bookmark: "ustvari zaznamek prvega prispevka v tej temi"
         unbookmark: "odstrani vse zaznamke v tej temi"
     bookmarks:
-      created: "ustvarili ste zaznamek prispevka"
       not_bookmarked: "zaznamuj prispevek"
       remove: "Odstrani zaznamek"
       confirm_clear: "Ste prepričani, da želite odstraniti vse svoje zaznamke iz te teme?"
@@ -742,6 +740,10 @@ sl:
       private_message: "Zasebno sporočilo"
       private_messages: "Zasebna sporočila"
       user_notifications:
+        filters:
+          all: "Vsi"
+          read: "Čas branja"
+          unread: "Neprebrane"
         ignore_duration_title: "Prezri opomnik"
         ignore_duration_username: "Uporabniško ime"
         ignore_duration_when: "Trajanje:"
@@ -1238,6 +1240,7 @@ sl:
     assets_changed_confirm: "Stran ji bala pravkar posodobljena. Osvežimo takoj za zadnjo verzijo?"
     logout: "Bili ste odjavljeni."
     refresh: "Osveži"
+    home: "Domov"
     read_only_mode:
       enabled: "Stran je v načinu samo za branje. Lahko nadaljujete z branjem; odgovori, všečki in druga dejanja pa so onemogočena za zdaj."
       login_disabled: "Prijava je onemogočena dokler je stran v načinu za branje."
@@ -1996,7 +1999,6 @@ sl:
           "2_8": "Videli boste število novih odgovorov, ker sledite tej kategoriji."
           "2_4": "Videli boste število novih odgovorov, ker ste objavili odgovor na to temo."
           "2_2": "Videli boste število novih odgovorov, ker sledite tej temi."
-          "2": 'Videli boste število novih odgovorov, ker ste <a href="{{basePath}}/u/{{username}}/preferences">prebrali to temo</a>.'
           "1_2": "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
           "1": "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
           "0_7": "Ignorirate vsa obvestila za to kategorijo."
@@ -2761,7 +2763,6 @@ sl:
         this_week: "Teden"
         today: "Danes"
         other_periods: "poglej najboljše"
-    browser_update: 'Nažalost, <a href="https://www.discourse.org/faq/#browser">vaš brskalnik je preveč zastarel za to spletno stran</a>. <a href="https://browsehappy.com">Nadgradite vaš brskalnik</a>.'
     permission_types:
       full: "Ustvari / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"

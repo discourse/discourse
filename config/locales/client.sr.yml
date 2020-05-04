@@ -28,7 +28,6 @@ sr:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_with_zone: "HH:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"
@@ -248,7 +247,6 @@ sr:
         bookmark: "Klikni da markiraš prvi post u ovoj temi"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
     bookmarks:
-      created: "markirao si ovu poruku"
       remove: "Obriši marker"
       save: "Sačuvaj"
     drafts:
@@ -450,6 +448,10 @@ sr:
       private_message: "Privatna poruka"
       private_messages: "Poruke"
       user_notifications:
+        filters:
+          all: "Sve"
+          read: "Pročitano"
+          unread: "Nepročitano"
         ignore_duration_username: "Korisničko ime"
         mute_option: "Utišano"
         normal_option: "Normalno"
@@ -749,6 +751,7 @@ sr:
     assets_changed_confirm: "Ova stranica je upravo ažurirana. Osveži sada za najnoviju verziju?"
     logout: "Odjavljeni ste."
     refresh: "Osveži"
+    home: "Home"
     read_only_mode:
       login_disabled: "Prijave su onemogućene dok je stranica u modulu \"samo čitanje\"."
     learn_more: "saznaj više..."

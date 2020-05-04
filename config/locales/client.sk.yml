@@ -29,7 +29,6 @@ sk:
         millions: "{{number}}mil"
     dates:
       time: "h:mm a"
-      time_with_zone: "h:mm a (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -283,7 +282,6 @@ sk:
         bookmark: "Kliknutím vložíte záložku na prvý príspevok tejto témy"
         unbookmark: "Kliknutím odstánite všetky záložky v tejto téme"
     bookmarks:
-      created: "záložka bola pridaná"
       not_bookmarked: "Vytvor záložku na tento príspevok"
       remove: "Odstrániť záložku"
       confirm_clear: "Ste si istý, že chcete odstrániť všetky záložky z tejto témy?"
@@ -624,6 +622,10 @@ sk:
       private_message: "Správa"
       private_messages: "Správy"
       user_notifications:
+        filters:
+          all: "Všetky"
+          read: "Prečítané"
+          unread: "Neprečítané"
         ignore_duration_username: "Používateľské meno"
         mute_option: "Ignorované"
         normal_option: "Normálne"
@@ -1049,6 +1051,7 @@ sk:
     assets_changed_confirm: "Táto stránka bola práve aktualizovaná. Obnoviť na najnovšiu verziu?"
     logout: "Boli ste odhlásený."
     refresh: "Obnoviť"
+    home: "Domov"
     read_only_mode:
       enabled: "Stránky sú v móde iba na čítanie. Prosím pokračujte v prezeraní, ale iné akcie, ako odpovedanie, dávanie páči sa mi alebo niektové ďalšie sú teraz vypnuté."
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."

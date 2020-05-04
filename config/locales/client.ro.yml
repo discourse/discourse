@@ -28,7 +28,6 @@ ro:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_with_zone: "HH:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM "
@@ -257,7 +256,6 @@ ro:
         bookmark: "Click pentru a adăuga semn de carte la subiectul acesta"
         unbookmark: "Click pentru a șterge semnele de carte"
     bookmarks:
-      created: "Ai pus semn de carte pe acest mesaj"
       remove: "Șterge semn de carte"
       save: "Salvează"
       reminders:
@@ -585,6 +583,10 @@ ro:
       private_message: "Mesaj"
       private_messages: "Mesaje"
       user_notifications:
+        filters:
+          all: "Toate"
+          read: "Citite"
+          unread: "Necitite"
         ignore_duration_username: "Nume utilizator"
         ignore_duration_save: "Ignoră"
         mute_option: "Setate pe silențios"
@@ -988,6 +990,7 @@ ro:
     assets_changed_confirm: "Acest site tocmai a fost actualizat. Reîmprospătați pentru cea mai nouă versiune?"
     logout: "Aţi fost deconectat."
     refresh: "Reîmprospătează"
+    home: "Acasă"
     read_only_mode:
       enabled: "Acest site se află în modul exclusiv-citire. Te rugăm să continui să răsfoiești, însă sunt dezactivate acțiunile de răspuns, apreciere și altele. "
       login_disabled: "Autentificarea este dezactivată când siteul este în modul exclusiv-citire."
@@ -1567,7 +1570,6 @@ ro:
           "3_1": "Vei primi notificări deoarece ai creat acest subiect."
           "3": "Vei primi notificări deoarece urmărești activ acest subiect."
           "2_2": "Vei vedea numărul răspunsurilor noi deoarece urmărești acest subiect."
-          "2": 'Vei vedea numărul răspunsurilor noi deoarece <a href="{{basePath}}/u/{{username}}/preferences">citești acest subiect</a>'
           "1_2": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
           "1": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
           "0_7": "Ignori toate notificările din această categorie."

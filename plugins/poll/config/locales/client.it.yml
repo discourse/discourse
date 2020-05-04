@@ -93,6 +93,8 @@ it:
           label: Gruppi ammessi
         poll_chart_type:
           label: Tipo di grafico
+          bar: Barra
+          pie: Torta
         poll_config:
           max: Massimo
           min: Minimo

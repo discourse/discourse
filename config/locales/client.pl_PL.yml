@@ -29,7 +29,6 @@ pl_PL:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
-      time_with_zone: "H:mm (z)"
       time_short_day: "ddd, GG: mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, GG: mm"
@@ -311,9 +310,7 @@ pl_PL:
         bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
     bookmarks:
-      created: "zakładka dodana"
       not_bookmarked: "dodaj do zakładek"
-      created_with_at_desktop_reminder: "zakładka tego posta została dodana do zakładek, a następnym razem zostaniesz o tym powiadomiony"
       remove: "Usuń zakładkę"
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
       save: "Zapisz"
@@ -831,6 +828,10 @@ pl_PL:
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
       user_notifications:
+        filters:
+          all: "Wszystkie"
+          read: "Przeczytane"
+          unread: "Nieprzeczytane"
         ignore_duration_title: "Ignoruj licznik"
         ignore_duration_username: "Nazwa użytkownika"
         ignore_duration_when: "Oczekiwanie"
@@ -1373,6 +1374,7 @@ pl_PL:
     assets_changed_confirm: "Serwis został zmieniony, czy pozwolisz na przeładowanie strony w celu aktualizacji do najnowszej wersji?"
     logout: "Nastąpiło wylogowanie."
     refresh: "Odśwież"
+    home: "Strona główna"
     read_only_mode:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, lajkowanie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
@@ -2179,7 +2181,6 @@ pl_PL:
           "2_8": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz kategorię wątku."
           "2_4": "Widzisz ilość nowych odpowiedzi, ponieważ wypowiedziałeś się w tym wątku."
           "2_2": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz ten wątek."
-          "2": 'Widzisz ilość nowych odpowiedzi, ponieważ przeczytałeś <a href="{{basePath}}/u/{{username}}/preferences">ten wątek</a>.'
           "1_2": "Otrzymasz powiadomienie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
           "1": "Otrzymasz powiadomienie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
           "0_7": "Ignorujesz wszystkie powiadomienia z tej kategorii."
@@ -2597,6 +2598,7 @@ pl_PL:
             button: "HTML"
       bookmarks:
         created: "Utworzono"
+        updated: "Zaktualizowane"
         name: "Imię"
     category:
       can: "może&hellip; "

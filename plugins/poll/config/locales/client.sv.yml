@@ -93,6 +93,8 @@ sv:
           label: Tillåtna grupper
         poll_chart_type:
           label: Diagramtyp
+          bar: Stapel
+          pie: Cirkel
         poll_config:
           max: Max
           min: Min
