@@ -16,7 +16,7 @@ export default Controller.extend({
   },
 
   @discourseComputed("model.content.length", "filter")
-  hasNotifications(length, filter) {
+  hasFilteredNotifications(length, filter) {
     if (filter === "read") {
       return this.model.filterBy("read", true).length > 0;
     } else if (filter === "unread") {
