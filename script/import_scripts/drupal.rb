@@ -41,6 +41,8 @@ class ImportScripts::Drupal < ImportScripts::Base
     import_forum_topics
 
     import_replies
+    import_likes
+    mark_topics_as_solved
 
     begin
       create_admin(email: 'neil.lalonde@discourse.org', username: UserNameSuggester.suggest('neil'))
@@ -176,16 +178,16 @@ class ImportScripts::Drupal < ImportScripts::Base
                fi.created created,
                fi.sticky sticky,
                f.body_value body,
-	       nc.totalcount views
-          FROM forum_index fi,
-               node n,
-               field_data_body f,
-	       node_counter nc
+	       nc.totalcount views,
+	       fl.timestamp solved
+          FROM forum_index fi
+	 LEFT JOIN node n ON fi.nid = n.nid
+	 LEFT JOIN field_data_body f ON f.entity_id = n.nid
+	 LEFT JOIN flagging fl ON fl.entity_id = n.nid
+	     AND fl.fid = 7
+	 LEFT JOIN node_counter nc ON nc.nid = n.nid
          WHERE n.type = 'forum'
-           AND fi.nid = n.nid
-           AND n.nid = f.entity_id
            AND n.status = 1
-	   AND nc.nid = n.nid
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset};
       SQL
@@ -196,7 +198,7 @@ class ImportScripts::Drupal < ImportScripts::Base
       next if all_records_exist? :posts, results.map { |p| "nid:#{p['nid']}" }
 
       create_posts(results, total: total_count, offset: offset) do |row|
-        {
+        topic = {
           id: "nid:#{row['nid']}",
           user_id: user_id_from_imported_user_id(row['uid']) || -1,
           category: category_id_from_imported_category_id(row['tid']),
@@ -206,6 +208,8 @@ class ImportScripts::Drupal < ImportScripts::Base
           title: row['title'].try(:strip),
 	  views: row['views']
         }
+	topic[:custom_fields] = { import_solved: true } if row['solved'].present?
+	topic
       end
     end
   end
@@ -265,6 +269,57 @@ class ImportScripts::Drupal < ImportScripts::Base
           nil
         end
       end
+    end
+  end
+  
+  def import_likes
+    puts "", "importing post likes"
+
+    last_like_id = -1
+
+    batches(BATCH_SIZE) do |offset|
+      likes = mysql_query(<<-SQL
+        SELECT flagging_id,
+               fid,
+	       entity_id,
+	       uid
+	  FROM flagging
+	 WHERE fid = 5
+	    OR fid = 6
+	 LIMIT #{BATCH_SIZE}
+	OFFSET #{offset}
+      SQL
+      ).to_a
+
+      break if likes.empty?
+
+      last_like_id = likes[-1]['flagging_id']
+
+      likes.each do |l|
+        identifier = l['fid'] == 5 ? 'nid' : 'cid'
+	next unless user_id = user_id_from_imported_user_id(l['uid'])
+	next unless post_id = post_id_from_imported_post_id("#{identifier}:#{l['entity_id']}")
+	next unless user = User.find_by(id: user_id)
+	next unless post = Post.find_by(id: post_id)
+        PostActionCreator.like(user, post) rescue nil
+      end
+    end
+  end
+
+  def mark_topics_as_solved
+    puts "", "marking topics as solved"
+
+    user_id = -1
+
+    solved_topics = TopicCustomField.where(name: "import_solved").where(value: true).pluck(:topic_id)
+
+    solved_topics.each do |topic_id|
+      next unless topic = Topic.find(topic_id)
+      next unless post = topic.posts.last
+      post_id = post.id
+
+      PostCustomField.create!(post_id: post_id, name: "is_accepted_answer", value: true)
+      TopicCustomField.create!(topic_id: topic_id, name: "accepted_answer_post_id", value: post_id)
     end
   end
 
