@@ -3,6 +3,7 @@ import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["notifications-filter"],
+
   content: computed(function() {
     return [
       {
@@ -19,6 +20,7 @@ export default DropdownSelectBoxComponent.extend({
       }
     ];
   }),
+
   selectKitOptions: {
     headerComponent: "notifications-filter/notifications-filter-header"
   }

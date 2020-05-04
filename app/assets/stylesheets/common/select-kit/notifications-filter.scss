@@ -5,37 +5,33 @@
       position: relative;
 
       .select-kit-collection {
-        padding: 5px;
+        padding: 0.25em;
       }
 
       .notifications-filter-header {
-        padding: 0 0.5em 0 0.5em;
+        padding: 0.5em;
         background: none;
         border: none;
-        justify-content: flex-start;
-        width: auto;
-        height: auto;
-        label.filter-text {
-          margin-right: 15px;
+        outline: none;
+        cursor: pointer;
+
+        .filter-text {
+          margin-right: 0.5em;
           color: $primary-medium;
+          cursor: pointer;
+          margin-bottom: 0;
         }
 
-        label.header-text {
+        .header-text {
           color: dark-light-choose($tertiary, $tertiary);
+          cursor: pointer;
+          margin-bottom: 0;
         }
 
         .d-icon {
           color: $primary-medium;
-          opacity: 1;
-          margin: 5px 0 10px 5px;
-          font-size: $font-up-3;
-        }
-
-        &.is-focused,
-        &:hover {
-          background: none;
-          border: none;
-          outline: none;
+          margin: 0 0 0 0.25em;
+          font-size: $font-up-2;
         }
       }
     }
