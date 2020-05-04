@@ -23,7 +23,7 @@ export default DropdownSelectBoxComponent.extend({
       },
       {
         id: "edit",
-        icon: "pencil",
+        icon: "pencil-alt",
         name: I18n.t("post.bookmarks.actions.edit_bookmark.name"),
         description: I18n.t("post.bookmarks.actions.edit_bookmark.description")
       }
