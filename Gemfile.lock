@@ -350,8 +350,9 @@ GEM
       rexml
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-discourse (2.0.1)
+    rubocop-discourse (2.1.2)
       rubocop (>= 0.69.0)
+      rubocop-rspec (>= 1.39.0)
     rubocop-rspec (1.39.0)
       rubocop (>= 0.68.1)
     ruby-prof (1.3.2)
