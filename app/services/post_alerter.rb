@@ -256,6 +256,7 @@ class PostAlerter
   end
 
   def should_notify_edit?(notification, post, opts)
+    notification.created_at < 1.day.ago ||
     notification.data_hash["display_username"] != (opts[:display_username].presence || post.user.username)
   end
 
