@@ -110,7 +110,15 @@ describe PostAlerter do
       admin = Fabricate(:admin)
       post.revise(admin, raw: 'I made a revision')
 
-      # skip this notification cause we already notified on a similar edit
+      # lets also like this post which should trigger a notification
+      PostActionCreator.new(
+        admin,
+        post,
+        PostActionType.types[:like]
+      ).perform
+
+      # skip this notification cause we already notified on an edit by the same user
+      # in the previous edit
       freeze_time 2.hours.from_now
       post.revise(admin, raw: 'I made another revision')
 
@@ -119,7 +127,7 @@ describe PostAlerter do
       freeze_time 2.hours.from_now
       post.revise(admin, raw: 'I made another revision')
 
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(3)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(4)
     end
 
     it 'notifies flaggers when flagged post gets unhidden by edit' do
@@ -195,14 +203,13 @@ describe PostAlerter do
                                           user: evil_trout,
                                           data: { topic_title: "test topic" }.to_json
                                          )
-
       expect {
-        PostAlerter.post_created(post)
+        PostAlerter.post_edited(post)
       }.to change(evil_trout.notifications, :count).by(0)
 
       notification.destroy
       expect {
-        PostAlerter.post_created(post)
+        PostAlerter.post_edited(post)
       }.to change(evil_trout.notifications, :count).by(1)
     end
 
