@@ -54,8 +54,10 @@ export function getRawSize(size) {
   return size * Math.min(3, Math.max(1, Math.round(pixelRatio)));
 }
 
+const getURLWithCDN = url => Discourse.getURLWithCDN(url);
+
 export function avatarImg(options, getURL) {
-  getURL = getURL || Discourse.getURLWithCDN;
+  getURL = getURL || getURLWithCDN;
 
   const size = translateSize(options.size);
   const url = avatarUrl(options.avatarTemplate, size);
