@@ -28,6 +28,83 @@ class Topic < ActiveRecord::Base
     400
   end
 
+  def self.share_thumbnail_size
+    [1024, 1024]
+  end
+
+  def self.thumbnail_sizes
+    [ self.share_thumbnail_size ]
+  end
+
+  def thumbnail_job_redis_key(extra_sizes)
+    "generate_topic_thumbnail_enqueue_#{id}_#{extra_sizes.inspect}"
+  end
+
+  def filtered_topic_thumbnails(extra_sizes: [])
+    return nil unless original = image_upload
+    return nil unless original.width && original.height
+
+    thumbnail_sizes = Topic.thumbnail_sizes + extra_sizes
+    topic_thumbnails.filter { |record| thumbnail_sizes.include?([record.max_width, record.max_height]) }
+  end
+
+  def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
+    return nil unless original = image_upload
+    return nil unless original.width && original.height
+
+    infos = []
+    infos << { # Always add original
+               max_width: nil,
+               max_height: nil,
+               width: original.width,
+               height: original.height,
+               url: original.url
+             }
+
+    records = filtered_topic_thumbnails(extra_sizes: extra_sizes)
+
+    records.each do |record|
+      next unless record.optimized_image # Only serialize successful thumbnails
+
+      infos << {
+        max_width: record.max_width,
+        max_height: record.max_height,
+        width: record.optimized_image&.width,
+        height: record.optimized_image&.height,
+        url: record.optimized_image&.url
+      }
+    end
+
+    thumbnail_sizes = Topic.thumbnail_sizes + extra_sizes
+    if SiteSetting.create_thumbnails &&
+       enqueue_if_missing &&
+       records.length < thumbnail_sizes.length &&
+       Discourse.redis.set(thumbnail_job_redis_key(extra_sizes), 1, nx: true, ex: 1.minute)
+
+      Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id, extra_sizes: extra_sizes })
+    end
+
+    infos.sort_by! { |i| -i[:width] * i[:height] }
+  end
+
+  def generate_thumbnails!(extra_sizes: [])
+    return nil unless SiteSetting.create_thumbnails
+    return nil unless original = image_upload
+    return nil unless original.width && original.height
+
+    (Topic.thumbnail_sizes + extra_sizes).each do |dim|
+      TopicThumbnail.find_or_create_for!(original, max_width: dim[0], max_height: dim[1])
+    end
+  end
+
+  def image_url
+    thumbnail = topic_thumbnails.detect do |record|
+      record.max_width == Topic.share_thumbnail_size[0] &&
+        record.max_height == Topic.share_thumbnail_size[1]
+    end
+    thumbnail&.optimized_image&.url || image_upload&.url
+  end
+
   def featured_users
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
@@ -138,6 +215,9 @@ class Topic < ActiveRecord::Base
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
+
+  belongs_to :image_upload, class_name: 'Upload'
+  has_many :topic_thumbnails, through: :image_upload
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
@@ -1601,6 +1681,7 @@ end
 #  highest_staff_post_number :integer          default(0), not null
 #  featured_link             :string
 #  reviewable_score          :float            default(0.0), not null
+#  image_upload_id           :bigint
 #
 # Indexes
 #
@@ -1611,6 +1692,7 @@ end
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
+#  index_topics_on_image_upload_id         (image_upload_id)
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally

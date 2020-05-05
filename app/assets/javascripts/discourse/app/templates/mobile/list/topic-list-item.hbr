@@ -1,4 +1,5 @@
 <td>
+  {{~raw-plugin-outlet name="topic-list-before-columns"}}
   {{~#unless expandPinned}}
   <div class='pull-left'>
     <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.last_poster_username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
@@ -14,6 +15,7 @@
           This causes the topic-post-badge to be considered the same word as "text"
           at the end of the link, preventing it from line wrapping onto its own line.
         --}}
+        {{~raw-plugin-outlet name="topic-list-before-link"}}
         <div class='main-link'>
           {{~raw-plugin-outlet name="topic-list-before-status"}}
           {{~raw "topic-status" topic=topic~}}
