@@ -120,54 +120,38 @@ const Discourse = Application.extend(FocusEvent, {
     return loginController.authenticationComplete(options);
   },
 
+  _prepareInitializer(moduleName) {
+    const module = requirejs(moduleName, null, null, true);
+    if (!module) {
+      throw new Error(moduleName + " must export an initializer.");
+    }
+
+    const init = module.default;
+    const oldInitialize = init.initialize;
+    init.initialize = () => oldInitialize.call(init, this.__container__, this);
+    return init;
+  },
+
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
     $("noscript").remove();
 
-    Object.keys(requirejs._eak_seen).forEach(function(key) {
+    Object.keys(requirejs._eak_seen).forEach(key => {
       if (/\/pre\-initializers\//.test(key)) {
-        const module = requirejs(key, null, null, true);
-        if (!module) {
-          throw new Error(key + " must export an initializer.");
-        }
-
-        const init = module.default;
-        const oldInitialize = init.initialize;
-        init.initialize = function() {
-          oldInitialize.call(this, Discourse.__container__, Discourse);
-        };
-
-        Discourse.initializer(init);
-      }
-    });
-
-    Object.keys(requirejs._eak_seen).forEach(function(key) {
-      if (/\/initializers\//.test(key)) {
-        const module = requirejs(key, null, null, true);
-        if (!module) {
-          throw new Error(key + " must export an initializer.");
-        }
-
-        const init = module.default;
-        const oldInitialize = init.initialize;
-        init.initialize = function() {
-          oldInitialize.call(this, Discourse.__container__, Discourse);
-        };
-
-        Discourse.instanceInitializer(init);
+        this.initializer(this._prepareInitializer(key));
+      } else if (/\/initializers\//.test(key)) {
+        this.instanceInitializer(this._prepareInitializer(key));
       }
     });
 
     // Plugins that are registered via `<script>` tags.
     const withPluginApi = requirejs("discourse/lib/plugin-api").withPluginApi;
     let initCount = 0;
-    _pluginCallbacks.forEach(function(cb) {
-      Discourse.instanceInitializer({
-        name: "_discourse_plugin_" + ++initCount,
+    _pluginCallbacks.forEach(cb => {
+      this.instanceInitializer({
+        name: `_discourse_plugin_${++initCount}`,
         after: "inject-objects",
-        initialize() {
-          withPluginApi(cb.version, cb.code);
-        }
+        initialize: () => withPluginApi(cb.version, cb.code)
       });
     });
   },
