@@ -38,11 +38,23 @@ export default Controller.extend({
     return loaded && contentLength === 0 && noResultsHelp;
   },
 
+  _removeBookmarkFromList(bookmark) {
+    this.content.removeObject(bookmark);
+  },
+
   @action
   removeBookmark(bookmark) {
+    const deleteBookmark = () => {
+      return bookmark
+        .destroy()
+        .then(() => this._removeBookmarkFromList(bookmark));
+    };
+    if (!bookmark.reminder_at) {
+      return deleteBookmark();
+    }
     bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
       if (result) {
-        return bookmark.destroy().then(() => this.loadItems());
+        return deleteBookmark();
       }
     });
   },
