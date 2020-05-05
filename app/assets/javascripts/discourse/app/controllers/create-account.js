@@ -60,25 +60,9 @@ export default Controller.extend(
       this._createUserFields();
     },
 
-    @discourseComputed(
-      "passwordRequired",
-      "nameValidation.failed",
-      "emailValidation.failed",
-      "usernameValidation.failed",
-      "passwordValidation.failed",
-      "formSubmitted",
-      "inviteCode"
-    )
+    @discourseComputed("formSubmitted")
     submitDisabled() {
       if (this.formSubmitted) return true;
-      if (this.get("nameValidation.failed")) return true;
-      if (this.get("emailValidation.failed")) return true;
-      if (this.get("usernameValidation.failed") && this.usernameRequired)
-        return true;
-      if (this.get("passwordValidation.failed") && this.passwordRequired)
-        return true;
-
-      if (this.requireInviteCode && !this.inviteCode) return true;
 
       return false;
     },
@@ -111,18 +95,26 @@ export default Controller.extend(
     // Check the email address
     @discourseComputed("accountEmail", "rejectedEmails.[]")
     emailValidation(email, rejectedEmails) {
+      const failedAttrs = {
+        failed: true,
+        element: document.querySelector("#new-account-email")
+      };
+
       // If blank, fail without a reason
       if (isEmpty(email)) {
-        return EmberObject.create({
-          failed: true
-        });
+        return EmberObject.create(
+          Object.assign(failedAttrs, {
+            message: I18n.t("user.email.required")
+          })
+        );
       }
 
       if (rejectedEmails.includes(email)) {
-        return EmberObject.create({
-          failed: true,
-          reason: I18n.t("user.email.invalid")
-        });
+        return EmberObject.create(
+          Object.assign(failedAttrs, {
+            reason: I18n.t("user.email.invalid")
+          })
+        );
       }
 
       if (
@@ -146,10 +138,11 @@ export default Controller.extend(
         });
       }
 
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("user.email.invalid")
-      });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          reason: I18n.t("user.email.invalid")
+        })
+      );
     },
 
     @discourseComputed(
@@ -309,10 +302,21 @@ export default Controller.extend(
       },
 
       createAccount() {
-        if (this.userFieldsValidation.failed) {
-          const userField = this.userFieldsValidation.userField;
-          this.flash(userField.field.name, "error");
-          userField.focus();
+        this.clearFlash();
+
+        const validation = [
+          this.emailValidation,
+          this.usernameValidation,
+          this.nameValidation,
+          this.passwordValidation,
+          this.userFieldsValidation
+        ].find(v => v.failed);
+
+        if (validation) {
+          if (validation.message) {
+            this.flash(validation.message, "error");
+          }
+          validation.element.focus();
           return;
         }
 

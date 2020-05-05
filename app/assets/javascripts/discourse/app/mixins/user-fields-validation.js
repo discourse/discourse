@@ -32,9 +32,11 @@ export default Mixin.create({
         return !val || isEmpty(val);
       });
       if (emptyUserField) {
+        const userField = emptyUserField.field;
         return EmberObject.create({
           failed: true,
-          userField: emptyUserField
+          message: I18n.t("user_fields.required", { name: userField.name }),
+          element: userField.component
         });
       }
     }
