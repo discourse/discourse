@@ -841,7 +841,7 @@ export default Component.extend(
             },
             {
               name: "sameWidth",
-              enabled: window.innerWidth > 400,
+              enabled: window.innerWidth > 450,
               phase: "beforeWrite",
               requires: ["computeStyles"],
               fn: ({ state }) => {
