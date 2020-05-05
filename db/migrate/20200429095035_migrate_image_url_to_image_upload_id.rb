@@ -9,8 +9,11 @@ class MigrateImageUrlToImageUploadId < ActiveRecord::Migration[6.0]
     # Defining regex here to avoid needing to double-escape the \ characters
     regex = '\/(original|optimized)\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*'
 
+    # Can't use a real temporary table because we're running outside a transaction
+    # and the connection could change between statements
+    drop_temporary_table! # First check it doesn't already exist
     execute <<~SQL
-      CREATE TEMPORARY TABLE tmp_post_image_uploads(
+      CREATE TABLE tmp_post_image_uploads(
         post_id int primary key,
         upload_id int
       )
@@ -91,5 +94,15 @@ class MigrateImageUrlToImageUploadId < ActiveRecord::Migration[6.0]
       SQL
       last_update_id = result.last&.id
     end while last_update_id
+  ensure
+    drop_temporary_table!
+  end
+
+  def drop_temporary_table!
+    Migration::SafeMigrate.disable!
+    execute <<~SQL
+      DROP TABLE IF EXISTS tmp_post_image_uploads
+    SQL
+    Migration::SafeMigrate.enable!
   end
 end
