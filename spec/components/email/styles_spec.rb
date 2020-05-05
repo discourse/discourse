@@ -8,14 +8,14 @@ describe Email::Styles do
   def basic_fragment(html)
     styler = Email::Styles.new(html)
     styler.format_basic
-    Nokogiri::HTML.fragment(styler.to_html)
+    Nokogiri::HTML5.fragment(styler.to_html)
   end
 
   def html_fragment(html)
     styler = Email::Styles.new(html)
     styler.format_basic
     styler.format_html
-    Nokogiri::HTML.fragment(styler.to_html)
+    Nokogiri::HTML5.fragment(styler.to_html)
   end
 
   context "basic formatter" do

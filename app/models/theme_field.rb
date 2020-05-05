@@ -78,7 +78,7 @@ class ThemeField < ActiveRecord::Base
 
     js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
 
-    doc = Nokogiri::HTML.fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
 
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"

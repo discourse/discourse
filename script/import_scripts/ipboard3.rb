@@ -376,7 +376,7 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
 
     raw.gsub!(/<(.+)>&nbsp;<\/\1>/, "\n\n")
 
-    doc = Nokogiri::HTML.fragment(raw)
+    doc = Nokogiri::HTML5.fragment(raw)
 
     doc.css("blockquote.ipsBlockquote").each do |bq|
       post_id = post_id_from_imported_post_id(bq["data-cid"])

@@ -24,7 +24,7 @@ module Onebox
         return true if WhitelistedGenericOnebox.html_providers.include?(data[:provider_name])
 
         if data[:html]["iframe"]
-          fragment = Nokogiri::HTML::fragment(data[:html])
+          fragment = Nokogiri::HTML5::fragment(data[:html])
           if iframe = fragment.at_css("iframe")
             src = iframe["src"]
             return src.present? && SiteSetting.allowed_iframes.split("|").any? { |url| src.start_with?(url) }

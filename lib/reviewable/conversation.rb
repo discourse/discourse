@@ -17,7 +17,7 @@ class Reviewable < ActiveRecord::Base
       def self.excerpt(cooked)
         excerpt = ::Post.excerpt(cooked, 250, keep_emoji_images: true)
         # remove the first link if it's the first node
-        fragment = Nokogiri::HTML.fragment(excerpt)
+        fragment = Nokogiri::HTML5.fragment(excerpt)
         if fragment.children.first == fragment.css("a:first").first && fragment.children.first
           fragment.children.first.remove
         end
