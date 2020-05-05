@@ -45,7 +45,9 @@ class ImportScripts::Drupal < ImportScripts::Base
     #import_likes
     #mark_topics_as_solved
     #import_sso_records
-    import_attachments
+    #import_attachments
+    postprocess_posts
+    create_permalinks
 
     begin
       create_admin(email: 'neil.lalonde@discourse.org', username: UserNameSuggester.suggest('neil'))
@@ -201,11 +203,12 @@ class ImportScripts::Drupal < ImportScripts::Base
       next if all_records_exist? :posts, results.map { |p| "nid:#{p['nid']}" }
 
       create_posts(results, total: total_count, offset: offset) do |row|
+        raw = preprocess_raw(row['body'])
         topic = {
           id: "nid:#{row['nid']}",
           user_id: user_id_from_imported_user_id(row['uid']) || -1,
           category: category_id_from_imported_category_id(row['tid']),
-          raw: row['body'],
+          raw: raw,
           created_at: Time.zone.at(row['created']),
           pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
           title: row['title'].try(:strip),
@@ -255,11 +258,12 @@ class ImportScripts::Drupal < ImportScripts::Base
       create_posts(results, total: total_count, offset: offset) do |row|
         topic_mapping = topic_lookup_from_imported_post_id("nid:#{row['nid']}")
         if topic_mapping && topic_id = topic_mapping[:topic_id]
+          raw = preprocess_raw(row['body'])
           h = {
             id: "cid:#{row['cid']}",
             topic_id: topic_id,
             user_id: user_id_from_imported_user_id(row['uid']) || -1,
-            raw: row['body'],
+            raw: raw,
             created_at: Time.zone.at(row['created']),
           }
           if row['pid']
@@ -390,7 +394,6 @@ class ImportScripts::Drupal < ImportScripts::Base
         next unless post = Post.find(post_id)
 
         begin
-        byebug if current_count == 150
         new_raw = post.raw.dup
         upload, filename = find_upload(post, attachment)
 
@@ -414,13 +417,25 @@ class ImportScripts::Drupal < ImportScripts::Base
     end
   end
 
+  def create_permalinks
+    puts '', 'creating permalinks...'
+
+    Topic.listable_topics.find_each do |topic|
+      tcf = topic.custom_fields
+      if tcf && tcf['import_id']
+        node_id = tcf['import_id'][/nid:(\d+)/,1]
+        slug = "/forum/topic/#{node_id}"
+        Permalink.create(url: slug, topic_id: topic.id)
+      end
+    end
+  end
+
   def find_upload(post, attachment)
     real_filename = CGI.unescapeHTML(attachment['filename'])
     file = File.join(ATTACHMENT_DIR, real_filename)
 
     return unless File.exists?(file)
 
-    byebug if post.user.id == nil
     upload = create_upload(post.user.id || -1, file, real_filename)
 
     if upload.nil? || upload.errors.any?
@@ -430,6 +445,61 @@ class ImportScripts::Drupal < ImportScripts::Base
     end
 
     [upload, real_filename]
+  end
+
+  def preprocess_raw(raw)
+    # quotes on new lines
+    raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { |quote|
+      quote.gsub!(/\[quote\](.+?)\[\/quote\]/im) { "\n#{$1}\n" }
+      quote.gsub!(/\n(.+?)/) { "\n> #{$1}" }
+    }
+
+    # [QUOTE=<username>]...[/QUOTE]
+    raw.gsub!(/\[quote=([^;\]]+)\](.+?)\[\/quote\]/im) do
+     old_username, quote = $1, $2
+     new_username = get_username_for_old_username(old_username)
+     "\n[quote=\"#{new_username}\"]\n#{quote}\n[/quote]\n"
+    end
+  end
+
+  def postprocess_posts
+    puts '', 'postprocessing posts'
+
+    current = 0
+    max = Post.count
+
+    Post.find_each do |post|
+      begin
+      raw = post.raw
+      new_raw = raw.dup
+
+      # replace old topic to new topic links
+      new_raw.gsub!(/https:\/\/firecore.com\/forum\/topic\/(\d+)/im) do
+        post_id = post_id_from_imported_post_id("nid:#{$1}")
+        next unless post_id
+        topic = Post.find(post_id).topic
+        "https://community.firecore.com/t/-/#{topic.id}"
+      end
+
+      # replace old comment to reply links
+      new_raw.gsub!(/https:\/\/firecore.com\/comment\/(\d+)#comment-\d+/im) do
+        post_id = post_id_from_imported_post_id("cid:#{$1}")
+        next unless post_id
+        post = Post.find(post_id) 
+        "https://community.firecore.com/t/-/#{post.topic_id}/#{post.post_number}"
+      end
+
+      if raw != new_raw
+        post.raw = new_raw
+        post.cooked = post.cook(new_raw)
+        post.save
+      end
+      rescue
+        puts '', "Failed rewrite on post: #{post.id}"
+      ensure
+        print_status(current += 1, max)
+      end
+    end
   end
 
   def mysql_query(sql)
