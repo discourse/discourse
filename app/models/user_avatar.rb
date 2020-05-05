@@ -96,16 +96,31 @@ class UserAvatar < ActiveRecord::Base
 
     return unless tempfile
 
-    ext = FastImage.type(tempfile).to_s
-    tempfile.rewind
+    create_custom_avatar(
+      user,
+      tempfile,
+      override_gravatar: options&.dig(:override_gravatar),
+      origin: avatar_url
+    )
+  rescue Net::ReadTimeout, OpenURI::HTTPError
+    # skip saving, we are not connected to the net
+  ensure
+    tempfile.close! if tempfile && tempfile.respond_to?(:close!)
+  end
 
-    upload = UploadCreator.new(tempfile, "external-avatar." + ext, origin: avatar_url, type: "avatar").create_for(user.id)
+  def self.create_custom_avatar(user, file, override_gravatar: false, origin: nil)
+    ext = FastImage.type(file).to_s
+    file.rewind
+
+    upload = UploadCreator.new(file, "external-avatar.#{ext}",
+      origin: origin,
+      type: "avatar"
+    ).create_for(user.id)
 
     user.create_user_avatar! unless user.user_avatar
 
     if !user.user_avatar.contains_upload?(upload.id)
       user.user_avatar.update!(custom_upload_id: upload.id)
-      override_gravatar = !options || options[:override_gravatar]
 
       if user.uploaded_avatar_id.nil? ||
           !user.user_avatar.contains_upload?(user.uploaded_avatar_id) ||
@@ -114,11 +129,6 @@ class UserAvatar < ActiveRecord::Base
         user.update!(uploaded_avatar_id: upload.id)
       end
     end
-
-  rescue Net::ReadTimeout, OpenURI::HTTPError
-    # skip saving, we are not connected to the net
-  ensure
-    tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end
 
   def self.ensure_consistency!
