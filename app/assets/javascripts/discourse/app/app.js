@@ -179,6 +179,6 @@ const Discourse = Application.extend(FocusEvent, {
       return this.currentAssetVersion;
     }
   })
-}).create();
+});
 
 export default Discourse;
