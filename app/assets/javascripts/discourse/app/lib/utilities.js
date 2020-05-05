@@ -328,6 +328,28 @@ export function clipboardData(e, canUpload) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
+// Replace any accented characters with their ASCII equivalent
+// Return the string if it only contains ASCII printable characters,
+// otherwise use the fallback
+export function toAsciiPrintable(string, fallback) {
+  if (typeof string.normalize === "function") {
+    string = string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  return /^[/\040-\176/]*$/.test(string) ? string : fallback;
+}
+
+export function slugify(string) {
+  return string
+    .trim()
+    .toLowerCase()
+    .replace(/\s|_+/g, "-") // Replace spaces and underscores with dashes
+    .replace(/[^\w\-]+/g, "") // Remove non-word characters except for dashes
+    .replace(/\-\-+/g, "-") // Replace multiple dashes with a single dash
+    .replace(/^-+/, "") // Remove leading dashes
+    .replace(/-+$/, ""); // Remove trailing dashes
+}
+
 export function toNumber(input) {
   return typeof input === "number" ? input : parseFloat(input);
 }
