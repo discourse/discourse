@@ -8,12 +8,14 @@
     <span class="presence-text">
       <span class="description">
         {{#if isReply ~}}
-          {{i18n 'presence.replying'}}
+          {{i18n "presence.replying"}}
         {{~else~}}
-          {{i18n 'presence.editing'}}
-        {{~/if}}</span>{{!-- (using comment to stop whitespace)
-   --}}</span>{{!--
-   --}}<span class="wave"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+          {{i18n "presence.editing"}}
+        {{~/if}}
+      </span>{{!-- (using comment to stop whitespace)
+--}}</span>{{!--
+--}}<span class="wave">
+      <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
     </span>
   </div>
 {{/if}}

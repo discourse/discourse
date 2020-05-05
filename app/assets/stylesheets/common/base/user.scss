@@ -590,8 +590,13 @@
       margin-right: 10px;
     }
 
-    .form-horizontal .instructions {
-      margin-left: 0;
+    .form-horizontal {
+      .instructions {
+        margin-left: 0;
+      }
+      .actions {
+        margin-top: 5px;
+      }
     }
 
     .backup-codes {
