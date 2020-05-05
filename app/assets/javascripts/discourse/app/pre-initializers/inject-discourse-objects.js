@@ -28,7 +28,10 @@ export default {
 
     const messageBus = window.MessageBus;
     app.register("message-bus:main", messageBus, { instantiate: false });
-    ALL_TARGETS.forEach(t => app.inject(t, "messageBus", "message-bus:main"));
+
+    ALL_TARGETS.concat("service").forEach(t =>
+      app.inject(t, "messageBus", "message-bus:main")
+    );
 
     const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
@@ -47,7 +50,7 @@ export default {
 
     const siteSettings = app.SiteSettings;
     app.register("site-settings:main", siteSettings, { instantiate: false });
-    ALL_TARGETS.forEach(t =>
+    ALL_TARGETS.concat("service").forEach(t =>
       app.inject(t, "siteSettings", "site-settings:main")
     );
 
@@ -77,7 +80,7 @@ export default {
     );
 
     if (currentUser) {
-      ["component", "route", "controller"].forEach(t => {
+      ["component", "route", "controller", "service"].forEach(t => {
         app.inject(t, "currentUser", "current-user:main");
       });
     }

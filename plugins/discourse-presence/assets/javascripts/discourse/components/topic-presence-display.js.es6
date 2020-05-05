@@ -1,17 +1,12 @@
 import Component from "@ember/component";
-import { getOwner } from "@ember/application";
 import { gt } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { TOPIC_TYPE } from "../lib/presence-manager";
+import { TOPIC_TYPE } from "../lib/presence";
 
 export default Component.extend({
   topic: null,
-  presenceManager: null,
-
-  init() {
-    this._super(...arguments);
-    this.set("presenceManager", getOwner(this).lookup("presence-manager:main"));
-  },
+  presenceManager: service(),
 
   @discourseComputed("topic.id")
   users(topicId) {
