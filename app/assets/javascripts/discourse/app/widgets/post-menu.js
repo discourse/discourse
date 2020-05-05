@@ -41,6 +41,11 @@ export function addButton(name, builder) {
   _extraButtons[name] = builder;
 }
 
+export function removeButton(name) {
+  if (_extraButtons[name]) delete _extraButtons[name];
+  if (_builders[name]) delete _builders[name];
+}
+
 function registerButton(name, builder) {
   _builders[name] = builder;
 }
