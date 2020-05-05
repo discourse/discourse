@@ -15,6 +15,7 @@ export default DropdownSelectBoxComponent.extend({
     return [
       {
         id: "remove",
+        classNames: "is-dangerous",
         icon: "trash-alt",
         name: I18n.t("post.bookmarks.actions.delete_bookmark.name"),
         description: I18n.t(

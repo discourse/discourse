@@ -170,6 +170,28 @@
       background: $tertiary-low;
     }
 
+    &.is-dangerous {
+      background: $danger;
+
+      &:hover {
+        background: dark-light-choose(
+          scale-color($danger, $lightness: -20%),
+          scale-color($danger, $lightness: 20%)
+        );
+      }
+      .texts {
+        .name,
+        .desc {
+          color: $secondary;
+        }
+      }
+      .icons {
+        .d-icon {
+          color: $secondary;
+        }
+      }
+    }
+
     .discourse-tag,
     .discourse-tag-count {
       color: $primary;
