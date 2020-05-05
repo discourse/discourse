@@ -11,7 +11,7 @@ describe CategoriesController do
     it 'web crawler view has correct urls for subfolder install' do
       set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
-      html = Nokogiri::HTML(response.body)
+      html = Nokogiri::HTML5(response.body)
       expect(html.css('body.crawler')).to be_present
       expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
     end

@@ -184,7 +184,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -206,7 +206,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -227,7 +227,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -254,7 +254,7 @@ describe PrettyText do
           <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
           </div>
           <blockquote>
           <p>ddd</p>
@@ -828,7 +828,7 @@ describe PrettyText do
 
   describe "strip_image_wrapping" do
     def strip_image_wrapping(html)
-      doc = Nokogiri::HTML.fragment(html)
+      doc = Nokogiri::HTML5.fragment(html)
       described_class.strip_image_wrapping(doc)
       doc.to_html
     end
@@ -1122,7 +1122,7 @@ describe PrettyText do
   it "can handle mixed lists" do
     # known bug in old md engine
     cooked = PrettyText.cook("* a\n\n1. b")
-    expect(cooked).to match_html("<ul>\n<li>a</li>\n</ul><ol>\n<li>b</li>\n</ol>")
+    expect(cooked).to match_html("<ul>\n<li>a</li>\n</ul>\n<ol>\n<li>b</li>\n</ol>")
   end
 
   it "can handle traditional vs non traditional newlines" do
@@ -1342,13 +1342,13 @@ HTML
 
   it "supports img bbcode" do
     cooked = PrettyText.cook "[img]http://www.image/test.png[/img]"
-    html = "<p><img src=\"http://www.image/test.png\" alt></p>"
+    html = "<p><img src=\"http://www.image/test.png\" alt=\"\"></p>"
     expect(cooked).to eq(html)
   end
 
   it "provides safety for img bbcode" do
     cooked = PrettyText.cook "[img]http://aaa.com<script>alert(1);</script>[/img]"
-    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt></p>'
+    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt=""></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1433,10 +1433,10 @@ HTML
 
       html = <<~HTML
         <p><img src="http://png.com/my.png" alt="title with | title" width="220" height="100"><br>
-        <img src="http://png.com/my.png" alt><br>
-        <img src="http://png.com/my.png" alt width="220" height="100"><br>
+        <img src="http://png.com/my.png" alt=""><br>
+        <img src="http://png.com/my.png" alt="" width="220" height="100"><br>
         <img src="http://png.com/my.png" alt="stuff"><br>
-        <img src="http://png.com/my.png" alt title="some title" width="110" height="50"></p>
+        <img src="http://png.com/my.png" alt="" title="some title" width="110" height="50"></p>
       HTML
 
       expect(cooked).to eq(html.strip)
@@ -1452,11 +1452,11 @@ HTML
       MD
 
       html = <<~HTML
-        <p><img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="150" height="68"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+        <p><img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="150" height="68"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"></p>
       HTML
 
       expect(cooked).to eq(html.strip)

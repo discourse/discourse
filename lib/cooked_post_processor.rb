@@ -24,7 +24,7 @@ class CookedPostProcessor
     @cooking_options = @cooking_options.symbolize_keys
 
     cooked = post.cook(post.raw, @cooking_options)
-    @doc = Nokogiri::HTML::fragment(cooked)
+    @doc = Nokogiri::HTML5::fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
@@ -95,7 +95,7 @@ class CookedPostProcessor
 
     return if previous.blank?
 
-    previous_text = Nokogiri::HTML::fragment(previous).text.strip
+    previous_text = Nokogiri::HTML5::fragment(previous).text.strip
     quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip || ""
 
     return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')

@@ -350,7 +350,7 @@ after_initialize do
         # in the validators instead of cooking twice
         cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
 
-        Nokogiri::HTML(cooked).css("div.poll").map do |p|
+        Nokogiri::HTML5(cooked).css("div.poll").map do |p|
           poll = { "options" => [], "name" => DiscoursePoll::DEFAULT_POLL_NAME }
 
           # attributes

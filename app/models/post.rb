@@ -953,7 +953,7 @@ class Post < ActiveRecord::Base
       /\/uploads\/short-url\/[a-zA-Z0-9]+(\.[a-z0-9]+)?/
     ]
 
-    fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    fragments ||= Nokogiri::HTML5::fragment(self.cooked)
     selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
 
     links = selectors.map do |media|

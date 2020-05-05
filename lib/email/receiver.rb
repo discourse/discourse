@@ -338,7 +338,7 @@ module Email
       markdown, elided_markdown = if html.present?
         # use the first html extracter that matches
         if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
-          doc = Nokogiri::HTML.fragment(html)
+          doc = Nokogiri::HTML5.fragment(html)
           self.public_send(:"extract_from_#{html_extracter[0]}", doc)
         else
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
