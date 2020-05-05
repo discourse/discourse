@@ -103,6 +103,11 @@ export default Controller.extend(ModalFunctionality, {
   _initializeExistingBookmarkData() {
     if (this._existingBookmarkHasReminder()) {
       let parsedReminderAt = this._parseCustomDateTime(this.model.reminderAt);
+
+      if (parsedReminderAt.isSame(this.laterToday())) {
+        return this.set("selectedReminderType", REMINDER_TYPES.LATER_TODAY);
+      }
+
       this.setProperties({
         customReminderDate: parsedReminderAt.format("YYYY-MM-DD"),
         customReminderTime: parsedReminderAt.format("HH:mm"),
