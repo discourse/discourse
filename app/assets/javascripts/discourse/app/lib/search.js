@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import { findRawTemplate } from "discourse/lib/raw-templates";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import Category from "discourse/models/category";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";

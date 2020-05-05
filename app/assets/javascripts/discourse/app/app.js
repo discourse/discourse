@@ -10,7 +10,6 @@ const _pluginCallbacks = [];
 const Discourse = Application.extend(FocusEvent, {
   rootElement: "#main",
   _docTitle: document.title,
-  RAW_TEMPLATES: {},
   __widget_helpers: {},
   customEvents: {
     paste: "paste"

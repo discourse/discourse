@@ -1,5 +1,5 @@
 import { registerUnbound } from "discourse-common/lib/helpers";
-import { findRawTemplate } from "discourse/lib/raw-templates";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { htmlSafe } from "@ember/template";
 import { setOwner } from "@ember/application";
 

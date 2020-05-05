@@ -3,7 +3,7 @@ import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
-import { findRawTemplate } from "discourse/lib/raw-templates";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { on } from "@ember/object/evented";
 
