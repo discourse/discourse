@@ -1,6 +1,5 @@
 .select-kit {
   border: none;
-  min-width: 220px;
   box-sizing: border-box;
   display: inline-block;
   flex-direction: column;
@@ -22,12 +21,8 @@
     .select-kit-body {
       display: flex;
       flex-direction: column;
-      left: 0;
-      position: absolute;
-      top: 0;
       align-items: center;
       justify-content: center;
-      max-width: 450px;
     }
 
     .select-kit-collection {
@@ -133,7 +128,6 @@
     display: none;
     background: $secondary;
     box-sizing: border-box;
-    width: auto;
   }
 
   .select-kit-row {

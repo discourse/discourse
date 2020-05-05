@@ -808,7 +808,7 @@ export default Component.extend(
           placementStrategy = inModal ? "fixed" : "absolute";
         }
 
-        const verticalOffset = this.multiSelect ? 0 : 2;
+        const verticalOffset = this.multiSelect ? 0 : 3;
 
         /* global Popper:true */
         this.popper = Popper.createPopper(anchor, popper, {
@@ -820,6 +820,35 @@ export default Component.extend(
               name: "offset",
               options: {
                 offset: [0, verticalOffset]
+              }
+            },
+            {
+              name: "applySmallScreenOffset",
+              enabled: window.innerWidth <= 450,
+              phase: "main",
+              fn({ state }) {
+                let { x } = state.elements.reference.getBoundingClientRect();
+                state.modifiersData.popperOffsets.x = -x + 10;
+              }
+            },
+            {
+              name: "applySmallScreenMaxWidth",
+              enabled: window.innerWidth <= 450,
+              phase: "beforeWrite",
+              fn({ state }) {
+                state.styles.popper.width = `${window.innerWidth - 20}px`;
+              }
+            },
+            {
+              name: "sameWidth",
+              enabled: window.innerWidth > 400,
+              phase: "beforeWrite",
+              requires: ["computeStyles"],
+              fn: ({ state }) => {
+                state.styles.popper.minWidth = `${state.rects.reference.width}px`;
+              },
+              effect: ({ state }) => {
+                state.elements.popper.style.minWidth = `${state.elements.reference.offsetWidth}px`;
               }
             },
             {
