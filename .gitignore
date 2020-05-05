@@ -138,3 +138,6 @@ openapi/*
 
 # ember-cli generated
 dist
+
+# Copyright Deposits
+copyright
