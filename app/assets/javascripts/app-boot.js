@@ -4,7 +4,7 @@
   if (window.unsupportedBrowser) {
     throw "Unsupported browser detected";
   }
-  let Discourse = requirejs("discourse/app").default;
+  let Discourse = requirejs("discourse/app").default.create();
 
   // required for our template compiler
   window.__DISCOURSE_RAW_TEMPLATES = requirejs(
