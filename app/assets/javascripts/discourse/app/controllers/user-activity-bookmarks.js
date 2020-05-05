@@ -38,7 +38,7 @@ export default Controller.extend({
     return loaded && contentLength === 0 && noResultsHelp;
   },
 
-  removeBookmarkFromList(bookmark) {
+  _removeBookmarkFromList(bookmark) {
     this.content.removeObject(bookmark);
   },
 
@@ -47,7 +47,7 @@ export default Controller.extend({
     const deleteBookmark = () => {
       return bookmark
         .destroy()
-        .then(() => this.removeBookmarkFromList(bookmark));
+        .then(() => this._removeBookmarkFromList(bookmark));
     };
     if (!bookmark.reminder_at) {
       return deleteBookmark();
