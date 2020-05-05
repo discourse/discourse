@@ -81,9 +81,6 @@
 
   .category-input {
     margin-bottom: 5px;
-    .category-chooser {
-      width: 100% !important;
-    }
   }
 
   .submit-panel {
@@ -205,10 +202,6 @@
           font-size: $font-0;
         }
       }
-    }
-
-    .title-and-category .select-kit {
-      min-width: unset;
     }
   }
 

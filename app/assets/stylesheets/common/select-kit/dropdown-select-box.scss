@@ -17,8 +17,6 @@
       border: 1px solid $primary-low;
       background-clip: padding-box;
       box-shadow: shadow("dropdown");
-      max-width: 300px;
-      width: 300px;
     }
 
     .select-kit-row {
@@ -89,6 +87,7 @@
           font-weight: normal;
           color: $primary-medium;
           white-space: normal;
+          min-width: 350px;
         }
       }
     }

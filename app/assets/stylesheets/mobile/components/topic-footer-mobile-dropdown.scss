@@ -1,11 +1,19 @@
-.topic-footer-mobile-dropdown {
-  .select-kit-row {
-    .svg-icon-title {
-      margin-right: 0.5em;
-    }
-    &.bookmarked {
-      .d-icon {
-        color: $tertiary;
+.select-kit {
+  &.combo-box {
+    &.topic-footer-mobile-dropdown {
+      .select-kit-row {
+        .svg-icon-title {
+          margin-right: 0.5em;
+        }
+        &.bookmarked {
+          .d-icon {
+            color: $tertiary;
+          }
+        }
+      }
+
+      .select-kit-collection {
+        max-height: 100%;
       }
     }
   }
