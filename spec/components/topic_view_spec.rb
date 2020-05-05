@@ -708,9 +708,12 @@ describe TopicView do
   end
 
   describe '#image_url' do
-    let!(:post1) { Fabricate(:post, topic: topic) }
-    let!(:post2) { Fabricate(:post, topic: topic) }
-    let!(:post3) { Fabricate(:post, topic: topic).tap { |p| p.update_column(:image_url, "post3_image.png") }.reload }
+    fab!(:op_upload) { Fabricate(:image_upload) }
+    fab!(:post3_upload) { Fabricate(:image_upload) }
+
+    fab!(:post1) { Fabricate(:post, topic: topic) }
+    fab!(:post2) { Fabricate(:post, topic: topic) }
+    fab!(:post3) { Fabricate(:post, topic: topic).tap { |p| p.update_column(:image_upload_id, post3_upload.id) }.reload }
 
     def topic_view_for_post(post_number)
       TopicView.new(topic.id, evil_trout, post_number: post_number)
@@ -718,14 +721,14 @@ describe TopicView do
 
     context "when op has an image" do
       before do
-        topic.update_column(:image_url, "op_image.png")
-        post1.update_column(:image_url, "op_image.png")
+        topic.update_column(:image_upload_id, op_upload.id)
+        post1.update_column(:image_upload_id, op_upload.id)
       end
 
       it "uses the topic image as a fallback when posts have no image" do
-        expect(topic_view_for_post(1).image_url).to eq("op_image.png")
-        expect(topic_view_for_post(2).image_url).to eq("op_image.png")
-        expect(topic_view_for_post(3).image_url).to eq("post3_image.png")
+        expect(topic_view_for_post(1).image_url).to eq(op_upload.url)
+        expect(topic_view_for_post(2).image_url).to eq(op_upload.url)
+        expect(topic_view_for_post(3).image_url).to eq(post3_upload.url)
       end
     end
 
@@ -733,7 +736,7 @@ describe TopicView do
       it "returns nil when posts have no image" do
         expect(topic_view_for_post(1).image_url).to eq(nil)
         expect(topic_view_for_post(2).image_url).to eq(nil)
-        expect(topic_view_for_post(3).image_url).to eq("post3_image.png")
+        expect(topic_view_for_post(3).image_url).to eq(post3_upload.url)
       end
     end
   end

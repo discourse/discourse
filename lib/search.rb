@@ -434,7 +434,7 @@ class Search
   end
 
   advanced_filter(/^with:images$/) do |posts|
-    posts.where("posts.image_url IS NOT NULL")
+    posts.where("posts.image_upload_id IS NOT NULL")
   end
 
   advanced_filter(/^category:(.+)$/) do |posts, match|
