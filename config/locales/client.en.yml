@@ -3060,7 +3060,7 @@ en:
         this_month: "Month"
         this_week: "Week"
         today: "Today"
-        other_periods: "see top"
+        other_periods: "see top:"
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, login, and reply.'
 

@@ -288,6 +288,7 @@ ol.category-breadcrumb {
 .top-title-buttons {
   display: inline-flex;
   margin: 0.25em 0;
+  flex-wrap: wrap;
 
   button {
     margin-right: 0.5em;
