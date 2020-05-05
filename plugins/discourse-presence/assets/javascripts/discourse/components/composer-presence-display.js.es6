@@ -1,17 +1,12 @@
 import Component from "@ember/component";
-import { getOwner } from "@ember/application";
 import { cancel } from "@ember/runloop";
 import { equal, gt } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
-import {
-  REPLYING,
-  CLOSED,
-  EDITING,
-  COMPOSER_TYPE
-} from "../lib/presence-manager";
+import { REPLYING, CLOSED, EDITING, COMPOSER_TYPE } from "../lib/presence";
 import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
@@ -22,15 +17,7 @@ export default Component.extend({
   reply: null,
   title: null,
   isWhispering: null,
-  presenceManager: null,
-
-  init() {
-    this._super(...arguments);
-
-    this.setProperties({
-      presenceManager: getOwner(this).lookup("presence-manager:main")
-    });
-  },
+  presenceManager: service(),
 
   @discourseComputed("topic.id")
   users(topicId) {
