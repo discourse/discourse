@@ -39,6 +39,8 @@
 <% end %>
 
 <div itemscope itemtype='http://schema.org/ItemList'>
+  <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
+
   <table class='topic-list'>
 
     <thead>
@@ -52,7 +54,6 @@
     </thead>
 
     <tbody>
-      <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
       <% @list.topics.each_with_index do |t,i| %>
         <tr class="topic-list-item">
           <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
