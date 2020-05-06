@@ -528,7 +528,9 @@ DEPENDENCIES
   rspec-rails
   rswag-specs
   rtlit
+  rubocop
   rubocop-discourse
+  rubocop-rspec
   ruby-prof
   ruby-readability
   rubyzip
