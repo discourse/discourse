@@ -330,7 +330,7 @@ QUnit.test("previews", assert => {
           },
           {
             formated:
-              "Monday, March 23, 2020 10:00 AM → Monday, March 23, 2020 10:00 AM",
+              "Sunday, March 22, 2020 10:00 AM → Monday, March 23, 2020 10:00 AM",
             timezone: "Sydney"
           }
         ]
@@ -403,7 +403,11 @@ QUnit.test("previews", assert => {
 
   freezeTime({ date: "2020-04-06", timezone: PARIS }, () => {
     assert.buildsCorrectDate(
-      { timezone: PARIS, date: "2020-04-07", timezones: [LONDON, LAGOS] },
+      {
+        timezone: PARIS,
+        date: "2020-04-07",
+        timezones: [LONDON, LAGOS, SYDNEY]
+      },
       {
         previews: [
           {
@@ -414,13 +418,50 @@ QUnit.test("previews", assert => {
           },
           {
             formated:
-              "Tuesday, April 7, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
+              "Monday, April 6, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
             timezone: "London"
           },
           {
             formated:
-              "Tuesday, April 7, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
+              "Monday, April 6, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
             timezone: "Lagos"
+          },
+          {
+            formated:
+              "Tuesday, April 7, 2020 8:00 AM → Wednesday, April 8, 2020 8:00 AM",
+            timezone: "Sydney"
+          }
+        ]
+      }
+    );
+  });
+
+  freezeTime({ date: "2020-04-06", timezone: PARIS }, () => {
+    assert.buildsCorrectDate(
+      {
+        timezone: PARIS,
+        date: "2020-04-07",
+        time: "14:54",
+        timezones: [LONDON, LAGOS, SYDNEY]
+      },
+      {
+        previews: [
+          {
+            current: true,
+            formated: "April 7, 2020 2:54 PM",
+            timezone: "Paris"
+          },
+          {
+            formated: "April 7, 2020 1:54 PM",
+            timezone: "London"
+          },
+          {
+            formated: "April 7, 2020 1:54 PM",
+            timezone: "Lagos"
+          },
+          {
+            formated: "April 7, 2020 10:54 PM",
+            timezone: "Sydney"
           }
         ]
       }
