@@ -2,15 +2,18 @@
 import Application from "@ember/application";
 import { computed } from "@ember/object";
 import { buildResolver } from "discourse-common/resolver";
+import { bind } from "@ember/runloop";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import FocusEvent from "discourse-common/mixins/focus-event";
 
 const _pluginCallbacks = [];
 
-const Discourse = Application.extend(FocusEvent, {
+const Discourse = Application.extend({
   rootElement: "#main",
   _docTitle: document.title,
   __widget_helpers: {},
+  hasFocus: null,
+  _boundFocusChange: null,
+
   customEvents: {
     paste: "paste"
   },
@@ -18,6 +21,24 @@ const Discourse = Application.extend(FocusEvent, {
   reset() {
     this._super(...arguments);
     Mousetrap.reset();
+
+    document.removeEventListener("visibilitychange", this._boundFocusChange);
+    document.removeEventListener("resume", this._boundFocusChange);
+    document.removeEventListener("freeze", this._boundFocusChange);
+
+    this._boundFocusChange = null;
+  },
+
+  ready() {
+    this._super(...arguments);
+    this._boundFocusChange = bind(this, this._focusChanged);
+
+    // Default to true
+    this.set("hasFocus", true);
+
+    document.addEventListener("visibilitychange", this._boundFocusChange);
+    document.addEventListener("resume", this._boundFocusChange);
+    document.addEventListener("freeze", this._boundFocusChange);
   },
 
   getURL(url) {
@@ -178,7 +199,19 @@ const Discourse = Application.extend(FocusEvent, {
       }
       return this.currentAssetVersion;
     }
-  })
+  }),
+
+  _focusChanged() {
+    if (document.visibilityState === "hidden") {
+      if (this.hasFocus) {
+        this.set("hasFocus", false);
+        this.appEvents.trigger("discourse:focus-changed", false);
+      }
+    } else if (!this.hasFocus) {
+      this.set("hasFocus", true);
+      this.appEvents.trigger("discourse:focus-changed", true);
+    }
+  }
 });
 
 export default Discourse;

@@ -20,6 +20,7 @@ export default {
 
     // backwards compatibility: remove when plugins have updated
     app.register("store:main", Store);
+    app.appEvents = container.lookup("service:app-events");
 
     if (!app.hasRegistration("service:store")) {
       app.register("service:store", Store);
