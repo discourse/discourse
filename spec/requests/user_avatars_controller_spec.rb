@@ -27,7 +27,7 @@ describe UserAvatarsController do
       # travis is not good here, no image magick
       if !ENV["TRAVIS"]
         let :upload do
-          File.open("#{Rails.root}/spec/fixtures/images/cropped.png") do |f|
+          File.open(file_from_fixtures("cropped.png")) do |f|
             UploadCreator.new(
               f,
               "test.png"
