@@ -40,7 +40,7 @@ describe BookmarksController do
 
         expect(response.status).to eq(400)
         expect(JSON.parse(response.body)['errors'].first).to include(
-          I18n.t("bookmarks.errors.time_must_be_provided", reminder_type: I18n.t("bookmarks.reminders.at_desktop"))
+          I18n.t("bookmarks.errors.time_must_be_provided")
         )
       end
     end

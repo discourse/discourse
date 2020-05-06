@@ -306,8 +306,6 @@ registerButton("bookmark", attrs => {
       );
       title = "bookmarks.created_with_reminder";
       titleOptions.date = formattedReminder;
-    } else if (attrs.bookmarkReminderType === "at_desktop") {
-      title = "bookmarks.created_with_at_desktop_reminder";
     } else {
       title = "bookmarks.created";
     }

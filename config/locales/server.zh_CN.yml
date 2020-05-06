@@ -318,7 +318,7 @@ zh_CN:
       already_bookmarked_post: "你不能将同一帖子收藏两次。"
       cannot_set_past_reminder: "你不能在此主题设置收藏提醒。"
       cannot_set_reminder_in_distant_future: "你不能够设置一个大于十年的收藏提醒。"
-      time_must_be_provided: "必须为除“ %{reminder_type}”以外的所有提醒提供时间"
+      time_must_be_provided: "必须为除提醒提供时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天的某个时候"

@@ -29,7 +29,6 @@ class BookmarkManager
 
     update_topic_user_bookmarked(topic: post.topic, bookmarked: true)
 
-    BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(@user)
     bookmark
   end
 
@@ -40,7 +39,6 @@ class BookmarkManager
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
 
     bookmark.destroy
-    clear_at_desktop_cache_if_required
 
     bookmarks_remaining_in_topic = Bookmark.exists?(topic_id: bookmark.topic_id, user: @user)
     if !bookmarks_remaining_in_topic
@@ -61,8 +59,6 @@ class BookmarkManager
 
       update_topic_user_bookmarked(topic: topic, bookmarked: false)
     end
-
-    clear_at_desktop_cache_if_required
   end
 
   def self.send_reminder_notification(id)
@@ -93,15 +89,6 @@ class BookmarkManager
   end
 
   private
-
-  def clear_at_desktop_cache_if_required
-    return if user_has_any_pending_at_desktop_reminders?
-    Discourse.redis.del(BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_KEY_PREFIX + @user.id.to_s)
-  end
-
-  def user_has_any_pending_at_desktop_reminders?
-    Bookmark.at_desktop_reminders_for_user(@user).any?
-  end
 
   def update_topic_user_bookmarked(topic:, bookmarked:)
     TopicUser.change(@user.id, topic, bookmarked: bookmarked)
