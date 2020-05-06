@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Onebox::Engine::RedditImageOnebox do
+describe Onebox::Engine::RedditMediaOnebox do
   let(:link) { "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition" }
   let(:html) { described_class.new(link).to_html }
 
