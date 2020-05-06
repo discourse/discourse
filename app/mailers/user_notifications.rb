@@ -213,11 +213,11 @@ class UserNotifications < ActionMailer::Base
                    value: new_topics_count,
                    href: "#{Discourse.base_url}/new" }]
 
-      value = user.unread_notifications
+      # totalling unread notifications (which are low-priority only) and unread
+      # PMs and bookmark reminder notifications, so the total is both unread low
+      # and high priority PMs
+      value = user.unread_notifications + user.unread_high_priority_notifications
       @counts << { label_key: 'user_notifications.digest.unread_notifications', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
-
-      value = user.unread_high_priority_notifications
-      @counts << { label_key: 'user_notifications.digest.unread_high_priority', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
 
       if @counts.size < 3
         value = user.unread_notifications_of_type(Notification.types[:liked])

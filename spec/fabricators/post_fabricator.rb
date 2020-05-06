@@ -56,7 +56,7 @@ HTML
 end
 
 Fabricator(:post_with_uploaded_image, from: :post) do
-  raw "<img src=\"/#{Discourse.store.upload_path}/original/2X/3456789012345678.png\" width=\"1500\" height=\"2000\">"
+  raw { "<img src=\"#{Fabricate(:image_upload)}\" width=\"1500\" height=\"2000\">" }
 end
 
 Fabricator(:post_with_an_attachment, from: :post) do

@@ -22,7 +22,7 @@ import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
-import { findRawTemplate } from "discourse/lib/raw-templates";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,

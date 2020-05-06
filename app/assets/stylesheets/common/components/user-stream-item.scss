@@ -39,9 +39,14 @@
   .time,
   .delete-info,
   .draft-type {
-    margin-left: auto;
+    float: right;
     color: $primary-medium;
     font-size: $font-down-2;
+  }
+
+  .notification .time {
+    margin-left: auto;
+    float: none;
   }
 
   .draft-type {
