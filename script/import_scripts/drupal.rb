@@ -28,24 +28,24 @@ class ImportScripts::Drupal < ImportScripts::Base
 
   def execute
 
-    #import_users
-    #import_categories
+    import_users
+    import_categories
 
 
     # "Nodes" in Drupal are divided into types. Here we import two types,
     # and will later import all the comments/replies for each node.
     # You will need to figure out what the type names are on your install and edit the queries to match.
     if ENV['DRUPAL_IMPORT_BLOG']
-      #import_blog_topics
+      import_blog_topics
     end
 
-    #import_forum_topics
+    import_forum_topics
 
-    #import_replies
-    #import_likes
-    #mark_topics_as_solved
-    #import_sso_records
-    #import_attachments
+    import_replies
+    import_likes
+    mark_topics_as_solved
+    import_sso_records
+    import_attachments
     postprocess_posts
     create_permalinks
 
@@ -142,7 +142,7 @@ class ImportScripts::Drupal < ImportScripts::Base
              f.body_value body
         FROM node n,
              field_data_body f
-       WHERE n.type = 'blog'
+       WHERE n.type = 'article'
          AND n.nid = f.entity_id
          AND n.status = 1
     SQL
@@ -229,7 +229,7 @@ class ImportScripts::Drupal < ImportScripts::Base
                node n
          WHERE n.nid = c.nid
            AND c.status = 1
-           AND n.type IN ('blog', 'forum')
+           AND n.type IN ('article', 'forum')
            AND n.status = 1
     SQL
     ).first['count']
@@ -434,9 +434,29 @@ class ImportScripts::Drupal < ImportScripts::Base
     real_filename = CGI.unescapeHTML(attachment['filename'])
     file = File.join(ATTACHMENT_DIR, real_filename)
 
-    return unless File.exists?(file)
+    unless File.exists?(file)
+      # add _0 to filename if missing
+      appended_filename = real_filename.insert(-5, '_0')
+      file = File.join(ATTACHMENT_DIR, appended_filename)
+      unless File.exists?(file)
+        puts "Attachment file #{attachment['filename']} doesn't exist"
+
+        tmpfile = "attachments_failed.txt"
+        filename = File.join('/tmp/', tmpfile)
+        File.open(filename, 'a') { |f|
+          f.puts attachment['filename']
+        }
+      end
+    end
 
     upload = create_upload(post.user.id || -1, file, real_filename)
+
+    if real_filename.end_with?(".jpg") && upload.errors.any?
+      real_filename.gsub!(/.jpg/, ".mov")
+      File.rename(file, ATTACHMENT_DIR + real_filename)
+      file = File.join(ATTACHMENT_DIR, real_filename)
+      upload = create_upload(post.user.id || -1, file, real_filename) if File.exists?(file)
+    end
 
     if upload.nil? || upload.errors.any?
       puts "Upload not valid"
@@ -448,6 +468,7 @@ class ImportScripts::Drupal < ImportScripts::Base
   end
 
   def preprocess_raw(raw)
+    return if raw.blank?
     # quotes on new lines
     raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { |quote|
       quote.gsub!(/\[quote\](.+?)\[\/quote\]/im) { "\n#{$1}\n" }
@@ -456,9 +477,8 @@ class ImportScripts::Drupal < ImportScripts::Base
 
     # [QUOTE=<username>]...[/QUOTE]
     raw.gsub!(/\[quote=([^;\]]+)\](.+?)\[\/quote\]/im) do
-     old_username, quote = $1, $2
-     new_username = get_username_for_old_username(old_username)
-     "\n[quote=\"#{new_username}\"]\n#{quote}\n[/quote]\n"
+     username, quote = $1, $2
+     "\n[quote=\"#{username}\"]\n#{quote}\n[/quote]\n"
     end
   end
 
