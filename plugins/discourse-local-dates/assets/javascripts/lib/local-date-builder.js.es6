@@ -113,21 +113,15 @@ export default class LocalDateBuilder {
       previewedTimezones.push({
         timezone: this._zoneWithoutPrefix(timezone),
         formated: this._createDateTimeRange(
-          localDate.datetimeWithZone(timezone),
+          DateWithZoneHelper.fromDatetime(
+            localDate.datetime,
+            localDate.timezone,
+            timezone
+          ),
           this.time
         )
       });
     });
-
-    if (!previewedTimezones.length) {
-      previewedTimezones.push({
-        timezone: "UTC",
-        formated: this._createDateTimeRange(
-          localDate.datetimeWithZone("Etc/UTC"),
-          this.time
-        )
-      });
-    }
 
     return previewedTimezones.uniqBy("timezone");
   }
