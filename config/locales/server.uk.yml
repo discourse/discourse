@@ -354,7 +354,7 @@ uk:
   bookmarks:
     errors:
       already_bookmarked_post: "Ви не можете зробити закладку на одну публікацію двічі."
-      time_must_be_provided: "Для всіх нагадувань повинен бути встановлений час, крім '%{reminder_type}'"
+      time_must_be_provided: "Для всіх нагадувань повинен бути встановлений час"
     reminders:
       at_desktop: "Наступного разу на мій робочий стіл"
       later_today: "Пізніше сьогодні"

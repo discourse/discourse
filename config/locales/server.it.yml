@@ -334,7 +334,7 @@ it:
       already_bookmarked_post: "Non puoi aggiungere due volte lo stesso messaggio nei segnalibri."
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
-      time_must_be_provided: "l'ora deve essere fornita per tutti i promemoria tranne '%{reminder_type}'"
+      time_must_be_provided: "l'ora deve essere fornita per tutti i promemoria"
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
