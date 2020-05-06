@@ -91,6 +91,10 @@ class StdOutDemux
       @data.delete Thread.current
     end
   end
+
+  def flush
+    # Do nothing
+  end
 end
 
 task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |_, args|
