@@ -359,7 +359,7 @@ ru:
       already_bookmarked_post: "Вы не можете дважды добавить сообщение в закладки"
       cannot_set_past_reminder: "Нельзя указать уже прошедшую дату напоминания."
       cannot_set_reminder_in_distant_future: "Нельзя указать дату напоминания, отличающуюся от текущей более чем на 10 лет. "
-      time_must_be_provided: "время должно быть установлено для всех напоминаний, кроме '%{reminder_type}'"
+      time_must_be_provided: "время должно быть установлено для всех напоминаний"
     reminders:
       at_desktop: "При следующем посещении форума"
       later_today: "Сегодня, но позже"

@@ -42,28 +42,6 @@ RSpec.describe BookmarkManager do
       end
     end
 
-    context "when the reminder type is at_desktop" do
-      let(:reminder_type) { 'at_desktop' }
-      let(:reminder_at) { nil }
-
-      def create_bookmark
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
-      end
-
-      it "this is a special case which needs client-side logic and has no reminder_at datetime" do
-        create_bookmark
-        bookmark = Bookmark.find_by(user: user)
-
-        expect(bookmark.reminder_at).to eq(nil)
-        expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:at_desktop])
-      end
-
-      it "sets a redis key for the user so we know they have a pending at_desktop reminder" do
-        create_bookmark
-        expect(Discourse.redis.get("pending_at_desktop_bookmark_reminder_user_#{user.id}")).not_to eq(nil)
-      end
-    end
-
     context "when the bookmark already exists for the user & post" do
       before do
         Bookmark.create(post: post, user: user, topic: post.topic)
@@ -80,7 +58,7 @@ RSpec.describe BookmarkManager do
       it "adds an error to the manager" do
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         expect(subject.errors.full_messages).to include(
-          "Reminder at " + I18n.t("bookmarks.errors.time_must_be_provided", reminder_type: I18n.t("bookmarks.reminders.at_desktop"))
+          "Reminder at " + I18n.t("bookmarks.errors.time_must_be_provided")
         )
       end
     end
@@ -157,25 +135,6 @@ RSpec.describe BookmarkManager do
         expect { subject.destroy(9999) }.to raise_error(Discourse::NotFound)
       end
     end
-
-    context "if the user has pending at desktop reminders for another bookmark" do
-      before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post), reminder_type: Bookmark.reminder_types[:at_desktop])
-        BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(user)
-      end
-      it "does not clear the at bookmark redis key" do
-        subject.destroy(bookmark.id)
-        expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(user)).to eq(true)
-      end
-    end
-
-    context "if the user has pending at desktop reminders for another bookmark" do
-      it "does clear the at bookmark redis key" do
-        BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(user)
-        subject.destroy(bookmark.id)
-        expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(user)).to eq(false)
-      end
-    end
   end
 
   describe ".update" do
@@ -239,25 +198,6 @@ RSpec.describe BookmarkManager do
       Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user2)
       subject.destroy_for_topic(topic)
       expect(Bookmark.where(user: user2, topic: topic).length).to eq(1)
-    end
-
-    context "if the user has pending at desktop reminders for another bookmark" do
-      before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post), reminder_type: Bookmark.reminder_types[:at_desktop])
-        BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(user)
-      end
-      it "does not clear the at bookmark redis key" do
-        subject.destroy_for_topic(topic)
-        expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(user)).to eq(true)
-      end
-    end
-
-    context "if the user has pending at desktop reminders for another bookmark" do
-      it "does clear the at bookmark redis key" do
-        BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(user)
-        subject.destroy_for_topic(topic)
-        expect(BookmarkReminderNotificationHandler.user_has_pending_at_desktop_reminders?(user)).to eq(false)
-      end
     end
 
     it "updates the topic user bookmarked column to false" do

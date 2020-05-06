@@ -369,7 +369,7 @@ he:
       already_bookmarked_post: "אי אפשר לסמן את אותו הפוסט פעמיים"
       cannot_set_past_reminder: "אי אפשר להגדיר תזכורת סימנייה למועד שעבר."
       cannot_set_reminder_in_distant_future: "לא ניתן להגדיר תזכורת סימנייה למעבר ל־10 שנים בעתיד."
-      time_must_be_provided: "צריך לציין זמן לכל התזכורות למעט ‚%{reminder_type}’"
+      time_must_be_provided: "צריך לציין זמן לכל התזכורות"
     reminders:
       at_desktop: "בשימוש הבא דרך שולחן העבודה"
       later_today: "בהמשך היום"

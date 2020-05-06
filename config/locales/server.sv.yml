@@ -335,7 +335,7 @@ sv:
       already_bookmarked_post: "Du kan inte bokmärka samma inlägg två gånger."
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
-      time_must_be_provided: "tid måste tillhandahållas för alla påminnelser utom '%{reminder_type}'"
+      time_must_be_provided: "tid måste tillhandahållas för alla påminnelser"
     reminders:
       at_desktop: "Nästa gång är jag vid datorn"
       later_today: "Senare idag"

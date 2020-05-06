@@ -302,7 +302,7 @@ ko:
       already_bookmarked_post: "동일한 게시물을 두 번 북마크 할 수 없습니다."
       cannot_set_past_reminder: "과거에는 북마크 미리 알림을 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "앞으로 10 년 이상 책갈피 알림을 설정할 수 없습니다."
-      time_must_be_provided: "&#39;%{reminder_type}&#39;을 제외한 모든 알림에 시간을 제공해야합니다."
+      time_must_be_provided: "을 모든 알림에 시간을 제공해야합니다."
     reminders:
       at_desktop: "다음에 저는 데스크탑에 있습니다"
       later_today: "오늘 늦게"

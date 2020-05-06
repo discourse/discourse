@@ -26,12 +26,6 @@
 
       {{#if userHasTimezoneSet}}
         {{#tap-tile-grid activeTile=selectedReminderType as |grid|}}
-          {{#if showAtDesktop}}
-            {{#tap-tile icon="desktop" tileId=reminderTypes.AT_DESKTOP activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-              <div class="tap-tile-title">{{i18n "bookmarks.reminders.at_desktop"}}</div>
-            {{/tap-tile}}
-          {{/if}}
-
           {{#if showLaterToday}}
             {{#tap-tile icon="far-moon" tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
               <div class="tap-tile-title">{{i18n "bookmarks.reminders.later_today"}}</div>
