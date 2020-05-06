@@ -37,7 +37,7 @@ module Onebox
                 <div class="aspect-image-full-size">
                   <a href="#{raw[:url]}" target="_blank" rel="nofollow ugc noopener">
                     <img src="#{raw[:image]}" class="scale-image"/>
-                    <span class="reddit-video-icon"></span>
+                    <span class="instagram-video-icon"></span>
                   </a>
                 </div>
                 <div class="description"><p>#{raw[:description]}</p></div>
