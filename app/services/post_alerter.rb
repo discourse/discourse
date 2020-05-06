@@ -628,7 +628,9 @@ class PostAlerter
 
     each_user_in_batches(notify) do |user|
       notification_type = already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
-      create_notification(user, notification_type, post)
+      opts = {}
+      opts[:display_username] = post.last_editor.username if notification_type == Notification.types[:edited]
+      create_notification(user, notification_type, post, opts)
     end
   end
 
