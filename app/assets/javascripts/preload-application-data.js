@@ -1,6 +1,6 @@
 // discourse-skip-module
 (function() {
-  const ps = require("preload-store").default;
+  const ps = require("discourse/lib/preload-store").default;
   const preloadedDataElement = document.getElementById("data-preloaded");
   const setupData = document.getElementById("data-discourse-setup").dataset;
 

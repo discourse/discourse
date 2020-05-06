@@ -48,7 +48,6 @@ class DiscourseJsProcessor
     return false if relative_path.start_with?("#{js_root}/plugins/")
 
     return true if %w(
-      preload-store
       preload-application-data
       wizard-start
       onpopstate-handler
