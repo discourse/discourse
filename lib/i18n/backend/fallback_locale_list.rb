@@ -6,19 +6,15 @@ module I18n
     class FallbackLocaleList < Hash
       def [](locale)
         locale = locale.to_sym
-        return [locale] if locale == :en
+        locale_list = [locale]
+        return locale_list if locale == :en
 
-        fallback_locale = LocaleSiteSetting.fallback_locale(locale)
-        site_locale = SiteSetting.default_locale.to_sym
+        while (fallback_locale = LocaleSiteSetting.fallback_locale(locale))
+          locale_list << fallback_locale
+          locale = fallback_locale
+        end
 
-        locale_list =
-          if locale == site_locale || site_locale == :en || fallback_locale == :en
-            [locale, fallback_locale, :en]
-          else
-            site_fallback_locale = LocaleSiteSetting.fallback_locale(site_locale)
-            [locale, fallback_locale, site_locale, site_fallback_locale, :en]
-          end
-
+        locale_list << :en
         locale_list.uniq.compact
       end
     end

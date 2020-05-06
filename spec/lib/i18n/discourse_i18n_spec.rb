@@ -13,7 +13,6 @@ describe I18n::Backend::DiscourseI18n do
     backend.store_translations(:en, foo: 'Foo in :en', bar: 'Bar in :en', wat: 'Hello %{count}')
     backend.store_translations(:en, items: { one: 'one item', other: '%{count} items' })
     backend.store_translations(:de, bar: 'Bar in :de')
-    backend.store_translations(:ru, baz: 'Baz in :ru')
     backend.store_translations(:en, link: '[text](url)')
   end
 
@@ -54,13 +53,6 @@ describe I18n::Backend::DiscourseI18n do
       expect(backend.translate(:de, 'bar')).to eq('Bar in :de')
       expect(backend.translate(:de, 'foo')).to eq('Foo in :en')
     end
-
-    it 'uses default_locale as fallback when key exists' do
-      SiteSetting.default_locale = 'ru'
-      expect(backend.translate(:de, 'bar')).to eq('Bar in :de')
-      expect(backend.translate(:de, 'baz')).to eq('Baz in :ru')
-      expect(backend.translate(:de, 'foo')).to eq('Foo in :en')
-    end
   end
 
   describe '#exists?' do
@@ -75,7 +67,6 @@ describe I18n::Backend::DiscourseI18n do
     it 'returns true when an existing key and an existing locale is given' do
       expect(backend.exists?(:en, :foo)).to eq(true)
       expect(backend.exists?(:de, :bar)).to eq(true)
-      expect(backend.exists?(:ru, :baz)).to eq(true)
     end
 
     it 'returns false when a non-existing key and an existing locale is given' do
