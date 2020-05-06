@@ -12,7 +12,6 @@
 //= require route-recognizer/dist/route-recognizer
 //= require pretender/pretender
 //= require discourse-loader
-//= require preload-store
 
 //= require locales/i18n
 //= require locales/en_US
