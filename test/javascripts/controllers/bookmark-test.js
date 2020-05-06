@@ -2,6 +2,7 @@ import { logIn } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 import { REMINDER_TYPES } from "discourse/lib/bookmark";
+import { fakeTime } from "helpers/qunit-helpers";
 let BookmarkController;
 
 moduleFor("controller:bookmark", {
@@ -18,8 +19,7 @@ moduleFor("controller:bookmark", {
 });
 
 function mockMomentTz(dateString) {
-  let now = moment.tz(dateString, BookmarkController.userTimezone);
-  sandbox.useFakeTimers(now.valueOf());
+  fakeTime(dateString, BookmarkController.userTimezone);
 }
 
 QUnit.test("showLaterToday when later today is tomorrow do not show", function(
