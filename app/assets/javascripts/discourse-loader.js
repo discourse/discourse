@@ -5,7 +5,8 @@ var define, requirejs;
   var EMBER_MODULES = {};
   var ALIASES = {
     "ember-addons/ember-computed-decorators":
-      "discourse-common/utils/decorators"
+      "discourse-common/utils/decorators",
+    "discourse/lib/raw-templates": "discourse-common/lib/raw-templates"
   };
   if (typeof Ember !== "undefined") {
     EMBER_MODULES = {
