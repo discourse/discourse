@@ -223,4 +223,31 @@ RSpec.describe Admin::GroupsController do
       end
     end
   end
+
+  describe '#automatic_membership_count' do
+    it 'returns count of users whose emails match the domain' do
+      Fabricate(:user, email: 'user1@somedomain.org')
+      Fabricate(:user, email: 'user1@somedomain.com')
+      Fabricate(:user, email: 'user1@notsomedomain.com')
+      group = Fabricate(:group)
+
+      put "/admin/groups/automatic_membership_count.json", params: {
+        automatic_membership_email_domains: 'somedomain.org|somedomain.com',
+        id: group.id
+      }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user_count"]).to eq(2)
+    end
+
+    it "doesn't responde with 500 if domain is invalid" do
+      group = Fabricate(:group)
+
+      put "/admin/groups/automatic_membership_count.json", params: {
+        automatic_membership_email_domains: '@somedomain.org|@somedomain.com',
+        id: group.id
+      }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user_count"]).to eq(0)
+    end
+  end
 end

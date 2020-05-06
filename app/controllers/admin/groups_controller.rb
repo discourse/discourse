@@ -133,7 +133,7 @@ class Admin::GroupsController < Admin::AdminController
 
         return can_not_modify_automatic if group.automatic
 
-        existing_domains = group.automatic_membership_email_domains.split("|")
+        existing_domains = group.automatic_membership_email_domains&.split("|") || []
         domains -= existing_domains
       end
 
