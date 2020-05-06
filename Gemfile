@@ -172,9 +172,7 @@ group :test, :development do
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
-  gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
-  gem "rubocop-rspec", require: false
   gem 'parallel_tests'
 
   gem 'rswag-specs'
