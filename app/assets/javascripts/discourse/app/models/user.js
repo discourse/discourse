@@ -18,7 +18,7 @@ import UserAction from "discourse/models/user-action";
 import UserDraftsStream from "discourse/models/user-drafts-stream";
 import Group from "discourse/models/group";
 import { emojiUnescape } from "discourse/lib/text";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";

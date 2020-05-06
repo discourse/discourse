@@ -5,7 +5,7 @@ import {
   getSearchKey,
   isValidSearchTerm
 } from "discourse/lib/search";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import { getTransient, setTransient } from "discourse/lib/page-tracker";
 import { escapeExpression } from "discourse/lib/utilities";
 

@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 
 export default {
   name: "banner",

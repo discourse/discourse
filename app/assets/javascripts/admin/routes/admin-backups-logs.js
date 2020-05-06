@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import Route from "@ember/routing/route";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 
 export default Route.extend({
   // since the logs are pushed via the message bus
