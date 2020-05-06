@@ -212,10 +212,8 @@ export function applyOnInputPluginApiCallbacks(identifiers, event, selectKit) {
 
 export function modifySelectKit(pluginApiIdentifiers) {
   return {
-    appendContent: content => {
-      appendContent(pluginApiIdentifiers, () => {
-        return content;
-      });
+    appendContent: callback => {
+      appendContent(pluginApiIdentifiers, callback);
       return modifySelectKit(pluginApiIdentifiers);
     },
     prependContent: content => {

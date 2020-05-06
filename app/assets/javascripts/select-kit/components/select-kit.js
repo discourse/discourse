@@ -451,7 +451,7 @@ export default Component.extend(
       return applyContentPluginApiCallbacks(
         this.pluginApiIdentifiers,
         content,
-        this.selectKit
+        this
       );
     },
 
