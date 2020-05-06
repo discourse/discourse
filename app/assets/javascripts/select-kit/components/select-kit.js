@@ -782,8 +782,10 @@ export default Component.extend(
               enabled: window.innerWidth <= 450,
               phase: "main",
               fn({ state }) {
-                let { x } = state.elements.reference.getBoundingClientRect();
-                state.modifiersData.popperOffsets.x = -x + 10;
+                if (!inModal) {
+                  let { x } = state.elements.reference.getBoundingClientRect();
+                  state.modifiersData.popperOffsets.x = -x + 10;
+                }
               }
             },
             {
@@ -791,7 +793,18 @@ export default Component.extend(
               enabled: window.innerWidth <= 450,
               phase: "beforeWrite",
               fn({ state }) {
-                state.styles.popper.width = `${window.innerWidth - 20}px`;
+                if (inModal) {
+                  const innerModal = document.querySelector(
+                    "#discourse-modal div.modal-inner-container"
+                  );
+
+                  if (innerModal) {
+                    state.styles.popper.width = `${innerModal.clientWidth -
+                      20}px`;
+                  }
+                } else {
+                  state.styles.popper.width = `${window.innerWidth - 20}px`;
+                }
               }
             },
             {
