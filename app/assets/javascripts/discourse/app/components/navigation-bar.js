@@ -29,7 +29,7 @@ export default Component.extend(FilterModeMixin, {
           if (
             c.connectorClass &&
             typeof c.connectorClass.path === "function" &&
-            typeof (c.connectorClass.displayName === "function")
+            typeof c.connectorClass.displayName === "function"
           ) {
             let path = c.connectorClass.path(category);
             if (path.indexOf(filterType) > 0) {
