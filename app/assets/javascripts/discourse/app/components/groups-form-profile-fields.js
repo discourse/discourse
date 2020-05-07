@@ -62,10 +62,9 @@ export default Component.extend({
   },
 
   checkGroupName: discourseDebounce(function() {
-    name = this.nameInput;
-    if (isEmpty(name)) return;
+    if (isEmpty(this.nameInput)) return;
 
-    Group.checkName(name)
+    Group.checkName(this.nameInput)
       .then(response => {
         const validationName = "uniqueNameValidation";
 
