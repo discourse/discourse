@@ -8,7 +8,6 @@ export default Component.extend({
 
   @discourseComputed("saving")
   savingText(saving) {
-    if (saving) return I18n.t("saving");
     return saving ? I18n.t("saving") : I18n.t("save");
   },
 
