@@ -11,6 +11,5 @@
 //= require ./pretty-text/addon/sanitizer
 //= require ./pretty-text/addon/oneboxer
 //= require ./pretty-text/addon/oneboxer-cache
-//= require ./pretty-text/addon/context/inline-onebox-css-classes
 //= require ./pretty-text/addon/inline-oneboxer
 //= require ./pretty-text/addon/upload-short-url

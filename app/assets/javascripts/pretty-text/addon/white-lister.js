@@ -1,8 +1,3 @@
-import {
-  INLINE_ONEBOX_LOADING_CSS_CLASS,
-  INLINE_ONEBOX_CSS_CLASS
-} from "pretty-text/context/inline-onebox-css-classes";
-
 // to match:
 // abcd
 // abcd[test]
@@ -121,8 +116,8 @@ export const DEFAULT_LIST = [
   "a.mention",
   "a.mention-group",
   "a.onebox",
-  `a.${INLINE_ONEBOX_CSS_CLASS}`,
-  `a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`,
+  `a.inline-onebox`,
+  `a.inline-onebox-loading`,
   "a[data-bbcode]",
   "a[name]",
   "a[rel=nofollow]",

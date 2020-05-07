@@ -97,10 +97,7 @@ describe CookedPostProcessor do
         cpp.post_process
 
         expect(cpp.html).to have_tag('a',
-          with: {
-            href: url,
-            class: described_class::INLINE_ONEBOX_CSS_CLASS
-          },
+          with: { href: url, class: "inline-onebox" },
           text: title,
           count: 2
         )
@@ -113,9 +110,7 @@ describe CookedPostProcessor do
         )
 
         expect(cpp.html).to have_tag('a',
-          without: {
-            class: described_class::INLINE_ONEBOX_LOADING_CSS_CLASS
-          },
+          without: { class: "inline-onebox-loading" },
           text: not_oneboxed_url,
           count: 1
         )
@@ -131,10 +126,6 @@ describe CookedPostProcessor do
     end
 
     describe 'when post contains inline oneboxes' do
-      let(:loading_css_class) do
-        described_class::INLINE_ONEBOX_LOADING_CSS_CLASS
-      end
-
       before do
         SiteSetting.enable_inline_onebox_on_all_domains = true
       end
@@ -148,12 +139,8 @@ describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to have_tag('a',
-            with: {
-              href: UrlHelper.cook_url(url)
-            },
-            without: {
-              class: loading_css_class
-            },
+            with: { href: UrlHelper.cook_url(url) },
+            without: { class: "inline-onebox-loading" },
             text: topic.title,
             count: 1
           )
@@ -163,12 +150,8 @@ describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to have_tag('a',
-            with: {
-              href: UrlHelper.cook_url(url)
-            },
-            without: {
-              class: loading_css_class
-            },
+            with: { href: UrlHelper.cook_url(url) },
+            without: { class: "inline-onebox-loading" },
             text: topic.title,
             count: 1
           )
@@ -235,33 +218,21 @@ describe CookedPostProcessor do
           html = cpp.html
 
           expect(html).to_not have_tag('a',
-            with: {
-              href: url_no_path
-            },
-            without: {
-              class: loading_css_class
-            },
+            with: { href: url_no_path },
+            without: { class: "inline-onebox-loading" },
             text: title
           )
 
           expect(html).to have_tag('a',
-            with: {
-              href: url_with_path
-            },
-            without: {
-              class: loading_css_class
-            },
+            with: { href: url_with_path },
+            without: { class: "inline-onebox-loading" },
             text: title,
             count: 2
           )
 
           expect(html).to have_tag('a',
-            with: {
-              href: url_with_query_param
-            },
-            without: {
-              class: loading_css_class
-            },
+            with: { href: url_with_query_param },
+            without: { class: "inline-onebox-loading" },
             text: title,
             count: 1
           )

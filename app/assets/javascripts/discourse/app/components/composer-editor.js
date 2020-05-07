@@ -43,10 +43,6 @@ import {
   cacheShortUploadUrl,
   resolveAllShortUrls
 } from "pretty-text/upload-short-url";
-import {
-  INLINE_ONEBOX_LOADING_CSS_CLASS,
-  INLINE_ONEBOX_CSS_CLASS
-} from "pretty-text/context/inline-onebox-css-classes";
 import ENV from "discourse-common/config/environment";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
@@ -968,32 +964,29 @@ export default Component.extend({
           // Inline Oneboxes = `a.inline-onebox-loading` -> `a.inline-onebox`
 
           let loadedOneboxes = $preview.find(
-            `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.${INLINE_ONEBOX_CSS_CLASS}`
+            `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.inline-onebox-loading`
           ).length;
 
-          $preview
-            .find(`a.onebox, a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`)
-            .each((_, link) => {
-              const $link = $(link);
-              const text = $link.text();
-              const isInline =
-                $link.attr("class") === INLINE_ONEBOX_LOADING_CSS_CLASS;
-              const m = isInline ? inlineOneboxes : oneboxes;
+          $preview.find(`a.onebox, a.inline-onebox-loading`).each((_, link) => {
+            const $link = $(link);
+            const text = $link.text();
+            const isInline = $link.attr("class") === "inline-onebox-loading";
+            const m = isInline ? inlineOneboxes : oneboxes;
 
-              if (loadedOneboxes < this.siteSettings.max_oneboxes_per_post) {
-                if (m[text] === undefined) {
-                  m[text] = [];
-                  loadedOneboxes++;
-                }
-                m[text].push(link);
-              } else {
-                if (m[text] !== undefined) {
-                  m[text].push(link);
-                } else if (isInline) {
-                  $link.removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
-                }
+            if (loadedOneboxes < this.siteSettings.max_oneboxes_per_post) {
+              if (m[text] === undefined) {
+                m[text] = [];
+                loadedOneboxes++;
               }
-            });
+              m[text].push(link);
+            } else {
+              if (m[text] !== undefined) {
+                m[text].push(link);
+              } else if (isInline) {
+                $link.removeClass("inline-onebox-loading");
+              }
+            }
+          });
 
           if (Object.keys(oneboxes).length > 0) {
             this._loadOneboxes(oneboxes);
