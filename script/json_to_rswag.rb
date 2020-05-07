@@ -22,7 +22,6 @@ require 'json'
 class JsonToRswag
 
   def initialize
-    @s = " "
     @output = Array.new
     @output.push("schema type: :object, properties: {")
   end
@@ -49,37 +48,37 @@ class JsonToRswag
       type = get_type(k, v)
 
       if type == "object"
-        @output << "#{@s * indent}#{k}: {"
-        @output << "#{@s * (indent + 2)}type: :object,"
-        @output << "#{@s * (indent + 2)}properties: {"
+        @output << "#{' ' * indent}#{k}: {"
+        @output << "#{' ' * (indent + 2)}type: :object,"
+        @output << "#{' ' * (indent + 2)}properties: {"
         run(v, indent + 4)
-        @output << "#{@s * indent}},"
+        @output << "#{' ' * indent}},"
       end
 
       if type == "array"
-        @output << "#{@s * indent}#{k}: {"
-        @output << "#{@s * (indent + 2)}type: :array,"
-        @output << "#{@s * (indent + 2)}items: {"
+        @output << "#{' ' * indent}#{k}: {"
+        @output << "#{' ' * (indent + 2)}type: :array,"
+        @output << "#{' ' * (indent + 2)}items: {"
         a = v.first
         if a.is_a? Hash
-          @output << "#{@s * (indent + 4)}type: :object,"
-          @output << "#{@s * (indent + 4)}properties: {"
+          @output << "#{' ' * (indent + 4)}type: :object,"
+          @output << "#{' ' * (indent + 4)}properties: {"
           run(a , indent + 6)
-          @output << "#{@s * (indent + 2)}},"
+          @output << "#{' ' * (indent + 2)}},"
         else
-          @output << "#{@s * (indent + 2)}},"
+          @output << "#{' ' * (indent + 2)}},"
         end
-        @output << "#{@s * indent}},"
+        @output << "#{' ' * indent}},"
       end
 
       if type == "null"
-        @output << "#{@s * indent}#{k}: { type: :string, nullable: true },"
+        @output << "#{' ' * indent}#{k}: { type: :string, nullable: true },"
       elsif type != "object" && type != "array"
-        @output << "#{@s * indent}#{k}: { type: :#{type} },"
+        @output << "#{' ' * indent}#{k}: { type: :#{type} },"
       end
     end
 
-    @output << "#{@s * (indent - 2)}}"
+    @output << "#{' ' * (indent - 2)}}"
   end
 
   def print
