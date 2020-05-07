@@ -15,7 +15,7 @@ export default TextField.extend({
   ],
 
   init() {
-    this.super(...arguments);
+    this._super(...arguments);
 
     this._prevValue = null;
     this._timer = null;
