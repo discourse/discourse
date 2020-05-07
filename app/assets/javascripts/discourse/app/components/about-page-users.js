@@ -20,7 +20,7 @@ export default Component.extend({
       return {
         name,
         username,
-        userPath: userPath(username),
+        userPath: userPath(username, 1, 2, 3),
         avatar: renderAvatar(user, { imageSize: "large" }),
         title: user.title || "",
         formatedUsername: formatUsername(username),
@@ -28,5 +28,7 @@ export default Component.extend({
         hideName
       };
     });
+
+    return "test";
   })
 });
