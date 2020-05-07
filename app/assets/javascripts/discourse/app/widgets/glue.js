@@ -58,11 +58,11 @@ export default class WidgetGlue {
       widget.vnode.children.forEach(child => {
         if (child.constructor.name === "CustomWidget") {
           widgets.push(child);
-          findWidgets(child, widgets);
+          findWidgets(child);
         }
       });
     };
-    findWidgets(this._tree, widgets);
+    findWidgets(this._tree);
     widgets.reverse().forEach(widget => widget.destroy());
 
     cancel(this._timeout);
