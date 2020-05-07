@@ -644,16 +644,15 @@ export default Component.extend(
       const highlightedIndex = this.mainCollection.indexOf(
         this.selectKit.highlighted
       );
-      let newHighlightedIndex = highlightedIndex;
       const count = this.mainCollection.length;
 
       if (highlightedIndex < count - 1) {
-        newHighlightedIndex = highlightedIndex + 1;
+        highlightedIndex = highlightedIndex + 1;
       } else {
-        newHighlightedIndex = 0;
+        highlightedIndex = 0;
       }
 
-      const highlighted = this.mainCollection.objectAt(newHighlightedIndex);
+      const highlighted = this.mainCollection.objectAt(highlightedIndex);
       if (highlighted) {
         this._scrollToRow(highlighted);
         this.set("selectKit.highlighted", highlighted);
@@ -664,16 +663,15 @@ export default Component.extend(
       const highlightedIndex = this.mainCollection.indexOf(
         this.selectKit.highlighted
       );
-      let newHighlightedIndex = highlightedIndex;
       const count = this.mainCollection.length;
 
       if (highlightedIndex > 0) {
-        newHighlightedIndex = highlightedIndex - 1;
+        highlightedIndex = highlightedIndex - 1;
       } else {
-        newHighlightedIndex = count - 1;
+        highlightedIndex = count - 1;
       }
 
-      const highlighted = this.mainCollection.objectAt(newHighlightedIndex);
+      const highlighted = this.mainCollection.objectAt(highlightedIndex);
       if (highlighted) {
         this._scrollToRow(highlighted);
         this.set("selectKit.highlighted", highlighted);
