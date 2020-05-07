@@ -12,7 +12,7 @@ class AdminPluginSerializer < ApplicationSerializer
              :enabled_setting_filter
 
   def id
-    object.metadata.name
+    object.directory_name
   end
 
   def name

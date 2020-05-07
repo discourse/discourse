@@ -15,12 +15,32 @@ export default Controller.extend({
     // If we have no content, don't bother filtering anything
     if (!!isEmpty(this.allSiteSettings)) return;
 
-    let filter;
+    let filter, pluginFilter;
     if (this.filter) {
-      filter = this.filter.toLowerCase().trim();
+      filter = this.filter
+        .toLowerCase()
+        .split(" ")
+        .filter((word) => {
+          if (word.length === 0) {
+            return false;
+          }
+
+          if (word.startsWith("plugin:")) {
+            pluginFilter = word.substr("plugin:".length).trim();
+            return false;
+          }
+
+          return true;
+        })
+        .join(" ")
+        .trim();
     }
 
-    if ((!filter || 0 === filter.length) && !this.onlyOverridden) {
+    if (
+      (!filter || 0 === filter.length) &&
+      (!pluginFilter || 0 === pluginFilter.length) &&
+      !this.onlyOverridden
+    ) {
       this.set("visibleSiteSettings", this.allSiteSettings);
       if (this.categoryNameKey === "all_results") {
         this.transitionToRoute("adminSiteSettings");
@@ -31,23 +51,21 @@ export default Controller.extend({
     const all = {
       nameKey: "all_results",
       name: I18n.t("admin.site_settings.categories.all_results"),
-      siteSettings: []
+      siteSettings: [],
     };
     const matchesGroupedByCategory = [all];
 
     const matches = [];
-    this.allSiteSettings.forEach(settingsCategory => {
-      const siteSettings = settingsCategory.siteSettings.filter(item => {
+    this.allSiteSettings.forEach((settingsCategory) => {
+      const siteSettings = settingsCategory.siteSettings.filter((item) => {
         if (this.onlyOverridden && !item.get("overridden")) return false;
+        if (pluginFilter && item.plugin !== pluginFilter) return false;
         if (filter) {
           const setting = item.get("setting").toLowerCase();
           return (
             setting.includes(filter) ||
             setting.replace(/_/g, " ").includes(filter) ||
-            item
-              .get("description")
-              .toLowerCase()
-              .includes(filter) ||
+            item.get("description").toLowerCase().includes(filter) ||
             (item.get("value") || "").toLowerCase().includes(filter)
           );
         } else {
@@ -62,7 +80,7 @@ export default Controller.extend({
             "admin.site_settings.categories." + settingsCategory.nameKey
           ),
           siteSettings,
-          count: siteSettings.length
+          count: siteSettings.length,
         });
       }
     });
@@ -79,7 +97,7 @@ export default Controller.extend({
   },
 
   @observes("filter", "onlyOverridden", "model")
-  filterContent: discourseDebounce(function() {
+  filterContent: discourseDebounce(function () {
     if (this._skipBounce) {
       this.set("_skipBounce", false);
     } else {
@@ -94,6 +112,6 @@ export default Controller.extend({
 
     toggleMenu() {
       $(".admin-detail").toggleClass("mobile-closed mobile-open");
-    }
-  }
+    },
+  },
 });
