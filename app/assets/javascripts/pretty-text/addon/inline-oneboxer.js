@@ -1,8 +1,3 @@
-import {
-  INLINE_ONEBOX_LOADING_CSS_CLASS,
-  INLINE_ONEBOX_CSS_CLASS
-} from "pretty-text/context/inline-onebox-css-classes";
-
 const _cache = {};
 
 export function applyInlineOneboxes(inline, ajax, opts) {
@@ -27,8 +22,8 @@ export function applyInlineOneboxes(inline, ajax, opts) {
         links.forEach(link => {
           $(link)
             .text(onebox.title)
-            .addClass(INLINE_ONEBOX_CSS_CLASS)
-            .removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
+            .addClass("inline-onebox")
+            .removeClass("inline-onebox-loading");
         });
       }
     });

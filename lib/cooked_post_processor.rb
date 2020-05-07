@@ -4,8 +4,6 @@
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
 class CookedPostProcessor
-  INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
-  INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   LOADING_SIZE = 10
   LOADING_COLORS = 32
@@ -518,7 +516,7 @@ class CookedPostProcessor
     oneboxes = {}
     inlineOneboxes = {}
 
-    Oneboxer.apply(@doc, extra_paths: [".#{INLINE_ONEBOX_LOADING_CSS_CLASS}"]) do |url, element|
+    Oneboxer.apply(@doc, extra_paths: [".inline-onebox-loading"]) do |url, element|
       is_onebox = element["class"] == Oneboxer::ONEBOX_CSS_CLASS
       map = is_onebox ? oneboxes : inlineOneboxes
       skip_onebox = limit <= 0 && !map[url]
@@ -724,14 +722,14 @@ class CookedPostProcessor
 
     if title = inline_onebox&.dig(:title)
       element.children = CGI.escapeHTML(title)
-      element.add_class(INLINE_ONEBOX_CSS_CLASS)
+      element.add_class("inline-onebox")
     end
 
     remove_inline_onebox_loading_class(element)
   end
 
   def remove_inline_onebox_loading_class(element)
-    element.remove_class(INLINE_ONEBOX_LOADING_CSS_CLASS)
+    element.remove_class("inline-onebox-loading")
   end
 
   def is_svg?(img)
