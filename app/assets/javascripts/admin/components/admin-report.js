@@ -59,8 +59,6 @@ export default Component.extend({
   forcedModes: null,
   showAllReportsLink: false,
   filters: null,
-  startDate: null,
-  endDate: null,
   showTrend: false,
   showHeader: true,
   showTitle: true,
