@@ -95,8 +95,6 @@ export default Controller.extend({
   scopedCategoryId: null,
   lastValidatedAt: null,
   isUploading: false,
-  allowUpload: false,
-  uploadIcon: "upload",
   topic: null,
   linkLookup: null,
   showPreview: true,
