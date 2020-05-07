@@ -91,7 +91,6 @@ createWidget("topic-admin-menu-button", {
     const position = $button.position();
 
     const rtl = $("html").hasClass("rtl");
-    position.left = position.left;
     position.outerHeight = $button.outerHeight();
 
     if (rtl) {
