@@ -475,13 +475,16 @@ class Admin::UsersController < Admin::AdminController
   def merge
     target_username = params.require(:target_username)
     target_user = User.find_by_username(target_username)
+    raise Discourse::NotFound if target_user.blank?
 
     guardian.ensure_can_merge_users!(@user, target_user)
+    serializer_opts = { root: false, scope: guardian }
 
     if user = UserMerger.new(@user, target_user, current_user).merge!
-      render json: success_json.merge(merged: true, user: user)
+      user_json = AdminDetailedUserSerializer.new(user, serializer_opts).as_json
+      render json: success_json.merge(merged: true, user: user_json)
     else
-      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, root: false).as_json)
+      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, serializer_opts).as_json)
     end
   end
 

@@ -234,7 +234,6 @@ ja:
         bookmark: "クリックするとトピックの最初の投稿をブックマークします"
         unbookmark: "クリックするとトピック内の全てのブックマークを削除します"
     bookmarks:
-      created: "この投稿をブックマークしました"
       not_bookmarked: "この投稿をブックマークする"
       remove: "ブックマークを削除"
       confirm_clear: "このトピックのすべてのブックマークをクリアしますか?"
@@ -641,6 +640,10 @@ ja:
       private_message: "メッセージ"
       private_messages: "メッセージ"
       user_notifications:
+        filters:
+          all: "すべて"
+          read: "既読"
+          unread: "未読"
         ignore_duration_username: "ユーザー名"
         ignore_duration_when: "期間："
         ignore_duration_save: "無視する"
@@ -1074,6 +1077,7 @@ ja:
     assets_changed_confirm: "Discourseがアップデートされました。ページを更新して最新のバージョンにしますか？"
     logout: "ログアウトしました"
     refresh: "更新"
+    home: "ホーム"
     read_only_mode:
       enabled: "このサイトは閲覧専用モードになっています。閲覧し続けられますが、返信したりいいねを付けるなどのアクションは現在出来ません。"
       login_disabled: "閲覧専用モードのため、ログインできません。"
@@ -1659,7 +1663,6 @@ ja:
           "2_8": "このカテゴリを追跡しているので、新たな返信のカウント数が表示されます。"
           "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
           "2_2": "このトピックを追跡しているので、新たな返信のカウント数が表示されます。"
-          "2": '<a href="{{basePath}}/u/{{username}}/preferences">このトピックを読む</a>ので、新しい返信の数が表示されます。'
           "1_2": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "1": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "0_7": "このカテゴリに関して一切通知を受け取りません。"
@@ -2432,7 +2435,6 @@ ja:
             trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与されるトラストレベル："
             trust_levels_none: "なし"
             automatic_membership_email_domains: "このリストにあるものと完全に一致するメー​​ルドメインで登録したユーザーは、自動的にこのグループに追加されます。"
-            automatic_membership_retroactive: "既存の登録ユーザーを追加するため、同じメールドメインにルールを適用する"
             primary_group: "自動的にプライマリーグループとして設定する"
         name_placeholder: "グループ名、スペースなし、ユーザー名のルールと同じ"
         primary: "プライマリーグループ"
@@ -2930,6 +2932,11 @@ ja:
         anonymize_yes: "はい。アカウントを匿名化してください"
         anonymize_failed: "アカウントの匿名化中に問題が発生しました"
         delete: "ユーザを削除"
+        merge:
+          prompt:
+            cancel: "キャンセル"
+          confirmation:
+            cancel: "キャンセル"
         delete_forbidden_because_staff: "管理者およびモデレータアカウントは削除できません。"
         delete_posts_forbidden_because_staff: "管理者、モデレータの全ての投稿は削除できません"
         delete_forbidden:

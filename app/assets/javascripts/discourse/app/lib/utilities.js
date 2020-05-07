@@ -1,5 +1,6 @@
 import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
+import Handlebars from "handlebars";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
 
@@ -53,8 +54,10 @@ export function getRawSize(size) {
   return size * Math.min(3, Math.max(1, Math.round(pixelRatio)));
 }
 
+const getURLWithCDN = url => Discourse.getURLWithCDN(url);
+
 export function avatarImg(options, getURL) {
-  getURL = getURL || Discourse.getURLWithCDN;
+  getURL = getURL || getURLWithCDN;
 
   const size = translateSize(options.size);
   const url = avatarUrl(options.avatarTemplate, size);
@@ -133,6 +136,7 @@ export function selectedText() {
   for (let r = 0; r < selection.rangeCount; r++) {
     const range = selection.getRangeAt(r);
     const $ancestor = $(range.commonAncestorContainer);
+    const $codeBlockTest = $ancestor.parent("pre");
 
     // ensure we never quote text in the post menu area
     const $postMenuArea = $ancestor.find(".post-menu-area")[0];
@@ -140,7 +144,20 @@ export function selectedText() {
       range.setEndBefore($postMenuArea);
     }
 
-    $div.append(range.cloneContents());
+    if ($codeBlockTest.length) {
+      const $code = $("<code>");
+      $code.append(range.cloneContents());
+      // Even though this was a code block, produce a non-block quote if it's a single line.
+      if (/\n/.test($code.text())) {
+        const $pre = $("<pre>");
+        $pre.append($code);
+        $div.append($pre);
+      } else {
+        $div.append($code);
+      }
+    } else {
+      $div.append(range.cloneContents());
+    }
   }
 
   return toMarkdown($div.html());
@@ -325,6 +342,28 @@ export function clipboardData(e, canUpload) {
     !canUploadImage;
 
   return { clipboard, types, canUpload, canPasteHtml };
+}
+
+// Replace any accented characters with their ASCII equivalent
+// Return the string if it only contains ASCII printable characters,
+// otherwise use the fallback
+export function toAsciiPrintable(string, fallback) {
+  if (typeof string.normalize === "function") {
+    string = string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  return /^[/\040-\176/]*$/.test(string) ? string : fallback;
+}
+
+export function slugify(string) {
+  return string
+    .trim()
+    .toLowerCase()
+    .replace(/\s|_+/g, "-") // Replace spaces and underscores with dashes
+    .replace(/[^\w\-]+/g, "") // Remove non-word characters except for dashes
+    .replace(/\-\-+/g, "-") // Replace multiple dashes with a single dash
+    .replace(/^-+/, "") // Remove leading dashes
+    .replace(/-+$/, ""); // Remove trailing dashes
 }
 
 export function toNumber(input) {

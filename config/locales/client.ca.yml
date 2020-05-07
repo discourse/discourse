@@ -259,7 +259,6 @@ ca:
         bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
     bookmarks:
-      created: "heu marcat aquesta publicació com a preferit"
       not_bookmarked: "marca aquesta publicació com a preferit"
       remove: "Elimina preferit"
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
@@ -731,6 +730,10 @@ ca:
       private_message: "Missatge"
       private_messages: "Missatges"
       user_notifications:
+        filters:
+          all: "Tot"
+          read: "Llegit"
+          unread: "No llegits"
         ignore_duration_title: "Ignora el temporitzador"
         ignore_duration_username: "Nom d'usuari "
         ignore_duration_when: "Duració:"
@@ -1240,6 +1243,7 @@ ca:
     assets_changed_confirm: "El lloc web s'ha actualitzat. Voleu tornar a carregar la pàgina per a la versió més recent?"
     logout: "Heu tancat la sessió."
     refresh: "Actualitza"
+    home: "Pàgina principal"
     read_only_mode:
       enabled: "El lloc web és en mode només de lectura. Continueu navegant, però de moment estan desactivades les accions de respondre, 'm'agrada' i altres."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
@@ -1983,7 +1987,6 @@ ca:
           "2_8": "Veureu un recompte de respostes perquè seguiu aquesta categoria. "
           "2_4": "Rebreu notificacions perquè heu escrit una resposta a aquest tema."
           "2_2": "Rebreu notificacions perquè seguiu aquest tema."
-          "2": 'Rebreu notificacions perquè heu <a href="{{basePath}}/u/{{username}}/preferences">llegit aquest tema</a>.'
           "1_2": "Sereu notificat si algú menciona el vostre @nom o us respon."
           "1": "Sereu notificat si algú us @menciona o us respon."
           "0_7": "No esteu fent cas de les notificacions d'aquesta categoria."
@@ -2380,6 +2383,7 @@ ca:
             button: "HTML"
       bookmarks:
         created: "Creat"
+        updated: "Actualitzat"
         name: "Nom"
     category:
       can: "pot&hellip; "
@@ -2685,7 +2689,6 @@ ca:
         this_week: "Setmana"
         today: "Avui"
         other_periods: "mira dalt de tot"
-    browser_update: 'Malauradament, <a href="http://www.discourse.org/faq/#browser">el vostre navegador és massa antic per a treballar amb aquest lloc web</a>. <a href="http://browsehappy.com">Actualitzeu el navegador</a>.'
     permission_types:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
@@ -2971,8 +2974,6 @@ ca:
           view_table: "taula"
           view_graph: "gràfica"
           refresh_report: "Actualitza el report"
-          start_date: "Data d'inici (UTC)"
-          end_date: "Data de finalització (UTC)"
           groups: "Tots els grups"
           disabled: "Aquest report és desactivat."
           totals_for_sample: "Totals per mostra"
@@ -3033,7 +3034,6 @@ ca:
             effects: Efectes
             trust_levels_none: "Cap"
             automatic_membership_email_domains: "Els usuaris registrats amb un domini de correu que coincideix amb un de la llista s'afegiran automàticament a aquest grup:"
-            automatic_membership_retroactive: "Aplica la mateixa regla de domini de correu per a afegir usuaris registrats existents."
             primary_group: "Estableix automàticament com a grup primari"
         name_placeholder: "Nom del grup, sense espais, igual que la regla del nom d'usuari"
         primary: "Grup primari"
@@ -3875,6 +3875,11 @@ ca:
         anonymize_yes: "Sí, fes anònim aquest compte"
         anonymize_failed: "Hi ha hagut un problema en fer anònim aquest compte."
         delete: "Suprimeix l'usuari"
+        merge:
+          prompt:
+            cancel: "Cancel·la"
+          confirmation:
+            cancel: "Cancel·la"
         delete_forbidden_because_staff: "No es poden suprimir administradors i moderadors. "
         delete_posts_forbidden_because_staff: "No es poden suprimir totes les publicacions d'administradores i moderadors."
         delete_forbidden:

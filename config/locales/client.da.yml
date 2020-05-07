@@ -258,7 +258,6 @@ da:
         bookmark: "Klik for at sætte et bogmærke i det første indlæg i denne tråd"
         unbookmark: "Klik for at fjerne alle bogmærker i dette emne"
     bookmarks:
-      created: "du har bogmærket dette indlæg."
       not_bookmarked: "bogmærke dette indlæg"
       remove: "Fjern bogmærke"
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
@@ -730,6 +729,10 @@ da:
       private_message: "Besked"
       private_messages: "Beskeder"
       user_notifications:
+        filters:
+          all: "Alle"
+          read: "Læste"
+          unread: "Ulæst"
         ignore_duration_title: "Ignorér timer"
         ignore_duration_username: "Brugernavn"
         ignore_duration_when: "Varighed:"
@@ -1229,6 +1232,7 @@ da:
     assets_changed_confirm: "Dette site er lige blevet opdateret. Vil du opdatere nu til den seneste version?"
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
+    home: "Hjem"
     read_only_mode:
       enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
@@ -1952,7 +1956,6 @@ da:
           "2_8": "Du vil se antallet af nye svar, fordi du følger denne kategori."
           "2_4": "Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne."
           "2_2": "Du vil se antallet af nye svar, fordi du følger dette emne."
-          "2": 'Du vil se antallet af nye svar, fordi du <a href="{{basePath}}/u/{{username}}/preferences">læste dette emne</a>.'
           "1_2": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "1": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "0_7": "Du ignorerer alle notifikationer i denne kategori."
@@ -2644,7 +2647,6 @@ da:
         this_week: "Uge"
         today: "I dag"
         other_periods: "se top"
-    browser_update: 'Desværre er <a href="https://www.discourse.org/faq/#browser">din browser for gammel til at virke på denne side</a> . <a href="https://browsehappy.com">Opgrader din browser</a> .'
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -2929,8 +2931,6 @@ da:
           view_table: "tabel"
           view_graph: "graf"
           refresh_report: "Genopfrisk rapporten"
-          start_date: "Startdato (UTC)"
-          end_date: "Slutdato (UTC)"
           groups: "Alle grupper"
           disabled: "Denne rapport er deaktiveret"
           totals_for_sample: "Totaler for prøve"
@@ -2989,7 +2989,6 @@ da:
             trust_levels_title: "Tillidsniveau der automatisk tildeles medlemmer når de oprettes:"
             trust_levels_none: "Ingen"
             automatic_membership_email_domains: "Brugere der registrerer med et email domæne der præcist matcher et på denne liste, vil automatisk blive tilføjet til denne gruppe:"
-            automatic_membership_retroactive: "Brug denne email domæne regel til at tilføje brugere der allerede er registrerede brugere"
             primary_group: "Sæt automatisk som primær gruppe"
         name_placeholder: "Gruppenavn uden mellemrum, samme som reglen for brugernavn"
         primary: "Primær gruppe"
@@ -3799,6 +3798,11 @@ da:
         anonymize_yes: "Ja, anonymiser denne konto"
         anonymize_failed: "Der var problemer med at anonymisere denne konto."
         delete: "Slet bruger"
+        merge:
+          prompt:
+            cancel: "Afbryd"
+          confirmation:
+            cancel: "Afbryd"
         delete_forbidden_because_staff: "Admins og moderatorer kan ikke slettes."
         delete_posts_forbidden_because_staff: "Kan ikke slette alle indlæg fra administratorer og moderatorer."
         delete_forbidden:

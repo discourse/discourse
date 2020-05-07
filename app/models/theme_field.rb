@@ -60,7 +60,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  BASE_COMPILER_VERSION = 15
+  BASE_COMPILER_VERSION = 16
   DEPENDENT_CONSTANTS = [
     BASE_COMPILER_VERSION,
     Ember::VERSION,
@@ -78,7 +78,7 @@ class ThemeField < ActiveRecord::Base
 
     js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
 
-    doc = Nokogiri::HTML.fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
 
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"
@@ -119,7 +119,8 @@ class ThemeField < ActiveRecord::Base
       js_compiler.append_js_error(error)
     end
 
-    js_compiler.prepend_settings(theme.cached_settings) if js_compiler.content.present? && theme.cached_settings.present?
+    settings_hash = theme.build_settings_hash
+    js_compiler.prepend_settings(settings_hash) if js_compiler.content.present? && settings_hash.present?
     javascript_cache.content = js_compiler.content
     javascript_cache.save!
 
@@ -317,23 +318,23 @@ class ThemeField < ActiveRecord::Base
       self.value_baked, self.error = translation_field? ? process_translation : process_html(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = COMPILER_VERSION
-      CSP::Extension.clear_theme_extensions_cache!
+      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
     elsif extra_js_field?
       self.value_baked, self.error = process_extra_js(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = COMPILER_VERSION
     elsif basic_scss_field?
       ensure_scss_compiles!
-      Stylesheet::Manager.clear_theme_cache!
+      DB.after_commit { Stylesheet::Manager.clear_theme_cache! }
     elsif settings_field?
       validate_yaml!
       theme.clear_cached_settings!
-      CSP::Extension.clear_theme_extensions_cache!
-      SvgSprite.expire_cache
+      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
+      DB.after_commit { SvgSprite.expire_cache }
       self.value_baked = "baked"
       self.compiler_version = COMPILER_VERSION
     elsif svg_sprite_field?
-      SvgSprite.expire_cache
+      DB.after_commit { SvgSprite.expire_cache }
       self.error = nil
       self.value_baked = "baked"
       self.compiler_version = COMPILER_VERSION

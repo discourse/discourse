@@ -193,9 +193,6 @@ ja:
   topics_in_category: "'%{category}' カテゴリ内のトピック"
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
-  author_wrote: "%{author} の投稿:"
-  num_posts: "投稿:"
-  num_participants: "参加者:"
   read_full_topic: "完全なトピックを読む"
   private_message_abbrev: "メッセージ"
   rss_description:

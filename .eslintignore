@@ -13,3 +13,5 @@ vendor/
 test/javascripts/test_helper.js
 test/javascripts/fixtures
 test/javascripts/helpers/assertions.js
+node_modules/
+dist/

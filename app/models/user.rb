@@ -352,7 +352,7 @@ class User < ActiveRecord::Base
   end
 
   EMAIL = %r{([^@]+)@([^\.]+)}
-  FROM_STAGED = "from_staged".freeze
+  FROM_STAGED = "from_staged"
 
   def self.new_from_params(params)
     user = User.new
@@ -598,7 +598,7 @@ class User < ActiveRecord::Base
     notification = notifications.visible.order('notifications.created_at desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
-    sql = (<<~SQL).freeze
+    sql = (<<~SQL)
        SELECT * FROM (
          SELECT n.id, n.read FROM notifications n
          LEFT JOIN topics t ON n.topic_id = t.id

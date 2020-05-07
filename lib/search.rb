@@ -434,7 +434,7 @@ class Search
   end
 
   advanced_filter(/^with:images$/) do |posts|
-    posts.where("posts.image_url IS NOT NULL")
+    posts.where("posts.image_upload_id IS NOT NULL")
   end
 
   advanced_filter(/^category:(.+)$/) do |posts, match|
@@ -904,12 +904,36 @@ class Search
         posts = categories_ignored(posts) unless @category_filter_matched
         posts
       end
-
-    if @order == :latest || (@term.blank? && !@order)
+    if @order == :latest
       if opts[:aggregate_search]
         posts = posts.order("MAX(posts.created_at) DESC")
       else
         posts = posts.reorder("posts.created_at DESC")
+      end
+    elsif @term.blank? && !@order
+      data_ranking = <<~SQL
+      (
+        CASE categories.search_priority
+        WHEN #{Searchable::PRIORITIES[:very_low]}
+        THEN #{SiteSetting.category_search_priority_very_low_weight}
+        WHEN #{Searchable::PRIORITIES[:low]}
+        THEN #{SiteSetting.category_search_priority_low_weight}
+        WHEN #{Searchable::PRIORITIES[:high]}
+        THEN #{SiteSetting.category_search_priority_high_weight}
+        WHEN #{Searchable::PRIORITIES[:very_high]}
+        THEN #{SiteSetting.category_search_priority_very_high_weight}
+        ELSE
+          CASE WHEN topics.closed
+          THEN 0.9
+          ELSE 1
+          END
+        END
+      )
+      SQL
+      if opts[:aggregate_search]
+        posts = posts.order("MAX(#{data_ranking}) DESC").order("MAX(posts.created_at) DESC")
+      else
+        posts = posts.order("#{data_ranking} DESC").order("posts.created_at DESC")
       end
     elsif @order == :latest_topic
       if opts[:aggregate_search]

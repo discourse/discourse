@@ -103,6 +103,8 @@ ru:
           label: Разрешенные группы
         poll_chart_type:
           label: Тип диаграммы
+          bar: Гистограмма
+          pie: Круговая
         poll_config:
           max: Макс.
           min: Мин.

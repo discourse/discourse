@@ -126,9 +126,6 @@ lt:
   home_title: "Pradinis"
   topics_in_category: "Temos kategorijoje '%{category}'"
   rss_posts_in_topic: "RSS iš '%{topic}'"
-  author_wrote: "%{author} parašė:"
-  num_posts: "Pranešimai:"
-  num_participants: "Dalyviai:"
   read_full_topic: "Skaityti pilną temą"
   private_message_abbrev: "Žinutė"
   rss_description:

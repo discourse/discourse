@@ -30,7 +30,7 @@ SQL
 
     results.each do |row|
       post_id, max_id = row["id"].to_i
-      doc = Nokogiri::HTML.fragment(row["cooked"])
+      doc = Nokogiri::HTML5.fragment(row["cooked"])
 
       uniq = {}
 

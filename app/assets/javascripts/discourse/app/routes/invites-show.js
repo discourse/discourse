@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 
 export default DiscourseRoute.extend({
   titleToken() {

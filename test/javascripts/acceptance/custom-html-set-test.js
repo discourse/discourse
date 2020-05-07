@@ -1,6 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { setCustomHTML } from "discourse/helpers/custom-html";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 
 acceptance("CustomHTML set");
 

@@ -299,9 +299,6 @@ de:
   topics_in_category: "Themen in der Kategorie '%{category}'"
   rss_posts_in_topic: "RSS-Feed von '%{topic}'"
   rss_topics_in_category: "RSS-Feed von Themen in der Kategorie '%{category}'"
-  author_wrote: "%{author} schrieb:"
-  num_posts: "Beiträge:"
-  num_participants: "Teilnehmer:"
   read_full_topic: "Lese das vollständige Thema"
   private_message_abbrev: "Nachricht"
   rss_description:
@@ -328,7 +325,7 @@ de:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
-      time_must_be_provided: "Zeit muss eingestellt werden für alle Erinnerungen ausser '%{reminder_type}'"
+      time_must_be_provided: "Zeit muss eingestellt werden für alle Erinnerungen"
     reminders:
       at_desktop: "Nächstes mal wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"

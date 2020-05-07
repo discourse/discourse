@@ -81,9 +81,9 @@ describe TopicTrackingState do
     end
 
     it 'can correctly publish muted' do
-      TopicUser.find_by(topic: post.topic, user: post.user).update(notification_level: 0)
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
       messages = MessageBus.track_publish("/latest") do
-        TopicTrackingState.publish_muted(post)
+        TopicTrackingState.publish_muted(topic)
       end
 
       muted_message = messages.find { |message| message.data["message_type"] == "muted" }
@@ -94,7 +94,7 @@ describe TopicTrackingState do
 
     it 'should not publish any message when notification level is not muted' do
       messages = MessageBus.track_publish("/latest") do
-        TopicTrackingState.publish_muted(post)
+        TopicTrackingState.publish_muted(topic)
       end
       muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
 
@@ -102,10 +102,10 @@ describe TopicTrackingState do
     end
 
     it 'should not publish any message when the user was not seen in the last 7 days' do
-      TopicUser.find_by(topic: post.topic, user: post.user).update(notification_level: 0)
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
       post.user.update(last_seen_at: 8.days.ago)
       messages = MessageBus.track_publish("/latest") do
-        TopicTrackingState.publish_muted(post)
+        TopicTrackingState.publish_muted(topic)
       end
       muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
       expect(muted_messages).to eq([])

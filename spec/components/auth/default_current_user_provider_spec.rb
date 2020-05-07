@@ -502,14 +502,6 @@ describe Auth::DefaultCurrentUserProvider do
         expect(u.last_seen_at).to eq(nil)
       end
     end
-
-    it "defers any at_desktop bookmark reminders" do
-      BookmarkReminderNotificationHandler.expects(:defer_at_desktop_reminder).with(
-        user: user, request_user_agent: 'test'
-      )
-      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}", "HTTP_USER_AGENT" => 'test')
-      provider2.current_user
-    end
   end
 
   it "should update last seen for non ajax" do

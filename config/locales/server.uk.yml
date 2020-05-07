@@ -328,9 +328,6 @@ uk:
   topics_in_category: "Теми в категорії '%{category}'"
   rss_posts_in_topic: "RSS-стрічка теми '%{topic}'"
   rss_topics_in_category: "RSS-стрічка тем у категорії '%{category}'"
-  author_wrote: "%{author} написав(ла):"
-  num_posts: "Дописи:"
-  num_participants: "Учасники:"
   read_full_topic: "Читати тему цілком"
   private_message_abbrev: "Пов."
   rss_description:
@@ -357,7 +354,7 @@ uk:
   bookmarks:
     errors:
       already_bookmarked_post: "Ви не можете зробити закладку на одну публікацію двічі."
-      time_must_be_provided: "Для всіх нагадувань повинен бути встановлений час, крім '%{reminder_type}'"
+      time_must_be_provided: "Для всіх нагадувань повинен бути встановлений час"
     reminders:
       at_desktop: "Наступного разу на мій робочий стіл"
       later_today: "Пізніше сьогодні"

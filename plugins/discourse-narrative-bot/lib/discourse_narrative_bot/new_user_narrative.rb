@@ -238,7 +238,7 @@ module DiscourseNarrativeBot
       return unless @post.user_id == self.discobot_user.id
 
       profile_page_url = url_helpers(:user_url, username: @user.username)
-      bookmark_url = "#{profile_page_url}/activity/bookmarks-with-reminders"
+      bookmark_url = "#{profile_page_url}/activity/bookmarks"
       raw = <<~RAW
         #{I18n.t("#{I18N_KEY}.bookmark.reply", i18n_post_args(bookmark_url: bookmark_url))}
 
@@ -326,7 +326,7 @@ module DiscourseNarrativeBot
 
       cooked = @post.post_analyzer.cook(@post.raw, {})
 
-      if Nokogiri::HTML.fragment(cooked).css("img").size > 0
+      if Nokogiri::HTML5.fragment(cooked).css("img").size > 0
         set_state_data(:post_id, @post.id)
 
         if get_state_data(:liked)
@@ -366,7 +366,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css("b", "strong", "em", "i", ".bbcode-i", ".bbcode-b").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css("b", "strong", "em", "i", ".bbcode-i", ".bbcode-b").size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.formatting.reply", i18n_post_args)}
 
@@ -390,7 +390,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      doc = Nokogiri::HTML.fragment(@post.cooked)
+      doc = Nokogiri::HTML5.fragment(@post.cooked)
 
       if doc.css(".quote").size > 0
         raw = <<~RAW
@@ -416,7 +416,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      doc = Nokogiri::HTML.fragment(@post.cooked)
+      doc = Nokogiri::HTML5.fragment(@post.cooked)
 
       if doc.css(".emoji").size > 0
         raw = <<~RAW

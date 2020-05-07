@@ -27,8 +27,10 @@ fi:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
+      time_with_zone: "HH.mm (z)"
       time_short_day: "ddd HH:mm"
       timeline_date: "MMM YYYY"
+      long_no_year: "D. MMM, HH.mm"
       long_no_year_no_time: "D. MMMM[ta]"
       full_no_year_no_time: "Do MMMM[ta]"
       long_with_year: "D. MMMM[ta] YYYY H:mm"
@@ -260,10 +262,9 @@ fi:
       help:
         bookmark: "Klikkaa lisätäksesi ketjun ensimmäisen viestin kirjanmerkkeihin"
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
+        unbookmark_with_reminder: "Poista kaikki kirjanmerkkisi ja muistutuksesi tästä ketjusta klikkaamalla. Olet asettanut muistutuksen tästä ketjusta ajankohtaan %{reminder_at}."
     bookmarks:
-      created: "olet lisännyt tämän viestin kirjanmerkkeihisi"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
-      created_with_at_desktop_reminder: "kirjanmerkitsit tämän viestin ja sinua muistutetaan siitä kun seuraavan kerran olet työpöytäympäristössäsi"
       remove: "Poista kirjanmerkki"
       confirm_clear: "Haluatko varmasti poistaa kaikki kirjanmerkkisi tästä ketjusta?"
       save: "Tallenna"
@@ -746,6 +747,10 @@ fi:
       private_message: "Viesti"
       private_messages: "Viestit"
       user_notifications:
+        filters:
+          all: "Kaikki"
+          read: "Luetut"
+          unread: "Lukematta"
         ignore_duration_title: "Estoajastin"
         ignore_duration_username: "Käyttäjätunnus"
         ignore_duration_when: "Kesto:"
@@ -1259,6 +1264,7 @@ fi:
     assets_changed_confirm: "Sivustolla on tehty päivityksiä. Ladataanko uudelleen?"
     logout: "Sinut kirjattiin ulos."
     refresh: "Lataa sivu uudelleen"
+    home: "Koti"
     read_only_mode:
       enabled: "Sivusto on vain luku -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on toistaiseksi poissa käytöstä."
       login_disabled: "Et voi kirjautua sisään, kun sivusto on vain luku -tilassa."
@@ -2015,7 +2021,6 @@ fi:
           "2_8": "Näet uusien vastausten määrän, koska olet asettanut tämän alueen seurantaan."
           "2_4": "Näet uusien vastausten määrän, koska olet kirjoittanut ketjuun."
           "2_2": "Näet uusien vastausten määrän, koska olet asettanut ketjun seurantaan."
-          "2": 'Näet uusien vastausten määrän, koska <a href="{{basePath}}/u/{{username}}/preferences">luit ketjua aiemmin</a>.'
           "1_2": "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
           "1": "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
           "0_7": "Et saa mitään ilmoituksia tältä alueelta."
@@ -2419,6 +2424,7 @@ fi:
       bookmarks:
         create: "Luo kirjanmerkki"
         created: "Luotu"
+        updated: "Päivitetty"
         name: "Nimi"
         actions:
           delete_bookmark:
@@ -2729,7 +2735,6 @@ fi:
         this_week: "Viikko"
         today: "Tänään"
         other_periods: "katso kuumat"
-    browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaimesi on niin vanha, ettei sivusto toimi sillä</a>. <a href="https://browsehappy.com">Päivitä selaimesi</a>.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -3038,8 +3043,6 @@ fi:
           view_table: "taulukko"
           view_graph: "graafi"
           refresh_report: "Päivitä raportti"
-          start_date: "Alkamisajankohta (UTC)"
-          end_date: "Päättymisajankohta (UTC)"
           groups: "Kaikki ryhmät"
           disabled: "Raportti ei ole käytössä"
           totals_for_sample: "Otos yhteensä"
@@ -3100,7 +3103,6 @@ fi:
             effects: Vaikutukset
             trust_levels_none: "Ei mitään"
             automatic_membership_email_domains: "Käyttäjä, joka rekisteröityy sähköpostiverkkotunnuksella joka täsmää tähän luetteloon, liitetään ryhmään automaattisesti:"
-            automatic_membership_retroactive: "Liitä olemassaolevia rekisteröityneitä käyttäjiä soveltaen samaa sähköpostiverkkotunnussääntöä "
             primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
         name_placeholder: "Ryhmän nimi, ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
         primary: "Ensisijainen ryhmä"
@@ -3953,6 +3955,11 @@ fi:
         anonymize_yes: "Kyllä, anonymisoi tämä käyttäjätili"
         anonymize_failed: "Käyttäjätilin anonymisointi ei onnistunut."
         delete: "Poista käyttäjä"
+        merge:
+          prompt:
+            cancel: "Peru"
+          confirmation:
+            cancel: "Peru"
         delete_forbidden_because_staff: "Ylläpitäjiä ja valvojia ei voi poistaa."
         delete_posts_forbidden_because_staff: "Ylläpitäjien ja valvojien kaikkia viestejä ei voi poistaa."
         delete_forbidden:
@@ -4135,7 +4142,7 @@ fi:
         secret_list:
           invalid_input: "Syöttökenttä ei voi olla tyhjä tai sisältää putkimerkkiä."
         default_categories:
-          modal_description: "Haluatko soveltaa tätä muutosta takautuvasti? Tämä muuttaa kaikkien %{count} olemassa olevan käyttäjän käyttäjäasetusta."
+          modal_description: "Haluatko tämän muutoksen vaikuttavan takautuvasti? Tämä muuttaa kaikkien %{count} olemassa olevan käyttäjän käyttäjäasetusta."
           modal_yes: "Kyllä"
           modal_no: "Ei, muutosta sovellettakoon vain tästedes"
       badges:

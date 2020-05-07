@@ -298,9 +298,6 @@ tr_TR:
   topics_in_category: "'%{category}' kategorisindeki konular"
   rss_posts_in_topic: " '%{topic}' konusuna ait RSS akışı"
   rss_topics_in_category: "'%{category}' kategorisindeki konulara ait RSS akışı"
-  author_wrote: "%{author} yazdı:"
-  num_posts: "Gönderiler:"
-  num_participants: "Katılımcılar:"
   read_full_topic: "Konunun tamamını okuyun"
   private_message_abbrev: "İlt"
   rss_description:
@@ -327,7 +324,7 @@ tr_TR:
   bookmarks:
     errors:
       already_bookmarked_post: "Aynı gönderiyi iki kez işaretleyemezsiniz."
-      time_must_be_provided: "&#39;%{reminder_type}&#39; dışındaki tüm hatırlatıcılara zaman verilmelidir"
+      time_must_be_provided: "Tüm hatırlatıcılara zaman verilmelidir"
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
       later_today: "Bugün ilerleyen saatlerde"

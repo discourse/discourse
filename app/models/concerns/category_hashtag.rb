@@ -3,7 +3,7 @@
 module CategoryHashtag
   extend ActiveSupport::Concern
 
-  SEPARATOR = ":".freeze
+  SEPARATOR = ":"
 
   class_methods do
     def query_from_hashtag_slug(category_slug)

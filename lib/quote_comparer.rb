@@ -2,7 +2,7 @@
 
 class QuoteComparer
   def self.whitespace
-    " \t\r\n".freeze
+    " \t\r\n"
   end
 
   def initialize(topic_id, post_number, text)
@@ -18,7 +18,7 @@ class QuoteComparer
   def modified?
     return true if @text.blank? || @parent_post.blank?
 
-    parent_text = Nokogiri::HTML::fragment(@parent_post.cooked).text.delete(QuoteComparer.whitespace)
+    parent_text = Nokogiri::HTML5::fragment(@parent_post.cooked).text.delete(QuoteComparer.whitespace)
     text = @text.delete(QuoteComparer.whitespace)
 
     !parent_text.include?(text)

@@ -126,7 +126,7 @@ class TopicEmbed < ActiveRecord::Base
       return
     end
 
-    raw_doc = Nokogiri::HTML(html)
+    raw_doc = Nokogiri::HTML5(html)
     auth_element = raw_doc.at('meta[@name="author"]')
     if auth_element.present?
       response.author = User.where(username_lower: auth_element[:content].strip).first
@@ -142,7 +142,7 @@ class TopicEmbed < ActiveRecord::Base
       title.strip!
     end
     response.title = title
-    doc = Nokogiri::HTML(read_doc.content)
+    doc = Nokogiri::HTML5(read_doc.content)
 
     tags = { 'img' => 'src', 'script' => 'src', 'a' => 'href' }
     doc.search(tags.keys.join(',')).each do |node|
@@ -198,7 +198,7 @@ class TopicEmbed < ActiveRecord::Base
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix += ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
-    fragment = Nokogiri::HTML.fragment("<div>#{contents}</div>")
+    fragment = Nokogiri::HTML5.fragment("<div>#{contents}</div>")
     fragment.css('a').each do |a|
       href = a['href']
       if href.present? && href.start_with?('/')
@@ -220,7 +220,7 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.first_paragraph_from(html)
-    doc = Nokogiri::HTML(html)
+    doc = Nokogiri::HTML5(html)
 
     result = +""
     doc.css('p').each do |p|

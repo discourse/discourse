@@ -36,6 +36,21 @@ export function logIn() {
   User.resetCurrent(currentUser());
 }
 
+// Note: Only use if `loggedIn: true` has been used in an acceptance test
+export function loggedInUser() {
+  return User.current();
+}
+
+export function fakeTime(timeString, timezone) {
+  let now = moment.tz(timeString, timezone);
+  return sandbox.useFakeTimers(now.valueOf());
+}
+
+export async function timeStep(clock, fn) {
+  fn();
+  return await clock.tickAsync(1000);
+}
+
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
 

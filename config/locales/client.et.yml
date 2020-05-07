@@ -229,7 +229,6 @@ et:
         bookmark: "Kliki selle teema esimesele postitusele järjehoidja lisamiseks"
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
-      created: "lisasid sellele postitusele järjehoidja"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       remove: "Eemalda järjehoidja"
       save: "Salvesta"
@@ -554,6 +553,10 @@ et:
       private_message: "Sõnum"
       private_messages: "Sõnumid"
       user_notifications:
+        filters:
+          all: "Kõik"
+          read: "Loe"
+          unread: "Lugemata"
         ignore_duration_username: "Kasutajanimi"
         ignore_duration_save: "Ignoreeri"
         mute_option: "Vaigistatud"
@@ -962,6 +965,7 @@ et:
     assets_changed_confirm: "See sait on just uuendatud. Värskendan nüüd viimasele versioonile?"
     logout: "Sind logiti välja."
     refresh: "Värskenda"
+    home: "Avaleht"
     read_only_mode:
       enabled: "See sait on kirjutuskaitstud režiimis. Sirvimist saab jätkata, kuid vastamine, meeldimine ja teised toimingud on hetkel blokeeritud."
       login_disabled: "Sisselogimine on blokeeritud seni, kuni sait on kirjutuskaitstud režiimis."
@@ -2362,7 +2366,6 @@ et:
             trust_levels_title: "Liikmetele peale lisamist automaatselt omistatud usaldustase:"
             trust_levels_none: "Pole"
             automatic_membership_email_domains: "Kasutajad, kes registreeruvad meiliaadressiga, mille domeen ühtib täpselt mõnega sellest loetelust, lisatakse siia gruppi automaatselt:"
-            automatic_membership_retroactive: "Olemasolevate registreeritud kasutajate lisamiseks rakenda sama meiliaadressi domeeni reeglit"
             primary_group: "Muuda automaatselt peamiseks grupiks"
         name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
         primary: "Peamine grupp"
@@ -2958,6 +2961,11 @@ et:
         anonymize_yes: "Jah, anonümiseeri see konto"
         anonymize_failed: "Viga konto anonümiseerimisel."
         delete: "Kustuta kasutaja"
+        merge:
+          prompt:
+            cancel: "Tühista"
+          confirmation:
+            cancel: "Tühista"
         delete_forbidden_because_staff: "Admine ja moderaatoreid ei saa kustutada."
         delete_posts_forbidden_because_staff: "Ei saa kustutada adminide ja moderaatorite kõiki postitusi."
         delete_forbidden:

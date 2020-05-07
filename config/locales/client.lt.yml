@@ -283,7 +283,6 @@ lt:
         bookmark: "Paspausk, kad pažymėtum pirmą įrašą šioje temoje"
         unbookmark: "Paspausk, kad pašalintum visas žymęs šioje temoje"
     bookmarks:
-      created: "jūs pažymėjot šį įrašą"
       remove: "Pašalinti Žymę"
       save: "Saugoti"
       reminders:
@@ -603,6 +602,10 @@ lt:
       private_message: "Žinutės"
       private_messages: "Žinutės"
       user_notifications:
+        filters:
+          all: "Visi"
+          read: "Skaitykite"
+          unread: "Neperskaitytos"
         ignore_duration_username: "Slapyvardis"
         ignore_duration_save: "Ignoruoti"
         mute_option: "Nutildyta"
@@ -982,6 +985,7 @@ lt:
     assets_changed_confirm: "Ši svetainė ka tik buvo atnaujinta. Perkrauti, kad matytumėte naujausią versiją?"
     logout: "Jūs buvote atjungtas nuo sistemos."
     refresh: "Atnaujinti"
+    home: "Pradinis"
     read_only_mode:
       enabled: "Puslapis veikia skaitymo (read only) režimu. Gali ieškoti, atsakinėti ar spausti \"patinka\", tačiau kitos funkcijos šiuo metu yra negalimos."
       login_disabled: "Prisijungimas yra išjungtas, kai svetainė yra skaitymo režime."
@@ -2395,7 +2399,6 @@ lt:
             trust_levels_title: "Pasitikėjimo lygis automatiškai suteikiamas nariui kai jis prideda:"
             trust_levels_none: "Nieko"
             automatic_membership_email_domains: "Vartotojai, kurie užsiregistravo su el. paštu, kuris sutampa su šiame sąraše esančiu el. paštu bus automatiškai pridėti į šią grupę:"
-            automatic_membership_retroactive: "Pritaikyk tas pačias el. pašto taisykles, kad pridėtum jau egzistuojančius registruotus vartotojus"
             primary_group: "Automatiškai nustatyk pagrindinę grupę"
         name_placeholder: "Grupės pavadinimas, be tarpų, taisyklės kaip ir slapyvardžiui"
         primary: "Pagrindinė Grupė"
@@ -2906,6 +2909,11 @@ lt:
         anonymize_yes: "Taip, Anonimizuoti šįą paskyrą"
         anonymize_failed: "Įvyko klaida anonimizuojant šią paskyrą"
         delete: "Ištrinti vartotoją"
+        merge:
+          prompt:
+            cancel: "Atšaukti"
+          confirmation:
+            cancel: "Atšaukti"
         delete_forbidden_because_staff: "Administratoriai ir moderatoriai negali būti ištrinti."
         delete_posts_forbidden_because_staff: "Negalima ištrinti administratorių ir moderatorių įrašų"
         delete_forbidden:
@@ -2962,6 +2970,8 @@ lt:
           likes_received: "Gauta patikimų"
           likes_received_days: "Gauta patikimų: unikalios dienos"
           likes_received_users: "Gauta patikimų: unikalūs vartotojai"
+          suspended: "Sustabdytas (6 Mėnesiai)"
+          silenced: "Užtildytas (6 Mėnesiai)"
           qualifies: "Atitinka 3 pasitikėjimo lygio reikalavimus."
           does_not_qualify: "Neatitinka 3 pasitikėjimo lygio reikalavimų."
           will_be_promoted: "Greitai bus paaukštintas."

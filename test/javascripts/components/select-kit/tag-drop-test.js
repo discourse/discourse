@@ -1,5 +1,5 @@
 import componentTest from "helpers/component-test";
-import { testSelectKitModule } from "./select-kit-test-helper";
+import { testSelectKitModule } from "helpers/select-kit-helper";
 import Site from "discourse/models/site";
 import { set } from "@ember/object";
 import pretender from "helpers/create-pretender";

@@ -70,7 +70,7 @@ function loadDraft(store, opts) {
 
 const _popupMenuOptionsCallbacks = [];
 
-let _checkDraftPopup = !ENV.environment === "test";
+let _checkDraftPopup = ENV.environment !== "test";
 
 export function toggleCheckDraftPopup(enabled) {
   _checkDraftPopup = enabled;
@@ -352,7 +352,7 @@ export default Controller.extend({
         if (!url || !topicTitle) return;
 
         url = `${location.protocol}//${location.host}${url}`;
-        const link = `[${Handlebars.escapeExpression(topicTitle)}](${url})`;
+        const link = `[${escapeExpression(topicTitle)}](${url})`;
         const continueDiscussion = I18n.t("post.continue_discussion", {
           postLink: link
         });

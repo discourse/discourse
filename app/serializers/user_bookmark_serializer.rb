@@ -8,6 +8,7 @@ class UserBookmarkSerializer < ApplicationSerializer
 
   attributes :id,
              :created_at,
+             :updated_at,
              :topic_id,
              :linked_post_number,
              :post_id,

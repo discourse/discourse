@@ -25,9 +25,10 @@
 
 {{create-topic-button
   canCreateTopic=canCreateTopic
-  action=createTopic
-  disabled=createTopicDisabled
+  action=(action "clickCreateTopicButton")
+  disabled=createTopicButtonDisabled
   label=createTopicLabel
+  btnClass=createTopicClass
 }}
 
 {{#if showCategoryEdit}}

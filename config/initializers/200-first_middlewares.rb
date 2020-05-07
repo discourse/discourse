@@ -6,12 +6,8 @@
 #
 # We aren't manipulating the middleware stack directly because of
 # https://github.com/rails/rails/pull/27936
-session_operations = Rails::Configuration::MiddlewareStackProxy.new([
-   [:delete, MessageBus::Rack::Middleware],
-   [:unshift, MessageBus::Rack::Middleware],
-])
 
-Rails.configuration.middleware = Rails.configuration.middleware + session_operations
+Rails.configuration.middleware.unshift(MessageBus::Rack::Middleware)
 
 # no reason to track this in development, that is 300+ redis calls saved per
 # page view (we serve all assets out of thin in development)

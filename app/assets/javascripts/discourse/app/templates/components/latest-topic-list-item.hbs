@@ -20,8 +20,7 @@
     {{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
   </div>
   <div class="bottom-row">
-    {{category-link topic.category}}
-    {{discourse-tags topic mode="list"}}
+    {{category-link topic.category}}{{discourse-tags topic mode="list"}}{{! intentionally inline to avoid whitespace}}
   </div>
 </div>
 <div class="topic-stats">

@@ -121,11 +121,6 @@ es:
       random_mention:
         reply: |-
           ¡Hola! Para saber qué puedo hacer, escribe `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Actualmente sé como realizar las siguientes cosas:
-
-          `@%{discobot_username} %{reset_trigger} {nombre-del-tutorial}`
-          > Comienza un tutorial interactivo. `{nombre-del-tutorial}` puede ser uno de: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -230,6 +225,8 @@ es:
       bookmark:
         instructions: |-
           Si quieres aprender más, selecciona debajo el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> y <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **guarda en marcadores este mensaje personal**. Si lo haces, ¡puede haber un :gift: en tu futuro!
+        reply: |-
+          ¡Excelente! Ahora puedes encontrar fácilmente las conversaciones privadas en cualquier momento directamente desde la [sección de marcadores de tu perfil](%{bookmark_url}). Sólo debes seleccionar tu foto de perfil en la parte superior derecha de la pantalla &#8599;
         not_found: |-
           Oh oh, no veo ningún marcador en este tema. ¿Encontraste el botón para guardar en marcadores que se encuentra debajo de cada mensaje? Usa el botón mostrar más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que aparezcan acciones adicionales si necesitas.
       emoji:

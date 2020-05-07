@@ -1,16 +1,23 @@
 import { acceptance } from "helpers/qunit-helpers";
+import compile from "handlebars-compiler";
+import {
+  addRawTemplate,
+  removeRawTemplate
+} from "discourse-common/lib/raw-templates";
 
 const CONNECTOR =
   "javascripts/raw-test/connectors/topic-list-before-status/lala";
+
 acceptance("Raw Plugin Outlet", {
   beforeEach() {
-    Discourse.RAW_TEMPLATES[CONNECTOR] = Handlebars.compile(
-      `<span class='topic-lala'>{{context.topic.id}}</span>`
+    addRawTemplate(
+      CONNECTOR,
+      compile(`<span class='topic-lala'>{{context.topic.id}}</span>`)
     );
   },
 
   afterEach() {
-    delete Discourse.RAW_TEMPLATES[CONNECTOR];
+    removeRawTemplate(CONNECTOR);
   }
 });
 

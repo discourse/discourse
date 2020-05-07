@@ -156,9 +156,6 @@ id:
   topics_in_category: "Topik dalam kategori '%{category}'"
   rss_posts_in_topic: "RSS feed dari '%{topic}'"
   rss_topics_in_category: "RSS feed dari topik-topik pada kategori '%{category}'"
-  author_wrote: "%{author} menuliskan:"
-  num_posts: "Pos:"
-  num_participants: "Peserta:"
   read_full_topic: "Baca topik sepenuhnya"
   private_message_abbrev: "Psn"
   rss_description:

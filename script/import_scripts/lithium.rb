@@ -913,7 +913,7 @@ SQL
       raw.sub!(match, content)
     end
 
-    doc = Nokogiri::HTML.fragment(raw)
+    doc = Nokogiri::HTML5.fragment(raw)
 
     doc.css("a,img,li-image").each do |l|
       upload_name, image, linked_upload = [nil] * 3

@@ -1,9 +1,10 @@
 import { createWidget } from "discourse/widgets/widget";
 import { emojiUrlFor, emojiUnescape } from "discourse/lib/text";
 import RawHtml from "discourse/widgets/raw-html";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export function replaceEmoji(str) {
-  const escaped = emojiUnescape(Handlebars.Utils.escapeExpression(str));
+  const escaped = emojiUnescape(escapeExpression(str));
   return [new RawHtml({ html: `<span>${escaped}</span>` })];
 }
 

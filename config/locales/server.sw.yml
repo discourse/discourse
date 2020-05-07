@@ -168,9 +168,6 @@ sw:
   topics_in_category: "Mada ndani ya kategoria '%{category}'"
   rss_posts_in_topic: "Mlisho wavuti wa '%{topic}'"
   rss_topics_in_category: "Mlisho wavuti wa mada za kategoria '%{category}'"
-  author_wrote: "%{author} ameandika:"
-  num_posts: "Machapisho:"
-  num_participants: "Mshiriki:"
   read_full_topic: "Soma mada yote"
   private_message_abbrev: "Msg"
   rss_description:

@@ -324,9 +324,6 @@ pl_PL:
   topics_in_category: "Tematy w kategorii '%{category}'"
   rss_posts_in_topic: "Kanał RSS tematu '%{topic}'"
   rss_topics_in_category: "Kanał RSS tematów z kategorii '%{category}'"
-  author_wrote: "%{author} pisze:"
-  num_posts: "Wpisy:"
-  num_participants: "Uczestnicy:"
   read_full_topic: "Przeczytaj cały temat"
   private_message_abbrev: "Wiad."
   rss_description:
@@ -355,7 +352,7 @@ pl_PL:
       already_bookmarked_post: "Nie możesz dodać zakładki do tego samego postu dwa razy."
       cannot_set_past_reminder: "W przeszłości nie można ustawić przypomnienia o zakładce."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
-      time_must_be_provided: "dla wszystkich przypomnień należy przewidzieć czas z wyjątkiem „%{reminder_type}”"
+      time_must_be_provided: "dla wszystkich przypomnień należy przewidzieć czas"
     reminders:
       at_desktop: "Następnym razem będę na swoim pulpicie"
       later_today: "Później dzisiaj"

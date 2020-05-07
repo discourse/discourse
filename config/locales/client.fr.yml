@@ -261,7 +261,6 @@ fr:
         bookmark: "Cliquer pour mettre un signet sur le premier message de ce sujet"
         unbookmark: "Cliquer pour retirer tous les signets de ce sujet"
     bookmarks:
-      created: "vous avez mis un signet à ce message"
       not_bookmarked: "mettre un signet à ce message"
       remove: "Retirer le signet"
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
@@ -742,6 +741,10 @@ fr:
       private_message: "Message direct"
       private_messages: "Messages directs"
       user_notifications:
+        filters:
+          all: "Toutes"
+          read: "Temps de lecture"
+          unread: "Non lus"
         ignore_duration_title: "Ignorer planification"
         ignore_duration_username: "Pseudo"
         ignore_duration_when: "Durée :"
@@ -1256,6 +1259,7 @@ fr:
     assets_changed_confirm: "Ce site vient d'être mis à jour. Rafraîchir maintenant pour accéder à la nouvelle version ?"
     logout: "Vous avez été déconnecté."
     refresh: "Rafraîchir"
+    home: "Accueil"
     read_only_mode:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "La connexion est désactivée quand le site est en lecture seule."
@@ -2011,7 +2015,6 @@ fr:
           "2_8": "Vous verrez un compteur de nouvelles réponses car vous suivez cette catégorie."
           "2_4": "Vous verrez un compteur de nouvelles réponses car vous avez répondu dans ce sujet."
           "2_2": "Vous verrez un compteur de nouvelles réponses car vous suivez ce sujet."
-          "2": 'Vous verrez un compteur de nouvelles réponses car vous <a href="{{basePath}}/u/{{username}}/preferences">avez lu ce sujet</a>.'
           "1_2": "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
           "1": "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
           "0_7": "Vous ignorez toutes les notifications de cette catégorie."
@@ -2415,6 +2418,7 @@ fr:
       bookmarks:
         create: "Ajouter un signet"
         created: "Créé"
+        updated: "Mis à jour"
         name: "Nom"
         actions:
           delete_bookmark:
@@ -2729,7 +2733,6 @@ fr:
         this_week: "Semaine"
         today: "Aujourd'hui"
         other_periods: "voir le top"
-    browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Merci <a href="https://browsehappy.com">de mettre à jour votre navigateur</a>.'
     permission_types:
       full: "Créer / Répondre / Voir"
       create_post: "Répondre / Voir"
@@ -3035,8 +3038,6 @@ fr:
           view_table: "tableau"
           view_graph: "graphique"
           refresh_report: "Actualiser le rapport"
-          start_date: "Date de début (UTC)"
-          end_date: "Date de fin (UTC)"
           groups: "Tous les groupes"
           disabled: "Ce rapport est désactivé"
           totals_for_sample: "Totaux pour l'échantillon"
@@ -3097,7 +3098,6 @@ fr:
             effects: Effets
             trust_levels_none: "Aucun"
             automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe :"
-            automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
             primary_group: "Définir comme groupe principal automatiquement"
         name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les pseudos"
         primary: "Groupe principal"
@@ -3950,6 +3950,11 @@ fr:
         anonymize_yes: "Oui, rendre ce compte anonyme"
         anonymize_failed: "Il y a eu un problème lors de l'anonymisation de ce compte."
         delete: "Supprimer l'utilisateur"
+        merge:
+          prompt:
+            cancel: "Annuler"
+          confirmation:
+            cancel: "Annuler"
         delete_forbidden_because_staff: "Administrateurs et modérateurs ne peuvent pas être supprimés."
         delete_posts_forbidden_because_staff: "Vous ne pouvez pas supprimer tous les messages des administrateurs et des modérateurs."
         delete_forbidden:

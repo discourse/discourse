@@ -7,8 +7,6 @@ RSpec.describe DbHelper do
     it 'should remap columns properly' do
       post = Fabricate(:post, cooked: "this is a specialcode that I included")
       post_attributes = post.reload.attributes
-      post2 = Fabricate(:post, image_url: "/testing/specialcode")
-      post2_attributes = post2.reload.attributes
 
       badge = Fabricate(:badge, query: "specialcode")
       badge_attributes = badge.reload.attributes
@@ -18,13 +16,6 @@ RSpec.describe DbHelper do
       post.reload
 
       expect(post.cooked).to include("codespecial")
-
-      post2.reload
-
-      expect(post2.image_url).to eq("/testing/codespecial")
-
-      expect(post2_attributes.except("image_url"))
-        .to eq(post2.attributes.except("image_url"))
 
       badge.reload
 

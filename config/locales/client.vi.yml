@@ -26,8 +26,10 @@ vi:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY HH:mm"
@@ -130,6 +132,7 @@ vi:
       banner:
         enabled: "chọn đây làm banner lúc %{when}. Nó sẽ xuất hiện ở đầu mỗi trang cho đến khi bị ẩn đi bởi người dùng."
         disabled: "xoá banner này lúc %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang."
+      forwarded: "Chuyển tiếp email phía trên"
     topic_admin_menu: "hành động cho chủ đề"
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
@@ -236,12 +239,13 @@ vi:
         bookmark: "Chọn bài viết đầu tiên của chủ đề cho vào dấu trang"
         unbookmark: "Chọn để xoá toàn bộ dấu trang trong chủ đề này"
     bookmarks:
-      created: "bạn đã đánh dấu bài viết này"
       not_bookmarked: "đánh dấu bài viết này"
       remove: "Xóa dấu trang"
+      delete: "Xóa chỉ mục"
       confirm_clear: "Bạn có chắc muốn xóa toàn bộ đánh dấu trong chủ đề này?"
       save: "Lưu"
       no_timezone: 'Bạn chưa đặt múi giờ. Bạn sẽ không thể đặt lời nhắc. Thiết lập một <a href="%{basePath}/my/preferences/profile">trong hồ sơ của bạn</a> .'
+      list_permission_denied: "Bạn không có quyền xem chỉ mục của người dùng này"
       reminders:
         at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
         tomorrow: "Ngày mai"
@@ -696,6 +700,10 @@ vi:
       private_message: "Tin nhắn"
       private_messages: "Tin nhắn"
       user_notifications:
+        filters:
+          all: "Tất cả"
+          read: "Đã đọc"
+          unread: "Chưa đọc"
         ignore_duration_title: "Bỏ qua bộ đếm giờ"
         ignore_duration_username: "Tên đăng nhập"
         ignore_duration_when: "Thời lượng:"
@@ -1115,6 +1123,7 @@ vi:
     assets_changed_confirm: "Website đã được cập nhật bản mới. Bạn có thể làm mới lại trang để có thể sử dụng bản mới được cập nhật"
     logout: "Bạn đã đăng xuất"
     refresh: "Tải lại"
+    home: "Trang chủ"
     read_only_mode:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
@@ -1591,7 +1600,6 @@ vi:
           "3_1": "Bạn sẽ được nhận các tin báo bởi bạn đã tạo chủ để này."
           "3": "Bạn sẽ nhận được các tin báo bởi vì bạn đang theo dõi chủ đề này."
           "2_8": "Bạn sẽ thấy được 1 số lượng bài viết mới bởi vì bạn đang theo dấu chuyên mục này."
-          "2": 'Bạn sẽ xem được các bài trả lời bởi vì bạn <a href="{{basePath}}/u/{{username}}/preferences">đọc chủ đề này</a>.'
           "1_2": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
           "1": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
           "0_7": "Bạn đang bỏ qua tất cả các tin báo trong chuyên mục này."
@@ -2325,7 +2333,6 @@ vi:
             trust_levels_title: "Cấp độ tin tưởng tự động tăng cho thành viên khi họ thêm:"
             trust_levels_none: "Không có gì"
             automatic_membership_email_domains: "Các thành viên đã đăng ký với đuôi email khớp với một trong danh sách này sẽ được tự động thêm vào nhóm:"
-            automatic_membership_retroactive: "Áp dụng quy tắc đuôi email tương tự để thêm thành viên đăng ký hiện tại"
             primary_group: "Tự động cài là nhóm chính"
         name_placeholder: "Tên nhóm, không có khoảng trắng, tương tự như luật đặt tên người dùng"
         primary: "Nhóm Chính"
@@ -2789,6 +2796,11 @@ vi:
         anonymize_yes: "Đồng ý, đây là tài khoản nặc danh."
         anonymize_failed: "Có vấn đề với những tài khoản nặc danh."
         delete: "Xóa thành viên"
+        merge:
+          prompt:
+            cancel: "Hủy"
+          confirmation:
+            cancel: "Hủy"
         delete_forbidden_because_staff: "Admin và mod không thể xóa."
         delete_posts_forbidden_because_staff: "Không thể xóa tất cả bài viết của quản trị và điều hành viên."
         delete_forbidden:

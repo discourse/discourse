@@ -523,6 +523,7 @@ class PostRevisor
   def bump_topic
     return if bypass_bump? || !is_last_post?
     @topic.update_column(:bumped_at, Time.now)
+    TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
@@ -578,7 +579,7 @@ class PostRevisor
   def update_category_description
     return unless category = Category.find_by(topic_id: @topic.id)
 
-    doc = Nokogiri::HTML.fragment(@post.cooked)
+    doc = Nokogiri::HTML5.fragment(@post.cooked)
     doc.css("img").remove
 
     if html = doc.css("p").first&.inner_html&.strip

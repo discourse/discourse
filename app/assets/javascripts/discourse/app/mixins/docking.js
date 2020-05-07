@@ -1,5 +1,5 @@
 import Mixin from "@ember/object/mixin";
-import { debounce } from "@ember/runloop";
+import { later, debounce } from "@ember/runloop";
 
 const helper = {
   offset() {
@@ -32,7 +32,8 @@ export default Mixin.create({
     $(window).bind("scroll.discourse-dock", this.queueDockCheck);
     $(document).bind("touchmove.discourse-dock", this.queueDockCheck);
 
-    this.dockCheck(helper);
+    // dockCheck might happen too early on full page refresh
+    later(this, this.safeDockCheck, 50);
   },
 
   willDestroyElement() {

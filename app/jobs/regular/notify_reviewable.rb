@@ -48,6 +48,8 @@ protected
   end
 
   def notify(count, user_ids)
+    return if user_ids.blank?
+
     data = { reviewable_count: count }
     MessageBus.publish("/reviewable_counts", data, user_ids: user_ids)
     @contacted += user_ids

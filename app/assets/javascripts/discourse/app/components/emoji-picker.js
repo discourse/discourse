@@ -2,7 +2,7 @@ import { inject as service } from "@ember/service";
 import { throttle, debounce, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { on, observes } from "discourse-common/utils/decorators";
-import { findRawTemplate } from "discourse/lib/raw-templates";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
 import {
   extendedEmojiList,

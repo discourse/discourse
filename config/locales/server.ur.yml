@@ -281,9 +281,6 @@ ur:
   topics_in_category: "'%{category}' زُمرہ میں ٹاپک"
   rss_posts_in_topic: "'%{topic}' کی RSS فِیڈ"
   rss_topics_in_category: "'%{category}' زُمرہ میں ٹاپکس کی RSS فِیڈ"
-  author_wrote: "%{author} نے لکھا: "
-  num_posts: "پوسٹس:"
-  num_participants: "شرکاء:"
   read_full_topic: "مکمل ٹاپک پڑھیں"
   private_message_abbrev: "پغم"
   rss_description:

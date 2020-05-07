@@ -7,32 +7,30 @@ class BookmarkManager
     @user = user
   end
 
-  def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil)
+  def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil, options: {})
     post = Post.unscoped.includes(:topic).find(post_id)
     reminder_type = parse_reminder_type(reminder_type)
 
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_see_post?(post)
 
     bookmark = Bookmark.create(
-      user_id: @user.id,
-      topic: post.topic,
-      post: post,
-      name: name,
-      reminder_type: reminder_type,
-      reminder_at: reminder_at,
-      reminder_set_at: Time.zone.now
+      {
+        user_id: @user.id,
+        topic: post.topic,
+        post: post,
+        name: name,
+        reminder_type: reminder_type,
+        reminder_at: reminder_at,
+        reminder_set_at: Time.zone.now
+      }.merge(options)
     )
 
     if bookmark.errors.any?
       return add_errors_from(bookmark)
     end
 
-    # bookmarking the topic-level mean
-    if post.is_first_post?
-      update_topic_user_bookmarked(topic: post.topic, bookmarked: true)
-    end
+    update_topic_user_bookmarked(topic: post.topic, bookmarked: true)
 
-    BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(@user)
     bookmark
   end
 
@@ -43,9 +41,13 @@ class BookmarkManager
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
 
     bookmark.destroy
-    clear_at_desktop_cache_if_required
 
-    { topic_bookmarked: Bookmark.exists?(topic_id: bookmark.topic_id, user: @user) }
+    bookmarks_remaining_in_topic = Bookmark.exists?(topic_id: bookmark.topic_id, user: @user)
+    if !bookmarks_remaining_in_topic
+      update_topic_user_bookmarked(topic: bookmark.topic, bookmarked: false)
+    end
+
+    { topic_bookmarked: bookmarks_remaining_in_topic }
   end
 
   def destroy_for_topic(topic)
@@ -59,8 +61,6 @@ class BookmarkManager
 
       update_topic_user_bookmarked(topic: topic, bookmarked: false)
     end
-
-    clear_at_desktop_cache_if_required
   end
 
   def self.send_reminder_notification(id)
@@ -68,7 +68,7 @@ class BookmarkManager
     BookmarkReminderNotificationHandler.send_notification(bookmark)
   end
 
-  def update(bookmark_id:, name:, reminder_type:, reminder_at:)
+  def update(bookmark_id:, name:, reminder_type:, reminder_at:, options: {})
     bookmark = Bookmark.find_by(id: bookmark_id)
 
     raise Discourse::NotFound if bookmark.blank?
@@ -77,10 +77,12 @@ class BookmarkManager
     reminder_type = parse_reminder_type(reminder_type)
 
     success = bookmark.update(
-      name: name,
-      reminder_at: reminder_at,
-      reminder_type: reminder_type,
-      reminder_set_at: Time.zone.now
+      {
+        name: name,
+        reminder_at: reminder_at,
+        reminder_type: reminder_type,
+        reminder_set_at: Time.zone.now
+      }.merge(options)
     )
 
     if bookmark.errors.any?
@@ -91,15 +93,6 @@ class BookmarkManager
   end
 
   private
-
-  def clear_at_desktop_cache_if_required
-    return if user_has_any_pending_at_desktop_reminders?
-    Discourse.redis.del(BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_KEY_PREFIX + @user.id.to_s)
-  end
-
-  def user_has_any_pending_at_desktop_reminders?
-    Bookmark.at_desktop_reminders_for_user(@user).any?
-  end
 
   def update_topic_user_bookmarked(topic:, bookmarked:)
     TopicUser.change(@user.id, topic, bookmarked: bookmarked)

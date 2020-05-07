@@ -187,7 +187,8 @@ const Category = RestModel.extend({
           "navigate_to_first_post_after_read"
         ),
         search_priority: this.search_priority,
-        reviewable_by_group_name: this.reviewable_by_group_name
+        reviewable_by_group_name: this.reviewable_by_group_name,
+        read_only_banner: this.read_only_banner
       },
       type: id ? "PUT" : "POST"
     });

@@ -248,7 +248,6 @@ lv:
         bookmark: "Uzklikšķiniet, lai pievienot šīs tēmas pirmo ierakstu grāmatzīmēm"
         unbookmark: "Uzklikšķiniet, lai noņemtu visas grāmatzīmes šai temā"
     bookmarks:
-      created: "tu esi pievienojies šim ierakstam grāmatzīmi"
       remove: "Noņemt grāmatzīmi"
       save: "Saglabāt"
       reminders:
@@ -537,6 +536,10 @@ lv:
       private_message: "Ziņa"
       private_messages: "Ziņas"
       user_notifications:
+        filters:
+          all: "Visi"
+          read: "Lasīts"
+          unread: "Nelasīts"
         ignore_duration_username: "Lietotājvārds"
         ignore_duration_when: "Ilgums:"
         ignore_duration_save: "Ignorēt"
@@ -1449,7 +1452,6 @@ lv:
           "2_8": "Jūs redzēsiet jauno atbilžu skaitu, jo sekojat šai sadaļai."
           "2_4": "Jūs redzēsiet jauno atbilžu skaitu, jo atbildējāt šajā tēmā."
           "2_2": "Jūs redzēsiet jauno atbilžu skaitu, jo jūs sekojat šai tēmai."
-          "2": 'Jūs redzēsiet jauno atbilžu skaitu, jo jūs <a href="{{basePath}}/u/{{username}}/preferences">lasījāt šo tēmu</a>.'
           "1_2": "Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums."
           "1": "Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums."
           "0_7": "Nesaņemt nekādus paziņojumus par šo sadaļu."
@@ -2283,7 +2285,6 @@ lv:
             trust_levels_title: "Uzticamības līmenis, ko automātiski piešķir visiem dalībniekiem pievienošanas brīdī:"
             trust_levels_none: "Nav"
             automatic_membership_email_domains: "Lietotāji, kas reģistrējas ar e-pasta domēnu, kas precīzi sakrīt ar kādu no šī saraksta, tiks automātiski pievienoti šai grupai:"
-            automatic_membership_retroactive: "Izmantot viena e-pasta domēna noteikumu, lai pievienotu esošus lietotājus"
             primary_group: "Automātiski padarīt par galveno grupu"
         name_placeholder: "Grupas nosaukums, bez atstarpēm, tādi paši noteikumi kā lietotāja vārdam"
         primary: "Galvenā grupa"
@@ -2787,6 +2788,11 @@ lv:
         anonymize_yes: "Jā, anonimizēt kontu. (anonymize)"
         anonymize_failed: "Radās problēma ar konta anonimizēšanu (anonymizing)."
         delete: "Dzēst lietotāju."
+        merge:
+          prompt:
+            cancel: "Atcelt"
+          confirmation:
+            cancel: "Atcelt"
         delete_forbidden_because_staff: "Administratori un moderatori nevar tikt dzēsti."
         delete_posts_forbidden_because_staff: "Nevar izdzēst visus administratoru un moderatoru ierakstus."
         delete_forbidden:

@@ -58,7 +58,7 @@ class PostJobsEnqueuer
 
   def after_post_create
     if @post.post_number > 1
-      TopicTrackingState.publish_muted(@post)
+      TopicTrackingState.publish_muted(@post.topic)
       TopicTrackingState.publish_unread(@post)
     end
     TopicTrackingState.publish_latest(@topic, @post.whisper?)

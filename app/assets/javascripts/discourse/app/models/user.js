@@ -18,7 +18,7 @@ import UserAction from "discourse/models/user-action";
 import UserDraftsStream from "discourse/models/user-drafts-stream";
 import Group from "discourse/models/group";
 import { emojiUnescape } from "discourse/lib/text";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
@@ -26,6 +26,7 @@ import { Promise } from "rsvp";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -483,7 +484,7 @@ const User = RestModel.extend({
           return;
         if (!this.get("stream.filter") && !this.inAllStream(ua)) return;
 
-        ua.title = emojiUnescape(Handlebars.Utils.escapeExpression(ua.title));
+        ua.title = emojiUnescape(escapeExpression(ua.title));
         const action = UserAction.collapseStream([UserAction.create(ua)]);
         stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
         stream.get("content").insertAt(0, action[0]);
@@ -595,6 +596,11 @@ const User = RestModel.extend({
 
       if (json.user.card_badge) {
         json.user.card_badge = Badge.create(json.user.card_badge);
+      }
+
+      if (!json.user._timezone) {
+        json.user._timezone = json.user.timezone;
+        delete json.user.timezone;
       }
 
       user.setProperties(json.user);
@@ -805,7 +811,7 @@ const User = RestModel.extend({
       .sort()
       .map(title => {
         return {
-          name: Ember.Handlebars.Utils.escapeExpression(title),
+          name: escapeExpression(title),
           id: title
         };
       });

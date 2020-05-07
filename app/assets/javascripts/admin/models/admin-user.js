@@ -5,7 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
-import { userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 
@@ -514,16 +514,16 @@ const AdminUser = User.extend({
       formData["target_username"] = opts.targetUsername;
     }
 
-    return ajax(`/admin/users/${user.get("id")}/merge.json`, {
+    return ajax(`/admin/users/${user.id}/merge.json`, {
       type: "POST",
       data: formData
     })
-      .then(function(data) {
+      .then(data => {
         if (data.merged) {
           if (/^\/admin\/users\/list\//.test(location)) {
-            document.location = location;
+            DiscourseURL.redirectTo(location);
           } else {
-            document.location = Discourse.getURL(
+            DiscourseURL.redirectTo(
               `/admin/users/${data.user.id}/${data.user.username}`
             );
           }
@@ -534,8 +534,8 @@ const AdminUser = User.extend({
           }
         }
       })
-      .catch(function() {
-        AdminUser.find(user.get("id")).then(u => user.setProperties(u));
+      .catch(() => {
+        AdminUser.find(user.id).then(u => user.setProperties(u));
         bootbox.alert(I18n.t("admin.user.merge_failed"));
       });
   },

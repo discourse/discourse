@@ -93,6 +93,8 @@ nl:
           label: Toegestane groepen
         poll_chart_type:
           label: Diagramtype
+          bar: Staaf
+          pie: Cirkel
         poll_config:
           max: Max
           min: Min

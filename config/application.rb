@@ -91,6 +91,11 @@ module Discourse
       end
     end
 
+    # we skip it cause we configure it in the initializer
+    # the railstie for message_bus would insert it in the
+    # wrong position
+    config.skip_message_bus_middleware = true
+
     # Disable so this is only run manually
     # we may want to change this later on
     # issue is image_optim crashes on missing dependencies
@@ -134,7 +139,6 @@ module Discourse
     config.assets.precompile += %w{
       vendor.js
       admin.js
-      preload-store.js
       browser-detect.js
       browser-update.js
       break_string.js
@@ -171,6 +175,11 @@ module Discourse
     # the exclusion list does not include hbs so you double compile all this stuff
     initializer :fix_sprockets_loose_file_searcher, after: :set_default_precompile do |app|
       app.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
+
+      # We don't want application from node_modules, only from the root
+      app.config.assets.precompile.delete(/(?:\/|\\|\A)application\.(css|js)$/)
+      app.config.assets.precompile += ['application.js']
+
       start_path = ::Rails.root.join("app/assets").to_s
       exclude = ['.es6', '.hbs', '.hbr', '.js', '.css', '']
       app.config.assets.precompile << lambda do |logical_path, filename|
@@ -240,7 +249,7 @@ module Discourse
 
     # Our templates shouldn't start with 'discourse/app/templates'
     config.handlebars.templates_root = 'discourse/app/templates'
-    config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
+    config.handlebars.raw_template_namespace = "__DISCOURSE_RAW_TEMPLATES"
     Sprockets.register_mime_type 'text/x-handlebars', extensions: ['.hbr']
     Sprockets.register_transformer 'text/x-handlebars', 'application/javascript', Ember::Handlebars::Template
 
@@ -324,7 +333,14 @@ module Discourse
 
         ActionView::Base.precompiled_asset_checker = -> logical_path do
           default_checker[logical_path] ||
-            %w{qunit.js qunit.css test_helper.css test_helper.js wizard/test/test_helper.js}.include?(logical_path)
+            %w{qunit.js
+              qunit.css
+              test_helper.css
+              test_helper.js
+              wizard/test/test_helper.js
+            }.include?(logical_path) ||
+            logical_path =~ /\/node_modules/ ||
+            logical_path =~ /\/dist/
         end
       end
     end

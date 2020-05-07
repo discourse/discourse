@@ -1,12 +1,8 @@
-//= require_tree ./ember-addons/utils
-//= require_tree ./discourse-common
-//= require ./ember-addons/decorator-alias
-//= require ./ember-addons/macro-alias
-//= require ./ember-addons/fmt
+//= require_tree ./discourse-common/addon
 //= require ./polyfills
 //= require_tree ./select-kit
-//= require ./discourse
-//= require ./deprecated
+//= require ./discourse/app/app
+//= require ./app-boot
 
 // Stuff we need to load first
 //= require ./discourse/app/lib/to-markdown
@@ -101,4 +97,5 @@
 //= require_tree ./discourse/app/pre-initializers
 //= require_tree ./discourse/app/initializers
 //= require_tree ./discourse/app/services
+
 //= require_tree ./discourse/app/widgets

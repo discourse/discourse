@@ -60,6 +60,7 @@ es:
       optimized_link: Los enlaces de imagen optimizados son efímeros y no deben incluirse en el código fuente del tema.
     settings_errors:
       invalid_yaml: "El YAML provisto es inválido."
+      data_type_not_a_number: "Tipo de ajuste `%{name}` no soportado. Los tipos soportados son `integer`, `bool`, `list`, `enum` y `upload`"
       name_too_long: "Hay un ajuste con un nombre muy largo. La cantidad máxima de caracteres es 255"
       default_value_missing: "El ajuste «%{name}» no tiene valor por defecto"
       default_not_match_type: "El tipo de valor por defecto para el ajuste «%{name}» no coincide con el tipo de ajuste."
@@ -300,9 +301,12 @@ es:
   topics_in_category: "Temas en la categoría «%{category}»"
   rss_posts_in_topic: "Feed RSS de «%{topic}»"
   rss_topics_in_category: "Feed RSS de los temas en la categoría «%{category}»"
-  author_wrote: "%{author} escribió:"
-  num_posts: "Publicaciones:"
-  num_participants: "Participantes:"
+  rss_num_posts:
+    one: "%{count} publicación"
+    other: "%{count} publicaciones"
+  rss_num_participants:
+    one: "%{count} participante"
+    other: "%{count} participantes"
   read_full_topic: "Leer todo el tema"
   private_message_abbrev: "Msj"
   rss_description:
@@ -331,10 +335,11 @@ es:
       already_bookmarked_post: "No puedes guardar la misma publicación en marcadores dos veces."
       cannot_set_past_reminder: "No puedes establecer un recordatorio de marcador en el pasado."
       cannot_set_reminder_in_distant_future: "No puedes establecer un recordatorio de marcador más de 10 años en el futuro."
-      time_must_be_provided: "se debe especificar la hora para todos los recordatorios excepto '%{reminder_type}'"
+      time_must_be_provided: "se debe especificar la hora para todos los recordatorios"
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
-      later_today: "Más tarde durante el día de hoy"
+      later_today: "Más tarde, hoy"
+      next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
       next_week: "Próxima semana"
       next_month: "Próximo mes"
@@ -459,6 +464,7 @@ es:
               no_user_selected: "Debes seleccionar un usuario válido."
               reply_by_email_disabled: "Las respuestas por correo electrónico han sido desactivadas."
               target_user_not_found: "No se pudo encontrar a uno de los usuarios a los que envías este mensaje."
+              unable_to_update: "Hubo un error actualizando ese tema."
             featured_link:
               invalid: "es inválido. El URL debería incluir http:// o https://."
               invalid_category: "no se puede editar en esta categoría."
@@ -1380,6 +1386,8 @@ es:
     force_https: "Forzar al sitio a utilizar solo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión a través de redes sociales y cualquier logo externo / dependencia son compatibles con HTTPS?"
     same_site_cookies: "Usar las mismas cookies del sitio, ellos eliminan todos los vectores CSRF (falsificación de petición en sitios cruzados) de los navegadores soportados (Lax o Strict). Advertencia: Strict solo funcionará en sitios que forcen el inicio de sesión y usen SSO. "
     summary_score_threshold: "La puntuación mínima requerida para que una publicación se incluya en el «resumen de este tema»"
+    summary_posts_required: "Cantidad mínima de publicaciones antes de que 'Resumen de este tema' esté habilitado. Los cambios a esta configuración se aplicarán retroactivamente dentro de una semana."
+    summary_likes_required: "Cantidad mínina de me gusta en un tema para habilitar «resumen de este tema». Los cambios a esta configuración se aplicarán retroactivamente dentro de una semana."
     summary_percent_filter: "Cuando un usuario hace clic en «resumen de este tema», mostrar el % de las publicaciones destacadas"
     summary_max_results: "Cantidad máxima de publicaciones devueltas en «resumen de este tema»"
     enable_personal_messages: "Permitir a los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Ten en cuenta que el staff siempre puede enviar mensajes pase lo que pase."
@@ -1461,6 +1469,7 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     email_domains_blacklist: "Una lista de dominios de correo electrónico que los usuarios no pueden utilizar para registrarse. Ejemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Una lista de dominios de correo electrónico con los que los usuarios DEBEN registrar sus cuentas. AVISO: ¡no se permitirá el registro de usuarios cuyo correo electrónico sea de un dominio diferente a los aquí listados!"
+    auto_approve_email_domains: "Los usuarios con direcciones de email de esta lista de dominios serán aprobados automáticamente."
     hide_email_address_taken: "No informar a los usuarios de la existencia de una cuenta con un correo electrónico dado durante el registro y desde el formulario de contraseña olvidada."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el Discourse Hub para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard <a href='/admin' target='_blank'>/admin</a>."
@@ -1752,6 +1761,7 @@ es:
     relative_date_duration: "Número de días desde la última publicación durante los que las fechas se mostrarán en formato relativo (7d) en vez de absoluto (20 Feb)."
     delete_user_max_post_age: "No permitir eliminar usuarios cuya primera publicación tenga una antigüedad mayor a (x) días."
     delete_all_posts_max: "El máximo número de publicaciones que pueden ser eliminadas a la vez con el botón «eliminar todas las publicaciones». Si un usuario tiene un número de publicaciones mayor que este valor, estas no podrán ser eliminadas de una vez y el usuario no podrá ser eliminado."
+    delete_user_self_max_post_count: "El número máximo de publicaciones que puede tener un usuario al tiempo que permite la auto-eliminación de la cuenta. Establezca en -1 para deshabilitar la auto-eliminación de la cuenta."
     username_change_period: "El número máximo de días después de registrarse durante los que una cuenta puede cambiar su nombre de usuario (0 para no permitir el cambio de nombre)"
     email_editable: "Permitir a los usuarios cambiar su dirección de correo electrónico después de registrarse."
     logout_redirect: "Ubicación para redirigir el navegador después del cierre de sesión (por ejemplo: https://example.com/logout)"
@@ -1827,10 +1837,12 @@ es:
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para deshabilitar."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) Ver: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
+    show_copy_button_on_codeblocks: "Agrega un botón a los bloques de código para copiar el contenido del bloque al portapapeles del usuario. Esta característica no es compatible con Internet Explorer."
     embed_any_origin: "Permitir la inserción de contenido sin importar su origen. Esto se requiere para aplicaciones móviles con HTML estático."
     embed_topics_list: "Soportar la inserción HTML de listas de temas"
     embed_set_canonical_url: "Establece la URL canónica para los temas insertados en la URL de los contenidos insertados."
     embed_truncate: "Truncar las publicaciones insertadas."
+    embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
     embed_support_markdown: "Soporte de formato Markdown para publicaciones incrustadas."
     embed_whitelist_selector: "Lista separada por comas de elementos CSS que están permitidos en las inserciones."
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
@@ -1862,6 +1874,7 @@ es:
     new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios nuevos."
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
+    enable_page_publishing: "Permitir que los miembros del personal publiquen temas en nuevas URL con su propio estilo."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios correos electrónicos de resumen por defecto."
     default_include_tl0_in_digests: "Incluir publicaciones de usuarios nuevos en los correos electrónicos de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
     default_email_level: "Establecer nivel por defecto de las notificaciones por correo electrónico para los temas regulares."
@@ -2029,6 +2042,7 @@ es:
   publish_page:
     slug_errors:
       blank: "no puede dejarse en blanco"
+      unavailable: "no está disponible"
       invalid: "contiene caracteres inválidos"
   topic_statuses:
     autoclosed_message_max_posts:
@@ -3147,6 +3161,7 @@ es:
       since_last_visit: "Desde tu última visita"
       new_topics: "Temas nuevos"
       unread_notifications: "Notificaciones no leídas"
+      unread_high_priority: "Notificaciones de alta prioridad sin leer"
       liked_received: "Me gusta recibidos"
       new_users: "Usuarios nuevos"
       popular_topics: "Temas destacados"

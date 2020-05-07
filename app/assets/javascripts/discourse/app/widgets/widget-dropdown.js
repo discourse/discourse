@@ -1,4 +1,5 @@
 import { createWidget } from "discourse/widgets/widget";
+import { schedule } from "@ember/runloop";
 import hbs from "discourse/widgets/hbs-compiler";
 
 /*
@@ -48,15 +49,18 @@ import hbs from "discourse/widgets/hbs-compiler";
     - options: accepts a hash of optional attributes
       - headerClass: adds css class to the dropdown header
       - bodyClass: adds css class to the dropdown header
+      - caret: adds a caret to visually enforce this is a dropdown
 */
 
 export const WidgetDropdownHeaderClass = {
   tagName: "button",
 
   transform(attrs) {
-    return {
-      label: attrs.translatedLabel ? attrs.translatedLabel : I18n.t(attrs.label)
-    };
+    return { label: this._buildLabel(attrs) };
+  },
+
+  buildAttributes(attrs) {
+    return { title: this._buildLabel(attrs) };
   },
 
   buildClasses(attrs) {
@@ -80,7 +84,14 @@ export const WidgetDropdownHeaderClass = {
     <span class="label">
       {{transformed.label}}
     </span>
-  `
+    {{#if attrs.caret}}
+      {{d-icon "caret-down"}}
+    {{/if}}
+  `,
+
+  _buildLabel(attrs) {
+    return attrs.translatedLabel ? attrs.translatedLabel : I18n.t(attrs.label);
+  }
 };
 
 createWidget("widget-dropdown-header", WidgetDropdownHeaderClass);
@@ -218,6 +229,7 @@ export const WidgetDropdownClass = {
           label=attrs.label
           translatedLabel=attrs.translatedLabel
           class=this.transformed.options.headerClass
+          caret=this.transformed.options.caret
         )
       }}
 
@@ -249,6 +261,9 @@ export const WidgetDropdownClass = {
         placement: "bottom-start",
         modifiers: [
           {
+            name: "preventOverflow"
+          },
+          {
             name: "offset",
             options: {
               offset: [0, 5]
@@ -257,6 +272,10 @@ export const WidgetDropdownClass = {
         ]
       });
     }
+
+    schedule("afterRender", () => {
+      this._popper && this._popper.update();
+    });
   }
 };
 

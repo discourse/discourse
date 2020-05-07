@@ -1,10 +1,13 @@
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { fakeTime } from "helpers/qunit-helpers";
 
 QUnit.module("lib:bookmark", {
   beforeEach() {
-    // set the current now time for all tests
-    let now = moment.tz("2020-04-11 08:00:00", "Australia/Brisbane");
-    sandbox.useFakeTimers(now.valueOf());
+    fakeTime("2020-04-11 08:00:00", "Australia/Brisbane");
+  },
+
+  afterEach() {
+    sandbox.restore();
   }
 });
 

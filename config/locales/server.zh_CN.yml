@@ -286,9 +286,10 @@ zh_CN:
   topics_in_category: "“%{category}”分类中的主题"
   rss_posts_in_topic: " '%{topic}'的RSS源"
   rss_topics_in_category: "'%{category}'分类中主题的RSS源"
-  author_wrote: "%{author}写道："
-  num_posts: "帖子："
-  num_participants: "参与者："
+  rss_num_posts:
+    other: "%{count} 个帖"
+  rss_num_participants:
+    other: "%{count} 位参与者"
   read_full_topic: "阅读整个主题"
   private_message_abbrev: "私信"
   rss_description:
@@ -317,7 +318,7 @@ zh_CN:
       already_bookmarked_post: "你不能将同一帖子收藏两次。"
       cannot_set_past_reminder: "你不能在此主题设置收藏提醒。"
       cannot_set_reminder_in_distant_future: "你不能够设置一个大于十年的收藏提醒。"
-      time_must_be_provided: "必须为除“ %{reminder_type}”以外的所有提醒提供时间"
+      time_must_be_provided: "必须为除提醒提供时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天的某个时候"
@@ -443,6 +444,7 @@ zh_CN:
               no_user_selected: "你必须选择一个有效的用户。"
               reply_by_email_disabled: "用邮件回复已被禁止"
               target_user_not_found: "未找到你要向其发送此消息的其中一个用户"
+              unable_to_update: "更新该主题时发生错误。"
             featured_link:
               invalid: "不合法。URL 应包括 http:// 或 https://。"
               invalid_category: "无法编辑该分类。"
@@ -738,26 +740,26 @@ zh_CN:
       title: "需要审核"
   post_action_types:
     off_topic:
-      title: "题外话"
-      description: "此帖与该主题标题和第一帖而言所讨论的主题无关，可能需要被移动。"
+      title: "偏离主题"
+      description: "该帖子与当前主题的标题和首帖内容所无关，可能需要被移动到其它地方。"
       short_description: "和讨论不相关"
-      long_form: "标记为题外话"
+      long_form: "标记为偏离主题"
     spam:
-      title: "垃圾"
+      title: "垃圾内容"
       description: "该帖子是广告或破坏。帖子没有价值或者与当前主题无关。"
-      short_description: "这是个广告或者破坏"
-      long_form: "标记为垃圾"
+      short_description: "这是广告或者破坏行为"
+      long_form: "标记为垃圾内容"
       email_title: '“%{title}”被标记为垃圾'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不当内容"
-      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
+      description: '该帖子的内容包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区指引</a>。'
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
       long_form: "标记为不当内容"
     notify_user:
       title: "给 @{{username}}发送一条私信"
-      description: "我想与此人私下交流他们的帖子。"
-      short_description: "我想与此人私下交流他们的帖子。"
+      description: "我想亲自与此人私下交流关于该帖子的事情。"
+      short_description: "我想亲自与此人私下交流关于该帖子的事情。"
       long_form: "以发送私信给用户"
       email_title: '你在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
@@ -775,9 +777,9 @@ zh_CN:
       long_form: "已收藏本帖"
     like:
       title: "赞"
-      description: "赞本帖"
-      short_description: "赞该贴"
-      long_form: "赞本帖内容"
+      description: "点赞该帖子"
+      short_description: "赞该帖"
+      long_form: "赞了本帖"
   draft:
     sequence_conflict_error:
       title: "草稿错误"
@@ -818,20 +820,20 @@ zh_CN:
   topic_flag_types:
     spam:
       title: "垃圾"
-      description: "这个主题是广告。它对本站点没有联系和帮助，仅仅是推销信息。"
+      description: "该主题是一个广告。它对本网站没有用处或相关性，仅仅是推销内容。"
       long_form: "标记为垃圾"
-      short_description: "这是个广告"
+      short_description: "这是广告"
     inappropriate:
       title: "不当内容"
-      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
+      description: '该帖子的内容包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       long_form: "标记为不当内容"
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
     notify_moderators:
       title: "其他内容"
-      description: '此帖需要版主依据<a href="%{base_path}/guidelines">社区准则</a>、<a href="%{tos_url}">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
-      long_form: "标记为需版主注意"
-      short_description: "需要管理人员注意的其他原因"
-      email_title: '“{title}”主题需要你的关注'
+      description: '该主题需要版主依据<a href="%{base_path}/guidelines">社区准则</a>、<a href="%{tos_url}">服务条款（TOS）</a>或其它未列出的原因给予关注。'
+      long_form: "标记以让版主注意"
+      short_description: "因其他原因需要管理人员注意"
+      email_title: '主题“%{title}”需要版主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>你的帖子被社区标记了。请<a href="%{path}">查看你的消息</a>。</p>'
@@ -1253,6 +1255,7 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的<a href='%{base_path}/admin/logs/watched_words'>敏感词设置</a>，或禁用“敏感词正则表达式”网站设置。"
   site_settings:
+    display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示本地时间。"
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
     default_locale: "此Discourse实例的默认语言。你可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本内容</a>替换系统生成的分类或主题的文本。"
@@ -1439,20 +1442,22 @@ zh_CN:
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
     verbose_sso_logging: "将详细的SSO相关诊断记录到<a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "在/session/sso_provider端点实现Discourse SSO提供程序协议，需要设置sso_provider_secrets"
-    sso_url: "单点登录 URL 入口点（必须包含 http:// 或 https://）"
-    sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
-    sso_provider_secrets: "使用Discourse作为SSO提供程序的域密码对列表。确保SSO密码为10个字符或更长。通配符*可用于匹配任何域或仅匹配其中的一部分（例如* .example.com）。"
-    sso_overrides_bio: "在用户页面中覆盖用户的个人信息并禁止用户修改"
-    sso_overrides_groups: "将所有手动组成员资格与组sso属性中指定的组同步（警告：如果未指定组，则将为用户清除所有手动组成员资格）"
-    sso_overrides_email: "每一次登录时，用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且阻止本地的邮件地址修改。（警告：因格本地邮件的正规化，邮件地址可能会有所差异）"
-    sso_overrides_username: "每一次登录时，用 SSO 信息中的外部站点的用户名覆盖本地用户名，并且阻止本地的用户名修改。（警告：因格本地用户名的长度和其他要求，用户名可能会有所差异）"
-    sso_overrides_name: "每一次登录时，用 SSO 信息中的外部站点的全名覆盖本地全名，并且阻止本地的全名修改。"
-    sso_overrides_avatar: "从SSO有效负载覆盖具有外部站点头像的用户头像。如果启用，则不允许用户在Discourse上传头像。"
-    sso_overrides_profile_background: "从SSO有效负载覆盖用户配置文件背景和外部站点头像。"
-    sso_overrides_card_background: "从SSO有效负载覆盖用户卡背景与外部站点头像。"
-    sso_not_approved_url: "重定向未受许可的单点登录账户至这个 URL"
-    sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（默认情况下返回地址必须位于当前站点）"
+    enable_sso_provider: "在端点/session/sso_provider实现Discourse SSO provider协议，需要设置sso_provider_secrets"
+    sso_url: "单点登录 URL 入口（必须包含 http:// 或 https://）"
+    sso_secret: "用于加密验证SSO信息的密钥字符串，请确保是 10 个字符或者更长"
+    sso_provider_secrets: "使用Discourse作为SSO provider的域名与密钥对列表。确保SSO密钥为10个字符或更长。通配符 * 可用于匹配任何域名或仅匹配其中的一部分（例如* .example.com）。"
+    sso_overrides_bio: "覆盖用户个人信息中的用户简介并禁止用户修改"
+    sso_overrides_groups: "将所有手动创建的群组与SSO属性中指定的群组同步（警告：如果你没有指定群组，那么将为用户清除所有手动创建的群组的成员资格）"
+    sso_overrides_email: "每次登录都使用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且禁止本地修改邮件地址。（警告：由于本地邮件的规范化，邮件地址可能会有所差异）"
+    sso_overrides_username: "每次登录都使用 SSO 信息中的的用户名覆盖本地用户名，并且禁止本地修改用户名。（警告：因本地用户名的长度或其它要求，用户名可能会有所差异）"
+    sso_overrides_name: "每次登录都使用 SSO 信息中的外部站点的全名覆盖本地全名，并且禁止本地的全名修改。"
+    sso_overrides_avatar: "使用SSO信息中的外部站点头像覆盖用户头像。如果启用，则不允许用户在Discourse上传头像。"
+    sso_overrides_location: "使用SSO信息中的位置覆盖用户位置，并且禁止本地修改。"
+    sso_overrides_website: "使用SSO信息中的外部位置覆盖用户网站，并且禁止本地修改。"
+    sso_overrides_profile_background: "使用SSO信息中的外部站点的头像覆盖用户资料背景"
+    sso_overrides_card_background: "使用SSO信息中的外部站点的头像覆盖用户卡片背景。"
+    sso_not_approved_url: "将未经授权的SSO账户重定向至这个 URL"
+    sso_allows_all_return_paths: "不限制 SSO 所提供的 return_paths 中的域名（默认情况下返回的地址必须位于当前站点）"
     enable_local_logins: "启用基于本地用户名和密码登录的账户。必须启用此选项才能使邀请生效。警告：如果禁用，且之前未配置至少一种备用登录方法，则可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件将一键登录链接发送给他们。"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
@@ -1788,6 +1793,7 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复一个最后回复于设定天数之前的主题时，将显示一个警告。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式声明语言，仍为所有预格式化代码块应用语法高亮。"
     highlighted_languages: "包含语法突出显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>用于演示"
+    show_copy_button_on_codeblocks: "为代码块添加复制到用户剪切板的按钮。该功能不支持IE浏览器。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用程序是必需的。"
     embed_topics_list: "主题列表支持HTML嵌入"
     embed_set_canonical_url: "为嵌入到主题的嵌入内容设置规范URL。"
@@ -1846,7 +1852,7 @@ zh_CN:
     default_categories_watching: "默认监看的分类列表。"
     default_categories_tracking: "默认跟踪的分类列表。"
     default_categories_muted: "默认静音的分类列表"
-    default_categories_watching_first_post: "默认关注该分类中每个新主题的第一条贴子"
+    default_categories_watching_first_post: "默认关注该分类中每个新主题的第一个帖子"
     mute_all_categories_by_default: "将所有分类的默认通知级别设置为静音。要求用户选择在“最新”和“分类”页面中出现的分类。如果您希望修改匿名用户的默认设置，请设置 'default_categories_'。"
     default_tags_watching: "默认监看的标签列表。"
     default_tags_tracking: "默认追踪的标签列表。"
@@ -1882,10 +1888,12 @@ zh_CN:
     company_name: "公司名"
     governing_law: "适用法律"
     city_for_disputes: "争议之城"
-    shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此类别中的主题将从管理人员的主题列表中删除。"
+    shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "通知角中显示的徽章图标。尺寸必须为96px × 96px。"
     short_title: "短标题将用于用户主页、启动器或其他可能空间有限的地方。应该控制在12个字符内。"
+    dashboard_hidden_reports: "允许从仪表盘中隐藏指定的报告。"
+    dashboard_visible_tabs: "选择可见的仪表盘标签页"
     dashboard_general_tab_activity_metrics: "选择在常规选项卡中显示为活动指标的报告。"
     gravatar_name: "Gravatar提供商的名称"
     gravatar_base_url: "Gravatar提供商API的基础链接"
@@ -3305,7 +3313,7 @@ zh_CN:
     default_theme_name: "亮"
     light_theme_name: "亮"
     dark_theme_name: "暗"
-    neutral_theme_name: "中型"
+    neutral_theme_name: "平淡"
     grey_amber_theme_name: "灰琥珀色"
     shades_of_blue_theme_name: "蓝黑"
     latte_theme_name: "棕色"

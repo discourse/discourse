@@ -197,7 +197,6 @@ th:
         bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
         unbookmark: "คลิกเพื่อลบบุ๊คมาร์คทั้งหมดในกระทู้นี้"
     bookmarks:
-      created: "คุณได้ทำบุ๊คม๊าคโพสแล้ว"
       remove: "ลบบุ๊คม๊าค"
       save: "บันทึก"
     drafts:
@@ -439,6 +438,10 @@ th:
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
       user_notifications:
+        filters:
+          all: "ทั้งหมด"
+          read: "อ่าน"
+          unread: "ยังไม่อ่าน"
         ignore_duration_username: "ชื่อผู้ใช้"
         mute_option: "ปิด"
         normal_option: "ปกติ"
@@ -1788,6 +1791,11 @@ th:
         time_read: "เวลาอ่าน"
         anonymize: "ผู้ใช้ที่ไม่ระบุ"
         delete: "ลบผู้ใช้"
+        merge:
+          prompt:
+            cancel: "ยกเลิก"
+          confirmation:
+            cancel: "ยกเลิก"
         delete_forbidden_because_staff: "ผู้ดูแลระบบและผู้ดูแลไม่สามารถถูกลบได้"
         delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสทั้งหมดของผู้ดูแลระบบและผู้ดูแลได้"
         delete_and_block: "ลบและ <b>บล็อก</b> อีเมลและไอพีนี้"

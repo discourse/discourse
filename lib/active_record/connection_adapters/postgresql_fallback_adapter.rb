@@ -11,7 +11,7 @@ class PostgreSQLFallbackHandler
   attr_reader :masters_down
   attr_accessor :initialized
 
-  DATABASE_DOWN_CHANNEL = '/global/database_down'.freeze
+  DATABASE_DOWN_CHANNEL = '/global/database_down'
 
   def initialize
     @masters_down = DistributedCache.new('masters_down', namespace: false)
@@ -154,7 +154,7 @@ module ActiveRecord
         begin
           connection = postgresql_connection(config)
           fallback_handler.initialized ||= true
-        rescue PG::ConnectionBad => e
+        rescue ::ActiveRecord::NoDatabaseError, PG::ConnectionBad => e
           fallback_handler.master_down
           fallback_handler.verify_master
 

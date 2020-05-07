@@ -5,6 +5,9 @@ import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
+import { htmlSafe } from "@ember/template";
+
+const getURLWithCDN = url => Discourse.getURLWithCDN(url);
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
@@ -12,7 +15,7 @@ function getOpts(opts) {
 
   opts = _.merge(
     {
-      getURL: Discourse.getURLWithCDN,
+      getURL: getURLWithCDN,
       currentUser: Discourse.__container__.lookup("current-user:main"),
       censoredRegexp: site.censored_regexp,
       siteSettings,
@@ -26,7 +29,7 @@ function getOpts(opts) {
 
 // Use this to easily create a pretty text instance with proper options
 export function cook(text, options) {
-  return new Handlebars.SafeString(createPrettyText(options).cook(text));
+  return htmlSafe(createPrettyText(options).cook(text));
 }
 
 // everything should eventually move to async API and this should be renamed
@@ -66,7 +69,7 @@ function emojiOptions() {
   }
 
   return {
-    getURL: Discourse.getURLWithCDN,
+    getURL: url => getURLWithCDN(url),
     emojiSet: Discourse.SiteSettings.emoji_set,
     enableEmojiShortcuts: Discourse.SiteSettings.enable_emoji_shortcuts,
     inlineEmoji: Discourse.SiteSettings.enable_inline_emoji_translation

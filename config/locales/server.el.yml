@@ -187,9 +187,6 @@ el:
   topics_in_category: "Νήματα στην κατηγορία '%{category}'"
   rss_posts_in_topic: "RSS feed του '%{topic}'"
   rss_topics_in_category: "Ροή RSS των νημάτων στην κατηγορία '%{category}'"
-  author_wrote: "%{author} έγραψε:"
-  num_posts: "Αναρτήσεις:"
-  num_participants: "Συμμετέχοντες:"
   read_full_topic: "Διαβάστε όλο το νήμα"
   private_message_abbrev: "Μνμ"
   rss_description:

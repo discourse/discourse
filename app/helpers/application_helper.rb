@@ -36,7 +36,7 @@ module ApplicationHelper
   end
 
   def shared_session_key
-    if SiteSetting.long_polling_base_url != '/'.freeze && current_user
+    if SiteSetting.long_polling_base_url != '/' && current_user
       sk = "shared_session_key"
       return request.env[sk] if request.env[sk]
 
@@ -282,7 +282,7 @@ module ApplicationHelper
         'query-input' => 'required name=search_term_string',
       }
     }
-    content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json'.freeze)
+    content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json')
   end
 
   def gsub_emoji_to_unicode(str)

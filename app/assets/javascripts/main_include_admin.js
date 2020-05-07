@@ -1,4 +1,3 @@
-//= require_tree ./ember-addons
 //= require admin/models/user-field
 //= require admin/models/site-setting
 //= require admin/models/screened-ip-address

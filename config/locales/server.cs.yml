@@ -200,9 +200,6 @@ cs:
   topics_in_category: "Témata v kategorii '%{category}'"
   rss_posts_in_topic: "RSS feed tématu '%{topic}'"
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
-  author_wrote: "%{author} napsal:"
-  num_posts: "Příspěvky:"
-  num_participants: "Účastníci:"
   read_full_topic: "Číst celé téma"
   private_message_abbrev: "Msg"
   rss_description:

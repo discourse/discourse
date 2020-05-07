@@ -232,7 +232,6 @@ zh_TW:
         bookmark: "點擊以將此話題的第一篇貼文加入書籤"
         unbookmark: "點擊以移除此話題所有書籤"
     bookmarks:
-      created: "你已將此貼文加上書籤"
       not_bookmarked: "將此貼文加入書籤"
       remove: "移除書籤"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
@@ -646,6 +645,10 @@ zh_TW:
       private_message: "訊息"
       private_messages: "訊息"
       user_notifications:
+        filters:
+          all: "全部"
+          read: "已讀"
+          unread: "未讀"
         ignore_duration_title: "忽略計時器"
         ignore_duration_username: "使用者名稱"
         ignore_duration_when: "持續時間："
@@ -1107,6 +1110,7 @@ zh_TW:
     assets_changed_confirm: "此網站剛剛已更新，你要重整頁面以獲得最新版本嗎？"
     logout: "已登出"
     refresh: "重新整理"
+    home: "主頁"
     read_only_mode:
       enabled: "站點正處於只讀模式。你可以繼續瀏覽，但是回覆、讚和其他操作暫時被禁用。"
       login_disabled: "在唯讀模式下不能登入"
@@ -1777,7 +1781,6 @@ zh_TW:
           "2_8": "您將會看到新回覆的數量，因為你正在追蹤這個分類。"
           "2_4": "您將會看到新回覆的數量，因為你回覆了此話題。"
           "2_2": "您將會看到新回覆的數量，因為你正在追蹤這個話題。"
-          "2": '您將會看到新回覆的數量，因為你<a href="{{basePath}}/u/{{username}}/preferences">看過這個話題</a>。'
           "1_2": "如果有人@你或回覆你，將通知你。"
           "1": "如果有人@你或回覆你，將通知你。"
           "0_7": "你正忽略此分類中的所有通知。"
@@ -2423,7 +2426,6 @@ zh_TW:
         this_week: "週"
         today: "今天"
         other_periods: "前往頂端"
-    browser_update: '抱歉，<a href="https://www.discourse.org/faq/#browser">您的瀏覽器版本過舊，無法讀取該網站</a>。請<a href="https://browsehappy.com">更新您的瀏覽器</a>。'
     permission_types:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
@@ -2739,7 +2741,6 @@ zh_TW:
             trust_levels_title: "當這些成員加入時，自動提升信任等級："
             trust_levels_none: "無"
             automatic_membership_email_domains: "當註冊使用者的電子郵件所屬網域，完全符合列表裡某項時，將會自動加進這個群組裡："
-            automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的使用者上："
             primary_group: "自動設為主要群組"
         name_placeholder: "群組名稱：不可含有空白字元，和使用者名稱的規則相同"
         primary: "主要群組"
@@ -3526,6 +3527,11 @@ zh_TW:
         anonymize_yes: "是，將這個帳戶變成匿名"
         anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除使用者"
+        merge:
+          prompt:
+            cancel: "取消"
+          confirmation:
+            cancel: "取消"
         delete_forbidden_because_staff: "管理員與板主不可刪除。"
         delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有貼文。"
         delete_forbidden:

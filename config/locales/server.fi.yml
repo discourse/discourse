@@ -298,9 +298,6 @@ fi:
   topics_in_category: "Ketjut alueella '%{category}'"
   rss_posts_in_topic: "ketjun '%{topic}' RSS syöte"
   rss_topics_in_category: "RSS syötteet alueen '%{category}' ketjuista"
-  author_wrote: "%{author} kirjoitti:"
-  num_posts: "Viestit:"
-  num_participants: "Osallistujat:"
   read_full_topic: "Lue koko ketju"
   private_message_abbrev: "YV"
   rss_description:
@@ -329,7 +326,7 @@ fi:
       already_bookmarked_post: "Samaa viestiä ei voi kirjanmerkitä kahdesti."
       cannot_set_past_reminder: "Kirjanmerkkimuistutusta ei voi asettaa menneisyyteen."
       cannot_set_reminder_in_distant_future: "Kirjanmerkkimuistutusta ei voi asettaa yli 10 vuoden päähän tulevaisuuteen."
-      time_must_be_provided: "kaikkiin muistutuksiin paitsi '%{reminder_type}' tarvitaan aika"
+      time_must_be_provided: "kaikkiin muistutuksiin tarvitaan aika"
     reminders:
       at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
       later_today: "Myöhemmin tänään"

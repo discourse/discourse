@@ -29,6 +29,7 @@ he:
         millions: "{{number}} מיליון"
     dates:
       time: "h:mm a"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
@@ -311,11 +312,13 @@ he:
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא הזה. יש לך תזכורת שמוגדרת ל־%{reminder_at} עבור הנושא הזה."
     bookmarks:
-      created: "פוסט זה נוסף לסימניות"
+      created: "סימנת את הפוסט הזה%{name}"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
-      created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}"
-      created_with_at_desktop_reminder: "סימנת את הפוסט הזה ותישלח לך תזכורת בעת השימוש הבא בשולחן העבודה שלך"
+      created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}%{name}"
+      created_with_at_desktop_reminder: "סימנת את הפוסט הזה ותישלח אליך תזכורת עם ההתחברות הבאה שלך משולחן עבודה%{name}"
       remove: "הסרה מהסימניות"
+      delete: "מחיקת סימנייה"
+      confirm_delete: "למחוק את הסימנייה הזאת? גם התזכורת תימחק."
       confirm_clear: "לנקות את כל הסימניות מנושא זה?"
       save: "שמירה"
       no_timezone: 'עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href="%{basePath}/my/preferences/profile">בפרופיל שלך</a>.'
@@ -836,6 +839,10 @@ he:
       private_message: "הודעה"
       private_messages: "הודעות"
       user_notifications:
+        filters:
+          all: "הכל"
+          read: "נקרא"
+          unread: "לא-נקראו"
         ignore_duration_title: "מתזמן התעלמות"
         ignore_duration_username: "שם משתמש"
         ignore_duration_when: "משך:"
@@ -1382,6 +1389,7 @@ he:
     assets_changed_confirm: "האתר עבר עדכון. תרצו לרענן לגרסה המתקדמת ביותר?"
     logout: "יצאת מהמערכת."
     refresh: "רענן"
+    home: "בית"
     read_only_mode:
       enabled: "אתר זה נמצא במצב קריאה בלבד. אנא המשיכו לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע אינם מאופשרים."
       login_disabled: "הכניסה מנוטרלת בזמן שהאתר במצב קריאה בלבד."
@@ -1411,6 +1419,7 @@ he:
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
+    local_time: "זמן מקומי"
     time_read: נקרא
     time_read_recently: "%{time_read} לאחרונה"
     time_read_tooltip: "%{time_read} זמן צפייה כולל"
@@ -2196,7 +2205,6 @@ he:
           "2_8": "תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר קטגוריה זו."
           "2_4": "תראו ספירה של תגובות חדשות כיוון שפרסמתם תגובה לנושא זה."
           "2_2": "תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר נושא זה:"
-          "2": 'אתם תראו ספירה של תגובות חדשות כיוון ש<a href="{{basePath}}/u/{{username}}/preferences">קראתם נושא זה</a>.'
           "1_2": "תישלח התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב לך."
           "1": "תישלח התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב לך."
           "0_7": "אתם מתעלמים מכל ההתראות בקטגוריה זו."
@@ -2667,6 +2675,7 @@ he:
         create: "יצירת סימנייה"
         edit: "עריכת סימנייה"
         created: "נוצר"
+        updated: "עודכן"
         name: "שם"
         name_placeholder: "עבור מה הסימנייה?"
         set_reminder: "להזכיר לי"
@@ -2737,6 +2746,7 @@ he:
       email_in_disabled_click: 'לאפשר את את ההגדרה „דוא״ל נכנס”'
       mailinglist_mirror: "קטגוריה שמשקפת רשימת תפוצה"
       show_subcategory_list: "הצגת רשימת קטגוריות משנה מעל נושאים בקטגוריה זו."
+      read_only_banner: "טקסט כרזה כאשר משתמש לא יכול ליצור נושא בקטגוריה הזו:"
       num_featured_topics: "מספר הנושאים המוצגים בדף הקטגוריות:"
       subcategory_num_featured_topics: "מספר הנושאים המומלצים בדף קטגוריית ההורה:"
       all_topics_wiki: "להפוך נושאים חדשים לעמודי ויקי כבררת מחדל"
@@ -3012,7 +3022,7 @@ he:
         this_week: "שבוע"
         today: "היום"
         other_periods: "ראה חלק עליון"
-    browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך מיושן מכדי להפעיל אתר זה</a>. נא <a href="https://browsehappy.com">לשדרג את דפדפנך</a>.'
+    browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך מיושן מכדי להפעיל אתר זה</a>. נא <a href="https://browsehappy.com">לשדרג את דפדפנך</a> כדי לצפות בתוכן עשיר, להיכנס למערכת ולהגיב.'
     permission_types:
       full: "יצירה / תגובה / צפייה"
       create_post: "תגובה / צפייה"
@@ -3080,6 +3090,7 @@ he:
         next_business_day: "%{shortcut} יום העסקים הבא"
         custom: "%{shortcut} בחירת שעה ותאריך"
         none: "%{shortcut} ללא תזכורת"
+        delete: "%{shortcut} מחיקת סימנייה"
       actions:
         title: "פעולות"
         bookmark_topic: "%{shortcut} סמנו/בטלו-סימנייה של נושא"
@@ -3361,8 +3372,7 @@ he:
           view_table: "טבלה"
           view_graph: "גרף"
           refresh_report: "רענון דו\"ח"
-          start_date: "תאריך התחלה (UTC)"
-          end_date: "תאריך סיום (UTC)"
+          dates: "תאריכים (UTC)"
           groups: "כל הקבוצות"
           disabled: "דוח זה מנוטרל"
           totals_for_sample: "סיכומים לדוגמה"
@@ -3379,6 +3389,8 @@ he:
               label: קבוצה
             category:
               label: קטגוריה
+            include-subcategories:
+              label: "לכלול תת־קטגוריות"
       commits:
         latest_changes: "שינויים אחרונים: בבקשה עדכן תכופות!"
         by: "על ידי"
@@ -3423,7 +3435,7 @@ he:
             effects: אפקטים
             trust_levels_none: "ללא"
             automatic_membership_email_domains: "משתמשים שנרשמים עם שם תחום (דומיין) דוא״ל שתואם בדיוק לאחד מהרשימה, יתווספו באופן אוטומטי לקבוצה זו:"
-            automatic_membership_retroactive: "להחיל את אותו כלל שם תחום הדוא״ל כדי להוסיף משתמשים רשומים"
+            automatic_membership_user_count: "ל־%{count} משתמשים יש את כתובות הדוא״ל בשם התחום החדש ויתווספו לקבוצה."
             primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
         name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
         primary: "קבוצה ראשית"
@@ -3717,6 +3729,9 @@ he:
           settings: "הגדרות"
           translations: "תרגומים"
           extra_scss: "SCSS נוסף"
+          extra_files: "קבצים נוספים"
+          extra_files_upload: "יש לייצא את ערכת העיצוב כדי לצפות בקבצים האלה."
+          extra_files_remote: "יש לייצא את ערכת הנושא או לבדוק את מאגר ה־git כדי לצפות בקבצים אלה."
           preview: "תצוגה מקדימה"
           show_advanced: "הצגת שדות מתקדמים"
           hide_advanced: "הסתרת שדות מתקדמים"
@@ -3780,6 +3795,7 @@ he:
           license: "רישיון"
           version: "גרסה:"
           authors: "נוצרה על ידי:"
+          creator: "נוצר על ידי:"
           source_url: "מקור"
           enable: "הפעל"
           disable: "בטל"
@@ -4291,6 +4307,30 @@ he:
         anonymize_yes: "כן, נא להפוך חשבון זה לאלמוני"
         anonymize_failed: "אירעה תקלה בהפיכת חשבון זה לאלמוני."
         delete: "מחיקת משתמש"
+        merge:
+          transfer_and_delete: "העברה ומחיקה"
+          prompt:
+            title: "העברה ומחיקה של ‎@%{username}‎"
+            description: |
+              <p>נא לבחור בעלות חדשה על התוכן של <b>‎@%{username}‎</b> .</p>
+
+              <p>כל הנושאים, הפוסטים, ההודעות ושאר התוכן שנוצר על ידי <b>‎@%{username}‎</b> יועבר.</p>
+            target_username_placeholder: "שם המשתמש של הבעלים החדשים"
+            transfer_and_delete: "העברה ומחיקה של ‎@%{username}‎"
+            cancel: "ביטול"
+          confirmation:
+            title: "העברה ומחיקה של ‎@%{username}‎"
+            description: |
+              <p>כל התוכן של <b>‎@%{username}‎</b> יועבר וישויך אל <b>‎@%{targetUsername}‎</b>. לאחר העברת התוכן, החשבון של <b>‎@%{username}‎</b> יימחק.</p>
+
+              <p><b>מדובר בפעולה בלתי הפיכה!</b></p>
+
+              <p>כדי להמשיך עליך להקליד: <code>%{text}</code></p>
+            text: "העברת ‎@%{username}‎ אל ‎@%{targetUsername}‎"
+            transfer_and_delete: "העברה ומחיקה של ‎@%{username}‎"
+            cancel: "ביטול"
+        merging_user: "המשתמש ממוזג…"
+        merge_failed: "אירעה שגיאה במיזוג המשתמשים."
         delete_forbidden_because_staff: "לא ניתן למחוק מנהלים ומפקחים."
         delete_posts_forbidden_because_staff: "לא ניתן להסיר את כל הפוסטים של מנהלי מערכת ומפקחים."
         delete_forbidden:

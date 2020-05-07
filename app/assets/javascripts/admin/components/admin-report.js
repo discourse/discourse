@@ -1,6 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
-import { alias, or, and, equal, notEmpty } from "@ember/object/computed";
+import { alias, or, and, equal, notEmpty, not } from "@ember/object/computed";
 import EmberObject, { computed, action } from "@ember/object";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
@@ -41,7 +41,12 @@ function collapseWeekly(data, average) {
 }
 
 export default Component.extend({
-  classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
+  classNameBindings: [
+    "isVisible",
+    "isEnabled",
+    "isLoading",
+    "dasherizedDataSourceName"
+  ],
   classNames: ["admin-report"],
   isEnabled: true,
   disabledLabel: I18n.t("admin.dashboard.disabled"),
@@ -63,12 +68,20 @@ export default Component.extend({
   showDatesOptions: alias("model.dates_filtering"),
   showRefresh: or("showDatesOptions", "model.available_filters.length"),
   shouldDisplayTrend: and("showTrend", "model.prev_period"),
+  isVisible: not("isHidden"),
 
   init() {
     this._super(...arguments);
 
     this._reports = [];
   },
+
+  isHidden: computed("siteSettings.dashboard_hidden_reports", function() {
+    return (this.siteSettings.dashboard_hidden_reports || "")
+      .split("|")
+      .filter(Boolean)
+      .includes(this.dataSourceName);
+  }),
 
   startDate: computed("filters.startDate", function() {
     if (this.filters && isPresent(this.filters.startDate)) {

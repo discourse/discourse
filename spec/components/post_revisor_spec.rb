@@ -6,7 +6,7 @@ require 'post_revisor'
 describe PostRevisor do
 
   fab!(:topic) { Fabricate(:topic) }
-  fab!(:newuser) { Fabricate(:newuser) }
+  fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
@@ -195,6 +195,19 @@ describe PostRevisor do
         expect {
           subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
         }.to change { post.topic.bumped_at }
+      end
+
+      it "should send muted and latest message" do
+        TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
+        messages = MessageBus.track_publish("/latest") do
+          subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
+        end
+
+        muted_message = messages.find { |message| message.data["message_type"] == "muted" }
+        latest_message = messages.find { |message| message.data["message_type"] == "latest" }
+
+        expect(muted_message.data["topic_id"]).to eq(topic.id)
+        expect(latest_message.data["topic_id"]).to eq(topic.id)
       end
     end
 

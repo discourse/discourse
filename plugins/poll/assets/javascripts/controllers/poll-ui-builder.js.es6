@@ -15,8 +15,14 @@ export default Controller.extend({
   closedPollResult: "on_close",
   staffPollResult: "staff_only",
   pollChartTypes: [
-    { name: BAR_CHART_TYPE.capitalize(), value: BAR_CHART_TYPE },
-    { name: PIE_CHART_TYPE.capitalize(), value: PIE_CHART_TYPE }
+    {
+      name: I18n.t("poll.ui_builder.poll_chart_type.bar"),
+      value: BAR_CHART_TYPE
+    },
+    {
+      name: I18n.t("poll.ui_builder.poll_chart_type.pie"),
+      value: PIE_CHART_TYPE
+    }
   ],
 
   pollType: null,

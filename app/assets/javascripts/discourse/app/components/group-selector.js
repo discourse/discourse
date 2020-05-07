@@ -4,7 +4,7 @@ import discourseComputed, {
   on,
   observes
 } from "discourse-common/utils/decorators";
-import { findRawTemplate } from "discourse/lib/raw-templates";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 
 export default Component.extend({
   @discourseComputed("placeholderKey")

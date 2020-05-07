@@ -264,9 +264,6 @@ hy:
   topics_in_category: "'%{category}' կատեգորիայի թեմաները"
   rss_posts_in_topic: "RSS լրահոս հետևյալի համար՝ '%{topic}'"
   rss_topics_in_category: "RSS լրահոս '%{category}' կատեգորիայի թեմաների համար"
-  author_wrote: "%{author} -ը գրել է."
-  num_posts: "Գրառումներ՝"
-  num_participants: "Մասնակիցներ՝ "
   read_full_topic: "Կարդալ ամբողջական թեման"
   private_message_abbrev: "Նմկ"
   rss_description:
@@ -292,10 +289,13 @@ hy:
   excerpt_image: "նկար"
   bookmarks:
     reminders:
+      at_desktop: "Հաջորդ այցելությունը ֆորումին, կլինի իմ աշխատանքային սեղանի միջոցով: "
       later_today: "Այսօր, մի փոքր ուշ"
+      next_business_day: "Հաջորդ աշխատանքային օրը: "
       tomorrow: "Վաղը"
       next_week: "Հաջորդ շաբաթ"
       next_month: "Հաջորդ ամիս"
+      custom: "Սահմանեք հիշեցումների ամսաթիվն ու ժամանակը:"
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' -ը վավեր վստահության մակարդակ չէ:"
@@ -762,6 +762,7 @@ hy:
     instructions: 'Մենք հենց նոր գեներացրինք նոր օգտատիրոջ API key՝ "%{application_name}" -ի հետ պգտագործելու համար, խնդրում ենք տեղադրել հետևյալ key -ը Ձեր հավելվածում.'
     otp_confirmation:
       confirm_title: "Շարունակել դեպի %{site_name}"
+      confirm_button: Ավարտել Մուտքը
     no_trust_level: "Ներողություն, Դուք չունեք օգտատիրոջ API -ի համար պահանջվող վստահության մակարդակը "
     generic_error: "Ներողություն, մենք չկարողացանք թողարկել օգտատիրոջ API key-եր, հնարավոր է՝ այս հատկանիշը անջատված է կայքի ադմինի կողմից:"
     scopes:
@@ -1792,6 +1793,10 @@ hy:
     autoclosed_disabled_lastpost: "Այս թեման այժմ բաց է: Նոր պատասխանները թույլատրելի են:"
     auto_deleted_by_timer: "Ավտոմատ կերպով ջնջվել է ժամաչափիչի կողմից:"
   login:
+    security_key_alternative: "Փորձեք ուրիշ եղանակով"
+    security_key_not_allowed_error: "Անվտանգության բանալու գրանցման ժամանակը վերջացել է կամ չեղյալ է հայտարարվել:"
+    security_key_no_matching_credential_error: "Նշված անվտանգության բանալիի մեջ չեն գտնվել համապատասխան հավատարմագրերը: "
+    security_key_support_missing_error: "Ձեր ընթացիկ սարքը կամ բրաուզերը չի պահպանում անվտանգության բանալիների  օգտագործումը: Խնդրում ենք օգտագործեք ուրիշ մեթոդ: "
     not_approved: "Ձեր հաշիվը դեռևս չի հաստատվել: Դուք ծանուցւոմ կստանաք էլ. նամակով, երբ պատրաստ լինեք մուտք գործելու:"
     incorrect_username_email_or_password: "Ոչ ճշգրիտ օգտանուն, էլ. հասցե կամ գաղտնաբառ"
     incorrect_password: "Սխալ գաղտնաբառ"
@@ -3296,10 +3301,12 @@ hy:
   reviewables:
     priorities:
       low: "Բարձր"
+      medium: "Միջին"
       high: "Ցածր"
     sensitivity:
       disabled: "Անջատված"
       low: "Բարձր"
+      medium: "Միջին"
       high: "Ցածր"
     actions:
       agree_and_keep:

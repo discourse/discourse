@@ -65,9 +65,9 @@ export default Component.extend(CardContentsBase, CleansUp, {
   },
 
   _close() {
-    this._super(...arguments);
-
     this.set("group", null);
+
+    this._super(...arguments);
   },
 
   cleanUp() {

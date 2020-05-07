@@ -6,8 +6,8 @@ class Bookmark < ActiveRecord::Base
   belongs_to :topic
 
   validates :reminder_at, presence: {
-    message: I18n.t("bookmarks.errors.time_must_be_provided", reminder_type: I18n.t("bookmarks.reminders.at_desktop")),
-    if: -> { reminder_type.present? && reminder_type != Bookmark.reminder_types[:at_desktop] }
+    message: I18n.t("bookmarks.errors.time_must_be_provided"),
+    if: -> { reminder_type.present? }
   }
 
   validate :unique_per_post_for_user
@@ -47,21 +47,12 @@ class Bookmark < ActiveRecord::Base
     where("reminder_at IS NOT NULL AND reminder_at <= :before_time", before_time: before_time)
   end
 
-  scope :pending_at_desktop_reminders, ->(before_time = Time.now.utc) do
-    where("reminder_at IS NULL AND reminder_type = :at_desktop", at_desktop: reminder_types[:at_desktop])
-  end
-
   scope :pending_reminders_for_user, ->(user) do
     pending_reminders.where(user: user)
   end
 
-  scope :at_desktop_reminders_for_user, ->(user) do
-    where("reminder_type = :at_desktop AND user_id = :user_id", at_desktop: reminder_types[:at_desktop], user_id: user.id)
-  end
-
   def self.reminder_types
     @reminder_type = Enum.new(
-      at_desktop: 0,
       later_today: 1,
       next_business_day: 2,
       tomorrow: 3,
@@ -88,17 +79,18 @@ end
 #
 # Table name: bookmarks
 #
-#  id                    :bigint           not null, primary key
-#  user_id               :bigint           not null
-#  topic_id              :bigint           not null
-#  post_id               :bigint           not null
-#  name                  :string
-#  reminder_type         :integer
-#  reminder_at           :datetime
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  reminder_last_sent_at :datetime
-#  reminder_set_at       :datetime
+#  id                        :bigint           not null, primary key
+#  user_id                   :bigint           not null
+#  topic_id                  :bigint           not null
+#  post_id                   :bigint           not null
+#  name                      :string
+#  reminder_type             :integer
+#  reminder_at               :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  reminder_last_sent_at     :datetime
+#  reminder_set_at           :datetime
+#  delete_when_reminder_sent :boolean          default(FALSE)
 #
 # Indexes
 #

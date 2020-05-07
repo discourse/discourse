@@ -7,7 +7,7 @@ import PostActionType from "discourse/models/post-action-type";
 import Singleton from "discourse/mixins/singleton";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import deprecated from "discourse-common/lib/deprecated";
 
 const Site = RestModel.extend({

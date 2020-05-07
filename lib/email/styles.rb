@@ -15,7 +15,7 @@ module Email
     def initialize(html, opts = nil)
       @html = html
       @opts = opts || {}
-      @fragment = Nokogiri::HTML.fragment(@html)
+      @fragment = Nokogiri::HTML5.parse(@html)
       @custom_styles = nil
     end
 
@@ -161,7 +161,7 @@ module Email
           src_uri = i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i['src'])
           # If an iframe is protocol relative, use SSL when displaying it
           display_src = "#{src_uri.scheme || 'https'}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? '' : '?' + src_uri.query}#{src_uri.fragment.nil? ? '' : '#' + src_uri.fragment}"
-          i.replace "<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>"
+          i.replace(Nokogiri::HTML5.fragment("<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>"))
         rescue URI::Error
           # If the URL is weird, remove the iframe
           i.remove
@@ -217,6 +217,7 @@ module Email
       style('.whisper div.body', 'font-style: italic; color: #9c9c9c;')
       style('.lightbox-wrapper .meta', 'display: none')
       style('div.undecorated-link-footer a', "font-weight: normal;")
+      style('.mso-accent-link', "mso-border-alt: 6px solid #{SiteSetting.email_accent_bg_color}; background-color: #{SiteSetting.email_accent_bg_color};")
 
       onebox_styles
       plugin_styles
@@ -241,7 +242,11 @@ module Email
       strip_classes_and_ids
       replace_relative_urls
       replace_secure_media_urls
-      @fragment.to_html
+      include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
+    end
+
+    def include_body?
+      @html =~ /<body>/i
     end
 
     def strip_avatars_and_emojis
@@ -337,8 +342,8 @@ module Email
 
     def strip_classes_and_ids
       @fragment.css('*').each do |element|
-        element.delete('class'.freeze)
-        element.delete('id'.freeze)
+        element.delete('class')
+        element.delete('id')
       end
     end
 

@@ -45,7 +45,7 @@ module Jobs
     end
 
     def self.last_notified_key
-      "last_notified_reviewable_id".freeze
+      "last_notified_reviewable_id"
     end
 
     def self.clear_key

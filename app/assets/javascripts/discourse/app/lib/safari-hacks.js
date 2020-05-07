@@ -86,7 +86,7 @@ function positioningWorkaround($fixedElement) {
 
   document.addEventListener("scroll", () => {
     if (!caps.isIpadOS && workaroundActive) {
-      document.documentElement.scrollTop = 0;
+      window.scrollTo(0, 0);
     }
   });
 
@@ -100,7 +100,8 @@ function positioningWorkaround($fixedElement) {
     if (workaroundActive) {
       $("body").removeClass("ios-safari-composer-hacks");
 
-      $(window).scrollTop(originalScrollTop);
+      window.scrollTo(0, originalScrollTop);
+
       if (evt && evt.target) {
         evt.target.removeEventListener("blur", blurred);
       }
@@ -164,21 +165,21 @@ function positioningWorkaround($fixedElement) {
       .find(".select-kit > button.is-focused")
       .removeClass("is-focused");
 
-    originalScrollTop = $(window).scrollTop();
+    if (window.pageYOffset > 0) {
+      originalScrollTop = window.pageYOffset;
+    }
 
     const elementRect = _this.getBoundingClientRect();
     if (elementRect.top > 100) {
       // this tricks iOS safari into assuming input/textarea is at top of the viewport
       // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
       _this.style.transform = "translateY(-400px)";
-      setTimeout(function() {
-        _this.style.transform = "none";
-      }, 30);
+      later(() => (_this.style.transform = "none"), 30);
     }
 
     let delay = caps.isIpadOS ? 350 : 150;
 
-    setTimeout(function() {
+    later(function() {
       if (caps.isIpadOS && iOSWithVisualViewport()) {
         // disable hacks when using a hardware keyboard
         // by default, a hardware keyboard will show the keyboard accessory bar
@@ -195,7 +196,7 @@ function positioningWorkaround($fixedElement) {
       }
 
       $("body").addClass("ios-safari-composer-hacks");
-      $(window).scrollTop(0);
+      window.scrollTo(0, 0);
 
       if (!iOSWithVisualViewport()) {
         const height = calcHeight();

@@ -40,7 +40,7 @@ class CategoryList
   end
 
   def preload_key
-    "categories_list".freeze
+    "categories_list"
   end
 
   def self.order_categories(categories)

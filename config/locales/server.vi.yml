@@ -149,9 +149,6 @@ vi:
   topics_in_category: "Các chủ đề ở chuyên '%{category}'"
   rss_posts_in_topic: "Nguồn cấp dữ liệu RSS của '%{topic}'"
   rss_topics_in_category: "Nguồn cấp dữ liệu RSS của các chủ đề trong chuyên mục '%{category}'"
-  author_wrote: "%{author} đã viết:"
-  num_posts: "Bài đã đăng:"
-  num_participants: "Người tham gia:"
   read_full_topic: "Đọc toàn bộ chủ đề"
   private_message_abbrev: "Tin nhắn"
   rss_description:

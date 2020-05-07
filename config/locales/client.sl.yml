@@ -304,7 +304,6 @@ sl:
         bookmark: "ustvari zaznamek prvega prispevka v tej temi"
         unbookmark: "odstrani vse zaznamke v tej temi"
     bookmarks:
-      created: "ustvarili ste zaznamek prispevka"
       not_bookmarked: "zaznamuj prispevek"
       remove: "Odstrani zaznamek"
       confirm_clear: "Ste prepričani, da želite odstraniti vse svoje zaznamke iz te teme?"
@@ -741,6 +740,10 @@ sl:
       private_message: "Zasebno sporočilo"
       private_messages: "Zasebna sporočila"
       user_notifications:
+        filters:
+          all: "Vsi"
+          read: "Čas branja"
+          unread: "Neprebrane"
         ignore_duration_title: "Prezri opomnik"
         ignore_duration_username: "Uporabniško ime"
         ignore_duration_when: "Trajanje:"
@@ -1237,6 +1240,7 @@ sl:
     assets_changed_confirm: "Stran ji bala pravkar posodobljena. Osvežimo takoj za zadnjo verzijo?"
     logout: "Bili ste odjavljeni."
     refresh: "Osveži"
+    home: "Domov"
     read_only_mode:
       enabled: "Stran je v načinu samo za branje. Lahko nadaljujete z branjem; odgovori, všečki in druga dejanja pa so onemogočena za zdaj."
       login_disabled: "Prijava je onemogočena dokler je stran v načinu za branje."
@@ -1995,7 +1999,6 @@ sl:
           "2_8": "Videli boste število novih odgovorov, ker sledite tej kategoriji."
           "2_4": "Videli boste število novih odgovorov, ker ste objavili odgovor na to temo."
           "2_2": "Videli boste število novih odgovorov, ker sledite tej temi."
-          "2": 'Videli boste število novih odgovorov, ker ste <a href="{{basePath}}/u/{{username}}/preferences">prebrali to temo</a>.'
           "1_2": "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
           "1": "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
           "0_7": "Ignorirate vsa obvestila za to kategorijo."
@@ -2760,7 +2763,6 @@ sl:
         this_week: "Teden"
         today: "Danes"
         other_periods: "poglej najboljše"
-    browser_update: 'Nažalost, <a href="https://www.discourse.org/faq/#browser">vaš brskalnik je preveč zastarel za to spletno stran</a>. <a href="https://browsehappy.com">Nadgradite vaš brskalnik</a>.'
     permission_types:
       full: "Ustvari / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
@@ -3104,7 +3106,6 @@ sl:
             trust_levels_title: "Stopnja zaupanja, ki je samodejno dodeljena članom, ko so dodani:"
             trust_levels_none: "Brez"
             automatic_membership_email_domains: "Uporabniki, ki se prijavijo z e-naslovom, ki se točno ujema s to domeno, bodo samodejno dodani v to skupino:"
-            automatic_membership_retroactive: "Uporabi enako pravilo za e-naslov domene za dodajanje obstoječih uporabnikov"
             primary_group: "Samodejno nastavi za primarno skupino"
         name_placeholder: "Ime skupine, brez presledkov, enaka pravila kot za uporabniško ime"
         primary: "Primarna skupina"
@@ -3566,6 +3567,11 @@ sl:
         anonymize_confirm: "Ali ste PREPRIČANI da hočete anonomizirati tega uporabnika? To bo spremenilo njegovo uporabniško ime in e-naslov ter ponastavilo vse profilne podatke."
         anonymize_yes: "Da, anonimiziraj tega uporabnika"
         delete: "Izbriši uporabnika"
+        merge:
+          prompt:
+            cancel: "Prekliči"
+          confirmation:
+            cancel: "Prekliči"
         delete_forbidden_because_staff: "Administratorjev in moderatorjev se ne da izbrisati."
         delete_posts_forbidden_because_staff: "Ne morete izbrisati vseh prispevkov od administratorjev ali moderatorjev."
         delete_forbidden:

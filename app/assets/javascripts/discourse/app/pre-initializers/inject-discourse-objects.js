@@ -2,7 +2,6 @@ import Session from "discourse/models/session";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Store from "discourse/models/store";
 import DiscourseLocation from "discourse/lib/discourse-location";
-import Discourse from "discourse";
 import SearchService from "discourse/services/search";
 import TopicTrackingState, {
   startTracking
@@ -21,6 +20,7 @@ export default {
 
     // backwards compatibility: remove when plugins have updated
     app.register("store:main", Store);
+    app.appEvents = container.lookup("service:app-events");
 
     if (!app.hasRegistration("service:store")) {
       app.register("service:store", Store);
@@ -29,11 +29,14 @@ export default {
 
     const messageBus = window.MessageBus;
     app.register("message-bus:main", messageBus, { instantiate: false });
-    ALL_TARGETS.forEach(t => app.inject(t, "messageBus", "message-bus:main"));
+
+    ALL_TARGETS.concat("service").forEach(t =>
+      app.inject(t, "messageBus", "message-bus:main")
+    );
 
     const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
-    Discourse.currentUser = currentUser;
+    app.currentUser = currentUser;
 
     const topicTrackingState = TopicTrackingState.create({
       messageBus,
@@ -46,9 +49,9 @@ export default {
       app.inject(t, "topicTrackingState", "topic-tracking-state:main")
     );
 
-    const siteSettings = Discourse.SiteSettings;
+    const siteSettings = app.SiteSettings;
     app.register("site-settings:main", siteSettings, { instantiate: false });
-    ALL_TARGETS.forEach(t =>
+    ALL_TARGETS.concat("service").forEach(t =>
       app.inject(t, "siteSettings", "site-settings:main")
     );
 
@@ -78,7 +81,7 @@ export default {
     );
 
     if (currentUser) {
-      ["component", "route", "controller"].forEach(t => {
+      ["component", "route", "controller", "service"].forEach(t => {
         app.inject(t, "currentUser", "current-user:main");
       });
     }

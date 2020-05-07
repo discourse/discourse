@@ -458,7 +458,7 @@ class TopicQuery
 
   def latest_results(options = {})
     result = default_results(options)
-    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
+    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted"
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
@@ -828,6 +828,8 @@ class TopicQuery
     result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
     result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
+    result = preload_thumbnails(result)
+
     result = TopicQuery.apply_custom_filters(result, self)
 
     @guardian.filter_allowed_categories(result)
@@ -1048,6 +1050,10 @@ class TopicQuery
     end
 
     result.order('topics.bumped_at DESC')
+  end
+
+  def preload_thumbnails(result)
+    result.preload(:image_upload, topic_thumbnails: :optimized_image)
   end
 
   private

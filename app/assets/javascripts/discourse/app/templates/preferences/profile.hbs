@@ -17,19 +17,23 @@
   {{d-button icon="globe" label="user.use_current_timezone" action=(action "useCurrentTimezone") }}
 </div>
 
-<div class="control-group pref-location">
-  <label class="control-label">{{i18n "user.location"}}</label>
-  <div class="controls">
-    {{input type="text" value=model.location class="input-xxlarge" id="edit-location"}}
+{{#if model.can_change_location}}
+  <div class="control-group pref-location">
+    <label class="control-label">{{i18n "user.location"}}</label>
+    <div class="controls">
+      {{input type="text" value=model.location class="input-xxlarge" id="edit-location"}}
+    </div>
   </div>
-</div>
+{{/if}}
 
-<div class="control-group pref-website">
-  <label class="control-label">{{i18n "user.website"}}</label>
-  <div class="controls">
-    {{input type="text" value=model.website class="input-xxlarge"}}
+{{#if model.can_change_website}}
+  <div class="control-group pref-website">
+    <label class="control-label">{{i18n "user.website"}}</label>
+    <div class="controls">
+      {{input type="text" value=model.website class="input-xxlarge"}}
+    </div>
   </div>
-</div>
+{{/if}}
 
 {{#each userFields as |uf|}}
   <div class="control-group">

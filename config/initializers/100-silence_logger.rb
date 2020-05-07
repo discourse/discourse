@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class SilenceLogger < Rails::Rack::Logger
-  PATH_INFO = 'PATH_INFO'.freeze
-  HTTP_X_SILENCE_LOGGER = 'HTTP_X_SILENCE_LOGGER'.freeze
+  PATH_INFO = 'PATH_INFO'
+  HTTP_X_SILENCE_LOGGER = 'HTTP_X_SILENCE_LOGGER'
 
   def initialize(app, opts = {})
     @app = app
@@ -36,9 +36,9 @@ class SilenceLogger < Rails::Rack::Logger
 end
 
 silenced = [
-  "/mini-profiler-resources/results".freeze,
-  "/mini-profiler-resources/includes.js".freeze,
-  "/mini-profiler-resources/includes.css".freeze,
-  "/mini-profiler-resources/jquery.tmpl.js".freeze
+  "/mini-profiler-resources/results",
+  "/mini-profiler-resources/includes.js",
+  "/mini-profiler-resources/includes.css",
+  "/mini-profiler-resources/jquery.tmpl.js"
 ]
 Rails.configuration.middleware.swap Rails::Rack::Logger, SilenceLogger, silenced: silenced

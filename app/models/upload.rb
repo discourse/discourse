@@ -9,7 +9,7 @@ class Upload < ActiveRecord::Base
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
-  SECURE_MEDIA_ROUTE = "secure-media-uploads".freeze
+  SECURE_MEDIA_ROUTE = "secure-media-uploads"
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -25,6 +25,7 @@ class Upload < ActiveRecord::Base
 
   has_many :optimized_images, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
+  has_many :topic_thumbnails
 
   attr_accessor :for_group_message
   attr_accessor :for_theme

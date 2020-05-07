@@ -4,8 +4,9 @@ import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
+import { escapeExpression } from "discourse/lib/utilities";
+import { htmlSafe } from "@ember/template";
 
-let escapeExpression = Handlebars.Utils.escapeExpression;
 let _renderer = defaultCategoryLinkRenderer;
 
 export function replaceCategoryLinkRenderer(fn) {
@@ -79,9 +80,7 @@ export function categoryLinkHTML(category, options) {
       categoryOptions.recursive = true;
     }
   }
-  return new Handlebars.SafeString(
-    categoryBadgeHTML(category, categoryOptions)
-  );
+  return htmlSafe(categoryBadgeHTML(category, categoryOptions));
 }
 
 registerUnbound("category-link", categoryLinkHTML);

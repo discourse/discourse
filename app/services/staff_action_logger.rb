@@ -222,7 +222,7 @@ class StaffActionLogger
 
   def log_theme_setting_change(setting_name, previous_value, new_value, theme, opts = {})
     raise Discourse::InvalidParameters.new(:theme) unless theme
-    raise Discourse::InvalidParameters.new(:setting_name) unless theme.included_settings.has_key?(setting_name)
+    raise Discourse::InvalidParameters.new(:setting_name) unless theme.cached_settings.has_key?(setting_name)
 
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:change_theme_setting],

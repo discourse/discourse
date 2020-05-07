@@ -16,7 +16,7 @@ class InlineUploads
       end
     end
 
-    cooked_fragment = Nokogiri::HTML::fragment(PrettyText.cook(markdown, disable_emojis: true))
+    cooked_fragment = Nokogiri::HTML5::fragment(PrettyText.cook(markdown, disable_emojis: true))
     link_occurences = []
 
     cooked_fragment.traverse do |node|
@@ -183,7 +183,7 @@ class InlineUploads
 
   def self.match_anchor(markdown, external_href: false)
     markdown.scan(/((<a[^<]+>)([^<\a>]*?)<\/a>)/i) do |match|
-      node = Nokogiri::HTML::fragment(match[0]).children[0]
+      node = Nokogiri::HTML5::fragment(match[0]).children[0]
       href =  node.attributes["href"]&.value
 
       if href && (matched_uploads(href).present? || external_href)
@@ -199,7 +199,7 @@ class InlineUploads
 
   def self.match_img(markdown, external_src: false)
     markdown.scan(/(<(?!img)[^<>]+\/?>)?(\s*)(<img [^>\n]+>)/i) do |match|
-      node = Nokogiri::HTML::fragment(match[2].strip).children[0]
+      node = Nokogiri::HTML5::fragment(match[2].strip).children[0]
       src =  node.attributes["src"]&.value
 
       if src && (matched_uploads(src).present? || external_src)

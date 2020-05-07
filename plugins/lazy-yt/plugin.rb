@@ -27,7 +27,19 @@ class Onebox::Engine::YoutubeOnebox
 
       # Put in the LazyYT div instead of the iframe
       escaped_title = ERB::Util.html_escape(video_title)
-      "<div class=\"lazyYT\" data-youtube-id=\"#{video_id}\" data-youtube-title=\"#{escaped_title}\" data-width=\"#{video_width}\" data-height=\"#{video_height}\" data-parameters=\"#{embed_params}\"></div>"
+
+      <<~EOF
+      <div class="lazyYT"
+           data-youtube-id="#{video_id}"
+           data-youtube-title="#{escaped_title}"
+           data-width="#{video_width}"
+           data-height="#{video_height}"
+           data-parameters="#{embed_params}">
+        <a href="https://www.youtube.com/watch?v=#{video_id}" target="_blank">
+          <img src="https://img.youtube.com/vi/#{video_id}/hqdefault.jpg" width="#{video_width}" height="#{video_height}" title="#{escaped_title}">
+        </a>
+      </div>
+      EOF
     else
       yt_onebox_to_html
     end

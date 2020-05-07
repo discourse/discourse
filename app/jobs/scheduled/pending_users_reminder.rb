@@ -58,7 +58,7 @@ module Jobs
     end
 
     def previous_newest_username_cache_key
-      "pending-users-reminder:newest-username".freeze
+      "pending-users-reminder:newest-username"
     end
 
   end

@@ -5,8 +5,8 @@ require 'webauthn/security_key_registration_service'
 require 'webauthn/security_key_authentication_service'
 
 module Webauthn
-  ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create".freeze
-  ACCEPTABLE_AUTHENTICATION_TYPE = "webauthn.get".freeze
+  ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create"
+  ACCEPTABLE_AUTHENTICATION_TYPE = "webauthn.get"
 
   # -7   - ES256
   # -257 - RS256 (Windows Hello supported alg.)

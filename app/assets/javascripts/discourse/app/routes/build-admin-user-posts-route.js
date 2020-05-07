@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default function(filter) {
   return DiscourseRoute.extend({
@@ -25,10 +26,7 @@ export default function(filter) {
 
       model.get("content").forEach(item => {
         if (item.get("title")) {
-          item.set(
-            "title",
-            emojiUnescape(Handlebars.Utils.escapeExpression(item.title))
-          );
+          item.set("title", emojiUnescape(escapeExpression(item.title)));
         }
       });
 

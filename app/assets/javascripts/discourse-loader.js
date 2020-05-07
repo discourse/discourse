@@ -5,7 +5,9 @@ var define, requirejs;
   var EMBER_MODULES = {};
   var ALIASES = {
     "ember-addons/ember-computed-decorators":
-      "discourse-common/utils/decorators"
+      "discourse-common/utils/decorators",
+    "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
+    "preload-store": "discourse/lib/preload-store"
   };
   if (typeof Ember !== "undefined") {
     EMBER_MODULES = {
@@ -262,6 +264,14 @@ var define, requirejs;
 
   function requireFrom(name, origin) {
     name = transformForAliases(name);
+
+    if (name === "discourse") {
+      // eslint-disable-next-line no-console
+      console.log(
+        "discourse has been moved to `discourse/app` - please update your code"
+      );
+      name = "discourse/app";
+    }
 
     if (name === "discourse/models/input-validation") {
       // eslint-disable-next-line no-console

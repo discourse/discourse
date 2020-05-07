@@ -191,7 +191,7 @@ class SearchIndexer
     def self.scrub(html, strip_diacritics: false)
       return +"" if html.blank?
 
-      document = Nokogiri::HTML("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
+      document = Nokogiri::HTML5("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
 
       nodes = document.css(
         "div.#{CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS}"
