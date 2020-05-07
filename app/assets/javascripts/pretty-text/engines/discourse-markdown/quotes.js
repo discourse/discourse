@@ -103,7 +103,7 @@ const rule = {
       token = state.push("quote_controls_open", "div", 1);
       token.attrs = [["class", "quote-controls"]];
 
-      token = state.push("quote_controls_close", "div", -1);
+      state.push("quote_controls_close", "div", -1);
 
       if (avatarImg) {
         token = state.push("html_inline", "", 0);
@@ -144,10 +144,10 @@ const rule = {
         token.content = ` ${displayName}:`;
       }
 
-      token = state.push("quote_header_close", "div", -1);
+      state.push("quote_header_close", "div", -1);
     }
 
-    token = state.push("bbcode_open", "blockquote", 1);
+    state.push("bbcode_open", "blockquote", 1);
   },
 
   after: function(state) {
