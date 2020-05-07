@@ -22,7 +22,7 @@ export function showTooltip(e) {
   pos.top -= delta.top;
   pos.left -= delta.left;
 
-  hideTooltip(tooltipID);
+  hideTooltip();
 
   $this.after(`
     <div id="discourse-tooltip" ${retina}>
