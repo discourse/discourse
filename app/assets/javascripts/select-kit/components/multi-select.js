@@ -104,7 +104,7 @@ export default SelectKitComponent.extend({
         }
       });
 
-      return this.selectKit.modifySelection(content || []);
+      return this.selectKit.modifySelection(content);
     } else {
       return this.selectKit.noneItem;
     }
