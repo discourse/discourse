@@ -143,8 +143,6 @@ export function performEmojiEscape(string, opts) {
 
     return m;
   });
-
-  return string;
 }
 
 export function isCustomEmoji(code, opts) {
