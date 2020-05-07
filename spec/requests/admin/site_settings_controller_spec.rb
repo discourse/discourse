@@ -19,7 +19,7 @@ describe Admin::SiteSettingsController do
       it 'returns valid info' do
         get "/admin/site_settings.json"
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["site_settings"].length).to be > 100
 
         locale = json["site_settings"].select do |s|
@@ -183,7 +183,7 @@ describe Admin::SiteSettingsController do
             default_categories_watching: category_id
           }
 
-          expect(JSON.parse(response.body)["user_count"]).to eq(User.count)
+          expect(response.parsed_body["user_count"]).to eq(User.count)
 
           CategoryUser.create!(category_id: category_id, notification_level: tracking, user: user)
 
@@ -191,7 +191,7 @@ describe Admin::SiteSettingsController do
             default_categories_watching: category_id
           }
 
-          expect(JSON.parse(response.body)["user_count"]).to eq(User.count - 1)
+          expect(response.parsed_body["user_count"]).to eq(User.count - 1)
 
           SiteSetting.setting(:default_categories_watching, "")
         end
@@ -203,7 +203,7 @@ describe Admin::SiteSettingsController do
             default_tags_watching: tag.name
           }
 
-          expect(JSON.parse(response.body)["user_count"]).to eq(User.count)
+          expect(response.parsed_body["user_count"]).to eq(User.count)
 
           TagUser.create!(tag_id: tag.id, notification_level: tracking, user: user)
 
@@ -211,7 +211,7 @@ describe Admin::SiteSettingsController do
             default_tags_watching: tag.name
           }
 
-          expect(JSON.parse(response.body)["user_count"]).to eq(User.count - 1)
+          expect(response.parsed_body["user_count"]).to eq(User.count - 1)
 
           SiteSetting.setting(:default_tags_watching, "")
         end

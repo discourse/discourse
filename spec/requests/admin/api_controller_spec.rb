@@ -22,7 +22,7 @@ describe Admin::ApiController do
       it "succeeds" do
         get "/admin/api/keys.json"
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["keys"].length).to eq(2)
+        expect(response.parsed_body["keys"].length).to eq(2)
       end
     end
 
@@ -30,7 +30,7 @@ describe Admin::ApiController do
       it "succeeds" do
         get "/admin/api/keys/#{key1.id}.json"
         expect(response.status).to eq(200)
-        data = JSON.parse(response.body)["key"]
+        data = response.parsed_body["key"]
         expect(data["id"]).to eq(key1.id)
         expect(data["key"]).to eq(nil)
         expect(data["truncated_key"]).to eq(key1.key[0..3])
@@ -92,7 +92,7 @@ describe Admin::ApiController do
         }
         expect(response.status).to eq(200)
 
-        data = JSON.parse(response.body)
+        data = response.parsed_body
 
         expect(data['key']['description']).to eq("master key description")
         expect(data['key']['user']).to eq(nil)
@@ -117,7 +117,7 @@ describe Admin::ApiController do
         }
         expect(response.status).to eq(200)
 
-        data = JSON.parse(response.body)
+        data = response.parsed_body
 
         expect(data['key']['description']).to eq("restricted key description")
         expect(data['key']['user']['username']).to eq(user.username)

@@ -94,7 +94,7 @@ describe InvitesController do
         invite = Invite.invite_by_email("invite@example.com", user)
         post "/invites.json", params: { email: invite.email }
         expect(response.status).to eq(422)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["failed"]).to be_present
       end
 
@@ -129,7 +129,7 @@ describe InvitesController do
         sign_in(Fabricate(:admin))
         post "/invites.json", params: { email: "test@mailinator.com" }
         expect(response.status).to eq(422)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["errors"]).to be_present
       end
     end
@@ -208,7 +208,7 @@ describe InvitesController do
       it "redirects to the root and doesn't change the session" do
         put "/invites/show/doesntexist.json"
         expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["success"]).to eq(false)
         expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
@@ -221,7 +221,7 @@ describe InvitesController do
         invite.update_attribute(:email, "John Doe <john.doe@example.com>")
         put "/invites/show/#{invite.invite_key}.json"
         expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["success"]).to eq(false)
         expect(json["message"]).to eq(I18n.t('invite.error_message'))
         expect(session[:current_user_id]).to be_blank
@@ -243,7 +243,7 @@ describe InvitesController do
         put "/invites/show/#{invite.invite_key}.json"
 
         expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["success"]).to eq(false)
         expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
@@ -286,7 +286,7 @@ describe InvitesController do
           it 'redirects to the first topic the user was invited to' do
             put "/invites/show/#{invite.invite_key}.json"
             expect(response.status).to eq(200)
-            json = JSON.parse(response.body)
+            json = response.parsed_body
             expect(json["success"]).to eq(true)
             expect(json["redirect_to"]).to eq(topic.relative_url)
           end
@@ -306,7 +306,7 @@ describe InvitesController do
           it "doesn't log in the user if there's a validation error" do
             put "/invites/show/#{invite.invite_key}.json", params: { password: "password" }
             expect(response.status).to eq(200)
-            json = JSON.parse(response.body)
+            json = response.parsed_body
             expect(json["success"]).to eq(false)
             expect(json["errors"]["password"]).to be_present
           end
@@ -317,7 +317,7 @@ describe InvitesController do
             user.send_welcome_message = true
             put "/invites/show/#{invite.invite_key}.json"
             expect(response.status).to eq(200)
-            expect(JSON.parse(response.body)["success"]).to eq(true)
+            expect(response.parsed_body["success"]).to eq(true)
 
             expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
           end
@@ -371,7 +371,7 @@ describe InvitesController do
                 end.to change { UserAuthToken.count }.by(1)
 
                 expect(response.status).to eq(200)
-                expect(JSON.parse(response.body)["success"]).to eq(true)
+                expect(response.parsed_body["success"]).to eq(true)
 
                 expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
                 expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -391,8 +391,8 @@ describe InvitesController do
                 end.not_to change { UserAuthToken.count }
 
                 expect(response.status).to eq(200)
-                expect(JSON.parse(response.body)["success"]).to eq(true)
-                expect(JSON.parse(response.body)["message"]).to eq(I18n.t("invite.confirm_email"))
+                expect(response.parsed_body["success"]).to eq(true)
+                expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
 
                 invited_user = User.find_by_email(invite.email)
                 expect(invited_user.active).to eq(false)
@@ -526,7 +526,7 @@ describe InvitesController do
 
         expect(response.status).to eq(422)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["errors"][0]).to eq(I18n.t("bulk_invite.max_rows", max_bulk_invites: SiteSetting.max_bulk_invites))
       end
     end

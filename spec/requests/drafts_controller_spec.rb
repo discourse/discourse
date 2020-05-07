@@ -13,7 +13,7 @@ describe DraftsController do
     Draft.set(user, 'xxx', 0, '{}')
     get "/drafts.json", params: { username: user.username }
     expect(response.status).to eq(200)
-    parsed = JSON.parse(response.body)
+    parsed = response.parsed_body
     expect(parsed["drafts"].length).to eq(1)
   end
 
@@ -23,7 +23,7 @@ describe DraftsController do
     Draft.clear(user, 'xxx', 0)
     get "/drafts.json", params: { username: user.username }
     expect(response.status).to eq(200)
-    parsed = JSON.parse(response.body)
+    parsed = response.parsed_body
     expect(parsed["drafts"].length).to eq(0)
   end
 
@@ -45,13 +45,13 @@ describe DraftsController do
     sign_in(topic_user)
     get "/drafts.json", params: { username: topic_user.username }
     expect(response.status).to eq(200)
-    parsed = JSON.parse(response.body)
+    parsed = response.parsed_body
     expect(parsed["drafts"].first["title"]).to eq(topic.title)
 
     sign_in(other_user)
     get "/drafts.json", params: { username: other_user.username }
     expect(response.status).to eq(200)
-    parsed = JSON.parse(response.body)
+    parsed = response.parsed_body
     expect(parsed["drafts"].first["title"]).to eq(nil)
   end
 end

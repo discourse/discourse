@@ -68,7 +68,7 @@ RSpec.describe ListController do
 
       get "/latest.json", params: { topic_ids: "#{p.topic_id}" }
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
@@ -90,11 +90,11 @@ RSpec.describe ListController do
       TopTopic.refresh!
 
       get "/categories_and_top.json"
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(data["topic_list"]["topics"].length).to eq(1)
 
       get "/categories_and_latest.json"
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(data["topic_list"]["topics"].length).to eq(2)
     end
   end
@@ -169,7 +169,7 @@ RSpec.describe ListController do
 
         expect(response.status).to eq(200)
 
-        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+        expect(response.parsed_body["topic_list"]["topics"].first["id"])
           .to eq(topic.id)
       end
     end
@@ -184,7 +184,7 @@ RSpec.describe ListController do
         get "/topics/private-messages-group/#{user.username}/#{UrlHelper.encode_component(unicode_group.name)}.json"
         expect(response.status).to eq(200)
 
-        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+        expect(response.parsed_body["topic_list"]["topics"].first["id"])
           .to eq(topic.id)
       end
     end
@@ -217,7 +217,7 @@ RSpec.describe ListController do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)["topic_list"]).to be_present
+          expect(response.parsed_body["topic_list"]).to be_present
         end
       end
 
@@ -286,7 +286,7 @@ RSpec.describe ListController do
 
         expect(response.status).to eq(200)
 
-        topics = JSON.parse(response.body)["topic_list"]["topics"]
+        topics = response.parsed_body["topic_list"]["topics"]
 
         expect(topics.map { |topic| topic["id"] }).to contain_exactly(
           topic.id, topic2.id
@@ -384,7 +384,7 @@ RSpec.describe ListController do
         it 'uses the correct category' do
           get "/c/#{other_category.slug}/l/latest.json"
           expect(response.status).to eq(200)
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["topic_list"]["topics"].first["category_id"])
             .to eq(other_category.id)
         end
@@ -429,7 +429,7 @@ RSpec.describe ListController do
           category.update!(default_view: 'top', default_top_period: 'monthly')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to eq("monthly")
         end
 
@@ -437,7 +437,7 @@ RSpec.describe ListController do
           category.update!(default_view: nil)
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
         end
 
@@ -445,7 +445,7 @@ RSpec.describe ListController do
           category.update!(default_view: '')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
         end
 
@@ -453,7 +453,7 @@ RSpec.describe ListController do
           category.update!(default_view: 'latest')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
         end
       end
@@ -502,7 +502,7 @@ RSpec.describe ListController do
     it "should respond with a list" do
       get "/topics/created-by/#{user.username}.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
 
@@ -510,7 +510,7 @@ RSpec.describe ListController do
       user.update!(username: "myname.test")
       get "/topics/created-by/#{user.username}", xhr: true
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
   end
@@ -528,7 +528,7 @@ RSpec.describe ListController do
       sign_in(user)
       get "/topics/private-messages/#{user.username}.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
   end
@@ -549,7 +549,7 @@ RSpec.describe ListController do
       sign_in(user)
       get "/topics/private-messages-sent/#{user.username}.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
   end
@@ -572,7 +572,7 @@ RSpec.describe ListController do
       sign_in(user)
       get "/topics/private-messages-unread/#{user.username}.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
   end

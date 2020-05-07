@@ -81,7 +81,7 @@ describe PostsController do
       new_post = create_post
 
       get "/posts/#{new_post.id}.json"
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
 
       expect(parsed["topic_slug"]).to eq(new_post.topic.slug)
       expect(parsed["moderator"]).to eq(false)
@@ -107,7 +107,7 @@ describe PostsController do
       _third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
 
       get "/posts/by-date/#{second_post.topic_id}/#{(second_post.created_at - 2.days).strftime("%Y-%m-%d")}.json"
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(response.status).to eq(200)
       expect(json["id"]).to eq(second_post.id)
@@ -115,7 +115,7 @@ describe PostsController do
 
     it 'returns no post if date is > at last created post' do
       get "/posts/by-date/#{post.topic_id}/2245-11-11.json"
-      _json = JSON.parse(response.body)
+      _json = response.parsed_body
       expect(response.status).to eq(404)
     end
   end
@@ -135,7 +135,7 @@ describe PostsController do
       get "/posts/#{child.id}/reply-history.json"
       expect(response.status).to eq(200)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json[0]['id']).to eq(parent.id)
       expect(json[0]['user_custom_fields']['hello']).to eq('world')
       expect(json[0]['user_custom_fields']['hidden']).to be_blank
@@ -158,7 +158,7 @@ describe PostsController do
       get "/posts/#{parent.id}/replies.json"
       expect(response.status).to eq(200)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json[0]['id']).to eq(child.id)
       expect(json[0]['user_custom_fields']['hello']).to eq('world')
       expect(json[0]['user_custom_fields']['hidden']).to be_blank
@@ -324,7 +324,7 @@ describe PostsController do
         put "/posts/#{post.id}.json", params: update_params
 
         expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
+        expect(response.parsed_body['errors']).to include(I18n.t('too_late_to_edit'))
       end
 
       it 'does not allow TL2 to update when edit time limit expired' do
@@ -338,7 +338,7 @@ describe PostsController do
         put "/posts/#{post.id}.json", params: update_params
 
         expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
+        expect(response.parsed_body['errors']).to include(I18n.t('too_late_to_edit'))
       end
 
       it 'passes the image sizes through' do
@@ -477,7 +477,7 @@ describe PostsController do
       end
       it "marks topic_bookmaked as true" do
         delete "/posts/#{post.id}/bookmark.json"
-        expect(JSON.parse(response.body)['topic_bookmarked']).to eq(true)
+        expect(response.parsed_body['topic_bookmarked']).to eq(true)
       end
     end
   end
@@ -671,7 +671,7 @@ describe PostsController do
 
         expect(response.status).to eq(400)
 
-        expect(JSON.parse(response.body)["errors"]).to include(
+        expect(response.parsed_body["errors"]).to include(
           I18n.t("invalid_params", message: "category")
         )
       end
@@ -698,7 +698,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(200)
-          parsed = ::JSON.parse(response.body)
+          parsed = response.parsed_body
 
           expect(parsed["action"]).to eq("enqueued")
 
@@ -737,7 +737,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(200)
-          parsed = ::JSON.parse(response.body)
+          parsed = response.parsed_body
 
           expect(parsed["action"]).not_to be_present
 
@@ -756,7 +756,7 @@ describe PostsController do
           }
 
           expect(response).not_to be_successful
-          parsed = ::JSON.parse(response.body)
+          parsed = response.parsed_body
           expect(parsed["action"]).not_to eq("enqueued")
         end
 
@@ -769,7 +769,7 @@ describe PostsController do
           }
 
           expect(response).not_to be_successful
-          parsed = ::JSON.parse(response.body)
+          parsed = response.parsed_body
           expect(parsed["action"]).not_to eq("enqueued")
         end
       end
@@ -783,7 +783,7 @@ describe PostsController do
         }
 
         expect(response.status).to eq(200)
-        parsed = ::JSON.parse(response.body)
+        parsed = response.parsed_body
 
         expect(parsed["action"]).to eq("enqueued")
         reviewable = ReviewableQueuedPost.find_by(created_by: user)
@@ -820,7 +820,7 @@ describe PostsController do
 
         expect(response.status).to eq(200)
 
-        parsed = ::JSON.parse(response.body)
+        parsed = response.parsed_body
         post = Post.find(parsed['id'])
 
         expect(post.topic.topic_allowed_users.length).to eq(1)
@@ -835,7 +835,7 @@ describe PostsController do
         }
 
         expect(response.status).to eq(200)
-        parsed = ::JSON.parse(response.body)
+        parsed = response.parsed_body
         expect(parsed['post']).to be_present
         expect(parsed['post']['cooked']).to be_present
       end
@@ -884,7 +884,7 @@ describe PostsController do
         }
 
         expect(response.status).to eq(422)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['errors']).to be_present
       end
 
@@ -983,7 +983,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(422)
-          expect(JSON.parse(response.body)["errors"]).to include(
+          expect(response.parsed_body["errors"]).to include(
             I18n.t("activerecord.errors.models.topic.attributes.base.no_user_selected")
           )
         end
@@ -1004,7 +1004,7 @@ describe PostsController do
           }
 
           expect(response.status).to eq(422)
-          expect(JSON.parse(response.body)["errors"]).to include(
+          expect(response.parsed_body["errors"]).to include(
             I18n.t("create_pm_on_existing_topic")
           )
         end
@@ -1027,7 +1027,7 @@ describe PostsController do
             meta_data: { xyz: 'abc' }
           }
 
-          expect(JSON.parse(response.body)["errors"]).to include(I18n.t(:spamming_host))
+          expect(response.parsed_body["errors"]).to include(I18n.t(:spamming_host))
         end
 
         context "allow_uncategorized_topics is false" do
@@ -1102,7 +1102,7 @@ describe PostsController do
               shared_draft: 'true'
             }
             expect(response.status).to eq(200)
-            result = JSON.parse(response.body)
+            result = response.parsed_body
             topic = Topic.find(result['topic_id'])
             expect(topic.category_id).to eq(shared_category.id)
             expect(topic.shared_draft.category_id).to eq(destination_category.id)
@@ -1394,13 +1394,13 @@ describe PostsController do
       it "fails when revision is blank" do
         put "/posts/#{post_id}/revisions/#{blank_post_revision.number}/revert.json"
         expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)['errors']).to include(I18n.t('revert_version_same'))
+        expect(response.parsed_body['errors']).to include(I18n.t('revert_version_same'))
       end
 
       it "fails when revised version is same as current version" do
         put "/posts/#{post_id}/revisions/#{same_post_revision.number}/revert.json"
         expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)['errors']).to include(I18n.t('revert_version_same'))
+        expect(response.parsed_body['errors']).to include(I18n.t('revert_version_same'))
       end
 
       it "works!" do
@@ -1435,7 +1435,7 @@ describe PostsController do
       TopicEmbed.expects(:expanded_for).with(post).returns("full content")
       get "/posts/#{post.id}/expand-embed.json"
       expect(response.status).to eq(200)
-      expect(::JSON.parse(response.body)['cooked']).to eq("full content")
+      expect(response.parsed_body['cooked']).to eq("full content")
     end
   end
 
@@ -1472,7 +1472,7 @@ describe PostsController do
         get "/posts/#{user.username}/flagged.json"
         expect(response.status).to eq(200)
 
-        expect(JSON.parse(response.body).length).to eq(2)
+        expect(response.parsed_body.length).to eq(2)
       end
     end
   end
@@ -1507,7 +1507,7 @@ describe PostsController do
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
-        data = JSON.parse(response.body)
+        data = response.parsed_body
         expect(data.length).to eq(0)
       end
 
@@ -1521,7 +1521,7 @@ describe PostsController do
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
-        data = JSON.parse(response.body)
+        data = response.parsed_body
         expect(data.length).to eq(0)
       end
 
@@ -1537,7 +1537,7 @@ describe PostsController do
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
-        data = JSON.parse(response.body)
+        data = response.parsed_body
         expect(data.length).to eq(1)
         expect(data[0]["id"]).to eq(post_deleted_by_admin.id)
         expect(data[0]["deleted_by"]["id"]).to eq(admin.id)
@@ -1650,7 +1650,7 @@ describe PostsController do
         get "/private-posts.json"
         expect(response.status).to eq(200)
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         post_ids = json['private_posts'].map { |p| p['id'] }
 
         expect(post_ids).to include private_post.id
@@ -1683,7 +1683,7 @@ describe PostsController do
         get "/posts.json"
         expect(response.status).to eq(200)
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         post_ids = json['latest_posts'].map { |p| p['id'] }
 
         expect(post_ids).to include public_post.id
@@ -1699,7 +1699,7 @@ describe PostsController do
       get "/posts/#{post.id}/cooked.json"
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json).to be_present
       expect(json['cooked']).to eq('WAt')
@@ -1725,7 +1725,7 @@ describe PostsController do
         get "/posts/#{post.id}/raw-email.json"
         expect(response.status).to eq(200)
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['raw_email']).to eq('email_content')
       end
     end
