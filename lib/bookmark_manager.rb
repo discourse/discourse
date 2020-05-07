@@ -7,20 +7,22 @@ class BookmarkManager
     @user = user
   end
 
-  def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil)
+  def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil, options: {})
     post = Post.unscoped.includes(:topic).find(post_id)
     reminder_type = parse_reminder_type(reminder_type)
 
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_see_post?(post)
 
     bookmark = Bookmark.create(
-      user_id: @user.id,
-      topic: post.topic,
-      post: post,
-      name: name,
-      reminder_type: reminder_type,
-      reminder_at: reminder_at,
-      reminder_set_at: Time.zone.now
+      {
+        user_id: @user.id,
+        topic: post.topic,
+        post: post,
+        name: name,
+        reminder_type: reminder_type,
+        reminder_at: reminder_at,
+        reminder_set_at: Time.zone.now
+      }.merge(options)
     )
 
     if bookmark.errors.any?
@@ -66,7 +68,7 @@ class BookmarkManager
     BookmarkReminderNotificationHandler.send_notification(bookmark)
   end
 
-  def update(bookmark_id:, name:, reminder_type:, reminder_at:)
+  def update(bookmark_id:, name:, reminder_type:, reminder_at:, options: {})
     bookmark = Bookmark.find_by(id: bookmark_id)
 
     raise Discourse::NotFound if bookmark.blank?
@@ -75,10 +77,12 @@ class BookmarkManager
     reminder_type = parse_reminder_type(reminder_type)
 
     success = bookmark.update(
-      name: name,
-      reminder_at: reminder_at,
-      reminder_type: reminder_type,
-      reminder_set_at: Time.zone.now
+      {
+        name: name,
+        reminder_at: reminder_at,
+        reminder_type: reminder_type,
+        reminder_set_at: Time.zone.now
+      }.merge(options)
     )
 
     if bookmark.errors.any?

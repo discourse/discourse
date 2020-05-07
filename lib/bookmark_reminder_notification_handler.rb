@@ -9,6 +9,11 @@ class BookmarkReminderNotificationHandler
       end
 
       create_notification(bookmark)
+
+      if bookmark.delete_when_reminder_sent?
+        return bookmark.destroy
+      end
+
       clear_reminder(bookmark)
     end
   end
