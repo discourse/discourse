@@ -126,8 +126,6 @@ export function performEmojiUnescape(string, opts) {
         } alt='${emojiVal}' class='${classes}'>`
       : m;
   });
-
-  return string;
 }
 
 export function performEmojiEscape(string, opts) {
