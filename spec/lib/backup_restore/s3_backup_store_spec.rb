@@ -13,7 +13,7 @@ describe BackupRestore::S3BackupStore do
     @objects = []
 
     def expected_prefix
-      Rails.configuration.multisite ? "backups/#{RailsMultisite::ConnectionManagement.current_db}/" : ""
+      Rails.configuration.multisite ? "#{RailsMultisite::ConnectionManagement.current_db}/" : ""
     end
 
     def check_context(context)
@@ -119,9 +119,9 @@ describe BackupRestore::S3BackupStore do
     @objects << { key: "no-backup.txt", size: 12, last_modified: Time.parse("2018-09-05T14:27:00Z") }
     @objects << { key: "subfolder/c.tar.gz", size: 23, last_modified: Time.parse("2019-01-24T18:44:00Z") }
 
-    @objects << { key: "backups/second/multi-2.tar.gz", size: 19, last_modified: Time.parse("2018-11-27T03:16:54Z") }
-    @objects << { key: "backups/second/multi-1.tar.gz", size: 22, last_modified: Time.parse("2018-11-26T03:17:09Z") }
-    @objects << { key: "backups/second/subfolder/multi-3.tar.gz", size: 23, last_modified: Time.parse("2019-01-24T18:44:00Z") }
+    @objects << { key: "second/multi-2.tar.gz", size: 19, last_modified: Time.parse("2018-11-27T03:16:54Z") }
+    @objects << { key: "second/multi-1.tar.gz", size: 22, last_modified: Time.parse("2018-11-26T03:17:09Z") }
+    @objects << { key: "second/subfolder/multi-3.tar.gz", size: 23, last_modified: Time.parse("2019-01-24T18:44:00Z") }
   end
 
   def remove_backups
