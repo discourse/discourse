@@ -88,10 +88,6 @@ export default TextField.extend({
     }
   },
 
-  _debouncedChange() {
-    next(() => this.onChange(this.value));
-  },
-
   @discourseComputed("placeholderKey")
   placeholder: {
     get() {
