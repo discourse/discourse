@@ -1,0 +1,54 @@
+{
+  "name": "pretty-text",
+  "version": "1.0.0",
+  "description": "Discourse's text rendering pipeline",
+  "author": "Discourse",
+  "license": "GPLv2",
+  "keywords": [
+    "ember-addon"
+  ],
+  "repository": "",
+  "license": "",
+  "author": "",
+  "scripts": {
+    "build": "ember build",
+    "lint:hbs": "ember-template-lint .",
+    "lint:js": "eslint .",
+    "start": "ember serve"
+  },
+  "dependencies": {
+    "ember-cli-babel": "^7.13.0",
+    "ember-cli-htmlbars": "^4.2.0",
+    "ember-auto-import": "^1.5.3"
+  },
+  "devDependencies": {
+    "@ember/optional-features": "^1.1.0",
+    "@glimmer/component": "^1.0.0",
+    "babel-eslint": "^10.0.3",
+    "broccoli-asset-rev": "^3.0.0",
+    "ember-cli": "~3.15.2",
+    "ember-cli-dependency-checker": "^3.2.0",
+    "ember-cli-eslint": "^5.1.0",
+    "ember-cli-inject-live-reload": "^2.0.1",
+    "ember-cli-sri": "^2.1.1",
+    "ember-cli-template-lint": "^1.0.0-beta.3",
+    "ember-cli-uglify": "^3.0.0",
+    "ember-disable-prototype-extensions": "^1.1.3",
+    "ember-export-application-global": "^2.0.1",
+    "ember-load-initializers": "^2.1.1",
+    "ember-maybe-import-regenerator": "^0.1.6",
+    "ember-resolver": "^7.0.0",
+    "ember-source": "~3.15.0",
+    "ember-source-channel-url": "^2.0.1",
+    "ember-try": "^1.4.0",
+    "eslint-plugin-ember": "^7.7.1",
+    "eslint-plugin-node": "^10.0.0",
+    "loader.js": "^4.7.0"
+  },
+  "engines": {
+    "node": "8.* || >= 10.*"
+  },
+  "ember": {
+    "edition": "octane"
+  }
+}
