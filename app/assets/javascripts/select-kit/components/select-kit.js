@@ -641,7 +641,7 @@ export default Component.extend(
     },
 
     _highlightNext() {
-      const highlightedIndex = this.mainCollection.indexOf(
+      let highlightedIndex = this.mainCollection.indexOf(
         this.selectKit.highlighted
       );
       const count = this.mainCollection.length;
@@ -660,7 +660,7 @@ export default Component.extend(
     },
 
     _highlightPrevious() {
-      const highlightedIndex = this.mainCollection.indexOf(
+      let highlightedIndex = this.mainCollection.indexOf(
         this.selectKit.highlighted
       );
       const count = this.mainCollection.length;
