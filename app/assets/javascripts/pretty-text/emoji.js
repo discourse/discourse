@@ -82,7 +82,7 @@ function isReplacableInlineEmoji(string, index, inlineEmoji) {
 
   // index depends on regex; when `inlineEmoji` is false, the regex starts
   // with a `\B` character, so there's no need to subtract from the index
-  const beforeEmoji = string.slice(0, index - (inlineEmoji ? 1 : 0));
+  const beforeEmoji = string.slice(0, index);
 
   return (
     beforeEmoji.length === 0 ||
