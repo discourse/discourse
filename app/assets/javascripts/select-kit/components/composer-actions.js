@@ -133,8 +133,7 @@ export default DropdownSelectBoxComponent.extend({
     if (
       this.canWhisper &&
       (!_postSnapshot ||
-        (_postSnapshot &&
-          _postSnapshot.post_type !== this.site.post_types.whisper))
+        _postSnapshot.post_type !== this.site.post_types.whisper)
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.toggle_whisper.label"),
