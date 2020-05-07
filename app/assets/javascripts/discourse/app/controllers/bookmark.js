@@ -75,7 +75,8 @@ export default Controller.extend(ModalFunctionality, {
       lastCustomReminderTime: null,
       userTimezone: this.currentUser.resolvedTimezone(),
       showOptions: false,
-      options: {}
+      options: {},
+      model: this.model || {}
     });
 
     this._loadBookmarkOptions();
