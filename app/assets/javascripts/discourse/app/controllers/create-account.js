@@ -316,7 +316,17 @@ export default Controller.extend(
           if (validation.message) {
             this.flash(validation.message, "error");
           }
-          validation.element.focus();
+
+          const element = validation.element;
+          if (element.tagName === "DIV") {
+            if (element.scrollIntoView) {
+              element.scrollIntoView();
+            }
+            element.click();
+          } else {
+            element.focus();
+          }
+
           return;
         }
 

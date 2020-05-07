@@ -36,7 +36,7 @@ export default Mixin.create({
         return EmberObject.create({
           failed: true,
           message: I18n.t("user_fields.required", { name: userField.name }),
-          element: userField.component
+          element: userField.element
         });
       }
     }
