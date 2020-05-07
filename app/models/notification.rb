@@ -45,7 +45,9 @@ class Notification < ActiveRecord::Base
   end
 
   before_create do
-    self.high_priority = Notification.high_priority_types.include?(self.notification_type)
+    # if we have manually set the notification to high_priority on create then
+    # make sure that is respected
+    self.high_priority = self.high_priority || Notification.high_priority_types.include?(self.notification_type)
   end
 
   def self.purge_old!
