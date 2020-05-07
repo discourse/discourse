@@ -265,7 +265,7 @@ describe TopicQuery do
   end
 
   context 'muted categories' do
-    it 'is removed from new and latest lists' do
+    it 'is removed from top, new and latest lists' do
       category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
       CategoryUser.create!(user_id: user.id,
@@ -273,6 +273,8 @@ describe TopicQuery do
                            notification_level: CategoryUser.notification_levels[:muted])
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
+      TopTopic.create!(topic: topic, all_score: 1)
+      expect(topic_query.list_top_for(:all).topics.map(&:id)).not_to include(topic.id)
     end
   end
 
