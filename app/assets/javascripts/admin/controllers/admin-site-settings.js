@@ -20,7 +20,7 @@ export default Controller.extend({
       filter = this.filter
         .toLowerCase()
         .split(" ")
-        .filter((word) => {
+        .filter(word => {
           if (word.length === 0) {
             return false;
           }
@@ -51,13 +51,13 @@ export default Controller.extend({
     const all = {
       nameKey: "all_results",
       name: I18n.t("admin.site_settings.categories.all_results"),
-      siteSettings: [],
+      siteSettings: []
     };
     const matchesGroupedByCategory = [all];
 
     const matches = [];
-    this.allSiteSettings.forEach((settingsCategory) => {
-      const siteSettings = settingsCategory.siteSettings.filter((item) => {
+    this.allSiteSettings.forEach(settingsCategory => {
+      const siteSettings = settingsCategory.siteSettings.filter(item => {
         if (this.onlyOverridden && !item.get("overridden")) return false;
         if (pluginFilter && item.plugin !== pluginFilter) return false;
         if (filter) {
@@ -65,7 +65,10 @@ export default Controller.extend({
           return (
             setting.includes(filter) ||
             setting.replace(/_/g, " ").includes(filter) ||
-            item.get("description").toLowerCase().includes(filter) ||
+            item
+              .get("description")
+              .toLowerCase()
+              .includes(filter) ||
             (item.get("value") || "").toLowerCase().includes(filter)
           );
         } else {
@@ -80,7 +83,7 @@ export default Controller.extend({
             "admin.site_settings.categories." + settingsCategory.nameKey
           ),
           siteSettings,
-          count: siteSettings.length,
+          count: siteSettings.length
         });
       }
     });
@@ -97,7 +100,7 @@ export default Controller.extend({
   },
 
   @observes("filter", "onlyOverridden", "model")
-  filterContent: discourseDebounce(function () {
+  filterContent: discourseDebounce(function() {
     if (this._skipBounce) {
       this.set("_skipBounce", false);
     } else {
@@ -112,6 +115,6 @@ export default Controller.extend({
 
     toggleMenu() {
       $(".admin-detail").toggleClass("mobile-closed mobile-open");
-    },
-  },
+    }
+  }
 });
