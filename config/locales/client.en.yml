@@ -1117,6 +1117,7 @@ en:
       email:
         title: "Email"
         primary: "Primary Email"
+        primary_indicator: "primary"
         secondary: "Secondary Emails"
         no_secondary: "No secondary emails"
         sso_override_instructions: "Email can be updated from SSO provider."

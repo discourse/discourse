@@ -375,6 +375,13 @@ const User = RestModel.extend({
       });
   },
 
+  setPrimaryEmail(email) {
+    return ajax(userPath(`${this.username}/preferences/primary-email.json`), {
+      type: "PUT",
+      data: { email }
+    });
+  },
+
   changePassword() {
     return ajax("/session/forgot_password", {
       dataType: "json",

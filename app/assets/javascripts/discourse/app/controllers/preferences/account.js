@@ -95,6 +95,23 @@ export default Controller.extend(CanCheckEmails, {
 
   disableConnectButtons: propertyNotEqual("model.id", "currentUser.id"),
 
+  @discourseComputed("model.email", "model.secondary_emails.[]")
+  emails(primaryEmail, secondaryEmails) {
+    const emails = [];
+
+    if (primaryEmail) {
+      emails.push({ email: primaryEmail, primary: true });
+    }
+
+    if (secondaryEmails) {
+      secondaryEmails.forEach(email => {
+        emails.push({ email, primary: false });
+      });
+    }
+
+    return emails;
+  },
+
   @discourseComputed(
     "model.second_factor_enabled",
     "canCheckEmails",
@@ -147,6 +164,14 @@ export default Controller.extend(CanCheckEmails, {
         .save(this.saveAttrNames)
         .then(() => this.set("saved", true))
         .catch(popupAjaxError);
+    },
+
+    setPrimaryEmail(email) {
+      this.model.setPrimaryEmail(email).then(() => {
+        this.model.secondary_emails.removeObject(email);
+        this.model.secondary_emails.pushObject(this.model.email);
+        this.model.set("email", email);
+      });
     },
 
     changePassword() {

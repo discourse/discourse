@@ -80,7 +80,11 @@ class EmailUpdater
           confirm_result = :authorizing_new
         when EmailChangeRequest.states[:authorizing_new]
           change_req.update_column(:change_state, EmailChangeRequest.states[:complete])
-          user.primary_email.update!(email: token.email)
+          if change_req.old_email.present?
+            user.user_emails.find_by(email: change_req.old_email).update!(email: change_req.new_email)
+          else
+            user.user_emails.create!(email: token.email)
+          end
           user.set_automatic_groups
           confirm_result = :complete
         end

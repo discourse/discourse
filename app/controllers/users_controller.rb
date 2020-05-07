@@ -205,6 +205,29 @@ class UsersController < ApplicationController
     render json: failed_json, status: 403
   end
 
+  def update_primary_email
+    params.require(:email)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    if user.primary_email.email == params[:email]
+      return render json: success_json
+    end
+
+    new_primary = user.user_emails.find_by(email: params[:email])
+    if new_primary.blank?
+      return render json: failed_json, status: 428
+    end
+
+    User.transaction do
+      user.primary_email.update!(primary: false)
+      new_primary.update!(primary: true)
+    end
+
+    render json: success_json
+  end
+
   def topic_tracking_state
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)

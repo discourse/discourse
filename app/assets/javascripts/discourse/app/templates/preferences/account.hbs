@@ -45,13 +45,25 @@
 {{#if canCheckEmails}}
   <div class="control-group pref-email">
     <label class="control-label">{{i18n "user.email.title"}}</label>
-    {{#if model.email}}
-      <div class="controls">
-        <span class="static">{{model.email}}</span>
-        {{#if model.can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
-        {{/if}}
-      </div>
+    {{#if emails.length}}
+      {{#each emails as |email|}}
+        <div class="controls">
+          <span class="static">{{email.email}}</span>
+          {{#if email.primary}}
+            <span class="instructions">{{d-icon "star"}} {{i18n "user.email.primary_indicator"}}</span>
+          {{else}}
+            {{d-button action=(action "setPrimaryEmail" email.email)
+                       class="btn-default btn-small btn-icon pad-left no-text edit"
+                       icon="star"
+                       aria-label="user.email.set_primary"
+                       title="user.email.set_primary"}}
+          {{/if}}
+          {{#if model.can_edit_email}}
+            {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
+          {{/if}}
+        </div>
+      {{/each}}
+
       <div class="instructions">
         {{#if siteSettings.sso_overrides_email}}
           {{i18n "user.email.sso_override_instructions"}}
