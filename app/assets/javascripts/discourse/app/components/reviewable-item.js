@@ -127,7 +127,6 @@ export default Component.extend({
         console.error(`No handler for ${action.client_action} found`);
         return;
       }
-      return;
     } else {
       return performAction();
     }
