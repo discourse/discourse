@@ -99,7 +99,7 @@ export default Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      if (!data || (data && data.errorThrown !== "abort")) {
+      if (!data || data.errorThrown !== "abort") {
         displayErrorForUpload(data);
       }
       reset();
