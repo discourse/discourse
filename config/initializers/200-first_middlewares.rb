@@ -24,8 +24,8 @@ if Rails.configuration.multisite
   # Multisite needs to be first, because the request tracker and message bus
   # rely on it
   session_operations = Rails::Configuration::MiddlewareStackProxy.new([
-     [:delete, RailsMultisite::Middleware],
-     [:unshift, [RailsMultisite::Middleware, RailsMultisite::DiscoursePatches.config]],
+    -> middleware { middleware.delete(RailsMultisite::Middleware) },
+    -> middleware { middleware.unshift(RailsMultisite::Middleware, RailsMultisite::DiscoursePatches.config) },
   ])
 
   Rails.configuration.middleware = Rails.configuration.middleware + session_operations
