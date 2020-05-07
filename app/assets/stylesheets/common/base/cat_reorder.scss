@@ -5,7 +5,7 @@
     }
   }
   input {
-    width: 4em;
+    width: 3em;
     @include breakpoint(mobile-extra-large) {
       width: 2em;
     }
