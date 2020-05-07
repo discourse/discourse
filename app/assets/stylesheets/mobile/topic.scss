@@ -217,3 +217,41 @@ sub sub {
   align-items: center;
   flex-wrap: wrap;
 }
+
+@media screen and (max-height: 600px) {
+  .topic-admin-popup-menu {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1em;
+    .header {
+      padding: 0;
+      position: relative;
+      .close-button {
+        position: absolute;
+        display: inline-block;
+        right: 0;
+        top: -0.1em;
+        width: auto;
+        background: transparent;
+      }
+    }
+    ul {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      @media screen and (max-width: 550px) {
+        grid-template-columns: 1fr 1fr;
+      }
+      > div {
+        margin-right: 0.5em;
+        overflow: hidden;
+        &:nth-of-type(2) {
+          // move delete further from modal close
+          order: 12;
+        }
+        button {
+          @include ellipsis;
+        }
+      }
+    }
+  }
+}
