@@ -10,7 +10,7 @@ import ActionSummary from "discourse/models/action-summary";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import { userPath } from "discourse/lib/url";
 import discourseComputed, {
   observes,

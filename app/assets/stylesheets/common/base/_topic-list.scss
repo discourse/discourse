@@ -52,6 +52,13 @@
   a.title:not(.badge-notification) {
     color: $primary-medium;
   }
+  span.badge-category {
+    font-weight: normal;
+    color: $primary-medium;
+  }
+  a.discourse-tag {
+    color: $primary-medium;
+  }
 }
 
 .topic-list-item {

@@ -16,12 +16,8 @@ import {
 } from "@ember/runloop";
 import { Promise } from "rsvp";
 import {
-  applyHeaderContentPluginApiCallbacks,
-  applyModifyNoSelectionPluginApiCallbacks,
   applyContentPluginApiCallbacks,
-  applyOnOpenPluginApiCallbacks,
-  applyOnClosePluginApiCallbacks,
-  applyOnInputPluginApiCallbacks
+  applyOnChangePluginApiCallbacks
 } from "select-kit/mixins/plugin-api";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
@@ -379,15 +375,7 @@ export default Component.extend(
         cancel(this._searchPromise);
       }
 
-      const input = applyOnInputPluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        event,
-        this.selectKit
-      );
-
-      if (input) {
-        debounce(this, this._debouncedInput, event.target.value, 200);
-      }
+      debounce(this, this._debouncedInput, event.target.value, 200);
     },
 
     _debouncedInput(filter) {
@@ -430,6 +418,9 @@ export default Component.extend(
         }
 
         this._boundaryActionHandler("onChange", value, items);
+
+        applyOnChangePluginApiCallbacks(value, items, this);
+
         resolve(items);
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
@@ -448,11 +439,7 @@ export default Component.extend(
     _modifyContentWrapper(content) {
       content = this.modifyContent(content);
 
-      return applyContentPluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        content,
-        this.selectKit
-      );
+      return applyContentPluginApiCallbacks(content, this);
     },
 
     modifyContent(content) {
@@ -460,13 +447,7 @@ export default Component.extend(
     },
 
     _modifyNoSelectionWrapper() {
-      let none = this.modifyNoSelection();
-
-      return applyModifyNoSelectionPluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        none,
-        this.selectKit
-      );
+      return this.modifyNoSelection();
     },
 
     modifyNoSelection() {
@@ -498,12 +479,6 @@ export default Component.extend(
     },
 
     _modifySelectionWrapper(item) {
-      applyHeaderContentPluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        item,
-        this.selectKit
-      );
-
       return this.modifySelection(item);
     },
 
@@ -731,30 +706,14 @@ export default Component.extend(
       this.selectKit.change(null, null);
     },
 
-    _onOpenWrapper(event) {
-      let boundaryAction = this._boundaryActionHandler("onOpen");
-
-      boundaryAction = applyOnOpenPluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        this.selectKit,
-        event
-      );
-
-      return boundaryAction;
+    _onOpenWrapper() {
+      return this._boundaryActionHandler("onOpen");
     },
 
-    _onCloseWrapper(event) {
+    _onCloseWrapper() {
       this.set("selectKit.highlighted", null);
 
-      let boundaryAction = this._boundaryActionHandler("onClose");
-
-      boundaryAction = applyOnClosePluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        this.selectKit,
-        event
-      );
-
-      return boundaryAction;
+      return this._boundaryActionHandler("onClose");
     },
 
     _toggle(event) {
@@ -772,9 +731,7 @@ export default Component.extend(
 
       this.clearErrors();
 
-      if (!this.selectKit.onClose(event)) {
-        return;
-      }
+      this.selectKit.onClose(event);
 
       this.selectKit.setProperties({
         isExpanded: false,
@@ -789,9 +746,7 @@ export default Component.extend(
 
       this.clearErrors();
 
-      if (!this.selectKit.onOpen(event)) {
-        return;
-      }
+      this.selectKit.onOpen(event);
 
       if (!this.popper) {
         const anchor = document.querySelector(

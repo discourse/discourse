@@ -326,7 +326,7 @@ fi:
       already_bookmarked_post: "Samaa viestiä ei voi kirjanmerkitä kahdesti."
       cannot_set_past_reminder: "Kirjanmerkkimuistutusta ei voi asettaa menneisyyteen."
       cannot_set_reminder_in_distant_future: "Kirjanmerkkimuistutusta ei voi asettaa yli 10 vuoden päähän tulevaisuuteen."
-      time_must_be_provided: "kaikkiin muistutuksiin paitsi '%{reminder_type}' tarvitaan aika"
+      time_must_be_provided: "kaikkiin muistutuksiin tarvitaan aika"
     reminders:
       at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
       later_today: "Myöhemmin tänään"

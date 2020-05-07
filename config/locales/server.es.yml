@@ -335,7 +335,7 @@ es:
       already_bookmarked_post: "No puedes guardar la misma publicación en marcadores dos veces."
       cannot_set_past_reminder: "No puedes establecer un recordatorio de marcador en el pasado."
       cannot_set_reminder_in_distant_future: "No puedes establecer un recordatorio de marcador más de 10 años en el futuro."
-      time_must_be_provided: "se debe especificar la hora para todos los recordatorios excepto '%{reminder_type}'"
+      time_must_be_provided: "se debe especificar la hora para todos los recordatorios"
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
       later_today: "Más tarde, hoy"

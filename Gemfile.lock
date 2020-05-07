@@ -241,7 +241,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.9.27.2)
+    onebox (1.9.28.1)
       addressable (~> 2.7.0)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
@@ -528,9 +528,7 @@ DEPENDENCIES
   rspec-rails
   rswag-specs
   rtlit
-  rubocop
   rubocop-discourse
-  rubocop-rspec
   ruby-prof
   ruby-readability
   rubyzip

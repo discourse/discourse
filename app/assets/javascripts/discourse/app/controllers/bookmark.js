@@ -175,14 +175,6 @@ export default Controller.extend(ModalFunctionality, {
     return isPresent(id);
   },
 
-  @discourseComputed()
-  showAtDesktop() {
-    return (
-      this.siteSettings.enable_bookmark_at_desktop_reminders &&
-      this.site.mobileView
-    );
-  },
-
   @discourseComputed("selectedReminderType")
   customDateTimeSelected(selectedReminderType) {
     return selectedReminderType === REMINDER_TYPES.CUSTOM;
@@ -346,8 +338,6 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     switch (this.selectedReminderType) {
-      case REMINDER_TYPES.AT_DESKTOP:
-        return null;
       case REMINDER_TYPES.LATER_TODAY:
         return this.laterToday();
       case REMINDER_TYPES.NEXT_BUSINESS_DAY:

@@ -1,4 +1,4 @@
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 
 /*jshint maxlen:10000000 */
 PreloadStore.store("site", {

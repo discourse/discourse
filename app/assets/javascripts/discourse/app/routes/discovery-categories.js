@@ -7,7 +7,7 @@ import CategoryList from "discourse/models/category-list";
 import { defaultHomepage } from "discourse/lib/utilities";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
 import { hash } from "rsvp";
 import Site from "discourse/models/site";

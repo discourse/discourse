@@ -335,7 +335,7 @@ nl:
       already_bookmarked_post: "U kunt geen twee bladwijzers voor hetzelfde bericht maken."
       cannot_set_past_reminder: "U kunt geen bladwijzerherinnering in het verleden instellen."
       cannot_set_reminder_in_distant_future: "U kunt geen bladwijzerherinnering later dan over 10 jaar instellen."
-      time_must_be_provided: "tijd moet voor alle herinneringen behalve '%{reminder_type}' worden opgegeven"
+      time_must_be_provided: "tijd moet voor alle herinneringen worden opgegeven"
     reminders:
       at_desktop: "De volgende keer vanaf mijn computer"
       later_today: "Later vandaag"
