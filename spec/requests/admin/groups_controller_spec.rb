@@ -88,7 +88,7 @@ RSpec.describe Admin::GroupsController do
 
       expect(response.status).to eq(200)
 
-      response_body = JSON.parse(response.body)
+      response_body = response.parsed_body
 
       expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
 
@@ -190,7 +190,7 @@ RSpec.describe Admin::GroupsController do
       expect(user2.title).to eq("WAT")
       expect(user2.trust_level).to eq(4)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['message']).to eq("2 users have been added to the group.")
       expect(json['users_not_added'][0]).to eq("doesnt_exist")
     end

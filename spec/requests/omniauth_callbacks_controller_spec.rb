@@ -141,7 +141,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(response.location).to include("/auth/failure?message=csrf_detected")
 
           get "/session/csrf.json"
-          token = JSON.parse(response.body)["csrf"]
+          token = response.parsed_body["csrf"]
 
           post "/auth/google_oauth2", params: { authenticity_token: token }
           expect(response.status).to eq(302)

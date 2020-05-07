@@ -76,7 +76,7 @@ describe SvgSpriteController do
 
       expect(response.status).to eq(200)
 
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(data.length).to eq(200)
       expect(data[0]["id"]).to eq("ad")
     end
@@ -88,7 +88,7 @@ describe SvgSpriteController do
 
       expect(response.status).to eq(200)
 
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(data.length).to eq(1)
       expect(data[0]["id"]).to eq("fab-500px")
     end

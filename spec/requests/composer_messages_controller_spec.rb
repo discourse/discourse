@@ -27,7 +27,7 @@ describe ComposerMessagesController do
 
         get "/composer_messages.json", params: args
         expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["composer_messages"].first["id"]).to eq("reviving_old")
       end
     end

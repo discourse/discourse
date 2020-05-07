@@ -37,7 +37,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['email_templates']).to be_present
     end
 
@@ -51,7 +51,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
       get '/admin/customize/email_templates.json'
       expect(response.status).to eq(200)
-      templates = JSON.parse(response.body)['email_templates']
+      templates = response.parsed_body['email_templates']
       template = templates.find { |t| t['id'] == 'user_notifications.admin_login' }
       expect(template['can_revert']).to eq(true)
 
@@ -59,7 +59,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
       get '/admin/customize/email_templates.json'
       expect(response.status).to eq(200)
-      templates = JSON.parse(response.body)['email_templates']
+      templates = response.parsed_body['email_templates']
       template = templates.find { |t| t['id'] == 'user_notifications.admin_login' }
       expect(template['can_revert']).to eq(false)
     end
@@ -93,7 +93,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
         expect(response).not_to be_successful
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['error_type']).to eq('not_found')
       end
 
@@ -103,7 +103,7 @@ RSpec.describe Admin::EmailTemplatesController do
             email_template: { subject: email_subject, body: email_body }
           }, headers: headers
 
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
           expect(json).to be_present
 
           errors = json['errors']
@@ -196,7 +196,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
           expect(response.status).to eq(200)
 
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
           expect(json).to be_present
 
           template = json['email_template']
@@ -279,7 +279,7 @@ RSpec.describe Admin::EmailTemplatesController do
         delete '/admin/customize/email_templates/non_existent_template', headers: headers
         expect(response).not_to be_successful
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['error_type']).to eq('not_found')
       end
 
@@ -307,7 +307,7 @@ RSpec.describe Admin::EmailTemplatesController do
           delete '/admin/customize/email_templates/user_notifications.admin_login', headers: headers
           expect(response.status).to eq(200)
 
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
           expect(json).to be_present
 
           template = json['email_template']

@@ -19,14 +19,14 @@ RSpec.describe Admin::UsersController do
     it 'returns success with JSON' do
       get "/admin/users/list.json"
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)).to be_present
+      expect(response.parsed_body).to be_present
     end
 
     context 'when showing emails' do
       it "returns email for all the users" do
         get "/admin/users/list.json", params: { show_emails: "true" }
         expect(response.status).to eq(200)
-        data = ::JSON.parse(response.body)
+        data = response.parsed_body
         data.each do |user|
           expect(user["email"]).to be_present
         end
@@ -582,7 +582,7 @@ RSpec.describe Admin::UsersController do
       it "returns an api response that the user can't be deleted because it has posts" do
         delete "/admin/users/#{delete_me.id}.json"
         expect(response.status).to eq(403)
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['deleted']).to eq(false)
       end
 
@@ -608,7 +608,7 @@ RSpec.describe Admin::UsersController do
     it "returns success" do
       put "/admin/users/#{reg_user.id}/activate.json"
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['success']).to eq("OK")
       reg_user.reload
       expect(reg_user.active).to eq(true)
@@ -634,7 +634,7 @@ RSpec.describe Admin::UsersController do
     it "returns success" do
       put "/admin/users/#{reg_user.id}/deactivate.json"
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['success']).to eq("OK")
       reg_user.reload
       expect(reg_user.active).to eq(false)
@@ -647,7 +647,7 @@ RSpec.describe Admin::UsersController do
     it "returns success" do
       post "/admin/users/#{reg_user.id}/log_out.json"
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['success']).to eq("OK")
     end
 
@@ -765,7 +765,7 @@ RSpec.describe Admin::UsersController do
 
       get "/admin/users/ip-info.json", params: { ip: ip }
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body).symbolize_keys).to eq(
+      expect(response.parsed_body.symbolize_keys).to eq(
         city: "London",
         country: "United Kingdom",
         country_code: "GB",
@@ -848,7 +848,7 @@ RSpec.describe Admin::UsersController do
 
       post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
       expect(response.status).to eq(403)
-      expect(JSON.parse(response.body)["message"]).to include("Primary email can't be blank")
+      expect(response.parsed_body["message"]).to include("Primary email can't be blank")
     end
 
     it 'should return the right message if the signature is invalid' do
@@ -860,8 +860,8 @@ RSpec.describe Admin::UsersController do
       correct_payload = Rack::Utils.parse_query(sso.payload)
       post "/admin/users/sync_sso.json", params: correct_payload.merge(sig: "someincorrectsignature")
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.login_error'))
-      expect(JSON.parse(response.body)["message"]).not_to include(correct_payload["sig"])
+      expect(response.parsed_body["message"]).to include(I18n.t('sso.login_error'))
+      expect(response.parsed_body["message"]).not_to include(correct_payload["sig"])
     end
 
     it "returns 404 if the external id does not exist" do
@@ -871,7 +871,7 @@ RSpec.describe Admin::UsersController do
       sso.external_id = ""
       post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.blank_id_error'))
+      expect(response.parsed_body["message"]).to include(I18n.t('sso.blank_id_error'))
     end
   end
 
@@ -975,7 +975,7 @@ RSpec.describe Admin::UsersController do
       it 'returns how many posts were deleted' do
         put "/admin/users/#{user.id}/delete_posts_batch.json"
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["posts_deleted"]).to eq(3)
+        expect(response.parsed_body["posts_deleted"]).to eq(3)
       end
     end
 
@@ -983,7 +983,7 @@ RSpec.describe Admin::UsersController do
       it "returns correct json" do
         put "/admin/users/#{user.id}/delete_posts_batch.json"
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["posts_deleted"]).to eq(0)
+        expect(response.parsed_body["posts_deleted"]).to eq(0)
       end
     end
   end

@@ -40,7 +40,7 @@ describe DirectoryItemsController do
     it "succeeds with a valid value" do
       get '/directory_items.json', params: { period: 'all' }
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json).to be_present
       expect(json['directory_items']).to be_present
@@ -63,7 +63,7 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', name: 'eviltrout' }
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to be_present
       expect(json['directory_items'].length).to eq(1)
       expect(json['meta']['total_rows_directory_items']).to eq(1)
@@ -74,7 +74,7 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', name: 'stage_user' }
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to be_present
       expect(json['directory_items'].length).to eq(1)
       expect(json['meta']['total_rows_directory_items']).to eq(1)
@@ -85,7 +85,7 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', exclude_usernames: "stage_user,eviltrout" }
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to be_present
       expect(json['directory_items'].length).to eq(2)
       expect(json['meta']['total_rows_directory_items']).to eq(2)
@@ -97,7 +97,7 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', group: group.name }
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to be_present
       expect(json['directory_items'].length).to eq(2)
       expect(json['meta']['total_rows_directory_items']).to eq(2)

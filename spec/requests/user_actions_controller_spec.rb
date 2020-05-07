@@ -26,7 +26,7 @@ describe UserActionsController do
       get "/user_actions.json", params: { username: post.user.username }
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       actions = parsed["user_actions"]
       expect(actions.length).to eq(1)
       action = actions[0]
@@ -50,7 +50,7 @@ describe UserActionsController do
 
       expect(response.status).to eq(200)
 
-      response_body = JSON.parse(response.body)
+      response_body = response.parsed_body
 
       expect(response_body["user_actions"].count).to eq(1)
 
@@ -68,7 +68,7 @@ describe UserActionsController do
       }
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
 
       expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.self"))
     end
@@ -83,7 +83,7 @@ describe UserActionsController do
       }
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
 
       expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.others"))
     end

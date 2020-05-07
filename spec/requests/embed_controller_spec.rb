@@ -52,7 +52,7 @@ describe EmbedController do
             params: { embed_url: topic_embed.embed_url },
             headers: { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: "system" }
 
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json['topic_id']).to eq(topic_embed.topic.id)
           expect(json['post_id']).to eq(topic_embed.post.id)
           expect(json['topic_slug']).to eq(topic_embed.topic.slug)
@@ -65,7 +65,7 @@ describe EmbedController do
             params: { embed_url: "http://nope.com" },
             headers: { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: "system" }
 
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["error_type"]).to eq("not_found")
         end
       end

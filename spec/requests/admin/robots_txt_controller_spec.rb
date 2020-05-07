@@ -38,7 +38,7 @@ describe Admin::RobotsTxtController do
     it "returns default content if there are no overrides" do
       get "/admin/customize/robots.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["robots_txt"]).to be_present
       expect(json["overridden"]).to eq(false)
     end
@@ -47,7 +47,7 @@ describe Admin::RobotsTxtController do
       SiteSetting.overridden_robots_txt = "something"
       get "/admin/customize/robots.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["robots_txt"]).to eq("something")
       expect(json["overridden"]).to eq(true)
     end
@@ -59,7 +59,7 @@ describe Admin::RobotsTxtController do
     it "overrides the site's default robots.txt" do
       put "/admin/customize/robots.json", params: { robots_txt: "new_content" }
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["robots_txt"]).to eq("new_content")
       expect(json["overridden"]).to eq(true)
       expect(SiteSetting.overridden_robots_txt).to eq("new_content")
@@ -82,7 +82,7 @@ describe Admin::RobotsTxtController do
       SiteSetting.overridden_robots_txt = "overridden_content"
       delete "/admin/customize/robots.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["robots_txt"]).not_to include("overridden_content")
       expect(json["overridden"]).to eq(false)
       expect(SiteSetting.overridden_robots_txt).to eq("")

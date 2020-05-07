@@ -232,7 +232,7 @@ RSpec.describe ApplicationController do
 
       expect(log).not_to include('exception app middleware')
 
-      expect(JSON.parse(response.body)).to eq(
+      expect(response.parsed_body).to eq(
         "status" => 400,
         "error" => "Bad Request"
       )
@@ -245,7 +245,7 @@ RSpec.describe ApplicationController do
       get "/search/query.json", params: { trem: "misspelled term" }
 
       expect(response.status).to eq(400)
-      expect(JSON.parse(response.body)).to eq(
+      expect(response.parsed_body).to eq(
         "errors" => ["param is missing or the value is empty: term"]
       )
     end

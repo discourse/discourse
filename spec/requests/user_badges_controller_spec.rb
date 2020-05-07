@@ -15,7 +15,7 @@ describe UserBadgesController do
       get "/user_badges.json", params: { badge_id: badge.id }
       expect(response.status).to eq(200)
 
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["topics"]).to eq(nil)
       expect(parsed["badges"].length).to eq(1)
       expect(parsed["user_badge_info"]["user_badges"][0]["post_id"]).to eq(nil)
@@ -40,7 +40,7 @@ describe UserBadgesController do
       get "/user-badges/#{user.username}.json"
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["user_badges"].length).to eq(1)
     end
 
@@ -49,7 +49,7 @@ describe UserBadgesController do
       get "/user-badges/#{user.username}", xhr: true
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["user_badges"].length).to eq(1)
     end
 
@@ -57,7 +57,7 @@ describe UserBadgesController do
       get "/user_badges.json", params: { badge_id: badge.id }
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["user_badge_info"]["user_badges"].length).to eq(1)
     end
 
@@ -67,7 +67,7 @@ describe UserBadgesController do
       }
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["user_badges"].first.has_key?('count')).to eq(true)
     end
   end
