@@ -20,11 +20,9 @@ export default class LinkLookup {
     if (linkInfo) {
       if (post) {
         // Skip edits to the OP
-        if (post) {
-          const postNumber = post.get("post_number");
-          if (postNumber === 1 || postNumber === linkInfo.post_number) {
-            return NO_RESULT;
-          }
+        const postNumber = post.get("post_number");
+        if (postNumber === 1 || postNumber === linkInfo.post_number) {
+          return NO_RESULT;
         }
 
         // Don't warn on older posts
