@@ -964,7 +964,7 @@ export default Component.extend({
           // Inline Oneboxes = `a.inline-onebox-loading` -> `a.inline-onebox`
 
           let loadedOneboxes = $preview.find(
-            `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.inline-onebox-loading`
+            `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.inline-onebox`
           ).length;
 
           $preview.find(`a.onebox, a.inline-onebox-loading`).each((_, link) => {
