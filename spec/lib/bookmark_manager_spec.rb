@@ -42,6 +42,17 @@ RSpec.describe BookmarkManager do
       end
     end
 
+    context "when options are provided" do
+      let(:options) { { delete_when_reminder_sent: true } }
+
+      it "saves any additional options successfully" do
+        subject.create(post_id: post.id, name: name, options: options)
+        bookmark = Bookmark.find_by(user: user)
+
+        expect(bookmark.delete_when_reminder_sent).to eq(true)
+      end
+    end
+
     context "when the bookmark already exists for the user & post" do
       before do
         Bookmark.create(post: post, user: user, topic: post.topic)
@@ -142,19 +153,34 @@ RSpec.describe BookmarkManager do
     let(:new_name) { "Some new name" }
     let(:new_reminder_at) { 10.days.from_now }
     let(:new_reminder_type) { Bookmark.reminder_types[:custom] }
+    let(:options) { {} }
 
     def update_bookmark
       subject.update(
-        bookmark_id: bookmark.id, name: new_name, reminder_type: new_reminder_type, reminder_at: new_reminder_at
+        bookmark_id: bookmark.id,
+        name: new_name,
+        reminder_type: new_reminder_type,
+        reminder_at: new_reminder_at,
+        options: options
       )
     end
 
-    it "saves the time and new reminder type sucessfully" do
+    it "saves the time and new reminder type and new name sucessfully" do
       update_bookmark
       bookmark.reload
       expect(bookmark.name).to eq(new_name)
       expect(bookmark.reminder_at).to eq_time(new_reminder_at)
       expect(bookmark.reminder_type).to eq(new_reminder_type)
+    end
+
+    context "when options are provided" do
+      let(:options) { { delete_when_reminder_sent: true } }
+
+      it "saves any additional options successfully" do
+        update_bookmark
+        bookmark.reload
+        expect(bookmark.delete_when_reminder_sent).to eq(true)
+      end
     end
 
     context "if the new reminder type is a string" do

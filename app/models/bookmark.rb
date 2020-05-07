@@ -79,17 +79,18 @@ end
 #
 # Table name: bookmarks
 #
-#  id                    :bigint           not null, primary key
-#  user_id               :bigint           not null
-#  topic_id              :bigint           not null
-#  post_id               :bigint           not null
-#  name                  :string
-#  reminder_type         :integer
-#  reminder_at           :datetime
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  reminder_last_sent_at :datetime
-#  reminder_set_at       :datetime
+#  id                        :bigint           not null, primary key
+#  user_id                   :bigint           not null
+#  topic_id                  :bigint           not null
+#  post_id                   :bigint           not null
+#  name                      :string
+#  reminder_type             :integer
+#  reminder_at               :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  reminder_last_sent_at     :datetime
+#  reminder_set_at           :datetime
+#  delete_when_reminder_sent :boolean          default(FALSE)
 #
 # Indexes
 #

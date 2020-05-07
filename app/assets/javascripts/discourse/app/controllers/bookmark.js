@@ -1,4 +1,5 @@
 import { and } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import { action } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import Controller from "@ember/controller";
@@ -59,6 +60,8 @@ export default Controller.extend(ModalFunctionality, {
   lastCustomReminderTime: null,
   mouseTrap: null,
   userTimezone: null,
+  showOptions: false,
+  options: null,
 
   onShow() {
     this.setProperties({
@@ -70,9 +73,13 @@ export default Controller.extend(ModalFunctionality, {
       customReminderTime: this._defaultCustomReminderTime(),
       lastCustomReminderDate: null,
       lastCustomReminderTime: null,
-      userTimezone: this.currentUser.resolvedTimezone()
+      userTimezone: this.currentUser.resolvedTimezone(),
+      showOptions: false,
+      options: {},
+      model: this.model || {}
     });
 
+    this._loadBookmarkOptions();
     this._bindKeyboardShortcuts();
     this._loadLastUsedCustomReminderDatetime();
 
@@ -122,6 +129,21 @@ export default Controller.extend(ModalFunctionality, {
 
   _existingBookmarkHasReminder() {
     return isPresent(this.model) && isPresent(this.model.reminderAt);
+  },
+
+  _loadBookmarkOptions() {
+    this.set(
+      "options.deleteWhenReminderSent",
+      this.model.deleteWhenReminderSent ||
+        localStorage.bookmarkOptionsDeleteWhenReminderSent === "true"
+    );
+
+    // we want to make sure the options panel opens so the user
+    // knows they have set these options previously. run next otherwise
+    // the modal is not visible when it tries to slide down the options
+    if (this.options.deleteWhenReminderSent) {
+      next(() => this.toggleOptionsPanel());
+    }
   },
 
   _loadLastUsedCustomReminderDatetime() {
@@ -268,6 +290,8 @@ export default Controller.extend(ModalFunctionality, {
       localStorage.lastCustomBookmarkReminderDate = this.customReminderDate;
     }
 
+    localStorage.bookmarkOptionsDeleteWhenReminderSent = this.options.deleteWhenReminderSent;
+
     let reminderType;
     if (this.selectedReminderType === REMINDER_TYPES.NONE) {
       reminderType = null;
@@ -282,7 +306,8 @@ export default Controller.extend(ModalFunctionality, {
       reminder_at: reminderAtISO,
       name: this.model.name,
       post_id: this.model.postId,
-      id: this.model.id
+      id: this.model.id,
+      delete_when_reminder_sent: this.options.deleteWhenReminderSent
     };
 
     if (this._editingExistingBookmark()) {
@@ -294,6 +319,7 @@ export default Controller.extend(ModalFunctionality, {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
+            deleteWhenReminderSent: this.options.deleteWhenReminderSent,
             id: this.model.id,
             name: this.model.name
           });
@@ -305,6 +331,7 @@ export default Controller.extend(ModalFunctionality, {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
+            deleteWhenReminderSent: this.options.deleteWhenReminderSent,
             id: response.id,
             name: this.model.name
           });
@@ -418,6 +445,16 @@ export default Controller.extend(ModalFunctionality, {
     } else {
       popupAjaxError(e);
     }
+  },
+
+  @action
+  toggleOptionsPanel() {
+    if (this.showOptions) {
+      $(".bookmark-options-panel").slideUp("fast");
+    } else {
+      $(".bookmark-options-panel").slideDown("fast");
+    }
+    this.toggleProperty("showOptions");
   },
 
   @action

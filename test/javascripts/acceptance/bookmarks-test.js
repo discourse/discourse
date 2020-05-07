@@ -106,6 +106,30 @@ test("Saving a bookmark with a reminder", async assert => {
   assert.verifySteps(["tomorrow"]);
 });
 
+test("Opening the options panel and remembering the option", async assert => {
+  mockSuccessfulBookmarkPost(assert);
+  await visit("/t/internationalization-localization/280");
+  await openBookmarkModal();
+  await click(".bookmark-options-button");
+  assert.ok(
+    exists(".bookmark-options-panel"),
+    "it should open the options panel"
+  );
+  await click("#delete_when_reminder_sent");
+  await click("#save-bookmark");
+  await openEditBookmarkModal();
+
+  assert.ok(
+    exists(".bookmark-options-panel"),
+    "it should reopen the options panel"
+  );
+  assert.ok(
+    exists(".bookmark-options-panel #delete_when_reminder_sent:checked"),
+    "it should pre-check delete when reminder sent option"
+  );
+  assert.verifySteps(["none"]);
+});
+
 test("Saving a bookmark with no reminder or name", async assert => {
   mockSuccessfulBookmarkPost(assert);
   await visit("/t/internationalization-localization/280");
