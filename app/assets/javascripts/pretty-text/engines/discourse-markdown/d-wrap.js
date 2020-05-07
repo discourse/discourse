@@ -57,7 +57,7 @@ const inlineRule = {
       token.content = content;
     }
 
-    token = state.push("wrap_close", "span", -1);
+    state.push("wrap_close", "span", -1);
     return true;
   }
 };
