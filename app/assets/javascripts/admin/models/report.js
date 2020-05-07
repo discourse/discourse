@@ -346,7 +346,7 @@ const Report = EmberObject.extend({
 
     return {
       value: username,
-      formatedValue: username ? formatedValue(username) : "—"
+      formatedValue: username ? formatedValue() : "—"
     };
   },
 
