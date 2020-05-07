@@ -449,9 +449,9 @@ export default Controller.extend(ModalFunctionality, {
   @action
   toggleOptionsPanel() {
     if (this.showOptions) {
-      $(".options-panel").slideUp("fast");
+      $(".bookmark-options-panel").slideUp("fast");
     } else {
-      $(".options-panel").slideDown("fast");
+      $(".bookmark-options-panel").slideDown("fast");
     }
     this.toggleProperty("showOptions");
   },
