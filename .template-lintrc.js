@@ -8,7 +8,6 @@ module.exports = {
   rules: {
     "block-indentation": true,
     "deprecated-render-helper": true,
-    "require-valid-alt-text": false,
     "linebreak-style": true,
     "link-rel-noopener": "strict",
     "no-abstract-roles": true,
