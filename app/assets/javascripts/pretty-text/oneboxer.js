@@ -29,7 +29,7 @@ function resolveSize(img) {
 }
 
 // Detect square images and apply smaller onebox-avatar class
-function applySquareGenericOnebox($elem, normalizedUrl) {
+function applySquareGenericOnebox($elem) {
   if (!$elem.hasClass("whitelistedgeneric")) {
     return;
   }
@@ -43,10 +43,10 @@ function applySquareGenericOnebox($elem, normalizedUrl) {
   }
 
   if (img.complete) {
-    resolveSize(img, $elem, normalizedUrl);
+    resolveSize(img);
   } else {
     $img.on("load.onebox", () => {
-      resolveSize(img, $elem, normalizedUrl);
+      resolveSize(img);
       $img.off("load.onebox");
     });
   }
