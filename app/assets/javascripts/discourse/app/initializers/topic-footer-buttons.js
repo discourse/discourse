@@ -84,7 +84,7 @@ export default {
     });
 
     registerTopicFooterButton({
-      dependentKeys: ["topic.bookmarked", "topic.isPrivateMessage"],
+      dependentKeys: ["topic.bookmarked"],
       id: "bookmark",
       icon() {
         if (this.get("topic.bookmark_reminder_at")) {
@@ -120,9 +120,6 @@ export default {
       action: "toggleBookmark",
       dropdown() {
         return this.site.mobileView;
-      },
-      displayed() {
-        return !this.get("topic.isPrivateMessage");
       }
     });
 

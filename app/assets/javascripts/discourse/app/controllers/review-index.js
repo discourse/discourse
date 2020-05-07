@@ -25,7 +25,7 @@ export default Controller.extend({
   username: "",
   from_date: null,
   to_date: null,
-  sort_order: "priority",
+  sort_order: null,
   additional_filters: null,
 
   init(...args) {
@@ -108,6 +108,38 @@ export default Controller.extend({
     },
 
     refresh() {
+      const currentStatus = this.status;
+      const nextStatus = this.filterStatus;
+      const currentOrder = this.sort_order;
+      let nextOrder = this.filterSortOrder;
+
+      const createdAtStatuses = ["reviewed", "all"];
+      const priorityStatuses = [
+        "approved",
+        "rejected",
+        "deleted",
+        "ignored",
+        "pending"
+      ];
+
+      if (
+        createdAtStatuses.includes(currentStatus) &&
+        currentOrder === "created_at" &&
+        priorityStatuses.includes(nextStatus) &&
+        nextOrder === "created_at"
+      ) {
+        nextOrder = "priority";
+      }
+
+      if (
+        priorityStatuses.includes(currentStatus) &&
+        currentOrder === "priority" &&
+        createdAtStatuses.includes(nextStatus) &&
+        nextOrder === "priority"
+      ) {
+        nextOrder = "created_at";
+      }
+
       this.setProperties({
         type: this.filterType,
         priority: this.filterPriority,
@@ -120,7 +152,7 @@ export default Controller.extend({
         to_date: isPresent(this.filterToDate)
           ? this.filterToDate.toISOString(true).split("T")[0]
           : null,
-        sort_order: this.filterSortOrder,
+        sort_order: nextOrder,
         additional_filters: JSON.stringify(this.additionalFilters)
       });
 

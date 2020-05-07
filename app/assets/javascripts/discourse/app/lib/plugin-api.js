@@ -5,7 +5,7 @@ import { addPluginOutletDecorator } from "discourse/components/plugin-connector"
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
-import { addButton } from "discourse/widgets/post-menu";
+import { addButton, removeButton } from "discourse/widgets/post-menu";
 import { includeAttributes } from "discourse/lib/transform-post";
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { addToolbarCallback } from "discourse/components/d-editor";
@@ -54,7 +54,7 @@ import { on } from "@ember/object/evented";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.42";
+const PLUGIN_API_VERSION = "0.8.43";
 
 class PluginApi {
   constructor(version, container) {
@@ -399,9 +399,23 @@ class PluginApi {
    *     position: 'first'  // can be `first`, `last` or `second-last-hidden`
    *   };
    * });
+   * ```
    **/
   addPostMenuButton(name, callback) {
     addButton(name, callback);
+  }
+
+  /**
+   * Remove existing button below a post with your plugin.
+   *
+   * Example:
+   *
+   * ```
+   * api.removePostMenuButton('like');
+   * ```
+   **/
+  removePostMenuButton(name) {
+    removeButton(name);
   }
 
   /**

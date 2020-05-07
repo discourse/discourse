@@ -231,7 +231,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option").map(&:inner_text)).to eq(slow_digest_frequencies)
       end
 
@@ -242,7 +242,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(six_months_freq.to_s)
       end
 
@@ -253,7 +253,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(never_frequency.to_s)
       end
     end

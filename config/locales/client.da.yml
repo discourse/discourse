@@ -27,7 +27,6 @@ da:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_with_zone: "HH:mm (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D. MMM"
       full_no_year_no_time: "D. MMMM"
@@ -259,7 +258,6 @@ da:
         bookmark: "Klik for at sætte et bogmærke i det første indlæg i denne tråd"
         unbookmark: "Klik for at fjerne alle bogmærker i dette emne"
     bookmarks:
-      created: "du har bogmærket dette indlæg."
       not_bookmarked: "bogmærke dette indlæg"
       remove: "Fjern bogmærke"
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
@@ -731,6 +729,10 @@ da:
       private_message: "Besked"
       private_messages: "Beskeder"
       user_notifications:
+        filters:
+          all: "Alle"
+          read: "Læste"
+          unread: "Ulæst"
         ignore_duration_title: "Ignorér timer"
         ignore_duration_username: "Brugernavn"
         ignore_duration_when: "Varighed:"
@@ -1230,6 +1232,7 @@ da:
     assets_changed_confirm: "Dette site er lige blevet opdateret. Vil du opdatere nu til den seneste version?"
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
+    home: "Hjem"
     read_only_mode:
       enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
@@ -1953,7 +1956,6 @@ da:
           "2_8": "Du vil se antallet af nye svar, fordi du følger denne kategori."
           "2_4": "Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne."
           "2_2": "Du vil se antallet af nye svar, fordi du følger dette emne."
-          "2": 'Du vil se antallet af nye svar, fordi du <a href="{{basePath}}/u/{{username}}/preferences">læste dette emne</a>.'
           "1_2": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "1": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "0_7": "Du ignorerer alle notifikationer i denne kategori."
@@ -2645,7 +2647,6 @@ da:
         this_week: "Uge"
         today: "I dag"
         other_periods: "se top"
-    browser_update: 'Desværre er <a href="https://www.discourse.org/faq/#browser">din browser for gammel til at virke på denne side</a> . <a href="https://browsehappy.com">Opgrader din browser</a> .'
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"

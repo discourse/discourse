@@ -91,6 +91,11 @@ module Discourse
       end
     end
 
+    # we skip it cause we configure it in the initializer
+    # the railstie for message_bus would insert it in the
+    # wrong position
+    config.skip_message_bus_middleware = true
+
     # Disable so this is only run manually
     # we may want to change this later on
     # issue is image_optim crashes on missing dependencies
@@ -134,7 +139,6 @@ module Discourse
     config.assets.precompile += %w{
       vendor.js
       admin.js
-      preload-store.js
       browser-detect.js
       browser-update.js
       break_string.js
@@ -245,7 +249,7 @@ module Discourse
 
     # Our templates shouldn't start with 'discourse/app/templates'
     config.handlebars.templates_root = 'discourse/app/templates'
-    config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
+    config.handlebars.raw_template_namespace = "__DISCOURSE_RAW_TEMPLATES"
     Sprockets.register_mime_type 'text/x-handlebars', extensions: ['.hbr']
     Sprockets.register_transformer 'text/x-handlebars', 'application/javascript', Ember::Handlebars::Template
 

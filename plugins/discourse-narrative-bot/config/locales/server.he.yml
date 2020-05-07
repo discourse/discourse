@@ -124,8 +124,8 @@ he:
         tracks: |-
           אלו הפעולות שאני יודע לבצע נכון להיום:
 
-          ‏`@%{discobot_username} %{reset_trigger} {name-of-tutorial}‏`
-          > מתחיל מדריך אינטראקטיבי. `{name-of-tutorial}` יכול להיות כל אחד מבין: `%{tracks}`.
+          ‎`@%{discobot_username} %{reset_trigger} {name-of-tutorial}`‎
+          > מתחיל מדריך אינטראקטיבי עבורך בלבד, בהודעה פרטית. `{name-of-tutorial}` יכול להיות כל אחד מבין: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

@@ -7,13 +7,15 @@ import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
 
+const getURLWithCDN = url => Discourse.getURLWithCDN(url);
+
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
     site = Discourse.__container__.lookup("site:main");
 
   opts = _.merge(
     {
-      getURL: Discourse.getURLWithCDN,
+      getURL: getURLWithCDN,
       currentUser: Discourse.__container__.lookup("current-user:main"),
       censoredRegexp: site.censored_regexp,
       siteSettings,
@@ -67,7 +69,7 @@ function emojiOptions() {
   }
 
   return {
-    getURL: Discourse.getURLWithCDN,
+    getURL: url => getURLWithCDN(url),
     emojiSet: Discourse.SiteSettings.emoji_set,
     enableEmojiShortcuts: Discourse.SiteSettings.enable_emoji_shortcuts,
     inlineEmoji: Discourse.SiteSettings.enable_inline_emoji_translation

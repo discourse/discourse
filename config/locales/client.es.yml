@@ -27,7 +27,6 @@ es:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
@@ -264,10 +263,7 @@ es:
         unbookmark: "Haz clic para eliminar todos los marcadores en este tema"
         unbookmark_with_reminder: "Haz clic para quitar todos los marcadores y recordatorios en este tema. Tienes un recordatorio puesto %{reminder_at} para este tema."
     bookmarks:
-      created: "has marcado esta publicación"
       not_bookmarked: "marcar esta publicación"
-      created_with_reminder: "has guardado esta publicación en marcadores con un recordatorio %{date}"
-      created_with_at_desktop_reminder: "guardaste esta publicación en marcadores y se te recordará la próxima vez que estés en tu computadora"
       remove: "Eliminar marcador"
       delete: "Borrar marcador"
       confirm_delete: "¿Seguro que quieres borrar este marcados? El recordatorio también se borrará."
@@ -759,6 +755,10 @@ es:
       private_message: "Mensaje"
       private_messages: "Mensajes"
       user_notifications:
+        filters:
+          all: "Todo"
+          read: "Leídos"
+          unread: "Sin leer"
         ignore_duration_title: "Temporizador de ignorado"
         ignore_duration_username: "Nombre de usuario"
         ignore_duration_when: "Duración:"
@@ -911,7 +911,7 @@ es:
         success: "(correo electrónico enviado)"
         in_progress: "(enviando correo electrónico)"
         error: "(error)"
-        emoji: "emoji de un candado"
+        emoji: "emoji candado"
         action: "Enviar correo electrónico para restablecer la contraseña"
         set_password: "Establecer contraseña"
         choose_new: "Escoge una nueva contraseña"
@@ -1285,6 +1285,7 @@ es:
     assets_changed_confirm: "Este sitio acaba de ser actualizado. ¿Quieres cargar la página de nuevo para ver la última versión?"
     logout: "Has cerrado sesión."
     refresh: "Actualizar"
+    home: "Inicio"
     read_only_mode:
       enabled: "Este sitio está en modo de solo lectura. Puedes continuar navegando pero algunas acciones como responder o dar me gusta no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro se encuentre en modo de solo lectura."
@@ -2059,7 +2060,6 @@ es:
           "2_8": "Verás el número de respuestas  nuevas porque estás siguiendo esta categoría."
           "2_4": "Verás el número de respuestas nuevas porque has publicado una respuesta en este tema."
           "2_2": "Verás el número de respuestas nuevas porque estás siguiendo este tema."
-          "2": 'Verás el número de respuestas nuevas porque has <a href="{{basePath}}/u/{{username}}/preferences">leído este tema</a>.'
           "1_2": "Se te notificará si alguien menciona tu @nombre o te responde."
           "1": "Se te notificará si alguien menciona tu @nombre o te responde."
           "0_7": "Estás ignorando todas las notificaciones en esta categoría."
@@ -2480,6 +2480,7 @@ es:
         create: "Crear marcador"
         edit: "Editar marcador"
         created: "Creado"
+        updated: "Actualizado"
         name: "Nombre"
         name_placeholder: "¿Para qué es este marcador?"
         set_reminder: "Recuérdame"
@@ -2795,7 +2796,6 @@ es:
         this_week: "Semana"
         today: "Hoy"
         other_periods: "ver los destacados"
-    browser_update: 'Desafortunadamente <a href="https://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor, <a href="https://browsehappy.com">actualiza tu navegador</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3184,6 +3184,7 @@ es:
             effects: Efectos
             trust_levels_none: "Ninguno"
             automatic_membership_email_domains: "Los usuarios que se registren con un dominio de correo electrónico que esté en esta lista se añadirán automáticamente a este grupo:"
+            automatic_membership_user_count: "%{count} usuarios tienen los nuevos dominios de email y serán añadidos al grupo."
             primary_group: "Establecer automáticamente como grupo principal"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que los nombres de usuarios"
         primary: "Grupo principal"

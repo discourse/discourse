@@ -8,7 +8,7 @@ describe PrettyText do
   let(:post) { Fabricate(:post) }
 
   it "supports details tag" do
-    cooked_html = <<~HTML
+    cooked_html = <<~HTML.gsub("\n", "")
       <details>
       <summary>
       foo</summary>
@@ -17,7 +17,7 @@ describe PrettyText do
     HTML
 
     expect(cooked_html).to match_html(cooked_html)
-    expect(PrettyText.cook("[details=foo]\nbar\n[/details]")).to match_html(cooked_html)
+    expect(PrettyText.cook("[details=foo]\nbar\n[/details]").gsub("\n", "")).to match_html(cooked_html)
   end
 
   it "deletes elided content" do

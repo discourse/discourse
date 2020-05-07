@@ -27,7 +27,6 @@ pt_BR:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
-      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"
@@ -262,9 +261,7 @@ pt_BR:
         bookmark: "Clique para adicionar o primeiro post deste tópico aos favoritos"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
     bookmarks:
-      created: "você marcou esta postagem como favorita"
       not_bookmarked: "marcar postagem como favorita"
-      created_with_at_desktop_reminder: "você marcou esta postagem como favorita e será lembrado na próxima vez em que estiver em sua área de trabalho"
       remove: "Remover Favorito"
       confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
       save: "Salvar"
@@ -746,6 +743,10 @@ pt_BR:
       private_message: "Mensagem"
       private_messages: "Mensagens"
       user_notifications:
+        filters:
+          all: "Tudo"
+          read: "Lido"
+          unread: "Não lidas"
         ignore_duration_title: "Ignorar Temporizador"
         ignore_duration_username: "Nome de Usuário"
         ignore_duration_when: "Duração:"
@@ -1264,6 +1265,7 @@ pt_BR:
     assets_changed_confirm: "Este site acabou de ser atualizado. Atualizar a página agora para ver a última versão?"
     logout: "Você foi desconectado."
     refresh: "Atualizar"
+    home: "Início"
     read_only_mode:
       enabled: "Este site está em modo de somente leitura. Por favor, continue a navegar, mas respostas, curtidas e outras ações estão desabilitadas por enquanto."
       login_disabled: "O login é desabilitado enquanto o site está em modo de somente leitura."
@@ -2015,7 +2017,6 @@ pt_BR:
           "2_8": "Você verá uma contagem de novas respostas porque está acompanhando esta categoria."
           "2_4": "Você verá uma contagem de novas respostas porque postou uma resposta a este tópico."
           "2_2": "Você verá uma contagem de novas respostas porque está acompanhando este tópico."
-          "2": 'Você verá uma contagem de novas respostas porque você <a href="{{basePath}}/u/{{username}}/preferences">leu este tópico</a>.'
           "1_2": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "1": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "0_7": "Você está ignorando todas as notificações nesta categoria."
@@ -2419,6 +2420,7 @@ pt_BR:
       bookmarks:
         create: "Criar marcador"
         created: "Criado"
+        updated: "Atualizado"
         name: "Nome"
     category:
       can: "pode&hellip; "
@@ -2725,7 +2727,6 @@ pt_BR:
         this_week: "Semana"
         today: "Hoje"
         other_periods: "Veja o topo"
-    browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">o seu navegador é muito antigo para funcionar neste site</a>. Por favor, <a href="https://browsehappy.com">atualize o seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"

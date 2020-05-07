@@ -316,6 +316,7 @@ const Post = RestModel.extend({
           postId: this.id,
           id: this.bookmark_id,
           reminderAt: this.bookmark_reminder_at,
+          deleteWhenReminderSent: this.bookmark_delete_when_reminder_sent,
           name: this.bookmark_name
         },
         title: this.bookmark_id
@@ -334,6 +335,8 @@ const Post = RestModel.extend({
             bookmarked: true,
             bookmark_reminder_at: savedData.reminderAt,
             bookmark_reminder_type: savedData.reminderType,
+            bookmark_delete_when_reminder_sent:
+              savedData.deleteWhenReminderSent,
             bookmark_name: savedData.name,
             bookmark_id: savedData.id
           });

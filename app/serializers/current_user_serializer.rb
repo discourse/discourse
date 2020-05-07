@@ -123,7 +123,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_invite_to_forum
-    true
+    scope.can_invite_to_forum?
   end
 
   def include_can_invite_to_forum?

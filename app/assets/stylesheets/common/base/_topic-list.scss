@@ -52,6 +52,13 @@
   a.title:not(.badge-notification) {
     color: $primary-medium;
   }
+  span.badge-category {
+    font-weight: normal;
+    color: $primary-medium;
+  }
+  a.discourse-tag {
+    color: $primary-medium;
+  }
 }
 
 .topic-list-item {
@@ -286,7 +293,9 @@ ol.category-breadcrumb {
 }
 
 .top-title-buttons {
-  display: inline;
+  display: inline-flex;
+  margin: 0.25em 0;
+  flex-wrap: wrap;
 
   button {
     margin-right: 0.5em;

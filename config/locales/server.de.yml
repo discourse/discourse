@@ -325,7 +325,7 @@ de:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
-      time_must_be_provided: "Zeit muss eingestellt werden für alle Erinnerungen ausser '%{reminder_type}'"
+      time_must_be_provided: "Zeit muss eingestellt werden für alle Erinnerungen"
     reminders:
       at_desktop: "Nächstes mal wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"

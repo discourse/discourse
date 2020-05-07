@@ -41,6 +41,11 @@ export function addButton(name, builder) {
   _extraButtons[name] = builder;
 }
 
+export function removeButton(name) {
+  if (_extraButtons[name]) delete _extraButtons[name];
+  if (_builders[name]) delete _builders[name];
+}
+
 function registerButton(name, builder) {
   _builders[name] = builder;
 }
@@ -301,8 +306,6 @@ registerButton("bookmark", attrs => {
       );
       title = "bookmarks.created_with_reminder";
       titleOptions.date = formattedReminder;
-    } else if (attrs.bookmarkReminderType === "at_desktop") {
-      title = "bookmarks.created_with_at_desktop_reminder";
     } else {
       title = "bookmarks.created";
     }

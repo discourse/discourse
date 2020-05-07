@@ -26,7 +26,6 @@ ja:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
-      time_with_zone: "H:mm (z)"
       timeline_date: "YYYY年M月"
       long_no_year_no_time: "M月D日"
       full_no_year_no_time: "M月D日"
@@ -235,7 +234,6 @@ ja:
         bookmark: "クリックするとトピックの最初の投稿をブックマークします"
         unbookmark: "クリックするとトピック内の全てのブックマークを削除します"
     bookmarks:
-      created: "この投稿をブックマークしました"
       not_bookmarked: "この投稿をブックマークする"
       remove: "ブックマークを削除"
       confirm_clear: "このトピックのすべてのブックマークをクリアしますか?"
@@ -642,6 +640,10 @@ ja:
       private_message: "メッセージ"
       private_messages: "メッセージ"
       user_notifications:
+        filters:
+          all: "すべて"
+          read: "既読"
+          unread: "未読"
         ignore_duration_username: "ユーザー名"
         ignore_duration_when: "期間："
         ignore_duration_save: "無視する"
@@ -1075,6 +1077,7 @@ ja:
     assets_changed_confirm: "Discourseがアップデートされました。ページを更新して最新のバージョンにしますか？"
     logout: "ログアウトしました"
     refresh: "更新"
+    home: "ホーム"
     read_only_mode:
       enabled: "このサイトは閲覧専用モードになっています。閲覧し続けられますが、返信したりいいねを付けるなどのアクションは現在出来ません。"
       login_disabled: "閲覧専用モードのため、ログインできません。"
@@ -1660,7 +1663,6 @@ ja:
           "2_8": "このカテゴリを追跡しているので、新たな返信のカウント数が表示されます。"
           "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
           "2_2": "このトピックを追跡しているので、新たな返信のカウント数が表示されます。"
-          "2": '<a href="{{basePath}}/u/{{username}}/preferences">このトピックを読む</a>ので、新しい返信の数が表示されます。'
           "1_2": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "1": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "0_7": "このカテゴリに関して一切通知を受け取りません。"

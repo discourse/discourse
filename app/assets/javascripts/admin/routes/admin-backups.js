@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 import BackupStatus from "admin/models/backup-status";
 import Backup from "admin/models/backup";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
 
 const LOG_CHANNEL = "/admin/backups/logs";

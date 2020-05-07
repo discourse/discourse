@@ -24,7 +24,7 @@ class CookedPostProcessor
     @cooking_options = @cooking_options.symbolize_keys
 
     cooked = post.cook(post.raw, @cooking_options)
-    @doc = Nokogiri::HTML::fragment(cooked)
+    @doc = Nokogiri::HTML5::fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
@@ -95,7 +95,7 @@ class CookedPostProcessor
 
     return if previous.blank?
 
-    previous_text = Nokogiri::HTML::fragment(previous).text.strip
+    previous_text = Nokogiri::HTML5::fragment(previous).text.strip
     quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip || ""
 
     return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')
@@ -490,16 +490,26 @@ class CookedPostProcessor
   end
 
   def update_post_image
-    img = extract_images_for_post.first
-    if img.blank?
-      @post.update_column(:image_url, nil) if @post.image_url
-      @post.topic.update_column(:image_url, nil) if @post.topic.image_url && @post.is_first_post?
-      return
+    upload = nil
+    eligible_image_fragments = extract_images_for_post
+
+    # Loop through those fragments until we find one with an upload record
+    @post.each_upload_url(fragments: eligible_image_fragments) do |src, path, sha1|
+      upload = Upload.find_by(sha1: sha1)
+      break if upload
     end
 
-    if img["src"].present?
-      @post.update_column(:image_url, img["src"][0...255]) # post
-      @post.topic.update_column(:image_url, img["src"][0...255]) if @post.is_first_post? # topic
+    if upload.present?
+      @post.update_column(:image_upload_id, upload.id) # post
+      if @post.is_first_post? # topic
+        @post.topic.update_column(:image_upload_id, upload.id)
+        extra_sizes = ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
+        @post.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+      end
+    else
+      @post.update_column(:image_upload_id, nil) if @post.image_upload_id
+      @post.topic.update_column(:image_upload_id, nil) if @post.topic.image_upload_id && @post.is_first_post?
+      nil
     end
   end
 

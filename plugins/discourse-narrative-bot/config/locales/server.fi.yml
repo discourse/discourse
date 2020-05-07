@@ -121,11 +121,6 @@ fi:
       random_mention:
         reply: |-
           Moi! Jos haluat tietää mitä osaan, sano `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Osaan tehdä seuraavat asiat:
-
-          `@%{discobot_username}%{reset_trigger}{name-of-tutorial}`
-          > Aloittaa interaktiivisen kurssin. `{name-of-tutorial} ` voi olla jokin seuraavista: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

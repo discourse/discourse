@@ -27,7 +27,6 @@ nb_NO:
         millions: "{{number}}M"
     dates:
       time: "LT"
-      time_with_zone: "LT (z)"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D. MMMM"
@@ -255,7 +254,6 @@ nb_NO:
         bookmark: "Klikk for å bokmerke det første innlegget i dette emnet"
         unbookmark: "Klikk for å fjerne alle bokmerker i dette emnet"
     bookmarks:
-      created: "du har bokmerket dette innlegget"
       not_bookmarked: "bokmerk dette innlegget"
       remove: "Fjern bokmerke"
       confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
@@ -647,6 +645,10 @@ nb_NO:
       private_message: "Melding"
       private_messages: "Meldinger"
       user_notifications:
+        filters:
+          all: "Alle"
+          read: "Lest"
+          unread: "Uleste"
         ignore_duration_username: "Brukernavn"
         ignore_duration_save: "Ignorer"
         add_ignored_user: "Legg til …"
@@ -1065,6 +1067,7 @@ nb_NO:
     assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Last inn siden på nytt nå for siste versjon?"
     logout: "Du ble logget ut"
     refresh: "Refresh"
+    home: "Hjem"
     read_only_mode:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
@@ -1714,7 +1717,6 @@ nb_NO:
           "2_8": "Du vil se antall nye svar fordi du følger denne kategorien."
           "2_4": "Du vil se antall nye svar fordi du skrev et svar i dette emnet."
           "2_2": "Du vil se antall nye svar fordi du overvåker dette emnet."
-          "2": 'Du vil se antall nye svar fordi du <a href="{{basePath}}/u/{{username}}/preferences">leste dette emnet</a>.'
           "1_2": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "1": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "0_7": "Du ignorerer alle varsler i denne kategorien."

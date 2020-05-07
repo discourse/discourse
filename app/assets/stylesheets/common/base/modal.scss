@@ -141,6 +141,13 @@
   z-index: z("modal", "content");
   overflow: auto;
 
+  .keyboard-visible & {
+    height: calc(var(--composer-vh, 1vh) * 100);
+    .modal-inner-container {
+      max-height: 100%;
+    }
+  }
+
   &:not(.history-modal) {
     .modal-body:not(.reorder-categories):not(.poll-ui-builder) {
       max-height: 80vh !important;

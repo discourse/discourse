@@ -11,7 +11,7 @@ module RetrieveTitle
 
   def self.extract_title(html)
     title = nil
-    if doc = Nokogiri::HTML(html)
+    if doc = Nokogiri::HTML5(html)
 
       title = doc.at('title')&.inner_text
 

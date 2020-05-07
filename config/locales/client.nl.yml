@@ -264,10 +264,10 @@ nl:
         unbookmark: "Klik om alle bladwijzers in dit topic te verwijderen"
         unbookmark_with_reminder: "Klik om alle bladwijzers en herinneringen in dit topic te verwijderen. U hebt voor dit topic een herinnering ingesteld voor %{reminder_at}."
     bookmarks:
-      created: "u hebt een bladwijzer voor dit bericht gemaakt"
+      created: "u hebt een bladwijzer voor dit bericht gemaakt%{name}"
       not_bookmarked: "bladwijzer voor dit bericht maken"
-      created_with_reminder: "u hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}"
-      created_with_at_desktop_reminder: "u hebt een bladwijzer voor dit bericht gemaakt en wordt de volgende keer dat u uw computer gebruikt herinnerd"
+      created_with_reminder: "u hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}%{name}"
+      created_with_at_desktop_reminder: "u hebt een bladwijzer voor dit bericht gemaakt en wordt de volgende keer dat u uw computer gebruikt herinnerd%{name}"
       remove: "Bladwijzer verwijderen"
       delete: "Bladwijzer verwijderen"
       confirm_delete: "Weet u zeker dat u deze bladwijzer wilt verwijderen? De herinnering wordt ook verwijderd."
@@ -759,6 +759,10 @@ nl:
       private_message: "Bericht"
       private_messages: "Berichten"
       user_notifications:
+        filters:
+          all: "Alle"
+          read: "Gelezen"
+          unread: "Ongelezen"
         ignore_duration_title: "Negeertimer"
         ignore_duration_username: "Gebruikersnaam"
         ignore_duration_when: "Tijdsduur:"
@@ -1285,6 +1289,7 @@ nl:
     assets_changed_confirm: "Deze website is zojuist bijgewerkt. Nu vernieuwen om de nieuwste versie te laden?"
     logout: "U bent afgemeld."
     refresh: "Vernieuwen"
+    home: "Hoofdpagina"
     read_only_mode:
       enabled: "Deze website bevindt zich in alleen-lezenmodus. U kunt doorgaan met browsen, maar berichten beantwoorden, likes geven en andere acties zijn momenteel uitgeschakeld."
       login_disabled: "Aanmelden is uitgeschakeld zolang de website zich in alleen-lezenmodus bevindt."
@@ -1314,6 +1319,7 @@ nl:
     mute: Negeren
     unmute: Tonen
     last_post: Geplaatst
+    local_time: "Lokale tijd"
     time_read: Gelezen
     time_read_recently: "%{time_read} onlangs"
     time_read_tooltip: "%{time_read} totale leestijd"
@@ -2059,7 +2065,6 @@ nl:
           "2_8": "U ziet het aantal nieuwe antwoorden, omdat u deze categorie volgt."
           "2_4": "U ziet het aantal nieuwe antwoorden, omdat u een antwoord in dit topic hebt geplaatst."
           "2_2": "U ziet het aantal nieuwe antwoorden, omdat u dit topic volgt."
-          "2": 'U ziet het aantal nieuwe antwoorden, omdat u <a href="{{basePath}}/u/{{username}}/preferences">dit topic hebt gelezen</a>.'
           "1_2": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "1": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "0_7": "U negeert alle meldingen in deze categorie."
@@ -2480,6 +2485,7 @@ nl:
         create: "Bladwijzer maken"
         edit: "Bladwijzer bewerken"
         created: "Gemaakt"
+        updated: "Bijgewerkt"
         name: "Naam"
         name_placeholder: "Waar is deze bladwijzer voor?"
         set_reminder: "Mij herinneren"
@@ -2550,6 +2556,7 @@ nl:
       email_in_disabled_click: 'schakelt u de instelling ''e-mail in'' in.'
       mailinglist_mirror: "Categorie weerspiegelt een mailinglijst"
       show_subcategory_list: "Subcategorielijsten boven topics tonen in deze categorie"
+      read_only_banner: "Bannertekst wanneer een gebruiker geen topic in deze categorie kan maken:"
       num_featured_topics: "Aantal getoonde topics op de categoriepagina:"
       subcategory_num_featured_topics: "Aantal aanbevolen topics op pagina van bovenliggende categorie:"
       all_topics_wiki: "Nieuwe topics standaard wiki's maken"
@@ -2795,7 +2802,7 @@ nl:
         this_week: "Week"
         today: "Vandaag"
         other_periods: "eerste bekijken"
-    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om met deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a>.'
+    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om op deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a> om rijke inhoud te kunnen bekijken, u aan te melden, en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
@@ -3474,6 +3481,9 @@ nl:
           settings: "Instellingen"
           translations: "Vertalingen"
           extra_scss: "Extra SCSS"
+          extra_files: "Extra bestanden"
+          extra_files_upload: "Exporteer een thema om deze bestanden te bekijken."
+          extra_files_remote: "Exporteer een thema of controleer de git-repository om deze bestanden te bekijken."
           preview: "Voorbeeld"
           show_advanced: "Geavanceerde velden tonen"
           hide_advanced: "Geavanceerde velden verbergen"
@@ -3537,6 +3547,7 @@ nl:
           license: "Licentie"
           version: "Versie:"
           authors: "Geschreven door:"
+          creator: "Gemaakt door:"
           source_url: "Bron"
           enable: "Inschakelen"
           disable: "Uitschakelen"
@@ -4063,6 +4074,7 @@ nl:
               <p><b>Dit kan niet ongedaan worden gemaakt!</b></p>
 
               <p>Type het volgende om door te gaan: <code>%{text}</code></p>
+            text: "@%{username} naar @%{targetUsername} overdragen"
             transfer_and_delete: "Overdragen & @%{username} verwijderen"
             cancel: "Annuleren"
         merging_user: "Gebruiker samenvoegen..."

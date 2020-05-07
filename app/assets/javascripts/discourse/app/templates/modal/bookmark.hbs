@@ -8,8 +8,16 @@
       </div>
     {{/if}}
 
-    <div class="control-group">
+    <div class="control-group bookmark-name-wrap">
       {{input id="bookmark-name" value=model.name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
+      {{d-button icon="gear" action=(action "toggleOptionsPanel") class="bookmark-options-button"}}
+    </div>
+
+    <div class="bookmark-options-panel">
+      <label for="delete_when_reminder_sent">
+        {{i18n "bookmarks.delete_when_reminder_sent"}}
+        {{input id="delete_when_reminder_sent" type="checkbox" checked=options.deleteWhenReminderSent}}
+      </label>
     </div>
 
     {{#if showExistingReminderAt }}
@@ -26,12 +34,6 @@
 
       {{#if userHasTimezoneSet}}
         {{#tap-tile-grid activeTile=selectedReminderType as |grid|}}
-          {{#if showAtDesktop}}
-            {{#tap-tile icon="desktop" tileId=reminderTypes.AT_DESKTOP activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-              <div class="tap-tile-title">{{i18n "bookmarks.reminders.at_desktop"}}</div>
-            {{/tap-tile}}
-          {{/if}}
-
           {{#if showLaterToday}}
             {{#tap-tile icon="far-moon" tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
               <div class="tap-tile-title">{{i18n "bookmarks.reminders.later_today"}}</div>

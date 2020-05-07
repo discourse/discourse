@@ -579,7 +579,7 @@ class PostRevisor
   def update_category_description
     return unless category = Category.find_by(topic_id: @topic.id)
 
-    doc = Nokogiri::HTML.fragment(@post.cooked)
+    doc = Nokogiri::HTML5.fragment(@post.cooked)
     doc.css("img").remove
 
     if html = doc.css("p").first&.inner_html&.strip

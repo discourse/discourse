@@ -121,11 +121,6 @@ tr_TR:
       random_mention:
         reply: |-
           Selam! Neler yapabileceğimi öğrenmek için `@ %{discobot_username} %{help_trigger}` komutunu girin.
-        tracks: |-
-          Şu anda aşağıdaki şeyleri nasıl yapacağımı biliyorum:
-
-          `` @ %{discobot_username} %{reset_trigger} {öğretici adı} `
-          &gt; Etkileşimli bir öğretici başlatır. `{öğretici adı}` şunlardan biri olabilir: `%{tracks}`.
         bot_actions: |-
           @ @ %{discobot_username} %{dice_trigger} 2d6`
           &gt;: game_die: 3, 6

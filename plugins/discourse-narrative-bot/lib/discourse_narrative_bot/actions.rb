@@ -68,7 +68,7 @@ module DiscourseNarrativeBot
     end
 
     def bot_mentioned?(post)
-      doc = Nokogiri::HTML.fragment(post.cooked)
+      doc = Nokogiri::HTML5.fragment(post.cooked)
 
       valid = false
 

@@ -22,6 +22,7 @@ class Theme < ActiveRecord::Base
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
   has_one :javascript_cache, dependent: :destroy
   has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
+  has_many :upload_fields, -> { where(type_id: ThemeField.types[:theme_upload_var]).preload(:upload) }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -68,7 +69,7 @@ class Theme < ActiveRecord::Base
 
     remove_from_cache!
     clear_cached_settings!
-    ColorScheme.hex_cache.clear
+    DB.after_commit { ColorScheme.hex_cache.clear }
     notify_theme_change(with_scheme: notify_with_scheme)
   end
 
@@ -88,7 +89,8 @@ class Theme < ActiveRecord::Base
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_raw_script(all_extra_js)
-      js_compiler.prepend_settings(cached_settings) if cached_settings.present?
+      settings_hash = build_settings_hash
+      js_compiler.prepend_settings(settings_hash) if settings_hash.present?
       javascript_cache || build_javascript_cache
       javascript_cache.update!(content: js_compiler.content)
     else
@@ -270,7 +272,9 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_cache!
-    @cache.clear
+    DB.after_commit do
+      @cache.clear
+    end
   end
 
   def self.targets
@@ -302,8 +306,10 @@ class Theme < ActiveRecord::Base
   end
 
   def notify_theme_change(with_scheme: false)
-    theme_ids = Theme.transform_ids([id])
-    self.class.notify_theme_change(theme_ids, with_scheme: with_scheme)
+    DB.after_commit do
+      theme_ids = Theme.transform_ids([id])
+      self.class.notify_theme_change(theme_ids, with_scheme: with_scheme)
+    end
   end
 
   def self.refresh_message_for_targets(targets, theme_ids)
@@ -455,26 +461,29 @@ class Theme < ActiveRecord::Base
 
   def cached_settings
     Discourse.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
-      hash = {}
-      self.settings.each do |setting|
-        hash[setting.name] = setting.value
-      end
-
-      theme_uploads = {}
-      theme_fields
-        .joins(:upload)
-        .where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
-
-        theme_uploads[field.name] = field.upload.url
-      end
-      hash['theme_uploads'] = theme_uploads if theme_uploads.present?
-
-      hash
+      build_settings_hash
     end
   end
 
+  def build_settings_hash
+    hash = {}
+    self.settings.each do |setting|
+      hash[setting.name] = setting.value
+    end
+
+    theme_uploads = {}
+    upload_fields.each do |field|
+      theme_uploads[field.name] = field.upload.url
+    end
+    hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+
+    hash
+  end
+
   def clear_cached_settings!
-    Discourse.cache.delete("settings_for_theme_#{self.id}")
+    DB.after_commit do
+      Discourse.cache.delete("settings_for_theme_#{self.id}")
+    end
   end
 
   def included_settings

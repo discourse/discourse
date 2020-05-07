@@ -12,3 +12,4 @@ bg:
         form:
           date_title: Дата
           time_title: 'Време '
+          timezone: Часова зона

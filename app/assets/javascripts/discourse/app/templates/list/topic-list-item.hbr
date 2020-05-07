@@ -1,3 +1,5 @@
+{{~raw-plugin-outlet name="topic-list-before-columns"}}
+
 {{#if bulkSelectEnabled}}
   <td class="bulk-select">
     <input type="checkbox" class="bulk-select">
@@ -12,6 +14,7 @@
   at the end of the link, preventing it from line wrapping onto its own line.
 --}}
 <td class='main-link clearfix' colspan="1">
+  {{~raw-plugin-outlet name="topic-list-before-link"}}
   <span class='link-top-line'>
     {{~raw-plugin-outlet name="topic-list-before-status"}}
     {{~raw "topic-status" topic=topic}}

@@ -17,7 +17,6 @@ export function formattedReminderTime(reminderAt, timezone) {
 }
 
 export const REMINDER_TYPES = {
-  AT_DESKTOP: "at_desktop",
   LATER_TODAY: "later_today",
   NEXT_BUSINESS_DAY: "next_business_day",
   TOMORROW: "tomorrow",

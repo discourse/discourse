@@ -294,10 +294,6 @@ basic:
     client: true
     default: true
     hidden: true
-  enable_bookmark_at_desktop_reminders:
-    client: true
-    default: false
-    hidden: true
   push_notifications_prompt:
     default: true
     client: true

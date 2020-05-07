@@ -110,16 +110,28 @@ describe PostAlerter do
       admin = Fabricate(:admin)
       post.revise(admin, raw: 'I made a revision')
 
-      # skip this notification cause we already notified on a similar edit
+      # lets also like this post which should trigger a notification
+      PostActionCreator.new(
+        admin,
+        post,
+        PostActionType.types[:like]
+      ).perform
+
+      # skip this notification cause we already notified on an edit by the same user
+      # in the previous edit
       freeze_time 2.hours.from_now
       post.revise(admin, raw: 'I made another revision')
+
+      # this we do not skip cause 1 day has passed
+      freeze_time 23.hours.from_now
+      post.revise(admin, raw: 'I made another revision xyz')
 
       post.revise(Fabricate(:admin), raw: 'I made a revision')
 
       freeze_time 2.hours.from_now
       post.revise(admin, raw: 'I made another revision')
 
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(3)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(5)
     end
 
     it 'notifies flaggers when flagged post gets unhidden by edit' do
@@ -195,14 +207,13 @@ describe PostAlerter do
                                           user: evil_trout,
                                           data: { topic_title: "test topic" }.to_json
                                          )
-
       expect {
-        PostAlerter.post_created(post)
+        PostAlerter.post_edited(post)
       }.to change(evil_trout.notifications, :count).by(0)
 
       notification.destroy
       expect {
-        PostAlerter.post_created(post)
+        PostAlerter.post_edited(post)
       }.to change(evil_trout.notifications, :count).by(1)
     end
 
@@ -1117,12 +1128,16 @@ describe PostAlerter do
   describe '#notify_post_users' do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:last_editor) { Fabricate(:user) }
+    fab!(:tag) { Fabricate(:tag) }
 
     it 'creates single edit notification when post is modified' do
       TopicUser.create!(user_id: user.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:watching], highest_seen_post_number: post.post_number)
+      PostRevisor.new(post).revise!(last_editor, tags: [tag.name])
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)
       expect(Notification.last.notification_type).to eq(Notification.types[:edited])
+      expect(JSON.parse(Notification.last.data)["display_username"]).to eq(last_editor.username)
 
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)

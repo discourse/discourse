@@ -217,9 +217,9 @@ describe ContentSecurityPolicy do
       policy # call this first to make sure further actions clear the cache
 
       theme.set_field(target: :common, name: "header", value: <<~SCRIPT)
-        <script src='https://example.com/myscript.js'/>
-        <script src='//example2.com/protocol-less-script.js'/>
-        <script src='domain-only.com'/>
+        <script src='https://example.com/myscript.js'></script>
+        <script src='//example2.com/protocol-less-script.js'></script>
+        <script src='domain-only.com'></script>
         <script>console.log('inline script')</script>
       SCRIPT
 
