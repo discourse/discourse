@@ -492,7 +492,6 @@ export default function(options) {
             (!prev || allowedLettersRegex.test(prev))
           ) {
             completeStart = c;
-            cp = completeEnd = initial;
             term = me[0].value.substring(c + 1, initial);
             updateAutoComplete(dataSource(term, options));
             return true;
