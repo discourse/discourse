@@ -43,7 +43,7 @@ export function sanitize(text, options) {
 }
 
 export function sanitizeAsync(text, options) {
-  return new loadMarkdownIt().then(() => {
+  return loadMarkdownIt().then(() => {
     return createPrettyText(options).sanitize(text);
   });
 }
