@@ -3,19 +3,8 @@
 require "spec_helper"
 
 describe Onebox do
-
   before do
     fake("https://www.amazon.com/product", response("amazon"))
-  end
-
-  describe ".preview" do
-    let(:url) { "http://www.amazon.com/product" }
-
-    let(:https_url) do
-      uri = URI(url)
-      uri.scheme = 'https'
-      uri.to_s
-    end
   end
 
   describe "templates" do
@@ -37,6 +26,7 @@ describe Onebox do
     before do
       Onebox::Engine::WhitelistedGenericOnebox.whitelist = %w(youtube.com)
     end
+
     it "has no matcher for a made up url" do
       expect(Onebox.has_matcher?("http://wow.com/omg/doge")).to be false
     end
