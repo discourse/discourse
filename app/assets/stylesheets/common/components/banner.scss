@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 #banner {
-  padding: 10px;
+  padding: 0.5em 1em;
   background: $tertiary-low;
   color: $primary;
   z-index: z("base") + 1;
@@ -14,13 +14,21 @@
   }
 
   .close {
-    margin-top: -5px;
     color: $primary-low-mid;
     padding-left: 5px;
     float: right;
+    .d-icon {
+      color: $primary-medium;
+    }
   }
 
   .meta {
     display: none;
+  }
+}
+
+#banner-content {
+  hr {
+    border-color: $primary-medium;
   }
 }
