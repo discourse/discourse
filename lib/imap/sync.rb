@@ -80,19 +80,16 @@ module Imap
             @provider.imap.idle_done
           end
         end
+      end
 
+      # Fetching UIDs of old (already imported into Discourse, but might need
+      # update) and new (not downloaded yet) emails.
+      if @group.imap_last_uid == 0
+        old_uids = []
+        new_uids = @provider.uids
+      else
         old_uids = @provider.uids(to: @group.imap_last_uid) # 1 .. seen
         new_uids = @provider.uids(from: @group.imap_last_uid + 1) # seen+1 .. inf
-      else
-        # Fetching UIDs of old (already imported into Discourse, but might need
-        # update) and new (not downloaded yet) emails.
-        if @group.imap_last_uid == 0
-          old_uids = []
-          new_uids = @provider.uids
-        else
-          old_uids = @provider.uids(to: @group.imap_last_uid) # 1 .. seen
-          new_uids = @provider.uids(from: @group.imap_last_uid + 1) # seen+1 .. inf
-        end
       end
 
       # Sometimes, new_uids contains elements from old_uids.
@@ -156,16 +153,13 @@ module Imap
 
           processed += 1
           @group.update_columns(
+            imap_uid_validity: @status[:uid_validity],
+            imap_last_uid: email['UID'],
             imap_old_emails: all_old_uids_size + processed,
             imap_new_emails: all_new_uids_size - processed
           )
         end
       end
-
-      @group.update_columns(
-        imap_uid_validity: @status[:uid_validity],
-        imap_last_uid: new_uids.last || 0
-      )
 
       # Discourse -> IMAP server (upload): syncs updated flags and labels.
       if SiteSetting.enable_imap_write
