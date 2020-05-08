@@ -197,7 +197,6 @@ I18n.toNumber = function(number, options) {
       .toFixed(options.precision)
       .toString(),
     parts = string.split(this.SEPARATOR),
-    precision,
     buffer = [],
     formattedNumber;
 
