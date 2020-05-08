@@ -1825,6 +1825,53 @@ RSpec.describe SessionController do
       expect(response.status).to eq(400)
     end
 
+    it 'should correctly screen ips' do
+      ScreenedIpAddress.create!(
+        ip_address: '100.0.0.1',
+        action_type: ScreenedIpAddress.actions[:block]
+      )
+
+      post "/session/forgot_password.json",
+        params: { login: 'made_up' },
+        headers: { 'REMOTE_ADDR' => '100.0.0.1'  }
+
+      expect(response.parsed_body).to eq({
+        "errors" => [I18n.t("login.reset_not_allowed_from_ip_address")]
+      })
+
+    end
+
+    it 'should correctly rate limits' do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      user = Fabricate(:user)
+
+      3.times do
+        post "/session/forgot_password.json", params: { login: user.username }
+        expect(response.status).to eq(200)
+      end
+
+      post "/session/forgot_password.json", params: { login: user.username }
+      expect(response.status).to eq(422)
+
+      3.times do
+        post "/session/forgot_password.json",
+          params: { login: user.username },
+          headers: { 'REMOTE_ADDR' => '10.1.1.1'  }
+
+        expect(response.status).to eq(200)
+      end
+
+      post "/session/forgot_password.json",
+        params: { login: user.username },
+        headers: { 'REMOTE_ADDR' => '100.1.1.1'  }
+
+      # not allowed, max 6 a day
+      expect(response.status).to eq(422)
+
+    end
+
     context 'for a non existant username' do
       it "doesn't generate a new token for a made up username" do
         expect do

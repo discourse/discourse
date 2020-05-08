@@ -2385,6 +2385,7 @@ en:
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
+    reset_not_allowed_from_ip_address: "You can't request a password reset from that IP address."
     suspended: "You can't log in until %{date}."
     suspended_with_reason: "Account suspended until %{date}: %{reason}"
     errors: "%{errors}"
