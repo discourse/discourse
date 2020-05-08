@@ -1,5 +1,5 @@
 .alert {
-  padding: 0.5em 1em;
+  padding: 0.5em 2.5em 0.5em 1em;
   background-color: $danger-low;
   color: $primary;
   position: relative;
@@ -7,11 +7,10 @@
   .close {
     font-size: $font-up-3;
     position: absolute;
-    top: 8px;
-    right: 8px;
-
+    top: 0.265em;
+    right: 0.66em;
     .d-icon {
-      color: $primary-low-mid;
+      color: $primary-medium;
     }
   }
 
