@@ -9,7 +9,7 @@
     {{#if popular}}
       <div class="popular-theme-items">
         {{#each themes as |theme|}}
-          <div class="popular-theme-item">
+          <div class="popular-theme-item" data-name={{theme.name}}>
             <div class="popular-theme-name">
               <a href={{theme.meta_url}} rel="noopener noreferrer" target="_blank">
                 {{#if theme.component}}
