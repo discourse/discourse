@@ -188,7 +188,7 @@ RSpec.configure do |config|
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 
-    DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != "1"
+    DiscoursePluginRegistry.reset! if ENV['LOAD_PLUGINS'] != "1"
     Discourse.current_user_provider = TestCurrentUserProvider
 
     SiteSetting.refresh!
