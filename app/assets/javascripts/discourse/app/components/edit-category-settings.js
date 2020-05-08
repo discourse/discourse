@@ -2,7 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { empty, and } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { SearchPriorities } from "discourse/lib/constants";
+import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import Group from "discourse/models/group";
 
 const categorySortCriteria = [];
@@ -71,7 +71,7 @@ export default buildCategoryPanel("settings", {
   searchPrioritiesOptions() {
     const options = [];
 
-    Object.entries(SearchPriorities).forEach(entry => {
+    Object.entries(SEARCH_PRIORITIES).forEach(entry => {
       const [name, value] = entry;
 
       options.push({
