@@ -185,7 +185,7 @@ export default function userSearch(options) {
       () => {
         resolve(CANCELLED_STATUS);
       },
-      Ember.testing ? 25 : 5000
+      Ember.testing ? 50 : 5000
     );
 
     if (skipSearch(term, options.allowEmails)) {
