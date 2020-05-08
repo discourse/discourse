@@ -53,6 +53,17 @@ RSpec.describe BookmarkManager do
       end
     end
 
+    context "when options are provided with null values" do
+      let(:options) { { delete_when_reminder_sent: nil } }
+
+      it "saves defaults successfully" do
+        subject.create(post_id: post.id, name: name, options: options)
+        bookmark = Bookmark.find_by(user: user)
+
+        expect(bookmark.delete_when_reminder_sent).to eq(false)
+      end
+    end
+
     context "when the bookmark already exists for the user & post" do
       before do
         Bookmark.create(post: post, user: user, topic: post.topic)
