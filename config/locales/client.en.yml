@@ -1083,6 +1083,10 @@ en:
         taken: "Sorry, that username is taken."
         invalid: "That username is invalid. It must only include numbers and letters"
 
+      add_email:
+        title: "Add Email"
+        add: "add"
+
       change_email:
         title: "Change Email"
         taken: "Sorry, that email is not available."
@@ -1130,6 +1134,13 @@ en:
         frequency:
           one: "We'll only email you if we haven't seen you in the last minute."
           other: "We'll only email you if we haven't seen you in the last %{count} minutes."
+
+      alternate_email:
+        title: "Alternate Email"
+        primary_label: "primary"
+        set_primary: "set primary email"
+        add_email: "Add Alternate Email"
+        none: "No alternate emails exist."
 
       associated_accounts:
         title: "Associated Accounts"

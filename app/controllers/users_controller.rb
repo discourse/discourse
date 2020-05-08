@@ -228,6 +228,21 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def destroy_email
+    params.require(:email)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    user_email = user.user_emails.find_by(email: params[:email])
+    if user_email.primary
+      return render json: failed_json, status: 428
+    end
+
+    user_email.destroy
+    render json: success_json
+  end
+
   def topic_tracking_state
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)

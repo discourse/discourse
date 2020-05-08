@@ -18,7 +18,7 @@ class EmailUpdater
     @user.staff?
   end
 
-  def change_to(email_input)
+  def change_to(email_input, add: false)
     @guardian.ensure_can_edit_email!(@user)
 
     email = Email.downcase(email_input.strip)
@@ -36,11 +36,15 @@ class EmailUpdater
 
     if errors.blank? && existing_user.nil?
       args = {
+        # `old_email` may be deleted later if user is adding a new email
+        # address as it is used just to confirm curent address for staff
+        # users.
         old_email: @user.email,
         new_email: email,
       }
 
       args, email_token = prepare_change_request(args)
+      args.delete(:old_email) if add
       @user.email_change_requests.create!(args)
 
       if initiating_admin_changing_another_user_email? && !changing_staff_user_email?
@@ -118,13 +122,8 @@ class EmailUpdater
                  email_token: email_token.token
   end
 
-  # regular users or changes requested by admin are always
-  # authorizing new only (as long as they are not changing their
-  # own email!)
-  #
-  # however even if an admin requests an email change for another
-  # admin the other admin must always confirm their old email
   def prepare_change_request(args)
+    # Staff must validate old email address before performing an operation
     if changing_staff_user_email?
       args[:change_state] = EmailChangeRequest.states[:authorizing_old]
       email_token = @user.email_tokens.create!(email: args[:old_email])

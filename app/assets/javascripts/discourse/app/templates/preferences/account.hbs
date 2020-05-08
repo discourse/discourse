@@ -45,25 +45,13 @@
 {{#if canCheckEmails}}
   <div class="control-group pref-email">
     <label class="control-label">{{i18n "user.email.title"}}</label>
-    {{#if emails.length}}
-      {{#each emails as |email|}}
-        <div class="controls">
-          <span class="static">{{email.email}}</span>
-          {{#if email.primary}}
-            <span class="instructions">{{d-icon "star"}} {{i18n "user.email.primary_indicator"}}</span>
-          {{else}}
-            {{d-button action=(action "setPrimaryEmail" email.email)
-                       class="btn-default btn-small btn-icon pad-left no-text edit"
-                       icon="star"
-                       aria-label="user.email.set_primary"
-                       title="user.email.set_primary"}}
-          {{/if}}
-          {{#if model.can_edit_email}}
-            {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
-          {{/if}}
-        </div>
-      {{/each}}
-
+    {{#if model.email}}
+      <div class="controls">
+        <span class="static">{{model.email}}</span>
+        {{#if model.can_edit_email}}
+          {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
+        {{/if}}
+      </div>
       <div class="instructions">
         {{#if siteSettings.sso_overrides_email}}
           {{i18n "user.email.sso_override_instructions"}}
@@ -75,6 +63,38 @@
         {{d-button action=(route-action "checkEmail") class="btn-default" actionParam=model title="admin.users.check_email.title" icon="far-envelope" label="admin.users.check_email.text"}}
       </div>
     {{/if}}
+  </div>
+
+  <div class="control-group pref-email">
+    <label class="control-label">{{i18n "user.alternate_email.title"}}</label>
+    {{#if model.secondary_emails}}
+      {{#each emails as |email|}}
+        <div class="controls">
+          <span class="static">{{email.email}}</span>
+          {{#if email.primary}}
+            <span class="instructions">{{i18n "user.alternate_email.primary_label"}}</span>
+          {{else}}
+            {{d-button action=(action "setPrimaryEmail" email.email)
+                       class="btn-default btn-small btn-icon pad-left no-text edit"
+                       icon="star"
+                       aria-label="user.email.set_primary"
+                       title="user.email.set_primary"}}
+            {{d-button action=(action "destroyEmail" email.email)
+                       class="btn btn-default btn-small btn-icon pad-left no-text"
+                       icon="times"}}
+          {{/if}}
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="instructions">
+        {{i18n "user.alternate_email.none"}}
+      </div>
+    {{/if}}
+    <div class="controls">
+      {{#link-to "preferences.email" (query-params new=1) class="btn btn-default"}}
+        {{d-icon "plus"}} {{i18n "user.alternate_email.add_email"}}
+      {{/link-to}}
+    </div>
   </div>
 {{/if}}
 

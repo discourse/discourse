@@ -36,7 +36,7 @@ class UsersEmailController < ApplicationController
     RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
 
     updater = EmailUpdater.new(guardian: guardian, user: user)
-    updater.change_to(params[:email])
+    updater.change_to(params[:email], add: request.post?)
 
     if updater.errors.present?
       return render_json_error(updater.errors.full_messages)

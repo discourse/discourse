@@ -109,7 +109,7 @@ export default Controller.extend(CanCheckEmails, {
       });
     }
 
-    return emails;
+    return emails.sort((a, b) => a.email.localeCompare(b.email));
   },
 
   @discourseComputed(
@@ -167,11 +167,11 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     setPrimaryEmail(email) {
-      this.model.setPrimaryEmail(email).then(() => {
-        this.model.secondary_emails.removeObject(email);
-        this.model.secondary_emails.pushObject(this.model.email);
-        this.model.set("email", email);
-      });
+      this.model.setPrimaryEmail(email);
+    },
+
+    destroyEmail(email) {
+      this.model.destroyEmail(email);
     },
 
     changePassword() {
