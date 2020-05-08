@@ -91,6 +91,12 @@ module Discourse
       end
     end
 
+    # we skip it cause we configure it in the initializer
+    # the railstie for message_bus would insert it in the
+    # wrong position
+    config.skip_message_bus_middleware = true
+    config.skip_multisite_middleware = true
+
     # Disable so this is only run manually
     # we may want to change this later on
     # issue is image_optim crashes on missing dependencies
