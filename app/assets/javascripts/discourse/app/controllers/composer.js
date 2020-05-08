@@ -23,7 +23,7 @@ import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 
 function loadDraft(store, opts) {
@@ -219,26 +219,26 @@ export default Controller.extend({
   isWhispering: or("replyingToWhisper", "model.whisper"),
 
   @discourseComputed("model.action", "isWhispering")
-  saveIcon(action, isWhispering) {
+  saveIcon(modelAction, isWhispering) {
     if (isWhispering) return "far-eye-slash";
 
-    return SAVE_ICONS[action];
+    return SAVE_ICONS[modelAction];
   },
 
   @discourseComputed("model.action", "isWhispering", "model.editConflict")
-  saveLabel(action, isWhispering, editConflict) {
+  saveLabel(modelAction, isWhispering, editConflict) {
     if (editConflict) return "composer.overwrite_edit";
     else if (isWhispering) return "composer.create_whisper";
 
-    return SAVE_LABELS[action];
+    return SAVE_LABELS[modelAction];
   },
 
   @discourseComputed("isStaffUser", "model.action")
-  canWhisper(isStaffUser, action) {
+  canWhisper(isStaffUser, modelAction) {
     return (
       this.siteSettings.enable_whispers &&
       isStaffUser &&
-      Composer.REPLY === action
+      Composer.REPLY === modelAction
     );
   },
 
@@ -329,6 +329,20 @@ export default Controller.extend({
     return uploadIcon(this.currentUser.staff);
   },
 
+  @action
+  openIfDraft(event) {
+    if (this.get("model.viewDraft")) {
+      // when called from shortcut, ensure we don't propagate the key to
+      // the composer input title
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      this.set("model.composeState", Composer.OPEN);
+    }
+  },
+
   actions: {
     togglePreview() {
       this.toggleProperty("showPreview");
@@ -368,8 +382,8 @@ export default Controller.extend({
       this.set("model.uploadCancelled", true);
     },
 
-    onPopupMenuAction(action) {
-      this.send(action);
+    onPopupMenuAction(menuAction) {
+      this.send(menuAction);
     },
 
     storeToolbarState(toolbarEvent) {
@@ -536,12 +550,6 @@ export default Controller.extend({
 
       if (this.get("model.viewOpen") || this.get("model.viewFullscreen")) {
         this.shrink();
-      }
-    },
-
-    openIfDraft() {
-      if (this.get("model.viewDraft")) {
-        this.set("model.composeState", Composer.OPEN);
       }
     },
 
@@ -1161,8 +1169,8 @@ export default Controller.extend({
   },
 
   @discourseComputed("model.action")
-  canEdit(action) {
-    return action === "edit" && this.currentUser.can_edit;
+  canEdit(modelAction) {
+    return modelAction === "edit" && this.currentUser.can_edit;
   },
 
   @discourseComputed("model.composeState")
