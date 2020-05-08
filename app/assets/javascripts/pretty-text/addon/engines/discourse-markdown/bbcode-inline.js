@@ -225,7 +225,7 @@ export function setup(helper) {
         token = state.push("text", "", 0);
         token.content = content;
 
-        token = state.push("link_close", "a", -1);
+        state.push("link_close", "a", -1);
         return true;
       }
     });

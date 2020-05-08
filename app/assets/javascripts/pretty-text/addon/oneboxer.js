@@ -78,7 +78,7 @@ function loadNext(ajax) {
         let $html = $(html);
         setLocalCache(normalize(url), $html);
         $elem.replaceWith($html);
-        applySquareGenericOnebox($html, normalize(url));
+        applySquareGenericOnebox($html);
       },
       result => {
         if (result && result.jqXHR && result.jqXHR.status === 429) {

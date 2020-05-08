@@ -452,14 +452,13 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     let categoryId = category ? get(category, "id") : null;
-    let categoryName = category ? get(category, "name") : null;
 
     if (name === "new") {
       return this.countNew(categoryId);
     } else if (name === "unread") {
       return this.countUnread(categoryId);
     } else {
-      categoryName = name.split("/")[1];
+      const categoryName = name.split("/")[1];
       if (categoryName) {
         return this.countCategory(categoryId);
       }
