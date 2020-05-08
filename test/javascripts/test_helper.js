@@ -166,7 +166,7 @@ QUnit.testStart(function(ctx) {
     _DiscourseURL.redirectedTo = url;
   };
 
-  var ps = require("preload-store").default;
+  var ps = require("discourse/lib/preload-store").default;
   ps.reset();
 
   window.sandbox = sinon;
