@@ -8,7 +8,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
-import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
+import { SearchPriorities } from "discourse/lib/constants";
 import { hash } from "rsvp";
 import Site from "discourse/models/site";
 
@@ -145,7 +145,7 @@ export function openNewCategoryModal(context) {
     allow_badges: true,
     topic_featured_link_allowed: true,
     custom_fields: {},
-    search_priority: searchPriorities.normal
+    search_priority: SearchPriorities.normal
   });
 
   showModal("edit-category", { model }).set("selectedTab", "general");
