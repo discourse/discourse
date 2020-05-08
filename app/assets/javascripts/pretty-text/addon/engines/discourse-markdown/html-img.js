@@ -66,7 +66,7 @@ function rule(state, startLine, endLine) {
   token.map = [startLine, state.line];
   token.children = [];
 
-  token = state.push("paragraph_close", "p", -1);
+  state.push("paragraph_close", "p", -1);
   state.parentType = oldParentType;
 
   return true;

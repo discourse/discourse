@@ -78,7 +78,7 @@ function paragraph(state, startLine /*, endLine*/) {
   // CUSTOM
   token.leading_space = hasLeadingSpace;
 
-  token = state.push("paragraph_close", "p", -1);
+  state.push("paragraph_close", "p", -1);
 
   state.parentType = oldParentType;
   return true;
