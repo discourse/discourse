@@ -125,7 +125,7 @@ module ApplicationHelper
 
   def body_classes
     result = ApplicationHelper.extra_body_classes.to_a
-    result << theme.name if theme
+    result << theme.name.gsub(" ", "-") if theme
 
     if @category && @category.url.present?
       result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
@@ -402,7 +402,7 @@ module ApplicationHelper
   end
 
   def scheme_id
-    theme.color_scheme_id
+    theme&.color_scheme_id
   end
 
   def theme
