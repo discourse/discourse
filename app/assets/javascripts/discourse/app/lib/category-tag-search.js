@@ -4,6 +4,7 @@ import Category from "discourse/models/category";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { SEPARATOR } from "discourse/lib/category-hashtags";
 import { Promise } from "rsvp";
+import { later, cancel } from "@ember/runloop";
 
 var cache = {};
 var cacheTime;
@@ -17,9 +18,12 @@ function updateCache(term, results) {
 
 function searchTags(term, categories, limit) {
   return new Promise(resolve => {
-    const clearPromise = setTimeout(() => {
-      resolve(CANCELLED_STATUS);
-    }, 5000);
+    const clearPromise = later(
+      () => {
+        resolve(CANCELLED_STATUS);
+      },
+      Ember.testing ? 25 : 5000
+    );
 
     const debouncedSearch = discourseDebounce((q, cats, resultFunc) => {
       oldSearch = $.ajax(Discourse.getURL("/tags/filter/search"), {
@@ -55,7 +59,7 @@ function searchTags(term, categories, limit) {
     }, 300);
 
     debouncedSearch(term, categories, result => {
-      clearTimeout(clearPromise);
+      cancel(clearPromise);
       resolve(updateCache(term, result));
     });
   });
