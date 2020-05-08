@@ -533,6 +533,7 @@ class Plugin::Instance
 
       if transpile_js
         DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+        DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
       end
     end
 
@@ -674,8 +675,9 @@ class Plugin::Instance
     if @path
       # Automatically include all ES6 JS and hbs files
       root_path = "#{File.dirname(@path)}/assets/javascripts"
+      admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
 
-      Dir.glob("#{root_path}/**/*") do |f|
+      Dir.glob(["#{root_path}/**/*", "#{admin_path}/**/*"]) do |f|
         f_str = f.to_s
         if File.directory?(f)
           yield [f, true]
