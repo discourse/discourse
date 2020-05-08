@@ -127,7 +127,10 @@ class User < ActiveRecord::Base
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
 
-  after_update :trigger_user_updated_event, if: :saved_change_to_uploaded_avatar_id?
+  after_update :trigger_user_updated_event, if: Proc.new {
+    self.human? && self.saved_change_to_uploaded_avatar_id?
+  }
+
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
 
   before_save :update_usernames
