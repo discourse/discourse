@@ -235,11 +235,16 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     user_email = user.user_emails.find_by(email: params[:email])
-    if user_email.primary
+    if user_email&.primary
       return render json: failed_json, status: 428
     end
 
-    user_email.destroy
+    if user_email
+      user.user_emails.where(email: params[:email]).destroy_all
+    elsif
+      user.email_change_requests.where(new_email: params[:email]).destroy_all
+    end
+
     render json: success_json
   end
 

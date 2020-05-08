@@ -95,17 +95,27 @@ export default Controller.extend(CanCheckEmails, {
 
   disableConnectButtons: propertyNotEqual("model.id", "currentUser.id"),
 
-  @discourseComputed("model.email", "model.secondary_emails.[]")
-  emails(primaryEmail, secondaryEmails) {
+  @discourseComputed(
+    "model.email",
+    "model.secondary_emails.[]",
+    "model.unconfirmed_emails.[]"
+  )
+  emails(primaryEmail, secondaryEmails, unconfirmedEmails) {
     const emails = [];
 
     if (primaryEmail) {
-      emails.push({ email: primaryEmail, primary: true });
+      emails.push({ email: primaryEmail, primary: true, confirmed: true });
     }
 
     if (secondaryEmails) {
       secondaryEmails.forEach(email => {
-        emails.push({ email, primary: false });
+        emails.push({ email, confirmed: true });
+      });
+    }
+
+    if (unconfirmedEmails) {
+      unconfirmedEmails.forEach(email => {
+        emails.push({ email });
       });
     }
 

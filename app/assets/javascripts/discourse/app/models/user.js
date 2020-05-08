@@ -399,6 +399,7 @@ const User = RestModel.extend({
       data: { email }
     }).then(() => {
       this.secondary_emails.removeObject(email);
+      this.unconfirmed_emails.removeObject(email);
     });
   },
 

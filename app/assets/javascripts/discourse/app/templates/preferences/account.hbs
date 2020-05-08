@@ -71,18 +71,28 @@
       {{#each emails as |email|}}
         <div class="controls">
           <span class="static">{{email.email}}</span>
+
           {{#if email.primary}}
             <span class="instructions">{{i18n "user.alternate_email.primary_label"}}</span>
-          {{else}}
-            {{d-button action=(action "setPrimaryEmail" email.email)
-                       class="btn-default btn-small btn-icon pad-left no-text edit"
-                       icon="star"
-                       aria-label="user.email.set_primary"
-                       title="user.email.set_primary"}}
-            {{d-button action=(action "destroyEmail" email.email)
-                       class="btn btn-default btn-small btn-icon pad-left no-text"
-                       icon="times"}}
           {{/if}}
+
+          {{#unless email.confirmed}}
+            <span class="instructions">{{i18n "user.alternate_email.unconfirmed_label"}}</span>
+          {{/unless}}
+
+          {{#unless email.primary}}
+            {{#if email.confirmed}}
+              {{d-button action=(action "setPrimaryEmail" email.email)
+                        class="btn-default btn-small btn-icon pad-left no-text edit"
+                        icon="star"
+                        aria-label="user.email.set_primary"
+                        title="user.email.set_primary"}}
+            {{/if}}
+
+            {{d-button action=(action "destroyEmail" email.email)
+                      class="btn btn-default btn-small btn-icon pad-left no-text"
+                      icon="times"}}
+          {{/unless}}
         </div>
       {{/each}}
     {{else}}

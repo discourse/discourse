@@ -1138,6 +1138,7 @@ en:
       alternate_email:
         title: "Alternate Email"
         primary_label: "primary"
+        unconfirmed_label: "unconfirmed"
         set_primary: "set primary email"
         add_email: "Add Alternate Email"
         none: "No alternate emails exist."
