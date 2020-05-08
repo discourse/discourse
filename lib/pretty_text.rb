@@ -286,7 +286,7 @@ module PrettyText
     doc.css("a").each do |l|
       href = l["href"].to_s
       begin
-        uri = URI(URI.escape(href))
+        uri = URI(UrlHelper.encode_component(href))
         site_uri ||= URI(Discourse.base_url)
 
         if !uri.host.present? ||
@@ -466,13 +466,13 @@ module PrettyText
 
         case type
         when USER_TYPE
-          element['href'] = "#{Discourse::base_uri}/u/#{URI.escape(name)}"
+          element['href'] = "#{Discourse::base_uri}/u/#{UrlHelper.encode_component(name)}"
         when GROUP_MENTIONABLE_TYPE
           element['class'] = 'mention-group notify'
-          element['href'] = "#{Discourse::base_uri}/groups/#{URI.escape(name)}"
+          element['href'] = "#{Discourse::base_uri}/groups/#{UrlHelper.encode_component(name)}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
-          element['href'] = "#{Discourse::base_uri}/groups/#{URI.escape(name)}"
+          element['href'] = "#{Discourse::base_uri}/groups/#{UrlHelper.encode_component(name)}"
         end
       end
     end
