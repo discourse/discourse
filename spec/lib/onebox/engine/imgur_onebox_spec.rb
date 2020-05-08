@@ -12,7 +12,7 @@ describe Onebox::Engine::ImgurOnebox do
   end
 
   it "excludes html tags in title" do
-    allow(imgur).to receive(:is_album?) { true }
+    allow(imgur).to receive(:is_album?).and_return(true)
     expect(html).to include("<span class='album-title'>[Album] Did you miss me?</span>")
   end
 end
