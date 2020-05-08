@@ -76,6 +76,13 @@ class Demon::EmailSync < ::Demon::Base
   def after_fork
     puts "Loading EmailSync in process id #{Process.pid}"
 
+    loop do
+      break if Discourse.redis.set(HEARTBEAT_KEY, Time.now.to_i, ex: HEARTBEAT_INTERVAL, nx: true)
+      sleep HEARTBEAT_INTERVAL
+    end
+
+    puts "Starting EmailSync main thread"
+
     @running = true
     @sync_data = {}
     @sync_lock = Mutex.new
@@ -144,6 +151,8 @@ class Demon::EmailSync < ::Demon::Base
     end
 
     @sync_lock.synchronize { kill_threads }
+    Discourse.redis.del(HEARTBEAT_KEY)
+    exit 0
   rescue => e
     STDERR.puts e.message
     STDERR.puts e.backtrace.join("\n")
