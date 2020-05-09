@@ -1,5 +1,5 @@
 import { inject as service } from "@ember/service";
-import { throttle, debounce, schedule, later, cancel } from "@ember/runloop";
+import { throttle, debounce, schedule, later } from "@ember/runloop";
 import Component from "@ember/component";
 import { on, observes } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -196,6 +196,8 @@ export default Component.extend({
     if (!this.site.isMobileDevice) {
       this._bindHover();
     }
+
+    later(this, this._onScroll, 100);
   },
 
   _bindModalClick() {
@@ -219,7 +221,6 @@ export default Component.extend({
 
   @on("willDestroyElement")
   _unbindEvents() {
-    cancel(this._refreshInterval);
     $(this.element).off();
     $(window).off("resize");
     $("#reply-control").off("div-resizing");
@@ -371,12 +372,10 @@ export default Component.extend({
 
   _bindSectionsScroll() {
     this.$list.on("scroll", this._onScroll.bind(this));
-    this._refreshInterval = later(this, this._onScroll, 100);
   },
 
   _onScroll() {
     debounce(this, this._checkVisibleSection, 50);
-    this._refreshInterval = later(this, this._onScroll, 100);
   },
 
   _checkVisibleSection(force) {
@@ -421,6 +420,8 @@ export default Component.extend({
 
       this._loadVisibleSections();
     }
+
+    later(this, this._checkVisibleSection, 100);
   },
 
   _loadVisibleSections() {
