@@ -38,8 +38,6 @@ export default Component.extend({
       this.$picker.css({ width: "", left: "", bottom: "", display: "none" });
 
     this.$modal.removeClass("fadeIn");
-
-    clearTimeout(this._checkTimeout);
   },
 
   show() {
@@ -71,7 +69,6 @@ export default Component.extend({
   @on("init")
   _setInitialValues() {
     this.set("customEmojis", customEmojis());
-    this._checkTimeout = null;
     this.scrollPosition = 0;
     this.$visibleSections = [];
   },
