@@ -78,7 +78,10 @@ jobs:
           architecture: 'x64'
 
       - name: Setup bundler
-        run: gem install bundler -v 2.1.4 --no-doc
+        run: |
+          gem install bundler -v 2.1.4 --no-doc && \
+          bundle config deployment 'true' && \
+          bundle config without 'development'
 
       - name: Bundler cache
         uses: actions/cache@v1
@@ -90,7 +93,7 @@ jobs:
             ${{ runner.os }}-gem-
 
       - name: Setup gems
-        run: bundle install --without development --deployment --jobs 4 --retry 3
+        run: bundle install --jobs 4 --retry 3
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
