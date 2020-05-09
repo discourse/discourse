@@ -257,3 +257,41 @@ componentTest("prevents propagating click event on header", {
     assert.equal(this.value, DEFAULT_VALUE);
   }
 });
+
+componentTest("focusAfterOnChange", {
+  template:
+    "{{d-button class='focus-me'}}{{single-select options=(hash focusAfterOnchange=focusAfterOnchange) value=value content=content onChange=onChange}}",
+
+  beforeEach() {
+    this.setProperties({
+      onChange: () => {
+        find(".focus-me").focus();
+        this.set("value", "foo");
+      },
+      content: DEFAULT_CONTENT,
+      value: DEFAULT_VALUE
+    });
+  },
+
+  async test(assert) {
+    this.set("focusAfterOnchange", true);
+
+    await this.subject.expand();
+    await this.subject.selectRowByIndex(0);
+
+    assert.ok(
+      document.activeElement.classList.contains("single-select-header"),
+      "it selects the header"
+    );
+
+    this.set("focusAfterOnchange", false);
+
+    await this.subject.expand();
+    await this.subject.selectRowByIndex(0);
+
+    assert.notOk(
+      document.activeElement.classList.contains("single-select-header"),
+      "it doesn’t select the header"
+    );
+  }
+});
