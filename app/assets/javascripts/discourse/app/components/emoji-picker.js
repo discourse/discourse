@@ -1,5 +1,5 @@
 import { inject as service } from "@ember/service";
-import { throttle, debounce, schedule } from "@ember/runloop";
+import { throttle, debounce, schedule, later, cancel } from "@ember/runloop";
 import Component from "@ember/component";
 import { on, observes } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -219,9 +219,9 @@ export default Component.extend({
 
   @on("willDestroyElement")
   _unbindEvents() {
+    cancel(this._refreshInterval);
     $(this.element).off();
     $(window).off("resize");
-    clearInterval(this._refreshInterval);
     $("#reply-control").off("div-resizing");
     $("html").off("mouseup.emoji-picker");
   },
@@ -370,12 +370,13 @@ export default Component.extend({
   },
 
   _bindSectionsScroll() {
-    let onScroll = () => {
-      debounce(this, this._checkVisibleSection, 50);
-    };
+    this.$list.on("scroll", this._onScroll.bind(this));
+    this._refreshInterval = later(this, this._onScroll, 100);
+  },
 
-    this.$list.on("scroll", onScroll);
-    this._refreshInterval = setInterval(onScroll, 100);
+  _onScroll() {
+    debounce(this, this._checkVisibleSection, 50);
+    this._refreshInterval = later(this, this._onScroll, 100);
   },
 
   _checkVisibleSection(force) {
