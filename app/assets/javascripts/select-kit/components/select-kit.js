@@ -269,7 +269,8 @@ export default Component.extend(
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       castInteger: false,
-      preventsClickPropagation: false
+      preventsClickPropagation: false,
+      focusAfterOnchange: true
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -428,10 +429,12 @@ export default Component.extend(
             this.selectKit.close();
           }
 
-          this._safeAfterRender(() => {
-            this._focusFilter();
-            this.popper && this.popper.update();
-          });
+          if (this.selectKit.options.focusAfterOnchange) {
+            this._safeAfterRender(() => {
+              this._focusFilter();
+              this.popper && this.popper.update();
+            });
+          }
         }
       });
     },
