@@ -8,6 +8,7 @@ class AdminPluginSerializer < ApplicationSerializer
              :admin_route,
              :enabled,
              :enabled_setting,
+             :has_settings,
              :is_official
 
   def id
@@ -36,6 +37,10 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def enabled_setting
     object.enabled_site_setting
+  end
+
+  def has_settings
+    SiteSetting.plugins.values.include?(id)
   end
 
   def include_url?
