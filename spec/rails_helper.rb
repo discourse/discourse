@@ -237,6 +237,10 @@ RSpec.configure do |config|
     end
   end
 
+  config.after(:suite) do
+    $files_from_fixtures.each { |tmp_file_path| FileUtils.rm(tmp_file_path) }
+  end
+
   config.before :each, &TestSetup.method(:test_setup)
 
   config.before(:each, type: :multisite) do
@@ -369,8 +373,11 @@ end
 
 def file_from_fixtures(filename, directory = "images")
   FileUtils.mkdir_p("#{Rails.root}/tmp/spec") unless Dir.exists?("#{Rails.root}/tmp/spec")
-  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
-  File.new("#{Rails.root}/tmp/spec/#{filename}")
+  tmp_file_path = "#{Rails.root}/tmp/spec/#{SecureRandom.hex << filename}"
+  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
+  $files_from_fixtures ||= []
+  $files_from_fixtures << tmp_file_path
+  File.new(tmp_file_path)
 end
 
 def has_trigger?(trigger_name)
