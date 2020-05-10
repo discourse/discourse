@@ -43,7 +43,8 @@ class ThemeField < ActiveRecord::Base
                         theme_color_var: 3, # No longer used
                         theme_var: 4, # No longer used
                         yaml: 5,
-                        js: 6)
+                        js: 6,
+                        json: 7)
   end
 
   def self.theme_var_type_ids
@@ -265,6 +266,8 @@ class ThemeField < ActiveRecord::Base
       types[:js]
     elsif target.to_s == "settings" || target.to_s == "translations"
       types[:yaml]
+    elsif target.to_s == "babel"
+      types[:json]
     end
   end
 
@@ -441,6 +444,9 @@ class ThemeField < ActiveRecord::Base
     ThemeFileMatcher.new(regex: /^settings\.ya?ml$/,
                          names: "yaml", types: :yaml, targets: :settings,
                          canonical: -> (h) { "settings.yml" }),
+    ThemeFileMatcher.new(regex: /^babel.config\.json$/,
+                         names: "json", targets: :babel, types: :json,
+                         canonical: -> (h) { "babel.config.json" }),
     ThemeFileMatcher.new(regex: /^locales\/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml$/,
                          names: I18n.available_locales.map(&:to_s), types: :yaml, targets: :translations,
                          canonical: -> (h) { "locales/#{h[:name]}.yml" }),
