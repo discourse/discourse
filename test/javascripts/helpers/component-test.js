@@ -12,7 +12,7 @@ export default function(name, opts) {
     return;
   }
 
-  test(name, async function(assert) {
+  test(name, function(assert) {
     this.site = Site.current();
 
     this.registry.register("site-settings:main", Discourse.SiteSettings, {
@@ -48,17 +48,21 @@ export default function(name, opts) {
     this.registry.register("service:store", store, { instantiate: false });
 
     if (opts.beforeEach) {
-      await opts.beforeEach.call(this, store);
+      opts.beforeEach.call(this, store);
     }
 
-    await this.render(opts.template);
+    andThen(() => {
+      return this.render(opts.template);
+    });
 
-    try {
-      await opts.test.call(this, assert);
-    } finally {
-      if (opts.afterEach) {
-        await opts.afterEach.call(opts);
+    andThen(() => {
+      try {
+        opts.test.call(this, assert);
+      } finally {
+        if (opts.afterEach) {
+          opts.afterEach.call(opts);
+        }
       }
-    }
+    });
   });
 }
