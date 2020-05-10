@@ -801,7 +801,7 @@ module Discourse
     redis_key = "deprecate-notice-#{digest}"
 
     if !Discourse.redis.without_namespace.get(redis_key)
-      Rails.logger.warn(warning)
+      Rails.logger.warn(warning) if Rails.logger
       begin
         Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
       rescue Redis::CommandError => e

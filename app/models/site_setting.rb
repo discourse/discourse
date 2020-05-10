@@ -12,9 +12,9 @@ class SiteSetting < ActiveRecord::Base
     true
   end
 
-  def self.load_settings(file)
+  def self.load_settings(file, plugin: nil)
     SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
-      setting(name, default, opts.merge(category: category))
+      setting(name, default, opts.merge(category: category, plugin: plugin))
     end
   end
 
@@ -22,7 +22,7 @@ class SiteSetting < ActiveRecord::Base
 
   unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
-      load_settings(file)
+      load_settings(file, plugin: file.split("/")[-3])
     end
   end
 

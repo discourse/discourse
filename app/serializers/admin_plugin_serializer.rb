@@ -8,11 +8,10 @@ class AdminPluginSerializer < ApplicationSerializer
              :admin_route,
              :enabled,
              :enabled_setting,
-             :is_official,
-             :enabled_setting_filter
+             :is_official
 
   def id
-    object.metadata.name
+    object.directory_name
   end
 
   def name
@@ -37,14 +36,6 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def enabled_setting
     object.enabled_site_setting
-  end
-
-  def include_enabled_setting_filter?
-    object.enabled_site_setting_filter.present?
-  end
-
-  def enabled_setting_filter
-    object.enabled_site_setting_filter
   end
 
   def include_url?
