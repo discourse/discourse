@@ -84,7 +84,7 @@ QUnit.test("adding a previously removed permission", async assert => {
   await visit("/c/bug");
 
   await click(".edit-category");
-  await await click("li.edit-category-security a");
+  await click("li.edit-category-security a");
   await click(".edit-category-tab-security .edit-permission");
   await click(
     ".edit-category-tab-security .permission-list li:first-of-type .remove-permission"
