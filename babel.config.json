@@ -1,0 +1,24 @@
+{
+  "ast": false,
+  "plugins": [
+    "transform-arrow-functions",
+    "transform-block-scoped-functions",
+    "transform-block-scoping",
+    "transform-classes",
+    "transform-computed-properties",
+    "transform-destructuring",
+    "transform-duplicate-keys",
+    "transform-for-of",
+    "transform-function-name",
+    "transform-literals",
+    "transform-object-super",
+    "transform-parameters",
+    "transform-shorthand-properties",
+    "transform-spread",
+    "transform-sticky-regex",
+    "transform-template-literals",
+    "transform-typeof-symbol",
+    "transform-unicode-regex",
+    "transform-regenerator"
+  ]
+}
