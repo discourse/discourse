@@ -95,7 +95,8 @@ class DiscourseJsProcessor
 JS
       source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
       js_source = ::JSON.generate(source, quirks_mode: true)
-      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex'] }).code")
+      main_babel_config_json = File.read("#{Rails.root}/babel.config.json")
+      js = ctx.eval("Babel.transform(#{js_source}, #{main_babel_config_json}).code")
       ctx.eval(js)
 
       ctx
@@ -122,14 +123,15 @@ JS
       @skip_module = skip_module
     end
 
-    def perform(source, root_path = nil, logical_path = nil)
+    def perform(source, root_path = nil, logical_path = nil, babel = nil)
       klass = self.class
       klass.mutex.synchronize do
         klass.v8.eval("console.prefix = 'BABEL: babel-eval: ';")
         transpiled = babel_source(
           source,
           module_name: module_name(root_path, logical_path),
-          filename: logical_path
+          filename: logical_path,
+          babel: babel
         )
         @output = klass.v8.eval(transpiled)
       end
@@ -137,15 +139,48 @@ JS
 
     def babel_source(source, opts = nil)
       opts ||= {}
+      hbsComp = 'exports.WidgetHbsCompiler'
+
+      if opts[:babel]
+        babel_config = JSON.parse(opts[:babel])
+      else
+        babel_config = []
+      end
 
       js_source = ::JSON.generate(source, quirks_mode: true)
+      main_babel_config = JSON.parse(File.read("#{Rails.root}/babel.config.json"))
+      main_babel_config["plugins"].push(hbsComp)
+
+      if babel_config["plugins"]
+        main_babel_config["plugins"].concat(babel_config["plugins"])
+      end
 
       if opts[:module_name] && !@skip_module
         filename = opts[:filename] || 'unknown'
-        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-es2015-modules-amd', {noInterop: true}], 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
+
+        module_babel_config = {
+          'moduleId' => opts[:module_name],
+          'filename' => filename,
+          'ast' => false,
+          'presets' => ['es2015'],
+          'plugins' => [
+            ['transform-modules-amd', { 'noInterop' => true }],
+            hbsComp
+          ]
+        }
+
+        if babel_config["plugins"]
+          module_babel_config["plugins"].concat(babel_config["plugins"])
+        end
+
+        babelConfigJson = JSON.generate(module_babel_config)
+          .gsub('"exports.WidgetHbsCompiler"', hbsComp)
       else
-        "Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex', 'transform-regenerator', 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
+        babelConfigJson = JSON.generate(main_babel_config)
+          .gsub('"exports.WidgetHbsCompiler"', hbsComp)
       end
+
+      "Babel.transform(#{js_source}, #{babelConfigJson}).code"
     end
 
     def module_name(root_path, logical_path)
