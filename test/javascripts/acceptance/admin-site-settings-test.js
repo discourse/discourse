@@ -10,7 +10,7 @@ acceptance("Admin - Site Settings", {
   },
 
   pretend(server, helper) {
-    server.put("/admin/site_settings/title", body => {
+    server.put("/admin/site_settings/title", (body) => {
       titleOverride = body.requestBody.split("=")[1];
       return helper.response({ success: "OK" });
     });
@@ -22,14 +22,14 @@ acceptance("Admin - Site Settings", {
         titleSetting.value = titleOverride;
       }
       const response = {
-        site_settings: [titleSetting, ...fixtures.slice(1)]
+        site_settings: [titleSetting, ...fixtures.slice(1)],
       };
       return helper.response(response);
     });
-  }
+  },
 });
 
-QUnit.test("upload site setting", async assert => {
+QUnit.test("upload site setting", async (assert) => {
   await visit("/admin/site_settings");
 
   assert.ok(
@@ -40,7 +40,7 @@ QUnit.test("upload site setting", async assert => {
   assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
 });
 
-QUnit.test("changing value updates dirty state", async assert => {
+QUnit.test("changing value updates dirty state", async (assert) => {
   await visit("/admin/site_settings");
   await fillIn("#setting-filter", " title ");
   assert.equal(count(".row.setting"), 1, "filter returns 1 site setting");
@@ -89,7 +89,7 @@ QUnit.test("changing value updates dirty state", async assert => {
 
 QUnit.test(
   "always shows filtered site settings if a filter is set",
-  async assert => {
+  async (assert) => {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", "title");
     assert.equal(count(".row.setting"), 1);
@@ -103,3 +103,14 @@ QUnit.test(
     assert.equal(count(".row.setting"), 1);
   }
 );
+
+QUnit.test("filter settings by plugin name", async (assert) => {
+  await visit("/admin/site_settings");
+
+  await fillIn("#setting-filter", "plugin:discourse-logo");
+  assert.equal(count(".row.setting"), 1);
+
+  // inexistent plugin
+  await fillIn("#setting-filter", "plugin:discourse-plugin");
+  assert.equal(count(".row.setting"), 0);
+});
