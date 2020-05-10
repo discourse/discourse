@@ -626,7 +626,7 @@ class Plugin::Instance
   end
 
   def enabled_site_setting_filter(filter = nil)
-    Discourse.deprecate("`enabled_site_setting_filter` is deprecated", output_in_test: true)
+    STDERR.puts("`enabled_site_setting_filter` is deprecated")
   end
 
   def enabled_site_setting(setting = nil)
