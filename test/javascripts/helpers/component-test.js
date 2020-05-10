@@ -12,7 +12,7 @@ export default function(name, opts) {
     return;
   }
 
-  test(name, function(assert) {
+  test(name, async function(assert) {
     this.site = Site.current();
 
     this.registry.register("site-settings:main", Discourse.SiteSettings, {
@@ -30,6 +30,7 @@ export default function(name, opts) {
     autoLoadModules(this.registry, this.registry);
 
     const store = createStore();
+
     if (!opts.anonymous) {
       const currentUser = User.create({ username: "eviltrout" });
       this.currentUser = currentUser;
@@ -47,21 +48,17 @@ export default function(name, opts) {
     this.registry.register("service:store", store, { instantiate: false });
 
     if (opts.beforeEach) {
-      opts.beforeEach.call(this, store);
+      await opts.beforeEach.call(this, store);
     }
 
-    andThen(() => {
-      return this.render(opts.template);
-    });
+    await this.render(opts.template);
 
-    andThen(() => {
-      try {
-        opts.test.call(this, assert);
-      } finally {
-        if (opts.afterEach) {
-          opts.afterEach.call(opts);
-        }
+    try {
+      await opts.test.call(this, assert);
+    } finally {
+      if (opts.afterEach) {
+        await opts.afterEach.call(opts);
       }
-    });
+    }
   });
 }
