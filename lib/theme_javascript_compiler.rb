@@ -215,7 +215,8 @@ class ThemeJavascriptCompiler
   def append_module(script, name, include_variables: true)
     script = "#{theme_variables}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
-    @content << transpiler.perform(script, "", name)
+    babel = Theme.lookup_field(@theme_id, :babel, "json")
+    @content << transpiler.perform(script, "", name, babel)
   rescue MiniRacer::RuntimeError => ex
     raise CompileError.new ex.message
   end
@@ -253,6 +254,8 @@ class ThemeJavascriptCompiler
         }
       })();
     PLUGIN_API_JS
+
+    @content << transpiler.perform(script, "", name)
 
     transpiler.perform(wrapped)
   rescue MiniRacer::RuntimeError => ex
