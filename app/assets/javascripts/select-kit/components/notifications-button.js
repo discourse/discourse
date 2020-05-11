@@ -22,10 +22,12 @@ export default DropdownSelectBoxComponent.extend({
   modifySelection(content) {
     content = content || {};
     const { i18nPrefix, i18nPostfix } = this.selectKit.options;
+    const title = I18n.t(
+      `${i18nPrefix}.${this.buttonForValue.key}${i18nPostfix}.title`
+    );
     setProperties(content, {
-      label: I18n.t(
-        `${i18nPrefix}.${this.buttonForValue.key}${i18nPostfix}.title`
-      ),
+      title,
+      label: title,
       icon: this.buttonForValue.icon
     });
     return content;
