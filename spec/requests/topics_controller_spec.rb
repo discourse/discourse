@@ -1843,10 +1843,17 @@ RSpec.describe TopicsController do
     end
 
     it "is not included for normal topics" do
-      topic = Fabricate(:topic, visible: true)
       get "/t/#{topic.slug}/#{topic.id}.json"
 
       expect(response.headers['X-Robots-Tag']).to eq(nil)
+    end
+
+    it "is included when allow_index_in_robots_txt is set to false" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
     it "doesn't store an incoming link when there's no referer" do
