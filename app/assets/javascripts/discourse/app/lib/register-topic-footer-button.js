@@ -28,10 +28,6 @@ export function registerTopicFooterButton(button) {
     label: null,
     translatedLabel: null,
 
-    // local key path for aria label
-    ariaLabel: null,
-    translatedAriaLabel: null,
-
     // is this button disaplyed in the mobile dropdown or as an inline button ?
     dropdown: false,
 
@@ -101,15 +97,6 @@ export function getTopicFooterButtons() {
           discourseComputedButon.label = label
             ? I18n.t(label)
             : _compute(button, "translatedLabel");
-
-          const ariaLabel = _compute(button, "ariaLabel");
-          if (ariaLabel) {
-            discourseComputedButon.ariaLabel = I18n.t(ariaLabel);
-          } else {
-            const translatedAriaLabel = _compute(button, "translatedAriaLabel");
-            discourseComputedButon.ariaLabel =
-              translatedAriaLabel || discourseComputedButon.label;
-          }
 
           const title = _compute(button, "title");
           discourseComputedButon.title = title
