@@ -3319,6 +3319,12 @@ en:
 
     forced_anonymous: "Due to extreme load, this is temporarily being shown to everyone as a logged out user would see it."
 
+    footer_nav:
+      back: "Back"
+      forward: "Forward"
+      share: "Share"
+      dismiss: "Dismiss"
+
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
