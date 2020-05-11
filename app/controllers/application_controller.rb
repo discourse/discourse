@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
-  after_action  :add_noindex_header, if: -> { is_feed_request? }
+  after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
 
   layout :set_layout
 
