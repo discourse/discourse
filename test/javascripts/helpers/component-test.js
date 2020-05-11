@@ -30,7 +30,6 @@ export default function(name, opts) {
     autoLoadModules(this.registry, this.registry);
 
     const store = createStore();
-
     if (!opts.anonymous) {
       const currentUser = User.create({ username: "eviltrout" });
       this.currentUser = currentUser;
