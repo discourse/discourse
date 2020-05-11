@@ -26,6 +26,8 @@ class Group < ActiveRecord::Base
   has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
 
+  belongs_to :flair_image, class_name: 'Upload'
+
   has_and_belongs_to_many :web_hooks
 
   before_save :downcase_incoming_email
@@ -61,7 +63,6 @@ class Group < ActiveRecord::Base
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
-  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url.exclude?('fa-') }
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
@@ -748,6 +749,16 @@ class Group < ActiveRecord::Base
       DiscourseEvent.trigger(event, self)
       true
     end
+  end
+
+  def flair_type
+    return :icon if flair_icon.present?
+    return :image if flair_image_id.present?
+  end
+
+  def flair_url
+    return flair_icon if flair_icon.present?
+    return flair_image.url if flair_image_id.present?
   end
 
   protected

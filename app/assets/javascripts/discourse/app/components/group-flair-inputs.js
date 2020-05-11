@@ -1,7 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { debounce } from "@ember/runloop";
 import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
+import { on, observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import { convertIconClass } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
@@ -16,7 +16,7 @@ export default Component.extend({
     return Discourse.getURL("/images/avatar.png");
   },
 
-  @discourseComputed("flairType")
+  @discourseComputed("model.flair_type")
   flairPreviewIcon(flairType) {
     return flairType && flairType === "icon";
   },
@@ -26,13 +26,14 @@ export default Component.extend({
     return flairIcon ? convertIconClass(flairIcon) : "";
   },
 
-  @observes("model.flair_url")
+  @on("didInsertElement")
+  @observes("model.flair_icon")
   _loadSVGIcon() {
     debounce(this, this._loadIcon, 1000);
   },
 
   _loadIcon() {
-    const icon = convertIconClass(this.get("model.flair_url")),
+    const icon = convertIconClass(this.model.flair_icon),
       c = "#svg-sprites",
       h = "ajax-icon-holder",
       singleIconEl = `${c} .${h}`;
@@ -50,9 +51,14 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("flairType")
+  @discourseComputed("model.flair_type")
   flairPreviewImage(flairType) {
     return flairType && flairType === "image";
+  },
+
+  @discourseComputed("model.flair_url")
+  flairImageUrl(flairURL) {
+    return flairURL.match(/\//) ? flairURL : null;
   },
 
   @discourseComputed(
@@ -94,19 +100,14 @@ export default Component.extend({
   },
 
   @action
-  setFlairIcon(value) {
-    this.model.flair_icon = value;
-    this.model.flair_image_id = null;
-  },
-
-  @action
   setFlairImage(upload) {
+    this.model.set("flair_url", Discourse.getURL(upload.url));
     this.model.flair_image_id = upload.id;
-    this.model.flair_icon = null;
   },
 
   @action
   removeFlairImage() {
+    this.model.set("flair_url", null);
     this.model.flair_image_id = null;
   }
 });
