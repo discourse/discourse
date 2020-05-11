@@ -149,12 +149,15 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (restricted) {
-    html += `${iconHTML(
-      "lock"
-    )}<span class="category-name" ${categoryDir}>${categoryName}</span>`;
-  } else {
-    html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
+    html += iconHTML("lock");
   }
+  Category.extraBadgeIconRenderers.forEach(function(appender) {
+    const icon = appender(category);
+    if (icon) {
+      html += icon;
+    }
+  });
+  html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   html += "</span>";
 
   if (opts.topicCount && categoryStyle !== "box") {
