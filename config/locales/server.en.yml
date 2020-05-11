@@ -4373,7 +4373,7 @@ en:
         This badge is granted when you use all %{max_likes_per_day} of your daily likes for 5 days. Thanks for taking the time actively encouraging the best conversations every day!
     crazy_in_love:
       name: Crazy in Love
-      description: Used 50 likes in a day 20 times
+      description: Used %{max_likes_per_day} likes in a day 20 times
       long_description: |
         This badge is granted when you use all %{max_likes_per_day} of your daily likes for 20 days. Wow! You’re a role model for encouraging your fellow community members!
     thank_you:
