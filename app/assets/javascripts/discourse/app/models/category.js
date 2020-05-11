@@ -510,11 +510,6 @@ Category.reopenClass({
     return _.sortBy(data, category => {
       return category.get("read_restricted");
     });
-  },
-
-  extraBadgeIconRenderers: [],
-  addExtraBadgeIconRenderer(renderer) {
-    this.extraBadgeIconRenderers.push(renderer);
   }
 });
 

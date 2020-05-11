@@ -6,6 +6,13 @@ import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
+import EmberObject from "@ember/object";
+
+const CategoryLink = EmberObject.extend({});
+
+CategoryLink.reopenClass({
+  extraIconRenderers: []
+});
 
 let _renderer = defaultCategoryLinkRenderer;
 
@@ -151,10 +158,10 @@ function defaultCategoryLinkRenderer(category, opts) {
   if (restricted) {
     html += iconHTML("lock");
   }
-  Category.extraBadgeIconRenderers.forEach(function(renderer) {
-    const icon = renderer(category);
-    if (icon) {
-      html += icon;
+  CategoryLink.extraIconRenderers.forEach(function(renderer) {
+    const iconName = renderer(category);
+    if (iconName) {
+      html += iconHTML(iconName);
     }
   });
   html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
@@ -176,3 +183,5 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
   return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }
+
+export default CategoryLink;
