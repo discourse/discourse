@@ -40,7 +40,9 @@ export default Component.extend(UtilsMixin, {
   }),
 
   title: computed("item", function() {
-    return this._safeProperty("title", this.item) || this.name || "";
+    return (
+      this._safeProperty("title", this.item) || this.label || this.name || ""
+    );
   }),
 
   label: computed("title", "name", function() {
