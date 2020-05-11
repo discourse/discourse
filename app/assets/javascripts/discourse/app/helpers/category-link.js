@@ -1,4 +1,4 @@
-import EmberObject, { get } from "@ember/object";
+import { get } from "@ember/object";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -6,12 +6,6 @@ import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
-
-const CategoryLink = EmberObject.extend({});
-
-CategoryLink.reopenClass({
-  extraIconRenderers: []
-});
 
 let _renderer = defaultCategoryLinkRenderer;
 
@@ -22,6 +16,12 @@ export function replaceCategoryLinkRenderer(fn) {
 function categoryStripe(color, classes) {
   var style = color ? "style='background-color: #" + color + ";'" : "";
   return "<span class='" + classes + "' " + style + "></span>";
+}
+
+let _extraIconRenderers = [];
+
+export function addExtraIconRenderer(renderer) {
+  _extraIconRenderers.push(renderer);
 }
 
 /**
@@ -157,7 +157,7 @@ function defaultCategoryLinkRenderer(category, opts) {
   if (restricted) {
     html += iconHTML("lock");
   }
-  CategoryLink.extraIconRenderers.forEach(function(renderer) {
+  _extraIconRenderers.forEach(function(renderer) {
     const iconName = renderer(category);
     if (iconName) {
       html += iconHTML(iconName);
@@ -182,5 +182,3 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
   return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }
-
-export default CategoryLink;

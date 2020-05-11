@@ -48,7 +48,7 @@ import {
   addComposerUploadMarkdownResolver
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import CategoryLink from "discourse/helpers/category-link";
+import { addExtraIconRenderer } from "discourse/helpers/category-link";
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
@@ -1080,7 +1080,7 @@ class PluginApi {
    *
    **/
   addCategoryLinkIcon(renderer) {
-    CategoryLink.extraIconRenderers.push(renderer);
+    addExtraIconRenderer(renderer);
   }
 }
 
