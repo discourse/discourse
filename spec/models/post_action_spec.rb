@@ -1018,4 +1018,14 @@ describe PostAction do
       end
     end
   end
+
+  describe "triggers web hooks" do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:hook) { Fabricate(:flag_web_hook) }
+
+    it 'triggers a flag webhook' do
+      expect { PostActionCreator.spam(eviltrout, post) }
+        .to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+    end
+  end
 end
