@@ -235,6 +235,16 @@ class Plugin::Instance
     end
   end
 
+  def add_controller_callback(klass_name, callback, &block)
+    reloadable_patch do |plugin|
+      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
+
+      klass.public_send(callback) do |controller, action|
+        block.call(controller, action) if plugin.enabled?
+      end
+    end
+  end
+
   # Add a post_custom_fields_whitelister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_whitelister(&block)
     reloadable_patch do |plugin|
