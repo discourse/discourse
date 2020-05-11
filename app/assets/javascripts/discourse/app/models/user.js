@@ -990,18 +990,20 @@ User.reopenClass(Singleton, {
   }
 });
 
-let warned = false;
-Object.defineProperty(Discourse, "User", {
-  get() {
-    if (!warned) {
-      deprecated("Import the User class instead of using User", {
-        since: "2.4.0",
-        dropFrom: "2.6.0"
-      });
-      warned = true;
+if (typeof Discourse !== "undefined") {
+  let warned = false;
+  Object.defineProperty(Discourse, "User", {
+    get() {
+      if (!warned) {
+        deprecated("Import the User class instead of using User", {
+          since: "2.4.0",
+          dropFrom: "2.6.0"
+        });
+        warned = true;
+      }
+      return User;
     }
-    return User;
-  }
-});
+  });
+}
 
 export default User;
