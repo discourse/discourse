@@ -296,10 +296,4 @@ class DiscoursePluginRegistry
     locales.clear
   end
 
-  def self.setup(plugin_class)
-    registry = DiscoursePluginRegistry.new
-    plugin = plugin_class.new(registry)
-    plugin.setup
-  end
-
 end
