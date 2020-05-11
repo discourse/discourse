@@ -1,4 +1,4 @@
-import { get } from "@ember/object";
+import EmberObject, { get } from "@ember/object";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -6,7 +6,6 @@ import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
-import EmberObject from "@ember/object";
 
 const CategoryLink = EmberObject.extend({});
 
