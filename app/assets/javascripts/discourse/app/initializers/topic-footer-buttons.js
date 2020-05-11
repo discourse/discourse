@@ -109,7 +109,7 @@ export default {
             return I18n.t("bookmarked.help.unbookmark_with_reminder", {
               reminder_at: formattedReminderTime(
                 bookmark_reminder_at,
-                currentUser.resolvedTimezone()
+                currentUser.resolvedTimezone(currentUser)
               )
             });
           }
