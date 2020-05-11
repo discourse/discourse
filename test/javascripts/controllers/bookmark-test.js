@@ -114,7 +114,9 @@ QUnit.test(
   function(assert) {
     let dt = moment.tz(
       "2019-12-11T11:37:16",
-      BookmarkController.currentUser.resolvedTimezone()
+      BookmarkController.currentUser.resolvedTimezone(
+        BookmarkController.currentUser
+      )
     );
 
     assert.equal(
@@ -208,7 +210,9 @@ QUnit.test(
       moment
         .tz(
           "2028-12-12 08:00",
-          BookmarkController.currentUser.resolvedTimezone()
+          BookmarkController.currentUser.resolvedTimezone(
+            BookmarkController.currentUser
+          )
         )
         .toString(),
       "the custom date and time are parsed correctly with default time"

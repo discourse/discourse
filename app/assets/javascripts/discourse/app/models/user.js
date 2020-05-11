@@ -849,23 +849,34 @@ const User = RestModel.extend({
     );
   },
 
-  resolvedTimezone() {
-    if (this._timezone) {
+  resolvedTimezone(currentUser) {
+    if (this.hasSavedTimezone()) {
       return this._timezone;
     }
 
-    this.changeTimezone(moment.tz.guess());
-    ajax(userPath(this.username + ".json"), {
-      type: "PUT",
-      dataType: "json",
-      data: { timezone: this._timezone }
-    });
+    // only change the timezone and save it if we are
+    // looking at our own user
+    if (currentUser.id === this.id) {
+      this.changeTimezone(moment.tz.guess());
+      ajax(userPath(this.username + ".json"), {
+        type: "PUT",
+        dataType: "json",
+        data: { timezone: this._timezone }
+      });
+    }
 
     return this._timezone;
   },
 
   changeTimezone(tz) {
     this._timezone = tz;
+  },
+
+  hasSavedTimezone() {
+    if (this._timezone) {
+      return true;
+    }
+    return false;
   },
 
   calculateMutedIds(notificationLevel, id, type) {

@@ -73,7 +73,7 @@ export default Controller.extend(ModalFunctionality, {
       customReminderTime: this._defaultCustomReminderTime(),
       lastCustomReminderDate: null,
       lastCustomReminderTime: null,
-      userTimezone: this.currentUser.resolvedTimezone(),
+      userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
       options: {},
       model: this.model || {}
