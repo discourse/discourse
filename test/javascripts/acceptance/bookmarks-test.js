@@ -205,7 +205,7 @@ test("Editing a bookmark", async assert => {
   mockSuccessfulBookmarkPost(assert);
 
   await visit("/t/internationalization-localization/280");
-  let now = moment.tz(loggedInUser().resolvedTimezone());
+  let now = moment.tz(loggedInUser().resolvedTimezone(loggedInUser()));
   let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
   await openBookmarkModal();
   await fillIn("input#bookmark-name", "Test name");
@@ -234,7 +234,7 @@ test("Editing a bookmark that has a Later Today reminder, and it is before 6pm t
   mockSuccessfulBookmarkPost(assert);
   let clock = fakeTime(
     "2020-05-04T13:00:00",
-    loggedInUser().resolvedTimezone()
+    loggedInUser().resolvedTimezone(loggedInUser())
   );
   await timeStep(clock, () =>
     visit("/t/internationalization-localization/280")

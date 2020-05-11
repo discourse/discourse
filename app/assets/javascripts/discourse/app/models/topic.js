@@ -236,16 +236,6 @@ const Topic = RestModel.extend({
     this.set("category", Category.findById(this.category_id));
   },
 
-  @observes("categoryName")
-  _categoryNameChanged() {
-    const categoryName = this.categoryName;
-    let category;
-    if (categoryName) {
-      category = this.site.get("categories").findBy("name", categoryName);
-    }
-    this.set("category", category);
-  },
-
   categoryClass: fmt("category.fullSlug", "category-%@"),
 
   @discourseComputed("tags")

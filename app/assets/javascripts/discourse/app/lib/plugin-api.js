@@ -267,6 +267,7 @@ class PluginApi {
    *   className   (optional) a css class to apply to the icon
    *   url         (optional) where to link the icon
    *   title       (optional) the tooltip title for the icon on hover
+   *   text        (optional) text to display alongside the emoji or icon
    *
    * ```
    * api.addPosterIcon((cfs, attrs) => {

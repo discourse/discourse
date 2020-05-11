@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
-  after_action  :add_noindex_header, if: -> { is_feed_request? }
+  after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
 
   layout :set_layout
 
@@ -806,7 +806,13 @@ class ApplicationController < ActionController::Base
   end
 
   def add_noindex_header
-    response.headers['X-Robots-Tag'] = 'noindex' if request.get?
+    if request.get?
+      if SiteSetting.allow_index_in_robots_txt
+        response.headers['X-Robots-Tag'] = 'noindex'
+      else
+        response.headers['X-Robots-Tag'] = 'noindex, nofollow'
+      end
+    end
   end
 
   protected

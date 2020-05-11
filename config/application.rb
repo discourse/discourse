@@ -23,7 +23,6 @@ require 'sprockets/railtie'
 # Plugin related stuff
 require_relative '../lib/plugin_initialization_guard'
 require_relative '../lib/discourse_event'
-require_relative '../lib/discourse_plugin'
 require_relative '../lib/discourse_plugin_registry'
 
 require_relative '../lib/plugin_gem'

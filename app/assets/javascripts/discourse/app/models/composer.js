@@ -790,7 +790,11 @@ const Composer = RestModel.extend({
     }
 
     this.set("originalText", opts.draft ? "" : this.reply);
-    if (this.editingFirstPost) {
+
+    if (this.canEditTitle) {
+      if (isEmpty(this.title) && this.title !== "") {
+        this.set("title", "");
+      }
       this.set("originalTitle", this.title);
     }
 
