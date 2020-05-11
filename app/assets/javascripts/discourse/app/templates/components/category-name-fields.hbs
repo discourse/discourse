@@ -2,7 +2,7 @@
   {{#unless category.isUncategorizedCategory}}
     <section class="field-item">
       <label>{{i18n "category.name"}}</label>
-      {{text-field value=category.name placeholderKey="category.name_placeholder" maxlength="50"}}
+      {{text-field value=category.name placeholderKey="category.name_placeholder" maxlength="50" class="category-name"}}
     </section>
   {{/unless}}
   <section class="field-item">
