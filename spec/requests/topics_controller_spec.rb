@@ -1853,7 +1853,7 @@ RSpec.describe TopicsController do
 
       get "/t/#{topic.slug}/#{topic.id}.json"
 
-      expect(response.headers['X-Robots-Tag']).to eq('noindex')
+      expect(response.headers['X-Robots-Tag']).to eq('noindex, nofollow')
     end
 
     it "doesn't store an incoming link when there's no referer" do

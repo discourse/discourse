@@ -806,7 +806,13 @@ class ApplicationController < ActionController::Base
   end
 
   def add_noindex_header
-    response.headers['X-Robots-Tag'] = 'noindex' if request.get?
+    if request.get?
+      if SiteSetting.allow_index_in_robots_txt
+        response.headers['X-Robots-Tag'] = 'noindex'
+      else
+        response.headers['X-Robots-Tag'] = 'noindex, nofollow'
+      end
+    end
   end
 
   protected
