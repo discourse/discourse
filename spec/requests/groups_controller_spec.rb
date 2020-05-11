@@ -364,6 +364,7 @@ describe GroupsController do
 
       expect(body['group']['id']).to eq(group.id)
       expect(body['extras']["visible_group_names"]).to eq([group.name])
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
     context 'as an admin' do
