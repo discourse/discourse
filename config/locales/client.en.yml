@@ -1842,7 +1842,7 @@ en:
           other: "{{count}} unread messages"
         high_priority:
           one: "%{count} unread high priority notification"
-          other: "%{count} unread high priority notificationis"
+          other: "%{count} unread high priority notifications"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
