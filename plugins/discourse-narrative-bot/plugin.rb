@@ -92,10 +92,10 @@ after_initialize do
 
         user = User.find_by(id: params[:user_id])
         raise Discourse::NotFound if user.blank?
-        cdn_avatar_url = fetch_avatar_url(user)
 
         hijack do
-          generator = CertificateGenerator.new(user, params[:date], cdn_avatar_url)
+          avatar_data = fetch_avatar(user)
+          generator = CertificateGenerator.new(user, params[:date], avatar_data)
 
           svg = params[:type] == 'advanced' ? generator.advanced_user_track : generator.new_user_track
 
@@ -107,7 +107,7 @@ after_initialize do
 
       private
 
-      def fetch_avatar_url(user)
+      def fetch_avatar(user)
         avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
         FileHelper.download(
           avatar_url.to_s,
