@@ -4,26 +4,29 @@
       <%= render_topic_title(@topic_view.topic) %>
     </h1>
 
-    <% if @breadcrumbs.present? || @tags.present? %>
+    <% if @breadcrumbs.present? %>
       <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
         <% @breadcrumbs.each_with_index do |c, i| %>
           <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
             <a href="<%= Discourse.base_url %><%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
-              <span class="badge-category-bg" style='background-color: #<%= c[:color] %>'></span>
-              <span class="category-name" itemprop="name"><%= c[:name] %></span>
+              <span class='badge-category-bg' style='background-color: #<%= c[:color] %>'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'><%= c[:name] %></span>
+              </span>
             </a>
             <meta itemprop="position" content="<%= i + 1 %>" />
           </span>
         <% end %>
+      </div>
+    <% end %>
 
-        <% if @tags.present? %>
-          <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
-          <div class='discourse-tags list-tags'>
-            <% @tags.each_with_index do |tag, i| %>
-              <a href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' class='discourse-tag' rel="tag"><%= tag.name -%></a><% if i < @tags.size - 1 %>, <% end %>
-            <% end %>
-          </div>
-        <% end %>
+    <% if @tags.present? %>
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+          <% @tags.each_with_index do |tag, i| %>
+            <a href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' class='discourse-tag' rel="tag"><%= tag.name -%></a><% if i < @tags.size - 1 %>, <% end %>
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>
@@ -32,7 +35,7 @@
 
   <%- if include_crawler_content? %>
 
-  <% @topic_view.posts.each do |post| %>
+  <% @topic_view.posts.each_with_index do |post, idx| %>
     <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
       <% if (u = post.user) %>
         <div class='crawler-post-meta'>
@@ -48,6 +51,10 @@
             <% end %>
           </span>
 
+          <% if post.image_url %>
+            <link itemprop="image" href="<%= Discourse.base_url %><%= post.image_url %>">
+          <% end %>
+
           <span class="crawler-post-infos">
             <% if post.updated_at > post.created_at %>
               <meta itemprop='datePublished' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
@@ -58,6 +65,7 @@
               <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
                 <%= l post.created_at, format: :long %>
               </time>
+              <meta itemprop='dateModified' content='<%= post.updated_at.to_formatted_s(:iso8601) %>'>
             <% end %>
           <span itemprop='position'>#<%= post.post_number %></span>
           </span>
@@ -67,6 +75,9 @@
         </div>
 
         <meta itemprop='headline' content='<%= @topic_view.title %>'>
+        <% if idx == 0 %>
+          <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
+        <% end %>
 
         <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
            <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
@@ -79,7 +90,7 @@
             <meta itemprop="userInteractionCount" content="<%= post.reply_count %>" />
           </div>
 
-          <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
+          <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].filter { |l| l[:reflection] }.length > 0 %>
             <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
               <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
                 <% if link[:reflection] && link[:title].present? %>
