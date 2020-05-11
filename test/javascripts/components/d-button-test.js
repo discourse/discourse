@@ -105,7 +105,7 @@ componentTest("aria-label", {
   template:
     "{{d-button ariaLabel=ariaLabel translatedAriaLabel=translatedAriaLabel}}",
 
-  beforEach() {
+  beforeEach() {
     I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
   },
 
@@ -129,13 +129,12 @@ componentTest("aria-label", {
 componentTest("title", {
   template: "{{d-button title=title translatedTitle=translatedTitle}}",
 
-  beforEach() {
+  beforeEach() {
     I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
   },
 
   test(assert) {
     this.set("title", "test.fooTitle");
-
     assert.equal(
       find("button")[0].getAttribute("title"),
       I18n.t("test.fooTitle")
@@ -153,7 +152,7 @@ componentTest("title", {
 componentTest("label", {
   template: "{{d-button label=label translatedLabel=translatedLabel}}",
 
-  beforEach() {
+  beforeEach() {
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
   },
 
