@@ -17,6 +17,7 @@ describe BadgesController do
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["badges"].length).to eq(Badge.enabled.count)
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
   end
 
