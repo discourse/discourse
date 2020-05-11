@@ -6,6 +6,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { convertIconClass } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
 import { htmlSafe } from "@ember/template";
+import { action } from "@ember/object";
 
 export default Component.extend({
   classNames: ["group-flair-inputs"],
@@ -15,14 +16,14 @@ export default Component.extend({
     return Discourse.getURL("/images/avatar.png");
   },
 
-  @discourseComputed("model.flair_url")
-  flairPreviewIcon(flairURL) {
-    return flairURL && /fa(r|b?)-/.test(flairURL);
+  @discourseComputed("flairType")
+  flairPreviewIcon(flairType) {
+    return flairType && flairType === "icon";
   },
 
-  @discourseComputed("model.flair_url", "flairPreviewIcon")
-  flairPreviewIconUrl(flairURL, flairPreviewIcon) {
-    return flairPreviewIcon ? convertIconClass(flairURL) : "";
+  @discourseComputed("model.flair_icon")
+  flairPreviewIconUrl(flairIcon) {
+    return flairIcon ? convertIconClass(flairIcon) : "";
   },
 
   @observes("model.flair_url")
@@ -49,9 +50,9 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("model.flair_url", "flairPreviewIcon")
-  flairPreviewImage(flairURL, flairPreviewIcon) {
-    return flairURL && !flairPreviewIcon;
+  @discourseComputed("flairType")
+  flairPreviewImage(flairType) {
+    return flairType && flairType === "image";
   },
 
   @discourseComputed(
@@ -90,5 +91,22 @@ export default Component.extend({
   flairPreviewLabel(flairPreviewImage) {
     const key = flairPreviewImage ? "image" : "icon";
     return I18n.t(`groups.flair_preview_${key}`);
+  },
+
+  @action
+  setFlairIcon(value) {
+    this.model.flair_icon = value;
+    this.model.flair_image_id = null;
+  },
+
+  @action
+  setFlairImage(upload) {
+    this.model.flair_image_id = upload.id;
+    this.model.flair_icon = null;
+  },
+
+  @action
+  removeFlairImage() {
+    this.model.flair_image_id = null;
   }
 });

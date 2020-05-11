@@ -516,7 +516,8 @@ class GroupsController < ApplicationController
           mentionable_level
           messageable_level
           title
-          flair_url
+          flair_icon
+          flair_image_id
           flair_bg_color
           flair_color
           bio_raw

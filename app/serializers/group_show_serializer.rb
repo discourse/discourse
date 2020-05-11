@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GroupShowSerializer < BasicGroupSerializer
-  attributes :is_group_user, :is_group_owner, :is_group_owner_display, :mentionable, :messageable
+  attributes :is_group_user, :is_group_owner, :is_group_owner_display, :mentionable, :messageable, :flair_image_id
 
   def include_is_group_user?
     authenticated?
@@ -41,6 +41,10 @@ class GroupShowSerializer < BasicGroupSerializer
 
   def messageable
     Group.messageable(scope.user).exists?(id: object.id)
+  end
+
+  def include_flair_image_id?
+    is_group_owner && object.flair_image_id.present?
   end
 
   private

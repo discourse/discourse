@@ -16,6 +16,7 @@ class BasicGroupSerializer < ApplicationSerializer
              :incoming_email,
              :has_messages,
              :flair_url,
+             :flair_icon,
              :flair_bg_color,
              :flair_color,
              :bio_raw,
