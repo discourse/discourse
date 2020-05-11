@@ -23,6 +23,8 @@ const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "d", "t"];
 const START_OF_DAY_HOUR = 8;
 const LATER_TODAY_CUTOFF_HOUR = 17;
 const LATER_TODAY_MAX_HOUR = 18;
+const MOMENT_MONDAY = 1;
+const MOMENT_THURSDAY = 4;
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -220,7 +222,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed()
   showLaterThisWeek() {
-    return this.now().day() < 4; // 4 is Thursday
+    return this.now().day() < MOMENT_THURSDAY;
   },
 
   @discourseComputed("parsedLastCustomReminderDatetime")
@@ -238,7 +240,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed()
   startNextBusinessWeekFormatted() {
     return this.nextWeek()
-      .day("Monday")
+      .day(MOMENT_MONDAY)
       .format(I18n.t("dates.long_no_year"));
   },
 
@@ -374,7 +376,7 @@ export default Controller.extend(ModalFunctionality, {
       case REMINDER_TYPES.NEXT_WEEK:
         return this.nextWeek();
       case REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK:
-        return this.nextWeek().day("Monday");
+        return this.nextWeek().day(MOMENT_MONDAY);
       case REMINDER_TYPES.LATER_THIS_WEEK:
         return this.laterThisWeek();
       case REMINDER_TYPES.NEXT_MONTH:
