@@ -132,6 +132,7 @@ RSpec.describe RobotsTxtController do
       get '/robots.txt'
 
       expect(response.body).to_not include("Disallow: /u/")
+      expect(response.body).to include("User-agent: googlebot\nAllow")
     end
 
     it "returns overridden robots.txt if the file is overridden" do
