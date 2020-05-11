@@ -64,6 +64,29 @@ QUnit.test("user card local time", async assert => {
   );
 });
 
+QUnit.test(
+  "user card local time - does not update timezone for another user",
+  async assert => {
+    User.current().changeTimezone("Australia/Brisbane");
+    let cardResponse = _.clone(userFixtures["/u/charlie/card.json"]);
+    delete cardResponse.user.timezone;
+
+    pretender.get("/u/charlie/card.json", () => [
+      200,
+      { "Content-Type": "application/json" },
+      cardResponse
+    ]);
+
+    await visit("/t/internationalization-localization/280");
+    await click("a[data-user-card=charlie]:first");
+
+    assert.not(
+      exists(".user-card .local-time"),
+      "it does not show the local time if the user card returns a null/undefined timezone for another user"
+    );
+  }
+);
+
 acceptance("User Card", { loggedIn: true });
 
 QUnit.test("user card", async assert => {
