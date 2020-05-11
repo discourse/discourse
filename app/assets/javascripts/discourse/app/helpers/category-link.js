@@ -151,8 +151,8 @@ function defaultCategoryLinkRenderer(category, opts) {
   if (restricted) {
     html += iconHTML("lock");
   }
-  Category.extraBadgeIconRenderers.forEach(function(appender) {
-    const icon = appender(category);
+  Category.extraBadgeIconRenderers.forEach(function(renderer) {
+    const icon = renderer(category);
     if (icon) {
       html += icon;
     }
