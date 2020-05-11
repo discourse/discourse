@@ -2433,6 +2433,7 @@ describe UsersController do
     it "redirects if the user is not logged in" do
       get "/my/wat.json"
       expect(response).to be_redirect
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
     context "when the user is logged in" do
