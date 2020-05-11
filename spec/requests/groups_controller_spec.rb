@@ -620,7 +620,7 @@ describe GroupsController do
       end
 
       after do
-        Group.plugin_editable_group_custom_fields.clear
+        DiscoursePluginRegistry.reset!
       end
 
       it "only updates allowed user fields" do
@@ -634,7 +634,7 @@ describe GroupsController do
       end
 
       it "is secure when there are no registered editable fields" do
-        Group.plugin_editable_group_custom_fields.clear
+        DiscoursePluginRegistry.reset!
         put "/groups/#{@group.id}.json", params: { group: { custom_fields: { test: :hello1, test2: :hello2 } } }
 
         @group.reload

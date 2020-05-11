@@ -30,16 +30,16 @@ class DiscoursePluginRegistry
   #   - Defines instance method as a shortcut to the singleton method
   #   - Automatically deletes the register on ::clear!
   def self.define_filtered_register(register_name)
-    define_register(register_name, Set)
+    define_register(register_name, Array)
 
     singleton_class.alias_method :"_raw_#{register_name}", :"#{register_name}"
 
     define_singleton_method(register_name) do
       unfiltered = public_send(:"_raw_#{register_name}")
-      Set.new(unfiltered
+      unfiltered
         .filter { |v| v[:plugin].enabled? }
         .map { |v| v[:value] }
-      ).freeze
+        .uniq
     end
 
     define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
@@ -66,6 +66,14 @@ class DiscoursePluginRegistry
   define_register :seed_path_builders, Set
   define_register :vendored_pretty_text, Set
   define_register :vendored_core_pretty_text, Set
+
+  define_filtered_register :staff_user_custom_fields
+  define_filtered_register :public_user_custom_fields
+
+  define_filtered_register :self_editable_user_custom_fields
+  define_filtered_register :staff_editable_user_custom_fields
+
+  define_filtered_register :editable_group_custom_fields
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider

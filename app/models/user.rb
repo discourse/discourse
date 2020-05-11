@@ -267,72 +267,44 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.plugin_editable_user_custom_fields
-    @plugin_editable_user_custom_fields ||= {}
-  end
-
-  def self.plugin_staff_editable_user_custom_fields
-    @plugin_staff_editable_user_custom_fields ||= {}
-  end
-
-  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin, staff_only: false)
-    if staff_only
-      plugin_staff_editable_user_custom_fields[custom_field_name] = plugin
-    else
-      plugin_editable_user_custom_fields[custom_field_name] = plugin
-    end
-  end
-
   def self.editable_user_custom_fields(by_staff: false)
     fields = []
-
-    plugin_editable_user_custom_fields.each do |k, v|
-      fields << k if v.enabled?
-    end
-
-    if by_staff
-      plugin_staff_editable_user_custom_fields.each do |k, v|
-        fields << k if v.enabled?
-      end
-    end
+    fields.push *DiscoursePluginRegistry.self_editable_user_custom_fields
+    fields.push *DiscoursePluginRegistry.staff_editable_user_custom_fields if by_staff
 
     fields.uniq
   end
 
-  def self.plugin_staff_user_custom_fields
-    @plugin_staff_user_custom_fields ||= {}
+  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin, staff_only: false)
+    Discourse.deprecate("Editable user custom fields should be registered using the plugin API", since: "v2.4.0.beta4", drop_from: "v2.5.0")
+    DiscoursePluginRegistry.register_editable_user_custom_field(custom_field_name, plugin, staff_only: staff_only)
   end
 
   def self.register_plugin_staff_custom_field(custom_field_name, plugin)
-    plugin_staff_user_custom_fields[custom_field_name] = plugin
-  end
-
-  def self.plugin_public_user_custom_fields
-    @plugin_public_user_custom_fields ||= {}
+    Discourse.deprecate("Staff user custom fields should be registered using the plugin API",  since: "v2.4.0.beta4", drop_from: "v2.5.0")
+    DiscoursePluginRegistry.register_staff_user_custom_field(custom_field_name, plugin)
   end
 
   def self.register_plugin_public_custom_field(custom_field_name, plugin)
-    plugin_public_user_custom_fields[custom_field_name] = plugin
+    Discourse.deprecate("Public user custom fields should be registered using the plugin API", since: "v2.4.0.beta4", drop_from: "v2.5.0")
+    DiscoursePluginRegistry.register_public_user_custom_field(custom_field_name, plugin)
   end
 
   def self.whitelisted_user_custom_fields(guardian)
     fields = []
 
-    plugin_public_user_custom_fields.each do |k, v|
-      fields << k if v.enabled?
-    end
+    fields.push *DiscoursePluginRegistry.public_user_custom_fields
 
     if SiteSetting.public_user_custom_fields.present?
-      fields += SiteSetting.public_user_custom_fields.split('|')
+      fields.push *SiteSetting.public_user_custom_fields.split('|')
     end
 
     if guardian.is_staff?
       if SiteSetting.staff_user_custom_fields.present?
-        fields += SiteSetting.staff_user_custom_fields.split('|')
+        fields.push *SiteSetting.staff_user_custom_fields.split('|')
       end
-      plugin_staff_user_custom_fields.each do |k, v|
-        fields << k if v.enabled?
-      end
+
+      fields.push *DiscoursePluginRegistry.staff_user_custom_fields
     end
 
     fields.uniq

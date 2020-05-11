@@ -200,7 +200,7 @@ describe ReviewablesController do
         end
 
         after do
-          User.plugin_public_user_custom_fields.clear
+          DiscoursePluginRegistry.reset!
         end
 
         it "returns user data with custom fields" do
