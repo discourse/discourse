@@ -16,6 +16,16 @@ class AddTopicThumbnailInformation < ActiveRecord::Migration[6.0]
       ADD COLUMN IF NOT EXISTS image_upload_id bigint
     SQL
 
+    execute <<~SQL
+      CREATE INDEX CONCURRENTLY IF NOT EXISTS
+      index_posts_on_image_upload_id ON posts USING btree (image_upload_id);
+    SQL
+
+    execute <<~SQL
+      CREATE INDEX CONCURRENTLY IF NOT EXISTS
+      index_topics_on_image_upload_id ON public.topics USING btree (image_upload_id);
+    SQL
+
     ActiveRecord::Base.transaction do
       add_column :theme_modifier_sets, :topic_thumbnail_sizes, :string, array: true
 
