@@ -67,7 +67,7 @@
               <a href='<%= t.url %>' class='title raw-link raw-topic-link'><%= t.title %></a>
             </span>
             <div class="link-bottom-line">
-              <% if (!@category || @category.has_children?) && t.category %>
+              <% if (!@category || @category.has_children?) && t.category && !t.category.uncategorized? %>
                 <a href='<%= t.category.url %>' class='badge-wrapper bullet'>
                   <span class='badge-category-bg' style='background-color: #<%= t.category.color %>'></span>
                   <span class='badge-category clear-badge'>
