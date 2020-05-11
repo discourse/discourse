@@ -43,48 +43,6 @@ describe Auth::DefaultCurrentUserProvider do
       expect(api_key.last_used_at).to eq(nil)
     end
 
-
-  context "whitelisted api auth query param routes" do
-
-    it "allows rss feeds" do
-      user = Fabricate(:user)
-      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
-      url = "/latest.rss?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
-      expect(provider(url).current_user.id).to eq(user.id)
-    end
-
-    it "allows ics feeds" do
-      user = Fabricate(:user)
-      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
-      url = "/u/#{user.username}/bookmarks.ics?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
-      expect(provider(url).current_user.id).to eq(user.id)
-    end
-
-    it "allows handle mail route" do
-      user = Fabricate(:user)
-      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
-      url = "/admin/email/handle_mail?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
-      opts = { method: "POST" }
-      expect(provider(url, opts).current_user.id).to eq(user.id)
-    end
-
-    it "raises errors for non whitlisted routes" do
-      user = Fabricate(:user)
-      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
-      url = "/u?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
-      expect {
-        provider(url).current_user
-      }.to raise_error(Discourse::InvalidAccess)
-    end
-
-    it "still allows header based auth" do
-      user = Fabricate(:user)
-      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
-      params = { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => user.username.downcase }
-      expect(provider("/", params).current_user.id).to eq(user.id)
-    end
-  end
-
     it "raises errors for incorrect api_key" do
       params = { "HTTP_API_KEY" => "INCORRECT" }
       expect {
