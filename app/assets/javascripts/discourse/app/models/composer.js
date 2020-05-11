@@ -785,11 +785,14 @@ const Composer = RestModel.extend({
       });
     }
 
+    this.set("originalTitle", "");
+
     if (opts.title) {
       this.set("title", opts.title);
     }
 
     this.set("originalText", opts.draft ? "" : this.reply);
+
     if (this.editingFirstPost) {
       this.set("originalTitle", this.title);
     }
