@@ -609,6 +609,8 @@ RSpec.describe ApplicationController do
   it 'has cannonical tag' do
     get '/', headers: { HTTP_ACCEPT: '*/*' }
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/" })
+    get '/?query_param=true', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/" })
     get '/404', headers: { HTTP_ACCEPT: '*/*' }
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/404" })
     topic = create_post.topic
