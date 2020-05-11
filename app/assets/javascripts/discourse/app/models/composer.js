@@ -785,7 +785,10 @@ const Composer = RestModel.extend({
       });
     }
 
-    this.set("originalTitle", "");
+    if (this.get("canEditTitle")) {
+      this.set("originalTitle", "");
+      this.set("title", "");
+    }
 
     if (opts.title) {
       this.set("title", opts.title);
