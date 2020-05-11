@@ -24,6 +24,29 @@ class DiscoursePluginRegistry
     end
   end
 
+  # Create a new register (see `define_register`) with some additions:
+  #   - Register is created in a class variable using the specified name/type
+  #   - Defines singleton method to access the register
+  #   - Defines instance method as a shortcut to the singleton method
+  #   - Automatically deletes the register on ::clear!
+  def self.define_filtered_register(register_name)
+    define_register(register_name, Set)
+
+    singleton_class.alias_method :"_raw_#{register_name}", :"#{register_name}"
+
+    define_singleton_method(register_name) do
+      unfiltered = public_send(:"_raw_#{register_name}")
+      Set.new(unfiltered
+        .filter { |v| v[:plugin].enabled? }
+        .map { |v| v[:value] }
+      ).freeze
+    end
+
+    define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
+      public_send(:"_raw_#{register_name}") << { plugin: plugin, value: value }
+    end
+  end
+
   define_register :javascripts, Set
   define_register :auth_providers, Set
   define_register :service_workers, Set

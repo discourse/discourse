@@ -10,6 +10,52 @@ describe DiscoursePluginRegistry do
   let(:registry) { TestRegistry }
   let(:registry_instance) { registry.new }
 
+  context '::define_register' do
+    let(:fresh_registry) { Class.new(TestRegistry) }
+
+    let(:plugin_class) do
+      Class.new(Plugin::Instance) do
+        attr_accessor :enabled
+        def enabled?
+          @enabled
+        end
+      end
+    end
+
+    let(:plugin) { plugin_class.new }
+
+    it 'works for a set' do
+      fresh_registry.define_register(:test_things, Set)
+      fresh_registry.test_things << "My Thing"
+      expect(fresh_registry.test_things).to contain_exactly("My Thing")
+      fresh_registry.reset!
+      expect(fresh_registry.test_things.length).to eq(0)
+    end
+
+    it 'works for a hash' do
+      fresh_registry.define_register(:test_things, Hash)
+      fresh_registry.test_things[:test] = "hello world"
+      expect(fresh_registry.test_things[:test]).to eq("hello world")
+      fresh_registry.reset!
+      expect(fresh_registry.test_things[:test]).to eq(nil)
+    end
+
+    context '::define_filtered_register' do
+      it 'works' do
+        fresh_registry.define_filtered_register(:test_things)
+        expect(fresh_registry.test_things.length).to eq(0)
+
+        fresh_registry.register_test_thing("mything", plugin)
+
+        plugin.enabled = true
+        expect(fresh_registry.test_things).to contain_exactly("mything")
+
+        plugin.enabled = false
+        expect(fresh_registry.test_things.length).to eq(0)
+      end
+    end
+  end
+
   context '#stylesheets' do
     it 'defaults to an empty Set' do
       registry.reset!
