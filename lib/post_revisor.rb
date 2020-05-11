@@ -43,7 +43,7 @@ class PostRevisor
 
   POST_TRACKED_FIELDS = %w{raw cooked edit_reason user_id wiki post_type}
 
-  attr_reader :category_changed
+  attr_reader :category_changed, :post_revision
 
   def initialize(post, topic = post.topic)
     @post = post
@@ -469,7 +469,7 @@ class PostRevisor
       modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
     end
 
-    PostRevision.create!(
+    @post_revision = PostRevision.create!(
       user_id: @post.last_editor_id,
       post_id: @post.id,
       number: @post.version,
@@ -598,7 +598,7 @@ class PostRevisor
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
-    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?)
+    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self)
   end
 
   def update_topic_word_counts
