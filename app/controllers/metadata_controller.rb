@@ -50,7 +50,57 @@ class MetadataController < ApplicationController
           title: "title",
           text: "body"
         }
-      }
+      },
+      shortcuts: [
+        {
+          name: I18n.t('js.topic.create_long'),
+          short_name: I18n.t('js.topic.create'),
+          url: "/new-topic",
+          icons: [
+            {
+              src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
+              sizes: "128x128",
+              type: "image/png"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.user.messages.inbox'),
+          short_name: I18n.t('js.user.messages.inbox'),
+          url: "/my/messages",
+          icons: [
+            {
+              src: ActionController::Base.helpers.image_url("push-notifications/private_message.png"),
+              sizes: "128x128",
+              type: "image/png"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.user.bookmarks'),
+          short_name: I18n.t('js.user.bookmarks'),
+          url: "/my/bookmarks",
+          icons: [
+            {
+              src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
+              sizes: "128x128",
+              type: "image/png"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.filters.top.title'),
+          short_name: I18n.t('js.filters.top.title'),
+          url: "/top",
+          icons: [
+            {
+              src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
+              sizes: "128x128",
+              type: "image/png"
+            }
+          ]
+        }
+      ]
     }
 
     logo = SiteSetting.site_manifest_icon_url
