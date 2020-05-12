@@ -97,7 +97,7 @@ task 'docker:test' do
       puts "Starting background redis"
       @redis_pid = Process.spawn('redis-server --dir tmp/test_data/redis')
 
-      @postgres_bin = "/usr/lib/postgresql/10/bin/"
+      @postgres_bin = "/usr/lib/postgresql/#{ENV['PG_MAJOR']}/bin/"
       `#{@postgres_bin}initdb -D tmp/test_data/pg`
 
       # speed up db, never do this in production mmmmk
