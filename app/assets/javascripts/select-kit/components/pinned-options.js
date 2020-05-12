@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { computed, action } from "@ember/object";

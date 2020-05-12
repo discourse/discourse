@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { formattedReminderTime } from "discourse/lib/bookmark";

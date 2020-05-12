@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import ArrayProxy from "@ember/array/proxy";
 import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";

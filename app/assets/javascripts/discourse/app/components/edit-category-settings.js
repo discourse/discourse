@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { empty, and } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
 import deprecated from "discourse-common/lib/deprecated";

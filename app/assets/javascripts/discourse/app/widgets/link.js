@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";

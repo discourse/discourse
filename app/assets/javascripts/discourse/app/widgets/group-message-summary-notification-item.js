@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { createWidgetFrom } from "discourse/widgets/widget";
 import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { not, notEmpty, equal, and, or } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";

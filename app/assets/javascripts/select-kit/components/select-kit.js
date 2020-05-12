@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject, { computed, get, guidFor } from "@ember/object";
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";

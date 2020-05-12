@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { alias, or, and, equal, notEmpty, not } from "@ember/object/computed";

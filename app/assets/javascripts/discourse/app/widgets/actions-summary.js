@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { avatarFor } from "discourse/widgets/post";
 import { h } from "virtual-dom";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { alias, equal } from "@ember/object/computed";
 import { next } from "@ember/runloop";

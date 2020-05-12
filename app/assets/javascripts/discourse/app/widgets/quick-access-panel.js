@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";

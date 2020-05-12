@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";

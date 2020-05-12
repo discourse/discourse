@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";

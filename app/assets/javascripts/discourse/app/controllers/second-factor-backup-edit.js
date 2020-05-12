@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import { later } from "@ember/runloop";
 import Controller from "@ember/controller";

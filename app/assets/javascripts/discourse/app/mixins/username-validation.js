@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import discourseDebounce from "discourse/lib/debounce";
 import { setting } from "discourse/lib/computed";

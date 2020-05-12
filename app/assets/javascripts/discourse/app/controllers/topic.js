@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";

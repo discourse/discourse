@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { reads, gte } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";

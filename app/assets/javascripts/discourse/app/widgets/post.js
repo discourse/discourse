@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import PostCooked from "discourse/widgets/post-cooked";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";

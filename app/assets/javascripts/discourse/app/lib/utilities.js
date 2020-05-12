@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
 import Handlebars from "handlebars";

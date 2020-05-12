@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Helper from "@ember/component/helper";
 
 function postActionTitle([id, nameKey]) {

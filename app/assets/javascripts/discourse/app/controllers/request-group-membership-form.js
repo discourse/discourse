@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";

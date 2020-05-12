@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
 import Permalink from "admin/models/permalink";
