@@ -213,16 +213,18 @@ class TopicLink < ActiveRecord::Base
     unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
       file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? || File.extname(parsed.path).empty?
       begin
-        TopicLink.create!(post_id: post.id,
-                          user_id: post.user_id,
-                          topic_id: post.topic_id,
-                          url: url,
-                          domain: parsed.host || Discourse.current_hostname,
-                          internal: internal,
-                          link_topic_id: topic&.id,
-                          link_post_id: reflected_post.try(:id),
-                          quote: link.is_quote,
-                          extension: file_extension)
+        TopicLink.create(
+          post_id: post.id,
+          user_id: post.user_id,
+          topic_id: post.topic_id,
+          url: url,
+          domain: parsed.host || Discourse.current_hostname,
+          internal: internal,
+          link_topic_id: topic&.id,
+          link_post_id: reflected_post.try(:id),
+          quote: link.is_quote,
+          extension: file_extension
+        )
       rescue ActiveRecord::RecordNotUnique
         # it's fine
       end
