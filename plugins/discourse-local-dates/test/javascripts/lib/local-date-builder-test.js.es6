@@ -298,6 +298,18 @@ QUnit.test("option[calendar]", assert => {
       "it stops formating out of calendar range"
     )
   );
+
+  freezeTime({ date: "2020-05-12", timezone: LOS_ANGELES }, () => {
+    assert.buildsCorrectDate(
+      {
+        date: "2020-05-13",
+        time: "18:00",
+        localTimezone: LOS_ANGELES
+      },
+      { formated: "Tomorrow 11:00 AM" },
+      "it correctly displays a different local timezone"
+    );
+  });
 });
 
 QUnit.test("previews", assert => {
@@ -462,6 +474,29 @@ QUnit.test("previews", assert => {
           {
             formated: "April 7, 2020 10:54 PM",
             timezone: "Sydney"
+          }
+        ]
+      }
+    );
+  });
+
+  freezeTime({ date: "2020-05-12", timezone: LOS_ANGELES }, () => {
+    assert.buildsCorrectDate(
+      {
+        date: "2020-05-13",
+        time: "18:00",
+        localTimezone: LOS_ANGELES
+      },
+      {
+        previews: [
+          {
+            current: true,
+            formated: "May 13, 2020 11:00 AM",
+            timezone: "Los Angeles"
+          },
+          {
+            formated: "May 13, 2020 6:00 PM",
+            timezone: "UTC"
           }
         ]
       }
