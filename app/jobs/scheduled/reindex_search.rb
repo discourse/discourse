@@ -113,11 +113,11 @@ module Jobs
         SELECT
           posts.id
         FROM posts
+        JOIN topics ON topics.id = posts.topic_id
         LEFT JOIN post_search_data pd
           ON pd.locale = :locale
           AND pd.version = :version
           AND pd.post_id = posts.id
-        INNER JOIN topics ON topics.id = posts.topic_id
         WHERE pd.post_id IS NULL
         AND posts.deleted_at IS NULL
         AND topics.deleted_at IS NULL
