@@ -24,15 +24,18 @@ class Auth::DefaultCurrentUserProvider
       method: :get,
       route: [
         "posts#latest",
-        "posts#user_topics_feed",
         "posts#user_posts_feed",
         "groups#posts_feed",
         "groups#mentions_feed",
+        "list#user_topics_feed",
         "list#category_feed",
-        "list#latest_feed",
-        "list#new_feed",
-        "list#unread_feed",
-        "topics#feed"
+        "topics#feed",
+        "badges#show",
+        "tags#tag_feed",
+        "tags#show",
+        *[:latest, :unread, :new, :read, :posted, :bookmarks].map { |f| "list##{f}_feed" },
+        *[:all, :yearly, :quarterly, :monthly, :weekly, :daily].map { |p| "list#top_#{p}_feed" },
+        *[:latest, :unread, :new, :read, :posted, :bookmarks].map { |f| "tags#show_#{f}" }
       ],
       format: :rss
     },
