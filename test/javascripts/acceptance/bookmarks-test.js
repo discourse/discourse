@@ -230,26 +230,29 @@ test("Editing a bookmark", async assert => {
   assert.verifySteps(["tomorrow"]);
 });
 
-test("Editing a bookmark that has a Later Today reminder, and it is before 6pm today", async assert => {
-  mockSuccessfulBookmarkPost(assert);
-  let clock = fakeTime(
-    "2020-05-04T13:00:00",
-    loggedInUser().resolvedTimezone(loggedInUser())
-  );
-  await timeStep(clock, () =>
-    visit("/t/internationalization-localization/280")
-  );
-  await timeStep(clock, () => openBookmarkModal());
-  await timeStep(clock, () => fillIn("input#bookmark-name", "Test name"));
-  await timeStep(clock, () => click("#tap_tile_later_today"));
-  await timeStep(clock, () => openEditBookmarkModal());
-  assert.not(
-    exists("#bookmark-custon-date > input"),
-    "it does not show the custom date input"
-  );
-  assert.ok(
-    exists("#tap_tile_later_today.active"),
-    "it preselects Later Today"
-  );
-  assert.verifySteps(["later_today"]);
-});
+QUnit.skip(
+  "Editing a bookmark that has a Later Today reminder, and it is before 6pm today",
+  async assert => {
+    mockSuccessfulBookmarkPost(assert);
+    let clock = fakeTime(
+      "2020-05-04T13:00:00",
+      loggedInUser().resolvedTimezone(loggedInUser())
+    );
+    await timeStep(clock, () =>
+      visit("/t/internationalization-localization/280")
+    );
+    await timeStep(clock, () => openBookmarkModal());
+    await timeStep(clock, () => fillIn("input#bookmark-name", "Test name"));
+    await timeStep(clock, () => click("#tap_tile_later_today"));
+    await timeStep(clock, () => openEditBookmarkModal());
+    assert.not(
+      exists("#bookmark-custon-date > input"),
+      "it does not show the custom date input"
+    );
+    assert.ok(
+      exists("#tap_tile_later_today.active"),
+      "it preselects Later Today"
+    );
+    assert.verifySteps(["later_today"]);
+  }
+);
