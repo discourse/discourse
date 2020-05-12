@@ -18,12 +18,12 @@ class AddTopicThumbnailInformation < ActiveRecord::Migration[6.0]
 
     execute <<~SQL
       CREATE INDEX CONCURRENTLY IF NOT EXISTS
-      index_posts_on_image_upload_id ON posts USING btree (image_upload_id);
+      index_posts_on_image_upload_id ON posts USING btree (image_upload_id)
     SQL
 
     execute <<~SQL
       CREATE INDEX CONCURRENTLY IF NOT EXISTS
-      index_topics_on_image_upload_id ON public.topics USING btree (image_upload_id);
+      index_topics_on_image_upload_id ON topics USING btree (image_upload_id)
     SQL
 
     ActiveRecord::Base.transaction do
