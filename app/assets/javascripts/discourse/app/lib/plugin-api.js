@@ -48,6 +48,7 @@ import {
   addComposerUploadMarkdownResolver
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addExtraIconRenderer } from "discourse/helpers/category-link";
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
@@ -1064,6 +1065,22 @@ class PluginApi {
    **/
   decorateTopicTitle(callback) {
     addTopicTitleDecorator(callback);
+  }
+
+  /**
+   * Allows adding icons to the category-link html
+   *
+   * ```
+   * api.addCategoryLinkIcon((category) => {
+   *  if (category.someProperty) {
+        return "eye"
+      }
+   * });
+   * ```
+   *
+   **/
+  addCategoryLinkIcon(renderer) {
+    addExtraIconRenderer(renderer);
   }
 }
 

@@ -18,6 +18,12 @@ function categoryStripe(color, classes) {
   return "<span class='" + classes + "' " + style + "></span>";
 }
 
+let _extraIconRenderers = [];
+
+export function addExtraIconRenderer(renderer) {
+  _extraIconRenderers.push(renderer);
+}
+
 /**
   Generates category badge HTML
 
@@ -149,12 +155,15 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (restricted) {
-    html += `${iconHTML(
-      "lock"
-    )}<span class="category-name" ${categoryDir}>${categoryName}</span>`;
-  } else {
-    html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
+    html += iconHTML("lock");
   }
+  _extraIconRenderers.forEach(renderer => {
+    const iconName = renderer(category);
+    if (iconName) {
+      html += iconHTML(iconName);
+    }
+  });
+  html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   html += "</span>";
 
   if (opts.topicCount && categoryStyle !== "box") {
