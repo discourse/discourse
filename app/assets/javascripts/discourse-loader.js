@@ -140,6 +140,9 @@ var define, requirejs;
       },
       "@ember/object/internals": {
         guidFor: Ember.guidFor
+      },
+      I18n: {
+        default: I18n
       }
     };
   }

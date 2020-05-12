@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { notEmpty, empty, equal } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import Component from "@ember/component";

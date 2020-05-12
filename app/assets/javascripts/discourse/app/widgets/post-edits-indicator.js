@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { longDate } from "discourse/lib/formatter";

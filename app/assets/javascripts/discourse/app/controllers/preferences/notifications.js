@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Controller from "@ember/controller";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";

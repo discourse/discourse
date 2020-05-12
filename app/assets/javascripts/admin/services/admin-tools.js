@@ -1,3 +1,4 @@
+import I18n from "I18n";
 // A service that can act as a bridge between the front end Discourse application
 // and the admin application. Use this if you need front end code to access admin
 // modules. Inject it optionally, and if it exists go to town!

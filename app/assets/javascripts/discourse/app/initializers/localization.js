@@ -1,3 +1,4 @@
+import I18n from "I18n";
 export default {
   name: "localization",
   after: "inject-objects",

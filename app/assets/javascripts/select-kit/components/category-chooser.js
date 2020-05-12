@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";

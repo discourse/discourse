@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, not, gt, empty, notEmpty, equal } from "@ember/object/computed";
 import { inject as controller } from "@ember/controller";

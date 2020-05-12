@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 const HEADING_COLLECTION = "HEADING_COLLECTION";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
 import Component from "@ember/component";

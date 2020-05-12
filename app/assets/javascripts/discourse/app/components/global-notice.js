@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { bind, cancel } from "@ember/runloop";
 import Component from "@ember/component";
 import LogsNotice from "discourse/services/logs-notice";

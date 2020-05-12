@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse-common/lib/deprecated";
 

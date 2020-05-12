@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { alias, or } from "@ember/object/computed";
 import { debounce, next, schedule } from "@ember/runloop";
 import Component from "@ember/component";

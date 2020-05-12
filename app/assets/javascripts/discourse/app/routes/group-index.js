@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject, { action } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";

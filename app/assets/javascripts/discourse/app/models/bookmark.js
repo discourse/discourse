@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Category from "discourse/models/category";
 import { isRTL } from "discourse/lib/text-direction";
 import { censor } from "pretty-text/censored-words";

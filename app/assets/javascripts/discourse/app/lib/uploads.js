@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isAppleDevice } from "discourse/lib/utilities";
 
 function isGUID(value) {

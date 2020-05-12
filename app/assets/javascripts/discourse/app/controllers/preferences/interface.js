@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { setDefaultHomepage } from "discourse/lib/utilities";
