@@ -298,6 +298,18 @@ QUnit.test("option[calendar]", assert => {
       "it stops formating out of calendar range"
     )
   );
+
+  freezeTime({ date: "2020-05-12", timezone: LOS_ANGELES }, () => {
+    assert.buildsCorrectDate(
+      {
+        date: "2020-05-13",
+        time: "18:00",
+        localTimezone: LOS_ANGELES
+      },
+      { formated: "Tomorrow 11:00 AM" },
+      "it correctly displays a different local timezone"
+    );
+  });
 });
 
 QUnit.test("previews", assert => {

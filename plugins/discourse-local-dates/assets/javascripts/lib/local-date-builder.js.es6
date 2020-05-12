@@ -187,10 +187,12 @@ export default class LocalDateBuilder {
         );
 
       if (inCalendarRange && sameTimezone) {
-        return localDate.datetime.calendar(
-          moment.tz(this.localTimezone),
-          this._calendarFormats(this.time ? this.time : null)
-        );
+        return localDate
+          .datetimeWithZone(this.localTimezone)
+          .calendar(
+            moment.tz(localDate.timezone),
+            this._calendarFormats(this.time ? this.time : null)
+          );
       }
     }
 
