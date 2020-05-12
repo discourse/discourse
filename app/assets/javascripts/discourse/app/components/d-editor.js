@@ -1,6 +1,7 @@
 import { debounce, later, next, schedule, scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
+import { replacements } from "pretty-text/emoji/data";
 /*global Mousetrap:true */
 import discourseComputed, {
   on,
@@ -902,6 +903,16 @@ export default Component.extend({
       textarea.blur();
       textarea.focus();
     });
+  },
+
+  @observes("value")
+  normalizeEmoji() {
+    let [...inputString] = this.value;
+    if (replacements.hasOwnProperty(inputString[inputString.length - 1])) {
+      inputString[inputString.length - 1] =
+        " :" + replacements[inputString[inputString.length - 1]] + ":";
+    }
+    this.set("value", inputString.join(""));
   },
 
   actions: {
