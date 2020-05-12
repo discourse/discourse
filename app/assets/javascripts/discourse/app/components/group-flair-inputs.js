@@ -28,8 +28,10 @@ export default Component.extend({
 
   @on("didInsertElement")
   @observes("model.flair_icon")
-  _loadSVGIcon() {
-    debounce(this, this._loadIcon, 1000);
+  _loadSVGIcon(flairIcon) {
+    if (flairIcon) {
+      debounce(this, this._loadIcon, 1000);
+    }
   },
 
   _loadIcon() {
@@ -58,7 +60,7 @@ export default Component.extend({
 
   @discourseComputed("model.flair_url")
   flairImageUrl(flairURL) {
-    return flairURL.match(/\//) ? flairURL : null;
+    return flairURL && flairURL.match(/\//) ? flairURL : null;
   },
 
   @discourseComputed(

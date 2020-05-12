@@ -757,8 +757,7 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    return flair_icon if flair_icon.present?
-    return flair_image.url if flair_image_id.present?
+    flair_icon.presence || flair_image&.url
   end
 
   protected
