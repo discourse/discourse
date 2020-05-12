@@ -20,9 +20,32 @@ class Auth::DefaultCurrentUserProvider
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
 
   PARAMETER_API_PATTERNS = [
-    { method: :get, route: "*", format: :rss },
-    { method: :get, route: "*", format: :ics },
-    { method: :post, route: "admin/email#handle_mail", format: "*" }
+    {
+      method: :get,
+      route: [
+        "posts#latest",
+        "posts#user_topics_feed",
+        "posts#user_posts_feed",
+        "groups#posts_feed",
+        "groups#mentions_feed",
+        "list#category_feed",
+        "list#latest_feed",
+        "list#new_feed",
+        "list#unread_feed",
+        "topics#feed"
+      ],
+      format: :rss
+    },
+    {
+      method: :get,
+      route: "users#bookmarks",
+      format: :ics
+    },
+    {
+      method: :post,
+      route: "admin/email#handle_mail",
+      format: "*"
+    }
   ]
 
   # do all current user initialization here
@@ -335,9 +358,9 @@ class Auth::DefaultCurrentUserProvider
     request_route = "#{path_params[:controller]}##{path_params[:action]}" if path_params
 
     PARAMETER_API_PATTERNS.any? do |p|
-      (p[:method] == "*" || p[:method] == request_method) &&
-      (p[:format] == "*" || p[:format] == request_format) &&
-      (p[:route] == "*" || p[:route] == request_route)
+      (p[:method] == "*" || Array(p[:method]).include?(request_method)) &&
+      (p[:format] == "*" || Array(p[:format]).include?(request_format)) &&
+      (p[:route] == "*" || Array(p[:route]).include?(request_route))
     end
   end
 
