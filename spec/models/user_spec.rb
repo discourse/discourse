@@ -873,6 +873,10 @@ describe User do
       SiteSetting.previous_visit_timeout_hours = 1
     end
 
+    after do
+      Discourse.redis.flushall
+    end
+
     it "should act correctly" do
       expect(user.previous_visit_at).to eq(nil)
 
@@ -902,6 +906,10 @@ describe User do
     let(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
+
+    after do
+      Discourse.redis.flushall
+    end
 
     it "should update the last seen value" do
       expect(user.last_seen_at).to eq nil
@@ -1305,6 +1313,9 @@ describe User do
       let!(:user) { Fabricate(:user) }
       let!(:now) { Time.zone.now }
       before { user.update_last_seen!(now) }
+      after do
+        Discourse.redis.flushall
+      end
 
       it "with existing UserVisit record, increments the posts_read value" do
         expect {
