@@ -301,9 +301,8 @@ describe PostCreator do
       end
 
       it 'creates post stats' do
-
-        Draft.set(user, 'new_topic', 0, "test")
-        Draft.set(user, 'new_topic', 0, "test1")
+        Draft.set(user, Draft::NEW_TOPIC, 0, "test")
+        Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
 
         begin
           PostCreator.track_post_stats = true
