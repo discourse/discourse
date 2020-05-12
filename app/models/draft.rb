@@ -43,17 +43,17 @@ class Draft < ActiveRecord::Base
         raise Draft::OutOfSequence
       end
 
-      if owner && current_owner && current_owner != owner
-        sequence += 1
+      sequence += 1
 
-        DraftSequence.upsert({
-            sequence: sequence,
-            draft_key: key,
-            user_id: user.id,
-          },
-          unique_by: [:user_id, :draft_key]
-        )
-      end
+      # we need to keep upping our sequence on every save
+      # if we do not do that there are bad race conditions
+      DraftSequence.upsert({
+          sequence: sequence,
+          draft_key: key,
+          user_id: user.id,
+        },
+        unique_by: [:user_id, :draft_key]
+      )
 
       DB.exec(<<~SQL, id: draft_id, sequence: sequence, data: data, owner: owner || current_owner)
         UPDATE drafts
@@ -337,7 +337,7 @@ end
 #  data       :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  sequence   :integer          default(0), not null
+#  sequence   :bigint           default(0), not null
 #  revisions  :integer          default(1), not null
 #  owner      :string
 #

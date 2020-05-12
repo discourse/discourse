@@ -48,7 +48,7 @@ end
 #  id        :integer          not null, primary key
 #  user_id   :integer          not null
 #  draft_key :string           not null
-#  sequence  :integer          not null
+#  sequence  :bigint           not null
 #
 # Indexes
 #
