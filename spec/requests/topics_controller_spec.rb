@@ -1817,7 +1817,7 @@ RSpec.describe TopicsController do
         end
 
         it 'shows the topic if valid api key is provided' do
-          get "/t/#{topic.slug}/#{topic.id}.json", params: { api_key: api_key.key }
+          get "/t/#{topic.slug}/#{topic.id}.json", headers: { "HTTP_API_KEY" => api_key.key }
 
           expect(response.status).to eq(200)
           topic.reload
@@ -1826,7 +1826,7 @@ RSpec.describe TopicsController do
 
         it 'returns 403 for an invalid key' do
           [:json, :html].each do |format|
-            get "/t/#{topic.slug}/#{topic.id}.#{format}", params: { api_key: "bad" }
+            get "/t/#{topic.slug}/#{topic.id}.#{format}", headers: { "HTTP_API_KEY" => "bad" }
 
             expect(response.code.to_i).to eq(403)
             expect(response.body).to include(I18n.t("invalid_access"))
