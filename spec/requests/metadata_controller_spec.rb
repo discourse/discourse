@@ -86,6 +86,14 @@ RSpec.describe MetadataController do
       manifest = JSON.parse(response.body)
       expect(manifest["short_name"]).to eq("foo")
     end
+
+    it 'contains valid shortcuts by default' do
+      get "/manifest.webmanifest"
+      expect(response.status).to eq(200)
+      manifest = JSON.parse(response.body)
+      expect(manifest["shortcuts"].size).to be > 0
+      expect { URI.parse(manifest["shortcuts"][0]["icons"][0]["src"]) }.not_to raise_error
+    end
   end
 
   describe 'opensearch.xml' do
