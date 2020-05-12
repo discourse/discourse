@@ -59,7 +59,8 @@ class MetadataController < ApplicationController
           icons: [
             {
               src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-              sizes: "128x128"
+              sizes: "128x128",
+              type: "image/png"
             }
           ]
         },
@@ -70,7 +71,8 @@ class MetadataController < ApplicationController
           icons: [
             {
               src: ActionController::Base.helpers.image_url("push-notifications/private_message.png"),
-              sizes: "128x128"
+              sizes: "128x128",
+              type: "image/png"
             }
           ]
         },
@@ -81,7 +83,8 @@ class MetadataController < ApplicationController
           icons: [
             {
               src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-              sizes: "128x128"
+              sizes: "128x128",
+              type: "image/png"
             }
           ]
         },
@@ -92,7 +95,8 @@ class MetadataController < ApplicationController
           icons: [
             {
               src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-              sizes: "128x128"
+              sizes: "128x128",
+              type: "image/png"
             }
           ]
         }
