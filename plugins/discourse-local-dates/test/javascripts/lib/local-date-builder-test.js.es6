@@ -467,4 +467,27 @@ QUnit.test("previews", assert => {
       }
     );
   });
+
+  freezeTime({ date: "2020-05-12", timezone: LOS_ANGELES }, () => {
+    assert.buildsCorrectDate(
+      {
+        date: "2020-05-13",
+        time: "18:00",
+        localTimezone: LOS_ANGELES
+      },
+      {
+        previews: [
+          {
+            current: true,
+            formated: "May 13, 2020 11:00 AM",
+            timezone: "Los Angeles"
+          },
+          {
+            formated: "May 13, 2020 6:00 PM",
+            timezone: "UTC"
+          }
+        ]
+      }
+    );
+  });
 });

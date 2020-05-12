@@ -89,7 +89,14 @@ export default class LocalDateBuilder {
     previewedTimezones.push({
       timezone: this._zoneWithoutPrefix(this.localTimezone),
       current: true,
-      formated: this._createDateTimeRange(localDate, this.time)
+      formated: this._createDateTimeRange(
+        DateWithZoneHelper.fromDatetime(
+          localDate.datetime,
+          localDate.timezone,
+          this.localTimezone
+        ),
+        this.time
+      )
     });
 
     if (
