@@ -352,7 +352,7 @@ export function toAsciiPrintable(string, fallback) {
     string = string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 
-  return /^[/\040-\176/]*$/.test(string) ? string : fallback;
+  return /^[\040-\176]*$/.test(string) ? string : fallback;
 }
 
 export function slugify(string) {
