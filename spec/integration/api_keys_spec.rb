@@ -51,10 +51,12 @@ describe 'api keys' do
 end
 
 describe 'user api keys' do
+  let(:user) { Fabricate(:user) }
+  let(:user_api_key) { Fabricate(:readonly_user_api_key, user: user) }
+
   it 'updates last used time on use' do
     freeze_time
 
-    user_api_key = Fabricate(:readonly_user_api_key)
     user_api_key.update_columns(last_used_at: 7.days.ago)
 
     get '/session/current.json', headers: {
@@ -63,4 +65,25 @@ describe 'user api keys' do
 
     expect(user_api_key.reload.last_used_at).to eq_time(Time.zone.now)
   end
+
+  it 'allows parameters on ics routes' do
+    get "/u/#{user.username}/bookmarks.ics?user_api_key=#{user_api_key.key}"
+    expect(response.status).to eq(200)
+
+    # Confirm not for JSON
+    get "/u/#{user.username}/bookmarks.json?user_api_key=#{user_api_key.key}"
+    expect(response.status).to eq(403)
+  end
+
+  it 'allows parameters for rss feeds' do
+    SiteSetting.login_required = true
+
+    get "/latest.rss?user_api_key=#{user_api_key.key}"
+    expect(response.status).to eq(200)
+
+    # Confirm not allowed for json
+    get "/latest.json?user_api_key=#{user_api_key.key}"
+    expect(response.status).to eq(302)
+  end
+
 end
