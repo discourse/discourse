@@ -874,7 +874,7 @@ describe User do
     end
 
     after do
-      Discourse.redis.flushall
+      Discourse.redis.del("user:#{user.id}:#{Time.zone.now.to_date}")
     end
 
     it "should act correctly" do
@@ -908,7 +908,7 @@ describe User do
     let!(:second_visit_date) { 2.hours.from_now }
 
     after do
-      Discourse.redis.flushall
+      Discourse.redis.del("user:#{user.id}:#{Time.zone.now.to_date}")
     end
 
     it "should update the last seen value" do
@@ -984,7 +984,9 @@ describe User do
 
     describe 'with no previous values' do
       after do
-        Discourse.redis.flushall
+        Discourse.redis.del("user:#{user.id}:#{Time.zone.now.to_date}")
+        unfreeze_time
+        Discourse.redis.del("user:#{user.id}:#{Time.zone.now.to_date}")
       end
 
       it "updates last_seen_at" do
@@ -1314,7 +1316,7 @@ describe User do
       let!(:now) { Time.zone.now }
       before { user.update_last_seen!(now) }
       after do
-        Discourse.redis.flushall
+        Discourse.redis.del("user:#{user.id}:#{now.to_date}")
       end
 
       it "with existing UserVisit record, increments the posts_read value" do
