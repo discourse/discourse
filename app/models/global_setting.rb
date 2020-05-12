@@ -140,6 +140,7 @@ class GlobalSetting
     hostnames << backup_hostname if backup_hostname.present?
 
     hostnames << URI.parse(cdn_url).host if cdn_url.present?
+    hostnames << cdn_origin_hostname if cdn_origin_hostname.present?
 
     hash["host_names"] = hostnames
     hash["database"] = db_name
