@@ -409,6 +409,15 @@ class Plugin::Instance
     SeedFu.fixture_paths.concat(paths)
   end
 
+  # Applies to all sites in a multisite environment. Block is not called if
+  # plugin is not enabled. Block is called with `user_id` and has to return a
+  # boolean based on whether the given `user_id` should be ignored.
+  def register_ignore_draft_sequence_callback(&block)
+    reloadable_patch do |plugin|
+      ::DraftSequence.plugin_ignore_draft_sequence_callbacks[plugin] = block
+    end
+  end
+
   def listen_for(event_name)
     return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
