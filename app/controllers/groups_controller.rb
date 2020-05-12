@@ -209,7 +209,7 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > 1000
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
-    dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
+    dir = (params[:asc] && params[:asc].present?) ? 'ASC' : 'DESC'
     order = ""
 
     if params[:requesters]

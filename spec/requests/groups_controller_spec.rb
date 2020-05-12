@@ -489,7 +489,7 @@ describe GroupsController do
       4.times { group.add(Fabricate(:user)) }
       usernames = group.users.map { |m| m.username }.sort
 
-      get "/groups/#{group.name}/members.json", params: { limit: 3 }
+      get "/groups/#{group.name}/members.json", params: { limit: 3, asc: true }
 
       expect(response.status).to eq(200)
 
@@ -497,7 +497,7 @@ describe GroupsController do
 
       expect(members.map { |m| m['username'] }).to eq(usernames[0..2])
 
-      get "/groups/#{group.name}/members.json", params: { limit: 3, offset: 3 }
+      get "/groups/#{group.name}/members.json", params: { limit: 3, offset: 3, asc: true }
 
       expect(response.status).to eq(200)
 
@@ -860,7 +860,7 @@ describe GroupsController do
 
       expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
 
-      get "/groups/#{group.name}/members.json", params: { order: 'last_seen_at' }
+      get "/groups/#{group.name}/members.json", params: { order: 'last_seen_at', asc: true }
 
       expect(response.status).to eq(200)
 
