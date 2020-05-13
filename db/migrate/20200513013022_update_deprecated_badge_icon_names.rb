@@ -14,7 +14,7 @@ class UpdateDeprecatedBadgeIconNames < ActiveRecord::Migration[6.0]
 
     icons.each do |key, value|
       from = dir == "up" ? key : value
-      to = dir != "up" ? key : value
+      to = dir == "up" ? value : key
       execute <<~SQL
         UPDATE badges
         SET icon = '#{to}'
