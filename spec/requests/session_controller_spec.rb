@@ -1055,6 +1055,13 @@ RSpec.describe SessionController do
         expect(response.body).to eq(I18n.t("sso.missing_secret"))
       end
 
+      it "returns a 422 if no return_sso_url" do
+        SiteSetting.sso_provider_secrets = "abcdefghij"
+        sso = SingleSignOnProvider.new
+        get "/session/sso_provider?sso=asdf&sig=abcdefghij"
+        expect(response.status).to eq(422)
+      end
+
       it "successfully redirects user to return_sso_url when the user is logged in" do
         sign_in(@user)
 
