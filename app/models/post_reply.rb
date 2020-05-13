@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PostReply < ActiveRecord::Base
+  # TODO(2020-01-17): remove
   self.ignored_columns = %w{
     reply_id
   }
