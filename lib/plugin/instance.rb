@@ -456,7 +456,6 @@ class Plugin::Instance
   end
 
   def register_custom_html(hash)
-    DiscoursePluginRegistry.custom_html ||= {}
     DiscoursePluginRegistry.custom_html.merge!(hash)
   end
 
