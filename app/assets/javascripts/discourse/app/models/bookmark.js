@@ -1,4 +1,5 @@
 import Category from "discourse/models/category";
+import User from "discourse/models/user";
 import { isRTL } from "discourse/lib/text-direction";
 import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
@@ -135,6 +136,19 @@ const Bookmark = RestModel.extend({
       }
     }
     return ajax({ url: moreUrl });
+  },
+
+  @discourseComputed(
+    "post_user_username",
+    "post_user_avatar_template",
+    "post_user_name"
+  )
+  postUser(post_user_username, avatarTemplate, name) {
+    return User.create({
+      username: post_user_username,
+      avatar_template: avatarTemplate,
+      name: name
+    });
   }
 });
 
