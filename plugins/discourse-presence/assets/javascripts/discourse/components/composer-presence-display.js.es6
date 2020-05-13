@@ -1,12 +1,18 @@
 import Component from "@ember/component";
-import { cancel } from "@ember/runloop";
+import { cancel, throttle } from "@ember/runloop";
 import { equal, gt } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import discourseComputed, {
   observes,
   on
 } from "discourse-common/utils/decorators";
-import { REPLYING, CLOSED, EDITING, COMPOSER_TYPE } from "../lib/presence";
+import {
+  REPLYING,
+  CLOSED,
+  EDITING,
+  COMPOSER_TYPE,
+  KEEP_ALIVE_DURATION_SECONDS
+} from "../lib/presence";
 import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
@@ -55,6 +61,10 @@ export default Component.extend({
 
   @observes("reply", "title")
   typing() {
+    throttle(this, this._typing, KEEP_ALIVE_DURATION_SECONDS * 1000);
+  },
+
+  _typing() {
     const action = this.action;
 
     if (action !== REPLY && action !== EDIT) {
@@ -70,7 +80,7 @@ export default Component.extend({
 
     this._prevPublishData = data;
 
-    this._throttle = this.presenceManager.throttlePublish(
+    this._throttle = this.presenceManager.publish(
       data.topicId,
       data.state,
       data.whisper,
