@@ -84,17 +84,6 @@ end
   end
 end
 
-%i(
-  flag_created
-  flag_agreed
-  flag_disagreed
-  flag_deferred
-).each do |event|
-  DiscourseEvent.on(event) do |flag|
-    WebHook.enqueue_object_hooks(:flag, flag, event)
-  end
-end
-
 DiscourseEvent.on(:reviewable_created) do |reviewable|
   WebHook.enqueue_object_hooks(:reviewable, reviewable, :reviewable_created, reviewable.serializer)
 end

@@ -3592,9 +3592,6 @@ en:
         tag_event:
           name: "Tag Event"
           details: "When a tag is created, updated or destroyed."
-        flag_event:
-          name: "Flag Event"
-          details: "When a flag is created, agreed, disagreed or ignored."
         queued_post_event:
           name: "Post Approval Event"
           details: "When a new queued post is created, approved or rejected."
