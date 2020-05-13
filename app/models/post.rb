@@ -10,7 +10,7 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
-  # remove line Jan 2021
+  # TODO(2021-01-04): remove
   self.ignored_columns = ["avg_time"]
 
   cattr_accessor :plugin_permitted_create_params
