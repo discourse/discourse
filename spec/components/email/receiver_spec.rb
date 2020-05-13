@@ -1563,8 +1563,6 @@ describe Email::Receiver do
     end
 
     it 'returns a ReplyToDigestError' do
-      receiver = Email::Receiver.new(email)
-
       expect { Email::Receiver.new(email).process! }.to raise_error(Email::Receiver::ReplyToDigestError)
     end
   end
