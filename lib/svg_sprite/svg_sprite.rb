@@ -421,18 +421,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     icons
   end
 
-  def self.fa4_shim_file
-    "#{Rails.root}/lib/svg_sprite/fa4-renames.json"
-  end
-
-  def self.fa4_to_fa5_names
-    @db ||= File.open(fa4_shim_file, "r:UTF-8") { |f| JSON.parse(f.read) }
-  end
-
   def self.process(icon_name)
     icon_name = icon_name.strip
     FA_ICON_MAP.each { |k, v| icon_name = icon_name.sub(k, v) }
-    fa4_to_fa5_names[icon_name] || icon_name
+    icon_name
   end
 
   def self.get_set_cache(key)

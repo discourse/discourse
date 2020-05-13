@@ -7,7 +7,7 @@ class AddMoreFlairColumnsToGroup < ActiveRecord::Migration[6.0]
 
     DB.exec(
       <<~SQL
-        UPDATE groups SET flair_icon = flair_url
+        UPDATE groups SET flair_icon = REPLACE(REPLACE(flair_url, 'fas fa-', ''), ' fa-', '-')
         WHERE flair_url LIKE 'fa%'
       SQL
     )
@@ -22,11 +22,5 @@ class AddMoreFlairColumnsToGroup < ActiveRecord::Migration[6.0]
       SQL
     )
 
-    DB.exec(
-      <<~SQL
-        UPDATE groups SET flair_url = NULL
-        WHERE flair_icon IS NOT NULL OR flair_image_id IS NOT NULL
-      SQL
-    )
   end
 end
