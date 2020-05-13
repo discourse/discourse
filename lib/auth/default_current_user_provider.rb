@@ -19,7 +19,7 @@ class Auth::DefaultCurrentUserProvider
   COOKIE_ATTEMPTS_PER_MIN ||= 10
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
 
-  PARAMETER_API_PATTERNS = [
+  PARAMETER_API_PATTERNS ||= [
     {
       method: :get,
       route: [
