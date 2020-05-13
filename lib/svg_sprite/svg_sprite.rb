@@ -209,24 +209,26 @@ module SvgSprite
   THEME_SPRITE_VAR_NAME = "icons-sprite"
 
   def self.custom_svg_sprites(theme_ids = [])
-    custom_sprite_paths = Dir.glob("#{Rails.root}/plugins/*/svg-icons/*.svg")
+    get_set_cache("custom_svg_sprites_#{Theme.transform_ids(theme_ids).join(',')}") do
+      custom_sprite_paths = Dir.glob("#{Rails.root}/plugins/*/svg-icons/*.svg")
 
-    ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_ids))
-      .pluck(:upload_id).each do |upload_id|
+      ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_ids))
+        .pluck(:upload_id).each do |upload_id|
 
-      upload = Upload.find(upload_id) rescue nil
+        upload = Upload.find(upload_id) rescue nil
 
-      if Discourse.store.external?
-        external_copy = Discourse.store.download(upload) rescue nil
-        original_path = external_copy.try(:path)
-      else
-        original_path = Discourse.store.path_for(upload)
+        if Discourse.store.external?
+          external_copy = Discourse.store.download(upload) rescue nil
+          original_path = external_copy.try(:path)
+        else
+          original_path = Discourse.store.path_for(upload)
+        end
+
+        custom_sprite_paths << original_path if original_path.present?
       end
 
-      custom_sprite_paths << original_path if original_path.present?
+      custom_sprite_paths
     end
-
-    custom_sprite_paths
   end
 
   def self.all_icons(theme_ids = [])
