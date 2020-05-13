@@ -191,7 +191,7 @@ module Email
           end
         end
 
-        raise ReplyToDigestError if EmailLog.find_by(email_type: "digest", message_id: @mail.in_reply_to).present?
+        raise ReplyToDigestError if EmailLog.find_by(email_type: "digest", message_id: @mail.in_reply_to).exists?
         raise BadDestinationAddress
       end
     end
