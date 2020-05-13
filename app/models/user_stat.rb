@@ -4,6 +4,9 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
+  # TODO(2021-05-13): Remove
+  self.ignored_columns = ["topic_reply_count"]
+
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
     update_distinct_badge_count
@@ -152,7 +155,7 @@ class UserStat < ActiveRecord::Base
 
   # topic_reply_count is a count of posts in other users' topics
   def calc_topic_reply_count!(max)
-    self.topic_reply_count = DB.query_single(<<~SQL, self.user_id, max).first
+    DB.query_single(<<~SQL, self.user_id, max).first
     SELECT COUNT(*) count
     FROM (
       SELECT DISTINCT posts.topic_id
@@ -224,7 +227,6 @@ end
 #  posts_read_count         :integer          default(0), not null
 #  likes_given              :integer          default(0), not null
 #  likes_received           :integer          default(0), not null
-#  topic_reply_count        :integer          default(0), not null
 #  new_since                :datetime         not null
 #  read_faq                 :datetime
 #  first_post_created_at    :datetime
