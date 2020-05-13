@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";

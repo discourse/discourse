@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 const { isEmpty } = Ember;
 import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";

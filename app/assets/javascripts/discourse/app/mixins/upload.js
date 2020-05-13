@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { warn } from "@ember/debug";
 import {
   displayErrorForUpload,

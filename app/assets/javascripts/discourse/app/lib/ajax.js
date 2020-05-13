@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { run } from "@ember/runloop";
 import userPresent from "discourse/lib/user-presence";
 import logout from "discourse/lib/logout";

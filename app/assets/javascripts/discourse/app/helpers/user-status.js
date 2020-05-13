@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlHelper } from "discourse-common/lib/helpers";
 import { escapeExpression } from "discourse/lib/utilities";

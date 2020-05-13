@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";
 import discourseComputed from "discourse-common/utils/decorators";
 

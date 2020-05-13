@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import Setting from "admin/mixins/setting-object";
 import EmberObject from "@ember/object";

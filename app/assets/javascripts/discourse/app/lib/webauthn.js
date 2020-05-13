@@ -1,3 +1,4 @@
+import I18n from "I18n";
 export function stringToBuffer(str) {
   let buffer = new ArrayBuffer(str.length);
   let byteView = new Uint8Array(buffer);

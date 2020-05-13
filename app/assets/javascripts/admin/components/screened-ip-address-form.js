@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";

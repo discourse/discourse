@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { action } from "@ember/object";

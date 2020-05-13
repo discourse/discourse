@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { searchContextDescription } from "discourse/lib/search";
 import { h } from "virtual-dom";

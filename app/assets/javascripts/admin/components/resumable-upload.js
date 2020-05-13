@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { later, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";

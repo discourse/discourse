@@ -75,6 +75,10 @@ module PrettyText
     end
     ctx.eval("__PRETTY_TEXT = true")
 
+    PrettyText::Helpers.instance_methods.each do |method|
+      ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
+    end
+
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
@@ -85,9 +89,6 @@ module PrettyText
     apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
     apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
-    PrettyText::Helpers.instance_methods.each do |method|
-      ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
-    end
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 

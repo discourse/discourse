@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 import UserAction from "discourse/models/user-action";
