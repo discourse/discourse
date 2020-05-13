@@ -17,36 +17,30 @@ import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
   // Passed in variables
-  action: null,
-  post: null,
-  topic: null,
-  reply: null,
-  title: null,
-  isWhispering: null,
   presenceManager: service(),
 
-  @discourseComputed("topic.id")
+  @discourseComputed("model.topic.id")
   users(topicId) {
     return this.presenceManager.users(topicId);
   },
 
-  @discourseComputed("topic.id")
+  @discourseComputed("model.topic.id")
   editingUsers(topicId) {
     return this.presenceManager.editingUsers(topicId);
   },
 
-  isReply: equal("action", REPLY),
+  isReply: equal("model.action", REPLY),
 
   @on("didInsertElement")
   subscribe() {
-    this.presenceManager.subscribe(this.get("topic.id"), COMPOSER_TYPE);
+    this.presenceManager.subscribe(this.get("model.topic.id"), COMPOSER_TYPE);
   },
 
   @discourseComputed(
-    "post.id",
+    "model.post.id",
     "editingUsers.@each.last_seen",
     "users.@each.last_seen",
-    "action"
+    "model.action"
   )
   presenceUsers(postId, editingUsers, users, action) {
     if (action === EDIT) {
@@ -59,23 +53,24 @@ export default Component.extend({
 
   shouldDisplay: gt("presenceUsers.length", 0),
 
-  @observes("reply", "title")
+  @observes("model.reply", "model.title")
   typing() {
     throttle(this, this._typing, KEEP_ALIVE_DURATION_SECONDS * 1000);
   },
 
   _typing() {
-    const action = this.action;
+    const action = this.get("model.action");
 
     if (action !== REPLY && action !== EDIT) {
       return;
     }
 
     let data = {
-      topicId: this.get("topic.id"),
+      topicId: this.get("model.topic.id"),
       state: action === EDIT ? EDITING : REPLYING,
-      whisper: this.whisper,
-      postId: this.get("post.id")
+      whisper: this.get("model.whisper"),
+      postId: this.get("model.post.id"),
+      presenceStaffOnly: this.get("model._presenceStaffOnly")
     };
 
     this._prevPublishData = data;
@@ -84,16 +79,17 @@ export default Component.extend({
       data.topicId,
       data.state,
       data.whisper,
-      data.postId
+      data.postId,
+      data.presenceStaffOnly
     );
   },
 
-  @observes("whisper")
+  @observes("model.whisper")
   cancelThrottle() {
     this._cancelThrottle();
   },
 
-  @observes("action", "topic.id")
+  @observes("model.action", "model.topic.id")
   composerState() {
     if (this._prevPublishData) {
       this.presenceManager.publish(
