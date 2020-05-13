@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { debounce, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";

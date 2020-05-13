@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";

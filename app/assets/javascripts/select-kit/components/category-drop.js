@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { readOnly } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import ComboBoxComponent from "select-kit/components/combo-box";

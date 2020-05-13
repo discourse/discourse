@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 
 export default type => {

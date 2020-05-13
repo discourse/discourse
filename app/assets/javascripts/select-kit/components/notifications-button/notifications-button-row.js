@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { readOnly } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";

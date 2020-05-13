@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
 import { isRTL } from "discourse/lib/text-direction";

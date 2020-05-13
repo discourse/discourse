@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { computed, get } from "@ember/object";
 import Component from "@ember/component";

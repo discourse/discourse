@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { gt } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";

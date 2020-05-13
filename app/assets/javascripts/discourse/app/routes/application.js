@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { once } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";

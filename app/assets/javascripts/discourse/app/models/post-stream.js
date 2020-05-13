@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { or, not, and } from "@ember/object/computed";

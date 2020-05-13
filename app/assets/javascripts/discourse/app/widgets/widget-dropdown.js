@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { schedule } from "@ember/runloop";
 import hbs from "discourse/widgets/hbs-compiler";

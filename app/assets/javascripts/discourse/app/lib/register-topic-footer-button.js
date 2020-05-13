@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import error from "@ember/error";
 import { computed } from "@ember/object";
 

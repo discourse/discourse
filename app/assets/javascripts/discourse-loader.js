@@ -1,7 +1,6 @@
 var define, requirejs;
 
 (function() {
-  // In future versions of ember we don't need this
   var EMBER_MODULES = {};
   var ALIASES = {
     "ember-addons/ember-computed-decorators":
@@ -9,6 +8,8 @@ var define, requirejs;
     "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
     "preload-store": "discourse/lib/preload-store"
   };
+
+  // In future versions of ember we don't need this
   if (typeof Ember !== "undefined") {
     EMBER_MODULES = {
       jquery: { default: $ },
@@ -140,6 +141,9 @@ var define, requirejs;
       },
       "@ember/object/internals": {
         guidFor: Ember.guidFor
+      },
+      I18n: {
+        default: I18n
       }
     };
   }

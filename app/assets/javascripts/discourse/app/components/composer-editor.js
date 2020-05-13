@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { debounce, later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";

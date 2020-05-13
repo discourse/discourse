@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { alias, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";

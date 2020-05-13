@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import TextField from "discourse/components/text-field";
 import discourseComputed from "discourse-common/utils/decorators";
 

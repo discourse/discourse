@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { isBlank, isEmpty } from "@ember/utils";
 import { or, gt } from "@ember/object/computed";

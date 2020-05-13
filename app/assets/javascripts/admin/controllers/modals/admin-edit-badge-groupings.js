@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Controller from "@ember/controller";
 import { A } from "@ember/array";
 import { ajax } from "discourse/lib/ajax";

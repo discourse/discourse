@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { empty, or } from "@ember/object/computed";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";

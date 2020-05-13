@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { equal, gte, none, alias } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
