@@ -66,7 +66,7 @@ GEM
     barber (0.12.2)
       ember-source (>= 1.0, < 3.1)
       execjs (>= 1.2, < 3)
-    better_errors (2.7.0)
+    better_errors (2.7.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
