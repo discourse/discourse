@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import { cancel, later, throttle } from "@ember/runloop";
+import { cancel, later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -97,17 +97,6 @@ const Presence = EmberObject.extend({
   @discourseComputed("topicId")
   channel(topicId) {
     return `/presence/${topicId}`;
-  },
-
-  throttlePublish(state, whisper, postId) {
-    return throttle(
-      this,
-      this.publish,
-      state,
-      whisper,
-      postId,
-      KEEP_ALIVE_DURATION_SECONDS * 1000
-    );
   },
 
   publish(state, whisper, postId) {

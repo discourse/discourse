@@ -36,11 +36,6 @@ const PresenceManager = Service.extend({
     return this._getPresence(topicId).editingUsers;
   },
 
-  throttlePublish(topicId, state, whisper, postId) {
-    if (!topicId) return;
-    return this._getPresence(topicId).throttlePublish(state, whisper, postId);
-  },
-
   publish(topicId, state, whisper, postId) {
     if (!topicId) return;
     return this._getPresence(topicId).publish(state, whisper, postId);
