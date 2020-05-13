@@ -20,6 +20,12 @@ export default RestrictedUserRoute.extend({
     });
   },
 
+  resetController: function(controller, isExiting) {
+    if (isExiting) {
+      controller.set("new", undefined);
+    }
+  },
+
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
   deactivate: function() {
     this._super(...arguments);
