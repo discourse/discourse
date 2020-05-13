@@ -152,10 +152,6 @@ async function getCookie(name, page) {
     return console.log("FAILED - could not retrieve an asset path");
   }
 
-  if (process.env.LOGIN_AT_BEGINNING) {
-    await login();
-  }
-
   function checkNoCookies(testPath) {
     return async function() {
       const priorCookie = await getCookie("_t", page);
@@ -189,27 +185,9 @@ async function getCookie(name, page) {
     };
   }
 
-  await exec(
-    `assets do not set cookies (${anyAssetPath})`,
-    checkNoCookies(anyAssetPath || "/assets/stylesheets/bogus.css")
-  );
-  await exec(
-    "service-worker.js does not set cookies",
-    checkNoCookies("/service-worker.js")
-  );
-  await exec("application paths do clear invalid cookies", async () => {
-    const fn = checkNoCookies("/about");
-    let failure = false;
-    try {
-      await fn();
-      failure = true;
-    } catch (e) {
-      // Expecting cookies to be set, so a throw is correct
-    }
-    if (failure) {
-      throw "FAILED - cookies not fixed on an application path";
-    }
-  });
+  if (process.env.LOGIN_AT_BEGINNING) {
+    await login();
+  }
 
   await exec("go to latest page", () => {
     return page.goto(path.join(url, "latest"));
@@ -258,6 +236,28 @@ async function getCookie(name, page) {
       });
 
       return promise;
+    });
+
+    await exec(
+      `assets do not set cookies (${anyAssetPath})`,
+      checkNoCookies(anyAssetPath || "/assets/stylesheets/bogus.css")
+    );
+    await exec(
+      "service-worker.js does not set cookies",
+      checkNoCookies("/service-worker.js")
+    );
+    await exec("application paths do clear invalid cookies", async () => {
+      const fn = checkNoCookies("/about");
+      let failure = false;
+      try {
+        await fn();
+        failure = true;
+      } catch (e) {
+        // Expecting cookies to be set, so a throw is correct
+      }
+      if (failure) {
+        throw "FAILED - cookies not fixed on an application path";
+      }
     });
 
     await exec("it shows a topic list", () => {
