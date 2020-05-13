@@ -36,9 +36,17 @@
   <%- if include_crawler_content? %>
 
   <% @topic_view.posts.each_with_index do |post, idx| %>
-    <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
-      <% if (u = post.user) %>
+    <% if (u = post.user) %>
+      <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
         <div class='crawler-post-meta'>
+          <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+            <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>
+            <% if application_logo_url.present? %>
+              <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+                <meta itemprop='url' content='<%= application_logo_url %>'>
+              </div>
+            <% end %>
+          </div>
           <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
             <a itemprop="url" href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
             <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
@@ -50,6 +58,8 @@
               <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username).html_safe %>
             <% end %>
           </span>
+
+          <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
 
           <% if post.image_url %>
             <link itemprop="image" href="<%= Discourse.base_url %><%= post.image_url %>">
@@ -105,9 +115,8 @@
               <% end %>
             </div>
          <% end %>
-
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   <% end %>
 
   <% if @topic_view.prev_page || @topic_view.next_page %>
