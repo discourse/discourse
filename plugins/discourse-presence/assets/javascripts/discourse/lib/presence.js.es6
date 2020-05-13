@@ -16,7 +16,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 //   update the client-side timestamp of when client A was last seen.
 // - If client A disconnects or becomes inactive, the state of client A will be
 //   cleaned up on client B by a scheduler that runs every TIMER_INTERVAL_MILLISECONDS
-const KEEP_ALIVE_DURATION_SECONDS = 10;
+export const KEEP_ALIVE_DURATION_SECONDS = 10;
 const BUFFER_DURATION_SECONDS = KEEP_ALIVE_DURATION_SECONDS + 2;
 
 const MESSAGE_BUS_LAST_ID = 0;
