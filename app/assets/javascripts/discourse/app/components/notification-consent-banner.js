@@ -20,21 +20,19 @@ export default DesktopNotificationConfig.extend({
     "isNotSupported",
     "isEnabled",
     "bannerDismissed",
-    "currentUser.reply_count",
-    "currentUser.topic_count"
+    "currentUser.any_posts"
   )
   showNotificationPromptBanner(
     isNotSupported,
     isEnabled,
     bannerDismissed,
-    replyCount,
-    topicCount
+    any_posts
   ) {
     return (
       this.siteSettings.push_notifications_prompt &&
       !isNotSupported &&
       this.currentUser &&
-      replyCount + topicCount > 0 &&
+      any_posts &&
       Notification.permission !== "denied" &&
       Notification.permission !== "granted" &&
       !isEnabled &&

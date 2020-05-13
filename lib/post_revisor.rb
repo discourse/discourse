@@ -394,7 +394,6 @@ class PostRevisor
         prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
         prev_owner_user_stat.likes_received -= likes
       end
-      prev_owner_user_stat.update_topic_reply_count
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
         prev_owner_user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
@@ -408,7 +407,6 @@ class PostRevisor
         new_owner_user_stat.topic_count += 1 if @post.is_first_post?
         new_owner_user_stat.likes_received += likes
       end
-      new_owner_user_stat.update_topic_reply_count
       new_owner_user_stat.save!
     end
   end

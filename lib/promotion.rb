@@ -91,7 +91,7 @@ class Promotion
     return false if stat.days_visited < SiteSetting.tl2_requires_days_visited
     return false if stat.likes_received < SiteSetting.tl2_requires_likes_received
     return false if stat.likes_given < SiteSetting.tl2_requires_likes_given
-    return false if stat.topic_reply_count < SiteSetting.tl2_requires_topic_reply_count
+    return false if stat.calc_topic_reply_count!(SiteSetting.tl2_requires_topic_reply_count) < SiteSetting.tl2_requires_topic_reply_count
 
     true
   end

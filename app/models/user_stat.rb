@@ -151,12 +151,24 @@ class UserStat < ActiveRecord::Base
   end
 
   # topic_reply_count is a count of posts in other users' topics
-  def update_topic_reply_count
-    self.topic_reply_count = Topic
-      .joins("INNER JOIN posts ON topics.id = posts.topic_id AND topics.user_id <> posts.user_id")
-      .where("posts.deleted_at IS NULL AND posts.user_id = ?", self.user_id)
-      .distinct
-      .count
+  def calc_topic_reply_count!(max)
+    self.topic_reply_count = DB.query_single(<<~SQL, self.user_id, max).first
+    SELECT COUNT(*) count
+    FROM (
+      SELECT DISTINCT posts.topic_id
+      FROM posts
+      INNER JOIN topics ON topics.id = posts.topic_id
+      WHERE posts.user_id = ?
+      AND topics.user_id <> posts.user_id
+      AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
+      AND topics.archetype <> 'private_message'
+      LIMIT ?
+    ) as user_topic_replies
+    SQL
+  end
+
+  def any_posts
+    user.posts.exists?
   end
 
   MAX_TIME_READ_DIFF = 100
