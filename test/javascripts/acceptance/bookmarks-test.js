@@ -1,8 +1,7 @@
 import {
   acceptance,
   loggedInUser,
-  fakeTime,
-  timeStep
+  acceptanceUseFakeClock
 } from "helpers/qunit-helpers";
 import pretender from "helpers/create-pretender";
 import { parsePostData } from "helpers/create-pretender";
@@ -230,23 +229,16 @@ test("Editing a bookmark", async assert => {
   assert.verifySteps(["tomorrow"]);
 });
 
-QUnit.skip(
-  "Editing a bookmark that has a Later Today reminder, and it is before 6pm today",
-  async assert => {
+test("Editing a bookmark that has a Later Today reminder, and it is before 6pm today", async assert => {
+  await acceptanceUseFakeClock("2020-05-04T13:00:00", async () => {
     mockSuccessfulBookmarkPost(assert);
-    let clock = fakeTime(
-      "2020-05-04T13:00:00",
-      loggedInUser().resolvedTimezone(loggedInUser())
-    );
-    await timeStep(clock, () =>
-      visit("/t/internationalization-localization/280")
-    );
-    await timeStep(clock, () => openBookmarkModal());
-    await timeStep(clock, () => fillIn("input#bookmark-name", "Test name"));
-    await timeStep(clock, () => click("#tap_tile_later_today"));
-    await timeStep(clock, () => openEditBookmarkModal());
+    await visit("/t/internationalization-localization/280");
+    await openBookmarkModal();
+    await fillIn("input#bookmark-name", "Test name");
+    await click("#tap_tile_later_today");
+    await openEditBookmarkModal();
     assert.not(
-      exists("#bookmark-custon-date > input"),
+      exists("#bookmark-custom-date > input"),
       "it does not show the custom date input"
     );
     assert.ok(
@@ -254,5 +246,5 @@ QUnit.skip(
       "it preselects Later Today"
     );
     assert.verifySteps(["later_today"]);
-  }
-);
+  });
+});
