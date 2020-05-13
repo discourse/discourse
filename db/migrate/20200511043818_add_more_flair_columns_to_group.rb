@@ -17,9 +17,8 @@ class AddMoreFlairColumnsToGroup < ActiveRecord::Migration[6.0]
         UPDATE groups g1
         SET flair_image_id = u.id
         FROM groups g2
-        INNER JOIN uploads u ON u.url = g2.flair_url
-          OR g2.flair_url ~ CONCAT('\/(original|optimized|short-url)\/(\dX[\/\.\w]*\/)?', u.sha1, '[\.\w]*')
-        WHERE g1.id = g2.id AND g1.flair_url IS NOT NULL AND g1.flair_url NOT LIKE 'fa%'
+        INNER JOIN uploads u ON g2.flair_url ~ CONCAT('\/', u.sha1, '[\.\w]*')
+        WHERE g1.id = g2.id
       SQL
     )
 
