@@ -35,7 +35,7 @@ export default Component.extend({
     return this.presenceManager.editingUsers(topicId);
   },
 
-  isReply: equal("action", "reply"),
+  isReply: equal("action", REPLY),
 
   @on("didInsertElement")
   subscribe() {
