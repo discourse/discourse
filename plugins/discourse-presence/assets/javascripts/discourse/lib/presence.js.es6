@@ -99,7 +99,7 @@ const Presence = EmberObject.extend({
     return `/presence/${topicId}`;
   },
 
-  publish(state, whisper, postId) {
+  publish(state, whisper, postId, staffOnly) {
     if (this.get("currentUser.hide_profile_and_presence")) return;
 
     const data = {
@@ -108,11 +108,15 @@ const Presence = EmberObject.extend({
     };
 
     if (whisper) {
-      data.is_whisper = 1;
+      data.is_whisper = true;
     }
 
     if (postId && state === EDITING) {
       data.post_id = postId;
+    }
+
+    if (staffOnly) {
+      data.staff_only = true;
     }
 
     return ajax("/presence/publish", {

@@ -36,9 +36,14 @@ const PresenceManager = Service.extend({
     return this._getPresence(topicId).editingUsers;
   },
 
-  publish(topicId, state, whisper, postId) {
+  publish(topicId, state, whisper, postId, staffOnly) {
     if (!topicId) return;
-    return this._getPresence(topicId).publish(state, whisper, postId);
+    return this._getPresence(topicId).publish(
+      state,
+      whisper,
+      postId,
+      staffOnly
+    );
   },
 
   cleanUpPresence(type) {
