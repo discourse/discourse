@@ -73,61 +73,65 @@ after_initialize do
         max_backlog_age: Presence::MAX_BACKLOG_AGE_SECONDS
       }
 
-      case permitted_params[:state]
-      when EDITING_STATE
+      if permitted_params[:staff_only]
         opts[:group_ids] = [Group::AUTO_GROUPS[:staff]]
+      else
+        case permitted_params[:state]
+        when EDITING_STATE
+          opts[:group_ids] = [Group::AUTO_GROUPS[:staff]]
 
-        if !post.locked? && !permitted_params[:is_whisper]
-          opts[:user_ids] = [post.user_id]
+          if !post.locked? && !permitted_params[:is_whisper]
+            opts[:user_ids] = [post.user_id]
 
-          if topic.private_message?
-            if post.wiki
-              opts[:user_ids] = opts[:user_ids].concat(
-                topic.allowed_users.where(
-                  "trust_level >= ? AND NOT admin OR moderator",
-                  SiteSetting.min_trust_to_edit_wiki_post
-                ).pluck(:id)
-              )
+            if topic.private_message?
+              if post.wiki
+                opts[:user_ids] = opts[:user_ids].concat(
+                  topic.allowed_users.where(
+                    "trust_level >= ? AND NOT admin OR moderator",
+                    SiteSetting.min_trust_to_edit_wiki_post
+                  ).pluck(:id)
+                )
 
-              opts[:user_ids].uniq!
+                opts[:user_ids].uniq!
 
-              # Ignore trust level and just publish to all allowed groups since
-              # trying to figure out which users in the allowed groups have
-              # the necessary trust levels can lead to a large array of user ids
-              # if the groups are big.
-              opts[:group_ids] = opts[:group_ids].concat(
-                topic.allowed_groups.pluck(:id)
-              )
-            end
-          else
-            if post.wiki
-              opts[:group_ids] << Group::AUTO_GROUPS[:"trust_level_#{SiteSetting.min_trust_to_edit_wiki_post}"]
-            elsif SiteSetting.trusted_users_can_edit_others?
-              opts[:group_ids] << Group::AUTO_GROUPS[:trust_level_4]
+                # Ignore trust level and just publish to all allowed groups since
+                # trying to figure out which users in the allowed groups have
+                # the necessary trust levels can lead to a large array of user ids
+                # if the groups are big.
+                opts[:group_ids] = opts[:group_ids].concat(
+                  topic.allowed_groups.pluck(:id)
+                )
+              end
+            else
+              if post.wiki
+                opts[:group_ids] << Group::AUTO_GROUPS[:"trust_level_#{SiteSetting.min_trust_to_edit_wiki_post}"]
+              elsif SiteSetting.trusted_users_can_edit_others?
+                opts[:group_ids] << Group::AUTO_GROUPS[:trust_level_4]
+              end
             end
           end
-        end
-      when REPLYING_STATE
-        if permitted_params[:is_whisper]
-          opts[:group_ids] = [Group::AUTO_GROUPS[:staff]]
-        elsif topic.private_message?
-          opts[:user_ids] = topic.allowed_users.pluck(:id)
+        when REPLYING_STATE
+          if permitted_params[:is_whisper]
+            opts[:group_ids] = [Group::AUTO_GROUPS[:staff]]
+          elsif topic.private_message?
+            opts[:user_ids] = topic.allowed_users.pluck(:id)
 
-          opts[:group_ids] = [Group::AUTO_GROUPS[:staff]].concat(
-            topic.allowed_groups.pluck(:id)
-          )
-        else
-          opts[:group_ids] = topic.secure_group_ids
-        end
-      when CLOSED_STATE
-        if topic.private_message?
-          opts[:user_ids] = topic.allowed_users.pluck(:id)
+            opts[:group_ids] = [Group::AUTO_GROUPS[:staff]].concat(
+              topic.allowed_groups.pluck(:id)
+            )
+          else
+            opts[:group_ids] = topic.secure_group_ids
+          end
+        when CLOSED_STATE
+          if topic.private_message?
+            opts[:user_ids] = topic.allowed_users.pluck(:id)
 
-          opts[:group_ids] = [Group::AUTO_GROUPS[:staff]].concat(
-            topic.allowed_groups.pluck(:id)
-          )
-        else
-          opts[:group_ids] = topic.secure_group_ids
+            opts[:group_ids] = [Group::AUTO_GROUPS[:staff]].concat(
+              topic.allowed_groups.pluck(:id)
+            )
+          else
+            opts[:group_ids] = topic.secure_group_ids
+          end
         end
       end
 
@@ -158,7 +162,7 @@ after_initialize do
     end
 
     def permitted_params
-      params.permit(:state, :topic_id, :post_id, :is_whisper)
+      params.permit(:state, :topic_id, :post_id, :is_whisper, :staff_only)
     end
   end
 

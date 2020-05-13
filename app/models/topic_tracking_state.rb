@@ -195,6 +195,8 @@ class TopicTrackingState
     #
     # This code needs to be VERY efficient as it is triggered via the message bus and may steal
     #  cycles from usual requests
+    tag_ids = muted_tag_ids(user)
+
     sql = +report_raw_sql(
       topic_id: topic_id,
       skip_unread: true,
@@ -202,7 +204,7 @@ class TopicTrackingState
       staff: user.staff?,
       admin: user.admin?,
       user: user,
-      muted_tag_ids: muted_tag_ids(user)
+      muted_tag_ids: tag_ids
     )
 
     sql << "\nUNION ALL\n\n"
@@ -215,7 +217,7 @@ class TopicTrackingState
       filter_old_unread: true,
       admin: user.admin?,
       user: user,
-      muted_tag_ids: muted_tag_ids(user)
+      muted_tag_ids: tag_ids
     )
 
     DB.query(

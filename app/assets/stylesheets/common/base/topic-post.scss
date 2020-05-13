@@ -116,6 +116,12 @@
   a {
     word-wrap: break-word;
   }
+
+  del,
+  ins {
+    text-decoration: none;
+  }
+
   ins {
     background-color: dark-light-choose(
       $success-low,

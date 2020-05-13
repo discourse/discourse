@@ -193,6 +193,28 @@ describe ::Presence::PresencesController do
         expect(message.user_ids).to eq(nil)
       end
 
+      it 'publishes the message to staff group when staff_only param override is present' do
+        messages = MessageBus.track_publish do
+          post '/presence/publish.json', params: {
+            topic_id: public_topic.id,
+            state: 'replying',
+            staff_only: true
+          }
+
+          expect(response.status).to eq(200)
+        end
+
+        expect(messages.length).to eq(1)
+
+        message = messages.first
+
+        expect(message.channel).to eq("/presence/#{public_topic.id}")
+        expect(message.data.dig(:user, :id)).to eq(user.id)
+        expect(message.data[:published_at]).to eq(Time.zone.now.to_i)
+        expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
+        expect(message.user_ids).to eq(nil)
+      end
+
       it 'publishes the message to staff group when a staff is editing a whisper' do
         SiteSetting.enable_whispers = true
         sign_in(admin)

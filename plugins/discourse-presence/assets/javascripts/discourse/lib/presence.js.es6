@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import { cancel, later, throttle } from "@ember/runloop";
+import { cancel, later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -16,7 +16,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 //   update the client-side timestamp of when client A was last seen.
 // - If client A disconnects or becomes inactive, the state of client A will be
 //   cleaned up on client B by a scheduler that runs every TIMER_INTERVAL_MILLISECONDS
-const KEEP_ALIVE_DURATION_SECONDS = 10;
+export const KEEP_ALIVE_DURATION_SECONDS = 10;
 const BUFFER_DURATION_SECONDS = KEEP_ALIVE_DURATION_SECONDS + 2;
 
 const MESSAGE_BUS_LAST_ID = 0;
@@ -99,18 +99,7 @@ const Presence = EmberObject.extend({
     return `/presence/${topicId}`;
   },
 
-  throttlePublish(state, whisper, postId) {
-    return throttle(
-      this,
-      this.publish,
-      state,
-      whisper,
-      postId,
-      KEEP_ALIVE_DURATION_SECONDS * 1000
-    );
-  },
-
-  publish(state, whisper, postId) {
+  publish(state, whisper, postId, staffOnly) {
     if (this.get("currentUser.hide_profile_and_presence")) return;
 
     const data = {
@@ -119,11 +108,15 @@ const Presence = EmberObject.extend({
     };
 
     if (whisper) {
-      data.is_whisper = 1;
+      data.is_whisper = true;
     }
 
     if (postId && state === EDITING) {
       data.post_id = postId;
+    }
+
+    if (staffOnly) {
+      data.staff_only = true;
     }
 
     return ajax("/presence/publish", {

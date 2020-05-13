@@ -1,4 +1,13 @@
+.bookmark-list {
+  th.post-metadata {
+    text-align: center;
+  }
+}
+
 .bookmark-list-item {
+  td.post-metadata {
+    text-align: center;
+  }
   .bookmark-metadata {
     font-size: $font-down-2;
     white-space: nowrap;
