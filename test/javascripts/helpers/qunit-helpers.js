@@ -41,14 +41,30 @@ export function loggedInUser() {
   return User.current();
 }
 
-export function fakeTime(timeString, timezone) {
+export function fakeTime(timeString, timezone = null, advanceTime = false) {
   let now = moment.tz(timeString, timezone);
-  return sandbox.useFakeTimers(now.valueOf());
+  return sandbox.useFakeTimers({
+    now: now.valueOf(),
+    shouldAdvanceTime: advanceTime
+  });
 }
 
-export async function timeStep(clock, fn) {
-  fn();
-  return await clock.tickAsync(1000);
+export async function acceptanceUseFakeClock(
+  timeString,
+  callback,
+  timezone = null
+) {
+  if (!timezone) {
+    let user = loggedInUser();
+    if (user) {
+      timezone = user.resolvedTimezone(user);
+    } else {
+      timezone = "America/Denver";
+    }
+  }
+  let clock = fakeTime(timeString, timezone, true);
+  await callback();
+  clock.reset();
 }
 
 const Plugin = $.fn.modal;
