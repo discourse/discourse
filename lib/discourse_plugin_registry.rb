@@ -5,99 +5,44 @@
 #
 class DiscoursePluginRegistry
 
-  class << self
-    attr_writer :javascripts
-    attr_writer :auth_providers
-    attr_writer :service_workers
-    attr_writer :admin_javascripts
-    attr_writer :stylesheets
-    attr_writer :mobile_stylesheets
-    attr_writer :desktop_stylesheets
-    attr_writer :sass_variables
-    attr_writer :handlebars
-    attr_writer :serialized_current_user_fields
-    attr_writer :seed_data
-    attr_writer :svg_icons
-    attr_writer :locales
-    attr_accessor :custom_html
+  # Shortcut to create new register in the plugin registry
+  #   - Register is created in a class variable using the specified name/type
+  #   - Defines singleton method to access the register
+  #   - Defines instance method as a shortcut to the singleton method
+  #   - Automatically deletes the register on ::clear!
+  def self.define_register(register_name, type)
+    @@register_names ||= Set.new
+    @@register_names << register_name
 
-    def plugins
-      @plugins ||= []
+    define_singleton_method(register_name) do
+      instance_variable_get(:"@#{register_name}") ||
+        instance_variable_set(:"@#{register_name}", type.new)
     end
 
-    # Default accessor values
-    def javascripts
-      @javascripts ||= Set.new
-    end
-
-    def auth_providers
-      @auth_providers ||= Set.new
-    end
-
-    def service_workers
-      @service_workers ||= Set.new
-    end
-
-    def asset_globs
-      @asset_globs ||= Set.new
-    end
-
-    def admin_javascripts
-      @admin_javascripts ||= Set.new
-    end
-
-    def stylesheets
-      @stylesheets ||= Hash.new
-    end
-
-    def mobile_stylesheets
-      @mobile_stylesheets ||= Hash.new
-    end
-
-    def desktop_stylesheets
-      @desktop_stylesheets ||= Hash.new
-    end
-
-    def sass_variables
-      @sass_variables ||= Set.new
-    end
-
-    def svg_icons
-      @svg_icons ||= []
-    end
-
-    def handlebars
-      @handlebars ||= Set.new
-    end
-
-    def serialized_current_user_fields
-      @serialized_current_user_fields ||= Set.new
-    end
-
-    def seed_data
-      @seed_data ||= HashWithIndifferentAccess.new({})
-    end
-
-    def locales
-      @locales ||= HashWithIndifferentAccess.new({})
-    end
-
-    def html_builders
-      @html_builders ||= {}
-    end
-
-    def seed_path_builders
-      @seed_path_builders ||= Set.new
-    end
-
-    def vendored_pretty_text
-      @vendored_pretty_text ||= Set.new
-    end
-
-    def vendored_core_pretty_text
-      @vendored_core_pretty_text ||= Set.new
+    define_method(register_name) do
+      self.class.public_send(register_name)
     end
   end
+
+  define_register :javascripts, Set
+  define_register :auth_providers, Set
+  define_register :service_workers, Set
+  define_register :admin_javascripts, Set
+  define_register :stylesheets, Hash
+  define_register :mobile_stylesheets, Hash
+  define_register :desktop_stylesheets, Hash
+  define_register :sass_variables, Set
+  define_register :handlebars, Set
+  define_register :serialized_current_user_fields, Set
+  define_register :seed_data, HashWithIndifferentAccess
+  define_register :locales, HashWithIndifferentAccess
+  define_register :svg_icons, Set
+  define_register :custom_html, Hash
+  define_register :asset_globs, Set
+  define_register :html_builders, Hash
+  define_register :seed_path_builders, Set
+  define_register :vendored_pretty_text, Set
+  define_register :vendored_core_pretty_text, Set
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
@@ -230,70 +175,10 @@ class DiscoursePluginRegistry
     asset
   end
 
-  def locales
-    self.class.locales
-  end
-
-  def javascripts
-    self.class.javascripts
-  end
-
-  def auth_providers
-    self.class.auth_providers
-  end
-
-  def service_workers
-    self.class.service_workers
-  end
-
-  def stylesheets
-    self.class.stylesheets
-  end
-
-  def mobile_stylesheets
-    self.class.mobile_stylesheets
-  end
-
-  def desktop_stylesheets
-    self.class.desktop_stylesheets
-  end
-
-  def sass_variables
-    self.class.sass_variables
-  end
-
-  def handlebars
-    self.class.handlebars
-  end
-
-  def self.clear
-    self.javascripts = nil
-    self.auth_providers = nil
-    self.service_workers = nil
-    self.stylesheets = nil
-    self.mobile_stylesheets = nil
-    self.desktop_stylesheets = nil
-    self.sass_variables = nil
-    self.handlebars = nil
-    self.locales = nil
-  end
-
   def self.reset!
-    javascripts.clear
-    auth_providers.clear
-    service_workers.clear
-    admin_javascripts.clear
-    stylesheets.clear
-    mobile_stylesheets.clear
-    desktop_stylesheets.clear
-    sass_variables.clear
-    serialized_current_user_fields
-    asset_globs.clear
-    html_builders.clear
-    vendored_pretty_text.clear
-    vendored_core_pretty_text.clear
-    seed_path_builders.clear
-    locales.clear
+    @@register_names.each do |name|
+      instance_variable_set(:"@#{name}", nil)
+    end
   end
 
 end

@@ -12,42 +12,42 @@ describe DiscoursePluginRegistry do
 
   context '#stylesheets' do
     it 'defaults to an empty Set' do
-      registry.stylesheets = nil
+      registry.reset!
       expect(registry.stylesheets).to eq(Hash.new)
     end
   end
 
   context '#mobile_stylesheets' do
     it 'defaults to an empty Set' do
-      registry.mobile_stylesheets = nil
+      registry.reset!
       expect(registry.mobile_stylesheets).to eq(Hash.new)
     end
   end
 
   context '#javascripts' do
     it 'defaults to an empty Set' do
-      registry.javascripts = nil
+      registry.reset!
       expect(registry.javascripts).to eq(Set.new)
     end
   end
 
   context '#auth_providers' do
     it 'defaults to an empty Set' do
-      registry.auth_providers = nil
+      registry.reset!
       expect(registry.auth_providers).to eq(Set.new)
     end
   end
 
   context '#admin_javascripts' do
     it 'defaults to an empty Set' do
-      registry.admin_javascripts = nil
+      registry.reset!
       expect(registry.admin_javascripts).to eq(Set.new)
     end
   end
 
   context '#seed_data' do
     it 'defaults to an empty Set' do
-      registry.seed_data = nil
+      registry.reset!
       expect(registry.seed_data).to be_a(Hash)
       expect(registry.seed_data.size).to eq(0)
     end
