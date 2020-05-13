@@ -197,14 +197,14 @@ async function getCookie(name, page) {
     "service-worker.js does not set cookies",
     checkNoCookies("/service-worker.js")
   );
-  await exec("cookie check works", async () => {
+  await exec("application paths do clear invalid cookies", async () => {
     const fn = checkNoCookies("/about");
     let failure = false;
     try {
       await fn();
       failure = true;
     } catch (e) {
-      // pass
+      // Expecting cookies to be set, so a throw is correct
     }
     if (failure) {
       throw "FAILED - cookies not fixed on an application path";
