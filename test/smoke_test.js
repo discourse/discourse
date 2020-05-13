@@ -14,6 +14,15 @@ console.log(`Starting Discourse Smoke Test for ${url}`);
 const puppeteer = require("puppeteer");
 const path = require("path");
 
+async function getCookie(name, page) {
+  const cookies = await page.cookies();
+  let found = null;
+  cookies.forEach(c => {
+    if (c.name === name) found = c;
+  });
+  return found;
+}
+
 (async () => {
   const browser = await puppeteer.launch({
     // when debugging localy setting the SHOW_BROWSER env variable can be very helpful
@@ -70,7 +79,11 @@ const path = require("path");
   page.on("console", msg => console.log(`PAGE LOG: ${msg.text()}`));
 
   page.on("response", resp => {
-    if (resp.status() !== 200 && resp.status() !== 302) {
+    if (
+      resp.status() !== 200 &&
+      resp.status() !== 302 &&
+      resp.status() !== 304
+    ) {
       console.log(
         "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
       );
@@ -129,9 +142,74 @@ const path = require("path");
     return page.waitForSelector("header .login-button", { visible: true });
   });
 
+  // Prep for assets check
+  const anyStylesheetEl = await page.$('link[href][rel="stylesheet"]');
+  const anyAssetPath = await page.evaluate(
+    el => el.getAttribute("href"),
+    anyStylesheetEl
+  );
+  if (!anyAssetPath) {
+    return console.log("FAILED - could not retrieve an asset path");
+  }
+
   if (process.env.LOGIN_AT_BEGINNING) {
     await login();
   }
+
+  function checkNoCookies(testPath) {
+    return async function() {
+      const priorCookie = await getCookie("_t", page);
+      const testURL = new URL(testPath, url);
+
+      await page.setCookie({
+        name: "_t",
+        value: "invalid_auth_token",
+        url: url,
+        domain: priorCookie.domain,
+        path: priorCookie.path,
+        expires: priorCookie.expires,
+        httpOnly: priorCookie.httpOnly,
+        secure: priorCookie.secure,
+        session: priorCookie.session,
+        sameSite: priorCookie.sameSite
+      });
+      const badCookie = await getCookie("_t", page);
+      if (badCookie.value !== "invalid_auth_token") {
+        throw "FAILED - could not set cookie";
+      }
+
+      await page.goto(testURL);
+
+      const newCookie = await getCookie("_t", page);
+      if (newCookie === null || newCookie.value !== "invalid_auth_token") {
+        throw "FAILED - Cookie was modified while fetching " + testPath;
+      }
+
+      await page.setCookie(priorCookie);
+    };
+  }
+
+  await exec(
+    `assets do not set cookies (${anyAssetPath})`,
+    checkNoCookies(anyAssetPath || "/assets/stylesheets/bogus.css")
+  );
+  await exec(
+    "service-worker.js does not set cookies",
+    checkNoCookies("/service-worker.js")
+  );
+  await exec("application paths do clear invalid cookies", async () => {
+    const fn = checkNoCookies("/about");
+    let failure = false;
+    try {
+      await fn();
+      failure = true;
+    } catch (e) {
+      // Expecting cookies to be set, so a throw is correct
+    }
+    if (failure) {
+      throw "FAILED - cookies not fixed on an application path";
+    }
+  });
 
   await exec("go to latest page", () => {
     return page.goto(path.join(url, "latest"));
