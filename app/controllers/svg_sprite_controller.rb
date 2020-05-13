@@ -66,6 +66,10 @@ class SvgSpriteController < ApplicationController
         doc.at_xpath("svg")['xmlns'] = "http://www.w3.org/2000/svg"
         doc.at_xpath("svg")['fill'] = "##{params[:color]}" if params[:color]
 
+        response.headers["Last-Modified"] = 1.years.ago.httpdate
+        response.headers["Content-Length"] = doc.to_s.bytesize.to_s
+        immutable_for 1.day
+
         render plain: doc, disposition: nil, content_type: 'image/svg+xml'
       end
     end
