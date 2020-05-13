@@ -93,4 +93,24 @@ describe SvgSpriteController do
       expect(data[0]["id"]).to eq("fab-500px")
     end
   end
+
+  context 'svg_icon' do
+    it "should return 404 when not appending .svg" do
+      get "/svg-sprite/icon/bolt"
+      expect(response.status).to eq(404)
+    end
+
+    it "should return SVG given an icon name" do
+      get "/svg-sprite/icon/bolt.svg"
+      expect(response.status).to eq(200)
+      expect(response.body).to include('bolt')
+    end
+
+    it "should return SVG given an icon name and a color" do
+      get "/svg-sprite/icon/CC0000/fab-github.svg"
+      expect(response.status).to eq(200)
+      expect(response.body).to include('fab-github')
+      expect(response.body).to include('fill="#CC0000"')
+    end
+  end
 end
