@@ -10,7 +10,7 @@ class Topic < ActiveRecord::Base
   include LimitedEdit
   extend Forwardable
 
-  # remove line Jan 2021
+  # TODO(2021-01-04): remove
   self.ignored_columns = ["avg_time"]
 
   def_delegator :featured_users, :user_ids, :featured_user_ids

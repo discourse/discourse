@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Group < ActiveRecord::Base
+  # TODO(2021-04-22): remove
   self.ignored_columns = %w{
     automatic_membership_retroactive
   }
