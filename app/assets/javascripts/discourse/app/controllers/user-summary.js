@@ -11,6 +11,41 @@ export default Controller.extend({
   userController: inject("user"),
   user: alias("userController.model"),
 
+  @discourseComputed(
+    "model.time_read",
+    "model.days_visited",
+    "model.topics_entered",
+    "model.posts_read_count",
+    "model.likes_given",
+    "model.topic_count",
+    "model.post_count",
+    "model.likes_received",
+    "model.recent_time_read"
+  )
+  showStats(
+    timeRead,
+    daysVisited,
+    topicsEntered,
+    postsRead,
+    likesGiven,
+    topicCount,
+    postCount,
+    likesReceived,
+    recentTimeRead
+  ) {
+    return (
+      timeRead ||
+      daysVisited ||
+      topicsEntered ||
+      postsRead ||
+      likesGiven ||
+      topicCount ||
+      postCount ||
+      likesReceived ||
+      recentTimeRead
+    );
+  },
+
   @discourseComputed("model.badges.length")
   moreBadges(badgesLength) {
     return badgesLength >= MAX_BADGES;

@@ -154,4 +154,8 @@ module UserGuardian
         .exists?
     )
   end
+
+  def can_see_summary_stats?
+    true
+  end
 end
