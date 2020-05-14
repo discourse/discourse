@@ -33,6 +33,9 @@ class MetadataController < ApplicationController
       end
     end
 
+    primary_color = ColorScheme.hex_for_name('primary', view_context.scheme_id)
+    icon_url_base = UrlHelper.absolute("/svg-sprite/#{Discourse.current_hostname}/icon/#{primary_color}")
+
     manifest = {
       name: SiteSetting.title,
       short_name: SiteSetting.short_title.presence || SiteSetting.title.truncate(12, separator: ' ', omission: ''),
@@ -58,9 +61,9 @@ class MetadataController < ApplicationController
           url: "/new-topic",
           icons: [
             {
-              src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-              sizes: "128x128",
-              type: "image/png"
+              src: "#{icon_url_base}/plus.svg",
+              sizes: "any",
+              type: "image/svg+xml"
             }
           ]
         },
@@ -70,9 +73,9 @@ class MetadataController < ApplicationController
           url: "/my/messages",
           icons: [
             {
-              src: ActionController::Base.helpers.image_url("push-notifications/private_message.png"),
-              sizes: "128x128",
-              type: "image/png"
+              src: "#{icon_url_base}/envelope.svg",
+              sizes: "any",
+              type: "image/svg+xml"
             }
           ]
         },
@@ -82,9 +85,9 @@ class MetadataController < ApplicationController
           url: "/my/bookmarks",
           icons: [
             {
-              src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-              sizes: "128x128",
-              type: "image/png"
+              src: "#{icon_url_base}/bookmark.svg",
+              sizes: "any",
+              type: "image/svg+xml"
             }
           ]
         },
@@ -94,9 +97,9 @@ class MetadataController < ApplicationController
           url: "/top",
           icons: [
             {
-              src: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-              sizes: "128x128",
-              type: "image/png"
+              src: "#{icon_url_base}/signal.svg",
+              sizes: "any",
+              type: "image/svg+xml"
             }
           ]
         }
