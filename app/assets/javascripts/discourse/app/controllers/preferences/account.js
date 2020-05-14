@@ -12,6 +12,7 @@ import { findAll } from "discourse/models/login-method";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import logout from "discourse/lib/logout";
+import EmberObject from "@ember/object";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -104,18 +105,21 @@ export default Controller.extend(CanCheckEmails, {
     const emails = [];
 
     if (primaryEmail) {
-      emails.push({ email: primaryEmail, primary: true, confirmed: true });
+      const obj = { email: primaryEmail, primary: true, confirmed: true };
+      emails.push(EmberObject.create(obj));
     }
 
     if (secondaryEmails) {
       secondaryEmails.forEach(email => {
-        emails.push({ email, confirmed: true });
+        const obj = { email, confirmed: true };
+        emails.push(EmberObject.create(obj));
       });
     }
 
     if (unconfirmedEmails) {
       unconfirmedEmails.forEach(email => {
-        emails.push({ email });
+        const obj = { email };
+        emails.push(EmberObject.create(obj));
       });
     }
 
@@ -182,6 +186,18 @@ export default Controller.extend(CanCheckEmails, {
 
     destroyEmail(email) {
       this.model.destroyEmail(email);
+    },
+
+    resendConfirmationEmail(email) {
+      email.set("resending", true);
+      this.model
+        .addEmail(email.email)
+        .then(() => {
+          email.set("resent", true);
+        })
+        .finally(() => {
+          email.set("resending", false);
+        });
     },
 
     changePassword() {

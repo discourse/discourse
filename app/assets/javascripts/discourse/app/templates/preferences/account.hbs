@@ -62,6 +62,14 @@
 
               {{#unless email.confirmed}}
                 <span class="unconfirmed">{{i18n "user.email.unconfirmed_label"}}</span>
+                &bull;
+                {{#if email.resending}}
+                  <span>{{i18n "user.email.resending_label"}}</span>
+                {{else if email.resent}}
+                  <span>{{i18n "user.email.resent_label"}}</span>
+                {{else}}
+                  <a {{action "resendConfirmationEmail" email}} href>{{i18n "user.email.resend_label"}}</a>
+                {{/if}}
               {{/unless}}
             </div>
           </div>

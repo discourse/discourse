@@ -35,21 +35,34 @@ class EmailUpdater
     end
 
     if errors.blank? && existing_user.nil?
-      args = {
-        # `old_email` may be deleted later if user is adding a new email
-        # address as it is used just to confirm curent address for staff
-        # users.
-        old_email: @user.email,
-        new_email: email,
-      }
+      email_change_request = EmailChangeRequest.find_by(user_id: @user.id, new_email: email)
+      if email_change_request.present? && email_change_request.change_state != EmailChangeRequest.states[:complete]
+        args = { change_state: email_change_request.change_state }
+        case args[:change_state]
+        when EmailChangeRequest.states[:authorizing_old]
+          email_token = @user.email_tokens.create!(email: email_change_request.old_email_token.email)
+          email_change_request.update!(old_email_token: email_token)
+        when EmailChangeRequest.states[:authorizing_new]
+          email_token = @user.email_tokens.create!(email: email_change_request.new_email_token.email)
+          email_change_request.update!(new_email_token: email_token)
+        end
+      else
+        args = {
+          # `old_email` may be deleted later if user is adding a new email
+          # address as it is used just to confirm curent address for staff
+          # users.
+          old_email: @user.email,
+          new_email: email,
+        }
 
-      args, email_token = prepare_change_request(args)
-      args.delete(:old_email) if add
-      @user.email_change_requests.create!(args)
+        args, email_token = prepare_change_request(args)
+        args.delete(:old_email) if add
+        @user.email_change_requests.create!(args)
 
-      if initiating_admin_changing_another_user_email? && !changing_staff_user_email?
-        auto_confirm_and_send_password_reset(email_token)
-        return
+        if initiating_admin_changing_another_user_email? && !changing_staff_user_email?
+          auto_confirm_and_send_password_reset(email_token)
+          return
+        end
       end
 
       if args[:change_state] == EmailChangeRequest.states[:authorizing_new]
