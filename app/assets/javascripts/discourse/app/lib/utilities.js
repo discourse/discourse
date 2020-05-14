@@ -137,7 +137,6 @@ export function selectedText() {
   for (let r = 0; r < selection.rangeCount; r++) {
     const range = selection.getRangeAt(r);
     const $ancestor = $(range.commonAncestorContainer);
-    const $codeBlockTest = $ancestor.parent("pre");
 
     // ensure we never quote text in the post menu area
     const $postMenuArea = $ancestor.find(".post-menu-area")[0];
@@ -145,6 +144,7 @@ export function selectedText() {
       range.setEndBefore($postMenuArea);
     }
 
+    const $codeBlockTest = $ancestor.parents("pre");
     if ($codeBlockTest.length) {
       const $code = $("<code>");
       $code.append(range.cloneContents());
