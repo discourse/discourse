@@ -93,4 +93,32 @@ describe SvgSpriteController do
       expect(data[0]["id"]).to eq("fab-500px")
     end
   end
+
+  context 'svg_icon' do
+    it "requires .svg extension" do
+      get "/svg-sprite/#{Discourse.current_hostname}/icon/bolt"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns SVG given an icon name" do
+      get "/svg-sprite/#{Discourse.current_hostname}/icon/bolt.svg"
+      expect(response.status).to eq(200)
+      expect(response.body).to include('bolt')
+    end
+
+    it "returns SVG given an icon name and a color" do
+      get "/svg-sprite/#{Discourse.current_hostname}/icon/CC0000/fab-github.svg"
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include('fab-github')
+      expect(response.body).to include('fill="#CC0000"')
+      expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
+    end
+
+    it "ignores non-HEX colors" do
+      get "/svg-sprite/#{Discourse.current_hostname}/icon/orange/fab-github.svg"
+      expect(response.status).to eq(404)
+    end
+
+  end
 end
