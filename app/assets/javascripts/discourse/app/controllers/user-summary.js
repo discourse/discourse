@@ -1,5 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { alias, readOnly } from "@ember/object/computed";
+import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { durationTiny } from "discourse/lib/formatter";
@@ -10,7 +10,6 @@ const MAX_BADGES = 6;
 export default Controller.extend({
   userController: inject("user"),
   user: alias("userController.model"),
-  showStats: readOnly("model.can_see_summary_stats"),
 
   @discourseComputed("model.badges.length")
   moreBadges(badgesLength) {
