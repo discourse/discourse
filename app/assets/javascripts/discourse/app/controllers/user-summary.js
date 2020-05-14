@@ -1,5 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
+import { alias, readOnly } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { durationTiny } from "discourse/lib/formatter";
@@ -10,41 +10,7 @@ const MAX_BADGES = 6;
 export default Controller.extend({
   userController: inject("user"),
   user: alias("userController.model"),
-
-  @discourseComputed(
-    "model.time_read",
-    "model.days_visited",
-    "model.topics_entered",
-    "model.posts_read_count",
-    "model.likes_given",
-    "model.topic_count",
-    "model.post_count",
-    "model.likes_received",
-    "model.recent_time_read"
-  )
-  showStats(
-    timeRead,
-    daysVisited,
-    topicsEntered,
-    postsRead,
-    likesGiven,
-    topicCount,
-    postCount,
-    likesReceived,
-    recentTimeRead
-  ) {
-    return (
-      timeRead ||
-      daysVisited ||
-      topicsEntered ||
-      postsRead ||
-      likesGiven ||
-      topicCount ||
-      postCount ||
-      likesReceived ||
-      recentTimeRead
-    );
-  },
+  showStats: readOnly("model.can_see_summary_stats"),
 
   @discourseComputed("model.badges.length")
   moreBadges(badgesLength) {

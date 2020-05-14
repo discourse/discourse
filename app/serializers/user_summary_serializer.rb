@@ -56,7 +56,12 @@ class UserSummarySerializer < ApplicationSerializer
              :post_count,
              :time_read,
              :recent_time_read,
-             :bookmark_count
+             :bookmark_count,
+             :can_see_summary_stats
+
+  def can_see_summary_stats
+    scope.can_see_summary_stats?
+  end
 
   def include_badges?
     SiteSetting.enable_badges
@@ -75,38 +80,38 @@ class UserSummarySerializer < ApplicationSerializer
   end
 
   def include_likes_given?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 
   def include_likes_received?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 
   def include_topics_entered?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 
   def include_posts_read_count?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 
   def include_days_visited?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 
   def include_topic_count?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 
   def include_post_count?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 
   def include_time_read?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 
   def include_recent_time_read?
-    scope.can_see_summary_stats?
+    can_see_summary_stats
   end
 end
