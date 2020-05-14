@@ -155,7 +155,7 @@ module UserGuardian
     )
   end
 
-  def can_see_summary_stats?
+  def can_see_summary_stats?(target_user)
     true
   end
 end

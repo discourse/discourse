@@ -60,7 +60,7 @@ class UserSummarySerializer < ApplicationSerializer
              :can_see_summary_stats
 
   def can_see_summary_stats
-    scope.can_see_summary_stats?
+    scope.can_see_summary_stats?(object.user)
   end
 
   def include_badges?

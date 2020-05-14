@@ -112,6 +112,10 @@ class UserSummary
     @user.id
   end
 
+  def user
+    @user
+  end
+
   def user_stat
     @user.user_stat
   end
