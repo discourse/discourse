@@ -35,12 +35,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   iconForComposerAction: computed("action", function() {
-    switch (this.action) {
-      case EDIT:
-        return "pencil-alt";
-      default:
-        return "share";
-    }
+    return this.isEditing ? "pencil-alt" : "share";
   }),
 
   contentChanged() {
