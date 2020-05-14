@@ -66,6 +66,7 @@ module Email
                          when Discourse::InvalidAccess                     then :email_reject_invalid_access
                          when Email::Receiver::OldDestinationError         then :email_reject_old_destination
                          when Email::Receiver::ReplyNotAllowedError        then :email_reject_reply_not_allowed
+                         when Email::Receiver::ReplyToDigestError          then :email_reject_reply_to_digest
                          else                                                   :email_reject_unrecognized_error
       end
 
