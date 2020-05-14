@@ -1096,7 +1096,11 @@ export default Controller.extend({
     const model = this.model;
     if (model) {
       if (model.draftSaving) {
-        debounce(this, this._saveDraft, 2000);
+        // in test debounce is Ember.run, this will cause
+        // an infinite loop
+        if (ENV.environment !== "test") {
+          debounce(this, this._saveDraft, 2000);
+        }
       } else {
         model.saveDraft().finally(() => {
           this._lastDraftSaved = Date.now();
