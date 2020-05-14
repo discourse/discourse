@@ -8,7 +8,6 @@ describe Jobs::Tl3Promotions do
     user.create_user_stat if user.user_stat.nil?
     user.user_stat.update!(
       days_visited: 1000,
-      topic_reply_count: 1000,
       topics_entered: 1000,
       posts_read_count: 1000,
       likes_given: 1000,

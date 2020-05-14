@@ -34,7 +34,6 @@ module Jobs
         ).where.not(id: demoted_user_ids)
         .joins(:user_stat)
         .where("user_stats.days_visited >= ?", SiteSetting.tl3_requires_days_visited)
-        .where("user_stats.topic_reply_count >= ?", SiteSetting.tl3_requires_topics_replied_to)
         .where("user_stats.topics_entered >= ?", SiteSetting.tl3_requires_topics_viewed_all_time)
         .where("user_stats.posts_read_count >= ?", SiteSetting.tl3_requires_posts_read_all_time)
         .where("user_stats.likes_given >= ?", SiteSetting.tl3_requires_likes_given)

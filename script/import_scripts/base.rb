@@ -58,7 +58,6 @@ class ImportScripts::Base
       update_post_timings
       update_feature_topic_users
       update_category_featured_topics
-      update_topic_count_replies
       reset_topic_counters
     end
 
@@ -690,19 +689,6 @@ class ImportScripts::Base
   end
 
   def update_user_stats
-    puts "", "Updating topic reply counts..."
-
-    count = 0
-    total = User.real.count
-
-    User.real.find_each do |u|
-      u.create_user_stat if u.user_stat.nil?
-      us = u.user_stat
-      us.update_topic_reply_count
-      us.save
-      print_status(count += 1, total, get_start_time("user_stats"))
-    end
-
     puts "", "Updating first_post_created_at..."
 
     DB.exec <<~SQL
@@ -804,19 +790,6 @@ class ImportScripts::Base
     Category.find_each do |category|
       CategoryFeaturedTopic.feature_topics_for(category)
       print_status(count += 1, total, get_start_time("category_featured_topics"))
-    end
-  end
-
-  def update_topic_count_replies
-    puts "", "Updating user topic reply counts"
-
-    count = 0
-    total = User.real.count
-
-    User.real.find_each do |u|
-      u.user_stat.update_topic_reply_count
-      u.user_stat.save!
-      print_status(count += 1, total, get_start_time("topic_count_replies"))
     end
   end
 
