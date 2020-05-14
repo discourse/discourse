@@ -31,6 +31,10 @@ export default Mixin.create({
 
   @discourseComputed("accountUsername")
   basicUsernameValidation(accountUsername) {
+    const failedAttrs = {
+      failed: true,
+      element: document.querySelector("#new-account-username")
+    };
     this.set("uniqueUsernameValidation", null);
 
     if (accountUsername && accountUsername === this.prefilledUsername) {
@@ -42,31 +46,38 @@ export default Mixin.create({
 
     // If blank, fail without a reason
     if (isEmpty(accountUsername)) {
-      return EmberObject.create({ failed: true });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          message: I18n.t("user.username.required")
+        })
+      );
     }
 
     // If too short
     if (accountUsername.length < this.siteSettings.min_username_length) {
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("user.username.too_short")
-      });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          reason: I18n.t("user.username.too_short")
+        })
+      );
     }
 
     // If too long
     if (accountUsername.length > this.maxUsernameLength) {
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("user.username.too_long")
-      });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          reason: I18n.t("user.username.too_long")
+        })
+      );
     }
 
     this.checkUsernameAvailability();
     // Let's check it out asynchronously
-    return EmberObject.create({
-      failed: true,
-      reason: I18n.t("user.username.checking")
-    });
+    return EmberObject.create(
+      Object.assign(failedAttrs, {
+        reason: I18n.t("user.username.checking")
+      })
+    );
   },
 
   shouldCheckUsernameAvailability() {
@@ -93,23 +104,30 @@ export default Mixin.create({
               })
             );
           } else {
+            const failedAttrs = {
+              failed: true,
+              element: document.querySelector("#new-account-username")
+            };
+
             if (result.suggestion) {
               return this.set(
                 "uniqueUsernameValidation",
-                EmberObject.create({
-                  failed: true,
-                  reason: I18n.t("user.username.not_available", result)
-                })
+                EmberObject.create(
+                  Object.assign(failedAttrs, {
+                    reason: I18n.t("user.username.not_available", result)
+                  })
+                )
               );
             } else {
               return this.set(
                 "uniqueUsernameValidation",
-                EmberObject.create({
-                  failed: true,
-                  reason: result.errors
-                    ? result.errors.join(" ")
-                    : I18n.t("user.username.not_available_no_suggestion")
-                })
+                EmberObject.create(
+                  Object.assign(failedAttrs, {
+                    reason: result.errors
+                      ? result.errors.join(" ")
+                      : I18n.t("user.username.not_available_no_suggestion")
+                  })
+                )
               );
             }
           }

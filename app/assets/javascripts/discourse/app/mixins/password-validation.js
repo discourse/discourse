@@ -43,44 +43,57 @@ export default Mixin.create({
     accountEmail,
     passwordMinLength
   ) {
+    const failedAttrs = {
+      failed: true,
+      element: document.querySelector("#new-account-password")
+    };
+
     if (!passwordRequired) {
       return EmberObject.create({ ok: true });
     }
 
     if (rejectedPasswords.includes(password)) {
-      return EmberObject.create({
-        failed: true,
-        reason:
-          this.rejectedPasswordsMessages.get(password) ||
-          I18n.t("user.password.common")
-      });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          reason:
+            this.rejectedPasswordsMessages.get(password) ||
+            I18n.t("user.password.common")
+        })
+      );
     }
 
     // If blank, fail without a reason
     if (isEmpty(password)) {
-      return EmberObject.create({ failed: true });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          message: I18n.t("user.password.required")
+        })
+      );
     }
 
     // If too short
     if (password.length < passwordMinLength) {
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("user.password.too_short")
-      });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          reason: I18n.t("user.password.too_short")
+        })
+      );
     }
 
     if (!isEmpty(accountUsername) && password === accountUsername) {
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("user.password.same_as_username")
-      });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          reason: I18n.t("user.password.same_as_username")
+        })
+      );
     }
 
     if (!isEmpty(accountEmail) && password === accountEmail) {
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("user.password.same_as_email")
-      });
+      return EmberObject.create(
+        Object.assign(failedAttrs, {
+          reason: I18n.t("user.password.same_as_email")
+        })
+      );
     }
 
     // Looks good!

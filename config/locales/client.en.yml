@@ -821,6 +821,7 @@ en:
 
     user_fields:
       none: "(select an option)"
+      required: 'Please enter a value for "%{name}"'
 
     user:
       said: "{{username}}:"
@@ -1115,6 +1116,7 @@ en:
         sso_override_instructions: "Email can be updated from SSO provider."
         instructions: "Never shown to the public."
         ok: "We will email you to confirm"
+        required: "Please enter an email address"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
         frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
@@ -1137,6 +1139,7 @@ en:
         title: "Name"
         instructions: "your full name (optional)"
         instructions_required: "Your full name"
+        required: "Please enter a name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
@@ -1150,6 +1153,7 @@ en:
         too_long: "Your username is too long"
         checking: "Checking username availability..."
         prefilled: "Email matches this registered username"
+        required: "Please enter a username"
 
       locale:
         title: "Interface language"
@@ -1308,6 +1312,7 @@ en:
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
         instructions: "at least %{count} characters"
+        required: "Please enter a password"
 
       summary:
         title: "Summary"

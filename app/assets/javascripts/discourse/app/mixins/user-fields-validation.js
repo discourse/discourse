@@ -27,12 +27,17 @@ export default Mixin.create({
       userFields = userFields.filterBy("field.required");
     }
     if (!isEmpty(userFields)) {
-      const anyEmpty = userFields.any(uf => {
+      const emptyUserField = userFields.find(uf => {
         const val = uf.get("value");
         return !val || isEmpty(val);
       });
-      if (anyEmpty) {
-        return EmberObject.create({ failed: true });
+      if (emptyUserField) {
+        const userField = emptyUserField.field;
+        return EmberObject.create({
+          failed: true,
+          message: I18n.t("user_fields.required", { name: userField.name }),
+          element: userField.element
+        });
       }
     }
     return EmberObject.create({ ok: true });
