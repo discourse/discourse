@@ -51,7 +51,9 @@ describe CrawlerDetection do
     end
 
     it "returns true when VIA header contains 'web.archive.org'" do
-      crawler!("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "HTTP/1.0 web.archive.org (Wayback Save Page)")
+      crawler! "Mozilla/5.0 (compatible; archive.org_bot +http://archive.org/details/archive.org_bot)"
+      crawler! "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "HTTP/1.0 web.archive.org (Wayback Save Page)"
+      crawler! "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "Mozilla/5.0 (compatible; archive.org_bot; Wayback Machine Live Record; http://archive.org/details/archive.org_bot), 1.1 warcprox"
     end
 
     it "returns false for non-crawler user agents" do
