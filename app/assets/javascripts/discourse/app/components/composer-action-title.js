@@ -23,7 +23,6 @@ export default Component.extend({
   classNames: ["composer-action-title"],
   options: alias("model.replyOptions"),
   action: alias("model.action"),
-  isEditing: equal("action", EDIT),
 
   @discourseComputed("options", "action")
   actionTitle(opts, action) {
