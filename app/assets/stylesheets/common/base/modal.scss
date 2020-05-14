@@ -141,10 +141,11 @@
   z-index: z("modal", "content");
   overflow: auto;
 
-  .keyboard-visible & {
+  html.keyboard-visible body.ios-safari-composer-hacks & {
     height: calc(var(--composer-vh, 1vh) * 100);
     .modal-inner-container {
       max-height: 100%;
+      margin-bottom: 0px;
     }
   }
 
