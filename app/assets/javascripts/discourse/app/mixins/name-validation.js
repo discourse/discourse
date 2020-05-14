@@ -18,7 +18,11 @@ export default Mixin.create({
   @discourseComputed("accountName")
   nameValidation() {
     if (this.siteSettings.full_name_required && isEmpty(this.accountName)) {
-      return EmberObject.create({ failed: true });
+      return EmberObject.create({
+        failed: true,
+        message: I18n.t("user.name.required"),
+        element: document.querySelector("#new-account-name")
+      });
     }
 
     return EmberObject.create({ ok: true });

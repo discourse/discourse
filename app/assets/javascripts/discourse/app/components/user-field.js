@@ -6,6 +6,16 @@ export default Component.extend({
   classNameBindings: [":user-field", "field.field_type", "customFieldClass"],
   layoutName: fmt("field.field_type", "components/user-fields/%@"),
 
+  didInsertElement() {
+    this._super(...arguments);
+
+    let element = this.element.querySelector(
+      ".user-field.dropdown .select-kit-header"
+    );
+    element = element || this.element.querySelector("input");
+    this.field.element = element;
+  },
+
   @discourseComputed
   noneLabel() {
     return "user_fields.none";
