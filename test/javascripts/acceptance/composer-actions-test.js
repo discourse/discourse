@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";

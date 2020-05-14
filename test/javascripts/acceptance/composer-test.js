@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
