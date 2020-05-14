@@ -1086,12 +1086,14 @@ const Composer = RestModel.extend({
   },
 
   saveDraft() {
+    if (this.draftSaving) return Promise.resolve();
+
     // Do not save when drafts are disabled
-    if (this.disableDrafts) return;
+    if (this.disableDrafts) return Promise.resolve();
 
     if (this.canEditTitle) {
       // Save title and/or post body
-      if (!this.title && !this.reply) return;
+      if (!this.title && !this.reply) return Promise.resolve();
 
       if (
         this.title &&
@@ -1099,14 +1101,15 @@ const Composer = RestModel.extend({
         this.reply &&
         this.replyLength < this.siteSettings.min_post_length
       ) {
-        return;
+        return Promise.resolve();
       }
     } else {
       // Do not save when there is no reply
-      if (!this.reply) return;
+      if (!this.reply) return Promise.resolve();
 
       // Do not save when the reply's length is too small
-      if (this.replyLength < this.siteSettings.min_post_length) return;
+      if (this.replyLength < this.siteSettings.min_post_length)
+        return Promise.resolve();
     }
 
     this.setProperties({
@@ -1138,13 +1141,11 @@ const Composer = RestModel.extend({
         }
         if (result.conflict_user) {
           this.setProperties({
-            draftSaving: false,
             draftStatus: I18n.t("composer.edit_conflict"),
             draftConflictUser: result.conflict_user
           });
         } else {
           this.setProperties({
-            draftSaving: false,
             draftSaved: true,
             draftConflictUser: null
           });
@@ -1169,10 +1170,12 @@ const Composer = RestModel.extend({
         }
 
         this.setProperties({
-          draftSaving: false,
           draftStatus: draftStatus || I18n.t("composer.drafts_offline"),
           draftConflictUser: null
         });
+      })
+      .finally(() => {
+        this.set("draftSaving", false);
       });
   },
 
