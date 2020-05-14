@@ -37,7 +37,8 @@ class AdminUserIndexQuery
   end
 
   def custom_direction
-    asc = params[:asc]
+    Discourse.deprecate(":ascending is deprecated please use :asc instead", output_in_test: true) if params[:ascending]
+    asc = params[:asc] || params[:ascending]
     asc.present? && asc ? "ASC" : "DESC"
   end
 

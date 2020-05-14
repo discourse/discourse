@@ -11,7 +11,7 @@ export default Controller.extend({
   queryParams: ["order", "asc", "filter"],
 
   order: "",
-  asc: null,
+  asc: true,
   filter: null,
   filterInput: null,
 
