@@ -55,7 +55,7 @@ import { on } from "@ember/object/evented";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.43";
+const PLUGIN_API_VERSION = "0.9.0";
 
 class PluginApi {
   constructor(version, container) {
@@ -954,6 +954,36 @@ class PluginApi {
    */
   serializeToDraft(fieldName, property) {
     Composer.serializeToDraft(fieldName, property);
+  }
+
+  /**
+   * Adds a field to composer create serializer
+   *
+   * Example:
+   *
+   * api.serializeOnCreate('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeOnCreate('field_name');
+   *
+   */
+  serializeOnCreate(fieldName, property) {
+    Composer.serializeOnCreate(fieldName, property);
+  }
+
+  /**
+   * Adds a field to composer update serializer
+   *
+   * Example:
+   *
+   * api.serializeOnUpdate('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeOnUpdate('field_name');
+   *
+   */
+  serializeOnUpdate(fieldName, property) {
+    Composer.serializeOnUpdate(fieldName, property);
   }
 
   /**

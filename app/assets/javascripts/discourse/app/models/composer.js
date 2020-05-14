@@ -61,6 +61,11 @@ const CLOSED = "closed",
     no_bump: "noBump",
     draft_key: "draftKey"
   },
+  _update_serializer = {
+    raw: "reply",
+    topic_id: "topic.id",
+    raw_old: "rawOld"
+  },
   _edit_topic_serializer = {
     title: "topic.title",
     categoryId: "topic.category.id",
@@ -851,6 +856,11 @@ const Composer = RestModel.extend({
     });
   },
 
+  @discourseComputed("editConflict", "originalText")
+  rawOld(editConflict, originalText) {
+    return editConflict ? null : originalText;
+  },
+
   editPost(opts) {
     const post = this.post;
     const oldCooked = post.cooked;
@@ -885,14 +895,12 @@ const Composer = RestModel.extend({
     }
 
     const props = {
-      topic_id: this.topic.id,
-      raw: this.reply,
-      raw_old: this.editConflict ? null : this.originalText,
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
       cooked: this.getCookedHtml()
     };
 
+    this.serialize(_update_serializer, props);
     this.set("composeState", SAVING);
 
     const rollback = throwAjaxError(error => {
@@ -1223,6 +1231,17 @@ Composer.reopenClass({
 
   serializedFieldsForCreate() {
     return Object.keys(_create_serializer);
+  },
+
+  serializeOnUpdate(fieldName, property) {
+    if (!property) {
+      property = fieldName;
+    }
+    _update_serializer[fieldName] = property;
+  },
+
+  serializedFieldsForUpdate() {
+    return Object.keys(_update_serializer);
   },
 
   serializeToDraft(fieldName, property) {
