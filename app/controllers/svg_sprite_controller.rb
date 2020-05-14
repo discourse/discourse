@@ -64,7 +64,7 @@ class SvgSpriteController < ApplicationController
         doc = Nokogiri.XML(icon)
         doc.at_xpath("symbol").name = "svg"
         doc.at_xpath("svg")['xmlns'] = "http://www.w3.org/2000/svg"
-        doc.at_xpath("svg")['fill'] = "##{params[:color]}" if params[:color]
+        doc.at_xpath("svg")['fill'] = adjust_hex(params[:color]) if params[:color]
 
         response.headers["Last-Modified"] = 1.years.ago.httpdate
         response.headers["Content-Length"] = doc.to_s.bytesize.to_s
@@ -73,5 +73,15 @@ class SvgSpriteController < ApplicationController
         render plain: doc, disposition: nil, content_type: 'image/svg+xml'
       end
     end
+  end
+
+  private
+
+  def adjust_hex(hex)
+    if hex.size == 3
+      chars = hex.scan(/\w/)
+      hex = chars.zip(chars).flatten.join
+    end
+    "##{hex}"
   end
 end

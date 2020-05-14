@@ -115,6 +115,15 @@ describe SvgSpriteController do
       expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
     end
 
+    it "returns SVG given an icon name and a 3-character HEX color" do
+      get "/svg-sprite/#{Discourse.current_hostname}/icon/C00/fab-github.svg"
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include('fab-github')
+      expect(response.body).to include('fill="#CC0000"')
+      expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
+    end
+
     it "ignores non-HEX colors" do
       get "/svg-sprite/#{Discourse.current_hostname}/icon/orange/fab-github.svg"
       expect(response.status).to eq(404)
