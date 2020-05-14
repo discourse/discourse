@@ -66,11 +66,6 @@ export default DropdownSelectBoxComponent.extend({
       this.contentChanged();
     }
 
-    this.set(
-      "selectKit.options.icon",
-      this.action === EDIT ? "pencil-alt" : "share"
-    );
-
     if (isEmpty(this.content)) {
       this.set("selectKit.isHidden", true);
     }
