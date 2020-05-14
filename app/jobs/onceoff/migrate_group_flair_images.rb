@@ -7,11 +7,12 @@ module Jobs
 
       Group.where.not(flair_url: nil).each do |group|
         if group.flair_image.present?
-          g.update_attribute(:flair_url, nil)
+          g.update_column(:flair_url, nil)
           next
         end
 
-        old_url = group.flair_url
+        old_url = group[:flair_url]
+        group_name = group.name
 
         count = 0
         file = nil
@@ -42,7 +43,7 @@ module Jobs
 
             logger.warn(
               "Error encountered when trying to download file " +
-              "for group '#{group.name}'.\n#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
+              "for group '#{group_name}'.\n#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
             )
           end
 
@@ -50,7 +51,7 @@ module Jobs
           break if file || (file.blank? && count >= 3)
 
           logger.info(
-            "Failed to download upload from #{url} for group '#{group.name}'. Retrying..."
+            "Failed to download upload from #{url} for group '#{group_name}'. Retrying..."
           )
 
           sleep(count * sleep_interval)
@@ -60,12 +61,11 @@ module Jobs
 
         upload = UploadCreator.new(
           file,
-          "#{new_setting}",
-          origin: UrlHelper.absolute(old_url),
-          for_site_setting: true
+          "group_#{group_name}",
+          origin: UrlHelper.absolute(old_url)
         ).create_for(Discourse.system_user.id)
 
-        g.update_attribute(:flair_image_id, upload.id)
+        group.update_columns(flair_image_id: upload.id, flair_url: nil) if upload.present?
       end
     end
 
