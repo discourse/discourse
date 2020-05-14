@@ -1,5 +1,7 @@
 import Service from "@ember/service";
-import Presence, { CLOSED } from "../lib/presence";
+import Presence, {
+  CLOSED
+} from "discourse/plugins/discourse-presence/discourse/lib/presence";
 
 const PresenceManager = Service.extend({
   presences: null,
