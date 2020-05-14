@@ -1095,7 +1095,13 @@ export default Controller.extend({
   _saveDraft() {
     const model = this.model;
     if (model) {
-      model.saveDraft();
+      if (model.draftSaving) {
+        debounce(this, this._saveDraft, 2000);
+      } else {
+        model.saveDraft().finally(() => {
+          this._lastDraftSaved = Date.now();
+        });
+      }
     }
   },
 
@@ -1107,7 +1113,15 @@ export default Controller.extend({
       !this.skipAutoSave &&
       !this.model.disableDrafts
     ) {
-      debounce(this, this._saveDraft, 2000);
+      if (!this._lastDraftSaved) {
+        // pretend so we get a save unconditionally in 15 secs
+        this._lastDraftSaved = Date.now();
+      }
+      if (Date.now() - this._lastDraftSaved > 15000) {
+        this._saveDraft();
+      } else {
+        debounce(this, this._saveDraft, 2000);
+      }
     }
   },
 
