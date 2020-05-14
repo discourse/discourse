@@ -732,12 +732,7 @@ export default Controller.extend({
 
         this.close();
 
-        const currentUser = this.currentUser;
-        if (composer.creatingTopic) {
-          currentUser.set("topic_count", currentUser.topic_count + 1);
-        } else {
-          currentUser.set("reply_count", currentUser.reply_count + 1);
-        }
+        this.currentUser.set("any_posts", true);
 
         const post = result.target;
         if (post && !staged) {

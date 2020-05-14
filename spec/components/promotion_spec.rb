@@ -124,6 +124,8 @@ describe Promotion do
     context "that has done the requisite things" do
 
       before do
+        SiteSetting.tl2_requires_topic_reply_count = 3
+
         stat = user.user_stat
         stat.topics_entered = SiteSetting.tl2_requires_topics_entered
         stat.posts_read_count = SiteSetting.tl2_requires_read_posts
@@ -131,7 +133,10 @@ describe Promotion do
         stat.days_visited = SiteSetting.tl2_requires_days_visited * 60
         stat.likes_received = SiteSetting.tl2_requires_likes_received
         stat.likes_given = SiteSetting.tl2_requires_likes_given
-        stat.topic_reply_count = SiteSetting.tl2_requires_topic_reply_count
+        SiteSetting.tl2_requires_topic_reply_count.times do |_|
+          topic = Fabricate(:topic)
+          reply = Fabricate(:post, topic: topic, user: user, post_number: 2)
+        end
 
         @result = promotion.review
       end
@@ -148,6 +153,7 @@ describe Promotion do
     context "when the account hasn't existed long enough" do
       it "does not promote the user" do
         user.created_at = 1.minute.ago
+        SiteSetting.tl2_requires_topic_reply_count = 3
 
         stat = user.user_stat
         stat.topics_entered = SiteSetting.tl2_requires_topics_entered
@@ -156,7 +162,10 @@ describe Promotion do
         stat.days_visited = SiteSetting.tl2_requires_days_visited * 60
         stat.likes_received = SiteSetting.tl2_requires_likes_received
         stat.likes_given = SiteSetting.tl2_requires_likes_given
-        stat.topic_reply_count = SiteSetting.tl2_requires_topic_reply_count
+        SiteSetting.tl2_requires_topic_reply_count.times do |_|
+          topic = Fabricate(:topic)
+          reply = Fabricate(:post, topic: topic, user: user, post_number: 2)
+        end
 
         result = promotion.review
         expect(result).to eq(false)

@@ -539,11 +539,6 @@ class PostCreator
       @user.user_stat.topic_count += 1 if @post.is_first_post?
     end
 
-    # We don't count replies to your own topics
-    if !@opts[:import_mode] && @user.id != @topic.user_id
-      @user.user_stat.update_topic_reply_count
-    end
-
     @user.user_stat.save!
 
     if !@topic.private_message? && @post.post_type != Post.types[:whisper]
