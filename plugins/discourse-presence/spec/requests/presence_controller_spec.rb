@@ -208,9 +208,6 @@ describe ::Presence::PresencesController do
 
         message = messages.first
 
-        expect(message.channel).to eq("/presence/#{public_topic.id}")
-        expect(message.data.dig(:user, :id)).to eq(user.id)
-        expect(message.data[:published_at]).to eq(Time.zone.now.to_i)
         expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
         expect(message.user_ids).to eq(nil)
       end
