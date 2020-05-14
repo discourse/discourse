@@ -55,7 +55,11 @@ class EmailUpdater
       if args[:change_state] == EmailChangeRequest.states[:authorizing_new]
         send_email(:confirm_new_email, email_token)
       elsif args[:change_state] == EmailChangeRequest.states[:authorizing_old]
-        send_email(:confirm_old_email, email_token)
+        if add
+          send_email(:confirm_old_email_add, email_token)
+        else
+          send_email(:confirm_old_email, email_token)
+        end
       end
     end
   end
@@ -99,7 +103,7 @@ class EmailUpdater
     end
 
     if confirm_result == :complete && change_req.old_email_token_id.blank?
-      notify_old(change_req.old_email, token.email)
+      notify_old(change_req.old_email, change_req.new_email)
     end
 
     confirm_result || :error
@@ -109,9 +113,10 @@ class EmailUpdater
 
   def notify_old(old_email, new_email)
     Jobs.enqueue :critical_user_email,
-                 to_address: old_email,
-                 type: :notify_old_email,
-                 user_id: @user.id
+                 to_address: @user.email,
+                 type: old_email ? :notify_old_email : :notify_old_email_add,
+                 user_id: @user.id,
+                 new_email: new_email
   end
 
   def send_email(type, email_token)
