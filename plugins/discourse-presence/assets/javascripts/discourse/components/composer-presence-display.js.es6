@@ -62,7 +62,10 @@ export default Component.extend({
   _typing() {
     const action = this.get("model.action");
 
-    if (action !== REPLY && action !== EDIT) {
+    if (
+      (action !== REPLY && action !== EDIT) ||
+      !this.get("model.composerOpened")
+    ) {
       return;
     }
 
