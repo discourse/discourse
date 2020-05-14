@@ -14,7 +14,7 @@ export default EmberObject.extend({
 
   @discourseComputed("num_topics_replied_to", "min_topics_replied_to")
   capped_topics_replied_to(numReplied, minReplied) {
-    return numReplied === 2 * minReplied;
+    return numReplied > minReplied;
   },
 
   @discourseComputed(

@@ -26,13 +26,13 @@ export default DesktopNotificationConfig.extend({
     isNotSupported,
     isEnabled,
     bannerDismissed,
-    any_posts
+    anyPosts
   ) {
     return (
       this.siteSettings.push_notifications_prompt &&
       !isNotSupported &&
       this.currentUser &&
-      any_posts &&
+      anyPosts &&
       Notification.permission !== "denied" &&
       Notification.permission !== "granted" &&
       !isEnabled &&
