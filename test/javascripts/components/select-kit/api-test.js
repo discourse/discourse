@@ -36,14 +36,18 @@ componentTest("modifySelectKit(identifier).appendContent", {
           name: "Alpaca"
         };
       });
+      api.modifySelectKit("combo-box").appendContent(() => {});
     });
   },
 
   async test(assert) {
     await this.comboBox.expand();
-    const row = this.comboBox.rowByIndex(3);
-    assert.ok(row.exists());
-    assert.equal(row.value(), "alpaca");
+
+    assert.equal(this.comboBox.rows().length, 4);
+
+    const appendedRow = this.comboBox.rowByIndex(3);
+    assert.ok(appendedRow.exists());
+    assert.equal(appendedRow.value(), "alpaca");
 
     await this.comboBox.collapse();
 
@@ -67,16 +71,18 @@ componentTest("modifySelectKit(identifier).prependContent", {
           name: "Alpaca"
         };
       });
+      api.modifySelectKit("combo-box").prependContent(() => {});
     });
   },
 
-  afterEach() {},
-
   async test(assert) {
     await this.comboBox.expand();
-    const row = this.comboBox.rowByIndex(0);
-    assert.ok(row.exists());
-    assert.equal(row.value(), "alpaca");
+
+    assert.equal(this.comboBox.rows().length, 4);
+
+    const prependedRow = this.comboBox.rowByIndex(0);
+    assert.ok(prependedRow.exists());
+    assert.equal(prependedRow.value(), "alpaca");
 
     await this.comboBox.collapse();
 

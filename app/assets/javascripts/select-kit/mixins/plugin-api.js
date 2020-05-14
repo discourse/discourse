@@ -32,10 +32,16 @@ function onChange(pluginApiIdentifiers, mutationFunction) {
 export function applyContentPluginApiCallbacks(content, component) {
   makeArray(component.pluginApiIdentifiers).forEach(key => {
     (_prependContentCallbacks[key] || []).forEach(c => {
-      content = makeArray(c(component, content)).concat(content);
+      const prependedContent = c(component, content);
+      if (prependedContent) {
+        content = makeArray(prependedContent).concat(content);
+      }
     });
     (_appendContentCallbacks[key] || []).forEach(c => {
-      content = content.concat(makeArray(c(component, content)));
+      const appendedContent = c(component, content);
+      if (appendedContent) {
+        content = content.concat(makeArray(appendedContent));
+      }
     });
   });
 
