@@ -137,7 +137,7 @@ jobs:
         if: env.BUILD_TYPE == 'LINT'
         run: |
           yarn eslint app/assets/javascripts test/javascripts
-          yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins
+          yarn eslint --global I18n --ext .es6 plugins
 
       - name: Prettier
         if: env.BUILD_TYPE == 'LINT'
