@@ -12,7 +12,8 @@ import {
   EDITING,
   COMPOSER_TYPE,
   KEEP_ALIVE_DURATION_SECONDS
-} from "../lib/presence";
+} from "discourse/plugins/discourse-presence/discourse/lib/presence";
+
 import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
