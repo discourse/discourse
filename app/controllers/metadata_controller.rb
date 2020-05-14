@@ -62,7 +62,7 @@ class MetadataController < ApplicationController
           icons: [
             {
               src: "#{icon_url_base}/plus.svg",
-              sizes: "any",
+              sizes: "128x128",
               type: "image/svg+xml"
             }
           ]
@@ -74,7 +74,7 @@ class MetadataController < ApplicationController
           icons: [
             {
               src: "#{icon_url_base}/envelope.svg",
-              sizes: "any",
+              sizes: "128x128",
               type: "image/svg+xml"
             }
           ]
@@ -86,7 +86,7 @@ class MetadataController < ApplicationController
           icons: [
             {
               src: "#{icon_url_base}/bookmark.svg",
-              sizes: "any",
+              sizes: "128x128",
               type: "image/svg+xml"
             }
           ]
@@ -98,7 +98,7 @@ class MetadataController < ApplicationController
           icons: [
             {
               src: "#{icon_url_base}/signal.svg",
-              sizes: "any",
+              sizes: "128x128",
               type: "image/svg+xml"
             }
           ]
