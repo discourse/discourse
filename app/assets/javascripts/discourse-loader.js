@@ -143,6 +143,7 @@ var define, requirejs;
         guidFor: Ember.guidFor
       },
       I18n: {
+        // eslint-disable-next-line
         default: I18n
       }
     };

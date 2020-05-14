@@ -2,6 +2,7 @@ import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
+import I18n from "I18n";
 
 export default Mixin.create({
   @on("init")

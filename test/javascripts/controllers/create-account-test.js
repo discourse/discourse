@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { mapRoutes } from "discourse/mapping-router";
 
 moduleFor("controller:create-account", "controller:create-account", {

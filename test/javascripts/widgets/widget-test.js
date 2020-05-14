@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { next } from "@ember/runloop";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 import { createWidget } from "discourse/widgets/widget";

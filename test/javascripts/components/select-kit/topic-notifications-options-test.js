@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import Topic from "discourse/models/topic";
