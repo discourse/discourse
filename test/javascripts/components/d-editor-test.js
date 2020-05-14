@@ -109,6 +109,13 @@ testCase(`selecting the space before a word`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 9);
 });
 
+testCase("Unicode emoji normalizing in preview", function(assert, textarea) {
+  this.set("value", "hello Ahmed😊 🇮🇳");
+  assert.equal(textarea.value, "hello Ahmed :blush:  :india:");
+  this.set("value", "🇺🇸 America Unicode");
+  assert.equal(textarea.value, " :us: America Unicode");
+});
+
 testCase(`selecting the space after a word`, async function(assert, textarea) {
   textarea.selectionStart = 0;
   textarea.selectionEnd = 6;

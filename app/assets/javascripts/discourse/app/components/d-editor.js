@@ -907,12 +907,17 @@ export default Component.extend({
 
   @observes("value")
   normalizeEmoji() {
-    let [...inputString] = this.value;
-    if (replacements.hasOwnProperty(inputString[inputString.length - 1])) {
-      inputString[inputString.length - 1] =
-        " :" + replacements[inputString[inputString.length - 1]] + ":";
-    }
-    this.set("value", inputString.join(""));
+    let inputString = this.value;
+    inputString = inputString.replace(
+      /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?(?:\u200d(?:[^\ud800-\udfff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?)*/gi,
+      match => {
+        if (replacements.hasOwnProperty(match)) {
+          return " :" + replacements[match] + ":";
+        }
+        return match;
+      }
+    );
+    this.set("value", inputString);
   },
 
   actions: {
