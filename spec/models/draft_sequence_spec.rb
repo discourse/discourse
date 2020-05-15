@@ -24,7 +24,7 @@ describe DraftSequence do
 
     it 'should return nil for non-human user' do
       user.id = -99999
-      expect(DraftSequence.current(user, 'test')).to eq(nil)
+      expect(DraftSequence.current(user, 'test')).to eq(0)
     end
 
     it 'should return the right sequence' do

@@ -23,7 +23,7 @@ class DraftSequence < ActiveRecord::Base
     user_id = user
     user_id = user.id unless user.is_a?(Integer)
 
-    return nil if invalid_user_id?(user_id)
+    return 0 if invalid_user_id?(user_id)
 
     # perf critical path
     r, _ = DB.query_single('select sequence from draft_sequences where user_id = ? and draft_key = ?', user_id, key)
