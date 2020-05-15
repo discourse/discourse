@@ -27,7 +27,7 @@ export default Component.extend(UtilsMixin, {
     "roleButton:role",
     "selectedValue:data-value",
     "selectedNames:data-name",
-    "serializedNames:title"
+    "buttonTitle:title"
   ],
 
   selectedValue: computed("value", function() {
@@ -40,6 +40,16 @@ export default Component.extend(UtilsMixin, {
     return makeArray(this.selectedContent)
       .map(s => this.getName(s))
       .join(",");
+  }),
+
+  buttonTitle: computed("value", "selectKit.noneItem", function() {
+    if (
+      !this.value &&
+      this.selectKit.noneItem &&
+      !this.selectKit.options.showFullTitle
+    ) {
+      return this.selectKit.noneItem.title || this.selectKit.noneItem.name;
+    }
   }),
 
   icons: computed("selectKit.options.{icon,icons}", function() {

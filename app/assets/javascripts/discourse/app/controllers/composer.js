@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
@@ -731,12 +732,7 @@ export default Controller.extend({
 
         this.close();
 
-        const currentUser = this.currentUser;
-        if (composer.creatingTopic) {
-          currentUser.set("topic_count", currentUser.topic_count + 1);
-        } else {
-          currentUser.set("reply_count", currentUser.reply_count + 1);
-        }
+        this.currentUser.set("any_posts", true);
 
         const post = result.target;
         if (post && !staged) {
@@ -1094,7 +1090,17 @@ export default Controller.extend({
   _saveDraft() {
     const model = this.model;
     if (model) {
-      model.saveDraft();
+      if (model.draftSaving) {
+        // in test debounce is Ember.run, this will cause
+        // an infinite loop
+        if (ENV.environment !== "test") {
+          debounce(this, this._saveDraft, 2000);
+        }
+      } else {
+        model.saveDraft().finally(() => {
+          this._lastDraftSaved = Date.now();
+        });
+      }
     }
   },
 
@@ -1106,7 +1112,15 @@ export default Controller.extend({
       !this.skipAutoSave &&
       !this.model.disableDrafts
     ) {
-      debounce(this, this._saveDraft, 2000);
+      if (!this._lastDraftSaved) {
+        // pretend so we get a save unconditionally in 15 secs
+        this._lastDraftSaved = Date.now();
+      }
+      if (Date.now() - this._lastDraftSaved > 15000) {
+        this._saveDraft();
+      } else {
+        debounce(this, this._saveDraft, 2000);
+      }
     }
   },
 
@@ -1161,6 +1175,7 @@ export default Controller.extend({
     const elem = document.querySelector("html");
     elem.classList.remove("fullscreen-composer");
 
+    document.activeElement.blur();
     this.setProperties({ model: null, lastValidatedAt: null });
   },
 

@@ -605,4 +605,18 @@ RSpec.describe ApplicationController do
     expect(response.status).to eq(200)
     expect(response.body).to include('Discourse')
   end
+
+  it 'has canonical tag' do
+    get '/', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/" })
+    get '/?query_param=true', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/" })
+    get '/latest?page=2&additional_param=true', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/latest?page=2" })
+    get '/404', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/404" })
+    topic = create_post.topic
+    get "/t/#{topic.slug}/#{topic.id}"
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
+  end
 end

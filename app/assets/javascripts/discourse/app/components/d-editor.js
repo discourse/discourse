@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { debounce, later, next, schedule, scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";

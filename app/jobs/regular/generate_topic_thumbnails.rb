@@ -10,8 +10,8 @@ module Jobs
 
       raise Discourse::InvalidParameters.new(:topic_id) if topic_id.blank?
 
-      topic = Topic.find(topic_id)
-      topic.generate_thumbnails!(extra_sizes: extra_sizes)
+      topic = Topic.find_by(id: topic_id)
+      topic&.generate_thumbnails!(extra_sizes: extra_sizes)
     end
 
   end

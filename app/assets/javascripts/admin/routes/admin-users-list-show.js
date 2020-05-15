@@ -3,7 +3,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default DiscourseRoute.extend({
   queryParams: {
     order: { refreshModel: true },
-    ascending: { refreshModel: true }
+    asc: { refreshModel: true }
   },
 
   // TODO: this has been introduced to fix a bug in admin-users-list-show
@@ -18,7 +18,7 @@ export default DiscourseRoute.extend({
       if (controller) {
         controller.setProperties({
           order: transition.to.queryParams.order,
-          ascending: transition.to.queryParams.ascending,
+          asc: transition.to.queryParams.asc,
           query: params.filter,
           refreshing: false
         });

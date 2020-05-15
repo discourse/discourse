@@ -6,8 +6,9 @@
       <table class="topic-list bookmark-list">
         <thead>
           <th>{{i18n "topic.title"}}</th>
-          <th>{{i18n "post.bookmarks.updated"}}</th>
-          <th>{{i18n "activity"}}</th>
+          <th>&nbsp;</th>
+          <th class="post-metadata">{{i18n "post.bookmarks.updated"}}</th>
+          <th class="post-metadata">{{i18n "activity"}}</th>
           <th>&nbsp;</th>
         </thead>
         <tbody>
@@ -39,8 +40,15 @@
                   {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
                 </div>
               </td>
-              <td>{{format-date bookmark.updated_at format="tiny"}}</td>
-              {{raw "list/activity-column" topic=bookmark class="num" tagName="td"}}
+              <td>
+                {{#if bookmark.post_user_avatar_template}}
+                  <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}}>
+                    {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
+                  </a>
+                {{/if}}
+              </td>
+              <td class="post-metadata">{{format-date bookmark.updated_at format="tiny"}}</td>
+              {{raw "list/activity-column" topic=bookmark class="num post-metadata" tagName="td"}}
               <td>
                 {{bookmark-actions-dropdown
                   bookmark=bookmark

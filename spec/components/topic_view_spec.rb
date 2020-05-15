@@ -726,9 +726,9 @@ describe TopicView do
       end
 
       it "uses the topic image as a fallback when posts have no image" do
-        expect(topic_view_for_post(1).image_url).to eq(op_upload.url)
-        expect(topic_view_for_post(2).image_url).to eq(op_upload.url)
-        expect(topic_view_for_post(3).image_url).to eq(post3_upload.url)
+        expect(topic_view_for_post(1).image_url).to end_with(op_upload.url)
+        expect(topic_view_for_post(2).image_url).to end_with(op_upload.url)
+        expect(topic_view_for_post(3).image_url).to end_with(post3_upload.url)
       end
     end
 
@@ -736,7 +736,7 @@ describe TopicView do
       it "returns nil when posts have no image" do
         expect(topic_view_for_post(1).image_url).to eq(nil)
         expect(topic_view_for_post(2).image_url).to eq(nil)
-        expect(topic_view_for_post(3).image_url).to eq(post3_upload.url)
+        expect(topic_view_for_post(3).image_url).to end_with(post3_upload.url)
       end
     end
   end

@@ -1,4 +1,5 @@
-import { alias, equal } from "@ember/object/computed";
+import I18n from "I18n";
+import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import {
@@ -22,7 +23,6 @@ export default Component.extend({
   classNames: ["composer-action-title"],
   options: alias("model.replyOptions"),
   action: alias("model.action"),
-  isEditing: equal("action", EDIT),
 
   @discourseComputed("options", "action")
   actionTitle(opts, action) {

@@ -1,34 +1,50 @@
+import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   PRIVATE_MESSAGE,
   CREATE_TOPIC,
   CREATE_SHARED_DRAFT,
-  REPLY
+  REPLY,
+  EDIT
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { computed } from "@ember/object";
+import { equal } from "@ember/object/computed";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
 let _postSnapshot = null;
+let _actionSnapshot = null;
 
 export function _clearSnapshots() {
   _topicSnapshot = null;
   _postSnapshot = null;
+  _actionSnapshot = null;
 }
 
 export default DropdownSelectBoxComponent.extend({
   seq: 0,
   pluginApiIdentifiers: ["composer-actions"],
   classNames: ["composer-actions"],
+  isEditing: equal("action", EDIT),
 
   selectKitOptions: {
-    icon: "share",
+    icon: "iconForComposerAction",
     filterable: false,
     showFullTitle: false
   },
+
+  iconForComposerAction: computed("action", function() {
+    if (this.isEditing) {
+      return "pencil-alt";
+    } else if (this.action === CREATE_TOPIC) {
+      return "plus";
+    } else {
+      return "share";
+    }
+  }),
 
   contentChanged() {
     this.set("seq", this.seq + 1);
@@ -36,6 +52,7 @@ export default DropdownSelectBoxComponent.extend({
 
   didReceiveAttrs() {
     this._super(...arguments);
+    let changeContent = false;
 
     // if we change topic we want to change both snapshots
     if (
@@ -44,18 +61,25 @@ export default DropdownSelectBoxComponent.extend({
     ) {
       _topicSnapshot = this.topic;
       _postSnapshot = this.post;
-      this.contentChanged();
+      changeContent = true;
     }
 
     // if we hit reply on a different post we want to change postSnapshot
     if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
       _postSnapshot = this.post;
+      changeContent = true;
+    }
+
+    if (this.action !== _actionSnapshot) {
+      _actionSnapshot = this.action;
+      changeContent = true;
+    }
+
+    if (changeContent) {
       this.contentChanged();
     }
 
-    if (isEmpty(this.content)) {
-      this.set("selectKit.isHidden", true);
-    }
+    this.set("selectKit.isHidden", isEmpty(this.content));
   },
 
   modifySelection() {
@@ -68,6 +92,7 @@ export default DropdownSelectBoxComponent.extend({
     if (
       this.action !== CREATE_TOPIC &&
       this.action !== CREATE_SHARED_DRAFT &&
+      !this.isEditing &&
       _topicSnapshot
     ) {
       items.push({
@@ -99,7 +124,8 @@ export default DropdownSelectBoxComponent.extend({
 
     if (
       this.siteSettings.enable_personal_messages &&
-      this.action !== PRIVATE_MESSAGE
+      this.action !== PRIVATE_MESSAGE &&
+      !this.isEditing
     ) {
       items.push({
         name: I18n.t(
@@ -114,12 +140,13 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     if (
-      (this.action !== REPLY && _topicSnapshot) ||
-      (this.action === REPLY &&
-        _topicSnapshot &&
-        this.replyOptions.userAvatar &&
-        this.replyOptions.userLink &&
-        this.replyOptions.topicLink)
+      !this.isEditing &&
+      ((this.action !== REPLY && _topicSnapshot) ||
+        (this.action === REPLY &&
+          _topicSnapshot &&
+          this.replyOptions.userAvatar &&
+          this.replyOptions.userLink &&
+          this.replyOptions.topicLink))
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_topic.label"),

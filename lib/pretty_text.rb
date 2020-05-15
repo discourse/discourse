@@ -65,7 +65,7 @@ module PrettyText
   end
 
   def self.create_es6_context
-    ctx = MiniRacer::Context.new(timeout: 25000)
+    ctx = MiniRacer::Context.new(timeout: 25000, ensure_gc_after_idle: 2000)
 
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
@@ -74,6 +74,10 @@ module PrettyText
       ctx.eval('window.console = console;')
     end
     ctx.eval("__PRETTY_TEXT = true")
+
+    PrettyText::Helpers.instance_methods.each do |method|
+      ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
+    end
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
@@ -85,9 +89,6 @@ module PrettyText
     apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
     apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
-    PrettyText::Helpers.instance_methods.each do |method|
-      ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
-    end
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 

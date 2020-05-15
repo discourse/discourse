@@ -10,7 +10,7 @@ class Topic < ActiveRecord::Base
   include LimitedEdit
   extend Forwardable
 
-  # remove line Jan 2021
+  # TODO(2021-01-04): remove
   self.ignored_columns = ["avg_time"]
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
@@ -84,6 +84,8 @@ class Topic < ActiveRecord::Base
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id, extra_sizes: extra_sizes })
     end
 
+    infos.each { |i| i[:url] = UrlHelper.cook_url(i[:url], secure: original.secure?) }
+
     infos.sort_by! { |i| -i[:width] * i[:height] }
   end
 
@@ -102,7 +104,9 @@ class Topic < ActiveRecord::Base
       record.max_width == Topic.share_thumbnail_size[0] &&
         record.max_height == Topic.share_thumbnail_size[1]
     end
-    thumbnail&.optimized_image&.url || image_upload&.url
+
+    raw_url = thumbnail&.optimized_image&.url || image_upload&.url
+    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?)
   end
 
   def featured_users

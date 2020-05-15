@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import TextField from "@ember/component/text-field";
 import discourseComputed from "discourse-common/utils/decorators";
 import { siteDir, isRTL, isLTR } from "discourse/lib/text-direction";

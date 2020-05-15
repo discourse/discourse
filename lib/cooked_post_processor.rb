@@ -216,7 +216,11 @@ class CookedPostProcessor
     # minus images inside quotes
     @doc.css(".quote img") -
     # minus onebox site icons
-    @doc.css("img.site-icon")
+    @doc.css("img.site-icon") -
+    # minus onebox avatars
+    @doc.css("img.onebox-avatar") -
+    # minus small onebox images (large images are .aspect-image-full-size)
+    @doc.css(".onebox .aspect-image img")
   end
 
   def oneboxed_images

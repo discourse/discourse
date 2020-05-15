@@ -1,3 +1,4 @@
+import I18n from "I18n";
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
 }

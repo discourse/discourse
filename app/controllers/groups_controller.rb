@@ -15,6 +15,7 @@ class GroupsController < ApplicationController
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
   skip_before_action :check_xhr, only: [:show]
+  after_action :add_noindex_header
 
   TYPE_FILTERS = {
     my: Proc.new { |groups, user|
@@ -208,7 +209,11 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > 1000
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
-    dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
+    dir = (params[:asc] && params[:asc].present?) ? 'ASC' : 'DESC'
+    if params[:desc]
+      Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true)
+      dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
+    end
     order = ""
 
     if params[:requesters]
@@ -541,7 +546,7 @@ class GroupsController < ApplicationController
             :publish_read_state
           ])
 
-          custom_fields = Group.editable_group_custom_fields
+          custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
           default_params << { custom_fields: custom_fields } unless custom_fields.blank?
         end
 

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { computed } from "@ember/object";
 import { setting } from "discourse/lib/computed";
@@ -11,7 +12,8 @@ export default DropdownSelectBoxComponent.extend({
     icon: "bars",
     showFullTitle: false,
     autoFilterable: false,
-    filterable: false
+    filterable: false,
+    none: "select_kit.components.categories_admin_dropdown.title"
   },
 
   content: computed(function() {

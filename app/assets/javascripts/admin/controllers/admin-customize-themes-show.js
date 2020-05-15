@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { makeArray } from "discourse-common/lib/helpers";
 import {
   empty,

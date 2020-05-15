@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { readOnly } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import ComboBoxComponent from "select-kit/components/combo-box";
@@ -137,7 +138,7 @@ export default ComboBoxComponent.extend({
 
   search(filter) {
     if (filter) {
-      let results = Discourse.Category.search(filter);
+      let results = Category.search(filter);
       results = this._filterUncategorized(results).sort((a, b) => {
         if (a.parent_category_id && !b.parent_category_id) {
           return 1;

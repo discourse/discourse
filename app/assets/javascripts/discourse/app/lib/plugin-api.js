@@ -48,13 +48,14 @@ import {
   addComposerUploadMarkdownResolver
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addExtraIconRenderer } from "discourse/helpers/category-link";
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.43";
+const PLUGIN_API_VERSION = "0.10.0";
 
 class PluginApi {
   constructor(version, container) {
@@ -267,6 +268,7 @@ class PluginApi {
    *   className   (optional) a css class to apply to the icon
    *   url         (optional) where to link the icon
    *   title       (optional) the tooltip title for the icon on hover
+   *   text        (optional) text to display alongside the emoji or icon
    *
    * ```
    * api.addPosterIcon((cfs, attrs) => {
@@ -940,6 +942,21 @@ class PluginApi {
   }
 
   /**
+   * Adds a field to topic edit serializer
+   *
+   * Example:
+   *
+   * api.serializeToTopic('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeToTopic('field_name');
+   *
+   */
+  serializeToTopic(fieldName, property) {
+    Composer.serializeToTopic(fieldName, property);
+  }
+
+  /**
    * Adds a field to draft serializer
    *
    * Example:
@@ -952,6 +969,36 @@ class PluginApi {
    */
   serializeToDraft(fieldName, property) {
     Composer.serializeToDraft(fieldName, property);
+  }
+
+  /**
+   * Adds a field to composer create serializer
+   *
+   * Example:
+   *
+   * api.serializeOnCreate('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeOnCreate('field_name');
+   *
+   */
+  serializeOnCreate(fieldName, property) {
+    Composer.serializeOnCreate(fieldName, property);
+  }
+
+  /**
+   * Adds a field to composer update serializer
+   *
+   * Example:
+   *
+   * api.serializeOnUpdate('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeOnUpdate('field_name');
+   *
+   */
+  serializeOnUpdate(fieldName, property) {
+    Composer.serializeOnUpdate(fieldName, property);
   }
 
   /**
@@ -1063,6 +1110,22 @@ class PluginApi {
    **/
   decorateTopicTitle(callback) {
     addTopicTitleDecorator(callback);
+  }
+
+  /**
+   * Allows adding icons to the category-link html
+   *
+   * ```
+   * api.addCategoryLinkIcon((category) => {
+   *  if (category.someProperty) {
+        return "eye"
+      }
+   * });
+   * ```
+   *
+   **/
+  addCategoryLinkIcon(renderer) {
+    addExtraIconRenderer(renderer);
   }
 }
 

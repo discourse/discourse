@@ -21,13 +21,13 @@ describe Draft do
         random_key: "random"
       }
 
-      Draft.set(user, "xyz", 0, draft.to_json)
+      seq = Draft.set(user, "xyz", 0, draft.to_json)
       draft["reply"] = "test" * 100
 
       half_grace = (SiteSetting.editing_grace_period / 2 + 1).seconds
 
       freeze_time half_grace.from_now
-      Draft.set(user, "xyz", 0, draft.to_json)
+      seq = Draft.set(user, "xyz", seq, draft.to_json)
 
       draft_post = BackupDraftPost.find_by(user_id: user.id, key: "xyz").post
 
@@ -37,7 +37,7 @@ describe Draft do
 
       # this should trigger a post revision as 10 minutes have passed
       draft["reply"] = "hello"
-      Draft.set(user, "xyz", 0, draft.to_json)
+      Draft.set(user, "xyz", seq, draft.to_json)
 
       draft_topic = BackupDraftTopic.find_by(user_id: user.id)
       expect(draft_topic.topic.posts_count).to eq(2)
@@ -58,9 +58,16 @@ describe Draft do
   end
 
   it "should overwrite draft data correctly" do
-    Draft.set(user, "test", 0, "data")
-    Draft.set(user, "test", 0, "new data")
-    expect(Draft.get(user, "test", 0)).to eq "new data"
+    seq = Draft.set(user, "test", 0, "data")
+    seq = Draft.set(user, "test", seq, "new data")
+    expect(Draft.get(user, "test", seq)).to eq "new data"
+  end
+
+  it "should increase the sequence on every save" do
+    seq = Draft.set(user, "test", 0, "data")
+    expect(seq).to eq(0)
+    seq = Draft.set(user, "test", 0, "data")
+    expect(seq).to eq(1)
   end
 
   it "should clear drafts on request" do
@@ -227,7 +234,7 @@ describe Draft do
       expect(draft_seq).to eq(1)
 
       draft_seq = Draft.set(user, 'new_topic', 1, 'hello world', _owner = 'HIJKL')
-      expect(draft_seq).to eq(1)
+      expect(draft_seq).to eq(2)
     end
 
     it 'can correctly preload drafts' do

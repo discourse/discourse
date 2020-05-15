@@ -32,6 +32,7 @@ module Email
     class UnsubscribeNotAllowed        < ProcessingError; end
     class EmailNotAllowed              < ProcessingError; end
     class OldDestinationError          < ProcessingError; end
+    class ReplyToDigestError           < ProcessingError; end
 
     attr_reader :incoming_email
     attr_reader :raw_email
@@ -190,6 +191,7 @@ module Email
           end
         end
 
+        raise ReplyToDigestError if EmailLog.where(email_type: "digest", message_id: @mail.in_reply_to).exists?
         raise BadDestinationAddress
       end
     end

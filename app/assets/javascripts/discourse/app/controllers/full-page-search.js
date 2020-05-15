@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";

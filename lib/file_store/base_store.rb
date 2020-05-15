@@ -77,7 +77,7 @@ module FileStore
     end
 
     def download(upload)
-      DistributedMutex.synchronize("download_#{upload.sha1}") do
+      DistributedMutex.synchronize("download_#{upload.sha1}", validity: 3.minutes) do
         filename = "#{upload.sha1}#{File.extname(upload.original_filename)}"
         file = get_from_cache(filename)
 

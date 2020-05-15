@@ -1,3 +1,4 @@
+import I18n from "I18n";
 /*jshint maxlen:10000000 */
 export default {
   "/t/280/1.json": {

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { avatarImg } from "discourse/widgets/post";
 import { dateNode } from "discourse/helpers/node";
 import RawHtml from "discourse/widgets/raw-html";

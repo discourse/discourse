@@ -227,7 +227,6 @@ def update_user_stats
 
   # TODO: topic_count is counting all topics you replied in as if you started the topic.
   # TODO: post_count is counting first posts.
-  # TODO: topic_reply_count is never used, and is counting PMs here.
   DB.exec <<-SQL
     WITH X AS (
       SELECT p.user_id
@@ -235,20 +234,6 @@ def update_user_stats
            , COUNT(DISTINCT p.topic_id) topics
            , MIN(p.created_at) min_created_at
            , COALESCE(COUNT(DISTINCT DATE(p.created_at)), 0) days
-           , COALESCE((
-              SELECT COUNT(*)
-                FROM topics
-               WHERE id IN (
-                SELECT topic_id
-                  FROM posts p2
-                  JOIN topics t2 ON t2.id = p2.topic_id
-                 WHERE p2.deleted_at IS NULL
-                   AND p2.post_type = 1
-                   AND NOT COALESCE(p2.hidden, 't')
-                   AND p2.user_id <> t2.user_id
-                   AND p2.user_id = p.user_id
-                )
-              ), 0) topic_replies
         FROM posts p
         JOIN topics t ON t.id = p.topic_id
        WHERE p.deleted_at IS NULL
@@ -268,7 +253,6 @@ def update_user_stats
          , topics_entered = X.topics
          , first_post_created_at = X.min_created_at
          , days_visited = X.days
-         , topic_reply_count = X.topic_replies
       FROM X
      WHERE user_stats.user_id = X.user_id
        AND (post_count <> X.posts
@@ -278,7 +262,7 @@ def update_user_stats
          OR topics_entered <> X.topics
          OR COALESCE(first_post_created_at, '1970-01-01') <> X.min_created_at
          OR days_visited <> X.days
-         OR topic_reply_count <> X.topic_replies)
+         )
   SQL
 end
 

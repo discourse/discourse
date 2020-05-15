@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { next } from "@ember/runloop";
 import { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";

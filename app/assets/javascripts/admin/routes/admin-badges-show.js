@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";

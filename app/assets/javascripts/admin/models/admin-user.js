@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { filter, or, gt, lt, not } from "@ember/object/computed";
 import { iconHTML } from "discourse-common/lib/icon-library";

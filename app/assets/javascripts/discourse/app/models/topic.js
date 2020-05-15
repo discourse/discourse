@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { not, notEmpty, equal, and, or } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
@@ -234,16 +235,6 @@ const Topic = RestModel.extend({
   @observes("category_id")
   _categoryIdChanged() {
     this.set("category", Category.findById(this.category_id));
-  },
-
-  @observes("categoryName")
-  _categoryNameChanged() {
-    const categoryName = this.categoryName;
-    let category;
-    if (categoryName) {
-      category = this.site.get("categories").findBy("name", categoryName);
-    }
-    this.set("category", category);
   },
 
   categoryClass: fmt("category.fullSlug", "category-%@"),

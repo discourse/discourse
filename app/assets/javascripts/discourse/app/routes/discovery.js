@@ -13,14 +13,7 @@ export default DiscourseRoute.extend(OpenComposer, {
   },
 
   beforeModel(transition) {
-    // the new bookmark list is radically different to this topic-based one,
-    // including being able to show links to multiple posts to the same topic
-    // and being based on a different model. better to just redirect
     const url = transition.intent.url;
-    if (url === "/bookmarks") {
-      this.transitionTo("userActivity.bookmarks", this.currentUser);
-    }
-
     if (
       (url === "/" || url === "/latest" || url === "/categories") &&
       transition.targetName.indexOf("discovery.top") === -1 &&

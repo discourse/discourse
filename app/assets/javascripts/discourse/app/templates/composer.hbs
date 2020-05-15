@@ -185,6 +185,7 @@
                 </span>
               {{/if}}
             </div>
+            {{plugin-outlet name="composer-after-save-or-cancel" connectorTagName="" args=(hash model=model)}}
           </div>
 
           {{#if site.mobileView}}

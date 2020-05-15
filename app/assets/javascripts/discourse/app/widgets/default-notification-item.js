@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import RawHtml from "discourse/widgets/raw-html";

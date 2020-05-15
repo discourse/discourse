@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { allLevels, buttonDetails } from "discourse/lib/notification-levels";
 import { computed, setProperties } from "@ember/object";
@@ -22,10 +23,12 @@ export default DropdownSelectBoxComponent.extend({
   modifySelection(content) {
     content = content || {};
     const { i18nPrefix, i18nPostfix } = this.selectKit.options;
+    const title = I18n.t(
+      `${i18nPrefix}.${this.buttonForValue.key}${i18nPostfix}.title`
+    );
     setProperties(content, {
-      label: I18n.t(
-        `${i18nPrefix}.${this.buttonForValue.key}${i18nPostfix}.title`
-      ),
+      title,
+      label: title,
       icon: this.buttonForValue.icon
     });
     return content;

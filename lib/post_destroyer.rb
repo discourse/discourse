@@ -350,11 +350,6 @@ class PostDestroyer
       author.user_stat.topic_count -= 1 if @post.is_first_post?
     end
 
-    # We don't count replies to your own topics in topic_reply_count
-    if @topic && author.id != @topic.user_id
-      author.user_stat.update_topic_reply_count
-    end
-
     author.user_stat.save!
 
     if @post.created_at == author.last_posted_at

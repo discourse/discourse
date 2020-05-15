@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { or, and } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";

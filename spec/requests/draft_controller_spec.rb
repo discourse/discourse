@@ -22,7 +22,7 @@ describe DraftController do
   end
 
   it "returns 404 when the key is missing" do
-    user = sign_in(Fabricate(:user))
+    _user = sign_in(Fabricate(:user))
     post "/draft.json", params: { data: { my: "data" }.to_json, sequence: 0 }
     expect(response.status).to eq(404)
   end
@@ -135,18 +135,18 @@ describe DraftController do
 
     expect(response.status).to eq(200)
     json = response.parsed_body
-    expect(json["draft_sequence"]).to eq(1)
+    expect(json["draft_sequence"]).to eq(2)
 
     post "/draft.json", params: {
       draft_key: "abc",
-      sequence: 1,
+      sequence: 2,
       data: { c: "test" }.to_json,
       owner: "abc"
     }
 
     expect(response.status).to eq(200)
     json = response.parsed_body
-    expect(json["draft_sequence"]).to eq(2)
+    expect(json["draft_sequence"]).to eq(3)
   end
 
   it 'raises an error for out-of-sequence draft setting' do

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";

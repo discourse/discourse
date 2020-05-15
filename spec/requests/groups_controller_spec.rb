@@ -364,6 +364,7 @@ describe GroupsController do
 
       expect(body['group']['id']).to eq(group.id)
       expect(body['extras']["visible_group_names"]).to eq([group.name])
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
     context 'as an admin' do
@@ -488,7 +489,7 @@ describe GroupsController do
       4.times { group.add(Fabricate(:user)) }
       usernames = group.users.map { |m| m.username }.sort
 
-      get "/groups/#{group.name}/members.json", params: { limit: 3 }
+      get "/groups/#{group.name}/members.json", params: { limit: 3, asc: true }
 
       expect(response.status).to eq(200)
 
@@ -496,7 +497,7 @@ describe GroupsController do
 
       expect(members.map { |m| m['username'] }).to eq(usernames[0..2])
 
-      get "/groups/#{group.name}/members.json", params: { limit: 3, offset: 3 }
+      get "/groups/#{group.name}/members.json", params: { limit: 3, offset: 3, asc: true }
 
       expect(response.status).to eq(200)
 
@@ -504,7 +505,7 @@ describe GroupsController do
 
       expect(members.map { |m| m['username'] }).to eq(usernames[3..5])
 
-      get "/groups/#{group.name}/members.json", params: { order: 'added_at', desc: true }
+      get "/groups/#{group.name}/members.json", params: { order: 'added_at' }
       members = response.parsed_body["members"]
 
       expect(members.last['added_at']).to eq(first_user.created_at.as_json)
@@ -619,7 +620,7 @@ describe GroupsController do
       end
 
       after do
-        Group.plugin_editable_group_custom_fields.clear
+        DiscoursePluginRegistry.reset!
       end
 
       it "only updates allowed user fields" do
@@ -633,7 +634,7 @@ describe GroupsController do
       end
 
       it "is secure when there are no registered editable fields" do
-        Group.plugin_editable_group_custom_fields.clear
+        DiscoursePluginRegistry.reset!
         put "/groups/#{@group.id}.json", params: { group: { custom_fields: { test: :hello1, test2: :hello2 } } }
 
         @group.reload
@@ -850,7 +851,7 @@ describe GroupsController do
 
     it "should allow members to be sorted by" do
       get "/groups/#{group.name}/members.json", params: {
-        order: 'last_seen_at', desc: true
+        order: 'last_seen_at'
       }
 
       expect(response.status).to eq(200)
@@ -859,7 +860,7 @@ describe GroupsController do
 
       expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
 
-      get "/groups/#{group.name}/members.json", params: { order: 'last_seen_at' }
+      get "/groups/#{group.name}/members.json", params: { order: 'last_seen_at', asc: true }
 
       expect(response.status).to eq(200)
 
@@ -868,7 +869,7 @@ describe GroupsController do
       expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id, user3.id])
 
       get "/groups/#{group.name}/members.json", params: {
-        order: 'last_posted_at', desc: true
+        order: 'last_posted_at'
       }
 
       expect(response.status).to eq(200)

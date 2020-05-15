@@ -253,28 +253,6 @@ describe PostCreator do
         creator_with_image_sizes.create
       end
 
-      it 'increases topic response counts' do
-        first_post = creator.create
-
-        # ensure topic user is correct
-        topic_user = first_post.user.topic_users.find_by(topic_id: first_post.topic_id)
-        expect(topic_user).to be_present
-        expect(topic_user).to be_posted
-        expect(topic_user.last_read_post_number).to eq(first_post.post_number)
-        expect(topic_user.highest_seen_post_number).to eq(first_post.post_number)
-
-        user2 = Fabricate(:coding_horror)
-        expect(user2.user_stat.topic_reply_count).to eq(0)
-
-        expect(first_post.user.user_stat.reload.topic_reply_count).to eq(0)
-
-        PostCreator.new(user2, topic_id: first_post.topic_id, raw: "this is my test post 123").create
-
-        expect(first_post.user.user_stat.reload.topic_reply_count).to eq(0)
-
-        expect(user2.user_stat.reload.topic_reply_count).to eq(1)
-      end
-
       it 'sets topic excerpt if first post, but not second post' do
         first_post = creator.create
         topic = first_post.topic.reload
@@ -301,9 +279,8 @@ describe PostCreator do
       end
 
       it 'creates post stats' do
-
-        Draft.set(user, 'new_topic', 0, "test")
-        Draft.set(user, 'new_topic', 0, "test1")
+        Draft.set(user, Draft::NEW_TOPIC, 0, "test")
+        Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
 
         begin
           PostCreator.track_post_stats = true

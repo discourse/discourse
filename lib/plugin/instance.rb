@@ -146,27 +146,23 @@ class Plugin::Instance
   end
 
   def whitelist_staff_user_custom_field(field)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
+    DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
   end
 
   def whitelist_public_user_custom_field(field)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_public_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
+    DiscoursePluginRegistry.register_public_user_custom_field(field, self)
   end
 
   def register_editable_user_custom_field(field, staff_only: false)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_editable_user_custom_field(field, plugin, staff_only: staff_only) # plugin.enabled? is checked at runtime
+    if staff_only
+      DiscoursePluginRegistry.register_staff_editable_user_custom_field(field, self)
+    else
+      DiscoursePluginRegistry.register_self_editable_user_custom_field(field, self)
     end
   end
 
   def register_editable_group_custom_field(field)
-    reloadable_patch do |plugin|
-      ::Group.register_plugin_editable_group_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
+    DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
   def custom_avatar_column(column)
@@ -399,6 +395,15 @@ class Plugin::Instance
     SeedFu.fixture_paths.concat(paths)
   end
 
+  # Applies to all sites in a multisite environment. Block is not called if
+  # plugin is not enabled. Block is called with `user_id` and has to return a
+  # boolean based on whether the given `user_id` should be ignored.
+  def register_ignore_draft_sequence_callback(&block)
+    reloadable_patch do |plugin|
+      ::DraftSequence.plugin_ignore_draft_sequence_callbacks[plugin] = block
+    end
+  end
+
   def listen_for(event_name)
     return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
@@ -437,7 +442,6 @@ class Plugin::Instance
   end
 
   def register_custom_html(hash)
-    DiscoursePluginRegistry.custom_html ||= {}
     DiscoursePluginRegistry.custom_html.merge!(hash)
   end
 

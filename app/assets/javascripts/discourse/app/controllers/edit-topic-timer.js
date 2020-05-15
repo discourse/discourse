@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject, { setProperties } from "@ember/object";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
 

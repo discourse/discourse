@@ -11,10 +11,9 @@
 //= require fake_xml_http_request
 //= require route-recognizer/dist/route-recognizer
 //= require pretender/pretender
-//= require discourse-loader
-
 //= require locales/i18n
 //= require locales/en_US
+//= require discourse-loader
 
 // Stuff we need to load first
 //= require vendor

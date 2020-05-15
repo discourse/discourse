@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import KeyValueStore from "discourse/lib/key-value-store";

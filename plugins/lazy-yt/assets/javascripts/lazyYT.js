@@ -87,6 +87,8 @@
     innerHtml.push("</div>"); // .html5-title-text-wrapper
     innerHtml.push("</div>"); // end of Video title .html5-info-bar
 
+    var prefetchedThumbnail = $el[0].querySelector(".ytp-thumbnail-image");
+
     $el
       .css({
         "padding-bottom": padding_bottom
@@ -108,17 +110,27 @@
       thumb_img = "default.jpg";
     }
 
+    if (prefetchedThumbnail) {
+      $el.find(".ytp-thumbnail").append(prefetchedThumbnail);
+    } else {
+      // Fallback for old posts which were baked before the lazy-yt onebox prefetched a thumbnail
+      $el
+        .find(".ytp-thumbnail")
+        .append(
+          $(
+            [
+              '<img class="ytp-thumbnail-image" src="https://img.youtube.com/vi/',
+              id,
+              "/",
+              thumb_img,
+              '">'
+            ].join("")
+          )
+        );
+    }
+
     $thumb = $el
       .find(".ytp-thumbnail")
-      .css({
-        "background-image": [
-          "url(https://img.youtube.com/vi/",
-          id,
-          "/",
-          thumb_img,
-          ")"
-        ].join("")
-      })
       .addClass("lazyYT-image-loaded")
       .on("click", function(e) {
         e.preventDefault();

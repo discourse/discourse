@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
