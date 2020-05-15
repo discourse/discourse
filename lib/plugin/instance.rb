@@ -146,27 +146,23 @@ class Plugin::Instance
   end
 
   def whitelist_staff_user_custom_field(field)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
+    DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
   end
 
   def whitelist_public_user_custom_field(field)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_public_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
+    DiscoursePluginRegistry.register_public_user_custom_field(field, self)
   end
 
   def register_editable_user_custom_field(field, staff_only: false)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_editable_user_custom_field(field, plugin, staff_only: staff_only) # plugin.enabled? is checked at runtime
+    if staff_only
+      DiscoursePluginRegistry.register_staff_editable_user_custom_field(field, self)
+    else
+      DiscoursePluginRegistry.register_self_editable_user_custom_field(field, self)
     end
   end
 
   def register_editable_group_custom_field(field)
-    reloadable_patch do |plugin|
-      ::Group.register_plugin_editable_group_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
+    DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
   def custom_avatar_column(column)

@@ -177,7 +177,7 @@ class Admin::GroupsController < Admin::AdminController
       :usernames,
       :publish_read_state
     ]
-    custom_fields = Group.editable_group_custom_fields
+    custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
     permitted << { custom_fields: custom_fields } unless custom_fields.blank?
 
     params.require(:group).permit(permitted)
