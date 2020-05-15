@@ -5,6 +5,7 @@ require 'rails_helper'
 describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
+  fab!(:user) { Fabricate(:user) }
 
   context 'index' do
 
@@ -51,6 +52,26 @@ describe CategoriesController do
       get "/category/something"
       expect(response.status).to eq(301)
       expect(response.body).to include(category.slug)
+    end
+
+    it 'returns the right response for a normal user' do
+      sign_in(user)
+
+      Draft.set(user, Draft::NEW_TOPIC, 0, 'hello')
+
+      get "/categories.json"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      expect(category_list["categories"].map { |c| c["id"] }).to contain_exactly(
+        SiteSetting.get(:uncategorized_category_id), category.id
+      )
+
+      expect(category_list["draft_sequence"]).to eq(0)
+      expect(category_list["draft_key"]).to eq(Draft::NEW_TOPIC)
+      expect(category_list["draft"]).to eq('hello')
     end
   end
 
@@ -505,8 +526,19 @@ describe CategoriesController do
 
       get '/categories_and_latest.json'
       json = response.parsed_body
-      expect(json['category_list']['categories'].size).to eq(2) # 'Uncategorized' and category
-      expect(json['topic_list']['topics'].size).to eq(5)
+
+      category_list = json['category_list']
+      topic_list = json['topic_list']
+
+      expect(category_list['categories'].size).to eq(2) # 'Uncategorized' and category
+      expect(category_list['draft_key']).to eq(Draft::NEW_TOPIC)
+      expect(category_list['draft_sequence']).to eq(nil)
+      expect(category_list['draft']).to eq(nil)
+
+      expect(topic_list['topics'].size).to eq(5)
+      expect(topic_list['draft_key']).to eq(Draft::NEW_TOPIC)
+      expect(topic_list['draft_sequence']).to eq(nil)
+      expect(topic_list['draft']).to eq(nil)
 
       Fabricate(:category, parent_category: category)
 
