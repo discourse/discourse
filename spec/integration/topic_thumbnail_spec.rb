@@ -31,7 +31,7 @@ describe "Topic Thumbnails" do
       expect(thumbnails[0]["max_height"]).to eq(nil)
       expect(thumbnails[0]["width"]).to eq(image.width)
       expect(thumbnails[0]["height"]).to eq(image.height)
-      expect(thumbnails[0]["url"]).to eq(image.url)
+      expect(thumbnails[0]["url"]).to end_with(image.url)
 
       # Run the job
       args = Jobs::GenerateTopicThumbnails.jobs.last["args"].first
