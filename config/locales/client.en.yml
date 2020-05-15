@@ -336,6 +336,9 @@ en:
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
         existing_reminder: "You have a reminder set for this bookmark which will be sent"
+    
+    copy_codeblock:
+      copied: "copied!"
 
     drafts:
       resume: "Resume"
