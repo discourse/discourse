@@ -1,17 +1,16 @@
-import { computed, get } from "@ember/object";
+import { computed, get, action } from "@ember/object";
 import Component from "@ember/component";
 import { makeArray } from "discourse-common/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {
+  tagName: "",
   layoutName: "select-kit/templates/components/selected-name",
-  classNames: ["select-kit-selected-name", "selected-name", "choice"],
   name: null,
   value: null,
-  tabindex: 0,
-  attributeBindings: ["title", "value:data-value", "name:data-name"],
 
-  click() {
+  @action
+  onSelectedNameClick() {
     if (this.selectKit.options.clearOnClick) {
       this.selectKit.deselect(this.item);
       return false;

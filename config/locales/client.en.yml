@@ -1670,6 +1670,9 @@ en:
         one: "Select at least {{count}} item."
         other: "Select at least {{count}} items."
       invalid_selection_length: "Selection must be at least {{count}} characters."
+      components:
+        categories_admin_dropdown:
+          title: "Categories admin dropdown"
 
     date_time_picker:
       from: From
