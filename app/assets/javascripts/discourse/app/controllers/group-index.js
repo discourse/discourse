@@ -8,10 +8,10 @@ import { action } from "@ember/object";
 export default Controller.extend({
   application: controller(),
 
-  queryParams: ["order", "desc", "filter"],
+  queryParams: ["order", "asc", "filter"],
 
   order: "",
-  desc: null,
+  asc: true,
   filter: null,
   filterInput: null,
 
@@ -24,7 +24,7 @@ export default Controller.extend({
     this.set("filter", this.filterInput);
   }, 500),
 
-  @observes("order", "desc", "filter")
+  @observes("order", "asc", "filter")
   _filtersChanged() {
     this.findMembers(true);
   },
@@ -49,9 +49,9 @@ export default Controller.extend({
     });
   },
 
-  @discourseComputed("order", "desc", "filter")
-  memberParams(order, desc, filter) {
-    return { order, desc, filter };
+  @discourseComputed("order", "asc", "filter")
+  memberParams(order, asc, filter) {
+    return { order, asc, filter };
   },
 
   hasMembers: gt("model.members.length", 0),

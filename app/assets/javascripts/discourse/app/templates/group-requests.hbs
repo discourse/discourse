@@ -12,8 +12,8 @@
     {{#load-more selector=".group-members tr" action=(action "loadMore")}}
       <table class="group-members">
         <thead>
-          {{group-index-toggle order=order desc=desc field="username_lower" i18nKey="username"}}
-          {{group-index-toggle order=order desc=desc field="requested_at" i18nKey="groups.member_requested"}}
+          {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username"}}
+          {{table-header-toggle order=order asc=asc field="requested_at" labelKey="groups.member_requested"}}
           <th>{{i18n "groups.requests.reason"}}</th>
           <th></th>
           <th></th>

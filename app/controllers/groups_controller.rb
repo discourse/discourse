@@ -209,7 +209,11 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > 1000
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
-    dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
+    dir = (params[:asc] && params[:asc].present?) ? 'ASC' : 'DESC'
+    if params[:desc]
+      Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true)
+      dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
+    end
     order = ""
 
     if params[:requesters]
