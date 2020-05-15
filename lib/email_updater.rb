@@ -14,10 +14,6 @@ class EmailUpdater
     User.human_attribute_name(name, options)
   end
 
-  def changing_staff_user_email?
-    @user.staff?
-  end
-
   def change_to(email_input, add: false)
     @guardian.ensure_can_edit_email!(@user)
 
@@ -59,7 +55,7 @@ class EmailUpdater
         args.delete(:old_email) if add
         @user.email_change_requests.create!(args)
 
-        if initiating_admin_changing_another_user_email? && !changing_staff_user_email?
+        if initiating_admin_changing_another_user_email? && !@user.staff?
           auto_confirm_and_send_password_reset(email_token)
           return
         end
@@ -141,8 +137,7 @@ class EmailUpdater
   end
 
   def prepare_change_request(args)
-    # Staff must validate old email address before performing an operation
-    if changing_staff_user_email?
+    if @user.staff?
       args[:change_state] = EmailChangeRequest.states[:authorizing_old]
       email_token = @user.email_tokens.create!(email: args[:old_email])
       args[:old_email_token] = email_token
