@@ -3,7 +3,7 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Click Track", {});
 
-QUnit.test("Do not track mentions", async assert => {
+QUnit.skip("Do not track mentions", async assert => {
   pretender.post("/clicks/track", () => assert.ok(false));
 
   await visit("/t/internationalization-localization/280");
