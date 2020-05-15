@@ -37,7 +37,7 @@ export default DropdownSelectBoxComponent.extend({
   iconForComposerAction: computed("action", function() {
     if (this.isEditing) {
       return "pencil-alt";
-    } else if (this.action == CREATE_TOPIC) {
+    } else if (this.action === CREATE_TOPIC) {
       return "plus";
     } else {
       return "share";
