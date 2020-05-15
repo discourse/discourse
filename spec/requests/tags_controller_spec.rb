@@ -125,8 +125,18 @@ describe TagsController do
     fab!(:tag) { Fabricate(:tag, name: 'test') }
 
     it "should return the right response" do
-      get "/tag/test"
+      get "/tag/test.json"
+
       expect(response.status).to eq(200)
+
+      json = response.parsed_body
+
+      topic_list = json["topic_list"]
+
+      expect(topic_list["tags"].map { |t| t["id"] }).to contain_exactly(tag.id)
+      expect(topic_list["draft"]).to eq(nil)
+      expect(topic_list["draft_sequence"]).to eq(nil)
+      expect(topic_list["draft_key"]).to eq(Draft::NEW_TOPIC)
     end
 
     it "should handle invalid tags" do
