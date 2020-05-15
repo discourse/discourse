@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
+import { later } from "@ember/runloop";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
@@ -10,6 +11,12 @@ export default buildCategoryPanel("general", {
     this._super(...arguments);
 
     this.foregroundColors = ["FFFFFF", "000000"];
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    this._focusCategoryName();
   },
 
   canSelectParentCategory: not("category.isUncategorizedCategory"),
@@ -101,5 +108,14 @@ export default buildCategoryPanel("general", {
       window.open(this.get("category.topic_url"), "_blank").focus();
       return false;
     }
+  },
+
+  _focusCategoryName() {
+    later(() => {
+      if (this.element && !this.isDestroying && !this.isDestroyed) {
+        const categoryName = this.element.querySelector(".category-name");
+        categoryName && categoryName.focus();
+      }
+    }, 25);
   }
 });
