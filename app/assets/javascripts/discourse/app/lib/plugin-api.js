@@ -55,7 +55,7 @@ import { on } from "@ember/object/evented";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.9.0";
+const PLUGIN_API_VERSION = "0.10.0";
 
 class PluginApi {
   constructor(version, container) {
@@ -939,6 +939,21 @@ class PluginApi {
    */
   composerBeforeSave(method) {
     Composer.reopen({ beforeSave: method });
+  }
+
+  /**
+   * Adds a field to topic edit serializer
+   *
+   * Example:
+   *
+   * api.serializeToTopic('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeToTopic('field_name');
+   *
+   */
+  serializeToTopic(fieldName, property) {
+    Composer.serializeToTopic(fieldName, property);
   }
 
   /**
