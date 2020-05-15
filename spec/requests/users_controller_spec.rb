@@ -1851,8 +1851,7 @@ describe UsersController do
             end
 
             after do
-              User.plugin_editable_user_custom_fields.clear
-              User.plugin_staff_editable_user_custom_fields.clear
+              DiscoursePluginRegistry.reset!
             end
 
             it "only updates allowed user fields" do
@@ -1903,8 +1902,7 @@ describe UsersController do
             end
 
             it "is secure when there are no registered editable fields" do
-              User.plugin_editable_user_custom_fields.clear
-              User.plugin_staff_editable_user_custom_fields.clear
+              DiscoursePluginRegistry.reset!
               put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2, test3: :hello3 } }
               expect(response.status).to eq(200)
               expect(user.custom_fields["test1"]).to be_blank

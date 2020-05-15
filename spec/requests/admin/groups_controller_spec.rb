@@ -46,7 +46,7 @@ RSpec.describe Admin::GroupsController do
       end
 
       after do
-        Group.plugin_editable_group_custom_fields.clear
+        DiscoursePluginRegistry.reset!
       end
 
       it "only updates allowed user fields" do
@@ -63,7 +63,7 @@ RSpec.describe Admin::GroupsController do
       end
 
       it "is secure when there are no registered editable fields" do
-        Group.plugin_editable_group_custom_fields.clear
+        DiscoursePluginRegistry.reset!
         params = group_params
         params[:group].merge!(custom_fields: { test: :hello1, test2: :hello2 })
 

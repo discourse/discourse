@@ -545,7 +545,7 @@ class GroupsController < ApplicationController
             :publish_read_state
           ])
 
-          custom_fields = Group.editable_group_custom_fields
+          custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
           default_params << { custom_fields: custom_fields } unless custom_fields.blank?
         end
 

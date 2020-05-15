@@ -257,10 +257,10 @@ describe UserSerializer do
       end
 
       after do
-        User.plugin_public_user_custom_fields.clear
+        DiscoursePluginRegistry.reset!
       end
 
-      it "serializes the fields listed in plugin_public_user_custom_fields" do
+      it "serializes the fields listed in public_user_custom_fields" do
         expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
         expect(json[:custom_fields]['secret_field']).to eq(nil)
       end
