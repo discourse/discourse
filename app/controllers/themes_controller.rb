@@ -12,6 +12,7 @@ class ThemesController < ::ApplicationController
 
     targets = view_context.mobile_view? ? [:mobile, :mobile_theme] : [:desktop, :desktop_theme]
     targets << :admin if guardian.is_staff?
+    targets.append(*Discourse.find_plugin_css_assets(mobile_view: true, desktop_view: true))
 
     object = targets.map do |target|
       Stylesheet::Manager.stylesheet_data(target, theme_ids).map do |hash|
