@@ -54,7 +54,7 @@ describe TopicViewSerializer do
       it 'should return the image url' do
         json = serialize_topic(topic, user)
 
-        expect(json[:image_url]).to eq(image_upload.url)
+        expect(json[:image_url]).to end_with(image_upload.url)
       end
 
       it 'should have thumbnails' do
