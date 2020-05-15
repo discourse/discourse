@@ -155,7 +155,7 @@ describe BackupRestore::DatabaseRestorer do
 
   context "readonly functions" do
     before do
-      Migration::SafeMigrate.stubs(:post_migration_path).returns("spec/fixtures/db/post_migrate")
+      Migration::SafeMigrate.stubs(:post_migration_path).returns("spec/fixtures/db/post_migrate/drop_column")
     end
 
     it "doesn't try to drop function when no functions have been created" do
@@ -164,12 +164,10 @@ describe BackupRestore::DatabaseRestorer do
     end
 
     it "creates and drops all functions when none exist" do
-      Migration::BaseDropper.expects(:create_readonly_function).with(:email_logs, nil)
       Migration::BaseDropper.expects(:create_readonly_function).with(:posts, :via_email)
       Migration::BaseDropper.expects(:create_readonly_function).with(:posts, :raw_email)
       execute_stubbed_restore(stub_readonly_functions: false)
 
-      Migration::BaseDropper.expects(:drop_readonly_function).with(:email_logs, nil)
       Migration::BaseDropper.expects(:drop_readonly_function).with(:posts, :via_email)
       Migration::BaseDropper.expects(:drop_readonly_function).with(:posts, :raw_email)
       subject.clean_up
