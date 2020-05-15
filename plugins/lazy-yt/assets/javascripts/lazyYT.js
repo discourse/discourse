@@ -87,7 +87,7 @@
     innerHtml.push("</div>"); // .html5-title-text-wrapper
     innerHtml.push("</div>"); // end of Video title .html5-info-bar
 
-    const prefetchedThumbnail = $el[0].querySelector(".ytp-thumbnail-image");
+    var prefetchedThumbnail = $el[0].querySelector(".ytp-thumbnail-image");
 
     $el
       .css({
