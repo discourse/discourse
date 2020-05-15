@@ -148,12 +148,18 @@ QUnit.test("reply_as_new_topic without a new_topic draft", async assert => {
 });
 
 QUnit.test("hide component if no content", async assert => {
-  const composerActions = selectKit(".composer-actions");
+  await visit("/");
+  await click("button#create-topic");
 
-  await visit("/u/eviltrout/messages");
-  await click(".new-private-message");
+  const composerActions = selectKit(".composer-actions");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_as_private_message");
 
   assert.ok(composerActions.el().hasClass("is-hidden"));
+
+  await click("button#create-topic");
+  await composerActions.expand();
+  assert.equal(composerActions.rows().length, 2);
 });
 
 QUnit.test("interactions", async assert => {
