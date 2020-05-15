@@ -31,13 +31,11 @@ class CategoriesController < ApplicationController
 
     @category_list = CategoryList.new(guardian, category_options)
     @category_list.draft_key = Draft::NEW_TOPIC
-    if current_user&.human?
-      @category_list.draft_sequence = DraftSequence.current(
-        current_user,
-        Draft::NEW_TOPIC
-      )
-      @category_list.draft = Draft.get(current_user, Draft::NEW_TOPIC, @category_list.draft_sequence)
-    end
+    @category_list.draft_sequence = DraftSequence.current(
+      current_user,
+      Draft::NEW_TOPIC
+    )
+    @category_list.draft = Draft.get(current_user, Draft::NEW_TOPIC, @category_list.draft_sequence) if current_user
 
     if category_options[:is_homepage] && SiteSetting.short_site_description.present?
       @title = "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
