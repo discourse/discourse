@@ -34,12 +34,16 @@ class Migration::SafeMigrate
     private
 
     def is_post_deploy_migration?
+      instance_methods = self.class.instance_methods(false)
+
       method =
-        if self.respond_to?(:up)
+        if instance_methods.include?(:up)
           :up
-        elsif self.respond_to?(:change)
+        elsif instance_methods.include?(:change)
           :change
         end
+
+      return false if !method
 
       self.method(method).source_location.first.include?(
         Discourse::DB_POST_MIGRATE_PATH
