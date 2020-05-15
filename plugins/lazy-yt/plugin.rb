@@ -25,6 +25,9 @@ class Onebox::Engine::YoutubeOnebox
       video_width = (params['width'] && params['width'].to_i <= 695) ? params['width'] : 480 # embed width
       video_height = (params['height'] && params['height'].to_i <= 500) ? params['height'] : 270 # embed height
 
+      og = get_opengraph.data
+      thumbnail_url = og[:image] || "https://img.youtube.com/vi/#{video_id}/hqdefault.jpg"
+
       # Put in the LazyYT div instead of the iframe
       escaped_title = ERB::Util.html_escape(video_title)
 
@@ -36,7 +39,7 @@ class Onebox::Engine::YoutubeOnebox
            data-height="#{video_height}"
            data-parameters="#{embed_params}">
         <a href="https://www.youtube.com/watch?v=#{video_id}" target="_blank">
-          <img src="https://img.youtube.com/vi/#{video_id}/hqdefault.jpg" width="#{video_width}" height="#{video_height}" title="#{escaped_title}">
+          <img class="ytp-thumbnail-image" src="#{thumbnail_url}" width="#{video_width}" height="#{video_height}" title="#{escaped_title}">
         </a>
       </div>
       EOF
