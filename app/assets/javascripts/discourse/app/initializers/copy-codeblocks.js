@@ -86,6 +86,8 @@ export default {
         if (code) {
           clipboardCopy(code.innerText.trim()).then(() => {
             button.classList.add("copied");
+            const state = button.innerHTML;
+            button.innerHTML = I18n.t("copy_codeblock.copied");
 
             const commandId = Ember.guidFor(button);
 
@@ -96,6 +98,7 @@ export default {
 
             _fadeCopyCodeblocksRunners[commandId] = later(() => {
               button.classList.remove("copied");
+              button.innerHTML = state;
               delete _fadeCopyCodeblocksRunners[commandId];
             }, 3000);
           });
