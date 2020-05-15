@@ -282,7 +282,7 @@ module JsLocaleHelper
   def self.with_context
     @mutex.synchronize do
       yield @ctx ||= begin
-        ctx = MiniRacer::Context.new(timeout: 15000)
+        ctx = MiniRacer::Context.new(timeout: 15000, ensure_gc_after_idle: 2000)
         ctx.load("#{Rails.root}/lib/javascripts/messageformat.js")
         ctx
       end
