@@ -31,29 +31,28 @@ class User < ActiveRecord::Base
   has_many :email_logs, dependent: :delete_all
   has_many :incoming_emails, dependent: :delete_all
   has_many :post_timings
-  has_many :topic_allowed_users, dependent: :destroy
+  has_many :topic_allowed_users, dependent: :delete_all
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
-  has_many :email_tokens, dependent: :destroy
-  has_many :user_visits, dependent: :destroy
-  has_many :invites, dependent: :destroy
-  has_many :topic_links, dependent: :destroy
+  has_many :email_tokens, dependent: :delete_all
+  has_many :user_visits, dependent: :delete_all
+  has_many :invites, dependent: :delete_all
+  has_many :topic_links, dependent: :delete_all
   has_many :uploads
   has_many :user_warnings
-  has_many :user_archived_messages, dependent: :destroy
-  has_many :email_change_requests, dependent: :destroy
+  has_many :user_archived_messages, dependent: :delete_all
+  has_many :email_change_requests, dependent: :delete_all
 
-  # see before_destroy
-  has_many :directory_items
-  has_many :user_auth_tokens, dependent: :destroy
-  has_many :user_auth_token_logs, dependent: :destroy
+  has_many :directory_items # see before_destroy
+  has_many :user_auth_tokens, dependent: :delete_all
+  has_many :user_auth_token_logs, dependent: :delete_all
 
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users
-  has_many :group_requests, dependent: :destroy
+  has_many :group_requests, dependent: :delete_all
   has_many :secure_categories, through: :groups, source: :categories
 
-  has_many :user_uploads, dependent: :destroy
-  has_many :user_emails, dependent: :destroy
+  has_many :user_uploads, dependent: :delete_all
+  has_many :user_emails, dependent: :delete_all
 
   has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
 
