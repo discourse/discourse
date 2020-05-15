@@ -16,10 +16,12 @@ import { isEmpty } from "@ember/utils";
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
 let _postSnapshot = null;
+let _actionSnapshot = null;
 
 export function _clearSnapshots() {
   _topicSnapshot = null;
   _postSnapshot = null;
+  _actionSnapshot = null;
 }
 
 export default DropdownSelectBoxComponent.extend({
@@ -50,6 +52,7 @@ export default DropdownSelectBoxComponent.extend({
 
   didReceiveAttrs() {
     this._super(...arguments);
+    let changeContent = false;
 
     // if we change topic we want to change both snapshots
     if (
@@ -58,18 +61,25 @@ export default DropdownSelectBoxComponent.extend({
     ) {
       _topicSnapshot = this.topic;
       _postSnapshot = this.post;
-      this.contentChanged();
+      changeContent = true;
     }
 
     // if we hit reply on a different post we want to change postSnapshot
     if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
       _postSnapshot = this.post;
+      changeContent = true;
+    }
+
+    if (this.action !== _actionSnapshot) {
+      _actionSnapshot = this.action;
+      changeContent = true;
+    }
+
+    if (changeContent) {
       this.contentChanged();
     }
 
-    if (isEmpty(this.content)) {
-      this.set("selectKit.isHidden", true);
-    }
+    this.set("selectKit.isHidden", isEmpty(this.content));
   },
 
   modifySelection() {
