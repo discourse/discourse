@@ -963,6 +963,7 @@ en:
       api_approved: "Approved:"
       api_last_used_at: "Last used at:"
       theme: "Theme"
+      save_to_change_theme: 'Theme will be updated after you click "%{save_text}"'
       home: "Default Home Page"
       staged: "Staged"
 

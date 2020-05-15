@@ -950,8 +950,6 @@ Discourse::Application.routes.draw do
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
-  get "/themes/assets/:ids" => "themes#assets"
-
   unless Rails.env.production?
     get "/qunit" => "qunit#index"
     get "/wizard/qunit" => "wizard#qunit"
