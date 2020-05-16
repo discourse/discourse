@@ -271,7 +271,7 @@ export default Component.extend(
       selectedNameComponent: "selected-name",
       castInteger: false,
       preventsClickPropagation: false,
-      focusAfterOnchange: true
+      focusAfterOnChange: true
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
@@ -430,7 +430,7 @@ export default Component.extend(
             this.selectKit.close();
           }
 
-          if (this.selectKit.options.focusAfterOnchange) {
+          if (this.selectKit.options.focusAfterOnChange) {
             this._safeAfterRender(() => {
               this._focusFilter();
               this.popper && this.popper.update();
