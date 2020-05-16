@@ -482,7 +482,10 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, Post.excerpt_size, strip_links: true, strip_images: true, post: self)
+    strip_links = SiteSetting.post_excerpt_strip_links
+    strip_images = SiteSetting.post_excerpt_strip_images
+    markdown_images = SiteSetting.post_excerpt_markdown_images
+    Post.excerpt(cooked, Post.excerpt_size, strip_links: strip_links, strip_images: strip_images, markdown_images: markdown_images, post: self)
   end
 
   def is_first_post?

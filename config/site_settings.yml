@@ -2007,6 +2007,18 @@ uncategorized:
     default: false
     hidden: true
 
+  post_excerpt_strip_links:
+    default: true
+    hidden: true
+
+  post_excerpt_strip_images:
+    default: true
+    hidden: true
+
+  post_excerpt_markdown_images:
+    default: false
+    hidden: true
+
   max_bulk_invites:
     default: 50000
     hidden: true
