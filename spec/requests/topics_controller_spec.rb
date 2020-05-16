@@ -2709,7 +2709,7 @@ RSpec.describe TopicsController do
         expect(json['duration']).to eq(topic_status_update.duration)
       end
 
-      it 'should be able to remove a topic status update' do
+      it 'should be able to delete a topic status update for delete_replies type' do
         Fabricate(:topic_timer, topic: topic, status_type: TopicTimer.types[:delete_replies])
 
         post "/t/#{topic.id}/timer.json", params: {
