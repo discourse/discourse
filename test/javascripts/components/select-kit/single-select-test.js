@@ -261,7 +261,7 @@ componentTest("prevents propagating click event on header", {
 
 componentTest("focusAfterOnChange", {
   template:
-    "{{d-button class='focus-me'}}{{single-select options=(hash focusAfterOnchange=focusAfterOnchange) value=value content=content onChange=onChange}}",
+    "{{d-button class='focus-me'}}{{single-select options=(hash focusAfterOnChange=focusAfterOnChange) value=value content=content onChange=onChange}}",
 
   beforeEach() {
     this.setProperties({
@@ -275,7 +275,7 @@ componentTest("focusAfterOnChange", {
   },
 
   async test(assert) {
-    this.set("focusAfterOnchange", true);
+    this.set("focusAfterOnChange", true);
 
     await this.subject.expand();
     await this.subject.selectRowByIndex(0);
@@ -285,7 +285,7 @@ componentTest("focusAfterOnChange", {
       "it selects the header"
     );
 
-    this.set("focusAfterOnchange", false);
+    this.set("focusAfterOnChange", false);
 
     await this.subject.expand();
     await this.subject.selectRowByIndex(0);
