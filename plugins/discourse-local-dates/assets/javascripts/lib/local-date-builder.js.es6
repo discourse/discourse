@@ -202,28 +202,40 @@ export default class LocalDateBuilder {
 
     return localDate.format(this.format);
   }
+  
+  _timeFormatString(time, format) {
+	  if (time) {
+		  if (format.indexOf("LTS") >= 0)
+		    return " LTS";
+		  if (format.indexOf("LT") >= 0)
+		    return " LT";
+	  }
+	  return "";
+  }
 
   _calendarFormats(time) {
+    const timeFormat = this._timeFormatString(time, this.format);
     return {
-      sameDay: this._translateCalendarKey(time, "today"),
-      nextDay: this._translateCalendarKey(time, "tomorrow"),
-      lastDay: this._translateCalendarKey(time, "yesterday"),
-      sameElse: "L"
+      sameDay: this._translateCalendarKey(time, "today") + timeFormat,
+      nextDay: this._translateCalendarKey(time, "tomorrow") + timeFormat,
+      lastDay: this._translateCalendarKey(time, "yesterday") + timeFormat,
+      sameElse: "L" + timeFormat
     };
   }
 
   _translateCalendarKey(time, key) {
+    const timeFormat = this._timeFormatString(time, this.format);
     const translated = I18n.t(`discourse_local_dates.relative_dates.${key}`, {
-      time: "LT"
+      time: timeFormat
     });
 
-    if (time) {
+    if (time && timeFormat !== "") {
       return translated
-        .split("LT")
+        .split(timeFormat.trimStart())
         .map(w => `[${w}]`)
-        .join("LT");
+        .join(timeFormat.trimStart());
     } else {
-      return `[${translated.replace(" LT", "")}]`;
+      return `[${translated.replace(timeFormat, "")}]`;
     }
   }
 
