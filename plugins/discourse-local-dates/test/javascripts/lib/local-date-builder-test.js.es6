@@ -74,6 +74,12 @@ QUnit.test("date", assert => {
       { formated: "April 11, 2020 1:00 PM" },
       "it displays the date with time"
     );
+
+    assert.buildsCorrectDate(
+      { date: "2020-04-11T11:00" },
+      { formated: "April 11, 2020 1:00 PM" },
+      "it displays the date with time (alt format)"
+    );
   });
 });
 

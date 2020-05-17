@@ -19,6 +19,9 @@ export default class LocalDateBuilder {
     this.format = params.format || (this.time ? TIME_FORMAT : DATE_FORMAT);
     this.countdown = params.countdown;
     this.localTimezone = localTimezone;
+    if (this.time === undefined && this.date.indexOf("T") > 0) {
+      [this.date, this.time] = this.date.split("T");
+    }
   }
 
   build() {
