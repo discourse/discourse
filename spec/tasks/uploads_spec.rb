@@ -134,6 +134,115 @@ RSpec.describe "tasks/uploads" do
     end
   end
 
+  describe "uploads:batch_migrate_from_s3" do
+    let!(:uploads) do
+      [
+        upload1,
+        upload2,
+      ]
+    end
+
+    let(:upload1) { Fabricate(:upload_s3) }
+    let(:upload2) { Fabricate(:upload_s3) }
+
+    let!(:url1) { "upload://#{upload1.base62_sha1}.jpg" }
+    let!(:url2) { "upload://#{upload2.base62_sha1}.jpg" }
+
+    let(:post1) { Fabricate(:post, raw: "[foo](#{url1})") }
+    let(:post2) { Fabricate(:post, raw: "[foo](#{url2})") }
+
+    before do
+      global_setting :s3_bucket, 'file-uploads/folder'
+      global_setting :s3_region, 'us-east-1'
+      enable_s3_uploads(uploads)
+      upload1.url = "//#{SiteSetting.s3_upload_bucket}.amazonaws.com/original/1X/#{upload1.base62_sha1}.png"
+      upload1.save!
+      upload2.url = "//#{SiteSetting.s3_upload_bucket}.amazonaws.com/original/1X/#{upload2.base62_sha1}.png"
+      upload2.save!
+
+      PostUpload.create(post: post1, upload: upload1)
+      PostUpload.create(post: post2, upload: upload2)
+      SiteSetting.enable_s3_uploads = false
+    end
+
+    def invoke_task
+      capture_stdout do
+        Rake::Task['uploads:batch_migrate_from_s3'].invoke('1')
+      end
+    end
+
+    it "applies the limit" do
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png")).once()
+
+      freeze_time
+
+      post1.update_columns(baked_at: 1.week.ago)
+      post2.update_columns(baked_at: 1.week.ago)
+      invoke_task
+
+      expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+      expect(post2.reload.baked_at).to eq_time(1.week.ago)
+    end
+
+  end
+
+  describe "uploads:migrate_from_s3" do
+    let!(:uploads) do
+      [
+        upload1,
+        upload2,
+      ]
+    end
+
+    let(:upload1) { Fabricate(:upload_s3) }
+    let(:upload2) { Fabricate(:upload_s3) }
+
+    let!(:url1) { "upload://#{upload1.base62_sha1}.jpg" }
+    let!(:url2) { "upload://#{upload2.base62_sha1}.jpg" }
+
+    let(:post1) { Fabricate(:post, raw: "[foo](#{url1})") }
+    let(:post2) { Fabricate(:post, raw: "[foo](#{url2})") }
+
+    before do
+      global_setting :s3_bucket, 'file-uploads/folder'
+      global_setting :s3_region, 'us-east-1'
+      enable_s3_uploads(uploads)
+      upload1.url = "//#{SiteSetting.s3_upload_bucket}.amazonaws.com/original/1X/#{upload1.base62_sha1}.png"
+      upload1.save!
+      upload2.url = "//#{SiteSetting.s3_upload_bucket}.amazonaws.com/original/1X/#{upload2.base62_sha1}.png"
+      upload2.save!
+
+      PostUpload.create(post: post1, upload: upload1)
+      PostUpload.create(post: post2, upload: upload2)
+      SiteSetting.enable_s3_uploads = false
+    end
+
+    def invoke_task
+      capture_stdout do
+        Rake::Task['uploads:migrate_from_s3'].invoke
+      end
+    end
+
+    it "fails if s3 uploads are still enabled" do
+      SiteSetting.enable_s3_uploads = true
+      expect { invoke_task }.to raise_error(SystemExit)
+    end
+
+    it "does not apply a limit" do
+      FileHelper.stubs(:download).with("http:#{upload1.url}", max_file_size: 4194304, tmp_file_name: "from_s3", follow_redirect: true).returns(file_from_fixtures("logo.png")).once()
+      FileHelper.stubs(:download).with("http:#{upload2.url}", max_file_size: 4194304, tmp_file_name: "from_s3", follow_redirect: true).returns(file_from_fixtures("logo.png")).once()
+
+      freeze_time
+
+      post1.update_columns(baked_at: 1.week.ago)
+      post2.update_columns(baked_at: 1.week.ago)
+      invoke_task
+
+      expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+      expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
+    end
+  end
+
   describe "uploads:disable_secure_media" do
     def invoke_task
       capture_stdout do
