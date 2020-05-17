@@ -131,12 +131,12 @@ def migrate_from_s3
 
   Post
     .where("user_id > 0")
-    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%(upload://%'")
+    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%#{SiteSetting.Upload.absolute_base_url}%' OR raw LIKE '%(upload://%'")
     .find_each do |post|
     begin
       updated = false
 
-      post.raw.gsub!(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
+      post.raw.gsub!(/(\/\/[\w.-]+(amazonaws\.com|#{Regexp.quote(SiteSetting.s3_endpoint)})\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
         begin
           if filename = guess_filename(url, post.raw)
             file = FileHelper.download("http:#{url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
