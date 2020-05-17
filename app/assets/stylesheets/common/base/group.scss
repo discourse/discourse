@@ -153,6 +153,22 @@ table.group-members {
       background-color: #f4f4f4;
     }
   }
+
+  .radios {
+    margin-bottom: 5px;
+  }
+
+  .radio-label {
+    display: inline-flex;
+    padding-right: 10px;
+    margin-bottom: 0;
+    align-items: center;
+  }
+
+  .uploaded-image-preview {
+    height: 75px;
+    width: 275px;
+  }
 }
 
 .group-form-save {

@@ -188,7 +188,8 @@ const Group = RestModel.extend({
       primary_group: !!this.primary_group,
       grant_trust_level: this.grant_trust_level,
       incoming_email: this.incoming_email,
-      flair_url: this.flair_url,
+      flair_icon: null,
+      flair_image_id: null,
       flair_bg_color: this.flairBackgroundHexColor,
       flair_color: this.flairHexColor,
       bio_raw: this.bio_raw,
@@ -200,6 +201,12 @@ const Group = RestModel.extend({
       membership_request_template: this.membership_request_template,
       publish_read_state: this.publish_read_state
     };
+
+    if (this.flair_type === "icon") {
+      attrs["flair_icon"] = this.flair_icon;
+    } else if (this.flair_type === "image") {
+      attrs["flair_image_id"] = this.flair_image_id;
+    }
 
     if (!this.id) {
       attrs["usernames"] = this.usernames;

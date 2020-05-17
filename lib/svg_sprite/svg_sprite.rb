@@ -388,7 +388,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.group_icons
-    Group.where("flair_url LIKE '%fa-%'").pluck(:flair_url).uniq
+    Group.pluck(:flair_icon).uniq
   end
 
   def self.theme_icons(theme_ids)
