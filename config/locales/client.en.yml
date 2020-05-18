@@ -645,7 +645,7 @@ en:
           notification: Notification
         email:
           title: "Email"
-          status: "Synchronized {{old_emails}} / {{total_emails}} emails via IMAP."
+          status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
