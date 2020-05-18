@@ -2709,6 +2709,24 @@ RSpec.describe TopicsController do
         expect(json['duration']).to eq(topic_status_update.duration)
       end
 
+      it 'should be able to delete a topic status update for delete_replies type' do
+        Fabricate(:topic_timer, topic: topic, status_type: TopicTimer.types[:delete_replies])
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: nil,
+          status_type: TopicTimer.types[7]
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.public_topic_timer).to eq(nil)
+
+        json = response.parsed_body
+
+        expect(json['execute_at']).to eq(nil)
+        expect(json['duration']).to eq(nil)
+        expect(json['closed']).to eq(topic.closed)
+      end
+
       describe 'publishing topic to category in the future' do
         it 'should be able to create the topic status update' do
           post "/t/#{topic.id}/timer.json", params: {
