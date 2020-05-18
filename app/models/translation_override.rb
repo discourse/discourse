@@ -38,6 +38,16 @@ class TranslationOverride < ActiveRecord::Base
     i18n_changed(locale, keys)
   end
 
+  def self.reload_all_overrides!
+    reload_locale!
+
+    overrides = TranslationOverride.pluck(:locale, :translation_key)
+    overrides = overrides.group_by(&:first).map { |k, a| [k, a.map(&:last)] }
+    overrides.each do |locale, keys|
+      clear_cached_keys!(locale, keys)
+    end
+  end
+
   def self.reload_locale!
     I18n.reload!
     ExtraLocalesController.clear_cache!
