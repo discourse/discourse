@@ -10,6 +10,8 @@ class UploadsController < ApplicationController
 
   before_action :is_asset_path, only: [:show, :show_short, :show_secure]
 
+  SECURE_REDIRECT_GRACE_SECONDS = 5
+
   def create
     # capture current user for block later on
     me = current_user
@@ -150,6 +152,9 @@ class UploadsController < ApplicationController
     else
       return render_404 if current_user.nil?
     end
+
+    cache_seconds = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS - SECURE_REDIRECT_GRACE_SECONDS
+    expires_in cache_seconds.seconds # defaults to public: false, so only cached by the client browser
 
     # url_for figures out the full URL, handling multisite DBs,
     # and will return a presigned URL for the upload
