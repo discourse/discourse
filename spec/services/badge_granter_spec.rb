@@ -7,6 +7,15 @@ describe BadgeGranter do
   fab!(:badge) { Fabricate(:badge) }
   fab!(:user) { Fabricate(:user) }
 
+  before do
+    BadgeGranter.enable_queue
+  end
+
+  after do
+    BadgeGranter.disable_queue
+    BadgeGranter.clear_queue!
+  end
+
   describe 'revoke_titles' do
     it 'can correctly revoke titles' do
       badge = Fabricate(:badge, allow_title: true)
@@ -268,10 +277,6 @@ describe BadgeGranter do
   context "update_badges" do
     fab!(:user) { Fabricate(:user) }
     fab!(:liker) { Fabricate(:user) }
-
-    before do
-      BadgeGranter.clear_queue!
-    end
 
     it "grants autobiographer" do
       user.user_profile.bio_raw = "THIS IS MY bio it a long bio I like my bio"

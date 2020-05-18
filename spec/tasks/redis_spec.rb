@@ -36,6 +36,8 @@ RSpec.describe "Redis rake tasks", type: :multisite do
       orphan_keys.each do |key|
         expect(redis.get(key)).to eq(nil)
       end
+    ensure
+      active_keys.each { |key| redis.del(key) }
     end
   end
 end

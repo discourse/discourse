@@ -1779,6 +1779,7 @@ describe UsersController do
           end
 
           it "updates the title" do
+            BadgeGranter.enable_queue
             user.update!(locale: :fr)
             user.change_trust_level!(TrustLevel[4])
             BadgeGranter.process_queue!
@@ -1786,6 +1787,9 @@ describe UsersController do
             leader_title = I18n.t("badges.leader.name", locale: :fr)
             put "/u/#{user.username}.json", params: { title: leader_title }
             expect(user.reload.title).to eq(leader_title)
+          ensure
+            BadgeGranter.disable_queue
+            BadgeGranter.clear_queue!
           end
         end
 
