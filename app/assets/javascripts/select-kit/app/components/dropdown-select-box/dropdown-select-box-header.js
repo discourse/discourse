@@ -14,5 +14,18 @@ export default SingleSelectHeaderComponent.extend({
 
   btnClassName: computed("showFullTitle", function() {
     return `btn ${this.showFullTitle ? "btn-icon-text" : "no-text btn-icon"}`;
-  })
+  }),
+
+  caretUpIcon: readOnly("selectKit.options.caretUpIcon"),
+
+  caretDownIcon: readOnly("selectKit.options.caretDownIcon"),
+
+  caretIcon: computed(
+    "selectKit.isExpanded",
+    "caretUpIcon",
+    "caretDownIcon",
+    function() {
+      return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
+    }
+  )
 });
