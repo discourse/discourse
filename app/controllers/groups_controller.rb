@@ -349,7 +349,7 @@ class GroupsController < ApplicationController
     end
 
     if params[:accept]
-      PostCreator.new(Discourse.system_user,
+      PostCreator.new(current_user,
         title: I18n.t('groups.request_accepted_pm.title', group_name: group.name),
         raw: I18n.t('groups.request_accepted_pm.body', group_name: group.name),
         archetype: Archetype.private_message,
