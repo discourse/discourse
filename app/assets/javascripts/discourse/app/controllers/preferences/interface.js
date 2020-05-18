@@ -11,6 +11,7 @@ import {
   iOSWithVisualViewport
 } from "discourse/lib/utilities";
 import { computed } from "@ember/object";
+import DiscourseEnv from "discourse-common/config/environment";
 
 const USER_HOMES = {
   1: "latest",
@@ -192,7 +193,9 @@ export default Controller.extend({
           }
 
           if (this.themeId !== this.currentThemeId) {
-            location.reload();
+            if (DiscourseEnv.environment !== "test") {
+              location.reload();
+            }
           }
         })
         .catch(popupAjaxError);
