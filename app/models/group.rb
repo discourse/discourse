@@ -987,6 +987,9 @@ end
 #  members_visibility_level           :integer          default(0), not null
 #  flair_icon                         :string
 #  flair_upload_id                    :integer
+#  imap_last_error                    :text
+#  imap_old_emails                    :integer
+#  imap_new_emails                    :integer
 #
 # Indexes
 #
