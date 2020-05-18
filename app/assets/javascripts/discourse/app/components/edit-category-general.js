@@ -20,7 +20,6 @@ export default buildCategoryPanel("general", {
     this._focusCategoryName();
   },
 
-
   willDestroyElement() {
     this._super(...arguments);
 
