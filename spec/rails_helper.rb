@@ -237,6 +237,12 @@ RSpec.configure do |config|
     end
   end
 
+  config.after(:suite) do
+    if SpecSecureRandom.value
+      FileUtils.remove_dir(file_from_fixtures_tmp_folder, true)
+    end
+  end
+
   config.before :each, &TestSetup.method(:test_setup)
 
   config.before(:each, type: :multisite) do
@@ -368,9 +374,15 @@ def unfreeze_time
 end
 
 def file_from_fixtures(filename, directory = "images")
-  FileUtils.mkdir_p("#{Rails.root}/tmp/spec") unless Dir.exists?("#{Rails.root}/tmp/spec")
-  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
-  File.new("#{Rails.root}/tmp/spec/#{filename}")
+  SpecSecureRandom.value ||= SecureRandom.hex
+  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exists?(file_from_fixtures_tmp_folder)
+  tmp_file_path = File.join(file_from_fixtures_tmp_folder, SecureRandom.hex << filename)
+  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
+  File.new(tmp_file_path)
+end
+
+def file_from_fixtures_tmp_folder
+  File.join(Dir.tmpdir, "rspec_#{Process.pid}_#{SpecSecureRandom.value}")
 end
 
 def has_trigger?(trigger_name)
@@ -409,4 +421,10 @@ def track_log_messages(level: nil)
   logger.messages
 ensure
   Rails.logger = old_logger
+end
+
+class SpecSecureRandom
+  class << self
+    attr_accessor :value
+  end
 end

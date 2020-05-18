@@ -24,22 +24,24 @@ describe Admin::ThemesController do
   end
 
   describe '#upload_asset' do
+    let(:file) { file_from_fixtures("fake.woff2", "woff2") }
+    let(:filename) { File.basename(file) }
     let(:upload) do
-      Rack::Test::UploadedFile.new(file_from_fixtures("fake.woff2", "woff2"))
+      Rack::Test::UploadedFile.new(file)
     end
 
     it 'can create a theme upload' do
       post "/admin/themes/upload_asset.json", params: { file: upload }
       expect(response.status).to eq(201)
 
-      upload = Upload.find_by(original_filename: "fake.woff2")
+      upload = Upload.find_by(original_filename: filename)
 
       expect(upload.id).not_to be_nil
       expect(response.parsed_body["upload_id"]).to eq(upload.id)
     end
 
     context "when trying to upload an existing file" do
-      let(:uploaded_file) { Upload.find_by(original_filename: "fake.woff2") }
+      let(:uploaded_file) { Upload.find_by(original_filename: filename) }
       let(:response_json) { response.parsed_body }
 
       before do
