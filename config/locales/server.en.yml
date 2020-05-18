@@ -431,6 +431,10 @@ en:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
+    request_accepted_pm:
+      title: "Membership Request Accepted for @%{group_name}"
+      body: |
+        Your membership request to join @%{group_name} was accepted.
     view_hidden_topic_request_reason: "I would like to join the group '%{group_name}', so I may access [this topic](%{topic_url})"
 
   education:
