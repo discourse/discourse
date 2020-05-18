@@ -9,6 +9,10 @@ export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["pinned-options"],
   classNames: ["pinned-options"],
 
+  selectKitOptions: {
+    showCaret: true
+  },
+
   modifySelection(content) {
     const pinnedGlobally = this.get("topic.pinned_globally");
     const pinned = this.value;
