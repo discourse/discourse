@@ -72,7 +72,18 @@ class Search
         require 'cppjieba_rb' unless defined? CppjiebaRb
         mode = (purpose == :query ? :query : :mix)
         data = CppjiebaRb.segment(search_data, mode: mode)
-        data = CppjiebaRb.filter_stop_word(data).join(' ')
+
+        # TODO: we still want to tokenize here but the current stopword list is too wide
+        # in cppjieba leading to words such as volume to be skipped. PG already has an English
+        # stopword list so use that vs relying on cppjieba
+        if ts_config != 'english'
+          data = CppjiebaRb.filter_stop_word(data)
+        else
+          data = data.filter { |s| s.present? }
+        end
+
+        data = data.join(' ')
+
       else
         data.squish!
       end
