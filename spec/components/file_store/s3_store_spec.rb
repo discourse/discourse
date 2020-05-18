@@ -251,7 +251,7 @@ describe FileStore::S3Store do
 
       before do
         optimized_image.update!(
-          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com#{image_path}"
+          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{image_path}"
         )
       end
 

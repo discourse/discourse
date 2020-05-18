@@ -87,7 +87,10 @@ module FileStore
         # some cases, and we do not want to assume the url is uploaded
         # here. e.g. the path of the current site could be /prod and the
         # other site could be /staging
-        if s3_bucket_folder_path.present?
+        #
+        # we also do not want to do this check for optimized images,
+        # because they do not use the bucket folder path
+        if s3_bucket_folder_path.present? && !parsed_url.path.starts_with?("/optimized")
           return parsed_url.path.starts_with?("/#{s3_bucket_folder_path}")
         else
           return true
