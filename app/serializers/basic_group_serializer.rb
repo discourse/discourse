@@ -14,19 +14,6 @@ class BasicGroupSerializer < ApplicationSerializer
              :title,
              :grant_trust_level,
              :incoming_email,
-             :smtp_server,
-             :smtp_port,
-             :smtp_ssl,
-             :imap_server,
-             :imap_port,
-             :imap_ssl,
-             :imap_mailbox_name,
-             :imap_mailboxes,
-             :email_username,
-             :email_password,
-             :imap_last_error,
-             :imap_old_emails,
-             :imap_new_emails,
              :has_messages,
              :flair_url,
              :flair_bg_color,
@@ -46,6 +33,30 @@ class BasicGroupSerializer < ApplicationSerializer
              :can_see_members,
              :publish_read_state
 
+  def self.admin_attributes(*attrs)
+    attributes(*attrs)
+    attrs.each do |attr|
+      define_method "include_#{attr}?" do
+        scope.is_admin?
+      end
+    end
+  end
+
+  admin_attributes :automatic_membership_email_domains,
+                   :smtp_server,
+                   :smtp_port,
+                   :smtp_ssl,
+                   :imap_server,
+                   :imap_port,
+                   :imap_ssl,
+                   :imap_mailbox_name,
+                   :imap_mailboxes,
+                   :email_username,
+                   :email_password,
+                   :imap_last_error,
+                   :imap_old_emails,
+                   :imap_new_emails
+
   def include_display_name?
     object.automatic
   end
@@ -62,66 +73,6 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def include_incoming_email?
     staff?
-  end
-
-  def include_automatic_membership_email_domains?
-    scope.is_admin?
-  end
-
-  def include_smtp_server?
-    scope.is_admin?
-  end
-
-  def include_smtp_port?
-    scope.is_admin?
-  end
-
-  def include_smtp_ssl?
-    scope.is_admin?
-  end
-
-  def include_imap_server?
-    scope.is_admin?
-  end
-
-  def include_imap_port?
-    scope.is_admin?
-  end
-
-  def include_imap_ssl?
-    scope.is_admin?
-  end
-
-  def include_imap_mailbox_name?
-    scope.is_admin?
-  end
-
-  def include_imap_mailboxes?
-    scope.is_admin?
-  end
-
-  def include_email_username?
-    scope.is_admin?
-  end
-
-  def include_email_password?
-    scope.is_admin?
-  end
-
-  def include_imap_last_error?
-    scope.is_admin?
-  end
-
-  def include_imap_old_emails?
-    scope.is_admin?
-  end
-
-  def include_imap_new_emails?
-    scope.is_admin?
-  end
-
-  def include_automatic_membership_retroactive?
-    scope.is_admin?
   end
 
   def include_has_messages?
