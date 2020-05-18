@@ -52,7 +52,10 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       ) {
         tokens.push(this.shortSiteDescription);
       }
-      Discourse.set("_docTitle", tokens.join(" - "));
+      Discourse.set(
+        "_docTitle",
+        tokens.join(this.siteSettings.document_title_separator)
+      );
     },
 
     // Ember doesn't provider a router `willTransition` event so let's make one

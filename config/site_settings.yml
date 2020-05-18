@@ -1968,6 +1968,10 @@ uncategorized:
     default: true
     client: true
 
+  document_title_separator:
+    default: " - "
+    client: true
+
   native_app_install_banner_ios: false
 
   native_app_install_banner_android: false
