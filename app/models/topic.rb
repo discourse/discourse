@@ -42,7 +42,7 @@ class Topic < ActiveRecord::Base
 
   def filtered_topic_thumbnails(extra_sizes: [])
     return nil unless original = image_upload
-    return nil unless original.width && original.height
+    return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     thumbnail_sizes = Topic.thumbnail_sizes + extra_sizes
     topic_thumbnails.filter { |record| thumbnail_sizes.include?([record.max_width, record.max_height]) }
@@ -50,7 +50,7 @@ class Topic < ActiveRecord::Base
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
-    return nil unless original.width && original.height
+    return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     infos = []
     infos << { # Always add original
