@@ -16,9 +16,11 @@ describe UploadsController do
         sign_in(user)
       end
 
+      let(:logo_file) { file_from_fixtures("logo.png") }
       let(:logo) do
-        Rack::Test::UploadedFile.new(file_from_fixtures("logo.png"))
+        Rack::Test::UploadedFile.new(logo_file)
       end
+      let(:logo_filename) { File.basename(logo_file) }
 
       let(:fake_jpg) do
         Rack::Test::UploadedFile.new(file_from_fixtures("fake.jpg"))
@@ -160,7 +162,7 @@ describe UploadsController do
         upload = Upload.last
 
         expect(upload.id).to eq(id)
-        expect(upload.original_filename).to eq('logo.png')
+        expect(upload.original_filename).to eq(logo_filename)
       end
 
       it 'respects `authorized_extensions_for_staff` setting when staff upload file' do
@@ -265,7 +267,7 @@ describe UploadsController do
       expect(response.status).to eq(200)
 
       expect(response.headers["Content-Disposition"])
-        .to eq(%Q|attachment; filename="logo.png"; filename*=UTF-8''logo.png|)
+        .to eq(%Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|)
     end
 
     it 'returns 200 when js file' do
@@ -282,7 +284,7 @@ describe UploadsController do
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
       expect(response.headers["Content-Disposition"])
-        .to eq(%Q|attachment; filename="image_no_extension.png"; filename*=UTF-8''image_no_extension.png|)
+        .to eq(%Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|)
     end
 
     it "handles file without extension" do
@@ -292,7 +294,7 @@ describe UploadsController do
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
       expect(response.headers["Content-Disposition"])
-        .to eq(%Q|attachment; filename="not_an_image"; filename*=UTF-8''not_an_image|)
+        .to eq(%Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|)
     end
 
     context "prevent anons from downloading files" do
