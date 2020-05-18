@@ -336,7 +336,7 @@ en:
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
         existing_reminder: "You have a reminder set for this bookmark which will be sent"
-    
+
     copy_codeblock:
       copied: "copied!"
 
@@ -4741,7 +4741,7 @@ en:
   wizard_js:
     wizard:
       done: "Done"
-      finish: "Finish"
+      finish: "Finish & Exit"
       back: "Back"
       next: "Next"
       step: "%{current} of %{total}"
