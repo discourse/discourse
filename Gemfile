@@ -131,7 +131,7 @@ gem 'highline', '~> 1.7.0', require: false
 # This is a bit of a hornets nest cause in an ideal world we much prefer
 # if Sidekiq reused session and CSRF mitigation with Discourse on the
 # _forum_session cookie instead of a rack.session cookie
-gem 'rack', '2.0.8'
+gem 'rack', '2.2.2'
 
 gem 'rack-protection' # security
 gem 'cbor', require: false
