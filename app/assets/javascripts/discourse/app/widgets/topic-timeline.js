@@ -390,7 +390,8 @@ createWidget("timeline-footer-controls", {
             showFullTitle: false,
             appendReason: false,
             placement: "bottom-end",
-            mountedAsWidget: true
+            mountedAsWidget: true,
+            showCaret: false
           },
           ["notificationLevel"]
         )

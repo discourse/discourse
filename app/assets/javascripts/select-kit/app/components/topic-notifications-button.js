@@ -9,6 +9,7 @@ export default Component.extend({
   placement: "bottom-start",
   notificationLevel: null,
   topic: null,
+  showCaret: true,
 
   @action
   changeTopicNotificationLevel(levelId) {
