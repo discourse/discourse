@@ -272,6 +272,12 @@ describe FileStore::S3Store do
           SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
         end
 
+        before do
+          optimized_image.update!(
+            url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/#{image_path}"
+          )
+        end
+
         it "removes the file from s3 with the right paths" do
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_object = stub
