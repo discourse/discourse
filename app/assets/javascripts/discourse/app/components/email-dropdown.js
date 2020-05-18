@@ -1,9 +1,11 @@
-import { getOwner } from "@ember/application";
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
+import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({
+  router: service(),
+
   classNames: ["email-dropdown"],
 
   selectKitOptions: {
@@ -44,21 +46,18 @@ export default DropdownSelectBoxComponent.extend({
     return content;
   }),
 
-  actions: {
-    onChange(id) {
-      switch (id) {
-        case "updateEmail":
-          getOwner(this)
-            .lookup("router:main")
-            .transitionTo("preferences.email");
-          break;
-        case "setPrimaryEmail":
-          this.setPrimaryEmail(this.email.email);
-          break;
-        case "destroyEmail":
-          this.destroyEmail(this.email.email);
-          break;
-      }
+  @action
+  onChange(id) {
+    switch (id) {
+      case "updateEmail":
+        this.router.transitionTo("preferences.email");
+        break;
+      case "setPrimaryEmail":
+        this.setPrimaryEmail(this.email.email);
+        break;
+      case "destroyEmail":
+        this.destroyEmail(this.email.email);
+        break;
     }
   }
 });
