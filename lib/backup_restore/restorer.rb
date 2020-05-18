@@ -55,6 +55,7 @@ module BackupRestore
       clear_category_cache
       clear_emoji_cache
       clear_theme_cache
+      reload_translations
 
       @uploads_restorer.restore(@tmp_directory)
 
@@ -129,6 +130,11 @@ module BackupRestore
     def clear_emoji_cache
       log "Clearing emoji cache..."
       Emoji.clear_cache
+    end
+
+    def reload_translations
+      log "Reloading translations..."
+      TranslationOverride.reload_all_overrides!
     end
 
     def notify_user
