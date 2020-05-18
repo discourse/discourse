@@ -1,3 +1,4 @@
+import { Promise } from "rsvp";
 import I18n from "I18n";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
@@ -16,20 +17,34 @@ export default Component.extend({
     return mobileView ? "date" : "text";
   },
 
-  @on("didInsertElement")
-  _loadDatePicker() {
+  click(event) {
+    event.stopPropagation();
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+
     schedule("afterRender", () => {
-      const container = this.element.querySelector(`#${this.containerId}`);
+      if (!this.element || this.isDestroying || this.isDestroying) {
+        return;
+      }
+
+      let promise;
+      const container = document.getElementById(this.containerId);
 
       if (this.site.mobileView) {
-        this._loadNativePicker(container);
+        promise = this._loadNativePicker(container);
       } else {
-        this._loadPikadayPicker(container);
+        promise = this._loadPikadayPicker(container);
       }
 
-      if (this._picker && this.date) {
-        this._picker.setDate(moment(this.date).toDate(), true);
-      }
+      promise.then(picker => {
+        this._picker = picker;
+
+        if (this._picker && this.date) {
+          this._picker.setDate(moment(this.date).toDate(), true);
+        }
+      });
     });
   },
 
@@ -50,7 +65,7 @@ export default Component.extend({
   },
 
   _loadPikadayPicker(container) {
-    loadScript("/javascripts/pikaday.js").then(() => {
+    return loadScript("/javascripts/pikaday.js").then(() => {
       let defaultOptions = {
         field: this.element.querySelector(".date-picker"),
         container: container || this.element.querySelector(".picker-container"),
@@ -73,10 +88,7 @@ export default Component.extend({
         });
       }
 
-      this._picker = new Pikaday(
-        Object.assign({}, defaultOptions, this._opts())
-      );
-      this._picker.setDate(moment(this.date).toDate(), true);
+      return new Pikaday(Object.assign({}, defaultOptions, this._opts()));
     });
   },
 
@@ -96,11 +108,12 @@ export default Component.extend({
     picker.setMinDate = date => {
       picker.min = date;
     };
-    this._picker = picker;
 
     if (this.date) {
       picker.setDate(this.date);
     }
+
+    return Promise.resolve(picker);
   },
 
   _handleSelection(value) {
