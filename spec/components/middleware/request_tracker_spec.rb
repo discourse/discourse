@@ -15,6 +15,15 @@ describe Middleware::RequestTracker do
     }.merge(opts)
   end
 
+  before do
+    ApplicationRequest.enable
+  end
+
+  after do
+    ApplicationRequest.disable
+    ApplicationRequest.clear_cache!
+  end
+
   context "full request" do
     before do
       @orig = WebCrawlerRequest.autoflush
