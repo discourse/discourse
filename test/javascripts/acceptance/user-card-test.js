@@ -10,7 +10,7 @@ acceptance("User Card - Show Local Time", {
   settings: { display_local_time_in_user_card: true }
 });
 
-QUnit.test("user card local time", async assert => {
+QUnit.skip("user card local time", async assert => {
   User.current().changeTimezone("Australia/Brisbane");
   let cardResponse = _.clone(userFixtures["/u/eviltrout/card.json"]);
   cardResponse.user.timezone = "Australia/Perth";
