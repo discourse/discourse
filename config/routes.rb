@@ -2,6 +2,7 @@
 
 require "sidekiq/web"
 require "mini_scheduler/web"
+require 'freedom_patches/sidekiq/sidekiq_session_patch'
 
 # The following constants have been replaced with `RouteFormat` and are deprecated.
 USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
@@ -23,6 +24,7 @@ Discourse::Application.routes.draw do
   post "webhooks/sparkpost" => "webhooks#sparkpost"
 
   scope path: nil, constraints: { format: /.*/ } do
+    Sidekiq::WebAction.prepend(SidekiqSessionPatch)
     if Rails.env.development?
       mount Sidekiq::Web => "/sidekiq"
       mount Logster::Web => "/logs"
