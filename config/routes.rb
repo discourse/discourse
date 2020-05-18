@@ -67,6 +67,7 @@ Discourse::Application.routes.draw do
 
   get "srv/status" => "forums#status"
 
+  get "setup" => "wizard#setup_redirect"
   get "wizard" => "wizard#index"
   get 'wizard/steps' => 'steps#index'
   get 'wizard/steps/:id' => "wizard#index"

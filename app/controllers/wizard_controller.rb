@@ -19,6 +19,10 @@ class WizardController < ApplicationController
     end
   end
 
+  def setup_redirect
+    redirect_to "/wizard"
+  end
+
   def qunit
     raise Discourse::InvalidAccess.new if Rails.env.production?
   end
