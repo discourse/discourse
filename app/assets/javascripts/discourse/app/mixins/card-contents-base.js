@@ -304,6 +304,8 @@ export default Mixin.create({
       this,
       "_topicHeaderTrigger"
     );
+
+    this._hide();
   },
 
   keyUp(e) {
