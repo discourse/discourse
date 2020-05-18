@@ -43,6 +43,10 @@ export default MultiSelectComponent.extend({
     );
   },
 
+  modifyComponentForRow() {
+    return "category-row";
+  },
+
   actions: {
     onChange(values) {
       this.attrs.onChange(
