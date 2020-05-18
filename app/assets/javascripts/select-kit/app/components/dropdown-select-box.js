@@ -8,7 +8,10 @@ export default SingleSelectComponent.extend({
     autoFilterable: false,
     filterable: false,
     showFullTitle: true,
-    headerComponent: "dropdown-select-box/dropdown-select-box-header"
+    headerComponent: "dropdown-select-box/dropdown-select-box-header",
+    caretUpIcon: "caret-up",
+    caretDownIcon: "caret-down",
+    showCaret: false
   },
 
   modifyComponentForRow() {
