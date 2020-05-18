@@ -1,7 +1,8 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
-import { later } from "@ember/runloop";
+import { action } from "@ember/object";
+import { later, cancel } from "@ember/runloop";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
@@ -17,6 +18,12 @@ export default buildCategoryPanel("general", {
     this._super(...arguments);
 
     this._focusCategoryName();
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this._laterFocus && cancel(this._laterFocus);
   },
 
   canSelectParentCategory: not("category.isUncategorizedCategory"),
@@ -103,19 +110,16 @@ export default buildCategoryPanel("general", {
     return !isUncategorizedCategory && categoryId;
   },
 
-  actions: {
-    showCategoryTopic() {
-      window.open(this.get("category.topic_url"), "_blank").focus();
-      return false;
-    }
+  @action
+  showCategoryTopic() {
+    window.open(this.get("category.topic_url"), "_blank").focus();
+    return false;
   },
 
   _focusCategoryName() {
-    later(() => {
-      if (this.element && !this.isDestroying && !this.isDestroyed) {
-        const categoryName = this.element.querySelector(".category-name");
-        categoryName && categoryName.focus();
-      }
+    this._laterFocus = later(() => {
+      const categoryName = this.element.querySelector(".category-name");
+      categoryName && categoryName.focus();
     }, 25);
   }
 });
