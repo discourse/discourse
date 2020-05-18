@@ -192,10 +192,11 @@ export default Controller.extend({
             );
           }
 
-          if (this.themeId !== this.currentThemeId) {
-            if (DiscourseEnv.environment !== "test") {
-              location.reload();
-            }
+          if (
+            this.themeId !== this.currentThemeId &&
+            DiscourseEnv.environment !== "test"
+          ) {
+            location.reload();
           }
         })
         .catch(popupAjaxError);
