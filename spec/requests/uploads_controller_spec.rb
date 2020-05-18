@@ -396,6 +396,16 @@ describe UploadsController do
           expect(response).to redirect_to(Discourse.store.signed_url_for_path(Discourse.store.get_path_for_upload(upload)))
         end
 
+        it "has the correct caching header" do
+          sign_in(user)
+          get upload.short_path
+
+          expected_max_age = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS - UploadsController::SECURE_REDIRECT_GRACE_SECONDS
+          expect(expected_max_age).to be > 0 # Sanity check that the constants haven't been set to broken values
+
+          expect(response.headers["Cache-Control"]).to eq("max-age=#{expected_max_age}, private")
+        end
+
         it "raises invalid access if the user cannot access the upload access control post" do
           sign_in(user)
           post = Fabricate(:post)
