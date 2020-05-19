@@ -2,7 +2,6 @@ import I18n from "I18n";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
 import User from "discourse/models/user";
-import pageReloader from "discourse/helpers/page-reloader";
 
 acceptance("User Preferences", {
   loggedIn: true,
@@ -68,7 +67,6 @@ acceptance("User Preferences", {
 
 QUnit.test("update some fields", async assert => {
   await visit("/u/eviltrout/preferences");
-  sandbox.stub(pageReloader, "reload").returns(function() {});
 
   assert.ok($("body.user-preferences-page").length, "has the body class");
   assert.equal(
