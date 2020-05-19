@@ -140,7 +140,11 @@ export default Component.extend(UtilsMixin, {
       this._focusFilterInput();
     } else if (event.keyCode === 9) {
       // Tab
-      if (this.selectKit.highlighted && this.selectKit.isExpanded) {
+      if (
+        this.selectKit.highlighted &&
+        this.selectKit.isExpanded &&
+        this.selectKit.options.triggerOnChangeOnTab
+      ) {
         this.selectKit.select(
           this.getValue(this.selectKit.highlighted),
           this.selectKit.highlighted
