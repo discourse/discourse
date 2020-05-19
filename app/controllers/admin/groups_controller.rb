@@ -164,7 +164,7 @@ class Admin::GroupsController < Admin::AdminController
       :grant_trust_level,
       :incoming_email,
       :flair_icon,
-      :flair_image_id,
+      :flair_upload_id,
       :flair_bg_color,
       :flair_color,
       :bio_raw,

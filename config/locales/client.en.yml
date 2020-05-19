@@ -748,7 +748,7 @@ en:
           title: "Muted"
           description: "You will not be notified of anything about messages in this group."
       flair_url: "Avatar Flair Image"
-      flair_image_description: "Use square images no smaller than 20px by 20px."
+      flair_upload_description: "Use square images no smaller than 20px by 20px."
       flair_bg_color: "Avatar Flair Background Color"
       flair_bg_color_placeholder: "(Optional) Hex color value"
       flair_color: "Avatar Flair Color"

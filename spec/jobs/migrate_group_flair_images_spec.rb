@@ -12,7 +12,7 @@ RSpec.describe Jobs::MigrateGroupFlairImages do
     )
   end
 
-  it 'should migrate to the new group `flair_image_id` column correctly' do
+  it 'should migrate to the new group `flair_upload_id` column correctly' do
     group
 
     expect do
@@ -20,7 +20,7 @@ RSpec.describe Jobs::MigrateGroupFlairImages do
     end.to change { Upload.count }.by(1)
 
     group.reload
-    expect(group.flair_image).to eq(Upload.last)
+    expect(group.flair_upload).to eq(Upload.last)
     expect(group[:flair_url]).to eq(nil)
   end
 end

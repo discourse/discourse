@@ -103,13 +103,17 @@ export default Component.extend({
 
   @action
   setFlairImage(upload) {
-    this.model.set("flair_url", Discourse.getURL(upload.url));
-    this.model.flair_image_id = upload.id;
+    this.model.setProperties({
+      flair_url: Discourse.getURL(upload.url),
+      flair_upload_id: upload.id
+    });
   },
 
   @action
   removeFlairImage() {
-    this.model.set("flair_url", null);
-    this.model.flair_image_id = null;
+    this.model.setProperties({
+      flair_url: null,
+      flair_upload_id: null
+    });
   }
 });

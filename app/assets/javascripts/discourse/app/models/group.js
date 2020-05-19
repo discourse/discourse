@@ -189,7 +189,7 @@ const Group = RestModel.extend({
       grant_trust_level: this.grant_trust_level,
       incoming_email: this.incoming_email,
       flair_icon: null,
-      flair_image_id: null,
+      flair_upload_id: null,
       flair_bg_color: this.flairBackgroundHexColor,
       flair_color: this.flairHexColor,
       bio_raw: this.bio_raw,
@@ -205,7 +205,7 @@ const Group = RestModel.extend({
     if (this.flair_type === "icon") {
       attrs["flair_icon"] = this.flair_icon;
     } else if (this.flair_type === "image") {
-      attrs["flair_image_id"] = this.flair_image_id;
+      attrs["flair_upload_id"] = this.flair_upload_id;
     }
 
     if (!this.id) {

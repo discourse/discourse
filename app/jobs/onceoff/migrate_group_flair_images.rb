@@ -6,7 +6,7 @@ module Jobs
       return if Group.column_names.exclude?("flair_url")
 
       Group.where.not(flair_url: nil).each do |group|
-        if group.flair_image.present?
+        if group.flair_upload.present?
           g.update_column(:flair_url, nil)
           next
         end
@@ -28,7 +28,7 @@ module Jobs
                 SiteSetting.max_image_size_kb.kilobytes,
                 20.megabytes
               ].max,
-              tmp_file_name: 'tmp_group_flair_image',
+              tmp_file_name: 'tmp_group_flair_upload',
               skip_rate_limit: true,
               follow_redirect: true
             )
@@ -65,7 +65,7 @@ module Jobs
           origin: UrlHelper.absolute(old_url)
         ).create_for(Discourse.system_user.id)
 
-        group.update_columns(flair_image_id: upload.id, flair_url: nil) if upload.present?
+        group.update_columns(flair_upload_id: upload.id, flair_url: nil) if upload.present?
       end
     end
 

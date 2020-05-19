@@ -26,7 +26,7 @@ class Group < ActiveRecord::Base
   has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
 
-  belongs_to :flair_image, class_name: 'Upload'
+  belongs_to :flair_upload, class_name: 'Upload'
 
   has_and_belongs_to_many :web_hooks
 
@@ -753,11 +753,11 @@ class Group < ActiveRecord::Base
 
   def flair_type
     return :icon if flair_icon.present?
-    return :image if flair_image_id.present?
+    return :image if flair_upload_id.present?
   end
 
   def flair_url
-    flair_icon.presence || flair_image&.url || self[:flair_url].presence
+    flair_icon.presence || flair_upload&.url || self[:flair_url].presence
   end
 
   protected
