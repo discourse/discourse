@@ -168,19 +168,6 @@ QUnit.test(
   }
 );
 
-QUnit.test("emoji picker lazy loads emojis", async assert => {
-  await visit("/t/internationalization-localization/280");
-  await click("#topic-footer-buttons .btn.create");
-
-  await click("button.emoji.btn");
-
-  assert.equal(
-    find('.emoji-picker button[title="massage_woman"]').css("background-image"),
-    "none",
-    "it doesn't load invisible emojis"
-  );
-});
-
 QUnit.test("emoji picker persists state", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
