@@ -5,8 +5,6 @@ class AddMoreFlairColumnsToGroup < ActiveRecord::Migration[6.0]
     add_column :groups, :flair_icon, :string
     add_column :groups, :flair_upload_id, :integer
 
-    add_foreign_key :groups, :uploads, column: :flair_upload_id
-
     reversible do |dir|
       dir.up do
         DB.exec(
