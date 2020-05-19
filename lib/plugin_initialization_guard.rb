@@ -6,7 +6,7 @@ def plugin_initialization_guard(&block)
   rescue => error
     plugins_directory = Rails.root + 'plugins'
 
-    if error.backtrace
+    if error.backtrace && error.backtrace_locations
       plugin_path = error.backtrace_locations.lazy.map do |location|
         Pathname.new(location.absolute_path)
           .ascend
