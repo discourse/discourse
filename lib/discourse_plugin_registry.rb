@@ -75,6 +75,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :editable_group_custom_fields
 
+  define_filtered_register :topic_thumbnail_sizes
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end
