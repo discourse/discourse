@@ -22,6 +22,7 @@ task "bookmarks:sync_to_table" => :environment do |_t, args|
         INNER JOIN posts ON posts.id = post_actions.post_id
         LEFT JOIN bookmarks ON bookmarks.post_id = post_actions.post_id AND bookmarks.user_id = post_actions.user_id
         INNER JOIN topics ON topics.id = posts.topic_id
+        INNER JOIN users ON users.id = post_actions.user_id
         WHERE bookmarks.id IS NULL AND post_action_type_id = :type_id AND post_actions.deleted_at IS NULL AND posts.deleted_at IS NULL
         LIMIT 2000
       SQL
