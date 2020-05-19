@@ -451,20 +451,15 @@ pre.copy-codeblocks:hover .copy-cmd {
   }
 }
 
-@mixin topic-footer-button {
-  margin-bottom: 5px;
-  margin-right: 10px;
-}
-
 #topic-footer-buttons {
-  padding: 10px 10px 0 0;
-  float: left;
-  .btn {
-    @include topic-footer-button;
+  max-width: calc(690px + (11px * 2) + 45px);
+
+  .bookmark {
     .d-icon-bookmark.bookmarked {
       color: $tertiary;
     }
   }
+
   .bookmark.bookmarked .d-icon-bookmark,
   .bookmark.bookmarked .d-icon-discourse-bookmark-clock {
     color: $tertiary;
@@ -472,10 +467,6 @@ pre.copy-codeblocks:hover .copy-cmd {
   .feature-on-profile.featured-on-profile .d-icon-id-card {
     color: $tertiary;
   }
-}
-
-#topic-footer-button {
-  width: 757px;
 }
 
 .suggested-topics {
