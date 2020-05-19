@@ -1,17 +1,28 @@
-{{topic-notifications-options
-  value=notificationLevel
-  topic=topic
-  onChange=(action "changeTopicNotificationLevel")
-  options=(hash
-    showFullTitle=showFullTitle
-    placement=placement
-    preventsClickPropagation=true
-    showCaret=showCaret
-  )
-}}
-
 {{#if appendReason}}
   <p class="reason">
-    {{html-safe topic.details.notificationReasonText}}
+    {{topic-notifications-options
+      value=notificationLevel
+      topic=topic
+      onChange=(action "changeTopicNotificationLevel")
+      options=(hash
+        showFullTitle=showFullTitle
+        placement=placement
+        preventsClickPropagation=true
+        showCaret=showCaret
+      )
+    }}
+    <span class="text">{{html-safe topic.details.notificationReasonText}}</span>
   </p>
+{{else}}
+  {{topic-notifications-options
+    value=notificationLevel
+    topic=topic
+    onChange=(action "changeTopicNotificationLevel")
+    options=(hash
+      showFullTitle=showFullTitle
+      placement=placement
+      preventsClickPropagation=true
+      showCaret=showCaret
+    )
+  }}
 {{/if}}
