@@ -5,13 +5,13 @@ import { setDefaultHomepage } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
 import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import pageReloader from "discourse/helpers/page-reloader";
 import {
   safariHacksDisabled,
   isiPad,
   iOSWithVisualViewport
 } from "discourse/lib/utilities";
 import { computed } from "@ember/object";
-import DiscourseEnv from "discourse-common/config/environment";
 
 const USER_HOMES = {
   1: "latest",
@@ -192,11 +192,8 @@ export default Controller.extend({
             );
           }
 
-          if (
-            this.themeId !== this.currentThemeId &&
-            DiscourseEnv.environment !== "test"
-          ) {
-            location.reload();
+          if (this.themeId !== this.currentThemeId) {
+            pageReloader.reload();
           }
         })
         .catch(popupAjaxError);
