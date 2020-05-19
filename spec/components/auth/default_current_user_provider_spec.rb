@@ -237,7 +237,7 @@ describe Auth::DefaultCurrentUserProvider do
     end
 
     after do
-      Discourse.redis.flushall
+      Discourse.redis.flushdb
     end
 
     it "should not update last seen for suspended users" do

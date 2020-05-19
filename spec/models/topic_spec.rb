@@ -33,7 +33,7 @@ describe Topic do
 
       describe 'censored words' do
         after do
-          Discourse.redis.flushall
+          Discourse.redis.flushdb
         end
 
         describe 'when title contains censored words' do
