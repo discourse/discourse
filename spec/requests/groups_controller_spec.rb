@@ -673,7 +673,7 @@ describe GroupsController do
               incoming_email: 'test@mail.org',
               flair_bg_color: 'FFF',
               flair_color: 'BBB',
-              flair_url: 'fa-adjust',
+              flair_icon: 'adjust',
               bio_raw: 'testing',
               full_name: 'awesome team',
               public_admission: true,
