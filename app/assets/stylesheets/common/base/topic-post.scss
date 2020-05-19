@@ -1026,14 +1026,6 @@ a.mention-group {
     margin-top: 0;
   }
 
-  .topic-notifications-button.is-loading {
-    pointer-events: none;
-    user-select: none;
-    .topic-notifications-options {
-      opacity: 0.5;
-    }
-  }
-
   .pinned-button,
   .topic-notifications-button {
     margin: 1em 0;
