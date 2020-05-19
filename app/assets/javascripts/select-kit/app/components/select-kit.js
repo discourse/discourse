@@ -271,7 +271,8 @@ export default Component.extend(
       selectedNameComponent: "selected-name",
       castInteger: false,
       preventsClickPropagation: false,
-      focusAfterOnChange: true
+      focusAfterOnChange: true,
+      triggerOnChangeOnTab: true
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
