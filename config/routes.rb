@@ -120,7 +120,6 @@ Discourse::Application.routes.draw do
       put "unsuspend"
       put "revoke_admin", constraints: AdminConstraint.new
       put "grant_admin", constraints: AdminConstraint.new
-      post "generate_api_key", constraints: AdminConstraint.new
       put "revoke_moderation", constraints: AdminConstraint.new
       put "grant_moderation", constraints: AdminConstraint.new
       put "approve"
