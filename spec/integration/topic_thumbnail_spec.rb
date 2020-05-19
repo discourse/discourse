@@ -10,7 +10,7 @@ describe "Topic Thumbnails" do
 
   context 'latest' do
     def get_topic
-      Discourse.redis.del(topic.thumbnail_job_redis_key([]))
+      Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
       get '/latest.json'
       response.parsed_body["topic_list"]["topics"][0]
     end
