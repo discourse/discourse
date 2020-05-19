@@ -1,0 +1,18 @@
+.topic-notifications-button {
+  &.is-loading {
+    pointer-events: none;
+    user-select: none;
+
+    .d-icon-spinner {
+      margin: 0;
+    }
+
+    .selected-name .d-icon {
+      display: none;
+    }
+
+    .topic-notifications-options {
+      opacity: 0.5;
+    }
+  }
+}
