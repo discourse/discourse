@@ -738,6 +738,16 @@ class Plugin::Instance
     end
   end
 
+  # Receives a new mapping:
+  # 1. A symbol that represents the name of the resource.
+  # 2. A symbol that represents the name of the action.
+  # 3. An action that contains the controller mapping, optional params, and aliases.
+  def add_api_key_scope(resource, action_name, action)
+    reloadable_patch do
+      ApiKey.new_mapping(resource, action_name, action)
+    end
+  end
+
   protected
 
   def self.js_path

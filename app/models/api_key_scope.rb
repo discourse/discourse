@@ -21,6 +21,6 @@ class ApiKeyScope < ActiveRecord::Base
   end
 
   def mapping
-    @mapping ||= ApiKey::SCOPE_MAPPINGS.dig(resource.to_sym, action.to_sym)
+    @mapping ||= ApiKey.scope_mappings.dig(resource.to_sym, action.to_sym)
   end
 end

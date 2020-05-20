@@ -3,14 +3,6 @@
 class ApiKey < ActiveRecord::Base
   class KeyAccessError < StandardError; end
 
-  SCOPE_MAPPINGS = {
-    topics: {
-      write: { action: 'posts#create', params: %i[topic_id] },
-      read: { action: 'topics#show', params: %i[topic_id], aliases: { topic_id: :id } },
-      feed: { action: 'topics#feed', params: %i[topic_id] }
-    }
-  }
-
   has_many :api_key_scopes
   belongs_to :user
   belongs_to :created_by, class_name: 'User'
@@ -24,6 +16,24 @@ class ApiKey < ActiveRecord::Base
                    }
 
   after_initialize :generate_key
+
+  def self.scope_mappings
+    @mappings ||= {
+      topics: {
+        write: { action: 'posts#create', params: %i[topic_id] },
+        read: { action: 'topics#show', params: %i[topic_id], aliases: { topic_id: :id } },
+        feed: { action: 'topics#feed', params: %i[topic_id] }
+      }
+    }
+  end
+
+  def self.new_mapping(resource, action_name, action)
+    if scope_mappings[resource]
+      scope_mappings[resource][action_name] = action
+    else
+      scope_mappings[resource] = { action_name => action }
+    end
+  end
 
   def generate_key
     if !self.key_hash
