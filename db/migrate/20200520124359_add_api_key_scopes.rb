@@ -7,6 +7,7 @@ class AddApiKeyScopes < ActiveRecord::Migration[6.0]
       t.string :resource
       t.string :action
       t.json :allowed_parameters
+      t.timestamps
     end
   end
 end

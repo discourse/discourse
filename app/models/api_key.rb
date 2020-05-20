@@ -5,9 +5,9 @@ class ApiKey < ActiveRecord::Base
 
   SCOPE_MAPPINGS = {
     topics: {
-      write: { action: 'PostsController#create', params: %i[topic_id] },
-      read: { action: 'TopicsController#show', params: %i[topic_id] },
-      feed: { action: 'TopicsController#feed', params: %i[topic_id] }
+      write: { action: 'posts#create', params: %i[topic_id] },
+      read: { action: 'topics#show', params: %i[topic_id], aliases: { topic_id: :id } },
+      feed: { action: 'topics#feed', params: %i[topic_id] }
     }
   }
 
@@ -68,6 +68,12 @@ class ApiKey < ActiveRecord::Base
 
   def self.hash_key(key)
     Digest::SHA256.hexdigest key
+  end
+
+  def request_allowed?(request, route_param)
+    return false if allowed_ips.present? && allowed_ips.none? { |ip| ip.include?(request.ip) }
+
+    api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(route_param) }
   end
 end
 
