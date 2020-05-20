@@ -51,13 +51,15 @@ export default Controller.extend(CanCheckEmails, {
   hasDeletedPosts: gt("model.number_of_deleted_posts", 0),
   hasBeenSuspended: gt("model.number_of_suspensions", 0),
   hasReceivedWarnings: gt("model.warnings_received_count", 0),
+  hasRejectedPosts: gt("model.number_of_rejected_posts", 0),
 
   showStaffCounters: or(
     "hasGivenFlags",
     "hasFlaggedPosts",
     "hasDeletedPosts",
     "hasBeenSuspended",
-    "hasReceivedWarnings"
+    "hasReceivedWarnings",
+    "hasRejectedPosts"
   ),
 
   showFeaturedTopic: and(
