@@ -175,6 +175,9 @@ export default {
       action: "editFirstPost",
       classNames: ["edit-message"],
       dependentKeys: ["editFirstPost", "showEditOnFooter"],
+      dropdown() {
+        return this.site.mobileView && this.get("topic.isPrivateMessage");
+      },
       displayed() {
         return this.showEditOnFooter;
       }
