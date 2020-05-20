@@ -18,7 +18,7 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def show
-    api_key = ApiKey.find_by!(id: params[:id])
+    api_key = ApiKey.includes(:api_key_scopes).find_by!(id: params[:id])
     render_serialized(api_key, ApiKeySerializer, root: 'key')
   end
 

@@ -79,4 +79,28 @@
       {{/if}}
     </div>
   {{/admin-form-row}}
+
+  {{#admin-form-row label="admin.api.scopes.title"}}
+  {{/admin-form-row}}
+
+  <table class="scopes-table">
+    <thead>
+      <tr>
+        <td>{{i18n "admin.api.scopes.resource"}}</td>
+        <td>{{i18n "admin.api.scopes.action"}}</td>
+        <td>{{i18n "admin.api.scopes.allowed_parameters"}}</td>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model.api_key_scopes as |scope|}}
+        <tr>
+          <td>{{scope.resource}}</td>
+          <td>{{scope.action}}</td>
+          {{#each scope.parameters as |p|}}
+            <td><b>{{p}}:</b> {{get scope.allowed_parameters p}}</td>
+          {{/each}}
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </div>

@@ -43,7 +43,7 @@
             <tr>
               <td><b>{{resource}}</b></td>
               <td></td>
-              <td>Allowed parameters (optional)</td>
+              <td>{{i18n "admin.api.scopes.optional_allowed_parameters"}}</td>
             </tr>
           </thead>
           <tbody>
@@ -58,7 +58,6 @@
                     </div>
                   {{/each}}
                 </td>
-                <td>{{i18n (concat "admin.api.scopes." resource "." act.name)}}</td>
               </tr>
             {{/each}}
           </tbody>
