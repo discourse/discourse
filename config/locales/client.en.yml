@@ -2100,7 +2100,7 @@ en:
         help: "Move message back to Inbox"
       edit_message:
         help: "Edit first post of the message"
-        title: "Edit Message"
+        title: "Edit"
       defer:
         help: "Mark as unread"
         title: "Defer"
