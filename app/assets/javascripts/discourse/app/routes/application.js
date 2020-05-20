@@ -54,7 +54,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       }
       Discourse.set(
         "_docTitle",
-        tokens.join(this.siteSettings.document_title_separator)
+        tokens.join(` ${this.siteSettings.document_title_separator} `)
       );
     },
 

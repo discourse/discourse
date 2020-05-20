@@ -85,7 +85,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.rss do
         @posts = posts
-        @title = "#{SiteSetting.title} - #{rss_description}"
+        @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + rss_description
         @link = Discourse.base_url
         @description = rss_description
         render 'posts/latest', formats: [:rss]
@@ -120,7 +120,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.rss do
         @posts = posts
-        @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_posts", username: user.username)}"
+        @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + I18n.t("rss_description.user_posts", username: user.username)
         @link = "#{Discourse.base_url}/u/#{user.username}/activity"
         @description = I18n.t("rss_description.user_posts", username: user.username)
         render 'posts/latest', formats: [:rss]

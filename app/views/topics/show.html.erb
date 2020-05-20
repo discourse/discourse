@@ -146,7 +146,7 @@
     <% end %>
   <% end %>
 
-  <% content_for(:title) { @title || "#{gsub_emoji_to_unicode(@topic_view.page_title)} - #{SiteSetting.title}" } %>
+  <% content_for(:title) { @title || gsub_emoji_to_unicode(@topic_view.page_title) + " #{SiteSetting.document_title_separator} " + SiteSetting.title } %>
 
   <% if @topic_view.print %>
     <% content_for :after_body do %>

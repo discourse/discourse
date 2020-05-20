@@ -91,9 +91,9 @@ class ListController < ApplicationController
           else
             @title = I18n.t('js.filters.with_topics', filter: filter_title)
           end
-          @title << " - #{SiteSetting.title}"
+          @title << SiteSetting.document_title_separator + SiteSetting.title
         elsif @category.blank? && (filter.to_s == current_homepage) && SiteSetting.short_site_description.present?
-          @title = "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
+          @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + SiteSetting.short_site_description
         end
       end
 
@@ -168,7 +168,7 @@ class ListController < ApplicationController
   def latest_feed
     discourse_expires_in 1.minute
 
-    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.latest")}"
+    @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + I18n.t("rss_description.latest")
     @link = "#{Discourse.base_url}/latest"
     @atom_link = "#{Discourse.base_url}/latest.rss"
     @description = I18n.t("rss_description.latest")
@@ -180,7 +180,7 @@ class ListController < ApplicationController
   def top_feed
     discourse_expires_in 1.minute
 
-    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.top")}"
+    @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + I18n.t("rss_description.top")
     @link = "#{Discourse.base_url}/top"
     @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
@@ -193,7 +193,7 @@ class ListController < ApplicationController
     guardian.ensure_can_see!(@category)
     discourse_expires_in 1.minute
 
-    @title = "#{@category.name} - #{SiteSetting.title}"
+    @title = @category.name + " #{SiteSetting.document_title_separator} " + SiteSetting.title
     @link = "#{Discourse.base_url_no_prefix}#{@category.url}"
     @atom_link = "#{Discourse.base_url_no_prefix}#{@category.url}.rss"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
@@ -206,7 +206,7 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
     target_user = fetch_user_from_params
 
-    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
+    @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + I18n.t("rss_description.user_topics", username: target_user.username)
     @link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics"
     @atom_link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics.rss"
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
@@ -246,7 +246,7 @@ class ListController < ApplicationController
       @rss = "top_#{period}"
 
       if use_crawler_layout?
-        @title = I18n.t("js.filters.top.#{period}.title") + " - #{SiteSetting.title}"
+        @title = I18n.t("js.filters.top.#{period}.title") + " #{SiteSetting.document_title_separator} " + SiteSetting.title
       end
 
       respond_with_list(list)
@@ -268,7 +268,7 @@ class ListController < ApplicationController
       discourse_expires_in 1.minute
 
       @description = I18n.t("rss_description.top_#{period}")
-      @title = "#{SiteSetting.title} - #{@description}"
+      @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + @description
       @link = "#{Discourse.base_url}/top/#{period}"
       @atom_link = "#{Discourse.base_url}/top/#{period}.rss"
       @topic_list = TopicQuery.new(nil).list_top_for(period)

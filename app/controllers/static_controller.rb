@@ -44,7 +44,7 @@ class StaticController < ApplicationController
       else
         @topic.title
       end
-      @title = "#{title_prefix} - #{SiteSetting.title}"
+      @title = title_prefix + " #{SiteSetting.document_title_separator} " + SiteSetting.title
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
       render :show, layout: !request.xhr?, formats: [:html]
@@ -53,7 +53,7 @@ class StaticController < ApplicationController
 
     unless @title.present?
       @title = if SiteSetting.short_site_description.present?
-        "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
+        SiteSetting.title + " #{SiteSetting.document_title_separator} " + SiteSetting.short_site_description
       else
         SiteSetting.title
       end

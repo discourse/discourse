@@ -38,9 +38,9 @@ class CategoriesController < ApplicationController
     @category_list.draft = Draft.get(current_user, Draft::NEW_TOPIC, @category_list.draft_sequence) if current_user
 
     if category_options[:is_homepage] && SiteSetting.short_site_description.present?
-      @title = "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
+      @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + SiteSetting.short_site_description
     elsif !category_options[:is_homepage]
-      @title = "#{I18n.t('js.filters.categories.title')} - #{SiteSetting.title}"
+      @title = I18n.t('js.filters.categories.title') + " #{SiteSetting.document_title_separator} " + SiteSetting.title
     end
 
     respond_to do |format|

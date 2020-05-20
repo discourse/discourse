@@ -169,7 +169,7 @@ class GroupsController < ApplicationController
       guardian,
       params.permit(:before_post_id, :category_id)
     ).limit(50)
-    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.group_posts", group_name: group.name)}"
+    @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + I18n.t("rss_description.group_posts", group_name: group.name)
     @link = Discourse.base_url
     @description = I18n.t("rss_description.group_posts", group_name: group.name)
     render 'posts/latest', formats: [:rss]
@@ -192,7 +192,7 @@ class GroupsController < ApplicationController
       guardian,
       params.permit(:before_post_id, :category_id)
     ).limit(50)
-    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.group_mentions", group_name: group.name)}"
+    @title = SiteSetting.title + " #{SiteSetting.document_title_separator} " + I18n.t("rss_description.group_mentions", group_name: group.name)
     @link = Discourse.base_url
     @description = I18n.t("rss_description.group_mentions", group_name: group.name)
     render 'posts/latest', formats: [:rss]
