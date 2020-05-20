@@ -304,6 +304,15 @@ describe FileStore::S3Store do
 
   describe ".has_been_uploaded?" do
 
+    it "doesn't crash for invalid URLs" do
+      expect(store.has_been_uploaded?("https://site.discourse.com/#bad#6")).to eq(false)
+    end
+
+    it "doesn't crash if URL contains non-ascii characters" do
+      expect(store.has_been_uploaded?("//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/漢1337.png")).to eq(true)
+      expect(store.has_been_uploaded?("//s3-upload-bucket.s3.amazonaws.com/漢1337.png")).to eq(false)
+    end
+
     it "identifies S3 uploads" do
       expect(store.has_been_uploaded?("//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/1337.png")).to eq(true)
     end

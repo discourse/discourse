@@ -79,7 +79,12 @@ module FileStore
     def has_been_uploaded?(url)
       return false if url.blank?
 
-      parsed_url = URI.parse(url)
+      begin
+        parsed_url = URI.parse(URI.encode(url))
+      rescue URI::InvalidURIError
+        return false
+      end
+
       base_hostname = URI.parse(absolute_base_url).hostname
       if url[base_hostname]
         # if the hostnames match it means the upload is in the same
