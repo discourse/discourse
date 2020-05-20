@@ -512,8 +512,8 @@ en:
         status: "Status"
         category: "Category"
         orders:
-          priority: "Priority"
-          priority_asc: "Priority (reverse)"
+          score: "Score"
+          score_asc: "Score (reverse)"
           created_at: "Created At"
           created_at_asc: "Created At (reverse)"
 

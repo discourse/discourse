@@ -450,7 +450,7 @@ class Reviewable < ActiveRecord::Base
     min_score = Reviewable.min_score_for_priority(priority)
 
     order = case sort_order
-            when 'priority_asc'
+            when 'score_asc'
               'reviewables.score ASC, reviewables.created_at DESC'
             when 'created_at'
               'reviewables.created_at DESC, reviewables.score DESC'
