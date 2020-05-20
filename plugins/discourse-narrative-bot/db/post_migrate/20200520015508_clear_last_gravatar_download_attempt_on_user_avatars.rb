@@ -10,5 +10,6 @@ class ClearLastGravatarDownloadAttemptOnUserAvatars < ActiveRecord::Migration[6.
   end
 
   def down
+    raise ActiveRecord::IrreversibleMigration
   end
 end
