@@ -1,9 +1,9 @@
 import EmberObject from "@ember/object";
-import DiscourseEnv from "discourse-common/config/environment";
+import Ember from "ember";
 
 export default EmberObject.create({
   reload: function() {
-    if (DiscourseEnv.environment !== "test") {
+    if (!Ember.testing) {
       location.reload();
     }
   }
