@@ -254,7 +254,7 @@ module Discourse
     # Our templates shouldn't start with 'discourse/app/templates'
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
-      'select-kit/app/templates' => 'select-kit/templates/'
+      'select-kit/addon/templates' => 'select-kit/templates/'
     }
 
     config.handlebars.raw_template_namespace = "__DISCOURSE_RAW_TEMPLATES"
