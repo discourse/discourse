@@ -709,37 +709,29 @@ class Category < ActiveRecord::Base
     ].include? id
   end
 
-  @@url_cache = DistributedCache.new('category_url')
+  def full_slug(separator = "-")
+    start_idx = "#{Discourse.base_uri}/c/".size
+    url[start_idx..-1].gsub("/", separator)
+  end
+
+  @@url_cache = DistributedCache.new("category_url")
 
   def clear_url_cache
     @@url_cache.clear
   end
 
-  def full_slug(separator = "-")
-    start_idx = "#{Discourse.base_uri}/c/".length
-    url[start_idx..-1].gsub("/", separator)
-  end
-
   def url
-    url = @@url_cache[self.id]
-    unless url
-      url = "#{Discourse.base_uri}/c/#{slug_path.join('/')}"
-
-      @@url_cache[self.id] = url
-    end
-
-    url
+    @@url_cache[self.id] ||= "#{Discourse.base_uri}/c/#{slug_path.join('/')}"
   end
 
   def url_with_id
     self.parent_category ? "#{url}/#{self.id}" : "#{Discourse.base_uri}/c/#{self.slug}/#{self.id}"
   end
 
-  # If the name changes, try and update the category definition topic too if it's
-  # an exact match
+  # If the name changes, try and update the category definition topic too if it's an exact match
   def rename_category_definition
-    old_name = saved_changes.transform_values(&:first)["name"]
     return unless topic.present?
+    old_name = saved_changes.transform_values(&:first)["name"]
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
       topic.update_attribute(:title, I18n.t("category.topic_prefix", category: name))
     end
