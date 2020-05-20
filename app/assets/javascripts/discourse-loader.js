@@ -36,7 +36,6 @@ var define, requirejs;
         default: Ember.Object,
         get: Ember.get,
         getProperties: Ember.getProperties,
-        guidFor: Ember.guidFor,
         set: Ember.set,
         setProperties: Ember.setProperties,
         computed: Ember.computed,
