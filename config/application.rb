@@ -27,6 +27,10 @@ require_relative '../lib/discourse_plugin_registry'
 
 require_relative '../lib/plugin_gem'
 
+if ENV['RAILS_FAILOVER']
+  require 'rails_failover'
+end
+
 # Global config
 require_relative '../app/models/global_setting'
 GlobalSetting.configure!
