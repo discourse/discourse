@@ -11,6 +11,7 @@ class ApiKey < ActiveRecord::Base
     }
   }
 
+  has_many :api_key_scopes
   belongs_to :user
   belongs_to :created_by, class_name: 'User'
 

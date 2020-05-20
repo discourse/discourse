@@ -54,6 +54,7 @@ class Admin::ApiController < Admin::AdminController
     api_key = ApiKey.new(update_params)
     ApiKey.transaction do
       api_key.created_by = current_user
+      api_key.api_key_scopes = build_scopes
       if username = params.require(:key).permit(:username)[:username].presence
         api_key.user = User.find_by_username(username)
         raise Discourse::NotFound unless api_key.user
@@ -87,6 +88,21 @@ class Admin::ApiController < Admin::AdminController
   end
 
   private
+
+  def build_scopes
+    params.require(:key)[:scopes].to_a.map do |scope_params|
+      resource, action = scope_params[:id].split(':')
+      mapping = ApiKey::SCOPE_MAPPINGS.dig(resource.to_sym, action.to_sym)
+      raise Discourse::InvalidParameters if mapping.nil?
+
+      allowed_params = mapping[:params].nil? ? nil : scope_params.slice(*mapping[:params])
+      ApiKeyScope.new(
+        resource: resource,
+        action: action,
+        allowed_parameters: allowed_params
+      )
+    end
+  end
 
   def update_params
     editable_fields = [:description]
