@@ -79,4 +79,18 @@ describe ApiKey do
     expect(used_recently.revoked_at).to eq(nil)
   end
 
+  describe 'API Key scope mappings' do
+    it 'maps api_key permissions' do
+      api_key_mappings = ApiKey::SCOPE_MAPPINGS[:topics]
+
+      assert_responds_to(api_key_mappings.dig(:write, :action))
+      assert_responds_to(api_key_mappings.dig(:read, :action))
+      assert_responds_to(api_key_mappings.dig(:feed, :action))
+    end
+
+    def assert_responds_to(mapping)
+      controller, method = mapping.split('#')
+      expect(controller.constantize.method_defined?(method)).to eq(true)
+    end
+  end
 end

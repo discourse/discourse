@@ -22,6 +22,16 @@ class Admin::ApiController < Admin::AdminController
     render_serialized(api_key, ApiKeySerializer, root: 'key')
   end
 
+  def scopes
+    scopes = ApiKey::SCOPE_MAPPINGS.reduce({}) do |memo, (resource, actions)|
+      memo.tap do |m|
+        m[resource] = actions.map { |k, v| { id: "#{resource}:#{k}", name: k, params: v[:params] } }
+      end
+    end
+
+    render json: { scopes: scopes }
+  end
+
   def update
     api_key = ApiKey.find_by!(id: params[:id])
     ApiKey.transaction do

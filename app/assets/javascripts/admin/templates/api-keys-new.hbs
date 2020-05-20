@@ -31,8 +31,41 @@
           }}
       {{/admin-form-row}}
     {{/if}}
-    {{#admin-form-row}}
-      {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}
+
+    {{#admin-form-row label="admin.api.use_scopes"}}
+      {{combo-box content=scopeModes value=useScopes}}
     {{/admin-form-row}}
+
+    {{#if useScopes}}
+      {{#each-in scopes as |resource actions|}}
+        <table class="scopes-table">
+          <thead>
+            <tr>
+              <td><b>{{resource}}</b></td>
+              <td></td>
+              <td>Allowed parameters (optional)</td>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each actions as |act|}}
+              <tr>
+                <td>{{input type="checkbox" checked=act.selected}}</td>
+                <td><b>{{act.name}}</b></td>
+                <td>
+                  {{#each act.params as |p|}}
+                    <div>
+                      {{input maxlength="255" value=(get act p) placeholder=p}}
+                    </div>
+                  {{/each}}
+                </td>
+                <td>{{i18n (concat "admin.api.scopes." resource "." act.name)}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{/each-in}}
+    {{/if}}
+
+    {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}
   {{/if}}
 </div>

@@ -9,6 +9,12 @@ export default Controller.extend({
     { id: "all", name: I18n.t("admin.api.all_users") },
     { id: "single", name: I18n.t("admin.api.single_user") }
   ],
+  scopeModes: [
+    { id: true, name: I18n.t("yes_value") },
+    { id: false, name: I18n.t("no_value") }
+  ],
+  useScopes: true,
+  scopes: null,
 
   @discourseComputed("userMode")
   showUserSelector(mode) {
@@ -31,6 +37,16 @@ export default Controller.extend({
     },
 
     save() {
+      if (this.useScopes) {
+        const selectedScopes = Object.values(this.scopes)
+          .flat()
+          .filter(action => {
+            return action.selected;
+          });
+
+        this.model.set("scopes", selectedScopes);
+      }
+
       this.model.save().catch(popupAjaxError);
     },
 

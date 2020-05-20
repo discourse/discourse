@@ -154,6 +154,16 @@ describe Admin::ApiController do
         expect(UserHistory.last.details).to eq(I18n.t("staff_action_logs.api_key.restored"))
       end
     end
+
+    describe '#scopes' do
+      it 'includes scopes' do
+        get '/admin/api/keys/scopes.json'
+
+        data = response.parsed_body
+
+        expect(data['scopes']).not_to be_empty
+      end
+    end
   end
 
   context "as a moderator" do

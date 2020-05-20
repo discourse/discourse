@@ -41,7 +41,7 @@ const ApiKey = RestModel.extend({
   },
 
   createProperties() {
-    return this.getProperties("description", "username");
+    return this.getProperties("description", "username", "scopes");
   },
 
   @discourseComputed()

@@ -3,6 +3,14 @@
 class ApiKey < ActiveRecord::Base
   class KeyAccessError < StandardError; end
 
+  SCOPE_MAPPINGS = {
+    topics: {
+      write: { action: 'PostsController#create', params: %i[topic_id] },
+      read: { action: 'TopicsController#show', params: %i[topic_id] },
+      feed: { action: 'TopicsController#feed', params: %i[topic_id] }
+    }
+  }
+
   belongs_to :user
   belongs_to :created_by, class_name: 'User'
 
