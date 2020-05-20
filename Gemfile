@@ -127,10 +127,6 @@ gem 'mini_racer'
 # TODO: determine why highline is being held back and upgrade to latest
 gem 'highline', '~> 1.7.0', require: false
 
-# TODO: Upgrading breaks Sidekiq Web
-# This is a bit of a hornets nest cause in an ideal world we much prefer
-# if Sidekiq reused session and CSRF mitigation with Discourse on the
-# _forum_session cookie instead of a rack.session cookie
 gem 'rack', '2.2.2'
 
 gem 'rack-protection' # security
