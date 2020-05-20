@@ -1,6 +1,6 @@
 //= require_tree ./discourse-common/addon
 //= require ./polyfills
-//= require_tree ./select-kit/app
+//= require_tree ./select-kit/addon
 //= require ./discourse/app/app
 //= require ./app-boot
 
