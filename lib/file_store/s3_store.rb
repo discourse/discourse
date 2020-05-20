@@ -79,7 +79,6 @@ module FileStore
     def has_been_uploaded?(url)
       return false if url.blank?
 
-      parsed_url = nil
       begin
         parsed_url = URI.parse(URI.encode(url))
       rescue URI::InvalidURIError
