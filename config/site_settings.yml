@@ -1969,8 +1969,26 @@ uncategorized:
     client: true
 
   document_title_separator:
-    default: " - "
+    default: "-"
     client: true
+    type: enum
+    choices:
+      - "-"
+      - "--"
+      - "---"
+      - ":"
+      - "·"
+      - "•"
+      - "*"
+      - "⋆"
+      - "|"
+      - "~"
+      - "«"
+      - "»"
+      - "<"
+      - ">"
+      - "@"
+      - "#"
 
   native_app_install_banner_ios: false
 
