@@ -7,101 +7,94 @@ class User < ActiveRecord::Base
   include SecondFactorManager
   include HasDestroyedWebHook
 
+  DEFAULT_FEATURED_BADGE_COUNT = 3
+
+  # not deleted on user delete
   has_many :posts
-  has_many :notifications, dependent: :delete_all
-  has_many :topic_users, dependent: :delete_all
+  has_many :topics
+  has_many :uploads
+
   has_many :category_users, dependent: :destroy
   has_many :tag_users, dependent: :destroy
   has_many :user_api_keys, dependent: :destroy
-  has_many :topics
-  has_many :bookmarks
+  has_many :topic_allowed_users, dependent: :destroy
+  has_many :user_archived_messages, dependent: :destroy
+  has_many :email_change_requests, dependent: :destroy
+  has_many :email_tokens, dependent: :destroy
+  has_many :invites, dependent: :destroy
+  has_many :topic_links, dependent: :destroy
+  has_many :user_uploads, dependent: :destroy
+  has_many :user_emails, dependent: :destroy
+  has_many :user_associated_accounts, dependent: :destroy
+  has_many :oauth2_user_infos, dependent: :destroy
+  has_many :user_second_factors, dependent: :destroy
+  has_many :user_badges, -> { for_enabled_badges }, dependent: :destroy
+  has_many :user_auth_tokens, dependent: :destroy
+  has_many :group_users, dependent: :destroy
+  has_many :user_warnings, dependent: :destroy
+  has_many :api_keys, dependent: :destroy
+  has_many :push_subscriptions, dependent: :destroy
+  has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: 'GroupHistory'
+  has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
+  has_many :reviewable_scores, dependent: :destroy
 
-  # dependent deleting handled via before_destroy
+  has_one :user_option, dependent: :destroy
+  has_one :user_avatar, dependent: :destroy
+  has_one :github_user_info, dependent: :destroy
+  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
+  has_one :user_stat, dependent: :destroy
+  has_one :user_profile, dependent: :destroy, inverse_of: :user
+  has_one :single_sign_on_record, dependent: :destroy
+  has_one :anonymous_user_master, class_name: 'AnonymousUser', dependent: :destroy
+  has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser', dependent: :destroy
+
+  # delete all is faster but bypasses callbacks
+  has_many :bookmarks, dependent: :delete_all
+  has_many :notifications, dependent: :delete_all
+  has_many :topic_users, dependent: :delete_all
+  has_many :email_logs, dependent: :delete_all
+  has_many :incoming_emails, dependent: :delete_all
+  has_many :user_visits, dependent: :delete_all
+  has_many :user_auth_token_logs, dependent: :delete_all
+  has_many :group_requests, dependent: :delete_all
+  has_many :muted_user_records, class_name: 'MutedUser', dependent: :delete_all
+  has_many :ignored_user_records, class_name: 'IgnoredUser', dependent: :delete_all
+
+  # dependent deleting handled via before_destroy (special cases)
   has_many :user_actions
   has_many :post_actions
+  has_many :post_timings
+  has_many :directory_items
+  has_many :security_keys, -> {
+    where(enabled: true)
+  }, class_name: "UserSecurityKey"
 
-  DEFAULT_FEATURED_BADGE_COUNT = 3
-
-  has_many :user_badges, -> { for_enabled_badges }, dependent: :destroy
   has_many :badges, through: :user_badges
   has_many :default_featured_user_badges,
             -> { for_enabled_badges.grouped_with_count.where("featured_rank <= ?", DEFAULT_FEATURED_BADGE_COUNT) },
             class_name: "UserBadge"
 
-  has_many :email_logs, dependent: :delete_all
-  has_many :incoming_emails, dependent: :delete_all
-  has_many :post_timings
-  has_many :topic_allowed_users, dependent: :destroy
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
-  has_many :email_tokens, dependent: :destroy
-  has_many :user_visits, dependent: :destroy
-  has_many :invites, dependent: :destroy
-  has_many :topic_links, dependent: :destroy
-  has_many :uploads
-  has_many :user_warnings
-  has_many :user_archived_messages, dependent: :destroy
-  has_many :email_change_requests, dependent: :destroy
-
-  # see before_destroy
-  has_many :directory_items
-  has_many :user_auth_tokens, dependent: :destroy
-  has_many :user_auth_token_logs, dependent: :destroy
-
-  has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users
-  has_many :group_requests, dependent: :destroy
   has_many :secure_categories, through: :groups, source: :categories
 
-  has_many :user_uploads, dependent: :destroy
-  has_many :user_emails, dependent: :destroy
-
-  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
-
-  has_one :user_option, dependent: :destroy
-  has_one :user_avatar, dependent: :destroy
-  has_many :user_associated_accounts, dependent: :destroy
-  has_one :github_user_info, dependent: :destroy
-  has_many :oauth2_user_infos, dependent: :destroy
-  has_many :user_second_factors, dependent: :destroy
-
+  # deleted in user_second_factors relationship
   has_many :totps, -> {
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
 
-  has_many :security_keys, -> {
-    where(enabled: true)
-  }, class_name: "UserSecurityKey"
-
-  has_one :anonymous_user_master, class_name: 'AnonymousUser'
-  has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'
-
   has_one :master_user, through: :anonymous_user_master
   has_one :shadow_user, through: :anonymous_user_shadow, source: :user
 
-  has_one :user_stat, dependent: :destroy
-  has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :profile_background_upload, through: :user_profile
   has_one :card_background_upload, through: :user_profile
-  has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
 
-  has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
-
-  has_many :ignored_user_records, class_name: 'IgnoredUser'
   has_many :ignored_users, through: :ignored_user_records
 
-  has_many :api_keys, dependent: :destroy
-
-  has_many :push_subscriptions, dependent: :destroy
-
   belongs_to :uploaded_avatar, class_name: 'Upload'
-
-  has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: 'GroupHistory'
-  has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
-
-  has_many :reviewable_scores, dependent: :destroy
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -164,6 +157,9 @@ class User < ActiveRecord::Base
     DirectoryItem.where(user_id: self.id)
       .where('period_type in (?)', DirectoryItem.period_types.values)
       .delete_all
+
+    # our relationship filters on enabled, this makes sure everything is deleted
+    UserSecurityKey.where(user_id: self.id).delete_all
   end
 
   # Skip validating email, for example from a particular auth provider plugin
@@ -933,7 +929,7 @@ class User < ActiveRecord::Base
 
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
-      user = EmailToken.confirm(email_token.token, skip_reviewable: true)
+      EmailToken.confirm(email_token.token, skip_reviewable: true)
     end
     self.update!(active: true)
     create_reviewable
