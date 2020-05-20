@@ -7,8 +7,6 @@ class WebHookEventType < ActiveRecord::Base
   GROUP = 4
   CATEGORY = 5
   TAG = 6
-  FLAG = 7
-  QUEUED_POST = 8
   REVIEWABLE = 9
   NOTIFICATION = 10
   SOLVED = 11
