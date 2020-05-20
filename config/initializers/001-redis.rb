@@ -6,8 +6,6 @@ if Rails.env.development? && ENV['DISCOURSE_FLUSH_REDIS']
 end
 
 if ENV['RAILS_FAILOVER']
-  require 'rails_failover'
-
   message_bus_keepalive_interval = MessageBus.keepalive_interval
 
   RailsFailover::Redis.register_master_up_callback do
