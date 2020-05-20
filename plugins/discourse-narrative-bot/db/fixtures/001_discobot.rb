@@ -26,19 +26,6 @@ unless user = User.find_by(id: DiscourseNarrativeBot::BOT_USER_ID)
     u.approved = true
     u.trust_level = TrustLevel[4]
   end
-
-  # TODO Pull the user avatar from that thread for now. In the future, pull it from a local file or from some central discobot repo.
-  if !Rails.env.test?
-    begin
-      UserAvatar.import_url_for_user(
-        "https://cdn.discourse.org/dev/uploads/default/original/2X/e/edb63d57a720838a7ce6a68f02ba4618787f2299.png",
-        User.find(DiscourseNarrativeBot::BOT_USER_ID),
-        override_gravatar: true
-      )
-    rescue
-      # In case the avatar can't be downloaded, don't fail seed
-    end
-  end
 end
 
 bot = User.find(DiscourseNarrativeBot::BOT_USER_ID)
