@@ -251,7 +251,7 @@ describe FileStore::S3Store do
 
       before do
         optimized_image.update!(
-          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com#{image_path}"
+          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{image_path}"
         )
       end
 
@@ -270,6 +270,12 @@ describe FileStore::S3Store do
       describe "when s3_upload_bucket includes folders path" do
         before do
           SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
+        end
+
+        before do
+          optimized_image.update!(
+            url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/#{image_path}"
+          )
         end
 
         it "removes the file from s3 with the right paths" do
