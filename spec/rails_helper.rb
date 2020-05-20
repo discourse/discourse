@@ -131,6 +131,9 @@ module TestSetup
 
     # Don't track ApplicationRequests in test mode unless opted in
     ApplicationRequest.disable
+
+    # Don't queue badge grant in test mode
+    BadgeGranter.disable_queue
   end
 end
 
