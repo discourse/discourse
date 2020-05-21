@@ -10,7 +10,7 @@ end
 Fabricator(:post_with_long_raw_content, from: :post) do
   raw 'This is a sample post with semi-long raw content. The raw content is also more than
       two hundred characters to satisfy any test conditions that require content longer
-      than the typical test post raw content.'
+      than the typical test post raw content. It really is some long content, folks.'
 end
 
 Fabricator(:post_with_youtube, from: :post) do
