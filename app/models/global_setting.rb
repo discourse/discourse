@@ -144,8 +144,9 @@ class GlobalSetting
 
     hash["host_names"] = hostnames
     hash["database"] = db_name
-
     hash["prepared_statements"] = !!self.db_prepared_statements
+    hash["idle_timeout"] = connection_reaper_age if connection_reaper_age.present?
+    hash["reaping_frequency"] = connection_reaper_interval if connection_reaper_interval.present?
 
     { "production" => hash }
   end
