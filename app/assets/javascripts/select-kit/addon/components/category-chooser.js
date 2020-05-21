@@ -67,6 +67,7 @@ export default ComboBoxComponent.extend({
 
   search(filter) {
     if (filter) {
+      filter = filter.toLowerCase();
       return this.content.filter(item => {
         const category = Category.findById(this.getValue(item));
         const categoryName = this.getName(item);
