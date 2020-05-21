@@ -125,7 +125,7 @@ createWidget(
           {
             attributes: {
               href: attrs.user.get("path"),
-              title: attrs.user.get("username"),
+              title: attrs.user.get("name"),
               "data-auto-route": true
             }
           },
