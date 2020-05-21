@@ -5,9 +5,11 @@
       {{combo-box
         content=userSelectableThemes
         value=themeId
-        onChange=(action (mut themeId))
       }}
     </div>
+    {{#if themeIdChanged}}
+      <p class="alert alert-success save-theme-alert">{{i18n "user.save_to_change_theme" save_text=(i18n "save") }}</p>
+    {{/if}}
     {{#if showThemeSetDefault}}
       <div class="controls">
         {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}

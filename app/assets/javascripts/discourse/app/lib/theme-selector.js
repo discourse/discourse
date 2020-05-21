@@ -1,5 +1,4 @@
 import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse-common/lib/deprecated";
 
 const keySelector = "meta[name=discourse_theme_ids]";
@@ -41,66 +40,6 @@ export function setLocalTheme(ids, themeSeq) {
     });
   } else {
     $.removeCookie("theme_ids", { path: "/", expires: 1 });
-  }
-}
-
-export function refreshCSS(node, hash, newHref) {
-  let $orig = $(node);
-
-  if ($orig.data("reloading")) {
-    clearTimeout($orig.data("timeout"));
-    $orig.data("copy").remove();
-  }
-
-  if (!$orig.data("orig")) {
-    $orig.data("orig", node.href);
-  }
-
-  $orig.data("reloading", true);
-
-  const orig = $(node).data("orig");
-
-  let reloaded = $orig.clone(true);
-  if (hash) {
-    reloaded[0].href =
-      orig + (orig.indexOf("?") >= 0 ? "&hash=" : "?hash=") + hash;
-  } else {
-    reloaded[0].href = newHref;
-  }
-
-  $orig.after(reloaded);
-
-  let timeout = setTimeout(() => {
-    $orig.remove();
-    reloaded.data("reloading", false);
-  }, 2000);
-
-  $orig.data("timeout", timeout);
-  $orig.data("copy", reloaded);
-}
-
-export function previewTheme(ids = []) {
-  ids = ids.reject(id => !id);
-  if (!ids.includes(currentThemeId())) {
-    Discourse.set("assetVersion", "forceRefresh");
-
-    ajax(`/themes/assets/${ids.length > 0 ? ids.join("-") : "default"}`).then(
-      results => {
-        const elem = _.first($(keySelector));
-        if (elem) {
-          elem.content = ids.join(",");
-        }
-
-        results.themes.forEach(theme => {
-          const node = $(
-            `link[rel=stylesheet][data-target=${theme.target}]`
-          )[0];
-          if (node) {
-            refreshCSS(node, null, theme.new_href);
-          }
-        });
-      }
-    );
   }
 }
 
