@@ -32,6 +32,11 @@ async function selectKitFillInFilter(filter, selector) {
   );
 }
 
+async function selectKitEmptyFilter(selector) {
+  checkSelectKitIsNotCollapsed(selector);
+  await fillIn(`${selector} .filter-input`, "");
+}
+
 async function selectKitSelectRowByValue(value, selector) {
   checkSelectKitIsNotCollapsed(selector);
   await click(`${selector} .select-kit-row[data-value='${value}']`);
@@ -178,6 +183,10 @@ export default function selectKit(selector) {
 
     async fillInFilter(filter) {
       await selectKitFillInFilter(filter, selector);
+    },
+
+    async emptyFilter() {
+      await selectKitEmptyFilter(selector);
     },
 
     async keyboard(value, target) {
