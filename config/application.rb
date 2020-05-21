@@ -360,10 +360,5 @@ module Discourse
     config.generators do |g|
       g.test_framework :rspec, fixture: false
     end
-
-    # we have a monkey_patch we need to require early... prior to connection
-    # init
-    require 'freedom_patches/reaper'
-
   end
 end
