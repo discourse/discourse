@@ -819,6 +819,12 @@ posting:
       ja: 120
       zh_CN: 120
       zh_TW: 120
+  topic_excerpt_maxlength:
+    default: 220
+    locale_default:
+      ja: 120
+      zh_CN: 120
+      zh_TW: 120
   show_pinned_excerpt_mobile:
     client: true
     default: true
