@@ -1199,6 +1199,8 @@ describe Post do
     it "updates the topic excerpt at the same time if it is the OP" do
       post = create_post
       post.topic.update(excerpt: "test")
+      DB.exec("UPDATE posts SET cooked = 'frogs' WHERE id = ?", [ post.id ])
+      post.reload
       result = post.rebake!
       post.topic.reload
       expect(post.topic.excerpt).not_to eq("test")
