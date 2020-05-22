@@ -83,15 +83,17 @@ describe ApiKey do
     it 'maps api_key permissions' do
       api_key_mappings = ApiKey.scope_mappings[:topics]
 
-      assert_responds_to(api_key_mappings.dig(:write, :action))
-      assert_responds_to(api_key_mappings.dig(:read, :action))
-      assert_responds_to(api_key_mappings.dig(:feed, :action))
+      assert_responds_to(api_key_mappings.dig(:write, :actions))
+      assert_responds_to(api_key_mappings.dig(:read, :actions))
+      assert_responds_to(api_key_mappings.dig(:read_lists, :actions))
     end
 
-    def assert_responds_to(mapping)
-      controller, method = mapping.split('#')
-      controller_name = "#{controller.capitalize}Controller"
-      expect(controller_name.constantize.method_defined?(method)).to eq(true)
+    def assert_responds_to(mappings)
+      mappings.each do |m|
+        controller, method = m.split('#')
+        controller_name = "#{controller.capitalize}Controller"
+        expect(controller_name.constantize.method_defined?(method)).to eq(true)
+      end
     end
   end
 
@@ -132,6 +134,12 @@ describe ApiKey do
       route_path = { 'controller' => 'topics', 'action' => 'show', 'id' => '3' }
 
       expect(key.request_allowed?(request_mock, route_path)).to eq(true)
+    end
+
+    it 'rejects the request when the main parameter and the alias are both used' do
+      route_path = { 'controller' => 'topics', 'action' => 'show', 'topic_id' => '3', 'id' => '4' }
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(false)
     end
   end
 end

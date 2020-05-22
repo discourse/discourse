@@ -17,13 +17,25 @@ class ApiKey < ActiveRecord::Base
 
   after_initialize :generate_key
 
+  def self.list_actions
+    actions = []
+
+    TopTopic.periods.each do |p|
+      actions.concat(["list#category_top_#{p}", "list#top_#{p}", "list#top_#{p}_feed"])
+    end
+
+    %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
+
+    actions
+  end
+
   def self.scope_mappings
     @mappings ||= {
       topics: {
-        write: { action: 'posts#create', params: %i[topic_id] },
-        read: { action: 'topics#show', params: %i[topic_id], aliases: { topic_id: :id } },
-        feed: { action: 'topics#feed', params: %i[topic_id] }
-      }
+        write: { actions: %w[posts#create topics#feed], params: %i[topic_id] },
+        read: { actions: %w[topics#show], params: %i[topic_id], aliases: { topic_id: :id } },
+        read_lists: { actions: list_actions, params: %i[category_id], aliases: { category_id: :category_slug_path_with_id } }
+      },
     }
   end
 
