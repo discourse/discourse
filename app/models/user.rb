@@ -1115,10 +1115,9 @@ class User < ActiveRecord::Base
   end
 
   def number_of_rejected_posts
-    Post.with_deleted
-      .where(user_id: self.id)
-      .joins('INNER JOIN reviewables r ON posts.id = r.target_id')
-      .where(r: { status: Reviewable.statuses[:rejected], type: ReviewableQueuedPost.name })
+    ReviewableQueuedPost
+      .where(status: Reviewable.statuses[:rejected])
+      .where(created_by_id: self.id)
       .count
   end
 
