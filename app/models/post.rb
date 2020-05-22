@@ -650,6 +650,10 @@ class Post < ActiveRecord::Base
       baked_version: BAKED_VERSION
     )
 
+    if is_first_post?
+      topic.update_excerpt(excerpt_for_topic)
+    end
+
     if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)
       save_custom_fields
