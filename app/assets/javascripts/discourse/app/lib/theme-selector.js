@@ -43,6 +43,41 @@ export function setLocalTheme(ids, themeSeq) {
   }
 }
 
+export function refreshCSS(node, hash, newHref) {
+  let $orig = $(node);
+
+  if ($orig.data("reloading")) {
+    clearTimeout($orig.data("timeout"));
+    $orig.data("copy").remove();
+  }
+
+  if (!$orig.data("orig")) {
+    $orig.data("orig", node.href);
+  }
+
+  $orig.data("reloading", true);
+
+  const orig = $(node).data("orig");
+
+  let reloaded = $orig.clone(true);
+  if (hash) {
+    reloaded[0].href =
+      orig + (orig.indexOf("?") >= 0 ? "&hash=" : "?hash=") + hash;
+  } else {
+    reloaded[0].href = newHref;
+  }
+
+  $orig.after(reloaded);
+
+  let timeout = setTimeout(() => {
+    $orig.remove();
+    reloaded.data("reloading", false);
+  }, 2000);
+
+  $orig.data("timeout", timeout);
+  $orig.data("copy", reloaded);
+}
+
 export function listThemes(site) {
   let themes = site.get("user_themes");
 
