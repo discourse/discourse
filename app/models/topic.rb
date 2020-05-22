@@ -1476,6 +1476,13 @@ class Topic < ActiveRecord::Base
     private_topic
   end
 
+  def update_excerpt(excerpt)
+    update_column(:excerpt, excerpt)
+    if archetype == "banner"
+      ApplicationController.banner_json_cache.clear
+    end
+  end
+
   def pm_with_non_human_user?
     sql = <<~SQL
     SELECT 1 FROM topics
