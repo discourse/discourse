@@ -1012,13 +1012,15 @@ a.mention-group {
     display: flex;
     flex-wrap: wrap;
 
-    > .btn,
-    .topic-admin-menu-button-container {
+    > .btn {
+      display: inline-flex;
       margin: 0 0.5em 0.5em 0;
     }
 
-    .topic-admin-menu-button-container {
+    .topic-admin-menu-button-container > span:not(:empty) {
       display: inline-flex;
+      margin: 0 0 0.5em 0;
+      margin-right: 0.5em;
     }
   }
 
