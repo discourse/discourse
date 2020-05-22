@@ -36,6 +36,7 @@ span.badge-posts {
     .double-button {
       display: flex;
       flex: 0 1 auto;
+      align-items: center;
       button {
         &.like,
         &.read-indicator,
