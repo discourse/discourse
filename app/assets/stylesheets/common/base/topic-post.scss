@@ -1013,8 +1013,15 @@ a.mention-group {
     flex-wrap: wrap;
 
     > .btn {
-      display: inline-flex;
       margin: 0 0.5em 0.5em 0;
+      display: inline-flex;
+      align-items: center;
+
+      .d-button-label {
+        display: flex;
+        flex: 1 0 auto;
+        align-items: center;
+      }
     }
 
     .topic-admin-menu-button-container {
