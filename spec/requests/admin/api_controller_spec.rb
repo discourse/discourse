@@ -205,9 +205,9 @@ describe Admin::ApiController do
       it 'includes scopes' do
         get '/admin/api/keys/scopes.json'
 
-        data = response.parsed_body
+        scopes = response.parsed_body['scopes']
 
-        expect(data['scopes']).not_to be_empty
+        expect(scopes.keys).to contain_exactly('topics')
       end
     end
   end

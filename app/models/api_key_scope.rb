@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class ApiKeyScope < ActiveRecord::Base
+  validates_presence_of :resource
+  validates_presence_of :action
+
   def permits?(route_param)
     path_params = "#{route_param['controller']}##{route_param['action']}"
 
