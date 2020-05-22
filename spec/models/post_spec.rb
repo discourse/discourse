@@ -1195,6 +1195,23 @@ describe Post do
       expect(post.cooked).to eq(first_cooked)
       expect(result).to eq(true)
     end
+
+    it "updates the topic excerpt at the same time if it is the OP" do
+      post = create_post
+      post.topic.update(excerpt: "test")
+      result = post.rebake!
+      post.topic.reload
+      expect(post.topic.excerpt).not_to eq("test")
+    end
+
+    it "does not update the topic excerpt if the post is not the OP" do
+      post = create_post
+      post2 = create_post
+      post.topic.update(excerpt: "test")
+      result = post2.rebake!
+      post.topic.reload
+      expect(post.topic.excerpt).to eq("test")
+    end
   end
 
   describe "#set_owner" do
