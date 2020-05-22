@@ -308,6 +308,14 @@ describe TopicEmbed do
       end
     end
 
+    context "non-http URL" do
+      let(:url) { '/test.txt' }
+
+      it "throws an error" do
+        expect { TopicEmbed.find_remote(url) }.to raise_error(URI::InvalidURIError)
+      end
+    end
+
     context "emails" do
       let(:url) { 'http://example.com/foo' }
       let(:contents) { '<p><a href="mailto:foo%40example.com">URL encoded @ symbol</a></p><p><a href="mailto:bar@example.com">normal mailto link</a></p>' }
