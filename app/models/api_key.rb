@@ -29,21 +29,23 @@ class ApiKey < ActiveRecord::Base
     actions
   end
 
-  def self.scope_mappings
-    @mappings ||= {
+  def self.default_mappings
+    {
       topics: {
         write: { actions: %w[posts#create topics#feed], params: %i[topic_id] },
         read: { actions: %w[topics#show], params: %i[topic_id], aliases: { topic_id: :id } },
         read_lists: { actions: list_actions, params: %i[category_id], aliases: { category_id: :category_slug_path_with_id } }
-      },
+      }
     }
   end
 
-  def self.new_mapping(resource, action_name, action)
-    if scope_mappings[resource]
-      scope_mappings[resource][action_name] = action
-    else
-      scope_mappings[resource] = { action_name => action }
+  def self.scope_mappings
+    plugin_mappings = DiscoursePluginRegistry.api_key_scope_mappings
+
+    default_mappings.tap do |mappings|
+      plugin_mappings.each do |mapping|
+        mappings.deep_merge!(mapping)
+      end
     end
   end
 

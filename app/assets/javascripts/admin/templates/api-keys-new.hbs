@@ -32,11 +32,11 @@
       {{/admin-form-row}}
     {{/if}}
 
-    {{#admin-form-row label="admin.api.use_scopes"}}
-      {{combo-box content=scopeModes value=useScopes}}
+    {{#admin-form-row label="admin.api.use_global_key"}}
+      {{input type="checkbox" checked=useGlobalKey}}
     {{/admin-form-row}}
 
-    {{#if useScopes}}
+    {{#unless useGlobalKey}}
       {{#each-in scopes as |resource actions|}}
         <table class="scopes-table">
           <thead>
@@ -63,7 +63,7 @@
           </tbody>
         </table>
       {{/each-in}}
-    {{/if}}
+    {{/unless}}
 
     {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}
   {{/if}}
