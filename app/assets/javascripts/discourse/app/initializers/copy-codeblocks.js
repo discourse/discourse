@@ -3,6 +3,7 @@ import { cancel, later } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
+import { guidFor } from "@ember/object/internals";
 
 // http://github.com/feross/clipboard-copy
 function clipboardCopy(text) {
@@ -90,7 +91,7 @@ export default {
             const state = button.innerHTML;
             button.innerHTML = I18n.t("copy_codeblock.copied");
 
-            const commandId = Ember.guidFor(button);
+            const commandId = guidFor(button);
 
             if (_fadeCopyCodeblocksRunners[commandId]) {
               cancel(_fadeCopyCodeblocksRunners[commandId]);

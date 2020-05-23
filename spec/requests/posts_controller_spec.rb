@@ -675,6 +675,17 @@ describe PostsController do
           I18n.t("invalid_params", message: "category")
         )
       end
+
+      it 'will raise an error if specified embed_url is invalid' do
+        user = Fabricate(:admin)
+        master_key = Fabricate(:api_key).key
+
+        post "/posts.json",
+          params: { title: 'this is a test title', raw: 'this is test body', embed_url: '/test.txt' },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
+
+        expect(response.status).to eq(422)
+      end
     end
 
     describe "when logged in" do

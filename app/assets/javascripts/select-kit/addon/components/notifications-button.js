@@ -13,8 +13,7 @@ export default DropdownSelectBoxComponent.extend({
     autoFilterable: false,
     filterable: false,
     i18nPrefix: "",
-    i18nPostfix: "",
-    showCaret: true
+    i18nPostfix: ""
   },
 
   modifyComponentForRow() {

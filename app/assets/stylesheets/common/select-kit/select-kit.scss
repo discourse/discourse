@@ -63,6 +63,11 @@
     flex-direction: row;
     min-height: 30px;
 
+    .d-icon-spinner {
+      -webkit-animation: rotate-forever 1s infinite linear;
+      animation: rotate-forever 1s infinite linear;
+    }
+
     .selected-name {
       text-align: left;
       flex: 0 1 auto;

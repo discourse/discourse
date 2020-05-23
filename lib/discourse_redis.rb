@@ -266,12 +266,6 @@ class DiscourseRedis
     end
   end
 
-  def flushdb
-    DiscourseRedis.ignore_readonly do
-      keys.each { |k| del(k) }
-    end
-  end
-
   def reconnect
     @redis._client.reconnect
   end

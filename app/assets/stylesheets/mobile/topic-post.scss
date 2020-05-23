@@ -36,6 +36,7 @@ span.badge-posts {
     .double-button {
       display: flex;
       flex: 0 1 auto;
+      align-items: center;
       button {
         &.like,
         &.read-indicator,
@@ -235,20 +236,16 @@ a.reply-to-tab {
 }
 
 #topic-footer-buttons {
-  @include clearfix;
-  padding: 20px 0 0 0;
   .d-icon-bookmark.bookmarked,
   .d-icon-discourse-bookmark-clock.bookmarked {
     color: $tertiary;
   }
-  .combobox {
-    margin-right: 0.5em;
-    width: 160px;
-    margin-bottom: 0.5em;
-  }
-}
 
-#topic-footer-buttons {
+  .topic-footer-mobile-dropdown {
+    margin: 0 0.5em 0.5em 0;
+    width: 160px;
+  }
+
   .topic-notifications-button,
   .pinned-button {
     display: flex;
@@ -261,11 +258,6 @@ a.reply-to-tab {
       }
     }
   }
-}
-
-#topic-footer-button {
-  width: 100px;
-  margin: 0 auto;
 }
 
 .suggested-topics {
@@ -290,13 +282,6 @@ span.post-count {
   background: $primary;
   color: $secondary;
   opacity: 0.8;
-}
-
-#topic-footer-buttons {
-  .btn {
-    margin-bottom: 0.5em;
-    margin-right: 0.5em;
-  }
 }
 
 #topic-title {

@@ -567,11 +567,7 @@ class PostRevisor
   end
 
   def update_topic_excerpt
-    excerpt = @post.excerpt_for_topic
-    @topic.update_column(:excerpt, excerpt)
-    if @topic.archetype == "banner"
-      ApplicationController.banner_json_cache.clear
-    end
+    @topic.update_excerpt(@post.excerpt_for_topic)
   end
 
   def update_category_description

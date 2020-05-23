@@ -77,12 +77,6 @@ const AdminUser = User.extend({
     });
   },
 
-  revokeApiKey() {
-    return ajax(`/admin/users/${this.id}/revoke_api_key`, {
-      type: "DELETE"
-    }).then(() => this.set("api_key", null));
-  },
-
   deleteAllPosts() {
     let deletedPosts = 0;
     const user = this;

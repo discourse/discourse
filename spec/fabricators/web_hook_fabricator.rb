@@ -71,22 +71,6 @@ Fabricator(:tag_web_hook, from: :web_hook) do
   end
 end
 
-Fabricator(:flag_web_hook, from: :web_hook) do
-  transient flag_hook: WebHookEventType.find_by(name: 'flag')
-
-  after_build do |web_hook, transients|
-    web_hook.web_hook_event_types = [transients[:flag_hook]]
-  end
-end
-
-Fabricator(:queued_post_web_hook, from: :web_hook) do
-  transient queued_post_hook: WebHookEventType.find_by(name: 'queued_post')
-
-  after_build do |web_hook, transients|
-    web_hook.web_hook_event_types = [transients[:queued_post_hook]]
-  end
-end
-
 Fabricator(:reviewable_web_hook, from: :web_hook) do
   transient reviewable_hook: WebHookEventType.find_by(name: 'reviewable')
 

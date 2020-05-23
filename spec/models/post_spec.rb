@@ -1158,6 +1158,25 @@ describe Post do
     expect(post.custom_fields).to eq("Tommy" => "Hanks", "Vincent" => "Vega")
   end
 
+  describe "#excerpt_for_topic" do
+    it "returns a topic excerpt, defaulting to 220 chars" do
+      expected_excerpt = "This is a sample post with semi-long raw content. The raw content is also more than \ntwo hundred characters to satisfy any test conditions that require content longer \nthan the typical test post raw content. It really is&hellip;"
+      post = Fabricate(:post_with_long_raw_content)
+      post.rebake!
+      excerpt = post.excerpt_for_topic
+      expect(excerpt).to eq(expected_excerpt)
+    end
+
+    it "respects the site setting for topic excerpt" do
+      SiteSetting.topic_excerpt_maxlength = 10
+      expected_excerpt = "This is a &hellip;"
+      post = Fabricate(:post_with_long_raw_content)
+      post.rebake!
+      excerpt = post.excerpt_for_topic
+      expect(excerpt).to eq(expected_excerpt)
+    end
+  end
+
   describe "#rebake!" do
     it "will rebake a post correctly" do
       post = create_post
@@ -1175,6 +1194,25 @@ describe Post do
       expect(post.baked_at).not_to eq_time(first_baked)
       expect(post.cooked).to eq(first_cooked)
       expect(result).to eq(true)
+    end
+
+    it "updates the topic excerpt at the same time if it is the OP" do
+      post = create_post
+      post.topic.update(excerpt: "test")
+      DB.exec("UPDATE posts SET cooked = 'frogs' WHERE id = ?", [ post.id ])
+      post.reload
+      result = post.rebake!
+      post.topic.reload
+      expect(post.topic.excerpt).not_to eq("test")
+    end
+
+    it "does not update the topic excerpt if the post is not the OP" do
+      post = create_post
+      post2 = create_post
+      post.topic.update(excerpt: "test")
+      result = post2.rebake!
+      post.topic.reload
+      expect(post.topic.excerpt).to eq("test")
     end
   end
 
