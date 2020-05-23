@@ -1,9 +1,11 @@
 div.poll {
   .poll-buttons {
-    padding: 0.5em 1em 1em 1em;
+    display: inline-flex;
+    flex-wrap: wrap;
+    padding: 0.5em 1em 0.5em 1em;
 
     button {
-      margin-right: 0.5em;
+      margin: 0 0.5em 0.5em 0;
     }
   }
 
@@ -11,6 +13,7 @@ div.poll {
     padding: 0 1em;
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     .info-text {
       display: inline;
     }
