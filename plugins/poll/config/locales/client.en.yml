@@ -43,15 +43,15 @@ en:
       multiple:
         help:
           at_least_min_options:
-            one: "Choose at least <strong>%{count}</strong> option"
-            other: "Choose at least <strong>%{count}</strong> options"
+            one: "Choose at least <strong>%{count}</strong> option."
+            other: "Choose at least <strong>%{count}</strong> options."
           up_to_max_options:
-            one: "Choose up to <strong>%{count}</strong> option"
-            other: "Choose up to <strong>%{count}</strong> options"
+            one: "Choose up to <strong>%{count}</strong> option."
+            other: "Choose up to <strong>%{count}</strong> options."
           x_options:
-            one: "Choose <strong>%{count}</strong> option"
-            other: "Choose <strong>%{count}</strong> options"
-          between_min_and_max_options: "Choose between <strong>%{min}</strong> and <strong>%{max}</strong> options"
+            one: "Choose <strong>%{count}</strong> option."
+            other: "Choose <strong>%{count}</strong> options."
+          between_min_and_max_options: "Choose between <strong>%{min}</strong> and <strong>%{max}</strong> options."
 
       cast-votes:
         title: "Cast your votes"
