@@ -493,10 +493,6 @@ class Guardian
     is_staff?
   end
 
-  def can_see_about_stats?
-    true
-  end
-
   def auth_token
     if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
       UserAuthToken.hash_token(cookie)

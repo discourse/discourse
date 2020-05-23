@@ -164,15 +164,9 @@ class GlobalSetting
         c[:port] = redis_port if redis_port
 
         if redis_slave_host && redis_slave_port
-          if ENV["RAILS_FAILOVER"]
-            c[:replica_host] = redis_slave_host
-            c[:replica_port] = redis_slave_port
-            c[:connector] = RailsFailover::Redis::Connector
-          else
-            c[:slave_host] = redis_slave_host
-            c[:slave_port] = redis_slave_port
-            c[:connector] = DiscourseRedis::Connector
-          end
+          c[:slave_host] = redis_slave_host
+          c[:slave_port] = redis_slave_port
+          c[:connector] = DiscourseRedis::Connector
         end
 
         c[:password] = redis_password if redis_password.present?
@@ -194,15 +188,9 @@ class GlobalSetting
         c[:port] = message_bus_redis_port if message_bus_redis_port
 
         if message_bus_redis_slave_host && message_bus_redis_slave_port
-          if ENV["RAILS_FAILOVER"]
-            c[:replica_host] = message_bus_redis_slave_host
-            c[:replica_port] = message_bus_redis_slave_port
-            c[:connector] = RailsFailover::Redis::Connector
-          else
-            c[:slave_host] = message_bus_redis_slave_host
-            c[:slave_port] = message_bus_redis_slave_port
-            c[:connector] = DiscourseRedis::Connector
-          end
+          c[:slave_host] = message_bus_redis_slave_host
+          c[:slave_port] = message_bus_redis_slave_port
+          c[:connector] = DiscourseRedis::Connector
         end
 
         c[:password] = message_bus_redis_password if message_bus_redis_password.present?

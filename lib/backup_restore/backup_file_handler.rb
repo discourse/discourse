@@ -65,10 +65,9 @@ module BackupRestore
       return if !@is_archive
 
       log "Unzipping archive, this may take a while..."
-      Discourse::Utils.execute_command(
-        'tar', '--extract', '--gzip', '--file', @archive_path, '--directory', @tmp_directory,
-        failure_message: "Failed to decompress archive."
-      )
+      pipeline = Compression::Pipeline.new([Compression::Tar.new, Compression::Gzip.new])
+      unzipped_path = pipeline.decompress(@tmp_directory, @archive_path, available_size)
+      pipeline.strip_directory(unzipped_path, @tmp_directory)
     end
 
     def extract_db_dump

@@ -8,7 +8,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
   fab!(:user) { Fabricate(:user) }
 
   before do
-    Discourse.redis.flushdb
+    Discourse.redis.flushall
   end
 
   describe "#send_notification" do

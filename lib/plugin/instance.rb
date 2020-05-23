@@ -165,16 +165,6 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
-  # Request a new size for topic thumbnails
-  # Will respect plugin enabled setting is enabled
-  # Size should be an array with two elements [max_width, max_height]
-  def register_topic_thumbnail_size(size)
-    if !(size.kind_of?(Array) && size.length == 2)
-      raise ArgumentError.new("Topic thumbnail dimension is not valid")
-    end
-    DiscoursePluginRegistry.register_topic_thumbnail_size(size, self)
-  end
-
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       AvatarLookup.lookup_columns << column

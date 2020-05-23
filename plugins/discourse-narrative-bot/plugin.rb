@@ -55,7 +55,6 @@ after_initialize do
 
   module ::DiscourseNarrativeBot
     PLUGIN_NAME = "discourse-narrative-bot".freeze
-    BOT_USER_ID = -2
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -272,9 +271,4 @@ after_initialize do
       end
     end
   end
-
-  UserAvatar.register_custom_user_gravatar_email_hash(
-    DiscourseNarrativeBot::BOT_USER_ID,
-    "discobot@discourse.org"
-  )
 end

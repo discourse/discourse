@@ -26,11 +26,11 @@ describe SearchController do
     before do
       # TODO be a bit more strategic here instead of junking
       # all of redis
-      Discourse.redis.flushdb
+      Discourse.redis.flushall
     end
 
     after do
-      Discourse.redis.flushdb
+      Discourse.redis.flushall
     end
 
     context "when overloaded" do

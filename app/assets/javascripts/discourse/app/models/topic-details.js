@@ -61,15 +61,12 @@ const TopicDetails = RestModel.extend({
     }
   },
 
-  updateNotifications(level) {
-    return ajax(`/t/${this.get("topic.id")}/notifications`, {
+  updateNotifications(v) {
+    this.set("notification_level", v);
+    this.set("notifications_reason_id", null);
+    return ajax("/t/" + this.get("topic.id") + "/notifications", {
       type: "POST",
-      data: { notification_level: level }
-    }).then(() => {
-      this.setProperties({
-        notification_level: level,
-        notifications_reason_id: null
-      });
+      data: { notification_level: v }
     });
   },
 

@@ -1578,15 +1578,20 @@ describe User do
 
     describe '#number_of_rejected_posts' do
       it 'counts rejected posts' do
-        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:rejected])
+        post = Fabricate(:post, user: user)
+
+        Fabricate(:reviewable_queued_post, target: post, status: Reviewable.statuses[:rejected])
 
         expect(user.number_of_rejected_posts).to eq(1)
       end
 
       it 'ignore non-rejected posts' do
-        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:approved])
+        post = Fabricate(:post, user: user)
+
+        Fabricate(:reviewable_queued_post, target: post, status: Reviewable.statuses[:approved])
 
         expect(user.number_of_rejected_posts).to eq(0)
+
       end
     end
   end

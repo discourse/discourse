@@ -444,7 +444,7 @@ describe Search do
       end
 
       let(:expected_blurb) do
-        "...quire content longer than the typical test post raw content. It really is some long content, folks. elephant"
+        "...to satisfy any test conditions that require content longer than the typical test post raw content. elephant"
       end
 
       it 'returns the post' do
