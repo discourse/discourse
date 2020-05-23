@@ -16,7 +16,7 @@ class AboutController < ApplicationController
         render :index
       end
       format.json do
-        render_json_dump(AboutSerializer.new(@about, scope: guardian))
+        render_serialized(@about, AboutSerializer)
       end
     end
   end

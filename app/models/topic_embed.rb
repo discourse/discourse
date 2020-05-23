@@ -109,8 +109,6 @@ class TopicEmbed < ActiveRecord::Base
 
     url = UrlHelper.escape_uri(url)
     original_uri = URI.parse(url)
-    raise URI::InvalidURIError unless original_uri.is_a?(URI::HTTP)
-
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
       attributes: %w[href src class],

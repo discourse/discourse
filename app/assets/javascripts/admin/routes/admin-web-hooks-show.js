@@ -1,4 +1,5 @@
 import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
@@ -14,7 +15,7 @@ export default DiscourseRoute.extend({
   },
 
   setupController(controller, model) {
-    if (model.get("isNew")) {
+    if (model.get("isNew") || isEmpty(model.get("web_hook_event_types"))) {
       model.set("web_hook_event_types", controller.get("defaultEventTypes"));
     }
 

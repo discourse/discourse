@@ -273,17 +273,12 @@ export function addNavItem(item) {
   NavItem.extraNavItemDescriptors.push(item);
 }
 
-if (typeof Discourse !== "undefined") {
-  Object.defineProperty(Discourse, "NavItem", {
-    get() {
-      deprecated(
-        "Import the NavItem class instead of using Discourse.NavItem",
-        {
-          since: "2.4.0",
-          dropFrom: "2.5.0"
-        }
-      );
-      return NavItem;
-    }
-  });
-}
+Object.defineProperty(Discourse, "NavItem", {
+  get() {
+    deprecated("Import the NavItem class instead of using Discourse.NavItem", {
+      since: "2.4.0",
+      dropFrom: "2.5.0"
+    });
+    return NavItem;
+  }
+});

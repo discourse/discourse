@@ -16,16 +16,15 @@ class ApplicationRequest < ActiveRecord::Base
   include CachedCounting
 
   def self.disable
-    @disabled = true
+    @enabled = false
   end
 
   def self.enable
-    @disabled = false
+    @enabled = true
   end
 
   def self.increment!(type, opts = nil)
-    return if @disabled
-    perform_increment!(redis_key(type), opts)
+    perform_increment!(redis_key(type), opts) if @enabled
   end
 
   def self.write_cache!(date = nil)

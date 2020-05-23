@@ -2127,7 +2127,7 @@ RSpec.describe TopicsController do
     let(:topic) { post.topic }
 
     after do
-      Discourse.redis.flushdb
+      Discourse.redis.flushall
     end
 
     it 'returns first post of the topic' do

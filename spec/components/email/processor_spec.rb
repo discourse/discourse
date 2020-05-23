@@ -5,7 +5,7 @@ require "email/processor"
 
 describe Email::Processor do
   after do
-    Discourse.redis.flushdb
+    Discourse.redis.flushall
   end
 
   let(:from) { "foo@bar.com" }

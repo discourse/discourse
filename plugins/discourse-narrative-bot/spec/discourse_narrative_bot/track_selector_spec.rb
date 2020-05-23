@@ -472,7 +472,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           let(:post) { Fabricate(:post, topic: topic) }
 
           after do
-            Discourse.redis.flushdb
+            Discourse.redis.flushall
           end
 
           describe 'when random reply massage has been displayed in the last 6 hours' do

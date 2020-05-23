@@ -128,12 +128,6 @@ module TestSetup
     # code that runs inside jobs. run_later! means they are put on the redis
     # queue and never processed.
     Jobs.run_later!
-
-    # Don't track ApplicationRequests in test mode unless opted in
-    ApplicationRequest.disable
-
-    # Don't queue badge grant in test mode
-    BadgeGranter.disable_queue
   end
 end
 

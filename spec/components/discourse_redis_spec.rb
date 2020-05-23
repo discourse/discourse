@@ -21,11 +21,11 @@ describe DiscourseRedis do
     let(:raw_redis) { Redis.new(DiscourseRedis.config) }
 
     before do
-      raw_redis.flushdb
+      raw_redis.flushall
     end
 
     after do
-      raw_redis.flushdb
+      raw_redis.flushall
     end
 
     describe 'when namespace is enabled' do
