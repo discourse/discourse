@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe WebhooksController do
-  before { Discourse.redis.flushall }
+  before { Discourse.redis.flushdb }
 
   let(:email) { "em@il.com" }
   let(:message_id) { "12345@il.com" }

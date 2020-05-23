@@ -22,7 +22,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     bookmark1.update_column(:reminder_at, five_minutes_ago - 10.minutes)
     bookmark2.update_column(:reminder_at, five_minutes_ago - 5.minutes)
     bookmark3.update_column(:reminder_at, five_minutes_ago)
-    Discourse.redis.flushall
+    Discourse.redis.flushdb
   end
 
   it "sends every reminder and marks the reminder_at to nil for all bookmarks, as well as last sent date" do

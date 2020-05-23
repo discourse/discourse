@@ -3,11 +3,11 @@
 class BadgeGranter
 
   def self.disable_queue
-    @queue_enabled = false
+    @queue_disabled = true
   end
 
   def self.enable_queue
-    @queue_enabled = true
+    @queue_disabled = false
   end
 
   def initialize(badge, user, opts = {})
@@ -124,7 +124,7 @@ class BadgeGranter
   end
 
   def self.queue_badge_grant(type, opt)
-    return if !SiteSetting.enable_badges || !@queue_enabled
+    return if !SiteSetting.enable_badges || @queue_disabled
     payload = nil
 
     case type

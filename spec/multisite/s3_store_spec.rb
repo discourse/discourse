@@ -217,4 +217,47 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       end
     end
   end
+
+  describe "#has_been_uploaded?" do
+    before do
+      SiteSetting.s3_region = 'us-west-1'
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket/test"
+      SiteSetting.s3_access_key_id = "s3-access-key-id"
+      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+      SiteSetting.enable_s3_uploads = true
+    end
+
+    let(:store) { FileStore::S3Store.new }
+    let(:client) { Aws::S3::Client.new(stub_responses: true) }
+    let(:resource) { Aws::S3::Resource.new(client: client) }
+    let(:s3_bucket) { resource.bucket(SiteSetting.s3_upload_bucket) }
+    let(:s3_helper) { store.s3_helper }
+
+    it "returns false for blank urls" do
+      url = ""
+      expect(store.has_been_uploaded?(url)).to eq(false)
+    end
+
+    it "returns true if the base hostname is the same for both urls" do
+      url = "https://s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/test/original/2X/d/dd7964f5fd13e1103c5244ca30abe1936c0a4b88.png"
+      expect(store.has_been_uploaded?(url)).to eq(true)
+    end
+
+    it "returns false if the base hostname is the same for both urls BUT the bucket name is different in the path" do
+      bucket = "someotherbucket"
+      url = "https://s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{bucket}/original/2X/d/dd7964f5fd13e1103c5244ca30abe1936c0a4b88.png"
+      expect(store.has_been_uploaded?(url)).to eq(false)
+    end
+
+    it "returns false if the hostnames do not match and the s3_cdn_url is blank" do
+      url = "https://www.someotherhostname.com/test/original/2X/d/dd7964f5fd13e1103c5244ca30abe1936c0a4b88.png"
+      expect(store.has_been_uploaded?(url)).to eq(false)
+    end
+
+    it "returns true if the s3_cdn_url is present and matches the url hostname" do
+      SiteSetting.s3_cdn_url = "https://www.someotherhostname.com"
+      url = "https://www.someotherhostname.com/test/original/2X/d/dd7964f5fd13e1103c5244ca30abe1936c0a4b88.png"
+      expect(store.has_been_uploaded?(url)).to eq(true)
+    end
+  end
 end

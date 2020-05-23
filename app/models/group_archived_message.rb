@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GroupArchivedMessage < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :group
   belongs_to :topic
 
   def self.move_to_inbox!(group_id, topic)
