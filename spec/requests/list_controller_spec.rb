@@ -128,7 +128,7 @@ RSpec.describe ListController do
     let(:moderator) { Fabricate(:moderator) }
     let(:admin) { Fabricate(:admin) }
     let(:tag) { Fabricate(:tag) }
-    let(:private_message) { Fabricate(:private_message_topic) }
+    let(:private_message) { Fabricate(:private_message_topic, user: admin) }
 
     before do
       SiteSetting.tagging_enabled = true
@@ -148,6 +148,17 @@ RSpec.describe ListController do
         get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
         expect(response.status).to eq(200)
       end
+    end
+
+    it 'should work for tag with unicode name' do
+      unicode_tag = Fabricate(:tag, name: 'hello-🇺🇸')
+      Fabricate(:topic_tag, tag: unicode_tag, topic: private_message)
+
+      sign_in(admin)
+      get "/topics/private-messages-tags/#{admin.username}/#{UrlHelper.encode_component(unicode_tag.name)}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].first["id"])
+        .to eq(private_message.id)
     end
   end
 

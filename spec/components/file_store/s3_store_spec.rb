@@ -251,7 +251,7 @@ describe FileStore::S3Store do
 
       before do
         optimized_image.update!(
-          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com#{image_path}"
+          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{image_path}"
         )
       end
 
@@ -270,6 +270,12 @@ describe FileStore::S3Store do
       describe "when s3_upload_bucket includes folders path" do
         before do
           SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
+        end
+
+        before do
+          optimized_image.update!(
+            url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/#{image_path}"
+          )
         end
 
         it "removes the file from s3 with the right paths" do
@@ -297,6 +303,15 @@ describe FileStore::S3Store do
   end
 
   describe ".has_been_uploaded?" do
+
+    it "doesn't crash for invalid URLs" do
+      expect(store.has_been_uploaded?("https://site.discourse.com/#bad#6")).to eq(false)
+    end
+
+    it "doesn't crash if URL contains non-ascii characters" do
+      expect(store.has_been_uploaded?("//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/漢1337.png")).to eq(true)
+      expect(store.has_been_uploaded?("//s3-upload-bucket.s3.amazonaws.com/漢1337.png")).to eq(false)
+    end
 
     it "identifies S3 uploads" do
       expect(store.has_been_uploaded?("//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/1337.png")).to eq(true)

@@ -4,20 +4,20 @@ discobot_username = 'discobot'
 
 def seed_primary_email
   UserEmail.seed do |ue|
-    ue.id = -2
+    ue.id = DiscourseNarrativeBot::BOT_USER_ID
     ue.email = "discobot_email"
     ue.primary = true
-    ue.user_id = -2
+    ue.user_id = DiscourseNarrativeBot::BOT_USER_ID
   end
 end
 
-unless user = User.find_by(id: -2)
+unless user = User.find_by(id: DiscourseNarrativeBot::BOT_USER_ID)
   suggested_username = UserNameSuggester.suggest(discobot_username)
 
   seed_primary_email
 
   User.seed do |u|
-    u.id = -2
+    u.id = DiscourseNarrativeBot::BOT_USER_ID
     u.name = discobot_username
     u.username = suggested_username
     u.username_lower = suggested_username.downcase
@@ -26,22 +26,9 @@ unless user = User.find_by(id: -2)
     u.approved = true
     u.trust_level = TrustLevel[4]
   end
-
-  # TODO Pull the user avatar from that thread for now. In the future, pull it from a local file or from some central discobot repo.
-  if !Rails.env.test?
-    begin
-      UserAvatar.import_url_for_user(
-        "https://cdn.discourse.org/dev/uploads/default/original/2X/e/edb63d57a720838a7ce6a68f02ba4618787f2299.png",
-        User.find(-2),
-        override_gravatar: true
-      )
-    rescue
-      # In case the avatar can't be downloaded, don't fail seed
-    end
-  end
 end
 
-bot = User.find(-2)
+bot = User.find(DiscourseNarrativeBot::BOT_USER_ID)
 
 # ensure discobot has a primary email
 unless bot.primary_email
@@ -62,4 +49,4 @@ if !bot.user_profile.bio_raw
   )
 end
 
-Group.user_trust_level_change!(-2, TrustLevel[4])
+Group.user_trust_level_change!(DiscourseNarrativeBot::BOT_USER_ID, TrustLevel[4])

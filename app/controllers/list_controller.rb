@@ -331,7 +331,13 @@ class ListController < ApplicationController
 
     params[:category] = @category.id.to_s
 
-    @description_meta = @category.description_text
+    @description_meta = if @category.uncategorized?
+      I18n.t('category.uncategorized_description', locale: SiteSetting.default_locale)
+    else
+      @category.description_text
+    end
+    @description_meta = SiteSetting.site_description if @description_meta.blank?
+
     if !guardian.can_see?(@category)
       if SiteSetting.detailed_404
         raise Discourse::InvalidAccess

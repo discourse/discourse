@@ -1005,10 +1005,51 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  .reason {
-    color: $primary-high;
-    display: inline;
-    margin: 0 0 0 8px;
-    line-height: $line-height-medium;
+  padding: 0.5em 0;
+
+  .topic-footer-main-buttons {
+    margin: 0 0 -0.5em 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    > .btn {
+      margin: 0 0.5em 0.5em 0;
+      display: inline-flex;
+      align-items: center;
+
+      .d-button-label {
+        display: flex;
+        flex: 1 0 auto;
+        align-items: center;
+      }
+    }
+
+    .topic-admin-menu-button-container {
+      display: inline-flex;
+    }
+
+    .topic-admin-menu-button-container > span:not(:empty) {
+      margin: 0 0.5em 0.5em 0;
+    }
+  }
+
+  .pinned-button:not(.is-hidden) + .topic-notifications-button {
+    margin-top: 0;
+  }
+
+  .pinned-button,
+  .topic-notifications-button {
+    margin: 1em 0;
+
+    .reason {
+      color: $primary-high;
+      display: inline-flex;
+      margin: 0;
+      align-items: center;
+
+      .text {
+        margin-left: 0.5em;
+      }
+    }
   }
 }

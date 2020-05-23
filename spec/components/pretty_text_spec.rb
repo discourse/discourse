@@ -508,7 +508,7 @@ describe PrettyText do
         ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
         expect(PrettyText.cook("# banana")).not_to include('banana')
       ensure
-        Discourse.redis.flushall
+        Discourse.redis.flushdb
       end
     end
   end
@@ -1166,7 +1166,7 @@ HTML
   end
 
   describe "censoring" do
-    after(:all) { Discourse.redis.flushall }
+    after(:all) { Discourse.redis.flushdb }
 
     def expect_cooked_match(raw, expected_cooked)
       expect(PrettyText.cook(raw)).to eq(expected_cooked)

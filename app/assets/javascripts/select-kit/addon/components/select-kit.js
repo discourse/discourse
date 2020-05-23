@@ -1,5 +1,6 @@
 import I18n from "I18n";
-import EmberObject, { computed, get, guidFor } from "@ember/object";
+import EmberObject, { computed, get } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -271,7 +272,8 @@ export default Component.extend(
       selectedNameComponent: "selected-name",
       castInteger: false,
       preventsClickPropagation: false,
-      focusAfterOnChange: true
+      focusAfterOnChange: true,
+      triggerOnChangeOnTab: true
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function() {
