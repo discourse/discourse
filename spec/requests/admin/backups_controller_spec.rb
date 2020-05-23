@@ -35,7 +35,7 @@ RSpec.describe Admin::BackupsController do
   end
 
   after do
-    Discourse.redis.flushall
+    Discourse.redis.flushdb
 
     @paths&.each { |path| File.delete(path) if File.exists?(path) }
     @paths = nil

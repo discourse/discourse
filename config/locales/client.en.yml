@@ -963,6 +963,7 @@ en:
       api_approved: "Approved:"
       api_last_used_at: "Last used at:"
       theme: "Theme"
+      save_to_change_theme: 'Theme will be updated after you click "%{save_text}"'
       home: "Default Home Page"
       staged: "Staged"
 
@@ -2100,7 +2101,7 @@ en:
         help: "Move message back to Inbox"
       edit_message:
         help: "Edit first post of the message"
-        title: "Edit Message"
+        title: "Edit"
       defer:
         help: "Mark as unread"
         title: "Defer"
@@ -3598,12 +3599,6 @@ en:
         tag_event:
           name: "Tag Event"
           details: "When a tag is created, updated or destroyed."
-        flag_event:
-          name: "Flag Event"
-          details: "When a flag is created, agreed, disagreed or ignored."
-        queued_post_event:
-          name: "Post Approval Event"
-          details: "When a new queued post is created, approved or rejected."
         reviewable_event:
           name: "Reviewable Event"
           details: "When a new item is ready for review and when its status is updated."

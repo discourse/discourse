@@ -2,13 +2,10 @@ import I18n from "I18n";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import { setDefaultHomepage } from "discourse/lib/utilities";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import {
-  listThemes,
-  previewTheme,
-  setLocalTheme
-} from "discourse/lib/theme-selector";
+import discourseComputed from "discourse-common/utils/decorators";
+import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import pageReloader from "discourse/helpers/page-reloader";
 import {
   safariHacksDisabled,
   isiPad,
@@ -28,6 +25,9 @@ const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default Controller.extend({
+  currentThemeId: -1,
+  preferencesController: inject("preferences"),
+
   @discourseComputed("makeThemeDefault")
   saveAttrNames(makeDefault) {
     let attrs = [
@@ -50,8 +50,6 @@ export default Controller.extend({
 
     return attrs;
   },
-
-  preferencesController: inject("preferences"),
 
   @discourseComputed()
   isiPad() {
@@ -105,10 +103,14 @@ export default Controller.extend({
     return themes && themes.length > 1;
   },
 
-  @observes("themeId")
-  themeIdChanged() {
-    const id = this.themeId;
-    previewTheme([id]);
+  @discourseComputed("themeId")
+  themeIdChanged(themeId) {
+    if (this.currentThemeId === -1) {
+      this.set("currentThemeId", themeId);
+      return false;
+    } else {
+      return this.currentThemeId !== themeId;
+    }
   },
 
   @discourseComputed("model.user_option.theme_ids", "themeId")
@@ -188,6 +190,10 @@ export default Controller.extend({
               "safari-hacks-disabled",
               this.disableSafariHacks.toString()
             );
+          }
+
+          if (this.themeId !== this.currentThemeId) {
+            pageReloader.reload();
           }
         })
         .catch(popupAjaxError);

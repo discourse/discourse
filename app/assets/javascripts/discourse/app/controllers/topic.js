@@ -185,6 +185,13 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
+  @discourseComputed("model.category")
+  minimumRequiredTags(category) {
+    return category && category.minimum_required_tags > 0
+      ? category.minimum_required_tags
+      : null;
+  },
+
   _forceRefreshPostStream() {
     this.appEvents.trigger("post-stream:refresh", { force: true });
   },

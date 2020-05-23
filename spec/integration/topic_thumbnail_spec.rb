@@ -10,7 +10,7 @@ describe "Topic Thumbnails" do
 
   context 'latest' do
     def get_topic
-      Discourse.redis.del(topic.thumbnail_job_redis_key([]))
+      Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
       get '/latest.json'
       response.parsed_body["topic_list"]["topics"][0]
     end
@@ -82,6 +82,39 @@ describe "Topic Thumbnails" do
 
         # Original + Optimized + 3 theme requests
         expect(thumbnails.length).to eq(5)
+      end
+    end
+
+    context "with a plugin" do
+      before do
+        plugin = Plugin::Instance.new
+        plugin.register_topic_thumbnail_size [512, 512]
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      it "includes the theme specified resolutions" do
+        topic_json = nil
+
+        expect do
+          topic_json = get_topic
+        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
+
+        # Run the job
+        args = Jobs::GenerateTopicThumbnails.jobs.last["args"].first
+        Jobs::GenerateTopicThumbnails.new.execute(args.with_indifferent_access)
+
+        # Request again
+        expect do
+          topic_json = get_topic
+        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
+
+        thumbnails = topic_json["thumbnails"]
+
+        # Original + Optimized + 1 plugin request
+        expect(thumbnails.length).to eq(3)
       end
     end
   end

@@ -27,6 +27,36 @@ body.crawler {
 
   .topic-list {
     margin-bottom: 1em;
+    @media (max-width: 850px) {
+      td {
+        word-break: break-all;
+        &.posters {
+          a:not(:last-of-type) {
+            display: none;
+          }
+          a:last-of-type {
+            display: block;
+          }
+        }
+      }
+
+      td,
+      th {
+        &.views {
+          display: none;
+        }
+      }
+
+      .link-top-line {
+        a.title {
+          padding: 0;
+        }
+      }
+
+      .link-bottom-line {
+        margin-top: 0.25em;
+      }
+    }
   }
 
   footer {

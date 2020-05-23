@@ -159,14 +159,6 @@ class Post < ActiveRecord::Base
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
 
-  def self.excerpt_size=(sz)
-    @excerpt_size = sz
-  end
-
-  def self.excerpt_size
-    @excerpt_size || 220
-  end
-
   def whisper?
     post_type == Post.types[:whisper]
   end
@@ -482,7 +474,7 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, Post.excerpt_size, strip_links: true, strip_images: true, post: self)
+    Post.excerpt(cooked, SiteSetting.topic_excerpt_maxlength, strip_links: true, strip_images: true, post: self)
   end
 
   def is_first_post?
@@ -657,6 +649,10 @@ class Post < ActiveRecord::Base
       baked_at: Time.zone.now,
       baked_version: BAKED_VERSION
     )
+
+    if is_first_post?
+      topic.update_excerpt(excerpt_for_topic)
+    end
 
     if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)

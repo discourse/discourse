@@ -1,5 +1,4 @@
 import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse-common/lib/deprecated";
 
 const keySelector = "meta[name=discourse_theme_ids]";
@@ -77,31 +76,6 @@ export function refreshCSS(node, hash, newHref) {
 
   $orig.data("timeout", timeout);
   $orig.data("copy", reloaded);
-}
-
-export function previewTheme(ids = []) {
-  ids = ids.reject(id => !id);
-  if (!ids.includes(currentThemeId())) {
-    Discourse.set("assetVersion", "forceRefresh");
-
-    ajax(`/themes/assets/${ids.length > 0 ? ids.join("-") : "default"}`).then(
-      results => {
-        const elem = _.first($(keySelector));
-        if (elem) {
-          elem.content = ids.join(",");
-        }
-
-        results.themes.forEach(theme => {
-          const node = $(
-            `link[rel=stylesheet][data-target=${theme.target}]`
-          )[0];
-          if (node) {
-            refreshCSS(node, null, theme.new_href);
-          }
-        });
-      }
-    );
-  }
 }
 
 export function listThemes(site) {

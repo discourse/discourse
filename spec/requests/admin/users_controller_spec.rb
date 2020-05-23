@@ -293,7 +293,7 @@ RSpec.describe Admin::UsersController do
     fab!(:another_user) { Fabricate(:coding_horror) }
 
     after do
-      Discourse.redis.flushall
+      Discourse.redis.flushdb
     end
 
     it "raises an error when the user doesn't have permission" do

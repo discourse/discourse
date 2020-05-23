@@ -60,7 +60,7 @@ describe TopicViewSerializer do
       it 'should have thumbnails' do
         SiteSetting.create_thumbnails = true
 
-        Discourse.redis.del(topic.thumbnail_job_redis_key([]))
+        Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
         json = nil
 
         expect do
