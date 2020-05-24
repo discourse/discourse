@@ -196,6 +196,22 @@
       {{/unless}}
     </div>
   </section>
+
+  <section class="field">
+    <label for="category-default-filter">
+      {{i18n "category.default_list_filter"}}
+    </label>
+    <div class="controls">
+      {{combo-box
+        id="category-default-filter"
+        valueProperty="value"
+        content=availableListFilters
+        value=category.default_list_filter
+        none="category.list_filters.all"
+      }}
+    </div>
+  </section>
+
   {{#if isParentCategory}}
     <section class="field show-subcategory-list-field">
       <label>
