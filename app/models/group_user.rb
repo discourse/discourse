@@ -38,7 +38,7 @@ class GroupUser < ActiveRecord::Base
 
   def grant_other_available_title
     if group.title.present? && group.title == user.title
-      user.update!(title: user.next_best_title)
+      user.update_attribute(:title, user.next_best_title)
     end
   end
 
