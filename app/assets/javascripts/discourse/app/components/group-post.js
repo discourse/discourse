@@ -3,5 +3,7 @@ import Component from "@ember/component";
 
 export default Component.extend({
   @discourseComputed("post.url")
-  postUrl: Discourse.getURL
+  postUrl(url) {
+    return Discourse.getURL(url);
+  }
 });
