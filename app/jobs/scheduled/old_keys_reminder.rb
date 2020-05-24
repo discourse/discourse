@@ -24,33 +24,25 @@ module Jobs
     def old_site_settings_keys
       @old_site_settings_keys ||= SiteSetting.secret_settings.each_with_object([]) do |secret_name, old_keys|
         site_setting = SiteSetting.find_by(name: secret_name)
-        next unless site_setting
-        next if site_setting.value.blank?
+        next if site_setting&.value.blank?
         next if site_setting.updated_at + calculate_period > Time.zone.now
         old_keys << site_setting
-      end
+      end.sort_by { |key| key.updated_at }
     end
 
     def old_api_keys
-      @old_api_keys ||= ApiKey.all.each_with_object([]) do |api_key, old_keys|
+      @old_api_keys ||= ApiKey.all.order(created_at: :asc).each_with_object([]) do |api_key, old_keys|
         next if api_key.created_at + calculate_period > Time.zone.now
         old_keys << api_key
       end
     end
 
     def calculate_period
-      case SiteSetting.notify_about_secrets_older_than
-      when '1 year'
-        1.year
-      when '2 years'
-        2.years
-      when '3 years'
-        3.years
-      end
+      SiteSetting.notify_about_secrets_older_than.to_i.years
     end
 
     def admins
-      User.real.where(admin: true)
+      User.real.admins
     end
 
     def title
