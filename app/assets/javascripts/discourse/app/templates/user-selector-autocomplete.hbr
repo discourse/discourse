@@ -6,6 +6,7 @@
           {{avatar user imageSize="tiny"}}
           <span class='username'>{{format-username user.username}}</span>
           <span class='name'>{{user.name}}</span>
+          {{decorate-username-selector user.username}}
         </a>
       </li>
     {{/each}}
