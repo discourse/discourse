@@ -45,34 +45,40 @@ export default function loadScript(url, opts) {
 
   opts = opts || {};
 
+  if (_loaded[url]) {
+    return Promise.resolve();
+  }
+
   // Scripts should always load from CDN
   // CSS is type text, to accept it from a CDN we would need to handle CORS
-  url = opts.css ? Discourse.getURL(url) : Discourse.getURLWithCDN(url);
+  const fullUrl = opts.css
+    ? Discourse.getURL(url)
+    : Discourse.getURLWithCDN(url);
 
   $("script").each((i, tag) => {
     const src = tag.getAttribute("src");
 
-    if (src && src !== url && !_loading[src]) {
+    if (src && src !== fullUrl && !_loading[src]) {
       _loaded[src] = true;
     }
   });
 
   return new Promise(function(resolve) {
     // If we already loaded this url
-    if (_loaded[url]) {
+    if (_loaded[fullUrl]) {
       return resolve();
     }
-    if (_loading[url]) {
-      return _loading[url].then(resolve);
+    if (_loading[fullUrl]) {
+      return _loading[fullUrl].then(resolve);
     }
 
     let done;
-    _loading[url] = new Promise(function(_done) {
+    _loading[fullUrl] = new Promise(function(_done) {
       done = _done;
     });
 
-    _loading[url].then(function() {
-      delete _loading[url];
+    _loading[fullUrl].then(function() {
+      delete _loading[fullUrl];
     });
 
     const cb = function(data) {
@@ -82,17 +88,18 @@ export default function loadScript(url, opts) {
       done();
       resolve();
       _loaded[url] = true;
+      _loaded[fullUrl] = true;
     };
 
     if (opts.css) {
       ajax({
-        url: url,
+        url: fullUrl,
         dataType: "text",
         cache: true
       }).then(cb);
     } else {
       // Always load JavaScript with script tag to avoid Content Security Policy inline violations
-      loadWithTag(url, cb);
+      loadWithTag(fullUrl, cb);
     }
   });
 }
