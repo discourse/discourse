@@ -32,7 +32,7 @@ class Onebox::Engine::YoutubeOnebox
       escaped_title = ERB::Util.html_escape(video_title)
 
       <<~EOF
-      <div class="onebox lazyYT"
+      <div class="onebox lazyYT lazyYT-container"
            data-youtube-id="#{video_id}"
            data-youtube-title="#{escaped_title}"
            data-width="#{video_width}"
