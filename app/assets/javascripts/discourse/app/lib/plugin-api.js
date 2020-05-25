@@ -933,7 +933,7 @@ class PluginApi {
    *
    * Example:
    *
-   * api.appendUsernameDecorator(username => {
+   * api.addUsernameSelectorDecorator(username => {
    *   return `<span class="status">[is_away]</class>`;
    * })
    */
