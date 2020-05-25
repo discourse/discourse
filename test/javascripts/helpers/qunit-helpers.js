@@ -19,6 +19,7 @@ import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import User from "discourse/models/user";
@@ -162,6 +163,7 @@ export function acceptance(name, options) {
       resetPostCookedDecorators();
       resetPluginOutletDecorators();
       resetTopicTitleDecorators();
+      resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
       Discourse._runInitializer("instanceInitializers", function(
