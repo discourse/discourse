@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'uri'
 
 module Jobs
   class MigrateGroupFlairImages < ::Jobs::Onceoff
@@ -12,6 +13,8 @@ module Jobs
         end
 
         old_url = group[:flair_url]
+        next if old_url.blank? || old_url !~ URI::regexp
+
         group_name = group.name
 
         count = 0
@@ -42,7 +45,7 @@ module Jobs
                  Discourse::InvalidParameters => e
 
             logger.warn(
-              "Error encountered when trying to download file " +
+              "Error encountered when trying to download from URL '#{old_url}' " +
               "for group '#{group_name}'.\n#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
             )
           end
