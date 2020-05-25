@@ -216,12 +216,12 @@ describe SvgSprite do
   end
 
   it "includes Font Awesome 4.7 icons as group flair" do
-    group = Fabricate(:group, flair_url: "fa-air-freshener")
+    group = Fabricate(:group, flair_icon: "fa-air-freshener")
     expect(SvgSprite.bundle).to match(/air-freshener/)
   end
 
   it "includes Font Awesome 5 icons as group flair" do
-    group = Fabricate(:group, flair_url: "far fa-building")
+    group = Fabricate(:group, flair_icon: "far fa-building")
     expect(SvgSprite.bundle).to match(/building/)
   end
 end
