@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Group < ActiveRecord::Base
-  # TODO(2021-04-22): remove
+  # TODO(2021-05-26): remove
   self.ignored_columns = %w{
     automatic_membership_retroactive
+    flair_url
   }
 
   include HasCustomFields
