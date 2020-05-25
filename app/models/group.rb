@@ -748,7 +748,7 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    flair_icon.presence || flair_upload&.url || self[:flair_url].presence
+    flair_icon.presence || flair_upload&.url
   end
 
   protected
