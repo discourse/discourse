@@ -259,5 +259,11 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       url = "https://www.someotherhostname.com/test/original/2X/d/dd7964f5fd13e1103c5244ca30abe1936c0a4b88.png"
       expect(store.has_been_uploaded?(url)).to eq(true)
     end
+
+    it "returns false if the URI is an invalid mailto link" do
+      link = 'mailto: roman;@test.com'
+
+      expect(store.has_been_uploaded?(link)).to eq(false)
+    end
   end
 end
