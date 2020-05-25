@@ -336,7 +336,7 @@ en:
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
         existing_reminder: "You have a reminder set for this bookmark which will be sent"
-    
+
     copy_codeblock:
       copied: "copied!"
 
@@ -4715,6 +4715,7 @@ en:
         post_title: "Post"
         category_id: "Category ID"
         category_title: "Category"
+        tag_name: "Tag name"
         external_url: "External URL"
         destination: "Destination"
         delete_confirm: Are you sure you want to delete this permalink?

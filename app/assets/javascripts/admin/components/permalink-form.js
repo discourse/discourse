@@ -17,6 +17,7 @@ export default Component.extend({
       { id: "topic_id", name: I18n.t("admin.permalink.topic_id") },
       { id: "post_id", name: I18n.t("admin.permalink.post_id") },
       { id: "category_id", name: I18n.t("admin.permalink.category_id") },
+      { id: "tag_name", name: I18n.t("admin.permalink.tag_name") },
       { id: "external_url", name: I18n.t("admin.permalink.external_url") }
     ];
   },
