@@ -502,6 +502,14 @@ describe Group do
       expect(user.title).to eq('Different')
       expect(user.primary_group).to eq(primary_group)
     end
+
+    it "doesn't fail when the user gets destroyed" do
+      group.update(title: 'Awesome')
+      group.add(user)
+      user.reload
+
+      UserDestroyer.new(Discourse.system_user).destroy(user)
+    end
   end
 
   it "has custom fields" do
