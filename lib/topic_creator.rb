@@ -208,7 +208,7 @@ class TopicCreator
   def add_users(topic, usernames)
     return unless usernames
 
-    names = usernames.split(',').map(&:downcase).flatten
+    names = usernames.split(',').flatten
     len = 0
 
     User.includes(:user_option).where(username_lower: names).find_each do |user|
