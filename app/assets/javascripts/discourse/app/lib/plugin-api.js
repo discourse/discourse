@@ -40,6 +40,7 @@ import { replaceFormatter } from "discourse/lib/utilities";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
@@ -925,6 +926,19 @@ class PluginApi {
    */
   addComposerUploadMarkdownResolver(resolver) {
     addComposerUploadMarkdownResolver(resolver);
+  }
+
+  /**
+   * Registers a function to decorate each autocomplete usernames.
+   *
+   * Example:
+   *
+   * api.appendUsernameDecorator(username => {
+   *   return `<span class="status">[is_away]</class>`;
+   * })
+   */
+  addUsernameSelectorDecorator(decorator) {
+    addUsernameSelectorDecorator(decorator);
   }
 
   /**
