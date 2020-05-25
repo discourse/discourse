@@ -19,6 +19,24 @@ acceptance("Composer Actions", {
   }
 });
 
+QUnit.test(
+  "creating new topic and then reply_as_private_message keeps attributes",
+  async assert => {
+    await visit("/");
+    await click("button#create-topic");
+
+    await fillIn("#reply-title", "this is the title");
+    await fillIn(".d-editor-input", "this is the reply");
+
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_as_private_message");
+
+    assert.ok(find("#reply-title").val(), "this is the title");
+    assert.ok(find(".d-editor-input").val(), "this is the reply");
+  }
+);
+
 QUnit.test("replying to post", async assert => {
   const composerActions = selectKit(".composer-actions");
 

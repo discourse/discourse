@@ -328,6 +328,7 @@ export default DropdownSelectBoxComponent.extend({
           this.composerModel.getProperties(
             "draftKey",
             "draftSequence",
+            "title",
             "reply",
             "disableScopedCategory"
           ),
