@@ -8,7 +8,7 @@ createWidget("avatar-flair", {
   isIcon(attrs) {
     return (
       attrs.primary_group_flair_url &&
-      attrs.primary_group_flair_url.includes("fa-")
+      !attrs.primary_group_flair_url.includes("/")
     );
   },
 
