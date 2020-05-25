@@ -825,7 +825,7 @@ describe PostsController do
         post "/posts.json", params: {
           raw: 'I can haz a test',
           title: 'I loves my test',
-          target_recipients: group.name,
+          target_recipients: "test_Group",
           archetype: Archetype.private_message
         }
 
@@ -965,13 +965,13 @@ describe PostsController do
 
       it 'creates a private post' do
         user_2 = Fabricate(:user)
-        user_3 = Fabricate(:user)
+        user_3 = Fabricate(:user, username: "foo_bar")
 
         post "/posts.json", params: {
           raw: 'this is the test content',
           archetype: 'private_message',
           title: "this is some post",
-          target_recipients: "#{user_2.username},#{user_3.username}"
+          target_recipients: "#{user_2.username},Foo_Bar"
         }
 
         expect(response.status).to eq(200)
