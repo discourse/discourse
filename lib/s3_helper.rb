@@ -90,6 +90,8 @@ class S3Helper
   # make sure we have a cors config for assets
   # otherwise we will have no fonts
   def ensure_cors!(rules = nil)
+    return unless SiteSetting.s3_install_cors_rule
+
     rule = nil
 
     begin

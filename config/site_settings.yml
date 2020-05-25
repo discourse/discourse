@@ -1207,6 +1207,9 @@ files:
   s3_http_continue_timeout:
     default: 1
     hidden: true
+  s3_install_cors_rule:
+    default: true
+    hidden: true
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
