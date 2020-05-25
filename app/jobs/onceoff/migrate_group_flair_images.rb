@@ -4,11 +4,20 @@ require 'uri'
 module Jobs
   class MigrateGroupFlairImages < ::Jobs::Onceoff
     def execute_onceoff(args)
-      return if Group.column_names.exclude?("flair_url")
+      column_exists = DB.exec(<<~SQL) == 1
+        SELECT 1
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE
+          table_schema = 'public' AND
+          table_name = 'groups' AND
+          column_name = 'flair_url'
+      SQL
+      return unless column_exists
 
-      Group.where.not(flair_url: nil).each do |group|
+      groups = Group.where.not(flair_url: nil).select(:id, :flair_url, :flair_upload_id, :name)
+      groups.each do |group|
         if group.flair_upload.present?
-          g.update_column(:flair_url, nil)
+          DB.exec("UPDATE groups SET flair_url = NULL WHERE id = #{group.id}")
           next
         end
 
@@ -68,7 +77,7 @@ module Jobs
           origin: UrlHelper.absolute(old_url)
         ).create_for(Discourse.system_user.id)
 
-        group.update_columns(flair_upload_id: upload.id, flair_url: nil) if upload.present?
+        DB.exec("UPDATE groups SET flair_url = NULL, flair_upload_id = #{upload.id} WHERE id = #{group.id}") if upload.present?
       end
     end
 
