@@ -751,14 +751,16 @@ en:
           title: "Muted"
           description: "You will not be notified of anything about messages in this group."
       flair_url: "Avatar Flair Image"
-      flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
-      flair_url_description: 'Use square images no smaller than 20px by 20px or FontAwesome icons (accepted formats: "fa-icon", "far fa-icon" or "fab fa-icon").'
+      flair_upload_description: "Use square images no smaller than 20px by 20px."
       flair_bg_color: "Avatar Flair Background Color"
       flair_bg_color_placeholder: "(Optional) Hex color value"
       flair_color: "Avatar Flair Color"
       flair_color_placeholder: "(Optional) Hex color value"
       flair_preview_icon: "Preview Icon"
       flair_preview_image: "Preview Image"
+      flair_type:
+        icon: "Select an icon"
+        image: "Upload an image"
 
     user_action_groups:
       "1": "Likes"
