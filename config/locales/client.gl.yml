@@ -514,9 +514,11 @@ gl:
         enable: "Activar"
       second_factor:
         name: "Nome"
+        disable: "Desactivar"
+        save: "Gardar"
         edit: "Editar"
         security_key:
-          delete: "Eliminar"
+          save: "Gardar"
       change_about:
         title: "Cambiar «Verbo de min»"
       change_username:
@@ -1010,6 +1012,8 @@ gl:
       move_to_inbox:
         title: "Mover á caixa de entrada"
         help: "Mover mensaxes á caixa de entrada"
+      edit_message:
+        title: "Editar"
       defer:
         title: "Pospor"
       list: "Temas"
@@ -1575,7 +1579,6 @@ gl:
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoxe"
-        other_periods: "ver destacados"
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -1677,6 +1680,9 @@ gl:
           unread: "Non hai máis temas sen ler."
           top: "Non hai máis temas destacados."
           bookmarks: "Non hai máis temas marcados."
+    footer_nav:
+      share: "Compartir"
+      dismiss: "Desbotar"
   admin_js:
     type_to_filter: "escribe para filtrar..."
     admin:

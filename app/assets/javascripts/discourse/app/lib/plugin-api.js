@@ -5,7 +5,7 @@ import { addPluginOutletDecorator } from "discourse/components/plugin-connector"
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
-import { addButton } from "discourse/widgets/post-menu";
+import { addButton, removeButton } from "discourse/widgets/post-menu";
 import { includeAttributes } from "discourse/lib/transform-post";
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { addToolbarCallback } from "discourse/components/d-editor";
@@ -40,6 +40,7 @@ import { replaceFormatter } from "discourse/lib/utilities";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
@@ -48,13 +49,14 @@ import {
   addComposerUploadMarkdownResolver
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addExtraIconRenderer } from "discourse/helpers/category-link";
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.42";
+const PLUGIN_API_VERSION = "0.10.1";
 
 class PluginApi {
   constructor(version, container) {
@@ -267,6 +269,7 @@ class PluginApi {
    *   className   (optional) a css class to apply to the icon
    *   url         (optional) where to link the icon
    *   title       (optional) the tooltip title for the icon on hover
+   *   text        (optional) text to display alongside the emoji or icon
    *
    * ```
    * api.addPosterIcon((cfs, attrs) => {
@@ -399,9 +402,23 @@ class PluginApi {
    *     position: 'first'  // can be `first`, `last` or `second-last-hidden`
    *   };
    * });
+   * ```
    **/
   addPostMenuButton(name, callback) {
     addButton(name, callback);
+  }
+
+  /**
+   * Remove existing button below a post with your plugin.
+   *
+   * Example:
+   *
+   * ```
+   * api.removePostMenuButton('like');
+   * ```
+   **/
+  removePostMenuButton(name) {
+    removeButton(name);
   }
 
   /**
@@ -912,6 +929,19 @@ class PluginApi {
   }
 
   /**
+   * Registers a function to decorate each autocomplete usernames.
+   *
+   * Example:
+   *
+   * api.addUsernameSelectorDecorator(username => {
+   *   return `<span class="status">[is_away]</class>`;
+   * })
+   */
+  addUsernameSelectorDecorator(decorator) {
+    addUsernameSelectorDecorator(decorator);
+  }
+
+  /**
    * Registers a "beforeSave" function on the composer. This allows you to
    * implement custom logic that will happen before the user makes a post.
    *
@@ -923,6 +953,21 @@ class PluginApi {
    */
   composerBeforeSave(method) {
     Composer.reopen({ beforeSave: method });
+  }
+
+  /**
+   * Adds a field to topic edit serializer
+   *
+   * Example:
+   *
+   * api.serializeToTopic('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeToTopic('field_name');
+   *
+   */
+  serializeToTopic(fieldName, property) {
+    Composer.serializeToTopic(fieldName, property);
   }
 
   /**
@@ -938,6 +983,36 @@ class PluginApi {
    */
   serializeToDraft(fieldName, property) {
     Composer.serializeToDraft(fieldName, property);
+  }
+
+  /**
+   * Adds a field to composer create serializer
+   *
+   * Example:
+   *
+   * api.serializeOnCreate('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeOnCreate('field_name');
+   *
+   */
+  serializeOnCreate(fieldName, property) {
+    Composer.serializeOnCreate(fieldName, property);
+  }
+
+  /**
+   * Adds a field to composer update serializer
+   *
+   * Example:
+   *
+   * api.serializeOnUpdate('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeOnUpdate('field_name');
+   *
+   */
+  serializeOnUpdate(fieldName, property) {
+    Composer.serializeOnUpdate(fieldName, property);
   }
 
   /**
@@ -1049,6 +1124,22 @@ class PluginApi {
    **/
   decorateTopicTitle(callback) {
     addTopicTitleDecorator(callback);
+  }
+
+  /**
+   * Allows adding icons to the category-link html
+   *
+   * ```
+   * api.addCategoryLinkIcon((category) => {
+   *  if (category.someProperty) {
+        return "eye"
+      }
+   * });
+   * ```
+   *
+   **/
+  addCategoryLinkIcon(renderer) {
+    addExtraIconRenderer(renderer);
   }
 }
 

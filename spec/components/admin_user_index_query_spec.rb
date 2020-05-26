@@ -29,7 +29,7 @@ describe AdminUserIndexQuery do
     end
 
     it "allows custom ordering asc" do
-      query = ::AdminUserIndexQuery.new(order: "trust_level", ascending: true)
+      query = ::AdminUserIndexQuery.new(order: "trust_level", asc: true)
       expect(query.find_users_query.to_sql).to match("trust_level ASC")
     end
 
@@ -39,7 +39,7 @@ describe AdminUserIndexQuery do
     end
 
     it "allows custom ordering and direction for stats" do
-      query = ::AdminUserIndexQuery.new(order: "topics_viewed", ascending: true)
+      query = ::AdminUserIndexQuery.new(order: "topics_viewed", asc: true)
       expect(query.find_users_query.to_sql).to match("topics_entered ASC")
     end
   end
@@ -118,7 +118,7 @@ describe AdminUserIndexQuery do
     end
 
     it "shows nil values first with asc" do
-      users = ::AdminUserIndexQuery.new(order: "last_emailed", ascending: true).find_users
+      users = ::AdminUserIndexQuery.new(order: "last_emailed", asc: true).find_users
 
       expect(users.where('users.id > -2').count).to eq(2)
       expect(users.where('users.id > -2').order('users.id asc').first.username).to eq("system")

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { warn } from "@ember/debug";
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, oneWay } from "@ember/object/computed";

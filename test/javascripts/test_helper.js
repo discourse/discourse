@@ -11,11 +11,9 @@
 //= require fake_xml_http_request
 //= require route-recognizer/dist/route-recognizer
 //= require pretender/pretender
-//= require discourse-loader
-//= require preload-store
-
 //= require locales/i18n
 //= require locales/en_US
+//= require discourse-loader
 
 // Stuff we need to load first
 //= require vendor
@@ -167,7 +165,7 @@ QUnit.testStart(function(ctx) {
     _DiscourseURL.redirectedTo = url;
   };
 
-  var ps = require("preload-store").default;
+  var ps = require("discourse/lib/preload-store").default;
   ps.reset();
 
   window.sandbox = sinon;

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import ComponentConnector from "discourse/widgets/component-connector";
@@ -389,7 +390,8 @@ createWidget("timeline-footer-controls", {
             showFullTitle: false,
             appendReason: false,
             placement: "bottom-end",
-            mountedAsWidget: true
+            mountedAsWidget: true,
+            showCaret: false
           },
           ["notificationLevel"]
         )

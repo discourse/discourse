@@ -128,12 +128,13 @@ export default Component.extend(KeyEnterEscape, {
       throttle(this, performDrag, event, THROTTLE_RATE);
     }).bind(this);
 
-    const endDrag = () => {
+    const endDrag = (() => {
+      this.appEvents.trigger("composer:resize-ended");
       $document.off(DRAG_EVENTS, throttledPerformDrag);
       $document.off(END_EVENTS, endDrag);
       $composer.removeClass("clear-transitions");
       $composer.focus();
-    };
+    }).bind(this);
 
     $grippie.on(START_EVENTS, event => {
       event.preventDefault();

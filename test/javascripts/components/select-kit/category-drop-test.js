@@ -1,7 +1,8 @@
+import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import componentTest from "helpers/component-test";
-import { testSelectKitModule } from "./select-kit-test-helper";
+import { testSelectKitModule } from "helpers/select-kit-helper";
 import {
   NO_CATEGORIES_ID,
   ALL_CATEGORIES_ID

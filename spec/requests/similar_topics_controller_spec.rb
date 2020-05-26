@@ -33,7 +33,7 @@ describe SimilarTopicsController do
 
       get "/topics/similar_to.json", params: { title: title, raw: raw }
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["similar_topics"].size).to eq(0)
     end
 
@@ -51,7 +51,7 @@ describe SimilarTopicsController do
           get "/topics/similar_to.json", params: { title: title, raw: raw }
 
           expect(response.status).to eq(200)
-          similar_topics = ::JSON.parse(response.body)["similar_topics"]
+          similar_topics = response.parsed_body["similar_topics"]
           expect(similar_topics.size).to eq(1)
           expect(similar_topics.first["topic_id"]).to eq(topic.id)
         end
@@ -69,7 +69,7 @@ describe SimilarTopicsController do
             get "/topics/similar_to.json", params: { title: title, raw: raw }
 
             expect(response.status).to eq(200)
-            similar_topics = ::JSON.parse(response.body)["similar_topics"].map { |topic| topic["topic_id"] }
+            similar_topics = response.parsed_body["similar_topics"].map { |topic| topic["topic_id"] }
             expect(similar_topics.size).to eq(2)
             expect(similar_topics).to include(topic.id)
             expect(similar_topics).to include(private_topic.id)
@@ -85,7 +85,7 @@ describe SimilarTopicsController do
         get "/topics/similar_to.json", params: { title: title, raw: raw }
 
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["similar_topics"].size).to eq(0)
       end
     end

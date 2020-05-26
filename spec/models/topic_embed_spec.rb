@@ -14,7 +14,7 @@ describe TopicEmbed do
     fab!(:user) { Fabricate(:user) }
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { 'http://eviltrout.com/123' }
-    let(:contents) { "hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'>" }
+    let(:contents) { "<p>hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'></p>" }
     fab!(:embeddable_host) { Fabricate(:embeddable_host) }
 
     it "returns nil when the URL is malformed" do
@@ -46,7 +46,7 @@ describe TopicEmbed do
 
       it "Supports updating the post content" do
         expect do
-          TopicEmbed.import(user, url, "New title received", "muhahaha new contents!")
+          TopicEmbed.import(user, url, "New title received", "<p>muhahaha new contents!</p>")
         end.to change { topic_embed.reload.content_sha1 }
         expect(topic_embed.topic.title).to eq("New title received")
 
@@ -305,6 +305,14 @@ describe TopicEmbed do
       it "doesn't throw an error" do
         response = TopicEmbed.find_remote(url)
         expect(response.title).to eq("Hello World!")
+      end
+    end
+
+    context "non-http URL" do
+      let(:url) { '/test.txt' }
+
+      it "throws an error" do
+        expect { TopicEmbed.find_remote(url) }.to raise_error(URI::InvalidURIError)
       end
     end
 

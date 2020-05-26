@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
@@ -15,12 +16,32 @@ export default Controller.extend({
     // If we have no content, don't bother filtering anything
     if (!!isEmpty(this.allSiteSettings)) return;
 
-    let filter;
+    let filter, pluginFilter;
     if (this.filter) {
-      filter = this.filter.toLowerCase().trim();
+      filter = this.filter
+        .toLowerCase()
+        .split(" ")
+        .filter(word => {
+          if (word.length === 0) {
+            return false;
+          }
+
+          if (word.startsWith("plugin:")) {
+            pluginFilter = word.substr("plugin:".length).trim();
+            return false;
+          }
+
+          return true;
+        })
+        .join(" ")
+        .trim();
     }
 
-    if ((!filter || 0 === filter.length) && !this.onlyOverridden) {
+    if (
+      (!filter || 0 === filter.length) &&
+      (!pluginFilter || 0 === pluginFilter.length) &&
+      !this.onlyOverridden
+    ) {
       this.set("visibleSiteSettings", this.allSiteSettings);
       if (this.categoryNameKey === "all_results") {
         this.transitionToRoute("adminSiteSettings");
@@ -39,6 +60,7 @@ export default Controller.extend({
     this.allSiteSettings.forEach(settingsCategory => {
       const siteSettings = settingsCategory.siteSettings.filter(item => {
         if (this.onlyOverridden && !item.get("overridden")) return false;
+        if (pluginFilter && item.plugin !== pluginFilter) return false;
         if (filter) {
           const setting = item.get("setting").toLowerCase();
           return (

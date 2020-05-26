@@ -1173,6 +1173,7 @@ describe Report do
 
     context "with data" do
       it "works" do
+        ApplicationRequest.enable
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         2.times { ApplicationRequest.increment!(:page_view_logged_in) }
         ApplicationRequest.increment!(:page_view_anon)
@@ -1190,6 +1191,9 @@ describe Report do
 
         expect(page_view_anon_report[:color]).to eql("#40c8ff")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
+      ensure
+        ApplicationRequest.disable
+        ApplicationRequest.clear_cache!
       end
     end
   end

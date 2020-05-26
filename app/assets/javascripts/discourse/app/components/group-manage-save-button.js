@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -8,7 +9,6 @@ export default Component.extend({
 
   @discourseComputed("saving")
   savingText(saving) {
-    if (saving) return I18n.t("saving");
     return saving ? I18n.t("saving") : I18n.t("save");
   },
 

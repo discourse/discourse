@@ -660,7 +660,6 @@ module Discourse
     Sidekiq.redis_pool.shutdown { |c| nil }
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
-    start_connection_reaper
 
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
@@ -741,40 +740,6 @@ module Discourse
     end
   rescue
     STDERR.puts "Failed to report exception #{e} #{message}"
-  end
-
-  def self.start_connection_reaper
-    return if GlobalSetting.connection_reaper_age < 1 ||
-              GlobalSetting.connection_reaper_interval < 1
-
-    # this helps keep connection counts in check
-    Thread.new do
-      while true
-        begin
-          sleep GlobalSetting.connection_reaper_interval
-          reap_connections(GlobalSetting.connection_reaper_age)
-        rescue => e
-          Discourse.warn_exception(e, message: "Error reaping connections")
-        end
-      end
-    end
-  end
-
-  def self.reap_connections(idle)
-    pools = []
-    ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
-
-    pools.each do |pool|
-      # reap recovers connections that were aborted
-      # eg a thread died or a dev forgot to check it in
-      # flush removes idle connections
-      # after fork we have "deadpools" so ignore them, they have been discarded
-      # so @connections is set to nil
-      if pool.connections
-        pool.reap
-        pool.flush(idle)
-      end
-    end
   end
 
   def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)

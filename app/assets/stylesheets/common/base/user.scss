@@ -590,8 +590,13 @@
       margin-right: 10px;
     }
 
-    .form-horizontal .instructions {
-      margin-left: 0;
+    .form-horizontal {
+      .instructions {
+        margin-left: 0;
+      }
+      .actions {
+        margin-top: 5px;
+      }
     }
 
     .backup-codes {
@@ -647,6 +652,9 @@
   .featured-topic-link {
     padding: 5px 0;
     font-weight: bold;
+  }
+  .save-theme-alert {
+    font-size: $font-down-1;
   }
 }
 

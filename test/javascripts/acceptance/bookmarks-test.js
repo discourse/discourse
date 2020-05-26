@@ -1,15 +1,22 @@
-import { acceptance, loggedInUser } from "helpers/qunit-helpers";
+import I18n from "I18n";
+import {
+  acceptance,
+  loggedInUser,
+  acceptanceUseFakeClock
+} from "helpers/qunit-helpers";
 import pretender from "helpers/create-pretender";
+import { parsePostData } from "helpers/create-pretender";
 
-acceptance("Bookmarking", { loggedIn: true });
+acceptance("Bookmarking", {
+  loggedIn: true,
+  afterEach() {
+    sandbox.restore();
+  }
+});
 
 function handleRequest(assert, request) {
-  const body = request.requestBody;
-  const reminderType = body
-    .substr(0, body.indexOf("&"))
-    .replace("reminder_type=", "");
-
-  assert.step(reminderType || "none");
+  const data = parsePostData(request.requestBody);
+  assert.step(data.reminder_type || "none");
 
   return [
     200,
@@ -99,6 +106,30 @@ test("Saving a bookmark with a reminder", async assert => {
   assert.verifySteps(["tomorrow"]);
 });
 
+test("Opening the options panel and remembering the option", async assert => {
+  mockSuccessfulBookmarkPost(assert);
+  await visit("/t/internationalization-localization/280");
+  await openBookmarkModal();
+  await click(".bookmark-options-button");
+  assert.ok(
+    exists(".bookmark-options-panel"),
+    "it should open the options panel"
+  );
+  await click("#delete_when_reminder_sent");
+  await click("#save-bookmark");
+  await openEditBookmarkModal();
+
+  assert.ok(
+    exists(".bookmark-options-panel"),
+    "it should reopen the options panel"
+  );
+  assert.ok(
+    exists(".bookmark-options-panel #delete_when_reminder_sent:checked"),
+    "it should pre-check delete when reminder sent option"
+  );
+  assert.verifySteps(["none"]);
+});
+
 test("Saving a bookmark with no reminder or name", async assert => {
   mockSuccessfulBookmarkPost(assert);
   await visit("/t/internationalization-localization/280");
@@ -174,7 +205,7 @@ test("Editing a bookmark", async assert => {
   mockSuccessfulBookmarkPost(assert);
 
   await visit("/t/internationalization-localization/280");
-  let now = moment.tz(loggedInUser().resolvedTimezone());
+  let now = moment.tz(loggedInUser().resolvedTimezone(loggedInUser()));
   let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
   await openBookmarkModal();
   await fillIn("input#bookmark-name", "Test name");
@@ -198,3 +229,26 @@ test("Editing a bookmark", async assert => {
   );
   assert.verifySteps(["tomorrow"]);
 });
+
+QUnit.skip(
+  "Editing a bookmark that has a Later Today reminder, and it is before 6pm today",
+  async assert => {
+    await acceptanceUseFakeClock("2020-05-04T13:00:00", async () => {
+      mockSuccessfulBookmarkPost(assert);
+      await visit("/t/internationalization-localization/280");
+      await openBookmarkModal();
+      await fillIn("input#bookmark-name", "Test name");
+      await click("#tap_tile_later_today");
+      await openEditBookmarkModal();
+      assert.not(
+        exists("#bookmark-custom-date > input"),
+        "it does not show the custom date input"
+      );
+      assert.ok(
+        exists("#tap_tile_later_today.active"),
+        "it preselects Later Today"
+      );
+      assert.verifySteps(["later_today"]);
+    });
+  }
+);

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
@@ -124,6 +125,7 @@ createWidget(
           {
             attributes: {
               href: attrs.user.get("path"),
+              title: attrs.user.get("name"),
               "data-auto-route": true
             }
           },

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { alias, gte, and, gt, not, or } from "@ember/object/computed";
 import EmberObject, { set } from "@ember/object";
@@ -72,7 +73,10 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
   @discourseComputed("user")
   userTimezone(user) {
-    return user.resolvedTimezone();
+    if (!this.showUserLocalTime) {
+      return;
+    }
+    return user.resolvedTimezone(this.currentUser);
   },
 
   @discourseComputed("userTimezone")

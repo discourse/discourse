@@ -12,7 +12,8 @@ createWidget("footer-nav", {
         action: "goBack",
         icon: "chevron-left",
         className: "btn-large",
-        disabled: !attrs.canGoBack
+        disabled: !attrs.canGoBack,
+        title: "footer_nav.back"
       })
     );
 
@@ -21,7 +22,8 @@ createWidget("footer-nav", {
         action: "goForward",
         icon: "chevron-right",
         className: "btn-large",
-        disabled: !attrs.canGoForward
+        disabled: !attrs.canGoForward,
+        title: "footer_nav.forward"
       })
     );
 
@@ -30,7 +32,8 @@ createWidget("footer-nav", {
         this.attach("flat-button", {
           action: "share",
           icon: "link",
-          className: "btn-large"
+          className: "btn-large",
+          title: "footer_nav.share"
         })
       );
 
@@ -38,7 +41,8 @@ createWidget("footer-nav", {
         this.attach("flat-button", {
           action: "dismiss",
           icon: "chevron-down",
-          className: "btn-large"
+          className: "btn-large",
+          title: "footer_nav.dismiss"
         })
       );
     }

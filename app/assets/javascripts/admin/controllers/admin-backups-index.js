@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { alias, equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";

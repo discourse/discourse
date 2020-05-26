@@ -1,5 +1,6 @@
+import I18n from "I18n";
 import componentTest from "helpers/component-test";
-import { testSelectKitModule } from "./select-kit-test-helper";
+import { testSelectKitModule } from "helpers/select-kit-helper";
 
 testSelectKitModule("mini-tag-chooser");
 

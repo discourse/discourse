@@ -25,13 +25,13 @@ describe UserGuardian do
   end
 
   let :already_uploaded do
-    u = Upload.new(user_id: 999, id: 2)
+    u = Upload.new(user_id: 9999, id: 2)
     user_avatar.custom_upload_id = u.id
     u
   end
 
   let :not_my_upload do
-    Upload.new(user_id: 999, id: 3)
+    Upload.new(user_id: 9999, id: 3)
   end
 
   let(:moderator_upload) do

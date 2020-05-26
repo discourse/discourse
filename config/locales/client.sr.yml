@@ -524,9 +524,11 @@ sr:
         enable: "Omogući"
       second_factor:
         name: "Ime foruma"
+        disable: "Onemogući"
+        save: "Sačuvaj"
         edit: "Izmeni"
         security_key:
-          delete: "Obriši"
+          save: "Sačuvaj"
       change_about:
         title: "Promijeni O meni"
       change_username:
@@ -1000,6 +1002,8 @@ sr:
       create_long: "Otvori novu Temu"
       archive_message:
         title: "Arhiviraj"
+      edit_message:
+        title: "Izmeni"
       defer:
         title: "Odloži"
       list: "Teme"
@@ -1485,7 +1489,6 @@ sr:
         this_month: "Mesec"
         this_week: "Nedelja"
         today: "Danas"
-        other_periods: "vidi top teme"
     permission_types:
       full: "Otvoriti / Odgovori / Pogledaj"
       create_post: "Odgovori / Pogledaj"
@@ -1581,6 +1584,9 @@ sr:
           unread: "Nema više nepročitanih tema."
           top: "Nema više glavnih tema."
           bookmarks: "Nema više markiranih tema."
+    footer_nav:
+      back: "Nazad"
+      share: "Podeli"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

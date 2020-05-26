@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
-  after_action  :add_noindex_header, if: -> { is_feed_request? }
+  after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
 
   layout :set_layout
 
@@ -124,7 +124,7 @@ class ApplicationController < ActionController::Base
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
-    raise Discourse::ReadOnly
+    rescue_with_handler(Discourse::ReadOnly.new) || raise
   end
 
   rescue_from ActionController::ParameterMissing do |e|
@@ -212,7 +212,9 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::ReadOnly do
-    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+    unless response_body
+      render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+    end
   end
 
   def redirect_with_client_support(url, options)
@@ -806,7 +808,13 @@ class ApplicationController < ActionController::Base
   end
 
   def add_noindex_header
-    response.headers['X-Robots-Tag'] = 'noindex' if request.get?
+    if request.get?
+      if SiteSetting.allow_index_in_robots_txt
+        response.headers['X-Robots-Tag'] = 'noindex'
+      else
+        response.headers['X-Robots-Tag'] = 'noindex, nofollow'
+      end
+    end
   end
 
   protected

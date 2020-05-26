@@ -1,6 +1,8 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
+import { action } from "@ember/object";
+import { later, cancel } from "@ember/runloop";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
@@ -10,6 +12,18 @@ export default buildCategoryPanel("general", {
     this._super(...arguments);
 
     this.foregroundColors = ["FFFFFF", "000000"];
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    this._focusCategoryName();
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this._laterFocus && cancel(this._laterFocus);
   },
 
   canSelectParentCategory: not("category.isUncategorizedCategory"),
@@ -66,7 +80,7 @@ export default buildCategoryPanel("general", {
 
   @discourseComputed(
     "category.parent_category_id",
-    "category.categoryName",
+    "category.name",
     "category.color",
     "category.text_color"
   )
@@ -96,10 +110,16 @@ export default buildCategoryPanel("general", {
     return !isUncategorizedCategory && categoryId;
   },
 
-  actions: {
-    showCategoryTopic() {
-      window.open(this.get("category.topic_url"), "_blank").focus();
-      return false;
-    }
+  @action
+  showCategoryTopic() {
+    window.open(this.get("category.topic_url"), "_blank").focus();
+    return false;
+  },
+
+  _focusCategoryName() {
+    this._laterFocus = later(() => {
+      const categoryName = this.element.querySelector(".category-name");
+      categoryName && categoryName.focus();
+    }, 25);
   }
 });

@@ -15,15 +15,6 @@ vi:
       average_rating: "Trung bình: <strong>%{average}</strong>."
       public:
         title: "Bình chọn <strong>công khai</strong>"
-      multiple:
-        help:
-          at_least_min_options:
-            other: "Chọn ít nhất <strong>%{count}</strong> lựa chọn"
-          up_to_max_options:
-            other: "Chọn tối đa <strong>%{count}</strong> lựa chọn"
-          x_options:
-            other: "Chọn <strong>%{count}</strong> lựa chọn"
-          between_min_and_max_options: "Chọn giữa <strong>%{min}</strong> và <strong>%{max}</strong> lựa chọn."
       cast-votes:
         title: "Thay đổi bình chọn của bạn"
         label: "Bình chọn ngay!"

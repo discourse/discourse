@@ -56,19 +56,21 @@ class OptimizedImage < ActiveRecord::Base
 
     return thumbnail if thumbnail
 
+    # create the thumbnail otherwise
+    original_path = Discourse.store.path_for(upload)
+
+    if original_path.blank?
+      # download is protected with a DistributedMutex
+      external_copy = Discourse.store.download(upload) rescue nil
+      original_path = external_copy.try(:path)
+    end
+
     lock(upload.id, width, height) do
       # may have been generated since we got the lock
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
       # return the previous thumbnail if any
       return thumbnail if thumbnail
-
-      # create the thumbnail otherwise
-      original_path = Discourse.store.path_for(upload)
-      if original_path.blank?
-        external_copy = Discourse.store.download(upload) rescue nil
-        original_path = external_copy.try(:path)
-      end
 
       if original_path.blank?
         Rails.logger.error("Could not find file in the store located at url: #{upload.url}")

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { warn } from "@ember/debug";
 import {
   displayErrorForUpload,
@@ -99,7 +100,7 @@ export default Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      if (!data || (data && data.errorThrown !== "abort")) {
+      if (!data || data.errorThrown !== "abort") {
         displayErrorForUpload(data);
       }
       reset();

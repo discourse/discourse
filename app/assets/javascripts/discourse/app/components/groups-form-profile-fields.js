@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
 import Component from "@ember/component";
@@ -31,25 +32,24 @@ export default Component.extend({
 
   @observes("nameInput")
   _validateName() {
-    name = this.nameInput;
-    if (name === this.get("model.name")) return;
+    if (this.nameInput === this.get("model.name")) return;
 
-    if (name === undefined) {
+    if (this.nameInput === undefined) {
       return this._failedInputValidation();
     }
 
-    if (name === "") {
+    if (this.nameInput === "") {
       this.set("uniqueNameValidation", null);
       return this._failedInputValidation(I18n.t("admin.groups.new.name.blank"));
     }
 
-    if (name.length < this.siteSettings.min_username_length) {
+    if (this.nameInput.length < this.siteSettings.min_username_length) {
       return this._failedInputValidation(
         I18n.t("admin.groups.new.name.too_short")
       );
     }
 
-    if (name.length > this.siteSettings.max_username_length) {
+    if (this.nameInput.length > this.siteSettings.max_username_length) {
       return this._failedInputValidation(
         I18n.t("admin.groups.new.name.too_long")
       );
@@ -63,10 +63,9 @@ export default Component.extend({
   },
 
   checkGroupName: discourseDebounce(function() {
-    name = this.nameInput;
-    if (isEmpty(name)) return;
+    if (isEmpty(this.nameInput)) return;
 
-    Group.checkName(name)
+    Group.checkName(this.nameInput)
       .then(response => {
         const validationName = "uniqueNameValidation";
 

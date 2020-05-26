@@ -10,7 +10,7 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
-  # remove line Jan 2021
+  # TODO(2021-01-04): remove
   self.ignored_columns = ["avg_time"]
 
   cattr_accessor :plugin_permitted_create_params
@@ -50,6 +50,8 @@ class Post < ActiveRecord::Base
   has_many :revisions, -> { order(:number) }, foreign_key: :post_id, class_name: 'PostRevision'
 
   has_many :user_actions, foreign_key: :target_post_id
+
+  belongs_to :image_upload, class_name: "Upload"
 
   validates_with PostValidator, unless: :skip_validation
 
@@ -155,14 +157,6 @@ class Post < ActiveRecord::Base
 
   def self.find_by_detail(key, value)
     includes(:post_details).find_by(post_details: { key: key, value: value })
-  end
-
-  def self.excerpt_size=(sz)
-    @excerpt_size = sz
-  end
-
-  def self.excerpt_size
-    @excerpt_size || 220
   end
 
   def whisper?
@@ -480,7 +474,7 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, Post.excerpt_size, strip_links: true, strip_images: true, post: self)
+    Post.excerpt(cooked, SiteSetting.topic_excerpt_maxlength, strip_links: true, strip_images: true, post: self)
   end
 
   def is_first_post?
@@ -655,6 +649,10 @@ class Post < ActiveRecord::Base
       baked_at: Time.zone.now,
       baked_version: BAKED_VERSION
     )
+
+    if is_first_post?
+      topic.update_excerpt(excerpt_for_topic)
+    end
 
     if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)
@@ -953,7 +951,7 @@ class Post < ActiveRecord::Base
       /\/uploads\/short-url\/[a-zA-Z0-9]+(\.[a-z0-9]+)?/
     ]
 
-    fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    fragments ||= Nokogiri::HTML5::fragment(self.cooked)
     selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
 
     links = selectors.map do |media|
@@ -1062,6 +1060,10 @@ class Post < ActiveRecord::Base
     Upload.where(access_control_post_id: self.id)
   end
 
+  def image_url
+    image_upload&.url
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1144,6 +1146,7 @@ end
 #  action_code             :string
 #  image_url               :string
 #  locked_by_id            :integer
+#  image_upload_id         :bigint
 #
 # Indexes
 #
@@ -1152,6 +1155,7 @@ end
 #  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                      (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
 #  index_posts_on_id_and_baked_version       (id DESC,baked_version) WHERE (deleted_at IS NULL)
+#  index_posts_on_image_upload_id            (image_upload_id)
 #  index_posts_on_reply_to_post_number       (reply_to_post_number)
 #  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE

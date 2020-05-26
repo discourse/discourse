@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { empty, alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";

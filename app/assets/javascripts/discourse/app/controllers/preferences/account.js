@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { not, or, gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { iconHTML } from "discourse-common/lib/icon-library";

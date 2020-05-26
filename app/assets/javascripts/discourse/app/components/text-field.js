@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import TextField from "@ember/component/text-field";
 import discourseComputed from "discourse-common/utils/decorators";
 import { siteDir, isRTL, isLTR } from "discourse/lib/text-direction";
@@ -6,9 +7,6 @@ import { next, debounce, cancel } from "@ember/runloop";
 const DEBOUNCE_MS = 500;
 
 export default TextField.extend({
-  _prevValue: null,
-  _timer: null,
-
   attributeBindings: [
     "autocorrect",
     "autocapitalize",
@@ -17,13 +15,22 @@ export default TextField.extend({
     "dir"
   ],
 
+  init() {
+    this._super(...arguments);
+
+    this._prevValue = null;
+    this._timer = null;
+  },
+
   didReceiveAttrs() {
     this._super(...arguments);
+
     this._prevValue = this.value;
   },
 
   didUpdateAttrs() {
     this._super(...arguments);
+
     if (this._prevValue !== this.value) {
       if (this.onChangeImmediate) {
         next(() => this.onChangeImmediate(this.value));
@@ -69,27 +76,6 @@ export default TextField.extend({
         this.set("dir", siteDir());
       }
     }
-  },
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-    this._prevValue = this.value;
-  },
-
-  didUpdateAttrs() {
-    this._super(...arguments);
-    if (this._prevValue !== this.value) {
-      if (this.onChangeImmediate) {
-        next(() => this.onChangeImmediate(this.value));
-      }
-      if (this.onChange) {
-        debounce(this, this._debouncedChange, DEBOUNCE_MS);
-      }
-    }
-  },
-
-  _debouncedChange() {
-    next(() => this.onChange(this.value));
   },
 
   @discourseComputed("placeholderKey")

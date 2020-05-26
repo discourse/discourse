@@ -3,7 +3,7 @@ import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";
 import { ajax } from "discourse/lib/ajax";
-import { throttle } from "@ember/runloop";
+import { throttle, schedule } from "@ember/runloop";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
 const DEFAULT_BINDINGS = {
@@ -330,12 +330,17 @@ export default {
     });
   },
 
-  focusComposer() {
+  focusComposer(event) {
     const composer = this.container.lookup("controller:composer");
     if (composer.get("model.viewOpen")) {
-      setTimeout(() => $("textarea.d-editor-input").focus(), 0);
+      preventKeyboardEvent(event);
+
+      schedule("afterRender", () => {
+        const input = document.querySelector("textarea.d-editor-input");
+        input && input.focus();
+      });
     } else {
-      composer.send("openIfDraft");
+      composer.openIfDraft(event);
     }
   },
 

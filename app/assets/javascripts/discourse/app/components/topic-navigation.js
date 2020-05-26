@@ -9,7 +9,8 @@ import PanEvents, {
   SWIPE_VELOCITY_THRESHOLD
 } from "discourse/mixins/pan-events";
 
-const MIN_WIDTH_TIMELINE = 924;
+const MIN_WIDTH_TIMELINE = 924,
+  MIN_HEIGHT_TIMELINE = 325;
 
 export default Component.extend(PanEvents, {
   composerOpen: null,
@@ -39,7 +40,6 @@ export default Component.extend(PanEvents, {
       if (renderTimeline) {
         const width = window.innerWidth,
           composer = document.getElementById("reply-control"),
-          timelineContainer = document.querySelector(".timeline-container"),
           headerContainer = document.querySelector(".d-header"),
           headerHeight = (headerContainer && headerContainer.offsetHeight) || 0;
 
@@ -47,7 +47,7 @@ export default Component.extend(PanEvents, {
           renderTimeline =
             width > MIN_WIDTH_TIMELINE &&
             window.innerHeight - composer.offsetHeight - headerHeight >
-              (timelineContainer ? timelineContainer.offsetHeight : 0);
+              MIN_HEIGHT_TIMELINE;
         }
       }
 
@@ -196,7 +196,7 @@ export default Component.extend(PanEvents, {
         this._checkSize()
       );
       this.appEvents.on("composer:opened", this, this.composerOpened);
-      this.appEvents.on("composer:resized", this, this.composerOpened);
+      this.appEvents.on("composer:resize-ended", this, this.composerOpened);
       this.appEvents.on("composer:closed", this, this.composerClosed);
       $("#reply-control").on("div-resized.discourse-topic-navigation", () =>
         this._checkSize()
@@ -219,7 +219,7 @@ export default Component.extend(PanEvents, {
     if (!this.site.mobileView) {
       $(window).off("resize.discourse-topic-navigation");
       this.appEvents.off("composer:opened", this, this.composerOpened);
-      this.appEvents.off("composer:resized", this, this.composerOpened);
+      this.appEvents.off("composer:resize-ended", this, this.composerOpened);
       this.appEvents.off("composer:closed", this, this.composerClosed);
       $("#reply-control").off("div-resized.discourse-topic-navigation");
     }

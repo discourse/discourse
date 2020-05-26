@@ -33,7 +33,7 @@
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.topics_replied_to"}}</th>
         <td>{{check-icon model.tl3Requirements.met.topics_replied_to}}</td>
-        <td>{{model.tl3Requirements.num_topics_replied_to}}</td>
+        <td>{{#if model.tl3Requirements.capped_topics_replied_to}}&ge; {{/if}}{{model.tl3Requirements.num_topics_replied_to}}</td>
         <td>{{model.tl3Requirements.min_topics_replied_to}}</td>
       </tr>
       <tr>

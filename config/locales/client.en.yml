@@ -319,6 +319,7 @@ en:
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
       list_permission_denied: "You do not have permission to view this user's bookmarks."
+      delete_when_reminder_sent: "Delete this bookmark when the reminder notification is sent."
       reminders:
         at_desktop: "Next time I'm at my desktop"
         later_today: "Later today"
@@ -335,6 +336,9 @@ en:
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
         existing_reminder: "You have a reminder set for this bookmark which will be sent"
+
+    copy_codeblock:
+      copied: "copied!"
 
     drafts:
       resume: "Resume"
@@ -747,14 +751,16 @@ en:
           title: "Muted"
           description: "You will not be notified of anything about messages in this group."
       flair_url: "Avatar Flair Image"
-      flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
-      flair_url_description: 'Use square images no smaller than 20px by 20px or FontAwesome icons (accepted formats: "fa-icon", "far fa-icon" or "fab fa-icon").'
+      flair_upload_description: "Use square images no smaller than 20px by 20px."
       flair_bg_color: "Avatar Flair Background Color"
       flair_bg_color_placeholder: "(Optional) Hex color value"
       flair_color: "Avatar Flair Color"
       flair_color_placeholder: "(Optional) Hex color value"
       flair_preview_icon: "Preview Icon"
       flair_preview_image: "Preview Image"
+      flair_type:
+        icon: "Select an icon"
+        image: "Upload an image"
 
     user_action_groups:
       "1": "Likes"
@@ -820,6 +826,7 @@ en:
 
     user_fields:
       none: "(select an option)"
+      required: 'Please enter a value for "%{name}"'
 
     user:
       said: "{{username}}:"
@@ -958,6 +965,7 @@ en:
       api_approved: "Approved:"
       api_last_used_at: "Last used at:"
       theme: "Theme"
+      save_to_change_theme: 'Theme will be updated after you click "%{save_text}"'
       home: "Default Home Page"
       staged: "Staged"
 
@@ -1010,8 +1018,10 @@ en:
         enable: "Enable"
         enable_long: "Enable backup codes"
         manage: "Manage backup codes. You have <strong>{{count}}</strong> backup codes remaining."
-        copied_to_clipboard: "Copied to Clipboard"
+        copy_to_clipboard: "Copy to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
+        copied_to_clipboard: "Copied to Clipboard"
+        download_backup_codes: "Download backup codes"
         remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
         use: "Use a backup code"
         enable_prerequisites: "You must enable a primary second factor before generating backup codes."
@@ -1038,28 +1048,29 @@ en:
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
         use: "Use Authenticator app"
         enforced_notice: "You are required to enable two factor authentication before accessing this site."
-        disable: "disable"
-        disable_title: "Disable Second Factor"
+        disable: "Disable"
         disable_confirm: "Are you sure you want to disable all second factors?"
+        save: "Save"
         edit: "Edit"
         edit_title: "Edit Second Factor"
         edit_description: "Second Factor Name"
-        enable_security_key_description: "When you have your physical security key prepared press the Register button below."
+        enable_security_key_description: |
+          When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> prepared, press the Register button below.
         totp:
           title: "Token-Based Authenticators"
-          add: "New Authenticator"
+          add: "Add Authenticator"
           default_name: "My Authenticator"
           name_and_code_required_error: "You must provide a name and the code from your authenticator app."
         security_key:
           register: "Register"
           title: "Security Keys"
-          add: "Register Security Key"
+          add: "Add Security Key"
           default_name: "Main Security Key"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
           edit: "Edit Security Key"
+          save: "Save"
           edit_description: "Security Key Name"
-          delete: "Delete"
           name_required_error: "You must provide a name for your security key."
 
       change_about:
@@ -1111,6 +1122,7 @@ en:
         sso_override_instructions: "Email can be updated from SSO provider."
         instructions: "Never shown to the public."
         ok: "We will email you to confirm"
+        required: "Please enter an email address"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
         frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
@@ -1133,6 +1145,7 @@ en:
         title: "Name"
         instructions: "your full name (optional)"
         instructions_required: "Your full name"
+        required: "Please enter a name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
@@ -1146,6 +1159,7 @@ en:
         too_long: "Your username is too long"
         checking: "Checking username availability..."
         prefilled: "Email matches this registered username"
+        required: "Please enter a username"
 
       locale:
         title: "Interface language"
@@ -1304,6 +1318,7 @@ en:
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
         instructions: "at least %{count} characters"
+        required: "Please enter a password"
 
       summary:
         title: "Summary"
@@ -1658,6 +1673,9 @@ en:
         one: "Select at least {{count}} item."
         other: "Select at least {{count}} items."
       invalid_selection_length: "Selection must be at least {{count}} characters."
+      components:
+        categories_admin_dropdown:
+          title: "Categories admin dropdown"
 
     date_time_picker:
       from: From
@@ -1838,7 +1856,7 @@ en:
           other: "{{count}} unread messages"
         high_priority:
           one: "%{count} unread high priority notification"
-          other: "%{count} unread high priority notificationis"
+          other: "%{count} unread high priority notifications"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
@@ -2085,7 +2103,7 @@ en:
         help: "Move message back to Inbox"
       edit_message:
         help: "Edit first post of the message"
-        title: "Edit Message"
+        title: "Edit"
       defer:
         help: "Mark as unread"
         title: "Defer"
@@ -3057,7 +3075,7 @@ en:
         this_month: "Month"
         this_week: "Week"
         today: "Today"
-        other_periods: "see top"
+        other_periods: "see top:"
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, login, and reply.'
 
@@ -3314,6 +3332,12 @@ en:
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
     forced_anonymous: "Due to extreme load, this is temporarily being shown to everyone as a logged out user would see it."
+
+    footer_nav:
+      back: "Back"
+      forward: "Forward"
+      share: "Share"
+      dismiss: "Dismiss"
 
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
@@ -3577,12 +3601,6 @@ en:
         tag_event:
           name: "Tag Event"
           details: "When a tag is created, updated or destroyed."
-        flag_event:
-          name: "Flag Event"
-          details: "When a flag is created, agreed, disagreed or ignored."
-        queued_post_event:
-          name: "Post Approval Event"
-          details: "When a new queued post is created, approved or rejected."
         reviewable_event:
           name: "Reviewable Event"
           details: "When a new item is ready for review and when its status is updated."
@@ -4697,6 +4715,7 @@ en:
         post_title: "Post"
         category_id: "Category ID"
         category_title: "Category"
+        tag_name: "Tag name"
         external_url: "External URL"
         destination: "Destination"
         delete_confirm: Are you sure you want to delete this permalink?

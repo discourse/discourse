@@ -133,7 +133,7 @@ class Admin::GroupsController < Admin::AdminController
 
         return can_not_modify_automatic if group.automatic
 
-        existing_domains = group.automatic_membership_email_domains.split("|")
+        existing_domains = group.automatic_membership_email_domains&.split("|") || []
         domains -= existing_domains
       end
 
@@ -163,7 +163,8 @@ class Admin::GroupsController < Admin::AdminController
       :primary_group,
       :grant_trust_level,
       :incoming_email,
-      :flair_url,
+      :flair_icon,
+      :flair_upload_id,
       :flair_bg_color,
       :flair_color,
       :bio_raw,
@@ -177,7 +178,7 @@ class Admin::GroupsController < Admin::AdminController
       :usernames,
       :publish_read_state
     ]
-    custom_fields = Group.editable_group_custom_fields
+    custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
     permitted << { custom_fields: custom_fields } unless custom_fields.blank?
 
     params.require(:group).permit(permitted)

@@ -280,7 +280,7 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css('.hashtag').size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css('.hashtag').size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.category_hashtag.reply", i18n_post_args)}
 
@@ -331,7 +331,7 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css(".poll").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css(".poll").size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.poll.reply", i18n_post_args)}
 
@@ -354,7 +354,7 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      if Nokogiri::HTML.fragment(@post.cooked).css("details").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css("details").size > 0
         reply_to(@post, I18n.t("#{I18N_KEY}.details.reply", i18n_post_args))
       else
         reply_to(@post, I18n.t("#{I18N_KEY}.details.not_found", i18n_post_args)) unless @data[:attempted]

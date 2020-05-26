@@ -154,11 +154,11 @@ module Jobs
     # and there is no reason to invalidate oneboxes, run the post analyzer etc.
     # when only the username changes.
     def update_cooked(cooked)
-      doc = Nokogiri::HTML.fragment(cooked)
+      doc = Nokogiri::HTML5.fragment(cooked)
 
       doc.css("a.mention").each do |a|
         a.content = a.content.gsub(@cooked_mention_username_regex, "@#{@new_username}")
-        a["href"] = a["href"].gsub(@cooked_mention_user_path_regex, "/u/#{@new_username}") if a["href"]
+        a["href"] = a["href"].gsub(@cooked_mention_user_path_regex, "/u/#{UrlHelper.encode_component(@new_username)}") if a["href"]
       end
 
       doc.css("aside.quote").each do |aside|

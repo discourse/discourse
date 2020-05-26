@@ -18,13 +18,13 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.0.2.2'
-  gem 'actionpack', '6.0.2.2'
-  gem 'actionview', '6.0.2.2'
-  gem 'activemodel', '6.0.2.2'
-  gem 'activerecord', '6.0.2.2'
-  gem 'activesupport', '6.0.2.2'
-  gem 'railties', '6.0.2.2'
+  gem 'actionmailer', '6.0.3'
+  gem 'actionpack', '6.0.3'
+  gem 'actionview', '6.0.3'
+  gem 'activemodel', '6.0.3'
+  gem 'activerecord', '6.0.3'
+  gem 'activesupport', '6.0.3'
+  gem 'railties', '6.0.3'
   gem 'sprockets-rails'
 end
 
@@ -127,11 +127,7 @@ gem 'mini_racer'
 # TODO: determine why highline is being held back and upgrade to latest
 gem 'highline', '~> 1.7.0', require: false
 
-# TODO: Upgrading breaks Sidekiq Web
-# This is a bit of a hornets nest cause in an ideal world we much prefer
-# if Sidekiq reused session and CSRF mitigation with Discourse on the
-# _forum_session cookie instead of a rack.session cookie
-gem 'rack', '2.0.8'
+gem 'rack', '2.2.2'
 
 gem 'rack-protection' # security
 gem 'cbor', require: false
@@ -172,9 +168,7 @@ group :test, :development do
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
-  gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
-  gem "rubocop-rspec", require: false
   gem 'parallel_tests'
 
   gem 'rswag-specs'
@@ -254,3 +248,5 @@ end
 gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
+
+gem 'rails_failover', require: false

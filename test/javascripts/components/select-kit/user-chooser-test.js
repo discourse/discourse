@@ -1,5 +1,5 @@
 import componentTest from "helpers/component-test";
-import { testSelectKitModule } from "./select-kit-test-helper";
+import { testSelectKitModule } from "helpers/select-kit-helper";
 import pretender from "helpers/create-pretender";
 
 testSelectKitModule("user-chooser");

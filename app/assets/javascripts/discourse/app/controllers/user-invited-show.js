@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { equal, reads, gte } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import Invite from "discourse/models/invite";

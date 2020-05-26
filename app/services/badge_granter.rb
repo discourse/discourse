@@ -2,6 +2,14 @@
 
 class BadgeGranter
 
+  def self.disable_queue
+    @queue_disabled = true
+  end
+
+  def self.enable_queue
+    @queue_disabled = false
+  end
+
   def initialize(badge, user, opts = {})
     @badge, @user, @opts = badge, user, opts
     @granted_by = opts[:granted_by] || Discourse.system_user
@@ -116,7 +124,7 @@ class BadgeGranter
   end
 
   def self.queue_badge_grant(type, opt)
-    return unless SiteSetting.enable_badges
+    return if !SiteSetting.enable_badges || @queue_disabled
     payload = nil
 
     case type

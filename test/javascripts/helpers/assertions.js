@@ -15,7 +15,7 @@ function invisible(selector) {
   const $items = find(selector + ":visible");
   return (
     $items.length === 0 ||
-    $items.css("opacity") === "0" ||
+    $items.css("opacity") !== "1" ||
     $items.css("visibility") === "hidden"
   );
 }

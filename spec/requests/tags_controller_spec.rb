@@ -3,17 +3,10 @@
 require 'rails_helper'
 
 describe TagsController do
-  define_method(:get_json_body) do
-    ::JSON.parse(response.body)
-  end
-
-  let(:json) { get_json_body }
-
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }
   fab!(:moderator) { Fabricate(:moderator) }
-
   fab!(:category)  { Fabricate(:category) }
   fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
 
@@ -33,9 +26,10 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tags = json["tags"]
+        tags = response.parsed_body["tags"]
         expect(tags.length).to eq(1)
         expect(tags[0]['text']).to eq("topic-test")
+        expect(response.headers['X-Robots-Tag']).to eq('noindex')
       end
     end
 
@@ -48,9 +42,9 @@ describe TagsController do
         get "/tags.json"
         expect(response.status).to eq(200)
 
-        tags = json["tags"]
+        tags = response.parsed_body["tags"]
         expect(tags.length).to eq(0)
-        group = json.dig('extras', 'tag_groups')&.first
+        group = response.parsed_body.dig('extras', 'tag_groups')&.first
         expect(group).to be_present
         expect(group['tags'].length).to eq(2)
         expect(group['tags'].map { |t| t['id'] }).to contain_exactly(test_tag.name, topic_tag.name)
@@ -71,7 +65,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tags = json["tags"]
+        tags = response.parsed_body["tags"]
         expect(tags.length).to eq(2)
       end
 
@@ -135,7 +129,7 @@ describe TagsController do
       it "should produce the topic inside the category and not the topic outside of it" do
         get "/tags/c/#{category.slug}/#{tag.name}.json"
 
-        topic_ids = json['topic_list']['topics'].map { |x| x['id'] }
+        topic_ids = response.parsed_body['topic_list']['topics'].map { |x| x['id'] }
         expect(topic_ids).to include(topic_in_category.id)
         expect(topic_ids).to_not include(topic_out_of_category.id)
         expect(topic_ids).to_not include(topic_in_category_without_tag.id)
@@ -168,7 +162,7 @@ describe TagsController do
       it "should produce the topic inside the subcategory and not the topic outside of it" do
         get "/tags/c/#{category.slug}/#{subcategory.slug}/#{tag.name}.json"
 
-        topic_ids = json['topic_list']['topics'].map { |x| x['id'] }
+        topic_ids = response.parsed_body['topic_list']['topics'].map { |x| x['id'] }
         expect(topic_ids).to include(topic_in_subcategory.id)
         expect(topic_ids).to_not include(topic_out_of_subcategory.id)
         expect(topic_ids).to_not include(topic_in_subcategory_without_tag.id)
@@ -188,26 +182,26 @@ describe TagsController do
     it "can handle tag with no synonyms" do
       get "/tag/#{tag.name}/info.json"
       expect(response.status).to eq(200)
-      expect(json.dig('tag_info', 'name')).to eq(tag.name)
-      expect(json.dig('tag_info', 'synonyms')).to be_empty
-      expect(json.dig('tag_info', 'category_ids')).to be_empty
-      expect(json.dig('tag_info', 'category_restricted')).to eq(false)
+      expect(response.parsed_body.dig('tag_info', 'name')).to eq(tag.name)
+      expect(response.parsed_body.dig('tag_info', 'synonyms')).to be_empty
+      expect(response.parsed_body.dig('tag_info', 'category_ids')).to be_empty
+      expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(false)
     end
 
     it "can handle a synonym" do
       get "/tag/#{synonym.name}/info.json"
       expect(response.status).to eq(200)
-      expect(json.dig('tag_info', 'name')).to eq(synonym.name)
-      expect(json.dig('tag_info', 'synonyms')).to be_empty
-      expect(json.dig('tag_info', 'category_ids')).to be_empty
-      expect(json.dig('tag_info', 'category_restricted')).to eq(false)
+      expect(response.parsed_body.dig('tag_info', 'name')).to eq(synonym.name)
+      expect(response.parsed_body.dig('tag_info', 'synonyms')).to be_empty
+      expect(response.parsed_body.dig('tag_info', 'category_ids')).to be_empty
+      expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(false)
     end
 
     it "can return a tag's synonyms" do
       synonym
       get "/tag/#{tag.name}/info.json"
       expect(response.status).to eq(200)
-      expect(json.dig('tag_info', 'synonyms').map { |t| t['text'] }).to eq([synonym.name])
+      expect(response.parsed_body.dig('tag_info', 'synonyms').map { |t| t['text'] }).to eq([synonym.name])
     end
 
     it "returns 404 if tag is staff-only" do
@@ -230,9 +224,9 @@ describe TagsController do
       category2.update!(tag_groups: [tag_group])
       staff_category = Fabricate(:private_category, group: Fabricate(:group), tags: [tag])
       get "/tag/#{tag.name}/info.json"
-      expect(json.dig('tag_info', 'category_ids')).to contain_exactly(category.id, category2.id)
-      expect(json['categories']).to be_present
-      expect(json.dig('tag_info', 'category_restricted')).to eq(true)
+      expect(response.parsed_body.dig('tag_info', 'category_ids')).to contain_exactly(category.id, category2.id)
+      expect(response.parsed_body['categories']).to be_present
+      expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(true)
     end
 
     context 'tag belongs to a tag group' do
@@ -241,13 +235,13 @@ describe TagsController do
       it "returns tag groups if tag groups are visible" do
         SiteSetting.tags_listed_by_group = true
         get "/tag/#{tag.name}/info.json"
-        expect(json.dig('tag_info', 'tag_group_names')).to eq([tag_group.name])
+        expect(response.parsed_body.dig('tag_info', 'tag_group_names')).to eq([tag_group.name])
       end
 
       it "doesn't return tag groups if tag groups aren't visible" do
         SiteSetting.tags_listed_by_group = false
         get "/tag/#{tag.name}/info.json"
-        expect(json['tag_info'].has_key?('tag_group_names')).to eq(false)
+        expect(response.parsed_body['tag_info'].has_key?('tag_group_names')).to eq(false)
       end
 
       context "restricted to a private category" do
@@ -262,24 +256,24 @@ describe TagsController do
         it "can return categories to users who can access them" do
           sign_in(admin)
           get "/tag/#{tag.name}/info.json"
-          expect(json.dig('tag_info', 'category_ids')).to contain_exactly(private_category.id)
-          expect(json['categories']).to be_present
-          expect(json.dig('tag_info', 'category_restricted')).to eq(true)
+          expect(response.parsed_body.dig('tag_info', 'category_ids')).to contain_exactly(private_category.id)
+          expect(response.parsed_body['categories']).to be_present
+          expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(true)
         end
 
         it "can indicate category restriction to users who can't access them" do
           sign_in(user)
           get "/tag/#{tag.name}/info.json"
-          expect(json.dig('tag_info', 'category_ids')).to be_empty
-          expect(json['categories']).to be_blank
-          expect(json.dig('tag_info', 'category_restricted')).to eq(true)
+          expect(response.parsed_body.dig('tag_info', 'category_ids')).to be_empty
+          expect(response.parsed_body['categories']).to be_blank
+          expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(true)
         end
 
         it "can indicate category restriction to anon" do
           get "/tag/#{tag.name}/info.json"
-          expect(json.dig('tag_info', 'category_ids')).to be_empty
-          expect(json['categories']).to be_blank
-          expect(json.dig('tag_info', 'category_restricted')).to eq(true)
+          expect(response.parsed_body.dig('tag_info', 'category_ids')).to be_empty
+          expect(response.parsed_body['categories']).to be_blank
+          expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(true)
         end
       end
     end
@@ -293,7 +287,7 @@ describe TagsController do
 
       expect(response.status).to eq(200)
 
-      response_tag = json["valid"].first
+      response_tag = response.parsed_body["valid"].first
       expect(response_tag["value"]).to eq(tag.name)
     end
   end
@@ -359,7 +353,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = json['tags']
+        tag = response.parsed_body['tags']
         expect(tag[0]["id"]).to eq('test')
       end
     end
@@ -374,7 +368,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = json['tags']
+        tag = response.parsed_body['tags']
         expect(tag[0]["id"]).to eq('test')
       end
 
@@ -383,7 +377,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        tag = json['tags']
+        tag = response.parsed_body['tags']
         expect(tag[0]["id"]).to eq('test')
       end
     end
@@ -408,7 +402,7 @@ describe TagsController do
 
     context 'tagging enabled' do
       def parse_topic_ids
-        get_json_body["topic_list"]["topics"]
+        response.parsed_body["topic_list"]["topics"]
           .map { |topic| topic["id"] }
       end
 
@@ -552,7 +546,7 @@ describe TagsController do
         tag_names.each { |name| Fabricate(:tag, name: name) }
         get "/tags/filter/search.json", params: { q: 'stu' }
         expect(response.status).to eq(200)
-        expect(json["results"].map { |j| j["id"] }.sort).to eq(['stuff', 'stumped'])
+        expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(['stuff', 'stumped'])
       end
 
       it "returns tags ordered by topic_count, and prioritises exact matches" do
@@ -562,7 +556,7 @@ describe TagsController do
 
         get '/tags/filter/search.json', params: { q: 'tag', limit: 2 }
         expect(response.status).to eq(200)
-        expect(json['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
+        expect(response.parsed_body['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
       end
 
       context 'with category restriction' do
@@ -573,17 +567,17 @@ describe TagsController do
           nope = Fabricate(:tag, name: 'nope')
           get "/tags/filter/search.json", params: { q: nope.name, categoryId: category.id }
           expect(response.status).to eq(200)
-          expect(json["results"].map { |j| j["id"] }.sort).to eq([])
-          expect(json["forbidden"]).to be_present
-          expect(json["forbidden_message"]).to eq(I18n.t("tags.forbidden.in_this_category", tag_name: nope.name))
+          expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq([])
+          expect(response.parsed_body["forbidden"]).to be_present
+          expect(response.parsed_body["forbidden_message"]).to eq(I18n.t("tags.forbidden.in_this_category", tag_name: nope.name))
         end
 
         it "can say if given tag is restricted to different category" do
           category
           get "/tags/filter/search.json", params: { q: yup.name, categoryId: Fabricate(:category).id }
-          expect(json["results"].map { |j| j["id"] }.sort).to eq([])
-          expect(json["forbidden"]).to be_present
-          expect(json["forbidden_message"]).to eq(I18n.t(
+          expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq([])
+          expect(response.parsed_body["forbidden"]).to be_present
+          expect(response.parsed_body["forbidden_message"]).to eq(I18n.t(
             "tags.forbidden.restricted_to",
             count: 1,
             tag_name: yup.name,
@@ -595,7 +589,7 @@ describe TagsController do
           nope = Fabricate(:tag, name: 'nope')
           get "/tags/filter/search.json", params: { categoryId: category.id }
           expect(response.status).to eq(200)
-          expect(json["results"].map { |j| j["id"] }.sort).to eq([yup.name])
+          expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq([yup.name])
         end
       end
 
@@ -606,21 +600,21 @@ describe TagsController do
         it "can return synonyms" do
           get "/tags/filter/search.json", params: { q: 'plant' }
           expect(response.status).to eq(200)
-          expect(json['results'].map { |j| j['id'] }).to contain_exactly('plant', 'plants')
+          expect(response.parsed_body['results'].map { |j| j['id'] }).to contain_exactly('plant', 'plants')
         end
 
         it "can omit synonyms" do
           get "/tags/filter/search.json", params: { q: 'plant', excludeSynonyms: 'true' }
           expect(response.status).to eq(200)
-          expect(json['results'].map { |j| j['id'] }).to contain_exactly('plant')
+          expect(response.parsed_body['results'].map { |j| j['id'] }).to contain_exactly('plant')
         end
 
         it "can return a message about synonyms not being allowed" do
           get "/tags/filter/search.json", params: { q: 'plants', excludeSynonyms: 'true' }
           expect(response.status).to eq(200)
-          expect(json["results"].map { |j| j["id"] }.sort).to eq([])
-          expect(json["forbidden"]).to be_present
-          expect(json["forbidden_message"]).to eq(I18n.t("tags.forbidden.synonym", tag_name: tag.name))
+          expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq([])
+          expect(response.parsed_body["forbidden"]).to be_present
+          expect(response.parsed_body["forbidden_message"]).to eq(I18n.t("tags.forbidden.synonym", tag_name: tag.name))
         end
       end
 
@@ -628,7 +622,7 @@ describe TagsController do
         yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
         get "/tags/filter/search.json", params: { q: 'N/ope' }
         expect(response.status).to eq(200)
-        expect(json["results"].map { |j| j["id"] }.sort).to eq(["nope"])
+        expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(["nope"])
       end
 
       it "can return tags that are in secured categories but are allowed to be used" do
@@ -636,7 +630,7 @@ describe TagsController do
         Fabricate(:topic, category: c, tags: [Fabricate(:tag, name: "cooltag")])
         get "/tags/filter/search.json", params: { q: "cool" }
         expect(response.status).to eq(200)
-        expect(json["results"].map { |j| j["id"] }).to eq(['cooltag'])
+        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(['cooltag'])
       end
 
       it "supports Chinese and Russian" do
@@ -645,13 +639,11 @@ describe TagsController do
 
         get "/tags/filter/search.json", params: { q: '房' }
         expect(response.status).to eq(200)
-        json = get_json_body
-        expect(json["results"].map { |j| j["id"] }).to eq(['房地产'])
+        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(['房地产'])
 
         get "/tags/filter/search.json", params: { q: 'тема' }
         expect(response.status).to eq(200)
-        json = get_json_body
-        expect(json["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
+        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
       end
 
       it "can return all the results" do
@@ -659,10 +651,10 @@ describe TagsController do
         tag_group2 = Fabricate(:tag_group, tag_names: ['common1', 'common2'])
         category = Fabricate(:category, tag_groups: [tag_group1])
         get "/tags/filter/search.json", params: { q: '', limit: 5, categoryId: category.id, filterForInput: 'true' }
+
         expect(response.status).to eq(200)
-        json = get_json_body
         expect_same_tag_names(
-          json["results"].map { |j| j["id"] },
+          response.parsed_body["results"].map { |j| j["id"] },
           ['common1', 'common2', 'group1tag', 'group1tag2']
         )
       end
@@ -688,7 +680,7 @@ describe TagsController do
         it 'returns a tag not found message' do
           delete "/tag/doesntexists.json"
           expect(response).not_to be_successful
-          expect(json['error_type']).to eq('not_found')
+          expect(response.parsed_body['error_type']).to eq('not_found')
         end
       end
     end
@@ -720,7 +712,7 @@ describe TagsController do
         it 'returns the correct unused tags' do
           get "/tags/unused.json"
           expect(response.status).to eq(200)
-          expect(json["tags"]).to contain_exactly("unused1", "unused2")
+          expect(response.parsed_body["tags"]).to contain_exactly("unused1", "unused2")
         end
 
         it 'deletes the correct tags' do
@@ -817,9 +809,8 @@ describe TagsController do
         tag3 = Fabricate(:tag)
         post "/tag/#{tag3.name}/synonyms.json", params: { synonyms: [tag.name] }
         expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
-        expect(json['failed']).to be_present
-        expect(json.dig('failed_tags', tag.name)).to be_present
+        expect(response.parsed_body['failed']).to be_present
+        expect(response.parsed_body.dig('failed_tags', tag.name)).to be_present
       end
     end
   end

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 

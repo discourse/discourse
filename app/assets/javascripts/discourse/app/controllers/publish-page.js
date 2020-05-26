@@ -27,7 +27,6 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
   reason: null,
   publishedPage: null,
   disabled: not("valid"),
-  publishedPage: null,
 
   showUrl: computed("state", function() {
     return (

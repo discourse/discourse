@@ -15,6 +15,7 @@ class GroupsController < ApplicationController
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
   skip_before_action :check_xhr, only: [:show]
+  after_action :add_noindex_header
 
   TYPE_FILTERS = {
     my: Proc.new { |groups, user|
@@ -208,7 +209,11 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > 1000
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
-    dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
+    dir = (params[:asc] && params[:asc].present?) ? 'ASC' : 'DESC'
+    if params[:desc]
+      Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true)
+      dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
+    end
     order = ""
 
     if params[:requesters]
@@ -335,16 +340,26 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(:id) if group.blank?
     guardian.ensure_can_edit!(group)
 
-    ActiveRecord::Base.transaction do
-      user = User.find_by(id: params[:user_id])
-      raise Discourse::InvalidParameters.new(:user_id) if user.blank?
+    user = User.find_by(id: params[:user_id])
+    raise Discourse::InvalidParameters.new(:user_id) if user.blank?
 
+    ActiveRecord::Base.transaction do
       if params[:accept]
-        group.add(user, notify: true)
+        group.add(user)
         GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
       end
 
       GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
+    end
+
+    if params[:accept]
+      PostCreator.new(current_user,
+        title: I18n.t('groups.request_accepted_pm.title', group_name: group.name),
+        raw: I18n.t('groups.request_accepted_pm.body', group_name: group.name),
+        archetype: Archetype.private_message,
+        target_usernames: user.username,
+        skip_validations: true
+      ).create!
     end
 
     render json: success_json
@@ -516,7 +531,8 @@ class GroupsController < ApplicationController
           mentionable_level
           messageable_level
           title
-          flair_url
+          flair_icon
+          flair_upload_id
           flair_bg_color
           flair_color
           bio_raw
@@ -540,7 +556,7 @@ class GroupsController < ApplicationController
             :publish_read_state
           ])
 
-          custom_fields = Group.editable_group_custom_fields
+          custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
           default_params << { custom_fields: custom_fields } unless custom_fields.blank?
         end
 

@@ -419,7 +419,9 @@ export default {
           highest_post_number: 5,
           bumped_at: "2020-04-06T05:20:00.172Z",
           slug: "yelling-topic-title",
-          username: "someguy"
+          post_user_username: "someguy",
+          post_user_name: "Some Guy",
+          post_user_avatar_template: "/letter_avatar/someguy/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png"
         }
       ]
     }

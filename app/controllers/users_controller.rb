@@ -48,7 +48,7 @@ class UsersController < ApplicationController
                                                             :admin_login,
                                                             :confirm_admin]
 
-  after_action :add_noindex_header, only: [:show]
+  after_action :add_noindex_header, only: [:show, :my_redirect]
 
   def index
   end

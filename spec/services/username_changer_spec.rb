@@ -142,7 +142,7 @@ describe UsernameChanger do
           post = create_post_and_change_username(raw: ".@foo -@foo %@foo _@foo ,@foo ;@foo @@foo")
 
           expect(post.raw).to eq(".@bar -@bar %@bar _@bar ,@bar ;@bar @@bar")
-          expect(post.cooked).to match_html(<<~HTML)
+          expect(post.cooked).to match_html(<<~HTML.rstrip)
             <p>.<a class="mention" href="/u/bar">@bar</a>
                -<a class="mention" href="/u/bar">@bar</a>
                %<a class="mention" href="/u/bar">@bar</a>
@@ -164,7 +164,7 @@ describe UsernameChanger do
           post = create_post_and_change_username(raw: "**@foo** *@foo* _@foo_ ~~@foo~~")
 
           expect(post.raw).to eq("**@bar** *@bar* _@bar_ ~~@bar~~")
-          expect(post.cooked).to match_html(<<~HTML)
+          expect(post.cooked).to match_html(<<~HTML.rstrip)
             <p><strong><a class="mention" href="/u/bar">@bar</a></strong>
                <em><a class="mention" href="/u/bar">@bar</a></em>
                <em><a class="mention" href="/u/bar">@bar</a></em>
@@ -176,7 +176,7 @@ describe UsernameChanger do
           post = create_post_and_change_username(raw: "@foo. @foo, @foo: @foo; @foo_ @foo-")
 
           expect(post.raw).to eq("@bar. @bar, @bar: @bar; @bar_ @bar-")
-          expect(post.cooked).to match_html(<<~HTML)
+          expect(post.cooked).to match_html(<<~HTML.rstrip)
             <p><a class="mention" href="/u/bar">@bar</a>.
                <a class="mention" href="/u/bar">@bar</a>,
                <a class="mention" href="/u/bar">@bar</a>:
@@ -220,12 +220,8 @@ describe UsernameChanger do
           post = create_post_and_change_username(raw: "@foo @foobar @foo-bar @foo_bar @foo1")
 
           expect(post.raw).to eq("@bar @foobar @foo-bar @foo_bar @foo1")
-          expect(post.cooked).to match_html(<<~HTML)
-            <p><a class="mention" href="/u/bar">@bar</a>
-               <a class="mention" href="/u/foobar">@foobar</a>
-               <a class="mention" href="/u/foo-bar">@foo-bar</a>
-               <a class="mention" href="/u/foo_bar">@foo_bar</a>
-               <a class="mention" href="/u/foo1">@foo1</a></p>
+          expect(post.cooked).to match_html(<<~HTML.rstrip)
+            <p><a class="mention" href="/u/bar">@bar</a> <a class="mention" href="/u/foobar">@foobar</a> <a class="mention" href="/u/foo-bar">@foo-bar</a> <a class="mention" href="/u/foo_bar">@foo_bar</a> <a class="mention" href="/u/foo1">@foo1</a></p>
           HTML
         end
 
@@ -311,12 +307,8 @@ describe UsernameChanger do
             post = create_post_and_change_username(raw: "@թռչուն @թռչուն鳥 @թռչուն-鳥 @թռչուն_鳥 @թռչուն٩", target_username: 'птица')
 
             expect(post.raw).to eq("@птица @թռչուն鳥 @թռչուն-鳥 @թռչուն_鳥 @թռչուն٩")
-            expect(post.cooked).to match_html(<<~HTML)
-              <p><a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a>
-                 <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6%E9%B3%A5">@թռչուն鳥</a>
-                 <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6-%E9%B3%A5">@թռչուն-鳥</a>
-                 <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6_%E9%B3%A5">@թռչուն_鳥</a>
-                 <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6%D9%A9">@թռչուն٩</a></p>
+            expect(post.cooked).to match_html(<<~HTML.rstrip)
+              <p><a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a> <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6%E9%B3%A5">@թռչուն鳥</a> <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6-%E9%B3%A5">@թռչուն-鳥</a> <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6_%E9%B3%A5">@թռչուն_鳥</a> <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6%D9%A9">@թռչուն٩</a></p>
             HTML
           end
 
@@ -364,7 +356,7 @@ describe UsernameChanger do
             dolor sit amet
           RAW
 
-          expect(post.cooked).to match_html(<<~HTML)
+          expect(post.cooked).to match_html(<<~HTML.rstrip)
             <p>Lorem ipsum</p>
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
@@ -377,7 +369,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-username="bar">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -385,7 +377,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -415,7 +407,7 @@ describe UsernameChanger do
           end
 
           let(:expected_cooked) do
-            <<~HTML
+            <<~HTML.rstrip
               <p>Lorem ipsum</p>
               <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
               <div class="title">
@@ -459,7 +451,7 @@ describe UsernameChanger do
 
           expect(post.raw).to eq(raw)
 
-          expect(post.cooked).to match_html(<<~HTML)
+          expect(post.cooked).to match_html(<<~HTML.rstrip)
             <p><aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
@@ -491,7 +483,7 @@ describe UsernameChanger do
 
           expect(post.raw).to eq(raw)
 
-          expect(post.cooked).to match_html(<<~HTML)
+          expect(post.cooked).to match_html(<<~HTML.rstrip)
             <p><aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>

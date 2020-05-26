@@ -18,18 +18,27 @@
       {{/if}}
 
       <div class="actions">
-        {{d-button
-          class="btn-primary"
-          action=(action "generateSecondFactorCodes")
-          type="submit"
-          disabled=loading
-          label=generateBackupCodeBtnLabel}}
         {{#if backupEnabled}}
           {{d-button
+            class="btn-primary"
+            icon="redo"
+            action=(action "generateSecondFactorCodes")
+            type="submit"
+            isLoading=loading
+            label="user.second_factor_backup.regenerate"}}
+          {{d-button
             class="btn-danger"
+            icon="ban"
             action=(action "disableSecondFactorBackup")
             disabled=loading
             label="user.second_factor_backup.disable"}}
+        {{else}}
+          {{d-button
+            class="btn-primary"
+            action=(action "generateSecondFactorCodes")
+            type="submit"
+            disabled=loading
+            label="user.second_factor_backup.enable"}}
         {{/if}}
       </div>
 

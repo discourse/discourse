@@ -25,6 +25,7 @@ class Upload < ActiveRecord::Base
 
   has_many :optimized_images, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
+  has_many :topic_thumbnails
 
   attr_accessor :for_group_message
   attr_accessor :for_theme
@@ -446,8 +447,4 @@ end
 #  index_uploads_on_sha1                    (sha1) UNIQUE
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (access_control_post_id => posts.id)
 #

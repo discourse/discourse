@@ -620,7 +620,7 @@ export function applyDefaultHandlers(pretender) {
       });
     }
 
-    const ascending = request.queryParams.ascending;
+    const asc = request.queryParams.asc;
     const order = request.queryParams.order;
 
     if (order) {
@@ -629,7 +629,7 @@ export function applyDefaultHandlers(pretender) {
       });
     }
 
-    if (ascending) {
+    if (asc) {
       store = store.reverse();
     }
 

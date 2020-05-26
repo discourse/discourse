@@ -157,7 +157,7 @@ module Jobs
     end
 
     def extract_images_from(html)
-      doc = Nokogiri::HTML::fragment(html)
+      doc = Nokogiri::HTML5::fragment(html)
 
       doc.css("img[src], a.lightbox[href]") -
         doc.css("img.avatar") -

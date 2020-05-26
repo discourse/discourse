@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import PostCooked from "discourse/widgets/post-cooked";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
@@ -556,7 +557,9 @@ createWidget("post-article", {
 
   html(attrs, state) {
     const rows = [
-      h("a.tabLoc", { attributes: { href: "", "aria-hidden": true } })
+      h("a.tabLoc", {
+        attributes: { href: "", "aria-hidden": true, tabindex: -1 }
+      })
     ];
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map(p => {

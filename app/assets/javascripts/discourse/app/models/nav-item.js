@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
@@ -272,12 +273,17 @@ export function addNavItem(item) {
   NavItem.extraNavItemDescriptors.push(item);
 }
 
-Object.defineProperty(Discourse, "NavItem", {
-  get() {
-    deprecated("Import the NavItem class instead of using Discourse.NavItem", {
-      since: "2.4.0",
-      dropFrom: "2.5.0"
-    });
-    return NavItem;
-  }
-});
+if (typeof Discourse !== "undefined") {
+  Object.defineProperty(Discourse, "NavItem", {
+    get() {
+      deprecated(
+        "Import the NavItem class instead of using Discourse.NavItem",
+        {
+          since: "2.4.0",
+          dropFrom: "2.5.0"
+        }
+      );
+      return NavItem;
+    }
+  });
+}

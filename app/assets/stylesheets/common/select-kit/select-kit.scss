@@ -1,6 +1,5 @@
 .select-kit {
   border: none;
-  min-width: 220px;
   box-sizing: border-box;
   display: inline-block;
   flex-direction: column;
@@ -22,12 +21,8 @@
     .select-kit-body {
       display: flex;
       flex-direction: column;
-      left: 0;
-      position: absolute;
-      top: 0;
       align-items: center;
       justify-content: center;
-      max-width: 450px;
     }
 
     .select-kit-collection {
@@ -68,11 +63,17 @@
     flex-direction: row;
     min-height: 30px;
 
+    .d-icon-spinner {
+      -webkit-animation: rotate-forever 1s infinite linear;
+      animation: rotate-forever 1s infinite linear;
+    }
+
     .selected-name {
       text-align: left;
       flex: 0 1 auto;
       color: inherit;
       display: flex;
+      outline: none;
 
       .d-icon + .name {
         margin-left: 0.5em;
@@ -110,6 +111,7 @@
 
     .caret-icon {
       margin-left: auto;
+      margin-right: 0;
       padding-left: 5px;
       pointer-events: none;
       color: inherit;
@@ -133,7 +135,6 @@
     display: none;
     background: $secondary;
     box-sizing: border-box;
-    width: auto;
   }
 
   .select-kit-row {

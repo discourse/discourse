@@ -1,0 +1,12 @@
+{{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+
+{{component selectKit.options.selectedNameComponent
+  tabindex=tabindex
+  item=selectedContent
+  selectKit=selectKit
+  shouldDisplayClearableButton=shouldDisplayClearableButton
+}}
+
+{{#if selectKit.options.showCaret}}
+  {{d-icon caretIcon class="caret-icon"}}
+{{/if}}

@@ -41,15 +41,20 @@ export function addButton(name, builder) {
   _extraButtons[name] = builder;
 }
 
+export function removeButton(name) {
+  if (_extraButtons[name]) delete _extraButtons[name];
+  if (_builders[name]) delete _builders[name];
+}
+
 function registerButton(name, builder) {
   _builders[name] = builder;
 }
 
 export function buildButton(name, widget) {
-  let { attrs, state, siteSettings, settings } = widget;
+  let { attrs, state, siteSettings, settings, currentUser } = widget;
   let builder = _builders[name];
   if (builder) {
-    let button = builder(attrs, state, siteSettings, settings);
+    let button = builder(attrs, state, siteSettings, settings, currentUser);
     if (button && !button.id) {
       button.id = name;
     }
@@ -282,48 +287,49 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
   return args;
 });
 
-registerButton("bookmark", attrs => {
-  if (!attrs.canBookmark) {
-    return;
-  }
-
-  let classNames = ["bookmark", "with-reminder"];
-  let title = "bookmarks.not_bookmarked";
-  let titleOptions = { name: "" };
-
-  if (attrs.bookmarked) {
-    classNames.push("bookmarked");
-
-    if (attrs.bookmarkReminderAt) {
-      let formattedReminder = formattedReminderTime(
-        attrs.bookmarkReminderAt,
-        Discourse.currentUser.resolvedTimezone()
-      );
-      title = "bookmarks.created_with_reminder";
-      titleOptions.date = formattedReminder;
-    } else if (attrs.bookmarkReminderType === "at_desktop") {
-      title = "bookmarks.created_with_at_desktop_reminder";
-    } else {
-      title = "bookmarks.created";
+registerButton(
+  "bookmark",
+  (attrs, _state, _siteSettings, _settings, currentUser) => {
+    if (!attrs.canBookmark) {
+      return;
     }
 
-    if (attrs.bookmarkName) {
-      titleOptions.name = `. ${attrs.bookmarkName}`;
-    }
-  }
+    let classNames = ["bookmark", "with-reminder"];
+    let title = "bookmarks.not_bookmarked";
+    let titleOptions = { name: "" };
 
-  return {
-    id: attrs.bookmarked ? "unbookmark" : "bookmark",
-    action: "toggleBookmark",
-    title,
-    titleOptions,
-    className: classNames.join(" "),
-    icon:
-      attrs.bookmarkReminderAt || attrs.bookmarkReminderType === "at_desktop"
-        ? "discourse-bookmark-clock"
-        : "bookmark"
-  };
-});
+    if (attrs.bookmarked) {
+      classNames.push("bookmarked");
+
+      if (attrs.bookmarkReminderAt) {
+        let formattedReminder = formattedReminderTime(
+          attrs.bookmarkReminderAt,
+          currentUser.resolvedTimezone(currentUser)
+        );
+        title = "bookmarks.created_with_reminder";
+        titleOptions.date = formattedReminder;
+      } else {
+        title = "bookmarks.created";
+      }
+
+      if (attrs.bookmarkName) {
+        titleOptions.name = `. ${attrs.bookmarkName}`;
+      }
+    }
+
+    return {
+      id: attrs.bookmarked ? "unbookmark" : "bookmark",
+      action: "toggleBookmark",
+      title,
+      titleOptions,
+      className: classNames.join(" "),
+      icon:
+        attrs.bookmarkReminderAt || attrs.bookmarkReminderType === "at_desktop"
+          ? "discourse-bookmark-clock"
+          : "bookmark"
+    };
+  }
+);
 
 registerButton("admin", attrs => {
   if (!attrs.canManage && !attrs.canWiki) {
@@ -494,7 +500,13 @@ export default createWidget("post-menu", {
 
     Object.values(_extraButtons).forEach(builder => {
       if (builder) {
-        const buttonAtts = builder(attrs, this.state, this.siteSettings);
+        const buttonAtts = builder(
+          attrs,
+          this.state,
+          this.siteSettings,
+          this.settings,
+          this.currentUser
+        );
         if (buttonAtts) {
           const { position, beforeButton, afterButton } = buttonAtts;
           delete buttonAtts.position;

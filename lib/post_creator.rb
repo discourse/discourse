@@ -303,7 +303,7 @@ class PostCreator
 
   def draft_key
     @draft_key ||= @opts[:draft_key]
-    @draft_key ||= @topic ? "topic_#{@topic.id}" : "new_topic"
+    @draft_key ||= @topic ? @topic.draft_key : Draft::NEW_TOPIC
   end
 
   def build_post_stats
@@ -374,6 +374,10 @@ class PostCreator
   # discourse post.
   def create_embedded_topic
     return unless @opts[:embed_url].present?
+
+    original_uri = URI.parse(@opts[:embed_url])
+    raise Discourse::InvalidParameters.new(:embed_url) unless original_uri.is_a?(URI::HTTP)
+
     embed = TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
     rollback_from_errors!(embed) unless embed.save
   end
@@ -537,11 +541,6 @@ class PostCreator
     unless @post.topic.private_message?
       @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular] && !@post.is_first_post?
       @user.user_stat.topic_count += 1 if @post.is_first_post?
-    end
-
-    # We don't count replies to your own topics
-    if !@opts[:import_mode] && @user.id != @topic.user_id
-      @user.user_stat.update_topic_reply_count
     end
 
     @user.user_stat.save!

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { computed } from "@ember/object";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { action } from "@ember/object";
@@ -23,7 +24,7 @@ export default DropdownSelectBoxComponent.extend({
       },
       {
         id: "edit",
-        icon: "pencil",
+        icon: "pencil-alt",
         name: I18n.t("post.bookmarks.actions.edit_bookmark.name"),
         description: I18n.t("post.bookmarks.actions.edit_bookmark.description")
       }

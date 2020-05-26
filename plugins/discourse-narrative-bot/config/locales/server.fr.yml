@@ -250,7 +250,7 @@ fr:
           (Si vous êtes sur un périphérique mobile, vous pouvez aussi entrer l'émoji directement depuis votre clavier.)
       mention:
         instructions: |-
-          Parfois vous avez peut-être envie d'attirer l'attention de quelqu'un, même si vous ne lui répondez pas directement. Tapez `@` et complétez son pseudo pour le mentionner.
+          Parfois vous avez peut-être envie d'attirer l'attention de quelqu'un, même si vous ne lui répondez pas directement. Tapez `@` et complétez son nom d'utilisateur pour le mentionner.
 
           Pouvez-vous mentionner **`@%{discobot_username}`** dans votre réponse ?
         reply: |-

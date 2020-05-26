@@ -32,6 +32,7 @@ describe Permalink do
     let(:topic)           { Fabricate(:topic) }
     let(:post)            { Fabricate(:post, topic: topic) }
     let(:category)        { Fabricate(:category) }
+    let(:tag)             { Fabricate(:tag) }
     subject(:target_url)  { permalink.target_url }
 
     it "returns a topic url when topic_id is set" do
@@ -74,6 +75,24 @@ describe Permalink do
       permalink.post_id = post.id
       permalink.topic_id = topic.id
       permalink.category_id = category.id
+      expect(target_url).to eq(post.url)
+    end
+
+    it "returns a tag url when tag_id is set" do
+      permalink.tag_id = tag.id
+      expect(target_url).to eq(tag.full_url)
+    end
+
+    it "returns nil when tag_id is set but tag is not found" do
+      permalink.tag_id = 99999
+      expect(target_url).to eq(nil)
+    end
+
+    it "returns a post url when topic_id, post_id, category_id and tag_id are all set for some reason" do
+      permalink.post_id = post.id
+      permalink.topic_id = topic.id
+      permalink.category_id = category.id
+      permalink.tag_id = tag.id
       expect(target_url).to eq(post.url)
     end
 

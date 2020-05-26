@@ -546,9 +546,11 @@ th:
         enable: "เปิดใช้งาน"
       second_factor:
         name: "ชื่อ"
+        disable: "ปิดใช้งาน"
+        save: "บันทึก"
         edit: "แก้ไข"
         security_key:
-          delete: "ลบ"
+          save: "บันทึก"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -1059,6 +1061,8 @@ th:
       move_to_inbox:
         title: "ย้ายไปกล่องขาเข้า"
         help: "ย้ายข้อความกลับไปกล่องข้อความ"
+      edit_message:
+        title: "แก้ไข"
       list: "กระทู้"
       new: "สร้างกระทู้"
       unread: "ยังไม่ได้อ่าน"
@@ -1398,7 +1402,6 @@ th:
         this_month: "เดือน"
         this_week: "อาทิตย์"
         today: "วันนี้"
-        other_periods: "ดูสูงสุด"
     permission_types:
       full: "สร้าง / ตอบ / ดู"
       create_post: "ตอบ / ดู"
@@ -1515,6 +1518,10 @@ th:
           unread: "ไม่มีหัวข้อที่ยังไม่อ่านแล้ว"
           top: "ไม่มีหัวข้อสูงสุดแล้ว"
           bookmarks: "ไม่มีบุ๊คมาร์คในหัวข้อใดอีกแล้ว"
+    footer_nav:
+      back: "กลับ"
+      share: "แบ่งปัน"
+      dismiss: "ซ่อน"
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:

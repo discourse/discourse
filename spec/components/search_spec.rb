@@ -444,7 +444,7 @@ describe Search do
       end
 
       let(:expected_blurb) do
-        "...to satisfy any test conditions that require content longer than the typical test post raw content. elephant"
+        "...quire content longer than the typical test post raw content. It really is some long content, folks. elephant"
       end
 
       it 'returns the post' do
@@ -1134,13 +1134,11 @@ describe Search do
 
     it 'can find posts with images' do
       post_uploaded = Fabricate(:post_with_uploaded_image)
-      post_with_image_urls = Fabricate(:post_with_image_urls)
       Fabricate(:post)
 
       CookedPostProcessor.new(post_uploaded).update_post_image
-      CookedPostProcessor.new(post_with_image_urls).update_post_image
 
-      expect(Search.execute('with:images').posts.map(&:id)).to contain_exactly(post_uploaded.id, post_with_image_urls.id)
+      expect(Search.execute('with:images').posts.map(&:id)).to contain_exactly(post_uploaded.id)
     end
 
     it 'can find by latest' do

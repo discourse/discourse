@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { later } from "@ember/runloop";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
 import { h } from "virtual-dom";

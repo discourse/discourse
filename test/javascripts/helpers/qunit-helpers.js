@@ -19,6 +19,7 @@ import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import User from "discourse/models/user";
@@ -39,6 +40,32 @@ export function logIn() {
 // Note: Only use if `loggedIn: true` has been used in an acceptance test
 export function loggedInUser() {
   return User.current();
+}
+
+export function fakeTime(timeString, timezone = null, advanceTime = false) {
+  let now = moment.tz(timeString, timezone);
+  return sandbox.useFakeTimers({
+    now: now.valueOf(),
+    shouldAdvanceTime: advanceTime
+  });
+}
+
+export async function acceptanceUseFakeClock(
+  timeString,
+  callback,
+  timezone = null
+) {
+  if (!timezone) {
+    let user = loggedInUser();
+    if (user) {
+      timezone = user.resolvedTimezone(user);
+    } else {
+      timezone = "America/Denver";
+    }
+  }
+  let clock = fakeTime(timeString, timezone, true);
+  await callback();
+  clock.reset();
 }
 
 const Plugin = $.fn.modal;
@@ -136,6 +163,7 @@ export function acceptance(name, options) {
       resetPostCookedDecorators();
       resetPluginOutletDecorators();
       resetTopicTitleDecorators();
+      resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
       Discourse._runInitializer("instanceInitializers", function(

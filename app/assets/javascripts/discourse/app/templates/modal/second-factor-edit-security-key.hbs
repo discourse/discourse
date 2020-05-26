@@ -8,11 +8,13 @@
   {{d-button
     action=(action "editSecurityKey")
     class="btn-primary"
-    label="user.second_factor.security_key.edit"
+    label="user.second_factor.security_key.save"
   }}
   {{d-button
     action=(action "disableSecurityKey")
     class="btn-danger"
-    label="user.second_factor.security_key.delete"
+    icon="trash-alt"
+    aria-label="user.second_factor.disable"
+    title="user.second_factor.disable"
   }}
 {{/d-modal-body}}

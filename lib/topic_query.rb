@@ -265,6 +265,7 @@ class TopicQuery
   def list_top_for(period)
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
+      topics = remove_muted_categories(topics, @user)
       topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
       if period == :yearly && @user.try(:trust_level) == TrustLevel[0]
         topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
@@ -828,6 +829,8 @@ class TopicQuery
     result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
     result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
+    result = preload_thumbnails(result)
+
     result = TopicQuery.apply_custom_filters(result, self)
 
     @guardian.filter_allowed_categories(result)
@@ -1048,6 +1051,10 @@ class TopicQuery
     end
 
     result.order('topics.bumped_at DESC')
+  end
+
+  def preload_thumbnails(result)
+    result.preload(:image_upload, topic_thumbnails: :optimized_image)
   end
 
   private

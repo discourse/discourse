@@ -873,6 +873,10 @@ describe User do
       SiteSetting.previous_visit_timeout_hours = 1
     end
 
+    after do
+      reset_last_seen_cache!(user)
+    end
+
     it "should act correctly" do
       expect(user.previous_visit_at).to eq(nil)
 
@@ -902,6 +906,10 @@ describe User do
     let(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
+
+    after do
+      reset_last_seen_cache!(user)
+    end
 
     it "should update the last seen value" do
       expect(user.last_seen_at).to eq nil
@@ -976,7 +984,9 @@ describe User do
 
     describe 'with no previous values' do
       after do
-        Discourse.redis.flushall
+        reset_last_seen_cache!(user)
+        unfreeze_time
+        reset_last_seen_cache!(user)
       end
 
       it "updates last_seen_at" do
@@ -1305,6 +1315,9 @@ describe User do
       let!(:user) { Fabricate(:user) }
       let!(:now) { Time.zone.now }
       before { user.update_last_seen!(now) }
+      after do
+        reset_last_seen_cache!(user)
+      end
 
       it "with existing UserVisit record, increments the posts_read value" do
         expect {
@@ -1565,20 +1578,15 @@ describe User do
 
     describe '#number_of_rejected_posts' do
       it 'counts rejected posts' do
-        post = Fabricate(:post, user: user)
-
-        Fabricate(:reviewable_queued_post, target: post, status: Reviewable.statuses[:rejected])
+        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:rejected])
 
         expect(user.number_of_rejected_posts).to eq(1)
       end
 
       it 'ignore non-rejected posts' do
-        post = Fabricate(:post, user: user)
-
-        Fabricate(:reviewable_queued_post, target: post, status: Reviewable.statuses[:approved])
+        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:approved])
 
         expect(user.number_of_rejected_posts).to eq(0)
-
       end
     end
   end
@@ -2360,5 +2368,9 @@ describe User do
       expect(user.recent_time_read).to eq(60)
       expect(user2.recent_time_read).to eq(50)
     end
+  end
+
+  def reset_last_seen_cache!(user)
+    Discourse.redis.del("user:#{user.id}:#{Time.zone.now.to_date}")
   end
 end

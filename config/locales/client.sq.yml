@@ -576,9 +576,11 @@ sq:
         enable: "Aktivizo"
       second_factor:
         name: "Emri"
+        disable: "Çaktivizo"
+        save: "Ruaj"
         edit: "Redakto"
         security_key:
-          delete: "Fshij"
+          save: "Ruaj"
       change_about:
         title: "Ndrysho Rreth meje"
         error: "Pati një gabim gjatë ndryshimit të kësaj të dhëne."
@@ -1157,6 +1159,8 @@ sq:
       move_to_inbox:
         title: "Lëviz në Inbox"
         help: "Riktheje mesazhin në inbox"
+      edit_message:
+        title: "Redakto"
       defer:
         title: "Shty"
       list: "Temat"
@@ -1769,7 +1773,6 @@ sq:
         this_month: "Këtë muaj"
         this_week: "Këtë javë"
         today: "Sot"
-        other_periods: "shiko më populloret"
     permission_types:
       full: "Krijo / Përgjigju / Shiko"
       create_post: "Përgjigju / Shiko"
@@ -1923,6 +1926,10 @@ sq:
       custom_message_placeholder: "Vendosni mesazhin"
       custom_message_template_forum: "Hej, hajde bashkoju këtij forumi!"
       custom_message_template_topic: "Hej, besoj se do të të pelqejë kjo temë!"
+    footer_nav:
+      back: "Kthehu mbrapa"
+      share: "Shpërndaje"
+      dismiss: "Hiqe"
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:

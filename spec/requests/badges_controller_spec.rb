@@ -15,8 +15,9 @@ describe BadgesController do
       get "/badges.json"
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["badges"].length).to eq(Badge.enabled.count)
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
   end
 
@@ -24,7 +25,7 @@ describe BadgesController do
     it "should return a badge" do
       get "/badges/#{badge.id}.json"
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["badge"]).to be_present
     end
 

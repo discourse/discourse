@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -7,8 +8,8 @@ import CategoryList from "discourse/models/category-list";
 import { defaultHomepage } from "discourse/lib/utilities";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
-import PreloadStore from "preload-store";
-import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
+import PreloadStore from "discourse/lib/preload-store";
+import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import { hash } from "rsvp";
 import Site from "discourse/models/site";
 
@@ -145,7 +146,7 @@ export function openNewCategoryModal(context) {
     allow_badges: true,
     topic_featured_link_allowed: true,
     custom_fields: {},
-    search_priority: searchPriorities.normal
+    search_priority: SEARCH_PRIORITIES.normal
   });
 
   showModal("edit-category", { model }).set("selectedTab", "general");

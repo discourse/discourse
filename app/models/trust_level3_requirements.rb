@@ -143,11 +143,7 @@ class TrustLevel3Requirements
   end
 
   def num_topics_replied_to
-    @user.posts
-      .public_posts
-      .where("posts.created_at > ? AND posts.post_number > 1", time_period.days.ago)
-      .select("distinct topic_id")
-      .count
+    @user.user_stat.calc_topic_reply_count!(min_topics_replied_to + 1, time_period.days.ago)
   end
 
   def min_topics_replied_to

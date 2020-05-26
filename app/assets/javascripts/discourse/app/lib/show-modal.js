@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { dasherize } from "@ember/string";
 
 export default function(name, opts) {

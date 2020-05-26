@@ -128,6 +128,12 @@ module TestSetup
     # code that runs inside jobs. run_later! means they are put on the redis
     # queue and never processed.
     Jobs.run_later!
+
+    # Don't track ApplicationRequests in test mode unless opted in
+    ApplicationRequest.disable
+
+    # Don't queue badge grant in test mode
+    BadgeGranter.disable_queue
   end
 end
 
@@ -188,7 +194,7 @@ RSpec.configure do |config|
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 
-    DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != "1"
+    DiscoursePluginRegistry.reset! if ENV['LOAD_PLUGINS'] != "1"
     Discourse.current_user_provider = TestCurrentUserProvider
 
     SiteSetting.refresh!
@@ -234,6 +240,12 @@ RSpec.configure do |config|
 
     if ActiveRecord::Base.connection_pool.stat[:busy] > 1
       raise ActiveRecord::Base.connection_pool.stat.inspect
+    end
+  end
+
+  config.after(:suite) do
+    if SpecSecureRandom.value
+      FileUtils.remove_dir(file_from_fixtures_tmp_folder, true)
     end
   end
 
@@ -368,9 +380,15 @@ def unfreeze_time
 end
 
 def file_from_fixtures(filename, directory = "images")
-  FileUtils.mkdir_p("#{Rails.root}/tmp/spec") unless Dir.exists?("#{Rails.root}/tmp/spec")
-  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
-  File.new("#{Rails.root}/tmp/spec/#{filename}")
+  SpecSecureRandom.value ||= SecureRandom.hex
+  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exists?(file_from_fixtures_tmp_folder)
+  tmp_file_path = File.join(file_from_fixtures_tmp_folder, SecureRandom.hex << filename)
+  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
+  File.new(tmp_file_path)
+end
+
+def file_from_fixtures_tmp_folder
+  File.join(Dir.tmpdir, "rspec_#{Process.pid}_#{SpecSecureRandom.value}")
 end
 
 def has_trigger?(trigger_name)
@@ -409,4 +427,10 @@ def track_log_messages(level: nil)
   logger.messages
 ensure
   Rails.logger = old_logger
+end
+
+class SpecSecureRandom
+  class << self
+    attr_accessor :value
+  end
 end

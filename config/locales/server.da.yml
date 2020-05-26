@@ -45,7 +45,6 @@ da:
       unrecognized_extension: "Ikke anerkendt filtypenavn: %{extension}"
     import_error:
       generic: Der opstod en fejl under importen af dette tema
-      about_json: "Importfejl: about.json findes ikke eller er ugyldig"
       about_json_values: "about.json indeholder ugyldige værdier: %{errors}"
       git: "Fejl ved kloning af git repo, adgang nægtes, eller depot findes ikke"
       unpack_failed: "Kunne ikke pakke filen ud"

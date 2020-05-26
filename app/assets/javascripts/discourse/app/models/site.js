@@ -7,7 +7,7 @@ import PostActionType from "discourse/models/post-action-type";
 import Singleton from "discourse/mixins/singleton";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import deprecated from "discourse-common/lib/deprecated";
 
 const Site = RestModel.extend({
@@ -216,18 +216,20 @@ Site.reopenClass(Singleton, {
   }
 });
 
-let warned = false;
-Object.defineProperty(Discourse, "Site", {
-  get() {
-    if (!warned) {
-      deprecated("Import the Site class instead of using Discourse.Site", {
-        since: "2.4.0",
-        dropFrom: "2.6.0"
-      });
-      warned = true;
+if (typeof Discourse !== "undefined") {
+  let warned = false;
+  Object.defineProperty(Discourse, "Site", {
+    get() {
+      if (!warned) {
+        deprecated("Import the Site class instead of using Discourse.Site", {
+          since: "2.4.0",
+          dropFrom: "2.6.0"
+        });
+        warned = true;
+      }
+      return Site;
     }
-    return Site;
-  }
-});
+  });
+}
 
 export default Site;

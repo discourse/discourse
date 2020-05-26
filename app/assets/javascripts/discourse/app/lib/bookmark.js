@@ -1,3 +1,4 @@
+import I18n from "I18n";
 export function formattedReminderTime(reminderAt, timezone) {
   let reminderAtDate = moment.tz(reminderAt, timezone);
   let formatted = reminderAtDate.format(I18n.t("dates.time"));
@@ -17,7 +18,6 @@ export function formattedReminderTime(reminderAt, timezone) {
 }
 
 export const REMINDER_TYPES = {
-  AT_DESKTOP: "at_desktop",
   LATER_TODAY: "later_today",
   NEXT_BUSINESS_DAY: "next_business_day",
   TOMORROW: "tomorrow",

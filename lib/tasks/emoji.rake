@@ -353,7 +353,7 @@ def generate_emoji_groups(keywords, sections)
   puts "Generating groups..."
 
   list = open(EMOJI_ORDERING_URL).read
-  doc = Nokogiri::HTML(list)
+  doc = Nokogiri::HTML5(list)
   table = doc.css("table")[0]
 
   EMOJI_GROUPS.map do |group|

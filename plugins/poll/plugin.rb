@@ -350,7 +350,7 @@ after_initialize do
         # in the validators instead of cooking twice
         cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
 
-        Nokogiri::HTML(cooked).css("div.poll").map do |p|
+        Nokogiri::HTML5(cooked).css("div.poll").map do |p|
           poll = { "options" => [], "name" => DiscoursePoll::DEFAULT_POLL_NAME }
 
           # attributes
@@ -451,28 +451,30 @@ after_initialize do
     mount ::DiscoursePoll::Engine, at: "/polls"
   end
 
-  Post.class_eval do
-    attr_accessor :extracted_polls
+  reloadable_patch do
+    Post.class_eval do
+      attr_accessor :extracted_polls
 
-    has_many :polls, dependent: :destroy
+      has_many :polls, dependent: :destroy
 
-    after_save do
-      polls = self.extracted_polls
-      next if polls.blank? || !polls.is_a?(Hash)
-      post = self
+      after_save do
+        polls = self.extracted_polls
+        next if polls.blank? || !polls.is_a?(Hash)
+        post = self
 
-      Poll.transaction do
-        polls.values.each do |poll|
-          DiscoursePoll::Poll.create!(post.id, poll)
+        Poll.transaction do
+          polls.values.each do |poll|
+            DiscoursePoll::Poll.create!(post.id, poll)
+          end
+          post.custom_fields[DiscoursePoll::HAS_POLLS] = true
+          post.save_custom_fields(true)
         end
-        post.custom_fields[DiscoursePoll::HAS_POLLS] = true
-        post.save_custom_fields(true)
       end
     end
-  end
 
-  User.class_eval do
-    has_many :poll_votes, dependent: :delete_all
+    User.class_eval do
+      has_many :poll_votes, dependent: :delete_all
+    end
   end
 
   validate(:post, :validate_polls) do |force = nil|

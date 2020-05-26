@@ -1,3 +1,4 @@
+import I18n from "I18n";
 export function extractError(error, defaultMessage) {
   if (error instanceof Error) {
     // eslint-disable-next-line no-console

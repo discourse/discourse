@@ -1128,12 +1128,16 @@ describe PostAlerter do
   describe '#notify_post_users' do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:last_editor) { Fabricate(:user) }
+    fab!(:tag) { Fabricate(:tag) }
 
     it 'creates single edit notification when post is modified' do
       TopicUser.create!(user_id: user.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:watching], highest_seen_post_number: post.post_number)
+      PostRevisor.new(post).revise!(last_editor, tags: [tag.name])
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)
       expect(Notification.last.notification_type).to eq(Notification.types[:edited])
+      expect(JSON.parse(Notification.last.data)["display_username"]).to eq(last_editor.username)
 
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
@@ -182,6 +183,13 @@ export default Controller.extend(bufferedProperty("model"), {
       this.site.get("can_tag_topics") &&
       (!isPrivateMessage || this.site.get("can_tag_pms"))
     );
+  },
+
+  @discourseComputed("model.category")
+  minimumRequiredTags(category) {
+    return category && category.minimum_required_tags > 0
+      ? category.minimum_required_tags
+      : null;
   },
 
   _forceRefreshPostStream() {

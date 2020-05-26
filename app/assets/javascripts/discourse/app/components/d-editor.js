@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { debounce, later, next, schedule, scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
@@ -10,7 +11,7 @@ import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { cookAsync } from "discourse/lib/text";
 import { getRegister } from "discourse-common/lib/get-owner";
-import { findRawTemplate } from "discourse/lib/raw-templates";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { siteDir } from "discourse/lib/text-direction";
 import {
   determinePostReplaceSelection,
@@ -897,8 +898,16 @@ export default Component.extend({
 
   // ensures textarea scroll position is correct
   _focusTextArea() {
-    const textarea = this.element.querySelector("textarea.d-editor-input");
     schedule("afterRender", () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const textarea = this.element.querySelector("textarea.d-editor-input");
+      if (!textarea) {
+        return;
+      }
+
       textarea.blur();
       textarea.focus();
     });

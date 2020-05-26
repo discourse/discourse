@@ -24,7 +24,6 @@ export default Component.extend({
   formats: null,
   recurring: null,
   advancedMode: false,
-  isValid: true,
   timezone: null,
   fromSelected: null,
   fromFilled: notEmpty("date"),

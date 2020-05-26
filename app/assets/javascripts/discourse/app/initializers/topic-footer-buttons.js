@@ -1,6 +1,14 @@
+import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+
+const SHARE_PRIORITY = 1000;
+const BOOKMARK_PRIORITY = 900;
+const ARCHIVE_PRIORITY = 800;
+const FLAG_PRIORITY = 700;
+const EDIT_MESSAGE_PRIORITY = 600;
+const DEFER_PRIORITY = 500;
 
 export default {
   name: "topic-footer-buttons",
@@ -10,8 +18,12 @@ export default {
     registerTopicFooterButton({
       id: "share-and-invite",
       icon: "link",
-      priority: 999,
-      label: "topic.share.title",
+      priority: SHARE_PRIORITY,
+      label() {
+        if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
+          return "topic.share.title";
+        }
+      },
       title: "topic.share.help",
       action() {
         const panels = [
@@ -66,7 +78,7 @@ export default {
     registerTopicFooterButton({
       id: "flag",
       icon: "flag",
-      priority: 998,
+      priority: FLAG_PRIORITY,
       label: "topic.flag_topic.title",
       title: "topic.flag_topic.help",
       action: "showFlagTopic",
@@ -84,7 +96,7 @@ export default {
     });
 
     registerTopicFooterButton({
-      dependentKeys: ["topic.bookmarked", "topic.isPrivateMessage"],
+      dependentKeys: ["topic.bookmarked"],
       id: "bookmark",
       icon() {
         if (this.get("topic.bookmark_reminder_at")) {
@@ -92,14 +104,16 @@ export default {
         }
         return "bookmark";
       },
-      priority: 1000,
+      priority: BOOKMARK_PRIORITY,
       classNames() {
         const bookmarked = this.get("topic.bookmarked");
         return bookmarked ? ["bookmark", "bookmarked"] : ["bookmark"];
       },
       label() {
-        const bookmarked = this.get("topic.bookmarked");
-        return bookmarked ? "bookmarked.clear_bookmarks" : "bookmarked.title";
+        if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
+          const bookmarked = this.get("topic.bookmarked");
+          return bookmarked ? "bookmarked.clear_bookmarks" : "bookmarked.title";
+        }
       },
       translatedTitle() {
         const bookmarked = this.get("topic.bookmarked");
@@ -109,7 +123,7 @@ export default {
             return I18n.t("bookmarked.help.unbookmark_with_reminder", {
               reminder_at: formattedReminderTime(
                 bookmark_reminder_at,
-                currentUser.resolvedTimezone()
+                currentUser.resolvedTimezone(currentUser)
               )
             });
           }
@@ -120,15 +134,12 @@ export default {
       action: "toggleBookmark",
       dropdown() {
         return this.site.mobileView;
-      },
-      displayed() {
-        return !this.get("topic.isPrivateMessage");
       }
     });
 
     registerTopicFooterButton({
       id: "archive",
-      priority: 996,
+      priority: ARCHIVE_PRIORITY,
       icon() {
         return this.archiveIcon;
       },
@@ -157,13 +168,16 @@ export default {
 
     registerTopicFooterButton({
       id: "edit-message",
-      priority: 750,
+      priority: EDIT_MESSAGE_PRIORITY,
       icon: "pencil-alt",
       label: "topic.edit_message.title",
       title: "topic.edit_message.help",
       action: "editFirstPost",
       classNames: ["edit-message"],
       dependentKeys: ["editFirstPost", "showEditOnFooter"],
+      dropdown() {
+        return this.site.mobileView && this.get("topic.isPrivateMessage");
+      },
       displayed() {
         return this.showEditOnFooter;
       }
@@ -172,7 +186,7 @@ export default {
     registerTopicFooterButton({
       id: "defer",
       icon: "circle",
-      priority: 300,
+      priority: DEFER_PRIORITY,
       label: "topic.defer.title",
       title: "topic.defer.help",
       action: "deferTopic",

@@ -81,7 +81,7 @@ en:
       unrecognized_extension: "Unrecognized file extension: %{extension}"
     import_error:
       generic: An error occured while importing that theme
-      about_json: "Import Error: about.json does not exist, or is invalid"
+      about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
       git: "Error cloning git repository, access is denied or repository is not found"
@@ -391,7 +391,7 @@ en:
       already_bookmarked_post: "You cannot bookmark the same post twice."
       cannot_set_past_reminder: "You cannot set a bookmark reminder in the past."
       cannot_set_reminder_in_distant_future: "You cannot set a bookmark reminder more than 10 years in the future."
-      time_must_be_provided: "time must be provided for all reminders except '%{reminder_type}'"
+      time_must_be_provided: "time must be provided for all reminders"
 
     reminders:
       at_desktop: "Next time I'm at my desktop"
@@ -431,6 +431,10 @@ en:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
+    request_accepted_pm:
+      title: "You've been accepted into @%{group_name}"
+      body: |
+        Your request to enter @%{group_name} has been accepted and you are now a member.
     view_hidden_topic_request_reason: "I would like to join the group '%{group_name}', so I may access [this topic](%{topic_url})"
 
   education:
@@ -483,7 +487,7 @@ en:
 
       This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
 
-      It could be even better if you got other people space to share their points of view, too. Can you invite them over?
+      It could be even better if you gave other people space to share their points of view, too. Can you invite them over?
 
     get_a_room: |
       ### Encourage everyone to get involved in the conversation
@@ -1467,6 +1471,7 @@ en:
     exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. example.com will automatically allow sub.example.com as well. As a minimum, you should add the domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
 
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
+    topic_excerpt_maxlength: "Maximum length of a topic excerpt / summary, generated from the first post in a topic."
     show_pinned_excerpt_mobile: "Show excerpt on pinned topics in mobile view."
     show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
@@ -2385,6 +2390,7 @@ en:
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
+    reset_not_allowed_from_ip_address: "You can't request a password reset from that IP address."
     suspended: "You can't log in until %{date}."
     suspended_with_reason: "Account suspended until %{date}: %{reason}"
     errors: "%{errors}"
@@ -3092,6 +3098,16 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         You don't have permissions to reply to the topic. If you believe this is an error, [contact a staff member](%{base_url}/about).
+
+    email_reject_reply_to_digest:
+      title: "Email Reject Reply To Summary"
+      subject_template: "[%{email_prefix}] Email issue -- Reply to Summary"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        You replied to a Summary email, which is not accepted.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_error_notification:
       title: "Email Error Notification"
@@ -4372,7 +4388,7 @@ en:
         This badge is granted when you use all %{max_likes_per_day} of your daily likes for 5 days. Thanks for taking the time actively encouraging the best conversations every day!
     crazy_in_love:
       name: Crazy in Love
-      description: Used 50 likes in a day 20 times
+      description: Used %{max_likes_per_day} likes in a day 20 times
       long_description: |
         This badge is granted when you use all %{max_likes_per_day} of your daily likes for 20 days. Wow! You’re a role model for encouraging your fellow community members!
     thank_you:

@@ -7,6 +7,10 @@ describe Theme do
     Theme.clear_cache!
   end
 
+  before do
+    I18n.locale = :en
+  end
+
   fab! :user do
     Fabricate(:user)
   end
@@ -657,8 +661,8 @@ HTML
     end
 
     it "can create a hash of overridden values" do
-      en_translation = ThemeField.create!(theme_id: theme.id, name: "en_US", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
-        en_US:
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
           group_of_translations:
             translation1: en test1
       YAML
@@ -668,7 +672,7 @@ HTML
       theme.update_translation("group_of_translations.translation1", "overriddentest2")
       theme.reload
       expect(theme.translation_override_hash).to eq(
-        "en_US" => {
+        "en" => {
           "group_of_translations" => {
             "translation1" => "overriddentest1"
           }

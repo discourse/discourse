@@ -188,7 +188,7 @@ aside.onebox {
 
       // full size images for instagram, twitter, etc.
       .aspect-image-full-size {
-        max-height: 500px;
+        max-height: 100%;
         width: calc(500px * var(--aspect-ratio));
         max-width: 100%;
 
@@ -276,7 +276,7 @@ aside.onebox {
           '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
         );
       }
-      bottom: 10px;
+      bottom: 15px;
       right: 10px;
       position: absolute;
     }
@@ -660,6 +660,15 @@ aside.onebox.stackexchange .onebox-body {
   div.instagram-description {
     color: dark-light-choose($primary-medium, $secondary-medium);
     padding-top: 10px;
+  }
+}
+
+.onebox.reddit {
+  div.aspect-image-full-size {
+    position: relative;
+  }
+  div.description {
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
 }
 

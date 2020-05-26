@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { notEmpty, empty, equal } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import Component from "@ember/component";
@@ -5,12 +6,17 @@ import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 
 export default Component.extend({
+  tagName: "button",
   // subclasses need this
   layoutName: "components/d-button",
-
   form: null,
-
   type: "button",
+  title: null,
+  translatedTitle: null,
+  label: null,
+  translatedLabel: null,
+  ariaLabel: null,
+  translatedAriaLabel: null,
 
   isLoading: computed({
     set(key, value) {
@@ -19,7 +25,6 @@ export default Component.extend({
     }
   }),
 
-  tagName: "button",
   classNameBindings: [
     "isLoading:is-loading",
     "btnLink::btn",
@@ -30,8 +35,8 @@ export default Component.extend({
   attributeBindings: [
     "form",
     "isDisabled:disabled",
-    "translatedTitle:title",
-    "translatedLabel:aria-label",
+    "computedTitle:title",
+    "computedAriaLabel:aria-label",
     "tabindex",
     "type"
   ],
@@ -46,7 +51,7 @@ export default Component.extend({
 
   btnLink: equal("display", "link"),
 
-  @discourseComputed("icon", "translatedLabel")
+  @discourseComputed("icon", "computedLabel")
   btnType(icon, translatedLabel) {
     if (icon) {
       return translatedLabel ? "btn-icon-text" : "btn-icon";
@@ -55,28 +60,25 @@ export default Component.extend({
     }
   },
 
-  noText: empty("translatedLabel"),
+  noText: empty("computedLabel"),
 
-  @discourseComputed("title")
-  translatedTitle: {
-    get() {
-      if (this._translatedTitle) return this._translatedTitle;
-      if (this.title) return I18n.t(this.title);
-    },
-    set(value) {
-      return (this._translatedTitle = value);
-    }
+  @discourseComputed("title", "translatedTitle")
+  computedTitle(title, translatedTitle) {
+    if (this.title) return I18n.t(title);
+    return translatedTitle;
   },
 
-  @discourseComputed("label")
-  translatedLabel: {
-    get() {
-      if (this._translatedLabel) return this._translatedLabel;
-      if (this.label) return I18n.t(this.label);
-    },
-    set(value) {
-      return (this._translatedLabel = value);
-    }
+  @discourseComputed("label", "translatedLabel")
+  computedLabel(label, translatedLabel) {
+    if (this.label) return I18n.t(label);
+    return translatedLabel;
+  },
+
+  @discourseComputed("ariaLabel", "translatedAriaLabel", "computedLabel")
+  computedAriaLabel(ariaLabel, translatedAriaLabel, computedLabel) {
+    if (ariaLabel) return I18n.t(ariaLabel);
+    if (translatedAriaLabel) return translatedAriaLabel;
+    return computedLabel;
   },
 
   click() {

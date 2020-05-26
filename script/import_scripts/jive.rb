@@ -218,7 +218,7 @@ class ImportScripts::Jive < ImportScripts::Base
     raw = raw.dup
     raw = raw[5..-6]
 
-    doc = Nokogiri::HTML.fragment(raw)
+    doc = Nokogiri::HTML5.fragment(raw)
     doc.css('img').each do |img|
       img.remove if img['class'] == "jive-image"
     end

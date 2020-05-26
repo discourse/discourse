@@ -1,4 +1,4 @@
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import { htmlSafe } from "@ember/template";
 
 let _customizations = {};

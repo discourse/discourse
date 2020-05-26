@@ -17,18 +17,6 @@ sw:
       average_rating: "Wastani wa tathmini:<strong>%{average}</strong>"
       public:
         title: "Kura zina <strong>onwa na kila mtu</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Chagua angalau chaguo <strong>%{count}</strong>"
-            other: "Chagua angalau machaguo <strong>%{count}</strong>."
-          up_to_max_options:
-            one: "Chagua mpaka chaguo <strong>%{count}</strong>"
-            other: "Chagua mpaka machaguo <strong>%{count}</strong>"
-          x_options:
-            one: "Chagua chaguo <strong>%{count}</strong>"
-            other: "Chagua machaguo <strong>%{count}</strong>"
-          between_min_and_max_options: "Chagua kati ya <strong>%{min}</strong> mpaka <strong>%{max}</strong>"
       cast-votes:
         title: "Piga kura zako"
         label: "Piga kura sasa!"

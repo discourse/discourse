@@ -316,7 +316,7 @@ describe StaticController do
       it "redirects to the root" do
         post "/login.json", params: { redirect: ["/foo"] }
         expect(response.status).to eq(400)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["errors"]).to be_present
         expect(json["errors"]).to include(
           I18n.t("invalid_params", message: "redirect")

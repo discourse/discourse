@@ -2,7 +2,7 @@ import EmberObject, { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
 
@@ -452,14 +452,13 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     let categoryId = category ? get(category, "id") : null;
-    let categoryName = category ? get(category, "name") : null;
 
     if (name === "new") {
       return this.countNew(categoryId);
     } else if (name === "unread") {
       return this.countUnread(categoryId);
     } else {
-      categoryName = name.split("/")[1];
+      const categoryName = name.split("/")[1];
       if (categoryName) {
         return this.countCategory(categoryId);
       }

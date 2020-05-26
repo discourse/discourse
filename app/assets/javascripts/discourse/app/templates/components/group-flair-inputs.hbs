@@ -1,13 +1,36 @@
 <div class="control-group">
   <label class="control-label" for="flair_url">{{i18n "groups.flair_url"}}</label>
 
-  {{text-field name="flair_url"
-      class="input-xxlarge"
-      value=model.flair_url
-      placeholderKey="groups.flair_url_placeholder"}}
-  <div class="control-instructions">
-    {{i18n "groups.flair_url_description"}}
+  <div class="radios">
+    <label class="radio-label" for="avatar-flair">
+      {{radio-button name="avatar-flair" value="icon" selection=model.flair_type}}
+      <b>{{i18n "groups.flair_type.icon"}}</b>
+    </label>
+
+    <label class="radio-label" for="avatar-flair">
+      {{radio-button name="avatar-flair" value="image" selection=model.flair_type}}
+      <b>{{i18n "groups.flair_type.image"}}</b>
+    </label>
   </div>
+
+  {{#if flairPreviewIcon}}
+    {{icon-picker
+      name="icon"
+      value=model.flair_icon
+      options=(hash maximum=1)
+      onChange=(action (mut model.flair_icon))
+    }}
+  {{else if flairPreviewImage}}
+    {{image-uploader
+      imageUrl=flairImageUrl
+      onUploadDone=(action "setFlairImage")
+      onUploadDeleted=(action "removeFlairImage")
+      type="group_flair"
+      class="no-repeat contain-image"}}
+    <div class="control-instructions">
+      {{i18n "groups.flair_upload_description"}}
+    </div>
+  {{/if}}
 </div>
 
 <div class="control-group">
@@ -40,7 +63,7 @@
 
     {{#if flairPreviewImage}}
       <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}></div>
-    {{else}}
+    {{else if flairPreviewIcon}}
       <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}} role="presentation">
         {{d-icon flairPreviewIconUrl}}
       </div>

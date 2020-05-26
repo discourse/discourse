@@ -45,7 +45,6 @@ pt:
       unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro durante a importação do tema
-      about_json: "Erro de Importação: about.json não existe ou é inválido"
       about_json_values: "about.json possui valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório de git, acesso foi negado ou o repositório não existe"
       unpack_failed: "Falha ao desempacotar o ficheiro"
@@ -1966,7 +1965,6 @@ pt:
       name: Amor superior
     crazy_in_love:
       name: Amando Loucamente
-      description: Utilizou 50 gostos num dia 20 vezes
     thank_you:
       name: Obrigado
       description: Tem 20 publicações gostadas e deu 10 gostos

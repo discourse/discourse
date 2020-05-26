@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Component from "@ember/component";
 import getUrl from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";

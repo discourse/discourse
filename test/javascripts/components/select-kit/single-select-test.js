@@ -1,5 +1,6 @@
+import I18n from "I18n";
 import componentTest from "helpers/component-test";
-import { testSelectKitModule } from "./select-kit-test-helper";
+import { testSelectKitModule } from "helpers/select-kit-helper";
 
 testSelectKitModule("single-select");
 
@@ -255,5 +256,43 @@ componentTest("prevents propagating click event on header", {
     assert.equal(this.value, DEFAULT_VALUE);
     await this.subject.expand();
     assert.equal(this.value, DEFAULT_VALUE);
+  }
+});
+
+componentTest("focusAfterOnChange", {
+  template:
+    "{{d-button class='focus-me'}}{{single-select options=(hash focusAfterOnChange=focusAfterOnChange) value=value content=content onChange=onChange}}",
+
+  beforeEach() {
+    this.setProperties({
+      onChange: () => {
+        find(".focus-me").focus();
+        this.set("value", "foo");
+      },
+      content: DEFAULT_CONTENT,
+      value: DEFAULT_VALUE
+    });
+  },
+
+  async test(assert) {
+    this.set("focusAfterOnChange", true);
+
+    await this.subject.expand();
+    await this.subject.selectRowByIndex(0);
+
+    assert.ok(
+      document.activeElement.classList.contains("single-select-header"),
+      "it selects the header"
+    );
+
+    this.set("focusAfterOnChange", false);
+
+    await this.subject.expand();
+    await this.subject.selectRowByIndex(0);
+
+    assert.notOk(
+      document.activeElement.classList.contains("single-select-header"),
+      "it doesn’t select the header"
+    );
   }
 });

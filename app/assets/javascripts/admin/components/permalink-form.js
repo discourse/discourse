@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -16,6 +17,7 @@ export default Component.extend({
       { id: "topic_id", name: I18n.t("admin.permalink.topic_id") },
       { id: "post_id", name: I18n.t("admin.permalink.post_id") },
       { id: "category_id", name: I18n.t("admin.permalink.category_id") },
+      { id: "tag_name", name: I18n.t("admin.permalink.tag_name") },
       { id: "external_url", name: I18n.t("admin.permalink.external_url") }
     ];
   },

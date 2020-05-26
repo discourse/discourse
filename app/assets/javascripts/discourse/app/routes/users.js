@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import { longDate } from "discourse/lib/formatter";
 

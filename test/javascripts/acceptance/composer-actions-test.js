@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
@@ -17,6 +18,24 @@ acceptance("Composer Actions", {
     _clearSnapshots();
   }
 });
+
+QUnit.test(
+  "creating new topic and then reply_as_private_message keeps attributes",
+  async assert => {
+    await visit("/");
+    await click("button#create-topic");
+
+    await fillIn("#reply-title", "this is the title");
+    await fillIn(".d-editor-input", "this is the reply");
+
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_as_private_message");
+
+    assert.ok(find("#reply-title").val(), "this is the title");
+    assert.ok(find(".d-editor-input").val(), "this is the reply");
+  }
+);
 
 QUnit.test("replying to post", async assert => {
   const composerActions = selectKit(".composer-actions");
@@ -147,12 +166,18 @@ QUnit.test("reply_as_new_topic without a new_topic draft", async assert => {
 });
 
 QUnit.test("hide component if no content", async assert => {
-  const composerActions = selectKit(".composer-actions");
+  await visit("/");
+  await click("button#create-topic");
 
-  await visit("/u/eviltrout/messages");
-  await click(".new-private-message");
+  const composerActions = selectKit(".composer-actions");
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_as_private_message");
 
   assert.ok(composerActions.el().hasClass("is-hidden"));
+
+  await click("button#create-topic");
+  await composerActions.expand();
+  assert.equal(composerActions.rows().length, 2);
 });
 
 QUnit.test("interactions", async assert => {
@@ -338,6 +363,18 @@ QUnit.test(
     );
   }
 );
+
+QUnit.test("editing post", async assert => {
+  const composerActions = selectKit(".composer-actions");
+
+  await visit("/t/internationalization-localization/280");
+  await click("article#post_1 button.show-more-actions");
+  await click("article#post_1 button.edit");
+  await composerActions.expand();
+
+  assert.equal(composerActions.rows().length, 1);
+  assert.equal(composerActions.rowByIndex(0).value(), "reply_to_post");
+});
 
 acceptance("Composer Actions With New Topic Draft", {
   loggedIn: true,

@@ -1,5 +1,6 @@
+import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 

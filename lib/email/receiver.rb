@@ -32,6 +32,7 @@ module Email
     class UnsubscribeNotAllowed        < ProcessingError; end
     class EmailNotAllowed              < ProcessingError; end
     class OldDestinationError          < ProcessingError; end
+    class ReplyToDigestError           < ProcessingError; end
 
     attr_reader :incoming_email
     attr_reader :raw_email
@@ -190,6 +191,7 @@ module Email
           end
         end
 
+        raise ReplyToDigestError if EmailLog.where(email_type: "digest", message_id: @mail.in_reply_to).exists?
         raise BadDestinationAddress
       end
     end
@@ -338,7 +340,7 @@ module Email
       markdown, elided_markdown = if html.present?
         # use the first html extracter that matches
         if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
-          doc = Nokogiri::HTML.fragment(html)
+          doc = Nokogiri::HTML5.fragment(html)
           self.public_send(:"extract_from_#{html_extracter[0]}", doc)
         else
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown

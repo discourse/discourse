@@ -32,6 +32,9 @@
               {{#if pl.category_id}}
                 {{category-link pl.category}}
               {{/if}}
+              {{#if pl.tag_id}}
+                <a href={{pl.tag_url}}>{{pl.tag_name}}</a>
+              {{/if}}
               {{#if pl.external_url}}
                 {{#if pl.linkIsExternal}}
                   {{d-icon "external-link-alt"}}

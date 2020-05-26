@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
@@ -23,7 +24,7 @@ import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import ENV from "discourse-common/config/environment";
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 
 function loadDraft(store, opts) {
@@ -95,8 +96,6 @@ export default Controller.extend({
   scopedCategoryId: null,
   lastValidatedAt: null,
   isUploading: false,
-  allowUpload: false,
-  uploadIcon: "upload",
   topic: null,
   linkLookup: null,
   showPreview: true,
@@ -221,26 +220,26 @@ export default Controller.extend({
   isWhispering: or("replyingToWhisper", "model.whisper"),
 
   @discourseComputed("model.action", "isWhispering")
-  saveIcon(action, isWhispering) {
+  saveIcon(modelAction, isWhispering) {
     if (isWhispering) return "far-eye-slash";
 
-    return SAVE_ICONS[action];
+    return SAVE_ICONS[modelAction];
   },
 
   @discourseComputed("model.action", "isWhispering", "model.editConflict")
-  saveLabel(action, isWhispering, editConflict) {
+  saveLabel(modelAction, isWhispering, editConflict) {
     if (editConflict) return "composer.overwrite_edit";
     else if (isWhispering) return "composer.create_whisper";
 
-    return SAVE_LABELS[action];
+    return SAVE_LABELS[modelAction];
   },
 
   @discourseComputed("isStaffUser", "model.action")
-  canWhisper(isStaffUser, action) {
+  canWhisper(isStaffUser, modelAction) {
     return (
       this.siteSettings.enable_whispers &&
       isStaffUser &&
-      Composer.REPLY === action
+      Composer.REPLY === modelAction
     );
   },
 
@@ -331,6 +330,20 @@ export default Controller.extend({
     return uploadIcon(this.currentUser.staff);
   },
 
+  @action
+  openIfDraft(event) {
+    if (this.get("model.viewDraft")) {
+      // when called from shortcut, ensure we don't propagate the key to
+      // the composer input title
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      this.set("model.composeState", Composer.OPEN);
+    }
+  },
+
   actions: {
     togglePreview() {
       this.toggleProperty("showPreview");
@@ -370,8 +383,8 @@ export default Controller.extend({
       this.set("model.uploadCancelled", true);
     },
 
-    onPopupMenuAction(action) {
-      this.send(action);
+    onPopupMenuAction(menuAction) {
+      this.send(menuAction);
     },
 
     storeToolbarState(toolbarEvent) {
@@ -538,12 +551,6 @@ export default Controller.extend({
 
       if (this.get("model.viewOpen") || this.get("model.viewFullscreen")) {
         this.shrink();
-      }
-    },
-
-    openIfDraft() {
-      if (this.get("model.viewDraft")) {
-        this.set("model.composeState", Composer.OPEN);
       }
     },
 
@@ -725,12 +732,7 @@ export default Controller.extend({
 
         this.close();
 
-        const currentUser = this.currentUser;
-        if (composer.creatingTopic) {
-          currentUser.set("topic_count", currentUser.topic_count + 1);
-        } else {
-          currentUser.set("reply_count", currentUser.reply_count + 1);
-        }
+        this.currentUser.set("any_posts", true);
 
         const post = result.target;
         if (post && !staged) {
@@ -1088,7 +1090,17 @@ export default Controller.extend({
   _saveDraft() {
     const model = this.model;
     if (model) {
-      model.saveDraft();
+      if (model.draftSaving) {
+        // in test debounce is Ember.run, this will cause
+        // an infinite loop
+        if (ENV.environment !== "test") {
+          debounce(this, this._saveDraft, 2000);
+        }
+      } else {
+        model.saveDraft().finally(() => {
+          this._lastDraftSaved = Date.now();
+        });
+      }
     }
   },
 
@@ -1100,7 +1112,15 @@ export default Controller.extend({
       !this.skipAutoSave &&
       !this.model.disableDrafts
     ) {
-      debounce(this, this._saveDraft, 2000);
+      if (!this._lastDraftSaved) {
+        // pretend so we get a save unconditionally in 15 secs
+        this._lastDraftSaved = Date.now();
+      }
+      if (Date.now() - this._lastDraftSaved > 15000) {
+        this._saveDraft();
+      } else {
+        debounce(this, this._saveDraft, 2000);
+      }
     }
   },
 
@@ -1155,6 +1175,7 @@ export default Controller.extend({
     const elem = document.querySelector("html");
     elem.classList.remove("fullscreen-composer");
 
+    document.activeElement && document.activeElement.blur();
     this.setProperties({ model: null, lastValidatedAt: null });
   },
 
@@ -1163,8 +1184,8 @@ export default Controller.extend({
   },
 
   @discourseComputed("model.action")
-  canEdit(action) {
-    return action === "edit" && this.currentUser.can_edit;
+  canEdit(modelAction) {
+    return modelAction === "edit" && this.currentUser.can_edit;
   },
 
   @discourseComputed("model.composeState")

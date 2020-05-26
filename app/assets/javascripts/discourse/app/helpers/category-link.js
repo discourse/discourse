@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
@@ -16,6 +17,12 @@ export function replaceCategoryLinkRenderer(fn) {
 function categoryStripe(color, classes) {
   var style = color ? "style='background-color: #" + color + ";'" : "";
   return "<span class='" + classes + "' " + style + "></span>";
+}
+
+let _extraIconRenderers = [];
+
+export function addExtraIconRenderer(renderer) {
+  _extraIconRenderers.push(renderer);
 }
 
 /**
@@ -149,12 +156,15 @@ function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (restricted) {
-    html += `${iconHTML(
-      "lock"
-    )}<span class="category-name" ${categoryDir}>${categoryName}</span>`;
-  } else {
-    html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
+    html += iconHTML("lock");
   }
+  _extraIconRenderers.forEach(renderer => {
+    const iconName = renderer(category);
+    if (iconName) {
+      html += iconHTML(iconName);
+    }
+  });
+  html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   html += "</span>";
 
   if (opts.topicCount && categoryStyle !== "box") {

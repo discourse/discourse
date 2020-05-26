@@ -33,21 +33,21 @@ ru:
       multiple:
         help:
           at_least_min_options:
-            one: "Выберите хотя бы <strong>%{count}</strong> вариант ответа"
-            few: "Выберите хотя бы <strong>%{count}</strong> варианта ответов"
-            many: "Выберите хотя бы <strong>%{count}</strong> вариантов ответов"
-            other: "Выберите хотя бы <strong>%{count}</strong> вариантов ответов"
+            one: "Выберите как минимум %{count} вариант ответа ."
+            few: "Выберите как минимум %{count} варианта ответа ."
+            many: "Выберите как минимум %{count} вариантов ответа ."
+            other: "Выберите хотя бы <strong>%{count}</strong> вариантов ответа."
           up_to_max_options:
-            one: "Выберите не более <strong>%{count}</strong> варианта ответа"
-            few: "Выберите не более <strong>%{count}</strong> вариантов ответов"
-            many: "Выберите не более <strong>%{count}</strong> вариантов ответов"
-            other: "Выберите не более <strong>%{count}</strong> вариантов ответов"
+            one: "Выберите не более <strong>%{count}</strong> варианта ответа."
+            few: "Выберите не более <strong>%{count}</strong> вариантов ответа."
+            many: "Выберите не более <strong>%{count}</strong> вариантов ответа."
+            other: "Выберите не более <strong>%{count}</strong> вариантов ответа."
           x_options:
-            one: "Выберите <strong>%{count}</strong> вариант ответа"
-            few: "Выберите <strong>%{count}</strong> варианта ответотв"
-            many: "Выберите <strong>%{count}</strong> вариантов ответов"
-            other: "Выберите <strong>%{count}</strong> вариантов ответов"
-          between_min_and_max_options: "Выберите от <strong>%{min}</strong> до <strong>%{max}</strong> вариантов ответов"
+            one: "Выберите <strong>%{count}</strong> вариант ответа."
+            few: "Выберите <strong>%{count}</strong> варианта ответа."
+            many: "Выберите <strong>%{count}</strong> вариантов ответа."
+            other: "Выберите <strong>%{count}</strong> вариантов ответа."
+          between_min_and_max_options: "Выберите варианты ответов в диапазоне от %{min}до %{max}."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосовать!"

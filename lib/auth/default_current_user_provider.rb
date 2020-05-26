@@ -9,6 +9,7 @@ class Auth::DefaultCurrentUserProvider
   HEADER_API_USERNAME ||= "HTTP_API_USERNAME"
   HEADER_API_USER_EXTERNAL_ID ||= "HTTP_API_USER_EXTERNAL_ID"
   HEADER_API_USER_ID ||= "HTTP_API_USER_ID"
+  PARAMETER_USER_API_KEY ||= "user_api_key"
   USER_API_KEY ||= "HTTP_USER_API_KEY"
   USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID"
   API_KEY_ENV ||= "_DISCOURSE_API"
@@ -17,6 +18,38 @@ class Auth::DefaultCurrentUserProvider
   PATH_INFO ||= "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN ||= 10
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
+
+  PARAMETER_API_PATTERNS ||= [
+    {
+      method: :get,
+      route: [
+        "posts#latest",
+        "posts#user_posts_feed",
+        "groups#posts_feed",
+        "groups#mentions_feed",
+        "list#user_topics_feed",
+        "list#category_feed",
+        "topics#feed",
+        "badges#show",
+        "tags#tag_feed",
+        "tags#show",
+        *[:latest, :unread, :new, :read, :posted, :bookmarks].map { |f| "list##{f}_feed" },
+        *[:all, :yearly, :quarterly, :monthly, :weekly, :daily].map { |p| "list#top_#{p}_feed" },
+        *[:latest, :unread, :new, :read, :posted, :bookmarks].map { |f| "tags#show_#{f}" }
+      ],
+      format: :rss
+    },
+    {
+      method: :get,
+      route: "users#bookmarks",
+      format: :ics
+    },
+    {
+      method: :post,
+      route: "admin/email#handle_mail",
+      format: "*"
+    }
+  ]
 
   # do all current user initialization here
   def initialize(env)
@@ -42,7 +75,15 @@ class Auth::DefaultCurrentUserProvider
     request = @request
 
     user_api_key = @env[USER_API_KEY]
-    api_key = @env.blank? ? nil : @env[HEADER_API_KEY] || request[API_KEY]
+    api_key = @env[HEADER_API_KEY]
+
+    if !@env.blank? && request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
+      user_api_key ||= request[PARAMETER_USER_API_KEY]
+    end
+
+    if !@env.blank? && request[API_KEY] && api_parameter_allowed?
+      api_key ||= request[API_KEY]
+    end
 
     auth_token = request.cookies[TOKEN_COOKIE] unless user_api_key || api_key
 
@@ -124,10 +165,6 @@ class Auth::DefaultCurrentUserProvider
         u.update_last_seen!
         u.update_ip_address!(ip)
       end
-
-      BookmarkReminderNotificationHandler.defer_at_desktop_reminder(
-        user: u, request_user_agent: @request.user_agent
-      )
     end
 
     @env[CURRENT_USER_KEY] = current_user
@@ -287,10 +324,6 @@ class Auth::DefaultCurrentUserProvider
     if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
-      if !header_api_key?
-        raise Discourse::InvalidAccess unless is_whitelisted_query_param_auth_route?(request)
-      end
-
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
         Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")
         return nil
@@ -317,18 +350,21 @@ class Auth::DefaultCurrentUserProvider
 
   private
 
-  def is_whitelisted_query_param_auth_route?(request)
-    (is_user_feed?(request) || is_handle_mail?(request))
-  end
+  # By default we only allow headers for sending API credentials
+  # However, in some scenarios it is essential to send them via url parameters
+  # so we need to add some exceptions
+  def api_parameter_allowed?
+    request_method = @env["REQUEST_METHOD"]&.downcase&.to_sym
+    request_format = @env['action_dispatch.request.formats']&.first&.symbol
 
-  def is_user_feed?(request)
-    return true if request.path.match?(/\/(c|t){1}\/\S*.(rss|json)/) && request.get? # topic or category route
-    return true if request.path.match?(/\/(latest|top|categories).(rss|json)/) && request.get? # specific routes with rss
-    return true if request.path.match?(/\/u\/\S*\/bookmarks.(ics|json)/) && request.get? # specific routes with ics
-  end
+    path_params = @env['action_dispatch.request.path_parameters']
+    request_route = "#{path_params[:controller]}##{path_params[:action]}" if path_params
 
-  def is_handle_mail?(request)
-    return true if request.path == "/admin/email/handle_mail" && request.post?
+    PARAMETER_API_PATTERNS.any? do |p|
+      (p[:method] == "*" || Array(p[:method]).include?(request_method)) &&
+      (p[:format] == "*" || Array(p[:format]).include?(request_format)) &&
+      (p[:route] == "*" || Array(p[:route]).include?(request_route))
+    end
   end
 
   def header_api_key?

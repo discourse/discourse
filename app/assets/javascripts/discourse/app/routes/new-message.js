@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import User from "discourse/models/user";

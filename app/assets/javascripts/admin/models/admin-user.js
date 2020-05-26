@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { filter, or, gt, lt, not } from "@ember/object/computed";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -74,12 +75,6 @@ const AdminUser = User.extend({
         this.set("primary_group_id", null);
       }
     });
-  },
-
-  revokeApiKey() {
-    return ajax(`/admin/users/${this.id}/revoke_api_key`, {
-      type: "DELETE"
-    }).then(() => this.set("api_key", null));
   },
 
   deleteAllPosts() {

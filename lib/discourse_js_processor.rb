@@ -48,7 +48,6 @@ class DiscourseJsProcessor
     return false if relative_path.start_with?("#{js_root}/plugins/")
 
     return true if %w(
-      preload-store
       preload-application-data
       wizard-start
       onpopstate-handler
@@ -80,7 +79,7 @@ class DiscourseJsProcessor
 
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
-      ctx = MiniRacer::Context.new(timeout: 15000)
+      ctx = MiniRacer::Context.new(timeout: 15000, ensure_gc_after_idle: 2000)
       ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
       ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
       ctx.eval("module = {}; exports = {};")

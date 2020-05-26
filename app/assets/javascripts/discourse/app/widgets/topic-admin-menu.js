@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 
@@ -91,7 +92,6 @@ createWidget("topic-admin-menu-button", {
     const position = $button.position();
 
     const rtl = $("html").hasClass("rtl");
-    position.left = position.left;
     position.outerHeight = $button.outerHeight();
 
     if (rtl) {

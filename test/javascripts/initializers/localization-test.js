@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import LocalizationInitializer from "discourse/initializers/localization";
 
 QUnit.module("initializer:localization", {

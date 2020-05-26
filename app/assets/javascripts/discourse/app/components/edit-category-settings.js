@@ -1,8 +1,9 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { empty, and } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
+import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import Group from "discourse/models/group";
 
 const categorySortCriteria = [];
@@ -68,10 +69,17 @@ export default buildCategoryPanel("settings", {
   },
 
   @discourseComputed
+  availableListFilters() {
+    return ["all", "none"].map(p => {
+      return { name: I18n.t(`category.list_filters.${p}`), value: p };
+    });
+  },
+
+  @discourseComputed
   searchPrioritiesOptions() {
     const options = [];
 
-    Object.entries(searchPriorities).forEach(entry => {
+    Object.entries(SEARCH_PRIORITIES).forEach(entry => {
       const [name, value] = entry;
 
       options.push({

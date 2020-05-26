@@ -57,12 +57,14 @@ jobs:
           fetch-depth: 1
 
       - name: Setup Git
-        run:  git config --global user.email "ci@ci.invalid" && git config --global user.name "Discourse CI"
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
 
       - name: Setup packages
         if: env.BUILD_TYPE != 'LINT'
         run: |
-          sudo apt-get -yqq install postgresql-client libpq-dev gifsicle jpegoptim optipng jhead && \
+          sudo apt-get -yqq install postgresql-client libpq-dev gifsicle jpegoptim optipng jhead
           wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
 
       - name: Setup redis
@@ -78,7 +80,10 @@ jobs:
           architecture: 'x64'
 
       - name: Setup bundler
-        run: gem install bundler -v 2.1.1 --no-doc
+        run: |
+          gem install bundler -v 2.1.4 --no-doc
+          bundle config deployment 'true'
+          bundle config without 'development'
 
       - name: Bundler cache
         uses: actions/cache@v1
@@ -90,7 +95,7 @@ jobs:
             ${{ runner.os }}-gem-
 
       - name: Setup gems
-        run: bundle install --without development --deployment --jobs 4 --retry 3
+        run: bundle install --jobs 4
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
@@ -114,11 +119,15 @@ jobs:
 
       - name: Create database
         if: env.BUILD_TYPE != 'LINT'
-        run: bin/rake db:create && bin/rake db:migrate
+        run: |
+          bin/rake db:create
+          bin/rake db:migrate
 
       - name: Create parallel databases
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'CORE'
-        run: bin/rake parallel:create && bin/rake parallel:migrate
+        run: |
+          bin/rake parallel:create
+          bin/rake parallel:migrate
 
       - name: Rubocop
         if: env.BUILD_TYPE == 'LINT'
@@ -126,7 +135,9 @@ jobs:
 
       - name: ESLint
         if: env.BUILD_TYPE == 'LINT'
-        run: yarn eslint app/assets/javascripts test/javascripts && yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins
+        run: |
+          yarn eslint app/assets/javascripts test/javascripts
+          yarn eslint --global I18n --ext .es6 plugins
 
       - name: Prettier
         if: env.BUILD_TYPE == 'LINT'
@@ -136,7 +147,9 @@ jobs:
 
       - name: Core RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'CORE'
-        run: bin/turbo_rspec && bin/rake plugin:spec
+        run: |
+          bin/turbo_rspec
+          bin/rake plugin:spec
 
       - name: Plugin RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'PLUGINS'

@@ -2,6 +2,7 @@ import { logIn } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 import { REMINDER_TYPES } from "discourse/lib/bookmark";
+import { fakeTime } from "helpers/qunit-helpers";
 let BookmarkController;
 
 moduleFor("controller:bookmark", {
@@ -18,8 +19,7 @@ moduleFor("controller:bookmark", {
 });
 
 function mockMomentTz(dateString) {
-  let now = moment.tz(dateString, BookmarkController.userTimezone);
-  sandbox.useFakeTimers(now.valueOf());
+  fakeTime(dateString, BookmarkController.userTimezone);
 }
 
 QUnit.test("showLaterToday when later today is tomorrow do not show", function(
@@ -114,7 +114,9 @@ QUnit.test(
   function(assert) {
     let dt = moment.tz(
       "2019-12-11T11:37:16",
-      BookmarkController.currentUser.resolvedTimezone()
+      BookmarkController.currentUser.resolvedTimezone(
+        BookmarkController.currentUser
+      )
     );
 
     assert.equal(
@@ -208,7 +210,9 @@ QUnit.test(
       moment
         .tz(
           "2028-12-12 08:00",
-          BookmarkController.currentUser.resolvedTimezone()
+          BookmarkController.currentUser.resolvedTimezone(
+            BookmarkController.currentUser
+          )
         )
         .toString(),
       "the custom date and time are parsed correctly with default time"

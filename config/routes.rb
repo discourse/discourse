@@ -23,6 +23,7 @@ Discourse::Application.routes.draw do
   post "webhooks/sparkpost" => "webhooks#sparkpost"
 
   scope path: nil, constraints: { format: /.*/ } do
+    Sidekiq::Web.set :sessions, Rails.application.config.session_options
     if Rails.env.development?
       mount Sidekiq::Web => "/sidekiq"
       mount Logster::Web => "/logs"
@@ -120,7 +121,6 @@ Discourse::Application.routes.draw do
       put "unsuspend"
       put "revoke_admin", constraints: AdminConstraint.new
       put "grant_admin", constraints: AdminConstraint.new
-      post "generate_api_key", constraints: AdminConstraint.new
       put "revoke_moderation", constraints: AdminConstraint.new
       put "grant_moderation", constraints: AdminConstraint.new
       put "approve"
@@ -503,6 +503,7 @@ Discourse::Application.routes.draw do
   get "svg-sprite/:hostname/svg-:theme_ids-:version.js" => "svg_sprite#show", constraints: { hostname: /[\w\.-]+/, version: /\h{40}/, theme_ids: /([0-9]+(,[0-9]+)*)?/, format: :js }
   get "svg-sprite/search/:keyword" => "svg_sprite#search", format: false, constraints: { keyword: /[-a-z0-9\s\%]+/ }
   get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search", defaults: { format: :json }
+  get "svg-sprite/:hostname/icon(/:color)/:name.svg" => "svg_sprite#svg_icon", constraints: { hostname: /[\w\.-]+/, name: /[-a-z0-9\s\%]+/, color: /(\h{3}{1,2})/, format: :svg }
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", constraints: { hostname: /[\w\.-]+/, format: :js }
 
@@ -948,8 +949,6 @@ Discourse::Application.routes.draw do
 
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
-
-  get "/themes/assets/:ids" => "themes#assets"
 
   unless Rails.env.production?
     get "/qunit" => "qunit#index"

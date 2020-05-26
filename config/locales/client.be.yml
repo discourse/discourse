@@ -465,10 +465,12 @@ be:
       second_factor:
         title: "Два фактары аўтэнтыфікацыі"
         name: "Імя"
+        disable: "Адключыць"
+        save: "Захаваць"
         edit: "рэдагаваць"
         security_key:
           register: "рэгістрацыя"
-          delete: "выдаліць"
+          save: "Захаваць"
       change_about:
         title: "Змяніць інфу аба мяне"
       change_username:
@@ -891,6 +893,8 @@ be:
         title: "архіў"
       move_to_inbox:
         title: "Перамясціць у тэчцы Уваходныя"
+      edit_message:
+        title: "рэдагаваць"
       list: "тэмы"
       new: "новая тэма"
       unread: "непрачытаныя"
@@ -1261,6 +1265,9 @@ be:
           unread: "Непрачытаныя тэмы скончыліся."
           top: "There are no more top topics."
           bookmarks: "Тэмы ў закладках адсутнічаюць."
+    footer_nav:
+      back: "Назад"
+      share: "Падзяліцца"
   admin_js:
     admin:
       moderator: "Мадэратар"

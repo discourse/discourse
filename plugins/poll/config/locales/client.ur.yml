@@ -24,18 +24,6 @@ ur:
           title: "نتائج <strong>بند ہونے</strong> پر دکھائے جائیں گے۔"
         staff:
           title: "نتائج صرف <strong>سٹاف</strong> ممبران کو دکھائے جاتے ہیں۔"
-      multiple:
-        help:
-          at_least_min_options:
-            one: "کم از کم <strong>%{count}</strong> آپشن کا انتخاب کریں"
-            other: "کم از کم <strong>%{شمار}</strong> آپشنس کا انتخاب کریں"
-          up_to_max_options:
-            one: "<strong>%{count}</strong> آپشن کا انتخاب کریں"
-            other: "<strong>%{شمار}</strong> تک آپشنس کا انتخاب کریں"
-          x_options:
-            one: "<strong>%{count}</strong> آپشن انتخاب کریں"
-            other: "<strong>%{شمار}</strong> آپشنس انتخاب کریں"
-          between_min_and_max_options: "<strong>%{کم از کم}</strong> سے <strong>%{زیادہ سے زیادہ}</strong> آپشنس کا انتخاب کریں"
       cast-votes:
         title: "اپنے ووٹ دیں۔"
         label: "ابھی ووٹ دیں۔"
