@@ -91,6 +91,8 @@ class Group < ActiveRecord::Base
     everyone: 99
   }
 
+  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+
   def self.visibility_levels
     @visibility_levels = Enum.new(
       public: 0,
@@ -777,7 +779,7 @@ class Group < ActiveRecord::Base
     return if self.automatic_membership_email_domains.blank?
 
     domains = Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
-      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain))
     end
 
     self.automatic_membership_email_domains = domains.join("|")
@@ -862,10 +864,10 @@ class Group < ActiveRecord::Base
       domain.sub!(/^https?:\/\//, '')
       domain.sub!(/\/.*$/, '')
 
-      if domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+      if domain =~ Group::VALID_DOMAIN_REGEX
         valid_domains << domain
       else
-        yield domain
+        yield domain if block_given?
       end
     end
 
