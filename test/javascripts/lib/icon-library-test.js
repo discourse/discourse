@@ -18,14 +18,6 @@ QUnit.test("return icon markup", assert => {
 });
 
 QUnit.test("convert icon names", assert => {
-  const fa47Icon = convertIconClass("fa-clock-o");
-  assert.ok(iconHTML(fa47Icon).indexOf("far-clock") > -1, "FA 4.7 syntax");
-
-  assert.ok(
-    iconHTML("area-chart").indexOf("chart-area") > -1,
-    "renamed FA 4.7 icons"
-  );
-
   const fa5Icon = convertIconClass("fab fa-facebook");
   assert.ok(iconHTML(fa5Icon).indexOf("fab-facebook") > -1, "FA 5 syntax");
 
