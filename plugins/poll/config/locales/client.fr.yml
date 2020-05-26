@@ -18,24 +18,26 @@ fr:
       public:
         title: "Les votes sont <strong>publics</strong>."
       results:
+        groups:
+          title: "Vous devez être membre du groupe %{groups} pour voter à ce sondage."
         vote:
-          title: "Les résultats sont affichés après avoir <strong>voté</strong>."
+          title: "Les résultats sont affichés après le <strong>vote</strong>."
         closed:
-          title: "Les résultats sont affichés après avoir <strong>fermé</strong>."
+          title: "Les résultats sont affichés après la <strong>fermeture</strong> du sondage."
         staff:
-          title: "Les résultats ne sont montrés qu'aux membres du <strong>personnel</strong> ."
+          title: "Les résultats ne sont montrés qu'aux <strong>responsables</strong>."
       multiple:
         help:
           at_least_min_options:
-            one: "Choisissez au moins <strong>%{count}</strong> option"
-            other: "Choisissez au moins <strong>%{count}</strong> options"
+            one: "Choisissez au moins <strong>%{count}</strong> option."
+            other: "Choisissez au moins <strong>%{count}</strong> options."
           up_to_max_options:
-            one: "Choisissez jusqu'à <strong>%{count}</strong> option"
-            other: "Choisissez jusqu'à <strong>%{count}</strong> options"
+            one: "Choisissez jusqu'à <strong>%{count}</strong> option."
+            other: "Choisissez jusqu'à <strong>%{count}</strong> options."
           x_options:
-            one: "Choisissez <strong>%{count}</strong> option"
-            other: "Choisissez <strong>%{count}</strong> options"
-          between_min_and_max_options: "Choisissez entre <strong>%{min}</strong> et <strong>%{max}</strong> options"
+            one: "Choisissez <strong>%{count}</strong> option."
+            other: "Choisissez <strong>%{count}</strong> options."
+          between_min_and_max_options: "Choisissez entre <strong>%{min}</strong> et <strong>%{max}</strong> options."
       cast-votes:
         title: "Distribuez vos votes"
         label: "Votez maintenant !"
@@ -73,6 +75,7 @@ fr:
         title: Créer un sondage
         insert: Insérer le sondage
         help:
+          options_count: Entrez au moins 1 option
           invalid_values: La valeur minimum doit être plus petite que la valeur maximum.
           min_step_value: Le valeur minimum du pas est 1
         poll_type:
@@ -84,10 +87,14 @@ fr:
           label: Résultats
           always: Toujours visible
           vote: Lors du vote
-          closed: A la fermeture
-          staff: Personnel seulement
+          closed: À la fermeture
+          staff: Responsables seulement
+        poll_groups:
+          label: Groupes autorisés
         poll_chart_type:
           label: Type de graphique
+          bar: Barre
+          pie: Circulaire
         poll_config:
           max: Max
           min: Min
@@ -97,4 +104,4 @@ fr:
         poll_options:
           label: Entrez une option de sondage par ligne
         automatic_close:
-          label: Fermer sondage automatiquement
+          label: Fermer le sondage automatiquement

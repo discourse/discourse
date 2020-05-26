@@ -24,15 +24,6 @@ ko:
           title: "결과가 <strong>닫히면 표시</strong> 됩니다."
         staff:
           title: "결과는 <strong>직원</strong> 에게만 표시됩니다."
-      multiple:
-        help:
-          at_least_min_options:
-            other: "최소 <strong>%{count}</strong>개의 선택지를 택해야 합니다."
-          up_to_max_options:
-            other: "최대 <strong>%{count}</strong> 개까지 선택지를 고를 수 있습니다"
-          x_options:
-            other: "<strong>%{count}</strong> 개의 선택지를 고르세요"
-          between_min_and_max_options: "최소 <strong>%{min}</strong>개에서 최대 <strong>%{max}</strong>개까지 선택 가능합니다."
       cast-votes:
         title: "표 던지기"
         label: "지금 투표!"

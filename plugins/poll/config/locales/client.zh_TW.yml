@@ -13,15 +13,6 @@ zh_TW:
       total_votes:
         other: "總票數"
       average_rating: "平均評分：<strong>%{average}</strong>。"
-      multiple:
-        help:
-          at_least_min_options:
-            other: "至少選擇 <strong>%{count}</strong> 個選項"
-          up_to_max_options:
-            other: "最多選擇 <strong>%{count}</strong> 個選項"
-          x_options:
-            other: "選擇 <strong>%{count}</strong> 個選項"
-          between_min_and_max_options: "選擇 <strong>%{min}</strong> 至 <strong>%{max}</strong> 個選項"
       cast-votes:
         title: "投你的票"
         label: "現在投票！"

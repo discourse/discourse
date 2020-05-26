@@ -29,15 +29,15 @@ nl:
       multiple:
         help:
           at_least_min_options:
-            one: "Kies minstens <strong>%{count}</strong> optie"
-            other: "Kies minstens <strong>%{count}</strong> opties"
+            one: "Kies minstens <strong>%{count}</strong> optie."
+            other: "Kies minstens <strong>%{count}</strong> opties."
           up_to_max_options:
-            one: "Kies maximaal <strong>%{count}</string> optie"
-            other: "Kies maximaal <strong>%{count}</string> opties"
+            one: "Kies maximaal <strong>%{count}</strong> optie."
+            other: "Kies maximaal <strong>%{count}</strong> opties."
           x_options:
-            one: "Kies <strong>%{count}</strong> optie"
-            other: "Kies <strong>%{count}</strong> opties"
-          between_min_and_max_options: "Kies <strong>%{min}</strong> tot <strong>%{max}</strong> opties"
+            one: "Kies <strong>%{count}</strong> optie."
+            other: "Kies <strong>%{count}</strong> opties."
+          between_min_and_max_options: "Kies <strong>%{min}</strong> tot <strong>%{max}</strong> opties."
       cast-votes:
         title: "Uw stemmen uitbrengen"
         label: "Nu stemmen!"

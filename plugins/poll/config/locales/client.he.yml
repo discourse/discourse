@@ -33,21 +33,21 @@ he:
       multiple:
         help:
           at_least_min_options:
-            one: "נא לבחור באפשרות <strong>אחת</strong> לפחות"
-            two: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
-            many: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
-            other: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
+            one: "יש לבחור באפשרות <strong>%{count}</strong> לפחות."
+            two: "יש לבחור <strong>%{count}</strong> אפשרויות לפחות."
+            many: "יש לבחור <strong>%{count}</strong> אפשרויות לפחות."
+            other: "יש לבחור <strong>%{count}</strong> אפשרויות לפחות."
           up_to_max_options:
-            one: "נא לבחור עד אפשרות <strong>אחת</strong>."
-            two: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
-            many: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
-            other: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
+            one: "יש לבחור אפשרות <strong>%{count}</strong> לכל היותר."
+            two: "יש לבחור עד <strong>%{count}</strong> אפשרויות."
+            many: "יש לבחור עד <strong>%{count}</strong> אפשרויות."
+            other: "יש לבחור עד <strong>%{count}</strong> אפשרויות."
           x_options:
-            one: "נא לבחור באפשרות אחת"
-            two: "נא לבחור <strong>%{count}</strong> אפשרויות"
-            many: "נא לבחור <strong>%{count}</strong> אפשרויות"
-            other: "נא לבחור <strong>%{count}</strong> אפשרויות"
-          between_min_and_max_options: "נא לבחור בין <strong>%{min}</strong> ל־<strong>%{max}</strong> אפשרויות"
+            one: "יש לבחור באפשרות <strong>%{count}</strong>."
+            two: "יש לבחור <strong>%{count}</strong> אפשרויות."
+            many: "יש לבחור <strong>%{count}</strong> אפשרויות."
+            other: "יש לבחור <strong>%{count}</strong> אפשרויות."
+          between_min_and_max_options: "נא לבחור בין <strong>%{min}</strong> ל־<strong>%{max}</strong> אפשרויות."
       cast-votes:
         title: "להצביע"
         label: "להצביע עכשיו!"

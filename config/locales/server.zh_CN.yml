@@ -45,7 +45,6 @@ zh_CN:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
       generic: 导入该主题时发生错误
-      about_json: "导入错误：about.json 不存在或无效"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 的修改包含无效值：%{errors}"
       git: "克隆 git 储存库时出错，访问被拒绝或找不到存储库"
@@ -318,7 +317,7 @@ zh_CN:
       already_bookmarked_post: "你不能将同一帖子收藏两次。"
       cannot_set_past_reminder: "你不能在此主题设置收藏提醒。"
       cannot_set_reminder_in_distant_future: "你不能够设置一个大于十年的收藏提醒。"
-      time_must_be_provided: "必须为除提醒提供时间"
+      time_must_be_provided: "必须为所有提醒设置时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天的某个时候"
@@ -394,12 +393,6 @@ zh_CN:
       你可以在你的回复中添加引用。只要选择你想引用的文字，然后点击随后出现的<b>引用回复</b>按钮。
 
       这样其它人会更容易地看一个长的回复，而不是多个分开的回复。
-    dominating_topic: |
-      ### 让其他人加入讨论
-
-      很明显这个主题对你很重要 &ndash; 你已经发表的帖子占该主题 %{percent}% 的回复。
-
-      如果你能留出空间让其他人来分享他们的观点，那可能会更好。你可以邀请他们过来吗？
     get_a_room: |
       ### 鼓励大家参与讨论
 
@@ -2048,6 +2041,7 @@ zh_CN:
     not_activated: "你还不能登录。我们发送了一封激活邮件给你，请按照邮件中的步骤来激活你的账户。"
     not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登录。"
     admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
+    reset_not_allowed_from_ip_address: "你不能够从当前的IP地址请求重置密码。"
     suspended: "你要等到 %{date} 之后才能登录。"
     suspended_with_reason: "账户已封禁至 %{date}：%{reason}"
     errors: "%{errors}"
@@ -3869,7 +3863,7 @@ zh_CN:
         此徽章授予给连续5天用完所有每日 %{max_likes_per_day} “赞”的你。感谢您每天花时间积极鼓励最好的交流！
     crazy_in_love:
       name: 狂热
-      description: 20 天都赞过 50 次
+      description: "一天内送出 %{max_likes_per_day} 个赞达 20 次"
       long_description: |
         此徽章授予给每天都送完所有的每日 %{max_likes_per_day} 赞的你。哇！你是鼓励社区成员的榜样！
     thank_you:

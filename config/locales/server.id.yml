@@ -39,7 +39,6 @@ id:
       unrecognized_extension: "Ekstensi file tidak dikenal: %{extension}"
     import_error:
       generic: Terjadi kesalahan saat mengimpor tema itu
-      about_json: "Kesalahan Impor: about.json tidak ada, atau tidak valid"
       unpack_failed: "Gagal membongkar berkas"
       file_too_big: "Berkas yang tidak dikompresi terlalu besar."
     settings_errors:

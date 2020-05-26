@@ -28,21 +28,6 @@ bs_BA:
           title: "Rezultati će biti prikazani onda kada glasanje bude <strong>završeno</strong>."
         staff:
           title: "Rezultati su prikazani samo <strong>uredništvu i admin</strong> korisnicima."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Odaberi barem <strong>%{count}</strong> opciju"
-            few: "Odaberi barem <strong>%{count}</strong> opcije"
-            other: "Odaberi barem <strong>%{count}</strong> opcija"
-          up_to_max_options:
-            one: "Odaberi do <strong>%{count}</strong> opciju"
-            few: "Odaberi do <strong>%{count}</strong> opcije"
-            other: "Odaberi do <strong>%{count}</strong> opcija"
-          x_options:
-            one: "Odaberi <strong>%{count}</strong> opciju"
-            few: "Odaberi <strong>%{count}</strong> opcije"
-            other: "Odaberi <strong>%{count}</strong> opcija"
-          between_min_and_max_options: "Odaberi između <strong>%{min}</strong> i <strong>%{max}</strong> opcija"
       cast-votes:
         title: "ukupno glasova"
         label: "Glasaj"
