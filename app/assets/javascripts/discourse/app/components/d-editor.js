@@ -898,8 +898,16 @@ export default Component.extend({
 
   // ensures textarea scroll position is correct
   _focusTextArea() {
-    const textarea = this.element.querySelector("textarea.d-editor-input");
     schedule("afterRender", () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const textarea = this.element.querySelector("textarea.d-editor-input");
+      if (!textarea) {
+        return;
+      }
+
       textarea.blur();
       textarea.focus();
     });
