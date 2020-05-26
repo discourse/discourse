@@ -38,6 +38,14 @@ export function cookAsync(text, options) {
   return loadMarkdownIt().then(() => cook(text, options));
 }
 
+export function cookAsyncWithContext(text, context) {
+  return loadMarkdownIt().then(() => htmlSafe(context.cook(text)));
+}
+
+export function createContext(options) {
+  return loadMarkdownIt().then(() => createPrettyText(options));
+}
+
 export function sanitize(text, options) {
   return textSanitize(text, new WhiteLister(options));
 }
@@ -49,6 +57,10 @@ export function sanitizeAsync(text, options) {
 }
 
 function loadMarkdownIt() {
+  if ("markdownit" in window) {
+    return Promise.resolve();
+  }
+
   if (Discourse.MarkdownItURL) {
     return loadScript(Discourse.MarkdownItURL).catch(e => {
       // eslint-disable-next-line no-console
