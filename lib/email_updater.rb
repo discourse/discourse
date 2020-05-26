@@ -26,7 +26,7 @@ class EmailUpdater
       end
     end
 
-    return if !errors.blank? || existing_user.present?
+    return if errors.present? || existing_user.present?
 
     old_email = @user.email if !add
 
