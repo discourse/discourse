@@ -218,7 +218,7 @@ class UsersController < ApplicationController
 
     new_primary = user.user_emails.find_by(email: params[:email])
     if new_primary.blank?
-      return render json: failed_json, status: 428
+      return render json: failed_json.merge(errors: [I18n.t("change_email.doesnt_exist")]), status: 428
     end
 
     User.transaction do

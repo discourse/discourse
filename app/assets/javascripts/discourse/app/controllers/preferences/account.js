@@ -181,7 +181,7 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     setPrimaryEmail(email) {
-      this.model.setPrimaryEmail(email);
+      this.model.setPrimaryEmail(email).catch(popupAjaxError);
     },
 
     destroyEmail(email) {
