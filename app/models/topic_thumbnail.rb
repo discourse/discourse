@@ -26,7 +26,7 @@ class TopicThumbnail < ActiveRecord::Base
       upload_id: original.id,
       max_width: max_width,
       max_height: max_height,
-      optimized_image_id: optimized.id
+      optimized_image_id: optimized&.id
     ])
 
     TopicThumbnail.find_by(
