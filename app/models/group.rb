@@ -616,16 +616,15 @@ class Group < ActiveRecord::Base
   PUBLISH_CATEGORIES_LIMIT = 10
 
   def add(user, notify: false, automatic: false)
-    self.users.push(user) unless self.users.include?(user)
+    return self if self.users.include?(user)
+
+    self.users.push(user)
 
     if notify
       Notification.create!(
         notification_type: Notification.types[:membership_request_accepted],
         user_id: user.id,
-        data: {
-          group_id: id,
-          group_name: name
-        }.to_json
+        data: { group_id: id, group_name: name }.to_json
       )
     end
 
