@@ -17,27 +17,12 @@ module Onebox
       def data
         oembed = get_oembed
         permalink = clean_url.gsub("/#{oembed.author_name}/", "/")
-        description = oembed.title
-        type = if description =~ /^Photos by/
-          "album"
-        elsif description =~ /^Video by/
-          "video"
-        else
-          "photo"
-        end
-        title = if type == "album"
-          "[Album] @#{oembed.author_name}"
-        else
-          "@#{oembed.author_name}"
-        end
 
-        result = { link: permalink,
-                   title: title,
-                   image: "#{permalink}/media/?size=l",
-                   description: Onebox::Helpers.truncate(description, 250)
-                  }
-        result[:video_link] = permalink if type == "video"
-        result
+        { link: permalink,
+          title: "@#{oembed.author_name}",
+          image: "#{permalink}/media/?size=l",
+          description: Onebox::Helpers.truncate(oembed.title, 250)
+        }
       end
 
       protected
