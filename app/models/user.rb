@@ -306,8 +306,12 @@ class User < ActiveRecord::Base
     fields.uniq
   end
 
+  def self.human_user_id?(user_id)
+    user_id > 0
+  end
+
   def human?
-    self.id > 0
+    User.human_user_id?(self.id)
   end
 
   def bot?

@@ -10,6 +10,8 @@ class Draft < ActiveRecord::Base
   class OutOfSequence < StandardError; end
 
   def self.set(user, key, sequence, data, owner = nil)
+    return 0 if !User.human_user_id?(user.id)
+
     if SiteSetting.backup_drafts_to_pm_length > 0 && SiteSetting.backup_drafts_to_pm_length < data.length
       backup_draft(user, key, sequence, data)
     end
@@ -94,6 +96,7 @@ class Draft < ActiveRecord::Base
   end
 
   def self.get(user, key, sequence)
+    return if !user || !user.id || !User.human_user_id?(user.id)
 
     opts = {
       user_id: user.id,
@@ -128,6 +131,8 @@ class Draft < ActiveRecord::Base
   end
 
   def self.clear(user, key, sequence)
+    return if !user || !user.id || !User.human_user_id?(user.id)
+
     current_sequence = DraftSequence.current(user, key)
 
     # bad caller is a reason to complain
