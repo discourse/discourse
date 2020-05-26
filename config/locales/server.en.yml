@@ -432,9 +432,9 @@ en:
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
     request_accepted_pm:
-      title: "Membership Request Accepted for @%{group_name}"
+      title: "You've been accepted into @%{group_name}"
       body: |
-        Your membership request to join @%{group_name} was accepted.
+        Your request to enter @%{group_name} has been accepted and you are now a member.
     view_hidden_topic_request_reason: "I would like to join the group '%{group_name}', so I may access [this topic](%{topic_url})"
 
   education:
