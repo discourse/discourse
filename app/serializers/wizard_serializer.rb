@@ -14,7 +14,7 @@ class WizardSerializer < ApplicationSerializer
   end
 
   def current_color_scheme
-    color_scheme = Theme.find(SiteSetting.default_theme_id).color_scheme
+    color_scheme = Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
     colors = color_scheme ? color_scheme.colors : ColorScheme.base_colors
 
     # The frontend expects the color hexs to start with '#'
