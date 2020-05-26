@@ -35,10 +35,10 @@ $bronze: #cd7f32 !default;
 // Fonts
 // --------------------------------------------------
 
-$base-font-size-smaller: 14px !default;
-$base-font-size: 15px !default;
-$base-font-size-larger: 17px !default;
-$base-font-size-largest: 19px !default;
+$base-font-size-smaller: 0.875em !default; // eq. to 14px
+$base-font-size: 0.938em !default; // eq. to 15px
+$base-font-size-larger: 1.063em !default; // eq. to 17px
+$base-font-size-largest: 1.118em !default; // eq. to 19px
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
 // Font-size defintions, multiplier ^ (step / interval)
