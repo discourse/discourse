@@ -81,7 +81,7 @@ module FileStore
 
       begin
         parsed_url = URI.parse(URI.encode(url))
-      rescue URI::InvalidURIError
+      rescue URI::InvalidURIError, URI::InvalidComponentError
         return false
       end
 
