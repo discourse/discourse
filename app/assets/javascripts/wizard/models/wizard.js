@@ -28,7 +28,7 @@ const Wizard = EmberObject.extend({
   getCurrentColors(schemeId) {
     const colorStep = this.steps.findBy("id", "colors");
     if (!colorStep) {
-      return;
+      return this.current_color_scheme;
     }
 
     const themeChoice = colorStep.get("fieldsById.theme_previews");
