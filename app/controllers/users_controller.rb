@@ -211,7 +211,8 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    if user.primary_email.email == params[:email]
+    old_primary = user.primary_email
+    if old_primary.email == params[:email]
       return render json: success_json
     end
 
@@ -221,8 +222,14 @@ class UsersController < ApplicationController
     end
 
     User.transaction do
-      user.primary_email.update!(primary: false)
+      old_primary.update!(primary: false)
       new_primary.update!(primary: true)
+    end
+
+    if current_user.staff? && current_user != user
+      StaffActionLogger.new(current_user).log_update_email(user, previous_value: old_primary.email, new_value: new_primary.email)
+    else
+      UserHistory.create(action: UserHistory.actions[:update_email], target_user_id: user.id, previous_value: old_primary.email, new_value: new_primary.email)
     end
 
     render json: success_json
@@ -243,6 +250,12 @@ class UsersController < ApplicationController
       user.user_emails.where(email: params[:email]).destroy_all
     elsif
       user.email_change_requests.where(new_email: params[:email]).destroy_all
+    end
+
+    if current_user.staff? && current_user != user
+      StaffActionLogger.new(current_user).log_destroy_email(user, previous_value: params[:email])
+    else
+      UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id, previous_value: params[:email])
     end
 
     render json: success_json

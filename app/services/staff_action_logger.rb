@@ -744,6 +744,18 @@ class StaffActionLogger
     ))
   end
 
+  def log_add_email(user, opts = {})
+    UserHistory.create!(opts.merge(target_user_id: user.id, action: UserHistory.actions[:add_email]))
+  end
+
+  def log_update_email(user, opts = {})
+    UserHistory.create!(opts.merge(target_user_id: user.id, action: UserHistory.actions[:update_email]))
+  end
+
+  def log_destroy_email(user, opts = {})
+    UserHistory.create!(opts.merge(target_user_id: user.id, action: UserHistory.actions[:destroy_email]))
+  end
+
   private
 
   def get_changes(changes)

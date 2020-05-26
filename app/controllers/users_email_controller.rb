@@ -42,6 +42,12 @@ class UsersEmailController < ApplicationController
       return render_json_error(updater.errors.full_messages)
     end
 
+    if current_user.staff? && current_user != user
+      StaffActionLogger.new(current_user).log_add_email(user, previous_value: request.post? ? nil : user.email, new_value: params[:email])
+    else
+      UserHistory.create(action: UserHistory.actions[:add_email], target_user_id: user.id, previous_value: request.post? ? nil : user.email, new_value: params[:email])
+    end
+
     render body: nil
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
