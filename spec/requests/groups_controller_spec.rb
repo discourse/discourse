@@ -1325,6 +1325,25 @@ describe GroupsController do
     end
   end
 
+  describe "#handle_membership_request" do
+    before do
+      group.add_owner(user)
+      sign_in(user)
+    end
+
+    it "sends a private message when accepted" do
+      group_request = GroupRequest.create!(group: group, user: other_user)
+      expect { put "/groups/#{group.id}/handle_membership_request.json", params: { user_id: other_user.id, accept: true } }
+        .to change { Topic.count }.by(1)
+        .and change { Post.count }.by(1)
+
+      topic = Topic.last
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(topic.title).to eq(I18n.t('groups.request_accepted_pm.title', group_name: group.name))
+      expect(topic.first_post.raw).to eq(I18n.t('groups.request_accepted_pm.body', group_name: group.name).strip)
+    end
+  end
+
   describe "#histories" do
     context 'when user is not signed in' do
       it 'should raise the right error' do

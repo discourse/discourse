@@ -340,16 +340,26 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(:id) if group.blank?
     guardian.ensure_can_edit!(group)
 
-    ActiveRecord::Base.transaction do
-      user = User.find_by(id: params[:user_id])
-      raise Discourse::InvalidParameters.new(:user_id) if user.blank?
+    user = User.find_by(id: params[:user_id])
+    raise Discourse::InvalidParameters.new(:user_id) if user.blank?
 
+    ActiveRecord::Base.transaction do
       if params[:accept]
-        group.add(user, notify: true)
+        group.add(user)
         GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
       end
 
       GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
+    end
+
+    if params[:accept]
+      PostCreator.new(current_user,
+        title: I18n.t('groups.request_accepted_pm.title', group_name: group.name),
+        raw: I18n.t('groups.request_accepted_pm.body', group_name: group.name),
+        archetype: Archetype.private_message,
+        target_usernames: user.username,
+        skip_validations: true
+      ).create!
     end
 
     render json: success_json
