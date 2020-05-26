@@ -45,7 +45,7 @@ nl:
       unrecognized_extension: "Niet-herkende bestandsextensie: %{extension}"
     import_error:
       generic: Er is een fout opgetreden bij het importeren van dat thema
-      about_json: "Fout bij importeren: about.json bestaat niet, of is ongeldig"
+      about_json: "Belangrijke fout: about.json bestaat niet, of is ongeldig. Weet u zeker dat dit een Discourse-thema is?"
       about_json_values: "about.json bevat ongeldige waarden: %{errors}"
       modifier_values: "about.json-modificatoren bevatten ongeldige waarden: %{errors}"
       git: "Fout bij klonen van git-repository; toegang is geweigerd of repository is niet gevonden"
@@ -414,12 +414,6 @@ nl:
       U kunt uw eerdere antwoord bewerken om een citaat toe te voegen door tekst te accentueren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder uitgebreide antwoorden bevatten dan die met veel kleine, individuele antwoorden.
-    dominating_topic: |
-      ### Laat anderen aan de conversatie deelnemen
-
-      Dit topic is duidelijk belangrijk voor u &ndash; u hebt hier meer dan %{percent}% van de antwoorden geplaatst.
-
-      Het zou nog beter kunnen zijn als u ook anderen de ruimte geeft om hun ideeën te delen. Kunt u ze uitnodigen?
     get_a_room: |
       ### Overweeg iedereen aan de conversatie te laten deelnemen
 
@@ -1361,6 +1355,7 @@ nl:
     add_rel_nofollow_to_user_content: '''rel nofollow'' toevoegen aan alle ingediende gebruikersinhoud, behalve voor interne koppelingen (inclusief bovenliggende domeinen). Als u dit wijzigt, moet u alle berichten opnieuw opbouwen met ''rake posts:rebake'''
     exclude_rel_nofollow_domains: "Een lijst van domeinen waarvoor 'nofollow' niet aan koppelingen mag worden toegevoegd. example.com staat ook automatisch sub.example.com toe. Voeg minimaal het domein van deze website toe om webcrawlers alle inhoud te helpen vinden. Als andere onderdelen van uw website zich op andere domeinen bevinden, voeg die dan ook toe."
     post_excerpt_maxlength: "Maximale lengte van een fragment / samenvatting van een bericht."
+    topic_excerpt_maxlength: "Maximale lengte van een fragment / samenvatting van een topic, gegenereerd vanuit het eerste bericht in een topic."
     show_pinned_excerpt_mobile: "Fragment tonen bij vastgemaakte topics in mobiele weergave."
     show_pinned_excerpt_desktop: "Fragment tonen bij vastgemaakte topics in desktopweergave."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse'-bericht in tekens."
@@ -2114,6 +2109,7 @@ nl:
     not_activated: "U kunt zich nog niet aanmelden. We hebben u een activeringsmail gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren."
     not_allowed_from_ip_address: "U kunt zich niet als %{username} aanmelden vanaf dat IP-adres."
     admin_not_allowed_from_ip_address: "U kunt zich niet als beheerder aanmelden vanaf dat IP-adres."
+    reset_not_allowed_from_ip_address: "U kunt geen wachtwoordherinitialisatie aanvragen vanaf dat IP-adres."
     suspended: "U kunt zich tot %{date} niet aanmelden."
     suspended_with_reason: "Account geschorst tot %{date}: %{reason}"
     errors: "%{errors}"
@@ -2695,6 +2691,7 @@ nl:
       long_description: |
         Deze badge wordt toegekend wanneer u 5 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Bedankt dat u de tijd neemt voor het dagelijks actief aanmoedigen van de beste conversaties!
     crazy_in_love:
+      description: "20 keer %{max_likes_per_day} likes op een dag gebruikt"
       long_description: |
         Deze badge wordt toegekend wanneer u 20 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Wow! U bent een rolmodel voor het aanmoedigen van uw medegemeenschapesleden!
     thank_you:

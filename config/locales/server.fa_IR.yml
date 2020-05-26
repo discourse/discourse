@@ -44,7 +44,6 @@ fa_IR:
       unrecognized_extension: "پرونده افزونه شناسایی نشد:%{extension}"
     import_error:
       generic: خطایی در هنگام وارد کردن پوسته اتفاق افتاده
-      about_json: "خطا در وارد کردن: about.json وجود ندارد یا نامعتبر است"
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
   emails:
@@ -2105,7 +2104,6 @@ fa_IR:
       name: مهرورز
     crazy_in_love:
       name: الهه‌ی مهر
-      description: در 20 روز، روزانه 50 نوشته را پسندیده است.
     thank_you:
       name: سپاس‌گزاریم
       description: 20 نوشته پسندیده شده دارد و 10 نوشته را پسندیده است.

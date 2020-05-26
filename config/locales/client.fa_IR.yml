@@ -656,8 +656,6 @@ fa_IR:
           title: "بی‌صدا شد"
           description: "شما برای هر اتفاقی در ارتباط با پیام های این گروه آگاه سازی می‌گیرید."
       flair_url: "تصویر آواتار"
-      flair_url_placeholder: "(اختیاری) URL تصویر و یا کلاس Font Awesome"
-      flair_url_description: 'از تصاویر مربعی بزرگتر از ۲۰پیکسل × ۲۰ پیکسل و یا ایکون های فونت آسام استفاده کنید (فرمت های قابل قبول: "fa-icon", "far fa-icon", "fab fa-icon" ).'
       flair_bg_color: "رنگ پس زمینه آواتار"
       flair_bg_color_placeholder: "(اختیاری) کد HEX رنگ"
       flair_color: "رنگ آواتار"
@@ -904,8 +902,9 @@ fa_IR:
         enable: "فعال کردن"
         enable_long: "کدهای پشتیبان را به کار بگیر"
         manage: "مدیریت کد‌های پشتیبانی، <strong>{{count}}</strong> از کد‌های پشتیبانی شما باقی مانده"
-        copied_to_clipboard: "کپی شد"
+        copy_to_clipboard: "کپی در clipboard"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
+        copied_to_clipboard: "کپی شد"
         remaining_codes: "شما <strong>{{count}}</strong>کد پشتیبان باقی مانده دارید."
         use: "از کد پشتیبان استفاده کنید"
         enable_prerequisites: "شما باید قبل از ساخت کد‌های پشتیبانی یک تایید هویت دوعاملی اصلی را فعال کنید "
@@ -931,25 +930,23 @@ fa_IR:
         oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
         use: "از اپلیکیشن احراز هویت استفاده کنید"
         enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
-        disable: "غیرفعال"
-        disable_title: "غیر فعال کردن تایید دوعاملی"
+        disable: "ازکاراندازی"
         disable_confirm: "ایا از غیرفعال‌ سازی تمامی تایید‌های دوعاملی مطمعن‌ هستید؟"
+        save: "ذخیره"
         edit: "ویرایش"
         edit_title: "ویرایش تایید دوعاملی"
         edit_description: "نام تایید دوعاملی"
         totp:
           title: "تایید برپایه توکن"
-          add: "تایید کننده جدید"
           default_name: "تایید‌کننده من"
         security_key:
           register: "ثبت‌نام"
           title: "کلیدهای امنیتی"
-          add: "کلید امنیتی را ثبت کنید"
           default_name: "کلید امنیتی اصلی"
           not_allowed_error: "روند ثبت کلید امنیتی به پایان رسیده است یا لغو شده است."
           edit: "کلید امنیتی را ویرایش کنید"
+          save: "ذخیره"
           edit_description: "نام کلید امنیتی"
-          delete: "حذف"
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
@@ -1830,7 +1827,7 @@ fa_IR:
         help: "بازگرداندن پیام به صندوق دریافتی"
       edit_message:
         help: "ویرایش اولین نوشته از پیام"
-        title: "ویرایش پیام"
+        title: "ویرایش"
       defer:
         help: "علامت به عنوان خوانده نشده"
         title: " واگذار کردن"
@@ -2625,7 +2622,6 @@ fa_IR:
         this_month: "ماه"
         this_week: "هفته"
         today: "امروز"
-        other_periods: "دیدن بالاترین مطالب"
     permission_types:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
@@ -2815,6 +2811,10 @@ fa_IR:
       custom_message_placeholder: "متن پیام خود را وارد کنید"
       custom_message_template_forum: "سلام، باید عضو این انجمن بشی!"
       custom_message_template_topic: "سلام، فکر کردم از این موضوع لذت می‌بری!"
+    footer_nav:
+      back: "بازگشت"
+      share: "اشتراک‌گذاری"
+      dismiss: "نخواستیم"
     safe_mode:
       enabled: "حالت امن فعال شده، برای خروج از حالت امن این پنجره مرورگر را ببندید."
   admin_js:

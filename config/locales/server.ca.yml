@@ -45,7 +45,6 @@ ca:
       unrecognized_extension: "Extensió de fitxer no reconeguda: %{extension}"
     import_error:
       generic: Hi ha hagut un error important l'aparença.
-      about_json: "Error d'importació: about.json no existeix o no és vàlid"
       about_json_values: "about.json conté valors no vàlids: %{errors}"
       git: "S'ha produït un error clonant el dipòsit git, s'ha denegat l'accés o no s'ha trobat el dipòsit."
       unpack_failed: "Error en desempaquetar el fitxer"
@@ -388,12 +387,6 @@ ca:
       Podeu editar la vostra darrera resposta per a afegir una citació. Per a fer-ho, seleccioneu text i premeu el botó de <b>cita resposta</b> que apareixerà.
 
       És més fàcil seguir un tema quan té poques respostes en profunditat que no pas moltes respostes curtes i individuals.
-    dominating_topic: |
-      ### Deixeu que altres s'afegeixin a la conversa
-
-      Aquest tema us resulta clarament important. Heu publicat més del %{percent}% de les respostes aquí.
-
-      Encara seria millor si deixéssiu temps a altres persones per a compartir els seus punts de vista. Els podeu convidar?
     get_a_room: |
       ### Anima tothom a participar en la conversa
 
@@ -3046,7 +3039,6 @@ ca:
         Aquesta insígnia es concedeix quan gasteu tots els %{max_likes_per_day} dels vostres 'M'agrada' diaris durant 5 dies. Gràcies per animar activament les millors converses cada dia.
     crazy_in_love:
       name: Boig d'amor
-      description: Ha fet servir 50 'M'agrada' en un dia 20 vegades
       long_description: |
         Aquesta insígnia es concedeix quan utilitzeu tots els vostres %{max_likes_per_day} 'm'agrada' diaris durant vint dies. Oh! Sou un model per a animar els companys de comunitat!
     thank_you:

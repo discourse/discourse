@@ -423,9 +423,11 @@ te:
         enable: "చేతనం"
       second_factor:
         name: "పేరు"
+        disable: "అచేతనం"
+        save: "భద్రపరచు"
         edit: "సవరించు"
         security_key:
-          delete: "తొలగించు"
+          save: "భద్రపరచు"
       change_about:
         title: "నా గురించి మార్చు"
       change_username:
@@ -802,6 +804,8 @@ te:
     topic:
       create: "కొత్త విషయం"
       create_long: "కొత్త విషయం సృష్టించు"
+      edit_message:
+        title: "సవరించు"
       defer:
         title: "వాయిదావేయి"
       list: "విషయాలు"
@@ -1324,6 +1328,9 @@ te:
           unread: "ఇంకా చదవని విషయాలు లేవు."
           top: "ఇంకా అగ్ర విషయాలు లేవు."
           bookmarks: "ఇంకా పేజీక విషయాలు లేవు."
+    footer_nav:
+      back: "వెనుకకు"
+      share: "పంచు"
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:

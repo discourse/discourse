@@ -18,24 +18,14 @@ pt_BR:
       public:
         title: "Votos são <strong>públicos</strong>."
       results:
+        groups:
+          title: "Você precisa ser membro de %{groups} para votar nesta votação."
         vote:
           title: "Resultados serão mostrados ao <strong>votar</strong>."
         closed:
           title: "Resultados serão mostrados quando a votação <strong>fechar</strong>."
         staff:
           title: "Resultados são somente mostrados para <strong>funcionários</strong> membros."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Escolha pelo menos <strong>%{count}</strong> opção"
-            other: "Escolha pelo menos <strong>%{count}</strong> opções"
-          up_to_max_options:
-            one: "Escolha até <strong>%{count}</strong> opção"
-            other: "Escolha até <strong>%{count}</strong> opções"
-          x_options:
-            one: "Escolha <strong>%{count}</strong> opção"
-            other: "Escolha <strong>%{count}</strong> opções"
-          between_min_and_max_options: "Você pode escolher entre <strong>%{min}</strong> e <strong>%{max}</strong> opções"
       cast-votes:
         title: "Registre seus votos"
         label: "Votar agora!"
@@ -73,6 +63,7 @@ pt_BR:
         title: Criar Votação
         insert: Inserir Votação
         help:
+          options_count: Insira pelo menos 1 opção
           invalid_values: O valor mínimo precisa ser menor que o valor máximo.
           min_step_value: O valor mínimo de intervalo é 1
         poll_type:
@@ -86,8 +77,12 @@ pt_BR:
           vote: Ao votar
           closed: Quando fechada
           staff: Somente pessoal autorizado
+        poll_groups:
+          label: Grupos permitidos
         poll_chart_type:
           label: Tipo de gráfico
+          bar: Barras
+          pie: Pizza
         poll_config:
           max: Máx
           min: Mín
