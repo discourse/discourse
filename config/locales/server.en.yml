@@ -1583,6 +1583,7 @@ en:
     moderators_view_emails: "Allow moderators to view user emails"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
+    notify_about_secrets_older_than: "Notify about credentials older than"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
@@ -4817,3 +4818,12 @@ en:
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."
+
+  old_keys_reminder:
+    title: "You have %{keys_count} old credentials"
+    body: |
+      We have detected you have the following credentials that are 2 years or older
+
+      %{keys}
+
+      These credentials are sensitive and we recommend resetting them every 2 years to avoid impact of any future data breaches
