@@ -3803,6 +3803,7 @@ en:
     user_email_user_suspended: "user was suspended"
     user_email_already_read: "user has already read this post"
     user_email_access_denied: "user is not allowed to see this post"
+    user_email_no_email: "No email associated with user id %{user_id}"
     sender_message_blank: "message is blank"
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
