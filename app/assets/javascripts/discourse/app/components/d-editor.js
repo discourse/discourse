@@ -907,16 +907,52 @@ export default Component.extend({
 
   @observes("value")
   normalizeEmoji() {
+    const rsAstralRange = "\\ud800-\\udfff";
+    const rsComboMarksRange = "\\u0300-\\u036f";
+    const reComboHalfMarksRange = "\\ufe20-\\ufe2f";
+    const rsComboSymbolsRange = "\\u20d0-\\u20ff";
+    const rsComboMarksExtendedRange = "\\u1ab0-\\u1aff";
+    const rsComboMarksSupplementRange = "\\u1dc0-\\u1dff";
+    const rsComboRange =
+      rsComboMarksRange +
+      reComboHalfMarksRange +
+      rsComboSymbolsRange +
+      rsComboMarksExtendedRange +
+      rsComboMarksSupplementRange;
+    const rsCombo = `[${rsComboRange}]`;
+    const rsDingbatRange = "\\u2700-\\u27bf";
+    const rsVarRange = "\\ufe0e\\ufe0f";
+
+    /** Used to compose unicode capture groups. */
+    const rsZWJ = "\\u200d";
+    const rsNonAstral = `[^${rsAstralRange}]`;
+    const rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]";
+    const rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}";
+    const rsFitz = "\\ud83c[\\udffb-\\udfff]";
+    const rsModifier = `(?:${rsCombo}|${rsFitz})`;
+    const rsDingbat = `[${rsDingbatRange}]`;
+
+    /** Used to compose unicode regexes. */
+    const reOptMod = `${rsModifier}?`;
+    const rsOptVar = `[${rsVarRange}]?`;
+    const rsOptJoin = `(?:${rsZWJ}(?:${[
+      rsNonAstral,
+      rsRegional,
+      rsSurrPair
+    ].join("|")})${rsOptVar + reOptMod})*`;
+    const rsSeq = rsOptVar + reOptMod + rsOptJoin;
+    const rsEmoji = `(?:${[rsDingbat, rsRegional, rsSurrPair].join(
+      "|"
+    )})${rsSeq}`;
+
+    const reUnicodeWords = RegExp(rsEmoji, "g");
     let inputString = this.value;
-    inputString = inputString.replace(
-      /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?(?:\u200d(?:[^\ud800-\udfff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?)*/gi,
-      match => {
-        if (replacements.hasOwnProperty(match)) {
-          return " :" + replacements[match] + ":";
-        }
-        return match;
+    inputString = inputString.replace(reUnicodeWords, match => {
+      if (replacements.hasOwnProperty(match)) {
+        return ` :${replacements[match]}:`;
       }
-    );
+      return match;
+    });
     this.set("value", inputString);
   },
 
