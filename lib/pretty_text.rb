@@ -126,6 +126,10 @@ module PrettyText
     @ctx
   end
 
+  def self.reset_translations
+    v8.eval("__resetTranslationTree()")
+  end
+
   def self.reset_context
     @ctx_init.synchronize do
       @ctx&.dispose
@@ -159,6 +163,7 @@ module PrettyText
         __optInput.getTopicInfo = __getTopicInfo;
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
+        __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};

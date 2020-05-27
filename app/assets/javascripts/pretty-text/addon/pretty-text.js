@@ -30,7 +30,8 @@ export function buildOptions(state) {
     previewing,
     linkify,
     censoredRegexp,
-    disableEmojis
+    disableEmojis,
+    customEmojiTranslation
   } = state;
 
   let features = {
@@ -68,6 +69,7 @@ export function buildOptions(state) {
     emojiUnicodeReplacer,
     lookupUploadUrls,
     censoredRegexp,
+    customEmojiTranslation,
     allowedHrefSchemes: siteSettings.allowed_href_schemes
       ? siteSettings.allowed_href_schemes.split("|")
       : null,

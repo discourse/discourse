@@ -126,7 +126,7 @@ class Emoji
   end
 
   def self.load_translations
-    db["translations"].merge(Plugin::CustomEmoji.translations)
+    db["translations"]
   end
 
   def self.base_directory
