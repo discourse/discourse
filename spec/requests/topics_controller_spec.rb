@@ -1357,6 +1357,17 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
+    it 'will return a 403 if you try to redirect to a topic you have no access to' do
+      category = Fabricate(:category)
+      category.set_permissions(Group::AUTO_GROUPS[:staff] => :full)
+      category.save!
+
+      topic.update!(category_id: category.id)
+      get "/t/#{topic.slug}"
+
+      expect(response.status).to eq(403)
+    end
+
     it 'can find a topic when a slug has a number in front' do
       another_topic = Fabricate(:post).topic
 
