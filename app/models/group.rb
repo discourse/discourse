@@ -923,7 +923,6 @@ end
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
-#  flair_url                          :string
 #  flair_bg_color                     :string
 #  flair_color                        :string
 #  bio_raw                            :text
@@ -934,11 +933,13 @@ end
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
-#  publish_read_state                 :boolean          default(FALSE), not null
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  publish_read_state                 :boolean          default(FALSE), not null
 #  members_visibility_level           :integer          default(0), not null
+#  flair_icon                         :string
+#  flair_upload_id                    :integer
 #
 # Indexes
 #
