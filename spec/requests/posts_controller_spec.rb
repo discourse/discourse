@@ -838,6 +838,30 @@ describe PostsController do
         expect(post.topic.topic_allowed_groups.length).to eq(1)
       end
 
+      it "can send a message to a group with caps" do
+        group = Group.create(name: 'Test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
+        user1 = user
+        group.add(user1)
+
+        # allow pm to this group
+        group.update_columns(messageable_level: Group::ALIAS_LEVELS[:everyone])
+
+        post "/posts.json", params: {
+          raw: 'I can haz a test',
+          title: 'I loves my test',
+          target_recipients: "test_Group",
+          archetype: Archetype.private_message
+        }
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+        post = Post.find(parsed['id'])
+
+        expect(post.topic.topic_allowed_users.length).to eq(1)
+        expect(post.topic.topic_allowed_groups.length).to eq(1)
+      end
+
       it "returns the nested post with a param" do
         post "/posts.json", params: {
           raw: 'this is the test content',
