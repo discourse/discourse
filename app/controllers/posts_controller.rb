@@ -748,7 +748,7 @@ class PostsController < ApplicationController
 
     if recipients
       recipients = recipients.split(",").map(&:downcase)
-      groups = Group.messageable(current_user).where('lower(name) in (?)', recipients).pluck('name')
+      groups = Group.messageable(current_user).where('lower(name) in (?)', recipients).pluck('lower(name)')
       recipients -= groups
       emails = recipients.select { |user| user.match(/@/) }
       recipients -= emails
