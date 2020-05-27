@@ -4,7 +4,7 @@ import showModal from "discourse/lib/show-modal";
 
 acceptance("Modal");
 
-QUnit.test("modal", async function(assert) {
+QUnit.skip("modal", async function(assert) {
   await visit("/");
 
   assert.ok(
