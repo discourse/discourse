@@ -26,16 +26,17 @@ module Jobs
       notification = nil
       type = args[:type]
       user = User.find_by(id: args[:user_id])
-      to_address = args[:to_address].presence || user.try(:email).presence || "no_email_found"
+      to_address = args[:to_address].presence || user&.primary_email&.email.presence || "no_email_found"
 
       set_skip_context(type, args[:user_id], to_address, args[:post_id])
 
-      return skip(SkippedEmailLog.reason_types[:user_email_no_user]) unless user
+      return skip(SkippedEmailLog.reason_types[:user_email_no_user]) if !user
+      return skip(SkippedEmailLog.reason_types[:user_email_no_email]) if to_address == "no_email_found"
 
       if args[:post_id].present?
         post = Post.find_by(id: args[:post_id])
 
-        unless post.present?
+        if post.blank?
           return skip(SkippedEmailLog.reason_types[:user_email_post_not_found])
         end
 
