@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import Component from "@ember/component";
+import { or } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
@@ -46,6 +47,21 @@ export default Component.extend({
       { name: I18n.t("groups.alias_levels.everyone"), value: 99 }
     ];
   },
+
+  membersVisibilityLevel: or(
+    "model.members_visibility_level",
+    "visibilityLevelOptions.firstObject.value"
+  ),
+
+  messageableLevel: or(
+    "model.messageable_level",
+    "aliasLevelOptions.firstObject.value"
+  ),
+
+  mentionableLevel: or(
+    "model.mentionable_level",
+    "aliasLevelOptions.firstObject.value"
+  ),
 
   @discourseComputed(
     "siteSettings.email_in",
