@@ -12,7 +12,7 @@
 //= require ember-template-compiler
 //= require qunit/qunit/qunit
 //= require ember-qunit
-//= require ember-shim
+//= require discourse-shims
 //= require wizard-application
 //= require wizard-vendor
 //= require helpers/assertions
