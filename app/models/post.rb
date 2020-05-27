@@ -748,11 +748,12 @@ class Post < ActiveRecord::Base
   end
 
   # Enqueue post processing for this post
-  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false)
+  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false, skip_pull_hotlinked_images: false)
     args = {
       post_id: id,
       bypass_bump: bypass_bump,
       new_post: new_post,
+      skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
     args[:image_sizes] = image_sizes if image_sizes.present?
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
