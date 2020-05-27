@@ -18,6 +18,7 @@ function getOpts(opts) {
       getURL: getURLWithCDN,
       currentUser: Discourse.__container__.lookup("current-user:main"),
       censoredRegexp: site.censored_regexp,
+      customEmojiTranslation: site.custom_emoji_translation,
       siteSettings,
       formatUsername
     },

@@ -483,8 +483,15 @@ export default Component.extend({
             }
           }
 
-          if (translations[full]) {
-            return resolve([translations[full]]);
+          // note this will only work for emojis starting with :
+          // eg: :-)
+          const allTranslations = Object.assign(
+            {},
+            translations,
+            this.getWithDefault("site.custom_emoji_translation", {})
+          );
+          if (allTranslations[full]) {
+            return resolve([allTranslations[full]]);
           }
 
           const match = term.match(/^:?(.*?):t([2-6])?$/);

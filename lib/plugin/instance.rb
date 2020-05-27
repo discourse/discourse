@@ -18,6 +18,7 @@ class Plugin::CustomEmoji
   def self.clear_cache
     @@cache_key = CACHE_KEY
     @@emojis = {}
+    @@translations = {}
   end
 
   def self.register(name, url, group = Emoji::DEFAULT_GROUP)

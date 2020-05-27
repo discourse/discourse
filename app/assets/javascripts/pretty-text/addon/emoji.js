@@ -98,13 +98,18 @@ export function performEmojiUnescape(string, opts) {
 
   const inlineEmoji = opts.inlineEmoji;
   const regexp = unicodeRegexp(inlineEmoji);
+  const allTranslations = Object.assign(
+    {},
+    translations,
+    opts.customEmojiTranslation || {}
+  );
 
   return string.replace(regexp, (m, index) => {
-    const isEmoticon = opts.enableEmojiShortcuts && !!translations[m];
+    const isEmoticon = opts.enableEmojiShortcuts && !!allTranslations[m];
     const isUnicodeEmoticon = !!replacements[m];
     let emojiVal;
     if (isEmoticon) {
-      emojiVal = translations[m];
+      emojiVal = allTranslations[m];
     } else if (isUnicodeEmoticon) {
       emojiVal = replacements[m];
     } else {
@@ -131,11 +136,16 @@ export function performEmojiUnescape(string, opts) {
 export function performEmojiEscape(string, opts) {
   const inlineEmoji = opts.inlineEmoji;
   const regexp = unicodeRegexp(inlineEmoji);
+  const allTranslations = Object.assign(
+    {},
+    translations,
+    opts.customEmojiTranslation || {}
+  );
 
   return string.replace(regexp, (m, index) => {
     if (isReplacableInlineEmoji(string, index, inlineEmoji)) {
-      if (!!translations[m]) {
-        return opts.emojiShortcuts ? `:${translations[m]}:` : m;
+      if (!!allTranslations[m]) {
+        return opts.emojiShortcuts ? `:${allTranslations[m]}:` : m;
       } else if (!!replacements[m]) {
         return `:${replacements[m]}:`;
       }
