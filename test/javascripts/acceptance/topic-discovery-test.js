@@ -1,6 +1,4 @@
 import { acceptance } from "helpers/qunit-helpers";
-import MessageBus from "message-bus-client";
-
 acceptance("Topic Discovery", {
   settings: {
     show_pinned_excerpt_desktop: true
@@ -87,7 +85,7 @@ QUnit.test("Live update unread state", async assert => {
   );
 
   // Mimic a messagebus message
-  MessageBus.callbacks.filterBy("channel", "/latest").map(c =>
+  window.MessageBus.callbacks.filterBy("channel", "/latest").map(c =>
     c.func({
       message_type: "read",
       topic_id: 11995,
