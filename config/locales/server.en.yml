@@ -3738,6 +3738,9 @@ en:
 
         If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
 
+  page_forbidden:
+    title: "Oops! That page is private."
+
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"

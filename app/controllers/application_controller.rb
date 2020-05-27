@@ -245,12 +245,20 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
-    error_page_opts = {
-      title: opts[:custom_message_translated] || I18n.t(opts[:custom_message] || "page_not_found.title"),
-      status: status_code,
-      group: opts[:group]
-    }
+    if opts[:custom_message_translated]
+      title = message = opts[:custom_message_translated]
+    elsif opts[:custom_message]
+      title = message = I18n.t(opts[:custom_message])
+    else
+      message = I18n.t(type)
+      if status_code == 403
+        title = I18n.t("page_forbidden.title")
+      else
+        title = I18n.t("page_not_found.title")
+      end
+    end
+
+    error_page_opts = { title: title, status: status_code, group: opts[:group] }
 
     if show_json_errors
       opts = { type: type, status: status_code }
