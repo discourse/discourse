@@ -1,4 +1,4 @@
-import { alias, match, gt, or } from "@ember/object/computed";
+import { alias, match, gt } from "@ember/object/computed";
 import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
