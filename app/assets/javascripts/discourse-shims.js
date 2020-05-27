@@ -12,3 +12,7 @@ define("ember", ["exports"], function(__exports__) {
 
   __exports__.default = Ember;
 });
+
+define("message-bus-client", ["exports"], function(__exports__) {
+  __exports__.default = window.MessageBus;
+});
