@@ -1040,6 +1040,17 @@ describe PrettyText do
     end
   end
 
+  describe "custom emoji translation" do
+    before do
+      plugin = Plugin::Instance.new
+      plugin.translate_emoji "0:)", "otter"
+    end
+
+    it "sets the custom translation" do
+      expect(PrettyText.cook("hello 0:)")).to match(/otter/)
+    end
+  end
+
   it "replaces skin toned emoji" do
     expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
     expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
