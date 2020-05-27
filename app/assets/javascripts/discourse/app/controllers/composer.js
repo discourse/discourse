@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
-import { debounce } from "@ember/runloop";
+import { cancel, debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -982,6 +982,10 @@ export default Controller.extend({
         this.send("clearTopicDraft");
       }
 
+      if (this._saveDraftPromise) {
+        return this._saveDraftPromise.then(() => this.destroyDraft());
+      }
+
       return Draft.clear(key, this.get("model.draftSequence")).then(() =>
         this.appEvents.trigger("draft:destroyed", key)
       );
@@ -1027,6 +1031,10 @@ export default Controller.extend({
 
   cancelComposer(differentDraft = false) {
     this.skipAutoSave = true;
+
+    if (this._saveDraftDebounce) {
+      cancel(this._saveDraftDebounce);
+    }
 
     const keyPrefix =
       this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
@@ -1102,11 +1110,12 @@ export default Controller.extend({
         // in test debounce is Ember.run, this will cause
         // an infinite loop
         if (ENV.environment !== "test") {
-          debounce(this, this._saveDraft, 2000);
+          this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
         }
       } else {
-        model.saveDraft().finally(() => {
+        this._saveDraftPromise = model.saveDraft().finally(() => {
           this._lastDraftSaved = Date.now();
+          this._saveDraftPromise = null;
         });
       }
     }
@@ -1127,7 +1136,7 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        debounce(this, this._saveDraft, 2000);
+        this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
       }
     }
   },
