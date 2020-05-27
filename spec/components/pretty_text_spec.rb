@@ -7,9 +7,6 @@ describe PrettyText do
 
   before do
     SiteSetting.enable_markdown_typographer = false
-
-    plugin = Plugin::Instance.new
-    plugin.translate_emoji "0:)", "otter"
   end
 
   def n(html)
@@ -1045,8 +1042,11 @@ describe PrettyText do
 
   describe "custom emoji translation" do
     before do
+      SiteSetting.enable_emoji = true
       SiteSetting.enable_emoji_shortcuts = true
-      SiteSetting.enable_emoji_shortcuts = true
+
+      plugin = Plugin::Instance.new
+      plugin.translate_emoji "0:)", "otter"
     end
 
     it "sets the custom translation" do
