@@ -27,11 +27,6 @@ export default Component.extend(CardContentsBase, CleansUp, {
   viewingTopic: match("currentPath", /^topic\./),
 
   showMoreMembers: gt("moreMembersCount", 0),
-  hasMembersOrIsMember: or(
-    "group.members",
-    "group.is_group_owner_display",
-    "group.is_group_user"
-  ),
 
   group: null,
 
