@@ -319,7 +319,30 @@ module Jobs
           klass.new.perform(opts)
         end
       else
-        klass.new.perform(opts)
+        # Run the job synchronously
+        # But never run a job inside another job
+        # That could cause deadlocks during test runs
+        queue = Thread.current[:discourse_nested_job_queue]
+        outermost_job = !queue
+
+        if outermost_job
+          queue = Queue.new
+          Thread.current[:discourse_nested_job_queue] = queue
+        end
+
+        queue.push([klass, opts])
+
+        if outermost_job
+          # responsible for executing the queue
+          begin
+            until queue.empty?
+              queued_klass, queued_opts = queue.pop(true)
+              queued_klass.new.perform(queued_opts)
+            end
+          ensure
+            Thread.current[:discourse_nested_job_queue] = nil
+          end
+        end
       end
     end
 
