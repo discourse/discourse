@@ -1042,7 +1042,7 @@ describe PrettyText do
 
   describe "custom emoji translation" do
     before do
-      PrettyText.v8.eval("__resetTranslationTree()")
+      PrettyText.reset_translations
 
       SiteSetting.enable_emoji = true
       SiteSetting.enable_emoji_shortcuts = true
@@ -1053,7 +1053,7 @@ describe PrettyText do
 
     after do
       Plugin::CustomEmoji.clear_cache
-      PrettyText.v8.eval("__resetTranslationTree()")
+      PrettyText.reset_translations
     end
 
     it "sets the custom translation" do

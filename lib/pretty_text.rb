@@ -126,6 +126,10 @@ module PrettyText
     @ctx
   end
 
+  def self.reset_translations
+    v8.eval("__resetTranslationTree()")
+  end
+
   def self.reset_context
     @ctx_init.synchronize do
       @ctx&.dispose
