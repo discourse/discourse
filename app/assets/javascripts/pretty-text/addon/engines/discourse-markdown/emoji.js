@@ -5,6 +5,10 @@ const MAX_NAME_LENGTH = 60;
 
 let translationTree = null;
 
+export function resetTranslationTree() {
+  translationTree = null;
+}
+
 // This allows us to efficiently search for aliases
 // We build a data structure that allows us to quickly
 // search through our N next chars to see if any match

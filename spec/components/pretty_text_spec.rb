@@ -1042,11 +1042,18 @@ describe PrettyText do
 
   describe "custom emoji translation" do
     before do
+      PrettyText.v8.eval("__resetTranslationTree()")
+
       SiteSetting.enable_emoji = true
       SiteSetting.enable_emoji_shortcuts = true
 
       plugin = Plugin::Instance.new
       plugin.translate_emoji "0:)", "otter"
+    end
+
+    after do
+      Plugin::CustomEmoji.clear_cache
+      PrettyText.v8.eval("__resetTranslationTree()")
     end
 
     it "sets the custom translation" do
