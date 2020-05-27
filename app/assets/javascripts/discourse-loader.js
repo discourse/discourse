@@ -29,6 +29,7 @@ var define, requirejs;
         inject: Ember.inject.controller
       },
       "@ember/debug": {
+        isTesting: () => Ember.testing,
         warn: Ember.warn
       },
       "@ember/object": {
