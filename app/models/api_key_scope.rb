@@ -38,3 +38,20 @@ class ApiKeyScope < ActiveRecord::Base
     !parts.empty? && parts.last =~ /\A\d+\Z/ ? parts.pop : nil
   end
 end
+
+# == Schema Information
+#
+# Table name: api_key_scopes
+#
+#  id                 :bigint           not null, primary key
+#  api_key_id         :integer          not null
+#  resource           :string           not null
+#  action             :string           not null
+#  allowed_parameters :json
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+# Indexes
+#
+#  index_api_key_scopes_on_api_key_id  (api_key_id)
+#
