@@ -29,4 +29,3 @@
 //= require virtual-dom
 //= require virtual-dom-amd
 //= require intersection-observer
-//= require discourse-shims

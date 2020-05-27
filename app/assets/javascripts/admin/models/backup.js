@@ -2,7 +2,6 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import EmberObject from "@ember/object";
-import MessageBus from "message-bus-client";
 
 const Backup = EmberObject.extend({
   destroy() {
@@ -12,7 +11,7 @@ const Backup = EmberObject.extend({
   restore() {
     return ajax("/admin/backups/" + this.filename + "/restore", {
       type: "POST",
-      data: { client_id: MessageBus.clientId }
+      data: { client_id: window.MessageBus.clientId }
     });
   }
 });
@@ -39,7 +38,7 @@ Backup.reopenClass({
       type: "POST",
       data: {
         with_uploads: withUploads,
-        client_id: MessageBus.clientId
+        client_id: window.MessageBus.clientId
       }
     }).then(result => {
       if (!result.success) {
