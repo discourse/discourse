@@ -89,7 +89,7 @@ QUnit.test(
 
 acceptance("User Card", { loggedIn: true });
 
-QUnit.test("user card", async assert => {
+QUnit.skip("user card", async assert => {
   await visit("/t/internationalization-localization/280");
   assert.ok(invisible(".user-card"), "user card is invisible by default");
 
