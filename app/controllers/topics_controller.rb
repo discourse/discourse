@@ -946,6 +946,16 @@ class TopicsController < ApplicationController
   end
 
   def redirect_to_correct_topic(topic, post_number = nil)
+    begin
+      guardian.ensure_can_see!(topic)
+    rescue Discourse::InvalidAccess => ex
+      if !SiteSetting.detailed_404
+        raise Discourse::NotFound
+      else
+        raise ex
+      end
+    end
+
     url = topic.relative_url
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
