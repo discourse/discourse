@@ -1043,8 +1043,8 @@ export default Controller.extend({
               if (differentDraft) {
                 this.model.clearState();
                 this.close();
-                resolve();
               }
+              resolve();
             }
           },
           {
@@ -1052,22 +1052,30 @@ export default Controller.extend({
             class: "btn-danger",
             callback: result => {
               if (result) {
-                this.destroyDraft().then(() => {
-                  this.model.clearState();
-                  this.close();
-                  resolve();
-                });
+                this.destroyDraft()
+                  .then(() => {
+                    this.model.clearState();
+                    this.close();
+                  })
+                  .finally(() => {
+                    resolve();
+                  });
+              } else {
+                resolve();
               }
             }
           }
         ]);
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
-        this.destroyDraft().then(() => {
-          this.model.clearState();
-          this.close();
-          resolve();
-        });
+        this.destroyDraft()
+          .then(() => {
+            this.model.clearState();
+            this.close();
+          })
+          .finally(() => {
+            resolve();
+          });
       }
     });
 
