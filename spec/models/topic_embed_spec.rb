@@ -149,6 +149,7 @@ describe TopicEmbed do
       before do
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
+        stub_request(:head, url)
       end
 
       it "doesn't scrub the title by default" do
@@ -177,6 +178,7 @@ describe TopicEmbed do
         SiteSetting.embed_classname_whitelist = 'emoji, foo'
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
+        stub_request(:head, url)
         response = TopicEmbed.find_remote(url)
       end
 
@@ -213,6 +215,7 @@ describe TopicEmbed do
       before(:each) do
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
+        stub_request(:head, url)
         response = TopicEmbed.find_remote(url)
       end
 
@@ -235,6 +238,7 @@ describe TopicEmbed do
         SiteSetting.embed_classname_whitelist = ''
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
+        stub_request(:head, url)
         response = TopicEmbed.find_remote(url)
       end
 
@@ -262,9 +266,8 @@ describe TopicEmbed do
       let!(:file) { StringIO.new }
 
       before do
-        file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open)
-          .with('http://eviltrout.com/test/%D9%85%D8%A7%D9%87%DB%8C', allow_redirections: :safe).returns file
+        stub_request(:head, url)
+        stub_request(:get, url).to_return(body: contents).then.to_raise
       end
 
       it "doesn't throw an error" do
@@ -280,9 +283,8 @@ describe TopicEmbed do
       let!(:file) { StringIO.new }
 
       before do
-        file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open)
-          .with('http://example.com/hello%20world', allow_redirections: :safe).returns file
+        stub_request(:head, url)
+        stub_request(:get, url).to_return(body: contents).then.to_raise
       end
 
       it "doesn't throw an error" do
@@ -293,7 +295,6 @@ describe TopicEmbed do
 
     context "non-http URL" do
       let(:url) { '/test.txt' }
-
       it "throws an error" do
         expect { TopicEmbed.find_remote(url) }.to raise_error(URI::InvalidURIError)
       end
@@ -311,6 +312,7 @@ describe TopicEmbed do
       end
 
       it "handles mailto links" do
+        stub_request(:head, url)
         response = TopicEmbed.find_remote(url)
         expect(response.body).to have_tag('a', with: { href: 'mailto:foo%40example.com' })
         expect(response.body).to have_tag('a', with: { href: 'mailto:bar@example.com' })
