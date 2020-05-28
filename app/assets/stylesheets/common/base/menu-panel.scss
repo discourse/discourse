@@ -76,6 +76,10 @@
         background-color: $highlight-medium;
         outline: none;
       }
+
+      .d-icon {
+        color: $primary-medium;
+      }
     }
 
     .new {
@@ -164,6 +168,7 @@
     .icon {
       color: $primary-high;
     }
+
     li {
       background-color: $tertiary-low;
 
@@ -185,7 +190,6 @@
 
       a {
         padding: 0;
-        color: $primary;
 
         > div {
           overflow: hidden; // clears the text from wrapping below icons
@@ -252,6 +256,18 @@
     }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
+
+    &.quick-access-profile {
+      li:not(.show-all) a {
+        color: $primary;
+        .d-icon {
+          color: $primary-medium;
+        }
+
+        // accounts for menu "ears" 4px + border 1px
+        padding: 0.25em calc(0.5em + 4px + 1px);
+      }
+    }
   }
 
   .dismiss-link {
