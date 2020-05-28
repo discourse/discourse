@@ -60,14 +60,6 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  BASE_COMPILER_VERSION = 16
-  DEPENDENT_CONSTANTS = [
-    BASE_COMPILER_VERSION,
-    Ember::VERSION,
-    GlobalSetting.cdn_url
-  ]
-  COMPILER_VERSION = Digest::SHA1.hexdigest(DEPENDENT_CONSTANTS.join)
-
   belongs_to :theme
 
   def process_html(html)
@@ -311,18 +303,18 @@ class ThemeField < ActiveRecord::Base
   end
 
   def ensure_baked!
-    needs_baking = !self.value_baked || compiler_version != COMPILER_VERSION
+    needs_baking = !self.value_baked || compiler_version != Theme.compiler_version
     return unless needs_baking
 
     if basic_html_field? || translation_field?
       self.value_baked, self.error = translation_field? ? process_translation : process_html(self.value)
       self.error = nil unless self.error.present?
-      self.compiler_version = COMPILER_VERSION
+      self.compiler_version = Theme.compiler_version
       DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
     elsif extra_js_field?
       self.value_baked, self.error = process_extra_js(self.value)
       self.error = nil unless self.error.present?
-      self.compiler_version = COMPILER_VERSION
+      self.compiler_version = Theme.compiler_version
     elsif basic_scss_field?
       ensure_scss_compiles!
       DB.after_commit { Stylesheet::Manager.clear_theme_cache! }
@@ -332,12 +324,12 @@ class ThemeField < ActiveRecord::Base
       DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
       DB.after_commit { SvgSprite.expire_cache }
       self.value_baked = "baked"
-      self.compiler_version = COMPILER_VERSION
+      self.compiler_version = Theme.compiler_version
     elsif svg_sprite_field?
       DB.after_commit { SvgSprite.expire_cache }
       self.error = nil
       self.value_baked = "baked"
-      self.compiler_version = COMPILER_VERSION
+      self.compiler_version = Theme.compiler_version
     end
 
     if self.will_save_change_to_value_baked? ||
@@ -370,7 +362,7 @@ class ThemeField < ActiveRecord::Base
     rescue SassC::SyntaxError => e
       self.error = e.message unless self.destroyed?
     end
-    self.compiler_version = COMPILER_VERSION
+    self.compiler_version = Theme.compiler_version
     self.value_baked = Digest::SHA1.hexdigest(result.join(",")) # We don't use the compiled CSS here, we just use it to invalidate the stylesheet cache
   end
 
