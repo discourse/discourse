@@ -27,8 +27,8 @@ require_relative '../lib/discourse_plugin_registry'
 
 require_relative '../lib/plugin_gem'
 
-if ENV['RAILS_FAILOVER']
-  require 'rails_failover'
+if ENV['ACTIVE_RECORD_RAILS_FAILOVER']
+  require 'rails_failover/active_record'
 end
 
 # Global config

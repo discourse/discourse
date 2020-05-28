@@ -249,4 +249,4 @@ gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
 
-gem 'rails_failover', require: false
+gem 'rails_failover', require: false, git: 'https://github.com/discourse/rails_failover'
