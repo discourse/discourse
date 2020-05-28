@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/discourse/rails_failover
+  revision: ba904987444b96a3fb627ed0b145059ff9f1cf6c
+  specs:
+    rails_failover (0.4.0)
+      activerecord (~> 6.0)
+      listen (~> 3.2)
+      railties (~> 6.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -277,8 +286,6 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
-    rails_failover (0.2.0)
-      redis (~> 4)
     rails_multisite (2.1.2)
       activerecord (> 5.0, < 7)
       railties (> 5.0, < 7)
@@ -514,7 +521,7 @@ DEPENDENCIES
   rack (= 2.2.2)
   rack-mini-profiler
   rack-protection
-  rails_failover
+  rails_failover!
   rails_multisite
   railties (= 6.0.3)
   rake
