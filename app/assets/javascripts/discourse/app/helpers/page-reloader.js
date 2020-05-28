@@ -1,9 +1,9 @@
 import EmberObject from "@ember/object";
-import { isTesting } from "@ember/debug";
+import Ember from "ember";
 
 export default EmberObject.create({
-  reload() {
-    if (!isTesting()) {
+  reload: function() {
+    if (!Ember.testing) {
       location.reload();
     }
   }
