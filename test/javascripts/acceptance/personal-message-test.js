@@ -24,17 +24,3 @@ QUnit.test("suggested messages", async assert => {
     I18n.t("suggested_topics.pm_title")
   );
 });
-
-acceptance("Personal Message Tagging", {
-  loggedIn: true,
-  site: { can_tag_pms: true }
-});
-
-QUnit.test("show footer edit button", async assert => {
-  await visit("/t/pm-for-testing/12");
-
-  assert.ok(
-    exists(".edit-message"),
-    "shows edit first post button on footer when PM tagging is enabled"
-  );
-});
