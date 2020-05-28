@@ -10,9 +10,13 @@
       }
 
       .future-date-input-selector-datetime {
-        color: lighten($primary, 40%);
-        margin-left: 5px;
+        color: $primary-medium;
+        margin-left: auto;
         white-space: nowrap;
+
+        + svg {
+          margin-left: 0.25em;
+        }
       }
 
       .future-date-input-selector-icons {
