@@ -22,6 +22,8 @@ export default Component.extend(UtilsMixin, {
 
     // we can't listen on `item.nameProperty` given it's variable
     this.setProperties({
+      headerLabel: this.getProperty(this.item, "labelProperty"),
+      headerTitle: this.getProperty(this.item, "titleProperty"),
       name: this.getName(this.item),
       value:
         this.item === this.selectKit.noneItem ? null : this.getValue(this.item)
@@ -38,12 +40,22 @@ export default Component.extend(UtilsMixin, {
     return String(this.title).replace("&hellip;", "");
   }),
 
-  title: computed("item", function() {
-    return this._safeProperty("title", this.item) || this.name || "";
+  title: computed("headerTitle", "item", function() {
+    return (
+      this.headerTitle ||
+      this._safeProperty("title", this.item) ||
+      this.name ||
+      ""
+    );
   }),
 
-  label: computed("title", "name", function() {
-    return this._safeProperty("label", this.item) || this.title || this.name;
+  label: computed("headerLabel", "title", "name", function() {
+    return (
+      this.headerLabel ||
+      this._safeProperty("label", this.item) ||
+      this.title ||
+      this.name
+    );
   }),
 
   icons: computed("item.{icon,icons}", function() {
