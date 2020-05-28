@@ -311,7 +311,8 @@ describe PostMover do
             expect(small_action.topic_id).to eq(topic.id)
             expect(hidden_small_action.topic_id).to eq(topic.id)
 
-            moderator_post = topic.posts.last
+            # Moderator post is inserted where the first post was
+            moderator_post = topic.posts.find_by(post_number: p2.post_number)
             expect(moderator_post.raw).to include("2 posts were split")
           end
 
