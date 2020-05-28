@@ -404,7 +404,7 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countNew(categoryId) {
+  getNew(categoryId) {
     const subcategoryIds = this.getSubCategoryIds(categoryId);
     return _.chain(this.states)
       .filter(isNew)
@@ -414,10 +414,14 @@ const TopicTrackingState = EmberObject.extend({
           !topic.deleted &&
           (!categoryId || subcategoryIds.has(topic.category_id))
       )
-      .value().length;
+      .value();
   },
 
-  countUnread(categoryId) {
+  countNew(categoryId) {
+    this.getNew(categoryId).length;
+  },
+
+  getUnread(categoryId) {
     const subcategoryIds = this.getSubCategoryIds(categoryId);
     return _.chain(this.states)
       .filter(isUnread)
@@ -427,7 +431,11 @@ const TopicTrackingState = EmberObject.extend({
           !topic.deleted &&
           (!categoryId || subcategoryIds.has(topic.category_id))
       )
-      .value().length;
+      .value();
+  },
+
+  countUnread(categoryId) {
+    this.getUnread(categoryId).length;
   },
 
   countCategory(category_id) {
