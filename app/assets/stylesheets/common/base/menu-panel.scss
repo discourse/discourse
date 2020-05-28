@@ -279,8 +279,8 @@ div.menu-links-header {
 
         a {
           // Expand the click area a bit.
-          padding-left: 0.6em;
-          padding-right: 0.6em;
+          padding-left: 0.55em;
+          padding-right: 0.55em;
         }
       }
 
@@ -327,7 +327,7 @@ div.menu-links-header {
     align-items: center;
     display: flex;
     margin: -0.5em 0;
-    max-width: 130px;
+    max-width: 120px;
 
     // `overflow: hidden` on `.user-activity-link` would hide the `::after`
     // pseudo element (used to create the tab-looking effect). Sets `overflow:
