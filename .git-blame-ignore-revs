@@ -11,23 +11,11 @@ dafd3c3b47f116c6c1dc56cb18df614c11747733
 # Rename many `.js.es6` files to `.js`
 032205e2029cbf82dc8f05b459fb93adf2503c60
 
-# Rename admin app es6 -> js
-181758e3248b14ad8b53abe063da8dc6a82d3089
-
 # Rename pretty-text from es6 -> js
 c15056650647e8650288f973d9038500dc9cf7bb
 
-# Rename select kit from es6 -> js
-acc5cbdf8ecb9293a0fa9474ee73baf499c02428
-
 # Rename wizard from es6 -> js
 1ac02422011f89716ab27250d39b0e0212e03892
-
-# Rename some root files
-11938d58d4b1bea1ff43306450da7b24f05db0a
-
-# The last remaining ES6
-aabeb17aab4e73de5ef56753ab22ef5d416d2932
 
 # DEV: enforces block-indentation of ember-template-lint rules
 b66b277dc44bcd2122dc21965dab209c30636214
