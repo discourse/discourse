@@ -9,7 +9,6 @@ class TopicTrackingState
 
   include ActiveModel::SerializerSupport
 
-  CHANNEL = "/user-tracking"
   UNREAD_MESSAGE_TYPE = "unread"
   LATEST_MESSAGE_TYPE = "latest"
   MUTED_MESSAGE_TYPE = "muted"
