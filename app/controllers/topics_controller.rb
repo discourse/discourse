@@ -87,11 +87,7 @@ class TopicsController < ApplicationController
 
       raise ex
     rescue Discourse::NotLoggedIn => ex
-      if !SiteSetting.detailed_404
-        raise Discourse::NotFound
-      else
-        raise ex
-      end
+      raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     rescue Discourse::InvalidAccess => ex
       # If the user can't see the topic, clean up notifications for it.
       Notification.remove_for(current_user.id, params[:topic_id]) if current_user
@@ -948,11 +944,7 @@ class TopicsController < ApplicationController
     begin
       guardian.ensure_can_see!(topic)
     rescue Discourse::InvalidAccess => ex
-      if !SiteSetting.detailed_404
-        raise Discourse::NotFound
-      else
-        raise ex
-      end
+      raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     end
 
     url = topic.relative_url
