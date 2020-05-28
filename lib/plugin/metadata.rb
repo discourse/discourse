@@ -75,7 +75,8 @@ class Plugin::Metadata
     "lazy-yt",
     "poll",
     "discourse-unsupported-browser",
-    "discourse-fontawesome-pro"
+    "discourse-fontawesome-pro",
+    "discourse-staff-alias",
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version, :transpile_js]
