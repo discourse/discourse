@@ -85,7 +85,7 @@ module FlagQuery
         action[:name_key] = PostActionType.types.key(rs.reviewable_score_type)
 
         if rs.meta_topic.present?
-          meta_posts = rs.meta_topic.ordered_posts
+          meta_posts = rs.meta_topic.posts
 
           conversation = {}
           if response = meta_posts[0]

@@ -313,7 +313,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
     # update sort_order and flip post_number to prevent
     # unique constraint violations when updating post_number
     builder = DB.build(<<~SQL)
-      WITH ordered_posts AS (
+      WITH posts AS (
           SELECT
             id,
             ROW_NUMBER()
@@ -326,7 +326,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
       UPDATE posts AS p
       SET sort_order = o.new_post_number,
         post_number  = p.post_number * -1
-      FROM ordered_posts AS o
+      FROM posts AS o
       WHERE p.id = o.id AND
             p.post_number <> o.new_post_number
     SQL

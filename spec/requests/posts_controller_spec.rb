@@ -390,7 +390,7 @@ describe PostsController do
       end
 
       it "doesn't allow updating of deleted posts" do
-        first_post = post.topic.ordered_posts.first
+        first_post = post.topic.posts.first
         PostDestroyer.new(moderator, first_post).destroy
 
         put "/posts/#{first_post.id}.json", params: update_params
@@ -404,7 +404,7 @@ describe PostsController do
       end
 
       it "supports updating posts in deleted topics" do
-        first_post = post.topic.ordered_posts.first
+        first_post = post.topic.posts.first
         PostDestroyer.new(moderator, first_post).destroy
 
         put "/posts/#{first_post.id}.json", params: update_params
@@ -1444,7 +1444,7 @@ describe PostsController do
       end
 
       it "supports reverting posts in deleted topics" do
-        first_post = post.topic.ordered_posts.first
+        first_post = post.topic.posts.first
         PostDestroyer.new(moderator, first_post).destroy
 
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"

@@ -238,7 +238,7 @@ module Oneboxer
 
     post = post_number > 1 ?
       topic.posts.where(post_number: post_number).first :
-      topic.ordered_posts.first
+      topic.posts.first
 
     return if !post || post.hidden || !allowed_post_types.include?(post.post_type)
 

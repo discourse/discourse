@@ -107,7 +107,7 @@ module ImportExport
           existing_categories << { category_id: category.id, value: import_id }
 
           if cat_attrs[:description].present?
-            post = category.topic.ordered_posts.first
+            post = category.topic.posts.first
             post.raw = cat_attrs[:description]
             post.skip_validation = true
             post.save!

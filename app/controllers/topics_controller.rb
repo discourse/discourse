@@ -370,7 +370,7 @@ class TopicsController < ApplicationController
     success = true
 
     if changes.length > 0
-      first_post = topic.ordered_posts.first
+      first_post = topic.posts.first
       success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
 
       if !success && topic.errors.blank?
@@ -546,7 +546,7 @@ class TopicsController < ApplicationController
 
   def bookmark
     topic = Topic.find(params[:topic_id].to_i)
-    first_post = topic.ordered_posts.first
+    first_post = topic.posts.first
 
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark_manager.create(post_id: first_post.id)
@@ -562,7 +562,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_delete!(topic)
 
-    first_post = topic.ordered_posts.first
+    first_post = topic.posts.first
     PostDestroyer.new(current_user, first_post, context: params[:context]).destroy
 
     render body: nil

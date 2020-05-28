@@ -140,7 +140,7 @@ class TopicsBulkAction
   def delete
     topics.each do |t|
       if guardian.can_delete?(t)
-        post = t.ordered_posts.first
+        post = t.posts.first
         PostDestroyer.new(@user, post).destroy if post
       end
     end

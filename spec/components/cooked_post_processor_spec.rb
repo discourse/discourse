@@ -1758,7 +1758,7 @@ describe CookedPostProcessor do
         topic.bumped_at = 1.day.ago
         CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
 
-        expect(topic.ordered_posts.pluck(:id))
+        expect(topic.posts.pluck(:id))
           .to eq([post.id, hidden.id, small_action.id, reply.id])
 
         expect(topic.bumped_at).to eq_time(1.day.ago)
@@ -1772,14 +1772,14 @@ describe CookedPostProcessor do
     it 'does nothing if there are multiple quotes' do
       reply = Fabricate(:post, topic: topic, raw: raw3)
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
-      expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
+      expect(topic.posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw3)
     end
 
     it 'does not delete quote if not first paragraph' do
       reply = Fabricate(:post, topic: topic, raw: raw2)
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
-      expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
+      expect(topic.posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
     end
 

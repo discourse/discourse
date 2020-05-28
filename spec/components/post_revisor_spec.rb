@@ -531,7 +531,7 @@ describe PostRevisor do
       let!(:post) { Fabricate(:post, topic: topic) }
 
       it "should publish topic changes to clients" do
-        revisor = PostRevisor.new(topic.ordered_posts.first, topic)
+        revisor = PostRevisor.new(topic.posts.first, topic)
 
         message = MessageBus.track_publish("/topic/#{topic.id}") do
           revisor.revise!(newuser, title: 'this is a test topic')

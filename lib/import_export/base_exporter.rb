@@ -117,7 +117,7 @@ module ImportExport
 
         topic_data[:posts] = []
 
-        topic.ordered_posts.find_each do |post|
+        topic.posts.find_each do |post|
           attributes = POST_ATTRS.inject({}) do |h, a|
             h[a] = post.public_send(a)
             h

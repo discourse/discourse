@@ -115,7 +115,7 @@ module TopicGuardian
     if is_staff?
       !!(topic && topic.deleted_at)
     else
-      topic && can_recover_post?(topic.ordered_posts.first)
+      topic && can_recover_post?(topic.posts.first)
     end
   end
 

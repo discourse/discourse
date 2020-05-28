@@ -972,7 +972,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
           end.to change { Post.count }.by(2)
 
-          new_post = topic.ordered_posts.last(2).first
+          new_post = topic.posts.last(2).first
 
           expect(new_post.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.search.reply',

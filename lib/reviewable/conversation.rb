@@ -33,7 +33,7 @@ class Reviewable < ActiveRecord::Base
       @permalink = "#{Discourse.base_url_no_prefix}#{meta_topic.relative_url}"
       @posts = []
 
-      meta_posts = meta_topic.ordered_posts.where(post_type: ::Post.types[:regular]).limit(2)
+      meta_posts = meta_topic.posts.where(post_type: ::Post.types[:regular]).limit(2)
 
       @conversation_posts = meta_posts.map { |mp| Reviewable::Conversation::Post.new(mp) }
       @has_more = meta_topic.posts_count > 2

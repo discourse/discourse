@@ -179,9 +179,12 @@ class Topic < ActiveRecord::Base
 
   belongs_to :category
   has_many :category_users, through: :category
-  has_many :posts
+  has_many :posts, -> { order(post_number: :asc) }, class_name: "Post"
+  has_many :ordered_posts, -> {
+    Discourse.deprecate(":ordered_posts is deprecated please use :posts instead", output_in_test: true)
+    order(post_number: :asc)
+  }, class_name: "Post"
   has_many :bookmarks
-  has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
   has_many :topic_allowed_groups
 
@@ -802,7 +805,7 @@ class Topic < ActiveRecord::Base
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
 
-        if post = self.ordered_posts.first
+        if post = self.posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
           DB.after_commit do
             Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
@@ -1088,7 +1091,7 @@ class Topic < ActiveRecord::Base
   end
 
   def banner
-    post = self.ordered_posts.first
+    post = self.posts.first
 
     {
       html: post.cooked,
@@ -1250,13 +1253,13 @@ class Topic < ActiveRecord::Base
 
     if topic_timer.based_on_last_post
       if duration > 0
-        last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
+        last_post_created_at = self.posts.last.present? ? self.posts.last.created_at : time_now
         topic_timer.execute_at = last_post_created_at + duration.hours
         topic_timer.created_at = last_post_created_at
       end
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
       if duration > 0
-        first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
+        first_reply_created_at = (self.posts.where("post_number > 1").minimum(:created_at) || time_now)
         topic_timer.execute_at = first_reply_created_at + duration.days
         topic_timer.created_at = first_reply_created_at
       end
@@ -1519,7 +1522,7 @@ class Topic < ActiveRecord::Base
   end
 
   def reset_bumped_at
-    post = ordered_posts.where(
+    post = posts.where(
       user_deleted: false,
       hidden: false,
       post_type: Post.types[:regular]

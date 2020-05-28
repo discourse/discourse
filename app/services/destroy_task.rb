@@ -18,9 +18,9 @@ class DestroyTask
     @io.puts "There are #{topics.count} topics to delete in #{descriptive_slug} category"
     topics.find_each do |topic|
       @io.puts "Deleting #{topic.slug}..."
-      first_post = topic.ordered_posts.first
+      first_post = topic.posts.first
       if first_post.nil?
-        return @io.puts "Topic.ordered_posts.first was nil"
+        return @io.puts "Topic.posts.first was nil"
       end
       @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
     end
@@ -36,8 +36,8 @@ class DestroyTask
     end
     @io.puts "There are #{topics.count} topics to delete in #{c.slug} category"
     topics.find_each do |topic|
-      first_post = topic.ordered_posts.first
-      return @io.puts "Topic.ordered_posts.first was nil for topic: #{topic.id}" if first_post.nil?
+      first_post = topic.posts.first
+      return @io.puts "Topic.posts.first was nil for topic: #{topic.id}" if first_post.nil?
       PostDestroyer.new(Discourse.system_user, first_post).destroy
     end
     topics = Topic.where(category_id: c.id, pinned_at: nil)
@@ -54,7 +54,7 @@ class DestroyTask
   def destroy_private_messages
     Topic.where(archetype: "private_message").find_each do |pm|
       @io.puts "Destroying #{pm.slug} pm"
-      first_post = pm.ordered_posts.first
+      first_post = pm.posts.first
       @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
     end
   end

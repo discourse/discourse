@@ -17,7 +17,7 @@
           <dc:creator><![CDATA[<%= rss_creator(topic.user) -%>]]></dc:creator>
           <category><%= topic.category.name %></category>
           <description><![CDATA[
-            <%- if first_post = topic.ordered_posts.first %>
+            <%- if first_post = topic.posts.first %>
             <%= first_post.cooked.html_safe %>
             <%- end %>
             <p><small><%= t 'rss_num_posts', count: topic.posts_count %> - <%= t 'rss_num_participants', count: topic.participant_count %></small></p>

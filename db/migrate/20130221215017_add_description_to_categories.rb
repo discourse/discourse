@@ -19,7 +19,7 @@ class AddDescriptionToCategories < ActiveRecord::Migration[4.2]
       Discourse.reset_active_record_cache
 
       Category.order('id').each do |c|
-        post = c.topic.ordered_posts.first
+        post = c.topic.posts.first
         PostRevisor.new(post).update_category_description
       end
 

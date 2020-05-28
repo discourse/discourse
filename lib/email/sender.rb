@@ -103,7 +103,7 @@ module Email
         return skip(SkippedEmailLog.reason_types[:sender_topic_deleted]) if topic.blank?
 
         add_attachments(post)
-        first_post = topic.ordered_posts.first
+        first_post = topic.posts.first
 
         topic_message_id = first_post.incoming_email&.message_id.present? ?
           "<#{first_post.incoming_email.message_id}>" :

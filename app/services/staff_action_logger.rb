@@ -82,7 +82,7 @@ class StaffActionLogger
       "title: #{topic.title}"
     ]
 
-    if first_post = topic.ordered_posts.with_deleted.first
+    if first_post = topic.posts.with_deleted.first
       details << "raw: #{first_post.raw}"
     end
 

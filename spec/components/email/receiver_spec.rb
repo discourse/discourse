@@ -443,7 +443,7 @@ describe Email::Receiver do
     it "posts a reply to the topic when the post was deleted" do
       post.update_columns(deleted_at: 1.day.ago)
       expect { process(:reply_user_matching) }.to change { topic.posts.count }
-      expect(topic.ordered_posts.last.reply_to_post_number).to be_nil
+      expect(topic.posts.last.reply_to_post_number).to be_nil
     end
 
     describe 'Unsubscribing via email' do
@@ -796,7 +796,7 @@ describe Email::Receiver do
     it "cap the number of staged users created per email" do
       SiteSetting.maximum_staged_users_per_email = 1
       expect { process(:cc) }.to change(Topic, :count)
-      expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
+      expect(Topic.last.posts[-1].post_type).to eq(Post.types[:moderator_action])
     end
 
     describe "when 'find_related_post_with_key' is disabled" do
@@ -809,11 +809,11 @@ describe Email::Receiver do
           .to change(Topic, :count).by(1) & change(Post, :count).by(3)
 
         topic = Topic.last
-        ordered_posts = topic.ordered_posts
+        posts = topic.posts
 
-        expect(ordered_posts.first.raw).to eq('This is email reply **1**.')
+        expect(posts.first.raw).to eq('This is email reply **1**.')
 
-        ordered_posts[1..-1].each do |post|
+        posts[1..-1].each do |post|
           expect(post.action_code).to eq('invited_user')
           expect(post.user.email).to eq('one@foo.com')
 
@@ -823,7 +823,7 @@ describe Email::Receiver do
 
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1)
         expect { process(:email_reply_3) }.to change { topic.posts.count }.by(1)
-        ordered_posts[1..-1].each(&:trash!)
+        posts[1..-1].each(&:trash!)
         expect { process(:email_reply_4) }.to change { topic.posts.count }.by(1)
       end
     end
