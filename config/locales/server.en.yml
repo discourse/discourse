@@ -1578,7 +1578,7 @@ en:
     moderators_view_emails: "Allow moderators to view user emails"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
-    notify_about_secrets_older_than: "Notify about credentials older than"
+    send_old_credential_reminder_days: "Remind about old credentials after days"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
@@ -4815,10 +4815,12 @@ en:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."
 
   old_keys_reminder:
-    title: "You have %{keys_count} old credentials"
+    title: "Reminder about old credentials"
     body: |
-      We have detected you have the following credentials that are 2 years or older
-
+      Hello! This is a routine yearly security reminder from your Discourse instance.
+      
+      As a courtesy, we wanted to let you know that the following credentials used on your Discourse instance have not been updated in more than two years:
+      
       %{keys}
-
-      These credentials are sensitive and we recommend resetting them every 2 years to avoid impact of any future data breaches
+      
+      No action is required at this time, however, it is considered good security practice to cycle all your important credentials every few years.

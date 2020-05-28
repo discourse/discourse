@@ -1448,14 +1448,9 @@ security:
   allow_embedding_site_in_an_iframe:
     default: false
     hidden: true
-  notify_about_secrets_older_than:
-    default: "2 years"
-    type: enum
-    choices:
-      - never
-      - "1 year"
-      - "2 years"
-      - "3 years"
+  send_old_credential_reminder_days:
+    default: 0
+    hidden: true
 
 onebox:
   enable_flash_video_onebox: false
