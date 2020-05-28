@@ -50,32 +50,30 @@ describe ::Jobs::Base do
   context "with fake jobs" do
     let(:common_state) { [] }
 
-    before do
-      class Jobs::TestJob1 < Jobs::Base
-        def execute(args)
-          @@state << "job_1_executed"
+    let(:test_job_1) {
+      Class.new(Jobs::Base).tap do |klass|
+        state = common_state
+        klass.define_method(:execute) do |args|
+          state << "job_1_executed"
         end
       end
-      Jobs::TestJob1.class_variable_set(:@@state, common_state)
+    }
 
-      class Jobs::TestJob2 < Jobs::Base
-        def execute(args)
-          @@state << "job_2_started"
-          Jobs.enqueue(:test_job_1)
-          @@state << "job_2_finished"
+    let(:test_job_2) {
+      Class.new(Jobs::Base).tap do |klass|
+        state = common_state
+        job_1 = test_job_1
+        klass.define_method(:execute) do |args|
+          state << "job_2_started"
+          Jobs.enqueue(job_1)
+          state << "job_2_finished"
         end
       end
-      Jobs::TestJob2.class_variable_set(:@@state, common_state)
-    end
-
-    after do
-      Jobs.send(:remove_const, :TestJob1)
-      Jobs.send(:remove_const, :TestJob2)
-    end
+    }
 
     it "runs jobs synchronously sequentially in tests" do
       Jobs.run_immediately!
-      Jobs.enqueue(:test_job_2)
+      Jobs.enqueue(test_job_2)
 
       expect(common_state).to eq([
         "job_2_started",

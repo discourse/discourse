@@ -281,8 +281,12 @@ module Jobs
     end
   end
 
-  def self.enqueue(job_name, opts = {})
-    klass = "::Jobs::#{job_name.to_s.camelcase}".constantize
+  def self.enqueue(job, opts = {})
+    if job.instance_of?(Class)
+      klass = job
+    else
+      klass = "::Jobs::#{job.to_s.camelcase}".constantize
+    end
 
     # Unless we want to work on all sites
     unless opts.delete(:all_sites)
