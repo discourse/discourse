@@ -946,7 +946,7 @@ describe Search do
 
   describe 'Advanced search' do
 
-    it 'supports pinned and unpinned' do
+    it 'supports pinned' do
       topic = Fabricate(:topic)
       Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
       _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
@@ -957,11 +957,6 @@ describe Search do
       guardian = Guardian.new(user)
 
       expect(Search.execute('boom in:pinned').posts.length).to eq(1)
-      expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(0)
-
-      topic.clear_pin_for(user)
-
-      expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(1)
     end
 
     it 'supports wiki' do

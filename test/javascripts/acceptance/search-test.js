@@ -135,7 +135,6 @@ QUnit.test("Right filters are shown to anonymous users", async assert => {
 
   assert.ok(inSelector.rowByValue("first").exists());
   assert.ok(inSelector.rowByValue("pinned").exists());
-  assert.ok(inSelector.rowByValue("unpinned").exists());
   assert.ok(inSelector.rowByValue("wiki").exists());
   assert.ok(inSelector.rowByValue("images").exists());
 
@@ -161,7 +160,6 @@ QUnit.test("Right filters are shown to logged-in users", async assert => {
 
   assert.ok(inSelector.rowByValue("first").exists());
   assert.ok(inSelector.rowByValue("pinned").exists());
-  assert.ok(inSelector.rowByValue("unpinned").exists());
   assert.ok(inSelector.rowByValue("wiki").exists());
   assert.ok(inSelector.rowByValue("images").exists());
 

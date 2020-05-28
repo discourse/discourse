@@ -21,7 +21,7 @@ const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
 const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
-const REGEXP_IN_MATCH = /^(in|with):(posted|created|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen|image)/gi;
+const REGEXP_IN_MATCH = /^(in|with):(posted|created|watching|tracking|bookmarks|first|pinned|wiki|unseen|image)/gi;
 const REGEXP_SPECIAL_IN_LIKES_MATCH = /^in:likes/gi;
 const REGEXP_SPECIAL_IN_TITLE_MATCH = /^in:title/gi;
 const REGEXP_SPECIAL_IN_PERSONAL_MATCH = /^in:personal/gi;
@@ -51,7 +51,6 @@ export default Component.extend({
     this.inOptionsForAll = [
       { name: I18n.t("search.advanced.filters.first"), value: "first" },
       { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
-      { name: I18n.t("search.advanced.filters.unpinned"), value: "unpinned" },
       { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
       { name: I18n.t("search.advanced.filters.images"), value: "images" }
     ];
