@@ -7,7 +7,7 @@ module BackupRestore
     def initialize(opts = {})
       @s3_options = S3Helper.s3_options(SiteSetting)
       @s3_options.merge!(opts[:s3_options]) if opts[:s3_options]
-      @s3_helper = S3Helper.new(s3_bucket_name_with_prefix, '', @s3_options)
+      @s3_helper = S3Helper.new(s3_bucket_name_with_prefix, '', @s3_options.clone)
     end
 
     def remote?
@@ -52,7 +52,7 @@ module BackupRestore
     end
 
     def vacate_legacy_prefix
-      legacy_s3_helper = S3Helper.new(s3_bucket_name_with_legacy_prefix, '', @s3_options)
+      legacy_s3_helper = S3Helper.new(s3_bucket_name_with_legacy_prefix, '', @s3_options.clone)
       legacy_keys = legacy_s3_helper.list.map { |o| o.key }
       legacy_keys.each do |legacy_key|
         bucket, prefix = s3_bucket_name_with_prefix.split('/', 2)
@@ -61,7 +61,7 @@ module BackupRestore
           bucket: bucket,
           key: File.join(prefix, legacy_key.split('/').last)
         })
-        legacy_s3_helper.remove(legacy_key, false)
+        legacy_s3_helper.delete_object(legacy_key)
       end
     end
 

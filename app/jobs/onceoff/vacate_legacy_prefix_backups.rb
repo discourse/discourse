@@ -3,7 +3,8 @@
 module Jobs
   class VacateLegacyPrefixBackups < ::Jobs::Onceoff
     def execute_onceoff(args)
-      BackupRestore::S3BackupStore.create.vacate_legacy_prefix if SiteSetting.backup_location == BackupLocationSiteSetting::S3
+      args ||= {}
+      BackupRestore::S3BackupStore.create(s3_options: args[:s3_options]).vacate_legacy_prefix if SiteSetting.backup_location == BackupLocationSiteSetting::S3
     end
   end
 end
