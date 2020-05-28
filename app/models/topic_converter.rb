@@ -63,7 +63,7 @@ class TopicConverter
   private
 
   def posters
-    @posters ||= @topic.posts.distinct.pluck(:user_id).to_a
+    @posters ||= @topic.unordered_posts.distinct.pluck(:user_id).to_a
   end
 
   def update_user_stats

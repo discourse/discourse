@@ -179,6 +179,7 @@ class Topic < ActiveRecord::Base
 
   belongs_to :category
   has_many :category_users, through: :category
+  has_many :unordered_posts, class_name: "Post"
   has_many :posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :ordered_posts, -> {
     Discourse.deprecate(":ordered_posts is deprecated please use :posts instead", output_in_test: true)

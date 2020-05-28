@@ -701,7 +701,7 @@ class TopicView
   end
 
   def unfiltered_posts
-    result = filter_post_types(@topic.posts)
+    result = filter_post_types(@topic.unordered_posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?
     result = result.where("user_id IS NOT NULL") if @exclude_deleted_users
     result = result.where(hidden: false) if @exclude_hidden
