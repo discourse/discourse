@@ -1,4 +1,3 @@
-import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { ButtonClass } from "discourse/widgets/button";
@@ -7,6 +6,20 @@ createWidget(
   "post-admin-menu-button",
   jQuery.extend(ButtonClass, { tagName: "li.btn" })
 );
+
+createWidget("post-admin-menu-button", {
+  tagName: "li",
+
+  html(attrs) {
+    return this.attach("button", {
+      className: attrs.className,
+      action: attrs.action,
+      icon: attrs.icon,
+      label: attrs.label,
+      secondaryAction: attrs.secondaryAction
+    });
+  }
+});
 
 export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (!currentUser) {
@@ -147,7 +160,6 @@ export default createWidget("post-admin-menu", {
 
   html() {
     const contents = [];
-    contents.push(h("h3", I18n.t("admin_title")));
 
     buildManageButtons(this.attrs, this.currentUser, this.siteSettings).forEach(
       b => {
@@ -156,7 +168,7 @@ export default createWidget("post-admin-menu", {
       }
     );
 
-    return contents;
+    return h("ul", contents);
   },
 
   clickOutside() {

@@ -1,26 +1,27 @@
-import I18n from "I18n";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 
 createWidget("admin-menu-button", {
+  tagName: "li",
+
+  buildClasses(attrs) {
+    return attrs.className;
+  },
+
   html(attrs) {
     let className;
     if (attrs.buttonClass) {
       className = attrs.buttonClass;
     }
 
-    return h(
-      "li",
-      { className: attrs.className },
-      this.attach("button", {
-        className,
-        action: attrs.action,
-        url: attrs.url,
-        icon: attrs.icon,
-        label: attrs.fullLabel || `topic.${attrs.label}`,
-        secondaryAction: "hideAdminMenu"
-      })
-    );
+    return this.attach("button", {
+      className,
+      action: attrs.action,
+      url: attrs.url,
+      icon: attrs.icon,
+      label: attrs.fullLabel || `topic.${attrs.label}`,
+      secondaryAction: "hideAdminMenu"
+    });
   }
 });
 
@@ -300,26 +301,13 @@ export default createWidget("topic-admin-menu", {
       this.attrs,
       this.state
     );
-    return [
-      h("div.header", [
-        h("h3", I18n.t("topic.actions.title")),
-        h(
-          "div",
-          this.attach("button", {
-            action: "clickOutside",
-            icon: "times",
-            className: "close-button"
-          })
-        )
-      ]),
-      h(
-        "ul",
-        attrs.actionButtons
-          .concat(extraButtons)
-          .filter(Boolean)
-          .map(b => this.attach("admin-menu-button", b))
-      )
-    ];
+    return h(
+      "ul",
+      attrs.actionButtons
+        .concat(extraButtons)
+        .filter(Boolean)
+        .map(b => this.attach("admin-menu-button", b))
+    );
   },
 
   clickOutside() {

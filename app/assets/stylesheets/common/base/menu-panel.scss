@@ -66,9 +66,11 @@
 .menu-panel {
   li,
   li.heading {
-    a.widget-link {
+    a.widget-link,
+    a.categories-link {
       padding: 0.25em 0.5em;
       display: block;
+      color: $primary;
       &:hover,
       &:focus {
         background-color: $highlight-medium;
@@ -81,11 +83,6 @@
       margin-left: 0.5em;
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
-  }
-
-  .categories-link {
-    display: block;
-    padding: 0.25em 0.5em;
   }
 
   li.category-link {
@@ -101,6 +98,10 @@
       &:hover,
       &:focus {
         background: transparent;
+
+        .category-name {
+          color: $primary;
+        }
       }
     }
     .badge-notification {
@@ -184,6 +185,8 @@
 
       a {
         padding: 0;
+        color: $primary;
+
         > div {
           overflow: hidden; // clears the text from wrapping below icons
           overflow-wrap: anywhere;
@@ -204,11 +207,14 @@
       }
     }
     li:not(.show-all) {
-      padding: 0.25em 0.5em;
+      padding: 0;
+      a {
+        display: flex;
+        align-items: center;
+        padding: 0.25em 0.5em;
+      }
       .d-icon {
-        float: left;
-        margin-right: 5px;
-        padding-top: 0.2em;
+        margin-right: 0.5em;
       }
     }
     .is-warning {
