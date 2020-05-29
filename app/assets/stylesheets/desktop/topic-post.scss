@@ -54,9 +54,9 @@ nav.post-controls {
   padding: 0;
 
   .actions {
-    text-align: right;
-    float: right;
-    display: inline-block;
+    display: flex;
+    justify-content: flex-end;
+
     .more-actions {
       display: none;
       overflow: hidden;
