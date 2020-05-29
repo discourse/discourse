@@ -3,6 +3,7 @@ import { createWidget } from "discourse/widgets/widget";
 import transformPost from "discourse/lib/transform-post";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import { isTesting } from "discourse-common/config/environment";
 
 let transformCallbacks = null;
 export function postTransformCallbacks(transformed) {
@@ -19,7 +20,7 @@ export function addPostTransformCallback(callback) {
   transformCallbacks.push(callback);
 }
 
-const CLOAKING_ENABLED = !window.inTestEnv;
+const CLOAKING_ENABLED = !isTesting();
 const DAY = 1000 * 60 * 60 * 24;
 
 const _dontCloak = {};
