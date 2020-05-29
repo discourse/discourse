@@ -4,6 +4,14 @@ import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 
+let _pluginCategoryAdminDropdownActions = {};
+
+export function addCategoryAdminDropdownAction(actionId, handler) {
+  _pluginCategoryAdminDropdownActions[actionId] =
+    _pluginCategoryAdminDropdownActions[actionId] || [];
+  _pluginCategoryAdminDropdownActions[actionId].push(handler);
+}
+
 export default Component.extend(FilterModeMixin, {
   router: service(),
   persistedQueryParams: null,
@@ -96,6 +104,10 @@ export default Component.extend(FilterModeMixin, {
         case "reorder":
           this.reorderCategories();
           break;
+      }
+      const pluginActions = _pluginCategoryAdminDropdownActions[actionId];
+      if (Array.isArray(pluginActions)) {
+        pluginActions.forEach(action => action());
       }
     },
 

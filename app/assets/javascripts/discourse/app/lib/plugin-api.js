@@ -48,6 +48,7 @@ import {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver
 } from "discourse/components/composer-editor";
+import { addCategoryAdminDropdownAction } from "discourse/components/d-navigation";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { addExtraIconRenderer } from "discourse/helpers/category-link";
 import { queryRegistry } from "discourse/widgets/widget";
@@ -1140,6 +1141,34 @@ class PluginApi {
    **/
   addCategoryLinkIcon(renderer) {
     addExtraIconRenderer(renderer);
+  }
+
+  /**
+   * adds an item and handler to the category admin dropdown
+   *
+   * ```
+   * api.addCategoryAdminDropdownItem(
+   *    {
+   *      id: "some-button",
+   *      name: I18n.t("some-button.name"),
+   *      description: I18n.t("some-button.description"),
+   *      icon: "plus"
+   *    },
+   *    function() {
+   *      console.log("clicked some-button!");
+   *    }
+   * );
+   * ```
+   *
+   **/
+  addCategoryAdminDropdownItem(item, handler) {
+    if (!item || !item.id) return;
+
+    modifySelectKit("categories-admin-dropdown").appendContent(function() {
+      return item;
+    });
+
+    addCategoryAdminDropdownAction(item.id, handler);
   }
 }
 
