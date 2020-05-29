@@ -84,7 +84,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_invite_to_forum!(groups)
     group_ids = groups.map(&:id)
 
-    invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
+    invite_exists = Invite.exists?(email: params[:email], invited_by_id: current_user.id)
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
       return render json: failed_json, status: 422
     end
@@ -114,7 +114,7 @@ class InvitesController < ApplicationController
 
     group_ids = groups.map(&:id)
 
-    invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
+    invite_exists = Invite.exists?(email: params[:email], invited_by_id: current_user.id)
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
       return render json: failed_json, status: 422
     end
