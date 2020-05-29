@@ -1485,15 +1485,13 @@ describe CookedPostProcessor do
         expect(SiteSetting.download_remote_images_to_local).to eq(false)
       end
 
+      it "does not run when requested to skip" do
+        CookedPostProcessor.new(post, skip_pull_hotlinked_images: true).pull_hotlinked_images
+        expect(Jobs::PullHotlinkedImages.jobs.size).to eq(0)
+      end
+
       context "and there is enough disk space" do
-
         before { cpp.expects(:disable_if_low_on_disk_space) }
-
-        it "does not run when the system user updated the post" do
-          post.last_editor_id = Discourse.system_user.id
-          Jobs.expects(:cancel_scheduled_job).never
-          cpp.pull_hotlinked_images
-        end
 
         context "and the post has been updated by an actual user" do
 

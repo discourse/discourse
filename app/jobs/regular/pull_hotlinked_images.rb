@@ -152,7 +152,10 @@ module Jobs
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
         post.revise(Discourse.system_user, changes, bypass_bump: true, skip_staff_log: true)
       elsif has_downloaded_image || has_new_large_image || has_new_broken_image
-        post.trigger_post_process(bypass_bump: true)
+        post.trigger_post_process(
+          bypass_bump: true,
+          skip_pull_hotlinked_images: true # Avoid an infinite loop of job scheduling
+        )
       end
     end
 
