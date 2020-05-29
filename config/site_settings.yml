@@ -1166,10 +1166,6 @@ files:
   download_remote_images_to_local:
     default: true
   download_remote_images_threshold: 10
-  download_remote_images_max_days_old:
-    default: 30
-    min: 1
-    max: 10000
   disabled_image_download_domains:
     type: list
     default: ""

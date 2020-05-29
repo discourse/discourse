@@ -1555,34 +1555,6 @@ describe CookedPostProcessor do
 
   end
 
-  context "#download_remote_images_max_days_old" do
-
-    let(:post) { build(:post, created_at: 20.days.ago) }
-    let(:cpp) { CookedPostProcessor.new(post) }
-
-    before do
-      SiteSetting.download_remote_images_to_local = true
-      cpp.expects(:disable_if_low_on_disk_space).returns(false)
-    end
-
-    it "does not run when download_remote_images_max_days_old is not satisfied" do
-      SiteSetting.download_remote_images_max_days_old = 15
-      Jobs.expects(:cancel_scheduled_job).never
-      cpp.pull_hotlinked_images
-    end
-
-    it "runs when download_remote_images_max_days_old is satisfied" do
-      SiteSetting.download_remote_images_max_days_old = 30
-
-      Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
-
-      delay = SiteSetting.editing_grace_period + 1
-      Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id).once
-
-      cpp.pull_hotlinked_images
-    end
-  end
-
   context "#is_a_hyperlink?" do
 
     let(:post) { build(:post) }

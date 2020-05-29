@@ -666,8 +666,6 @@ class CookedPostProcessor
     return if @opts[:skip_pull_hotlinked_images]
     # have we enough disk space?
     disable_if_low_on_disk_space # But still enqueue the job
-    # don't download remote images for posts that are more than n days old
-    return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # make sure no other job is scheduled
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job
