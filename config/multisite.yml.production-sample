@@ -6,7 +6,6 @@ mlp:
   host: dbhost
   pool: 5
   timeout: 5000
-  db_id: 1	# ensure db_id is unique for each site
   ### If you change this setting you will need to
   ###   - restart sidekiq if you change this setting
   ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
@@ -22,7 +21,6 @@ drwho:
   host: dbhost
   pool: 5
   timeout: 5000
-  db_id: 	# ensure db_id is unique for each site
   ### If you change this setting you will need to
   ###   - restart sidekiq if you change this setting
   ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
