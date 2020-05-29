@@ -103,6 +103,16 @@ createWidget("topic-admin-menu-button", {
       position.left += $button.width() - 203;
     }
 
+    if (this.attrs.openUpwards) {
+      if (rtl) {
+        position.left -= $button[0].offsetWidth;
+      } else {
+        position.left += $button[0].offsetWidth;
+      }
+    } else {
+      position.top += $button[0].offsetHeight;
+    }
+
     if (this.site.mobileView && !this.attrs.rightSide) {
       const headerCloak = document.querySelector(".header-cloak");
       if (headerCloak) headerCloak.style.display = "block";
