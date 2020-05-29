@@ -15,6 +15,7 @@ const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
 export default {
   name: "inject-discourse-objects",
+  after: "discourse-bootstrap",
 
   initialize(container, app) {
     ALL_TARGETS.forEach(t => app.inject(t, "appEvents", "service:app-events"));

@@ -154,7 +154,7 @@ module Discourse
       service-worker.js
       google-tag-manager.js
       google-universal-analytics.js
-      preload-application-data.js
+      start-discourse.js
       print-page.js
       omniauth-complete.js
       activate-account.js

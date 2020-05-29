@@ -53,8 +53,6 @@ sinon.config = {
   useFakeServer: false
 };
 
-window.inTestEnv = true;
-
 let MessageBus = require("message-bus-client").default;
 
 // Stop the message bus so we don't get ajax calls
