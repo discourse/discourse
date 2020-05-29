@@ -833,12 +833,6 @@ a.mention-group {
   }
 }
 
-.popup-menu {
-  h3 {
-    margin-top: 0;
-  }
-}
-
 .suggested-topics {
   .topics {
     padding-bottom: 15px;
@@ -1052,4 +1046,16 @@ a.mention-group {
       }
     }
   }
+}
+
+.post-admin-menu {
+  display: inline-flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: auto;
+  max-width: 320px;
+  position: absolute;
+  text-align: left;
+  bottom: -2px;
+  right: 15px;
 }

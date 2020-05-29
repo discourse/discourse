@@ -68,6 +68,10 @@
           display: contents;
         }
       }
+
+      a.widget-link {
+        color: $tertiary;
+      }
     }
 
     .main-results {
