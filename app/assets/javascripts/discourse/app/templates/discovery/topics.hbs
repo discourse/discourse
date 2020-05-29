@@ -42,8 +42,6 @@
       {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
     </div>
   {{else}}
-    {{plugin-outlet name="before-topic-list" args=(hash category=category)}}
-
     {{#if topicTrackingState.hasIncoming}}
       <div class="show-more {{if hasTopics "has-topics"}}">
         <a tabindex="0" href {{action "showInserted"}} class="alert alert-info clickable">
@@ -52,6 +50,7 @@
       </div>
     {{/if}}
   {{/if}}
+  {{plugin-outlet name="before-topic-list" args=(hash category=category)}}
 
   {{#if hasTopics}}
     {{topic-list
