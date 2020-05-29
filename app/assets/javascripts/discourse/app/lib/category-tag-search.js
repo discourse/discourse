@@ -5,10 +5,11 @@ import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { SEPARATOR } from "discourse/lib/category-hashtags";
 import { Promise } from "rsvp";
 import { later, cancel } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
 
-var cache = {};
-var cacheTime;
-var oldSearch;
+let cache = {};
+let cacheTime;
+let oldSearch;
 
 function updateCache(term, results) {
   cache[term] = results;
@@ -22,7 +23,7 @@ function searchTags(term, categories, limit) {
       () => {
         resolve(CANCELLED_STATUS);
       },
-      Ember.testing ? 50 : 5000
+      isTesting() ? 50 : 5000
     );
 
     const debouncedSearch = discourseDebounce((q, cats, resultFunc) => {

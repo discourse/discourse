@@ -1,7 +1,7 @@
-import Ember from "ember";
+import { isTesting } from "discourse-common/config/environment";
 
 export function reload() {
-  if (!Ember.testing) {
+  if (!isTesting()) {
     location.reload();
   }
 }
