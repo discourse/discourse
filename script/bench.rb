@@ -229,7 +229,7 @@ begin
               'Api-Username' => "admin1" }
 
   # asset precompilation is a dog, wget to force it
-  run "wget http://127.0.0.1:#{@port}/ -o /dev/null -O /dev/null"
+  run "curl -s -o /dev/null http://127.0.0.1:#{@port}/"
 
   redirect_response = `curl -s -I "http://127.0.0.1:#{@port}/t/i-am-a-topic-used-for-perf-tests"`
   if redirect_response !~ /301 Moved Permanently/
