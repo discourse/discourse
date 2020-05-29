@@ -446,6 +446,11 @@ describe TopicTrackingState do
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(0)
+
+      TopicTag.where(topic_id: topic.id).delete_all
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
     end
 
     it "remove_muted_tags_from_latest is set to only_muted" do
@@ -475,6 +480,11 @@ describe TopicTrackingState do
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(0)
+
+      TopicTag.where(topic_id: topic.id).delete_all
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
     end
 
     it "remove_muted_tags_from_latest is set to never" do
