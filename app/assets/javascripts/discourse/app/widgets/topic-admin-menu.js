@@ -27,7 +27,7 @@ createWidget("admin-menu-button", {
 
 createWidget("topic-admin-menu-button", {
   tagName: "span",
-  buildKey: () => `topic-admin-menu-button`,
+  buildKey: () => "topic-admin-menu-button",
 
   defaultState() {
     return { expanded: false, position: null };
@@ -53,7 +53,7 @@ createWidget("topic-admin-menu-button", {
       result.push(
         this.attach("button", {
           className:
-            "btn-default toggle-admin-menu" +
+            "popup-menu-button toggle-admin-menu" +
             (attrs.fixed ? " show-topic-admin" : "") +
             (attrs.addKeyboardTargetClass ? " keyboard-target-admin-menu" : ""),
           title: "topic_admin_menu",
@@ -104,7 +104,8 @@ createWidget("topic-admin-menu-button", {
     }
 
     if (this.site.mobileView && !this.attrs.rightSide) {
-      $(".header-cloak").css("display", "block");
+      const headerCloak = document.querySelector(".header-cloak");
+      if (headerCloak) headerCloak.style.display = "block";
     }
 
     this.state.position = position;
@@ -135,7 +136,7 @@ export default createWidget("topic-admin-menu", {
     if (this.currentUser && this.currentUser.get("canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-multi-select",
-        buttonClass: "btn-default",
+        buttonClass: "popup-menu-btn",
         action: "toggleMultiSelect",
         icon: "tasks",
         label: "actions.multi_select"
@@ -144,7 +145,7 @@ export default createWidget("topic-admin-menu", {
       if (details.get("can_delete")) {
         this.addActionButton({
           className: "topic-admin-delete",
-          buttonClass: "btn-danger",
+          buttonClass: "popup-menu-btn-danger",
           action: "deleteTopic",
           icon: "far-trash-alt",
           label: "actions.delete"
@@ -154,7 +155,7 @@ export default createWidget("topic-admin-menu", {
       if (topic.get("deleted") && details.get("can_recover")) {
         this.addActionButton({
           className: "topic-admin-recover",
-          buttonClass: "btn-default",
+          buttonClass: "popup-menu-btn",
           action: "recoverTopic",
           icon: "undo",
           label: "actions.recover"
@@ -164,7 +165,7 @@ export default createWidget("topic-admin-menu", {
       if (topic.get("closed")) {
         this.addActionButton({
           className: "topic-admin-open",
-          buttonClass: "btn-default",
+          buttonClass: "popup-menu-btn",
           action: "toggleClosed",
           icon: "unlock",
           label: "actions.open"
@@ -172,7 +173,7 @@ export default createWidget("topic-admin-menu", {
       } else {
         this.addActionButton({
           className: "topic-admin-close",
-          buttonClass: "btn-default",
+          buttonClass: "popup-menu-btn",
           action: "toggleClosed",
           icon: "lock",
           label: "actions.close"
@@ -181,7 +182,7 @@ export default createWidget("topic-admin-menu", {
 
       this.addActionButton({
         className: "topic-admin-status-update",
-        buttonClass: "btn-default",
+        buttonClass: "popup-menu-btn",
         action: "showTopicStatusUpdate",
         icon: "far-clock",
         label: "actions.timed_update"
@@ -190,7 +191,7 @@ export default createWidget("topic-admin-menu", {
       if (!isPrivateMessage && (topic.get("visible") || featured)) {
         this.addActionButton({
           className: "topic-admin-pin",
-          buttonClass: "btn-default",
+          buttonClass: "popup-menu-btn",
           action: "showFeatureTopic",
           icon: "thumbtack",
           label: featured ? "actions.unpin" : "actions.pin"
@@ -200,7 +201,7 @@ export default createWidget("topic-admin-menu", {
       if (this.currentUser.get("staff")) {
         this.addActionButton({
           className: "topic-admin-change-timestamp",
-          buttonClass: "btn-default",
+          buttonClass: "popup-menu-btn",
           action: "showChangeTimestamp",
           icon: "calendar-alt",
           label: "change_timestamp.title"
@@ -209,7 +210,7 @@ export default createWidget("topic-admin-menu", {
 
       this.addActionButton({
         className: "topic-admin-reset-bump-date",
-        buttonClass: "btn-default",
+        buttonClass: "popup-menu-btn",
         action: "resetBumpDate",
         icon: "anchor",
         label: "actions.reset_bump_date"
@@ -218,7 +219,7 @@ export default createWidget("topic-admin-menu", {
       if (!isPrivateMessage) {
         this.addActionButton({
           className: "topic-admin-archive",
-          buttonClass: "btn-default",
+          buttonClass: "popup-menu-btn",
           action: "toggleArchived",
           icon: "folder",
           label: topic.get("archived") ? "actions.unarchive" : "actions.archive"
@@ -227,7 +228,7 @@ export default createWidget("topic-admin-menu", {
 
       this.addActionButton({
         className: "topic-admin-visible",
-        buttonClass: "btn-default",
+        buttonClass: "popup-menu-btn",
         action: "toggleVisibility",
         icon: visible ? "far-eye-slash" : "far-eye",
         label: visible ? "actions.invisible" : "actions.visible"
@@ -236,7 +237,7 @@ export default createWidget("topic-admin-menu", {
       if (details.get("can_convert_topic")) {
         this.addActionButton({
           className: "topic-admin-convert",
-          buttonClass: "btn-default",
+          buttonClass: "popup-menu-btn",
           action: isPrivateMessage
             ? "convertToPublicTopic"
             : "convertToPrivateMessage",
@@ -250,7 +251,7 @@ export default createWidget("topic-admin-menu", {
       if (this.currentUser.get("staff")) {
         this.addActionButton({
           icon: "list",
-          buttonClass: "btn-default",
+          buttonClass: "popup-menu-btn",
           fullLabel: "review.moderation_history",
           url: `/review?topic_id=${topic.id}&status=all`
         });

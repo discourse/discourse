@@ -25,16 +25,20 @@
     padding: 0.75em;
     border-radius: 0;
 
+    .d-icon {
+      color: $primary-medium;
+    }
+
     &:hover {
       color: $primary;
-      background: $primary-low;
+      background: $tertiary-low;
 
       .d-icon {
-        color: $primary-high;
+        color: $primary-medium;
       }
     }
 
-    &.btn-danger {
+    &.popup-menu-btn-danger {
       .d-icon {
         color: $danger;
       }
