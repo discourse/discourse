@@ -738,7 +738,7 @@ HTML
 
       expect(Theme.lookup_field(theme.id, :common, :after_header)).to include("_ws=#{Discourse.current_hostname}")
 
-      Discourse.stubs(:current_hostname).returns("someotherhostname.com")
+      SiteSetting.force_hostname = "someotherhostname.com"
       Theme.clear_cache!
 
       expect(Theme.lookup_field(theme.id, :common, :after_header)).to include("_ws=someotherhostname.com")
