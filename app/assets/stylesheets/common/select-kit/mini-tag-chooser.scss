@@ -46,8 +46,14 @@
           background: $tertiary-low;
         }
 
+        .discourse-tag {
+          &:hover {
+            color: $primary;
+          }
+        }
+
         .discourse-tag-count {
-          margin-left: 5px;
+          margin-left: 0.5em;
         }
       }
 
