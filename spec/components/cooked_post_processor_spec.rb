@@ -1486,8 +1486,8 @@ describe CookedPostProcessor do
       end
 
       it "does not run when requested to skip" do
-        Jobs.expects(:enqueue_in).never
         CookedPostProcessor.new(post, skip_pull_hotlinked_images: true).pull_hotlinked_images
+        expect(Jobs::PullHotlinkedImages.jobs.size).to eq(0)
       end
 
       context "and there is enough disk space" do
