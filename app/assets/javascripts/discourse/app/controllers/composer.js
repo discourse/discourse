@@ -1157,6 +1157,7 @@ export default Controller.extend({
     const tagsArray = tags || [];
     if (
       this.site.can_tag_topics &&
+      !this.currentUser.staff &&
       category &&
       category.minimum_required_tags > tagsArray.length
     ) {
