@@ -186,6 +186,14 @@ class TopicTrackingState
               ).where_clause.send(:predicates)[0]
   end
 
+  def self.include_tags_in_report?
+    @include_tags_in_report
+  end
+
+  def self.include_tags_in_report=(v)
+    @include_tags_in_report = v
+  end
+
   def self.report(user, topic_id = nil)
     # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
     #  Dropping to sql_builder so I can make sense of it.
@@ -219,6 +227,18 @@ class TopicTrackingState
       user: user,
       muted_tag_ids: tag_ids
     )
+
+    if SiteSetting.tagging_enabled && TopicTrackingState.include_tags_in_report?
+      sql = <<~SQL
+        WITH X AS (#{sql})
+        SELECT *, (
+          SELECT ARRAY_AGG(name) from topic_tags
+             JOIN tags on tags.id = topic_tags.tag_id
+             WHERE topic_id = X.topic_id
+          ) tags
+        FROM X
+      SQL
+    end
 
     DB.query(
       sql,
