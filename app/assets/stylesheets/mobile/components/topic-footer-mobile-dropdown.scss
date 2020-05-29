@@ -10,11 +10,11 @@
         }
 
         .d-icon {
-          color: $primary-high;
+          color: $primary-medium;
         }
 
         &.is-highlighted {
-          background: $primary-low;
+          background: $tertiary-low;
 
           .name {
             color: $primary;
