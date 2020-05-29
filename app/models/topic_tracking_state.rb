@@ -315,18 +315,26 @@ class TopicTrackingState
         "(topics.visible #{append}) AND"
       end
 
-    tags_filter =
-      if opts[:muted_tag_ids].present? && SiteSetting.remove_muted_tags_from_latest == 'always'
-        <<~SQL
-          NOT ((select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id) && ARRAY[#{opts[:muted_tag_ids].join(',')}]) AND
+    tags_filter = ""
+
+    if (muted_tag_ids = opts[:muted_tag_ids]).present? && ['always', 'only_muted'].include?(SiteSetting.remove_muted_tags_from_latest)
+      existing_tags_sql = "(select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id)"
+      muted_tags_array_sql = "ARRAY[#{opts[:muted_tag_ids].join(',')}]"
+
+      if SiteSetting.remove_muted_tags_from_latest == 'always'
+        tags_filter = <<~SQL
+          NOT (
+            COALESCE(#{existing_tags_sql}, ARRAY[]::int[]) && #{muted_tags_array_sql}
+          ) AND
         SQL
-      elsif opts[:muted_tag_ids].present? && SiteSetting.remove_muted_tags_from_latest == 'only_muted'
-        <<~SQL
-          NOT ((select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id) <@ ARRAY[#{opts[:muted_tag_ids].join(',')}]) AND
+      else # only muted
+        tags_filter = <<~SQL
+          NOT (
+            COALESCE(#{existing_tags_sql}, ARRAY[-999]) <@ #{muted_tags_array_sql}
+          ) AND
         SQL
-      else
-        ""
       end
+    end
 
     sql = +<<~SQL
     SELECT #{select}
