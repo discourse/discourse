@@ -122,6 +122,19 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
+  BASE_COMPILER_VERSION = 16
+  def self.compiler_version
+    get_set_cache "compiler_version" do
+      dependencies = [
+        BASE_COMPILER_VERSION,
+        Ember::VERSION,
+        GlobalSetting.cdn_url,
+        Discourse.current_hostname
+      ]
+      Digest::SHA1.hexdigest(dependencies.join)
+    end
+  end
+
   def self.get_set_cache(key, &blk)
     if @cache.hash.key? key.to_s
       return @cache[key]
@@ -248,7 +261,7 @@ class Theme < ActiveRecord::Base
     theme_ids = [theme_ids] unless Array === theme_ids
 
     theme_ids = transform_ids(theme_ids)
-    cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{ThemeField::COMPILER_VERSION}"
+    cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{Theme.compiler_version}"
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
 
@@ -262,7 +275,7 @@ class Theme < ActiveRecord::Base
     theme_ids = [theme_ids] unless Array === theme_ids
 
     theme_ids = transform_ids(theme_ids)
-    get_set_cache("#{theme_ids.join(",")}:modifier:#{modifier_name}:#{ThemeField::COMPILER_VERSION}") do
+    get_set_cache("#{theme_ids.join(",")}:modifier:#{modifier_name}:#{Theme.compiler_version}") do
       ThemeModifierSet.resolve_modifier_for_themes(theme_ids, modifier_name)
     end
   end
@@ -321,7 +334,7 @@ class Theme < ActiveRecord::Base
   def self.resolve_baked_field(theme_ids, target, name)
     if target == :extra_js
       require_rebake = ThemeField.where(theme_id: theme_ids, target_id: Theme.targets[:extra_js]).
-        where("compiler_version <> ?", ThemeField::COMPILER_VERSION)
+        where("compiler_version <> ?", Theme.compiler_version)
       require_rebake.each { |tf| tf.ensure_baked! }
       require_rebake.map(&:theme_id).uniq.each do |theme_id|
         Theme.find(theme_id).update_javascript_cache!
