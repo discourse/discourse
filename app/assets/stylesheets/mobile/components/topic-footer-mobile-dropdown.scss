@@ -5,6 +5,10 @@
         padding: 0.75em 0.5em;
         border-bottom: 1px solid rgba($primary-low, 0.5);
 
+        .name {
+          line-height: $line-height-medium;
+        }
+
         &:last-child {
           border: none;
         }
