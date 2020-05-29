@@ -299,17 +299,21 @@ export default createWidget("header", {
 
   html(attrs, state) {
     let contents = () => {
-      const panels = [
-        this.attach("header-buttons", attrs),
-        this.attach("header-icons", {
+      const attachIcons = () => {
+        return this.attach("header-icons", {
           hamburgerVisible: state.hamburgerVisible,
           userVisible: state.userVisible,
           searchVisible: state.searchVisible,
           ringBackdrop: state.ringBackdrop,
           flagCount: attrs.flagCount,
           user: this.currentUser
-        })
-      ];
+        });
+      };
+      if (attrs.onlyIcons) {
+        return attachIcons();
+      }
+
+      const panels = [this.attach("header-buttons", attrs), attachIcons()];
 
       if (state.searchVisible) {
         const contextType = this.searchContextType();
