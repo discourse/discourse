@@ -241,16 +241,8 @@ sub sub {
       @media screen and (max-width: 550px) {
         grid-template-columns: 1fr 1fr;
       }
-      > div {
-        margin-right: 0.5em;
-        overflow: hidden;
-        &:nth-of-type(2) {
-          // move delete further from modal close
-          order: 12;
-        }
-        button {
-          @include ellipsis;
-        }
+      .popup-menu-btn {
+        @include ellipsis;
       }
     }
   }

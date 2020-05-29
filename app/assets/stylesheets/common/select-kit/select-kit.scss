@@ -139,13 +139,13 @@
 
   .select-kit-row {
     cursor: pointer;
-    line-height: $line-height-medium;
     outline: none;
     display: flex;
     flex: 1 0 auto;
     box-sizing: border-box;
     align-items: center;
     justify-content: flex-start;
+    padding: 0.75em;
 
     .name {
       margin: 0;

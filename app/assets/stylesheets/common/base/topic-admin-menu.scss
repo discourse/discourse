@@ -2,7 +2,8 @@
 
 .topic-admin-popup-menu {
   @include breakpoint(mobile-extra-large) {
-    width: 100%;
+    width: calc(100% - 20px);
+    margin: 0 10px;
     padding: 0;
     padding-bottom: env(safe-area-inset-bottom);
     z-index: z("modal", "popover");
