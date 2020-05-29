@@ -1,34 +1,14 @@
 import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
-const HEADING_COLLECTION = "HEADING_COLLECTION";
-
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["toolbar-popup-menu-options"],
   classNames: ["toolbar-popup-menu-options"],
-
-  init() {
-    this._super(...arguments);
-
-    this.prependCollection(HEADING_COLLECTION);
-  },
 
   selectKitOptions: {
     showFullTitle: false,
     filterable: false,
     autoFilterable: false
-  },
-
-  modifyContentForCollection(collection) {
-    if (collection === HEADING_COLLECTION) {
-      return { title: this.selectKit.options.popupTitle };
-    }
-  },
-
-  modifyComponentForCollection(collection) {
-    if (collection === HEADING_COLLECTION) {
-      return "toolbar-popup-menu-options/toolbar-popup-menu-options-heading";
-    }
   },
 
   modifyContent(contents) {
