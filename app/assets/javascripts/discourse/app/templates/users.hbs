@@ -16,7 +16,7 @@
           {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
         </div>
 
-        {{#conditional-loading-spinner condition=model.loading}}
+        {{#conditional-loading-spinner condition=isLoading}}
           {{#if model.length}}
 
             <table>
