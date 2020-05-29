@@ -22,13 +22,13 @@
         }
 
         .d-icon {
-          color: $primary-high;
+          color: $primary-medium;
         }
 
         &.is-highlighted,
         &.is-selected,
         &:hover {
-          background: $primary-low;
+          background: $tertiary-low;
           color: $primary;
         }
       }
