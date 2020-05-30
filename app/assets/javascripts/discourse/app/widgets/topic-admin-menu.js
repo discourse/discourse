@@ -90,13 +90,15 @@ createWidget("topic-admin-menu-button", {
       $button = $(e.target).closest("button");
     }
 
-    const position = $button.position();
+    const position = $button.position(),
+      SPACING = 3,
+      MENU_WIDTH = 217;
 
     const rtl = $("html").hasClass("rtl");
     position.outerHeight = $button.outerHeight();
 
     if (rtl) {
-      position.left -= 217 - $button.outerWidth();
+      position.left -= MENU_WIDTH - $button.outerWidth();
     }
 
     if (this.attrs.fixed) {
@@ -105,12 +107,12 @@ createWidget("topic-admin-menu-button", {
 
     if (this.attrs.openUpwards) {
       if (rtl) {
-        position.left -= $button[0].offsetWidth;
+        position.left -= $button[0].offsetWidth + SPACING;
       } else {
-        position.left += $button[0].offsetWidth;
+        position.left += $button[0].offsetWidth + SPACING;
       }
     } else {
-      position.top += $button[0].offsetHeight;
+      position.top += $button[0].offsetHeight + SPACING;
     }
 
     if (this.site.mobileView && !this.attrs.rightSide) {
