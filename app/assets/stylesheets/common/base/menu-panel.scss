@@ -279,10 +279,9 @@
 
 div.menu-links-header {
   width: 100%;
-  display: table;
-  border-collapse: separate;
-  border-spacing: 0 0.5em;
+  margin-bottom: 0.5em;
   .menu-links-row {
+    box-sizing: border-box;
     border-bottom: 1px solid dark-light-choose($primary-low, $secondary-medium);
     display: flex;
 
@@ -295,15 +294,17 @@ div.menu-links-header {
       flex-wrap: wrap;
       &.user {
         margin-right: auto;
+        flex: 1 1 0;
+        overflow: hidden;
       }
       &.glyphs {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         text-align: right;
 
         a {
           // Expand the click area a bit.
-          padding-left: 0.55em;
-          padding-right: 0.55em;
+          padding-left: 0.6em;
+          padding-right: 0.6em;
         }
       }
 
@@ -347,10 +348,11 @@ div.menu-links-header {
     padding: 0.3em 0.5em;
   }
   a.user-activity-link {
+    box-sizing: border-box;
     align-items: center;
     display: flex;
     margin: -0.5em 0;
-    max-width: 120px;
+    max-width: 100%;
 
     // `overflow: hidden` on `.user-activity-link` would hide the `::after`
     // pseudo element (used to create the tab-looking effect). Sets `overflow:
@@ -359,7 +361,6 @@ div.menu-links-header {
 
     span.d-label {
       display: block;
-      max-width: 130px;
       @include ellipsis;
     }
 
