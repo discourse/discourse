@@ -18,7 +18,7 @@ createWidget("poster-name-title", {
 
   html(attrs) {
     let titleContents = attrs.title;
-    if (attrs.primaryGroupName) {
+    if (attrs.primaryGroupName && attrs.titleIsGroup) {
       const href = Discourse.getURL(`/g/${attrs.primaryGroupName}`);
       titleContents = h(
         "a.user-group",
@@ -126,10 +126,15 @@ export default createWidget("poster-name", {
       );
     }
 
-    const title = attrs.user_title;
+    const title = attrs.user_title,
+      titleIsGroup = attrs.title_is_group;
     if (title && title.length) {
       contents.push(
-        this.attach("poster-name-title", { title, primaryGroupName })
+        this.attach("poster-name-title", {
+          title,
+          primaryGroupName,
+          titleIsGroup
+        })
       );
     }
 
