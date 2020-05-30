@@ -149,23 +149,7 @@ nav.post-controls {
       margin-right: 5px;
       transition: all linear 0.15s;
     }
-    .show-replies {
-      margin-left: -10px;
-      font-size: inherit;
-      span.badge-posts {
-        color: dark-light-choose($primary-medium, $secondary-high);
-      }
-      &:hover {
-        background: $primary-low;
-        span.badge-posts {
-          color: $primary;
-        }
-      }
-      .d-icon {
-        margin-left: 5px;
-        font-size: $font-down-1;
-      }
-    }
+
     button.create {
       margin-right: 0;
       color: dark-light-choose($primary-high, $secondary-low);
@@ -213,6 +197,22 @@ nav.post-controls {
           color: $tertiary;
         }
       }
+    }
+  }
+
+  .show-replies {
+    font-size: $font-up-1;
+    margin-left: -10px;
+    font-size: inherit;
+    padding: 10px;
+    color: $primary-medium;
+    &:hover {
+      color: $primary;
+      background: $primary-low;
+    }
+    .d-icon {
+      margin-left: 5px;
+      font-size: $font-down-1;
     }
   }
 }
