@@ -76,7 +76,6 @@ export default Component.extend(PanEvents, {
         if (
           !$target.is(".widget-button") &&
           !$parents.is(".widget-button") &&
-          !$parents.is(".dropdown-menu") &&
           !$parents.is("#discourse-modal") &&
           !$target.is("#discourse-modal") &&
           !$parents.is(".modal-footer") &&

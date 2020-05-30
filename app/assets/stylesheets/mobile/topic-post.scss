@@ -287,25 +287,6 @@ iframe {
   max-width: 100%;
 }
 
-.open > .dropdown-menu {
-  display: block;
-}
-
-.dropdown-menu li {
-  margin: 5px 0;
-  .fa {
-    float: left;
-    margin-right: 5px;
-    padding-top: 1px;
-  }
-  span {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-  span.title {
-    color: $primary;
-  }
-}
-
 .btn-group {
   margin-top: 25px;
   position: relative;

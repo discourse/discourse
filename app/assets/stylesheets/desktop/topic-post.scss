@@ -503,10 +503,6 @@ video {
   }
 }
 
-.open > .dropdown-menu {
-  display: block;
-}
-
 .btn-group {
   position: relative;
 }
@@ -639,72 +635,6 @@ blockquote {
   border-left: 4px solid transparent;
   content: "";
   margin-left: 5px;
-}
-
-.dropdown-menu {
-  position: absolute;
-  bottom: 115%;
-  left: 0;
-  z-index: z("dropdown");
-  display: none;
-  float: left;
-  width: 550px;
-  margin: 1px 0 0;
-  list-style: none;
-  background-color: $secondary;
-  border: 1px solid $primary-low;
-  box-shadow: shadow("dropdown");
-  background-clip: padding-box;
-  span {
-    font-size: $font-down-1;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-  span.title {
-    font-weight: bold;
-    display: block;
-    font-size: $font-0;
-    color: $primary;
-  }
-}
-
-.dropdown-menu a {
-  display: block;
-  padding: 9px;
-  clear: both;
-  font-weight: normal;
-  line-height: $line-height-medium;
-  color: $primary;
-  transition: all linear 0.15s;
-  & > div {
-    margin-left: 26px;
-  }
-}
-
-.dropdown-menu li > a:hover,
-.dropdown-menu .active > a,
-.dropdown-menu .active > a:hover {
-  color: $primary;
-  text-decoration: none;
-  background-color: $highlight-medium;
-}
-
-.dropdown-menu .disabled > a,
-.dropdown-menu .disabled > a:hover {
-  text-decoration: none;
-  color: $primary;
-  background-color: $tertiary-low;
-  cursor: default;
-}
-
-.dropdown-menu .icon {
-  margin-top: 3px;
-  float: left;
-  font-size: $font-up-2;
-}
-
-.open > .dropdown-menu {
-  display: block;
-  clear: both;
 }
 
 .selected-posts {

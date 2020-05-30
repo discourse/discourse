@@ -29,9 +29,6 @@
 }
 
 .modal-open {
-  .dropdown-menu {
-    z-index: z("modal", "dropdown");
-  }
   .popover {
     z-index: z("modal", "popover");
   }
