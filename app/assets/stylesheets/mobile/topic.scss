@@ -225,14 +225,19 @@ sub sub {
 
     ul {
       display: grid;
-      grid-template-columns: 50% 50%;
+      grid-template-columns: 1fr 1fr 1fr;
 
-      li {
-        border: 0;
+      @media screen and (max-width: 550px) {
+        grid-template-columns: 1fr 1fr;
       }
 
       .popup-menu-btn {
         @include ellipsis;
+      }
+
+      li {
+        border: 0;
+        min-width: 0;
       }
     }
   }
