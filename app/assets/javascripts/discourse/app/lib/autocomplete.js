@@ -425,7 +425,7 @@ export default function(options) {
           completeStart = cp - match[0].length;
           completeEnd = completeStart + match[0].length - 1;
           let term = match[0].substring(1, match[0].length);
-          debouncedBackspace(term, options);
+          debouncedUpdateAutocomplete(term, options);
         }
       }
     }
@@ -438,12 +438,12 @@ export default function(options) {
           (!prevChar || allowedLettersRegex.test(prevChar))
         ) {
           completeStart = completeEnd = cp - 1;
-          debouncedBackspace("", options);
+          debouncedUpdateAutocomplete("", options);
         }
       }
     } else if (completeStart !== null) {
       let term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
-      debouncedBackspace(term, options);
+      debouncedUpdateAutocomplete(term, options);
     }
   }
 
@@ -452,7 +452,7 @@ export default function(options) {
     debounce(this, debouncedInput, INPUT_DELAY);
   });
 
-  function debouncedBackspace(t, o) {
+  function debouncedUpdateAutocomplete(t, o) {
     updateAutoComplete(dataSource(t, o));
   }
 
@@ -504,7 +504,13 @@ export default function(options) {
           ) {
             completeStart = c;
             term = me[0].value.substring(c + 1, initial);
-            debounce(this, debouncedBackspace, term, options, INPUT_DELAY);
+            debounce(
+              this,
+              debouncedUpdateAutocomplete,
+              term,
+              options,
+              INPUT_DELAY
+            );
             return true;
           }
         }
@@ -591,7 +597,13 @@ export default function(options) {
             closeAutocomplete();
           }
 
-          debounce(this, debouncedBackspace, term, options, INPUT_DELAY);
+          debounce(
+            this,
+            debouncedUpdateAutocomplete,
+            term,
+            options,
+            INPUT_DELAY
+          );
           return true;
         default:
           completeEnd = cp;
