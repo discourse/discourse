@@ -75,7 +75,7 @@ $d-popover-border: $primary-medium;
     color: transparent;
     content: "";
     position: absolute;
-    z-index: calc(z("tooltip") - 100);
+    z-index: z("tooltip") - 100;
   }
 
   .d-popover-top-arrow {
