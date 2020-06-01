@@ -10,7 +10,7 @@ import {
   emojiSearch
 } from "pretty-text/emoji";
 import { safariHacksDisabled } from "discourse/lib/utilities";
-import ENV, { INPUT_DELAY } from "discourse-common/config/environment";
+import { isTesting, INPUT_DELAY } from "discourse-common/config/environment";
 
 const PER_ROW = 11;
 function customEmojis() {
@@ -525,7 +525,7 @@ export default Component.extend({
       this.$picker.css(_.merge(attributes, options));
     };
 
-    if (ENV.environment === "test" || !this.automaticPositioning) {
+    if (isTesting() || !this.automaticPositioning) {
       desktopPositioning();
       return;
     }

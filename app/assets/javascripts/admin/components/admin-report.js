@@ -9,8 +9,8 @@ import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import Report, { SCHEMA_VERSION } from "admin/models/report";
-import ENV from "discourse-common/config/environment";
 import { isPresent } from "@ember/utils";
+import { isTesting } from "discourse-common/config/environment";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -167,8 +167,8 @@ export default Component.extend({
     let reportKey = "reports:";
     reportKey += [
       dataSourceName,
-      ENV.environment === "test" ? "start" : startDate.replace(/-/g, ""),
-      ENV.environment === "test" ? "end" : endDate.replace(/-/g, ""),
+      isTesting() ? "start" : startDate.replace(/-/g, ""),
+      isTesting() ? "end" : endDate.replace(/-/g, ""),
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
       // Convert all filter values to strings to ensure unique serialization
