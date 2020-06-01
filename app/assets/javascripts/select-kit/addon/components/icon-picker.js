@@ -2,7 +2,11 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { makeArray } from "discourse-common/lib/helpers";
-import { convertIconClass } from "discourse-common/lib/icon-library";
+import {
+  convertIconClass,
+  disableMissingIconWarning,
+  enableMissingIconWarning
+} from "discourse-common/lib/icon-library";
 import { isDevelopment } from "discourse-common/config/environment";
 
 export default MultiSelectComponent.extend({
@@ -15,7 +19,7 @@ export default MultiSelectComponent.extend({
     this._cachedIconsList = null;
 
     if (isDevelopment()) {
-      Discourse.disableMissingIconWarning = true;
+      disableMissingIconWarning();
     }
   },
 
@@ -77,7 +81,7 @@ export default MultiSelectComponent.extend({
     this._cachedIconsList = null;
 
     if (isDevelopment()) {
-      delete Discourse.disableMissingIconWarning;
+      enableMissingIconWarning();
     }
   },
 

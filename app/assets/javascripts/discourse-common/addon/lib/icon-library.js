@@ -6,6 +6,8 @@ import { isDevelopment } from "discourse-common/config/environment";
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
+let warnMissingIcons = true;
+
 const REPLACEMENTS = {
   "d-tracking": "bell",
   "d-muted": "discourse-bell-slash",
@@ -44,6 +46,14 @@ const REPLACEMENTS = {
 
 export function replaceIcon(source, destination) {
   REPLACEMENTS[source] = destination;
+}
+
+export function disableMissingIconWarning() {
+  warnMissingIcons = false;
+}
+
+export function enableMissingIconWarning() {
+  warnMissingIcons = false;
 }
 
 export function renderIcon(renderType, id, params) {
@@ -107,7 +117,7 @@ function warnIfMissing(id) {
   if (
     typeof Discourse !== "undefined" &&
     isDevelopment() &&
-    !Discourse.disableMissingIconWarning &&
+    warnMissingIcons &&
     Discourse.SvgIconList &&
     Discourse.SvgIconList.indexOf(id) === -1
   ) {
