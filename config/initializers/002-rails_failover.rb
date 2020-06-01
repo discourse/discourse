@@ -11,7 +11,14 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
     Sidekiq.unpause!
   end
 
+  module Discourse
+    PG_FORCE_READONLY_MODE_KEY ||= 'readonly_mode:postgres_force'
+  end
+
   RailsFailover::ActiveRecord.register_force_reading_role_callback do
-    Discourse.pg_readonly_mode?
+    Discourse.redis.exists(
+      Discourse::PG_READONLY_MODE_KEY,
+      Discourse::PG_FORCE_READONLY_MODE_KEY
+    )
   end
 end
