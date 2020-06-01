@@ -629,7 +629,7 @@ describe PostsController do
 
       it "will invalidate broken images cache" do
         sign_in(moderator)
-        post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"].to_json
+        post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"]
         post.save_custom_fields
         put "/posts/#{post.id}/rebake.json"
         post.reload
