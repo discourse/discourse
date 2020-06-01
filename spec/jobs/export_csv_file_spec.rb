@@ -152,6 +152,20 @@ describe Jobs::ExportCsvFile do
       expect(report.second).to contain_exactly(user.username, "Earth", "2010-01-01 00:00:00 UTC")
     end
 
+    it 'works with topic reports' do
+      freeze_time DateTime.parse('2010-01-01 6:00')
+
+      exporter.extra['name'] = 'top_referred_topics'
+      post1 = Fabricate(:post)
+      post2 = Fabricate(:post)
+      IncomingLink.add(host: "a.com", referer: "http://twitter.com", post_id: post1.id, ip_address: '1.1.1.1')
+
+      report = exporter.report_export.to_a
+
+      expect(report.first).to contain_exactly("Topic", "Clicks")
+      expect(report.second).to contain_exactly(post1.topic.id.to_s, "1")
+    end
+
     it 'works with stacked_chart reports' do
       ApplicationRequest.create!(date: '2010-01-01', req_type: 'page_view_logged_in', count: 1)
       ApplicationRequest.create!(date: '2010-01-02', req_type: 'page_view_logged_in', count: 2)
