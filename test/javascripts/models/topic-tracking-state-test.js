@@ -14,6 +14,56 @@ QUnit.module("model:topic-tracking-state", {
   }
 });
 
+QUnit.test("tag counts", function(assert) {
+  const state = TopicTrackingState.create();
+
+  state.loadStates([
+    {
+      topic_id: 1,
+      last_read_post_number: null,
+      tags: ["foo", "new"]
+    },
+    {
+      topic_id: 2,
+      last_read_post_number: null,
+      tags: ["new"]
+    },
+    {
+      topic_id: 3,
+      last_read_post_number: null,
+      tags: ["random"]
+    },
+    {
+      topic_id: 4,
+      last_read_post_number: 1,
+      highest_post_number: 7,
+      tags: ["unread"],
+      notification_level: NotificationLevels.TRACKING
+    },
+    {
+      topic_id: 5,
+      last_read_post_number: 1,
+      highest_post_number: 7,
+      tags: ["bar", "unread"],
+      notification_level: NotificationLevels.TRACKING
+    },
+    {
+      topic_id: 6,
+      last_read_post_number: 1,
+      highest_post_number: 7,
+      tags: null,
+      notification_level: NotificationLevels.TRACKING
+    }
+  ]);
+
+  const states = state.countTags(["new", "unread"]);
+
+  assert.equal(states["new"].newCount, 2, "new counts");
+  assert.equal(states["new"].unreadCount, 0, "new counts");
+  assert.equal(states["unread"].unreadCount, 2, "unread counts");
+  assert.equal(states["unread"].newCount, 0, "unread counts");
+});
+
 QUnit.test("sync", function(assert) {
   const state = TopicTrackingState.create();
   state.states["t111"] = { last_read_post_number: null };
