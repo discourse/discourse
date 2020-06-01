@@ -224,7 +224,7 @@ class UserNotifications < ActionMailer::Base
         @counts << { label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
       end
 
-      if @counts.size < 3 && user.user_option.digest_after_minutes >= 1440
+      if @counts.size < 3 && user.user_option.digest_after_minutes.to_i >= 1440
         value = summary_new_users_count(min_date)
         @counts << { label_key: 'user_notifications.digest.new_users', value: value, href: "#{Discourse.base_url}/about" } if value > 0
       end
