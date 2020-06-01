@@ -315,8 +315,6 @@ lv:
         refresh: "Pārlādēt"
         status: "Statuss"
         category: "Sadaļa"
-        orders:
-          priority: "Prioritāte"
       scores:
         date: "Datums"
         status: "Statuss"
@@ -1240,7 +1238,6 @@ lv:
           tracking: Es sekoju
           first: ir tēmas pirmais ieraksts
           pinned: ir piesprausts
-          unpinned: nav piesprausts
           unseen: neesmu izlasījis
           wiki: ir wiki
         statuses:

@@ -497,8 +497,7 @@ uk:
         status: "Статус"
         category: "Категорія"
         orders:
-          priority: "Пріоритет"
-          priority_asc: "Пріоритет (зворотний порядок)"
+          score: "Бал"
           created_at: "Створено в"
           created_at_asc: "Створено (зворотний порядок)"
         priority:
@@ -1887,7 +1886,6 @@ uk:
           bookmarks: Мої закладки
           first: Тільки перші повідомлення в темах
           pinned: Закріплені
-          unpinned: Не закріплені
           seen: Читання
           unseen: Позначити непрочитаними
           wiki: Є вікі

@@ -443,8 +443,7 @@ es:
         status: "Estado"
         category: "Categoría"
         orders:
-          priority: "Prioridad"
-          priority_asc: "Prioridad (inverso)"
+          score: "Puntuación"
           created_at: "Creado el"
           created_at_asc: "Creado el (inverso)"
         priority:
@@ -1805,7 +1804,6 @@ es:
           bookmarks: he guardado
           first: son la primera publicación
           pinned: son destacados
-          unpinned: son no destacados
           seen: he leído
           unseen: no he leído
           wiki: son tipo wiki

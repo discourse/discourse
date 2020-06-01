@@ -360,8 +360,7 @@ ja:
         status: "ステータス"
         category: "カテゴリ"
         orders:
-          priority: "優先度"
-          priority_asc: "優先度（逆順）"
+          score: "スコア"
           created_at: "作られた"
         priority:
           title: "最小の優先度"
@@ -1462,7 +1461,6 @@ ja:
           bookmarks: ブックマーク中
           first: 最初の投稿
           pinned: 固定表示されている
-          unpinned: 固定表示されていない
           seen: 既読
           unseen: 未読
           wiki: wiki

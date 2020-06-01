@@ -356,6 +356,8 @@ zh_TW:
         refresh: "重新整理"
         status: "狀態"
         category: "分類"
+        orders:
+          score: "分數"
         priority:
           medium: "中間的"
           high: "高"
@@ -1562,7 +1564,6 @@ zh_TW:
           bookmarks: 我加入書籤的
           first: 是第一篇文
           pinned: 是置頂的
-          unpinned: 不是置頂的
           seen: 我已讀的
           unseen: 我還未讀的
           wiki: 是公共編輯的

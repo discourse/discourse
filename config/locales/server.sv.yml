@@ -373,6 +373,10 @@ sv:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Begäran om medlemskap i @%{group_name}"
+    request_accepted_pm:
+      title: "Du har blivit accepterad in i @%{group_name}"
+      body: |
+        Din begäran om tillträde i @%{group_name} har blivit accepterad och du är nu medlem.
     view_hidden_topic_request_reason: "Jag skulle vilja gå med i gruppen '%{group_name}', så att jag kan gå till [detta ämne](%{topic_url})"
   education:
     until_posts:
@@ -414,6 +418,12 @@ sv:
       Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
+    dominating_topic: |
+      ### Låt andra vara med i konversationen
+
+      Detta ämne är uppenbarligen viktigt för dig &ndash; du har postat mer än %{percent}% av alla svar här.
+
+      Det vore bättre om du ger andra personer utrymme att dela deras synpunkter också. Kanske kan du bjuda in dem?
     get_a_room: |
       ### Uppmuntra alla att delta i konversationen
 
@@ -1317,7 +1327,6 @@ sv:
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner. "
     download_remote_images_to_local: "Konvertera externa bilder till lokala bilder genom att ladda hem dem; det motverkar felaktiga bildlänkar."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
-    download_remote_images_max_days_old: "Ladda inte ner externa bilder från inlägg som är mer än n dagar gamla. "
     disabled_image_download_domains: "Externa bilder kommer aldrig att hämtas hem från dessa domän. Pipe-avgränsad lista."
     editing_grace_period: "I (n) sekunder efter inlägg kommer redigeringar inte att skapa nya versioner i inläggshistoriken."
     editing_grace_period_max_diff: "Uppnått maximalt antal teckenförändringar tillåtna för redigering under prövotid, om fler ändras spara dessa i en annan inläggsrevision (förtroendenivå 0 och 1)"
@@ -1439,6 +1448,7 @@ sv:
     moderators_view_emails: "Tillåt moderatorer att visa användares e-post"
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (när inaktiverad så visas namnet först)"
     enable_rich_text_paste: "Aktivera automatisk HTML vid Markdown-konvertering när du klistrar in text i kompositören. (Experimentell)"
+    send_old_credential_reminder_days: "Påminn om gamla behörigheter efter dag"
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
     enable_whispers: "Tiliåt privat kommunikation inom ämnena."
@@ -3102,6 +3112,8 @@ sv:
       title: "Ny inloggningsvarning"
       subject_template: "[%{site_name}]  Ny inloggning från %{location}"
       text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n- Plats: %{location} (%{client_ip})\n- Webbläsare: %{browser}\n- Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, vänligen [granska dina existerande sessioner](%{base_url}/my/preferences/account) samt överväg att ändra ditt lösenord.\n"
+  page_forbidden:
+    title: "Hoppsan! Den sidan är privat."
   page_not_found:
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"
@@ -3159,6 +3171,7 @@ sv:
     user_email_user_suspended: "användare blev avstängd"
     user_email_already_read: "användaren har redan läst det här inlägget"
     user_email_access_denied: "användare är inte tillåten att se detta inlägg"
+    user_email_no_email: "Ingen e-post är associerad för användar-id %{user_id}"
     sender_message_blank: "meddelande är tomt"
     sender_message_to_blank: "message.to är tomt"
     sender_text_part_body_blank: "text_part.body är tomt"
@@ -3847,3 +3860,6 @@ sv:
     html_missing_placeholder: "Html-mallen måste inkludera %{placeholder}"
   discord:
     not_in_allowed_guild: "Autentisering misslyckades. Du är inte medlem i ett tillåtet Discord sällskap. "
+  old_keys_reminder:
+    title: "Påminnelse gällande gamla behörigheter"
+    body: "Hejsan! Detta är en årlig säkerhetspåminnelse från din Discourse-instans.\n  \nAv artighet vill vi upplysa dig om att följande behörighet som används för din Discourse-instans inte har uppdaterats under de senaste 2 åren:\n\n%{keys}\n\nIngen åtgärd är nödvändig i nuläget, däremot anses det som god praxis ur säkerhetssynpunkt att ändra alla dina viktiga behörigheter med tiden.\n"

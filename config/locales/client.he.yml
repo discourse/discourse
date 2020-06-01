@@ -518,8 +518,8 @@ he:
         status: "מצב"
         category: "קטגוריה"
         orders:
-          priority: "עדיפות"
-          priority_asc: "עדיפות (הפוכה)"
+          score: "ניקוד"
+          score_asc: "ניקוד (הפוך)"
           created_at: "מועד יצירה"
           created_at_asc: "מועד יצירה (הפוך)"
         priority:
@@ -1957,7 +1957,6 @@ he:
           bookmarks: סימנתי
           first: הפוסטים הראשונים
           pinned: נעוצים
-          unpinned: לא נעוצים
           seen: קראתי
           unseen: לא קראתי
           wiki: הם ויקי

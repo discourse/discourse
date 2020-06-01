@@ -450,8 +450,8 @@ sv:
         status: "Status"
         category: "Kategori"
         orders:
-          priority: "Prioritet"
-          priority_asc: "Prioritet (omvänt)"
+          score: "Poäng"
+          score_asc: "Poäng (omvänt)"
           created_at: "Skapad den"
           created_at_asc: "Skapad den (omvänt)"
         priority:
@@ -1835,7 +1835,6 @@ sv:
           bookmarks: Som jag har bokmärkt
           first: är den första posten
           pinned: är pinnade
-          unpinned: är inte pinnade
           seen: Som jag har läst
           unseen: Jag inte har läst
           wiki: är wiki
