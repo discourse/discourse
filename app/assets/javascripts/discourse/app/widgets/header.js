@@ -299,21 +299,20 @@ export default createWidget("header", {
 
   html(attrs, state) {
     let contents = () => {
-      const attachIcons = () => {
-        return this.attach("header-icons", {
-          hamburgerVisible: state.hamburgerVisible,
-          userVisible: state.userVisible,
-          searchVisible: state.searchVisible,
-          ringBackdrop: state.ringBackdrop,
-          flagCount: attrs.flagCount,
-          user: this.currentUser
-        });
-      };
+      const headerIcons = this.attach("header-icons", {
+        hamburgerVisible: state.hamburgerVisible,
+        userVisible: state.userVisible,
+        searchVisible: state.searchVisible,
+        ringBackdrop: state.ringBackdrop,
+        flagCount: attrs.flagCount,
+        user: this.currentUser
+      });
+
       if (attrs.onlyIcons) {
-        return attachIcons();
+        return headerIcons;
       }
 
-      const panels = [this.attach("header-buttons", attrs), attachIcons()];
+      const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible) {
         const contextType = this.searchContextType();
