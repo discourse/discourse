@@ -59,19 +59,20 @@ def process_uploads
     print "\r#{progress}% Fixed dimensions: #{dimensions_count} Downsized: #{downsized_count} Skipped: #{skipped} (upload id: #{upload.id})"
     log "\n"
 
-    source = upload.local? ? Discourse.store.path_for(upload) : "https:#{upload.url}"
+    if upload.local?
+      path = Discourse.store.path_for(upload)
+    else
+      path = (Discourse.store.download(upload) rescue nil)&.path
+    end
 
-    unless source
-      log "No path or URL"
+    unless path
+      log "No image path"
       skipped += 1
       next
     end
 
     begin
-      w, h = FastImage.size(source, timeout: 15, raise_on_failure: true)
-    rescue FastImage::ImageFetchFailure
-      log "Retrying image resizing"
-      w, h = FastImage.size(source, timeout: 15)
+      w, h = FastImage.size(path, raise_on_failure: true)
     rescue FastImage::UnknownImageType
       log "Unknown image type"
       skipped += 1
@@ -114,14 +115,6 @@ def process_uploads
 
     if w * h < MAX_IMAGE_PIXELS
       log "Image size within allowed range"
-      skipped += 1
-      next
-    end
-
-    path = upload.local? ? source : (Discourse.store.download(upload) rescue nil)&.path
-
-    unless path
-      log "No image path"
       skipped += 1
       next
     end
