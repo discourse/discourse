@@ -236,7 +236,7 @@ acceptance("Topic featured links", {
   }
 });
 
-QUnit.test("remove featured link", async assert => {
+QUnit.skip("remove featured link", async assert => {
   await visit("/t/-/299/1");
   assert.ok(
     exists(".title-wrapper .topic-featured-link"),
