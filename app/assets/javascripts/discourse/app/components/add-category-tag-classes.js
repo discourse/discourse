@@ -34,11 +34,9 @@ export default Component.extend({
   },
 
   _removeClass() {
-    $("body").removeClass((_, css) => {
-      return (css.match(/\b(?:category|tag)-\S+|( category )/g) || []).join(
-        " "
-      );
-    });
+    $("body").removeClass((_, css) =>
+      (css.match(/\b(?:category|tag)-\S+|( category )/g) || []).join(" ")
+    );
   },
 
   willDestroyElement() {
