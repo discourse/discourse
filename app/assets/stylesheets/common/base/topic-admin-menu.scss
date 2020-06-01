@@ -24,14 +24,6 @@
   }
 }
 
-.show-topic-admin {
-  position: fixed;
-  top: 120px;
-  right: 10px;
-  z-index: z("dropdown");
-  height: 35px;
-}
-
 .modal-body.feature-topic {
   max-height: 500px;
   input.date-picker {
