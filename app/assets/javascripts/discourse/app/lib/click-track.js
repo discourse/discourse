@@ -5,7 +5,7 @@ import DiscourseURL from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { selectedText } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 import User from "discourse/models/user";
 
 export function isValidLink($link) {
@@ -101,7 +101,7 @@ export default {
 
     let trackPromise = Promise.resolve();
     if (tracking) {
-      if (ENV.environment !== "test" && navigator.sendBeacon) {
+      if (!isTesting() && navigator.sendBeacon) {
         const data = new FormData();
         data.append("url", href);
         data.append("post_id", postId);

@@ -1,4 +1,4 @@
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 let mobileForced = false;
 
@@ -12,7 +12,7 @@ const Mobile = {
     this.isMobileDevice = mobileForced || $html.hasClass("mobile-device");
     this.mobileView = mobileForced || $html.hasClass("mobile-view");
 
-    if (ENV.environment === "test" || mobileForced) {
+    if (isTesting() || mobileForced) {
       return;
     }
 

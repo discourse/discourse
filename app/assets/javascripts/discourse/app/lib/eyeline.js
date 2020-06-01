@@ -1,4 +1,4 @@
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 import AppEvents from "discourse/services/app-events";
 
 let _skipUpdate;
@@ -9,7 +9,7 @@ export function configureEyeline(opts) {
     _skipUpdate = opts.skipUpdate;
     _rootElement = opts.rootElement;
   } else {
-    _skipUpdate = ENV.environment === "test";
+    _skipUpdate = isTesting();
     _rootElement = null;
   }
 }
