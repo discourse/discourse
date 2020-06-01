@@ -151,9 +151,9 @@ module FileStore
 
       # Remove all but CACHE_MAXIMUM_SIZE most recent files
       files = Dir.glob("#{CACHE_DIR}*")
-      files.sort_by! do |file|
+      files.sort_by! do |f|
         begin
-          File.mtime(file)
+          File.mtime(f)
         rescue Errno::ENOENT
           Time.new(0)
         end
