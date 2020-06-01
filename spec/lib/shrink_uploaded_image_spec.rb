@@ -22,6 +22,16 @@ describe ShrinkUploadedImage do
     expect(upload.filesize).to be < filesize_before
   end
 
+  it "returns false if the image is not used by any models" do
+    result = ShrinkUploadedImage.new(
+      upload: upload,
+      path: Discourse.store.path_for(upload),
+      max_pixels: 10_000
+    ).perform
+
+    expect(result).to be(false)
+  end
+
   it "returns false if the image cannot be shrunk more" do
     post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
     post.link_post_uploads

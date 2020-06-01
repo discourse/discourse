@@ -104,23 +104,23 @@ class ShrinkUploadedImage
     if posts.empty?
       log "Upload not used in any posts"
 
-      if User.where(uploaded_avatar_id: original_upload.id).count
+      if User.where(uploaded_avatar_id: original_upload.id).exists?
         log "Used as a User avatar"
-      elsif UserAvatar.where(gravatar_upload_id: original_upload.id).count
+      elsif UserAvatar.where(gravatar_upload_id: original_upload.id).exists?
         log "Used as a UserAvatar gravatar"
-      elsif UserAvatar.where(custom_upload_id: original_upload.id).count
+      elsif UserAvatar.where(custom_upload_id: original_upload.id).exists?
         log "Used as a UserAvatar custom upload"
-      elsif UserProfile.where(profile_background_upload_id: original_upload.id).count
+      elsif UserProfile.where(profile_background_upload_id: original_upload.id).exists?
         log "Used as a UserProfile profile background"
-      elsif UserProfile.where(card_background_upload_id: original_upload.id).count
+      elsif UserProfile.where(card_background_upload_id: original_upload.id).exists?
         log "Used as a UserProfile card background"
-      elsif Category.where(uploaded_logo_id: original_upload.id).count
+      elsif Category.where(uploaded_logo_id: original_upload.id).exists?
         log "Used as a Category logo"
-      elsif Category.where(uploaded_background_id: original_upload.id).count
+      elsif Category.where(uploaded_background_id: original_upload.id).exists?
         log "Used as a Category background"
-      elsif CustomEmoji.where(upload_id: original_upload.id).count
+      elsif CustomEmoji.where(upload_id: original_upload.id).exists?
         log "Used as a CustomEmoji"
-      elsif ThemeField.where(upload_id: original_upload.id).count
+      elsif ThemeField.where(upload_id: original_upload.id).exists?
         log "Used as a ThemeField"
       else
         success = false
@@ -133,7 +133,7 @@ class ShrinkUploadedImage
         STDIN.beep
         STDIN.getch
         puts " k"
-      elsif !existing_upload && !Upload.where(url: upload.url).exist?
+      elsif !existing_upload && !Upload.where(url: upload.url).exists?
         # We're bailing, so clean up the just uploaded file
         Discourse.store.remove_upload(upload)
 
