@@ -3,6 +3,7 @@ import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { makeArray } from "discourse-common/lib/helpers";
 import { convertIconClass } from "discourse-common/lib/icon-library";
+import { isDevelopment } from "discourse-common/config/environment";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],
@@ -13,7 +14,7 @@ export default MultiSelectComponent.extend({
 
     this._cachedIconsList = null;
 
-    if (Discourse.Environment === "development") {
+    if (isDevelopment()) {
       Discourse.disableMissingIconWarning = true;
     }
   },
@@ -75,7 +76,7 @@ export default MultiSelectComponent.extend({
 
     this._cachedIconsList = null;
 
-    if (Discourse.Environment === "development") {
+    if (isDevelopment()) {
       delete Discourse.disableMissingIconWarning;
     }
   },

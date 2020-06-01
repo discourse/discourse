@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
+import { isDevelopment } from "discourse-common/config/environment";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -105,7 +106,7 @@ function iconClasses(icon, params) {
 function warnIfMissing(id) {
   if (
     typeof Discourse !== "undefined" &&
-    Discourse.Environment === "development" &&
+    isDevelopment() &&
     !Discourse.disableMissingIconWarning &&
     Discourse.SvgIconList &&
     Discourse.SvgIconList.indexOf(id) === -1
