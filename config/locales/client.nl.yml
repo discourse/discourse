@@ -450,8 +450,8 @@ nl:
         status: "Status"
         category: "Categorie"
         orders:
-          priority: "Prioriteit"
-          priority_asc: "Prioriteit (omgekeerd)"
+          score: "Score"
+          score_asc: "Score (omgekeerd)"
           created_at: "Lid sinds"
           created_at_asc: "Gemaakt op (omgekeerd)"
         priority:
@@ -1832,7 +1832,6 @@ nl:
           bookmarks: Ik heb een bladwijzer aangemaakt
           first: die het eerste bericht zijn
           pinned: die zijn vastgemaakt
-          unpinned: die niet zijn vastgemaakt
           seen: Ik heb gelezen
           unseen: die ik niet heb gelezen
           wiki: die een wiki zijn

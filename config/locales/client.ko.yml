@@ -408,8 +408,7 @@ ko:
         status: "상태"
         category: "카테고리"
         orders:
-          priority: "우선 순위"
-          priority_asc: "우선 순위 (역)"
+          score: "점수"
           created_at: "에 만든"
           created_at_asc: "에서 생성 (역)"
         priority:
@@ -1727,7 +1726,6 @@ ko:
           bookmarks: 나는 북마크했다
           first: 가 가장 첫 포스트입니다.
           pinned: 핀고정된
-          unpinned: 핀고정 되지 않은
           seen: 읽었다
           unseen: 읽지 않은 것
           wiki: 은(는) 위키입니다.

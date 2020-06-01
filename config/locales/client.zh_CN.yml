@@ -416,8 +416,8 @@ zh_CN:
         status: "状态"
         category: "分类"
         orders:
-          priority: "优先级"
-          priority_asc: "优先级（倒序）"
+          score: "评分"
+          score_asc: "分数（倒序）"
           created_at: "创建时间"
           created_at_asc: "创建时间（倒序）"
         priority:
@@ -642,12 +642,16 @@ zh_CN:
           title: "静音"
           description: "你不会收到有关此组中消息的任何通知。"
       flair_url: "头像图片"
+      flair_upload_description: "使用边长不小于20px的正方形图片。"
       flair_bg_color: "头像背景颜色"
       flair_bg_color_placeholder: "（可选）十六进制色彩值"
       flair_color: "头像颜色"
       flair_color_placeholder: "（可选）十六进制色彩值"
       flair_preview_icon: "预览图标"
       flair_preview_image: "预览图片"
+      flair_type:
+        icon: "选择图标"
+        image: "上传图片"
     user_action_groups:
       "1": "点赞赞"
       "2": "获得赞"
@@ -706,6 +710,7 @@ zh_CN:
       copied: "已复制"
     user_fields:
       none: "（选择一项）"
+      required: '请为“%{name}”输入一个值。'
     user:
       said: "{{username}}："
       profile: "个人资料"
@@ -721,6 +726,7 @@ zh_CN:
       private_messages: "私信"
       user_notifications:
         filters:
+          filter_by: "筛选"
           all: "全部"
           read: "阅读"
           unread: "未读"
@@ -841,6 +847,7 @@ zh_CN:
       api_approved: "已批准："
       api_last_used_at: "最后使用于："
       theme: "主题"
+      save_to_change_theme: '主题会在你点击“%{save_text}”后被更新。'
       home: "默认主页"
       staged: "暂存"
       staff_counters:
@@ -891,6 +898,7 @@ zh_CN:
         copy_to_clipboard: "复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
         copied_to_clipboard: "已复制到剪贴板"
+        download_backup_codes: "下载备份码"
         remaining_codes: "你有<strong>{{count}}</strong>个备份码"
         use: "使用备份码"
         enable_prerequisites: "你必须在生成备份代码之前启用主要第二因素。"
@@ -1016,6 +1024,7 @@ zh_CN:
         too_long: "用户名过长"
         checking: "查看用户名是否可用…"
         prefilled: "邮箱与用户匹配成功"
+        required: "请输入一个用户名"
       locale:
         title: "界面语言"
         instructions: "用户界面语言。将在你刷新页面后改变。"
@@ -1765,7 +1774,6 @@ zh_CN:
           bookmarks: 我收藏了
           first: 是第一帖
           pinned: 是置顶的
-          unpinned: 不是置顶的
           seen: 我看了
           unseen: 我还没看过
           wiki: 公共编辑
@@ -2174,6 +2182,7 @@ zh_CN:
         action: "合并选择的帖子"
         error: "合并帖子时发生了错误。"
       publish_page:
+        title: "页面发布中"
         publish: "出版"
         description: "当一个主题被出版为一个页面时，其链接是共享的，并且会以自定义的样式显示。"
         slug: "Slug"
@@ -2309,6 +2318,7 @@ zh_CN:
         convert_to_moderator: "添加管理人员颜色标识"
         revert_to_regular: "移除管理人员颜色标识"
         rebake: "重建 HTML"
+        publish_page: "页面发布中"
         unhide: "显示"
         change_owner: "更改作者"
         grant_badge: "授予徽章"
@@ -2936,6 +2946,7 @@ zh_CN:
     forced_anonymous: "由于极端负载，暂时向所有人显示，已注销用户会看到它。"
     footer_nav:
       back: "返回"
+      forward: "继续"
       share: "分享"
       dismiss: "忽略"
     safe_mode:
@@ -4265,6 +4276,7 @@ zh_CN:
         post_title: "帖子"
         category_id: "分类 ID"
         category_title: "分类"
+        tag_name: "标签名称"
         external_url: "外部 URL"
         destination: "目标"
         delete_confirm: 你确定要删除该永久链接？

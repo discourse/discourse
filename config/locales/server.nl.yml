@@ -373,6 +373,10 @@ nl:
       trust_level_4: "vertrouwensniveau_4"
     request_membership_pm:
       title: "Lidmaatschapsaanvraag voor @%{group_name}"
+    request_accepted_pm:
+      title: "U bent geaccepteerd in @%{group_name}"
+      body: |
+        Uw aanvraag om toe te treden tot @%{group_name} is geaccepteerd, en u bent nu lid.
     view_hidden_topic_request_reason: "Ik wil toetreden tot de groep '%{group_name}', zodat ik toegang heb tot [dit topic](%{topic_url})"
   education:
     until_posts:
@@ -414,6 +418,12 @@ nl:
       U kunt uw eerdere antwoord bewerken om een citaat toe te voegen door tekst te accentueren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder uitgebreide antwoorden bevatten dan die met veel kleine, individuele antwoorden.
+    dominating_topic: |
+      ### Laat anderen aan de conversatie deelnemen
+
+      Dit topic is duidelijk belangrijk voor u &ndash; u hebt hier meer dan %{percent}% van de antwoorden geplaatst.
+
+      Het zou nog beter kunnen zijn als u ook anderen de ruimte geeft om hun ideeën te delen. Kunt u ze uitnodigen?
     get_a_room: |
       ### Overweeg iedereen aan de conversatie te laten deelnemen
 
@@ -1337,7 +1347,6 @@ nl:
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
     download_remote_images_to_local: "Externe afbeeldingen naar lokale afbeeldingen converteren door ze te downloaden; dit voorkomt beschadigde afbeeldingen."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"
-    download_remote_images_max_days_old: "Geen externe afbeeldingen downloaden voor berichten die meer dan n dagen oud zijn"
     disabled_image_download_domains: "Externe afbeeldingen zullen nooit vanaf deze domeinen worden gedownload. Pipe-gescheiden lijst."
     editing_grace_period: "De eerste (n) seconden na plaatsing van een bericht leidt bewerking ervan niet tot een nieuwe versie in de berichtgeschiedenis."
     editing_grace_period_max_diff: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor bewerken; bij meer wijzigingen een andere berichtrevisie bewaren (vertrouwensniveau 0 en 1)"
@@ -2123,7 +2132,7 @@ nl:
     omniauth_error_unknown: "Er is iets misgegaan bij het verwerken van uw aanmelding. Probeer het opnieuw."
     omniauth_confirm_title: "Aanmelden via %{provider}"
     omniauth_confirm_button: "Doorgaan"
-    authenticator_error_no_valid_email: "E-mailadressen die met %{account} zijn gekoppeld, zijn niet toegestaan. Mogelijk dient u uw account met een andere e-mailadres te configureren."
+    authenticator_error_no_valid_email: "E-mailadressen die met %{account} zijn gekoppeld, zijn niet toegestaan. Mogelijk dient u uw account met een ander e-mailadres te configureren."
     new_registrations_disabled: "Nieuwe accountregistraties zijn op dit moment niet toegestaan."
     password_too_long: "Wachtwoorden mogen maximaal 200 tekens lang zijn."
     email_too_long: "Het opgegeven e-mailadres is te lang. Postvaknamen mogen niet langer zijn dan 254 tekens, en domeinnamen niet langer dan 253 tekens."
@@ -2526,6 +2535,8 @@ nl:
     suspicious_login:
       title: "Waarschuwing voor nieuwe aanmelding"
       subject_template: "[%{site_name}] Nieuwe aanmelding vanaf %{location}"
+  page_forbidden:
+    title: "Oeps! Die pagina is privé."
   page_not_found:
     title: "Oeps! Die pagina bestaat niet of is privé."
     popular_topics: "Populair"
@@ -2571,6 +2582,7 @@ nl:
     user_email_user_suspended: "gebruiker was geschorst"
     user_email_already_read: "gebruiker heeft dit bericht al gelezen"
     user_email_access_denied: "gebruiker mag dit bericht niet zien"
+    user_email_no_email: "Geen e-mailadres gekoppeld met gebruikers-ID %{user_id}"
     sender_message_blank: "bericht is leeg"
     sender_message_to_blank: "message.to is leeg"
     sender_text_part_body_blank: "text_part.body is leeg"

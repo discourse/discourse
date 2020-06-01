@@ -1309,7 +1309,6 @@ tr_TR:
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
-    download_remote_images_max_days_old: "n günden daha eski gönderiler için uzak adresteki resimleri indirme."
     disabled_image_download_domains: "Bu alan adlarından hiç bir zaman uzaktan resim indirme. Sınırlandırılmış liste."
     editing_grace_period: "Gönderi oluşturulduktan (n) saniye içerisinde bir düzenleme yapıldığında, gönderi geçmişinde yeni bir sürüm oluşturma."
     editing_grace_period_max_diff: "Yetkisiz kullanım süresinin düzenlenmesinde izin verilen maksimum karakter değişikliği sayısı, daha fazla değişiklik başka bir gönderi düzeltmesi saklar (güven düzeyi 0 ve 1)"

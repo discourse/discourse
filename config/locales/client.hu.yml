@@ -408,8 +408,7 @@ hu:
         status: "Állapot"
         category: "Kategória"
         orders:
-          priority: "Prioritás"
-          priority_asc: "Prioritás (fordított)"
+          score: "Pontszám"
           created_at: "Létrehozva"
           created_at_asc: "Létrehozva (fordított)"
         priority:
