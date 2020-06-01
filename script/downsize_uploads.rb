@@ -101,13 +101,14 @@ def process_uploads
       width: w,
       height: h,
       thumbnail_width: ww,
-      thumbnail_height: hh
+      thumbnail_height: hh,
+      filesize: File.size(path)
     }
 
     if upload.changed?
       log "Correcting the upload dimensions"
-      log "Before: #{upload.width_was}x#{upload.height_was} #{upload.thumbnail_width_was}x#{upload.thumbnail_height_was}"
-      log "After:  #{w}x#{h} #{ww}x#{hh}"
+      log "Before: #{upload.width_was}x#{upload.height_was} #{upload.thumbnail_width_was}x#{upload.thumbnail_height_was} (#{upload.filesize_was})"
+      log "After:  #{w}x#{h} #{ww}x#{hh} (#{upload.filesize})"
 
       dimensions_count += 1
       upload.save!

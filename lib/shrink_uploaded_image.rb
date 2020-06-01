@@ -12,9 +12,6 @@ class ShrinkUploadedImage
   end
 
   def perform
-    # Make sure the filesize is up to date
-    upload.filesize = File.size(path)
-
     OptimizedImage.downsize(path, path, "#{@max_pixels}@", filename: upload.original_filename)
     sha1 = Upload.generate_digest(path)
 
