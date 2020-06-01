@@ -130,16 +130,26 @@ class ShrinkUploadedImage
         STDIN.beep
         STDIN.getch
         puts " k"
-      elsif !existing_upload && !Upload.where(url: upload.url).exists?
-        # We're bailing, so clean up the just uploaded file
-        Discourse.store.remove_upload(upload)
+      else
+        if !existing_upload && !Upload.where(url: upload.url).exists?
+          # We're bailing, so clean up the just uploaded file
+          Discourse.store.remove_upload(upload)
+        end
 
         log "⏩ Skipping"
         return false
       end
     end
 
-    upload.save!
+    unless upload.save
+      if !existing_upload && !Upload.where(url: upload.url).exists?
+        # We're bailing, so clean up the just uploaded file
+        Discourse.store.remove_upload(upload)
+      end
+
+      log "⏩ Skipping an invalid upload"
+      return false
+    end
 
     if existing_upload
       begin
