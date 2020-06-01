@@ -30,11 +30,6 @@ def log(*args)
 end
 
 def process_uploads
-  unless SiteSetting.Upload.enable_s3_uploads
-    puts "This script supports only S3 uploads"
-    return
-  end
-
   puts "", "Downsizing images to no more than #{MAX_IMAGE_PIXELS} pixels"
 
   dimensions_count = 0

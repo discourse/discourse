@@ -3,12 +3,18 @@
 require 'rails_helper'
 
 describe ShrinkUploadedImage do
-  let(:upload) { Fabricate(:s3_image_upload, width: 200, height: 200) }
-  let(:path) { Discourse.store.download(upload).path }
+  let(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
 
   it "resizes the image" do
     filesize_before = upload.filesize
-    result = ShrinkUploadedImage.new(upload: upload, path: path, max_pixels: 10_000).perform
+    post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
+    post.link_post_uploads
+
+    result = ShrinkUploadedImage.new(
+      upload: upload,
+      path: Discourse.store.path_for(upload),
+      max_pixels: 10_000
+    ).perform
 
     expect(result).to be(true)
     expect(upload.width).to eq(100)
@@ -17,8 +23,21 @@ describe ShrinkUploadedImage do
   end
 
   it "returns false if the image cannot be shrunk more" do
-    ShrinkUploadedImage.new(upload: upload, path: path, max_pixels: 10_000).perform
-    result = ShrinkUploadedImage.new(upload: upload, path: path, max_pixels: 10_000).perform
+    post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
+    post.link_post_uploads
+    ShrinkUploadedImage.new(
+      upload: upload,
+      path: Discourse.store.path_for(upload),
+      max_pixels: 10_000
+    ).perform
+
+    upload.reload
+
+    result = ShrinkUploadedImage.new(
+      upload: upload,
+      path: Discourse.store.path_for(upload),
+      max_pixels: 10_000
+    ).perform
 
     expect(result).to be(false)
   end
