@@ -88,7 +88,6 @@ describe DiscourseRedis do
       end
     end
 
-    # Remove when this has been upstreamed in https://github.com/redis/redis-rb/pull/911
     describe '.exists' do
       it 'should return false when key is not present' do
         expect(Discourse.redis.exists('test')).to eq(false)
