@@ -194,7 +194,7 @@ class DiscourseRedis
   end
 
   # Proxy key methods through, but prefix the keys with the namespace
-  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :exists, :expire, :expireat, :get, :getbit, :getrange, :getset,
+  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :expire, :expireat, :get, :getbit, :getrange, :getset,
    :hdel, :hexists, :hget, :hgetall, :hincrby, :hincrbyfloat, :hkeys, :hlen, :hmget, :hmset, :hset, :hsetnx, :hvals, :incr,
    :incrby, :incrbyfloat, :lindex, :linsert, :llen, :lpop, :lpush, :lpushx, :lrange, :lrem, :lset, :ltrim,
    :mapped_hmset, :mapped_hmget, :mapped_mget, :mapped_mset, :mapped_msetnx, :move, :mset,
@@ -205,6 +205,17 @@ class DiscourseRedis
     define_method m do |*args|
       args[0] = "#{namespace}:#{args[0]}" if @namespace
       DiscourseRedis.ignore_readonly { @redis.public_send(m, *args) }
+    end
+  end
+
+  # Remove when this has been upstreamed in https://github.com/redis/redis-rb/pull/911
+  def exists(*keys)
+    keys.map! { |a| "#{namespace}:#{a}" }  if @namespace
+
+    DiscourseRedis.ignore_readonly do
+      @redis._client.call([:exists, *keys]) do |value|
+        value > 0
+      end
     end
   end
 
