@@ -396,6 +396,15 @@ createWidget("timeline-footer-controls", {
           ["notificationLevel"]
         )
       );
+      if (this.site.mobileView) {
+        controls.push(
+          this.attach("topic-admin-menu-button", {
+            topic,
+            addKeyboardTargetClass: true,
+            openUpwards: true
+          })
+        );
+      }
     }
 
     return controls;
