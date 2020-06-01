@@ -68,8 +68,9 @@ class UserOption < ActiveRecord::Base
       self.email_digests = false
     else
       self.email_digests = true
-      self.digest_after_minutes ||= SiteSetting.default_email_digest_frequency.to_i
     end
+
+    self.digest_after_minutes ||= SiteSetting.default_email_digest_frequency.to_i
 
     self.include_tl0_in_digests = SiteSetting.default_include_tl0_in_digests
 
