@@ -1214,6 +1214,13 @@ describe Post do
       post.topic.reload
       expect(post.topic.excerpt).to eq("test")
     end
+
+    it "works with posts in deleted topics" do
+      post = create_post
+      post.topic.trash!
+      post.reload
+      post.rebake!
+    end
   end
 
   describe "#set_owner" do

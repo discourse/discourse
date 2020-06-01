@@ -651,7 +651,7 @@ class Post < ActiveRecord::Base
     )
 
     if is_first_post?
-      topic.update_excerpt(excerpt_for_topic)
+      topic&.update_excerpt(excerpt_for_topic)
     end
 
     if invalidate_broken_images
