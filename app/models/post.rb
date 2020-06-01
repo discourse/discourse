@@ -10,8 +10,10 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
-  # TODO(2021-01-04): remove
-  self.ignored_columns = ["avg_time"]
+  self.ignored_columns = [
+    "avg_time", # TODO(2021-01-04): remove
+    "image_url" # TODO(2021-06-01): remove
+  ]
 
   cattr_accessor :plugin_permitted_create_params
   self.plugin_permitted_create_params = {}
@@ -1145,7 +1147,6 @@ end
 #  raw_email               :text
 #  public_version          :integer          default(1), not null
 #  action_code             :string
-#  image_url               :string
 #  locked_by_id            :integer
 #  image_upload_id         :bigint
 #
