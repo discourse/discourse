@@ -66,6 +66,20 @@ Fabricator(:upload_s3, from: :upload) do
   end
 end
 
+Fabricator(:s3_image_upload, from: :upload_s3) do
+  after_create do |upload|
+    file = Tempfile.new(['fabricated', '.png'])
+    `convert -size #{upload.width}x#{upload.height} xc:white "#{file.path}"`
+
+    Discourse.store.store_upload(file, upload)
+    upload.sha1 = Upload.generate_digest(file.path)
+
+    WebMock
+      .stub_request(:get, upload.url)
+      .to_return(status: 200, body: File.new(file.path))
+  end
+end
+
 Fabricator(:secure_upload_s3, from: :upload_s3) do
   secure true
   sha1 { SecureRandom.hex(20) }
