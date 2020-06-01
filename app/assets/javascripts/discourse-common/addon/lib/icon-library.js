@@ -1,9 +1,12 @@
 import I18n from "I18n";
 import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
+import { isDevelopment } from "discourse-common/config/environment";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
+
+let warnMissingIcons = true;
 
 const REPLACEMENTS = {
   "d-tracking": "bell",
@@ -43,6 +46,14 @@ const REPLACEMENTS = {
 
 export function replaceIcon(source, destination) {
   REPLACEMENTS[source] = destination;
+}
+
+export function disableMissingIconWarning() {
+  warnMissingIcons = false;
+}
+
+export function enableMissingIconWarning() {
+  warnMissingIcons = false;
 }
 
 export function renderIcon(renderType, id, params) {
@@ -105,8 +116,8 @@ function iconClasses(icon, params) {
 function warnIfMissing(id) {
   if (
     typeof Discourse !== "undefined" &&
-    Discourse.Environment === "development" &&
-    !Discourse.disableMissingIconWarning &&
+    isDevelopment() &&
+    warnMissingIcons &&
     Discourse.SvgIconList &&
     Discourse.SvgIconList.indexOf(id) === -1
   ) {

@@ -2,7 +2,11 @@ import PreloadStore from "discourse/lib/preload-store";
 import I18n from "I18n";
 import Session from "discourse/models/session";
 import RSVP from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
+import {
+  setEnvironment,
+  isTesting,
+  isProduction
+} from "discourse-common/config/environment";
 
 export default {
   name: "discourse-bootstrap",
@@ -33,7 +37,7 @@ export default {
     app.CDN = setupData.cdn;
     app.BaseUrl = setupData.baseUrl;
     app.BaseUri = setupData.baseUri;
-    app.Environment = setupData.environment;
+    setEnvironment(setupData.environment);
     app.SiteSettings = PreloadStore.get("siteSettings");
     app.ThemeSettings = PreloadStore.get("themeSettings");
     app.LetterAvatarVersion = setupData.letterAvatarVersion;
@@ -73,7 +77,7 @@ export default {
         return;
       }
 
-      if (Discourse.Environment === "development") {
+      if (!isProduction()) {
         /* eslint-disable no-console  */
         if (e) {
           if (e.message || e.stack) {

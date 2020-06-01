@@ -28,7 +28,7 @@ import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -378,7 +378,7 @@ export default Component.extend({
     }
 
     // Debouncing in test mode is complicated
-    if (ENV.environment === "test") {
+    if (isTesting()) {
       this._updatePreview();
     } else {
       debounce(this, this._updatePreview, 30);
