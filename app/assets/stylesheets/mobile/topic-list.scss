@@ -424,50 +424,7 @@ tr.category-topic-link {
   content: "";
   margin-left: 5px;
 }
-.dropdown-menu {
-  position: relative;
-  top: 100%;
-  left: 0;
-  z-index: z("dropdown");
-  display: none;
-  float: left;
-  width: 280px;
-  padding: 4px 0;
-  list-style: none;
-  background-color: $secondary;
-  border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), $primary);
-  border-radius: 5px;
-  box-shadow: shadow("dropdown");
-  background-clip: padding-box;
-  margin: 1px 0 20px;
-  .title {
-    font-weight: bold;
-    display: block;
-  }
-}
-.dropdown-menu a {
-  display: block;
-  padding: 3px 15px;
-  clear: both;
-  font-weight: normal;
-  line-height: $line-height-medium;
-  color: $primary;
-}
-.dropdown-menu li > a:hover,
-.dropdown-menu .active > a,
-.dropdown-menu .active > a:hover {
-  color: $tertiary;
-  text-decoration: none;
-  background-color: $tertiary-low;
-}
-.open > .dropdown-menu {
-  display: block;
-  clear: both;
-}
-.fade {
-  opacity: 0;
-  transition: opacity linear 0.15s;
-}
+
 .fade.in {
   opacity: 1;
 }
