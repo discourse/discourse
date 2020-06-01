@@ -18,13 +18,13 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.0.3'
-  gem 'actionpack', '6.0.3'
-  gem 'actionview', '6.0.3'
-  gem 'activemodel', '6.0.3'
-  gem 'activerecord', '6.0.3'
-  gem 'activesupport', '6.0.3'
-  gem 'railties', '6.0.3'
+  gem 'actionmailer', '6.0.3.1'
+  gem 'actionpack', '6.0.3.1'
+  gem 'actionview', '6.0.3.1'
+  gem 'activemodel', '6.0.3.1'
+  gem 'activerecord', '6.0.3.1'
+  gem 'activesupport', '6.0.3.1'
+  gem 'railties', '6.0.3.1'
   gem 'sprockets-rails'
 end
 
@@ -249,4 +249,4 @@ gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
 
-gem 'rails_failover', require: false
+gem 'rails_failover', require: false, git: 'https://github.com/discourse/rails_failover'

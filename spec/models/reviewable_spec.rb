@@ -159,11 +159,11 @@ RSpec.describe Reviewable, type: :model do
           r0 = Fabricate(:reviewable, score: 100, created_at: 3.months.ago)
           r1 = Fabricate(:reviewable, score: 999, created_at: 1.month.ago)
 
-          list = Reviewable.list_for(user, sort_order: 'priority')
+          list = Reviewable.list_for(user, sort_order: 'score')
           expect(list[0].id).to eq(r1.id)
           expect(list[1].id).to eq(r0.id)
 
-          list = Reviewable.list_for(user, sort_order: 'priority_asc')
+          list = Reviewable.list_for(user, sort_order: 'score_asc')
           expect(list[0].id).to eq(r0.id)
           expect(list[1].id).to eq(r1.id)
 

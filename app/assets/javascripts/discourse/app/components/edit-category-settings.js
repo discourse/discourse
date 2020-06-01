@@ -69,13 +69,6 @@ export default buildCategoryPanel("settings", {
   },
 
   @discourseComputed
-  availableListFilters() {
-    return ["all", "none"].map(p => {
-      return { name: I18n.t(`category.list_filters.${p}`), value: p };
-    });
-  },
-
-  @discourseComputed
   searchPrioritiesOptions() {
     const options = [];
 

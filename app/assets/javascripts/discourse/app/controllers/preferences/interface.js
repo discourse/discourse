@@ -5,7 +5,7 @@ import { setDefaultHomepage } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
 import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import pageReloader from "discourse/helpers/page-reloader";
+import { reload } from "discourse/helpers/page-reloader";
 import {
   safariHacksDisabled,
   isiPad,
@@ -193,7 +193,7 @@ export default Controller.extend({
           }
 
           if (this.themeId !== this.currentThemeId) {
-            pageReloader.reload();
+            reload();
           }
         })
         .catch(popupAjaxError);

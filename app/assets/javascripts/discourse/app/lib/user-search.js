@@ -4,6 +4,7 @@ import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { later, cancel } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
 
 var cache = {},
   cacheKey,
@@ -185,7 +186,7 @@ export default function userSearch(options) {
       () => {
         resolve(CANCELLED_STATUS);
       },
-      Ember.testing ? 50 : 5000
+      isTesting() ? 250 : 5000
     );
 
     if (skipSearch(term, options.allowEmails)) {

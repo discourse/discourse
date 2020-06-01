@@ -53,93 +53,6 @@ section.post-menu-area {
 nav.post-controls {
   padding: 0;
 
-  // Some buttons can be doubled up, like likes or flags
-  .double-button {
-    display: inline-flex;
-    color: $primary-low-mid;
-    margin-right: 0.15em;
-    &:hover {
-      button {
-        background: $primary-low;
-        color: $primary-medium;
-      }
-    }
-    button {
-      // It looks really confusing when one half a double button has an inner shadow on click.
-      &:active {
-        box-shadow: none;
-      }
-      margin-left: 0;
-      margin-right: 0;
-      &.my-likes,
-      &.read-indicator,
-      &.regular-likes {
-        // Like count on posts
-        .d-icon {
-          color: $primary-low-mid;
-          padding-left: 0.45em;
-        }
-      }
-      &.like {
-        // Like button with 0 likes
-        &.d-hover {
-          background: $love-low;
-          .d-icon {
-            color: $love;
-          }
-        }
-      }
-      &.has-like {
-        // Like button after I've liked
-        .d-icon {
-          color: $love;
-        }
-        &.d-hover {
-          background: $primary-low;
-          .d-icon {
-            color: $primary-medium;
-          }
-        }
-      }
-      &[disabled] {
-        // Disabled like button
-        cursor: not-allowed;
-      }
-      &.button-count {
-        // Like count button
-        &:not(.my-likes) {
-          padding-right: 0;
-        }
-        &.d-hover {
-          color: $primary;
-        }
-        + .toggle-like {
-          // Like button when like count is present
-          padding-left: 0.45em;
-          &.d-hover {
-            background: $primary-low;
-          }
-        }
-      }
-    }
-  }
-  a,
-  button {
-    color: dark-light-choose($primary-low-mid, $secondary-high);
-    .d-icon {
-      opacity: 1;
-    }
-    margin-right: 2px;
-    display: inline-block;
-  }
-  a.toggle-likes {
-    padding: 8px 0;
-    margin-right: -3px;
-  }
-  span.badge-posts {
-    margin-right: 5px;
-    transition: all linear 0.15s;
-  }
   .actions {
     text-align: right;
     float: right;
@@ -148,101 +61,158 @@ nav.post-controls {
       display: none;
       overflow: hidden;
     }
-  }
-  .show-replies {
-    margin-left: -10px;
-    font-size: inherit;
-    span.badge-posts {
-      color: dark-light-choose($primary-medium, $secondary-high);
+
+    // Some buttons can be doubled up, like likes or flags
+    .double-button {
+      display: inline-flex;
+      color: $primary-low-mid;
+      margin-right: 0.15em;
+      &:hover {
+        button {
+          background: $primary-low;
+          color: $primary-medium;
+        }
+      }
+      button {
+        // It looks really confusing when one half a double button has an inner shadow on click.
+        &:active {
+          box-shadow: none;
+        }
+        margin-left: 0;
+        margin-right: 0;
+        &.my-likes,
+        &.read-indicator,
+        &.regular-likes {
+          // Like count on posts
+          .d-icon {
+            color: $primary-low-mid;
+            padding-left: 0.45em;
+          }
+        }
+        &.like {
+          // Like button with 0 likes
+          &.d-hover {
+            background: $love-low;
+            .d-icon {
+              color: $love;
+            }
+          }
+        }
+        &.has-like {
+          // Like button after I've liked
+          .d-icon {
+            color: $love;
+          }
+          &.d-hover {
+            background: $primary-low;
+            .d-icon {
+              color: $primary-medium;
+            }
+          }
+        }
+        &[disabled] {
+          // Disabled like button
+          cursor: not-allowed;
+        }
+        &.button-count {
+          // Like count button
+          &:not(.my-likes) {
+            padding-right: 0;
+          }
+          &.d-hover {
+            color: $primary;
+          }
+          + .toggle-like {
+            // Like button when like count is present
+            padding-left: 0.45em;
+            &.d-hover {
+              background: $primary-low;
+            }
+          }
+        }
+      }
     }
-    &:hover {
-      background: $primary-low;
-      span.badge-posts {
+    a,
+    button {
+      color: dark-light-choose($primary-low-mid, $secondary-high);
+      .d-icon {
+        opacity: 1;
+      }
+      margin-right: 2px;
+      display: inline-block;
+    }
+    a.toggle-likes {
+      padding: 8px 0;
+      margin-right: -3px;
+    }
+    span.badge-posts {
+      margin-right: 5px;
+      transition: all linear 0.15s;
+    }
+
+    button.create {
+      margin-right: 0;
+      color: dark-light-choose($primary-high, $secondary-low);
+      margin-left: 10px;
+      .d-icon {
+        color: dark-light-choose($primary-high, $secondary-low);
+      }
+    }
+    .create .d-icon {
+      margin-right: 5px;
+    }
+    button {
+      font-size: $font-up-1;
+      padding: 8px 10px;
+      vertical-align: top;
+      background: transparent;
+      border: none;
+      margin-left: 3px;
+      &.d-hover,
+      &:focus {
+        background: $primary-low;
         color: $primary;
       }
+      &:active {
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+      }
+      &.hidden {
+        display: none;
+      }
+      &.admin {
+        position: relative;
+      }
+      &.delete.d-hover,
+      &.delete:hover,
+      &.delete:focus {
+        background: $danger;
+        color: $secondary;
+        .d-icon {
+          color: $secondary;
+        }
+      }
+      &.bookmark {
+        padding: 8px 11px;
+        &.bookmarked .d-icon {
+          color: $tertiary;
+        }
+      }
+    }
+  }
+
+  .show-replies {
+    font-size: $font-up-1;
+    margin-left: -10px;
+    font-size: inherit;
+    padding: 10px;
+    color: $primary-medium;
+    &:hover {
+      color: $primary;
+      background: $primary-low;
     }
     .d-icon {
       margin-left: 5px;
       font-size: $font-down-1;
-    }
-  }
-  button.create {
-    margin-right: 0;
-    color: dark-light-choose($primary-high, $secondary-low);
-    margin-left: 10px;
-    .d-icon {
-      color: dark-light-choose($primary-high, $secondary-low);
-    }
-  }
-  .create .d-icon {
-    margin-right: 5px;
-  }
-  button {
-    font-size: $font-up-1;
-    padding: 8px 10px;
-    vertical-align: top;
-    background: transparent;
-    border: none;
-    margin-left: 3px;
-    &.d-hover,
-    &:focus {
-      background: $primary-low;
-      color: $primary;
-    }
-    &:active {
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
-    }
-    &.hidden {
-      display: none;
-    }
-    &.admin {
-      position: relative;
-    }
-    &.delete.d-hover,
-    &.delete:hover,
-    &.delete:focus {
-      background: $danger;
-      color: $secondary;
-      .d-icon {
-        color: $secondary;
-      }
-    }
-    &.bookmark {
-      padding: 8px 11px;
-      &.bookmarked .d-icon {
-        color: $tertiary;
-      }
-    }
-  }
-  .post-admin-menu {
-    display: inline-flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    background-color: $secondary;
-    width: auto;
-    max-width: 320px;
-    padding: 10px;
-    border: 1px solid $primary-low;
-    position: absolute;
-    text-align: left;
-    bottom: -2px;
-    right: 15px;
-    z-index: z("dropdown");
-    h3 {
-      margin-top: 0;
-      color: $primary;
-      font-size: $font-0;
-    }
-    ul {
-      list-style: none;
-      margin: 10px 0 0 0;
-    }
-    li {
-      margin-bottom: 5px;
-      .d-icon {
-        width: 14px;
-        margin-right: 10px;
-      }
     }
   }
 }
@@ -533,10 +503,6 @@ video {
   }
 }
 
-.open > .dropdown-menu {
-  display: block;
-}
-
 .btn-group {
   position: relative;
 }
@@ -669,72 +635,6 @@ blockquote {
   border-left: 4px solid transparent;
   content: "";
   margin-left: 5px;
-}
-
-.dropdown-menu {
-  position: absolute;
-  bottom: 115%;
-  left: 0;
-  z-index: z("dropdown");
-  display: none;
-  float: left;
-  width: 550px;
-  margin: 1px 0 0;
-  list-style: none;
-  background-color: $secondary;
-  border: 1px solid $primary-low;
-  box-shadow: shadow("dropdown");
-  background-clip: padding-box;
-  span {
-    font-size: $font-down-1;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-  span.title {
-    font-weight: bold;
-    display: block;
-    font-size: $font-0;
-    color: $primary;
-  }
-}
-
-.dropdown-menu a {
-  display: block;
-  padding: 9px;
-  clear: both;
-  font-weight: normal;
-  line-height: $line-height-medium;
-  color: $primary;
-  transition: all linear 0.15s;
-  & > div {
-    margin-left: 26px;
-  }
-}
-
-.dropdown-menu li > a:hover,
-.dropdown-menu .active > a,
-.dropdown-menu .active > a:hover {
-  color: $primary;
-  text-decoration: none;
-  background-color: $highlight-medium;
-}
-
-.dropdown-menu .disabled > a,
-.dropdown-menu .disabled > a:hover {
-  text-decoration: none;
-  color: $primary;
-  background-color: $tertiary-low;
-  cursor: default;
-}
-
-.dropdown-menu .icon {
-  margin-top: 3px;
-  float: left;
-  font-size: $font-up-2;
-}
-
-.open > .dropdown-menu {
-  display: block;
-  clear: both;
 }
 
 .selected-posts {

@@ -1452,7 +1452,6 @@ en:
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
-    download_remote_images_max_days_old: "Don't download remote images for posts that are more than n days old."
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 0 and 1)"
@@ -1583,6 +1582,7 @@ en:
     moderators_view_emails: "Allow moderators to view user emails"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
+    send_old_credential_reminder_days: "Remind about old credentials after days"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
@@ -3738,6 +3738,9 @@ en:
 
         If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
 
+  page_forbidden:
+    title: "Oops! That page is private."
+
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"
@@ -3803,6 +3806,7 @@ en:
     user_email_user_suspended: "user was suspended"
     user_email_already_read: "user has already read this post"
     user_email_access_denied: "user is not allowed to see this post"
+    user_email_no_email: "No email associated with user id %{user_id}"
     sender_message_blank: "message is blank"
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
@@ -4817,3 +4821,14 @@ en:
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."
+
+  old_keys_reminder:
+    title: "Reminder about old credentials"
+    body: |
+      Hello! This is a routine yearly security reminder from your Discourse instance.
+      
+      As a courtesy, we wanted to let you know that the following credentials used on your Discourse instance have not been updated in more than two years:
+      
+      %{keys}
+      
+      No action is required at this time, however, it is considered good security practice to cycle all your important credentials every few years.

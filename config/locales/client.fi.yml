@@ -276,6 +276,7 @@ fi:
       no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se  <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
       invalid_custom_datetime: "Antamasi päivämäärä ja kellonaika ei kelpaa, yritä uudelleen."
       list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
+      delete_when_reminder_sent: "Poista tämä kirjanmerkki, kun muistutusilmoitus lähetetään."
       reminders:
         at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
         later_today: "Myöhemmin tänään"
@@ -292,6 +293,8 @@ fi:
         tomorrow_with_time: "huomenna klo %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Olet pyytänyt muistutuksen tästä kirjanmerkistä"
+    copy_codeblock:
+      copied: "kopioitiin!"
     drafts:
       resume: "Jatka"
       remove: "Poista"
@@ -447,8 +450,8 @@ fi:
         status: "Tila"
         category: "Alue"
         orders:
-          priority: "Prioriteetti"
-          priority_asc: "Prioriteetti (käänteinen)"
+          score: "Arvo"
+          score_asc: "Arvo (käänteinen)"
           created_at: "Luotu"
           created_at_asc: "Luotu (käänteinen)"
         priority:
@@ -676,12 +679,16 @@ fi:
           title: "Vaimennettu"
           description: "Et saa ilmoituksia ryhmän yksityiskeskusteluista."
       flair_url: "Avatarpinssin kuva"
+      flair_upload_description: "Käytä neliönmuotoisia kuvia, joiden koko on vähintään 20px kertaa 20px."
       flair_bg_color: "Avatar-pinssin taustaväri"
       flair_bg_color_placeholder: "(Ei-pakollinen) värin Hex-arvo"
       flair_color: "Avatarpinssin väri"
       flair_color_placeholder: "(Ei-pakollinen) värin Hex-arvo"
       flair_preview_icon: "Ikonin esikatselu"
       flair_preview_image: "Kuvan esikatselu"
+      flair_type:
+        icon: "Valitse ikoni"
+        image: "Lataa kuva"
     user_action_groups:
       "1": "Annetut tykkäykset"
       "2": "Saadut tykkäykset"
@@ -743,6 +750,7 @@ fi:
       copied: "kopioitu"
     user_fields:
       none: "(valitse vaihtoehto)"
+      required: '"%{name}" on pakollinen'
     user:
       said: "{{username}}:"
       profile: "Profiili"
@@ -879,6 +887,7 @@ fi:
       api_approved: "Sallittu:"
       api_last_used_at: "Viimeksi käytetty:"
       theme: "Teema"
+      save_to_change_theme: 'Teema päivittyy kun klikkaat "%{save_text}"'
       home: "Oletusnäkymä"
       staged: "Esikäyttäjä"
       staff_counters:
@@ -1019,6 +1028,7 @@ fi:
         no_secondary: "Ei toissijaisia sähköpostiosoitteita"
         instructions: "Ei tule julkiseksi."
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
+        required: "Syötä sähköpostiosoitteesi"
         invalid: "Sähköpostiosoite ei kelpaa."
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
         frequency_immediately: "Saat sähköpostia välittömästi, jollet ole jo lukenut asiaa, jota sähköpostiviesti koskee."
@@ -1039,6 +1049,7 @@ fi:
         title: "Nimi"
         instructions: "koko nimesi (ei pakollinen)"
         instructions_required: "Koko nimesi"
+        required: "Syötä nimesi"
         too_short: "Nimesi on liian lyhyt"
         ok: "Nimesi vaikuttaa hyvältä"
       username:
@@ -1052,6 +1063,7 @@ fi:
         too_long: "Käyttäjätunnus on liian pitkä"
         checking: "Tarkistetaan käyttäjätunnusta..."
         prefilled: "Sähköposti vastaa tätä käyttäjänimeä"
+        required: "Syötä käyttäjänimi"
       locale:
         title: "Käyttöliittymän kieli"
         instructions: "Käyttöliittymän kieli. Kieli vaihtuu sivun uudelleen lataamisen yhteydessä."
@@ -1195,6 +1207,7 @@ fi:
         same_as_email: "Salasanasi on sama kuin sähköpostisi."
         ok: "Salasana vaikuttaa hyvältä."
         instructions: "vähintään %{count} merkkiä."
+        required: "Syötä salasana"
       summary:
         title: "Yhteenveto"
         stats: "Tilastot"
@@ -1814,7 +1827,6 @@ fi:
           bookmarks: kirjanmerkeistäni
           first: jotka ovat ketjun avausviestejä
           pinned: jotka on kiinnitettyjä
-          unpinned: jotka eivät ole kiinnitettyjä
           seen: jotka olen lukenut
           unseen: joita en ole lukenut
           wiki: ovat wiki-viestejä

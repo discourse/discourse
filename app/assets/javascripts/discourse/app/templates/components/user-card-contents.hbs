@@ -125,7 +125,11 @@
             <div class="suspended">
               <div class="suspension-date">
                 {{d-icon "ban"}}
-                {{i18n "user.suspended_notice" date=this.user.suspendedTillDate}}
+                {{#if this.user.suspendedForever}}
+                  {{i18n 'user.suspended_permanently'}}
+                {{else}}
+                  {{i18n 'user.suspended_notice' date=this.user.suspendedTillDate}}
+                {{/if}}
               </div>
               <div class="suspension-reason">
                 <span class="suspension-reason-title">{{i18n "user.suspended_reason"}}</span>

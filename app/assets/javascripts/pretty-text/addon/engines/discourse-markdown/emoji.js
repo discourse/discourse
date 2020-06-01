@@ -5,15 +5,25 @@ const MAX_NAME_LENGTH = 60;
 
 let translationTree = null;
 
+export function resetTranslationTree() {
+  translationTree = null;
+}
+
 // This allows us to efficiently search for aliases
 // We build a data structure that allows us to quickly
 // search through our N next chars to see if any match
 // one of our alias emojis.
-function buildTranslationTree() {
+function buildTranslationTree(customEmojiTranslation) {
   let tree = [];
   let lastNode;
 
-  Object.keys(translations).forEach(key => {
+  const allTranslations = Object.assign(
+    {},
+    translations,
+    customEmojiTranslation || {}
+  );
+
+  Object.keys(allTranslations).forEach(key => {
     let node = tree;
 
     for (let i = 0; i < key.length; i++) {
@@ -37,7 +47,7 @@ function buildTranslationTree() {
       }
     }
 
-    lastNode[2] = translations[key];
+    lastNode[2] = allTranslations[key];
   });
 
   return tree;
@@ -114,8 +124,14 @@ function getEmojiTokenByName(name, state) {
   }
 }
 
-function getEmojiTokenByTranslation(content, pos, state) {
-  translationTree = translationTree || buildTranslationTree();
+function getEmojiTokenByTranslation(
+  content,
+  pos,
+  state,
+  customEmojiTranslation
+) {
+  translationTree =
+    translationTree || buildTranslationTree(customEmojiTranslation);
 
   let t = translationTree;
   let start = pos;
@@ -175,7 +191,8 @@ function applyEmoji(
   state,
   emojiUnicodeReplacer,
   enableShortcuts,
-  inlineEmoji
+  inlineEmoji,
+  customEmojiTranslation
 ) {
   let result = null;
   let start = 0;
@@ -201,7 +218,12 @@ function applyEmoji(
 
     if (enableShortcuts && !token) {
       // handle aliases (note: we can't do this in inline cause ; is not a split point)
-      const info = getEmojiTokenByTranslation(content, i, state);
+      const info = getEmojiTokenByTranslation(
+        content,
+        i,
+        state,
+        customEmojiTranslation
+      );
 
       if (info) {
         offset = info.pos - i;
@@ -310,7 +332,8 @@ export function setup(helper) {
           s,
           md.options.discourse.emojiUnicodeReplacer,
           md.options.discourse.features.emojiShortcuts,
-          md.options.discourse.features.inlineEmoji
+          md.options.discourse.features.inlineEmoji,
+          md.options.discourse.customEmojiTranslation
         )
       )
     );

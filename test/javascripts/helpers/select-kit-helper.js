@@ -95,6 +95,12 @@ function rowHelper(row) {
     title() {
       return row.attr("title");
     },
+    label() {
+      return row
+        .find(".name")
+        .text()
+        .trim();
+    },
     value() {
       const value = row.attr("data-value");
       return isEmpty(value) ? null : value;
@@ -124,7 +130,7 @@ function headerHelper(header) {
       return header.find(".d-icon");
     },
     title() {
-      return header.attr("title");
+      return header.find(".selected-name").attr("title");
     },
     el() {
       return header;

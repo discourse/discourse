@@ -397,8 +397,7 @@ vi:
         status: "Trạng thái"
         category: "Danh mục"
         orders:
-          priority: "Mức độ ưu tiên"
-          priority_asc: "Mức độ ưu tiên (đảo ngược)"
+          score: "Điểm số"
           created_at: "Được tạo tại"
           created_at_asc: "Tạo tại (đảo ngược)"
         priority:
@@ -1439,7 +1438,6 @@ vi:
           likes: Tôi đã thích
           posted: Tôi đã gửi trong
           pinned: được gim
-          unpinned: không được gim
           unseen: Tôi chưa đọc
           wiki: là wiki
         statuses:

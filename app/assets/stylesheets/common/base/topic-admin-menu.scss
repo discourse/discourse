@@ -1,43 +1,9 @@
 // Styles for the topic admin menu
 
-.show-topic-admin {
-  position: fixed;
-  top: 120px;
-  right: 10px;
-  z-index: z("dropdown");
-  height: 35px;
-}
-
-.popup-menu {
-  background-color: $secondary;
-  width: 215px;
-  padding: 10px;
-  border: 1px solid $primary-low;
-  z-index: z("dropdown");
-  box-shadow: shadow("card");
-
-  ul {
-    list-style: none;
-    margin: 10px 0 0 0;
-  }
-
-  .btn {
-    text-align: left;
-  }
-
-  button {
-    width: 100%;
-    margin-bottom: 5px;
-  }
-
-  .header {
-    .close-button {
-      display: none;
-    }
-  }
-
+.topic-admin-popup-menu {
   @include breakpoint(mobile-extra-large) {
-    width: 100%;
+    width: calc(100% - 20px);
+    margin: 0 10px;
     padding: 0;
     padding-bottom: env(safe-area-inset-bottom);
     z-index: z("modal", "popover");
@@ -51,19 +17,6 @@
       }
     }
     animation: slideUp 0.3s;
-
-    .header {
-      padding: 10px 0 0 10px;
-      display: flex;
-      justify-content: space-between;
-      .close-button {
-        display: block;
-        background: transparent;
-      }
-    }
-    ul {
-      margin-top: 0;
-    }
   }
 
   .mobile-view & {

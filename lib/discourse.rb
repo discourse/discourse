@@ -489,7 +489,7 @@ module Discourse
   end
 
   def self.readonly_mode?(keys = READONLY_KEYS)
-    recently_readonly? || Discourse.redis.mget(*keys).compact.present?
+    recently_readonly? || Discourse.redis.exists(*keys)
   end
 
   def self.pg_readonly_mode?
@@ -652,7 +652,7 @@ module Discourse
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
-    Discourse.redis._client.reconnect
+    Discourse.redis.reconnect
     Rails.cache.reconnect
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
@@ -660,6 +660,10 @@ module Discourse
     Sidekiq.redis_pool.shutdown { |c| nil }
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
+
+    if ENV['ACTIVE_RECORD_RAILS_FAILOVER']
+      RailsFailover::ActiveRecord.after_fork
+    end
 
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context

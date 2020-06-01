@@ -60,13 +60,17 @@
         }
 
         .topic-count {
-          margin-left: 5px;
+          margin-left: 0.5em;
           font-weight: normal;
+          color: $primary-medium;
+        }
+
+        .category-name {
+          color: $primary;
         }
 
         .badge-wrapper {
           margin: 0;
-          font-weight: bold;
 
           &:nth-child(2) {
             margin-left: 10px;

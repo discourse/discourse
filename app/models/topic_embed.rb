@@ -116,7 +116,7 @@ class TopicEmbed < ActiveRecord::Base
     )
 
     url = fd.resolve
-    raise URI::InvalidURIError if url.blank?
+    return if url.blank?
 
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],

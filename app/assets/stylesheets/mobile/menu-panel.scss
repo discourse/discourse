@@ -11,13 +11,17 @@
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
+
   &.animate {
     transition: opacity 0.2s ease-out;
   }
 }
 
-.user-menu .quick-access-profile li:not(.show-all) {
-  margin: 0.5em 0 0.75em;
-  padding: 0.75em;
-  border: 1px solid $primary-low;
+.user-menu .quick-access-panel.quick-access-profile li:not(.show-all) {
+  border-bottom: 1px solid $primary-low;
+
+  a {
+    // accounts for menu "ears" 4px + border 1px
+    padding: 0.75em calc(0.5em + 4px + 1px);
+  }
 }

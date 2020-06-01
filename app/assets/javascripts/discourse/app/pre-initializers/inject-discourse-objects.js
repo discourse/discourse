@@ -9,11 +9,13 @@ import TopicTrackingState, {
 import ScreenTrack from "discourse/lib/screen-track";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import MessageBus from "message-bus-client";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
 export default {
   name: "inject-discourse-objects",
+  after: "discourse-bootstrap",
 
   initialize(container, app) {
     ALL_TARGETS.forEach(t => app.inject(t, "appEvents", "service:app-events"));
@@ -27,8 +29,7 @@ export default {
       ALL_TARGETS.forEach(t => app.inject(t, "store", "service:store"));
     }
 
-    const messageBus = window.MessageBus;
-    app.register("message-bus:main", messageBus, { instantiate: false });
+    app.register("message-bus:main", MessageBus, { instantiate: false });
 
     ALL_TARGETS.concat("service").forEach(t =>
       app.inject(t, "messageBus", "message-bus:main")
@@ -39,7 +40,7 @@ export default {
     app.currentUser = currentUser;
 
     const topicTrackingState = TopicTrackingState.create({
-      messageBus,
+      messageBus: MessageBus,
       currentUser
     });
     app.register("topic-tracking-state:main", topicTrackingState, {

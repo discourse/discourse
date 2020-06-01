@@ -1459,7 +1459,6 @@ ar:
           bookmarks: وضعت علية علامة مرجعية
           first: اول منشور في الموضوعات
           pinned: مثبتة
-          unpinned: غير مثبتة
           seen: قراءته
           unseen: لم أقرأها
           wiki: من النوع wiki
@@ -3549,19 +3548,26 @@ ar:
         category_id: "رقم التصنيف"
         category_title: "قسم"
         external_url: "رابط خارجي"
+        destination: "المكان المقصود"
         delete_confirm: هل أنت متأكد من حذف هذا الرابط الثابت ؟
         form:
           label: "جديد :"
           add: "أضف"
           filter: "بحث ( رابط داخلي أو خارجي )"
       reseed:
+        action:
+          label: "استبدال النص ..."
+          title: "استبدل نص الفئات والمواضيع بالترجمات"
         modal:
+          title: "استبدال النص"
+          subtitle: "استبدل نص الفئات والمواضيع التي أنشأها النظام بأحدث الترجمات"
           categories: "التصنيفات"
           topics: "المواضيع"
           replace: "غير"
   wizard_js:
     wizard:
       done: "انتهى"
+      finish: "إنهاء"
       back: "الى الخلف"
       next: "التالي"
       step: "%{current} من %{total}"

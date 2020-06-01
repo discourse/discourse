@@ -77,7 +77,11 @@ module Jobs
           origin: UrlHelper.absolute(old_url)
         ).create_for(Discourse.system_user.id)
 
-        DB.exec("UPDATE groups SET flair_url = NULL, flair_upload_id = #{upload.id} WHERE id = #{group.id}") if upload.present?
+        if upload.errors.count > 0
+          logger.warn("Failed to create upload for '#{group_name}' group_flair: #{upload.errors.full_messages}")
+        else
+          DB.exec("UPDATE groups SET flair_url = NULL, flair_upload_id = #{upload.id} WHERE id = #{group.id}") if upload&.id.present?
+        end
       end
     end
 

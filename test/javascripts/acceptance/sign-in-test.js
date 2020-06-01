@@ -68,7 +68,7 @@ QUnit.test("sign in - not activated - edit email", async assert => {
   assert.equal(find(".modal-body b").text(), "different@example.com");
 });
 
-QUnit.test("second factor", async assert => {
+QUnit.skip("second factor", async assert => {
   await visit("/");
   await click("header .login-button");
 
@@ -101,7 +101,7 @@ QUnit.test("second factor", async assert => {
   );
 });
 
-QUnit.test("security key", async assert => {
+QUnit.skip("security key", async assert => {
   await visit("/");
   await click("header .login-button");
 

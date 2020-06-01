@@ -426,8 +426,7 @@ hy:
         status: "Ստատուս"
         category: "Կատեգորիա"
         orders:
-          priority: "Գերակայության"
-          priority_asc: "Գերակայության (հետադարձ տեսակավորում)"
+          score: "Միավոր"
           created_at: "Ստեղծվել է At"
           created_at_asc: "Ստեղծվել է At (հետադարձ տեսակավորում)"
         priority:
@@ -1777,7 +1776,6 @@ hy:
           bookmarks: Ես էջանշել եմ
           first: "ամենաառաջին գրառումներն են "
           pinned: ամրակցված են
-          unpinned: ամրակցված չեն
           seen: Ես կարդացել եմ
           unseen: Ես չեմ կարդացել
           wiki: wiki են

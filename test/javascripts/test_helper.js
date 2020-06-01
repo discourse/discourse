@@ -17,7 +17,7 @@
 
 // Stuff we need to load first
 //= require vendor
-//= require ember-shim
+//= require discourse-shims
 //= require pretty-text-bundle
 //= require markdown-it-bundle
 //= require application
@@ -53,10 +53,10 @@ sinon.config = {
   useFakeServer: false
 };
 
-window.inTestEnv = true;
+let MessageBus = require("message-bus-client").default;
 
 // Stop the message bus so we don't get ajax calls
-window.MessageBus.stop();
+MessageBus.stop();
 
 // Trick JSHint into allow document.write
 var d = document;
@@ -191,7 +191,7 @@ QUnit.testDone(function() {
     window.Discourse.__container__
   );
 
-  window.MessageBus.unsubscribe("*");
+  MessageBus.unsubscribe("*");
   delete window.server;
   window.Mousetrap.reset();
 });

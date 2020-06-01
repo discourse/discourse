@@ -246,10 +246,10 @@ class TopicCreator
 
   def add_groups(topic, groups)
     return unless groups
-    names = groups.split(',').flatten
+    names = groups.split(',').flatten.map(&:downcase)
     len = 0
 
-    Group.where(name: names).each do |group|
+    Group.where('lower(name) in (?)', names).each do |group|
       check_can_send_permission!(topic, group)
       topic.topic_allowed_groups.build(group_id: group.id)
       len += 1

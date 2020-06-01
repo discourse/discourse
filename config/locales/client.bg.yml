@@ -392,8 +392,7 @@ bg:
         status: "Статус"
         category: "Категория"
         orders:
-          priority: "Приоритет"
-          priority_asc: "Приоритет (по обратен ред)"
+          score: "Точки"
           created_at: "Създадено на"
           created_at_asc: "Създадено на (по обратен ред)"
         priority:
@@ -1345,7 +1344,6 @@ bg:
           tracking: Аз следя
           first: е първата публикация
           pinned: са закачени
-          unpinned: не са закачени
           all_tags: Всички по-горни етикети
         post:
           time:

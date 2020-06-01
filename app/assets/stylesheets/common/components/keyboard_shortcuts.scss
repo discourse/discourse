@@ -55,7 +55,7 @@
       border-radius: 3px;
       display: inline-flex;
       margin: 0 6px;
-      padding: 1px 0 5px;
+      padding: 2px 1px 4px;
     }
 
     span:first-child {
@@ -63,19 +63,8 @@
     }
 
     kbd {
-      align-items: center;
-      box-sizing: border-box;
-      color: dark-light-choose(#333, #aaa);
-      display: inline-flex;
       font-family: $base-font-family;
       font-weight: bold;
-      height: 24px;
-      justify-content: center;
-      margin: 0 3px;
-      min-width: 24px;
-      padding: 0 6px;
-      vertical-align: bottom;
-      white-space: nowrap;
     }
   }
 }

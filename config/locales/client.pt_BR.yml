@@ -450,8 +450,7 @@ pt_BR:
         status: "Status"
         category: "Categoria"
         orders:
-          priority: "Prioridade"
-          priority_asc: "Prioridade (reversa)"
+          score: "Pontuação"
           created_at: "Criado a"
           created_at_asc: "Criado Em (reverso)"
         priority:
@@ -1308,7 +1307,7 @@ pt_BR:
       login_disabled: "O login é desabilitado enquanto o site está em modo de somente leitura."
       logout_disabled: "O logout é desabilitado enquanto o site está em modo de somente leitura."
     too_few_topics_and_posts_notice_MF: >-
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">começar a discussão!</a> {currentTopics, plural, one {Existe <strong>#</strong> tópico} other {Existem <strong>#</strong> tópicos}} e {currentPosts, plural, one <strong>{#</strong> postagem} other <strong>{#</strong> postagens}}. Os visitantes precisam de mais para ler e responder – recomendamos pelo menos {requiredTopics, plural, one <strong>{#</strong> tópico} other <strong>{#</strong> tópicos}} e {requiredPosts, plural, one <strong>{#</strong> postagem} other <strong>{#</strong> postagens}}. Somente a staff pode ver esta mensagem.
+      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">começar a discussão!</a> {currentTopics, plural, one {Existe <strong>#</strong> tópico} other {Existem <strong>#</strong> tópicos}} e {currentPosts, plural, one {<strong>#</strong> postagem} other {<strong>#</strong> postagens}}. Os visitantes precisam de mais para ler e responder – recomendamos pelo menos {requiredTopics, plural, one {<strong>#</strong> tópico} other {<strong>#</strong> tópicos}} e {requiredPosts, plural, one {<strong>#</strong> postagem} other {<strong>#</strong> postagens}}. Somente a staff pode ver esta mensagem.
     too_few_topics_notice_MF: >-
       Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">começar a discussão!</a> {currentTopics, plural, one {Existe <strong>#</strong> tópico} other {Existem <strong>#</strong> tópicos}}. Os visitantes precisam de mais para ler e responder – recomendamos pelo menos {requiredTopics, plural, one {<strong>#</strong> tópico} other { <strong>#</strong> tópicos}}. Somente a staff pode ver esta mensagem.
     too_few_posts_notice_MF: >-
@@ -1833,7 +1832,6 @@ pt_BR:
           bookmarks: Eu marquei como favorito
           first: são exatamente a primeira postagem
           pinned: estão fixados
-          unpinned: não estão fixados
           seen: Eu li
           unseen: Eu não li
           wiki: são wiki

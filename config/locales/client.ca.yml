@@ -420,8 +420,7 @@ ca:
         status: "Estat"
         category: "Categoria"
         orders:
-          priority: "Prioritat"
-          priority_asc: "Prioritat (inversa)"
+          score: "Puntuació"
           created_at: "Creat"
           created_at_asc: "Creat (invers)"
         priority:
@@ -1748,7 +1747,6 @@ ca:
           bookmarks: He marcat com a preferits
           first: són la primera publicació
           pinned: estan afixats
-          unpinned: no estan afixats
           seen: he llegit
           unseen: no he llegit
           wiki: són wiki

@@ -20,7 +20,10 @@ export default Component.extend({
     this._removeClass();
 
     let classes = [];
-    if (slug) classes.push(`category-${slug}`);
+    if (slug) {
+      classes.push("category");
+      classes.push(`category-${slug}`);
+    }
     if (tags) tags.forEach(t => classes.push(`tag-${t}`));
     if (classes.length > 0) $("body").addClass(classes.join(" "));
   },
@@ -32,7 +35,7 @@ export default Component.extend({
 
   _removeClass() {
     $("body").removeClass((_, css) =>
-      (css.match(/\b(?:category|tag)-\S+/g) || []).join(" ")
+      (css.match(/\b(?:category|tag)-\S+|( category )/g) || []).join(" ")
     );
   },
 

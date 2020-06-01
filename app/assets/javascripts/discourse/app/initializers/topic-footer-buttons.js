@@ -7,7 +7,6 @@ const SHARE_PRIORITY = 1000;
 const BOOKMARK_PRIORITY = 900;
 const ARCHIVE_PRIORITY = 800;
 const FLAG_PRIORITY = 700;
-const EDIT_MESSAGE_PRIORITY = 600;
 const DEFER_PRIORITY = 500;
 
 export default {
@@ -163,23 +162,6 @@ export default {
       },
       displayed() {
         return this.canArchive;
-      }
-    });
-
-    registerTopicFooterButton({
-      id: "edit-message",
-      priority: EDIT_MESSAGE_PRIORITY,
-      icon: "pencil-alt",
-      label: "topic.edit_message.title",
-      title: "topic.edit_message.help",
-      action: "editFirstPost",
-      classNames: ["edit-message"],
-      dependentKeys: ["editFirstPost", "showEditOnFooter"],
-      dropdown() {
-        return this.site.mobileView && this.get("topic.isPrivateMessage");
-      },
-      displayed() {
-        return this.showEditOnFooter;
       }
     });
 

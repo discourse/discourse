@@ -38,13 +38,18 @@ export default Component.extend(UtilsMixin, {
     return this.getProperty(this.item, "ariaLabel") || this.title;
   }),
 
-  title: computed("item.title", "rowName", function() {
-    return this.getProperty(this.item, "title") || this.rowName;
+  title: computed("rowTitle", "item.title", "rowName", function() {
+    return (
+      this.rowTitle || this.getProperty(this.item, "title") || this.rowName
+    );
   }),
 
-  label: computed("item.label", "title", "rowName", function() {
+  label: computed("rowLabel", "item.label", "title", "rowName", function() {
     const label =
-      this.getProperty(this.item, "label") || this.title || this.rowName;
+      this.rowLabel ||
+      this.getProperty(this.item, "label") ||
+      this.title ||
+      this.rowName;
     if (
       this.selectKit.options.allowAny &&
       this.rowValue === this.selectKit.filter &&
@@ -61,7 +66,9 @@ export default Component.extend(UtilsMixin, {
 
     this.setProperties({
       rowName: this.getName(this.item),
-      rowValue: this.getValue(this.item)
+      rowValue: this.getValue(this.item),
+      rowLabel: this.getProperty(this.item, "labelProperty"),
+      rowTitle: this.getProperty(this.item, "titleProperty")
     });
   },
 

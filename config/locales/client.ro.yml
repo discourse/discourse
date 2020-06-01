@@ -1354,7 +1354,6 @@ ro:
           private: În mesajele mele
           first: sunt chiar pe primul loc în listă
           pinned: sunt fixate
-          unpinned: nu sunt fixate
           seen: Citesc
           unseen: Nu am citit
           wiki: sunt wiki

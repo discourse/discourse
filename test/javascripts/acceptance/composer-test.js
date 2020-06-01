@@ -18,7 +18,7 @@ acceptance("Composer", {
   }
 });
 
-QUnit.test("Tests the Composer controls", async assert => {
+QUnit.skip("Tests the Composer controls", async assert => {
   await visit("/");
   assert.ok(exists("#create-topic"), "the create button is visible");
 

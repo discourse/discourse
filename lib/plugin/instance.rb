@@ -18,6 +18,7 @@ class Plugin::CustomEmoji
   def self.clear_cache
     @@cache_key = CACHE_KEY
     @@emojis = {}
+    @@translations = {}
   end
 
   def self.register(name, url, group = Emoji::DEFAULT_GROUP)
@@ -29,6 +30,15 @@ class Plugin::CustomEmoji
 
   def self.unregister(name, group = Emoji::DEFAULT_GROUP)
     emojis[group].delete(name)
+  end
+
+  def self.translations
+    @@translations ||= {}
+  end
+
+  def self.translate(from, to)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + from)[0..10]
+    translations[from] = to
   end
 end
 
@@ -485,6 +495,10 @@ class Plugin::Instance
   def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
     Plugin::CustomEmoji.register(name, url, group)
     Emoji.clear_cache
+  end
+
+  def translate_emoji(from, to)
+    Plugin::CustomEmoji.translate(from, to)
   end
 
   def automatic_assets

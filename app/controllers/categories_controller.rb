@@ -57,7 +57,7 @@ class CategoriesController < ApplicationController
           @topic_list = TopicQuery.new(current_user, topic_options).list_latest
           @topic_list.more_topics_url = url_for(public_send("latest_path"))
         elsif style == "categories_and_top_topics"
-          @topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+          @topic_list = TopicQuery.new(current_user, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
           @topic_list.more_topics_url = url_for(public_send("top_path"))
         end
 
@@ -329,7 +329,6 @@ class CategoriesController < ApplicationController
         :required_tag_group_name,
         :min_tags_from_required_group,
         :read_only_banner,
-        :default_list_filter,
         custom_fields: [params[:custom_fields].try(:keys)],
         permissions: [*p.try(:keys)],
         allowed_tags: [],

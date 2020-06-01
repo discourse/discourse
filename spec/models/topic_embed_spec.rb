@@ -311,9 +311,10 @@ describe TopicEmbed do
     end
 
     context "non-http URL" do
-      let(:url) { '/test.txt' }
       it "throws an error" do
-        expect { TopicEmbed.find_remote(url) }.to raise_error(URI::InvalidURIError)
+        url = '/test.txt'
+
+        expect(TopicEmbed.find_remote(url)).to be_nil
       end
     end
 

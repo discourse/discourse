@@ -428,8 +428,7 @@ tr_TR:
         status: "Durum"
         category: "Kategori"
         orders:
-          priority: "Öncelik"
-          priority_asc: "Öncelik (ters)"
+          score: "Skor"
           created_at: "İçinde Oluşturuldu"
           created_at_asc: "İçinde Oluşturuldu (tersine)"
         priority:
@@ -1762,7 +1761,6 @@ tr_TR:
           bookmarks: İşaretledim
           first: "ilk gönderidir "
           pinned: sabitlenmiş
-          unpinned: sabitlenmemiş
           seen: Okudum
           unseen: Okumadım
           wiki: wiki olan

@@ -504,8 +504,7 @@ pl_PL:
         status: "Status"
         category: "Kategoria"
         orders:
-          priority: "Priorytet"
-          priority_asc: "Priorytet (odwróć)"
+          score: "Wynik"
           created_at: "Utworzony"
           created_at_asc: "Utworzono (odwrotnie)"
         priority:
@@ -1912,7 +1911,6 @@ pl_PL:
           bookmarks: Dodałeś do zakładek
           first: "tylko najnowsze posty "
           pinned: są przypięte
-          unpinned: są nie przypięte
           seen: Przeczytałem
           unseen: Nie przeczytałem
           wiki: są postami wiki

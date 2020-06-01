@@ -1344,7 +1344,6 @@ sk:
           tracking: Pozorujem
           private: V mojich správach
           pinned: sú pripnuté
-          unpinned: nie sú pripnuté
           unseen: som nečítal
         statuses:
           label: Kde témy
