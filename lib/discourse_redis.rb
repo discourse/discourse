@@ -208,13 +208,15 @@ class DiscourseRedis
     end
   end
 
-  # Remove when this has been upstreamed in https://github.com/redis/redis-rb/pull/911
+  # Implement our own because https://github.com/redis/redis-rb/issues/698 has stalled
   def exists(*keys)
     keys.map! { |a| "#{namespace}:#{a}" }  if @namespace
 
     DiscourseRedis.ignore_readonly do
-      @redis._client.call([:exists, *keys]) do |value|
-        value > 0
+      @redis.synchronize do |client|
+        client.call([:exists, *keys]) do |value|
+          value > 0
+        end
       end
     end
   end
