@@ -18,10 +18,15 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
 
     def self.enable_pg_force_readonly_mode
       Discourse.redis.set(PG_FORCE_READONLY_MODE_KEY, 1)
+      MessageBus.publish(readonly_channel, true)
+      Site.clear_anon_cache!
+      true
     end
 
     def self.disable_pg_force_readonly_mode
-      Discourse.redis.del(PG_FORCE_READONLY_MODE_KEY)
+      result = Discourse.redis.del(PG_FORCE_READONLY_MODE_KEY)
+      MessageBus.publish(readonly_channel, false)
+      result > 0
     end
   end
 
