@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/discourse/rails_failover
-  revision: 0e668eba86591c20aa7a43f47b0cd36d4eacaeb6
+  revision: 291bf1c18e9a704556a40204d8160549d0438e96
   specs:
     rails_failover (0.4.0)
       activerecord (~> 6.0)
