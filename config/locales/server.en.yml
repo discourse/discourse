@@ -899,7 +899,7 @@ en:
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
       long_form: "flagged this as inappropriate"
     notify_user:
-      title: "Send @{{username}} a message"
+      title: "Send @%{username} a message"
       description: "I want to talk to this person directly and personally about their post."
       short_description: "I want to talk to this person directly and personally about their post."
       long_form: "messaged user"
@@ -4826,9 +4826,9 @@ en:
     title: "Reminder about old credentials"
     body: |
       Hello! This is a routine yearly security reminder from your Discourse instance.
-      
+
       As a courtesy, we wanted to let you know that the following credentials used on your Discourse instance have not been updated in more than two years:
-      
+
       %{keys}
-      
+
       No action is required at this time, however, it is considered good security practice to cycle all your important credentials every few years.

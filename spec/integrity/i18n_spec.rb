@@ -141,12 +141,19 @@ describe "i18n integrity checks" do
       context "valid translations" do
         invalid_relative_links = {}
         invalid_relative_image_sources = {}
+        invalid_interpolation_key_format = {}
 
         each_translation(english_yaml) do |key, value|
           if value.match?(/href\s*=\s*["']\/[^\/]|\]\(\/[^\/]/i)
             invalid_relative_links[key] = value
-          elsif value.match?(/src\s*=\s*["']\/[^\/]/i)
+          end
+
+          if value.match?(/src\s*=\s*["']\/[^\/]/i)
             invalid_relative_image_sources[key] = value
+          end
+
+          if value.match?(/\{\{.+?}}/)
+            invalid_interpolation_key_format[key] = value
           end
         end
 
@@ -158,6 +165,11 @@ describe "i18n integrity checks" do
         it "uses %{base_url} or %{base_path} for relative image src" do
           keys = invalid_relative_image_sources.keys.join("\n")
           expect(invalid_relative_image_sources).to be_empty, "The following keys have relative image sources, but do not start with %{base_url} or %{base_path}:\n\n#{keys}"
+        end
+
+        it "uses the %{key} as interpolation key format" do
+          keys = invalid_interpolation_key_format.keys.join("\n")
+          expect(invalid_interpolation_key_format).to be_empty, "The following keys use {{key}} instead of %{key} for interpolation keys:\n\n#{keys}"
         end
       end
     end
