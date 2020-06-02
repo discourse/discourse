@@ -18,6 +18,7 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
 
     def self.enable_pg_force_readonly_mode
       Discourse.redis.set(PG_FORCE_READONLY_MODE_KEY, 1)
+      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
       MessageBus.publish(readonly_channel, true)
       Site.clear_anon_cache!
       true
@@ -25,6 +26,7 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
 
     def self.disable_pg_force_readonly_mode
       result = Discourse.redis.del(PG_FORCE_READONLY_MODE_KEY)
+      Sidekiq.unpause!
       MessageBus.publish(readonly_channel, false)
       result > 0
     end
