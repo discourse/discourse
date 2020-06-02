@@ -1,3 +1,4 @@
+import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
@@ -7,7 +8,7 @@ export default Component.extend({
 
   @discourseComputed("src")
   cdnSrc(src) {
-    return Discourse.getURLWithCDN(src);
+    return getURLWithCDN(src);
   },
 
   @discourseComputed("width", "height")

@@ -150,6 +150,6 @@ export default Controller.extend(PeriodComputationMixin, {
   },
 
   _reportsForPeriodURL(period) {
-    return Discourse.getURL(`/admin?period=${period}`);
+    return getURL(`/admin?period=${period}`);
   }
 });

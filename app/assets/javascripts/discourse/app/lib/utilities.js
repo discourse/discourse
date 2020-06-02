@@ -85,7 +85,7 @@ export function tinyAvatar(avatarTemplate, options) {
 }
 
 export function postUrl(slug, topicId, postNumber) {
-  var url = Discourse.getURL("/t/");
+  var url = getURL("/t/");
   if (slug) {
     url += slug + "/";
   } else {

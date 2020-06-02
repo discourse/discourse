@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { debounce } from "@ember/runloop";
@@ -14,7 +15,7 @@ export default Component.extend({
 
   @discourseComputed
   demoAvatarUrl() {
-    return Discourse.getURL("/images/avatar.png");
+    return getURL("/images/avatar.png");
   },
 
   @discourseComputed("model.flair_type")
@@ -105,7 +106,7 @@ export default Component.extend({
   @action
   setFlairImage(upload) {
     this.model.setProperties({
-      flair_url: Discourse.getURL(upload.url),
+      flair_url: getURL(upload.url),
       flair_upload_id: upload.id
     });
   },

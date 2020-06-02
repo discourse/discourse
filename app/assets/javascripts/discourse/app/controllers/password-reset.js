@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { alias, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
@@ -41,10 +42,10 @@ export default Controller.extend(PasswordValidation, {
 
   @discourseComputed("redirectTo")
   redirectHref(redirectTo) {
-    return Discourse.getURL(redirectTo || "/");
+    return getURL(redirectTo || "/");
   },
 
-  lockImageUrl: Discourse.getURL("/images/lock.svg"),
+  lockImageUrl: getURL("/images/lock.svg"),
 
   actions: {
     submit() {

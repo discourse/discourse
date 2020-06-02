@@ -47,9 +47,7 @@ export const DefaultNotificationItem = createWidget(
 
         let username = data.username;
         username = username ? "?username=" + username.toLowerCase() : "";
-        return Discourse.getURL(
-          "/badges/" + badgeId + "/" + badgeSlug + username
-        );
+        return getURL("/badges/" + badgeId + "/" + badgeSlug + username);
       }
 
       const topicId = attrs.topic_id;

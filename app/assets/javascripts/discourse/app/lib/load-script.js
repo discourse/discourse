@@ -1,3 +1,4 @@
+import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
 import { run } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { Promise } from "rsvp";
@@ -51,9 +52,7 @@ export default function loadScript(url, opts) {
 
   // Scripts should always load from CDN
   // CSS is type text, to accept it from a CDN we would need to handle CORS
-  const fullUrl = opts.css
-    ? Discourse.getURL(url)
-    : Discourse.getURLWithCDN(url);
+  const fullUrl = opts.css ? getURL(url) : getURLWithCDN(url);
 
   $("script").each((i, tag) => {
     const src = tag.getAttribute("src");

@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { not, or, gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
@@ -195,7 +196,7 @@ export default Controller.extend(CanCheckEmails, {
                 () => {
                   bootbox.alert(
                     I18n.t("user.deleted_yourself"),
-                    () => (window.location = Discourse.getURL("/"))
+                    () => (window.location = getURL("/"))
                   );
                 },
                 () => {

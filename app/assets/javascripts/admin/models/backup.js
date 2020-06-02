@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -66,7 +67,7 @@ Backup.reopenClass({
         bootbox.alert(result.message);
       } else {
         // redirect to homepage (session might be lost)
-        window.location = Discourse.getURL("/");
+        window.location = getURL("/");
       }
     });
   }
