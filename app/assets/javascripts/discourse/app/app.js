@@ -4,6 +4,8 @@ import { computed } from "@ember/object";
 import { buildResolver } from "discourse-common/resolver";
 import { bind } from "@ember/runloop";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
+import deprecated from "discourse-common/lib/deprecated";
 
 const _pluginCallbacks = [];
 
@@ -42,26 +44,19 @@ const Discourse = Application.extend({
   },
 
   getURL(url) {
-    if (!url) return url;
-
-    // if it's a non relative URL, return it.
-    if (url !== "/" && !/^\/[^\/]/.test(url)) return url;
-
-    if (url[0] !== "/") url = "/" + url;
-    if (url.startsWith(this.BaseUri)) return url;
-
-    return this.BaseUri + url;
+    deprecated(
+      "Import `getURL` from `discourse-common/lib/get-url` instead of `Discourse.getURL`",
+      { since: "2.5", dropFrom: "2.6" }
+    );
+    return getURL(url);
   },
 
   getURLWithCDN(url) {
-    url = this.getURL(url);
-    // only relative urls
-    if (this.CDN && /^\/[^\/]/.test(url)) {
-      url = this.CDN + url;
-    } else if (this.S3CDN) {
-      url = url.replace(this.S3BaseUrl, this.S3CDN);
-    }
-    return url;
+    deprecated(
+      "Import `getURLWithCDN` from `discourse-common/lib/get-url` instead of `Discourse.getURLWithCDN`",
+      { since: "2.5", dropFrom: "2.6" }
+    );
+    return getURLWithCDN(url);
   },
 
   Resolver: buildResolver("discourse"),

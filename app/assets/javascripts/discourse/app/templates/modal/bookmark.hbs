@@ -96,7 +96,7 @@
         {{/tap-tile-grid}}
 
       {{else}}
-        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=basePath)}}</div>
+        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(get-url "/"))}}</div>
       {{/if}}
     </div>
 

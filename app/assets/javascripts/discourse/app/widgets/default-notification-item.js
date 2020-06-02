@@ -15,6 +15,7 @@ import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse-common/lib/get-url";
 
 export const DefaultNotificationItem = createWidget(
   "default-notification-item",
@@ -134,8 +135,9 @@ export const DefaultNotificationItem = createWidget(
       const id = this.attrs.id;
       setTransientHeader("Discourse-Clear-Notifications", id);
       if (document && document.cookie) {
-        let path = Discourse.BaseUri || "/";
-        document.cookie = `cn=${id}; path=${path}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+        document.cookie = `cn=${id}; path=${getURL(
+          "/"
+        )}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
       }
       if (wantsNewWindow(e)) {
         return;
