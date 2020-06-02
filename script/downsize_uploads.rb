@@ -62,7 +62,7 @@ def process_uploads
     if upload.local?
       path = Discourse.store.path_for(upload)
     else
-      path = (Discourse.store.download(upload) rescue nil)&.path
+      path = (Discourse.store.download(upload, max_file_size_kb: 100.megabytes) rescue nil)&.path
     end
 
     unless path
