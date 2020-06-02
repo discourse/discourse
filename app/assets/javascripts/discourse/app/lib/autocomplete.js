@@ -1,5 +1,4 @@
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import { debounce, cancel, later } from "@ember/runloop";
+import { cancel, later } from "@ember/runloop";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { setCaretPosition, caretPosition } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
@@ -414,7 +413,9 @@ export default function(options) {
     return options.triggerRule ? options.triggerRule(me[0], opts) : true;
   }
 
-  function debouncedInput() {
+  $(this).on("keyup.autocomplete", function(e) {
+    if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
+
     let cp = caretPosition(me[0]);
     const key = me[0].value[cp - 1];
 
@@ -425,7 +426,7 @@ export default function(options) {
           completeStart = cp - match[0].length;
           completeEnd = completeStart + match[0].length - 1;
           let term = match[0].substring(1, match[0].length);
-          debouncedUpdateAutocomplete(term, options);
+          updateAutoComplete(dataSource(term, options));
         }
       }
     }
@@ -438,23 +439,14 @@ export default function(options) {
           (!prevChar || allowedLettersRegex.test(prevChar))
         ) {
           completeStart = completeEnd = cp - 1;
-          debouncedUpdateAutocomplete("", options);
+          updateAutoComplete(dataSource("", options));
         }
       }
     } else if (completeStart !== null) {
       let term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
-      debouncedUpdateAutocomplete(term, options);
+      updateAutoComplete(dataSource(term, options));
     }
-  }
-
-  $(this).on("keyup.autocomplete", function(e) {
-    if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
-    debounce(this, debouncedInput, INPUT_DELAY);
   });
-
-  function debouncedUpdateAutocomplete(t, o) {
-    updateAutoComplete(dataSource(t, o));
-  }
 
   $(this).on("keydown.autocomplete", function(e) {
     var c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
@@ -504,13 +496,7 @@ export default function(options) {
           ) {
             completeStart = c;
             term = me[0].value.substring(c + 1, initial);
-            debounce(
-              this,
-              debouncedUpdateAutocomplete,
-              term,
-              options,
-              INPUT_DELAY
-            );
+            updateAutoComplete(dataSource(term, options));
             return true;
           }
         }
@@ -597,13 +583,7 @@ export default function(options) {
             closeAutocomplete();
           }
 
-          debounce(
-            this,
-            debouncedUpdateAutocomplete,
-            term,
-            options,
-            INPUT_DELAY
-          );
+          updateAutoComplete(dataSource(term, options));
           return true;
         default:
           completeEnd = cp;
