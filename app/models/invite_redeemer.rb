@@ -147,8 +147,10 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
   def notify_invitee
     if inviter = invite.invited_by
-      inviter.notifications.create!(notification_type: Notification.types[:invitee_accepted],
-                                   data: { display_username: invited_user.username }.to_json)
+      inviter.notifications.create!(
+        notification_type: Notification.types[:invitee_accepted],
+        data: { display_username: invited_user.username }.to_json
+      )
     end
   end
 
