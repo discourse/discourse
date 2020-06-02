@@ -1145,7 +1145,7 @@ class PluginApi {
     addExtraIconRenderer(renderer);
   }
   /**
-   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets 
+   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
    * in a theme or plugin via an initializer prior to calling this function.
    *
    * ```
