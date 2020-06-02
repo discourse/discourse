@@ -34,8 +34,8 @@ en:
             mb: MB
             tb: TB
       short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
+        thousands: "%{number}k"
+        millions: "%{number}M"
     dates:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "HH:mm"
@@ -265,11 +265,11 @@ en:
     weekly: "weekly"
     every_month: "every month"
     every_six_months: "every six months"
-    max_of_count: "max of {{count}}"
+    max_of_count: "max of %{count}"
     alternation: "or"
     character_count:
-      one: "{{count}} character"
-      other: "{{count}} characters"
+      one: "%{count} character"
+      other: "%{count} characters"
 
     related_messages:
       title: "Related Messages"
@@ -352,16 +352,16 @@ en:
         no_value: "No, keep"
 
     topic_count_latest:
-      one: "See {{count}} new or updated topic"
-      other: "See {{count}} new or updated topics"
+      one: "See %{count} new or updated topic"
+      other: "See %{count} new or updated topics"
 
     topic_count_unread:
-      one: "See {{count}} unread topic"
-      other: "See {{count}} unread topics"
+      one: "See %{count} unread topic"
+      other: "See %{count} unread topics"
 
     topic_count_new:
-      one: "See {{count}} new topic"
-      other: "See {{count}} new topics"
+      one: "See %{count} new topic"
+      other: "See %{count} new topics"
 
     preview: "preview"
     cancel: "cancel"
@@ -372,7 +372,7 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
-    uploading_filename: "Uploading: {{filename}}..."
+    uploading_filename: "Uploading: %{filename}..."
     clipboard: "clipboard"
     uploaded: "Uploaded!"
 
@@ -434,7 +434,7 @@ en:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
         claimed_by_you: "You've claimed this item and can review it."
-        claimed_by_other: "This item can only be reviewed by <b>{{username}}</b>."
+        claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
       claim:
         title: "claim this topic"
       unclaim:
@@ -455,7 +455,7 @@ en:
       view_pending: "view pending"
       topic_has_pending:
         one: "This topic has <b>%{count}</b> post pending approval"
-        other: "This topic has <b>{{count}}</b> posts pending approval"
+        other: "This topic has <b>%{count}</b> posts pending approval"
       title: "Review"
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
@@ -473,17 +473,17 @@ en:
 
       user_percentage:
         summary:
-          one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flag)"
-          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flags)"
+          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} total flag)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} total flags)"
         agreed:
-          one: "{{count}}% agree"
-          other: "{{count}}% agree"
+          one: "%{count}% agree"
+          other: "%{count}% agree"
         disagreed:
-          one: "{{count}}% disagree"
-          other: "{{count}}% disagree"
+          one: "%{count}% disagree"
+          other: "%{count}% disagree"
         ignored:
-          one: "{{count}}% ignore"
-          other: "{{count}}% ignore"
+          one: "%{count}% ignore"
+          other: "%{count}% ignore"
       topics:
         topic: "Topic"
         reviewable_count: "Count"
@@ -493,10 +493,10 @@ en:
         details: "details"
         unique_users:
           one: "%{count} user"
-          other: "{{count}} users"
+          other: "%{count} users"
       replies:
         one: "%{count} reply"
-        other: "{{count}} replies"
+        other: "%{count} replies"
       edit: "Edit"
       save: "Save"
       cancel: "Cancel"
@@ -565,25 +565,25 @@ en:
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
         pending_posts:
           one: "You have <strong>%{count}</strong> post pending."
-          other: "You have <strong>{{count}}</strong> posts pending."
+          other: "You have <strong>%{count}</strong> posts pending."
         ok: "OK"
 
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the topic</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>You</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{topicUrl}}'>the topic</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> replied to <a href='{{topicUrl}}'>the topic</a>"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
+      you_posted_topic: "<a href='%{userUrl}'>You</a> posted <a href='%{topicUrl}'>the topic</a>"
+      user_replied_to_post: "<a href='%{userUrl}'>%{user}</a> replied to <a href='%{postUrl}'>%{post_number}</a>"
+      you_replied_to_post: "<a href='%{userUrl}'>You</a> replied to <a href='%{postUrl}'>%{post_number}</a>"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> replied to <a href='%{topicUrl}'>the topic</a>"
+      you_replied_to_topic: "<a href='%{userUrl}'>You</a> replied to <a href='%{topicUrl}'>the topic</a>"
 
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>you</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>You</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> mentioned <a href='%{user2Url}'>%{another_user}</a>"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> mentioned <a href='%{user2Url}'>you</a>"
+      you_mentioned_user: "<a href='%{user1Url}'>You</a> mentioned <a href='%{user2Url}'>%{another_user}</a>"
 
-      posted_by_user: "Posted by <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "Posted by <a href='{{userUrl}}'>you</a>"
-      sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
+      posted_by_user: "Posted by <a href='%{userUrl}'>%{user}</a>"
+      posted_by_you: "Posted by <a href='%{userUrl}'>you</a>"
+      sent_by_user: "Sent by <a href='%{userUrl}'>%{user}</a>"
+      sent_by_you: "Sent by <a href='%{userUrl}'>you</a>"
 
     directory:
       filter_name: "filter by username"
@@ -829,7 +829,7 @@ en:
       required: 'Please enter a value for "%{name}"'
 
     user:
-      said: "{{username}}:"
+      said: "%{username}:"
       profile: "Profile"
       mute: "Mute"
       edit: "Edit Preferences"
@@ -905,12 +905,12 @@ en:
       enable_defer: "Enable defer to mark topics unread"
       change: "change"
       featured_topic: "Featured Topic"
-      moderator: "{{user}} is a moderator"
-      admin: "{{user}} is an admin"
+      moderator: "%{user} is a moderator"
+      admin: "%{user} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
       silenced_tooltip: "This user is silenced"
-      suspended_notice: "This user is suspended until {{date}}."
+      suspended_notice: "This user is suspended until %{date}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
       github_profile: "Github"
@@ -923,7 +923,7 @@ en:
           Muted topics and categories are not included in these emails.
         individual: "Send an email for every new post"
         individual_no_echo: "Send an email for every new post except my own"
-        many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
+        many_per_day: "Send me an email for every new post (about %{dailyEmailEstimate} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
         warning: "Mailing list mode enabled. Email notification settings are overridden."
       tag_settings: "Tags"
@@ -1017,12 +1017,12 @@ en:
         disable: "Disable"
         enable: "Enable"
         enable_long: "Enable backup codes"
-        manage: "Manage backup codes. You have <strong>{{count}}</strong> backup codes remaining."
+        manage: "Manage backup codes. You have <strong>%{count}</strong> backup codes remaining."
         copy_to_clipboard: "Copy to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         download_backup_codes: "Download backup codes"
-        remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
+        remaining_codes: "You have <strong>%{count}</strong> backup codes remaining."
         use: "Use a backup code"
         enable_prerequisites: "You must enable a primary second factor before generating backup codes."
         codes:
@@ -1092,10 +1092,10 @@ en:
 
       change_avatar:
         title: "Change your profile picture"
-        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a>, based on"
-        gravatar_title: "Change your avatar on {{gravatarName}}'s website"
-        gravatar_failed: "We could not find a {{gravatarName}} with that email address."
-        refresh_gravatar_title: "Refresh your {{gravatarName}}"
+        gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, based on"
+        gravatar_title: "Change your avatar on %{gravatarName}'s website"
+        gravatar_failed: "We could not find a %{gravatarName} with that email address."
+        refresh_gravatar_title: "Refresh your %{gravatarName}"
         letter_based: "System assigned profile picture"
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
@@ -1124,11 +1124,11 @@ en:
         ok: "We will email you to confirm"
         required: "Please enter an email address"
         invalid: "Please enter a valid email address"
-        authenticated: "Your email has been authenticated by {{provider}}"
+        authenticated: "Your email has been authenticated by %{provider}"
         frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
         frequency:
           one: "We'll only email you if we haven't seen you in the last minute."
-          other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
+          other: "We'll only email you if we haven't seen you in the last %{count} minutes."
 
       associated_accounts:
         title: "Associated Accounts"
@@ -1151,9 +1151,9 @@ en:
       username:
         title: "Username"
         instructions: "unique, no spaces, short"
-        short_instructions: "People can mention you as @{{username}}"
+        short_instructions: "People can mention you as @%{username}"
         available: "Your username is available"
-        not_available: "Not available. Try {{suggestion}}?"
+        not_available: "Not available. Try %{suggestion}?"
         not_available_no_suggestion: "Not available"
         too_short: "Your username is too short"
         too_long: "Your username is too long"
@@ -1181,11 +1181,11 @@ en:
         log_out_all: "Log out all"
         active: "active now"
         not_you: "Not you?"
-        show_all: "Show all ({{count}})"
+        show_all: "Show all (%{count})"
         show_few: "Show fewer"
         was_this_you: "Was this you?"
         was_this_you_description: "If it wasn’t you, we recommend you change your password and log out everywhere."
-        browser_and_device: "{{browser}} on {{device}}"
+        browser_and_device: "%{browser} on %{device}"
         secure_account: "Secure my Account"
         latest_post: "You last posted…"
 
@@ -1275,14 +1275,14 @@ en:
         none: "No invites to display."
         truncated:
           one: "Showing the first invite."
-          other: "Showing the first {{count}} invites."
+          other: "Showing the first %{count} invites."
         redeemed: "Redeemed Invites"
         redeemed_tab: "Redeemed"
-        redeemed_tab_with_count: "Redeemed ({{count}})"
+        redeemed_tab_with_count: "Redeemed (%{count})"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
         pending_tab: "Pending"
-        pending_tab_with_count: "Pending ({{count}})"
+        pending_tab_with_count: "Pending (%{count})"
         topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
         expired: "This invite has expired."
@@ -1403,7 +1403,7 @@ en:
       desc:
         network: "Please check your connection."
         network_fixed: "Looks like it's back."
-        server: "Error code: {{status}}"
+        server: "Error code: %{status}"
         forbidden: "You're not allowed to view that."
         not_found: "Oops, the application tried to load a URL that doesn't exist."
         unknown: "Something went wrong."
@@ -1485,8 +1485,8 @@ en:
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
-      description: "There are <b>{{replyCount}}</b> replies."
-      description_time: "There are <b>{{replyCount}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
+      description: "There are <b>%{replyCount}</b> replies."
+      description_time: "There are <b>%{replyCount}</b> replies with an estimated read time of <b>%{readingTime} minutes</b>."
       enable: "Summarize This Topic"
       disable: "Show All Posts"
 
@@ -1501,8 +1501,8 @@ en:
       invite: "Invite Others ..."
       edit: "Add or Remove ..."
       leave_message: "Do you really want to leave this message?"
-      remove_allowed_user: "Do you really want to remove {{name}} from this message?"
-      remove_allowed_group: "Do you really want to remove {{name}} from this message?"
+      remove_allowed_user: "Do you really want to remove %{name} from this message?"
+      remove_allowed_group: "Do you really want to remove %{name} from this message?"
 
     email: "Email"
     username: "Username"
@@ -1513,7 +1513,7 @@ en:
     search_hint: "username, email or IP address"
 
     create_account:
-      disclaimer: "By registering, you agree to the <a href='{{privacy_link}}' target='blank'>privacy policy</a> and <a href='{{tos_link}}' target='blank'>terms of service</a>."
+      disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
       title: "Create New Account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
 
@@ -1577,7 +1577,7 @@ en:
       awaiting_activation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       requires_invite: "Sorry, access to this forum is by invite only."
-      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
+      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>%{sentTo}</b>. Please follow the instructions in that email to activate your account."
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
@@ -1588,7 +1588,7 @@ en:
       provide_new_email: "Provide a new address and we'll resend your confirmation email."
       submit_new_email: "Update Email Address"
 
-      sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      sent_activation_email_again: "We sent another activation email to you at <b>%{currentEmail}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       sent_activation_email_again_generic: "We sent another activation email. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
@@ -1658,21 +1658,21 @@ en:
       loading: Loading...
 
     category_row:
-      topic_count: "{{count}} topics in this category"
+      topic_count: "%{count} topics in this category"
 
     select_kit:
       default_header_text: Select...
       no_content: No matches found
       filter_placeholder: Search...
       filter_placeholder_with_any: Search or create...
-      create: "Create: '{{content}}'"
+      create: "Create: '%{content}'"
       max_content_reached:
-        one: "You can only select {{count}} item."
-        other: "You can only select {{count}} items."
+        one: "You can only select %{count} item."
+        other: "You can only select %{count} items."
       min_content_not_reached:
-        one: "Select at least {{count}} item."
-        other: "Select at least {{count}} items."
-      invalid_selection_length: "Selection must be at least {{count}} characters."
+        one: "Select at least %{count} item."
+        other: "Select at least %{count} items."
+      invalid_selection_length: "Selection must be at least %{count} characters."
       components:
         categories_admin_dropdown:
           title: "Categories admin dropdown"
@@ -1705,7 +1705,7 @@ en:
 
     shared_drafts:
       title: "Shared Drafts"
-      notice: "This topic is only visible to those who can see the <b>{{category}}</b> category."
+      notice: "This topic is only visible to those who can see the <b>%{category}</b> category."
       destination_category: "Destination Category"
       publish: "Publish Shared Draft"
       confirm_publish: "Are you sure you want to publish this draft?"
@@ -1728,25 +1728,25 @@ en:
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
 
-      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified."
+      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{max} users. Nobody will be notified."
       group_mentioned:
-        one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>%{count} person</a> – are you sure?"
-        other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
+        one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
+        other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
       cannot_see_mention:
-        category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
-        private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
-      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply on {{ago}}</a> – are you sure you want to post it again?"
-      reference_topic_title: "RE: {{title}}"
+        category: "You mentioned %{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
+        private: "You mentioned %{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+      duplicate_link: "It looks like your link to <b>%{domain}</b> was already posted in the topic by <b>@%{username}</b> in <a href='%{post_url}'>a reply on %{ago}</a> – are you sure you want to post it again?"
+      reference_topic_title: "RE: %{title}"
 
       error:
         title_missing: "Title is required"
-        title_too_short: "Title must be at least {{min}} characters"
-        title_too_long: "Title can't be more than {{max}} characters"
+        title_too_short: "Title must be at least %{min} characters"
+        title_too_long: "Title can't be more than %{max} characters"
         post_missing: "Post can’t be empty"
-        post_length: "Post must be at least {{min}} characters"
-        try_like: "Have you tried the {{heart}} button?"
+        post_length: "Post must be at least %{min} characters"
+        try_like: "Have you tried the %{heart} button?"
         category_missing: "You must choose a category"
-        tags_missing: "You must choose at least {{count}} tags"
+        tags_missing: "You must choose at least %{count} tags"
         topic_template_not_modified: "Please add details and specifics to your topic by editing the topic template."
 
       save_edit: "Save Edit"
@@ -1850,10 +1850,10 @@ en:
       tooltip:
         regular:
           one: "%{count} unseen notification"
-          other: "{{count}} unseen notifications"
+          other: "%{count} unseen notifications"
         message:
           one: "%{count} unread message"
-          other: "{{count}} unread messages"
+          other: "%{count} unread messages"
         high_priority:
           one: "%{count} unread high priority notification"
           other: "%{count} unread high priority notifications"
@@ -1862,50 +1862,50 @@ en:
       empty: "No notifications found."
       post_approved: "Your post was approved"
       reviewable_items: "items requiring review"
-      mentioned: "<span>{{username}}</span> {{description}}"
-      group_mentioned: "<span>{{username}}</span> {{description}}"
-      quoted: "<span>{{username}}</span> {{description}}"
-      bookmark_reminder: "<span>{{username}}</span> {{description}}"
-      replied: "<span>{{username}}</span> {{description}}"
-      posted: "<span>{{username}}</span> {{description}}"
-      edited: "<span>{{username}}</span> {{description}}"
-      liked: "<span>{{username}}</span> {{description}}"
-      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
+      mentioned: "<span>%{username}</span> %{description}"
+      group_mentioned: "<span>%{username}</span> %{description}"
+      quoted: "<span>%{username}</span> %{description}"
+      bookmark_reminder: "<span>%{username}</span> %{description}"
+      replied: "<span>%{username}</span> %{description}"
+      posted: "<span>%{username}</span> %{description}"
+      edited: "<span>%{username}</span> %{description}"
+      liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} and %{count} other</span> {{description}}"
-        other: "<span>{{username}}, {{username2}} and {{count}} others</span> {{description}}"
+        one: "<span>%{username}, %{username2} and %{count} other</span> %{description}"
+        other: "<span>%{username}, %{username2} and %{count} others</span> %{description}"
       liked_consolidated_description:
-        one: "liked {{count}} of your posts"
-        other: "liked {{count}} of your posts"
-      liked_consolidated: "<span>{{username}}</span> {{description}}"
-      private_message: "<span>{{username}}</span> {{description}}"
-      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
-      invited_to_topic: "<span>{{username}}</span> {{description}}"
-      invitee_accepted: "<span>{{username}}</span> accepted your invitation"
-      moved_post: "<span>{{username}}</span> moved {{description}}"
-      linked: "<span>{{username}}</span> {{description}}"
-      granted_badge: "Earned '{{description}}'"
-      topic_reminder: "<span>{{username}}</span> {{description}}"
-      watching_first_post: "<span>New Topic</span> {{description}}"
-      membership_request_accepted: "Membership accepted in '{{group_name}}'"
-      membership_request_consolidated: "{{count}} open membership requests for '{{group_name}}'"
+        one: "liked %{count} of your posts"
+        other: "liked %{count} of your posts"
+      liked_consolidated: "<span>%{username}</span> %{description}"
+      private_message: "<span>%{username}</span> %{description}"
+      invited_to_private_message: "<p><span>%{username}</span> %{description}"
+      invited_to_topic: "<span>%{username}</span> %{description}"
+      invitee_accepted: "<span>%{username}</span> accepted your invitation"
+      moved_post: "<span>%{username}</span> moved %{description}"
+      linked: "<span>%{username}</span> %{description}"
+      granted_badge: "Earned '%{description}'"
+      topic_reminder: "<span>%{username}</span> %{description}"
+      watching_first_post: "<span>New Topic</span> %{description}"
+      membership_request_accepted: "Membership accepted in '%{group_name}'"
+      membership_request_consolidated: "%{count} open membership requests for '%{group_name}'"
 
       group_message_summary:
-        one: "{{count}} message in your {{group_name}} inbox"
-        other: "{{count}} messages in your {{group_name}} inbox"
+        one: "%{count} message in your %{group_name} inbox"
+        other: "%{count} messages in your %{group_name} inbox"
 
       popup:
-        mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
-        group_mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
-        quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
-        replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
-        posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} sent you a personal message in "{{topic}}" - {{site_title}}'
-        linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
-        watching_first_post: '{{username}} created a new topic "{{topic}}" - {{site_title}}'
+        mentioned: '%{username} mentioned you in "%{topic}" - %{site_title}'
+        group_mentioned: '%{username} mentioned you in "%{topic}" - %{site_title}'
+        quoted: '%{username} quoted you in "%{topic}" - %{site_title}'
+        replied: '%{username} replied to you in "%{topic}" - %{site_title}'
+        posted: '%{username} posted in "%{topic}" - %{site_title}'
+        private_message: '%{username} sent you a personal message in "%{topic}" - %{site_title}'
+        linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
+        watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
         confirm_title: "Notifications enabled - %{site_title}"
         confirm_body: "Success! Notifications have been enabled."
-        custom: "Notification from {{username}} on %{site_title}"
+        custom: "Notification from %{username} on %{site_title}"
 
       titles:
         mentioned: "mentioned"
@@ -1937,9 +1937,9 @@ en:
       from_my_computer: "From my device"
       from_the_web: "From the web"
       remote_tip: "link to image"
-      remote_tip_with_attachments: "link to image or file {{authorized_extensions}}"
+      remote_tip_with_attachments: "link to image or file %{authorized_extensions}"
       local_tip: "select images from your device"
-      local_tip_with_attachments: "select images or files from your device {{authorized_extensions}}"
+      local_tip_with_attachments: "select images or files from your device %{authorized_extensions}"
       hint: "(you can also drag & drop into the editor to upload them)"
       hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
@@ -1957,15 +1957,15 @@ en:
       clear_all: "Clear All"
       too_short: "Your search term is too short."
       result_count:
-        one: "<span>%{count} result for</span><span class='term'>{{term}}</span>"
-        other: "<span>{{count}}{{plus}} results for</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
+        other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
       title: "search topics, posts, users, or categories"
       full_page_title: "search topics or posts"
       no_results: "No results found."
       no_more_results: "No more results found."
       searching: "Searching ..."
-      post_format: "#{{post_number}} by {{username}}"
-      results_page: "Search results for '{{term}}'"
+      post_format: "#%{post_number} by %{username}"
+      results_page: "Search results for '%{term}'"
       more_results: "There are more results. Please narrow your search criteria."
       cant_find: "Can’t find what you’re looking for?"
       start_new_topic: "Perhaps start a new topic?"
@@ -1975,9 +1975,9 @@ en:
       search_google_title: "Search this site"
 
       context:
-        user: "Search posts by @{{username}}"
-        category: "Search the #{{category}} category"
-        tag: "Search the #{{tag}} tag"
+        user: "Search posts by @%{username}"
+        category: "Search the #%{category} category"
+        tag: "Search the #%{tag} tag"
         topic: "Search this topic"
         private_messages: "Search messages"
 
@@ -2057,7 +2057,7 @@ en:
         choose_new_category: "Choose the new category for the topics:"
         selected:
           one: "You have selected <b>%{count}</b> topic."
-          other: "You have selected <b>{{count}}</b> topics."
+          other: "You have selected <b>%{count}</b> topics."
         change_tags: "Replace Tags"
         append_tags: "Append Tags"
         choose_new_tags: "Choose new tags for these topics:"
@@ -2071,7 +2071,7 @@ en:
         posted: "You haven't posted in any topics yet."
         latest: "There are no latest topics. That's sad."
         bookmarks: "You have no bookmarked topics yet."
-        category: "There are no {{category}} topics."
+        category: "There are no %{category} topics."
         top: "There are no top topics."
         educate:
           new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
@@ -2082,14 +2082,14 @@ en:
         read: "There are no more read topics."
         new: "There are no more new topics."
         unread: "There are no more unread topics."
-        category: "There are no more {{category}} topics."
+        category: "There are no more %{category} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
 
     topic:
       filter_to:
         one: "%{count} post in topic"
-        other: "{{count}} posts in topic"
+        other: "%{count} posts in topic"
       create: "New Topic"
       create_long: "Create a new Topic"
       open_draft: "Open Draft"
@@ -2119,10 +2119,10 @@ en:
       unread: "unread"
       new_topics:
         one: "%{count} new topic"
-        other: "{{count}} new topics"
+        other: "%{count} new topics"
       unread_topics:
         one: "%{count} unread topic"
-        other: "{{count}} unread topics"
+        other: "%{count} unread topics"
       title: "Topic"
       invalid_access:
         title: "Topic is private"
@@ -2136,24 +2136,24 @@ en:
         description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
       total_unread_posts:
         one: "you have %{count} unread post in this topic"
-        other: "you have {{count}} unread posts in this topic"
+        other: "you have %{count} unread posts in this topic"
       unread_posts:
         one: "you have %{count} unread old post in this topic"
-        other: "you have {{count}} unread old posts in this topic"
+        other: "you have %{count} unread old posts in this topic"
       new_posts:
         one: "there is %{count} new post in this topic since you last read it"
-        other: "there are {{count}} new posts in this topic since you last read it"
+        other: "there are %{count} new posts in this topic since you last read it"
       likes:
         one: "there is %{count} like in this topic"
-        other: "there are {{count}} likes in this topic"
+        other: "there are %{count} likes in this topic"
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
-      read_more: "Want to read more? {{catLink}} or {{latestLink}}."
-      group_request: "You need to request membership to the `{{name}}` group to see this topic"
-      group_join: "You need join the `{{name}}` group to see this topic"
+      read_more_in_category: "Want to read more? Browse other topics in %{catLink} or %{latestLink}."
+      read_more: "Want to read more? %{catLink} or %{latestLink}."
+      group_request: "You need to request membership to the `%{name}` group to see this topic"
+      group_join: "You need join the `%{name}` group to see this topic"
       group_request_sent: "Your group membership request has been sent. You will be informed when it's accepted."
       unread_indicator: "No member has read the last post of this topic yet."
 
@@ -2171,7 +2171,7 @@ en:
         =0 {}
         one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic}
         other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics}
-        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false %{latestLink} other {}}"
 
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
 
@@ -2280,7 +2280,7 @@ en:
           "2_8": "You will see a count of new replies because you are tracking this category."
           "2_4": "You will see a count of new replies because you posted a reply to this topic."
           "2_2": "You will see a count of new replies because you are tracking this topic."
-          "2": 'You will see a count of new replies because you <a href="{{basePath}}/u/{{username}}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "You will be notified if someone mentions your @name or replies to you."
           "1": "You will be notified if someone mentions your @name or replies to you."
           "0_7": "You are ignoring all notifications in this category."
@@ -2364,25 +2364,25 @@ en:
 
       feature_topic:
         title: "Feature this topic"
-        pin: "Make this topic appear at the top of the {{categoryLink}} category until"
-        confirm_pin: "You already have {{count}} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
-        unpin: "Remove this topic from the top of the {{categoryLink}} category."
-        unpin_until: "Remove this topic from the top of the {{categoryLink}} category or wait until <strong>%{until}</strong>."
+        pin: "Make this topic appear at the top of the %{categoryLink} category until"
+        confirm_pin: "You already have %{count} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
+        unpin: "Remove this topic from the top of the %{categoryLink} category."
+        unpin_until: "Remove this topic from the top of the %{categoryLink} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
         pin_validation: "A date is required to pin this topic."
-        not_pinned: "There are no topics pinned in {{categoryLink}}."
+        not_pinned: "There are no topics pinned in %{categoryLink}."
         already_pinned:
-          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "Topics currently pinned in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "Topics currently pinned in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Make this topic appear at the top of all topic lists until"
-        confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
+        confirm_pin_globally: "You already have %{count} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Users can unpin the topic individually for themselves."
         not_pinned_globally: "There are no topics pinned globally."
         already_pinned_globally:
           one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "Make this topic into a banner that appears at the top of all pages."
         remove_banner: "Remove the banner that appears at the top of all pages."
         banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
@@ -2417,17 +2417,17 @@ en:
         to_username: "Enter the username of the person you'd like to invite. We'll send a notification with a link inviting them to this topic."
 
         email_placeholder: "name@example.com"
-        success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
+        success_email: "We mailed out an invitation to <b>%{emailOrUsername}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
         success_username: "We've invited that user to participate in this topic."
         error: "Sorry, we couldn't invite that person. Perhaps they have already been invited? (Invites are rate limited)"
-        success_existing_email: "A user with email <b>{{emailOrUsername}}</b> already exists. We've invited that user to participate in this topic."
+        success_existing_email: "A user with email <b>%{emailOrUsername}</b> already exists. We've invited that user to participate in this topic."
 
       login_reply: "Log In to Reply"
 
       filters:
         n_posts:
           one: "%{count} post"
-          other: "{{count}} posts"
+          other: "%{count} posts"
         cancel: "Remove filter"
 
       move_to:
@@ -2443,7 +2443,7 @@ en:
         error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
-          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+          other: "You are about to create a new topic and populate it with the <b>%{count}</b> posts you've selected."
 
       merge_topic:
         title: "Move to Existing Topic"
@@ -2452,7 +2452,7 @@ en:
         radio_label: "Existing Topic"
         instructions:
           one: "Please choose the topic you'd like to move that post to."
-          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+          other: "Please choose the topic you'd like to move those <b>%{count}</b> posts to."
 
       move_to_new_message:
         title: "Move to New Message"
@@ -2462,7 +2462,7 @@ en:
         participants: "Participants"
         instructions:
           one: "You are about to create a new message and populate it with the post you've selected."
-          other: "You are about to create a new message and populate it with the <b>{{count}}</b> posts you've selected."
+          other: "You are about to create a new message and populate it with the <b>%{count}</b> posts you've selected."
 
       move_to_existing_message:
         title: "Move to Existing Message"
@@ -2471,7 +2471,7 @@ en:
         participants: "Participants"
         instructions:
           one: "Please choose the message you'd like to move that post to."
-          other: "Please choose the message you'd like to move those <b>{{count}}</b> posts to."
+          other: "Please choose the message you'd like to move those <b>%{count}</b> posts to."
 
       merge_posts:
         title: "Merge Selected Posts"
@@ -2497,11 +2497,11 @@ en:
         error: "There was an error changing the ownership of the posts."
         placeholder: "username of new owner"
         instructions:
-          one: "Please choose a new owner for the post by <b>@{{old_user}}</b>"
-          other: "Please choose a new owner for the {{count}} posts by <b>@{{old_user}}</b>"
+          one: "Please choose a new owner for the post by <b>@%{old_user}</b>"
+          other: "Please choose a new owner for the %{count} posts by <b>@%{old_user}</b>"
         instructions_without_old_user:
           one: "Please choose a new owner for the post"
-          other: "Please choose a new owner for the {{count}} posts"
+          other: "Please choose a new owner for the %{count} posts"
 
       change_timestamp:
         title: "Change Timestamp..."
@@ -2512,7 +2512,7 @@ en:
 
       multi_select:
         select: "select"
-        selected: "selected ({{count}})"
+        selected: "selected (%{count})"
         select_post:
           label: "select"
           title: "Add post to selection"
@@ -2531,7 +2531,7 @@ en:
         deselect_all: deselect all
         description:
           one: You have selected <b>%{count}</b> post.
-          other: "You have selected <b>{{count}}</b> posts."
+          other: "You have selected <b>%{count}</b> posts."
 
       deleted_by_author:
         one: "(topic withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
@@ -2540,13 +2540,13 @@ en:
     post:
       quote_reply: "Quote"
       edit_reason: "Reason: "
-      post_number: "post {{number}}"
+      post_number: "post %{number}"
       ignored: "Ignored content"
       wiki_last_edited_on: "wiki last edited on"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
       reply_as_new_private_message: "Reply as new message to the same recipients"
-      continue_discussion: "Continuing the discussion from {{postLink}}:"
+      continue_discussion: "Continuing the discussion from %{postLink}:"
       follow_quote: "go to the quoted post"
       show_full: "Show Full Post"
       show_hidden: "View ignored content."
@@ -2558,34 +2558,34 @@ en:
       locked: "a staff member has locked this post from being edited"
       gap:
         one: "view %{count} hidden reply"
-        other: "view {{count}} hidden replies"
+        other: "view %{count} hidden replies"
 
       notice:
-        new_user: "This is the first time {{user}} has posted — let’s welcome them to our community!"
-        returning_user: "It’s been a while since we’ve seen {{user}} — their last post was {{time}}."
+        new_user: "This is the first time %{user} has posted — let’s welcome them to our community!"
+        returning_user: "It’s been a while since we’ve seen %{user} — their last post was %{time}."
 
       unread: "Post is unread"
       has_replies:
-        one: "{{count}} Reply"
-        other: "{{count}} Replies"
+        one: "%{count} Reply"
+        other: "%{count} Replies"
 
       has_likes_title:
         one: "%{count} person liked this post"
-        other: "{{count}} people liked this post"
+        other: "%{count} people liked this post"
 
       has_likes_title_only_you: "you liked this post"
       has_likes_title_you:
         one: "you and %{count} other person liked this post"
-        other: "you and {{count}} other people liked this post"
+        other: "you and %{count} other people liked this post"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        file_too_large: "Sorry, that file is too big (maximum size is {{max_size_kb}}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
+        file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
-        too_many_dragged_and_dropped_files: "Sorry, you can only upload {{max}} files at a time."
-        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: {{authorized_extensions}})."
+        too_many_dragged_and_dropped_files: "Sorry, you can only upload %{max} files at a time."
+        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
@@ -2632,10 +2632,10 @@ en:
           confirm: "Do you also want to delete the replies to this post?"
           direct_replies:
             one: "Yes, and %{count} direct reply"
-            other: "Yes, and {{count}} direct replies"
+            other: "Yes, and %{count} direct replies"
           all_replies:
             one: "Yes, and %{count} reply"
-            other: "Yes, and all {{count}} replies"
+            other: "Yes, and all %{count} replies"
           just_the_post: "No, just this post"
         admin: "post admin actions"
         wiki: "Make Wiki"
@@ -2683,11 +2683,11 @@ en:
             one: "read this"
             other: "read this"
           like_capped:
-            one: "and {{count}} other liked this"
-            other: "and {{count}} others liked this"
+            one: "and %{count} other liked this"
+            other: "and %{count} others liked this"
           read_capped:
-            one: "and {{count}} other read this"
-            other: "and {{count}} others read this"
+            one: "and %{count} other read this"
+            other: "and %{count} others read this"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -2700,12 +2700,12 @@ en:
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete those {{count}} posts?"
+          other: "Are you sure you want to delete those %{count} posts?"
 
       merge:
         confirm:
           one: "Are you sure you want to merge those posts?"
-          other: "Are you sure you want to merge those {{count}} posts?"
+          other: "Are you sure you want to merge those %{count} posts?"
 
       revisions:
         controls:
@@ -2718,7 +2718,7 @@ en:
           revert: "Revert to this revision"
           edit_wiki: "Edit Wiki"
           edit_post: "Edit Post"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}} <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
@@ -2915,13 +2915,13 @@ en:
       custom_message:
         at_least:
           one: "enter at least %{count} character"
-          other: "enter at least {{count}} characters"
+          other: "enter at least %{count} characters"
         more:
           one: "%{count} to go..."
-          other: "{{count}} to go..."
+          other: "%{count} to go..."
         left:
           one: "%{count} remaining"
-          other: "{{count}} remaining"
+          other: "%{count} remaining"
 
     flagging_topic:
       title: "Thanks for helping to keep our community civil!"
@@ -2968,7 +2968,7 @@ en:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
     posts: "Posts"
-    posts_long: "there are {{number}} posts in this topic"
+    posts_long: "there are %{number} posts in this topic"
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
@@ -2985,20 +2985,20 @@ en:
     replies: "Replies"
     views_long:
       one: "this topic has been viewed %{count} time"
-      other: "this topic has been viewed {{number}} times"
+      other: "this topic has been viewed %{number} times"
     activity: "Activity"
     likes: "Likes"
     likes_lowercase:
       one: "like"
       other: "likes"
-    likes_long: "there are {{number}} likes in this topic"
+    likes_long: "there are %{number} likes in this topic"
     users: "Users"
     users_lowercase:
       one: "user"
       other: "users"
     category_title: "Category"
     history: "History"
-    changed_by: "by {{author}}"
+    changed_by: "by %{author}"
 
     raw_email:
       title: "Incoming Email"
@@ -3013,33 +3013,33 @@ en:
         title: "Latest"
         title_with_count:
           one: "Latest (%{count})"
-          other: "Latest ({{count}})"
+          other: "Latest (%{count})"
         help: "topics with recent posts"
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
       categories:
         title: "Categories"
-        title_in: "Category - {{categoryName}}"
+        title_in: "Category - %{categoryName}"
         help: "all topics grouped by category"
       unread:
         title: "Unread"
         title_with_count:
           one: "Unread (%{count})"
-          other: "Unread ({{count}})"
+          other: "Unread (%{count})"
         help: "topics you are currently watching or tracking with unread posts"
         lower_title_with_count:
           one: "%{count} unread"
-          other: "{{count}} unread"
+          other: "%{count} unread"
       new:
         lower_title_with_count:
           one: "%{count} new"
-          other: "{{count}} new"
+          other: "%{count} new"
         lower_title: "new"
         title: "New"
         title_with_count:
           one: "New (%{count})"
-          other: "New ({{count}})"
+          other: "New (%{count})"
         help: "topics created in the last few days"
       posted:
         title: "My Posts"
@@ -3048,11 +3048,11 @@ en:
         title: "Bookmarks"
         help: "topics you have bookmarked"
       category:
-        title: "{{categoryName}}"
+        title: "%{categoryName}"
         title_with_count:
-          one: "{{categoryName}} (%{count})"
-          other: "{{categoryName}} ({{count}})"
-        help: "latest topics in the {{categoryName}} category"
+          one: "%{categoryName} (%{count})"
+          other: "%{categoryName} (%{count})"
+        help: "latest topics in the %{categoryName} category"
       top:
         title: "Top"
         help: "the most active topics in the last year, month, week or day"
@@ -3222,8 +3222,8 @@ en:
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
       tag_groups_info:
-        one: 'This tag belongs to the group "{{tag_groups}}".'
-        other: "This tag belongs to these groups: {{tag_groups}}."
+        one: 'This tag belongs to the group "%{tag_groups}".'
+        other: "This tag belongs to these groups: %{tag_groups}."
       category_restrictions:
         one: "It can only be used in this category:"
         other: "It can only be used in these categories:"
@@ -3239,11 +3239,11 @@ en:
       delete_tag: "Delete Tag"
       delete_confirm:
         one: "Are you sure you want to delete this tag and remove it from %{count} topic it is assigned to?"
-        other: "Are you sure you want to delete this tag and remove it from {{count}} topics it is assigned to?"
+        other: "Are you sure you want to delete this tag and remove it from %{count} topics it is assigned to?"
       delete_confirm_no_topics: "Are you sure you want to delete this tag?"
       delete_confirm_synonyms:
         one: "Its synonym will also be deleted."
-        other: "Its {{count}} synonyms will also be deleted."
+        other: "Its %{count} synonyms will also be deleted."
       rename_tag: "Rename Tag"
       rename_instructions: "Choose a new name for the tag:"
       sort_by: "Sort by:"
@@ -3620,10 +3620,10 @@ en:
           redeliver: "Redeliver"
           incoming:
             one: "There is a new event."
-            other: "There are {{count}} new events."
+            other: "There are %{count} new events."
           completed_in:
             one: "Completed in %{count} second."
-            other: "Completed in {{count}} seconds."
+            other: "Completed in %{count} seconds."
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
@@ -3676,12 +3676,12 @@ en:
           label: "Upload"
           title: "Upload a backup to this instance"
           uploading: "Uploading..."
-          uploading_progress: "Uploading... {{progress}}%"
-          success: "'{{filename}}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
-          error: "There has been an error while uploading '{{filename}}': {{message}}"
+          uploading_progress: "Uploading... %{progress}%"
+          success: "'%{filename}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
+          error: "There has been an error while uploading '%{filename}': %{message}"
         operations:
           is_running: "An operation is currently running..."
-          failed: "The {{operation}} failed. Please check the logs."
+          failed: "The %{operation} failed. Please check the logs."
           cancel:
             label: "Cancel"
             title: "Cancel the current operation"
@@ -3808,7 +3808,7 @@ en:
           disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
-          and_x_more: "and {{count}} more."
+          and_x_more: "and %{count} more."
           collapse: Collapse
           uploads: "Uploads"
           no_uploads: "You can upload assets associated with your theme such as fonts and images"
@@ -3857,8 +3857,8 @@ en:
           disabled_by: "This component has been disabled by"
           required_version:
             error: "This theme has been automatically disabled because it is not compatible with this version of Discourse."
-            minimum: "Requires Discourse version {{version}} or above."
-            maximum: "Requires Discourse version {{version}} or below."
+            minimum: "Requires Discourse version %{version} or above."
+            maximum: "Requires Discourse version %{version} or below."
           component_of: "Component of:"
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
@@ -3871,7 +3871,7 @@ en:
           empty: "No items"
           commits_behind:
             one: "Theme is %{count} commit behind!"
-            other: "Theme is {{count}} commits behind!"
+            other: "Theme is %{count} commits behind!"
           compare_commits: "(See new commits)"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
           imported_from_archive: "This theme was imported from a .zip file"
@@ -4283,8 +4283,8 @@ en:
           text: "Show"
 
       user:
-        suspend_failed: "Something went wrong suspending this user {{error}}"
-        unsuspend_failed: "Something went wrong unsuspending this user {{error}}"
+        suspend_failed: "Something went wrong suspending this user %{error}"
+        unsuspend_failed: "Something went wrong unsuspending this user %{error}"
         suspend_duration: "How long will the user be suspended for?"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
