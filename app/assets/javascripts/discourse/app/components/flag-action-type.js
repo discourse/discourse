@@ -20,7 +20,7 @@ export default Component.extend({
   )
   formattedName(name, nameKey, isCustomFlag, username) {
     if (isCustomFlag) {
-      return name.replace("{{username}}", username);
+      return name.replace(/{{username}}|%{username}/, username);
     } else {
       return I18n.t("flagging.formatted_name." + nameKey);
     }
