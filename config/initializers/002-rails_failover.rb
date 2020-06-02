@@ -2,12 +2,18 @@
 
 if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
   RailsFailover::ActiveRecord.on_failover do
-    Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+    RailsMultisite::ConnectionManagement.each_connection do
+      Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+    end
+
     Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
   end
 
   RailsFailover::ActiveRecord.on_fallback do
-    Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+    RailsMultisite::ConnectionManagement.each_connection do
+      Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+    end
+
     Sidekiq.unpause!
   end
 
