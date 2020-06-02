@@ -176,7 +176,10 @@ class DiscourseRedis
         STDERR.puts "WARN: Redis is in a readonly state. Performed a noop"
       end
 
-      fallback_handler.verify_master if !fallback_handler.master
+      if !ENV["REDIS_RAILS_FAILOVER"]
+        fallback_handler.verify_master if !fallback_handler.master
+      end
+
       Discourse.received_redis_readonly!
       nil
     else

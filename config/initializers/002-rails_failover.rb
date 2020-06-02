@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+if ENV["REDIS_RAILS_FAILOVER"]
+  RailsFailover::Redis.on_failover do
+    Discourse.received_redis_readonly!
+  end
+
+  RailsFailover::Redis.on_fallback do
+    Discourse.clear_readonly!
+    Discourse.request_refresh!
+  end
+end
+
 if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
   RailsFailover::ActiveRecord.on_failover do
     RailsMultisite::ConnectionManagement.each_connection do
