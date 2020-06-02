@@ -33,7 +33,8 @@ class MetadataController < ApplicationController
       end
     end
 
-    primary_color = ColorScheme.hex_for_name('primary', view_context.scheme_id)
+    scheme_id = view_context.scheme_id
+    primary_color = ColorScheme.hex_for_name('primary', scheme_id)
     icon_url_base = UrlHelper.absolute("/svg-sprite/#{Discourse.current_hostname}/icon/#{primary_color}")
 
     manifest = {
@@ -41,8 +42,8 @@ class MetadataController < ApplicationController
       short_name: SiteSetting.short_title.presence || SiteSetting.title.truncate(12, separator: ' ', omission: ''),
       display: display,
       start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
-      background_color: "##{ColorScheme.hex_for_name('secondary', view_context.scheme_id)}",
-      theme_color: "##{ColorScheme.hex_for_name('header_background', view_context.scheme_id)}",
+      background_color: "##{ColorScheme.hex_for_name('secondary', scheme_id)}",
+      theme_color: "##{ColorScheme.hex_for_name('header_background', scheme_id)}",
       icons: [
       ],
       share_target: {
