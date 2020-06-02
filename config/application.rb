@@ -31,6 +31,10 @@ if ENV['ACTIVE_RECORD_RAILS_FAILOVER']
   require 'rails_failover/active_record'
 end
 
+if ENV['REDIS_RAILS_FAILOVER']
+  require 'rails_failover/redis'
+end
+
 # Global config
 require_relative '../app/models/global_setting'
 GlobalSetting.configure!
