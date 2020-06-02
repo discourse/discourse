@@ -12,6 +12,12 @@ import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { h } from "virtual-dom";
 
+const _extraHeaderIcons = [];
+
+export function addToHeaderIcons(icon) {
+  _extraHeaderIcons.push(icon);
+}
+
 const dropdown = {
   buildClasses(attrs) {
     if (attrs.active) {
@@ -224,6 +230,12 @@ createWidget("header-icons", {
           user: attrs.user
         })
       );
+    }
+
+    if (_extraHeaderIcons) {
+      _extraHeaderIcons.forEach(icon => {
+        icons.push(this.attach(icon));
+      });
     }
 
     return icons;

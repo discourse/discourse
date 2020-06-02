@@ -28,7 +28,10 @@ import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addPostTransformCallback } from "discourse/widgets/post-stream";
-import { attachAdditionalPanel } from "discourse/widgets/header";
+import {
+  attachAdditionalPanel,
+  addToHeaderIcons
+} from "discourse/widgets/header";
 import {
   registerIconRenderer,
   replaceIcon
@@ -1140,6 +1143,19 @@ class PluginApi {
    **/
   addCategoryLinkIcon(renderer) {
     addExtraIconRenderer(renderer);
+  }
+  /**
+   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
+   * in a theme or plugin via an initializer prior to calling this function.
+   *
+   * ```
+   * api.addToHeaderIcons(
+   *  createWidget('some-widget')
+   * ```
+   *
+   **/
+  addToHeaderIcons(icon) {
+    addToHeaderIcons(icon);
   }
 }
 
