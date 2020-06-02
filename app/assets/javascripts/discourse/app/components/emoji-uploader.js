@@ -1,4 +1,4 @@
-import { notEmpty, not } from "@ember/object/computed";
+import { notEmpty } from "@ember/object/computed";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -11,7 +11,6 @@ export default Component.extend(UploadMixin, {
   uploadUrl: "/admin/customize/emojis",
   hasName: notEmpty("name"),
   hasGroup: notEmpty("group"),
-  addDisabled: not("hasName"),
   group: "default",
   emojiGroups: null,
   newEmojiGroups: null,
@@ -21,6 +20,11 @@ export default Component.extend(UploadMixin, {
     this._super(...arguments);
 
     this.set("newEmojiGroups", this.emojiGroups);
+  },
+
+  @discourseComputed("hasName", "uploading")
+  addDisabled() {
+    return !this.hasName || this.uploading;
   },
 
   uploadOptions() {

@@ -4673,6 +4673,7 @@ en:
         title: "Emoji"
         help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
         add: "Add New Emoji"
+        uploading: "Uploading..."
         name: "Name"
         group: "Group"
         image: "Image"
