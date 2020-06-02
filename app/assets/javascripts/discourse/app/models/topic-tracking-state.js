@@ -354,6 +354,10 @@ const TopicTrackingState = EmberObject.extend({
         row.category_id = topic.category.id;
       }
 
+      if (topic.tags) {
+        row.tags = topic.tags;
+      }
+
       tracker.states["t" + topic.id] = row;
     });
 
