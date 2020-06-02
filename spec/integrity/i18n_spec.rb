@@ -167,7 +167,7 @@ describe "i18n integrity checks" do
           expect(invalid_relative_image_sources).to be_empty, "The following keys have relative image sources, but do not start with %{base_url} or %{base_path}:\n\n#{keys}"
         end
 
-        it "uses the %{key} as interpolation key format" do
+        skip "uses the %{key} as interpolation key format" do
           keys = invalid_interpolation_key_format.keys.join("\n")
           expect(invalid_interpolation_key_format).to be_empty, "The following keys use {{key}} instead of %{key} for interpolation keys:\n\n#{keys}"
         end
