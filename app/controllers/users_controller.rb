@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks
+    :bookmarks, :invited
   ]
 
   skip_before_action :check_xhr, only: [
@@ -301,7 +301,7 @@ class UsersController < ApplicationController
   def invited
     guardian.ensure_can_invite_to_forum!
 
-    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
     offset = params[:offset].to_i || 0
     filter_by = params[:filter]
 
