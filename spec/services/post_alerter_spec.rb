@@ -1130,6 +1130,7 @@ describe PostAlerter do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:last_editor) { Fabricate(:user) }
     fab!(:tag) { Fabricate(:tag) }
+    fab!(:category) { Fabricate(:category) }
 
     it 'creates single edit notification when post is modified' do
       TopicUser.create!(user_id: user.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:watching], highest_seen_post_number: post.post_number)
@@ -1141,6 +1142,27 @@ describe PostAlerter do
 
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)
+    end
+
+    it 'creates posted notification when Sidekiq is slow' do
+      CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id)
+
+      post = PostCreator.create!(
+        Fabricate(:user),
+        title: "one of my first topics",
+        raw: "one of my first posts",
+        category: category.id
+      )
+
+      TopicUser.change(user, post.topic_id, highest_seen_post_number: post.post_number)
+
+      # Manually run job after the user read the topic to simulate a slow
+      # Sidekiq.
+      job_args = Jobs::PostAlert.jobs[0]['args'][0]
+      expect { Jobs::PostAlert.new.execute(job_args.with_indifferent_access) }
+        .to change { Notification.count }.by(1)
+
+      expect(Notification.last.notification_type).to eq(Notification.types[:posted])
     end
   end
 end
