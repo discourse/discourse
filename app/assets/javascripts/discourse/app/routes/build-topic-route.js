@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import { queryParams } from "discourse/controllers/discovery-sortable";
@@ -12,7 +13,7 @@ function filterQueryParams(params, defaultParams) {
 
   if (params) {
     Object.keys(queryParams).forEach(function(opt) {
-      if (params[opt]) {
+      if (!isEmpty(params[opt])) {
         findOpts[opt] = params[opt];
       }
     });
