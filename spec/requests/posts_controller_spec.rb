@@ -1644,6 +1644,16 @@ describe PostsController do
       expect(body).to_not include(private_post.topic.slug)
       expect(body).to include(public_post.topic.slug)
     end
+
+    it "returns 404 if `hide_profile_and_presence` user option is checked" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+
+      get "/u/#{user.username}/activity.rss"
+      expect(response.status).to eq(404)
+
+      get "/u/#{user.username}/activity.json"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#latest' do
