@@ -21,9 +21,12 @@ export function addToHeaderIcons(icon) {
 
 const dropdown = {
   buildClasses(attrs) {
+    let classes = attrs.classNames || [];
     if (attrs.active) {
-      return "active";
+      classes.push("active");
     }
+
+    return classes;
   },
 
   click(e) {
@@ -189,6 +192,26 @@ createWidget("header-icons", {
       return [];
     }
 
+    const icons = [];
+
+    if (_extraHeaderIcons) {
+      _extraHeaderIcons.forEach(icon => {
+        icons.push(this.attach(icon));
+      });
+    }
+
+    const search = this.attach("header-dropdown", {
+      title: "search.title",
+      icon: "search",
+      iconId: "search-button",
+      action: "toggleSearchMenu",
+      active: attrs.searchVisible,
+      href: getURL("/search"),
+      classNames: ["search-dropdown"]
+    });
+
+    icons.push(search);
+
     const hamburger = this.attach("header-dropdown", {
       title: "hamburger_menu",
       icon: "bars",
@@ -196,6 +219,8 @@ createWidget("header-icons", {
       active: attrs.hamburgerVisible,
       action: "toggleHamburger",
       href: "",
+      classNames: ["hamburger-dropdown"],
+
       contents() {
         let { currentUser } = this;
         if (currentUser && currentUser.reviewable_count) {
@@ -212,16 +237,8 @@ createWidget("header-icons", {
       }
     });
 
-    const search = this.attach("header-dropdown", {
-      title: "search.title",
-      icon: "search",
-      iconId: "search-button",
-      action: "toggleSearchMenu",
-      active: attrs.searchVisible,
-      href: getURL("/search")
-    });
+    icons.push(hamburger);
 
-    const icons = [search, hamburger];
     if (attrs.user) {
       icons.push(
         this.attach("user-dropdown", {
@@ -231,12 +248,6 @@ createWidget("header-icons", {
           user: attrs.user
         })
       );
-    }
-
-    if (_extraHeaderIcons) {
-      _extraHeaderIcons.forEach(icon => {
-        icons.push(this.attach(icon));
-      });
     }
 
     return icons;
