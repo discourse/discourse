@@ -2,7 +2,7 @@
 
 Fabricator(:upload) do
   user
-  sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
+  sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest("#{n}#{Process.pid}") } }
   original_filename "logo.png"
   filesize 1234
   width 100
