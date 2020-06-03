@@ -196,6 +196,17 @@ createWidget("header-icons", {
       });
     }
 
+    const search = this.attach("header-dropdown", {
+      title: "search.title",
+      icon: "search",
+      iconId: "search-button",
+      action: "toggleSearchMenu",
+      active: attrs.searchVisible,
+      href: Discourse.getURL("/search")
+    });
+
+    icons.push(search);
+
     const hamburger = this.attach("header-dropdown", {
       title: "hamburger_menu",
       icon: "bars",
@@ -218,17 +229,8 @@ createWidget("header-icons", {
         }
       }
     });
-    icons.push(hamburger);
 
-    const search = this.attach("header-dropdown", {
-      title: "search.title",
-      icon: "search",
-      iconId: "search-button",
-      action: "toggleSearchMenu",
-      active: attrs.searchVisible,
-      href: Discourse.getURL("/search")
-    });
-    icons.push(search);
+    icons.push(hamburger);
 
     if (attrs.user) {
       icons.push(
