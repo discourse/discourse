@@ -206,7 +206,7 @@ createWidget("header-icons", {
       iconId: "search-button",
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
-      href: Discourse.getURL("/search"),
+      href: getURL("/search"),
       classNames: ["search-dropdown"]
     });
 
