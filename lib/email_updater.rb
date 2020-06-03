@@ -94,6 +94,14 @@ class EmailUpdater
           update_user_email(change_req.old_email, change_req.new_email)
           confirm_result = :complete
         end
+
+        if confirm_result == :complete
+          if @initiating_user&.staff? && @initiating_user != @user
+            StaffActionLogger.new(@initiating_user).log_add_email(@user, previous_value: change_req.old_email, new_value: change_req.new_email)
+          else
+            UserHistory.create(action: UserHistory.actions[:add_email], target_user_id: @user.id, previous_value: change_req.old_email, new_value: change_req.new_email)
+          end
+        end
       else
         errors.add(:base, I18n.t('change_email.already_done'))
         confirm_result = :error

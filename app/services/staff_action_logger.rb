@@ -745,15 +745,30 @@ class StaffActionLogger
   end
 
   def log_add_email(user, opts = {})
-    UserHistory.create!(opts.merge(target_user_id: user.id, action: UserHistory.actions[:add_email]))
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(opts.merge(
+      action: UserHistory.actions[:add_email]),
+      target_user_id: user.id
+    )
   end
 
   def log_update_email(user, opts = {})
-    UserHistory.create!(opts.merge(target_user_id: user.id, action: UserHistory.actions[:update_email]))
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(opts.merge(
+      action: UserHistory.actions[:update_email]),
+      target_user_id: user.id
+    )
   end
 
   def log_destroy_email(user, opts = {})
-    UserHistory.create!(opts.merge(target_user_id: user.id, action: UserHistory.actions[:destroy_email]))
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(opts.merge(
+      action: UserHistory.actions[:destroy_email]),
+      target_user_id: user.id
+    )
   end
 
   private
