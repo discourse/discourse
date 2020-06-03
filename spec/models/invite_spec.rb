@@ -29,9 +29,9 @@ describe Invite do
     fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "should not allow an invite with unformatted email address" do
-      expect {
-        Fabricate(:invite, email: "John Doe <john.doe@example.com>")
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      invite = Fabricate.build(:invite, email: "John Doe <john.doe@example.com>")
+      expect(invite.valid?).to eq(false)
+      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t("user.email.invalid"))
     end
 
     it "should not allow an invite with blacklisted email" do
@@ -44,6 +44,11 @@ describe Invite do
       expect(invite).to be_valid
     end
 
+    it "should not allow an invalid email address" do
+      invite = Fabricate.build(:invite, email: 'asjdso')
+      expect(invite.valid?).to eq(false)
+      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t("user.email.invalid"))
+    end
   end
 
   context '#create' do
