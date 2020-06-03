@@ -6,7 +6,7 @@ on:
       - master
   pull_request:
     branches-ignore:
-      - 'tests-passed'
+      - "tests-passed"
 
 jobs:
   build:
@@ -28,12 +28,12 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_types: [ 'BACKEND', 'FRONTEND', 'LINT' ]
-        target: [ 'PLUGINS', 'CORE' ]
-        os: [ ubuntu-latest ]
-        ruby: [ '2.6' ]
-        postgres: [ '10' ]
-        redis: [ '4.x' ]
+        build_types: ["BACKEND", "FRONTEND", "LINT"]
+        target: ["PLUGINS", "CORE"]
+        os: [ubuntu-latest]
+        ruby: ["2.6"]
+        postgres: ["10"]
+        redis: ["4.x"]
 
     services:
       postgres:
@@ -77,7 +77,7 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          architecture: 'x64'
+          architecture: "x64"
 
       - name: Setup bundler
         run: |
@@ -145,6 +145,14 @@ jobs:
           yarn prettier -v
           yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
 
+      - name: Core English locale
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
+        run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
+
+      - name: Plugin English locale
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
+        run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
+
       - name: Core RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'CORE'
         run: |
@@ -167,5 +175,5 @@ jobs:
 
       - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
         if: env.BUILD_TYPE == 'FRONTEND'
-        run: bundle exec rake plugin:qunit
+        run: bundle exec rake plugin:qunit['*','1200000']
         timeout-minutes: 30

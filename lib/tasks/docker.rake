@@ -66,6 +66,7 @@ task 'docker:test' do
 
       if ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
+        @good &&= run_or_fail("bundle exec ruby script/i18n_lint.rb plugins/#{ENV["SINGLE_PLUGIN"]}/config/locales/{client,server}.en.yml")
         @good &&= run_or_fail("yarn eslint --global I18n --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
 
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
@@ -77,6 +78,9 @@ task 'docker:test' do
 
         # TODO: remove --global I18n once plugins can be updated
         @good &&= run_or_fail("yarn eslint --global I18n --ext .es6 plugins") unless ENV["SKIP_PLUGINS"]
+
+        @good &&= run_or_fail('bundle exec ruby script/i18n_lint.rb "config/locales/{client,server}.en.yml"') unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail('bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"') unless ENV["SKIP_PLUGINS"]
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
