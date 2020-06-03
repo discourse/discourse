@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -37,7 +38,7 @@ const Report = EmberObject.extend({
       .locale("en")
       .format("YYYY-MM-DD");
 
-    return Discourse.getURL(
+    return getURL(
       `/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`
     );
   },
@@ -335,7 +336,7 @@ const Report = EmberObject.extend({
         avatar_template: row[properties.avatar]
       });
 
-      const href = Discourse.getURL(`/admin/users/${userId}/${username}`);
+      const href = getURL(`/admin/users/${userId}/${username}`);
 
       const avatarImg = renderAvatar(user, {
         imageSize: "tiny",
@@ -356,7 +357,7 @@ const Report = EmberObject.extend({
 
     const formatedValue = () => {
       const topicId = row[properties.id];
-      const href = Discourse.getURL(`/t/-/${topicId}`);
+      const href = getURL(`/t/-/${topicId}`);
       return `<a href='${href}'>${escapeExpression(topicTitle)}</a>`;
     };
 
@@ -370,7 +371,7 @@ const Report = EmberObject.extend({
     const postTitle = row[properties.truncated_raw];
     const postNumber = row[properties.number];
     const topicId = row[properties.topic_id];
-    const href = Discourse.getURL(`/t/-/${topicId}/${postNumber}`);
+    const href = getURL(`/t/-/${topicId}/${postNumber}`);
 
     return {
       property: properties.title,
@@ -434,7 +435,7 @@ const Report = EmberObject.extend({
 
   _linkLabel(properties, row) {
     const property = properties[0];
-    const value = Discourse.getURL(row[property]);
+    const value = getURL(row[property]);
     const formatedValue = (href, anchor) => {
       return `<a href="${escapeExpression(href)}">${escapeExpression(
         anchor

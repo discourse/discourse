@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import { notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -124,9 +125,9 @@ const TopicList = RestModel.extend({
       this.topics.filter(topic => topic_ids.indexOf(topic.id) >= 0)
     );
 
-    const url = `${Discourse.getURL("/")}${
-      this.filter
-    }.json?topic_ids=${topic_ids.join(",")}`;
+    const url = `${getURL("/")}${this.filter}.json?topic_ids=${topic_ids.join(
+      ","
+    )}`;
 
     return ajax({ url, data: this.params }).then(result => {
       let i = 0;

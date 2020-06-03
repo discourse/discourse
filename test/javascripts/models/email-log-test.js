@@ -1,4 +1,5 @@
 import EmailLog from "admin/models/email-log";
+import { setPrefix } from "discourse-common/lib/get-url";
 
 QUnit.module("Discourse.EmailLog");
 
@@ -7,7 +8,7 @@ QUnit.test("create", assert => {
 });
 
 QUnit.test("subfolder support", assert => {
-  Discourse.BaseUri = "/forum";
+  setPrefix("/forum");
   const attrs = {
     id: 60,
     to_address: "wikiman@asdf.com",

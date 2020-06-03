@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { none } from "@ember/object/computed";
 import EmberObject from "@ember/object";
@@ -11,7 +12,7 @@ const Badge = RestModel.extend({
 
   @discourseComputed
   url() {
-    return Discourse.getURL(`/badges/${this.id}/${this.slug}`);
+    return getURL(`/badges/${this.id}/${this.slug}`);
   },
 
   updateFromJson(json) {

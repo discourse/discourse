@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
@@ -19,7 +20,7 @@ const Bookmark = RestModel.extend({
 
   @computed
   get url() {
-    return Discourse.getURL(`/bookmarks/${this.id}`);
+    return getURL(`/bookmarks/${this.id}`);
   },
 
   destroy() {
@@ -37,7 +38,7 @@ const Bookmark = RestModel.extend({
 
   // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
-    let url = Discourse.getURL(`/t/${this.topic_id}`);
+    let url = getURL(`/t/${this.topic_id}`);
     if (postNumber > 0) {
       url += `/${postNumber}`;
     }

@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { debounce, later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
@@ -650,9 +651,7 @@ export default Component.extend({
     const $element = $(this.element);
 
     $element.fileupload({
-      url: Discourse.getURL(
-        `/uploads.json?client_id=${this.messageBus.clientId}`
-      ),
+      url: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       dataType: "json",
       pasteZone: $element
     });

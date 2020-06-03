@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
@@ -23,7 +24,7 @@ export default Component.extend({
 
   @discourseComputed
   searchLink() {
-    return Discourse.getURL(
+    return getURL(
       `/search?expanded=true&q=%40${this.targetUser.username}%20in%3Apersonal-direct`
     );
   },

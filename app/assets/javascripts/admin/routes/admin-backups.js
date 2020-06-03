@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import EmberObject from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -40,7 +41,7 @@ export default DiscourseRoute.extend({
         );
         if (log.operation === "restore") {
           // redirect to homepage when the restore is done (session might be lost)
-          window.location = Discourse.getURL("/");
+          window.location = getURL("/");
         }
       } else {
         this.controllerFor("adminBackupsLogs")

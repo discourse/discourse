@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { not, notEmpty, equal, and, or } from "@ember/object/computed";
@@ -25,7 +26,7 @@ import User from "discourse/models/user";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
-  const url = `${Discourse.getURL("/t/")}${topic.id}`;
+  const url = `${getURL("/t/")}${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
   delete data.nearPost;
@@ -259,7 +260,7 @@ const Topic = RestModel.extend({
     if (slug.trim().length === 0) {
       slug = "topic";
     }
-    return `${Discourse.getURL("/t/")}${slug}/${id}`;
+    return `${getURL("/t/")}${slug}/${id}`;
   },
 
   // Helper to build a Url with a post number
@@ -739,7 +740,7 @@ Topic.reopenClass({
 
   // Load a topic, but accepts a set of filters
   find(topicId, opts) {
-    let url = Discourse.getURL("/t/") + topicId;
+    let url = getURL("/t/") + topicId;
     if (opts.nearPost) {
       url += `/${opts.nearPost}`;
     }
