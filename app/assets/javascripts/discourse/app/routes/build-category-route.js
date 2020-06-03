@@ -30,6 +30,11 @@ export default (filterArg, params) => {
             category,
             category_slug_path_with_id
           });
+        } else if (modelParams.id === "all") {
+          modelParams.category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug
+          ].join("/");
         } else {
           modelParams.category_slug_path_with_id = [
             modelParams.parentSlug,
@@ -46,13 +51,14 @@ export default (filterArg, params) => {
 
     model(modelParams) {
       modelParams = this.serialize(modelParams);
+      const category_slug_path_with_id = modelParams.category_slug_path_with_id;
 
       const category = Category.findBySlugPathWithID(
-        modelParams.category_slug_path_with_id
+        category_slug_path_with_id
       );
 
       if (!category) {
-        const parts = modelParams.category_slug_path_with_id.split("/");
+        const parts = category_slug_path_with_id.split("/");
         if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
           parts.pop();
         }
@@ -66,6 +72,17 @@ export default (filterArg, params) => {
       }
 
       if (category) {
+        if (
+          category.default_list_filter === "none" &&
+          filterArg === "default" &&
+          modelParams.id !== "all"
+        ) {
+          this.replaceWith("discovery.categoryNone", {
+            category,
+            category_slug_path_with_id
+          });
+        }
+
         return { category };
       }
     },

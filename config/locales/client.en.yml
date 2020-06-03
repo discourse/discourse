@@ -336,7 +336,7 @@ en:
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
         existing_reminder: "You have a reminder set for this bookmark which will be sent"
-    
+
     copy_codeblock:
       copied: "copied!"
 
@@ -2825,6 +2825,7 @@ en:
       sort_order: "Topic List Sort By:"
       default_view: "Default Topic List:"
       default_top_period: "Default Top Period:"
+      default_list_filter: "Default List Filter:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       reviewable_by_group: "In addition to staff, posts and flags in this category can be also be reviewed by:"
@@ -2887,6 +2888,9 @@ en:
         moderation: "Moderation"
         appearance: "Appearance"
         email: "Email"
+      list_filters:
+        all: "all"
+        none: "none"
 
     flagging:
       title: "Thanks for helping to keep our community civil!"

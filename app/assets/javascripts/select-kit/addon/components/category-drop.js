@@ -127,7 +127,9 @@ export default ComboBoxComponent.extend({
     "selectKit.options.subCategory",
     function() {
       return Discourse.getURL(
-        this.selectKit.options.subCategory ? this.parentCategoryUrl || "/" : "/"
+        this.selectKit.options.subCategory
+          ? `${this.parentCategoryUrl}/all` || "/"
+          : "/"
       );
     }
   ),
