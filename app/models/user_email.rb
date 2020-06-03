@@ -11,8 +11,7 @@ class UserEmail < ActiveRecord::Base
   before_validation :strip_downcase_email
 
   validates :email, presence: true
-  validates :email, email: true, format: { with: EmailValidator.email_regex },
-                    if: :validate_email?
+  validates :email, email: true, if: :validate_email?
 
   validates :primary, uniqueness: { scope: [:user_id] }, if: [:user_id, :primary]
   validate :user_id_not_changed, if: :primary
