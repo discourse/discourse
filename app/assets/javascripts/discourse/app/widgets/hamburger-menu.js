@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
@@ -269,7 +270,7 @@ export default createWidget("hamburger-menu", {
 
     let faqUrl = this.siteSettings.faq_url;
     if (!faqUrl || faqUrl.length === 0) {
-      faqUrl = Discourse.getURL("/faq");
+      faqUrl = getURL("/faq");
     }
 
     const prioritizeFaq =

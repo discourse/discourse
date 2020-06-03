@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { get } from "@ember/object";
 import { schedule } from "@ember/runloop";
@@ -217,7 +218,7 @@ createWidget("header-icons", {
       iconId: "search-button",
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
-      href: Discourse.getURL("/search")
+      href: getURL("/search")
     });
 
     const icons = [search, hamburger];

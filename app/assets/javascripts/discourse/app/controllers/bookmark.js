@@ -270,11 +270,6 @@ export default Controller.extend(ModalFunctionality, {
     return this.nextMonth().format(I18n.t("dates.long_no_year"));
   },
 
-  @discourseComputed()
-  basePath() {
-    return Discourse.BaseUri;
-  },
-
   @discourseComputed("userTimezone")
   userHasTimezoneSet(userTimezone) {
     return !_.isEmpty(userTimezone);

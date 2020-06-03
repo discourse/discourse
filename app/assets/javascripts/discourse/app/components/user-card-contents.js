@@ -1,3 +1,4 @@
+import { getURLWithCDN } from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { alias, gte, and, gt, not, or } from "@ember/object/computed";
@@ -153,7 +154,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     }
 
     const url = this.get("user.card_background_upload_url");
-    const bg = isEmpty(url) ? "" : `url(${Discourse.getURLWithCDN(url)})`;
+    const bg = isEmpty(url) ? "" : `url(${getURLWithCDN(url)})`;
     thisElem.style.backgroundImage = bg;
   },
 

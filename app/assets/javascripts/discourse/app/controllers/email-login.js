@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
@@ -7,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
 export default Controller.extend({
-  lockImageUrl: Discourse.getURL("/images/lock.svg"),
+  lockImageUrl: getURL("/images/lock.svg"),
 
   @discourseComputed("model")
   secondFactorRequired(model) {

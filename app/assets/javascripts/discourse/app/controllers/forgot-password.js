@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { escapeExpression } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
+import getURL from "discourse-common/lib/get-url";
 
 export default Controller.extend(ModalFunctionality, {
   offerHelp: null,
@@ -30,7 +31,7 @@ export default Controller.extend(ModalFunctionality, {
     help() {
       this.setProperties({
         offerHelp: I18n.t("forgot_password.help", {
-          basePath: Discourse.BaseUri
+          basePath: getURL("/")
         }),
         helpSeen: true
       });

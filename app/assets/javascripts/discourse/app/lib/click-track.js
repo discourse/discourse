@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
@@ -106,9 +107,9 @@ export default {
         data.append("url", href);
         data.append("post_id", postId);
         data.append("topic_id", topicId);
-        navigator.sendBeacon(Discourse.getURL("/clicks/track"), data);
+        navigator.sendBeacon(getURL("/clicks/track"), data);
       } else {
-        trackPromise = ajax(Discourse.getURL("/clicks/track"), {
+        trackPromise = ajax(getURL("/clicks/track"), {
           type: "POST",
           data: {
             url: href,

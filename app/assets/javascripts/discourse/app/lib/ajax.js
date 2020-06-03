@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { run } from "@ember/runloop";
 import userPresent from "discourse/lib/user-presence";
@@ -159,7 +160,7 @@ export function ajax() {
       args.cache = true; // Disable JQuery cache busting param, which was created to deal with IE8
     }
 
-    ajaxObj = $.ajax(Discourse.getURL(url), args);
+    ajaxObj = $.ajax(getURL(url), args);
   }
 
   let promise;
@@ -169,7 +170,7 @@ export function ajax() {
   if (
     args.type &&
     args.type.toUpperCase() !== "GET" &&
-    url !== Discourse.getURL("/clicks/track") &&
+    url !== getURL("/clicks/track") &&
     !Session.currentProp("csrfToken")
   ) {
     promise = new Promise((resolve, reject) => {

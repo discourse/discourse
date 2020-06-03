@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
@@ -561,7 +562,7 @@ export default Controller.extend({
       ) {
         groups.forEach(group => {
           let body;
-          const groupLink = Discourse.getURL(`/g/${group.name}/members`);
+          const groupLink = getURL(`/g/${group.name}/members`);
 
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {

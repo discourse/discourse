@@ -1,3 +1,6 @@
+import { isAbsoluteURL } from "discourse-common/lib/get-url";
+import getURL from "discourse-common/lib/get-url";
+
 export default {
   name: "register-service-worker",
 
@@ -30,7 +33,7 @@ export default {
         });
 
         navigator.serviceWorker
-          .register(`${Discourse.BaseUri}/${Discourse.ServiceWorkerURL}`)
+          .register(`${getURL(Discourse.ServiceWorkerURL)}`)
           .catch(error => {
             // eslint-disable-next-line no-console
             console.info(`Failed to register Service Worker: ${error}`);
@@ -46,7 +49,7 @@ export default {
   },
 
   unregister(registration) {
-    if (registration.scope.startsWith(Discourse.BaseUrl)) {
+    if (isAbsoluteURL(registration.scope)) {
       registration.unregister();
     }
   }

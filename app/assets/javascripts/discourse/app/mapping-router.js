@@ -3,11 +3,9 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { rewritePath } from "discourse/lib/url";
 import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
-
-const rootURL = Discourse.BaseUri;
+import getURL from "discourse-common/lib/get-url";
 
 const BareRouter = EmberRouter.extend({
-  rootURL,
   location: isTesting() ? "none" : "discourse-location",
 
   handleURL(url) {
@@ -136,10 +134,10 @@ export function mapRoutes() {
     }
   });
 
-  return BareRouter.extend().map(function() {
+  return BareRouter.extend({
+    rootURL: getURL("/")
+  }).map(function() {
     tree.mapRoutes(this);
     this.route("unknown", { path: "*path" });
   });
 }
-
-export default BareRouter;
