@@ -220,6 +220,23 @@ class GlobalSetting
       end
   end
 
+  # test only
+  def self.reset_whitelisted_theme_ids!
+    @whitelisted_theme_ids = nil
+  end
+
+  def self.whitelisted_theme_ids
+    return nil if whitelisted_theme_repos.blank?
+
+    @whitelisted_theme_ids ||= begin
+      urls = whitelisted_theme_repos.split(",").map(&:strip)
+      Theme
+        .joins(:remote_theme)
+        .where('remote_themes.remote_url in (?)', urls)
+        .pluck(:id)
+    end
+  end
+
   def self.add_default(name, default)
     unless self.respond_to? name
       define_singleton_method(name) do

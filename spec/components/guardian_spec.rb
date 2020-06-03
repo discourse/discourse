@@ -2869,6 +2869,32 @@ describe Guardian do
     let!(:theme) { Fabricate(:theme) }
     let!(:theme2) { Fabricate(:theme) }
 
+    context "whitelist mode" do
+      before do
+        GlobalSetting.reset_whitelisted_theme_ids!
+        global_setting :whitelisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+      end
+
+      after do
+        GlobalSetting.reset_whitelisted_theme_ids!
+      end
+
+      it "should respect theme whitelisting" do
+        r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
+        theme.update!(remote_theme_id: r.id)
+
+        guardian = Guardian.new(admin)
+
+        expect(guardian.allow_themes?([theme.id, theme2.id], include_preview: true)).to eq(false)
+
+        expect(guardian.allow_themes?([theme.id], include_preview: true)).to eq(true)
+
+        expect(guardian.allowed_theme_repo_import?('https://x.com/git')).to eq(true)
+        expect(guardian.allowed_theme_repo_import?('https:/evil.com/git')).to eq(false)
+
+      end
+    end
+
     it "allows staff to use any themes" do
       expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(false)
       expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id])).to eq(false)

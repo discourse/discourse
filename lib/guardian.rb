@@ -471,8 +471,26 @@ class Guardian
     @user.staff? || @user.trust_level >= TrustLevel.levels[:member]
   end
 
+  def allowed_theme_repo_import?(repo)
+    return false if !@user.admin?
+
+    whitelisted_repos = GlobalSetting.whitelisted_theme_repos
+    if !whitelisted_repos.blank?
+      urls = whitelisted_repos.split(",").map(&:strip)
+      return urls.include?(repo)
+    end
+
+    true
+  end
+
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
+
+    if whitelisted_theme_ids = GlobalSetting.whitelisted_theme_ids
+      if (theme_ids - whitelisted_theme_ids).present?
+        return false
+      end
+    end
 
     if include_preview && is_staff? && (theme_ids - Theme.theme_ids).blank?
       return true

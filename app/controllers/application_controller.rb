@@ -414,7 +414,9 @@ class ApplicationController < ActionController::Base
     end
 
     if theme_ids.blank? && SiteSetting.default_theme_id != -1
-      theme_ids << SiteSetting.default_theme_id
+      if guardian.allow_themes?([SiteSetting.default_theme_id])
+        theme_ids << SiteSetting.default_theme_id
+      end
     end
 
     @theme_ids = request.env[:resolved_theme_ids] = theme_ids

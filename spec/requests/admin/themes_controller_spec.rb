@@ -87,6 +87,7 @@ describe Admin::ThemesController do
   end
 
   describe '#import' do
+
     let(:theme_json_file) do
       Rack::Test::UploadedFile.new(file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json"), "application/json")
     end
@@ -97,6 +98,40 @@ describe Admin::ThemesController do
 
     let(:image) do
       file_from_fixtures("logo.png")
+    end
+
+    context 'when theme whitelist mode is enabled' do
+      before do
+        GlobalSetting.reset_whitelisted_theme_ids!
+        global_setting :whitelisted_theme_repos, "https://github.com/discourse/discourse-brand-header"
+      end
+
+      after do
+        GlobalSetting.reset_whitelisted_theme_ids!
+      end
+
+      it "allows whitelisted imports" do
+        RemoteTheme.stubs(:import_theme)
+        post "/admin/themes/import.json", params: {
+          remote: '    https://github.com/discourse/discourse-brand-header       '
+        }
+
+        expect(response.status).to eq(201)
+      end
+
+      it "bans non whtielisted imports" do
+        RemoteTheme.stubs(:import_theme)
+        post "/admin/themes/import.json", params: {
+          remote: '    https://bad.com/discourse/discourse-brand-header       '
+        }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "bans json file import" do
+        post "/admin/themes/import.json", params: { theme: theme_json_file }
+        expect(response.status).to eq(403)
+      end
     end
 
     it 'can import a theme from Git' do
@@ -120,7 +155,7 @@ describe Admin::ThemesController do
     end
 
     it 'imports a theme from an archive' do
-      existing_theme = Fabricate(:theme, name: "Header Icons")
+      _existing_theme = Fabricate(:theme, name: "Header Icons")
 
       expect do
         post "/admin/themes/import.json", params: { theme: theme_archive }
@@ -135,7 +170,7 @@ describe Admin::ThemesController do
 
     it 'updates an existing theme from an archive by name' do
       # Old theme CLI method, remove Jan 2020
-      existing_theme = Fabricate(:theme, name: "Header Icons")
+      _existing_theme = Fabricate(:theme, name: "Header Icons")
 
       expect do
         post "/admin/themes/import.json", params: { bundle: theme_archive }
@@ -150,7 +185,7 @@ describe Admin::ThemesController do
 
     it 'updates an existing theme from an archive by id' do
       # Used by theme CLI
-      existing_theme = Fabricate(:theme, name: "Header Icons")
+      _existing_theme = Fabricate(:theme, name: "Header Icons")
       other_existing_theme = Fabricate(:theme, name: "Some other name")
 
       messages = MessageBus.track_publish do
@@ -271,6 +306,34 @@ describe Admin::ThemesController do
 
       expect(response.status).to eq(200)
       expect(SiteSetting.default_theme_id).to eq(-1)
+    end
+
+    context 'when theme whitelist mode is enabled' do
+      before do
+        GlobalSetting.reset_whitelisted_theme_ids!
+        global_setting :whitelisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+      end
+
+      after do
+        GlobalSetting.reset_whitelisted_theme_ids!
+      end
+
+      it 'unconditionally bans theme_fields from updating' do
+        r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
+        theme.update!(remote_theme_id: r.id)
+
+        put "/admin/themes/#{theme.id}.json", params: {
+          theme: {
+            name: 'my test name',
+            theme_fields: [
+              { name: 'scss', target: 'common', value: '' },
+              { name: 'scss', target: 'desktop', value: 'body{color: blue;}' },
+            ]
+          }
+        }
+
+        expect(response.status).to eq(403)
+      end
     end
 
     it 'updates a theme' do
