@@ -838,7 +838,7 @@ module Discourse
 
     # load up schema cache for all multisite assuming all dbs have
     # an identical schema
-    RailsMultisite::ConnectionManagement.each_connection do
+    RailsMultisite::ConnectionManagement.safe_each_connection do
       dup_cache = schema_cache.dup
       # this line is not really needed, but just in case the
       # underlying implementation changes lets give it a shot
