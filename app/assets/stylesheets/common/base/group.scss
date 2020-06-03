@@ -140,17 +140,15 @@ table.group-members {
   color: $primary;
 }
 
-.form-vertical {
-  .group-flair-inputs {
-    display: inline-block;
-  }
+.group-flair-inputs {
+  display: inline-block;
 
   .avatar-flair-preview {
     position: relative;
     width: 45px;
 
     .avatar-wrapper {
-      background-color: #f4f4f4;
+      background-color: $primary-very-low;
     }
   }
 
