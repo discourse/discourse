@@ -17,7 +17,10 @@ export default Component.extend({
   },
 
   keyDown(event) {
-    if (event.which === 13) this.addValue(this.newValue);
+    if (event.which === 13) {
+      this.addValue(this.newValue);
+      return;
+    }
   },
 
   @action
@@ -29,7 +32,7 @@ export default Component.extend({
 
   @action
   addValue(newValue) {
-    if (this.inputInvalid) return;
+    if (this.inputEmpty) return;
 
     this.set("newValue", null);
     this.collection.addObject(newValue);
