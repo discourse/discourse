@@ -18,6 +18,8 @@ fr:
     invalid_argument: "Valeur '%{value}' invalide pour paramètre '%{argument}'."
     multiple_polls_without_name: "Plusieurs sondages n'ont pas de nom. Utilisez l'attribut '<code>name</code>' pour donner un identifiant unique aux sondages."
     multiple_polls_with_same_name: "Plusieurs sondages ont le même nom : <strong>%{name}</strong>. Utilisez l'attribut '<code>name</code>' pour donner un identifiant unique aux sondages."
+    default_poll_must_have_at_least_1_option: "Un sondage doit avoir au moins 1 option."
+    named_poll_must_have_at_least_1_option: "Le sondage <strong>%{name}</strong> doit avoir au moins 1 option."
     default_poll_must_have_less_options:
       one: "Un sondage doit contenir moins que %{count}options."
       other: "Un sondage doit contenir moins que %{count} options."

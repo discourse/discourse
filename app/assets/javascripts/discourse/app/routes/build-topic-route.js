@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import { queryParams } from "discourse/controllers/discovery-sortable";
@@ -12,7 +13,7 @@ function filterQueryParams(params, defaultParams) {
 
   if (params) {
     Object.keys(queryParams).forEach(function(opt) {
-      if (params[opt]) {
+      if (!isEmpty(params[opt])) {
         findOpts[opt] = params[opt];
       }
     });
@@ -50,10 +51,12 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
     // Clean up any string parameters that might slip through
     filterParams = filterParams || {};
-    Object.keys(filterParams).forEach(function(k) {
-      const val = filterParams[k];
-      if (val === "undefined" || val === "null" || val === "false") {
-        filterParams[k] = undefined;
+    Object.keys(filterParams).forEach(k => {
+      let val = filterParams[k];
+      if (val === "false") val = false;
+      if (val === "true") val = true;
+      if (val === "undefined" || val === "null") {
+        filterParams[k] = null;
       }
     });
 

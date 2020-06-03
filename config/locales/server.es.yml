@@ -45,7 +45,6 @@ es:
       unrecognized_extension: "Extensión de archivo no reconocida: %{extension}"
     import_error:
       generic: Se produjo un error al importar ese tema
-      about_json: "Error de importación: about.json no existe, o es inválido"
       about_json_values: "about.json contiene valores inválidos: %{errors}"
       modifier_values: "los modificadores about.json contienen valores inválidos: %{errors}"
       git: "Error al clonar el repositorio git, se deniega el acceso o no se encuentra el repositorio"
@@ -335,7 +334,6 @@ es:
       already_bookmarked_post: "No puedes guardar la misma publicación en marcadores dos veces."
       cannot_set_past_reminder: "No puedes establecer un recordatorio de marcador en el pasado."
       cannot_set_reminder_in_distant_future: "No puedes establecer un recordatorio de marcador más de 10 años en el futuro."
-      time_must_be_provided: "se debe especificar la hora para todos los recordatorios"
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
       later_today: "Más tarde, hoy"
@@ -414,12 +412,6 @@ es:
       Puedes editar tu respuesta previa para añadir una cita seleccionando el texto y pulsando en el botón <b>citar respuesta</b> que aparecerá.
 
       Es más fácil para todos leer temas con menos respuestas pero más profundas que muchas respuestas pequeñas individuales.
-    dominating_topic: |
-      ### Deja a los demás unirse a la conversación
-
-      Este tema claramente es muy importante para ti &ndash; has publicado más del %{percent}% de las respuestas aquí.
-
-      Podría ser incluso mejor si también le das espacio a otras personas para que compartan sus puntos de vista. ¿Puedes invitarlos?
     get_a_room: |
       ### Anima a todos a participar en la conversación
 
@@ -1342,7 +1334,6 @@ es:
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
     download_remote_images_threshold: "Espacio mínimo en el disco necesario para descargar imágenes remotas de forma local (porcentaje)"
-    download_remote_images_max_days_old: "No descargar imágenes remotas de publicaciones que tengan más de n días de antigüedad."
     disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
     editing_grace_period: "Durante (n) segundos después de que se publique algún mensaje, se puede editar la publicación sin crear una nueva versión en el historial."
     editing_grace_period_max_diff: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 0 y 1)"
@@ -3938,7 +3929,6 @@ es:
         Esta medalla se concede cuando usas todos los %{max_likes_per_day} me gusta diarios por 5 días. ¡Gracias por tomarte tiempo en incentivar y premiar las mejores conversaciones cada día!
     crazy_in_love:
       name: Magnánimo
-      description: Utilizó 50 me gusta en un día 20 veces
       long_description: |
         Esta medalla se concede cuando usas todos los %{max_likes_per_day}de tus me gusta diarios por 20 días. ¡Wowl! ¡Eres un modelo a seguir por animar a los demás miembros de la comunidad!
     thank_you:

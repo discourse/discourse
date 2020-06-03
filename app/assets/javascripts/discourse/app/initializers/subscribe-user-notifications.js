@@ -11,7 +11,7 @@ import {
   unsubscribe as unsubscribePushNotifications,
   isPushNotificationsEnabled
 } from "discourse/lib/push-notifications";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 export default {
   name: "subscribe-user-notifications",
@@ -130,7 +130,7 @@ export default {
         Discourse.set("assetVersion", data)
       );
 
-      if (ENV.environment !== "test") {
+      if (!isTesting()) {
         bus.subscribe(alertChannel(user), data => onNotification(data, user));
         initDesktopNotifications(bus, appEvents);
 

@@ -24,18 +24,6 @@ ca:
           title: "Els resultats es mostraran una vegada <strong>tancada</strong> la votació."
         staff:
           title: "Els resultats només es mostren als membres de l'<strong>equip responsable</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Trieu com a mínim <strong>%{count}</strong> opció"
-            other: "Trieu com a mínim <strong>%{count}</strong> opcions"
-          up_to_max_options:
-            one: "Trieu fins a <strong>%{count}</strong> opció"
-            other: "Trieu fins a <strong>%{count}</strong> opcions"
-          x_options:
-            one: "Trieu <strong>%{count}</strong> opció"
-            other: "Trieu <strong>%{count}</strong> opcions"
-          between_min_and_max_options: "Trieu entre <strong>%{min}</strong> i <strong>%{max}</strong> opcions"
       cast-votes:
         title: "Repartiu els vostres vots"
         label: "Voteu ara!"

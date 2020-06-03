@@ -1,3 +1,5 @@
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
@@ -109,11 +111,7 @@ const User = RestModel.extend({
     if (isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) {
       return "".htmlSafe();
     }
-    return (
-      "background-image: url(" +
-      Discourse.getURLWithCDN(bgUrl) +
-      ")"
-    ).htmlSafe();
+    return ("background-image: url(" + getURLWithCDN(bgUrl) + ")").htmlSafe();
   },
 
   @discourseComputed()
@@ -183,22 +181,22 @@ const User = RestModel.extend({
   @discourseComputed()
   mutedTopicsPath() {
     return defaultHomepage() === "latest"
-      ? Discourse.getURL("/?state=muted")
-      : Discourse.getURL("/latest?state=muted");
+      ? getURL("/?state=muted")
+      : getURL("/latest?state=muted");
   },
 
   @discourseComputed()
   watchingTopicsPath() {
     return defaultHomepage() === "latest"
-      ? Discourse.getURL("/?state=watching")
-      : Discourse.getURL("/latest?state=watching");
+      ? getURL("/?state=watching")
+      : getURL("/latest?state=watching");
   },
 
   @discourseComputed()
   trackingTopicsPath() {
     return defaultHomepage() === "latest"
-      ? Discourse.getURL("/?state=tracking")
-      : Discourse.getURL("/latest?state=tracking");
+      ? getURL("/?state=tracking")
+      : getURL("/latest?state=tracking");
   },
 
   @discourseComputed("username")

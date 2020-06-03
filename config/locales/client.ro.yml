@@ -510,7 +510,6 @@ ro:
         muted:
           title: "Setat pe silențios"
       flair_url: "Imagine avatar cu element distinct"
-      flair_url_placeholder: "(Opțional) URL imagine sau clasă Font Awesome"
       flair_bg_color: "Culoarea de fundal a avatarului cu element distinct"
       flair_bg_color_placeholder: "(Opțional) Valoarea Hex a culorii"
       flair_color: "Culoarea avatarului cu element distinct"
@@ -718,14 +717,17 @@ ro:
         regenerate: "Regenerare"
         disable: "Dezactivează"
         enable: "Activează"
-        copied_to_clipboard: "Copiat în clipboard"
+        copy_to_clipboard: "Copiază în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
+        copied_to_clipboard: "Copiat în clipboard"
       second_factor:
         name: "Nume"
+        disable: "Dezactivează"
+        save: "Salvează"
         edit: "Editează"
         security_key:
           register: "Înregistrare"
-          delete: "Șterge"
+          save: "Salvează"
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."
@@ -1352,7 +1354,6 @@ ro:
           private: În mesajele mele
           first: sunt chiar pe primul loc în listă
           pinned: sunt fixate
-          unpinned: nu sunt fixate
           seen: Citesc
           unseen: Nu am citit
           wiki: sunt wiki
@@ -1441,6 +1442,8 @@ ro:
       move_to_inbox:
         title: "Mută în Primite"
         help: "Mută mesajul în Primite"
+      edit_message:
+        title: "Editează"
       defer:
         title: "Amânare"
       list: "Subiecte"
@@ -2196,7 +2199,6 @@ ro:
         this_month: "Lună"
         this_week: "Săptămână"
         today: "Astăzi"
-        other_periods: "vezi topul"
     permission_types:
       full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizează"
@@ -2365,6 +2367,10 @@ ro:
       custom_message_placeholder: "Introdu mesajul tău personalizat"
       custom_message_template_forum: "Salutare! Ar trebui să te alături acestui forum!"
       custom_message_template_topic: "Salutare! Cred că o să îți placă acest subiect!"
+    footer_nav:
+      back: "Înapoi"
+      share: "Distribuie"
+      dismiss: "Înlătură"
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
   admin_js:

@@ -462,8 +462,7 @@ bs_BA:
         status: "Status"
         category: "Kategorija"
         orders:
-          priority: "Prioritet"
-          priority_asc: "Prioritet (preokrenuti)"
+          score: "bodovi"
           created_at: "Napravjeno kod"
           created_at_asc: "Napravijeno kod (preokrenuti)"
         priority:
@@ -692,8 +691,6 @@ bs_BA:
           title: "Utišano"
           description: "Nećete biti obaviješteni o bilo kojoj poruci u ovoj grupi."
       flair_url: "Slika Avatara sposobnosti"
-      flair_url_placeholder: "(Opciono) URL slike ili Font Awesome class"
-      flair_url_description: 'Koristite kvadratne slike ne manje od 20px od 20px ili FontAwesome ikone (prihvaćeni formati: "fa-icon", "far fa-icon" ili "fab fa-icon").'
       flair_bg_color: "Boja pozadine Slike Avatara sposobnosti"
       flair_bg_color_placeholder: "(Opciono) Hex broj boje"
       flair_color: "Boja Avatara sposobnosti"
@@ -943,8 +940,9 @@ bs_BA:
         enable: "Omogući"
         enable_long: "Omogućite rezervne kodove"
         manage: "Upravljajte rezervnim kodovima. Imate <strong>preostale</strong> rezervne kodove <strong>{{count}}</strong> ."
-        copied_to_clipboard: "Kopirano u međuspremnik"
+        copy_to_clipboard: "Kopirati u clipboard"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
+        copied_to_clipboard: "Kopirano u međuspremnik"
         remaining_codes: "Imate <strong>preostale</strong> rezervne kodove <strong>{{count}}</strong> ."
         use: "Koristi backup kod"
         enable_prerequisites: "Morate omogućiti primarni drugi faktor prije generiranja rezervnih kodova."
@@ -970,27 +968,24 @@ bs_BA:
         oauth_enabled_warning: "Imajte na umu da će ulogovanje korištenjem socijalnih mreža biti isključeno u momentu kad uključite two factor authentication (dvofaktorsku ovjeru autentičnosti) na vašem korisničkom računu."
         use: "Koristi Authenticator app?"
         enforced_notice: "Morate omogućiti autentifikaciju s dva faktora prije pristupa ovoj web-lokaciji."
-        disable: "onemogući"
-        disable_title: "Onemogući Drugi Faktor"
+        disable: "Onemogući"
         disable_confirm: "Jeste li sigurni da želite onemogućiti sve druge faktore?"
+        save: "Sačuvaj"
         edit: "Izmijeni"
         edit_title: "Uredi drugi faktor"
         edit_description: "Ime drugog faktora"
-        enable_security_key_description: "Kada ste pripremili vaš fizikalni sigurnosni ključ (physical security key), pritisnite ispod dugme Registriraj."
         totp:
           title: "Autentikatori zasnovani na tokenu"
-          add: "Novi Authenticator"
           default_name: "Moj Authenticator"
         security_key:
           register: "Registriraj"
           title: "Sigurnosni ključevi"
-          add: "Registriraj sigurnosni ključ"
           default_name: "Glavni sigurnosni ključ"
           not_allowed_error: "Proces registracije sigurnosnog ključa je ili vremenski istekao ili je odkazan."
           already_added_error: "Već ste registrovali ovaj sigurnosni ključ. Nemate potrebe da ga ponovo registrujete."
           edit: "Izmijeni sigurnosni ključ"
+          save: "Sačuvaj"
           edit_description: "Ime sigurnosnog ključa"
-          delete: "Izbriši"
       change_about:
         title: "Promjeni O meni"
         error: "Desila se greška prilikom promjene."
@@ -1810,7 +1805,6 @@ bs_BA:
           bookmarks: Zabilježene
           first: su friške prve objave
           pinned: su zakačene
-          unpinned: nisu zakačene
           seen: Pročitane
           unseen: Nepročitane
           wiki: su wiki
@@ -1904,7 +1898,7 @@ bs_BA:
         help: "Premjesti poruke nazad u Sanduče"
       edit_message:
         help: "Izmijeni prvu objavu ove poruke"
-        title: "Izmijeni poruku"
+        title: "Izmijeni"
       defer:
         help: "Označi kao nepročitano"
         title: "Defer"
@@ -2771,7 +2765,6 @@ bs_BA:
         this_month: "Mjesec"
         this_week: "Nedelja"
         today: "Danas"
-        other_periods: "see top"
     permission_types:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
@@ -3009,6 +3002,10 @@ bs_BA:
       custom_message_template_forum: "Hej, trebalo bi da se pridružiš ovom forumu!"
       custom_message_template_topic: "Hej, mislio sam da ćete uživati u ovoj temi!"
     forced_anonymous: "Zbog ekstremnog opterećenja, ovo se privremeno prikazuje svima, jer bi ga odjavio korisnik."
+    footer_nav:
+      back: "Prethodno"
+      share: "Podijeli"
+      dismiss: "Odpusti"
     safe_mode:
       enabled: "Bezbedan režim je omogućen, da biste izašli iz bezbednog režima, zatvorite ovaj prozor pregledača"
   admin_js:
@@ -3222,12 +3219,6 @@ bs_BA:
         tag_event:
           name: "Oznaći događaj"
           details: "Kada se oznaka kreira, ažurira ili uništava."
-        flag_event:
-          name: "Prijavi event"
-          details: "Kada je prijava kreirana, potvrđena, odbačena ili ignorisana"
-        queued_post_event:
-          name: "Događaj nakon odobrenja"
-          details: "Kada se kreira, odobrava ili odbija novi post u redu čekanja."
         reviewable_event:
           name: "Eventable Event"
           details: "Kada je nova stavka spremna za pregled i kada je njen status ažuriran."

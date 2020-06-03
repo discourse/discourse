@@ -147,7 +147,7 @@
           filters=trendingSearchFilters
           isEnabled=logSearchQueriesEnabled
           disabledLabel=trendingSearchDisabledLabel}}
-        {{html-safe (i18n "admin.dashboard.reports.trending_search.more" basePath=basePath)}}
+        {{html-safe (i18n "admin.dashboard.reports.trending_search.more" basePath=(get-url "/"))}}
       </div>
     {{/if}}
   </div>

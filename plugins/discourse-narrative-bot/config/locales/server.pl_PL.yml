@@ -36,7 +36,7 @@ pl_PL:
 
         Aby kontynuować, odpowiedz mi w dowolnym momencie.
 
-        Aby pominąć ten krok, wyślij wiadomość o treści ``.
+        Aby pominąć ten krok, wyślij wiadomość o treści `%{skip_trigger}`.
 
         Aby rozpocząć od początku, wyślij wiadomość o treści `%{reset_trigger}`.
 

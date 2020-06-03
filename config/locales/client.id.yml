@@ -374,8 +374,7 @@ id:
         status: "Status"
         category: "Kategori"
         orders:
-          priority: "Prioritas"
-          priority_asc: "Prioritas (terbalik)"
+          score: "Skor"
           created_at: "Dibuat Pada"
           created_at_asc: "Dibuat Pada (terbalik)"
         priority:
@@ -592,7 +591,6 @@ id:
         muted:
           title: "meredam"
           description: "Anda tidak akan diberi tahu apa pun tentang pesan di grup ini."
-      flair_url_placeholder: "(Opsional) URL Gambar atau kelas Font Awesome"
       flair_bg_color_placeholder: "(Opsional) Nilai warna dalam Hex"
       flair_color_placeholder: "(Opsional) Nilai warna dalam Hex"
       flair_preview_icon: "Pratinjau Ikon"
@@ -815,9 +813,11 @@ id:
         name: "Nama"
         label: "Kode"
         show_key_description: "Masukkan secara manual"
+        disable: "Nonaktifkan"
+        save: "Simpan"
         edit: "Ubah"
         security_key:
-          delete: "Hapus"
+          save: "Simpan"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -1327,6 +1327,8 @@ id:
         title: "Arsip"
       move_to_inbox:
         title: "Pindah ke Kotak Masuk"
+      edit_message:
+        title: "Ubah"
       list: "Topik"
       new: "topik baru"
       new_topics:
@@ -1540,6 +1542,8 @@ id:
           new: "Anda tidak memiliki topik baru"
         bottom:
           new: "Tidak ada topik baru lagi"
+    footer_nav:
+      dismiss: "Bubar"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

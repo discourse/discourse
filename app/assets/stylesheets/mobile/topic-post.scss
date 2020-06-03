@@ -31,69 +31,70 @@ span.badge-posts {
     color: dark-light-choose($primary-low-mid, $secondary-high);
     .actions {
       display: flex;
-    }
-    // Handles the like and flag buttons in the post menu.
-    .double-button {
-      display: flex;
-      flex: 0 1 auto;
-      align-items: center;
-      button {
-        &.like,
-        &.read-indicator,
-        &.create-flag {
-          flex: 1 1 auto;
-        }
-        &.button-count {
-          padding: 8px 4px 8px 8px;
-          + .toggle-like,
-          + .create-flag {
-            padding: 8px 8px 8px 4px;
+
+      // Handles the like and flag buttons in the post menu.
+      .double-button {
+        display: flex;
+        flex: 0 1 auto;
+        align-items: center;
+        button {
+          &.like,
+          &.read-indicator,
+          &.create-flag {
+            flex: 1 1 auto;
           }
-          &.my-likes,
-          &.regular-likes {
-            display: flex;
-            max-width: unset;
-            padding: 8px;
-            .d-icon {
-              padding-left: 8px;
+          &.button-count {
+            padding: 8px 4px 8px 8px;
+            + .toggle-like,
+            + .create-flag {
+              padding: 8px 8px 8px 4px;
+            }
+            &.my-likes,
+            &.regular-likes {
+              display: flex;
+              max-width: unset;
+              padding: 8px;
+              .d-icon {
+                padding-left: 8px;
+              }
             }
           }
         }
       }
-    }
-    .d-icon {
-      opacity: 1;
-    }
-    button {
-      border: none;
-      font-size: $font-up-1;
-      padding: 10px 8px;
-      background: transparent;
-      flex: 1 1 auto;
-      max-width: 45px;
-      &.hidden {
-        display: none;
+      .d-icon {
+        opacity: 1;
       }
-      &.admin {
-        position: relative;
-      }
-      &.expand-post {
-        margin: 10px 0 10px 0;
-      }
-      &.reply {
-        .d-icon {
-          color: $primary-high;
+      button {
+        border: none;
+        font-size: $font-up-1;
+        padding: 10px 8px;
+        background: transparent;
+        flex: 1 1 auto;
+        max-width: 45px;
+        &.hidden {
+          display: none;
         }
-        margin-left: auto;
-      }
-      &.has-like {
-        .d-icon {
-          color: $love;
+        &.admin {
+          position: relative;
         }
-      }
-      &.bookmarked {
-        .d-icon {
-          color: $tertiary;
+        &.expand-post {
+          margin: 10px 0 10px 0;
+        }
+        &.reply {
+          .d-icon {
+            color: $primary-high;
+          }
+          margin-left: auto;
+        }
+        &.has-like {
+          .d-icon {
+            color: $love;
+          }
+        }
+        &.bookmarked {
+          .d-icon {
+            color: $tertiary;
+          }
         }
       }
     }
@@ -101,37 +102,10 @@ span.badge-posts {
 }
 
 .post-admin-menu {
-  display: inline-flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  background-color: $secondary;
-  width: auto;
-  max-width: 320px;
-  padding: 10px;
-  border: 1px solid $primary-low;
-  position: absolute;
-  text-align: left;
   bottom: -50px;
   left: 135px;
   @media screen and (max-width: 374px) {
     left: 50px;
-  }
-  z-index: z("dropdown");
-  h3 {
-    margin-top: 0;
-    color: $primary;
-    font-size: $font-0;
-  }
-  ul {
-    list-style: none;
-    margin: 10px 0 0 0;
-  }
-  li {
-    margin-bottom: 5px;
-    .d-icon {
-      width: 14px;
-      margin-right: 10px;
-    }
   }
 }
 
@@ -313,25 +287,6 @@ iframe {
   max-width: 100%;
 }
 
-.open > .dropdown-menu {
-  display: block;
-}
-
-.dropdown-menu li {
-  margin: 5px 0;
-  .fa {
-    float: left;
-    margin-right: 5px;
-    padding-top: 1px;
-  }
-  span {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-  span.title {
-    color: $primary;
-  }
-}
-
 .btn-group {
   margin-top: 25px;
   position: relative;
@@ -463,22 +418,6 @@ span.highlighted {
   }
   button {
     margin-right: 7px;
-  }
-}
-
-.popup-menu,
-#topic-footer-buttons .popup-menu {
-  h3 {
-    margin-bottom: 0;
-  }
-
-  ul div li {
-    border-bottom: 0.25em solid transparent;
-    border-top: 0.25em solid transparent;
-
-    button.btn {
-      margin-bottom: 0;
-    }
   }
 }
 

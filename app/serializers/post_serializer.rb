@@ -47,6 +47,7 @@ class PostSerializer < BasicPostSerializer
              :link_counts,
              :read,
              :user_title,
+             :title_is_group,
              :reply_to_user,
              :bookmarked,
              :bookmark_reminder_at,
@@ -210,6 +211,14 @@ class PostSerializer < BasicPostSerializer
 
   def user_title
     object&.user&.title
+  end
+
+  def title_is_group
+    object&.user&.title == object.user&.primary_group&.title
+  end
+
+  def include_title_is_group?
+    object&.user&.title.present?
   end
 
   def trust_level

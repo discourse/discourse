@@ -432,6 +432,8 @@ sl:
         refresh: "Osveži"
         status: "Stanje"
         category: "Kategorija"
+        orders:
+          score: "Ocena"
         priority:
           medium: "Srednja"
           high: "Visoka"
@@ -651,8 +653,6 @@ sl:
           title: "Utišano"
           description: "Obveščeni boste o vsem na sporočilih v tej skupini."
       flair_url: "Avatar Flair slika"
-      flair_url_placeholder: "(neobvezno) URL slike ali Font Awesome razred"
-      flair_url_description: 'Uporabite kvadratne slike velikosti vsaj 20px x 20px ali FontAwesome ikone (sprejeti formati: "fa-icon", "far fa-icon" ali "fab fa-icon").'
       flair_bg_color: "Avatar Flair barva ozadja"
       flair_bg_color_placeholder: "(neobvezno) Hex barvna vrednost"
       flair_color: "Avatar Flair barva"
@@ -899,8 +899,9 @@ sl:
         disable: "Onemogoči"
         enable: "Omogoči"
         enable_long: "Omogočite rezervne potrditvene kode"
-        copied_to_clipboard: "Prenešeno na odlagališče"
+        copy_to_clipboard: "Kopiraj v odložišče"
         copy_to_clipboard_error: "Napaka pri prenosu na odlagališče"
+        copied_to_clipboard: "Prenešeno na odlagališče"
         remaining_codes: "Imate <strong>{{count}}</strong> rezervnih potrditvenih kod."
         codes:
           title: "Rezervne potrditvene kode ustvarjene"
@@ -920,9 +921,11 @@ sl:
           Preverjanje v dveh korakih omogoči dodatno varnost vašega računa saj za prijavo zahteva dodatno enkratno potrditveno kodo poleg vašega gesla. Potrditvene kode se lahko ustvarijo na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ali <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> napravah.
         oauth_enabled_warning: "Preverjanje v dveh korakih bo onemogočila prijavo z družabnimi omrežji."
         enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
+        disable: "Onemogoči"
+        save: "Shrani"
         edit: "Uredi"
         security_key:
-          delete: "Izbriši"
+          save: "Shrani"
       change_about:
         title: "Spremeni O meni"
         error: "Prišlo je do napake pri spreminjanju te vrednosti"
@@ -1747,7 +1750,6 @@ sl:
           bookmarks: kjer sem ustvaril zaznamek
           first: ob prvem prispevku
           pinned: so pripete
-          unpinned: niso pripete
           seen: ki sem jih prebral
           unseen: ki jih nisem prebral
           wiki: so wiki
@@ -1844,7 +1846,7 @@ sl:
         help: "Prestavi sporočilo nazaj v Prejeto"
       edit_message:
         help: "Uredi prvi prispevek sporočila"
-        title: "Uredi sporočilo"
+        title: "Uredi"
       defer:
         title: "Preloži"
       list: "Teme"
@@ -2762,7 +2764,6 @@ sl:
         this_month: "Mesec"
         this_week: "Teden"
         today: "Danes"
-        other_periods: "poglej najboljše"
     permission_types:
       full: "Ustvari / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
@@ -2980,6 +2981,10 @@ sl:
       custom_message_template_forum: "Pridruži se našemu forumu!"
       custom_message_template_topic: "Zdi se mi, da vam bo ta tema všeč!"
     forced_anonymous: "Zaradi visoke obremenitve je to prikazano vsem tako kot bi videl neprijavljen uporabnik."
+    footer_nav:
+      back: "Nazaj"
+      share: "Deli"
+      dismiss: "Opusti"
     safe_mode:
       enabled: "Varni način je vklopljen, za izklop varnega načina zaprite okno brskalnika."
   admin_js:

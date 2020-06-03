@@ -276,6 +276,7 @@ nl:
       no_timezone: 'U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href="%{basePath}/my/preferences/profile">in uw profiel</a>.'
       invalid_custom_datetime: "De datum en tijd die u hebt opgegeven is ongeldig, probeer het opnieuw."
       list_permission_denied: "U hebt geen toestemming om de bladwijzers van deze gebruiker te bekijken."
+      delete_when_reminder_sent: "Deze bladwijzer verwijderen zodra de herinneringsmelding is verstuurd."
       reminders:
         at_desktop: "De volgende keer vanaf mijn computer"
         later_today: "Later vandaag"
@@ -292,6 +293,8 @@ nl:
         tomorrow_with_time: "morgen om %{time}"
         at_time: "op %{date_time}"
         existing_reminder: "U hebt een herinnering voor deze bladwijzer ingesteld die wordt verzonden"
+    copy_codeblock:
+      copied: "gekopieerd!"
     drafts:
       resume: "Hervatten"
       remove: "Verwijderen"
@@ -447,8 +450,8 @@ nl:
         status: "Status"
         category: "Categorie"
         orders:
-          priority: "Prioriteit"
-          priority_asc: "Prioriteit (omgekeerd)"
+          score: "Score"
+          score_asc: "Score (omgekeerd)"
           created_at: "Lid sinds"
           created_at_asc: "Gemaakt op (omgekeerd)"
         priority:
@@ -676,14 +679,16 @@ nl:
           title: "Genegeerd"
           description: "U ontvangt geen enkele melding over berichten in deze groep."
       flair_url: "Afbeelding voor avatar-flair"
-      flair_url_placeholder: "(Optioneel) Afbeeldings-URL of Font Awesome-klasse"
-      flair_url_description: 'Gebruik vierkante afbeeldingen die niet kleiner zijn dan 20 bij 20 pixels of FontAwesome-pictogrammen (geaccepteerde formaten: ''fa-icon'', ''far fa-icon'' of ''fab fa-icon'').'
+      flair_upload_description: "Gebruik vierkante afbeeldingen, niet kleiner dan 20px bij 20px."
       flair_bg_color: "Achtergrondkleur van avatar-flair"
       flair_bg_color_placeholder: "(Optioneel) Hex-kleurwaarde"
       flair_color: "Kleur van avatar-flair"
       flair_color_placeholder: "(Optioneel) Hex-kleurwaarde"
       flair_preview_icon: "Pictogramvoorbeeld"
       flair_preview_image: "Afbeeldingsvoorbeeld"
+      flair_type:
+        icon: "Een pictogram selecteren"
+        image: "Een afbeelding uploaden"
     user_action_groups:
       "1": "Gegeven likes"
       "2": "Ontvangen likes"
@@ -745,6 +750,7 @@ nl:
       copied: "gekopieerd"
     user_fields:
       none: "(selecteer een optie)"
+      required: 'Voer een waarde in voor ''%{name}'''
     user:
       said: "{{username}}:"
       profile: "Profiel"
@@ -760,6 +766,7 @@ nl:
       private_messages: "Berichten"
       user_notifications:
         filters:
+          filter_by: "Filteren op"
           all: "Alle"
           read: "Gelezen"
           unread: "Ongelezen"
@@ -880,6 +887,7 @@ nl:
       api_approved: "Goedgekeurd:"
       api_last_used_at: "Laatst gebruikt op:"
       theme: "Thema"
+      save_to_change_theme: 'Thema wordt bijgewerkt nadat u op ''%{save_text}'' klikt'
       home: "Standaard startpagina"
       staged: "Staged"
       staff_counters:
@@ -927,8 +935,10 @@ nl:
         enable: "Inschakelen"
         enable_long: "Back-upcodes inschakelen"
         manage: "Back-upcodes beheren. U hebt <strong>{{count}}</strong> back-upcodes over."
-        copied_to_clipboard: "Gekopieerd naar klembord"
+        copy_to_clipboard: "Kopiëren naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
+        copied_to_clipboard: "Gekopieerd naar klembord"
+        download_backup_codes: "Back-upcodes downloaden"
         remaining_codes: "U hebt <strong>{{count}}</strong> back-upcodes over."
         use: "Een back-upcode gebruiken"
         enable_prerequisites: "U moet een primaire tweede factor inschakelen voordat u back-upcodes genereert."
@@ -954,28 +964,29 @@ nl:
         oauth_enabled_warning: "Houd er rekening mee dat sociale aanmeldingen worden uitgeschakeld zodra twee-factor-authenticatie op uw account is ingeschakeld."
         use: "Authenticator-app gebruiken"
         enforced_notice: "U dient twee-factor-authenticatie in te schakelen voordat u deze website bezoekt."
-        disable: "uitschakelen"
-        disable_title: "Tweede factor uitschakelen"
+        disable: "Uitschakelen"
         disable_confirm: "Weet u zeker dat u alle tweede factoren wilt uitschakelen?"
+        save: "Opslaan"
         edit: "Bewerken"
         edit_title: "Tweede factor bewerken"
         edit_description: "Naam van tweede factor"
-        enable_security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Registreren."
+        enable_security_key_description: |
+          Druk wanneer u uw <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardwarebeveiligingssleutel</a> gereed hebt op de onderstaande knop Registreren.
         totp:
           title: "Op tokens gebaseerde authenticators"
-          add: "Nieuwe authenticator"
+          add: "Authenticator toevoegen"
           default_name: "Mijn authenticator"
           name_and_code_required_error: "U moet een naam en de code van uw authenticator-app opgeven."
         security_key:
           register: "Registreren"
           title: "Beveiligingssleutels"
-          add: "Beveiligingssleutel registreren"
+          add: "Beveiligingssleutel toevoegen"
           default_name: "Hoofdbeveiligingssleutel"
           not_allowed_error: "Het registratieproces van de beveiligingssleutel had een time-out of is geannuleerd."
           already_added_error: "U hebt deze beveiligingssleutel al geregistreerd. U hoeft deze niet opnieuw te registreren."
           edit: "Beveiligingssleutel bewerken"
+          save: "Opslaan"
           edit_description: "Naam van beveiligingssleutel"
-          delete: "Verwijderen"
           name_required_error: "U moet een naam voor uw beveiligingssleutel opgeven."
       change_about:
         title: "Over mij wijzigen"
@@ -1019,6 +1030,7 @@ nl:
         sso_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
         instructions: "Nooit openbaar zichtbaar."
         ok: "We sturen een e-mail ter bevestiging"
+        required: "Voer een e-mailadres in"
         invalid: "Voer een geldig e-mailadres in "
         authenticated: "Uw e-mailadres is geauthenticeerd door {{provider}}"
         frequency_immediately: "Als u de inhoud in kwestie nog niet hebt gelezen, sturen we u direct een e-mail."
@@ -1039,6 +1051,7 @@ nl:
         title: "Naam"
         instructions: "uw volledige naam (optioneel)"
         instructions_required: "Uw volledige naam"
+        required: "Voer een naam in"
         too_short: "Uw naam is te kort"
         ok: "Uw naam ziet er goed uit"
       username:
@@ -1052,6 +1065,7 @@ nl:
         too_long: "Uw gebruikersnaam is te lang"
         checking: "Beschikbaarheid van gebruikersnaam controleren..."
         prefilled: "E-mailadres komt overeen met deze geregistreerde gebruikersnaam"
+        required: "Voer een gebruikersnaam in"
       locale:
         title: "Taal van interface"
         instructions: "Taal van de gebruikersinterface. Deze verandert zodra u de pagina opnieuw laadt."
@@ -1195,6 +1209,7 @@ nl:
         same_as_email: "Uw wachtwoord is hetzelfde als uw e-mailadres."
         ok: "Uw wachtwoord ziet er goed uit."
         instructions: "minstens %{count} tekens"
+        required: "Voer een wachtwoord in"
       summary:
         title: "Samenvatting "
         stats: "Statistieken "
@@ -1817,7 +1832,6 @@ nl:
           bookmarks: Ik heb een bladwijzer aangemaakt
           first: die het eerste bericht zijn
           pinned: die zijn vastgemaakt
-          unpinned: die niet zijn vastgemaakt
           seen: Ik heb gelezen
           unseen: die ik niet heb gelezen
           wiki: die een wiki zijn
@@ -1911,7 +1925,7 @@ nl:
         help: "Bericht weer naar Postvak IN verplaatsen"
       edit_message:
         help: "Het eerste bericht van het bericht bewerken"
-        title: "Bericht bewerken"
+        title: "Bewerken"
       defer:
         help: "Markeren als ongelezen"
         title: "Negeren"
@@ -2065,6 +2079,7 @@ nl:
           "2_8": "U ziet het aantal nieuwe antwoorden, omdat u deze categorie volgt."
           "2_4": "U ziet het aantal nieuwe antwoorden, omdat u een antwoord in dit topic hebt geplaatst."
           "2_2": "U ziet het aantal nieuwe antwoorden, omdat u dit topic volgt."
+          "2": 'U ziet het aantal nieuwe antwoorden, omdat u <a href="{{basePath}}/u/{{username}}/preferences/notifications">dit topic hebt gelezen</a>.'
           "1_2": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "1": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "0_7": "U negeert alle meldingen in deze categorie."
@@ -2801,7 +2816,7 @@ nl:
         this_month: "Maand"
         this_week: "Week"
         today: "Vandaag"
-        other_periods: "eerste bekijken"
+        other_periods: "eerste bekijken:"
     browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om op deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a> om rijke inhoud te kunnen bekijken, u aan te melden, en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
@@ -3047,6 +3062,11 @@ nl:
       custom_message_template_forum: "Hee, u zou aan dit forum moeten deelnemen!"
       custom_message_template_topic: "Hee, dit topic lijkt me wel iets voor u!"
     forced_anonymous: "Vanwege overbelasting wordt dit tijdelijk voor iedereen weergegeven zoals niet-aangemelde gebruikers het zien."
+    footer_nav:
+      back: "Vorige"
+      forward: "Volgende"
+      share: "Delen"
+      dismiss: "Verwijderen"
     safe_mode:
       enabled: "Veilige modus is ingeschakeld; sluit dit browservenster om de veilige modus te verlaten"
   admin_js:
@@ -3297,12 +3317,6 @@ nl:
         tag_event:
           name: "Tag-gebeurtenis"
           details: "Wanneer een tag wordt gemaakt, bijgewerkt of verwijderd."
-        flag_event:
-          name: "Markeringsgebeurtenis"
-          details: "Wanneer een markering wordt gemaakt, geaccordeerd, niet wordt geaccordeerd of wordt genegeerd."
-        queued_post_event:
-          name: "Berichtgoedkeuringsgebeurtenis"
-          details: "Wanneer een nieuw wachtend bericht wordt gemaakt, goedgekeurd of geweigerd."
         reviewable_event:
           name: "Beoordeelbare gebeurtenis"
           details: "Wanneer een nieuw item gereed is voor beoordeling en wanneer de status ervan is bijgewerkt."
@@ -4056,7 +4070,7 @@ nl:
         anonymize_failed: "Er is een probleem opgetreden bij het anonimiseren van de account."
         delete: "Gebruiker verwijderen"
         merge:
-          transfer_and_delete: "Overdragen & verwijderen"
+          button: "Samenvoegen"
           prompt:
             title: "Overdragen & @%{username} verwijderen"
             description: |
@@ -4390,6 +4404,7 @@ nl:
         post_title: "Bericht"
         category_id: "Categorie-ID"
         category_title: "Categorie"
+        tag_name: "Tagnaam"
         external_url: "Externe URL"
         destination: "Bestemming"
         delete_confirm: "Weet u zeker dat u deze permalink wilt verwijderen?"

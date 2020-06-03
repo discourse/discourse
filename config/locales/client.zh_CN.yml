@@ -252,6 +252,7 @@ zh_CN:
       no_timezone: '你尚未设置时区。您将无法设置提醒。在 <a href="%{basePath}/my/preferences/profile">你的个人资料中</a>设置。'
       invalid_custom_datetime: "你所提供的日期和时间无效，请重试。"
       list_permission_denied: "你没有权限查看该用户的收藏。"
+      delete_when_reminder_sent: "提醒发出后删除该收藏。"
       reminders:
         at_desktop: "下次我使用桌面设备时"
         later_today: "今天的某个时候"
@@ -268,6 +269,8 @@ zh_CN:
         tomorrow_with_time: "明天%{time}"
         at_time: "于%{date_time}"
         existing_reminder: "你为该收藏所设定的提醒将被发出"
+    copy_codeblock:
+      copied: "已复制！"
     drafts:
       resume: "复位"
       remove: "移除"
@@ -413,8 +416,8 @@ zh_CN:
         status: "状态"
         category: "分类"
         orders:
-          priority: "优先级"
-          priority_asc: "优先级（倒序）"
+          score: "评分"
+          score_asc: "分数（倒序）"
           created_at: "创建时间"
           created_at_asc: "创建时间（倒序）"
         priority:
@@ -639,14 +642,16 @@ zh_CN:
           title: "静音"
           description: "你不会收到有关此组中消息的任何通知。"
       flair_url: "头像图片"
-      flair_url_placeholder: "（可选）图片 URL 或 Font Awesome class"
-      flair_url_description: '使用不小于20px × 20px的方形图像或FontAwesome图标（可接受的格式：“fa-icon”，“far fa-icon”或“fab fa-icon”）。'
+      flair_upload_description: "使用边长不小于20px的正方形图片。"
       flair_bg_color: "头像背景颜色"
       flair_bg_color_placeholder: "（可选）十六进制色彩值"
       flair_color: "头像颜色"
       flair_color_placeholder: "（可选）十六进制色彩值"
       flair_preview_icon: "预览图标"
       flair_preview_image: "预览图片"
+      flair_type:
+        icon: "选择图标"
+        image: "上传图片"
     user_action_groups:
       "1": "点赞赞"
       "2": "获得赞"
@@ -705,6 +710,7 @@ zh_CN:
       copied: "已复制"
     user_fields:
       none: "（选择一项）"
+      required: '请为“%{name}”输入一个值。'
     user:
       said: "{{username}}："
       profile: "个人资料"
@@ -720,6 +726,7 @@ zh_CN:
       private_messages: "私信"
       user_notifications:
         filters:
+          filter_by: "筛选"
           all: "全部"
           read: "阅读"
           unread: "未读"
@@ -840,6 +847,7 @@ zh_CN:
       api_approved: "已批准："
       api_last_used_at: "最后使用于："
       theme: "主题"
+      save_to_change_theme: '主题会在你点击“%{save_text}”后被更新。'
       home: "默认主页"
       staged: "暂存"
       staff_counters:
@@ -887,8 +895,10 @@ zh_CN:
         enable: "启用"
         enable_long: "启用备份码"
         manage: "管理备份码。你还剩下<strong>{{count}}</strong>个备份码。"
-        copied_to_clipboard: "已复制到剪贴板"
+        copy_to_clipboard: "复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
+        copied_to_clipboard: "已复制到剪贴板"
+        download_backup_codes: "下载备份码"
         remaining_codes: "你有<strong>{{count}}</strong>个备份码"
         use: "使用备份码"
         enable_prerequisites: "你必须在生成备份代码之前启用主要第二因素。"
@@ -915,27 +925,28 @@ zh_CN:
         use: "使用身份验证器应用"
         enforced_notice: "在访问此站点之前，你需要启用双重身份验证。"
         disable: "停用"
-        disable_title: "禁用次要身份验证器"
         disable_confirm: "确定禁用所有的两步验证吗？"
+        save: "保存"
         edit: "编辑"
         edit_title: "编辑次要身份验证器"
         edit_description: "次要身份验证器名称"
-        enable_security_key_description: "当你准备好物理安全密钥后，请按下面的“注册”按钮。"
+        enable_security_key_description: |
+          当你准备好<a href="https://www.google.com/search?q=hardware+security+key" target="_blank">物理安全密钥</a>后，请按下面的“注册”按钮。
         totp:
           title: "基于凭证的身份验证器"
-          add: "新增身份验证器"
+          add: "添加身份验证器"
           default_name: "我的身份验证器"
           name_and_code_required_error: "你必须提供你的身份验证器应用的名称和代码。"
         security_key:
           register: "注册"
           title: "安全密钥"
-          add: "注册安全密钥"
+          add: "添加安全密钥"
           default_name: "主要安全密钥"
           not_allowed_error: "安全密钥注册过程已超时或被取消。"
           already_added_error: "你已注册此安全密钥，无需再次注册。"
           edit: "编辑安全密钥"
+          save: "保存"
           edit_description: "安全密钥名称"
-          delete: "删除"
           name_required_error: "你必须提供安全密钥的名称。"
       change_about:
         title: "更改个人信息"
@@ -979,6 +990,7 @@ zh_CN:
         sso_override_instructions: "电子邮件地址可以通过SSO登录来更新。"
         instructions: "绝不会被公开显示"
         ok: "将通过邮件验证确认"
+        required: "请输入一个电子邮件地址"
         invalid: "请填写正确的邮箱地址"
         authenticated: "你的邮箱已被{{provider}}验证过了"
         frequency_immediately: "如果你没有阅读过摘要邮件中的相关内容，将立即发送电子邮件给你。"
@@ -998,6 +1010,7 @@ zh_CN:
         title: "昵称"
         instructions: "你的全名（可选）"
         instructions_required: "你的昵称"
+        required: "请输入一个名字"
         too_short: "昵称过短"
         ok: "昵称可用"
       username:
@@ -1011,6 +1024,7 @@ zh_CN:
         too_long: "用户名过长"
         checking: "查看用户名是否可用…"
         prefilled: "邮箱与用户匹配成功"
+        required: "请输入一个用户名"
       locale:
         title: "界面语言"
         instructions: "用户界面语言。将在你刷新页面后改变。"
@@ -1153,6 +1167,7 @@ zh_CN:
         same_as_email: "密码不能与邮箱相同"
         ok: "密码符合要求"
         instructions: "至少%{count}个字符"
+        required: "请输入一个密码"
       summary:
         title: "概要"
         stats: "统计"
@@ -1455,6 +1470,9 @@ zh_CN:
       min_content_not_reached:
         other: "选择至少{{count}}条。"
       invalid_selection_length: "选择的字符至少为{{count}}个字符。"
+      components:
+        categories_admin_dropdown:
+          title: "分类管理下拉菜单"
     date_time_picker:
       from: 从
       to: 发至
@@ -1618,7 +1636,7 @@ zh_CN:
         message:
           other: "{{count}} 条未读私信"
         high_priority:
-          other: "%{count}个未读的高优先级通知"
+          other: "%{count} 个未读的高优先级通知"
       title: "使用@提到你，回复你的内容、私信以及其他的通知"
       none: "现在无法载入通知"
       empty: "未发现通知"
@@ -1756,7 +1774,6 @@ zh_CN:
           bookmarks: 我收藏了
           first: 是第一帖
           pinned: 是置顶的
-          unpinned: 不是置顶的
           seen: 我看了
           unseen: 我还没看过
           wiki: 公共编辑
@@ -1848,7 +1865,7 @@ zh_CN:
         help: "移动私信到收件箱"
       edit_message:
         help: "编辑消息中的第一帖"
-        title: "编辑消息"
+        title: "编辑"
       defer:
         help: "标记为未读"
         title: "推迟处理"
@@ -1995,6 +2012,7 @@ zh_CN:
           "2_8": "因为你追踪了该分类，所以你会看到新回复的数量。"
           "2_4": "你会看到新回复的数量的原因是你曾经回复过该主题。"
           "2_2": "你会看到新回复数量的原因是你正在追踪该主题。"
+          "2": '你会看到新回复的数量是因为你<a href="{{basePath}}/u/{{username}}/preferences/notifications">阅读过该主题</a>。'
           "1_2": "有人@你或回复你时会通知你。"
           "1": "如果有人@你或回复你，将通知你。"
           "0_7": "你将忽略关于该分类的所有通知。"
@@ -2164,6 +2182,7 @@ zh_CN:
         action: "合并选择的帖子"
         error: "合并帖子时发生了错误。"
       publish_page:
+        title: "页面发布中"
         publish: "出版"
         description: "当一个主题被出版为一个页面时，其链接是共享的，并且会以自定义的样式显示。"
         slug: "Slug"
@@ -2299,6 +2318,7 @@ zh_CN:
         convert_to_moderator: "添加管理人员颜色标识"
         revert_to_regular: "移除管理人员颜色标识"
         rebake: "重建 HTML"
+        publish_page: "页面发布中"
         unhide: "显示"
         change_owner: "更改作者"
         grant_badge: "授予徽章"
@@ -2689,7 +2709,7 @@ zh_CN:
         this_month: "月"
         this_week: "周"
         today: "今天"
-        other_periods: "查看热门"
+        other_periods: "查看热门："
     browser_update: '抱歉，<a href="https://www.discourse.org/faq/#browser">你用于浏览本网站的浏览器太旧了</a>。请<a href="https://browsehappy.com">更新你的浏览器</a>以用于浏览丰富多彩的内容、登录还有回复。'
     permission_types:
       full: "创建 / 回复 / 阅读"
@@ -2924,6 +2944,11 @@ zh_CN:
       custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于极端负载，暂时向所有人显示，已注销用户会看到它。"
+    footer_nav:
+      back: "返回"
+      forward: "继续"
+      share: "分享"
+      dismiss: "忽略"
     safe_mode:
       enabled: "安全模式已经开启，关闭该浏览器窗口以退出安全模式"
   admin_js:
@@ -3173,12 +3198,6 @@ zh_CN:
         tag_event:
           name: "标签事件"
           details: "当标签创建，更新或销毁时。"
-        flag_event:
-          name: "标记事件"
-          details: "当标签创建，审批通过，审批不通过或忽略时。"
-        queued_post_event:
-          name: "帖子审批事件"
-          details: "当新的帖子队列创建，审批通过或拒绝时。"
         reviewable_event:
           name: "需审核事件"
           details: "当新条目准备审核时及其状态更新时。"
@@ -3928,7 +3947,7 @@ zh_CN:
         anonymize_failed: "在匿名化该账户时遇到问题。"
         delete: "删除用户"
         merge:
-          transfer_and_delete: "迁移并删除"
+          button: "合并"
           prompt:
             title: "迁移并删除 @%{username}"
             description: |
@@ -4257,6 +4276,7 @@ zh_CN:
         post_title: "帖子"
         category_id: "分类 ID"
         category_title: "分类"
+        tag_name: "标签名称"
         external_url: "外部 URL"
         destination: "目标"
         delete_confirm: 你确定要删除该永久链接？

@@ -177,6 +177,11 @@ task 'javascript:update' do
 
       puts "Cleanup unused styles folder"
       system("rm -rf node_modules/highlight.js/build/styles")
+
+      langs_dir = 'vendor/assets/javascripts/highlightjs/languages/*.min.js'
+      langs = Dir.glob(langs_dir).map { |lang| File.basename(lang).split('.')[0] }
+      test_bundle_dest = 'vendor/assets/javascripts/highlightjs/highlight-test-bundle.min.js'
+      File.write(test_bundle_dest, HighlightJs.bundle(langs))
     end
 
     if src.include? "ace-builds"

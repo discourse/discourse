@@ -21,7 +21,19 @@ class TopicThumbnail < ActiveRecord::Base
       optimized = OptimizedImage.create_for(original, target_width, target_height)
     end
 
-    create!(upload: original, max_width: max_width, max_height: max_height, optimized_image: optimized)
+    # may have been associated already, bulk insert will skip dupes
+    TopicThumbnail.insert_all([
+      upload_id: original.id,
+      max_width: max_width,
+      max_height: max_height,
+      optimized_image_id: optimized&.id
+    ])
+
+    TopicThumbnail.find_by(
+      upload: original,
+      max_width: max_width,
+      max_height: max_height
+    )
   end
 
   def self.ensure_consistency!

@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
@@ -86,10 +87,9 @@ export default Controller.extend(
     @discourseComputed
     disclaimerHtml() {
       return I18n.t("create_account.disclaimer", {
-        tos_link: this.get("siteSettings.tos_url") || Discourse.getURL("/tos"),
+        tos_link: this.get("siteSettings.tos_url") || getURL("/tos"),
         privacy_link:
-          this.get("siteSettings.privacy_policy_url") ||
-          Discourse.getURL("/privacy")
+          this.get("siteSettings.privacy_policy_url") || getURL("/privacy")
       });
     },
 

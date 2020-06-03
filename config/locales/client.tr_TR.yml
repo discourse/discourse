@@ -428,8 +428,7 @@ tr_TR:
         status: "Durum"
         category: "Kategori"
         orders:
-          priority: "Öncelik"
-          priority_asc: "Öncelik (ters)"
+          score: "Skor"
           created_at: "İçinde Oluşturuldu"
           created_at_asc: "İçinde Oluşturuldu (tersine)"
         priority:
@@ -656,8 +655,6 @@ tr_TR:
           title: "Sessiz"
           description: "Bu gruptaki bütün mesajlarla ilgili bilgilendirileceksiniz."
       flair_url: "Avatar Resmi"
-      flair_url_placeholder: "(İsteğe bağlı) Resim URL'si veya Font Awesome Class'ı"
-      flair_url_description: 'Kullanılan kare resimler ve FontAwesome ikonu 20x20px''den küçük olamaz (Kabul edilen formatlar: "fa-icon", "far fa-icon" veya "fab fa-icon").'
       flair_bg_color: "Avatar Arkaplan Rengi"
       flair_bg_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
       flair_color: "Avatar Rengi"
@@ -902,8 +899,9 @@ tr_TR:
         enable: "Etkinleştir"
         enable_long: "Yedek kodları etkinleştir"
         manage: "Yedek kodları yönet.  <strong>{{count}}</strong> yedek kod kaldı."
-        copied_to_clipboard: "Panoya kopyalandı"
+        copy_to_clipboard: "Kopyala"
         copy_to_clipboard_error: "Panoya kopyalanırken hata oluştu"
+        copied_to_clipboard: "Panoya kopyalandı"
         remaining_codes: "<strong>{{count}}</strong> yedek kodun kaldı "
         use: "Bir yedekleme kodu kullanın"
         enable_prerequisites: "Yedek kodları oluşturmadan önce birincil ikinci faktörü etkinleştirmelisiniz."
@@ -929,27 +927,24 @@ tr_TR:
         oauth_enabled_warning: "Hesabınızda iki faktörlü kimlik doğrulaması etkinleştirildikten sonra sosyal girişlerin devre dışı bırakılacağını lütfen unutmayın."
         use: "Authenticator uygulamasını kullan"
         enforced_notice: "Bu siteye erişmeden önce iki faktörlü kimlik doğrulamasını etkinleştirmeniz gerekir."
-        disable: "devre dışı bırak"
-        disable_title: "İkinci Faktör İnaktif"
+        disable: "Devre dışı bırak"
         disable_confirm: "Bütün ikinci faktörleri inaktifleştirmek istediğinize emin misiniz?"
+        save: "Kaydet"
         edit: "Düzenle"
         edit_title: "İkinci Faktörü Düzenle"
         edit_description: "İkinci Faktör Adı"
-        enable_security_key_description: "Fiziksel güvenlik anahtarınızı hazırladığınızda, aşağıdaki Kayıt düğmesine basın."
         totp:
           title: "Token Tabanlı Doğrulayıcılar"
-          add: "Yeni Doğrulayıcı"
           default_name: "Benim Doğrulayıcım"
         security_key:
           register: "Kayıt Ol"
           title: "Güvenlik Sözcükleri"
-          add: "Güvenlik Anahtarını Kaydedin"
           default_name: "Ana Güvenlik Anahtarı"
           not_allowed_error: "Güvenlik anahtarı kayıt işlemi zaman aşımına uğradı veya iptal edildi."
           already_added_error: "Bu güvenlik anahtarın daha önce kaydettiğiniz için tekrar kaydetmeniz gerekmez."
           edit: "Güvenlik Anahtarını Düzenle"
+          save: "Kaydet"
           edit_description: "Güvenlik Anahtarı Adı"
-          delete: "Sil"
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -1766,7 +1761,6 @@ tr_TR:
           bookmarks: İşaretledim
           first: "ilk gönderidir "
           pinned: sabitlenmiş
-          unpinned: sabitlenmemiş
           seen: Okudum
           unseen: Okumadım
           wiki: wiki olan
@@ -1860,7 +1854,7 @@ tr_TR:
         help: "Mesajı yeniden gelen kutusuna taşı"
       edit_message:
         help: "Mesajın ilk gönderisini düzenle"
-        title: "Gönderiyi düzenle"
+        title: "Düzenle"
       defer:
         help: "okunmamış olarak işaretle"
         title: "Ertele"
@@ -2718,7 +2712,6 @@ tr_TR:
         this_month: "Ay"
         this_week: "Hafta"
         today: "Bugün"
-        other_periods: "yukarı bak"
     permission_types:
       full: "Oluştur / Cevapla / Bak"
       create_post: "Cevapla / Bak"
@@ -2946,6 +2939,10 @@ tr_TR:
       custom_message_template_forum: "Hey, bu foruma katılmalısın!"
       custom_message_template_topic: "Hey, bu konu senin için eğlenceli olabilir!"
     forced_anonymous: "Aşırı yükleme nedeniyle, çıkış yapan bir kullanıcının göreceği şekilde herkese geçici olarak gösteriliyor. "
+    footer_nav:
+      back: "Geri"
+      share: "Paylaş"
+      dismiss: "Yoksay"
     safe_mode:
       enabled: "Güvenli mod etkin, çıkmak için bu tarayıcı penceresini kapat"
   admin_js:
@@ -3192,12 +3189,6 @@ tr_TR:
         tag_event:
           name: "Etiket Etkinliği"
           details: "Bir etiket oluşturulduğunda, güncellendiğinde veya iptal edildiğinde."
-        flag_event:
-          name: "Bayraklı Etkinlik"
-          details: "Bir bayrak oluşturulduğunda, mutabık kalınmış, kalınmamış veya yoksayılmış."
-        queued_post_event:
-          name: "Etkinlik Onayı Gönderisi"
-          details: "Yeni bir kuyruklu posta oluşturulduğunda, onaylanan veya reddedilen."
         reviewable_event:
           name: "Görüntülenebilen Etkinlik"
           details: "Yeni bir öğe incelemeye hazır olduğunda ve durumu güncellendiğinde."

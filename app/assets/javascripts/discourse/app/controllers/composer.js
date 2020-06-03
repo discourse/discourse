@@ -1,7 +1,8 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
-import { debounce } from "@ember/runloop";
+import { cancel, debounce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -23,7 +24,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 
@@ -71,7 +72,7 @@ function loadDraft(store, opts) {
 
 const _popupMenuOptionsCallbacks = [];
 
-let _checkDraftPopup = ENV.environment !== "test";
+let _checkDraftPopup = !isTesting();
 
 export function toggleCheckDraftPopup(enabled) {
   _checkDraftPopup = enabled;
@@ -561,7 +562,7 @@ export default Controller.extend({
       ) {
         groups.forEach(group => {
           let body;
-          const groupLink = Discourse.getURL(`/g/${group.name}/members`);
+          const groupLink = getURL(`/g/${group.name}/members`);
 
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {
@@ -982,6 +983,10 @@ export default Controller.extend({
         this.send("clearTopicDraft");
       }
 
+      if (this._saveDraftPromise) {
+        return this._saveDraftPromise.then(() => this.destroyDraft());
+      }
+
       return Draft.clear(key, this.get("model.draftSequence")).then(() =>
         this.appEvents.trigger("draft:destroyed", key)
       );
@@ -1028,6 +1033,10 @@ export default Controller.extend({
   cancelComposer(differentDraft = false) {
     this.skipAutoSave = true;
 
+    if (this._saveDraftDebounce) {
+      cancel(this._saveDraftDebounce);
+    }
+
     const keyPrefix =
       this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
 
@@ -1043,8 +1052,8 @@ export default Controller.extend({
               if (differentDraft) {
                 this.model.clearState();
                 this.close();
-                resolve();
               }
+              resolve();
             }
           },
           {
@@ -1052,22 +1061,30 @@ export default Controller.extend({
             class: "btn-danger",
             callback: result => {
               if (result) {
-                this.destroyDraft().then(() => {
-                  this.model.clearState();
-                  this.close();
-                  resolve();
-                });
+                this.destroyDraft()
+                  .then(() => {
+                    this.model.clearState();
+                    this.close();
+                  })
+                  .finally(() => {
+                    resolve();
+                  });
+              } else {
+                resolve();
               }
             }
           }
         ]);
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
-        this.destroyDraft().then(() => {
-          this.model.clearState();
-          this.close();
-          resolve();
-        });
+        this.destroyDraft()
+          .then(() => {
+            this.model.clearState();
+            this.close();
+          })
+          .finally(() => {
+            resolve();
+          });
       }
     });
 
@@ -1093,12 +1110,13 @@ export default Controller.extend({
       if (model.draftSaving) {
         // in test debounce is Ember.run, this will cause
         // an infinite loop
-        if (ENV.environment !== "test") {
-          debounce(this, this._saveDraft, 2000);
+        if (!isTesting()) {
+          this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
         }
       } else {
-        model.saveDraft().finally(() => {
+        this._saveDraftPromise = model.saveDraft().finally(() => {
           this._lastDraftSaved = Date.now();
+          this._saveDraftPromise = null;
         });
       }
     }
@@ -1119,7 +1137,7 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        debounce(this, this._saveDraft, 2000);
+        this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
       }
     }
   },
@@ -1140,6 +1158,7 @@ export default Controller.extend({
     const tagsArray = tags || [];
     if (
       this.site.can_tag_topics &&
+      !this.currentUser.staff &&
       category &&
       category.minimum_required_tags > tagsArray.length
     ) {
@@ -1175,7 +1194,7 @@ export default Controller.extend({
     const elem = document.querySelector("html");
     elem.classList.remove("fullscreen-composer");
 
-    document.activeElement.blur();
+    document.activeElement && document.activeElement.blur();
     this.setProperties({ model: null, lastValidatedAt: null });
   },
 

@@ -604,7 +604,6 @@ ar:
         muted:
           title: "مكتوم"
       flair_url: "الصورة الرمزية المميزة"
-      flair_url_placeholder: "(إختياري) عنوان الـ URL للصورة أو اسم رمز في Font Awesome"
       flair_bg_color: "لون خلفية الصورة الرمزية"
       flair_bg_color_placeholder: "(إختياري) اللون بترميز Hexadecimal"
       flair_color: "لون الصورة الرمزية"
@@ -814,8 +813,9 @@ ar:
         regenerate: "إعادة إنشاء"
         disable: "عطل"
         enable: "فعل"
-        copied_to_clipboard: "تم نسخه الى لوحة العمل"
+        copy_to_clipboard: "نسخ الى لوحة العمل"
         copy_to_clipboard_error: "خطأ في نسخ البيانات الى لوحة العمل"
+        copied_to_clipboard: "تم نسخه الى لوحة العمل"
       second_factor:
         name: "الإسم"
         label: "كود"
@@ -824,9 +824,11 @@ ar:
         short_description: |
           قم بحماية الحساب الخاص بك مع رمز الامان ذو الاستخدام الواحد.
         oauth_enabled_warning: "يرجى الملاحظة ان تسجيل الدخول عن طريق حسابات مواقع التواصل الاجتماعي سيتم تعطيلها بمجرد تفعيل خاصية التوثيق بعاملين الحساب"
+        disable: "عطل"
+        save: "احفظ"
         edit: "عدّل"
         security_key:
-          delete: "أحذف"
+          save: "احفظ"
       change_about:
         title: "تعديل عني"
         error: "حدث عطل أثناء تغيير هذه القيمة."
@@ -1457,7 +1459,6 @@ ar:
           bookmarks: وضعت علية علامة مرجعية
           first: اول منشور في الموضوعات
           pinned: مثبتة
-          unpinned: غير مثبتة
           seen: قراءته
           unseen: لم أقرأها
           wiki: من النوع wiki
@@ -1553,7 +1554,7 @@ ar:
         title: "انقل إلى البريد الوارد"
         help: "انقل الرسالة للبريد الوارد"
       edit_message:
-        title: "تحرير رسالة"
+        title: "عدّل"
       defer:
         title: "تأجيل"
       list: "الموضوعات"
@@ -2396,7 +2397,6 @@ ar:
         this_month: "شهر"
         this_week: "أسبوع"
         today: "يوم"
-        other_periods: "اعرض الاكثر مشاهدة"
     permission_types:
       full: "انشاء / رد / مشاهدة"
       create_post: "رد / مشاهدة"
@@ -2576,6 +2576,10 @@ ar:
       custom_message_placeholder: "ادخل رسالتك المخصصة"
       custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المجتمع!"
       custom_message_template_topic: "مرحبا. أظن أن هذا الموضوع سيسعدك!"
+    footer_nav:
+      back: "الى الخلف"
+      share: "شاركها"
+      dismiss: "تجاهل"
     safe_mode:
       enabled: "الوضع الآمن مفعّل، لتخرج منه أغلق نافذة المتصفّح هذه"
   admin_js:
@@ -3544,19 +3548,26 @@ ar:
         category_id: "رقم التصنيف"
         category_title: "قسم"
         external_url: "رابط خارجي"
+        destination: "المكان المقصود"
         delete_confirm: هل أنت متأكد من حذف هذا الرابط الثابت ؟
         form:
           label: "جديد :"
           add: "أضف"
           filter: "بحث ( رابط داخلي أو خارجي )"
       reseed:
+        action:
+          label: "استبدال النص ..."
+          title: "استبدل نص الفئات والمواضيع بالترجمات"
         modal:
+          title: "استبدال النص"
+          subtitle: "استبدل نص الفئات والمواضيع التي أنشأها النظام بأحدث الترجمات"
           categories: "التصنيفات"
           topics: "المواضيع"
           replace: "غير"
   wizard_js:
     wizard:
       done: "انتهى"
+      finish: "إنهاء"
       back: "الى الخلف"
       next: "التالي"
       step: "%{current} من %{total}"

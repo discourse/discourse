@@ -45,7 +45,6 @@ fi:
       unrecognized_extension: "Tuntematon tiedostomuoto: %{extension}"
     import_error:
       generic: Teeman tuomisessa tapahtui virhe
-      about_json: "Virhe tuomisessa: about.json -tiedostoa ei ole olemassa tai se ei kelpaa"
       about_json_values: "about.json sisältää arvoja, jotka eivät kelpaa: %{errors}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei ole pääsyoikeutta tai tietovarastoa ei löytynyt"
       unpack_failed: "Tiedoston purku epäonnistui"
@@ -326,7 +325,6 @@ fi:
       already_bookmarked_post: "Samaa viestiä ei voi kirjanmerkitä kahdesti."
       cannot_set_past_reminder: "Kirjanmerkkimuistutusta ei voi asettaa menneisyyteen."
       cannot_set_reminder_in_distant_future: "Kirjanmerkkimuistutusta ei voi asettaa yli 10 vuoden päähän tulevaisuuteen."
-      time_must_be_provided: "kaikkiin muistutuksiin tarvitaan aika"
     reminders:
       at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
       later_today: "Myöhemmin tänään"
@@ -405,12 +403,6 @@ fi:
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen maalaamalla lainattavan viestin tekstiä ja klikkaamalla ilmestyvää <b>lainaa</b>-painiketta.
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
-    dominating_topic: |
-      ### Anna muidenkin osallistua keskusteluun
-
-      Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
-
-      Oletko varma, että annat muillekin riittävästi aikaa jakaa omia ajatuksiaan? Voisit kutsua heitä tänne?
     get_a_room: |
       ### Rohkaise kaikkia osallistumaan keskusteluun
 
@@ -1328,7 +1320,6 @@ fi:
     crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
     download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan (prosenteissa)"
-    download_remote_images_max_days_old: "Älä lataa linkattuja kuvia viesteistä, jotka ovat yli n päivää vanhoja."
     disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu lista."
     editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin lokiin."
     editing_grace_period_max_diff: "Kuinka monen merkin muutos sallitaan katumusaikana. Jos muutos on isompi tallennetaan uusi viestirevisio (luottamustasolla 0 ja 1)."
@@ -3664,7 +3655,6 @@ fi:
         Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi viitenä päivänä. Kiitos kun vaivaudut aktiivisesti kannustamaan muita hyviin keskusteluihin joka päivä!
     crazy_in_love:
       name: Korviaan myöten rakastunut
-      description: Käytti 50 päivittäistä tykkäystä 20 päivänä
       long_description: |
         Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi 20 päivänä. Vau! Esimerkillistä muiden palstan käyttäjien kannustamista!
     thank_you:

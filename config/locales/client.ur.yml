@@ -40,7 +40,7 @@ ur:
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} قبل"
       tiny:
-        half_a_minute: "< 1منٹ"
+        half_a_minute: "ایک لحظہ قبل"
         less_than_x_seconds:
           one: "< %{count} سیکنڈ"
           other: "< %{count} سیکنڈ"
@@ -416,8 +416,7 @@ ur:
         status: "سٹیٹس"
         category: "زمرہ"
         orders:
-          priority: "ترجیح"
-          priority_asc: "ترجیح (ریوَرس)"
+          score: "اسکور"
           created_at: "کو بنایا گیا"
           created_at_asc: "کو بنایا گیا (ریوَرس)"
         priority:
@@ -642,8 +641,6 @@ ur:
           title: "خاموش کِیا ہوا"
           description: "آپ کو اِس گروپ کے پیغامات کے بارے میں کسی بھی چیز پر مطلع نہیں کیا جائے گا۔"
       flair_url: "اوتار فلیر کی تصویر"
-      flair_url_placeholder: "(اختیاری) تصویر کا URL یا فونٹ اَوسم کلاس"
-      flair_url_description: 'چکور تصاویر جو 20px سے 20px سے کم نہ ہوں، یا فونٹ اَوسم آئیکن (قبول فارمیٹس: "fa-icon"، "far fa-icon" یا "fab fa-icon") استعمال کریں۔'
       flair_bg_color: "اوتار فلیر کے پَسِّ منظر کا رنگ"
       flair_bg_color_placeholder: "(اختیاری) ہیکس رنگ نمبر"
       flair_color: "اوتار فلیر کا رنگ"
@@ -885,8 +882,9 @@ ur:
         enable: "فعال کریں"
         enable_long: "بیک اپ کوڈ فعال کریں"
         manage: "بیک اپ کوڈز کا انتظام کریں۔ آپ کے پاس <strong>{{count}}</strong> بیک اپ کوڈ باقی ہیں۔"
-        copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
+        copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
+        copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
         remaining_codes: "آپ کے پاس <strong>{{count}}</strong> بیک اپ کوڈ باقی ہیں۔"
         enable_prerequisites: "بیک اپ کوڈز تیار کرنے سے پہلے آپ کا ایک بنیادی دوسرا فیکٹر فعال کرنا ضروری ہے۔"
         codes:
@@ -909,19 +907,18 @@ ur:
           دو فیکٹر توثیق پاسوَرڈ کے ساتھ ساتھ ایک دفعہ کے ٹَوکن کو مانگ کر آپ کے اکاؤنٹ کیلئے اضافی سیکورٹی شامل کرتا ہے۔ ٹَوکن <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اینڈرائڈ</a> اور <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> ڈیوائسوں پر تخلیق کیے جا سکتے ہیں۔
         oauth_enabled_warning: "براہ مہربانی نوٹ کریں کہ ایک بار جب آپ کے اکاؤنٹ پر دو فیکٹر توثیق فعال ہو جائے تو سَوشَل لاگ اِن غیر فعال ہوجائیں گے۔"
         enforced_notice: "اِس سائٹ تک رسائی حاصل کرنے کیلئے آپ کا دو فیکٹر توثیق فعال کرنا ضروری ہے۔"
-        disable: "غیر فعال"
-        disable_title: "دوسرا فیکٹر غیر فعال کریں"
+        disable: "غیر فعال کریں"
         disable_confirm: "کیا آپ واقعی تمام دوسرے فیکٹر غیر فعال کرنا چاہتے ہیں؟"
+        save: "محفوظ کریں"
         edit: "ترمیم"
         edit_title: "دوسرا فیکٹر ترمیم کریں"
         edit_description: "دوسرا فیکٹر نام"
         totp:
           title: "ٹوکن کی بنیاد پر تصديق کنندہ"
-          add: "نیا تصديق کنندہ"
           default_name: "میرا تصديق کنندہ"
         security_key:
           register: "رجسٹر"
-          delete: "حذف کریں"
+          save: "محفوظ کریں"
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
         error: "اِس چیز کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
@@ -1709,7 +1706,6 @@ ur:
           bookmarks: میں نے بُک مارک کیے ہوے ہوں
           first: جو سب سے پہلی پوسٹ ہو
           pinned: جو پِن ہوا ہو
-          unpinned: جو پِن نہ ہوا ہو
           seen: جو میں نے پڑھ لیے ہوں
           unseen: جو میں نے نہ پڑھا ہو
           wiki: جو وِیکی ہو
@@ -1802,7 +1798,7 @@ ur:
         help: "پیغام واپس اِنباکس میں منتقل کریں"
       edit_message:
         help: "پیغام کی پہلی اشاعت میں ترمیم کریں"
-        title: "پیغام میں ترمیم کریں"
+        title: "ترمیم"
       defer:
         help: "بغیر پڑھا نشان زد کریں"
         title: "ملتوی کریں"
@@ -2635,7 +2631,6 @@ ur:
         this_month: "مہینہ"
         this_week: "ہفتہ"
         today: "آج"
-        other_periods: "سب سے اوپر دیکھیں"
     permission_types:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
@@ -2839,6 +2834,10 @@ ur:
       custom_message_template_forum: "ارے، آپ کو اس فورم میں شامل ہونا چاہیے!"
       custom_message_template_topic: "ارے، میں نے سوچا کہ آپ اِس ٹاپک سے لطف اندوز ہوں گے!"
     forced_anonymous: "انتہائی بوجھ کی وجہ سے، یہ عارضی طور پر سب کو ایسے دکھایا جا رہا ہے جیسے لاگ آؤٹ صارف اِسے دیکھتے ہیں۔"
+    footer_nav:
+      back: "واپس"
+      share: "شیئر"
+      dismiss: "بر خاست کریں"
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
   admin_js:
@@ -3066,12 +3065,6 @@ ur:
         tag_event:
           name: "ٹَیگ واقعہ"
           details: "جب ایک ٹَیگ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
-        flag_event:
-          name: "واقعہ فلَیگ کریں"
-          details: "جب ایک فلَیگ پر اتفاق، اختلاف یا اُسے نظر انداز کیا جاتا ہے۔"
-        queued_post_event:
-          name: "منظوری واقعہ شائع کریں"
-          details: "جب ایک نئی قطار شدہ پوسٹ بنائی، منظور یا مسترد کی جاتی ہے۔"
         reviewable_event:
           name: "قابل تجدید واقعہ"
           details: "جب ایک نئی چیز جائزہ کیلئے تیار ہو اور جب اُس کا اسٹیٹس اپ ڈیٹ کیا جائے۔"

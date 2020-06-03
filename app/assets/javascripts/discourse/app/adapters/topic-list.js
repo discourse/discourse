@@ -1,10 +1,11 @@
+import getURL from "discourse-common/lib/get-url";
 import { ajax } from "discourse/lib/ajax";
 import RestAdapter from "discourse/adapters/rest";
 import PreloadStore from "discourse/lib/preload-store";
 
 export function finderFor(filter, params) {
   return function() {
-    let url = Discourse.getURL("/") + filter + ".json";
+    let url = getURL("/") + filter + ".json";
 
     if (params) {
       const keys = Object.keys(params),

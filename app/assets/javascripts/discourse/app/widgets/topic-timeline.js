@@ -359,7 +359,7 @@ createWidget("timeline-footer-controls", {
       if (topic.get("details.can_create_post")) {
         controls.push(
           this.attach("button", {
-            className: "btn-default create",
+            className: "btn-default create reply-to-post",
             icon: "reply",
             title: "topic.reply.help",
             action: "replyToPost"
@@ -396,6 +396,15 @@ createWidget("timeline-footer-controls", {
           ["notificationLevel"]
         )
       );
+      if (this.site.mobileView) {
+        controls.push(
+          this.attach("topic-admin-menu-button", {
+            topic,
+            addKeyboardTargetClass: true,
+            openUpwards: true
+          })
+        );
+      }
     }
 
     return controls;

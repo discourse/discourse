@@ -45,7 +45,6 @@ tr_TR:
       unrecognized_extension: "Tanınmayan dosya uzantısı: %{extension}"
     import_error:
       generic: Bu temayı içe aktarırken bir hata oluştu
-      about_json: "Alma Hatası: about.json mevcut değil veya geçersiz"
       about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
       git: "Git deposu klonlanırken hata oluştu, erişim reddedildi veya depo bulunamadı"
       unpack_failed: "Dosya çözülemedi"
@@ -324,7 +323,6 @@ tr_TR:
   bookmarks:
     errors:
       already_bookmarked_post: "Aynı gönderiyi iki kez işaretleyemezsiniz."
-      time_must_be_provided: "Tüm hatırlatıcılara zaman verilmelidir"
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
       later_today: "Bugün ilerleyen saatlerde"
@@ -395,7 +393,6 @@ tr_TR:
 
       Herkesin benzersiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
     sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi denediniz \nBunun yerine yerine, lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt veriniz.\nMetni vurgulayıp görünen <b>alıntı</b> düğmesini seçerek önceki yanıtınızı düzenleyebilirsiniz. Böylece diğer kullanıcıların, yanıtlarınızı okuması daha kolay olacaktır.\n"
-    dominating_topic: "### Başkalarının konuya katılmasına izin verin.\nBu geri dönüş alabilmeniz için önemlidir - yanıtların %%{percent} değerinden fazlasını gönderdiniz. \nBaşkalarının fikirlerini paylaşacakları bir yer bulabilmeleri için onları davet edebilir misiniz?\n"
     get_a_room: |
       ### Herkesi sohbete katılmaya teşvik edin
 
@@ -1312,7 +1309,6 @@ tr_TR:
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
-    download_remote_images_max_days_old: "n günden daha eski gönderiler için uzak adresteki resimleri indirme."
     disabled_image_download_domains: "Bu alan adlarından hiç bir zaman uzaktan resim indirme. Sınırlandırılmış liste."
     editing_grace_period: "Gönderi oluşturulduktan (n) saniye içerisinde bir düzenleme yapıldığında, gönderi geçmişinde yeni bir sürüm oluşturma."
     editing_grace_period_max_diff: "Yetkisiz kullanım süresinin düzenlenmesinde izin verilen maksimum karakter değişikliği sayısı, daha fazla değişiklik başka bir gönderi düzeltmesi saklar (güven düzeyi 0 ve 1)"
@@ -3396,7 +3392,6 @@ tr_TR:
         5 defa günlük %{max_likes_per_day} beğeni kullandığınız zaman bu rozet size verilir. Her gün en iyi sohbetleri aktif olarak teşvik etmek için zaman ayırdığınız için teşekkür ederiz!
     crazy_in_love:
       name: Beğeni Delisi
-      description: "20 gün boyunca, günde 50 beğeni hakkını kullanma "
       long_description: |
         20 gün boyunca günlük beğenilerinizin tümünü %{max_likes_per_day} kullandığınızda bu rozet size verilir. Vay canına! Topluluk üyelerini teşvik etmek için bir rol modelisiniz!
     thank_you:

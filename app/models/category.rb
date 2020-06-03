@@ -972,6 +972,7 @@ end
 #  required_tag_group_id             :integer
 #  min_tags_from_required_group      :integer          default(1), not null
 #  read_only_banner                  :string
+#  default_list_filter               :string(20)       default("all")
 #
 # Indexes
 #

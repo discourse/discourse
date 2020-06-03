@@ -10,8 +10,10 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
-  # TODO(2021-01-04): remove
-  self.ignored_columns = ["avg_time"]
+  self.ignored_columns = [
+    "avg_time", # TODO(2021-01-04): remove
+    "image_url" # TODO(2021-06-01): remove
+  ]
 
   cattr_accessor :plugin_permitted_create_params
   self.plugin_permitted_create_params = {}
@@ -651,7 +653,7 @@ class Post < ActiveRecord::Base
     )
 
     if is_first_post?
-      topic.update_excerpt(excerpt_for_topic)
+      topic&.update_excerpt(excerpt_for_topic)
     end
 
     if invalidate_broken_images
@@ -748,11 +750,12 @@ class Post < ActiveRecord::Base
   end
 
   # Enqueue post processing for this post
-  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false)
+  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false, skip_pull_hotlinked_images: false)
     args = {
       post_id: id,
       bypass_bump: bypass_bump,
       new_post: new_post,
+      skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
     args[:image_sizes] = image_sizes if image_sizes.present?
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
@@ -1144,7 +1147,6 @@ end
 #  raw_email               :text
 #  public_version          :integer          default(1), not null
 #  action_code             :string
-#  image_url               :string
 #  locked_by_id            :integer
 #  image_upload_id         :bigint
 #

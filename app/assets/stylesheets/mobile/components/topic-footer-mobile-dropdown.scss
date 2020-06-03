@@ -2,9 +2,29 @@
   &.combo-box {
     &.topic-footer-mobile-dropdown {
       .select-kit-row {
-        .svg-icon-title {
-          margin-right: 0.5em;
+        padding: 0.75em 0.5em;
+        border-bottom: 1px solid rgba($primary-low, 0.5);
+
+        .name {
+          line-height: $line-height-medium;
         }
+
+        &:last-child {
+          border: none;
+        }
+
+        .d-icon {
+          color: $primary-medium;
+        }
+
+        &.is-highlighted {
+          background: $tertiary-low;
+
+          .name {
+            color: $primary;
+          }
+        }
+
         &.bookmarked {
           .d-icon {
             color: $tertiary;

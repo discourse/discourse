@@ -397,8 +397,7 @@ vi:
         status: "Trạng thái"
         category: "Danh mục"
         orders:
-          priority: "Mức độ ưu tiên"
-          priority_asc: "Mức độ ưu tiên (đảo ngược)"
+          score: "Điểm số"
           created_at: "Được tạo tại"
           created_at_asc: "Tạo tại (đảo ngược)"
         priority:
@@ -620,8 +619,6 @@ vi:
           title: "Im lặng"
           description: "Bạn sẽ không được thông báo về bất kì tin nhắn nào trong nhóm này nữa."
       flair_url: "Ảnh đại diện"
-      flair_url_placeholder: "(Tuỳ chọn) Link đến hình ảnh hoặc lớp Font Awesome"
-      flair_url_description: 'Ảnh hình vuông của bạn không được nhỏ hơn 20px x 20px hoặc FontAwesome không hợp lệ (chấp nhận: "fa-icon", "far fa-icon" hoặc "fab fa-icon").'
       flair_bg_color: "Màu nền ảnh đại diện"
       flair_bg_color_placeholder: "(Tuỳ chọn) Giá trị mã màu Hexa"
       flair_color: "Màu ảnh đại diện"
@@ -843,8 +840,8 @@ vi:
         disable: "Vô hiệu hóa"
         enable: "Kích hoạt"
         enable_long: "Bật backup codes"
-        copied_to_clipboard: "Sao chép vào Clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
+        copied_to_clipboard: "Sao chép vào Clipboard"
         remaining_codes: "Bạn có <strong>{{count}}</strong> mã sao lưu còn lại."
         use: "Sử dụng mã dự phòng"
       second_factor:
@@ -852,11 +849,13 @@ vi:
         name: "Tên"
         show_key_description: "Nhập thủ công"
         oauth_enabled_warning: "Xin lưu ý rằng thông tin đăng nhập xã hội sẽ bị vô hiệu hóa khi xác thực hai yếu tố đã được bật trên tài khoản của bạn."
+        disable: "Vô hiệu hóa"
+        save: "Lưu"
         edit: "Sửa"
         totp:
           default_name: "Authenticator của bạn"
         security_key:
-          delete: "Xóa"
+          save: "Lưu"
       change_about:
         title: "Thay đổi thông tin về tôi"
         error: "Có lỗi xảy ra khi thay đổi giá trị này."
@@ -1439,7 +1438,6 @@ vi:
           likes: Tôi đã thích
           posted: Tôi đã gửi trong
           pinned: được gim
-          unpinned: không được gim
           unseen: Tôi chưa đọc
           wiki: là wiki
         statuses:
@@ -1514,6 +1512,8 @@ vi:
       move_to_inbox:
         title: "Chuyển sang hộp thư"
         help: "Chuyển tin nhắn trở lại hộp thư"
+      edit_message:
+        title: "Sửa"
       defer:
         title: "Hoãn"
       list: "Chủ đề"
@@ -2122,7 +2122,6 @@ vi:
         this_month: "Tháng"
         this_week: "Tuần"
         today: "Ngày"
-        other_periods: "xem top"
     permission_types:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
@@ -2252,6 +2251,10 @@ vi:
           unread: "Không còn thêm chủ đề chưa đọc nào nữa."
           top: "Không còn của đề top nào nữa."
           bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
+    footer_nav:
+      back: "Quay lại"
+      share: "Chia sẻ"
+      dismiss: "Hủy bỏ"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:

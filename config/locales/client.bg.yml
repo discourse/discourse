@@ -392,8 +392,7 @@ bg:
         status: "Статус"
         category: "Категория"
         orders:
-          priority: "Приоритет"
-          priority_asc: "Приоритет (по обратен ред)"
+          score: "Точки"
           created_at: "Създадено на"
           created_at_asc: "Създадено на (по обратен ред)"
         priority:
@@ -580,7 +579,6 @@ bg:
         muted:
           title: "Заглушен"
       flair_url: "Добавка към аватара"
-      flair_url_placeholder: "(По желание) Адрес към снимка или Font Awesome клас"
       flair_bg_color: "Фон на добавка към аватара"
       flair_bg_color_placeholder: "(По желание) Шестнадесетична стойност на цвят"
       flair_color: "Цвят на добавка към аватар"
@@ -621,6 +619,13 @@ bg:
       topic_sentence:
         one: "%{count} тема"
         other: "%{count} теми"
+      topic_stat_sentence_week:
+        one: "%{count}нова тема през последната седмица."
+        other: "%{count}нови теми през последната седмица."
+      topic_stat_sentence_month:
+        one: "%{count}нова тема през последния месец."
+        other: "%{count}през последния месец."
+      n_more: "Категории (още %{count}) ..."
     ip_lookup:
       title: Търсене по IP адрес
       hostname: Хост
@@ -636,15 +641,18 @@ bg:
       topics_entered: "добавени теми"
       post_count: "# публикации"
       confirm_delete_other_accounts: "Сигурни ли сте, че искате да изтриете тези профили?"
+      powered_by: "с <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "копирано"
     user_fields:
       none: "(изберете опция)"
+      required: 'Моля, попълнете "%{name}"'
     user:
       said: "{{username}}:"
       profile: "Профил"
       mute: "Заглуши"
       edit: "Редактирай настройките"
       download_archive:
+        button_text: "Изтегли всичко"
         confirm: "Сигурни ли сте, че искате да свалите своите публикации?"
         success: "Свалянето е инициирано, ще бъдете уведомени чрез съобщение когато процесът е завършен."
         rate_limit_error: "Публикации могат да бъдат сваляни веднъж дневно, моля опитайте отново утре."
@@ -695,6 +703,7 @@ bg:
       dismiss_notifications: "Отмени всички"
       dismiss_notifications_tooltip: "Маркирайте всички непрочетени известия, като прочетени"
       first_notification: "Вашето първо известие! Изберете го за да започнете."
+      theme_default_on_all_devices: "Направи тази тема стандарт на всичките ми устройства"
       external_links_in_new_tab: "Отваряй всички външни връзки в нов раздел."
       enable_quoting: "Включи отговор с цитат при маркиран текст."
       change: "промени"
@@ -790,10 +799,12 @@ bg:
         name: "Име"
         label: "Код"
         use: "Използвайте приложението за удостоверяване"
+        disable: "Деактивиране"
+        save: "Запази"
         edit: "Редактирай"
         security_key:
           register: "Регистриране"
-          delete: "Изтрий"
+          save: "Запази"
       change_about:
         title: "Смяна на За мен"
         error: "Имаше грешка при промяна на тази стойност."
@@ -1333,7 +1344,6 @@ bg:
           tracking: Аз следя
           first: е първата публикация
           pinned: са закачени
-          unpinned: не са закачени
           all_tags: Всички по-горни етикети
         post:
           time:
@@ -1407,6 +1417,8 @@ bg:
       move_to_inbox:
         title: "Премести във входящи"
         help: "Премести съобщението обратно във входящи"
+      edit_message:
+        title: "Редактирай"
       defer:
         title: "Отложи "
       list: "Теми"
@@ -2066,7 +2078,6 @@ bg:
         this_month: "Месец"
         this_week: "Седмица"
         today: "Днес"
-        other_periods: "виж отгоре"
     permission_types:
       full: "Създай / Отговори / Виж"
       create_post: "Отговари / Виж"
@@ -2205,6 +2216,10 @@ bg:
       custom_message_placeholder: "Въведете вашето персонализирано съобщение"
       custom_message_template_forum: "Хей, трябва да се присъединиш към този форум!"
       custom_message_template_topic: "Хей, мисля си, че ще се насладиш на тази тема!"
+    footer_nav:
+      back: "Назад"
+      share: "Споделяне"
+      dismiss: "Отмени"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

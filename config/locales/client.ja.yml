@@ -360,8 +360,7 @@ ja:
         status: "ステータス"
         category: "カテゴリ"
         orders:
-          priority: "優先度"
-          priority_asc: "優先度（逆順）"
+          score: "スコア"
           created_at: "作られた"
         priority:
           title: "最小の優先度"
@@ -562,14 +561,14 @@ ja:
           title: "ミュート"
           description: "このグループのすべてのメッセージを通知しません。"
       flair_url: "アバター画像"
-      flair_url_placeholder: "(オプション) 画像URL or Font Awesomeのクラス名"
-      flair_url_description: '20ピクセルx 20ピクセル以上の正方形の画像またはFontAwesomeアイコン（使用可能な形式： "fa-icon"、 "far fa-icon"、または "fab fa-icon"）を使用します。'
       flair_bg_color: "アバターの背景色"
       flair_bg_color_placeholder: "(オプション) HEXカラー値"
       flair_color: "アバター色"
       flair_color_placeholder: "(オプション) HEXカラー値"
       flair_preview_icon: "アイコンプレビュー"
       flair_preview_image: "画像プレビュー"
+      flair_type:
+        image: "画像のアップロード"
     user_action_groups:
       "1": "「いいね！」 "
       "2": "「いいね！」 された"
@@ -791,8 +790,8 @@ ja:
         disable: "利用できません"
         enable: "利用できます"
         enable_long: "バックアップコードを有効にします"
-        copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
+        copied_to_clipboard: "クリップボードにコピーしました"
         remaining_codes: "<strong>{{count}}</strong> 個のバックアップコードが残っています。"
         use: "バックアップコードを使用"
         codes:
@@ -805,9 +804,11 @@ ja:
         show_key_description: "手動入力"
         oauth_enabled_warning: "アカウントで2段階認証が有効になると、ソーシャルログインは無効になります。"
         enforced_notice: "このサイトにアクセスするには2段階認証を有効にする必要があります。"
+        disable: "利用できません"
+        save: "保存"
         edit: "編集"
         security_key:
-          delete: "削除する"
+          save: "保存"
       change_about:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
@@ -1460,7 +1461,6 @@ ja:
           bookmarks: ブックマーク中
           first: 最初の投稿
           pinned: 固定表示されている
-          unpinned: 固定表示されていない
           seen: 既読
           unseen: 未読
           wiki: wiki
@@ -1550,7 +1550,7 @@ ja:
         help: "受信ボックスへメッセージを戻しました"
       edit_message:
         help: "メッセージの最初の投稿を編集"
-        title: "メッセージを編集"
+        title: "編集"
       defer:
         title: "取り下げる"
       list: "トピック"
@@ -2209,7 +2209,6 @@ ja:
         this_month: "月"
         this_week: "週"
         today: "今日"
-        other_periods: "次の期間のトピックを見る"
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
@@ -2349,6 +2348,10 @@ ja:
     invite:
       custom_message: "<a href>カスタムメッセージ</a>を作成して、あなたの招待状をもう少し個人的なものにします。"
       custom_message_placeholder: "メッセージを入力"
+    footer_nav:
+      back: "戻る"
+      share: "共有"
+      dismiss: "閉じる"
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:

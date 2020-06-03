@@ -1,4 +1,3 @@
-import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { ButtonClass } from "discourse/widgets/button";
@@ -7,6 +6,20 @@ createWidget(
   "post-admin-menu-button",
   jQuery.extend(ButtonClass, { tagName: "li.btn" })
 );
+
+createWidget("post-admin-menu-button", {
+  tagName: "li",
+
+  html(attrs) {
+    return this.attach("button", {
+      className: attrs.className,
+      action: attrs.action,
+      icon: attrs.icon,
+      label: attrs.label,
+      secondaryAction: attrs.secondaryAction
+    });
+  }
+});
 
 export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (!currentUser) {
@@ -27,7 +40,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     const buttonAtts = {
       action: "togglePostType",
       icon: "shield-alt",
-      className: "btn-default toggle-post-type"
+      className: "popup-menu-button toggle-post-type"
     };
 
     if (attrs.isModeratorAction) {
@@ -44,14 +57,14 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         icon: "user-shield",
         label: "post.controls.remove_post_notice",
         action: "removeNotice",
-        className: "btn-default remove-notice"
+        className: "popup-menu-button remove-notice"
       });
     } else {
       contents.push({
         icon: "user-shield",
         label: "post.controls.add_post_notice",
         action: "addNotice",
-        className: "btn-default add-notice"
+        className: "popup-menu-button add-notice"
       });
     }
   }
@@ -61,7 +74,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       icon: "far-eye",
       label: "post.controls.unhide",
       action: "unhidePost",
-      className: "btn-default unhide-post"
+      className: "popup-menu-button unhide-post"
     });
   }
 
@@ -70,7 +83,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       icon: "user",
       label: "post.controls.change_owner",
       action: "changePostOwner",
-      className: "btn-default change-owner"
+      className: "popup-menu-button change-owner"
     });
   }
 
@@ -80,7 +93,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         icon: "certificate",
         label: "post.controls.grant_badge",
         action: "grantBadge",
-        className: "btn-default grant-badge"
+        className: "popup-menu-button grant-badge"
       });
     }
 
@@ -90,7 +103,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         label: "post.controls.unlock_post",
         action: "unlockPost",
         title: "post.controls.unlock_post_description",
-        className: "btn-default unlock-post"
+        className: "popup-menu-button unlock-post"
       });
     } else {
       contents.push({
@@ -98,7 +111,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         label: "post.controls.lock_post",
         action: "lockPost",
         title: "post.controls.lock_post_description",
-        className: "btn-default lock-post"
+        className: "popup-menu-button lock-post"
       });
     }
   }
@@ -109,14 +122,14 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         action: "toggleWiki",
         label: "post.controls.unwiki",
         icon: "far-edit",
-        className: "btn-default wiki wikied"
+        className: "popup-menu-button wiki wikied"
       });
     } else {
       contents.push({
         action: "toggleWiki",
         label: "post.controls.wiki",
         icon: "far-edit",
-        className: "btn-default wiki"
+        className: "popup-menu-button wiki"
       });
     }
   }
@@ -126,7 +139,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       icon: "file",
       label: "post.controls.publish_page",
       action: "showPagePublish",
-      className: "btn-default publish-page"
+      className: "popup-menu-button publish-page"
     });
   }
 
@@ -135,7 +148,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       icon: "cog",
       label: "post.controls.rebake",
       action: "rebakePost",
-      className: "btn-default rebuild-html"
+      className: "popup-menu-button rebuild-html"
     });
   }
 
@@ -147,7 +160,6 @@ export default createWidget("post-admin-menu", {
 
   html() {
     const contents = [];
-    contents.push(h("h3", I18n.t("admin_title")));
 
     buildManageButtons(this.attrs, this.currentUser, this.siteSettings).forEach(
       b => {
@@ -156,7 +168,7 @@ export default createWidget("post-admin-menu", {
       }
     );
 
-    return contents;
+    return h("ul", contents);
   },
 
   clickOutside() {

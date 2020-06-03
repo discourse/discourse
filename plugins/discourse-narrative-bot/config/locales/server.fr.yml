@@ -7,12 +7,12 @@
 
 fr:
   site_settings:
-    discourse_narrative_bot_enabled: "Activer le rotbot de narration Discourse (discobot)"
+    discourse_narrative_bot_enabled: "Activer l'assistant Discourse (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Désactiver le message de bienvenue de l'assistant Discourse"
     discourse_narrative_bot_ignored_usernames: "Noms d'utilisateurs que l'assistant Discourse doit ignorer"
     discourse_narrative_bot_disable_public_replies: "Désactiver les réponses publiques de l'assistant Discourse"
     discourse_narrative_bot_welcome_post_type: "Type de message de bienvenue envoyé par l'assistant Discourse"
-    discourse_narrative_bot_welcome_post_delay: "Attendre (n) seconde(s) avant d'envoyer le message de bienvenue de l'Assistant Discourse"
+    discourse_narrative_bot_welcome_post_delay: "Attendre (n) seconde(s) avant d'envoyer le message de bienvenue de l'assistant Discourse"
   badges:
     certified:
       name: Certifié
@@ -175,23 +175,23 @@ fr:
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
-          Voici une photo de licorne :
+          Voici une photo de licorne :
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
           Si vous l'aimez (et qui n'aime pas les licornes ?) appuyez sur le bouton _J'aime_ :heart: sous ce message pour me le faire savoir.
 
-          Pouvez-vous **répondre avec une image ?** N'importe laquelle fera l'affaire ! Glissez et déposer, appuyez sur le bouton d'upload, ou copiez juste son lien.
+          Pouvez-vous **répondre avec une image ?** N'importe laquelle fera l'affaire ! Glissez et déposer, appuyez sur le bouton d'envoi d'images, ou copiez juste son lien.
         reply: |-
           Sympa la photo ! – J'ai appuyé sur le bouton :heart: J'aime pour que vous sachiez au combien je l'apprécie. :heart_eyes:
         like_not_found: |-
           Avez-vous oublié d'aimer :heart: mon [message ?](%{url}) :crying_cat_face:
         not_found: |-
-          Il semblerait que vous n'avez pas uploadé d'image, du coup, j'en ai choisi une qui vous fera _certainement_ plaisir.
+          Il semblerait que vous n'avez pas envoyé d'image, donc j'en ai choisi une qui vous fera _certainement_ plaisir.
 
           `%{image_url}`
 
-          Essayez d'uploader la suivante, ou coller le lien sur une nouvelle ligne vide !
+          Essayez d'envoyer cette image, ou coller le lien sur une nouvelle ligne vide !
       formatting:
         instructions: |-
           Pouvez-vous faire quelques mots en **gras** ou en _italique_ dans votre réponse ?
@@ -241,16 +241,16 @@ fr:
         reply: |-
           C'est :sparkles: _emojitastic !_ :sparkles:
         not_found: |-
-          Oops, Je ne vois pas aucun emoji dans votre réponse ? Oh non ! :sob:
+          Oops, je ne vois pas aucun emoji dans votre réponse ? Oh non ! :sob:
 
-          Essayez de taper <kbd>:</kbd> pour faire apparaitre la selection d'emoji, puis appuyer sur les premières lettres de ce que vous voulez, comme par exemple `:bird:`
+          Essayez de taper <kbd>:</kbd> pour faire apparaître la sélection d'emoji, puis appuyer sur les premières lettres de ce que vous voulez, comme par exemple `:bird:`
 
-          Ou, appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur.
+          Ou appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur.
 
-          (Si vous êtes sur un périphérique mobile, vous pouvez aussi entrer l'émoji directement depuis votre clavier.)
+          (Si vous êtes sur un appareil mobile, vous pouvez aussi entrer l'emoji directement depuis votre clavier.)
       mention:
         instructions: |-
-          Parfois vous avez peut-être envie d'attirer l'attention de quelqu'un, même si vous ne lui répondez pas directement. Tapez `@` et complétez son pseudo pour le mentionner.
+          Parfois vous avez peut-être envie d'attirer l'attention de quelqu'un, même si vous ne lui répondez pas directement. Tapez `@` et complétez son nom d'utilisateur pour le mentionner.
 
           Pouvez-vous mentionner **`@%{discobot_username}`** dans votre réponse ?
         reply: |-

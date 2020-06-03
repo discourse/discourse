@@ -356,6 +356,8 @@ zh_TW:
         refresh: "重新整理"
         status: "狀態"
         category: "分類"
+        orders:
+          score: "分數"
         priority:
           medium: "中間的"
           high: "高"
@@ -565,8 +567,6 @@ zh_TW:
           title: "靜音"
           description: "您不會收到任何此群組內訊息的推播通知。"
       flair_url: "頭像圖片"
-      flair_url_placeholder: "（可選）圖片網站或 Font Awesome class"
-      flair_url_description: '請用不小於20×20像素的方形圖片或FontAwesome圖標（可接受的格式包含：“fa-icon”，“far fa-icon”或“fab fa-icon”）。'
       flair_bg_color: "頭像背景顏色"
       flair_bg_color_placeholder: "（可選）十六進制色彩值"
       flair_color: "頭像顏色"
@@ -801,8 +801,9 @@ zh_TW:
         disable: "禁用"
         enable: "啟用"
         enable_long: "啟用備用碼"
-        copied_to_clipboard: "複製至剪貼簿"
+        copy_to_clipboard: "複製至剪貼簿"
         copy_to_clipboard_error: "複製至剪貼簿時發生錯誤"
+        copied_to_clipboard: "複製至剪貼簿"
         remaining_codes: "你還剩下 <strong>{{count}}</strong> 個可使用的備用碼"
         codes:
           title: "已產生備用碼"
@@ -823,10 +824,12 @@ zh_TW:
           二步驟驗證使用除了密碼外的一次性代碼來加強帳號安全性。可以使用<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>或<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>設備來產生代碼。
         oauth_enabled_warning: "請注意，一旦啟用二步驟驗證，將自動關閉社群登入。"
         enforced_notice: "在進入網站前，需啟用兩個步驟驗證以增強帳號安全性"
+        disable: "禁用"
+        save: "儲存"
         edit: "編輯"
         security_key:
           register: "註冊"
-          delete: "刪除"
+          save: "儲存"
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"
@@ -1561,7 +1564,6 @@ zh_TW:
           bookmarks: 我加入書籤的
           first: 是第一篇文
           pinned: 是置頂的
-          unpinned: 不是置頂的
           seen: 我已讀的
           unseen: 我還未讀的
           wiki: 是公共編輯的
@@ -1652,7 +1654,7 @@ zh_TW:
         help: "把訊息移動到收件匣"
       edit_message:
         help: "編輯這個訊息的第一篇貼文"
-        title: "編輯訊息"
+        title: "編輯"
       defer:
         title: "延遲"
       list: "話題"
@@ -2425,7 +2427,6 @@ zh_TW:
         this_month: "月"
         this_week: "週"
         today: "今天"
-        other_periods: "前往頂端"
     permission_types:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
@@ -2614,6 +2615,10 @@ zh_TW:
       custom_message_template_forum: "你好，你應該來我們這個論壇！"
       custom_message_template_topic: "你好，我覺得你可能會喜歡這個話題！"
     forced_anonymous: "由於系統資源超過負荷，暫時向所有使用者顯示，包含已登出的使用者。"
+    footer_nav:
+      back: "返回"
+      share: "分享"
+      dismiss: "忽略"
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
   admin_js:
@@ -2828,12 +2833,6 @@ zh_TW:
         tag_event:
           name: "標籤事件"
           details: "當標籤被建立、更新或刪除。"
-        flag_event:
-          name: "標記事件"
-          details: "當檢舉被建立、同意、否決或忽略"
-        queued_post_event:
-          name: "話題審核事件"
-          details: "當新的話題正在建立、審核通過或被拒絕核准時"
         reviewable_event:
           name: "可審核的事件"
           details: "當新項目已經準備好審核並狀態已更好時"

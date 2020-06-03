@@ -74,7 +74,9 @@ class Plugin::Metadata
     "docker_manager",
     "lazy-yt",
     "poll",
-    "discourse-unsupported-browser"
+    "discourse-unsupported-browser",
+    "discourse-fontawesome-pro",
+    "discourse-staff-alias",
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version, :transpile_js]

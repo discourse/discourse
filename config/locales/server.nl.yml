@@ -45,7 +45,7 @@ nl:
       unrecognized_extension: "Niet-herkende bestandsextensie: %{extension}"
     import_error:
       generic: Er is een fout opgetreden bij het importeren van dat thema
-      about_json: "Fout bij importeren: about.json bestaat niet, of is ongeldig"
+      about_json: "Belangrijke fout: about.json bestaat niet, of is ongeldig. Weet u zeker dat dit een Discourse-thema is?"
       about_json_values: "about.json bevat ongeldige waarden: %{errors}"
       modifier_values: "about.json-modificatoren bevatten ongeldige waarden: %{errors}"
       git: "Fout bij klonen van git-repository; toegang is geweigerd of repository is niet gevonden"
@@ -373,6 +373,10 @@ nl:
       trust_level_4: "vertrouwensniveau_4"
     request_membership_pm:
       title: "Lidmaatschapsaanvraag voor @%{group_name}"
+    request_accepted_pm:
+      title: "U bent geaccepteerd in @%{group_name}"
+      body: |
+        Uw aanvraag om toe te treden tot @%{group_name} is geaccepteerd, en u bent nu lid.
     view_hidden_topic_request_reason: "Ik wil toetreden tot de groep '%{group_name}', zodat ik toegang heb tot [dit topic](%{topic_url})"
   education:
     until_posts:
@@ -1343,7 +1347,6 @@ nl:
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
     download_remote_images_to_local: "Externe afbeeldingen naar lokale afbeeldingen converteren door ze te downloaden; dit voorkomt beschadigde afbeeldingen."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"
-    download_remote_images_max_days_old: "Geen externe afbeeldingen downloaden voor berichten die meer dan n dagen oud zijn"
     disabled_image_download_domains: "Externe afbeeldingen zullen nooit vanaf deze domeinen worden gedownload. Pipe-gescheiden lijst."
     editing_grace_period: "De eerste (n) seconden na plaatsing van een bericht leidt bewerking ervan niet tot een nieuwe versie in de berichtgeschiedenis."
     editing_grace_period_max_diff: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor bewerken; bij meer wijzigingen een andere berichtrevisie bewaren (vertrouwensniveau 0 en 1)"
@@ -1361,6 +1364,7 @@ nl:
     add_rel_nofollow_to_user_content: '''rel nofollow'' toevoegen aan alle ingediende gebruikersinhoud, behalve voor interne koppelingen (inclusief bovenliggende domeinen). Als u dit wijzigt, moet u alle berichten opnieuw opbouwen met ''rake posts:rebake'''
     exclude_rel_nofollow_domains: "Een lijst van domeinen waarvoor 'nofollow' niet aan koppelingen mag worden toegevoegd. example.com staat ook automatisch sub.example.com toe. Voeg minimaal het domein van deze website toe om webcrawlers alle inhoud te helpen vinden. Als andere onderdelen van uw website zich op andere domeinen bevinden, voeg die dan ook toe."
     post_excerpt_maxlength: "Maximale lengte van een fragment / samenvatting van een bericht."
+    topic_excerpt_maxlength: "Maximale lengte van een fragment / samenvatting van een topic, gegenereerd vanuit het eerste bericht in een topic."
     show_pinned_excerpt_mobile: "Fragment tonen bij vastgemaakte topics in mobiele weergave."
     show_pinned_excerpt_desktop: "Fragment tonen bij vastgemaakte topics in desktopweergave."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse'-bericht in tekens."
@@ -2114,6 +2118,7 @@ nl:
     not_activated: "U kunt zich nog niet aanmelden. We hebben u een activeringsmail gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren."
     not_allowed_from_ip_address: "U kunt zich niet als %{username} aanmelden vanaf dat IP-adres."
     admin_not_allowed_from_ip_address: "U kunt zich niet als beheerder aanmelden vanaf dat IP-adres."
+    reset_not_allowed_from_ip_address: "U kunt geen wachtwoordherinitialisatie aanvragen vanaf dat IP-adres."
     suspended: "U kunt zich tot %{date} niet aanmelden."
     suspended_with_reason: "Account geschorst tot %{date}: %{reason}"
     errors: "%{errors}"
@@ -2127,7 +2132,7 @@ nl:
     omniauth_error_unknown: "Er is iets misgegaan bij het verwerken van uw aanmelding. Probeer het opnieuw."
     omniauth_confirm_title: "Aanmelden via %{provider}"
     omniauth_confirm_button: "Doorgaan"
-    authenticator_error_no_valid_email: "E-mailadressen die met %{account} zijn gekoppeld, zijn niet toegestaan. Mogelijk dient u uw account met een andere e-mailadres te configureren."
+    authenticator_error_no_valid_email: "E-mailadressen die met %{account} zijn gekoppeld, zijn niet toegestaan. Mogelijk dient u uw account met een ander e-mailadres te configureren."
     new_registrations_disabled: "Nieuwe accountregistraties zijn op dit moment niet toegestaan."
     password_too_long: "Wachtwoorden mogen maximaal 200 tekens lang zijn."
     email_too_long: "Het opgegeven e-mailadres is te lang. Postvaknamen mogen niet langer zijn dan 254 tekens, en domeinnamen niet langer dan 253 tekens."
@@ -2530,6 +2535,8 @@ nl:
     suspicious_login:
       title: "Waarschuwing voor nieuwe aanmelding"
       subject_template: "[%{site_name}] Nieuwe aanmelding vanaf %{location}"
+  page_forbidden:
+    title: "Oeps! Die pagina is privé."
   page_not_found:
     title: "Oeps! Die pagina bestaat niet of is privé."
     popular_topics: "Populair"
@@ -2575,6 +2582,7 @@ nl:
     user_email_user_suspended: "gebruiker was geschorst"
     user_email_already_read: "gebruiker heeft dit bericht al gelezen"
     user_email_access_denied: "gebruiker mag dit bericht niet zien"
+    user_email_no_email: "Geen e-mailadres gekoppeld met gebruikers-ID %{user_id}"
     sender_message_blank: "bericht is leeg"
     sender_message_to_blank: "message.to is leeg"
     sender_text_part_body_blank: "text_part.body is leeg"
@@ -2695,6 +2703,7 @@ nl:
       long_description: |
         Deze badge wordt toegekend wanneer u 5 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Bedankt dat u de tijd neemt voor het dagelijks actief aanmoedigen van de beste conversaties!
     crazy_in_love:
+      description: "20 keer %{max_likes_per_day} likes op een dag gebruikt"
       long_description: |
         Deze badge wordt toegekend wanneer u 20 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Wow! U bent een rolmodel voor het aanmoedigen van uw medegemeenschapesleden!
     thank_you:

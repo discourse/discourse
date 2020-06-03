@@ -22,11 +22,12 @@
     <label for="visiblity">{{i18n "admin.groups.manage.interaction.members_visibility_levels.title"}}</label>
 
     {{combo-box name="alias"
-        valueProperty="value"
-        value=model.members_visibility_level
-        content=visibilityLevelOptions
-        castInteger=true
-        class="groups-form-members-visibility-level"}}
+      valueProperty="value"
+      value=membersVisibilityLevel
+      content=visibilityLevelOptions
+      class="groups-form-members-visibility-level"
+      onChange=(action (mut model.members_visibility_level))
+    }}
 
     <div class="control-instructions">
       {{i18n "admin.groups.manage.interaction.members_visibility_levels.description"}}
@@ -41,7 +42,7 @@
   {{combo-box
     name="alias"
     valueProperty="value"
-    value=model.mentionable_level
+    value=mentionableLevel
     content=aliasLevelOptions
     class="groups-form-mentionable-level"
     onChange=(action (mut model.mentionable_level))
@@ -54,7 +55,7 @@
   {{combo-box
     name="alias"
     valueProperty="value"
-    value=model.messageable_level
+    value=messageableLevel
     content=aliasLevelOptions
     class="groups-form-messageable-level"
     onChange=(action (mut model.messageable_level))

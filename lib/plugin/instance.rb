@@ -18,6 +18,7 @@ class Plugin::CustomEmoji
   def self.clear_cache
     @@cache_key = CACHE_KEY
     @@emojis = {}
+    @@translations = {}
   end
 
   def self.register(name, url, group = Emoji::DEFAULT_GROUP)
@@ -29,6 +30,15 @@ class Plugin::CustomEmoji
 
   def self.unregister(name, group = Emoji::DEFAULT_GROUP)
     emojis[group].delete(name)
+  end
+
+  def self.translations
+    @@translations ||= {}
+  end
+
+  def self.translate(from, to)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + from)[0..10]
+    translations[from] = to
   end
 end
 
@@ -405,15 +415,6 @@ class Plugin::Instance
     SeedFu.fixture_paths.concat(paths)
   end
 
-  # Applies to all sites in a multisite environment. Block is not called if
-  # plugin is not enabled. Block is called with `user_id` and has to return a
-  # boolean based on whether the given `user_id` should be ignored.
-  def register_ignore_draft_sequence_callback(&block)
-    reloadable_patch do |plugin|
-      ::DraftSequence.plugin_ignore_draft_sequence_callbacks[plugin] = block
-    end
-  end
-
   def listen_for(event_name)
     return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
@@ -494,6 +495,10 @@ class Plugin::Instance
   def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
     Plugin::CustomEmoji.register(name, url, group)
     Emoji.clear_cache
+  end
+
+  def translate_emoji(from, to)
+    Plugin::CustomEmoji.translate(from, to)
   end
 
   def automatic_assets

@@ -441,7 +441,6 @@ el:
         muted:
           title: "Σε σιγή"
       flair_url: "Avatar Flair Εικόνα"
-      flair_url_placeholder: "(Προαιρετικό) URL εικόνας ή Font Awesome class "
       flair_bg_color: "Avatar Flair Χρώμα Φόντου"
       flair_bg_color_placeholder: "(Προαιρετικό) Τιμή χρώματος Hex"
       flair_color: "Avatar Flair Χρώμα"
@@ -646,14 +645,17 @@ el:
         regenerate: "Αναδημιουγία"
         disable: "Απενεργοποίηση"
         enable: "Ενεργοποίηση"
-        copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
+        copy_to_clipboard: "Αντιγραφή στο Clipboard"
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
+        copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
       second_factor:
         name: "Όνομα"
+        disable: "Απενεργοποίηση"
+        save: "Αποθήκευση"
         edit: "Επεξεργασία"
         security_key:
           register: "Εγγραφή"
-          delete: "Σβήσιμο"
+          save: "Αποθήκευση"
       change_about:
         title: "Άλλαξε τα «σχετικά με εμένα»"
         error: "Προέκυψε σφάλμα στην αλλαγή της αξίας."
@@ -1248,7 +1250,6 @@ el:
           tracking: παρακολουθώ
           first: είναι η πρώτη ανάρτηση
           pinned: είναι καρφιτσωμένα
-          unpinned: δεν είναι καρφιτσωμένα
           unseen: δεν διάβασα
           wiki: " είναι βίκι"
         statuses:
@@ -1334,6 +1335,8 @@ el:
       move_to_inbox:
         title: "Μετακίνηση στα Εισερχόμενα"
         help: "Μετακίνηση μηνύματος πίσω στα Εισερχόμενα"
+      edit_message:
+        title: "Επεξεργασία"
       defer:
         title: "Αναβολή"
       list: "Νήματα"
@@ -2054,7 +2057,6 @@ el:
         this_month: "Μήνας"
         this_week: "Εβδομάδα"
         today: "Σήμερα"
-        other_periods: "δες τα κορυφαία"
     permission_types:
       full: "Δημιούργησε / Απάντησε / Δες"
       create_post: "Απάντησε / Δες"
@@ -2214,6 +2216,10 @@ el:
       custom_message_placeholder: "Πρόσθεσε το προσαρμοσμένο μήνυμά σου"
       custom_message_template_forum: "Γεια, θα πρέπει να λάβεις μέρος σε αυτό το χώρο συζητήσεων!"
       custom_message_template_topic: "Γεια, νομίζω ότι θα απολαύσεις αυτό το νήμα!"
+    footer_nav:
+      back: "Πίσω"
+      share: "Κοινοποίηση"
+      dismiss: "Απόρριψη"
     safe_mode:
       enabled: "Η λειτουργία ασφαλείας είναι ενεργοποιημένη, για να εξέλθεις από τη λειτουργία ασφαλείας κλείσε το παράθυρο περιήγησης"
   admin_js:

@@ -43,7 +43,6 @@ zh_TW:
     other_error: "更新佈景主題時發生了錯誤"
     import_error:
       generic: 匯入佈景主題時發生了錯誤
-      about_json: "匯入錯誤：about.json 不存在或無效"
       about_json_values: "about.json 含有無效的數值：%{errors}"
       git: "複製 git 版本庫時發生錯誤，存取被拒或找不到該版本庫"
       unpack_failed: "解壓縮檔案失敗"
@@ -347,12 +346,6 @@ zh_TW:
       你可以編輯你先前的回應訊息，選擇字句後點選 <b>引用</b> 來回應。
 
       對於大家而言，閱讀包含較多回覆的少量貼文，會比閱讀多篇瑣碎貼文更為輕鬆。
-    dominating_topic: |
-      ### 讓其他人能一起加入討論
-
-      這篇主題真的對你很重要 &ndash; 你在這個討論中已回覆多於 %{percent}% 的回應。
-
-      如果你可以邀請更多人來分享他們的觀點，那可能會更好。 你可以邀請他們過來參與討論嗎？
     get_a_room: |
       ### 考慮回應更多參與者
 
@@ -1185,7 +1178,6 @@ zh_TW:
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
     download_remote_images_to_local: "下載外部鏈接的圖片到本機；以防圖片損壞。"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
-    download_remote_images_max_days_old: "不下載超過 n 天的貼文中的遠程圖片。"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
     editing_grace_period: "在 (n) 秒之內，對貼文的編輯不生成貼文歷史。"
     editing_grace_period_max_diff: "編輯寬限期允許的字元更改的最大數量，如果有更多的更改，將另儲存為另一個版本的修訂（信任等級0和1）"
@@ -3227,7 +3219,6 @@ zh_TW:
       name: 激情
     crazy_in_love:
       name: 狂熱
-      description: 20 天都讚過 50 次
     thank_you:
       name: 感謝你
       description: 有 20 個被讚的貼文，給出過 10 個贊

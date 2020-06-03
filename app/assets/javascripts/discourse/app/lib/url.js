@@ -5,6 +5,7 @@ import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import { default as getURL, withoutPrefix } from "discourse-common/lib/get-url";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -55,11 +56,11 @@ export function clearRewrites() {
 }
 
 export function userPath(subPath) {
-  return Discourse.getURL(subPath ? `/u/${subPath}` : "/u");
+  return getURL(subPath ? `/u/${subPath}` : "/u");
 }
 
 export function groupPath(subPath) {
-  return Discourse.getURL(subPath ? `/g/${subPath}` : "/g");
+  return getURL(subPath ? `/g/${subPath}` : "/g");
 }
 
 let _jumpScheduled = false;
@@ -210,11 +211,10 @@ const DiscourseURL = EmberObject.extend({
     }
 
     if (Discourse.get("requiresRefresh")) {
-      return redirectTo(Discourse.getURL(path));
+      return redirectTo(getURL(path));
     }
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
-    const baseUri = Discourse.BaseUri;
 
     if (!DiscourseURL.isInternal(path)) {
       return redirectTo(path);
@@ -241,7 +241,7 @@ const DiscourseURL = EmberObject.extend({
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     // Rewrite /my/* urls
-    let myPath = `${baseUri}/my/`;
+    let myPath = getURL("/my");
     if (path.indexOf(myPath) === 0) {
       const currentUser = User.current();
       if (currentUser) {
@@ -256,11 +256,7 @@ const DiscourseURL = EmberObject.extend({
 
     // handle prefixes
     if (path.indexOf("/") === 0) {
-      const rootURL = (baseUri === undefined ? "/" : baseUri).replace(
-        /\/$/,
-        ""
-      );
-      path = path.replace(rootURL, "");
+      path = withoutPrefix(path);
     }
 
     path = rewritePath(path);
@@ -293,7 +289,7 @@ const DiscourseURL = EmberObject.extend({
   },
 
   routeToUrl(url, opts = {}) {
-    this.routeTo(Discourse.getURL(url), opts);
+    this.routeTo(getURL(url), opts);
   },
 
   rewrite(regexp, replacement, opts) {
@@ -301,7 +297,7 @@ const DiscourseURL = EmberObject.extend({
   },
 
   redirectTo(url) {
-    window.location = Discourse.getURL(url);
+    window.location = getURL(url);
   },
 
   /**
@@ -420,10 +416,8 @@ const DiscourseURL = EmberObject.extend({
 
   // This has been extracted so it can be tested.
   origin() {
-    return (
-      window.location.origin +
-      (Discourse.BaseUri === "/" ? "" : Discourse.BaseUri)
-    );
+    let prefix = getURL("/");
+    return window.location.origin + (prefix === "/" ? "" : prefix);
   },
 
   // TODO: These container calls can be replaced eventually if we migrate this to a service

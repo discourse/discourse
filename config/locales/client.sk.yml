@@ -544,7 +544,6 @@ sk:
         muted:
           title: "Ignorované"
       flair_url: "Obrázok pre štítok avataru"
-      flair_url_placeholder: "(Voliteľné) URL obrázka alebo typ Awesome Fontu"
       flair_bg_color: "Farba pozadia štítku avataru"
       flair_bg_color_placeholder: "(Voliteľné) Hexadecimálna hodnota farby"
       flair_color: "Farba štítku avataru"
@@ -763,8 +762,8 @@ sk:
         disable: "Zakázať"
         enable: "Povoliť"
         enable_long: "Povoliť kódy zálohy"
-        copied_to_clipboard: "Skopírované do schránky"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
+        copied_to_clipboard: "Skopírované do schránky"
         remaining_codes: "Zostáva vám <strong>{{count}}</strong> kódov zálohy."
         codes:
           title: "Záložné kódy vygenerované"
@@ -779,9 +778,11 @@ sk:
         show_key_description: "Vložiť ručne"
         extended_description: |
           Dvojfaktorové prihlásenie pridáva dodatočné zabezpečenie Vášho účtu prostredníctvom zadávania jednorázových hesiel. Heslá môžu byť generované na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> zariadeniach.
+        disable: "Zakázať"
+        save: "Uložiť"
         edit: "Upraviť"
         security_key:
-          delete: "Odstrániť"
+          save: "Uložiť"
       change_about:
         title: "Upraviť O mne"
         error: "Nastala chyba pri zmene tejto hodnoty."
@@ -1343,7 +1344,6 @@ sk:
           tracking: Pozorujem
           private: V mojich správach
           pinned: sú pripnuté
-          unpinned: nie sú pripnuté
           unseen: som nečítal
         statuses:
           label: Kde témy
@@ -1427,6 +1427,8 @@ sk:
       move_to_inbox:
         title: "Presunúť do schránky"
         help: "Presunúť správu späť do schránky"
+      edit_message:
+        title: "Upraviť"
       defer:
         title: "Odložiť"
       list: "Témy"
@@ -2117,7 +2119,6 @@ sk:
         this_month: "Mesiac"
         this_week: "Týždeň"
         today: "Dnes"
-        other_periods: "pozri hore"
     permission_types:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
@@ -2263,6 +2264,10 @@ sk:
           bookmarks: "Žiadne ďalšie zazáložkované témy."
     invite:
       custom_message_placeholder: "Zadajte Vašu vlastnú správu"
+    footer_nav:
+      back: "Späť"
+      share: "Zdieľať"
+      dismiss: "Zahodiť"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:

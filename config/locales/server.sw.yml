@@ -774,7 +774,6 @@ sw:
     educate_until_posts: "Mtumiaji akianza kuandika machapisho mapya (n), onyesha paneli ya ufundishaji kwenye sehemu ya kuandika maneno."
     title: "jina kwenye tovuti, kama linalotumika kwenye kichwa cha lebo."
     site_description: "Elezea tovuti hii kwenye sentensi moja, kama ilivyo kwenye maelezo ya lebo ya meta"
-    download_remote_images_max_days_old: "Usipakue picha kutoka ufikivu kutoka mbali kwa ajili ya machapisho ambayo ni zaidi ya siku n."
     editing_grace_period: "Kwa sekundi (n) baada ya kuchapisha, uhariri hautatengeneza nakala mpya kwenye historia ya chapisho."
     staff_edit_locks_post: "Machapisho hayataweza kufanyiwa uhariri kama yakihaririwa na wafanyakazi"
     edit_history_visible_to_public: "Ruhusu kila mtu aone matoleo ya kabla ya chapisho lililofanyiwa uhariri. Ikisitishwa, wasaidizi tu wataweza kuona."
@@ -2042,7 +2041,6 @@ sw:
       name: Upendo wa Hali ya Juu
     crazy_in_love:
       name: Imejaa Upendo
-      description: Umetumia upendo 50 mara 20 ndani ya siku moja
     thank_you:
       name: Asante
       description: ana upendo 20 kwenye machapisho na ametoa upendo 10

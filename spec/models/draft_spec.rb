@@ -12,6 +12,22 @@ describe Draft do
     Fabricate(:post)
   end
 
+  context 'system user' do
+    it "can not set drafts" do
+      # fake a sequence
+      DraftSequence.create!(user_id: Discourse.system_user.id, draft_key: "abc", sequence: 10)
+
+      seq = Draft.set(Discourse.system_user, "abc", 0, { reply: 'hi' }.to_json)
+      expect(seq).to eq(0)
+
+      draft = Draft.get(Discourse.system_user, "abc", 0)
+      expect(draft).to eq(nil)
+
+      draft = Draft.get(Discourse.system_user, "abc", 1)
+      expect(draft).to eq(nil)
+    end
+  end
+
   context 'backup_drafts_to_pm_length' do
     it "correctly backs up drafts to a personal message" do
       SiteSetting.backup_drafts_to_pm_length = 1

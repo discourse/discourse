@@ -45,7 +45,6 @@ it:
       unrecognized_extension: "Estensione del file non riconosciuta: %{extension}"
     import_error:
       generic: Errore durante l'importazione del tema
-      about_json: "Errore di importazione: about.json non esiste o non è valido"
       about_json_values: "about.json contiene valori non validi: %{errors}"
       modifier_values: "I modificatori about.json contengono valori non validi: %{errors}"
       git: "Errore nella clonazione del repository git, accesso negato o repository non trovato"
@@ -334,7 +333,6 @@ it:
       already_bookmarked_post: "Non puoi aggiungere due volte lo stesso messaggio nei segnalibri."
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
-      time_must_be_provided: "l'ora deve essere fornita per tutti i promemoria"
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -413,7 +411,6 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Cita<b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte individuali.
-    dominating_topic: "### Consenti agli altri di partecipare alla conversazione\n\nQuesto argomento è chiaramente importante per te: hai inviato più dell' %{percent}% delle risposte. \n\nPotrebbe essere ancora meglio se dessi anche ad altri lo spazio per condividere i loro punti di vista. Ti va di invitarli?\n"
     get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione privatamente con questo particolare utente, [invia un messaggio personale](%{base_path}/u/%{reply_username}).\n"
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
@@ -879,8 +876,8 @@ it:
     banner:
       title: "Argomento Annuncio"
       message:
-        make: "Questo argomento è ora uno striscione. Apparirà in cima ad ogni pagina finché non viene chiuso dall'utente."
-        remove: "Questo argomento non è più uno striscione. Non apparirà più in cima ad ogni pagina."
+        make: "Questo argomento è ora un annuncio. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente."
+        remove: "Questo argomento non è più un annuncio. Non apparirà più in cima ad ogni pagina."
   unsubscribed:
     title: "Preferenze email aggiornate!"
     description: "le preferenze email per <b>%{email}</b> sono state aggiornate. Per cambiare le tue impostazioni email <a href='%{url}'>accedi alle tue preferenze utente</a>."
@@ -1328,7 +1325,6 @@ it:
     crawl_images: "Recupera le immagini dagli URL remoti per inserire le dimensioni corrette di ampiezza e altezza nel tag."
     download_remote_images_to_local: "Scarica localmente le immagini remote; ciò permettei di evitare immagini assenti."
     download_remote_images_threshold: "Minimo spazio disco necessario per scaricare le immagini remote in locale (in percentuale)"
-    download_remote_images_max_days_old: "Non scaricare immagini remote per messaggi che sono più vecchi di n giorni."
     disabled_image_download_domains: "Le immagini non verranno mai scaricate dai seguenti domini. Elenco delimitato dal carattere pipe |"
     editing_grace_period: "Per (n) secondi dopo la creazione del messaggio, le modifiche non saranno tracciate nella cronologia."
     editing_grace_period_max_diff: "Numero massimo di modifiche ai caratteri consentite durante la modifica del periodo di tolleranza, se più modifiche memorizzano un'altra revisione post (Livello Esperienza 0 e 1)"
@@ -2024,10 +2020,10 @@ it:
     autoclosed_disabled_lastpost: "Questo argomento è ora aperto. Sono permesse altre risposte."
     auto_deleted_by_timer: "Eliminato automaticamente dal timer."
   login:
-    security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Security Key qui sotto."
+    security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Chiave di Sicurezza qui sotto."
     security_key_alternative: "Prova in un altro modo"
-    security_key_authenticate: "Autentica con Security Key"
-    security_key_not_allowed_error: "Il processo di autenticazione con Security Key è scaduto o è stato annullato."
+    security_key_authenticate: "Autenticare con Chiave di Sicurezza"
+    security_key_not_allowed_error: "Il processo di autenticazione con Chiave di Sicurezza è scaduto o è stato annullato."
     security_key_no_matching_credential_error: "Non è stato possibile trovare credenziali corrispondenti nella chiave di sicurezza fornita."
     security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l&#39;uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
     not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
@@ -2080,6 +2076,7 @@ it:
       short: "deve essere almeno di %{min} caratteri"
       long: "non deve essere più lungo di %{max} caratteri"
       too_long: "è troppo lungo"
+      characters: "deve includere solo numeri, lettere, trattini, puntini e trattini bassi"
       unique: "deve essere univoco"
       blank: "deve essere presente"
       must_begin_with_alphanumeric_or_underscore: "deve iniziare con una lettera, un numero o un underscore"
@@ -2967,6 +2964,12 @@ it:
     confirm_old_email:
       title: "Conferma Vecchia Email"
       subject_template: "[%{email_prefix}] Conferma il tuo attuale indirizzo email"
+      text_body_template: |
+        Prima di poter cambiare il tuo indirizzo email devi confermare di disporre dell'indirizzo email attuale. Dopo aver completato questo passaggio, dovrai confermare il nuovo indirizzo email.
+
+        Conferma il tuo attuale indirizzo email su %{site_name} cliccando il seguente collegamento:
+
+        %{base_url}/u/confirm-old-email/%{email_token}%{email_token}
     notify_old_email:
       title: "Notifica Vecchia Email"
       subject_template: "[%{email_prefix}] Il tuo indirizzo email è stato cambiato"
@@ -3459,9 +3462,13 @@ it:
       name: Amato
     higher_love:
       name: Pieno d'Amore
+      description: "Ha messo %{max_likes_per_day} Mi piace al giorno per 5 volte"
+      long_description: |
+        Questo distintivo è assegnato quando usi tutti i %{max_likes_per_day} mi piace giornalieri per 5 giorni. Grazie per aver dedicato del tempo ad incoraggiare le migliori conversazioni ogni giorno!
     crazy_in_love:
       name: Pazzo d’Amore
-      description: Ha messo 50 mi piace al giorno per 20 volte
+      long_description: |
+        Questo distintivo è assegnato quando usi tutti i %{max_likes_per_day} mi piace giornalieri per 20 giorni. Wow, sei davvero un modello di comportamento per i tuoi compagni di comunità!
     thank_you:
       name: Grazie
       description: Ha ricevuto 20 mi piace sui messaggi e dato 10 mi piace

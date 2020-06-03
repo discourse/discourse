@@ -1,6 +1,8 @@
+import getURL from "discourse-common/lib/get-url";
 // Initialize the message bus to receive messages.
 import userPresent from "discourse/lib/user-presence";
 import { handleLogoff } from "discourse/lib/ajax";
+import { isProduction } from "discourse-common/config/environment";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
@@ -32,7 +34,7 @@ export default {
       user = container.lookup("current-user:main"),
       siteSettings = container.lookup("site-settings:main");
 
-    messageBus.alwaysLongPoll = Discourse.Environment === "development";
+    messageBus.alwaysLongPoll = !isProduction();
     messageBus.shouldLongPollCallback = () =>
       userPresent(LONG_POLL_AFTER_UNSEEN_TIME);
 
@@ -83,7 +85,7 @@ export default {
         return ajax(opts);
       };
 
-      messageBus.baseUrl = Discourse.getURL("/");
+      messageBus.baseUrl = getURL("/");
     }
 
     if (user) {

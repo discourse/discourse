@@ -27,12 +27,12 @@ zh_CN:
       multiple:
         help:
           at_least_min_options:
-            other: "至少选择 <strong>%{count}</strong> 个选项"
+            other: "至少选择<strong>%{count}</strong>个选项。"
           up_to_max_options:
-            other: "最多选择 <strong>%{count}</strong> 个选项"
+            other: "最多选择 <strong>%{count}</strong> 个选项。"
           x_options:
-            other: "选择 <strong>%{count}</strong> 个选项"
-          between_min_and_max_options: "选择 <strong>%{min}</strong> 至 <strong>%{max}</strong> 个选项"
+            other: "选择 <strong>%{count}</strong> 个选项。"
+          between_min_and_max_options: "选择<strong>%{min}</strong>到<strong>%{max}</strong>个选项。"
       cast-votes:
         title: "投你的票"
         label: "现在投票！"

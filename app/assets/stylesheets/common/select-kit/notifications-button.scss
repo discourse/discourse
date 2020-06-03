@@ -7,8 +7,8 @@
 
       .select-kit-row {
         .icons {
-          -ms-flex-item-align: start;
           align-self: flex-start;
+          margin-right: 0.75em;
         }
       }
     }

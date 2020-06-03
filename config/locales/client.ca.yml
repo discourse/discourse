@@ -420,8 +420,7 @@ ca:
         status: "Estat"
         category: "Categoria"
         orders:
-          priority: "Prioritat"
-          priority_asc: "Prioritat (inversa)"
+          score: "Puntuació"
           created_at: "Creat"
           created_at_asc: "Creat (invers)"
         priority:
@@ -647,8 +646,6 @@ ca:
           title: "Silenciat"
           description: "No sereu notificat de res sobre els missatges d'aquest grup."
       flair_url: "Imatge de l'estil d'avatar"
-      flair_url_placeholder: "(Opcional) Imatge URL o classe Font Awesome "
-      flair_url_description: 'Feu servir imatges quadrades no més petites de 20px per 20 px o icones FontAwesome (formats acceptats: "fa-icon", "far fa-icon" o "fab fa-icon").'
       flair_bg_color: "Color de fons de l'estil d'avatar "
       flair_bg_color_placeholder: "(Opcional) Valor de color hexadecimal"
       flair_color: "Color de l'estil d'avatar"
@@ -890,8 +887,9 @@ ca:
         enable: "Activa"
         enable_long: "Activa els codis de còpia de seguretat"
         manage: "Gestiona els codis de còpia de seguretat. Us resten <strong>{{count}}</strong> codis de còpia de seguretat. "
-        copied_to_clipboard: "Copiat al porta-retalls."
+        copy_to_clipboard: "Copia al porta-retalls"
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"
+        copied_to_clipboard: "Copiat al porta-retalls."
         remaining_codes: "Us resten <strong>{{count}}</strong> codis de còpia de seguretat."
         use: "Utilitza un codi de còpia de seguretat"
         enable_prerequisites: "Cal habilitar un segon factor primari abans de generar codis de còpia de seguretat."
@@ -917,27 +915,24 @@ ca:
         oauth_enabled_warning: "Observeu que els inicis de sessió amb xarxes socials seran deshabilitats quan l'autenticació de dos factors s'hagi activat en el vostre compte. "
         use: "Utilitza l'aplicació Authenticator"
         enforced_notice: "Cal que activeu l'autenticació de dos factors abans d'accedir a aquest lloc web."
-        disable: "deshabilita"
-        disable_title: "Deshabilita el segon factor"
+        disable: "Desactiva"
         disable_confirm: "Esteu segur que voleu deshabilitar tots els factors segons?"
+        save: "Desa"
         edit: "Edita"
         edit_title: "Edita el factor segon"
         edit_description: "Nom del factor segon"
-        enable_security_key_description: "Quan tingueu preparada la vostra clau de seguretat física, premeu el botó Registre."
         totp:
           title: "Autenticadors basats en testimonis"
-          add: "Autenticador nou"
           default_name: "El meu autenticador"
         security_key:
           register: "Registre"
           title: "Claus de seguretat"
-          add: "Registra la clau de seguretat"
           default_name: "Clau de seguretat principal"
           not_allowed_error: "El procés de registre de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
           already_added_error: "Ja heu registrat aquesta clau de seguretat. No cal que la registreu de nou."
           edit: "Edita la clau de seguretat"
+          save: "Desa"
           edit_description: "Nom de la clau de seguretat"
-          delete: "Suprimeix"
       change_about:
         title: "Canvia Quant a mi"
         error: "Hi ha hagut un error en canviar aquest valor"
@@ -1752,7 +1747,6 @@ ca:
           bookmarks: He marcat com a preferits
           first: són la primera publicació
           pinned: estan afixats
-          unpinned: no estan afixats
           seen: he llegit
           unseen: no he llegit
           wiki: són wiki
@@ -1845,7 +1839,7 @@ ca:
         help: "Torna el missatge a la safata d'entrada"
       edit_message:
         help: "Edita la primera publicació del missatge"
-        title: "Edita el missatge"
+        title: "Edita"
       defer:
         help: "Marca com a no llegit"
         title: "Ajorna"
@@ -2688,7 +2682,6 @@ ca:
         this_month: "Mes"
         this_week: "Setmana"
         today: "Avui"
-        other_periods: "mira dalt de tot"
     permission_types:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
@@ -2893,6 +2886,10 @@ ca:
       custom_message_template_forum: "Ep! Hauríeu d'unir-vos a aquest fòrum!"
       custom_message_template_topic: "Ep! Crec que us pot agradar aquest tema!"
     forced_anonymous: "A causa de la càrrega extrema, això es mostra temporalment a tothom com ho veuria un usuari que no ha iniciat sessió."
+    footer_nav:
+      back: "Enrere"
+      share: "Comparteix"
+      dismiss: "Descarta-ho"
     safe_mode:
       enabled: "El mode segur està activat. Per a sortir-ne tanqueu aquesta finestra del navegador."
   admin_js:
@@ -3136,12 +3133,6 @@ ca:
         tag_event:
           name: "Esdeveniment d'etiqueta"
           details: "Quan una etiqueta és creada, actualitzada o destruïda."
-        flag_event:
-          name: "Marca amb bandera l'esdeveniment"
-          details: "Quan una bandera és creada, s'hi està d'acord, no s'hi està d'acord o és ignorada. "
-        queued_post_event:
-          name: "Esdeveniment posterior a l'aprovació"
-          details: "Quan una nova publicació en cua és creada, aprovada o rebutjada"
         reviewable_event:
           name: "Esdeveniment revisable"
           details: "Quan un nou element està a punt per a revisió i quan el seu estatus és actualitzat."

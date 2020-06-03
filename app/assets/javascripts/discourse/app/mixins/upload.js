@@ -39,8 +39,10 @@ export default Mixin.create({
 
   _initialize: on("didInsertElement", function() {
     const $upload = $(this.element);
-    const reset = () =>
+    const reset = () => {
       this.setProperties({ uploading: false, uploadProgress: 0 });
+      document.getElementsByClassName("hidden-upload-field")[0].value = "";
+    };
     const maxFiles = this.getWithDefault(
       "maxFiles",
       this.siteSettings.simultaneous_uploads

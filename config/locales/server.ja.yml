@@ -44,7 +44,6 @@ ja:
       unrecognized_extension: "ファイルの拡張子が認識できません。: %{extension}"
     import_error:
       generic: テーマをインポートするときにエラーが起こりました
-      about_json: "重要なエラー: about.json が存在しないか無効です"
       about_json_values: "about.jsonは無効な値があります: %{errors}"
       git: "gitレポジトリのクローニングに失敗しました。アクセスが許可されていないか、レポジトリが見つかりません。"
       unpack_failed: "ファイルの解凍に失敗しました"
@@ -1572,7 +1571,6 @@ ja:
       name: より多くの愛
     crazy_in_love:
       name: 愛
-      description: 50いいね！を20日間
     thank_you:
       name: ありがとう
       description: 20ものいいね！を受け取り10ものいいね！を与えました。

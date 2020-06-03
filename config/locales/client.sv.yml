@@ -276,6 +276,7 @@ sv:
       no_timezone: 'Du har ännu inte valt tidszon. Du kommer därför inte kunna sätta påminnelser. Ange en <a href="%{basePath}/my/preferences/profile">i din profil</a>.'
       invalid_custom_datetime: "Datumet och tiden du har angivit är ogiltig, vänligen försök igen."
       list_permission_denied: "Du har inte behörighet att visa bokmärken för denna användare."
+      delete_when_reminder_sent: "Radera detta bokmärke när notifikationen för påminnelsen är skickad."
       reminders:
         at_desktop: "Nästa gång är jag vid datorn"
         later_today: "Senare idag"
@@ -292,6 +293,8 @@ sv:
         tomorrow_with_time: "imorgon vid %{time}"
         at_time: "den %{date_time}"
         existing_reminder: "Du har en påminnelse inställd för detta bokmärke vilken kommer skickas"
+    copy_codeblock:
+      copied: "kopierad!"
     drafts:
       resume: "Återuppta"
       remove: "Ta bort"
@@ -447,8 +450,8 @@ sv:
         status: "Status"
         category: "Kategori"
         orders:
-          priority: "Prioritet"
-          priority_asc: "Prioritet (omvänt)"
+          score: "Poäng"
+          score_asc: "Poäng (omvänt)"
           created_at: "Skapad den"
           created_at_asc: "Skapad den (omvänt)"
         priority:
@@ -676,14 +679,16 @@ sv:
           title: "Tystad"
           description: "Du kommer inte att bli meddelad om någonting för meddelanden i denna grupp.\n "
       flair_url: "Avatar Flair Bild"
-      flair_url_placeholder: "(Valfritt) Bild-URL eller typ Awesome-klass"
-      flair_url_description: 'Använd fyrkantiga bilder som inte är mindre än 20px gånger 20px eller FontAwesome-ikoner (accepterade format: "fa-icon", "far fa-icon" eller "fab fa-icon").'
+      flair_upload_description: "Använd fyrkantiga bilder som inte är mindre än 20px gånger 20px."
       flair_bg_color: "Avatar Flair Bakgrundsfärg"
       flair_bg_color_placeholder: "Hex färgvärde"
       flair_color: "En Avatar som ändrar färg beroende på ljuset"
       flair_color_placeholder: "(Valfritt) Hex-färgvärde"
       flair_preview_icon: "Förhandsvisa icon"
       flair_preview_image: "förhandsvisa bild"
+      flair_type:
+        icon: "Välj en ikon"
+        image: "Infoga Bild"
     user_action_groups:
       "1": "Gillningar givna"
       "2": "Gillningar mottagna"
@@ -745,6 +750,7 @@ sv:
       copied: "kopierad"
     user_fields:
       none: "(välj ett alternativ)"
+      required: 'Vänligen ange ett värde för "%{name}"'
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -760,6 +766,7 @@ sv:
       private_messages: "Meddelanden"
       user_notifications:
         filters:
+          filter_by: "Filtrera på"
           all: "Alla"
           read: "Läst"
           unread: "Olästa"
@@ -879,6 +886,7 @@ sv:
       api_approved: "Godkänd:"
       api_last_used_at: "Senast använd vid:"
       theme: "Tema"
+      save_to_change_theme: 'Tema kommer att uppdateras efter att du klickat "%{save_text}"'
       home: "Standard hemsida"
       staged: "Arrangerad"
       staff_counters:
@@ -926,8 +934,10 @@ sv:
         enable: "Aktivera"
         enable_long: "Aktivera reservkoder"
         manage: "Hantera reservkoder. Du har <strong>{{count}}</strong> reservkod kvar."
-        copied_to_clipboard: "Kopierad till urklipp"
+        copy_to_clipboard: "Kopiera till urklipp"
         copy_to_clipboard_error: "Fel vid kopiering av data till urklipp"
+        copied_to_clipboard: "Kopierad till urklipp"
+        download_backup_codes: "Ladda ner säkerhetskoder"
         remaining_codes: "Du har <strong>{{count}}</strong> reservkoder kvar."
         use: "Använd en reservkod"
         enable_prerequisites: "Då måste aktivera en primär andra faktor innan du skapar reservkoder."
@@ -954,28 +964,29 @@ sv:
         oauth_enabled_warning: "Vänligen notera att inloggning genom sociala medier kommer att stängas av när tvåfaktors autentisering har aktiverats för ditt konto."
         use: "Använd autentiseringsappen"
         enforced_notice: "Du behöver aktivera tvåfaktor autentisering innan du kan besöka denna sida."
-        disable: "inaktivera"
-        disable_title: "Inaktivera tvåfaktor"
+        disable: "Inaktivera"
         disable_confirm: "Är du säker på att du vill inaktivera alla tvåfaktorer?"
+        save: "Spara"
         edit: "Redigera"
         edit_title: "Redigera tvåfaktor"
         edit_description: "Tvåfaktor namn"
-        enable_security_key_description: "När du har din fysiska säkerhetsnyckel förberedd, tryck på registrera-knappen nedan."
+        enable_security_key_description: |
+          När du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">säkerhetsnyckel för hårdvara</a> förberedd, tryck på registrera-knappen nedan.
         totp:
-          title: "Bevisbaserade autentiserare"
-          add: "Ny autentiserare"
-          default_name: "Min autentiserare"
+          title: "Bevisbaserade autentisering"
+          add: "Lägg till autentisering"
+          default_name: "Min autentisering"
           name_and_code_required_error: "Du måste ange ett namn samt koden från din app för autentisering."
         security_key:
           register: "Registrera"
           title: "Säkerhetsnycklar"
-          add: "Registrera säkerhetsnyckel"
+          add: "Lägg till säkerhetsnyckel"
           default_name: "Huvud säkerhetsnyckel"
           not_allowed_error: "Registreringsprocessen för säkerhetsnyckel dröjde antingen för länge eller avbröts."
           already_added_error: "Du har redan registrerat denna säkerhetsnyckel.\nDu behöver inte registrera den igen."
           edit: "Ändra säkerhetsnyckel"
+          save: "Spara"
           edit_description: "Namn på säkerhetsnyckel"
-          delete: "Radera"
           name_required_error: "Du måste ange ett namn för din säkerhetsnyckel."
       change_about:
         title: "Ändra Om Mig"
@@ -1019,6 +1030,7 @@ sv:
         sso_override_instructions: "E-post kan uppdateras från SSO leverantören."
         instructions: "Visas aldrig publikt"
         ok: "Vi skickar e-post till dig för bekräftelse"
+        required: "Vänligen ange en e-postadress"
         invalid: "Vänligen ange en giltig e-postadress"
         authenticated: "Din e-postadress har blivit verifierad av {{provider}}"
         frequency_immediately: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
@@ -1039,6 +1051,7 @@ sv:
         title: "Namn"
         instructions: "ditt fullständiga namn (tillval)"
         instructions_required: "Ditt fullständiga namn"
+        required: "Vänligen ange ett namn"
         too_short: "Ditt namn är för kort"
         ok: "Ditt namn ser bra ut"
       username:
@@ -1052,6 +1065,7 @@ sv:
         too_long: "Ditt användarnamn är för långt"
         checking: "Kollar användarnamnets tillgänglighet..."
         prefilled: "E-postadressen matchar det här registrerade användarnamnet"
+        required: "Vänligen ange ett användarnamn"
       locale:
         title: "Gränssnittsspråk"
         instructions: "Språket som används av forumsgränssnittet. Det kommer att ändras när du laddar om sidan."
@@ -1195,6 +1209,7 @@ sv:
         same_as_email: "Ditt lösenord är detsamma som din e-postadress."
         ok: "Ditt lösenord ser bra ut."
         instructions: "åtminstone %{count} tecken"
+        required: "Vänligen ange ett lösenord"
       summary:
         title: "Sammanfattning"
         stats: "Statistik"
@@ -1508,6 +1523,9 @@ sv:
         one: "Välj åtminstone {{count}} föremål."
         other: "Välj åtminstone {{count}} föremål."
       invalid_selection_length: "Valet måste vara minst {{count}} tecken."
+      components:
+        categories_admin_dropdown:
+          title: "Kategorier i rullgardinsmenyn för administratörer"
     date_time_picker:
       from: Från
       to: Till
@@ -1591,8 +1609,8 @@ sv:
       edit_reason_placeholder: "varför redigerar du?"
       topic_featured_link_placeholder: "Ange länken som visas med titeln"
       remove_featured_link: "Ta bort länk från ämne."
-      reply_placeholder: "Skriv här. Använd Markdown, BBCode eller HTML för formattering. Släpp eller klistra in bilder."
-      reply_placeholder_no_images: "Skriv här. Använd Markdown, BBCode eller HTML för formattering. "
+      reply_placeholder: "Skriv här. Använd Markdown, BBCode eller HTML för formatering. Släpp eller klistra in bilder."
+      reply_placeholder_no_images: "Skriv här. Använd Markdown, BBCode eller HTML för formatering. "
       reply_placeholder_choose_category: "Välj en kategori innan du skriver här."
       view_new_post: "Visa ditt nya inlägg."
       saving: "Sparar"
@@ -1817,7 +1835,6 @@ sv:
           bookmarks: Som jag har bokmärkt
           first: är den första posten
           pinned: är pinnade
-          unpinned: är inte pinnade
           seen: Som jag har läst
           unseen: Jag inte har läst
           wiki: är wiki
@@ -1911,7 +1928,7 @@ sv:
         help: "Flytta tillbaka meddelandet till inkorgen"
       edit_message:
         help: "Redigera första inlägget av meddelanden"
-        title: "Ändra meddelande"
+        title: "Redigera"
       defer:
         help: "Märk som oläst"
         title: "Skjut upp"
@@ -2065,6 +2082,7 @@ sv:
           "2_8": "Du kommer se en räknare för nya svar eftersom du följer denna kategorin."
           "2_4": "Du kommer se en räknare för nya svar eftersom du postat ett svar i detta ämne."
           "2_2": "Du kommer se en räknare för nya svar eftersom du följer detta ämne."
+          "2": 'Du kommer se en räknare för nya svar eftersom du <a href="{{basePath}}/u/{{username}}/preferences/notifications">läser detta ämne</a>. '
           "1_2": "Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg."
           "1": "Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg."
           "0_7": "Du ignorerar alla notifikationer i den här kategorin."
@@ -3047,6 +3065,11 @@ sv:
       custom_message_template_forum: "Hej! Du borde gå med i det här forumet!"
       custom_message_template_topic: "Hej! Jag tror att du kanske skulle uppskatta det här ämnet!"
     forced_anonymous: "På grund av extrem belastning, visas detta för samtliga precis som en utloggad användare skulle se det."
+    footer_nav:
+      back: "Tillbaka"
+      forward: "Framåt"
+      share: "Dela"
+      dismiss: "Avfärda"
     safe_mode:
       enabled: "Säkert läge är aktiverat, för att lämna säkert läge stäng detta webläsarfönster"
   admin_js:
@@ -3297,12 +3320,6 @@ sv:
         tag_event:
           name: "Tagghändelse"
           details: "När en tagg skapas, uppdateras eller förstörs."
-        flag_event:
-          name: "Flagghändelse"
-          details: "När en flagga skapas, motsätts eller ignoreras."
-        queued_post_event:
-          name: "Godkänt inläggshändelse"
-          details: "När ett köat inlägg skapas, godkänns eller nekas. "
         reviewable_event:
           name: "Granskningshändelse"
           details: "När ett föremål är redo för granskning och när dess status är uppdaterad."
@@ -4056,7 +4073,7 @@ sv:
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"
         delete: "Radera användare"
         merge:
-          transfer_and_delete: "Överför & radera"
+          button: "Slå ihop"
           prompt:
             title: "Överför & radera @%{username}"
             description: |
@@ -4390,6 +4407,7 @@ sv:
         post_title: "Publicera"
         category_id: "Kategori-ID"
         category_title: "Kategori"
+        tag_name: "Namn på tagg"
         external_url: "Extern URL"
         destination: "Mål"
         delete_confirm: "Är du säker på att du vill ta bort den här permalänken?"

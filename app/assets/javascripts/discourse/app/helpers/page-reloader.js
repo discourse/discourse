@@ -1,10 +1,7 @@
-import EmberObject from "@ember/object";
-import Ember from "ember";
+import { isTesting } from "discourse-common/config/environment";
 
-export default EmberObject.create({
-  reload: function() {
-    if (!Ember.testing) {
-      location.reload();
-    }
+export function reload() {
+  if (!isTesting()) {
+    location.reload();
   }
-});
+}

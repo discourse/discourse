@@ -516,8 +516,6 @@ pt:
           title: "Silenciado"
           description: "Não vai ser notificado(a) de nenhuma mensagem neste grupo."
       flair_url: "Imagem da Marca de Avatar"
-      flair_url_placeholder: "(Opcional) URL da Imagem ou nome da classe Font Awesome"
-      flair_url_description: 'Use imagens quadradas no mínimo 20px por 20px ou ícones FontAwesome (formatos aceites: "fa-icon", "far fa-icon" ou "fab fa-icon").'
       flair_bg_color: "Cor de Fundo da Marca de Avatar"
       flair_bg_color_placeholder: "(Opcional) Valor hexadecimal da cor"
       flair_color: "Cor da Marca de Avatar"
@@ -748,8 +746,8 @@ pt:
         disable: "Desativar"
         enable: "Ativar"
         enable_long: "Ativar códigos de reserva"
-        copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
+        copied_to_clipboard: "Copiado para a Área de Transferência"
         remaining_codes: "Restam <strong>{{count}}</strong> códigos de reserva."
         codes:
           title: "Códigos de Reserva Gerados"
@@ -766,10 +764,12 @@ pt:
           A autenticação em dois passos adiciona segurança à sua conta ao pedir um código de utilização única além da sua palavra-passe. Os códigos podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Note que os logins com contas sociais vão ser desativados depois da autenticação em dois passos ser ativa na sua conta."
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
+        disable: "Desativar"
+        save: "Guardar"
         edit: "Editar"
         security_key:
           register: "Registar"
-          delete: "Eliminar"
+          save: "Guardar"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -1507,7 +1507,6 @@ pt:
           bookmarks: Adicionei aos marcadores
           first: são a primeira publicação
           pinned: estão afixados
-          unpinned: não estão afixados
           seen: Eu li
           unseen: Eu não li
           wiki: são wiki
@@ -1599,7 +1598,7 @@ pt:
         help: "Mover mensagem de volta para a Caixa de Entrada"
       edit_message:
         help: "Editar primeira publicação da mensagem"
-        title: "Editar Mensagem"
+        title: "Editar"
       defer:
         title: "Diferir"
       list: "Tópicos"
@@ -2310,7 +2309,6 @@ pt:
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
-        other_periods: "ver topo"
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
@@ -2466,6 +2464,10 @@ pt:
       custom_message_placeholder: "Insira a sua mensagem personalizada"
       custom_message_template_forum: "Olá, devia juntar-se a este fórum!"
       custom_message_template_topic: "Olá, achei que poderia gostar deste tópico!"
+    footer_nav:
+      back: "Retroceder"
+      share: "Partilhar"
+      dismiss: "Marcar como visto"
     safe_mode:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
   admin_js:

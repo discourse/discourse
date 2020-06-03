@@ -502,6 +502,14 @@ describe Group do
       expect(user.title).to eq('Different')
       expect(user.primary_group).to eq(primary_group)
     end
+
+    it "doesn't fail when the user gets destroyed" do
+      group.update(title: 'Awesome')
+      group.add(user)
+      user.reload
+
+      UserDestroyer.new(Discourse.system_user).destroy(user)
+    end
   end
 
   it "has custom fields" do
@@ -962,24 +970,6 @@ describe Group do
 
       expect(job["args"].first["group_id"]).to eq(group.id)
     end
-  end
-
-  it "allows Font Awesome 4.7 syntax as group avatar flair" do
-    group = Fabricate(:group)
-    group.flair_url = "fa-air-freshener"
-    group.save
-
-    group = Group.find(group.id)
-    expect(group.flair_url).to eq("fa-air-freshener")
-  end
-
-  it "allows Font Awesome 5 syntax as group avatar flair" do
-    group = Fabricate(:group)
-    group.flair_url = "fab fa-bandcamp"
-    group.save
-
-    group = Group.find(group.id)
-    expect(group.flair_url).to eq("fab fa-bandcamp")
   end
 
   context "Unicode usernames and group names" do

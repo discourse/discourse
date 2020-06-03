@@ -3,6 +3,10 @@
 class EmailValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
+    unless value =~ EmailValidator.email_regex
+      record.errors.add(attribute, I18n.t(:'user.email.invalid'))
+    end
+
     unless EmailValidator.allowed?(value)
       record.errors.add(attribute, I18n.t(:'user.email.not_allowed'))
     end

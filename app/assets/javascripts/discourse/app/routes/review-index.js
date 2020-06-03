@@ -7,7 +7,7 @@ export default DiscourseRoute.extend({
       if (params.status === "reviewed" || params.status === "all") {
         params.sort_order = "created_at";
       } else {
-        params.sort_order = "priority";
+        params.sort_order = "score";
       }
     }
 

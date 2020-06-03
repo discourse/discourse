@@ -28,7 +28,10 @@ import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addPostTransformCallback } from "discourse/widgets/post-stream";
-import { attachAdditionalPanel } from "discourse/widgets/header";
+import {
+  attachAdditionalPanel,
+  addToHeaderIcons
+} from "discourse/widgets/header";
 import {
   registerIconRenderer,
   replaceIcon
@@ -40,6 +43,7 @@ import { replaceFormatter } from "discourse/lib/utilities";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
@@ -55,7 +59,7 @@ import { on } from "@ember/object/evented";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.10.0";
+const PLUGIN_API_VERSION = "0.10.1";
 
 class PluginApi {
   constructor(version, container) {
@@ -928,6 +932,19 @@ class PluginApi {
   }
 
   /**
+   * Registers a function to decorate each autocomplete usernames.
+   *
+   * Example:
+   *
+   * api.addUsernameSelectorDecorator(username => {
+   *   return `<span class="status">[is_away]</class>`;
+   * })
+   */
+  addUsernameSelectorDecorator(decorator) {
+    addUsernameSelectorDecorator(decorator);
+  }
+
+  /**
    * Registers a "beforeSave" function on the composer. This allows you to
    * implement custom logic that will happen before the user makes a post.
    *
@@ -1126,6 +1143,19 @@ class PluginApi {
    **/
   addCategoryLinkIcon(renderer) {
     addExtraIconRenderer(renderer);
+  }
+  /**
+   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
+   * in a theme or plugin via an initializer prior to calling this function.
+   *
+   * ```
+   * api.addToHeaderIcons(
+   *  createWidget('some-widget')
+   * ```
+   *
+   **/
+  addToHeaderIcons(icon) {
+    addToHeaderIcons(icon);
   }
 }
 

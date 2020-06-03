@@ -1,3 +1,4 @@
+import { getURLWithCDN } from "discourse-common/lib/get-url";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { performEmojiUnescape, buildEmojiUrl } from "pretty-text/emoji";
 import WhiteLister from "pretty-text/white-lister";
@@ -6,8 +7,6 @@ import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
-
-const getURLWithCDN = url => Discourse.getURLWithCDN(url);
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
@@ -18,6 +17,7 @@ function getOpts(opts) {
       getURL: getURLWithCDN,
       currentUser: Discourse.__container__.lookup("current-user:main"),
       censoredRegexp: site.censored_regexp,
+      customEmojiTranslation: site.custom_emoji_translation,
       siteSettings,
       formatUsername
     },

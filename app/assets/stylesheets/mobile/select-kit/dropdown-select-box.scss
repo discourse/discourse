@@ -1,12 +1,20 @@
 .select-kit {
   &.dropdown-select-box {
     .select-kit-collection {
-      max-height: 200px;
       overflow-y: auto;
     }
-  }
-}
 
-.select-kit.combo-box .select-kit-row {
-  padding: 10px;
+    .select-kit-row {
+      .svg-icon-title {
+        width: auto;
+        height: auto;
+      }
+
+      .texts {
+        .name {
+          font-weight: normal;
+        }
+      }
+    }
+  }
 }

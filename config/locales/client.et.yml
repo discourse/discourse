@@ -478,7 +478,6 @@ et:
         muted:
           title: "Vaigistatud"
       flair_url: "Avatari andekuse pilt"
-      flair_url_placeholder: "(Valikuline) Pildi URL või Font Awesome klass"
       flair_bg_color: "Avatari andekuse taustavärv"
       flair_bg_color_placeholder: "(Valikuline) Värvi väärtus heksakoodis"
       flair_color: "Avatari andekuse värv"
@@ -685,6 +684,7 @@ et:
         regenerate: "Genereeri uus"
         disable: "Keela"
         enable: "Luba"
+        copy_to_clipboard: "Kopeeri lõikelauale"
         copied_to_clipboard: "Kopeeritud lõikelauale"
       second_factor:
         confirm_password_description: "Palun kinnita jätkamiseks oma parooli"
@@ -692,10 +692,12 @@ et:
         label: "Kood"
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."
         show_key_description: "Sisesta käsitsi"
+        disable: "Keela"
+        save: "Salvesta"
         edit: "Muuda"
         security_key:
           register: "Registreeru"
-          delete: "Kustuta"
+          save: "Salvesta"
       change_about:
         title: "Muuda minu andmeid"
         error: "Välja muutmisel tekkis viga."
@@ -1324,7 +1326,6 @@ et:
           bookmarks: Minu järjehoidjates
           first: on teema esimesed postitused
           pinned: on esile tõstetud
-          unpinned: ei ole esile tõstetud
           seen: Minu loetud
           unseen: Minu poolt lugemata
           wiki: on wiki
@@ -1413,7 +1414,7 @@ et:
         title: "Liiguta Postkasti"
         help: "Liiguta sõnum tagasi Postkasti"
       edit_message:
-        title: "Muuda sõnumit"
+        title: "Muuda"
       defer:
         title: "Lükka edasi"
       list: "Teemad"
@@ -2112,7 +2113,6 @@ et:
         this_month: "Kuu"
         this_week: "Nädal"
         today: "Täna"
-        other_periods: "vaata juhtivaid"
     permission_types:
       full: "Loo / Vasta / Vaata"
       create_post: "Vasta / Vaata"
@@ -2268,6 +2268,10 @@ et:
       custom_message_placeholder: "Sisesta oma individuaalne sõnum"
       custom_message_template_forum: "Kuule, Sa peaksid selle foorumiga liituma!"
       custom_message_template_topic: "Kuule, arvan et see teema meeldiks Sulle!"
+    footer_nav:
+      back: "Tagasi"
+      share: "Jaga"
+      dismiss: "Ignoreeri"
     safe_mode:
       enabled: "Kaitstud režiim on aktiivne, väljumiseks sulge see brauseri aken."
   admin_js:

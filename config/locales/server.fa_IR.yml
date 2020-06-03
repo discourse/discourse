@@ -16,6 +16,7 @@ fa_IR:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, ژانویه, فوریه, مارچ, آپریل, می, جون, جولای, آگوست, سپتامبر, اکتبر, نوامبر, دسامبر]
     <<: *datetime_formats
@@ -44,7 +45,6 @@ fa_IR:
       unrecognized_extension: "پرونده افزونه شناسایی نشد:%{extension}"
     import_error:
       generic: خطایی در هنگام وارد کردن پوسته اتفاق افتاده
-      about_json: "خطا در وارد کردن: about.json وجود ندارد یا نامعتبر است"
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
   emails:
@@ -220,6 +220,7 @@ fa_IR:
     reminders:
       at_desktop: "بار آینده من پشت میزم هستم"
       later_today: "امروز"
+      next_business_day: "روز کاری بعدی"
       tomorrow: "فردا"
       next_week: "هفته بعد"
       next_month: "ماه بعد"
@@ -864,7 +865,6 @@ fa_IR:
     crawl_images: "بازیابی تصاویر از URL‌های خارجی برای وارد کردن طول و عرض صحیح. "
     download_remote_images_to_local: "تبدیل عکس‌های خارجی به عکس های محلی با دانلود کردن آنها، این مانع از شکستن عکس‌ها می شود."
     download_remote_images_threshold: "حداقل فضای دیسک مورد نیاز برای دانلود عکس‌های خارجی به هاست (به درصد)"
-    download_remote_images_max_days_old: "تصاویر خارجی را برای فرسته‌های قدیمی‌تر از n روز بارگیری نکن."
     disabled_image_download_domains: "عکس‌های خارجی هرگز از این دامنه‌ها دانلود نخواهند شد. لیست Pipe-delimited"
     editing_grace_period: "ویرایش کردن تا (n) ثانیه بعد از ارسال فرسته، نسخه جدیدی در تاریخچه ایجاد نمی‌کند."
     edit_history_visible_to_public: "به همه اجازه بده تا نسخه قبلی نوشته ویرایش شده را ببینند. وقتی غیر‌فعال است٬ فقی اعضای همکار می‌توانند ببینند."
@@ -1334,6 +1334,7 @@ fa_IR:
     autoclosed_disabled_lastpost: "این موضوع در حال حاضر باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
     auto_deleted_by_timer: "به صورت خودکار توسط زمان‌سنج حذف شده."
   login:
+    security_key_alternative: "روش دیگری را امتحان کنید"
     security_key_authenticate: "تأیید اعتبار با کلید امنیتی"
     security_key_not_allowed_error: "مراحل تأیید اعتبار کلید امنیتی به پایان رسیده است یا لغو شده است."
     not_approved: "حساب کاربری شما هنوز تایید نشده است. وقتی شما آماده ورود به سیستم شوید به شما اطلاع داده می شود."
@@ -2105,7 +2106,6 @@ fa_IR:
       name: مهرورز
     crazy_in_love:
       name: الهه‌ی مهر
-      description: در 20 روز، روزانه 50 نوشته را پسندیده است.
     thank_you:
       name: سپاس‌گزاریم
       description: 20 نوشته پسندیده شده دارد و 10 نوشته را پسندیده است.

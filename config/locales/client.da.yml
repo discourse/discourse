@@ -420,8 +420,7 @@ da:
         status: "Status"
         category: "Kategori"
         orders:
-          priority: "Prioritet"
-          priority_asc: "Prioritet (omvendt)"
+          score: "Score"
           created_at: "Oprettet kl"
           created_at_asc: "Oprettet kl (omvendt)"
         priority:
@@ -646,8 +645,6 @@ da:
           title: "Tavs"
           description: "Du bliver ikke underrettet om noget om beskeder i denne gruppe."
       flair_url: "Avatar Flair-billede"
-      flair_url_placeholder: "(Valgfrit) Billed-URL eller Font Awesome klasse"
-      flair_url_description: 'Brug firkantede billeder, der ikke er mindre end 20px gange 20px eller FontAwesome-ikoner (accepterede formater: "fa-icon", "far fa-icon" eller "fab fa-icon").'
       flair_bg_color: "Avatar Flair-baggrundsfarve"
       flair_bg_color_placeholder: "(Valgfrit) Hex farveværdi"
       flair_color: "Avatar Flair-farve"
@@ -892,8 +889,9 @@ da:
         enable: "Aktiver"
         enable_long: "Aktivér backup koder"
         manage: "Administrér backup koder. Du har <strong>{{count}}</strong> backup koder tilbage."
-        copied_to_clipboard: "Kopierede til udklipsholder"
+        copy_to_clipboard: "Kopiér til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
+        copied_to_clipboard: "Kopierede til udklipsholder"
         remaining_codes: "Du har <strong>{{count}}</strong> backup koder tilbage."
         use: "Brug en backup kode"
         enable_prerequisites: "Du skal aktivere en primær anden faktor, før du genererer backup koder."
@@ -919,22 +917,19 @@ da:
         oauth_enabled_warning: "Bemærk, at sociale logins deaktiveres, når To-faktor godkendelse er aktiveret på din konto."
         use: "Brug Autentificeringsapp"
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
-        disable: "deaktiver"
-        disable_title: "Deaktiver anden faktor"
+        disable: "Deaktivér"
         disable_confirm: "Er du sikker på, at du vil deaktivere alle andre faktorer?"
+        save: "Gem"
         edit: "Rediger"
         edit_title: "Rediger anden faktor"
         edit_description: "Navn på anden faktor"
-        enable_security_key_description: "Når du har din fysiske sikkerhedstast klar, skal du trykke på knappen Registrer nedenfor."
         totp:
           title: "Token-baserede autentificatorer"
-          add: "Ny autentifikator"
           default_name: "Min autentifikator"
         security_key:
           register: "Registrer"
           title: "Sikkerhedsnøgler"
-          add: "Registrer sikkerhedsnøgle"
-          delete: "Slet"
+          save: "Gem"
       change_about:
         title: "Skift “Om mig”"
         error: "Der opstod en fejl i ændringen af denne værdi."
@@ -1722,7 +1717,6 @@ da:
           bookmarks: Jeg bogmærkede
           first: er det allerførste indlæg
           pinned: er fastgjort
-          unpinned: er ikke fastgjort
           seen: jeg læser
           unseen: Jeg har ikke læst
           wiki: er wiki
@@ -1815,7 +1809,7 @@ da:
         help: "Flyt beskeder tilbage til Indbakke"
       edit_message:
         help: "Rediger det første indlæg af beskeden"
-        title: "Rediger Besked"
+        title: "Rediger"
       defer:
         help: "Markér som ulæst"
         title: "Udsæt"
@@ -2646,7 +2640,6 @@ da:
         this_month: "Måned"
         this_week: "Uge"
         today: "I dag"
-        other_periods: "se top"
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -2850,6 +2843,10 @@ da:
       custom_message_template_forum: "Hej, du burde tilmelde dig dette forum!"
       custom_message_template_topic: "Hej, jeg tænkte du måske ville synes om dette emne!"
     forced_anonymous: "På grund af ekstrem belastning vises dette midlertidigt for alle, da en logget ud bruger bruger også ville se det."
+    footer_nav:
+      back: "Tilbage"
+      share: "Del"
+      dismiss: "Afvis"
     safe_mode:
       enabled: "Sikker tilstand er slået til - for at forlade sikker tilstand, så luk dette browservindue"
   admin_js:
@@ -3076,12 +3073,6 @@ da:
         tag_event:
           name: "Tag begivenhed"
           details: "Når et tag bliver oprettet, opdateret eller ødelagt."
-        flag_event:
-          name: "Markér begivenhed"
-          details: "Når en markering oprettes, aftales, ueniggøres eller ignoreres."
-        queued_post_event:
-          name: "Indlæggodkendelsesbegivenhed"
-          details: "Når en ny indlæg i kø oprettes, godkendes eller afvises."
         reviewable_event:
           name: "Begivenhed, der kan gennemgås"
           details: "Når et nyt punkt er klar til gennemgang, og når dets status opdateres."

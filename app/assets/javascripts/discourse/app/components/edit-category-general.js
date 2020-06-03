@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
@@ -27,10 +28,10 @@ export default buildCategoryPanel("general", {
   },
 
   canSelectParentCategory: not("category.isUncategorizedCategory"),
-  uncategorizedSiteSettingLink: Discourse.getURL(
+  uncategorizedSiteSettingLink: getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
   ),
-  customizeTextContentLink: Discourse.getURL(
+  customizeTextContentLink: getURL(
     "/admin/customize/site_texts?q=uncategorized"
   ),
 

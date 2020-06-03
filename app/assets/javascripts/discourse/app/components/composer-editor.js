@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { debounce, later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
@@ -44,7 +45,7 @@ import {
   cacheShortUploadUrl,
   resolveAllShortUrls
 } from "pretty-text/upload-short-url";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -650,9 +651,7 @@ export default Component.extend({
     const $element = $(this.element);
 
     $element.fileupload({
-      url: Discourse.getURL(
-        `/uploads.json?client_id=${this.messageBus.clientId}`
-      ),
+      url: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       dataType: "json",
       pasteZone: $element
     });
@@ -847,7 +846,7 @@ export default Component.extend({
       // need to wait a bit for the "slide down" transition of the composer
       later(
         () => this.appEvents.trigger("composer:closed"),
-        ENV.environment === "test" ? 0 : 400
+        isTesting() ? 0 : 400
       );
     });
 

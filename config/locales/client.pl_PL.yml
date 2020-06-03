@@ -504,8 +504,7 @@ pl_PL:
         status: "Status"
         category: "Kategoria"
         orders:
-          priority: "Priorytet"
-          priority_asc: "Priorytet (odwróć)"
+          score: "Wynik"
           created_at: "Utworzony"
           created_at_asc: "Utworzono (odwrotnie)"
         priority:
@@ -739,8 +738,6 @@ pl_PL:
           title: "Wyciszony"
           description: "Nie dostaniesz powiadomień na temat wiadomości w tej grupie."
       flair_url: "Awatar "
-      flair_url_placeholder: "(Opcjonalne) Link do obrazka lub klasa Font Awesome"
-      flair_url_description: 'Użyj kwadratowego obrazka mniejszego niż 20px na 20px lub ikony FontAwesome (akceptowane formaty: "fa-icon", "far fa-icon" i "fab fa-icon").'
       flair_bg_color: "Kolor tła odznaki grupowej"
       flair_bg_color_placeholder: "(Opcjonalne) Kolor w formacie Hex"
       flair_color: "Kolor odznaki grupowej "
@@ -994,8 +991,9 @@ pl_PL:
         enable: "Włącz"
         enable_long: "Włącz kody zapasowe"
         manage: "Zarządzaj kodami zapasowymi. Pozostały Ci kody zapasowe <strong>{{count}}</strong> ."
-        copied_to_clipboard: "Skopiowane do schowka"
+        copy_to_clipboard: "Skopiuj do schowka"
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
+        copied_to_clipboard: "Skopiowane do schowka"
         remaining_codes: "Pozostały Ci kody zapasowe <strong>{{count}}</strong> ."
         use: "Używaj kodu zapasowego"
         enable_prerequisites: "Przed wygenerowaniem kodów zapasowych należy włączyć główny drugi czynnik."
@@ -1020,27 +1018,24 @@ pl_PL:
         use: "Użyj aplikacji Authenticator"
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
-        disable_title: "Wyłącz drugi czynnik"
         disable_confirm: "Czy na pewno chcesz wyłączyć wszystkie drugie czynniki?"
+        save: "Zapisz"
         edit: "Edytuj"
         edit_title: "Edytuj drugi czynnik"
         edit_description: "Nazwa drugiego czynnika"
-        enable_security_key_description: "Po przygotowaniu fizycznego klucza bezpieczeństwa naciśnij przycisk Zarejestruj poniżej."
         totp:
           title: "Uwierzytelnianie oparte na tokenach"
-          add: "Nowy Authenticator"
           default_name: "Mój Authenticator"
           name_and_code_required_error: "Musisz podać nazwę i kod z aplikacji uwierzytelniającej."
         security_key:
           register: "Zarejestruj"
           title: "Klucze bezpieczeństwa"
-          add: "Zarejestruj klucz bezpieczeństwa"
           default_name: "Główny klucz bezpieczeństwa"
           not_allowed_error: "Upłynął limit czasu procesu rejestracji klucza bezpieczeństwa lub został on anulowany."
           already_added_error: "Ten klucz bezpieczeństwa został już zarejestrowany. Nie musisz go ponownie rejestrować."
           edit: "Edytuj Klucz Bezpieczeństwa"
+          save: "Zapisz"
           edit_description: "Nazwa klucza bezpieczeństwa"
-          delete: "Usuń"
           name_required_error: "Musisz podać nazwę swojego klucza bezpieczeństwa."
       change_about:
         title: "Zmień O mnie"
@@ -1767,11 +1762,6 @@ pl_PL:
           few: "Nieodczytane wiadomości: {{count}}"
           many: "Nieodczytane wiadomości: {{count}}"
           other: "Nieodczytane wiadomości: 1"
-        high_priority:
-          one: "%{count} nieprzeczytane powiadomienie o wysokim priorytecie"
-          few: "%{count} nieprzeczytane powiadomienie o wysokim priorytecieis"
-          many: "%{count} nieprzeczytane powiadomienie o wysokim priorytecieis"
-          other: "%{count} nieprzeczytane powiadomienie o wysokim priorytecieis"
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
       empty: "Nie znaleziono powiadomień."
@@ -1921,7 +1911,6 @@ pl_PL:
           bookmarks: Dodałeś do zakładek
           first: "tylko najnowsze posty "
           pinned: są przypięte
-          unpinned: są nie przypięte
           seen: Przeczytałem
           unseen: Nie przeczytałem
           wiki: są postami wiki
@@ -2019,7 +2008,7 @@ pl_PL:
         help: "Przenieś wiadomość z powrotem do skrzynki odbiorczej"
       edit_message:
         help: "Edytuj pierwszy post wiadomości"
-        title: "Edytuj wiadomość"
+        title: "Edytuj"
       defer:
         help: "Oznacz jako nieprzeczytane"
         title: "Zignoruj"
@@ -2911,7 +2900,6 @@ pl_PL:
         this_month: "Miesiąc"
         this_week: "Tydzień"
         today: "Dzisiaj"
-        other_periods: "zobacz najważniejsze"
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
@@ -3119,6 +3107,10 @@ pl_PL:
       custom_message_placeholder: "Wpisz swoją niestandardową wiadomość"
       custom_message_template_forum: "Hej, należy dołączyć do tego forum!"
       custom_message_template_topic: "Hej, pomyślałem że spodoba Ci się ten temat !"
+    footer_nav:
+      back: "Poprzednia"
+      share: "Udostępnij"
+      dismiss: "Wyczyść"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
   admin_js:
@@ -3364,12 +3356,6 @@ pl_PL:
         tag_event:
           name: "Zdarzenie tagu"
           details: "Kiedy tag jest tworzony, aktualizowany lub niszczony."
-        flag_event:
-          name: "Zdarzenie flagi"
-          details: "Kiedy flaga jest tworzona, zatwierdzana, odrzucana lub ignorowana."
-        queued_post_event:
-          name: "Zdarzenie zatwierdzania wpisu"
-          details: "Kiedy wpis w kolejce jest tworzony, zatwierdzany lub odrzucany."
         reviewable_event:
           name: "Zdarzenie przeglądania"
           details: "Kiedy nowy element jest gotowy do przejrzenia lub kiedy jego status jest aktualizowany."

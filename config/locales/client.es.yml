@@ -443,8 +443,7 @@ es:
         status: "Estado"
         category: "Categoría"
         orders:
-          priority: "Prioridad"
-          priority_asc: "Prioridad (inverso)"
+          score: "Puntuación"
           created_at: "Creado el"
           created_at_asc: "Creado el (inverso)"
         priority:
@@ -672,8 +671,6 @@ es:
           title: "Silenciado"
           description: "No se te notificará nada sobre los mensajes en este grupo."
       flair_url: "Imagen del sub-avatar"
-      flair_url_placeholder: "(Opcional) URL de imagen o clase de Font Awesome"
-      flair_url_description: 'Usa imágenes cuadradas de no menos de 20 px por 20 px o los iconos de FontAwesome (formatos aceptados: «fa-icon», «far fa-icon» o «fab fa-icon»).'
       flair_bg_color: "Color de fondo del sub-avatar"
       flair_bg_color_placeholder: "(Opcional) Valor de color hexadecimal"
       flair_color: "Color del sub-avatar"
@@ -923,8 +920,9 @@ es:
         enable: "Deshabilitar"
         enable_long: "Habilitar códigos de respaldo"
         manage: "Administrar los códigos de respaldo. Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
-        copied_to_clipboard: "Copiado al portapapeles"
+        copy_to_clipboard: "Copiar al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"
+        copied_to_clipboard: "Copiado al portapapeles"
         remaining_codes: "Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
         use: "Usar un código de respaldo"
         enable_prerequisites: "Debes habilitar un segundo factor primario antes de generar códigos de respaldo."
@@ -950,28 +948,25 @@ es:
         oauth_enabled_warning: "Por favor, ten en cuenta que el acceso a tu cuenta a través de redes sociales se inhabilitará si activas la autenticación en dos pasos."
         use: "Usar app Authenticator"
         enforced_notice: "Se necesita que actives la autenticación en dos pasos antes de acceder a este sitio."
-        disable: "inhabilitar"
-        disable_title: "Inhabilitar segundo factor"
+        disable: "Inhabilitar"
         disable_confirm: "¿Estás seguro de que quieres inhabilitar todos los segundos factores?"
+        save: "Guardar"
         edit: "Editar"
         edit_title: "Editar segundo factor"
         edit_description: "Nombre del segundo factor"
-        enable_security_key_description: "Cuando tengas tu clave de seguridad física preparada, presione el botón de registro que se encuentra debajo."
         totp:
           title: "Autenticación basada en tokens"
-          add: "Nuevo autenticador"
           default_name: "Mi autenticador"
           name_and_code_required_error: "Debes introducir un nombre y un código de tu aplicación de autentificación."
         security_key:
           register: "Registrar"
           title: "Claves de seguridad"
-          add: "Clave de seguridad de registro"
           default_name: "Clave de seguridad principal"
           not_allowed_error: "El proceso de registro de clave de seguridad fue cancelado o se agotó el tiempo."
           already_added_error: "Ya registraste esta clave de seguridad. No tienes que registrarla de nuevo."
           edit: "Editar clave de seguridad"
+          save: "Guardar"
           edit_description: "Nombre de la clave de seguridad"
-          delete: "Eliminar"
           name_required_error: "Debes introducir un nombre para tu llave de seguridad."
       change_about:
         title: "Cambiar «Acerca de mí»"
@@ -1668,9 +1663,6 @@ es:
         message:
           one: "%{count} mensaje sin leer"
           other: "{{count}} mensajes sin leer"
-        high_priority:
-          one: "%{count} notificación de alta prioridad sin leer"
-          other: "%{count} notificaciones de alta prioridad sin leer"
       title: "notificaciones por menciones a tu @nombre, respuestas a tus publicaciones y temas, mensajes, etc"
       none: "No se pudieron cargar las notificaciones en este momento."
       empty: "No se encontraron notificaciones."
@@ -1812,7 +1804,6 @@ es:
           bookmarks: he guardado
           first: son la primera publicación
           pinned: son destacados
-          unpinned: son no destacados
           seen: he leído
           unseen: no he leído
           wiki: son tipo wiki
@@ -1906,7 +1897,7 @@ es:
         help: "Restaurar mensaje a la bandeja de entrada"
       edit_message:
         help: "Editar la primera publicación del mensaje"
-        title: "Editar Mensaje"
+        title: "Editar"
       defer:
         help: "Marcar como no leído"
         title: "Aplazar"
@@ -2795,7 +2786,6 @@ es:
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoy"
-        other_periods: "ver los destacados"
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3040,6 +3030,10 @@ es:
       custom_message_template_forum: "¡Hey, deberías unirte a este foro!"
       custom_message_template_topic: "¡Hey, creemos que este tema te va a encantar!"
     forced_anonymous: "Debido a una carga extrema, esto se está mostrando temporalmente a todos como lo vería un usuario que no haya iniciado sesión."
+    footer_nav:
+      back: "Atrás"
+      share: "Compartir"
+      dismiss: "Descartar"
     safe_mode:
       enabled: "El modo seguro está activado, para salir del modo seguro cierra esta ventana del navegador"
   admin_js:
@@ -3290,12 +3284,6 @@ es:
         tag_event:
           name: "Evento de etiqueta"
           details: "Cuando se crea, actualiza o destruye una etiqueta."
-        flag_event:
-          name: "Evento de reporte"
-          details: "Cuando se crea, se define como de acuerdo, se define como en  desacuerdo o se ignora un reporte."
-        queued_post_event:
-          name: "Evento de aprobación de publicación"
-          details: "Cuando se crea, aprueba o rechaza una nueva publicación en cola."
         reviewable_event:
           name: "Evento de revisión"
           details: "Cuando un elemento nuevo está disponible para ser revisado y cuando su estado se actualiza."
@@ -4045,7 +4033,6 @@ es:
         anonymize_failed: "Hubo un problema al hacer anónima la cuenta."
         delete: "Eliminar usuario"
         merge:
-          transfer_and_delete: "Transferir y eliminar"
           prompt:
             title: "Transferir y eliminar @%{username}"
             description: |

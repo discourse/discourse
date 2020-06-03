@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -96,7 +97,7 @@ const Category = RestModel.extend({
 
   @discourseComputed("name")
   url() {
-    return Discourse.getURL(`/c/${Category.slugFor(this)}/${this.id}`);
+    return getURL(`/c/${Category.slugFor(this)}/${this.id}`);
   },
 
   @discourseComputed

@@ -26,7 +26,8 @@ class SiteSerializer < ApplicationSerializer
     :topic_featured_link_allowed_category_ids,
     :user_themes,
     :censored_regexp,
-    :shared_drafts_category_id
+    :shared_drafts_category_id,
+    :custom_emoji_translation
   )
 
   has_many :categories, serializer: SiteCategorySerializer, embed: :objects
@@ -152,6 +153,10 @@ class SiteSerializer < ApplicationSerializer
 
   def censored_regexp
     WordWatcher.word_matcher_regexp(:censor)&.source
+  end
+
+  def custom_emoji_translation
+    Plugin::CustomEmoji.translations
   end
 
   def shared_drafts_category_id

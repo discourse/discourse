@@ -1,7 +1,5 @@
 .select-kit {
   &.dropdown-select-box {
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
     display: inline-flex;
     min-width: auto;
     border: none;
@@ -21,55 +19,27 @@
 
     .select-kit-row {
       margin: 0;
-      padding: 10px 5px;
 
       .icons {
-        display: -webkit-box;
-        display: -ms-flexbox;
         display: flex;
-        flex: 0 0 auto;
-        -webkit-box-align: start;
-        -ms-flex-align: start;
-        align-items: flex-start;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        justify-content: center;
-        -ms-flex-item-align: start;
-        align-self: flex-start;
-        margin-right: 0.357em;
-        margin-top: 2px;
-        width: 30px;
+        margin-right: 0.5em;
 
         .d-icon {
           font-size: $font-up-2;
-          -ms-flex-item-align: center;
           align-self: center;
           margin-right: 0;
-          opacity: 1;
         }
       }
 
       .texts {
-        line-height: $line-height-large;
-        -webkit-box-flex: 1;
-        -ms-flex: 1;
+        line-height: $line-height-medium;
         flex: 1 1 0%;
-        -webkit-box-align: start;
-        -ms-flex-align: start;
         align-items: flex-start;
-        display: -webkit-box;
-        display: -ms-flexbox;
         display: flex;
-        -ms-flex-wrap: wrap;
         flex-wrap: wrap;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
         flex-direction: column;
 
         .name {
-          -webkit-box-flex: 1;
-          -ms-flex: 1;
           flex: 1 1 auto;
           font-weight: bold;
           font-size: $font-0;
@@ -80,8 +50,6 @@
         }
 
         .desc {
-          -webkit-box-flex: 1;
-          -ms-flex: 1;
           flex: 1 1 auto;
           font-size: $font-down-1;
           font-weight: normal;
@@ -98,27 +66,15 @@
     }
 
     .dropdown-select-box-header {
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
       box-sizing: border-box;
       border: 0;
-
-      -webkit-box-align: center;
-      -ms-flex-align: center;
       align-items: center;
-      -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
       justify-content: space-between;
-      -webkit-box-orient: horizontal;
-      -webkit-box-direction: normal;
-      -ms-flex-direction: row;
       flex-direction: row;
-      display: -webkit-inline-box;
-      display: -ms-inline-flexbox;
       display: inline-flex;
 
       .d-icon + .d-icon {
-        margin-left: 5px;
+        margin-left: 0.25em;
       }
 
       &.is-focused {

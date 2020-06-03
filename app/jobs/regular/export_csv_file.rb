@@ -231,6 +231,9 @@ module Jobs
         if label[:type] == :user
           titles[label[:properties][:username]] = label[:title]
           header << label[:properties][:username]
+        elsif label[:type] == :topic
+          titles[label[:properties][:id]] = label[:title]
+          header << label[:properties][:id]
         else
           titles[label[:property]] = label[:title]
           header << label[:property]

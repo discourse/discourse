@@ -1,6 +1,5 @@
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
-import { longDate } from "discourse/lib/formatter";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -37,20 +36,11 @@ export default DiscourseRoute.extend({
   },
 
   model(params) {
-    // If we refresh via `refreshModel` set the old model to loading
-    this._params = params;
-    return this.store.find("directoryItem", params);
+    return params;
   },
 
-  setupController(controller, model) {
-    const params = this._params;
-    const lastUpdatedAt = model.get("resultSetMeta.last_updated_at");
-    controller.setProperties({
-      model,
-      lastUpdatedAt: lastUpdatedAt ? longDate(lastUpdatedAt) : null,
-      period: params.period,
-      nameInput: params.name
-    });
+  setupController(controller, params) {
+    controller.loadUsers(params);
   },
 
   actions: {

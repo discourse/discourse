@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Group < ActiveRecord::Base
-  # TODO(2021-04-22): remove
+  # TODO(2021-05-26): remove
   self.ignored_columns = %w{
     automatic_membership_retroactive
+    flair_url
   }
 
   include HasCustomFields
@@ -26,6 +27,8 @@ class Group < ActiveRecord::Base
   has_many :group_histories, dependent: :destroy
   has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
+
+  belongs_to :flair_upload, class_name: 'Upload'
 
   has_and_belongs_to_many :web_hooks
 
@@ -62,7 +65,6 @@ class Group < ActiveRecord::Base
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
-  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url.exclude?('fa-') }
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
@@ -88,6 +90,8 @@ class Group < ActiveRecord::Base
     owners_mods_and_admins: 4,
     everyone: 99
   }
+
+  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
 
   def self.visibility_levels
     @visibility_levels = Enum.new(
@@ -612,16 +616,15 @@ class Group < ActiveRecord::Base
   PUBLISH_CATEGORIES_LIMIT = 10
 
   def add(user, notify: false, automatic: false)
-    self.users.push(user) unless self.users.include?(user)
+    return self if self.users.include?(user)
+
+    self.users.push(user)
 
     if notify
       Notification.create!(
         notification_type: Notification.types[:membership_request_accepted],
         user_id: user.id,
-        data: {
-          group_id: id,
-          group_name: name
-        }.to_json
+        data: { group_id: id, group_name: name }.to_json
       )
     end
 
@@ -741,6 +744,15 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def flair_type
+    return :icon if flair_icon.present?
+    return :image if flair_upload_id.present?
+  end
+
+  def flair_url
+    flair_icon.presence || flair_upload&.url
+  end
+
   protected
 
   def name_format_validator
@@ -766,7 +778,7 @@ class Group < ActiveRecord::Base
     return if self.automatic_membership_email_domains.blank?
 
     domains = Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
-      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain))
     end
 
     self.automatic_membership_email_domains = domains.join("|")
@@ -851,10 +863,10 @@ class Group < ActiveRecord::Base
       domain.sub!(/^https?:\/\//, '')
       domain.sub!(/\/.*$/, '')
 
-      if domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+      if domain =~ Group::VALID_DOMAIN_REGEX
         valid_domains << domain
       else
-        yield domain
+        yield domain if block_given?
       end
     end
 
@@ -911,7 +923,6 @@ end
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
-#  flair_url                          :string
 #  flair_bg_color                     :string
 #  flair_color                        :string
 #  bio_raw                            :text
@@ -922,11 +933,13 @@ end
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
-#  publish_read_state                 :boolean          default(FALSE), not null
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  publish_read_state                 :boolean          default(FALSE), not null
 #  members_visibility_level           :integer          default(0), not null
+#  flair_icon                         :string
+#  flair_upload_id                    :integer
 #
 # Indexes
 #

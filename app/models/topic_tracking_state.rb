@@ -9,7 +9,6 @@ class TopicTrackingState
 
   include ActiveModel::SerializerSupport
 
-  CHANNEL = "/user-tracking"
   UNREAD_MESSAGE_TYPE = "unread"
   LATEST_MESSAGE_TYPE = "latest"
   MUTED_MESSAGE_TYPE = "muted"
@@ -186,6 +185,14 @@ class TopicTrackingState
               ).where_clause.send(:predicates)[0]
   end
 
+  def self.include_tags_in_report?
+    @include_tags_in_report
+  end
+
+  def self.include_tags_in_report=(v)
+    @include_tags_in_report = v
+  end
+
   def self.report(user, topic_id = nil)
     # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
     #  Dropping to sql_builder so I can make sense of it.
@@ -219,6 +226,18 @@ class TopicTrackingState
       user: user,
       muted_tag_ids: tag_ids
     )
+
+    if SiteSetting.tagging_enabled && TopicTrackingState.include_tags_in_report?
+      sql = <<~SQL
+        WITH X AS (#{sql})
+        SELECT *, (
+          SELECT ARRAY_AGG(name) from topic_tags
+             JOIN tags on tags.id = topic_tags.tag_id
+             WHERE topic_id = X.topic_id
+          ) tags
+        FROM X
+      SQL
+    end
 
     DB.query(
       sql,
@@ -295,18 +314,26 @@ class TopicTrackingState
         "(topics.visible #{append}) AND"
       end
 
-    tags_filter =
-      if opts[:muted_tag_ids].present? && SiteSetting.remove_muted_tags_from_latest == 'always'
-        <<~SQL
-          NOT ((select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id) && ARRAY[#{opts[:muted_tag_ids].join(',')}]) AND
+    tags_filter = ""
+
+    if (muted_tag_ids = opts[:muted_tag_ids]).present? && ['always', 'only_muted'].include?(SiteSetting.remove_muted_tags_from_latest)
+      existing_tags_sql = "(select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id)"
+      muted_tags_array_sql = "ARRAY[#{opts[:muted_tag_ids].join(',')}]"
+
+      if SiteSetting.remove_muted_tags_from_latest == 'always'
+        tags_filter = <<~SQL
+          NOT (
+            COALESCE(#{existing_tags_sql}, ARRAY[]::int[]) && #{muted_tags_array_sql}
+          ) AND
         SQL
-      elsif opts[:muted_tag_ids].present? && SiteSetting.remove_muted_tags_from_latest == 'only_muted'
-        <<~SQL
-          NOT ((select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id) <@ ARRAY[#{opts[:muted_tag_ids].join(',')}]) AND
+      else # only muted
+        tags_filter = <<~SQL
+          NOT (
+            COALESCE(#{existing_tags_sql}, ARRAY[-999]) <@ #{muted_tags_array_sql}
+          ) AND
         SQL
-      else
-        ""
       end
+    end
 
     sql = +<<~SQL
     SELECT #{select}

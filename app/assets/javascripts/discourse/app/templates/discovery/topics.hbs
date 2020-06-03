@@ -50,6 +50,7 @@
       </div>
     {{/if}}
   {{/if}}
+  {{plugin-outlet name="before-topic-list" args=(hash category=category)}}
 
   {{#if hasTopics}}
     {{topic-list
@@ -73,6 +74,8 @@
       scrollOnLoad=true
       onScroll=discoveryTopicList.saveScrollPosition}}
   {{/if}}
+
+  {{plugin-outlet name="after-topic-list" args=(hash category=category)}}
 {{/discovery-topics-list}}
 
 <footer class="topic-list-bottom">

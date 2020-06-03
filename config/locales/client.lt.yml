@@ -526,7 +526,6 @@ lt:
         muted:
           title: "Nutildytos"
       flair_url: "Avatar Flair paveiksliukas"
-      flair_url_placeholder: "(Pasirinktinai) Vaizdo URL arba \"Font Awesome\" klasė"
       flair_bg_color: "Avatar Flair fono splva"
       flair_bg_color_placeholder: "(Pasirinktinai) Hex spalva"
       flair_color: "Avatar Flair spalva"
@@ -734,8 +733,8 @@ lt:
         regenerate: "Pergeneruoti"
         disable: "Išjungti"
         enable: "Įgalinti"
-        copied_to_clipboard: "Nukopijuota į iškirptę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
+        copied_to_clipboard: "Nukopijuota į iškirptę"
         remaining_codes: "Jūs turite <strong>{{count}}</strong> atsarginiai kodai."
         codes:
           title: "Sukurta atsarginių kopijų kodai"
@@ -745,10 +744,12 @@ lt:
         name: "Vardas"
         label: "Kodas"
         show_key_description: "Įveskite rankiniu būdu"
+        disable: "Išjungti"
+        save: "Saugoti"
         edit: "Redaguoti"
         security_key:
           register: "Registruokis"
-          delete: "Pašalinti"
+          save: "Saugoti"
       change_about:
         title: "Keisti Apie Mane"
         error: "Rasta klaida bandant pakeisti reikšmę. Prašom patikslinti veiksmus."
@@ -1355,7 +1356,6 @@ lt:
           private: Mano žinutėse
           bookmarks: Aš išsaugojes
           pinned: yra prisegtas
-          unpinned: neprisegtas
           seen: Aš skaitau
           unseen: Aš neskaitau
           wiki: yra wiki
@@ -1437,7 +1437,7 @@ lt:
         title: "Perkelti į Pranešimų dėžutę"
         help: "Perkelti žinutes atgal į Pranešimų dėžutę"
       edit_message:
-        title: "Redaguoti žinutę"
+        title: "Redaguoti"
       defer:
         title: "Atidėti"
       list: "Temos"
@@ -2162,7 +2162,6 @@ lt:
         this_month: "Per mėnesį"
         this_week: "Per savaitę"
         today: "Šandien"
-        other_periods: "skaityk TOP"
     permission_types:
       full: "Kurti / Atsakyti / Peržiūrėti"
       create_post: "Atsakyti / Peržiūrėti"
@@ -2300,6 +2299,10 @@ lt:
     invite:
       custom_message_placeholder: "Įveskite savo pasirinktinę žinutę"
       custom_message_template_forum: "Labas, užsiregistruok ir tu!\nČia bus vienas geriausių forumų..."
+    footer_nav:
+      back: "Atgal"
+      share: "Dalintis"
+      dismiss: "Praleisti"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

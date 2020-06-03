@@ -408,8 +408,7 @@ ko:
         status: "상태"
         category: "카테고리"
         orders:
-          priority: "우선 순위"
-          priority_asc: "우선 순위 (역)"
+          score: "점수"
           created_at: "에 만든"
           created_at_asc: "에서 생성 (역)"
         priority:
@@ -632,8 +631,6 @@ ko:
           title: "알림 : 끔"
           description: "이 그룹의 메시지에 대한 알림을받지 않습니다."
       flair_url: "아바타 플레어 이미지"
-      flair_url_placeholder: "(선택) 이미지 URL 또는 Font Awesome 아이콘 클래스"
-      flair_url_description: '20px x 20px 이상의 FontAwesome 아이콘 (허용되는 형식 : &quot;fa-icon&quot;, &quot;far fa-icon&quot;또는 &quot;fab fa-icon&quot;)을 사용하십시오.'
       flair_bg_color: "아바타 플레어 배경 색상"
       flair_bg_color_placeholder: "(선택사항) 16진수 컬러 값"
       flair_color: "아바타 플레어 색상"
@@ -878,8 +875,9 @@ ko:
         enable: "설정"
         enable_long: "백업 코드 사용"
         manage: "백업 코드를 관리하십시오. 남아있는 <strong>{{count}}</strong> 백업 코드가 있습니다."
-        copied_to_clipboard: "클립보드에 복사됨"
+        copy_to_clipboard: "클립보드에 복사하기"
         copy_to_clipboard_error: "데이터를 클립보드에 복사하는데 오류가 발생했습니다."
+        copied_to_clipboard: "클립보드에 복사됨"
         remaining_codes: "남아있는 <strong>{{count}}</strong> 백업 코드가 있습니다."
         use: "백업 코드 사용"
         enable_prerequisites: "백업 코드를 생성하기 전에 기본 두 번째 요소를 활성화해야합니다."
@@ -899,28 +897,25 @@ ko:
         oauth_enabled_warning: "계정에서 2 단계 인증이 활성화되면 소셜 로그인이 비활성화됩니다."
         use: "인증 기 앱 사용"
         enforced_notice: "이 사이트에 액세스하기 전에 2 단계 인증을 활성화해야합니다."
-        disable: "비활성화"
-        disable_title: "두 번째 요소 비활성화"
+        disable: "해제"
         disable_confirm: "두 번째 요소를 모두 비활성화 하시겠습니까?"
+        save: "저장"
         edit: "수정"
         edit_title: "두 번째 요소 편집"
         edit_description: "두 번째 요인 이름"
-        enable_security_key_description: "물리적 보안 키가 준비되면 아래의 등록 버튼을 누릅니다."
         totp:
           title: "토큰 기반 인증 자"
-          add: "새로운 인증 자"
           default_name: "내 인증 자"
           name_and_code_required_error: "인증 자 앱에서 이름과 코드를 제공해야합니다."
         security_key:
           register: "등록하기"
           title: "보안 키"
-          add: "보안 키 등록"
           default_name: "기본 보안 키"
           not_allowed_error: "보안 키 등록 프로세스가 시간 초과되었거나 취소되었습니다."
           already_added_error: "이 보안 키를 이미 등록했습니다. 다시 등록 할 필요가 없습니다."
           edit: "보안 키 편집"
+          save: "저장"
           edit_description: "보안 키 이름"
-          delete: "삭제"
           name_required_error: "보안 키의 이름을 제공해야합니다."
       change_about:
         title: "내 소개 변경"
@@ -1731,7 +1726,6 @@ ko:
           bookmarks: 나는 북마크했다
           first: 가 가장 첫 포스트입니다.
           pinned: 핀고정된
-          unpinned: 핀고정 되지 않은
           seen: 읽었다
           unseen: 읽지 않은 것
           wiki: 은(는) 위키입니다.
@@ -1823,7 +1817,7 @@ ko:
         help: "메시지를 편지함으로 되돌리기"
       edit_message:
         help: "메시지의 첫 번째 게시물 수정"
-        title: "메시지 수정"
+        title: "수정"
       defer:
         help: "읽지 않은 상태로 표시"
         title: "연기"
@@ -2645,7 +2639,6 @@ ko:
         this_month: "월"
         this_week: "주"
         today: "오늘"
-        other_periods: "상단 보기"
     permission_types:
       full: "생성 / 답글 / 보기"
       create_post: "답글 / 보기"
@@ -2864,6 +2857,10 @@ ko:
       custom_message_template_forum: "저기요, 이 포럼에 가입하셔야 해요!"
       custom_message_template_topic: "이 토픽에 흥미 있을 거 같은데요!"
     forced_anonymous: "극단적 인로드로 인해 로그 아웃 한 사용자가 볼 수있는 것처럼 모든 사람에게 일시적으로 표시됩니다."
+    footer_nav:
+      back: "이전"
+      share: "공유"
+      dismiss: "해지"
     safe_mode:
       enabled: "안전모드가 활성화 되었습니다. 안전모드를 종료하려면 이 웹브라우저창을 닫아야 합니다."
   admin_js:
@@ -3111,12 +3108,6 @@ ko:
         tag_event:
           name: "태그 이벤트"
           details: "태그가 생성, 업데이트 또는 파괴 될 때."
-        flag_event:
-          name: "신고 이벤트"
-          details: "플래그가 생성, 동의, 동의 또는 무시 될 때"
-        queued_post_event:
-          name: "승인 후 이벤트"
-          details: "대기중인 새 게시물이 작성되면 승인 또는 거부됩니다."
         reviewable_event:
           name: "검토 가능한 이벤트"
           details: "새 항목을 검토 할 준비가되었고 상태가 업데이트 될 때"
@@ -3862,7 +3853,6 @@ ko:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "사용자 삭제"
         merge:
-          transfer_and_delete: "전송 및 삭제"
           prompt:
             title: "전송 및 삭제 @ %{username}"
             target_username_placeholder: "새로운 소유자의 사용자 이름"

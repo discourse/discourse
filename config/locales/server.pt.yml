@@ -45,7 +45,6 @@ pt:
       unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro durante a importação do tema
-      about_json: "Erro de Importação: about.json não existe ou é inválido"
       about_json_values: "about.json possui valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório de git, acesso foi negado ou o repositório não existe"
       unpack_failed: "Falha ao desempacotar o ficheiro"
@@ -860,7 +859,6 @@ pt:
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
     download_remote_images_to_local: "Converta as imagens remotas em imagens locais transferindo-as; isto previne imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir imagens remotas localmente (em percentagem)"
-    download_remote_images_max_days_old: "Não transferir imagens remotas para publicações que têm mais de n dias."
     disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. "
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
@@ -1966,7 +1964,6 @@ pt:
       name: Amor superior
     crazy_in_love:
       name: Amando Loucamente
-      description: Utilizou 50 gostos num dia 20 vezes
     thank_you:
       name: Obrigado
       description: Tem 20 publicações gostadas e deu 10 gostos

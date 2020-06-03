@@ -354,6 +354,10 @@ const TopicTrackingState = EmberObject.extend({
         row.category_id = topic.category.id;
       }
 
+      if (topic.tags) {
+        row.tags = topic.tags;
+      }
+
       tracker.states["t" + topic.id] = row;
     });
 
@@ -404,10 +408,10 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countNew(categoryId) {
+  countCategoryByState(fn, categoryId) {
     const subcategoryIds = this.getSubCategoryIds(categoryId);
     return _.chain(this.states)
-      .filter(isNew)
+      .filter(fn)
       .filter(
         topic =>
           topic.archetype !== "private_message" &&
@@ -417,17 +421,45 @@ const TopicTrackingState = EmberObject.extend({
       .value().length;
   },
 
+  countNew(categoryId) {
+    return this.countCategoryByState(isNew, categoryId);
+  },
+
   countUnread(categoryId) {
-    const subcategoryIds = this.getSubCategoryIds(categoryId);
-    return _.chain(this.states)
-      .filter(isUnread)
-      .filter(
-        topic =>
-          topic.archetype !== "private_message" &&
-          !topic.deleted &&
-          (!categoryId || subcategoryIds.has(topic.category_id))
-      )
-      .value().length;
+    return this.countCategoryByState(isUnread, categoryId);
+  },
+
+  countTags(tags) {
+    let counts = {};
+
+    tags.forEach(tag => {
+      counts[tag] = { unreadCount: 0, newCount: 0 };
+    });
+
+    Object.values(this.states).forEach(topic => {
+      if (
+        topic.archetype !== "private_message" &&
+        !topic.deleted &&
+        topic.tags
+      ) {
+        let newTopic = isNew(topic);
+        let unreadTopic = isUnread(topic);
+        if (isUnread || isNew) {
+          tags.forEach(tag => {
+            if (topic.tags.indexOf(tag) > -1) {
+              if (unreadTopic) {
+                counts[tag].unreadCount++;
+              }
+              if (newTopic) {
+                counts[tag].newCount++;
+              }
+            }
+          });
+        }
+      }
+    });
+
+    return counts;
   },
 
   countCategory(category_id) {

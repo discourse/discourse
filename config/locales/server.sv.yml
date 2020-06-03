@@ -45,7 +45,7 @@ sv:
       unrecognized_extension: "Okänt filnamnstillägg: %{extension}"
     import_error:
       generic: Det uppstod ett fel vid import av det temat
-      about_json: "Importfel: about.json finns inte eller är ogiltig"
+      about_json: "Importfel: about.json finns inte eller är ogiltig. Är du säker på att detta är ett Discourse tema?"
       about_json_values: "about.json innehåller ogiltiga värden: %{errors}"
       modifier_values: "about.json modifierare innehåller ogiltiga värden: %{errors}"
       git: "Fel vid kloning av git-lagringsplats, åtkomst nekas eller lagringsplatsen finns inte"
@@ -335,7 +335,7 @@ sv:
       already_bookmarked_post: "Du kan inte bokmärka samma inlägg två gånger."
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
-      time_must_be_provided: "tid måste tillhandahållas för alla påminnelser"
+      time_must_be_provided: "tid måste anges för alla påminnelser"
     reminders:
       at_desktop: "Nästa gång är jag vid datorn"
       later_today: "Senare idag"
@@ -373,6 +373,10 @@ sv:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Begäran om medlemskap i @%{group_name}"
+    request_accepted_pm:
+      title: "Du har blivit accepterad in i @%{group_name}"
+      body: |
+        Din begäran om tillträde i @%{group_name} har blivit accepterad och du är nu medlem.
     view_hidden_topic_request_reason: "Jag skulle vilja gå med i gruppen '%{group_name}', så att jag kan gå till [detta ämne](%{topic_url})"
   education:
     until_posts:
@@ -415,11 +419,11 @@ sv:
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
     dominating_topic: |
-      ### Låt andra gå med i konversationen
+      ### Låt andra vara med i konversationen
 
       Detta ämne är uppenbarligen viktigt för dig &ndash; du har postat mer än %{percent}% av alla svar här.
 
-      Det kunde vara ännu bättre om du ger andra personer utrymme att dela deras synpunkter, också. Kan du bjuda in dem?
+      Det vore bättre om du ger andra personer utrymme att dela deras synpunkter också. Kanske kan du bjuda in dem?
     get_a_room: |
       ### Uppmuntra alla att delta i konversationen
 
@@ -1323,7 +1327,6 @@ sv:
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner. "
     download_remote_images_to_local: "Konvertera externa bilder till lokala bilder genom att ladda hem dem; det motverkar felaktiga bildlänkar."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
-    download_remote_images_max_days_old: "Ladda inte ner externa bilder från inlägg som är mer än n dagar gamla. "
     disabled_image_download_domains: "Externa bilder kommer aldrig att hämtas hem från dessa domän. Pipe-avgränsad lista."
     editing_grace_period: "I (n) sekunder efter inlägg kommer redigeringar inte att skapa nya versioner i inläggshistoriken."
     editing_grace_period_max_diff: "Uppnått maximalt antal teckenförändringar tillåtna för redigering under prövotid, om fler ändras spara dessa i en annan inläggsrevision (förtroendenivå 0 och 1)"
@@ -1341,6 +1344,7 @@ sv:
     add_rel_nofollow_to_user_content: 'Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inklusive förälderdomän). Om du ändrar det här så måste du uppdatera alla inlägg med "rake posts:rebake"'
     exclude_rel_nofollow_domains: "En lista av alla domän där nofollow inte bör läggas till länkarna. exempel.se kommer automatiskt tillåta underdomän.exempel.se också. Du bör lägga till top-level domänen för den här webbplatsen för att hjälpa sökrobotar hitta allt innehåll. Om andra delar av din webbplats finns på andra domäner så bör du lägga till dem också. "
     post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag / sammanfattning."
+    topic_excerpt_maxlength: "Maxlängd på ett inläggs utdrag / sammanfattning, genererat från det första inlägget i ett ämne."
     show_pinned_excerpt_mobile: "Visa inte utdrag för klistrade ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa inte utdrag för klistrade ämnen på datorn."
     post_onebox_maxlength: "Maximal teckenlängd för ett Discourse-inlägg i onebox."
@@ -1444,6 +1448,7 @@ sv:
     moderators_view_emails: "Tillåt moderatorer att visa användares e-post"
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (när inaktiverad så visas namnet först)"
     enable_rich_text_paste: "Aktivera automatisk HTML vid Markdown-konvertering när du klistrar in text i kompositören. (Experimentell)"
+    send_old_credential_reminder_days: "Påminn om gamla behörigheter efter dag"
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
     enable_whispers: "Tiliåt privat kommunikation inom ämnena."
@@ -1850,7 +1855,7 @@ sv:
     notify_about_queued_posts_after: "Om det finns inlägg som har väntat på att granskas i mer än detta antal timmar, skickas ett meddelande till alla moderatorer. Inaktivera dessa aviseringar genom att ställa in till 0."
     auto_close_messages_post_count: "Högsta antal inlägg som tillåts i ett meddelande innan det automatiskt stängs (ange 0 för att inaktivera)"
     auto_close_topics_post_count: "Högsta antal inlägg som tillåts i ett ämne innan det automatiskt stängs (ange 0 för att inaktivera)"
-    code_formatting_style: "Kodknappen i redigeraren kommer att använda den här kodformatteringsstilen som standard"
+    code_formatting_style: "Kodknappen i redigeraren kommer att använda den här kodformateringsstilen som standard"
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
     old_post_notice_days: "Dagar tills inläggsmeddelandet blir gammalt"
@@ -2094,6 +2099,7 @@ sv:
     not_activated: "Du kan inte logga in ännu. Vi har skickat ett aktiveringsmejl till dig. Vänligen följ instruktionerna i mejlet för att aktivera ditt konto."
     not_allowed_from_ip_address: "Du kan inte logga in som %{username} från den IP-adressen."
     admin_not_allowed_from_ip_address: "Du kan inte logga in som admin från den IP-adressen."
+    reset_not_allowed_from_ip_address: "Du kan inte begära en återställning av lösenord från den IP-adressen."
     suspended: "Du kan inte logga in förrän %{date}."
     suspended_with_reason: "Konto avstängt t.o.m. %{date}: %{reason}"
     errors: "%{errors}"
@@ -2686,6 +2692,15 @@ sv:
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ditt konto har inte rättigheter att svara på ämnet. Om du tror att det här är ett misstag, [kontakta personal](%{base_url}/about).
+    email_reject_reply_to_digest:
+      title: "E-posten avslås; Svara på summering"
+      subject_template: "[%{email_prefix}] E-postfel --  Svar på summering"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Du svarade på en summeringsutskick, vilket inte är tillåtet.
+
+        Om du tror att det här är ett misstag, [kontakta personal](%{base_url}/about).
     email_error_notification:
       title: "Email felmeddelanden"
       subject_template: "[%{email_prefix}] E-postfel --  POP autentisieringsfel"
@@ -3097,6 +3112,8 @@ sv:
       title: "Ny inloggningsvarning"
       subject_template: "[%{site_name}]  Ny inloggning från %{location}"
       text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n- Plats: %{location} (%{client_ip})\n- Webbläsare: %{browser}\n- Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, vänligen [granska dina existerande sessioner](%{base_url}/my/preferences/account) samt överväg att ändra ditt lösenord.\n"
+  page_forbidden:
+    title: "Hoppsan! Den sidan är privat."
   page_not_found:
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"
@@ -3154,6 +3171,7 @@ sv:
     user_email_user_suspended: "användare blev avstängd"
     user_email_already_read: "användaren har redan läst det här inlägget"
     user_email_access_denied: "användare är inte tillåten att se detta inlägg"
+    user_email_no_email: "Ingen e-post är associerad för användar-id %{user_id}"
     sender_message_blank: "meddelande är tomt"
     sender_message_to_blank: "message.to är tomt"
     sender_text_part_body_blank: "text_part.body är tomt"
@@ -3462,7 +3480,7 @@ sv:
         Den här utmärkelsen beviljas när du använder alla dina %{max_likes_per_day} gillningar för en dag under 5 dagar. Tack för att du tar dig tiden att aktivt uppmuntra de bästa diskussionerna varje dag!
     crazy_in_love:
       name: Galet kär
-      description: Använde 50 gillningar på en dag 20 gånger
+      description: "Använde %{max_likes_per_day} gillningar på en dag 20 gånger"
       long_description: |
         Den här utmärkelsen beviljas när du använder alla dina %{max_likes_per_day}gillningar för en dag under 20 dagar. Wow! Du är en förebild som regelbundet uppmuntrar medlemmarna på forumet!
     thank_you:
@@ -3842,3 +3860,6 @@ sv:
     html_missing_placeholder: "Html-mallen måste inkludera %{placeholder}"
   discord:
     not_in_allowed_guild: "Autentisering misslyckades. Du är inte medlem i ett tillåtet Discord sällskap. "
+  old_keys_reminder:
+    title: "Påminnelse gällande gamla behörigheter"
+    body: "Hejsan! Detta är en årlig säkerhetspåminnelse från din Discourse-instans.\n  \nAv artighet vill vi upplysa dig om att följande behörighet som används för din Discourse-instans inte har uppdaterats under de senaste 2 åren:\n\n%{keys}\n\nIngen åtgärd är nödvändig i nuläget, däremot anses det som god praxis ur säkerhetssynpunkt att ändra alla dina viktiga behörigheter med tiden.\n"

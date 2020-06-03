@@ -27,8 +27,10 @@ fa_IR:
         millions: "{{number}} میلیون"
     dates:
       time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -269,11 +271,20 @@ fa_IR:
       reminders:
         at_desktop: "بار آینده من پشت میزم هستم"
         later_today: "امروز"
+        next_business_day: "روز کاری بعدی"
         tomorrow: "فردا"
         next_week: "هفته بعد"
         later_this_week: "این هفته"
+        start_of_next_business_week: "دوشنبه بعدی"
         next_month: "ماه بعد"
         custom: "درج تاریخ و ساعت"
+        last_custom: "آخرین"
+        none: "هیچ یادآوری لازم نیست"
+        today_with_time: "امروز در %{time}"
+        tomorrow_with_time: "فردا در %{time}"
+        at_time: "در %{date_time}"
+    copy_codeblock:
+      copied: "کپی شد!"
     drafts:
       resume: "از سر گیری"
       remove: "پاک کردن"
@@ -429,8 +440,8 @@ fa_IR:
         status: "وضعیت"
         category: "دسته‌بندی"
         orders:
-          priority: "اولویت"
-          priority_asc: "اولویت (برعکس)"
+          score: "امتیاز"
+          score_asc: "امتیاز (معکوس)"
           created_at: "ساخته شده"
           created_at_asc: "ساخته شده (برعکس)"
         priority:
@@ -511,6 +522,7 @@ fa_IR:
       days_visited_long: "روز‌های بازدید شده"
       posts_read: "خواندن"
       posts_read_long: "نوشته‌های خوانده شده"
+      last_updated: "آخرین به روز رسانی:"
       total_rows:
         one: "%{count} کاربر"
         other: "%{count} کاربر"
@@ -536,6 +548,7 @@ fa_IR:
         deny: "رد کردن"
         denied: "رد شده"
         undone: "بازگرداندن درخواست"
+        handle: "رسیدگی به درخواست عضویت"
       manage:
         title: "مدیریت"
         name: "نام"
@@ -656,14 +669,15 @@ fa_IR:
           title: "بی‌صدا شد"
           description: "شما برای هر اتفاقی در ارتباط با پیام های این گروه آگاه سازی می‌گیرید."
       flair_url: "تصویر آواتار"
-      flair_url_placeholder: "(اختیاری) URL تصویر و یا کلاس Font Awesome"
-      flair_url_description: 'از تصاویر مربعی بزرگتر از ۲۰پیکسل × ۲۰ پیکسل و یا ایکون های فونت آسام استفاده کنید (فرمت های قابل قبول: "fa-icon", "far fa-icon", "fab fa-icon" ).'
       flair_bg_color: "رنگ پس زمینه آواتار"
       flair_bg_color_placeholder: "(اختیاری) کد HEX رنگ"
       flair_color: "رنگ آواتار"
       flair_color_placeholder: "(اختیاری) کد HEX رنگ"
       flair_preview_icon: "پیش‌نمایش آیکن"
       flair_preview_image: "پیش‌نمایش تصویر"
+      flair_type:
+        icon: "یک آیکون را انتخاب کنید"
+        image: "تصویری را بارگذاری کنید"
     user_action_groups:
       "1": "پسندهای داده شده"
       "2": "پسندهای دریافت شده"
@@ -740,6 +754,7 @@ fa_IR:
       private_messages: "پیام‌ها"
       user_notifications:
         filters:
+          filter_by: "فیلتر توسط"
           all: "همه"
           read: "خواندن"
           unread: "خوانده‌ نشده‌"
@@ -867,6 +882,7 @@ fa_IR:
         deleted_posts: "پست های حذف شده"
         suspensions: "تعلیق‌ها"
         warnings_received: "هشدارها"
+        rejected_posts: "پست های رد شده"
       messages:
         all: "همه"
         inbox: "صندوق دریافت"
@@ -904,8 +920,9 @@ fa_IR:
         enable: "فعال کردن"
         enable_long: "کدهای پشتیبان را به کار بگیر"
         manage: "مدیریت کد‌های پشتیبانی، <strong>{{count}}</strong> از کد‌های پشتیبانی شما باقی مانده"
-        copied_to_clipboard: "کپی شد"
+        copy_to_clipboard: "کپی در clipboard"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
+        copied_to_clipboard: "کپی شد"
         remaining_codes: "شما <strong>{{count}}</strong>کد پشتیبان باقی مانده دارید."
         use: "از کد پشتیبان استفاده کنید"
         enable_prerequisites: "شما باید قبل از ساخت کد‌های پشتیبانی یک تایید هویت دوعاملی اصلی را فعال کنید "
@@ -931,25 +948,24 @@ fa_IR:
         oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
         use: "از اپلیکیشن احراز هویت استفاده کنید"
         enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
-        disable: "غیرفعال"
-        disable_title: "غیر فعال کردن تایید دوعاملی"
+        disable: "ازکاراندازی"
         disable_confirm: "ایا از غیرفعال‌ سازی تمامی تایید‌های دوعاملی مطمعن‌ هستید؟"
+        save: "ذخیره"
         edit: "ویرایش"
         edit_title: "ویرایش تایید دوعاملی"
         edit_description: "نام تایید دوعاملی"
         totp:
           title: "تایید برپایه توکن"
-          add: "تایید کننده جدید"
           default_name: "تایید‌کننده من"
         security_key:
           register: "ثبت‌نام"
           title: "کلیدهای امنیتی"
-          add: "کلید امنیتی را ثبت کنید"
           default_name: "کلید امنیتی اصلی"
           not_allowed_error: "روند ثبت کلید امنیتی به پایان رسیده است یا لغو شده است."
           edit: "کلید امنیتی را ویرایش کنید"
+          save: "ذخیره"
           edit_description: "نام کلید امنیتی"
-          delete: "حذف"
+          name_required_error: "شما باید یک نام برای کلید امنیتی خود انتخاب کنید."
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
@@ -966,6 +982,7 @@ fa_IR:
         success_staff: "یک ایمیل به آدرس کنونی شما ارسال کردیم. لطفا دستورالعمل آن را دنبال کنید."
       change_avatar:
         title: "عکس نمایه خود را تغییر دهید"
+        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a> ، بر اساس"
         letter_based: "سیستم تصویر پرفایل را اختصاص داده است"
         uploaded_avatar: "تصویر سفارشی"
         uploaded_avatar_empty: "افزودن تصویر سفارشی"
@@ -984,6 +1001,7 @@ fa_IR:
         sso_override_instructions: "ایمیل را میتوانید از طریق SSO به روزرسانی کنید"
         instructions: "هرگز به عموم نمایش داده نخواهد شد"
         ok: "برای تایید ایمیلی برایتان ارسال خواهیم کرد."
+        required: "لطفا یک آدرس ایمیل وارد کنید"
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
         authenticated: "ایمیل شما توسط {{provider}} تصدیق شد"
         frequency_immediately: "اگر به سرعت چیزی را که برایتان ارسال نکردیم نخوانده باشید، بلافاصله برایتان ایمیل ارسال می‌کنیم."
@@ -1004,6 +1022,7 @@ fa_IR:
         title: "نام"
         instructions: "نام و نام‌خانوادگی شما (اختیاری)"
         instructions_required: "نام و نام خانوادگی شما"
+        required: "لطفاً یک نام وارد کنید"
         too_short: "نام انتخابی شما خیلی کوتاه است"
         ok: "نام انتخابی شما به نطر می رسد خوب است"
       username:
@@ -1017,6 +1036,7 @@ fa_IR:
         too_long: "نام کاربری انتخابی شما خیلی طولانی است"
         checking: "بررسی در دسترس بودن نام‌کاربری..."
         prefilled: "ایمیل منطبق است با این نام کاربری ثبت شده "
+        required: "لطفاً یک نام کاربری وارد کنید"
       locale:
         title: "زبان رابط‌کاربری"
         instructions: "زبان رابط کاربری. با تازه کردن صفحه تغییر خواهد کرد."
@@ -1024,6 +1044,8 @@ fa_IR:
         any: "هر"
       password_confirmation:
         title: "رمز عبور را مجدد وارد نمایید"
+      invite_code:
+        title: "کد دعوت"
       auth_tokens:
         title: "ابزارهایی که اخیرا استفاده شدند"
         ip: "IP"
@@ -1156,6 +1178,7 @@ fa_IR:
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "رمز عبور خوبی است."
         instructions: "حداقل %{count} نویسه"
+        required: "لطفاً یک کلمه عبور وارد کنید"
       summary:
         title: "خلاصه"
         stats: "آمار"
@@ -1245,6 +1268,7 @@ fa_IR:
         fixed: "بارگذاری برگه"
     modal:
       close: "بسته"
+      dismiss_error: "رد کردن خطا"
     close: "بستن"
     assets_changed_confirm: "این وب سایت به روز رسانی شده است. برای دیدن آخرین نسخه تازه‌سازی می‌کنید؟"
     logout: "شما از سایت خارج شده‌اید."
@@ -1273,6 +1297,7 @@ fa_IR:
     mute: بی‌صدا
     unmute: صدادار
     last_post: ارسال شده
+    local_time: "زمان محلی"
     time_read: خواندن
     time_read_recently: "اخیراً"
     time_read_tooltip: "%{time_read} مجموع زمان خواندن "
@@ -1350,6 +1375,7 @@ fa_IR:
       second_factor_backup: "ورود با استفاده از یک کد پشتیبان"
       second_factor_backup_title: "پشتیبان دو عامله"
       second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
+      security_key_alternative: "روش دیگری را امتحان کنید"
       security_key_authenticate: "تأیید اعتبار با کلید امنیتی"
       security_key_not_allowed_error: "روند تأیید اعتبار کلید امنیتی به پایان رسیده است یا لغو شده است."
       email_placeholder: "ایمیل یا نام‌کاربری"
@@ -1731,13 +1757,13 @@ fa_IR:
           title: مطابقت فقط در عنوان باشد
           likes: پسندیده‌ام
           posted: در آن فرستاده‌ام
+          created: من درست کردم
           watching: مشاهده می‌کنم
           tracking: پیگیری می‌کنم
           private: در پیام‌های من
           bookmarks: نشانک زده‌ام
           first: اولین فرسته هستند
           pinned: سنجاق شده‌اند
-          unpinned: سنجاق نشده‌اند
           seen: خواندم
           unseen: نخوانده‌ام
           wiki: دانشنامه هستند
@@ -1830,7 +1856,7 @@ fa_IR:
         help: "بازگرداندن پیام به صندوق دریافتی"
       edit_message:
         help: "ویرایش اولین نوشته از پیام"
-        title: "ویرایش پیام"
+        title: "ویرایش"
       defer:
         help: "علامت به عنوان خوانده نشده"
         title: " واگذار کردن"
@@ -2139,6 +2165,14 @@ fa_IR:
         title: "ادغام نوشته‌های انتخاب شده"
         action: "ادغام نوشته‌های انتخاب شده"
         error: "خطایی در ادغام نوشته‌های انتخاب شده رخ داده است."
+      publish_page:
+        publish: "انتشار"
+        publish_url: "صفحه شما منتشر شده در:"
+        topic_published: "مبحث شما منتشر شده در:"
+        preview_url: "صفحه شما منتشر خواهد شد در:"
+        invalid_slug: "متأسفیم ، شما نمی توانید این صفحه را منتشر کنید."
+        unpublish: "لغو انتشار"
+        publishing_settings: "تنظیمات انتشار"
       change_owner:
         title: "تغییر دادن مالک"
         action: "تغییر مالکیت"
@@ -2282,6 +2316,12 @@ fa_IR:
           notify_moderators: "مدیر‌های مطلع شده"
           notify_user: "یک پیام ارسال شد"
           bookmark: "نشانه گذاری کن"
+          like:
+            one: "این را دوست داشت"
+            other: "دوست داشته اند"
+          read:
+            one: "این را بخوان"
+            other: "خوانده اند"
           like_capped:
             one: "و {{count}} نفر دیگر این را دوست داشتند"
             other: "و {{count}} نفر دیگر این را پسندیده‌اند."
@@ -2336,7 +2376,9 @@ fa_IR:
             button: "HTML"
       bookmarks:
         created: "ساخته شده"
+        updated: "به روز شده"
         name: "نام"
+        set_reminder: "به من یادآوری کن"
     category:
       can: "can&hellip; "
       none: "(بدون دسته‌بندی)"
@@ -2625,7 +2667,6 @@ fa_IR:
         this_month: "ماه"
         this_week: "هفته"
         today: "امروز"
-        other_periods: "دیدن بالاترین مطالب"
     permission_types:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
@@ -2676,6 +2717,15 @@ fa_IR:
         log_out: "%{shortcut} خروج"
       composing:
         title: "نوشتن"
+      bookmarks:
+        enter: "%{shortcut} ذخیره و بستن"
+        later_today: "%{shortcut} بعد از امروز"
+        later_this_week: "%{shortcut} بعد از این هفته"
+        tomorrow: "%{shortcut} فردا"
+        next_week: "%{shortcut} هفته بعد"
+        next_month: "%{shortcut} ماه آینده"
+        next_business_week: "%{shortcut} شروع هفته آینده"
+        next_business_day: "%{shortcut} روز کاری بعدی"
       actions:
         title: "عملیات"
         bookmark_topic: "%{shortcut} باز کردن موضوع نشانه‌گذاری شده"
@@ -2737,6 +2787,7 @@ fa_IR:
       changed: "برچسب‌های تغییر یافته:"
       tags: "برچسب‌ها"
       choose_for_topic: "برچسب‌های اختیاری"
+      info: "اطلاعات"
       add_synonyms: "افزودن"
       delete_tag: "حذف برچسب"
       delete_confirm_no_topics: "ایا از حذف این برچسب مطمعن هستید؟"
@@ -2815,6 +2866,10 @@ fa_IR:
       custom_message_placeholder: "متن پیام خود را وارد کنید"
       custom_message_template_forum: "سلام، باید عضو این انجمن بشی!"
       custom_message_template_topic: "سلام، فکر کردم از این موضوع لذت می‌بری!"
+    footer_nav:
+      back: "بازگشت"
+      share: "اشتراک‌گذاری"
+      dismiss: "نخواستیم"
     safe_mode:
       enabled: "حالت امن فعال شده، برای خروج از حالت امن این پنجره مرورگر را ببندید."
   admin_js:
@@ -2967,6 +3022,7 @@ fa_IR:
         user: "کاربر"
         title: "API"
         created: ساخته شده
+        updated: به روز شده
         generate: "تولید کردن"
         revoke: "ابطال"
         all_users: "همه کاربران"

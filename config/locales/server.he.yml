@@ -45,7 +45,7 @@ he:
       unrecognized_extension: "סיומת הקובץ אינה מוכרת: %{extension}"
     import_error:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
-      about_json: "שגיאת ייבוא: about.json לא קיים או שהוא פגום"
+      about_json: "שגיאת ייבוא: about.json לא קיים או שהוא שגוי. האם אכן מדובר בערכת עיצוב של Discourse?"
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
       git: "שגיאה בעת שכפול מאגר git, הגישה נדחיתה או שהמאגר לא נמצא"
@@ -369,7 +369,7 @@ he:
       already_bookmarked_post: "אי אפשר לסמן את אותו הפוסט פעמיים"
       cannot_set_past_reminder: "אי אפשר להגדיר תזכורת סימנייה למועד שעבר."
       cannot_set_reminder_in_distant_future: "לא ניתן להגדיר תזכורת סימנייה למעבר ל־10 שנים בעתיד."
-      time_must_be_provided: "צריך לציין זמן לכל התזכורות"
+      time_must_be_provided: "יש לספק זמן לכל התזכורות"
     reminders:
       at_desktop: "בשימוש הבא דרך שולחן העבודה"
       later_today: "בהמשך היום"
@@ -411,6 +411,10 @@ he:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "בקשת חברות עבור ‎@%{group_name}‎"
+    request_accepted_pm:
+      title: "התקבלת אל ‎@%{group_name}‎"
+      body: |
+        בקשתך להיכנס אל ‎@%{group_name}‎ אושרה והתקבלת לחברות.
     view_hidden_topic_request_reason: "אבקש להצטרף לקבוצה ‚%{group_name}’, כדי שאוכל לגשת ל[נושא הזה](%{topic_url})"
   education:
     until_posts:
@@ -1417,7 +1421,6 @@ he:
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
-    download_remote_images_max_days_old: "לא להוריד תמונות מרוחקות עבור פוסטים שגילם עולה על n ימים."
     disabled_image_download_domains: "תמונות מרחוק לעולם לא יורדו ממתחמים (domains) אלו. "
     editing_grace_period: "למשך (n) שניות לאחר הפרסום, עריכה לא תיצור גרסה חדשה בהיסטוריית הפוסט."
     editing_grace_period_max_diff: "מספר תווים מרבי שמותר לשנות בטווח עריכת חסד, אם נערכו למעלה מהכמות הזאת יש ליצור מהדורה חדשה לפוסט (דרגות אמון 0 ו־1)"
@@ -1435,6 +1438,7 @@ he:
     add_rel_nofollow_to_user_content: 'הוספת התווית rel nofollow לכל תוכן שפורסם על ידי המשתמש/ת, פרט לקישורים פנימיים (כולל מתחם הורה parent domains). אם תשנו אפשרות זו, עליכם לאפות מחדש את כל הפרסומים עם: "rake posts:rebake"'
     exclude_rel_nofollow_domains: "רשימת הדומיינים בהם לא צריך להוסיף תווית 'nofollow' לקישורים. example.com יאפשר באופן אוטומטי גם עבור sub.example.com. כמינימום, כדאי להוסיף את הדומיין של האתר הזה כדי לאפשר לזחלני רשת (web crawlers) למצוא את כל התוכן. אם חלקים אחרים של האתר שלכם נמצאים בדומיינים אחרים, כדאי להוסיף גם אותם."
     post_excerpt_maxlength: "אורך מקסימלי של קטע פוסט / סיכום."
+    topic_excerpt_maxlength: "האורך המרבי של מקטע מתוך / סיכום של נושא, נוצר מהפוסט הראשון בנושא."
     show_pinned_excerpt_mobile: "הצגת קטע בנושאים נעוצים במבט ניידים."
     show_pinned_excerpt_desktop: "הצגת קטע בנושאים נעוצים בתצוגת מחשב-שולחני."
     post_onebox_maxlength: "אורך מרבי של פוסט ב־Discourse בתיבת תחימה בתווים."
@@ -1538,6 +1542,7 @@ he:
     moderators_view_emails: "לאפשר למפקחים לצפות בכתובות הדוא״ל של המשתמשים"
     prioritize_username_in_ux: "הציגו שם-משתמש ראשון בדף המשתמש, כרטיס המשתמש ופוסטים (כשמנוטרל השם מופיע קודם)"
     enable_rich_text_paste: "הפעלת המרה אוטומטית מ־HTML ל־Markdown בעת הדבקת טקסט לתוך המחבר. (ניסיוני)"
+    send_old_credential_reminder_days: "להזכיר על פרטי גישה ישנים לאחר ימים"
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
     enable_badges: "הפעלת מערכת העיטורים"
     enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
@@ -2226,6 +2231,7 @@ he:
     not_activated: "אין לך אפשרות להיכנס עדיין. שלחנו אליך הודעת הפעלה בדוא״ל. נא לעקוב אחר ההוראות שבהודעה כדי להפעיל את החשבון שלך."
     not_allowed_from_ip_address: "אינכם יכולים להתחבר כ-%{username} מכתובת IP זו. "
     admin_not_allowed_from_ip_address: "אינכם יכולים להתחבר כמנהלי מערכת מכתובת IP זו."
+    reset_not_allowed_from_ip_address: "אי אפשר לבקש איפוס ססמה מכתובת ה־IP הזאת."
     suspended: "אינך יכול להתחבר עד %{date}."
     suspended_with_reason: "חשבון הושעה עד %{date}: %{reason}"
     errors: "%{errors}"
@@ -2889,6 +2895,15 @@ he:
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
         אין לך הרשאות להגיב לנושא הזה. אם לדעתך מדובר בטעות, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
+    email_reject_reply_to_digest:
+      title: "דחיית דוא״ל תגובה לתקציר"
+      subject_template: "[%{email_prefix}] תקלת דוא״ל -- תגובה לתקציר"
+      text_body_template: |
+        מחילה אך הודעות הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עברו.
+
+        הגבת להודעת תקציר, שזה לא מקובל.
+
+        אם לדעתך מדובר בשגיאה [נא ליצור קשר עם חבר סגל](%{base_url}/about).
     email_error_notification:
       title: "התראת בעיית מייל"
       subject_template: "[%{email_prefix}] בעיית מייל -- בעיית אימות POP"
@@ -3430,6 +3445,8 @@ he:
         אם זאת הייתה פעילות שלך, נהדר! לא צריך לעשות שום דבר.
 
         אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/account) לצד שיקול בכובד ראש להחלפת הססמה שלך.
+  page_forbidden:
+    title: "אופס! זה עמוד פרטי."
   page_not_found:
     title: "אופס! הדף לא קיים או שהוא פרטי."
     popular_topics: "פופלארי"
@@ -3487,6 +3504,7 @@ he:
     user_email_user_suspended: "המשתמש הושעה"
     user_email_already_read: "המשתמש כבר קרא פוסט זה"
     user_email_access_denied: "למשתמש אין הרשאה לצפות בפוסט הזה"
+    user_email_no_email: "לא משויכת כתובת דוא״ל למזהה המשתמש %{user_id}"
     sender_message_blank: "ההודעה ריקה"
     sender_message_to_blank: "message.to ריק"
     sender_text_part_body_blank: "text_part.body ריק"
@@ -3902,7 +3920,7 @@ he:
         עיטור זה מוענק עקב שימוש בכל %{max_likes_per_day} הלייקים היומיים שלכם במשך 5 ימים. תודה על שהשקעת את הזמן כדי לעודד את הדיונים הטובים ביותר בכל יום!
     crazy_in_love:
       name: מאוהבים בטירוף
-      description: השתמשו ב 50 לייקים ביום 20 פעם
+      description: "שימוש ב־%{max_likes_per_day} לייקים ביום 20 פעמים"
       long_description: |
         עיטור זה מוענק לך לאחר שהשתמשת בכל %{max_likes_per_day} הלייקים היומיים שלך במשך 20 ימים. חבל על הזמן! התנהגותך היא מופת לחברי הקהילה האחרים!
     thank_you:
@@ -4292,3 +4310,5 @@ he:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
   discord:
     not_in_allowed_guild: "האימות נכשל. הגילדה ב־Discord אליה הצטרפת אינה מורשית לגשת."
+  old_keys_reminder:
+    title: "תזכורת על פרטי גישה ישנים"

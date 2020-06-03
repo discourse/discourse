@@ -45,7 +45,6 @@ da:
       unrecognized_extension: "Ikke anerkendt filtypenavn: %{extension}"
     import_error:
       generic: Der opstod en fejl under importen af dette tema
-      about_json: "Importfejl: about.json findes ikke eller er ugyldig"
       about_json_values: "about.json indeholder ugyldige værdier: %{errors}"
       git: "Fejl ved kloning af git repo, adgang nægtes, eller depot findes ikke"
       unpack_failed: "Kunne ikke pakke filen ud"
@@ -945,7 +944,6 @@ da:
     crawl_images: "Hent billeder fra eksterne URLs for at indsætte de korrekte bredde og højde dimensioner."
     download_remote_images_to_local: "Konverter eksterne billeder til lokale billeder ved at downloade dem; dette forebygger at billeder ikke forsvinder."
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
-    download_remote_images_max_days_old: "Undlade at downloade billeder til indlæg der er mere end n dage gamle."
     disabled_image_download_domains: "Eksterne billeder vil ikke blive hentet fra disse domæner. Afgrænset liste."
     editing_grace_period: "For (n) sekunder efter postering, vil redigering ikke skabe et nyt indlæg."
     edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."

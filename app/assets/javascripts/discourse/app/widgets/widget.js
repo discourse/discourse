@@ -16,7 +16,7 @@ import {
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isProduction } from "discourse-common/config/environment";
 import { get } from "@ember/object";
 
 const _registry = {};
@@ -127,7 +127,7 @@ export default class Widget {
     this.init(this.attrs);
 
     // Helps debug widgets
-    if (Discourse.Environment === "development" || ENV.environment === "test") {
+    if (!isProduction()) {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
         throw new Error(`defaultState must return an object`);

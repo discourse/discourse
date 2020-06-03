@@ -8,7 +8,7 @@
   user-select: none;
 
   &.is-hidden {
-    display: none;
+    display: none !important;
   }
 
   &.is-disabled {
@@ -139,13 +139,13 @@
 
   .select-kit-row {
     cursor: pointer;
-    line-height: $line-height-medium;
     outline: none;
     display: flex;
     flex: 1 0 auto;
     box-sizing: border-box;
     align-items: center;
     justify-content: flex-start;
+    padding: 0.75em;
 
     .name {
       margin: 0;
@@ -190,7 +190,7 @@
     -webkit-overflow-scrolling: touch;
     margin: 0;
     padding: 0;
-    max-height: 200px;
+    max-height: 250px;
     width: 100%;
 
     .validation-message {

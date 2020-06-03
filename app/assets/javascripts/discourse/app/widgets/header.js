@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { get } from "@ember/object";
 import { schedule } from "@ember/runloop";
@@ -11,6 +12,12 @@ import { ajax } from "discourse/lib/ajax";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { h } from "virtual-dom";
+
+const _extraHeaderIcons = [];
+
+export function addToHeaderIcons(icon) {
+  _extraHeaderIcons.push(icon);
+}
 
 const dropdown = {
   buildClasses(attrs) {
@@ -211,7 +218,7 @@ createWidget("header-icons", {
       iconId: "search-button",
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
-      href: Discourse.getURL("/search")
+      href: getURL("/search")
     });
 
     const icons = [search, hamburger];
@@ -224,6 +231,12 @@ createWidget("header-icons", {
           user: attrs.user
         })
       );
+    }
+
+    if (_extraHeaderIcons) {
+      _extraHeaderIcons.forEach(icon => {
+        icons.push(this.attach(icon));
+      });
     }
 
     return icons;
@@ -299,17 +312,20 @@ export default createWidget("header", {
 
   html(attrs, state) {
     let contents = () => {
-      const panels = [
-        this.attach("header-buttons", attrs),
-        this.attach("header-icons", {
-          hamburgerVisible: state.hamburgerVisible,
-          userVisible: state.userVisible,
-          searchVisible: state.searchVisible,
-          ringBackdrop: state.ringBackdrop,
-          flagCount: attrs.flagCount,
-          user: this.currentUser
-        })
-      ];
+      const headerIcons = this.attach("header-icons", {
+        hamburgerVisible: state.hamburgerVisible,
+        userVisible: state.userVisible,
+        searchVisible: state.searchVisible,
+        ringBackdrop: state.ringBackdrop,
+        flagCount: attrs.flagCount,
+        user: this.currentUser
+      });
+
+      if (attrs.onlyIcons) {
+        return headerIcons;
+      }
+
+      const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible) {
         const contextType = this.searchContextType();

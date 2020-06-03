@@ -153,7 +153,7 @@ it:
         disabled: "delistato %{when}"
       banner:
         enabled: "lo ha reso un annuncio il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente. "
-        disabled: "ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
+        disabled: "ha rimosso questo annuncio il %{when}. Non apparirà più in cima ad ogni pagina."
       forwarded: "inoltrato l'email qui sopra"
     topic_admin_menu: "azioni argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
@@ -264,7 +264,10 @@ it:
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
         unbookmark_with_reminder: "Fare clic per rimuovere tutti i segnalibri e i promemoria in questo argomento. Hai un promemoria impostato %{reminder_at} per questo argomento."
     bookmarks:
+      created: "hai aggiunto questo messaggio ai segnalibri %{name}"
       not_bookmarked: "aggiungi ai segnalibri"
+      created_with_reminder: "hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}%{name}"
+      created_with_at_desktop_reminder: "hai aggiunto ai segnalibri questo messaggio e ti verrà ricordato la prossima volta che sarai sul desktop%{name}"
       remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
       confirm_delete: "Sicuro di voler eliminare questo segnalibro? Anche il promemoria verrà eliminato."
@@ -273,6 +276,7 @@ it:
       no_timezone: 'Non hai ancora impostato un fuso orario. Non sarai in grado di impostare promemoria. Creane uno <a href="%{basePath}/my/preferences/profile">nel tuo profilo</a> .'
       invalid_custom_datetime: "La data e l'ora fornite non sono valide, riprova."
       list_permission_denied: "Non sei autorizzato a visualizzare i segnalibri di questo utente."
+      delete_when_reminder_sent: "Elimina questo segnalibro quando viene inviata la notifica del promemoria."
       reminders:
         at_desktop: "La prossima volta che sarò al mio desktop"
         later_today: "Più tardi oggi"
@@ -289,6 +293,8 @@ it:
         tomorrow_with_time: "domani alle %{time}"
         at_time: "a %{date_time}"
         existing_reminder: "È stato impostato un promemoria per questo segnalibro che verrà inviato"
+    copy_codeblock:
+      copied: "copiato!"
     drafts:
       resume: "Riprendi"
       remove: "Rimuovi"
@@ -444,8 +450,7 @@ it:
         status: "Stato"
         category: "Categoria"
         orders:
-          priority: "Priorità"
-          priority_asc: "Priorità (inversa)"
+          score: "Punteggio"
           created_at: "Creato il"
           created_at_asc: "Data creazione (inversa)"
         priority:
@@ -673,14 +678,16 @@ it:
           title: "Silenziato"
           description: "Non verrai avvertito di nulla riguardo ai messaggi in questo gruppo."
       flair_url: "Immagine Avatar Flair"
-      flair_url_placeholder: "(Facoltativo) URL Immagine o classe Font Awesome"
-      flair_url_description: 'Usa immagini quadrate non più piccole di 20px per 20px o icone FontAwesome (formati accettati: "fa-icon", "far fa-icon" o "fab fa-icon").'
+      flair_upload_description: "Usa immagini quadrate non inferiori a 20px per 20px."
       flair_bg_color: "Colore Sfondo Avatar Flair"
       flair_bg_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
       flair_color: "Colore Avatar Flair"
       flair_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
       flair_preview_icon: "Anteprima Icona"
       flair_preview_image: "Anteprima Immagine"
+      flair_type:
+        icon: "Seleziona un'icona"
+        image: "Carica un'immagine"
     user_action_groups:
       "1": "Mi piace - Assegnati"
       "2": "Mi piace - Ricevuti"
@@ -742,6 +749,7 @@ it:
       copied: "copiato"
     user_fields:
       none: "(scegli un'opzione)"
+      required: 'Inserisci un valore per "%{name}"'
     user:
       said: "{{username}}:"
       profile: "Profilo"
@@ -757,6 +765,7 @@ it:
       private_messages: "Messaggi"
       user_notifications:
         filters:
+          filter_by: "Filtra per"
           all: "Tutti"
           read: "Letti"
           unread: "Non letti"
@@ -877,6 +886,7 @@ it:
       api_approved: "Approvato:"
       api_last_used_at: "Ultimo utilizzo:"
       theme: "Tema"
+      save_to_change_theme: 'Il tema verrà aggiornato dopo aver cliccato su "%{save_text}"'
       home: "Home Page Predefinita"
       staged: "Temporaneo"
       staff_counters:
@@ -924,8 +934,10 @@ it:
         enable: "Abilita"
         enable_long: "Abilita codici di backup"
         manage: "Gestisci i codici di backup. Hai <strong>{{count}}</strong> codici di backup rimanenti."
-        copied_to_clipboard: "Copiato nella Clipboard"
+        copy_to_clipboard: "Copia negli Appunti"
         copy_to_clipboard_error: "Errore durante la copia nella Clipboard"
+        copied_to_clipboard: "Copiato nella Clipboard"
+        download_backup_codes: "Scarica i codici di backup"
         remaining_codes: "Ti sono rimasti <strong>{{count}}</strong> codici di backup."
         use: "Usa un codice di backup"
         enable_prerequisites: "È necessario abilitare un secondo fattore primario prima di generare codici di backup."
@@ -951,29 +963,30 @@ it:
         oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
         use: "Usa l'app Authenticator"
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
-        disable: "disabilita"
-        disable_title: "Disabilita Secondo Fattore"
+        disable: "Disabilita"
         disable_confirm: "Sei sicuro di voler disabilitare tutti i secondi fattori?"
+        save: "Salva"
         edit: "Modifica"
         edit_title: "Modifica secondo fattore"
         edit_description: "Nome del secondo fattore"
-        enable_security_key_description: "Quando la chiave di sicurezza fisica è pronta, premi il pulsante Registra qui sotto."
+        enable_security_key_description: |
+          Quando <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">la chiave di sicurezza hardware</a> è pronta, premi il pulsante Registra di seguito.
         totp:
           title: "Authenticator basati su Token"
-          add: "Nuovo Authenticator"
+          add: "Aggiungi Authenticator"
           default_name: "Il mio Authenticator"
           name_and_code_required_error: "Devi fornire un nome e il codice dalla tua app di autenticazione."
         security_key:
           register: "Registrare"
-          title: "Security Keys"
-          add: "Registra Security Key"
-          default_name: "Security Key principale"
-          not_allowed_error: "Il processo di registrazione della Security Key è scaduto o è stato annullato."
-          already_added_error: "Hai già registrato questa Security Key. Non è necessario registrarla di nuovo."
-          edit: "Modifica Security Key"
-          edit_description: "Nome Security Key"
-          delete: "Elimina"
-          name_required_error: "Devi fornire un nome per la Security Key"
+          title: "Chiave di Sicurezza"
+          add: "Modifica Chiave di Sicurezza"
+          default_name: "Chiave di Sicurezza principale"
+          not_allowed_error: "Il processo di registrazione della Chiave di Sicurezza è scaduto o è stato annullato."
+          already_added_error: "Hai già registrato questa Chiave di Sicurezza. Non è necessario registrarla di nuovo."
+          edit: "Modifica Chiave di Sicurezza"
+          save: "Salva"
+          edit_description: "Nome Chiave di Sicurezza"
+          name_required_error: "Devi fornire un nome per la Chiave di Sicurezza"
       change_about:
         title: "Modifica i dati personali"
         error: "Si è verificato un errore durante la modifica del valore."
@@ -1016,6 +1029,7 @@ it:
         sso_override_instructions: "L'email può essere aggiornata dal provider SSO."
         instructions: "Mai mostrato pubblicamente"
         ok: "Ti invieremo una email di conferma"
+        required: "Inserisci un indirizzo email"
         invalid: "Inserisci un indirizzo email valido"
         authenticated: "{{provider}} ha autenticato la tua email"
         frequency_immediately: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
@@ -1036,6 +1050,7 @@ it:
         title: "Nome"
         instructions: "il tuo nome completo (opzionale)"
         instructions_required: "Il tuo nome completo"
+        required: "Inserisci un nome"
         too_short: "Il nome è troppo breve"
         ok: "Il nome sembra adeguato"
       username:
@@ -1049,6 +1064,7 @@ it:
         too_long: "Il nome utente è troppo lungo"
         checking: "Controllo la disponibilità del nome utente..."
         prefilled: "L'email corrisponde al nome utente registrato"
+        required: "Inserisci un nome utente"
       locale:
         title: "Lingua dell'interfaccia"
         instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
@@ -1192,6 +1208,7 @@ it:
         same_as_email: "La password coincide con l'email."
         ok: "La password è adeguata"
         instructions: "almeno %{count} caratteri"
+        required: "Inserisci una password"
       summary:
         title: "Riepilogo"
         stats: "Statistiche"
@@ -1398,10 +1415,10 @@ it:
       second_factor_backup_title: "Backup Due Fattori"
       second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
       second_factor: "Accedi utilizzando l'app Authenticator"
-      security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Security Key qui sotto."
+      security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Chiave di Sicurezza qui sotto."
       security_key_alternative: "Prova in un altro modo"
-      security_key_authenticate: "Autentica con Security Key"
-      security_key_not_allowed_error: "Il processo di autenticazione con Security Key è scaduto o è stato annullato."
+      security_key_authenticate: "Autentica con Chiave di Sicurezza"
+      security_key_not_allowed_error: "Il processo di autenticazione con Chiave di Sicurezza è scaduto o è stato annullato."
       security_key_no_matching_credential_error: "Non è stato possibile trovare credenziali corrispondenti nella chiave di sicurezza fornita."
       security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l&#39;uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
       email_placeholder: "email o nome utente"
@@ -1814,7 +1831,6 @@ it:
           bookmarks: ho aggiunto ai segnalibri
           first: sono il primissimo post
           pinned: sono appuntati
-          unpinned: non sono appuntati
           seen: messaggi che ho letto
           unseen: non ho letto
           wiki: sono wiki
@@ -1908,7 +1924,7 @@ it:
         help: "Sposta il messaggio di nuovo nella posta in arrivo"
       edit_message:
         help: "Modifica la prima versione del Messaggio"
-        title: "Modifica Messaggio"
+        title: "Modifica"
       defer:
         help: "Contrassegna come non letto"
         title: "Rinvia"
@@ -2062,6 +2078,7 @@ it:
           "2_8": "Vedrai un conteggio delle nuove risposte perché stai seguendo questa categoria."
           "2_4": "Vedrai un conteggio delle nuove risposte perché hai pubblicato una risposta in questo argomento."
           "2_2": "Vedrai un conteggio delle nuove risposte perché stai seguendo questo argomento."
+          "2": 'Vedrai un conteggio delle nuove risposte perché hai <a href="{{basePath}}/u/{{username}}/preferences/notifications">letto questo argomento</a>.'
           "1_2": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "1": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "0_7": "Stai ignorando tutte le notifiche di questa categoria."
@@ -2156,7 +2173,7 @@ it:
         already_pinned_globally:
           one: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>"
-        make_banner: "Rendi questo argomento uno striscione che apparirà in cima a tutte le pagine."
+        make_banner: "Rendi questo argomento un annuncio che apparirà in cima a tutte le pagine."
         remove_banner: "Rimuovi lo striscione che appare in cima a tutte le pagine."
         banner_note: "Gli utenti possono nascondere l'annuncio chiudendolo. Solo un argomento per volta può diventare un annuncio."
         no_banner_exists: "Non c'è alcun argomento annuncio."
@@ -2553,6 +2570,7 @@ it:
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
       mailinglist_mirror: "La categoria si comporta come una mailing list"
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
+      read_only_banner: "Testo dell'annuncio quando un utente non può creare un argomento in questa categoria:"
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
       all_topics_wiki: "Rendi i nuovi argomenti automaticamente delle wiki"
@@ -2793,7 +2811,7 @@ it:
         this_month: "Mese"
         this_week: "Settimana"
         today: "Oggi"
-        other_periods: "vedi argomenti di punta"
+        other_periods: "vedi argomenti di punta:"
     browser_update: 'Sfortunatamente <a href="https://www.discourse.org/faq/#browser">il tuo browser è troppo obsoleto per funzionare su questo sito</a>. <a href="https://browsehappy.com">Aggiorna il tuo browser</a> per visualizzare contenuti multimediali, accedere e rispondere.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
@@ -3039,6 +3057,11 @@ it:
       custom_message_template_forum: "Ehi, unisciti a questo forum!"
       custom_message_template_topic: "Ehi, credo che questo argomento ti possa interessare!"
     forced_anonymous: "A causa del carico eccessivo, il sito viene ora mostrato a tutti come lo vedrebbe un utente non connesso."
+    footer_nav:
+      back: "Indietro"
+      forward: "Inoltra"
+      share: "Condividi"
+      dismiss: "Ignora"
     safe_mode:
       enabled: "La modalità sicura è attiva, per disattivarla chiudi il browser"
   admin_js:
@@ -3289,12 +3312,6 @@ it:
         tag_event:
           name: "Evento di Etichetta"
           details: "Quando un'Etichetta viene creata, aggiornata o distrutta."
-        flag_event:
-          name: "Evento di Segnalazione"
-          details: "Quando una segnalazione viene creata, approvata, rifiutata o ignorata."
-        queued_post_event:
-          name: "Evento approvazione messaggio"
-          details: "Quando un nuovo messaggio accodato viene creato, approvato o respinto."
         reviewable_event:
           name: "Evento revisionabile"
           details: "Quando un nuovo elemento è pronto per la revisione e quando il suo stato viene aggiornato."
@@ -3473,6 +3490,9 @@ it:
           settings: "Impostazioni"
           translations: "Traduzioni"
           extra_scss: "Extra SCSS"
+          extra_files: "File extra"
+          extra_files_upload: "Esporta il tema per visualizzare questi file."
+          extra_files_remote: "Esporta il tema o controlla il repository git per visualizzare questi file."
           preview: "Anteprima"
           show_advanced: "Mostra campi avanzati"
           hide_advanced: "Nascondi campi avanzati"
@@ -3536,6 +3556,7 @@ it:
           license: "Licenza"
           version: "Versione:"
           authors: "Creato da:"
+          creator: "Creato da:"
           source_url: "Fonte"
           enable: "Abilita"
           disable: "Disabilita"
@@ -4044,7 +4065,7 @@ it:
         anonymize_failed: "Si è verificato un problema nel rendere anonimo l'account."
         delete: "Cancella utente"
         merge:
-          transfer_and_delete: "Trasferisci ed Elimina"
+          button: "Unisci"
           prompt:
             title: "Trasferisci ed Elimina @%{username}"
             description: |
@@ -4062,6 +4083,7 @@ it:
               <p><b>Questa azione non può essere annullata!</b></p>
 
               <p>Per continuare digitare: <code>%{text}</code></p>
+            text: "trasferire @%{username} a @%{targetUsername}"
             transfer_and_delete: "Trasferisci ed Elimina @%{username}"
             cancel: "Annulla"
         merging_user: "Unione utente in corso..."

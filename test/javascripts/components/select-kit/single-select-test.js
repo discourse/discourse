@@ -296,3 +296,45 @@ componentTest("focusAfterOnChange", {
     );
   }
 });
+
+componentTest("labelProperty", {
+  template: '{{single-select labelProperty="foo" value=value content=content}}',
+
+  beforeEach() {
+    this.setProperties({
+      content: [{ id: 1, name: "john", foo: "JACKSON" }],
+      value: 1
+    });
+  },
+
+  async test(assert) {
+    assert.equal(this.subject.header().label(), "JACKSON");
+
+    await this.subject.expand();
+
+    const row = this.subject.rowByValue(1);
+
+    assert.equal(row.label(), "JACKSON");
+  }
+});
+
+componentTest("titleProperty", {
+  template: '{{single-select titleProperty="foo" value=value content=content}}',
+
+  beforeEach() {
+    this.setProperties({
+      content: [{ id: 1, name: "john", foo: "JACKSON" }],
+      value: 1
+    });
+  },
+
+  async test(assert) {
+    assert.equal(this.subject.header().title(), "JACKSON");
+
+    await this.subject.expand();
+
+    const row = this.subject.rowByValue(1);
+
+    assert.equal(row.title(), "JACKSON");
+  }
+});

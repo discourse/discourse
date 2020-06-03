@@ -3,52 +3,32 @@
     &.toolbar-popup-menu-options {
       .select-kit-body {
         box-shadow: none;
-        padding: 0.5em 0.5em 0.25em 0.5em;
         width: 230px;
-      }
-
-      .toolbar-popup-menu-options-heading {
-        width: 100%;
+        border-radius: 0;
       }
 
       .select-kit-row {
-        margin-bottom: 0.25em;
-        padding: 0.5em 0.25em;
-        background: $primary-low;
-        transition: all 0.25s;
+        padding: 0.75em 0.5em;
+        border-bottom: 1px solid rgba($primary-low, 0.5);
+
+        &:last-child {
+          border: none;
+        }
 
         .texts .name,
         .icons .d-icon {
           font-size: $font-0;
           font-weight: normal;
-          color: $primary;
         }
 
         .d-icon {
-          opacity: 0.7;
+          color: $primary-medium;
         }
 
-        &.is-highlighted {
-          background: $primary-medium;
-
-          .name,
-          .d-icon {
-            color: $secondary;
-          }
-        }
-
+        &.is-highlighted,
+        &.is-selected,
         &:hover {
-          background: $primary-medium;
-          color: $secondary;
-        }
-
-        &.is-selected {
-          color: $primary;
-          background: $primary-low;
-        }
-
-        &.is-selected.is-highlighted {
-          background: $primary-medium;
+          background: $tertiary-low;
           color: $primary;
         }
       }

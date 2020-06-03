@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import Category from "discourse/models/category";
 import { readOnly, or, equal, gte } from "@ember/object/computed";
 import { i18n, setting } from "discourse/lib/computed";
@@ -73,9 +74,9 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   allTagsUrl: computed("firstCategory", "secondCategory", function() {
     if (this.currentCategory) {
-      return Discourse.getURL(`${this.currentCategoryUrl}?allTags=1`);
+      return getURL(`${this.currentCategoryUrl}?allTags=1`);
     } else {
-      return Discourse.getURL("/");
+      return getURL("/");
     }
   }),
 
@@ -86,7 +87,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
         this.currentCategory.id
       }`;
     }
-    return Discourse.getURL(`${url}/${NONE_TAG_ID}`);
+    return getURL(`${url}/${NONE_TAG_ID}`);
   }),
 
   allTagsLabel: i18n("tagging.selector_all_tags"),
@@ -189,7 +190,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
           }
       }
 
-      DiscourseURL.routeTo(Discourse.getURL(url));
+      DiscourseURL.routeTo(getURL(url));
     }
   }
 });

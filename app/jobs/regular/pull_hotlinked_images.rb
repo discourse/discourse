@@ -59,7 +59,7 @@ module Jobs
         if should_download_image?(src, post)
           begin
             # have we already downloaded that file?
-            schemeless_src = remove_scheme(original_src)
+            schemeless_src = normalize_src(original_src)
 
             unless downloaded_images.include?(schemeless_src) || large_images.include?(schemeless_src) || broken_images.include?(schemeless_src)
 
@@ -75,17 +75,17 @@ module Jobs
 
                   if upload.persisted?
                     downloaded_urls[src] = upload.url
-                    downloaded_images[remove_scheme(src)] = upload.id
+                    downloaded_images[normalize_src(src)] = upload.id
                     has_downloaded_image = true
                   else
                     log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.full_messages.join("\n")}")
                   end
                 else
-                  large_images << remove_scheme(original_src)
+                  large_images << normalize_src(original_src)
                   has_new_large_image = true
                 end
               else
-                broken_images << remove_scheme(original_src)
+                broken_images << normalize_src(original_src)
                 has_new_broken_image = true
               end
             end
@@ -95,8 +95,8 @@ module Jobs
               escaped_src = Regexp.escape(original_src)
 
               replace_raw = ->(match, match_src, replacement, _index) {
-                if remove_scheme(src) == remove_scheme(match_src)
 
+                if normalize_src(src) == normalize_src(match_src)
                   replacement =
                     if replacement.include?(InlineUploads::PLACEHOLDER)
                       replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
@@ -152,7 +152,10 @@ module Jobs
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
         post.revise(Discourse.system_user, changes, bypass_bump: true, skip_staff_log: true)
       elsif has_downloaded_image || has_new_large_image || has_new_broken_image
-        post.trigger_post_process(bypass_bump: true)
+        post.trigger_post_process(
+          bypass_bump: true,
+          skip_pull_hotlinked_images: true # Avoid an infinite loop of job scheduling
+        )
       end
     end
 
@@ -212,8 +215,13 @@ module Jobs
 
     private
 
-    def remove_scheme(src)
-      src.sub(/^https?:/i, "")
+    def normalize_src(src)
+      uri = Addressable::URI.heuristic_parse(src)
+      uri.normalize!
+      uri.scheme = nil
+      uri.to_s
+    rescue URI::Error
+      src
     end
   end
 

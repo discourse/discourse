@@ -27,8 +27,12 @@ require_relative '../lib/discourse_plugin_registry'
 
 require_relative '../lib/plugin_gem'
 
-if ENV['RAILS_FAILOVER']
-  require 'rails_failover'
+if ENV['ACTIVE_RECORD_RAILS_FAILOVER']
+  require 'rails_failover/active_record'
+end
+
+if ENV['REDIS_RAILS_FAILOVER']
+  require 'rails_failover/redis'
 end
 
 # Global config
@@ -154,7 +158,7 @@ module Discourse
       service-worker.js
       google-tag-manager.js
       google-universal-analytics.js
-      preload-application-data.js
+      start-discourse.js
       print-page.js
       omniauth-complete.js
       activate-account.js
@@ -360,10 +364,5 @@ module Discourse
     config.generators do |g|
       g.test_framework :rspec, fixture: false
     end
-
-    # we have a monkey_patch we need to require early... prior to connection
-    # init
-    require 'freedom_patches/reaper'
-
   end
 end

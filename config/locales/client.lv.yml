@@ -315,8 +315,6 @@ lv:
         refresh: "Pārlādēt"
         status: "Statuss"
         category: "Sadaļa"
-        orders:
-          priority: "Prioritāte"
       scores:
         date: "Datums"
         status: "Statuss"
@@ -463,7 +461,6 @@ lv:
         muted:
           title: "Noklusināts"
       flair_url: "Avatāra attēls"
-      flair_url_placeholder: "(Neobligāti) Saite uz attēlu vai Font Awesome klasi"
       flair_bg_color: "Avatāra attēla fona krāsa"
       flair_bg_color_placeholder: "(Neobligāti) Heksadecimālā krāsas vērtība"
       flair_color: "Avatāra attēla krāsa"
@@ -665,14 +662,17 @@ lv:
         regenerate: "Atkārtoti radīt"
         disable: "Atslēgt"
         enable: "Ieslēgt"
-        copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
+        copy_to_clipboard: "Kopēt uz starpliktuvi (clipboard)"
         copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"
+        copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
       second_factor:
         name: "Vārds"
         label: "Kods"
+        disable: "Atslēgt"
+        save: "Saglabāt"
         edit: "Labot"
         security_key:
-          delete: "Dzēst"
+          save: "Saglabāt"
       change_about:
         title: "Mainīt aprakstu par mani"
         error: "Mainot šo vērtību, notika kļūda."
@@ -1238,7 +1238,6 @@ lv:
           tracking: Es sekoju
           first: ir tēmas pirmais ieraksts
           pinned: ir piesprausts
-          unpinned: nav piesprausts
           unseen: neesmu izlasījis
           wiki: ir wiki
         statuses:
@@ -1326,6 +1325,8 @@ lv:
       move_to_inbox:
         title: "Pārvietot uz iesūtni"
         help: "Atgriezt ziņu uz iesūtni "
+      edit_message:
+        title: "Labot"
       defer:
         title: "Nepiekrist"
       list: "Tēmas"
@@ -2048,7 +2049,6 @@ lv:
         this_month: "Mēneša"
         this_week: "Nedēļas"
         today: "Šodienas"
-        other_periods: "skatīt topu"
     permission_types:
       full: "Izveidot / Atbildēt / Skatīt"
       create_post: "Atbildēt / Skatīt"
@@ -2203,6 +2203,10 @@ lv:
       custom_message_placeholder: "Ievadi savu ziņas tekstu"
       custom_message_template_forum: "Sveiks, Tev ir jāpievienojas šim forumam!"
       custom_message_template_topic: "Sveiks, man šķiet, ka Tu varētu izbaudīt šo tēmu!"
+    footer_nav:
+      back: "Atpakaļ"
+      share: "Dalīties"
+      dismiss: "Nerādīt"
     safe_mode:
       enabled: "Ir ieslēgts drošais režīms; lai pamestu drošo režīmu, aizveriet šo pārlūkprogrammas logu"
   admin_js:

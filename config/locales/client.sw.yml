@@ -483,7 +483,6 @@ sw:
         muted:
           title: "Imenyamazishwa"
       flair_url: "Picha ya mtumiaji"
-      flair_url_placeholder: "(Hiari) URL ya Picha au Font Awesome class"
       flair_bg_color: "Rangi ya nyuma kwenye picha ya mtumiaji"
       flair_bg_color_placeholder: "(Hiari) Thamani ya Rangi kwa Hex"
       flair_color: "Rangi ya picha ya mtumiaji"
@@ -693,8 +692,9 @@ sw:
         disable: "Sitisha"
         enable: "Wezesha"
         enable_long: "Wezesha kodi za backup"
-        copied_to_clipboard: "Nakili"
+        copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copy_to_clipboard_error: "Makosa kwenye Kunakili"
+        copied_to_clipboard: "Nakili"
         remaining_codes: "Una kodi <strong>{{count}}</strong> za backup zimebaki."
       second_factor:
         title: "Uhalalalishaji wa Viwango Viwili"
@@ -704,10 +704,12 @@ sw:
         disable_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako"
         show_key_description: "Andika kwa mkono"
         oauth_enabled_warning: "Tafadhali jua kuwa kuingia kupitia mitandao itasitishwa kama uthibitisho wa kiwango cha pili umewezeshwa kwenye akaunti yako."
+        disable: "Sitisha"
+        save: "hifadhi"
         edit: "Hariri"
         security_key:
           register: "Jisajili"
-          delete: "Futa"
+          save: "hifadhi"
       change_about:
         title: "Badilisha Taarifa Zangu"
         error: "Hitilafu imetokea wakati wa kubadilisha namba hii."
@@ -1391,7 +1393,6 @@ sw:
           bookmarks: Nimejibu
           first: ni chapisho la kwanza
           pinned: zimebadikwa
-          unpinned: hazijabadikwa
           seen: Nilisoma
           unseen: Sijasoma
           wiki: ni wiki
@@ -1483,7 +1484,7 @@ sw:
         help: "Hamisha kwenda Kisanduku pokezi"
       edit_message:
         help: "Hariri chapisho la kwanza la ujumbe"
-        title: "Hariri Ujumbe"
+        title: "Hariri"
       list: "Mada"
       new: "mada mpya"
       unread: "haijasomwa"
@@ -2143,7 +2144,6 @@ sw:
         this_month: "Mwezi"
         this_week: "Wiki"
         today: "Leo"
-        other_periods: "tazama juu"
     permission_types:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
@@ -2304,6 +2304,10 @@ sw:
       custom_message_placeholder: "Andika ujumbe binafsi"
       custom_message_template_forum: "Habari, jiunge kwenye jumuiya yetu!"
       custom_message_template_topic: "Habari, nadhani utaipenda hii mada!"
+    footer_nav:
+      back: "Nyuma"
+      share: "Shirikisha"
+      dismiss: "Ondosha"
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:
@@ -2477,8 +2481,6 @@ sw:
         tag_event:
           name: "Lebo Tukio"
           details: "Wakati lebo inapotengenezwa, sasishwa au kufutwa."
-        flag_event:
-          name: "Repoti Tukio"
         delivery_status:
           title: "Hali ya Uwasilishaji"
           inactive: "Isiyo Amilifu"

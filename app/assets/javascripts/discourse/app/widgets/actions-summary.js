@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { avatarFor } from "discourse/widgets/post";
@@ -48,7 +49,7 @@ createWidget("small-user-list", {
       if (postUrl) {
         description = h(
           "a",
-          { attributes: { href: Discourse.getURL(postUrl) } },
+          { attributes: { href: getURL(postUrl) } },
           description
         );
       }

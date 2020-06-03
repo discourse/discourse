@@ -260,20 +260,37 @@ de:
       help:
         bookmark: "Klicke hier, um ein Lesezeichen auf den ersten Beitrag in diesem Thema zu setzen."
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
+        unbookmark_with_reminder: "Klicke hier um alle Lesezeichen und Erinnerungen in diesem Thema zu löschen. Du hast eine Erinnerung für %{reminder_at} zu diesem Thema."
     bookmarks:
+      created: "du hast ein Lesezeichen für diesen Beitrag %{name} gesetzt"
       not_bookmarked: "Lesezeichen auf diesen Beitrag setzen"
+      created_with_reminder: "Lesezeichen mit Erinnerung für %{date}%{name} gesetz "
+      created_with_at_desktop_reminder: "Du hast ein Lesezeichen für diesen Beitrag gesetzt und wirst das nächste Mal, wenn Du am Rechner sitzt, daran erinnert.%{name}"
       remove: "Lesezeichen entfernen"
+      delete: "Lesezeichen löschen"
+      confirm_delete: "Lesezeichen wirklich löschen? Die Erinnerung daran wird dann auch gelöscht."
       confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest? "
       save: "Speichern"
       no_timezone: 'Du hast noch keine Zeitzone ausgewählt. Du wirst keine Erinnerungen erstellen können. Stelle eine <a href="%{basePath}/my/preferences/profile">in deinem Profil</a> ein.'
+      invalid_custom_datetime: "Ungültiges Datum und/oder Uhrzeit. Bitte nochmals versuchen.\n "
+      list_permission_denied: "Dir fehlt die Erlaubnis, die Lesezeichen dieses Nutzers gezeigt zu bekommen."
+      delete_when_reminder_sent: "Dieses Lesezeichen nach Versenden einer Erinnerung löschen."
       reminders:
         at_desktop: "Nächstes mal wenn ich an meinem PC bin"
         later_today: "Im Laufe des Tages"
+        next_business_day: "Nächster Werktag"
         tomorrow: "Morgen"
         next_week: "Nächste Woche"
         later_this_week: "Später in dieser Woche"
+        start_of_next_business_week: "Nächster Montag"
         next_month: "Nächster Monat"
         custom: "Eigenes Datum und Zeit"
+        last_custom: "Letzter"
+        none: "Keine Erinnerung nötig"
+        today_with_time: "heute um %{time}"
+        tomorrow_with_time: "morgen um %{time}"
+        at_time: "um %{date_time}"
+        existing_reminder: "Es gibt eine Erinnerung für dieses Lesezeichen, die versendet werden wird"
     drafts:
       resume: "Fortsetzen"
       remove: "Entfernen"
@@ -429,8 +446,7 @@ de:
         status: "Status"
         category: "Kategorie"
         orders:
-          priority: "Priorität"
-          priority_asc: "Priorität (umgekehrt)"
+          score: "Wertung"
           created_at: "Erstellt am"
           created_at_asc: "Erstellt am (umgekehrt)"
         priority:
@@ -657,8 +673,6 @@ de:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit Nachrichten in dieser Gruppe."
       flair_url: "Avatar-Hintergrund"
-      flair_url_placeholder: "(Optional) Bild-URL oder Font Awesome-Klasse"
-      flair_url_description: 'Verwende quadratische Bilder, die nicht kleiner als 20x20 Pixel sind oder FontAwesome-Icons (akzeptierte Formate: "fa-icon", "far fa-icon" oder "fab fa-icon").'
       flair_bg_color: "Avatar-Hintergrundfarbe"
       flair_bg_color_placeholder: "(Optional) Hex-Farbwert"
       flair_color: "Avatar-Hintergrundfarbe"
@@ -905,8 +919,9 @@ de:
         enable: "Aktivieren"
         enable_long: "Wiederherstellungscodes aktivieren"
         manage: "Verwalte Sicherungscodes. Du hast noch <strong>{{count}}</strong> Sicherungscodes."
-        copied_to_clipboard: "Wurde in Zwischenablage kopiert"
+        copy_to_clipboard: "In Zwischenablage kopieren"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
+        copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         remaining_codes: "Du hast noch <strong>{{count}}</strong> Wiederherstellungscodes übrig."
         use: "Benutze einen Backup-Code"
         enable_prerequisites: "Du musst vor dem Generieren von Sicherungscodes einen primären zweiten Faktor aktivieren."
@@ -932,27 +947,26 @@ de:
         oauth_enabled_warning: "Beachte bitte, dass soziale Anmelde-Methoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert ist."
         use: "Benutze die Authentifizierungs-App"
         enforced_notice: "Du musst Zwei-Faktor-Authentifizierung aktivieren, bevor du auf diese Seite zugreifen kannst."
-        disable: "deaktivieren"
-        disable_title: "Zweiten Faktor deaktivieren"
+        disable: "Deaktivieren"
         disable_confirm: "Sollen alle zweiten Faktoren deaktiviert werden?"
+        save: "Speichern"
         edit: "Bearbeiten"
         edit_title: "Zweiten Faktor bearbeiten"
         edit_description: "Name des zweiten Faktors"
-        enable_security_key_description: "Wenn Du deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche Registrieren."
         totp:
           title: "Token-basierte Authentifikatoren"
-          add: "Neuer Authentifikator"
           default_name: "Mein Authentifikator"
         security_key:
           register: "Registrieren"
           title: "Sicherheitsschlüssel"
-          add: "Registriere den Sicherheitsschlüssel"
+          add: "Sicherheitsschlüssel hinzufügen"
           default_name: "Hauptsicherheitsschlüssel"
           not_allowed_error: "Der Registrierungsvorgang für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
-          already_added_error: "Du hast diesen Sicherheitsschlüssel bereits registriert. Du musst Ihn nicht erneut registrieren.\e"
+          already_added_error: "Du hast diesen Sicherheitsschlüssel bereits registriert. Du musst Ihn nicht erneut registrieren."
           edit: "Bearbeite den Sicherheitsschlüssel"
+          save: "Speichern"
           edit_description: "Name des Sicherheitsschlüssels"
-          delete: "Löschen"
+          name_required_error: "Ein wird ein Name für den Sicherheitsschlüssel benötigt."
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -969,6 +983,8 @@ de:
         success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
       change_avatar:
         title: "Ändere dein Profilbild"
+        gravatar_title: "Ändere deinen Avatar auf der Website von {{gravatarName}}"
+        gravatar_failed: "{{gravatarName}} zu dieser Email-Adresse nicht gefunden."
         letter_based: "ein vom System zugewiesenes Profilbild"
         uploaded_avatar: "Eigenes Bild"
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
@@ -1031,6 +1047,9 @@ de:
         any: "(keine Einschränkung)"
       password_confirmation:
         title: "Wiederholung des Passworts"
+      invite_code:
+        title: "Einladungs-Code"
+        instructions: "Zur Registrierung eines Benutzerkontos wird ein Einladungs-Code benötigt."
       auth_tokens:
         title: "Kürzlich benutzte Geräte"
         ip: "IP"
@@ -1773,7 +1792,6 @@ de:
           bookmarks: Themen/Beiträge mit Lesezeichen
           first: Erste Beiträge in Themen
           pinned: Angeheftete Themen
-          unpinned: Nicht angeheftete Themen
           seen: Gelesene Themen/Beiträge
           unseen: Ungelesene Themen/Beiträge
           wiki: Wikis
@@ -1867,7 +1885,7 @@ de:
         help: "Nachricht in den Posteingang zurück verschieben"
       edit_message:
         help: "Bearbeite ersten Beitrag dieser Nachricht"
-        title: "Nachricht bearbeiten"
+        title: "Bearbeiten"
       defer:
         help: "Als ungelesen markieren"
         title: "Ignorieren"
@@ -2725,7 +2743,6 @@ de:
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
-        other_periods: "zeige angesagte Themen:"
     permission_types:
       full: "Erstellen / Antworten / Ansehen"
       create_post: "Antworten / Ansehen"
@@ -2953,6 +2970,10 @@ de:
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
     forced_anonymous: "Aufgrund einer außergewöhnlichen Last wird dies vorübergehend so angezeigt, wie es ein nicht angemeldeter Benutzer sehen würde."
+    footer_nav:
+      back: "Zurück"
+      share: "Teilen"
+      dismiss: "Alles gelesen"
     safe_mode:
       enabled: "Der geschützte Modus ist aktiviert. Schliesse das Browserfenster um ihn zu verlassen."
   admin_js:
@@ -3199,12 +3220,6 @@ de:
         tag_event:
           name: "Schlagwort-Ereignis"
           details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
-        flag_event:
-          name: "Meldung-Ereignis"
-          details: "Wenn eine Meldung erstellt, akzeptiert, abgelehnt oder ignoriert wird."
-        queued_post_event:
-          name: "Ereignis nach Beitragsgenehmigung"
-          details: "Wenn eine Beitrag in der Warteschlange erstellt, genehmigt oder abgelehnt wird."
         reviewable_event:
           name: "Überpüfbares Ereignis"
           details: "Wenn ein neuer Eintrag zur Überprüfung bereit ist und wenn sich sein Status ändert."

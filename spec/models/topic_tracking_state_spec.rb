@@ -446,6 +446,11 @@ describe TopicTrackingState do
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(0)
+
+      TopicTag.where(topic_id: topic.id).delete_all
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
     end
 
     it "remove_muted_tags_from_latest is set to only_muted" do
@@ -475,6 +480,11 @@ describe TopicTrackingState do
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(0)
+
+      TopicTag.where(topic_id: topic.id).delete_all
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
     end
 
     it "remove_muted_tags_from_latest is set to never" do
@@ -546,6 +556,41 @@ describe TopicTrackingState do
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(3)
 
+  end
+
+  context "tag support" do
+    after do
+      # this is a bit of an odd hook, but this is a global change
+      # used by plugins that leverage tagging heavily and need
+      # tag information in topic tracking state
+      TopicTrackingState.include_tags_in_report = false
+    end
+
+    it "correctly handles tags" do
+      SiteSetting.tagging_enabled = true
+
+      post.topic.notifier.watch_topic!(post.topic.user_id)
+
+      DiscourseTagging.tag_topic_by_names(
+        post.topic,
+        Guardian.new(Discourse.system_user),
+        ['bananas', 'apples']
+      )
+
+      TopicTrackingState.include_tags_in_report = true
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.tags).to contain_exactly("apples", "bananas")
+
+      TopicTrackingState.include_tags_in_report = false
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.respond_to? :tags).to eq(false)
+    end
   end
 
   it "correctly gets the tracking state" do

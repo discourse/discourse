@@ -45,7 +45,6 @@ hu:
       unrecognized_extension: "Ismeretlen fájlkiterjesztés: %{extension}"
     import_error:
       generic: Hiba történt a téma importálásákor
-      about_json: "Importálási hiba: az about.json nem létezik vagy érvénytelen"
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
       modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"

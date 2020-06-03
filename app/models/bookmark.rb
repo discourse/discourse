@@ -90,7 +90,7 @@ end
 #  updated_at                :datetime         not null
 #  reminder_last_sent_at     :datetime
 #  reminder_set_at           :datetime
-#  delete_when_reminder_sent :boolean          default(FALSE)
+#  delete_when_reminder_sent :boolean          default(FALSE), not null
 #
 # Indexes
 #
@@ -101,10 +101,4 @@ end
 #  index_bookmarks_on_topic_id             (topic_id)
 #  index_bookmarks_on_user_id              (user_id)
 #  index_bookmarks_on_user_id_and_post_id  (user_id,post_id) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_...  (post_id => posts.id)
-#  fk_rails_...  (topic_id => topics.id)
-#  fk_rails_...  (user_id => users.id)
 #

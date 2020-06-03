@@ -28,7 +28,7 @@ import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -378,7 +378,7 @@ export default Component.extend({
     }
 
     // Debouncing in test mode is complicated
-    if (ENV.environment === "test") {
+    if (isTesting()) {
       this._updatePreview();
     } else {
       debounce(this, this._updatePreview, 30);
@@ -483,8 +483,15 @@ export default Component.extend({
             }
           }
 
-          if (translations[full]) {
-            return resolve([translations[full]]);
+          // note this will only work for emojis starting with :
+          // eg: :-)
+          const allTranslations = Object.assign(
+            {},
+            translations,
+            this.getWithDefault("site.custom_emoji_translation", {})
+          );
+          if (allTranslations[full]) {
+            return resolve([allTranslations[full]]);
           }
 
           const match = term.match(/^:?(.*?):t([2-6])?$/);
@@ -898,8 +905,16 @@ export default Component.extend({
 
   // ensures textarea scroll position is correct
   _focusTextArea() {
-    const textarea = this.element.querySelector("textarea.d-editor-input");
     schedule("afterRender", () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const textarea = this.element.querySelector("textarea.d-editor-input");
+      if (!textarea) {
+        return;
+      }
+
       textarea.blur();
       textarea.focus();
     });

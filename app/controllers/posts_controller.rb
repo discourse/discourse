@@ -106,6 +106,7 @@ class PostsController < ApplicationController
   def user_posts_feed
     params.require(:username)
     user = fetch_user_from_params
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
     posts = Post.public_posts
       .where(user_id: user.id)
@@ -747,8 +748,8 @@ class PostsController < ApplicationController
     end
 
     if recipients
-      recipients = recipients.split(",")
-      groups = Group.messageable(current_user).where('name in (?)', recipients).pluck('name')
+      recipients = recipients.split(",").map(&:downcase)
+      groups = Group.messageable(current_user).where('lower(name) in (?)', recipients).pluck('lower(name)')
       recipients -= groups
       emails = recipients.select { |user| user.match(/@/) }
       recipients -= emails

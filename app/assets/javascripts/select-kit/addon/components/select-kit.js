@@ -57,6 +57,8 @@ export default Component.extend(
     nameProperty: "name",
     singleSelect: false,
     multiSelect: false,
+    labelProperty: null,
+    titleProperty: null,
 
     init() {
       this._super(...arguments);
@@ -76,6 +78,8 @@ export default Component.extend(
           uniqueID: guidFor(this),
           valueProperty: this.valueProperty,
           nameProperty: this.nameProperty,
+          labelProperty: this.labelProperty,
+          titleProperty: this.titleProperty,
           options: EmberObject.create(),
 
           isLoading: false,

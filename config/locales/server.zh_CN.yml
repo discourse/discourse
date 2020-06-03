@@ -45,7 +45,7 @@ zh_CN:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
       generic: 导入该主题时发生错误
-      about_json: "导入错误：about.json 不存在或无效"
+      about_json: "导入错误：about.json不存在或无效。你确定这是一个Discourse主题码？"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 的修改包含无效值：%{errors}"
       git: "克隆 git 储存库时出错，访问被拒绝或找不到存储库"
@@ -318,7 +318,7 @@ zh_CN:
       already_bookmarked_post: "你不能将同一帖子收藏两次。"
       cannot_set_past_reminder: "你不能在此主题设置收藏提醒。"
       cannot_set_reminder_in_distant_future: "你不能够设置一个大于十年的收藏提醒。"
-      time_must_be_provided: "必须为除提醒提供时间"
+      time_must_be_provided: "必须为所有提醒设置时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天的某个时候"
@@ -354,6 +354,10 @@ zh_CN:
       trust_level_4: "信任等级4"
     request_membership_pm:
       title: "%{group_name}的成员请求"
+    request_accepted_pm:
+      title: "你已接受加入@%{group_name}"
+      body: |
+        你要加入@%{group_name}的请求已被允许，现在你是其中一员了。
     view_hidden_topic_request_reason: "我希望加入群组 “%{group_name}” 以访问[此主题](%{topic_url})"
   education:
     until_posts:
@@ -395,11 +399,11 @@ zh_CN:
 
       这样其它人会更容易地看一个长的回复，而不是多个分开的回复。
     dominating_topic: |
-      ### 让其他人加入讨论
+      ### 让其他人也加入到讨论中
 
-      很明显这个主题对你很重要 &ndash; 你已经发表的帖子占该主题 %{percent}% 的回复。
+      显然这个主题对你很重要 &ndash；但所有回复中你的发言占比超过%{percent}%
 
-      如果你能留出空间让其他人来分享他们的观点，那可能会更好。你可以邀请他们过来吗？
+      留一点空间给其他人分享他们自己的见解会更好。你能邀请他们吗？
     get_a_room: |
       ### 鼓励大家参与讨论
 
@@ -1296,7 +1300,6 @@ zh_CN:
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "通过下载将远程图像转换为本地图像；此选项可避免图像损坏。"
     download_remote_images_threshold: "下载远程图像到本地所需的最小硬盘空间（百分比）"
-    download_remote_images_max_days_old: "不下载超过 n 天的帖子中的远程图片。"
     disabled_image_download_domains: "域名列表，链接到这些站点的图片不会被下载。用 | 分割。"
     editing_grace_period: "在 (n) 秒之内，对帖子的编辑不生成帖子历史。"
     editing_grace_period_max_diff: "编辑宽限期允许的最大字符更改数，如果更改存储后的另一个修订版（信任级别0和1）"
@@ -1314,6 +1317,7 @@ zh_CN:
     add_rel_nofollow_to_user_content: '添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须使用“rake posts:rebake"重制所有帖子。'
     exclude_rel_nofollow_domains: "不应添加nofollow的域名列表。example.com 会自动包含 sub.example.com。至少你应该填写本站域名来帮助爬虫获得所有内容。如果你网站的其余部分在另外的域名，也请添加那些域名。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
+    topic_excerpt_maxlength: "根据主题的第一帖所生成，主题的节选或摘要的最大长度。"
     show_pinned_excerpt_mobile: "移动版显示置顶主题剪辑。"
     show_pinned_excerpt_desktop: "桌面版显示置顶主题剪辑。"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
@@ -2048,6 +2052,7 @@ zh_CN:
     not_activated: "你还不能登录。我们发送了一封激活邮件给你，请按照邮件中的步骤来激活你的账户。"
     not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登录。"
     admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
+    reset_not_allowed_from_ip_address: "你不能够从当前的IP地址请求重置密码。"
     suspended: "你要等到 %{date} 之后才能登录。"
     suspended_with_reason: "账户已封禁至 %{date}：%{reason}"
     errors: "%{errors}"
@@ -2691,6 +2696,15 @@ zh_CN:
         我们很抱歉，但是你发送至%{destination}（标题 %{former_title}）的邮件出问题了。
 
         你的账户没有权限回复这个主题。如果你认为这是一个错误，[联系管理人员](%{base_url}/about)。
+    email_reject_reply_to_digest:
+      title: "回复摘要邮件被拒"
+      subject_template: "[%{email_prefix}] 邮件问题 -- 回复摘要邮件"
+      text_body_template: |
+        抱歉，你发送到%{destination}（标题为%{former_title}）的邮件出现了问题。
+
+        我们不接受直接回复摘要邮件。
+
+        如果你认为这是一个错误，[联系我们的管理人员](%{base_url}/about).
     email_error_notification:
       title: "邮件错误提醒"
       subject_template: "[%{email_prefix}] 电子邮件错误 -- POP 验证错误"
@@ -3236,6 +3250,8 @@ zh_CN:
         如果这是你，太棒了！你不需要做任何其他事情。
 
         如果不是你，请[查看你现有的会话](%{base_url}/my/preferences/account)并考虑更改密码。
+  page_forbidden:
+    title: "啊噢！该页面是私密的。"
   page_not_found:
     title: "抱歉！这个页面不存在或者是私密的。"
     popular_topics: "热门"
@@ -3293,6 +3309,7 @@ zh_CN:
     user_email_user_suspended: "用户被封禁"
     user_email_already_read: "用户已阅读此帖"
     user_email_access_denied: "用户不被允许查看此帖子"
+    user_email_no_email: "没有与用户id%{user_id}相关联的邮件"
     sender_message_blank: "消息空"
     sender_message_to_blank: "message.to为空"
     sender_text_part_body_blank: "text_part.body为空"
@@ -3869,7 +3886,7 @@ zh_CN:
         此徽章授予给连续5天用完所有每日 %{max_likes_per_day} “赞”的你。感谢您每天花时间积极鼓励最好的交流！
     crazy_in_love:
       name: 狂热
-      description: 20 天都赞过 50 次
+      description: "一天内送出 %{max_likes_per_day} 个赞达 20 次"
       long_description: |
         此徽章授予给每天都送完所有的每日 %{max_likes_per_day} 赞的你。哇！你是鼓励社区成员的榜样！
     thank_you:

@@ -386,9 +386,6 @@ nb_NO:
         refresh: "Last inn på nytt"
         status: "Status"
         category: "Kategori"
-        orders:
-          priority: "Prioritet"
-          priority_asc: "Prioritet (motsatt)"
       scores:
         date: "Dato"
         type: "Type"
@@ -571,7 +568,6 @@ nb_NO:
         muted:
           title: "Ignorert"
       flair_url: "Bilde for gruppetilhørighet på avatar"
-      flair_url_placeholder: "(Valgfritt) Font Awesome-klasse eller URL til bilde"
       flair_bg_color: "Bakgrunnsfarge for gruppetilhørighetsbilde på avatar"
       flair_bg_color_placeholder: "(Valgfritt) Fargekode som hex-verdi"
       flair_color: "Farge på bilde for gruppetilhørighet på avatar"
@@ -784,8 +780,9 @@ nb_NO:
         disable: "Deaktiver"
         enable: "Aktiver"
         enable_long: "Aktiver reservekoder"
-        copied_to_clipboard: "Kopiert til utklippstavlen"
+        copy_to_clipboard: "Kopier til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering til utklippstavlen"
+        copied_to_clipboard: "Kopiert til utklippstavlen"
         remaining_codes: "Du har <strong>{{count}}</strong> reservekoder igjen."
         codes:
           title: "Reservekoder opprettet"
@@ -798,10 +795,12 @@ nb_NO:
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
         oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
+        disable: "Deaktiver"
+        save: "Lagre"
         edit: "Rediger"
         security_key:
           register: "Registrer"
-          delete: "Slett"
+          save: "Lagre"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -1492,7 +1491,6 @@ nb_NO:
           bookmarks: Jeg bokmerket
           first: er det første innlegget
           pinned: er festet
-          unpinned: er ikke festet
           seen: Jeg leste
           unseen: Jeg har ikke lest
           wiki: er wiki
@@ -1584,7 +1582,7 @@ nb_NO:
         help: "Flytt melding tilbake til innboks"
       edit_message:
         help: "Rediger første innlegg i meldingen"
-        title: "Rediger melding"
+        title: "Rediger"
       defer:
         title: "Utsett"
       list: "Emner"
@@ -2342,7 +2340,6 @@ nb_NO:
         this_month: "Den siste måneden"
         this_week: "Den siste uken"
         today: "I dag"
-        other_periods: "se toppen"
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
@@ -2521,6 +2518,10 @@ nb_NO:
       custom_message_template_forum: "Hei, du burde ta del i dette forumet!"
       custom_message_template_topic: "Hei, jeg tenkte du ville like dette emnet!"
     forced_anonymous: "På grunn av ekstrem belastning vises denne siden midlertidig på samme måte som om du var logget ut."
+    footer_nav:
+      back: "Forrige"
+      share: "Del"
+      dismiss: "Avslå"
     safe_mode:
       enabled: "Sikkert modus er påskrudd, for å skru av sikkert modus, lukk dette nettleservinduet"
   admin_js:
@@ -2722,12 +2723,6 @@ nb_NO:
         tag_event:
           name: "Stikkordshandling"
           details: "Når et stikkord lages, oppdateres eller slettes."
-        flag_event:
-          name: "Flagghandling"
-          details: "Når et flagg settes, aksepteres, avvises eller ignoreres."
-        queued_post_event:
-          name: "Hendelse for godkjent innlegg"
-          details: "Når et køet innlegg opprettes, godkjennes eller avvises."
         delivery_status:
           title: "Sendingsstatus"
           inactive: "Inaktiv"

@@ -33,6 +33,7 @@
   &.timeline-fullscreen.show {
     max-height: 700px;
     transition: max-height 0.4s ease-out;
+
     @media screen and (max-height: 425px) {
       max-height: 75vh;
     }
@@ -58,7 +59,7 @@
     right: 0;
     border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
     box-shadow: shadow("composer");
-    padding-top: 20px;
+    padding: 20px 0px;
     z-index: z("fullscreen");
     @media screen and (max-height: 425px) {
       padding-top: 10px;
@@ -119,21 +120,21 @@
       .timeline-footer-controls {
         display: none;
         position: absolute;
-        bottom: 10px;
+        bottom: 20px;
         left: 10px;
 
         button,
         .btn-group {
-          float: none;
-          display: inline-block;
           margin-bottom: 0;
           margin-right: 15px;
-          position: static;
+        }
+
+        .widget-component-connector {
+          vertical-align: top;
         }
       }
       .timeline-scrollarea-wrapper {
         display: table-cell;
-        padding-bottom: 20px;
         padding-right: 1.5em;
         width: 100px;
       }
@@ -178,10 +179,6 @@
 
     .timeline-controls {
       margin-bottom: 1em;
-
-      button {
-        margin-right: 0.5em;
-      }
     }
 
     .timeline-footer-controls {
@@ -189,7 +186,7 @@
       transition: opacity 0.2s ease-in;
       display: flex;
 
-      button {
+      .reply-to-post {
         margin-right: 0.5em;
       }
 

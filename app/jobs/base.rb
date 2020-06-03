@@ -281,8 +281,12 @@ module Jobs
     end
   end
 
-  def self.enqueue(job_name, opts = {})
-    klass = "::Jobs::#{job_name.to_s.camelcase}".constantize
+  def self.enqueue(job, opts = {})
+    if job.instance_of?(Class)
+      klass = job
+    else
+      klass = "::Jobs::#{job.to_s.camelcase}".constantize
+    end
 
     # Unless we want to work on all sites
     unless opts.delete(:all_sites)
@@ -319,7 +323,30 @@ module Jobs
           klass.new.perform(opts)
         end
       else
-        klass.new.perform(opts)
+        # Run the job synchronously
+        # But never run a job inside another job
+        # That could cause deadlocks during test runs
+        queue = Thread.current[:discourse_nested_job_queue]
+        outermost_job = !queue
+
+        if outermost_job
+          queue = Queue.new
+          Thread.current[:discourse_nested_job_queue] = queue
+        end
+
+        queue.push([klass, opts])
+
+        if outermost_job
+          # responsible for executing the queue
+          begin
+            until queue.empty?
+              queued_klass, queued_opts = queue.pop(true)
+              queued_klass.new.perform(queued_opts)
+            end
+          ensure
+            Thread.current[:discourse_nested_job_queue] = nil
+          end
+        end
       end
     end
 

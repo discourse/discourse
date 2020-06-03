@@ -36,6 +36,9 @@ describe Tag do
       expect { Fabricate.build(:tag, name: "hElLo").save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
+    it 'does not allow creation of tag with name in "RESERVED_TAGS"' do
+      expect { Fabricate.build(:tag, name: "None").save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
   end
 
   describe 'destroy' do

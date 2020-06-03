@@ -825,7 +825,31 @@ describe PostsController do
         post "/posts.json", params: {
           raw: 'I can haz a test',
           title: 'I loves my test',
-          target_recipients: group.name,
+          target_recipients: "test_Group",
+          archetype: Archetype.private_message
+        }
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+        post = Post.find(parsed['id'])
+
+        expect(post.topic.topic_allowed_users.length).to eq(1)
+        expect(post.topic.topic_allowed_groups.length).to eq(1)
+      end
+
+      it "can send a message to a group with caps" do
+        group = Group.create(name: 'Test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
+        user1 = user
+        group.add(user1)
+
+        # allow pm to this group
+        group.update_columns(messageable_level: Group::ALIAS_LEVELS[:everyone])
+
+        post "/posts.json", params: {
+          raw: 'I can haz a test',
+          title: 'I loves my test',
+          target_recipients: "test_Group",
           archetype: Archetype.private_message
         }
 
@@ -965,13 +989,13 @@ describe PostsController do
 
       it 'creates a private post' do
         user_2 = Fabricate(:user)
-        user_3 = Fabricate(:user)
+        user_3 = Fabricate(:user, username: "foo_bar")
 
         post "/posts.json", params: {
           raw: 'this is the test content',
           archetype: 'private_message',
           title: "this is some post",
-          target_recipients: "#{user_2.username},#{user_3.username}"
+          target_recipients: "#{user_2.username},Foo_Bar"
         }
 
         expect(response.status).to eq(200)
@@ -1619,6 +1643,16 @@ describe PostsController do
 
       expect(body).to_not include(private_post.topic.slug)
       expect(body).to include(public_post.topic.slug)
+    end
+
+    it "returns 404 if `hide_profile_and_presence` user option is checked" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+
+      get "/u/#{user.username}/activity.rss"
+      expect(response.status).to eq(404)
+
+      get "/u/#{user.username}/activity.json"
+      expect(response.status).to eq(404)
     end
   end
 

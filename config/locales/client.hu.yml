@@ -408,8 +408,7 @@ hu:
         status: "Állapot"
         category: "Kategória"
         orders:
-          priority: "Prioritás"
-          priority_asc: "Prioritás (fordított)"
+          score: "Pontszám"
           created_at: "Létrehozva"
           created_at_asc: "Létrehozva (fordított)"
         priority:
@@ -633,8 +632,6 @@ hu:
           title: "Némítás"
           description: "A csoport üzeneteiről nem fogsz értesítéseket kapni."
       flair_url: "Avatar Flair kép"
-      flair_url_placeholder: "(Opcionális) Kép url címe vagy Font Awesome css osztálya"
-      flair_url_description: 'Használj négyzet alakú, minimum 20x20-as képeket vagy FontAwesome ikonokat (elfogadott formátumok: "fa-icon", "far fa-icon" or "fab fa-icon").'
       flair_bg_color: "Avatar Flair háttér szín"
       flair_bg_color_placeholder: "(Opcionális) Hex színkód érték"
       flair_color: "Avatar Flair szín"
@@ -876,8 +873,9 @@ hu:
         regenerate: "Újragenerálás"
         disable: "Kikapcsol"
         enable: "Engedélyez"
-        copied_to_clipboard: "Vágólapra másolva"
+        copy_to_clipboard: "Vágólapra másolás"
         copy_to_clipboard_error: "Hiba az adat Vágólapra másolása során"
+        copied_to_clipboard: "Vágólapra másolva"
       second_factor:
         title: "Két-faktoros hitelesítés"
         forgot_password: "Elfelejtetted a jelszavad?"
@@ -887,11 +885,12 @@ hu:
         disable_description: "Írd be az azonosító kódodat az alkalmazásból"
         show_key_description: "Manuális beírás"
         oauth_enabled_warning: "A közösségi bejelentkezések nem lesznek elérhetőek a fét-faktoros azonosítás aktiválása után a fiókhoz."
-        disable: "kikapcsolás"
+        disable: "Kikapcsol"
+        save: "Mentés"
         edit: "Szerkesztés"
         security_key:
           register: "Regisztráció"
-          delete: "Törlés"
+          save: "Mentés"
       change_about:
         title: "Rólam megváltoztatása"
         error: "Hiba történt az adat módosításakor."
@@ -1613,7 +1612,7 @@ hu:
       move_to_inbox:
         title: "Áthelyezés a bejövő üzenetek közé"
       edit_message:
-        title: "Üzenet szerkesztése"
+        title: "Szerkesztés"
       list: "Témák"
       new: "új téma"
       unread: "olvasatlan"
@@ -2206,7 +2205,6 @@ hu:
         this_month: "Utolsó 30 nap"
         this_week: "Utolsó 7 nap"
         today: "Utolsó 24 óra"
-        other_periods: "Lásd felül"
     permission_types:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
@@ -2349,6 +2347,10 @@ hu:
       custom_message_placeholder: "Add meg az egyéni üzenetedet"
       custom_message_template_forum: "Hej, csatlakoznód kéne ehez a fórumhoz"
       custom_message_template_topic: "Hej, úgygondoltam talán élveznéd ezt a témát"
+    footer_nav:
+      back: "Vissza"
+      share: "Megosztás"
+      dismiss: "Elvet"
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, hogy kilépj a biztonságos módból lépj ki ebből a keresési lapból"
   admin_js:

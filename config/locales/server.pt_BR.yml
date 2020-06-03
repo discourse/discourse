@@ -45,7 +45,6 @@ pt_BR:
       unrecognized_extension: "Extensão de arquivo não reconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro ao importar esse tema
-      about_json: "Erro de Importação: o about.json não existe ou é inválido"
       about_json_values: "about.json contém valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
       unpack_failed: "Falha ao descompactar o arquivo"
@@ -174,6 +173,8 @@ pt_BR:
     errors:
       <<: *errors
   invite:
+    not_found: "Seu token de convite é inválido. Entre em <a href='%{base_url}/about'>contato com a staff</a>."
+    not_found_json: "Seu token de convite é inválido. Por favor entre em contato com a staff."
     not_found_template: |
       <p>Seu convite para <a href="%{base_url}">%{site_name}</a>já foi resgatado.
       <p>Se você lembrar de sua senha, você pode <a href="%{base_url}/login">Login</a>.</p>
@@ -212,8 +213,11 @@ pt_BR:
   invalid_whisper_access: "Os sussurros não estão habilitados ou você não tem acesso para criar postagens de sussurro"
   not_in_group:
     title_topic: "Você precisa estar em um grupo para ver este tópico."
+    title_category: "Você deve estar em um grupo para ver esta categoria."
     request_membership: "Pedir para participar"
     join_group: "Entrar no Grupo"
+  deleted_topic: "Ops! Este tópico foi excluído e não está mais disponível."
+  delete_topic_failed: "Ocorreu um erro ao excluir esse tópico. Entre em contato com o administrador do site."
   reading_time: "Tempo de leitura"
   likes: "Curtidas"
   too_many_replies:
@@ -269,6 +273,7 @@ pt_BR:
     one: "Desculpe, usuários novos podem colocar apenas %{count} link nas postagens."
     other: "Desculpe, usuários novos podem colocar apenas %{count} links nas postagens."
   contains_blocked_word: "Sua postagem contém uma palavra que não é permitida:%{word}"
+  contains_blocked_words: "Sua postagem contém várias palavras que não são permitidas: %{words}"
   spamming_host: "Desculpe, você não pode colocar um link para este site."
   user_is_suspended: "Usuários suspensos não tem permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
@@ -276,6 +281,7 @@ pt_BR:
   max_pm_recipients: "Desculpe, você pode enviar uma mensagem para o máximo %{recipients_limit} destinatários."
   pm_reached_recipients_limit: "Desculpe, você não pode ter mais de %{recipients_limit} destinatários em uma mensagem."
   removed_direct_reply_full_quotes: "Citação removida automaticamente de todo a postagem anterior."
+  create_pm_on_existing_topic: "Desculpe, você não pode criar uma MP em um tópico existente."
   just_posted_that: "é demasiado similar ao que postaste recentemente"
   invalid_characters: "contém caracteres inválidos"
   is_invalid: "parece pouco claro; é uma frase completa?"
@@ -310,9 +316,15 @@ pt_BR:
   revert_version_same: "A versão atual é a mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
   bookmarks:
+    errors:
+      already_bookmarked_post: "Você não pode favoritar a mesma postagem duas vezes."
+      cannot_set_past_reminder: "Você não pode definir um lembrete de favorito no passado."
+      cannot_set_reminder_in_distant_future: "Você não pode definir um lembrete de favorito mais de 10 anos no futuro."
+      time_must_be_provided: "a hora deve ser fornecida para todos os lembretes"
     reminders:
-      at_desktop: "Da próxima vez que estiver na minha área de trabalho"
+      at_desktop: "Da próxima vez que estiver em meu desktop"
       later_today: "Mais tarde hoje"
+      next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       next_week: "Próxima semana"
       next_month: "Próximo mês"
@@ -346,6 +358,7 @@ pt_BR:
       trust_level_4: "nivel_de_confianca_4"
     request_membership_pm:
       title: "Pedido de associação para @%{group_name}"
+    view_hidden_topic_request_reason: "Gostaria de fazer parte do grupo '%{group_name}' para poder acessar [este tópico](%{topic_url})"
   education:
     until_posts:
       one: "%{count} mensagem"
@@ -386,12 +399,6 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todo mundo ler tópicos que possuem poucas respostas com muita informação em vez de muitas respostas individuais com pouca informação cada.
-    dominating_topic: |
-      ### Deixe que outros participem desta conversa
-
-      Este tópico claramente é importante para você &ndash; você postou mais de %{percent}% das respostas aqui.
-
-      Poderia ser ainda melhor se você tivesse outras pessoas para compartilhar seus pontos de vista também. Você pode convidá-las?
     get_a_room: |
       ### Incentive todos a se envolverem na conversa
 
@@ -547,6 +554,7 @@ pt_BR:
       description_incomplete: "A postagem da descrição da categoria deve ter pelo menos um parágrafo."
       permission_conflict: "Qualquer grupo que tenha permissão para acessar uma subcategoria também deve ter permissão para acessar a categoria pai. Os grupos a seguir têm acesso a uma das subcategorias, mas não têm acesso à categoria pai: %{group_names}."
       disallowed_topic_tags: "Este tópico tem etiquetas não permitidas por esta categoria: '%{tags}'"
+      disallowed_tags_generic: "Este tópico não permite etiquetas."
     cannot_delete:
       uncategorized: "Esta categoria é especial. Ela se destina como uma área de espera para tópicos que não têm categoria; ela não pode ser excluída."
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
@@ -712,6 +720,7 @@ pt_BR:
       windows: "Microsoft Windows"
       unknown: "sistema operacional desconhecido"
   change_email:
+    wrong_account_error: "Você está logado na conta errada, desconecte-se e tente novamente."
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar no %{site_name}"
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
@@ -720,11 +729,14 @@ pt_BR:
     confirm: "Confirmar"
     authorizing_new:
       title: "Confirme seu novo e-mail"
+      description: "Por favor confirme que você deseja que seu novo endereço de e-mail seja alterado para:"
     authorizing_old:
       title: "Troque seu endereço de e-mail"
+      description: "Por favor confirme a alteração do seu endereço de e-mail"
       old_email: "E-mail antigo: %{email}"
       new_email: "Novo e-mail: %{email}"
       almost_done_title: "Confirmando seu novo endereço de e-mail"
+      almost_done_description: "Nós enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
   associated_accounts:
     revoke_failed: "Falha ao revogar sua conta com %{provider_name}."
     connected: "(conectado)"
@@ -739,6 +751,7 @@ pt_BR:
     activated: "Desculpe, esta conta já foi ativada."
     admin_confirm:
       title: "Confirmar Conta de Administrador"
+      description: "Tem certeza de que deseja que <b>%{target_username} (%{target_email})</b> seja um administrador?"
       grant: "Conceder acesso de administrador"
       complete: "<b>%{target_username}</b> é agora um administrador."
       back_to: "Retornar para %{title}"
@@ -790,6 +803,7 @@ pt_BR:
   draft:
     sequence_conflict_error:
       title: "erro no rascunho"
+      description: "O rascunho está sendo editado em outra janela. Por favor recarregue esta página."
   draft_backup:
     pm_body: "Tópico contém rascunhos salvos"
   user_activity:
@@ -960,6 +974,7 @@ pt_BR:
       yaxis: "Número de novos colaboradores"
       description: "Número de usuários que fizeram sua primeira postagem durante este período."
     trust_level_growth:
+      title: "Crescimento de nível de confiança"
       yaxis: "Dia"
     consolidated_page_views:
       title: "Visualizações de Página Consolidadas"
@@ -1235,6 +1250,7 @@ pt_BR:
     force_https_warning: "Seu site está usando SSL. Mas `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ainda não está ativado nas configurações do seu site."
     out_of_date_themes: "Atualizações estão disponíveis para os seguintes temas:"
     unreachable_themes: "Não foi possível verificar se há atualizações para os seguintes temas:"
+    watched_word_regexp_error: "A expressão regular para %{action} palavras assistidas é inválida. Verifique as <a href='%{base_path}/admin/logs/watched_words'>configurações das Palavras Assistidas</a> ou desative a configuração do site 'expressões regulares de palavras assistidas'."
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
@@ -1275,7 +1291,6 @@ pt_BR:
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário para download das imagens ( em % )"
-    download_remote_images_max_days_old: "Não baixe fotos remotas para publicações que tem mais de n dias."
     disabled_image_download_domains: "Imagens hospedadas nestes domínios nunca serão baixadas. \nLista delimitada por |"
     editing_grace_period: "Por (n) segundos após a publicação, as edições não criarão uma nova versão ho histórico da publicação."
     editing_grace_period_max_diff: "Número máximo de alterações de caracteres permitidas no período de carência de edição, se mais alterações forem armazenadas, outra revisão de publicação (nível de confiança 0 e 1)"
@@ -1874,6 +1889,8 @@ pt_BR:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Buscar resultados para '%{term}'"
+    audio: "[áudio]"
+    video: "[vídeo]"
   sso:
     login_error: "Erro de Login"
     not_found: "Sua conta não pode ser encontrada. Por favor, entre em contato com o administrador do site."
@@ -1962,6 +1979,8 @@ pt_BR:
     autoclosed_disabled_lastpost: "Este tópico está aberto agora. Novas respostas estão permitidas."
     auto_deleted_by_timer: "Excluído automaticamente pelo temporizador."
   login:
+    invalid_second_factor_method: "O método de autenticação de dois fatores selecionado é inválido."
+    not_enabled_second_factor_method: "O método de autenticação de dois fatores selecionado não está ativado para sua conta."
     security_key_description: "Quando você tiver uma chave física de segurança preparada, pressione o Anti\n\nQuando sua chave de segurança física estiver pronta, pressione o botão \"Autenticar com Chave de Segurança\" abaixo."
     security_key_alternative: "T"
     security_key_authenticate: "Autenticar com Chave de Segurança"
@@ -1982,7 +2001,12 @@ pt_BR:
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo deu errado, talvez o nome de usuário ou o email já estejam registrados. Tente o link Esqueci minha Senha."
+    omniauth_error:
+      generic: "Desculpe, houve um erro ao autorizar sua conta. Por favor, tente novamente."
+      csrf_detected: "A autorização levou tempo demais ou você mudou de navegador. Por favor, tente novamente."
+      request_error: "Ocorreu um erro ao iniciar a autorização. Por favor, tente novamente."
     omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
+    omniauth_confirm_title: "Efetuar login usando %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Nenhum endereço de e-mail associado a%{account} são autorizados. Você pode precisar configurar sua conta com um endereço de e-mail diferente."
     new_registrations_disabled: "Novas contas não são permitidas neste momento."
@@ -1999,6 +2023,7 @@ pt_BR:
     second_factor_backup_title: "Código de Backup de Dois Fatores"
     invalid_second_factor_code: "Código de autenticação inválido. Cada código só pode ser usado uma vez."
     second_factor_toggle:
+      totp: "Usar um aplicativo autenticador ou chave de segurança"
       backup_code: "Use um código de backup"
   admin:
     email:
@@ -2013,6 +2038,7 @@ pt_BR:
       short: "deve ter no mínimo %{min} caracteres"
       long: "precisa ter não mais que ${max} caracteres"
       too_long: "é muito longo"
+      characters: "deve incluir apenas números, letras, traços, pontos e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
       must_begin_with_alphanumeric_or_underscore: "deve começar com uma letra, número ou um underline"
@@ -2034,6 +2060,7 @@ pt_BR:
       fixed_primary_email: "E-mail principal fixo para usuário testado"
       same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
       inactive_user: "Usuário inativo"
+    email_in_spam_header: "O primeiro e-mail do usuário foi sinalizado como spam"
   reviewables_reminder:
     submitted:
       one: "Itens foram enviados durante %{count} hora atrás. [Por favor, revise-os] (%{base_path}/review)."
@@ -2091,7 +2118,7 @@ pt_BR:
       %{invite_link}
   invite_forum_mailer:
     title: "Convidar remetente do Fórum"
-    subject_template: "%{inviter_name}convidou você para se juntar à %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou você para se juntar à %{site_domain_name}"
     text_body_template: |
       %{inviter_name} convidou você para se juntar
 
@@ -2143,6 +2170,10 @@ pt_BR:
   admin_confirmation_mailer:
     title: "Confirmação do administrador"
     subject_template: "[%{email_prefix}] Confirmar nova conta de administrador"
+    text_body_template: |
+      Por favor confirme que você deseja adicionar **%{target_username} (%{target_email})** como administrador do seu fórum.
+
+      [Confirmar conta de administrador](%{admin_confirm_url})
   test_mailer:
     title: "Teste de remetente"
     subject_template: "[%{email_prefix}] Teste de entrega de e-mail"
@@ -2172,9 +2203,46 @@ pt_BR:
     post_hidden:
       title: "Post oculto"
       subject_template: "Post oculto pelas sinalizações da comunidade"
+      text_body_template: |
+        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi ocultada.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Esta postagem foi ocultada devido a sinalizações da comunidade; portanto, considere como você pode revisar sua postagem para refletir os comentários deles. **Você pode editar sua postagem após %{edit_delay} minutos e ela será automaticamente mostrada novamente.**
+
+        No entanto, se a postagem for ocultada pela comunidade uma segunda vez, ela permanecerá oculta até ser tratada pela staff.
+
+        Para obter orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     post_hidden_again:
       title: "Posto oculto novamente"
       subject_template: "Post escondido por sinalizações da comunidade, equipe notificada"
+      text_body_template: |
+        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi ocultada novamente.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        A comunidade sinalizou esta postagem e agora está oculta. **Como esta postagem foi ocultada mais de uma vez, sua postagem permanecerá oculta até ser tratada por um membro da staff.**
+
+        Para obter orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
+    flags_disagreed:
+      title: "Postagem sinalizada restaurada pela staff"
+      subject_template: "Postagem sinalizada restaurada pela staff"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automatizada de %{site_name} para informar que [sua postagem](%{base_url}%{url}) foi restaurada.
+
+        Esta postagem foi sinalizada pela comunidade e um membro da staff optou por restaurá-la.
+
+        [details="Clique para expandir a postagem restaurada"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
     flags_agreed_and_post_deleted:
       title: "Postagem sinalizada removida pela equipe"
       subject_template: "Postagem sinalizada removida pela equipe"
@@ -2217,6 +2285,8 @@ pt_BR:
         Opa, tudo bom? Nós vemos que você tem estado ocupado lendo, o que é fantástico, então nós te promovemos a um [nível de confiança!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) mais alto.
 
         Estamos realmente felizes por você estar passando tempo conosco e adoraríamos saber mais sobre você. Tire um momento para [preencher seu perfil](%{base_url}/my/preferences/profile) ou sinta-se à vontade para [iniciar um novo tópico](%{base_url}/categories).
+    welcome_staff:
+      subject_template: "Parabéns, você recebeu o status %{role}!"
     welcome_invite:
       title: "Convite de boas-vindas"
       subject_template: "Bem-vindo ao %{site_name}!"
@@ -2255,7 +2325,7 @@ pt_BR:
 
         Aqui está o log:
 
-        `` text
+        ``` text
         %{logs}
         ```
     restore_succeeded:
@@ -2506,6 +2576,12 @@ pt_BR:
     ignored_users_summary:
       title: "Usuário Ignorado passou o limite"
       subject_template: "Um usuário está sendo ignorado por muitos outros usuários"
+      text_body_template: |
+        Olá, esta é uma mensagem automática de %{site_name} para informar que @%{username} foi ignorado por %{ignores_threshold} usuários. Isso pode indicar que um problema está se desenvolvendo em sua comunidade.
+
+        Você pode querer [revisar postagens recentes](%{base_url}/u/%{username}/summary) desse usuário e, possivelmente, outros usuários no [relatório de usuários ignorados e silenciados](%{base_url}/admin/reports/top_ignored_users).
+
+        Para obter orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Muitas Sinalizações de Spam"
       subject_template: "Nova conta suspensa"
@@ -2586,6 +2662,12 @@ pt_BR:
     dashboard_problems:
       title: "Problemas do painel"
       subject_template: "Nova recomendação no painel do seu site"
+      text_body_template: |
+        Temos alguns novos conselhos e recomendações para você, com base nas configurações atuais do site.
+
+        [Visite o painel do site](%{base_url}/admin) para vê-los.
+
+        Se nada estiver visível no seu painel, outro membro da equipe pode já ter agido com base neste conselho. Uma lista de ações da staff pode ser encontrada em seus [Logs de ação da staff](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Você é um novo usuário do mês!"
       subject_template: "Você é um novo usuário do mês!"
@@ -2632,6 +2714,48 @@ pt_BR:
     visit_link_to_respond_pm: "[Visite a Mensagem](%{base_url}%{url}) para responder a %{participants}."
     posted_by: "Postado por %{username} em %{post_date}"
     pm_participants: "Participantes: %{participants}"
+    invited_group_to_private_message_body: |
+      %{username} convidou @%{group_name} para uma mensagem
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      em
+
+      > %{site_title} - %{site_description}
+
+      Para participar da mensagem, clique no link abaixo:
+
+      %{topic_url}
+    invited_to_private_message_body: |
+      %{username} convidou você para uma mensagem
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      em
+
+      > %{site_title} - %{site_description}
+
+      Para participar da mensagem, clique no link abaixo:
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} convidou você para uma discussão
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      em
+
+      > %{site_title} -- %{site_description}
+
+      Para participar da discussão, clique no link abaixo:
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "Grupo Convidado do Usuário para MP"
       subject_template: "[%{email_prefix}] %{username} convidou @%{group_name} para a mensagem'%{topic_title}'"
@@ -2866,6 +2990,13 @@ pt_BR:
     admin_login:
       title: "Login de administrador"
       subject_template: "[%{email_prefix}] Login"
+      text_body_template: |
+        Alguém pediu para fazer login na sua conta em [%{site_name}](%{base_url}).
+
+        Se você não fez essa solicitação, pode ignorar este e-mail com segurança.
+
+        Clique no link a seguir para fazer login:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Conta Criada"
       subject_template: "[%{email_prefix}] Sua Nova Conta"
@@ -2877,9 +3008,11 @@ pt_BR:
     confirm_new_email:
       title: "Confirmar novo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
+      text_body_template: "Confirme seu novo endereço de email para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-new-email/%{email_token}\n"
     confirm_old_email:
       title: "Confirmar Antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
+      text_body_template: "Antes de podermos alterar seu endereço de e-mail, precisamos confirmar que você \ncontrola a conta de e-mail atual. Depois de concluir esta etapa, solicitaremos que você \nconfirme o novo endereço de e-mail.\n\nConfirme seu endereço de email atual para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     notify_old_email:
       title: "Notificar e-mail antigo"
       subject_template: "[%{email_prefix}] Seu endereço de e-mail foi alterado"
@@ -2984,6 +3117,7 @@ pt_BR:
     missing: "Desculpe! Não conseguimos achar nenhum avatar associado a esse endereço de email. Você pode tentar novamente?"
   flag_reason:
     sockpuppet: "Um novo usuário criou um tópico, e um outro novo usuário no mesmo endereço IP (%{ip_address}) respondeu. Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> do site."
+    spam_hosts: "Este novo usuário tentou criar várias postagens com links para o mesmo domínio. Todas as postagens deste usuário que incluam links devem ser revisadas. Veja a configuração do site <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Excedido max_emails_per_day_per_user"
     exceeded_bounces_limit: "Excedido bounce_score_threshold"
@@ -3294,11 +3428,19 @@ pt_BR:
         Esse selo é concedido quando você recebe pelo menos cinco curtidas em 300 postagens diferentes. Uau! A comunidade admira suas contribuições freqüentes e de alta qualidade para as conversas aqui.
     out_of_love:
       name: Por Amor
+      description: "Usou %{max_likes_per_day} curtidas no mesmo dia"
+      long_description: |
+        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias. Lembrar-se de curtir as postagens que você gosta e aprecia incentiva seus colegas membros da comunidade a criar ainda mais discussões de qualidade no futuro.
     higher_love:
       name: Amor Maior
+      description: "Usou %{max_likes_per_day} curtidas no mesmo dia 5 vezes"
+      long_description: |
+        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias durante 5 dias. Obrigado por dedicar um tempo para incentivar ativamente as melhores conversas todos os dias!
     crazy_in_love:
       name: Apaixonado
-      description: Deu 50 curtidas no mesmo dia 20 vezes
+      description: "Usou %{max_likes_per_day} curtidas no mesmo dia 20 vezes"
+      long_description: |
+        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias durante 20 dias. Uau! Você é um modelo para incentivar seus colegas membros da comunidade!
     thank_you:
       name: Obrigado
       description: Teve 20 mensagens curtidas e curtiu 10 mensagens
@@ -3374,10 +3516,20 @@ pt_BR:
       other: "Você precisa selecionar pelo menos %{count} etiquetas."
     upload_row_too_long: "O arquivo CSV deve ter uma etiqueta por linha. Opcionalmente, a etiqueta pode ser seguida por uma vírgula e, em seguida, pelo nome do grupo de etiquetas."
     forbidden:
+      invalid:
+        one: "A tag que você selecionou não pode ser usada"
+        other: "Nenhuma das tags que você selecionou pode ser usada"
       in_this_category: '"%{tag_name}" não pode ser usado nesta categoria'
       restricted_to:
         one: '"%{tag_name}" é restrito à categoria "%{category_names}"'
         other: '"%{tag_name}" é restrito às seguintes categorias: %{category_names}'
+      synonym: 'Sinônimos não são permitidos. Use "%{tag_name}" em seu lugar.'
+      has_synonyms: '"%{tag_name}"  não pode ser usado porque possui sinônimos.'
+    required_tags_from_group:
+      one: "Você deve incluir pelo menos a tag %{count} %{tag_group_name}."
+      other: "Você deve incluir pelo menos %{count} etiquetas %{tag_group_name}."
+    invalid_target_tag: "não pode ser um sinônimo de um sinônimo"
+    synonyms_exist: "não é permitido pois existem sinônimos"
   rss_by_tag: "Tópicos marcados com %{tag}"
   finish_installation:
     congratulations: "Parabéns, você instalou o Discourse!"
@@ -3557,6 +3709,7 @@ pt_BR:
     api_key:
       revoked: Regovado
   reviewables:
+    already_handled: "Obrigado, mas já analisamos essa postagem e determinamos que ela não precisa ser sinalizada novamente."
     priorities:
       low: "Baixo"
       medium: "Média"
@@ -3581,6 +3734,7 @@ pt_BR:
       category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."
       must_approve_users: "Todos os novos usuários precisam ser aprovados pela staff. Veja `must_approve_users`."
       invite_only: "Todos os novos usuários devem ser convidados. Veja `invite_only`."
+      email_spam: "Este e-mail foi sinalizado como spam pelo cabeçalho definido em `email_in_spam_header`."
     actions:
       agree:
         title: "Concordar…"

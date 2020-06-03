@@ -176,6 +176,12 @@ describe GroupsController do
       )
     end
 
+    it 'should return correct X-Robots-Tag header when allow_index_in_robots_txt is set to false' do
+      SiteSetting.allow_index_in_robots_txt = false
+      get "/groups"
+      expect(response.headers['X-Robots-Tag']).to eq('noindex, nofollow')
+    end
+
     context 'viewing groups of another user' do
       describe 'when an invalid username is given' do
         it 'should return the right response' do
@@ -674,7 +680,7 @@ describe GroupsController do
               incoming_email: 'test@mail.org',
               flair_bg_color: 'FFF',
               flair_color: 'BBB',
-              flair_url: 'fa-adjust',
+              flair_icon: 'fa-adjust',
               bio_raw: 'testing',
               full_name: 'awesome team',
               public_admission: true,
@@ -1322,6 +1328,25 @@ describe GroupsController do
           end
         end
       end
+    end
+  end
+
+  describe "#handle_membership_request" do
+    before do
+      group.add_owner(user)
+      sign_in(user)
+    end
+
+    it "sends a private message when accepted" do
+      group_request = GroupRequest.create!(group: group, user: other_user)
+      expect { put "/groups/#{group.id}/handle_membership_request.json", params: { user_id: other_user.id, accept: true } }
+        .to change { Topic.count }.by(1)
+        .and change { Post.count }.by(1)
+
+      topic = Topic.last
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(topic.title).to eq(I18n.t('groups.request_accepted_pm.title', group_name: group.name))
+      expect(topic.first_post.raw).to eq(I18n.t('groups.request_accepted_pm.body', group_name: group.name).strip)
     end
   end
 

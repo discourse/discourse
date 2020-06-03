@@ -274,6 +274,9 @@ export default function(options) {
     ul.find("li").click(function() {
       selectedOption = ul.find("li").index(this);
       completeTerm(autocompleteOptions[selectedOption]);
+      if (!options.single) {
+        me.focus();
+      }
       return false;
     });
     var pos = null;

@@ -36,5 +36,13 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
-  })
+  }),
+
+  _onChange(value, item) {
+    if (item.onChange) {
+      item.onChange(value, item);
+    } else if (this.attrs.onChange) {
+      this.attrs.onChange(value, item);
+    }
+  }
 });

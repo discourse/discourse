@@ -644,18 +644,20 @@ pre {
 }
 
 kbd {
-  border-radius: 3px;
-  box-shadow: shadow("kbd");
+  align-items: center;
   background: dark-light-choose(#fafafa, #303030);
   border: 1px solid dark-light-choose(#d0d0d0, #505050);
-  border-bottom: none;
-
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  box-sizing: border-box;
   color: $primary;
-  display: inline-block;
+  display: inline-flex;
   font-size: $font-down-1;
+  justify-content: center;
   line-height: $line-height-large;
-  margin: 0 0.1em;
-  padding: 0.1em 0.6em;
+  margin: 0 0.15em;
+  min-width: 24px;
+  padding: 0.15em 0.6em;
 
   // don't allow more than 3 nested elements to prevent FF from crashing
   // cf. http://what.thedailywtf.com/t/nested-elements/7927
@@ -804,11 +806,12 @@ blockquote > *:last-child {
 }
 
 a.mention {
+  align-items: baseline;
+  display: inline-flex;
   font-weight: bold;
   font-size: 0.93em;
-  color: $primary;
   color: dark-light-choose($primary-high, $secondary-low);
-  padding: 2px 4px;
+  padding: 1px 4px;
   background: $primary-low;
   border-radius: 8px;
 }
@@ -830,12 +833,6 @@ a.mention-group {
     padding: 2px 4px;
     background: $primary-low;
     border-radius: 8px;
-  }
-}
-
-.popup-menu {
-  h3 {
-    margin-top: 0;
   }
 }
 
@@ -1052,4 +1049,16 @@ a.mention-group {
       }
     }
   }
+}
+
+.post-admin-menu {
+  display: inline-flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: auto;
+  max-width: 320px;
+  position: absolute;
+  text-align: left;
+  bottom: -2px;
+  right: 15px;
 }

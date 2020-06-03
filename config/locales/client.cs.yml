@@ -552,7 +552,6 @@ cs:
         muted:
           title: "Ztišený"
       flair_url: "Avatar Flair obrázek"
-      flair_url_placeholder: "(Volitelné) URL obrázku nebo třída Font Awesome "
       flair_bg_color: "Avatar Flair barva pozadí"
       flair_bg_color_placeholder: "(Volitelné) Hex kód barvy"
       flair_color: "Avatar Flair barva"
@@ -771,8 +770,9 @@ cs:
         disable: "Vypnout"
         enable: "Zapnout"
         enable_long: "Povolit záložní kódy"
-        copied_to_clipboard: "Zkopírováno do schránky"
+        copy_to_clipboard: "Kopírovat do schránky"
         copy_to_clipboard_error: "Chyba při kopírování dat do schránky"
+        copied_to_clipboard: "Zkopírováno do schránky"
         remaining_codes: "Zbývá vám <strong>{{count}}</strong> záložní kód."
         codes:
           title: "Záložní kódy vytvořeny"
@@ -788,9 +788,11 @@ cs:
         extended_description: |
           Dvoufaktorová autentizace přidává další bezpečnostní vrstvu k vašemu účtu, protože vedle hesla vyžaduje ještě i zadání jednorázového kódu, vytvořeného na zařízeních <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> nebo <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Upozorňujeme, že možnost přihlásit se pomocí účtu ze sociální sítě bude vypnuta, jakmila bude na vašem účtu povolena dvoufaktorová autentizace."
+        disable: "Vypnout"
+        save: "Uložit"
         edit: "Upravit"
         security_key:
-          delete: "Smazat"
+          save: "Uložit"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -1539,7 +1541,6 @@ cs:
           bookmarks: Mám v záložkách
           first: jsou první příspěvek v tématu
           pinned: jsou připnuty
-          unpinned: nejsou připnuty
           seen: která jsem četl
           unseen: jsem nečetl
           wiki: jsou wiki
@@ -1635,7 +1636,7 @@ cs:
         help: "Přesunout zprávu zpět do Přijaté"
       edit_message:
         help: "Upravit první příspěvek zprávy"
-        title: "upravit zprávu"
+        title: "Upravit"
       defer:
         title: "Odložit"
       list: "Témata"
@@ -2473,7 +2474,6 @@ cs:
         this_month: "Měsíc"
         this_week: "Týden"
         today: "Dnes"
-        other_periods: "viz nahoře"
     permission_types:
       full: "Vytvářet / Odpovídat / Prohlížet"
       create_post: "Odpovídat / Prohlížet"
@@ -2663,6 +2663,10 @@ cs:
       custom_message_template_forum: "Ahoj! Měl by se připojit na toto fórum!"
       custom_message_template_topic: "Ahoj, myslím si, že by se ti mohlo tohle téma líbit!"
     forced_anonymous: "Kvůli vysoké zátěži dočasně všichni vidí stránku tak, jak by ji viděli nepřihlášení uživatelé."
+    footer_nav:
+      back: "Zpět"
+      share: "Sdílet"
+      dismiss: "Označit jako přečtené"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavři toto okno prohlížeče"
   admin_js:

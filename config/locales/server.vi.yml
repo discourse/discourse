@@ -382,7 +382,7 @@ vi:
       email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
     bookmark:
-      title: "Đánh dấu chỉ mục \x1C"
+      title: "Đánh dấu chỉ mục"
       description: "Đánh dấu chỉ mục bài viết này"
       short_description: "Đánh dấu chỉ mục bài viết này"
       long_form: "đã đánh dấu chỉ mục bài viết này"
@@ -1375,7 +1375,6 @@ vi:
       name: Thích nhiều hơn
     crazy_in_love:
       name: Thích nhiệt tình
-      description: Sử dụng 50 like một ngày trong 20 ngày
     thank_you:
       name: Cám ơn bạn
       description: Nhận được 20 like và đã like 10 lần

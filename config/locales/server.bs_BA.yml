@@ -45,7 +45,6 @@ bs_BA:
       unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
       generic: Došlo je do pogreške prilikom uvoza te teme
-      about_json: "Greška uvoza: about.json ne postoji ili je nevažeća"
       about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
       unpack_failed: "Otpakivanje datoteke nije uspelo"
