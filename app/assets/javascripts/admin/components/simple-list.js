@@ -31,7 +31,8 @@ export default Component.extend({
 
   @action
   changeValue(index, newValue) {
-    this._replaceValue(index, newValue);
+    this.collection.replace(index, 1, [newValue]);
+    this._saveValues();
   },
 
   @action
@@ -39,26 +40,13 @@ export default Component.extend({
     if (this.inputInvalid) return;
 
     this.set("newValue", null);
-    this._addValue(newValue);
+    this.collection.addObject(newValue);
+    this._saveValues();
   },
 
   @action
   removeValue(value) {
-    this._removeValue(value);
-  },
-
-  _addValue(value) {
-    this.collection.addObject(value);
-    this._saveValues();
-  },
-
-  _removeValue(value) {
     this.collection.removeObject(value);
-    this._saveValues();
-  },
-
-  _replaceValue(index, newValue) {
-    this.collection.replace(index, 1, [newValue]);
     this._saveValues();
   },
 
