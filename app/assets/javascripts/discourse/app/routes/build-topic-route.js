@@ -51,14 +51,12 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
     // Clean up any string parameters that might slip through
     filterParams = filterParams || {};
-    Object.keys(filterParams).forEach(function(k) {
+    Object.keys(filterParams).forEach(k => {
       let val = filterParams[k];
-      if (val === "false") {
-        val = false;
-      }
-
-      if (val === "undefined" || val === "null" || val === "false") {
-        filterParams[k] = undefined;
+      if (val === "false") val = false;
+      if (val === "true") val = true;
+      if (val === "undefined" || val === "null") {
+        filterParams[k] = null;
       }
     });
 
