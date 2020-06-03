@@ -30,6 +30,11 @@ export default (filterArg, params) => {
             category,
             category_slug_path_with_id
           });
+        } else if (modelParams.id === "all") {
+          modelParams.category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug
+          ].join("/");
         } else {
           modelParams.category_slug_path_with_id = [
             modelParams.parentSlug,
@@ -76,10 +81,24 @@ export default (filterArg, params) => {
         return;
       }
 
-      this._setupNavigation(model.category);
+      const { category, modelParams } = model;
+
+      if (
+        category.default_list_filter === "none" &&
+        filterArg === "default" &&
+        modelParams &&
+        modelParams.id !== "all"
+      ) {
+        this.replaceWith("discovery.categoryNone", {
+          category,
+          category_slug_path_with_id: modelParams.category_slug_path_with_id
+        });
+      }
+
+      this._setupNavigation(category);
       return all([
-        this._createSubcategoryList(model.category),
-        this._retrieveTopicList(model.category, transition, model.modelParams)
+        this._createSubcategoryList(category),
+        this._retrieveTopicList(category, transition, modelParams)
       ]);
     },
 

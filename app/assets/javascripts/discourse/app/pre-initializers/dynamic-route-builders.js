@@ -13,12 +13,16 @@ export default {
     app.DiscoveryCategoryController = DiscoverySortableController.extend();
     app.DiscoveryParentCategoryController = DiscoverySortableController.extend();
     app.DiscoveryCategoryNoneController = DiscoverySortableController.extend();
+    app.DiscoveryCategoryAllController = DiscoverySortableController.extend();
     app.DiscoveryCategoryWithIDController = DiscoverySortableController.extend();
 
     app.DiscoveryCategoryRoute = buildCategoryRoute("default");
     app.DiscoveryParentCategoryRoute = buildCategoryRoute("default");
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute("default", {
       no_subcategories: true
+    });
+    app.DiscoveryCategoryAllRoute = buildCategoryRoute("default", {
+      no_subcategories: false
     });
     app.DiscoveryCategoryWithIDRoute = buildCategoryRoute("default");
 
