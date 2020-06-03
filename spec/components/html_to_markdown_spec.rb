@@ -65,6 +65,23 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(html)).to eq(markdown.strip)
   end
 
+  it "doesn't error on non-inline elements like (aside, section)" do
+
+    html = <<~HTML
+      <aside class="quote no-group">
+      <blockquote>
+      <p>hello.</p>
+      </blockquote>
+      </aside>
+    HTML
+
+    markdown = <<~MD
+      > hello.
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+  end
+
   it "skips hidden tags" do
     expect(html_to_markdown(%Q{<p>Hello <span style="display: none">cruel </span>World!</p>})).to eq("Hello World!")
     expect(html_to_markdown(%Q{<p>Hello <span hidden>cruel </span>World!</p>})).to eq("Hello World!")

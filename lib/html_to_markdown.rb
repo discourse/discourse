@@ -99,7 +99,7 @@ class HtmlToMarkdown
   end
 
   def is_inline?(node)
-    node.text? || ("br" != node.name && node.description.inline? && node.children.all? { |n| is_inline?(n) })
+    node.text? || ("br" != node.name && node.description&.inline? && node.children.all? { |n| is_inline?(n) })
   end
 
   def collapse_spaces!(nodes, was_space = true)
