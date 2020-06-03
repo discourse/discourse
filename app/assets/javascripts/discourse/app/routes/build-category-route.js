@@ -51,14 +51,13 @@ export default (filterArg, params) => {
 
     model(modelParams) {
       modelParams = this.serialize(modelParams);
-      const category_slug_path_with_id = modelParams.category_slug_path_with_id;
 
       const category = Category.findBySlugPathWithID(
-        category_slug_path_with_id
+        modelParams.category_slug_path_with_id
       );
 
       if (!category) {
-        const parts = category_slug_path_with_id.split("/");
+        const parts = modelParams.category_slug_path_with_id.split("/");
         if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
           parts.pop();
         }
@@ -72,17 +71,6 @@ export default (filterArg, params) => {
       }
 
       if (category) {
-        if (
-          category.default_list_filter === "none" &&
-          filterArg === "default" &&
-          modelParams.id !== "all"
-        ) {
-          this.replaceWith("discovery.categoryNone", {
-            category,
-            category_slug_path_with_id
-          });
-        }
-
         return { category, modelParams };
       }
     },
@@ -93,10 +81,23 @@ export default (filterArg, params) => {
         return;
       }
 
-      this._setupNavigation(model.category);
+      const { category, modelParams } = model;
+
+      if (
+        category.default_list_filter === "none" &&
+        filterArg === "default" &&
+        modelParams.id !== "all"
+      ) {
+        this.replaceWith("discovery.categoryNone", {
+          category,
+          category_slug_path_with_id: modelParams.category_slug_path_with_id
+        });
+      }
+
+      this._setupNavigation(category);
       return all([
-        this._createSubcategoryList(model.category),
-        this._retrieveTopicList(model.category, transition, model.modelParams)
+        this._createSubcategoryList(category),
+        this._retrieveTopicList(category, transition, modelParams)
       ]);
     },
 
