@@ -86,6 +86,7 @@ export default (filterArg, params) => {
       if (
         category.default_list_filter === "none" &&
         filterArg === "default" &&
+        modelParams &&
         modelParams.id !== "all"
       ) {
         this.replaceWith("discovery.categoryNone", {
