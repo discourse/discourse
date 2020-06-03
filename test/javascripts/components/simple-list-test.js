@@ -22,10 +22,9 @@ componentTest("adding a value", {
       "it adds the value to the list of values"
     );
 
-    assert.deepEqual(
-      this.values,
-      "vinkas\nosama\npenar",
-      "it adds the value to the list of values"
+    assert.ok(
+      find(".values .value[data-index='2'] .value-input")[0].value === "penar",
+      "it sets the correct value for added item"
     );
 
     await fillIn(".add-value-input", "eviltrout");
@@ -53,30 +52,9 @@ componentTest("removing a value", {
       "it removes the value from the list of values"
     );
 
-    assert.equal(this.values, "osama", "it removes the expected value");
-  }
-});
-
-componentTest("array support", {
-  template: "{{simple-list values=values inputType='array'}}",
-
-  beforeEach() {
-    this.set("values", ["vinkas", "osama"]);
-  },
-
-  async test(assert) {
-    await fillIn(".add-value-input", "eviltrout");
-    await click(".add-value-btn");
-
     assert.ok(
-      find(".values .value").length === 3,
-      "it adds the value to the list of values"
-    );
-
-    assert.deepEqual(
-      this.values,
-      ["vinkas", "osama", "eviltrout"],
-      "it adds the value to the list of values"
+      find(".values .value[data-index='0'] .value-input")[0].value === "osama",
+      "it removes the correct value"
     );
   }
 });
@@ -97,10 +75,10 @@ componentTest("delimiter support", {
       "it adds the value to the list of values"
     );
 
-    assert.deepEqual(
-      this.values,
-      "vinkas|osama|eviltrout",
-      "it adds the value to the list of values"
+    assert.ok(
+      find(".values .value[data-index='2'] .value-input")[0].value ===
+        "eviltrout",
+      "it adds the correct value"
     );
   }
 });

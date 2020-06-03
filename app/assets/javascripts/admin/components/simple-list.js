@@ -7,32 +7,24 @@ export default Component.extend({
   classNameBindings: [":simple-list", ":value-list"],
   inputEmpty: empty("newValue"),
   inputDelimiter: null,
-  inputType: null,
   newValue: "",
   collection: null,
   values: null,
 
   @on("didReceiveAttrs")
   _setupCollection() {
-    if (this.inputType === "array") {
-      this.set("collection", this.values || []);
-      return;
-    }
-
-    this.set(
-      "collection",
-      this._splitValues(this.values, this.inputDelimiter || "\n")
-    );
+    this.set("collection", this._splitValues(this.values, this.inputDelimiter));
   },
 
   keyDown(event) {
-    if (event.keyCode === 13) this.addValue(this.newValue);
+    if (event.which === 13) this.addValue(this.newValue);
   },
 
   @action
   changeValue(index, newValue) {
     this.collection.replace(index, 1, [newValue]);
-    this._saveValues();
+    this.collection.arrayContentDidChange(index);
+    this._onChange();
   },
 
   @action
@@ -41,29 +33,22 @@ export default Component.extend({
 
     this.set("newValue", null);
     this.collection.addObject(newValue);
-    this._saveValues();
+    this._onChange();
   },
 
   @action
   removeValue(value) {
     this.collection.removeObject(value);
-    this._saveValues();
+    this._onChange();
   },
 
-  _saveValues() {
-    if (this.inputType === "array") {
-      this.set("values", this.collection);
-      return;
-    }
-
-    this.set("values", this.collection.join(this.inputDelimiter || "\n"));
+  _onChange() {
+    this.attrs.onChange && this.attrs.onChange(this.collection);
   },
 
   _splitValues(values, delimiter) {
-    if (values && values.length) {
-      return values.split(delimiter).filter(Boolean);
-    } else {
-      return [];
-    }
+    return values && values.length
+      ? values.split(delimiter || "\n").filter(Boolean)
+      : [];
   }
 });
