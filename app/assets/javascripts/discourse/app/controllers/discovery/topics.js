@@ -38,7 +38,7 @@ const controllerOpts = {
       if (sortBy === this.order) {
         this.toggleProperty("ascending");
       } else {
-        this.setProperties({ order: sortBy, ascending: true });
+        this.setProperties({ order: sortBy, ascending: false });
       }
 
       this.model.refreshSort(sortBy, this.ascending);
