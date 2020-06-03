@@ -48,7 +48,16 @@ export default {
         return baseUrl;
       }
     });
-    app.BaseUri = setupData.baseUri;
+    let baseUri = setupData.baseUri;
+    Object.defineProperty(app, "BaseUri", {
+      get() {
+        deprecated(`use "get-url" helpers instead of Discourse.BaseUri`, {
+          since: "2.5",
+          dropFrom: "2.6"
+        });
+        return baseUri;
+      }
+    });
     setupURL(setupData.cdn, baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
     app.SiteSettings = PreloadStore.get("siteSettings");
