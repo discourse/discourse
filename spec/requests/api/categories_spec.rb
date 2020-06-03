@@ -195,6 +195,7 @@ describe 'categories' do
               default_view: { type: :string, nullable: true },
               subcategory_list_style: { type: :string },
               default_top_period: { type: :string },
+              default_list_filter: { type: :string },
               minimum_required_tags: { type: :integer },
               navigate_to_first_post_after_read: { type: :boolean },
               custom_fields: {
@@ -370,6 +371,7 @@ describe 'categories' do
               default_view: { type: :string, nullable: true },
               subcategory_list_style: { type: :string },
               default_top_period: { type: :string },
+              default_list_filter: { type: :string },
               minimum_required_tags: { type: :integer },
               navigate_to_first_post_after_read: { type: :boolean },
               custom_fields: {

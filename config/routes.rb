@@ -686,6 +686,7 @@ Discourse::Application.routes.draw do
       get "/l/#{filter}" => "list#category_#{filter}", as: "category_#{filter}"
     end
 
+    get "/all" => "list#category_default", as: "category_all", constraints: { format: 'html' }
     get "/" => "list#category_default", as: "category_default"
   end
 
