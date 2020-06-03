@@ -6,6 +6,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { extractDomainFromUrl } from "discourse/lib/utilities";
 import EmberObject from "@ember/object";
+import { isAbsoluteURL } from "discourse-common/lib/get-url";
 
 export default Controller.extend({
   adminWebHooks: controller(),
@@ -109,7 +110,7 @@ export default Controller.extend({
         domain === "localhost" ||
         domain.match(/192\.168\.\d+\.\d+/) ||
         domain.match(/127\.\d+\.\d+\.\d+/) ||
-        url.startsWith(Discourse.BaseUrl)
+        isAbsoluteURL(url)
       ) {
         return bootbox.confirm(
           I18n.t("admin.web_hooks.warn_local_payload_url"),

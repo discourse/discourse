@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import discourseDebounce from "discourse/lib/debounce";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import Category from "discourse/models/category";
@@ -27,7 +28,7 @@ function searchTags(term, categories, limit) {
     );
 
     const debouncedSearch = discourseDebounce((q, cats, resultFunc) => {
-      oldSearch = $.ajax(Discourse.getURL("/tags/filter/search"), {
+      oldSearch = $.ajax(getURL("/tags/filter/search"), {
         type: "GET",
         cache: true,
         data: { limit: limit, q }

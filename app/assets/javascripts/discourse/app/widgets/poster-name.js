@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
@@ -19,7 +20,7 @@ createWidget("poster-name-title", {
   html(attrs) {
     let titleContents = attrs.title;
     if (attrs.primaryGroupName && attrs.titleIsGroup) {
-      const href = Discourse.getURL(`/g/${attrs.primaryGroupName}`);
+      const href = getURL(`/g/${attrs.primaryGroupName}`);
       titleContents = h(
         "a.user-group",
         {

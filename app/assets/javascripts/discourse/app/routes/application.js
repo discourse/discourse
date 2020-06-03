@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { once } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -46,8 +47,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     _collectTitleTokens(tokens) {
       tokens.push(this.siteTitle);
       if (
-        (window.location.pathname === Discourse.getURL("/") ||
-          window.location.pathname === Discourse.getURL("/login")) &&
+        (window.location.pathname === getURL("/") ||
+          window.location.pathname === getURL("/login")) &&
         this.shortSiteDescription !== ""
       ) {
         tokens.push(this.shortSiteDescription);
@@ -250,9 +251,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   handleShowLogin() {
     if (this.siteSettings.enable_sso) {
       const returnPath = encodeURIComponent(window.location.pathname);
-      window.location = Discourse.getURL(
-        "/session/sso?return_path=" + returnPath
-      );
+      window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
       this._autoLogin("login", "login-modal", () =>
         this.controllerFor("login").resetForm()
@@ -263,9 +262,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   handleShowCreateAccount() {
     if (this.siteSettings.enable_sso) {
       const returnPath = encodeURIComponent(window.location.pathname);
-      window.location = Discourse.getURL(
-        "/session/sso?return_path=" + returnPath
-      );
+      window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
       this._autoLogin("createAccount", "create-account");
     }

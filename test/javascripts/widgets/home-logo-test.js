@@ -1,4 +1,5 @@
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
+import { setPrefix } from "discourse-common/lib/get-url";
 
 moduleForWidget("home-logo");
 
@@ -101,7 +102,7 @@ widgetTest("mobile without logo", {
 widgetTest("basics, subfolder", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
-    Discourse.BaseUri = "/forum";
+    setPrefix("/forum");
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
@@ -118,7 +119,7 @@ widgetTest("basics, subfolder", {
 widgetTest("basics, subfolder - minimized", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
-    Discourse.BaseUri = "/forum";
+    setPrefix("/forum");
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
@@ -135,7 +136,7 @@ widgetTest("basics, subfolder - minimized", {
 widgetTest("mobile logo, subfolder", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
-    Discourse.BaseUri = "/forum";
+    setPrefix("/forum");
     this.siteSettings.site_mobile_logo_url = mobileLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.site.mobileView = true;

@@ -2,43 +2,6 @@ import { logIn, updateCurrentUser } from "helpers/qunit-helpers";
 
 QUnit.module("lib:discourse");
 
-QUnit.test("getURL on subfolder install", assert => {
-  Discourse.BaseUri = "/forum";
-  assert.equal(Discourse.getURL("/"), "/forum/", "root url has subfolder");
-  assert.equal(
-    Discourse.getURL("/u/neil"),
-    "/forum/u/neil",
-    "relative url has subfolder"
-  );
-
-  assert.equal(
-    Discourse.getURL("/svg-sprite/forum.example.com/svg-sprite.js"),
-    "/forum/svg-sprite/forum.example.com/svg-sprite.js",
-    "works when the url has the prefix in the middle"
-  );
-
-  assert.equal(
-    Discourse.getURL("/forum/t/123"),
-    "/forum/t/123",
-    "does not prefix if the URL is already prefixed"
-  );
-});
-
-QUnit.test("getURLWithCDN on subfolder install with S3", assert => {
-  Discourse.BaseUri = "/forum";
-
-  Discourse.S3CDN = "https://awesome.cdn/site";
-  Discourse.S3BaseUrl = "//test.s3-us-west-1.amazonaws.com/site";
-
-  let url = "//test.s3-us-west-1.amazonaws.com/site/forum/awesome.png";
-  let expected = "https://awesome.cdn/site/forum/awesome.png";
-
-  assert.equal(Discourse.getURLWithCDN(url), expected, "at correct path");
-
-  Discourse.S3CDN = null;
-  Discourse.S3BaseUrl = null;
-});
-
 QUnit.test("title counts are updated correctly", assert => {
   Discourse.set("hasFocus", true);
   Discourse.set("contextCount", 0);

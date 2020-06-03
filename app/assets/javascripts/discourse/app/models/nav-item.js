@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
@@ -105,7 +106,7 @@ NavItem.reopenClass({
   extraNavItemDescriptors: [],
 
   pathFor(filterType, context) {
-    let path = Discourse.getURL("");
+    let path = getURL("");
     let includesCategoryContext = false;
     let includesTagContext = false;
 

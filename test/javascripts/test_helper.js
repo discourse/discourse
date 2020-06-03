@@ -151,8 +151,10 @@ QUnit.testStart(function(ctx) {
 
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
-  Discourse.BaseUri = "";
-  Discourse.BaseUrl = "http://localhost:3000";
+
+  let getURL = require("discourse-common/lib/get-url");
+  getURL.setupURL(null, "http://localhost:3000", "");
+  getURL.setupS3CDN(null, null);
 
   let User = require("discourse/models/user").default;
   let Session = require("discourse/models/session").default;

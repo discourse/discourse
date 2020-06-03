@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { reads } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
@@ -8,7 +9,7 @@ import { isEmpty } from "@ember/utils";
 
 export default Mixin.create({
   searchTags(url, data, callback) {
-    return ajax(Discourse.getURL(url), {
+    return ajax(getURL(url), {
       quietMillis: 200,
       cache: true,
       dataType: "json",

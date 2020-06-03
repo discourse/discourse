@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
@@ -52,7 +53,7 @@ export default createWidget("hamburger-categories", {
   tagName: "ul.category-links.clearfix",
 
   html(attrs) {
-    const href = Discourse.getURL("/categories");
+    const href = getURL("/categories");
     let title = I18n.t("filters.categories.title");
     if (attrs.moreCount > 0) {
       title = I18n.t("categories.n_more", { count: attrs.moreCount });

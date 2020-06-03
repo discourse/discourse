@@ -7,6 +7,8 @@ import {
   isTesting,
   isProduction
 } from "discourse-common/config/environment";
+import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
+import deprecated from "discourse-common/lib/deprecated";
 
 export default {
   name: "discourse-bootstrap",
@@ -35,8 +37,28 @@ export default {
     }
 
     app.CDN = setupData.cdn;
-    app.BaseUrl = setupData.baseUrl;
-    app.BaseUri = setupData.baseUri;
+
+    let baseUrl = setupData.baseUrl;
+    Object.defineProperty(app, "BaseUrl", {
+      get() {
+        deprecated(`use "get-url" helpers instead of Discourse.BaseUrl`, {
+          since: "2.5",
+          dropFrom: "2.6"
+        });
+        return baseUrl;
+      }
+    });
+    let baseUri = setupData.baseUri;
+    Object.defineProperty(app, "BaseUri", {
+      get() {
+        deprecated(`use "get-url" helpers instead of Discourse.BaseUri`, {
+          since: "2.5",
+          dropFrom: "2.6"
+        });
+        return baseUri;
+      }
+    });
+    setupURL(setupData.cdn, baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
     app.SiteSettings = PreloadStore.get("siteSettings");
     app.ThemeSettings = PreloadStore.get("themeSettings");
@@ -69,6 +91,7 @@ export default {
     if (setupData.s3BaseUrl) {
       app.S3CDN = setupData.s3Cdn;
       app.S3BaseUrl = setupData.s3BaseUrl;
+      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
     }
 
     RSVP.configure("onerror", function(e) {

@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 // Initialize the message bus to receive messages.
 import userPresent from "discourse/lib/user-presence";
 import { handleLogoff } from "discourse/lib/ajax";
@@ -84,7 +85,7 @@ export default {
         return ajax(opts);
       };
 
-      messageBus.baseUrl = Discourse.getURL("/");
+      messageBus.baseUrl = getURL("/");
     }
 
     if (user) {
