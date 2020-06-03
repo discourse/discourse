@@ -20,9 +20,12 @@ export function addToHeaderIcons(icon) {
 
 const dropdown = {
   buildClasses(attrs) {
+    let classes = attrs.classNames || [];
     if (attrs.active) {
-      return "active";
+      classes.push("active");
     }
+
+    return classes;
   },
 
   click(e) {
@@ -202,7 +205,8 @@ createWidget("header-icons", {
       iconId: "search-button",
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
-      href: Discourse.getURL("/search")
+      href: Discourse.getURL("/search"),
+      classNames: ["search-dropdown"]
     });
 
     icons.push(search);
@@ -214,6 +218,8 @@ createWidget("header-icons", {
       active: attrs.hamburgerVisible,
       action: "toggleHamburger",
       href: "",
+      classNames: ["hamburger-dropdown"],
+
       contents() {
         let { currentUser } = this;
         if (currentUser && currentUser.reviewable_count) {
