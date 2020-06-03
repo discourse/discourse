@@ -446,8 +446,7 @@ de:
         status: "Status"
         category: "Kategorie"
         orders:
-          priority: "Priorität"
-          priority_asc: "Priorität (umgekehrt)"
+          score: "Wertung"
           created_at: "Erstellt am"
           created_at_asc: "Erstellt am (umgekehrt)"
         priority:
@@ -1793,7 +1792,6 @@ de:
           bookmarks: Themen/Beiträge mit Lesezeichen
           first: Erste Beiträge in Themen
           pinned: Angeheftete Themen
-          unpinned: Nicht angeheftete Themen
           seen: Gelesene Themen/Beiträge
           unseen: Ungelesene Themen/Beiträge
           wiki: Wikis

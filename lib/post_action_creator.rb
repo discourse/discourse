@@ -7,8 +7,15 @@ class PostActionCreator
 
   # Shortcut methods for easier invocation
   class << self
-    def create(created_by, post, action_key, message: nil, created_at: nil)
-      new(created_by, post, PostActionType.types[action_key], message: message, created_at: created_at).perform
+    def create(created_by, post, action_key, message: nil, created_at: nil, reason: nil)
+      new(
+        created_by,
+        post,
+        PostActionType.types[action_key],
+        message: message,
+        created_at: created_at,
+        reason: reason
+      ).perform
     end
 
     [:like, :off_topic, :spam, :inappropriate, :bookmark].each do |action|
@@ -31,7 +38,8 @@ class PostActionCreator
     message: nil,
     take_action: false,
     flag_topic: false,
-    created_at: nil
+    created_at: nil,
+    reason: nil
   )
     @created_by = created_by
     @created_at = created_at || Time.zone.now
@@ -46,6 +54,7 @@ class PostActionCreator
     @message = message
     @flag_topic = flag_topic
     @meta_post = nil
+    @reason = reason
   end
 
   def post_can_act?
@@ -306,6 +315,7 @@ private
       created_at: @created_at,
       take_action: @take_action,
       meta_topic_id: @meta_post&.topic_id,
+      reason: @reason
     )
   end
 

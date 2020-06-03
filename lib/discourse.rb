@@ -489,7 +489,7 @@ module Discourse
   end
 
   def self.readonly_mode?(keys = READONLY_KEYS)
-    recently_readonly? || Discourse.redis.mget(*keys).compact.present?
+    recently_readonly? || Discourse.redis.exists(*keys)
   end
 
   def self.pg_readonly_mode?
@@ -652,12 +652,12 @@ module Discourse
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
-    Discourse.redis._client.reconnect
+    Discourse.redis.reconnect
     Rails.cache.reconnect
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool
-    Sidekiq.redis_pool.shutdown { |c| nil }
+    Sidekiq.redis_pool.shutdown { |conn| conn.close  }
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
 

@@ -374,8 +374,7 @@ id:
         status: "Status"
         category: "Kategori"
         orders:
-          priority: "Prioritas"
-          priority_asc: "Prioritas (terbalik)"
+          score: "Skor"
           created_at: "Dibuat Pada"
           created_at_asc: "Dibuat Pada (terbalik)"
         priority:

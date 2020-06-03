@@ -6,6 +6,6 @@ export default MountWidget.extend({
   widget: "topic-admin-menu-button",
 
   buildArgs() {
-    return this.getProperties("topic", "fixed", "openUpwards", "rightSide");
+    return this.getProperties("topic", "openUpwards", "rightSide");
   }
 });

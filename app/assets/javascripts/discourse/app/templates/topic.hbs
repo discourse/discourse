@@ -127,24 +127,6 @@
 
       {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
         {{#if info.renderTimeline}}
-          {{#if info.renderAdminMenuButton}}
-            {{topic-admin-menu-button
-              topic=model
-              fixed="true"
-              toggleMultiSelect=(action "toggleMultiSelect")
-              deleteTopic=(action "deleteTopic")
-              recoverTopic=(action "recoverTopic")
-              toggleClosed=(action "toggleClosed")
-              toggleArchived=(action "toggleArchived")
-              toggleVisibility=(action "toggleVisibility")
-              showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
-              showFeatureTopic=(route-action "showFeatureTopic")
-              showChangeTimestamp=(route-action "showChangeTimestamp")
-              resetBumpDate=(action "resetBumpDate")
-              convertToPublicTopic=(action "convertToPublicTopic")
-              convertToPrivateMessage=(action "convertToPrivateMessage")}}
-          {{/if}}
-
           {{topic-timeline
             topic=model
             notificationLevel=model.details.notification_level
@@ -178,24 +160,22 @@
             expanded=info.topicProgressExpanded
             jumpToPost=(action "jumpToPost")}}
             {{plugin-outlet name="before-topic-progress" args=(hash model=model jumpToPost=(action "jumpToPost"))}}
-            {{#if info.renderAdminMenuButton}}
-              {{topic-admin-menu-button
-                topic=model
-                openUpwards="true"
-                rightSide="true"
-                toggleMultiSelect=(action "toggleMultiSelect")
-                deleteTopic=(action "deleteTopic")
-                recoverTopic=(action "recoverTopic")
-                toggleClosed=(action "toggleClosed")
-                toggleArchived=(action "toggleArchived")
-                toggleVisibility=(action "toggleVisibility")
-                showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
-                showFeatureTopic=(route-action "showFeatureTopic")
-                showChangeTimestamp=(route-action "showChangeTimestamp")
-                resetBumpDate=(action "resetBumpDate")
-                convertToPublicTopic=(action "convertToPublicTopic")
-                convertToPrivateMessage=(action "convertToPrivateMessage")}}
-            {{/if}}
+            {{topic-admin-menu-button
+              topic=model
+              openUpwards="true"
+              rightSide="true"
+              toggleMultiSelect=(action "toggleMultiSelect")
+              deleteTopic=(action "deleteTopic")
+              recoverTopic=(action "recoverTopic")
+              toggleClosed=(action "toggleClosed")
+              toggleArchived=(action "toggleArchived")
+              toggleVisibility=(action "toggleVisibility")
+              showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+              showFeatureTopic=(route-action "showFeatureTopic")
+              showChangeTimestamp=(route-action "showChangeTimestamp")
+              resetBumpDate=(action "resetBumpDate")
+              convertToPublicTopic=(action "convertToPublicTopic")
+              convertToPrivateMessage=(action "convertToPrivateMessage")}}
           {{/topic-progress}}
         {{/if}}
       {{/topic-navigation}}

@@ -44,7 +44,7 @@ import {
   cacheShortUploadUrl,
   resolveAllShortUrls
 } from "pretty-text/upload-short-url";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -847,7 +847,7 @@ export default Component.extend({
       // need to wait a bit for the "slide down" transition of the composer
       later(
         () => this.appEvents.trigger("composer:closed"),
-        ENV.environment === "test" ? 0 : 400
+        isTesting() ? 0 : 400
       );
     });
 

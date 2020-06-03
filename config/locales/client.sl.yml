@@ -432,6 +432,8 @@ sl:
         refresh: "Osveži"
         status: "Stanje"
         category: "Kategorija"
+        orders:
+          score: "Ocena"
         priority:
           medium: "Srednja"
           high: "Visoka"
@@ -1748,7 +1750,6 @@ sl:
           bookmarks: kjer sem ustvaril zaznamek
           first: ob prvem prispevku
           pinned: so pripete
-          unpinned: niso pripete
           seen: ki sem jih prebral
           unseen: ki jih nisem prebral
           wiki: so wiki

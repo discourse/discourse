@@ -87,6 +87,31 @@ describe DiscourseRedis do
         expect(Discourse.recently_readonly?).to eq(true)
       end
     end
+
+    describe '.exists' do
+      it 'should return false when key is not present' do
+        expect(Discourse.redis.exists('test')).to eq(false)
+      end
+
+      it 'should return false when keys are not present' do
+        expect(Discourse.redis.exists('test', 'test2')).to eq(false)
+      end
+
+      it 'should return true when key is present' do
+        Discourse.redis.set('test', 1)
+
+        expect(Discourse.redis.exists('test')).to eq(true)
+      end
+
+      it 'should return true when any key is present' do
+        Discourse.redis.set('test', 1)
+        Discourse.redis.set('test2', 1)
+
+        expect(Discourse.redis.exists('test')).to eq(true)
+        expect(Discourse.redis.exists('test', 'test2')).to eq(true)
+        expect(Discourse.redis.exists('test2', 'test3')).to eq(true)
+      end
+    end
   end
 
   context '.slave_host' do

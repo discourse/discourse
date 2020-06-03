@@ -1291,7 +1291,6 @@ pt_BR:
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário para download das imagens ( em % )"
-    download_remote_images_max_days_old: "Não baixe fotos remotas para publicações que tem mais de n dias."
     disabled_image_download_domains: "Imagens hospedadas nestes domínios nunca serão baixadas. \nLista delimitada por |"
     editing_grace_period: "Por (n) segundos após a publicação, as edições não criarão uma nova versão ho histórico da publicação."
     editing_grace_period_max_diff: "Número máximo de alterações de caracteres permitidas no período de carência de edição, se mais alterações forem armazenadas, outra revisão de publicação (nível de confiança 0 e 1)"

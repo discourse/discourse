@@ -186,7 +186,7 @@ export default function userSearch(options) {
       () => {
         resolve(CANCELLED_STATUS);
       },
-      isTesting() ? 50 : 5000
+      isTesting() ? 250 : 5000
     );
 
     if (skipSearch(term, options.allowEmails)) {

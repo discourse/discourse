@@ -11,6 +11,7 @@
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
+
   &.animate {
     transition: opacity 0.2s ease-out;
   }

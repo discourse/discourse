@@ -2,7 +2,12 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { makeArray } from "discourse-common/lib/helpers";
-import { convertIconClass } from "discourse-common/lib/icon-library";
+import {
+  convertIconClass,
+  disableMissingIconWarning,
+  enableMissingIconWarning
+} from "discourse-common/lib/icon-library";
+import { isDevelopment } from "discourse-common/config/environment";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],
@@ -13,8 +18,8 @@ export default MultiSelectComponent.extend({
 
     this._cachedIconsList = null;
 
-    if (Discourse.Environment === "development") {
-      Discourse.disableMissingIconWarning = true;
+    if (isDevelopment()) {
+      disableMissingIconWarning();
     }
   },
 
@@ -75,8 +80,8 @@ export default MultiSelectComponent.extend({
 
     this._cachedIconsList = null;
 
-    if (Discourse.Environment === "development") {
-      delete Discourse.disableMissingIconWarning;
+    if (isDevelopment()) {
+      enableMissingIconWarning();
     }
   },
 

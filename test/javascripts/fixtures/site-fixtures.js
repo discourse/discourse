@@ -490,7 +490,7 @@ export default {
         },
         {
           name_key: "notify_user",
-          name: "Notify {{username}}",
+          name: "Notify %{username}",
           description:
             "This post contains something I want to talk to this person directly and privately about. Does not cast a flag.",
           short_description:

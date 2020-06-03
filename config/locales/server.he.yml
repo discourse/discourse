@@ -411,6 +411,10 @@ he:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "בקשת חברות עבור ‎@%{group_name}‎"
+    request_accepted_pm:
+      title: "התקבלת אל ‎@%{group_name}‎"
+      body: |
+        בקשתך להיכנס אל ‎@%{group_name}‎ אושרה והתקבלת לחברות.
     view_hidden_topic_request_reason: "אבקש להצטרף לקבוצה ‚%{group_name}’, כדי שאוכל לגשת ל[נושא הזה](%{topic_url})"
   education:
     until_posts:
@@ -454,6 +458,12 @@ he:
       ניתן לערוך תגובות קודמות שלך כדי להוסיף ציטוט על ידי סימון טקסט ובחירה בכפתור שנגלה <b>ציטוט תגובה</b>.
 
       יותר קל לכולם לקרוא נושאים שיש בהם פחות תגובות עמוקות מאשר הרבה תגובות קטנות.
+    dominating_topic: |
+      ### לאפשר לזולת לקחת חלק בדיון
+
+      נושא זה בהחלט חשוב בעיניך &ndash; פרסמת בו למעלה מ־%{percent}% מהתגובות.
+
+      הדיון הזה עשוי עוד להשתפר אם יצטרפו אליו אנשים עם גישות שונות בנוסף. למה שלא להזמין אותם?
     get_a_room: |
       ### מומלץ לעודד את כולם להשתתף בדיון
 
@@ -1411,7 +1421,6 @@ he:
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
-    download_remote_images_max_days_old: "לא להוריד תמונות מרוחקות עבור פוסטים שגילם עולה על n ימים."
     disabled_image_download_domains: "תמונות מרחוק לעולם לא יורדו ממתחמים (domains) אלו. "
     editing_grace_period: "למשך (n) שניות לאחר הפרסום, עריכה לא תיצור גרסה חדשה בהיסטוריית הפוסט."
     editing_grace_period_max_diff: "מספר תווים מרבי שמותר לשנות בטווח עריכת חסד, אם נערכו למעלה מהכמות הזאת יש ליצור מהדורה חדשה לפוסט (דרגות אמון 0 ו־1)"
@@ -1533,6 +1542,7 @@ he:
     moderators_view_emails: "לאפשר למפקחים לצפות בכתובות הדוא״ל של המשתמשים"
     prioritize_username_in_ux: "הציגו שם-משתמש ראשון בדף המשתמש, כרטיס המשתמש ופוסטים (כשמנוטרל השם מופיע קודם)"
     enable_rich_text_paste: "הפעלת המרה אוטומטית מ־HTML ל־Markdown בעת הדבקת טקסט לתוך המחבר. (ניסיוני)"
+    send_old_credential_reminder_days: "להזכיר על פרטי גישה ישנים לאחר ימים"
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
     enable_badges: "הפעלת מערכת העיטורים"
     enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
@@ -3435,6 +3445,8 @@ he:
         אם זאת הייתה פעילות שלך, נהדר! לא צריך לעשות שום דבר.
 
         אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/account) לצד שיקול בכובד ראש להחלפת הססמה שלך.
+  page_forbidden:
+    title: "אופס! זה עמוד פרטי."
   page_not_found:
     title: "אופס! הדף לא קיים או שהוא פרטי."
     popular_topics: "פופלארי"
@@ -3492,6 +3504,7 @@ he:
     user_email_user_suspended: "המשתמש הושעה"
     user_email_already_read: "המשתמש כבר קרא פוסט זה"
     user_email_access_denied: "למשתמש אין הרשאה לצפות בפוסט הזה"
+    user_email_no_email: "לא משויכת כתובת דוא״ל למזהה המשתמש %{user_id}"
     sender_message_blank: "ההודעה ריקה"
     sender_message_to_blank: "message.to ריק"
     sender_text_part_body_blank: "text_part.body ריק"
@@ -4297,3 +4310,5 @@ he:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
   discord:
     not_in_allowed_guild: "האימות נכשל. הגילדה ב־Discord אליה הצטרפת אינה מורשית לגשת."
+  old_keys_reminder:
+    title: "תזכורת על פרטי גישה ישנים"

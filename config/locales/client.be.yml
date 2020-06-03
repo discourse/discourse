@@ -221,6 +221,8 @@ be:
           title: "тып"
         refresh: "абнавіць"
         category: "катэгорыя"
+        orders:
+          score: "кошт"
       scores:
         score: "кошт"
         type: "тып"

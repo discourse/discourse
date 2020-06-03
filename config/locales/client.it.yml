@@ -450,8 +450,7 @@ it:
         status: "Stato"
         category: "Categoria"
         orders:
-          priority: "Priorità"
-          priority_asc: "Priorità (inversa)"
+          score: "Punteggio"
           created_at: "Creato il"
           created_at_asc: "Data creazione (inversa)"
         priority:
@@ -1832,7 +1831,6 @@ it:
           bookmarks: ho aggiunto ai segnalibri
           first: sono il primissimo post
           pinned: sono appuntati
-          unpinned: non sono appuntati
           seen: messaggi che ho letto
           unseen: non ho letto
           wiki: sono wiki

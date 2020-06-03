@@ -116,14 +116,14 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   def add_to_private_topics_if_invited
     topic_ids = Topic.where(archetype: Archetype::private_message).includes(:invites).where(invites: { email: invite.email }).pluck(:id)
     topic_ids.each do |id|
-      TopicAllowedUser.create(user_id: invited_user.id, topic_id: id) unless TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
+      TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id) unless TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
     end
   end
 
   def add_user_to_groups
     new_group_ids = invite.groups.pluck(:id) - invited_user.group_users.pluck(:group_id)
     new_group_ids.each do |id|
-      invited_user.group_users.create(group_id: id)
+      invited_user.group_users.create!(group_id: id)
       DiscourseEvent.trigger(:user_added_to_group, invited_user, Group.find_by(id: id), automatic: false)
     end
   end
@@ -147,8 +147,10 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
   def notify_invitee
     if inviter = invite.invited_by
-      inviter.notifications.create(notification_type: Notification.types[:invitee_accepted],
-                                   data: { display_username: invited_user.username }.to_json)
+      inviter.notifications.create!(
+        notification_type: Notification.types[:invitee_accepted],
+        data: { display_username: invited_user.username }.to_json
+      )
     end
   end
 

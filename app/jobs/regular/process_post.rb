@@ -44,7 +44,12 @@ module Jobs
           s = post.cooked
           s << " #{post.topic.title}" if post.post_number == 1
           if !args[:bypass_bump] && WordWatcher.new(s).should_flag?
-            PostActionCreator.create(Discourse.system_user, post, :inappropriate)
+            PostActionCreator.create(
+              Discourse.system_user,
+              post,
+              :inappropriate,
+              reason: :watched_word
+            )
           end
         end
       end

@@ -38,7 +38,6 @@ createWidget("topic-admin-menu-button", {
 
     const menu = this.attach("topic-admin-menu", {
       position: state.position,
-      fixed: attrs.fixed,
       topic: attrs.topic,
       openUpwards: attrs.openUpwards,
       rightSide: !this.site.mobileView && attrs.rightSide,
@@ -54,7 +53,6 @@ createWidget("topic-admin-menu-button", {
         this.attach("button", {
           className:
             "popup-menu-button toggle-admin-menu" +
-            (attrs.fixed ? " show-topic-admin" : "") +
             (attrs.addKeyboardTargetClass ? " keyboard-target-admin-menu" : ""),
           title: "topic_admin_menu",
           icon: "wrench",
@@ -74,10 +72,6 @@ createWidget("topic-admin-menu-button", {
   hideAdminMenu() {
     this.state.expanded = false;
     this.state.position = null;
-
-    if (this.site.mobileView && !this.attrs.rightSide) {
-      $(".header-cloak").css("display", "");
-    }
   },
 
   showAdminMenu(e) {
@@ -101,10 +95,6 @@ createWidget("topic-admin-menu-button", {
       position.left -= MENU_WIDTH - $button.outerWidth();
     }
 
-    if (this.attrs.fixed) {
-      position.left += $button.width() - 203;
-    }
-
     if (this.attrs.openUpwards) {
       if (rtl) {
         position.left -= $button[0].offsetWidth + SPACING;
@@ -113,11 +103,6 @@ createWidget("topic-admin-menu-button", {
       }
     } else {
       position.top += $button[0].offsetHeight + SPACING;
-    }
-
-    if (this.site.mobileView && !this.attrs.rightSide) {
-      const headerCloak = document.querySelector(".header-cloak");
-      if (headerCloak) headerCloak.style.display = "block";
     }
 
     this.state.position = position;
@@ -273,7 +258,7 @@ export default createWidget("topic-admin-menu", {
 
   buildAttributes(attrs) {
     let { top, left, outerHeight } = attrs.position;
-    const position = attrs.fixed || this.site.mobileView ? "fixed" : "absolute";
+    const position = this.site.mobileView ? "fixed" : "absolute";
 
     if (attrs.rightSide) {
       return;
@@ -289,7 +274,7 @@ export default createWidget("topic-admin-menu", {
       }
 
       if (this.site.mobileView) {
-        bottom = 0;
+        bottom = 50;
         left = 0;
       }
 

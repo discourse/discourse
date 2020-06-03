@@ -487,9 +487,13 @@
     .hex-input {
       width: 80px;
       margin-bottom: 0;
+      margin-right: 6px;
     }
     .hex {
       text-align: center;
+    }
+    .color-input {
+      display: flex;
     }
     h3 {
       margin: 0;

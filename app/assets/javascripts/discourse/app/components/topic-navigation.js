@@ -30,10 +30,7 @@ export default Component.extend(PanEvents, {
     let info = this.info;
 
     if (info.get("topicProgressExpanded")) {
-      info.setProperties({
-        renderTimeline: true,
-        renderAdminMenuButton: true
-      });
+      info.set("renderTimeline", true);
     } else {
       let renderTimeline = !this.site.mobileView;
 
@@ -51,10 +48,7 @@ export default Component.extend(PanEvents, {
         }
       }
 
-      info.setProperties({
-        renderTimeline,
-        renderAdminMenuButton: !renderTimeline
-      });
+      info.set("renderTimeline", renderTimeline);
     }
   },
 
@@ -76,7 +70,6 @@ export default Component.extend(PanEvents, {
         if (
           !$target.is(".widget-button") &&
           !$parents.is(".widget-button") &&
-          !$parents.is(".dropdown-menu") &&
           !$parents.is("#discourse-modal") &&
           !$target.is("#discourse-modal") &&
           !$parents.is(".modal-footer") &&

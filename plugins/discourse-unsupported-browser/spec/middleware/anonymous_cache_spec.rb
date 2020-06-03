@@ -3,6 +3,8 @@
 require "rails_helper"
 
 describe Middleware::AnonymousCache::Helper do
+  before { SiteSetting.discourse_unsupported_browser_enabled = true }
+
   def env(opts = {})
     {
       "HTTP_HOST" => "http://test.com",

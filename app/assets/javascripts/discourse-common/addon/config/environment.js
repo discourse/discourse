@@ -1,9 +1,23 @@
 export const INPUT_DELAY = 250;
 
-let environment = Ember.testing ? "test" : "development";
+let environment = "unknown";
 
-export function isTesting() {
-  return environment === "test";
+export function setEnvironment(e) {
+  if (isTesting()) {
+    environment = "testing";
+  } else {
+    environment = e;
+  }
 }
 
-export default { environment };
+export function isTesting() {
+  return Ember.testing;
+}
+
+export function isDevelopment() {
+  return environment === "development";
+}
+
+export function isProduction() {
+  return environment === "production";
+}

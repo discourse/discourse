@@ -40,7 +40,7 @@ ur:
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} قبل"
       tiny:
-        half_a_minute: "< 1منٹ"
+        half_a_minute: "ایک لحظہ قبل"
         less_than_x_seconds:
           one: "< %{count} سیکنڈ"
           other: "< %{count} سیکنڈ"
@@ -416,8 +416,7 @@ ur:
         status: "سٹیٹس"
         category: "زمرہ"
         orders:
-          priority: "ترجیح"
-          priority_asc: "ترجیح (ریوَرس)"
+          score: "اسکور"
           created_at: "کو بنایا گیا"
           created_at_asc: "کو بنایا گیا (ریوَرس)"
         priority:
@@ -1707,7 +1706,6 @@ ur:
           bookmarks: میں نے بُک مارک کیے ہوے ہوں
           first: جو سب سے پہلی پوسٹ ہو
           pinned: جو پِن ہوا ہو
-          unpinned: جو پِن نہ ہوا ہو
           seen: جو میں نے پڑھ لیے ہوں
           unseen: جو میں نے نہ پڑھا ہو
           wiki: جو وِیکی ہو

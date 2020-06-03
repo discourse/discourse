@@ -4,7 +4,7 @@ import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { escape } from "pretty-text/sanitizer";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 const MAX_COMPONENTS = 4;
 
@@ -41,7 +41,7 @@ export default Component.extend({
   animate(isInitial) {
     const $container = $(this.element);
     const $list = $(this.element.querySelector(".components-list"));
-    if ($list.length === 0 || ENV.environment === "test") {
+    if ($list.length === 0 || isTesting()) {
       return;
     }
     const duration = 300;
