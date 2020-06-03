@@ -61,12 +61,12 @@ export default (filterArg, params) => {
           const record = this.store.createRecord("category", result.category);
           record.setupGroupsAndPermissions();
           this.site.updateCategory(record);
-          return { category: record };
+          return { category: record, modelParams };
         });
       }
 
       if (category) {
-        return { category };
+        return { category, modelParams };
       }
     },
 
@@ -79,7 +79,7 @@ export default (filterArg, params) => {
       this._setupNavigation(model.category);
       return all([
         this._createSubcategoryList(model.category),
-        this._retrieveTopicList(model.category, transition)
+        this._retrieveTopicList(model.category, transition, model.modelParams)
       ]);
     },
 
@@ -113,11 +113,11 @@ export default (filterArg, params) => {
       return Promise.resolve();
     },
 
-    _retrieveTopicList(category, transition) {
+    _retrieveTopicList(category, transition, modelParams) {
       const listFilter = `c/${Category.slugFor(category)}/${
           category.id
         }/l/${this.filter(category)}`,
-        findOpts = filterQueryParams(transition.to.queryParams, params),
+        findOpts = filterQueryParams(modelParams),
         extras = { cached: this.isPoppedState(transition) };
 
       return findTopicList(
