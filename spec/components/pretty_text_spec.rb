@@ -1106,9 +1106,9 @@ describe PrettyText do
 
     [
       "<span class=\"hashtag\">#unknown::tag</span>",
-      "<a class=\"hashtag\" href=\"#{category2.url_with_id}\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"#{category2.url}\">#<span>known</span></a>",
       "<a class=\"hashtag\" href=\"http://test.localhost/tag/known\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"#{category.url_with_id}\">#<span>testing</span></a>"
+      "<a class=\"hashtag\" href=\"#{category.url}\">#<span>testing</span></a>"
     ].each do |element|
 
       expect(cooked).to include(element)
