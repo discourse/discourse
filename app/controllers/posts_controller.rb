@@ -106,6 +106,7 @@ class PostsController < ApplicationController
   def user_posts_feed
     params.require(:username)
     user = fetch_user_from_params
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
     posts = Post.public_posts
       .where(user_id: user.id)
