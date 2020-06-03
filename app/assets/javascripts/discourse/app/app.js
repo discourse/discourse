@@ -15,6 +15,7 @@ const Discourse = Application.extend({
   __widget_helpers: {},
   hasFocus: null,
   _boundFocusChange: null,
+  __bootstrap: null,
 
   customEvents: {
     paste: "paste"

@@ -19,12 +19,22 @@ export default {
     if (isTesting()) {
       return;
     }
-    const preloadedDataElement = document.getElementById("data-preloaded");
-    const setupData = document.getElementById("data-discourse-setup").dataset;
 
-    if (preloadedDataElement) {
-      const preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
+    let setupData;
+    let preloaded;
+    if (app.__bootstrap) {
+      setupData = app.__bootstrap.setup_data;
+      preloaded = app.__bootstrap.preloaded;
+      delete app.__bootstrap;
+    } else {
+      setupData = document.getElementById("data-discourse-setup").dataset;
+      const preloadedDataElement = document.getElementById("data-preloaded");
+      if (preloadedDataElement) {
+        preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
+      }
+    }
 
+    if (preloaded) {
       Object.keys(preloaded).forEach(function(key) {
         PreloadStore.store(key, JSON.parse(preloaded[key]));
 
