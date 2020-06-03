@@ -188,6 +188,14 @@ createWidget("header-icons", {
       return [];
     }
 
+    const icons = [];
+
+    if (_extraHeaderIcons) {
+      _extraHeaderIcons.forEach(icon => {
+        icons.push(this.attach(icon));
+      });
+    }
+
     const hamburger = this.attach("header-dropdown", {
       title: "hamburger_menu",
       icon: "bars",
@@ -210,6 +218,7 @@ createWidget("header-icons", {
         }
       }
     });
+    icons.push(hamburger);
 
     const search = this.attach("header-dropdown", {
       title: "search.title",
@@ -219,8 +228,8 @@ createWidget("header-icons", {
       active: attrs.searchVisible,
       href: Discourse.getURL("/search")
     });
+    icons.push(search);
 
-    const icons = [search, hamburger];
     if (attrs.user) {
       icons.push(
         this.attach("user-dropdown", {
@@ -230,12 +239,6 @@ createWidget("header-icons", {
           user: attrs.user
         })
       );
-    }
-
-    if (_extraHeaderIcons) {
-      _extraHeaderIcons.forEach(icon => {
-        icons.push(this.attach(icon));
-      });
     }
 
     return icons;
