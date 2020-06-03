@@ -12,7 +12,7 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 
 require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
 
-if ENV['RAILS_ENV'] != 'production' && ENV['RAILS_ENV'] != 'profile'
+if (ENV['FORCE_BOOTSNAP'] == '1') || (ENV['RAILS_ENV'] != 'production' && ENV['RAILS_ENV'] != 'profile')
   begin
     require 'bootsnap'
   rescue LoadError
