@@ -1,5 +1,6 @@
 import { empty } from "@ember/object/computed";
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
@@ -13,37 +14,37 @@ export default Component.extend({
 
   @on("didReceiveAttrs")
   _setupCollection() {
-    const values = this.values;
     if (this.inputType === "array") {
-      this.set("collection", values || []);
+      this.set("collection", this.values || []);
       return;
     }
 
     this.set(
       "collection",
-      this._splitValues(values, this.inputDelimiter || "\n")
+      this._splitValues(this.values, this.inputDelimiter || "\n")
     );
   },
 
   keyDown(event) {
-    if (event.keyCode === 13) this.send("addValue", this.newValue);
+    if (event.keyCode === 13) this.addValue(this.newValue);
   },
 
-  actions: {
-    changeValue(index, newValue) {
-      this._replaceValue(index, newValue);
-    },
+  @action
+  changeValue(index, newValue) {
+    this._replaceValue(index, newValue);
+  },
 
-    addValue(newValue) {
-      if (this.inputInvalid) return;
+  @action
+  addValue(newValue) {
+    if (this.inputInvalid) return;
 
-      this.set("newValue", null);
-      this._addValue(newValue);
-    },
+    this.set("newValue", null);
+    this._addValue(newValue);
+  },
 
-    removeValue(value) {
-      this._removeValue(value);
-    }
+  @action
+  removeValue(value) {
+    this._removeValue(value);
   },
 
   _addValue(value) {
@@ -72,7 +73,7 @@ export default Component.extend({
 
   _splitValues(values, delimiter) {
     if (values && values.length) {
-      return values.split(delimiter).filter(x => x);
+      return values.split(delimiter).filter(Boolean);
     } else {
       return [];
     }

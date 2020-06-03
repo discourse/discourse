@@ -934,13 +934,13 @@ table#user-badges {
 .simple-list-input {
   display: flex;
 
-  input {
+  .add-value-input {
     margin: 0;
     box-sizing: border-box;
     flex: 1 0 0px;
   }
 
-  button {
+  .add-value-btn {
     margin-left: 0.25em;
   }
 }
