@@ -684,7 +684,7 @@ class ImportScripts::Base
       FROM users u1
       JOIN lpa ON lpa.user_id = u1.id
       WHERE u1.id = users.id
-        AND users.last_posted_at <> lpa.last_posted_at
+        AND users.last_posted_at IS DISTINCT FROM lpa.last_posted_at
     SQL
   end
 
@@ -702,7 +702,7 @@ class ImportScripts::Base
       FROM user_stats u1
       JOIN sub ON sub.user_id = u1.user_id
       WHERE u1.user_id = user_stats.user_id
-        AND user_stats.first_post_created_at <> sub.first_post_created_at
+        AND user_stats.first_post_created_at IS DISTINCT FROM sub.first_post_created_at
     SQL
 
     puts "", "Updating user post_count..."
