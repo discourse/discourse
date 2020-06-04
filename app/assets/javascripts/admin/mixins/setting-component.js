@@ -25,7 +25,8 @@ const CUSTOM_TYPES = [
   "upload",
   "group_list",
   "tag_list",
-  "color"
+  "color",
+  "simple_list"
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];

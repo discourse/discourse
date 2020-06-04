@@ -1445,7 +1445,7 @@ security:
   content_security_policy_collect_reports:
     default: false
   content_security_policy_script_src:
-    type: list
+    type: simple_list
     default: ""
   invalidate_inactive_admin_email_after_days:
     default: 365

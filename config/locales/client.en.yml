@@ -4588,6 +4588,8 @@ en:
           modal_description: "Would you like to apply this change historically? This will change preferences for %{count} existing users."
           modal_yes: "Yes"
           modal_no: "No, only apply change going forward"
+        simple_list:
+          add_item: "Add item..."
 
       badges:
         title: Badges
