@@ -500,7 +500,7 @@ end
 
 desc "Update first_post_created_at column in user_stats table"
 task "import:update_first_post_created_at" => :environment do
-  puts "", "Updating first_post_created_at..."
+  log "Updating first_post_created_at..."
 
   DB.exec <<~SQL
     WITH sub AS (
@@ -515,4 +515,6 @@ task "import:update_first_post_created_at" => :environment do
     WHERE u1.user_id = user_stats.user_id
       AND user_stats.first_post_created_at IS DISTINCT FROM sub.first_post_created_at
   SQL
+
+  log "Done"
 end
