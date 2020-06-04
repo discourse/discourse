@@ -25,7 +25,7 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
       Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
     end
 
-    Sidekiq.unpause!
+    Sidekiq.unpause! if Sidekiq.pause?
   end
 
   module Discourse
