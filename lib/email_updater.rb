@@ -5,10 +5,9 @@ class EmailUpdater
 
   attr_reader :user
 
-  def initialize(guardian: nil, user: nil, initiating_user: nil)
+  def initialize(guardian: nil, user: nil)
     @guardian = guardian
     @user = user
-    @initiating_user = initiating_user
   end
 
   def self.human_attribute_name(name, options = {})
@@ -135,7 +134,7 @@ class EmailUpdater
   end
 
   def initiating_admin_changing_another_user_email?
-    @initiating_user&.admin? && @initiating_user != @user
+    @guardian.is_admin? && @guardian.user != @user
   end
 
   def auto_confirm_and_send_password_reset(email_token)

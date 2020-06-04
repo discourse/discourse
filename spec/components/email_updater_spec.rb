@@ -19,7 +19,7 @@ describe EmailUpdater do
 
   context "when an admin is changing the email of another user" do
     let(:admin) { Fabricate(:admin) }
-    let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user, initiating_user: admin) }
+    let(:updater) { EmailUpdater.new(guardian: admin.guardian, user: user) }
 
     def expect_old_email_job
       Jobs.expects(:enqueue).with(:critical_user_email, has_entries(to_address: old_email, type: :notify_old_email, user_id: user.id))
