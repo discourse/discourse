@@ -247,7 +247,7 @@ const DiscourseURL = EmberObject.extend({
       if (currentUser) {
         path = path.replace(
           myPath,
-          userPath(currentUser.get("username_lower") + "/")
+          userPath(currentUser.get("username_lower"))
         );
       } else {
         return redirectTo("/login-preferences");
