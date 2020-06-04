@@ -22,9 +22,11 @@
 
       .icons {
         display: flex;
+        align-self: flex-start;
         margin-right: 0.5em;
 
         .d-icon {
+          flex: 0 0 100%;
           font-size: $font-up-2;
           align-self: center;
           margin-right: 0;
