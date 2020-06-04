@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 task "tags:bulk_tag_category", [:tags, :category, :append] => [:environment] do |_, args|
-  args.with_defaults(:append => false)
+  args.with_defaults(append: false)
   tags = args[:tags].split("|")
   category_id = args[:category]
   append = args[:append]
