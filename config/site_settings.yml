@@ -1549,6 +1549,12 @@ rate_limits:
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
+  rate_limit_search_anon:
+    hidden: true
+    default: 15
+  rate_limit_search_user:
+    hidden: true
+    default: 30
   max_topics_per_day: 20
   max_personal_messages_per_day: 20
   max_likes_per_day: 50
