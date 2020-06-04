@@ -6,6 +6,7 @@ import Topic from "discourse/models/topic";
 import Category from "discourse/models/category";
 
 const _buttons = [];
+let _createdButtons = false;
 
 const alwaysTrue = () => true;
 
@@ -25,51 +26,58 @@ function addBulkButton(action, key, opts) {
   _buttons.push(btn);
 }
 
-// Default buttons
-addBulkButton("showChangeCategory", "change_category", {
-  icon: "pencil-alt",
-  class: "btn-default"
-});
-addBulkButton("closeTopics", "close_topics", {
-  icon: "lock",
-  class: "btn-default"
-});
-addBulkButton("archiveTopics", "archive_topics", {
-  icon: "folder",
-  class: "btn-default"
-});
-addBulkButton("showNotificationLevel", "notification_level", {
-  icon: "d-regular",
-  class: "btn-default"
-});
-addBulkButton("resetRead", "reset_read", {
-  icon: "backward",
-  class: "btn-default"
-});
-addBulkButton("unlistTopics", "unlist_topics", {
-  icon: "far-eye-slash",
-  class: "btn-default",
-  buttonVisible: topics => topics.some(t => t.visible)
-});
-addBulkButton("relistTopics", "relist_topics", {
-  icon: "far-eye",
-  class: "btn-default",
-  buttonVisible: topics => topics.some(t => !t.visible)
-});
-if (Discourse.SiteSettings.tagging_enabled) {
-  addBulkButton("showTagTopics", "change_tags", {
-    icon: "tag",
+function createBulkButtons(settings) {
+  if (_createdButtons) {
+    return;
+  }
+  _createdButtons = true;
+
+  // Default buttons
+  addBulkButton("showChangeCategory", "change_category", {
+    icon: "pencil-alt",
     class: "btn-default"
   });
-  addBulkButton("showAppendTagTopics", "append_tags", {
-    icon: "tag",
+  addBulkButton("closeTopics", "close_topics", {
+    icon: "lock",
     class: "btn-default"
+  });
+  addBulkButton("archiveTopics", "archive_topics", {
+    icon: "folder",
+    class: "btn-default"
+  });
+  addBulkButton("showNotificationLevel", "notification_level", {
+    icon: "d-regular",
+    class: "btn-default"
+  });
+  addBulkButton("resetRead", "reset_read", {
+    icon: "backward",
+    class: "btn-default"
+  });
+  addBulkButton("unlistTopics", "unlist_topics", {
+    icon: "far-eye-slash",
+    class: "btn-default",
+    buttonVisible: topics => topics.some(t => t.visible)
+  });
+  addBulkButton("relistTopics", "relist_topics", {
+    icon: "far-eye",
+    class: "btn-default",
+    buttonVisible: topics => topics.some(t => !t.visible)
+  });
+  if (settings.tagging_enabled) {
+    addBulkButton("showTagTopics", "change_tags", {
+      icon: "tag",
+      class: "btn-default"
+    });
+    addBulkButton("showAppendTagTopics", "append_tags", {
+      icon: "tag",
+      class: "btn-default"
+    });
+  }
+  addBulkButton("deleteTopics", "delete", {
+    icon: "trash-alt",
+    class: "btn-danger"
   });
 }
-addBulkButton("deleteTopics", "delete", {
-  icon: "trash-alt",
-  class: "btn-danger"
-});
 
 // Modal for performing bulk actions on topics
 export default Controller.extend(ModalFunctionality, {
@@ -77,6 +85,11 @@ export default Controller.extend(ModalFunctionality, {
 
   emptyTags: empty("tags"),
   categoryId: alias("model.category.id"),
+
+  init() {
+    this._super(...arguments);
+    createBulkButtons(this.siteSettings);
+  },
 
   onShow() {
     const topics = this.get("model.topics");
@@ -196,5 +209,3 @@ export default Controller.extend(ModalFunctionality, {
     }
   }
 });
-
-export { addBulkButton };

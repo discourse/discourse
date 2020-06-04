@@ -4,11 +4,13 @@ import Sharing from "discourse/lib/sharing";
 export default {
   name: "sharing-sources",
 
-  initialize: function() {
+  initialize(container) {
+    let siteSettings = container.lookup("site-settings:main");
+
     Sharing.addSource({
       id: "twitter",
       icon: "fab-twitter-square",
-      generateUrl: function(link, title) {
+      generateUrl(link, title) {
         return (
           "http://twitter.com/intent/tweet?url=" +
           encodeURIComponent(link) +
@@ -25,7 +27,7 @@ export default {
       id: "facebook",
       icon: "fab-facebook",
       title: I18n.t("share.facebook"),
-      generateUrl: function(link, title) {
+      generateUrl(link, title) {
         return (
           "http://www.facebook.com/sharer.php?u=" +
           encodeURIComponent(link) +
@@ -40,12 +42,10 @@ export default {
       id: "email",
       icon: "envelope-square",
       title: I18n.t("share.email"),
-      generateUrl: function(link, title) {
+      generateUrl(link, title) {
         return (
           "mailto:?to=&subject=" +
-          encodeURIComponent(
-            "[" + Discourse.SiteSettings.title + "] " + title
-          ) +
+          encodeURIComponent(`[${siteSettings.title}] ${title}`) +
           "&body=" +
           encodeURIComponent(link)
         );

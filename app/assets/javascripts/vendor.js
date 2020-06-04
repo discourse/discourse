@@ -1,5 +1,4 @@
 //= require logster
-//= require ./discourse-objects
 
 //= require template_include.js
 //= require i18n-patches

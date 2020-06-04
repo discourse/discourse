@@ -35,7 +35,7 @@ const AdminUser = User.extend({
   bounceScoreExplanation(bounce_score) {
     if (bounce_score === 0) {
       return I18n.t("admin.user.bounce_score_explanation.none");
-    } else if (bounce_score < Discourse.SiteSettings.bounce_score_threshold) {
+    } else if (bounce_score < this.siteSettings.bounce_score_threshold) {
       return I18n.t("admin.user.bounce_score_explanation.some");
     } else {
       return I18n.t("admin.user.bounce_score_explanation.threshold_reached");

@@ -67,7 +67,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
   @discourseComputed("category")
   showTagFilter() {
-    return Discourse.SiteSettings.show_filter_by_tag;
+    return this.siteSettings.show_filter_by_tag;
   },
 
   @discourseComputed("additionalTags", "category", "tag.id")

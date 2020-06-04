@@ -2,11 +2,14 @@ import { warn } from "@ember/debug";
 import { equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const RestModel = EmberObject.extend({
   isNew: equal("__state", "new"),
   isCreated: equal("__state", "created"),
   isSaving: false,
+  siteSettings: null,
+  store: null,
 
   beforeCreate() {},
   afterCreate() {},
@@ -100,9 +103,12 @@ RestModel.reopenClass({
 
   create(args) {
     args = args || {};
+    const container = getOwner(this);
     if (!args.store) {
-      const container = Discourse.__container__;
       args.store = container.lookup("service:store");
+    }
+    if (!args.siteSettings) {
+      args.siteSettings = container.lookup("site-settings:main");
     }
 
     args.__munge = this.munge;

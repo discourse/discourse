@@ -121,8 +121,7 @@ export default Controller.extend({
           model.invites.pushObjects(invite_model.invites);
           if (
             invite_model.invites.length === 0 ||
-            invite_model.invites.length <
-              Discourse.SiteSettings.invites_per_page
+            invite_model.invites.length < this.siteSettings.invites_per_page
           ) {
             this.set("canLoadMore", false);
           }

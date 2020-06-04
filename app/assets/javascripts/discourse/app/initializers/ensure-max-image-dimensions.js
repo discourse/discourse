@@ -9,9 +9,9 @@ export default {
     // This enforces maximum dimensions of images based on site settings
     // for mobile we use the window width as a safeguard
     // This rule should never really be at play unless for some reason images do not have dimensions
-
-    var width = Discourse.SiteSettings.max_image_width;
-    var height = Discourse.SiteSettings.max_image_height;
+    let siteSettings = container.lookup("site-settings:main");
+    let width = siteSettings.max_image_width;
+    let height = siteSettings.max_image_height;
 
     const site = container.lookup("site:main");
     if (site.mobileView) {

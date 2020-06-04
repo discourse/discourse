@@ -23,7 +23,7 @@ export default Component.extend({
 
   @discourseComputed
   adminWhitelistEnabled() {
-    return Discourse.SiteSettings.use_admin_ip_whitelist;
+    return this.siteSettings.use_admin_ip_whitelist;
   },
 
   @discourseComputed("adminWhitelistEnabled")

@@ -1,4 +1,3 @@
-import deprecated from "discourse-common/lib/deprecated";
 import { getOwner as emberGetOwner } from "@ember/application";
 
 export function getOwner(obj) {
@@ -21,17 +20,6 @@ export function getRegister(obj) {
       } else if (owner._lookupFactory) {
         return owner._lookupFactory(...args);
       }
-    },
-
-    deprecateContainer(target) {
-      Object.defineProperty(target, "container", {
-        get() {
-          deprecated(
-            "Use `this.register` or `getOwner` instead of `this.container`"
-          );
-          return register;
-        }
-      });
     }
   };
 

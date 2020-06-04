@@ -1,2 +1,0 @@
-window.Discourse = {};
-Discourse.SiteSettings = {};

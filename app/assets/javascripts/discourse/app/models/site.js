@@ -15,7 +15,6 @@ const Site = RestModel.extend({
 
   init() {
     this._super(...arguments);
-
     this.topicCountDesc = ["topic_count:desc"];
   },
 
@@ -136,7 +135,7 @@ Site.reopenClass(Singleton, {
   },
 
   create() {
-    const result = this._super.apply(this, arguments);
+    const result = this._super(...arguments);
     const store = result.store;
 
     if (result.categories) {

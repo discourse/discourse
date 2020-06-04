@@ -10,7 +10,6 @@ class DecoratorHelper {
     this.canConnectComponent = true;
     this.state = state;
     this.register = widget.register;
-    this.register.deprecateContainer(this);
   }
 
   /**

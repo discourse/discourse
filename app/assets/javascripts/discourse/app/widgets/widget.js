@@ -113,8 +113,6 @@ export default class Widget {
     this.register = register;
     this.dirtyKeys = opts.dirtyKeys;
 
-    register.deprecateContainer(this);
-
     this.key = this.buildKey ? this.buildKey(attrs) : null;
     this.site = register.lookup("site:main");
     this.siteSettings = register.lookup("site-settings:main");
