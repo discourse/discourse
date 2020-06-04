@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: Remove once we upgrade to Rails 6.1
 # Copied implementation from https://github.com/rails/rails/pull/38169
 module ActionDispatch
