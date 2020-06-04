@@ -27,5 +27,9 @@ if Rails.configuration.multisite
 end
 
 if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
-  Rails.configuration.middleware.move_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
+  if Rails.configuration.multisite
+    Rails.configuration.middleware.move_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
+  else
+    Rails.configuration.middleware.move_before(MessageBus::Rack::Middleware, RailsFailover::ActiveRecord::Middleware)
+  end
 end
