@@ -25,3 +25,7 @@ if Rails.configuration.multisite
   Rails.configuration.middleware.unshift RailsMultisite::Middleware, RailsMultisite::DiscoursePatches.config
   Rails.configuration.middleware.delete ActionDispatch::Executor
 end
+
+if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
+  Rails.configuration.middleware.move_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
+end
