@@ -3039,7 +3039,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        None of the destination email addresses are recognized, or the Message-ID header in the email has been modified. Please make sure that you are sending to the correct email address provided by staff.
+        Do you use more than one email address? Did you reply from a different email address? Email replies require that you use the same email address when replying. Alternately, the Message-ID header in the email may have been modified.
 
     email_reject_old_destination:
       title: "Email Reject Old Destination"
