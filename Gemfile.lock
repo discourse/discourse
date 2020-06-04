@@ -1,10 +1,9 @@
 GIT
   remote: https://github.com/discourse/rails_failover
-  revision: a8785298ad5c89869c315d53d5f7243ec9443b55
+  revision: e9893a3920809c9a1bca4f7ae07b7243b2cd127e
   specs:
     rails_failover (0.4.0)
       activerecord (~> 6.0)
-      listen (~> 3.2)
       railties (~> 6.0)
 
 GEM

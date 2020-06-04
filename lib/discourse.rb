@@ -661,10 +661,6 @@ module Discourse
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
 
-    if ENV['ACTIVE_RECORD_RAILS_FAILOVER']
-      RailsFailover::ActiveRecord.after_fork
-    end
-
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
 
