@@ -7,10 +7,6 @@
   vertical-align: middle;
   user-select: none;
 
-  &.is-hidden {
-    display: none !important;
-  }
-
   &.is-disabled {
     pointer-events: none;
   }
