@@ -37,12 +37,12 @@ describe NotificationsController do
 
       describe '#index' do
         it 'should succeed for recent' do
-          get "/notifications", params: { recent: true }
+          get "/notifications.json", params: { recent: true }
           expect(response.status).to eq(200)
         end
 
         it 'should succeed for history' do
-          get "/notifications"
+          get "/notifications.json"
           expect(response.status).to eq(200)
         end
 

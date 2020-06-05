@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
   ]
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
-  skip_before_action :check_xhr, only: [:show]
+  skip_before_action :check_xhr, only: [:show, :new]
   after_action :add_noindex_header
 
   TYPE_FILTERS = {
@@ -133,6 +133,7 @@ class GroupsController < ApplicationController
   end
 
   def new
+    render 'default/empty'
   end
 
   def edit

@@ -107,6 +107,7 @@ class ApplicationController < ActionController::Base
   end
 
   class RenderEmpty < StandardError; end
+  class CheckXhrForTest < StandardError; end
   class PluginDisabled < StandardError; end
 
   rescue_from RenderEmpty do
@@ -661,7 +662,11 @@ class ApplicationController < ActionController::Base
   def check_xhr
     # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
     return if !request.get? && (is_api? || is_user_api?)
-    raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
+    unless ((request.format && request.format.json?) || request.xhr?)
+      # Tests usually aren't trying to request HTML pages. Give a special error
+      raise ApplicationController::CheckXhrForTest.new if Rails.env.test?
+      raise ApplicationController::RenderEmpty.new
+    end
   end
 
   def self.requires_login(arg = {})

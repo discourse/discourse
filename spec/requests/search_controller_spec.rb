@@ -466,7 +466,7 @@ describe SearchController do
         ip_address: '127.0.0.1'
       )
 
-      post "/search/click", params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 12345,
         search_result_type: 'topic'
@@ -525,7 +525,7 @@ describe SearchController do
         ip_address: '192.168.0.19'
       )
 
-      post "/search/click", params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 22222,
         search_result_type: 'topic'

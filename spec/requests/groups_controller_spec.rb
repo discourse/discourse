@@ -1630,7 +1630,7 @@ describe GroupsController do
     describe 'for an admin user' do
       before { sign_in(Fabricate(:admin)) }
 
-      it 'should return 404' do
+      it 'should return html' do
         get '/groups/custom/new'
 
         expect(response.status).to eq(200)
