@@ -206,6 +206,10 @@ class UsersController < ApplicationController
   end
 
   def update_primary_email
+    if !SiteSetting.enable_secondary_emails
+      return render json: failed_json, status: 410
+    end
+
     params.require(:email)
 
     user = fetch_user_from_params
@@ -236,6 +240,10 @@ class UsersController < ApplicationController
   end
 
   def destroy_email
+    if !SiteSetting.enable_secondary_emails
+      return render json: failed_json, status: 410
+    end
+
     params.require(:email)
 
     user = fetch_user_from_params

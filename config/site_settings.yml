@@ -1124,6 +1124,10 @@ email:
   delete_rejected_email_after_days:
     default: 90
     max: 36500
+  enable_secondary_emails:
+    client: true
+    default: true
+    hidden: true
 
 files:
   max_image_size_kb:
