@@ -4,7 +4,7 @@ let S3BaseUrl, S3CDN;
 export default function getURL(url) {
   if (!url) return url;
 
-  if (!baseUri) {
+  if (baseUri === undefined) {
     baseUri = $('meta[name="discourse-base-uri"]').attr("content") || "";
   }
 
