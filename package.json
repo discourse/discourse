@@ -17,7 +17,6 @@
     "favcount": "https://github.com/chrishunt/favcount",
     "handlebars": "^4.7.0",
     "highlight.js": "https://github.com/highlightjs/highlight.js#d72f0817aaab8187711fca7c608f5272ea5147f6",
-    "htmlparser": "https://github.com/tautologistics/node-htmlparser",
     "intersection-observer": "^0.5.1",
     "jquery": "3.5.0",
     "jquery-color": "3.0.0-alpha.1",
