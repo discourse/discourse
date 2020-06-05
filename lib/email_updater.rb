@@ -5,6 +5,10 @@ class EmailUpdater
 
   attr_reader :user
 
+  def self.human_attribute_name(name, options = {})
+    User.human_attribute_name(name, options)
+  end
+
   def initialize(guardian: nil, user: nil)
     @guardian = guardian
     @user = user
@@ -30,7 +34,13 @@ class EmailUpdater
 
     old_email = @user.email if !add
 
-    if @guardian.is_admin? && !@user.staff? && @guardian.user != @user
+    if @guardian.is_staff? && @guardian.user != @user
+      StaffActionLogger.new(@guardian.user).log_add_email(@user)
+    else
+      UserHistory.create!(action: UserHistory.actions[:add_email], target_user_id: @user.id)
+    end
+
+    if @guardian.is_staff? && !@user.staff?
       send_email_notification(@user.email, email)
       update_user_email(old_email, email)
       send_email(:forgot_password, @user.email_tokens.create!(email: @user.email))
@@ -93,14 +103,6 @@ class EmailUpdater
           end
           update_user_email(change_req.old_email, change_req.new_email)
           confirm_result = :complete
-        end
-
-        if confirm_result == :complete
-          if @initiating_user&.staff? && @initiating_user != @user
-            StaffActionLogger.new(@initiating_user).log_add_email(@user, previous_value: change_req.old_email, new_value: change_req.new_email)
-          else
-            UserHistory.create!(action: UserHistory.actions[:add_email], target_user_id: @user.id, previous_value: change_req.old_email, new_value: change_req.new_email)
-          end
         end
       else
         errors.add(:base, I18n.t('change_email.already_done'))

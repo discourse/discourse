@@ -852,7 +852,7 @@ en:
 
     authorizing_new:
       title: "Confirm your new email"
-      description: "Please confirm you would like your new email address changed to:"
+      description: "Please confirm you would like your email address changed to:"
       description_add: "Please confirm you would like to add an alternate email address:"
 
     authorizing_old:

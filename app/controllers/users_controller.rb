@@ -230,9 +230,9 @@ class UsersController < ApplicationController
       new_primary.update!(primary: true)
 
       if current_user.staff? && current_user != user
-        StaffActionLogger.new(current_user).log_update_email(user, previous_value: old_primary.email, new_value: new_primary.email)
+        StaffActionLogger.new(current_user).log_update_email(user)
       else
-        UserHistory.create!(action: UserHistory.actions[:update_email], target_user_id: user.id, previous_value: old_primary.email, new_value: new_primary.email)
+        UserHistory.create!(action: UserHistory.actions[:update_email], target_user_id: user.id)
       end
     end
 
@@ -262,9 +262,9 @@ class UsersController < ApplicationController
       end
 
       if current_user.staff? && current_user != user
-        StaffActionLogger.new(current_user).log_destroy_email(user, previous_value: params[:email])
+        StaffActionLogger.new(current_user).log_destroy_email(user)
       else
-        UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id, previous_value: params[:email])
+        UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id)
       end
     end
 
