@@ -8,7 +8,7 @@ Create your new cloud server, for example [on DigitalOcean][do]:
 
 - The default of **Ubuntu 18.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
 
-- The default of **1 GB** RAM works fine for small Discourse communities. We recommend 2 GB RAM for larger communities.
+- The default of **1 GB** RAM works fine for small Discourse communities. We recommend 2 GB RAM for larger communities. **Note that for cloud servers with SSD storage, at least 3 GB RAM should be chosen, otherwise Discourse will automatically create a swap file which is not recommended on SSDs.**
 
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 
