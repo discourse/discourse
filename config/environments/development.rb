@@ -84,7 +84,7 @@ Discourse::Application.configure do
 
     if ENV["RAILS_VERBOSE_QUERY_LOGS"] == "1"
       ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
-        line =~ /lib\/freedom_patches\/fast_pluck\.rb/
+        line =~ /lib\/freedom_patches/
       end
     end
 
