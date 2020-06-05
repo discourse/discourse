@@ -28,8 +28,8 @@ end
 
 if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
   if Rails.configuration.multisite
-    Rails.configuration.middleware.move_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
+    Rails.configuration.middleware.insert_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
   else
-    Rails.configuration.middleware.move_before(MessageBus::Rack::Middleware, RailsFailover::ActiveRecord::Middleware)
+    Rails.configuration.middleware.insert_before(MessageBus::Rack::Middleware, RailsFailover::ActiveRecord::Middleware)
   end
 end
