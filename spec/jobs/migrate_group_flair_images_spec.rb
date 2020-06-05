@@ -28,7 +28,9 @@ RSpec.describe Jobs::MigrateGroupFlairImages do
     end.to change { Upload.count }.by(1)
 
     group.reload
-    expect(group.flair_upload).to eq(Upload.last)
+    upload = Upload.last
+    expect(group.flair_upload).to eq(upload)
+    expect(group.flair_url).to eq(upload.short_path)
     expect(group[:flair_url]).to eq(nil)
   end
 
