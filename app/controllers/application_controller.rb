@@ -760,7 +760,7 @@ class ApplicationController < ActionController::Base
     return if !current_user
     return if !should_enforce_2fa?
 
-    redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
+    redirect_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     if !request.fullpath.start_with?(redirect_path)
       redirect_to path(redirect_path)
       nil

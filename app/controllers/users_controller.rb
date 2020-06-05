@@ -130,7 +130,7 @@ class UsersController < ApplicationController
   end
 
   def user_preferences_redirect
-    redirect_to email_preferences_path(current_user.username_lower)
+    redirect_to path("/u/#{current_user.encoded_username}/preferences")
   end
 
   def update
@@ -273,7 +273,7 @@ class UsersController < ApplicationController
       cookies[:destination_url] = path("/my/#{params[:path]}")
       redirect_to path("/login-preferences")
     else
-      redirect_to(path("/u/#{current_user.username}/#{params[:path]}"))
+      redirect_to(path("/u/#{current_user.encoded_username}/#{params[:path]}"))
     end
   end
 

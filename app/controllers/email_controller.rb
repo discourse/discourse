@@ -7,7 +7,7 @@ class EmailController < ApplicationController
   before_action :ensure_logged_in, only: :preferences_redirect
 
   def preferences_redirect
-    redirect_to(email_preferences_path(current_user.username_lower))
+    redirect_to path("/u/#{current_user.encoded_username}/preferences/emails")
   end
 
   def unsubscribe
