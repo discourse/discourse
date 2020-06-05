@@ -11,6 +11,10 @@ task 'plugin:install_all_official' do
     'poll'
   ])
 
+  if skip_install = ENV["SKIP_INSTALL_PLUGINS"]
+    skip_install.split(",").map(&:strip).each { |plugin| skip << plugin  }
+  end
+
   map = {
     'Canned Replies' => 'https://github.com/discourse/discourse-canned-replies',
     'discourse-perspective' => 'https://github.com/discourse/discourse-perspective-api'
