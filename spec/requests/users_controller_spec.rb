@@ -2433,8 +2433,10 @@ describe UsersController do
 
   describe '#my_redirect' do
     it "redirects if the user is not logged in" do
-      get "/my/wat.json"
-      expect(response).to be_redirect
+      get "/my/wat"
+      expect(response).to redirect_to("/login-preferences")
+      expect(response.cookies).to have_key("destination_url")
+      expect(response.cookies["destination_url"]).to eq("/my/wat")
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
@@ -2447,13 +2449,21 @@ describe UsersController do
       end
 
       it "will redirect to an valid path" do
-        get "/my/preferences.json"
-        expect(response).to be_redirect
+        get "/my/preferences"
+        expect(response).to redirect_to("/u/#{user.username}/preferences")
       end
 
       it "permits forward slashes" do
-        get "/my/activity/posts.json"
-        expect(response).to be_redirect
+        get "/my/activity/posts"
+        expect(response).to redirect_to("/u/#{user.username}/activity/posts")
+      end
+
+      it "correctly redirects for Unicode usernames" do
+        SiteSetting.unicode_usernames = true
+        user = sign_in(Fabricate(:unicode_user))
+
+        get "/my/preferences"
+        expect(response).to redirect_to("/u/#{user.encoded_username}/preferences")
       end
     end
   end
@@ -3495,7 +3505,14 @@ describe UsersController do
     it "redirects to their profile when logged in" do
       sign_in(user)
       get '/user_preferences'
-      expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
+      expect(response).to redirect_to("/u/#{user.username}/preferences")
+    end
+
+    it "correctly redirects for Unicode usernames" do
+      SiteSetting.unicode_usernames = true
+      user = sign_in(Fabricate(:unicode_user))
+      get '/user_preferences'
+      expect(response).to redirect_to("/u/#{user.encoded_username}/preferences")
     end
   end
 

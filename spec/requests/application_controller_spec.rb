@@ -162,6 +162,15 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
+    it "correctly redirects for Unicode usernames" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.unicode_usernames = true
+      user = sign_in(Fabricate(:unicode_user))
+
+      get "/"
+      expect(response).to redirect_to("/u/#{user.encoded_username}/preferences/second-factor")
+    end
+
     context "when enforcing second factor for staff" do
       before do
         SiteSetting.enforce_second_factor = "staff"

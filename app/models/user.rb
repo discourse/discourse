@@ -1302,6 +1302,10 @@ class User < ActiveRecord::Base
       .pluck(:credential_id)
   end
 
+  def encoded_username(lower: false)
+    UrlHelper.encode_component(lower ? username_lower : username)
+  end
+
   protected
 
   def badge_grant

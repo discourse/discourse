@@ -112,3 +112,7 @@ end
 Fabricator(:staged, from: :user) do
   staged true
 end
+
+Fabricator(:unicode_user, from: :user) do
+  username { sequence(:username) { |i| "Löwe#{i}" } }
+end

@@ -176,11 +176,17 @@ RSpec.describe EmailController do
     end
 
     context 'when logged in' do
-      let!(:user) { sign_in(Fabricate(:user)) }
-
       it 'redirects to your user preferences' do
+        user = sign_in(Fabricate(:user))
         get "/email_preferences.json"
-        expect(response).to redirect_to("/u/#{user.username}/preferences")
+        expect(response).to redirect_to("/u/#{user.username}/preferences/emails")
+      end
+
+      it "correctly redirects for Unicode usernames" do
+        SiteSetting.unicode_usernames = true
+        user = sign_in(Fabricate(:unicode_user))
+        get "/email_preferences.json"
+        expect(response).to redirect_to("/u/#{user.encoded_username}/preferences/emails")
       end
     end
   end

@@ -2373,4 +2373,19 @@ describe User do
   def reset_last_seen_cache!(user)
     Discourse.redis.del("user:#{user.id}:#{Time.zone.now.to_date}")
   end
+
+  describe ".encoded_username" do
+    it "doesn't encoded ASCII usernames" do
+      user = Fabricate(:user, username: "John")
+      expect(user.encoded_username).to eq("John")
+      expect(user.encoded_username(lower: true)).to eq("john")
+    end
+
+    it "encodes Unicode characters" do
+      SiteSetting.unicode_usernames = true
+      user = Fabricate(:user, username: "Löwe")
+      expect(user.encoded_username).to eq("L%C3%B6we")
+      expect(user.encoded_username(lower: true)).to eq("l%C3%B6we")
+    end
+  end
 end
