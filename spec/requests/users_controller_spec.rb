@@ -3496,26 +3496,6 @@ describe UsersController do
     end
   end
 
-  describe '#user_preferences_redirect' do
-    it 'requires the user to be logged in' do
-      get '/user_preferences'
-      expect(response.status).to eq(404)
-    end
-
-    it "redirects to their profile when logged in" do
-      sign_in(user)
-      get '/user_preferences'
-      expect(response).to redirect_to("/u/#{user.username}/preferences")
-    end
-
-    it "correctly redirects for Unicode usernames" do
-      SiteSetting.unicode_usernames = true
-      user = sign_in(Fabricate(:unicode_user))
-      get '/user_preferences'
-      expect(response).to redirect_to("/u/#{user.encoded_username}/preferences")
-    end
-  end
-
   describe '#email_login' do
     before do
       SiteSetting.enable_local_logins_via_email = true

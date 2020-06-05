@@ -169,28 +169,6 @@ RSpec.describe EmailController do
     end
   end
 
-  context '#preferences_redirect' do
-    it 'requires you to be logged in' do
-      get "/email_preferences.json"
-      expect(response.status).to eq(403)
-    end
-
-    context 'when logged in' do
-      it 'redirects to your user preferences' do
-        user = sign_in(Fabricate(:user))
-        get "/email_preferences.json"
-        expect(response).to redirect_to("/u/#{user.username}/preferences/emails")
-      end
-
-      it "correctly redirects for Unicode usernames" do
-        SiteSetting.unicode_usernames = true
-        user = sign_in(Fabricate(:unicode_user))
-        get "/email_preferences.json"
-        expect(response).to redirect_to("/u/#{user.encoded_username}/preferences/emails")
-      end
-    end
-  end
-
   context '#unsubscribe' do
     it 'displays not found if key is not found' do
       navigate_to_unsubscribe(SecureRandom.hex)

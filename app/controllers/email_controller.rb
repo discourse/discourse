@@ -4,11 +4,6 @@ class EmailController < ApplicationController
   layout 'no_ember'
 
   skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
-  before_action :ensure_logged_in, only: :preferences_redirect
-
-  def preferences_redirect
-    redirect_to path("/u/#{current_user.encoded_username}/preferences/emails")
-  end
 
   def unsubscribe
     @not_found = true
