@@ -1,5 +1,4 @@
 import { debounce } from "@ember/runloop";
-import { ATTACHMENT_CSS_CLASS } from "./engines/discourse-markdown-it";
 let _cache = {};
 
 export function lookupCachedUploadUrl(shortUrl) {
@@ -85,15 +84,6 @@ function _loadCachedShortUrls($uploads, siteSettings) {
       case "A":
         retrieveCachedUrl($upload, siteSettings, "orig-href", url => {
           $upload.attr("href", url);
-
-          // Replace "|attachment" with class='attachment'
-          // TODO: This is a part of the cooking process now and should be
-          // removed in the future.
-          const content = $upload.text().split("|");
-          if (content[1] === ATTACHMENT_CSS_CLASS) {
-            $upload.addClass(ATTACHMENT_CSS_CLASS);
-            $upload.text(content[0]);
-          }
         });
 
         break;
