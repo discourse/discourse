@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/discourse/rails_failover
-  revision: 19a40ef42cb051c56d2679940ec5f00a436e670b
+  revision: 850d04f4b1c4178862d9674ec0b2a46a2f1c20d9
   specs:
     rails_failover (0.4.0)
       activerecord (~> 6.0)
@@ -155,7 +155,7 @@ GEM
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
-    i18n (1.8.2)
+    i18n (1.8.3)
       concurrent-ruby (~> 1.0)
     image_size (1.5.0)
     in_threads (1.5.4)
