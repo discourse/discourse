@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   skip_before_action :authorize_mini_profiler, only: [:avatar]
 
   requires_login only: [
-    :username, :update, :user_preferences_redirect, :upload_user_image,
+    :username, :update, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor_totp,
     :enable_second_factor_totp, :disable_second_factor, :list_second_factors,
@@ -16,7 +16,7 @@ class UsersController < ApplicationController
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset_show, :password_reset_update, :update, :account_created,
-    :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
+    :activate_account, :perform_account_activation, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
     :feature_topic, :clear_featured_topic, :bookmarks
   ]
@@ -127,10 +127,6 @@ class UsersController < ApplicationController
   def badges
     raise Discourse::NotFound unless SiteSetting.enable_badges?
     show
-  end
-
-  def user_preferences_redirect
-    redirect_to path("/u/#{current_user.encoded_username}/preferences")
   end
 
   def update
