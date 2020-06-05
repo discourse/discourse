@@ -134,6 +134,13 @@ task 'docker:test' do
         @good &&= run_or_fail("bundle exec rake plugin:update_all")
       end
 
+      if skip_install = ENV["SKIP_INSTALL_PLUGINS"]
+        skip_install.split(",").map(&:strip).each do |plugin|
+          puts "[SKIP_INSTALL_PLUGINS] Removing #{plugin}"
+          `rm -fr plugins/#{plugin}`
+        end
+      end
+
       command_prefix =
         if ENV["SKIP_PLUGINS"]
           # Make sure not to load plugins. bin/rake will add LOAD_PLUGINS=1 automatically unless we set it to 0 explicitly
