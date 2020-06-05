@@ -63,6 +63,7 @@
   }
 
   &.draft {
+    z-index: z("footer-nav") + 1;
     padding-bottom: env(safe-area-inset-bottom);
 
     .toggle-toolbar,
