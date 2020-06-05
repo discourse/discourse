@@ -315,8 +315,6 @@ Discourse::Application.routes.draw do
 
     end # admin namespace
 
-    get "email_preferences" => "email#preferences_redirect", :as => "email_preferences_redirect"
-
     get "email/unsubscribe/:key" => "email#unsubscribe", as: "email_unsubscribe"
     get "email/unsubscribed" => "email#unsubscribed", as: "email_unsubscribed"
     post "email/unsubscribe/:key" => "email#perform_unsubscribe", as: "email_perform_unsubscribe"
@@ -374,7 +372,6 @@ Discourse::Application.routes.draw do
     end
 
     get "my/*path", to: 'users#my_redirect'
-    get "user_preferences" => "users#user_preferences_redirect"
     get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
 
     get "user-cards" => "users#cards", format: :json
@@ -442,7 +439,7 @@ Discourse::Application.routes.draw do
       get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username } }.merge(index == 1 ? { as: 'user' } : {}))
       put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get "#{root_path}/:username/emails" => "users#check_emails", constraints: { username: RouteFormat.username }
-      get({ "#{root_path}/:username/preferences" => "users#preferences", constraints: { username: RouteFormat.username } }.merge(index == 1 ? { as: :email_preferences } : {}))
+      get "#{root_path}/:username/preferences" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/email" => "users_email#index", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/account" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/profile" => "users#preferences", constraints: { username: RouteFormat.username }
