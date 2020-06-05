@@ -33,7 +33,7 @@ class EmailUpdater
     if @guardian.is_admin? && !@user.staff? && @guardian.user != @user
       send_email_notification(@user.email, email)
       update_user_email(old_email, email)
-      send_email(:forgot_password, @user.email_tokens.create(email: @user.email))
+      send_email(:forgot_password, @user.email_tokens.create!(email: @user.email))
       return
     end
 
@@ -99,7 +99,7 @@ class EmailUpdater
           if @initiating_user&.staff? && @initiating_user != @user
             StaffActionLogger.new(@initiating_user).log_add_email(@user, previous_value: change_req.old_email, new_value: change_req.new_email)
           else
-            UserHistory.create(action: UserHistory.actions[:add_email], target_user_id: @user.id, previous_value: change_req.old_email, new_value: change_req.new_email)
+            UserHistory.create!(action: UserHistory.actions[:add_email], target_user_id: @user.id, previous_value: change_req.old_email, new_value: change_req.new_email)
           end
         end
       else

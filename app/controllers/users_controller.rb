@@ -209,7 +209,7 @@ class UsersController < ApplicationController
     params.require(:email)
 
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_edit_email!(user)
 
     old_primary = user.primary_email
     if old_primary.email == params[:email]
@@ -224,12 +224,12 @@ class UsersController < ApplicationController
     User.transaction do
       old_primary.update!(primary: false)
       new_primary.update!(primary: true)
-    end
 
-    if current_user.staff? && current_user != user
-      StaffActionLogger.new(current_user).log_update_email(user, previous_value: old_primary.email, new_value: new_primary.email)
-    else
-      UserHistory.create(action: UserHistory.actions[:update_email], target_user_id: user.id, previous_value: old_primary.email, new_value: new_primary.email)
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_update_email(user, previous_value: old_primary.email, new_value: new_primary.email)
+      else
+        UserHistory.create!(action: UserHistory.actions[:update_email], target_user_id: user.id, previous_value: old_primary.email, new_value: new_primary.email)
+      end
     end
 
     render json: success_json
@@ -246,16 +246,18 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 428
     end
 
-    if user_email
-      user.user_emails.where(email: params[:email]).destroy_all
-    elsif
-      user.email_change_requests.where(new_email: params[:email]).destroy_all
-    end
+    ActiveRecord::Base.transaction do
+      if user_email
+        user_email.destroy
+      elsif
+        user.email_change_requests.where(new_email: params[:email]).destroy_all
+      end
 
-    if current_user.staff? && current_user != user
-      StaffActionLogger.new(current_user).log_destroy_email(user, previous_value: params[:email])
-    else
-      UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id, previous_value: params[:email])
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_destroy_email(user, previous_value: params[:email])
+      else
+        UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id, previous_value: params[:email])
+      end
     end
 
     render json: success_json
