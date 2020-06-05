@@ -75,10 +75,10 @@ describe UserAvatarsController do
       SiteSetting.s3_secret_access_key = "XXX"
       SiteSetting.s3_upload_bucket = "test"
       SiteSetting.s3_cdn_url = "http://cdn.com"
+      SiteSetting.unicode_usernames = true
 
       stub_request(:get, "http://cdn.com/something/else").to_return(body: 'image')
-
-      GlobalSetting.stubs(:cdn_url).returns("http://awesome.com/boom")
+      set_cdn_url("http://awesome.com/boom")
 
       upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
 
@@ -103,6 +103,11 @@ describe UserAvatarsController do
       expect(response.body).to eq("image")
       expect(response.headers["Cache-Control"]).to eq('max-age=31556952, public, immutable')
       expect(response.headers["Last-Modified"]).to eq(optimized_image.upload.created_at.httpdate)
+
+      user.update!(username: "Löwe")
+
+      get "/user_avatar/default/#{user.encoded_username}/97/#{upload.id}.png"
+      expect(response).to redirect_to("http://awesome.com/boom/user_avatar/default/#{user.encoded_username(lower: true)}/98/#{upload.id}_#{OptimizedImage::VERSION}.png")
     end
 
     it 'serves new version for old urls' do
@@ -148,6 +153,23 @@ describe UserAvatarsController do
       get "/user_avatar/default/#{user.username}/51/#{upload.id}.png"
 
       expect(response.status).to eq(200)
+    end
+
+    it "serves the correct image when the upload id changed" do
+      SiteSetting.avatar_sizes = "50"
+      SiteSetting.unicode_usernames = true
+
+      upload = Fabricate(:upload)
+      another_upload = Fabricate(:upload)
+      user = Fabricate(:user, uploaded_avatar_id: upload.id)
+
+      get "/user_avatar/default/#{user.username}/50/#{another_upload.id}.png"
+      expect(response).to redirect_to("http://test.localhost/user_avatar/default/#{user.username_lower}/50/#{upload.id}_#{OptimizedImage::VERSION}.png")
+
+      user.update!(username: "Löwe")
+
+      get "/user_avatar/default/#{user.encoded_username}/50/#{another_upload.id}.png"
+      expect(response).to redirect_to("http://test.localhost/user_avatar/default/#{user.encoded_username(lower: true)}/50/#{upload.id}_#{OptimizedImage::VERSION}.png")
     end
   end
 end
