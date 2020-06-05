@@ -114,7 +114,7 @@ GEM
       in_threads (~> 1.3)
       progress (~> 3.0, >= 3.0.1)
     docile (1.3.2)
-    email_reply_trimmer (0.1.12)
+    email_reply_trimmer (0.1.13)
     ember-data-source (3.0.2)
       ember-source (>= 2, < 3.0)
     ember-handlebars-template (0.8.0)
