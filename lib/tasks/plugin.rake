@@ -11,8 +11,8 @@ task 'plugin:install_all_official' do
     'poll'
   ])
 
-  if ENV['SKIP_PLUGINS']
-    skip.merge(ENV['SKIP_PLUGINS'].split(','))
+  if ENV['SKIP_OFFICIAL_PLUGINS']
+    skip.merge(ENV['SKIP_OFFICIAL_PLUGINS'].split(','))
   end
 
   map = {
