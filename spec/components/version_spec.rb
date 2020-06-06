@@ -46,4 +46,61 @@ describe Discourse::VERSION do
     end
 
   end
+
+  context "compatible_resource" do
+    after do
+      # Cleanup versions
+      ::Discourse::VERSION::STRING = [::Discourse::VERSION::MAJOR, ::Discourse::VERSION::MINOR, ::Discourse::VERSION::TINY, ::Discourse::VERSION::PRE].compact.join('.')
+    end
+
+    shared_examples "test compatible resource" do
+      it "returns nil when the current version is above all pinned versions" do
+        ::Discourse::VERSION::STRING = "2.6.0"
+        expect(Discourse.find_compatible_resource(version_list)).to be_nil
+      end
+
+      it "returns the correct version if matches exactly" do
+        ::Discourse::VERSION::STRING = "2.5.0.beta4"
+        expect(Discourse.find_compatible_resource(version_list)).to eq("twofivebetafour")
+      end
+
+      it "returns the closest matching version" do
+        ::Discourse::VERSION::STRING = "2.4.6.beta12"
+        expect(Discourse.find_compatible_resource(version_list)).to eq("twofivebetatwo")
+      end
+
+      it "returns the lowest version possible when using an older version" do
+        ::Discourse::VERSION::STRING = "1.4.6.beta12"
+        expect(Discourse.find_compatible_resource(version_list)).to eq("twofourtwobetaone")
+      end
+    end
+
+    it "returns nil when nil" do
+      expect(Discourse.find_compatible_resource(nil)).to be_nil
+    end
+
+    context "with a regular compatible list" do
+      let(:version_list) { <<~VERSION_LIST
+        2.5.0.beta6: twofivebetasix
+        2.5.0.beta4: twofivebetafour
+        2.5.0.beta2: twofivebetatwo
+        2.4.4.beta6: twofourfourbetasix
+        2.4.2.beta1: twofourtwobetaone
+        VERSION_LIST
+      }
+      include_examples "test compatible resource"
+    end
+
+    context "handle a compatible resource out of order" do
+      let(:version_list) { <<~VERSION_LIST
+        2.4.2.beta1: twofourtwobetaone
+        2.5.0.beta4: twofivebetafour
+        2.5.0.beta6: twofivebetasix
+        2.5.0.beta2: twofivebetatwo
+        2.4.4.beta6: twofourfourbetasix
+        VERSION_LIST
+      }
+      include_examples "test compatible resource"
+    end
+  end
 end

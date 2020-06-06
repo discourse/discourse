@@ -88,6 +88,45 @@ task 'plugin:update', :plugin do |t, args|
   abort('Unable to pull latest version of plugin') unless update_status
 end
 
+desc 'pull compatible plugin versions for all plugins'
+task 'plugin:pull_compatible_all' do |t|
+  # Loop through each directory
+  plugins = Dir.glob(File.expand_path('plugins/*')).select { |f| File.directory? f }
+  # run plugin:pull_compatible
+  plugins.each do |plugin|
+    next unless File.directory?(plugin + "/.git")
+    Rake::Task['plugin:pull_compatible'].invoke(plugin)
+    Rake::Task['plugin:pull_compatible'].reenable
+  end
+end
+
+desc 'pull a compatible plugin version'
+task 'plugin:pull_compatible', :plugin do |t, args|
+
+  plugin = ENV['PLUGIN'] || ENV['plugin'] || args[:plugin]
+  plugin_path = plugin
+  plugin = File.basename(plugin)
+
+  unless File.directory?(plugin_path)
+    if File.directory?('plugins/' + plugin)
+      plugin_path = File.expand_path('plugins/' + plugin)
+    else
+      abort('Plugin ' + plugin + ' not found')
+    end
+  end
+
+  checkout_version = Discourse.find_compatible_git_resource(plugin_path)
+
+  # Checkout value of the version compat
+  if checkout_version
+    puts "checking out compatible #{plugin} version: #{checkout_version}"
+    update_status = system("git -C '#{plugin_path}' reset --hard #{checkout_version}")
+    abort('Unable to checkout a compatible plugin version') unless update_status
+  else
+    puts "#{plugin} is already at latest compatible version"
+  end
+end
+
 desc 'install all plugin gems'
 task 'plugin:install_all_gems' do |t|
   plugins = Dir.glob(File.expand_path('plugins/*')).select { |f| File.directory? f }
