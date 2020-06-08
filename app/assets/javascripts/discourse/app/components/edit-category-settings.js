@@ -108,11 +108,18 @@ export default buildCategoryPanel("settings", {
       .sort((a, b) => a.name.localeCompare(b.name));
   },
 
+  @discourseComputed("category.sort_ascending")
+  sortAscendingOption(sortAscending) {
+    if (sortAscending === "false") return false;
+    if (sortAscending === "true") return true;
+    return sortAscending;
+  },
+
   @discourseComputed
   sortAscendingOptions() {
     return [
-      { name: I18n.t("category.sort_ascending"), value: "true" },
-      { name: I18n.t("category.sort_descending"), value: "false" }
+      { name: I18n.t("category.sort_ascending"), value: true },
+      { name: I18n.t("category.sort_descending"), value: false }
     ];
   }
 });
