@@ -181,17 +181,25 @@
       {{i18n "category.sort_order"}}
     </label>
     <div class="controls">
-      {{combo-box valueProperty="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+      {{combo-box
+        valueProperty="value"
+        content=availableSorts
+        value=category.sort_order
+        options=(hash
+          none="category.sort_options.default"
+        )
+        onChange=(action (mut category.sort_order))
+      }}
       {{#unless isDefaultSortOrder}}
         {{combo-box
-          castBoolean=true
           valueProperty="value"
           content=sortAscendingOptions
-          value=category.sort_ascending
-          none="category.sort_options.default"
+          value=sortAscendingOption
           options=(hash
+            none="category.sort_options.default"
             placementStrategy="absolute"
           )
+          onChange=(action (mut category.sort_ascending))
         }}
       {{/unless}}
     </div>
