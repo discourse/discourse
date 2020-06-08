@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
 if ENV["REDIS_RAILS_FAILOVER"]
+  message_bus_keepalive_interval = nil
+
   RailsFailover::Redis.on_failover do
+    message_bus_keepalive_interval = MessageBus.keepalive_interval
+    MessageBus.keepalive_interval = -1 # Disable MessageBus keepalive_interval
     Discourse.received_redis_readonly!
   end
 
   RailsFailover::Redis.on_fallback do
     Discourse.clear_readonly!
     Discourse.request_refresh!
+    MessageBus.keepalive_interval = message_bus_keepalive_interval
   end
 end
 
