@@ -101,8 +101,6 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
       post_details.key
       post_details.value
       post_search_data.locale
-      posts.action_code
-      posts.edit_reason
       schema_migrations.version
       screened_emails.email
       screened_urls.domain
