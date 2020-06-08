@@ -333,6 +333,13 @@ export default MountWidget.extend({
     });
 
     this.appEvents.on("post-stream:refresh", this, "_refresh");
+
+    // restore scroll position on browsers with aggressive BFCaches (like Safari)
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        DiscourseURL.routeTo(this.location.pathname);
+      }
+    };
   },
 
   willDestroyElement() {
