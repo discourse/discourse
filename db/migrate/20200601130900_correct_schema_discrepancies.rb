@@ -120,7 +120,6 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
       topic_links.title
       topic_search_data.locale
       topics.archetype
-      topics.image_url
       topics.slug
       topics.subtype
       topics.title
