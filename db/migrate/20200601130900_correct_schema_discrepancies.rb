@@ -69,8 +69,6 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
 
     char_limit_columns = %w{
       badge_groupings.name
-      badge_posts.action_code
-      badge_posts.edit_reason
       badge_types.name
       badges.icon
       badges.name
