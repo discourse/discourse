@@ -10,7 +10,6 @@ const SELECTED_TAGS_COLLECTION = "MINI_TAG_CHOOSER_SELECTED_TAGS";
 import { ERRORS_COLLECTION } from "select-kit/components/select-kit";
 
 export default ComboBox.extend(TagsMixin, {
-  headerComponent: "mini-tag-chooser/mini-tag-chooser-header",
   pluginApiIdentifiers: ["mini-tag-chooser"],
   attributeBindings: ["selectKit.options.categoryId:category-id"],
   classNames: ["mini-tag-chooser"],
@@ -31,6 +30,7 @@ export default ComboBox.extend(TagsMixin, {
   ),
 
   selectKitOptions: {
+    headerComponent: "mini-tag-chooser/mini-tag-chooser-header",
     fullWidthOnMobile: true,
     filterable: true,
     caretDownIcon: "caretIcon",

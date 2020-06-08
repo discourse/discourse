@@ -12,31 +12,36 @@ export default SelectKitComponent.extend({
     headerComponent: "select-kit/single-select-header"
   },
 
-  selectedContent: computed("value", "content.[]", function() {
-    if (!isEmpty(this.value)) {
-      let content;
+  selectedContent: computed(
+    "value",
+    "content.[]",
+    "selectKit.noneItem",
+    function() {
+      if (!isEmpty(this.value)) {
+        let content;
 
-      const value =
-        this.selectKit.options.castInteger && this._isNumeric(this.value)
-          ? Number(this.value)
-          : this.value;
+        const value =
+          this.selectKit.options.castInteger && this._isNumeric(this.value)
+            ? Number(this.value)
+            : this.value;
 
-      if (this.selectKit.valueProperty) {
-        content = (this.content || []).findBy(
-          this.selectKit.valueProperty,
-          value
-        );
+        if (this.selectKit.valueProperty) {
+          content = (this.content || []).findBy(
+            this.selectKit.valueProperty,
+            value
+          );
 
-        return this.selectKit.modifySelection(
-          content || this.defaultItem(value, value)
-        );
+          return this.selectKit.modifySelection(
+            content || this.defaultItem(value, value)
+          );
+        } else {
+          return this.selectKit.modifySelection(
+            (this.content || []).filter(c => c === value)
+          );
+        }
       } else {
-        return this.selectKit.modifySelection(
-          (this.content || []).filter(c => c === value)
-        );
+        return this.selectKit.noneItem;
       }
-    } else {
-      return this.selectKit.noneItem;
     }
-  })
+  )
 });
