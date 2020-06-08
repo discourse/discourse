@@ -9,7 +9,7 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import { cookAsync } from "discourse/lib/text";
+import { generateCookFunction } from "discourse/lib/text";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { siteDir } from "discourse/lib/text-direction";
@@ -344,15 +344,26 @@ export default Component.extend({
     return toolbar;
   },
 
+  cachedCookAsync(text) {
+    if (this._cachedCookFunction) {
+      return Promise.resolve(this._cachedCookFunction(text));
+    }
+
+    const markdownOptions = this.markdownOptions || {};
+    return generateCookFunction(markdownOptions).then(cook => {
+      this._cachedCookFunction = cook;
+      return cook(text);
+    });
+  },
+
   _updatePreview() {
     if (this._state !== "inDOM") {
       return;
     }
 
     const value = this.value;
-    const markdownOptions = this.markdownOptions || {};
 
-    cookAsync(value, markdownOptions).then(cooked => {
+    this.cachedCookAsync(value).then(cooked => {
       if (this.isDestroyed) {
         return;
       }
