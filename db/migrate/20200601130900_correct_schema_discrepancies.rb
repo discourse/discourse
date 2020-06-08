@@ -151,21 +151,44 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
       top_topics.yearly_score
     }
 
+    other_default_columns = %w{
+      categories.color
+      topic_search_data.topic_id
+    }
+
+    lookup_sql = (
+      timestamp_columns +
+      char_limit_columns +
+      float_default_columns +
+      other_default_columns
+    ).map do |ref|
+      table, column = ref.split(".")
+      "(table_name='#{table}' AND column_name='#{column}')"
+    end.join(" OR ")
+
+    raw_info = DB.query_hash <<~SQL
+      SELECT table_name, column_name, is_nullable, character_maximum_length, column_default
+      FROM information_schema.columns 
+      WHERE table_schema='public' 
+      AND (
+        #{lookup_sql}
+      )
+    SQL
+
+    schema_hash = {}
+
+    raw_info.each do |row|
+      schema_hash["#{row["table_name"]}.#{row["column_name"]}"] = row
+    end
+
     # In the past, rails changed the default behavior for timestamp columns
     # This only affects older discourse installations
     # This migration will make old database schemas match modern behavior
     timestamp_columns.each do |ref|
+      current_value = schema_hash[ref]["is_nullable"]
+      next if current_value == "NO"
+
       table, column = ref.split(".")
-
-      current_value = DB.query_single <<~SQL
-        SELECT is_nullable 
-        FROM information_schema.columns 
-        WHERE table_schema='public' 
-        AND table_name='#{table}' 
-        AND column_name='#{column}'
-      SQL
-
-      next if current_value[0] == "NO"
 
       # There shouldn't be any null values - rails inserts timestamps automatically
       # But just in case, set them to now() if there are any nulls
@@ -182,17 +205,9 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
     # This only affects older discourse installations
     # This migration removes the character limits from columns, so that they match modern behavior
     char_limit_columns.each do |ref|
+      current_value = schema_hash[ref]["character_maximum_length"]
+      next if current_value == nil
       table, column = ref.split(".")
-
-      current_value = DB.query_single <<~SQL
-        SELECT character_maximum_length 
-        FROM information_schema.columns 
-        WHERE table_schema='public' 
-        AND table_name='#{table}' 
-        AND column_name='#{column}'
-      SQL
-
-      next if current_value[0] == nil
 
       DB.exec <<~SQL
         ALTER TABLE #{table} ALTER COLUMN #{column} TYPE varchar
@@ -203,17 +218,9 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
     # This only affects older discourse installations
     # This migration updates the default values, so that they match modern behavior
     float_default_columns.each do |ref|
+      current_value = schema_hash[ref]["column_default"]
+      next if current_value == "0.0"
       table, column = ref.split(".")
-
-      current_value = DB.query_single <<~SQL
-        SELECT column_default 
-        FROM information_schema.columns 
-        WHERE table_schema='public' 
-        AND table_name='#{table}' 
-        AND column_name='#{column}'
-      SQL
-
-      next if current_value[0] == "0.0"
 
       DB.exec <<~SQL
         ALTER TABLE #{table} ALTER COLUMN #{column} SET DEFAULT 0.0
@@ -222,15 +229,19 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
 
     # Category color default was changed in https://github.com/discourse/discourse/commit/faf09bb8c80fcb28b132a5a644ac689cc9abffc2
     # But should have been added in a new migration
-    DB.exec <<~SQL
-      ALTER TABLE categories ALTER COLUMN color SET DEFAULT '0088CC'
-    SQL
+    if schema_hash["categories.color"]["column_default"] != "'0088CC'::character varying"
+      DB.exec <<~SQL
+        ALTER TABLE categories ALTER COLUMN color SET DEFAULT '0088CC'
+      SQL
+    end
 
     # Older sites have a default value like nextval('topic_search_data_topic_id_seq'::regclass)
     # Modern sites do not. This is likely caused by another historical change in rails
-    DB.exec <<~SQL
-      ALTER TABLE topic_search_data ALTER COLUMN topic_id SET DEFAULT NULL
-    SQL
+    if schema_hash["topic_search_data.topic_id"]["column_default"] != nil
+      DB.exec <<~SQL
+        ALTER TABLE topic_search_data ALTER COLUMN topic_id SET DEFAULT NULL
+      SQL
+    end
   end
 
   def down
