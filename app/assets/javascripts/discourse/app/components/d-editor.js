@@ -367,6 +367,9 @@ export default Component.extend({
       if (this.isDestroyed) {
         return;
       }
+
+      if (this.preview === cooked) return;
+
       this.set("preview", cooked);
       schedule("afterRender", () => {
         if (this._state !== "inDOM") {
