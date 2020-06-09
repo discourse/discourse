@@ -11,7 +11,11 @@ import {
   WidgetChangeHook,
   WidgetMouseUpHook,
   WidgetMouseDownHook,
-  WidgetMouseMoveHook
+  WidgetMouseMoveHook,
+  WidgetMouseOverHook,
+  WidgetMouseOutHook,
+  WidgetTouchStartHook,
+  WidgetTouchEndHook
 } from "discourse/widgets/hooks";
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -408,6 +412,22 @@ export default class Widget {
 
     if (this.mouseMove) {
       properties["widget-mouse-move"] = new WidgetMouseMoveHook(this);
+    }
+
+    if (this.mouseOver) {
+      properties["widget-mouse-over"] = new WidgetMouseOverHook(this);
+    }
+
+    if (this.mouseOut) {
+      properties["widget-mouse-out"] = new WidgetMouseOutHook(this);
+    }
+
+    if (this.touchStart) {
+      properties["widget-touch-start"] = new WidgetTouchStartHook(this);
+    }
+
+    if (this.touchEnd) {
+      properties["widget-touch-end"] = new WidgetTouchEndHook(this);
     }
 
     const attributes = properties["attributes"] || {};
