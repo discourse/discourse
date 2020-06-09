@@ -148,11 +148,11 @@ basic:
   suggested_topics_unread_max_days_old:
     default: 90
     min: 0
-    max: 10000
+    max: 36500
   suggested_topics_max_days_old:
     default: 365
     min: 7
-    max: 10000
+    max: 36500
   ga_universal_tracking_code:
     client: true
     default: ""
@@ -530,6 +530,7 @@ users:
     default: true
   invite_expiry_days:
     default: 30
+    max: 36500
   invites_per_page:
     client: true
     default: 40
@@ -553,6 +554,7 @@ users:
     min: 1
   purge_unactivated_users_grace_period_days:
     default: 14
+    max: 36500
   public_user_custom_fields:
     type: list
     default: ""
@@ -595,14 +597,15 @@ users:
     default: 365
     client: true
     min: 1
+    max: 36500
   clean_up_inactive_users_after_days:
     default: 730
     min: 0
-    max: 3650
+    max: 36500
   clean_up_unused_staged_users_after_days:
     default: 365
     min: 0
-    max: 3650
+    max: 36500
   user_selected_primary_groups:
     default: false
     client: true
@@ -836,6 +839,7 @@ posting:
     default: false
   show_time_gap_days:
     default: 7
+    max: 36500
     client: true
   short_progress_text_threshold:
     client: true
@@ -930,6 +934,7 @@ posting:
     client: true
   old_post_notice_days:
     default: 14
+    max: 36500
     client: true
   new_user_notice_tl:
     default: 2
@@ -939,6 +944,7 @@ posting:
     enum: "TrustLevelSetting"
   returning_users_days:
     default: 120
+    max: 36500
   enable_page_publishing:
     default: false
 
@@ -968,6 +974,7 @@ email:
     max: 20
   suppress_digest_email_after_days:
     default: 365
+    max: 36500
   digest_suppress_categories:
     type: category_list
     default: ""
@@ -1048,8 +1055,10 @@ email:
     default: false
   disallow_reply_by_email_after_days:
     default: 90
+    max: 36500
   delete_email_logs_after_days:
     default: 90
+    max: 36500
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
@@ -1079,6 +1088,7 @@ email:
     min: 2
   reset_bounce_score_after_days:
     default: 30
+    max: 36500
   attachment_content_type_blacklist:
     type: list
     default: "pkcs7|x-vcard"
@@ -1111,7 +1121,9 @@ email:
   post_excerpts_in_emails: false
   raw_email_max_length: 220000
   raw_rejected_email_max_length: 4000
-  delete_rejected_email_after_days: 90
+  delete_rejected_email_after_days:
+    default: 90
+    max: 36500
 
 files:
   max_image_size_kb:
@@ -1174,6 +1186,7 @@ files:
   clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days:
     default: 30
+    max: 36500
   prevent_anons_from_downloading_files:
     default: false
     client: true
@@ -1327,6 +1340,7 @@ trust:
   tl2_requires_time_spent_mins: 60
   tl2_requires_days_visited:
     default: 15
+    max: 36500
   tl2_requires_likes_received: 1
   tl2_requires_likes_given: 1
   tl2_requires_topic_reply_count: 3
@@ -1336,6 +1350,7 @@ trust:
     max: 1000000
   tl3_requires_days_visited:
     default: 50
+    max: 36500
   tl3_requires_topics_replied_to:
     default: 10
   tl3_requires_topics_viewed:
@@ -1450,7 +1465,7 @@ security:
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
-    max: 2000
+    max: 36500
   allow_embedding_site_in_an_iframe:
     default: false
     hidden: true
@@ -1868,12 +1883,15 @@ uncategorized:
   # Cold map thresholds
   cold_age_days_low:
     default: 14
+    max: 36500
     client: true
   cold_age_days_medium:
     default: 90
+    max: 36500
     client: true
   cold_age_days_high:
     default: 180
+    max: 36500
     client: true
 
   # Warnings
@@ -1932,6 +1950,7 @@ uncategorized:
 
   delete_drafts_older_than_n_days:
     default: 180
+    max: 36500
 
   backup_drafts_to_pm_length:
     default: 0
@@ -2122,6 +2141,7 @@ user_preferences:
 api:
   retain_web_hook_events_period_days:
     default: 30
+    max: 36500
   retry_web_hook_events:
     default: false
   api_key_last_used_epoch:
@@ -2129,6 +2149,7 @@ api:
     hidden: true
   revoke_api_keys_days:
     default: 180
+    max: 36500
 
 user_api:
   allow_user_api_keys:
@@ -2152,6 +2173,7 @@ user_api:
     type: list
   expire_user_api_keys_days:
     default: 180
+    max: 36500
 
 tags:
   tagging_enabled:
