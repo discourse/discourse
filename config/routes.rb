@@ -452,7 +452,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: { username: RouteFormat.username }
-      post "#{root_path}/:username/preferences/email" => "users_email#update", constraints: { username: RouteFormat.username }
+      post "#{root_path}/:username/preferences/email" => "users_email#create", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/preferences/email" => "users_email#update", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/badge_title" => "users#preferences", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/preferences/badge_title" => "users#badge_title", constraints: { username: RouteFormat.username }
