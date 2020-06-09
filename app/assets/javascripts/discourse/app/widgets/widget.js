@@ -327,14 +327,21 @@ export default class Widget {
     });
   }
 
+  callWidgetFunction(name, param) {
+    const widget = this._findAncestorWithProperty(name);
+    if (widget) {
+      return widget[name].call(widget, param);
+    }
+  }
+
   sendWidgetAction(name, param) {
     return this.rerenderResult(() => {
-      const widget = this._findAncestorWithProperty(name);
-      if (widget) {
-        return widget[name].call(widget, param);
-      }
+      const widgetFunction = this.callWidgetFunction(name, param);
 
-      return this._sendComponentAction(name, param || this.findAncestorModel());
+      return (
+        widgetFunction ||
+        this._sendComponentAction(name, param || this.findAncestorModel())
+      );
     });
   }
 
