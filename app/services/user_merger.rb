@@ -358,6 +358,8 @@ class UserMerger
 
   def delete_source_user
     @source_user.reload
+
+    @source_user.skip_email_validation = true
     @source_user.update(
       admin: false,
       email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid"
