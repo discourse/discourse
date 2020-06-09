@@ -136,7 +136,7 @@ export default (filterArg, params) => {
       const listFilter = `c/${Category.slugFor(category)}/${
           category.id
         }/l/${this.filter(category)}`,
-        findOpts = filterQueryParams(modelParams),
+        findOpts = filterQueryParams(modelParams, params),
         extras = { cached: this.isPoppedState(transition) };
 
       return findTopicList(
