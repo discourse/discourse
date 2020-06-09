@@ -518,12 +518,21 @@ module Discourse
     postgres_last_read_only[Discourse.redis.namespace] = Time.zone.now
   end
 
+  def self.clear_postgres_readonly!
+    postgres_last_read_only[Discourse.redis.namespace] = nil
+  end
+
   def self.received_redis_readonly!
     redis_last_read_only[Discourse.redis.namespace] = Time.zone.now
   end
 
+  def self.clear_redis_readonly!
+    redis_last_read_only[Discourse.redis.namespace] = nil
+  end
+
   def self.clear_readonly!
-    postgres_last_read_only[Discourse.redis.namespace] = redis_last_read_only[Discourse.redis.namespace] = nil
+    clear_redis_readonly!
+    clear_postgres_readonly!
     Site.clear_anon_cache!
     true
   end

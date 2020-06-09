@@ -10,7 +10,7 @@ if ENV["REDIS_RAILS_FAILOVER"]
   end
 
   RailsFailover::Redis.on_fallback do
-    Discourse.clear_readonly!
+    Discourse.clear_redis_readonly!
     Discourse.request_refresh!
     MessageBus.keepalive_interval = message_bus_keepalive_interval
   end
