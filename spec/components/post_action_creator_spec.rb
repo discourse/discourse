@@ -159,15 +159,14 @@ describe PostActionCreator do
         end
 
         it "fails when other flag action types are open" do
-          expect(reviewable.pending?).to eq(false)
           freeze_time 10.seconds.from_now
           spam_result = PostActionCreator.create(user, post, :spam)
 
-          expect(reviewable.reload.pending?).to eq(true)
           inappropriate_result = PostActionCreator.create(Fabricate(:user), post, :inappropriate)
 
           reviewable.reload
 
+          expect(inappropriate_result.success?).to eq(false)
           expect(reviewable.pending?).to eq(true)
           expect(reviewable.reviewable_scores.select(&:pending?).count).to eq(1)
         end
