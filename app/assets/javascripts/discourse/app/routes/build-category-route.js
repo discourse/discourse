@@ -177,7 +177,7 @@ export default (filterArg, params) => {
         category = model.category,
         canCreateTopic = topics.get("can_create_topic"),
         canCreateTopicOnCategory =
-          category.get("permission") === PermissionType.FULL,
+          canCreateTopic && category.get("permission") === PermissionType.FULL,
         filter = this.filter(category);
 
       this.controllerFor("navigation/category").setProperties({
