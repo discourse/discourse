@@ -5,6 +5,12 @@ class Invite < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
 
+  # TODO(2021-05-22): remove
+  self.ignored_columns = %w{
+    user_id
+    redeemed_at
+  }
+
   BULK_INVITE_EMAIL_LIMIT = 200
 
   rate_limit :limit_invites_per_day
@@ -13,6 +19,8 @@ class Invite < ActiveRecord::Base
   belongs_to :topic
   belongs_to :invited_by, class_name: 'User'
 
+  has_many :invited_users
+  has_many :users, through: :invited_users
   has_many :invited_groups
   has_many :groups, through: :invited_groups
   has_many :topic_invites
@@ -22,14 +30,19 @@ class Invite < ActiveRecord::Base
 
   before_create do
     self.invite_key ||= SecureRandom.hex
+    self.expires_at ||= SiteSetting.invite_expiry_days.days.from_now
   end
 
   before_validation do
     self.email = Email.downcase(email) unless email.nil?
   end
 
+  validate :ensure_max_redemptions_allowed
   validate :user_doesnt_already_exist
   attr_accessor :email_already_exists
+
+  scope :single_use_invites, -> { where('invites.max_redemptions_allowed = 1') }
+  scope :multiple_use_invites, -> { where('invites.max_redemptions_allowed > 1') }
 
   def self.emailed_status_types
     @emailed_status_types ||= Enum.new(not_required: 0, pending: 1, bulk_pending: 2, sending: 3, sent: 4)
@@ -40,18 +53,26 @@ class Invite < ActiveRecord::Base
     return if email.blank?
     user = Invite.find_user_by_email(email)
 
-    if user && user.id != self.user_id
+    if user && user.id != self.invited_users&.first&.user_id
       @email_already_exists = true
       errors.add(:email)
     end
   end
 
+  def is_invite_link?
+    max_redemptions_allowed > 1
+  end
+
   def redeemed?
-    redeemed_at.present?
+    if is_invite_link?
+      redemption_count >= max_redemptions_allowed
+    else
+      self.invited_users.count > 0
+    end
   end
 
   def expired?
-    updated_at < SiteSetting.invite_expiry_days.days.ago
+    expires_at < Time.zone.now
   end
 
   # link_valid? indicates whether the invite link can be used to log in to the site
@@ -61,7 +82,7 @@ class Invite < ActiveRecord::Base
 
   def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
     if !expired? && !destroyed? && link_valid?
-      InviteRedeemer.new(self, username, name, password, user_custom_fields, ip_address).redeem
+      InviteRedeemer.new(invite: self, email: self.email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address).redeem
     end
   end
 
@@ -74,8 +95,7 @@ class Invite < ActiveRecord::Base
     )
   end
 
-  # generate invite link
-  def self.generate_invite_link(email, invited_by, topic = nil, group_ids = nil)
+  def self.generate_single_use_invite_link(email, invited_by, topic = nil, group_ids = nil)
     invite = create_invite_by_email(email, invited_by,
       topic: topic,
       group_ids: group_ids,
@@ -123,6 +143,7 @@ class Invite < ActiveRecord::Base
       invite.update_columns(
         created_at: Time.zone.now,
         updated_at: Time.zone.now,
+        expires_at: SiteSetting.invite_expiry_days.days.from_now,
         emailed_status: emailed_status
       )
     else
@@ -160,6 +181,37 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+  def self.generate_multiple_use_invite_link(invited_by:, max_redemptions_allowed: 5, expires_at: 1.month.from_now, group_ids: nil)
+    Invite.transaction do
+      create_args = {
+        invited_by: invited_by,
+        max_redemptions_allowed: max_redemptions_allowed.to_i,
+        expires_at: expires_at,
+        emailed_status: emailed_status_types[:not_required]
+      }
+      invite = Invite.create!(create_args)
+
+      if group_ids.present?
+        now = Time.zone.now
+        invited_groups = group_ids.map { |group_id| { group_id: group_id, invite_id: invite.id, created_at: now, updated_at: now } }
+        InvitedGroup.insert_all(invited_groups)
+      end
+
+      "#{Discourse.base_url}/invites/#{invite.invite_key}"
+    end
+  end
+
+  # redeem multiple use invite link
+  def redeem_invite_link(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
+    DistributedMutex.synchronize("redeem_invite_link_#{self.id}") do
+      reload
+      if is_invite_link? && !expired? && !redeemed? && !destroyed? && link_valid?
+        raise UserExists.new I18n.t("invite_link.email_taken") if UserEmail.exists?(email: email)
+        InviteRedeemer.new(invite: self, email: email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address).redeem
+      end
+    end
+  end
+
   def self.find_user_by_email(email)
     User.with_email(Email.downcase(email)).where(staged: false).first
   end
@@ -176,30 +228,62 @@ class Invite < ActiveRecord::Base
     group_ids
   end
 
-  def self.find_all_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
-    Invite.where(invited_by_id: inviter.id)
+  def self.find_all_pending_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
+    Invite.single_use_invites
+      .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
+      .joins("LEFT JOIN users ON invited_users.user_id = users.id")
+      .where('invited_users.user_id IS NULL')
+      .where(invited_by_id: inviter.id)
       .where('invites.email IS NOT NULL')
-      .includes(user: :user_stat)
-      .order("CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END, user_stats.time_read DESC, invites.redeemed_at DESC")
+      .order('invites.updated_at DESC')
       .limit(limit)
       .offset(offset)
-      .references('user_stats')
   end
 
   def self.find_pending_invites_from(inviter, offset = 0)
-    find_all_invites_from(inviter, offset).where('invites.user_id IS NULL').order('invites.updated_at DESC')
-  end
-
-  def self.find_redeemed_invites_from(inviter, offset = 0)
-    find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL').order('invites.redeemed_at DESC')
+    find_all_pending_invites_from(inviter, offset)
   end
 
   def self.find_pending_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').reorder(nil).count
+    find_all_pending_invites_from(inviter, 0, nil).reorder(nil).count
+  end
+
+  def self.find_all_redeemed_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
+    InvitedUser.includes(:invite)
+      .includes(user: :user_stat)
+      .where('invited_users.user_id IS NOT NULL')
+      .where('invites.invited_by_id = ?', inviter.id)
+      .order('user_stats.time_read DESC, invited_users.redeemed_at DESC')
+      .limit(limit)
+      .offset(offset)
+      .references('invite')
+      .references('user')
+      .references('user_stat')
+  end
+
+  def self.find_redeemed_invites_from(inviter, offset = 0)
+    find_all_redeemed_invites_from(inviter, offset)
   end
 
   def self.find_redeemed_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').reorder(nil).count
+    find_all_redeemed_invites_from(inviter, 0, nil).reorder(nil).count
+  end
+
+  def self.find_all_links_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
+    Invite.multiple_use_invites
+      .includes(invited_groups: :group)
+      .where(invited_by_id: inviter.id)
+      .order('invites.updated_at DESC')
+      .limit(limit)
+      .offset(offset)
+  end
+
+  def self.find_links_invites_from(inviter, offset = 0)
+    find_all_links_invites_from(inviter, offset)
+  end
+
+  def self.find_links_invites_count(inviter)
+    find_all_links_invites_from(inviter, 0, nil).reorder(nil).count
   end
 
   def self.filter_by(email_or_username)
@@ -223,25 +307,32 @@ class Invite < ActiveRecord::Base
   end
 
   def self.redeem_from_email(email)
-    invite = Invite.find_by(email: Email.downcase(email))
-    InviteRedeemer.new(invite).redeem if invite
+    invite = Invite.single_use_invites.find_by(email: Email.downcase(email))
+    InviteRedeemer.new(invite: invite, email: invite.email).redeem if invite
     invite
   end
 
   def resend_invite
-    self.update_columns(updated_at: Time.zone.now)
+    self.update_columns(updated_at: Time.zone.now, expires_at: SiteSetting.invite_expiry_days.days.from_now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
   def self.resend_all_invites_from(user_id)
-    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id).find_each do |invite|
+    Invite.single_use_invites
+      .joins(:invited_users)
+      .where('invited_users.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id)
+      .find_each do |invite|
       invite.resend_invite
     end
   end
 
   def self.rescind_all_expired_invites_from(user)
-    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ? AND invites.updated_at < ?',
-                user.id, SiteSetting.invite_expiry_days.days.ago).find_each do |invite|
+    Invite.single_use_invites
+      .includes(:invited_users)
+      .where('invited_users.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ? AND invites.expires_at < ?',
+                user.id, Time.zone.now)
+      .references('invited_users')
+      .find_each do |invite|
       invite.trash!(user)
     end
   end
@@ -253,26 +344,37 @@ class Invite < ActiveRecord::Base
   def self.base_directory
     File.join(Rails.root, "public", "uploads", "csv", RailsMultisite::ConnectionManagement.current_db)
   end
+
+  def ensure_max_redemptions_allowed
+    if self.max_redemptions_allowed.nil? || self.max_redemptions_allowed == 1
+      self.max_redemptions_allowed ||= 1
+    else
+      if !self.max_redemptions_allowed.between?(2, SiteSetting.invite_link_max_redemptions_limit)
+        errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: SiteSetting.invite_link_max_redemptions_limit))
+      end
+    end
+  end
 end
 
 # == Schema Information
 #
 # Table name: invites
 #
-#  id             :integer          not null, primary key
-#  invite_key     :string(32)       not null
-#  email          :string
-#  invited_by_id  :integer          not null
-#  user_id        :integer
-#  redeemed_at    :datetime
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  deleted_at     :datetime
-#  deleted_by_id  :integer
-#  invalidated_at :datetime
-#  moderator      :boolean          default(FALSE), not null
-#  custom_message :text
-#  emailed_status :integer
+#  id                      :integer          not null, primary key
+#  invite_key              :string(32)       not null
+#  email                   :string
+#  invited_by_id           :integer          not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  deleted_at              :datetime
+#  deleted_by_id           :integer
+#  invalidated_at          :datetime
+#  moderator               :boolean          default(FALSE), not null
+#  custom_message          :text
+#  emailed_status          :integer
+#  max_redemptions_allowed :integer          default(1), not null
+#  redemption_count        :integer          default(0), not null
+#  expires_at              :datetime         not null
 #
 # Indexes
 #

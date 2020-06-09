@@ -1,16 +1,18 @@
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
-import { alias, notEmpty } from "@ember/object/computed";
+import { alias, notEmpty, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import getUrl from "discourse-common/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
+import { emailValid } from "discourse/lib/utilities";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
 import NameValidation from "discourse/mixins/name-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
+import EmberObject from "@ember/object";
 
 export default Controller.extend(
   PasswordValidation,
@@ -18,7 +20,7 @@ export default Controller.extend(
   NameValidation,
   UserFieldsValidation,
   {
-    invitedBy: alias("model.invited_by"),
+    invitedBy: readOnly("model.invited_by"),
     email: alias("model.email"),
     accountUsername: alias("model.username"),
     passwordRequired: notEmpty("accountPassword"),
@@ -26,6 +28,21 @@ export default Controller.extend(
     errorMessage: null,
     userFields: null,
     inviteImageUrl: getUrl("/images/envelope.svg"),
+    isInviteLink: readOnly("model.is_invite_link"),
+    submitDisabled: or(
+      "emailValidation.failed",
+      "usernameValidation.failed",
+      "passwordValidation.failed",
+      "nameValidation.failed",
+      "userFieldsValidation.failed"
+    ),
+    rejectedEmails: null,
+
+    init() {
+      this._super(...arguments);
+
+      this.rejectedEmails = [];
+    },
 
     @discourseComputed
     welcomeTitle() {
@@ -44,26 +61,40 @@ export default Controller.extend(
       return findLoginMethods().length > 0;
     },
 
-    @discourseComputed(
-      "usernameValidation.failed",
-      "passwordValidation.failed",
-      "nameValidation.failed",
-      "userFieldsValidation.failed"
-    )
-    submitDisabled(
-      usernameFailed,
-      passwordFailed,
-      nameFailed,
-      userFieldsFailed
-    ) {
-      return usernameFailed || passwordFailed || nameFailed || userFieldsFailed;
-    },
-
     @discourseComputed
     fullnameRequired() {
       return (
         this.siteSettings.full_name_required || this.siteSettings.enable_names
       );
+    },
+
+    @discourseComputed("email", "rejectedEmails.[]")
+    emailValidation(email, rejectedEmails) {
+      // If blank, fail without a reason
+      if (isEmpty(email)) {
+        return EmberObject.create({
+          failed: true
+        });
+      }
+
+      if (rejectedEmails.includes(email)) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("user.email.invalid")
+        });
+      }
+
+      if (emailValid(email)) {
+        return EmberObject.create({
+          ok: true,
+          reason: I18n.t("user.email.ok")
+        });
+      }
+
+      return EmberObject.create({
+        failed: true,
+        reason: I18n.t("user.email.invalid")
+      });
     },
 
     actions: {
@@ -80,6 +111,7 @@ export default Controller.extend(
           url: `/invites/show/${this.get("model.token")}.json`,
           type: "PUT",
           data: {
+            email: this.email,
             username: this.accountUsername,
             name: this.accountName,
             password: this.accountPassword,
@@ -97,6 +129,14 @@ export default Controller.extend(
                 DiscourseURL.redirectTo(result.redirect_to);
               }
             } else {
+              if (
+                result.errors &&
+                result.errors.email &&
+                result.errors.email.length > 0 &&
+                result.values
+              ) {
+                this.rejectedEmails.pushObject(result.values.email);
+              }
               if (
                 result.errors &&
                 result.errors.password &&

@@ -383,6 +383,10 @@ class Guardian
     user.admin?
   end
 
+  def can_send_invite_links?(user)
+    user.staff?
+  end
+
   def can_send_multiple_invites?(user)
     user.staff?
   end

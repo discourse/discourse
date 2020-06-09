@@ -16,11 +16,13 @@ QUnit.test("Invite Acceptance Page", async assert => {
       name: "Neil Lalonde",
       title: "team"
     },
-    email: "invited@asdf.com",
-    username: "invited"
+    email: null,
+    username: "invited",
+    is_invite_link: true
   });
 
   await visit("/invites/myvalidinvitetoken");
+  assert.ok(exists("#new-account-email"), "shows the email input");
   assert.ok(exists("#new-account-username"), "shows the username input");
   assert.equal(
     find("#new-account-username").val(),
@@ -31,10 +33,16 @@ QUnit.test("Invite Acceptance Page", async assert => {
   assert.ok(exists("#new-account-password"), "shows the password input");
   assert.ok(
     exists(".invites-show .btn-primary:disabled"),
-    "submit is disabled because name is not filled"
+    "submit is disabled because name and email is not filled"
   );
 
   await fillIn("#new-account-name", "John Doe");
+  assert.ok(
+    exists(".invites-show .btn-primary:disabled"),
+    "submit is disabled because email is not filled"
+  );
+
+  await fillIn("#new-account-email", "john.doe@example.com");
   assert.not(
     exists(".invites-show .btn-primary:disabled"),
     "submit is enabled"
@@ -54,10 +62,19 @@ QUnit.test("Invite Acceptance Page", async assert => {
     "submit is disabled"
   );
 
+  await fillIn("#new-account-email", "john.doe@example");
+  assert.ok(exists(".email-input .bad"), "email is not valid");
+  assert.ok(
+    exists(".invites-show .btn-primary:disabled"),
+    "submit is disabled"
+  );
+
   await fillIn("#new-account-username", "validname");
   await fillIn("#new-account-password", "secur3ty4Y0uAndMe");
+  await fillIn("#new-account-email", "john.doe@example.com");
   assert.ok(exists(".username-input .good"), "username is valid");
   assert.ok(exists(".password-input .good"), "password is valid");
+  assert.ok(exists(".email-input .good"), "email is valid");
   assert.not(
     exists(".invites-show .btn-primary:disabled"),
     "submit is enabled"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_fields, :ip_address) do
+InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_custom_fields, :ip_address, keyword_init: true) do
 
   def redeem
     Invite.transaction do
@@ -14,8 +14,8 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(invite, username, name, password = nil, user_custom_fields = nil, ip_address = nil)
-    user = User.where(staged: true).with_email(invite.email.strip.downcase).first
+  def self.create_user_from_invite(email:, invite:, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
+    user = User.where(staged: true).with_email(email.strip.downcase).first
     user.unstage! if user
 
     user ||= User.new
@@ -23,11 +23,11 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
       available_username = username
     else
-      available_username = UserNameSuggester.suggest(invite.email)
+      available_username = UserNameSuggester.suggest(email)
     end
 
     user.attributes = {
-      email: invite.email,
+      email: email,
       username: available_username,
       name: name || available_username,
       active: false,
@@ -63,7 +63,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
     user.save!
 
-    if invite.emailed_status != Invite.emailed_status_types[:not_required]
+    if invite.emailed_status != Invite.emailed_status_types[:not_required] && email == invite.email
       user.email_tokens.create!(email: user.email)
       user.activate
     end
@@ -86,35 +86,42 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def invite_was_redeemed?
-    # Return true if a row was updated
-    mark_invite_redeemed == 1
+    mark_invite_redeemed
   end
 
   def mark_invite_redeemed
-    count = Invite.where('id = ? AND redeemed_at IS NULL AND updated_at >= ?',
-                 invite.id, SiteSetting.invite_expiry_days.days.ago)
-      .update_all('redeemed_at = CURRENT_TIMESTAMP')
+    if !invite.is_invite_link? && InvitedUser.exists?(invite_id: invite.id)
+      return false
+    end
 
-    if count == 1
+    existing_user = get_existing_user
+    if existing_user.present? && InvitedUser.exists?(user_id: existing_user.id, invite_id: invite.id)
+      return false
+    end
+
+    @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
+    if invite.is_invite_link? && @invited_user_record.present?
+      Invite.increment_counter(:redemption_count, invite.id)
+    elsif @invited_user_record.present?
       delete_duplicate_invites
     end
 
-    count
+    @invited_user_record.present?
   end
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(invite, username, name, password, user_custom_fields, ip_address)
+    result ||= InviteRedeemer.create_user_from_invite(invite: invite, email: email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address)
     result.send_welcome_message = false
     result
   end
 
   def get_existing_user
-    User.where(admin: false, staged: false).find_by_email(invite.email)
+    User.where(admin: false, staged: false).find_by_email(email)
   end
 
   def add_to_private_topics_if_invited
-    topic_ids = Topic.where(archetype: Archetype::private_message).includes(:invites).where(invites: { email: invite.email }).pluck(:id)
+    topic_ids = Topic.where(archetype: Archetype::private_message).includes(:invites).where(invites: { email: email }).pluck(:id)
     topic_ids.each do |id|
       TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id) unless TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
     end
@@ -129,9 +136,8 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def send_welcome_message
-    if Invite.where('email = ?', invite.email).update_all(['user_id = ?', invited_user.id]) == 1
-      invited_user.send_welcome_message = true
-    end
+    @invited_user_record.update!(user_id: invited_user.id)
+    invited_user.send_welcome_message = true
   end
 
   def approve_account_if_needed
@@ -155,6 +161,10 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def delete_duplicate_invites
-    Invite.where('invites.email = ? AND redeemed_at IS NULL AND invites.id != ?', invite.email, invite.id).delete_all
+    Invite.single_use_invites
+      .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
+      .where('invited_users.user_id IS NULL')
+      .where('invites.email = ? AND invites.id != ?', email, invite.id)
+      .delete_all
   end
 end

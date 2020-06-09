@@ -62,7 +62,8 @@
   }
 }
 
-.share-and-invite.modal .invite.modal-panel {
+.share-and-invite.modal .invite.modal-panel,
+.invite-link.modal-panel {
   .error-message,
   .success-message {
     margin-bottom: 8px;
@@ -83,11 +84,29 @@
       width: 100%;
     }
 
+    .max-redemptions-allowed {
+      margin-bottom: 8px;
+
+      .max-redemptions-allowed-input {
+        width: 20%;
+        min-width: 100px;
+      }
+    }
+
+    .invite-link-expires-at .date-picker,
+    .time-input {
+      width: 150px;
+    }
+
     .invite-user-input-wrapper {
       display: flex;
       div.ac-wrap {
         flex: 1;
       }
+    }
+
+    .invite-link-input {
+      width: 100%;
     }
   }
 
