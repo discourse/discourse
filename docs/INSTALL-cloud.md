@@ -6,7 +6,7 @@
 
 Create your new cloud server, for example [on DigitalOcean][do]:
 
-- The default of **the current supported LTS release of Ubuntu Server** works fine. At minimum, a 64-bit Linux OS with a modern kernel version is required.
+- **Ubuntu Server LTS 18.04** works fine. At minimum, a 64-bit Linux OS with a modern kernel version is required.
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We recommend 2 GB RAM for larger communities.
 
