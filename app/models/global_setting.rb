@@ -200,8 +200,8 @@ class GlobalSetting
 
         if message_bus_redis_slave_host && message_bus_redis_slave_port
           if ENV["REDIS_RAILS_FAILOVER"]
-            c[:replica_host] = redis_slave_host
-            c[:replica_port] = redis_slave_port
+            c[:replica_host] = message_bus_redis_slave_host
+            c[:replica_port] = message_bus_redis_slave_port
             c[:connector] = RailsFailover::Redis::Connector
           else
             c[:slave_host] = message_bus_redis_slave_host
