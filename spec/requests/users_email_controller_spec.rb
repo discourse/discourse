@@ -261,6 +261,20 @@ describe UsersEmailController do
     end
   end
 
+  describe '#create' do
+    let(:new_email) { 'bubblegum@adventuretime.ooo' }
+
+    it 'has an email token' do
+      sign_in(user)
+
+      expect do
+        post "/u/#{user.username}/preferences/email.json", params: {
+          email: new_email
+        }
+      end.to change(EmailChangeRequest, :count)
+    end
+  end
+
   describe '#update' do
     let(:new_email) { 'bubblegum@adventuretime.ooo' }
 
