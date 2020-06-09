@@ -105,21 +105,22 @@ export default Controller.extend(CanCheckEmails, {
     const emails = [];
 
     if (primaryEmail) {
-      const obj = { email: primaryEmail, primary: true, confirmed: true };
-      emails.push(EmberObject.create(obj));
+      emails.push(EmberObject.create({ 
+        email: primaryEmail, 
+        primary: true, 
+        confirmed: true
+      }));
     }
 
     if (secondaryEmails) {
       secondaryEmails.forEach(email => {
-        const obj = { email, confirmed: true };
-        emails.push(EmberObject.create(obj));
+        emails.push(EmberObject.create({ email, confirmed: true }));
       });
     }
 
     if (unconfirmedEmails) {
       unconfirmedEmails.forEach(email => {
-        const obj = { email };
-        emails.push(EmberObject.create(obj));
+        emails.push(EmberObject.create({ email }));
       });
     }
 
