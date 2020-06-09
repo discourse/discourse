@@ -560,7 +560,11 @@ export default createWidget("post-menu", {
       state
     );
 
-    const controlsButtons = [...beforeExtraControls, ...visibleButtons, ...extraControls];
+    const controlsButtons = [
+      ...beforeExtraControls,
+      ...visibleButtons,
+      ...extraControls
+    ];
 
     postControls.push(h("div.actions", controlsButtons));
     if (state.adminVisible) {
