@@ -232,7 +232,8 @@ export default Component.extend({
       start_date: this.startDate.toISOString(true).split("T")[0],
       end_date: this.endDate.toISOString(true).split("T")[0],
       category_id: customFilters.category,
-      group_id: customFilters.group
+      group_id: customFilters.group,
+      include_subcategories: customFilters["include-subcategories"]
     }).then(outputExportResult);
   },
 
