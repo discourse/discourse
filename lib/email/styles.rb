@@ -15,7 +15,16 @@ module Email
     def initialize(html, opts = nil)
       @html = html
       @opts = opts || {}
-      @fragment = Nokogiri::HTML5.parse(@html)
+
+      # This is a hack. Having to have this conditional is unfortunate, but
+      # emails may or may not have overarching structure with html and body
+      # tags and we want to handle both cases.
+      if @html.include?("<body")
+        @fragment = Nokogiri::HTML5.parse(@html)
+      else
+        @fragment = Nokogiri::HTML5.fragment(@html)
+      end
+
       @custom_styles = nil
     end
 
@@ -242,11 +251,7 @@ module Email
       strip_classes_and_ids
       replace_relative_urls
       replace_secure_media_urls
-      include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
-    end
-
-    def include_body?
-      @html =~ /<body>/i
+      @fragment.to_html.strip
     end
 
     def strip_avatars_and_emojis

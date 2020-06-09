@@ -3,6 +3,7 @@
 require "rails_helper"
 
 describe EmailStyle do
+  fab!(:invite) { Fabricate(:invite) }
 
   context "ERB evaluation" do
     it "does not evaluate ERB outside of the email itself" do
@@ -10,6 +11,20 @@ describe EmailStyle do
       html = Email::Renderer.new(UserNotifications.signup(Fabricate(:user))).html
       expect(html).not_to match("36963")
       expect(html.starts_with?('<hello>')).to eq(true)
+    end
+  end
+
+  context "when the custom template has a meta tag" do
+    before do
+      SiteSetting.email_custom_template =
+        '<html><head><meta foo="bar"></head><body><p>helloooo</p></body></html>'
+    end
+
+    it "preserves the meta tag" do
+      mail = InviteMailer.send_invite(invite)
+      output = Email::Renderer.new(mail).html
+
+      expect(output).to include('<meta foo="bar">')
     end
   end
 
@@ -26,7 +41,6 @@ describe EmailStyle do
     end
 
     context 'invite' do
-      fab!(:invite) { Fabricate(:invite) }
       let(:invite_mail) { InviteMailer.send_invite(invite) }
 
       subject(:mail_html) { Email::Renderer.new(invite_mail).html }
