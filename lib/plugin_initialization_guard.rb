@@ -42,6 +42,8 @@ def plugin_initialization_guard(&block)
         initialization:
 
         #{error}
+
+        #{error.backtrace.join("\n")}
       MESSAGE
     end
     exit 1
