@@ -990,6 +990,15 @@ describe UserMerger do
     expect(User.find_by_username(source_user.username)).to be_nil
   end
 
+  it "works even when email domains are restricted" do
+    SiteSetting.email_domains_whitelist = "example.com|work.com"
+    source_user.update_attribute(:admin, true)
+
+    expect(User.find_by_username(source_user.username)).to be_present
+    merge_users!
+    expect(User.find_by_username(source_user.username)).to be_nil
+  end
+
   it "deletes external auth infos of source user" do
     UserAssociatedAccount.create(user_id: source_user.id, provider_name: "facebook", provider_uid: "1234")
     GithubUserInfo.create(user_id: source_user.id, screen_name: "example", github_user_id: "examplel123123")

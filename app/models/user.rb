@@ -1200,7 +1200,7 @@ class User < ActiveRecord::Base
     if primary_email
       new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
     else
-      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true)
+      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true, skip_validate_email: !should_validate_email_address?)
     end
   end
 
