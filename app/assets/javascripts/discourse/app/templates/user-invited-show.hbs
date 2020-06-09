@@ -5,11 +5,14 @@
         <h2>{{i18n "user.invited.title"}}</h2>
 
         {{#if model.can_see_invite_details}}
-          <div class="admin-controls">
+          <div class="admin-controls invite-controls">
             <nav>
               <ul class="nav nav-pills">
                 {{nav-item route="userInvited.show" routeParam="pending" i18nLabel=pendingLabel}}
                 {{nav-item route="userInvited.show" routeParam="redeemed" i18nLabel=redeemedLabel}}
+                {{#if canSendInviteLink}}
+                  {{nav-item route="userInvited.show" routeParam="links" i18nLabel=linksLabel}}
+                {{/if}}
               </ul>
             </nav>
 
@@ -17,7 +20,6 @@
               {{d-button icon="plus" action=(route-action "showInvite") label="user.invited.create"}}
               {{#if canBulkInvite}}
                 {{csv-uploader uploading=uploading}}
-                <a href="https://meta.discourse.org/t/sending-bulk-user-invites/16468" rel="noopener noreferrer" target="_blank" style="color:black;">{{d-icon "question-circle"}}</a>
               {{/if}}
               {{#if showBulkActionButtons}}
                 {{#if rescindedAll}}
@@ -54,15 +56,25 @@
                     <th>{{i18n "user.invited.posts_read_count"}}</th>
                     <th>{{i18n "user.invited.time_read"}}</th>
                     <th>{{i18n "user.invited.days_visited"}}</th>
+                    {{#if canSendInviteLink}}
+                      <th>{{i18n "user.invited.source"}}</th>
+                    {{/if}}
                   {{/if}}
-                {{else}}
+                {{else if invitePending}}
                   <th colspan="1">{{i18n "user.invited.user"}}</th>
                   <th colspan="6">{{i18n "user.invited.sent"}}</th>
+                {{else if inviteLinks}}
+                  <th>{{i18n "user.invited.link_url"}}</th>
+                  <th>{{i18n "user.invited.link_created_at"}}</th>
+                  <th>{{i18n "user.invited.link_redemption_stats"}}</th>
+                  <th colspan="2">{{i18n "user.invited.link_groups"}}</th>
+                  <th>{{i18n "user.invited.link_expires_at"}}</th>
+                  <th></th>
                 {{/if}}
               </tr>
               {{#each model.invites as |invite|}}
                 <tr>
-                  {{#if invite.user}}
+                  {{#if inviteRedeemed}}
                     <td>
                       {{#link-to "user" invite.user}}{{avatar invite.user imageSize="tiny"}}{{/link-to}}
                       {{#link-to "user" invite.user}}{{invite.user.username}}{{/link-to}}
@@ -78,8 +90,11 @@
                           /
                         <span title={{i18n "user.invited.account_age_days"}}>{{html-safe invite.user.days_since_created}}</span>
                       </td>
+                      {{#if canSendInviteLink}}
+                        <td>{{html-safe invite.invite_source}}</td>
+                      {{/if}}
                     {{/if}}
-                  {{else}}
+                  {{else if invitePending}}
                     <td>{{invite.email}}</td>
                     <td>{{format-date invite.updated_at}}</td>
                     <td>
@@ -97,6 +112,19 @@
                         <div>{{i18n "user.invited.reinvited"}}</div>
                       {{else}}
                         {{d-button icon="sync" action=(action "reinvite") actionParam=invite label="user.invited.reinvite"}}
+                      {{/if}}
+                    </td>
+                  {{else if inviteLinks}}
+                    <td>{{d-button icon="link" action=(route-action "editInvite" invite.invite_key) label="user.invited.copy_link"}}</td>
+                    <td>{{format-date invite.created_at}}</td>
+                    <td>{{number invite.redemption_count}} / {{number invite.max_redemptions_allowed}}</td>
+                    <td colspan="2">{{ invite.group_names }}</td>
+                    <td>{{raw-date invite.expires_at leaveAgo="true"}}</td>
+                    <td>
+                      {{#if invite.rescinded}}
+                        {{i18n "user.invited.rescinded"}}
+                      {{else}}
+                        {{d-button icon="times" action=(action "rescind") actionParam=invite label="user.invited.rescind"}}
                       {{/if}}
                     </td>
                   {{/if}}

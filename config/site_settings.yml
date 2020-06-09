@@ -1604,6 +1604,11 @@ rate_limits:
   max_post_deletions_per_day:
     min: 1
     default: 10
+  invite_link_max_redemptions_limit:
+    min: 2
+    max: 1000000
+    default: 5000
+    client: true
 
 developer:
   force_hostname:

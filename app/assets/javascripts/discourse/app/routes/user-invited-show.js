@@ -30,18 +30,51 @@ export default DiscourseRoute.extend({
 
   actions: {
     showInvite() {
+      const panels = [
+        {
+          id: "invite",
+          title: "user.invited.single_user",
+          model: {
+            inviteModel: this.currentUser,
+            userInvitedShow: this.controllerFor("user-invited-show")
+          }
+        }
+      ];
+
+      if (this.get("currentUser.staff")) {
+        panels.push({
+          id: "invite-link",
+          title: "user.invited.multiple_user",
+          model: {
+            inviteModel: this.currentUser,
+            userInvitedShow: this.controllerFor("user-invited-show")
+          }
+        });
+      }
+
       showModal("share-and-invite", {
         modalClass: "share-and-invite",
-        panels: [
-          {
-            id: "invite",
-            title: "user.invited.create",
-            model: {
-              inviteModel: this.currentUser,
-              userInvitedShow: this.controllerFor("user-invited-show")
-            }
+        panels
+      });
+    },
+
+    editInvite(inviteKey) {
+      const inviteLink = `${Discourse.BaseUrl}/invites/${inviteKey}`;
+      this.currentUser.setProperties({ finished: true, inviteLink });
+      const panels = [
+        {
+          id: "invite-link",
+          title: "user.invited.generate_link",
+          model: {
+            inviteModel: this.currentUser,
+            userInvitedShow: this.controllerFor("user-invited-show")
           }
-        ]
+        }
+      ];
+
+      showModal("share-and-invite", {
+        modalClass: "share-and-invite",
+        panels
       });
     }
   }

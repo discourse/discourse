@@ -297,28 +297,42 @@ class UsersController < ApplicationController
   def invited
     guardian.ensure_can_invite_to_forum!
 
-    inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
     offset = params[:offset].to_i || 0
-    filter_by = params[:filter]
+    filter_by = params[:filter] || "redeemed"
+    inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
 
     invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
       Invite.find_pending_invites_from(inviter, offset)
-    else
+    elsif filter_by == "redeemed"
       Invite.find_redeemed_invites_from(inviter, offset)
+    else
+      []
     end
 
     show_emails = guardian.can_see_invite_emails?(inviter)
-    if params[:search].present?
+    if params[:search].present? && invites.present?
       filter_sql = '(LOWER(users.username) LIKE :filter)'
       filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
       invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
     end
 
     render json: MultiJson.dump(InvitedSerializer.new(
-      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter),
+      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter, type: filter_by),
       scope: guardian,
       root: false
     ))
+  end
+
+  def invite_links
+    guardian.ensure_can_invite_to_forum!
+
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    guardian.ensure_can_see_invite_details!(inviter)
+
+    offset = params[:offset].to_i || 0
+    invites = Invite.find_links_invites_from(inviter, offset)
+
+    render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
   end
 
   def invited_count
@@ -328,8 +342,9 @@ class UsersController < ApplicationController
 
     pending_count = Invite.find_pending_invites_count(inviter)
     redeemed_count = Invite.find_redeemed_invites_count(inviter)
+    links_count = Invite.find_links_invites_count(inviter)
 
-    render json: { counts: { pending: pending_count, redeemed: redeemed_count,
+    render json: { counts: { pending: pending_count, redeemed: redeemed_count, links: links_count,
                              total: (pending_count.to_i + redeemed_count.to_i) } }
   end
 

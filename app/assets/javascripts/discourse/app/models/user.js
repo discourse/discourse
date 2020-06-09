@@ -654,6 +654,17 @@ const User = RestModel.extend({
     });
   },
 
+  generateMultipleUseInviteLink(
+    group_names,
+    max_redemptions_allowed,
+    expires_at
+  ) {
+    return ajax("/invites/link", {
+      type: "POST",
+      data: { group_names, max_redemptions_allowed, expires_at }
+    });
+  },
+
   @observes("muted_category_ids")
   updateMutedCategories() {
     this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
