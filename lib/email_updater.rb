@@ -19,6 +19,7 @@ class EmailUpdater
 
     email = Email.downcase(email.strip)
     EmailValidator.new(attributes: :email).validate_each(self, :email, email)
+    return if errors.present?
 
     if existing_user = User.find_by_email(email)
       if SiteSetting.hide_email_address_taken
