@@ -552,8 +552,18 @@ export default createWidget("post-menu", {
       postControls.push(repliesButton);
     }
 
-    let extraControls = applyDecorators(this, "extra-controls", attrs, state);
-    postControls.push(h("div.actions", visibleButtons.concat(extraControls)));
+    const extraControls = applyDecorators(this, "extra-controls", attrs, state);
+    const beforeExtraControls = applyDecorators(
+      this,
+      "before-extra-controls",
+      attrs,
+      state
+    );
+
+    let controlsButtons = beforeExtraControls.concat(visibleButtons);
+    controlsButtons = controlsButtons.concat(extraControls);
+
+    postControls.push(h("div.actions", controlsButtons));
     if (state.adminVisible) {
       postControls.push(this.attach("post-admin-menu", attrs));
     }
