@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe InvitesController do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:trust_level_4) { Fabricate(:trust_level_4) }
 
   context 'show' do
     fab!(:invite) { Fabricate(:invite) }
@@ -95,7 +96,7 @@ describe InvitesController do
       end
 
       it "fails for normal user if invite email already exists" do
-        user = sign_in(Fabricate(:trust_level_4))
+        user = sign_in(trust_level_4)
         invite = Invite.invite_by_email("invite@example.com", user)
         post "/invites.json", params: { email: invite.email }
         expect(response.status).to eq(422)
@@ -159,7 +160,7 @@ describe InvitesController do
         end
 
         it "fails for normal user if invite email already exists" do
-          user = sign_in(Fabricate(:trust_level_4))
+          user = sign_in(trust_level_4)
           invite = Invite.invite_by_email("invite@example.com", user)
 
           post "/invites/link.json", params: {
@@ -169,11 +170,21 @@ describe InvitesController do
           expect(response.status).to eq(422)
         end
 
+        it "returns the right response when topic_id is invalid" do
+          sign_in(trust_level_4)
+
+          post "/invites/link.json", params: {
+            email: email, topic_id: -9999
+          }
+
+          expect(response.status).to eq(400)
+        end
+
         it "verifies that inviter is authorized to invite new user to a group-private topic" do
           group = Fabricate(:group)
           private_category = Fabricate(:private_category, group: group)
           group_private_topic = Fabricate(:topic, category: private_category)
-          sign_in(Fabricate(:trust_level_4))
+          sign_in(trust_level_4)
 
           post "/invites/link.json", params: {
             email: email, topic_id: group_private_topic.id
@@ -219,7 +230,7 @@ describe InvitesController do
 
       context 'while logged in' do
         it "fails for non-staff users" do
-          sign_in(Fabricate(:trust_level_4))
+          sign_in(trust_level_4)
           post "/invites/link.json", params: {
             max_redemptions_allowed: 5
           }

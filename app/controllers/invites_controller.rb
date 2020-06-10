@@ -126,14 +126,19 @@ class InvitesController < ApplicationController
     group_ids = groups.map(&:id)
 
     if is_single_invite
-      if params[:topic_id].present?
-        topic = Topic.find_by(id: params[:topic_id])
-        guardian.ensure_can_invite_to!(topic) if topic.present?
-      end
-
       invite_exists = Invite.exists?(email: params[:email], invited_by_id: current_user.id)
       if invite_exists && !guardian.can_send_multiple_invites?(current_user)
         return render json: failed_json, status: 422
+      end
+
+      if params[:topic_id].present?
+        topic = Topic.find_by(id: params[:topic_id])
+
+        if topic.present?
+          guardian.ensure_can_invite_to!(topic)
+        else
+          raise Discourse::InvalidParameters.new(:topic_id)
+        end
       end
     end
 
