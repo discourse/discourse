@@ -121,7 +121,7 @@ describe Jobs::ExportCsvFile do
       user1.user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
 
       exporter.extra['name'] = 'visits'
-      exporter.extra['group_id'] = group.id
+      exporter.extra['group'] = group.id
       report = exporter.report_export.to_a
 
       expect(report.length).to eq(2)
@@ -188,6 +188,25 @@ describe Jobs::ExportCsvFile do
       expect(report[3]).to contain_exactly("2010-01-03", "3", "6", "9")
     end
 
+    it 'works with posts reports and filters' do
+      category = Fabricate(:category)
+      subcategory = Fabricate(:category, parent_category: category)
+
+      Fabricate(:post, topic: Fabricate(:topic, category: category), created_at: '2010-01-01 12:00:00 UTC')
+      Fabricate(:post, topic: Fabricate(:topic, category: subcategory), created_at: '2010-01-01 12:00:00 UTC')
+
+      exporter.extra['name'] = 'posts'
+
+      exporter.extra['category'] = category.id
+      report = exporter.report_export.to_a
+      expect(report[0]).to contain_exactly("Count", "Day")
+      expect(report[1]).to contain_exactly("1", "2010-01-01")
+
+      exporter.extra['include_subcategories'] = true
+      report = exporter.report_export.to_a
+      expect(report[0]).to contain_exactly("Count", "Day")
+      expect(report[1]).to contain_exactly("2", "2010-01-01")
+    end
   end
 
   let(:user_list_header) {

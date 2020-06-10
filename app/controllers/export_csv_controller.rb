@@ -18,7 +18,7 @@ class ExportCsvController < ApplicationController
   def export_params
     @_export_params ||= begin
       params.require(:entity)
-      params.permit(:entity, args: [:name, :start_date, :end_date, :category_id, :group_id, :trust_level]).to_h
+      params.permit(:entity, args: Report::FILTERS).to_h
     end
   end
 end
