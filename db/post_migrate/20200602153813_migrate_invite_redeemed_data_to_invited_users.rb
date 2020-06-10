@@ -17,6 +17,7 @@ class MigrateInviteRedeemedDataToInvitedUsers < ActiveRecord::Migration[6.0]
       SELECT user_id, id, redeemed_at, created_at, updated_at
       FROM invites
       WHERE user_id IS NOT NULL AND redeemed_at IS NOT NULL
+      ON CONFLICT DO NOTHING
     SQL
   end
 
