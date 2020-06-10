@@ -215,15 +215,9 @@ module Jobs
       end
 
       @extra[:filters] = {}
-      if @extra[:category_id].present?
-        @extra[:filters][:category] = @extra[:category_id].to_i
-      end
-      if @extra[:group_id].present?
-        @extra[:filters][:group] = @extra[:group_id].to_i
-      end
-      if @extra[:include_subcategories].present?
-        @extra[:filters][:'include-subcategories'] = !!ActiveRecord::Type::Boolean.new.cast(@extra[:include_subcategories])
-      end
+      @extra[:filters][:category] = @extra[:category].to_i if @extra[:category].present?
+      @extra[:filters][:group] = @extra[:group].to_i if @extra[:group].present?
+      @extra[:filters][:'include-subcategories'] = !!ActiveRecord::Type::Boolean.new.cast(@extra[:'include-subcategories']) if @extra[:'include-subcategories'].present?
 
       report = Report.find(@extra[:name], @extra)
 

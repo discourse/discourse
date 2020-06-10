@@ -5,6 +5,8 @@ class Report
   # and you want to ensure cache is reset
   SCHEMA_VERSION = 4
 
+  FILTERS = [:category, :group, :trust_level, :'include-subcategories']
+
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :labels, :prev_period, :facets, :limit, :average,
                 :percent, :higher_is_better, :icon, :modes, :prev_data,

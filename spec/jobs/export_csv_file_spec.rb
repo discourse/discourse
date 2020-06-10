@@ -197,12 +197,12 @@ describe Jobs::ExportCsvFile do
 
       exporter.extra['name'] = 'posts'
 
-      exporter.extra['category_id'] = category.id
+      exporter.extra['category'] = category.id
       report = exporter.report_export.to_a
       expect(report[0]).to contain_exactly("Count", "Day")
       expect(report[1]).to contain_exactly("1", "2010-01-01")
 
-      exporter.extra['include_subcategories'] = true
+      exporter.extra['include-subcategories'] = true
       report = exporter.report_export.to_a
       expect(report[0]).to contain_exactly("Count", "Day")
       expect(report[1]).to contain_exactly("2", "2010-01-01")
