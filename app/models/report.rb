@@ -5,7 +5,7 @@ class Report
   # and you want to ensure cache is reset
   SCHEMA_VERSION = 4
 
-  FILTERS = [:name, :start_date, :end_date, :category, :group, :trust_level, :'include-subcategories']
+  FILTERS = [:name, :start_date, :end_date, :category, :group, :trust_level, :'file-extension', :'include-subcategories']
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :labels, :prev_period, :facets, :limit, :average,
