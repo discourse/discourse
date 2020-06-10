@@ -539,7 +539,7 @@ sl:
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
       long_form: "prijavljeno kot neprimerno"
     notify_user:
-      title: "Pošlji uporabniku @{{username}} ZS"
+      title: "Pošlji uporabniku @%{username} ZS"
       description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
       short_description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
       long_form: "opozorjen uporabnik"
@@ -721,10 +721,12 @@ sl:
   site_settings:
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
   search:
+    within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorije"
       topic: "Rezultati"
       user: "Uporabniki"
+    results_page: "Zadetki iskanja za '%{term}'"
   original_poster: "Originalni avtor"
   most_recent_poster: "Zadnji odgovarja"
   frequent_poster: "Pogosto odgovarja"
@@ -1209,10 +1211,6 @@ sl:
     email_reject_bad_destination_address:
       title: "E-sporočilo zavrnjeno - neustrezen naslov"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- neustrezen naslov"
-      text_body_template: |
-        Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
-
-        Noben od prejemnih e-naslovov ni prepoznan ali je prišlo do spremembe Message-ID vrstice. Zagotovite, da pošiljate na ustrezen e-naslov, ki vam ga je posredovalo osebje.
     email_reject_old_destination:
       title: "E-sporočilo zavrnjeno - star naslov"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- star naslov"
@@ -1731,6 +1729,7 @@ sl:
   image: "slika"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
+    unauthorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
   flag_reason:
     sockpuppet: "Nov uporabnik je ustvaril temo in drugi novi uporabnik z enakim IP naslovom (%{ip_address}) je odgovoril. Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nastavitev strani."
   edit_this_page: "Uredi to stran"

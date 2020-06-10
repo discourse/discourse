@@ -194,6 +194,8 @@ sv:
     file_should_be_csv: "De uppladdade filerna skall vara i csv format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
     error: "Det uppstod ett problem när filerna skulle laddas upp. Vad snäll och försök senare igen."
+  invite_link:
+    email_taken: "Den här e-postadressen används redan. Om du redan har ett konto ber vi dig logga in eller återställa lösenordet."
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
     user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
@@ -787,7 +789,7 @@ sv:
       short_description: 'En överträdelse av <a href="%{base_path}/guidelines"> våra riktlinjer</a>'
       long_form: "flagga detta som olämpligt"
     notify_user:
-      title: "Skicka ett meddelande till @{{username}} "
+      title: "Skicka ett meddelande till @%{username} "
       description: "Jag vill prata med den här personen direkt och privat om inlägget. "
       short_description: "Jag vill prata med den här personen direkt och privat om inlägget. "
       long_form: "notifierad användare"
@@ -2158,6 +2160,7 @@ sv:
       must_not_contain_two_special_chars_in_seq: "får inte innehålla en sekvens av 2 eller fler specialtecken (.-_)"
       must_not_end_with_confusing_suffix: "får inte avslutas med ett förvirrande suffix som .json eller .png etc."
     email:
+      invalid: "är ogiltig."
       not_allowed: "är inte en tillåten e-postleverantör. Vänligen använd en annan e-postadress."
       blocked: "är inte tillåtet."
       revoked: "Kommer inte skicka e-post till '%{email}' förrän %{date}."
@@ -2642,7 +2645,7 @@ sv:
     email_reject_bad_destination_address:
       title: "E-posten avslås; dålig mottagaradress"
       subject_template: "[%{email_prefix}] E-postfel -- Okänd mottagaradress"
-      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.\n\nInga av mottagaradresserna kunde identifieras, eller har rubrikens meddelande-ID-i e-postmeddelandet ändrats. Var god se till att du skickar till en korrekt e-postadress tillhandahållen av personalen. \n"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nAnvänder du dig av mer än en e-postadress? Svarade du från en annan e-postadress? E-postsvar kräver att du använder samma e-postadress när du svarar. Alternativt kan meddelande-id rubriken i e-postmeddelandet ha modifierats. \n"
     email_reject_old_destination:
       title: "E-posten avslås; gammal destination"
       subject_template: "[%{email_prefix}] E-postfel -- Du försöker svara på ett gammalt meddelande"

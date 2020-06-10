@@ -787,6 +787,7 @@ hu:
       category: "Kategóriák"
       topic: "Eredmények"
       user: "Felhasználók"
+    results_page: "Keresési eredmény: '%{term}'"
   original_poster: "Eredeti szerző"
   most_posts: "Legtöbb bejegyzés"
   most_recent_poster: "Legutóbbi szerzők"
@@ -810,6 +811,7 @@ hu:
     suspended: "Nem jelentkezhet be eddig: %{date}."
     suspended_with_reason: "A fiók felfüggesztve eddig: %{date}: %{reason}"
     errors: "%{errors}"
+    not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
     omniauth_error_unknown: "A bejelentkezési valamiért nem sikerült, próbálja meg újra."
     omniauth_confirm_button: "Folytatás"
@@ -1276,6 +1278,11 @@ hu:
   joined: "Csatlakozott"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
+      group_mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
+      quoted: '%{username} idézett itt: "%{topic}" - %{site_title}'
+      replied: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
+      posted: '%{username} hozzászólt itt: "%{topic}" - %{site_title}'
       confirm_title: "Értesítések bekapcsolva – %{site_title}"
       confirm_body: "Siker! Értesítések engedélyezve."
       custom: "Értesítés %{username} felhasználótól itt: %{site_title}"

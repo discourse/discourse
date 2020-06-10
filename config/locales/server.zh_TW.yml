@@ -681,7 +681,7 @@ zh_TW:
       short_description: '違反<a href="%{base_path}/guidelines">我們的社群規範</a>'
       long_form: "投訴為不當內容"
     notify_user:
-      title: "給 @{{username}} 送出一則訊息"
+      title: "給 @%{username} 送出一則訊息"
       description: "我想要針對這位使用者的貼文直接和他們溝通。"
       short_description: "我想要針對這位使用者的貼文直接和他們溝通。"
       long_form: "傳訊給使用者"
@@ -1757,7 +1757,7 @@ zh_TW:
         key: "www.範例.com"
         value: "單一登入服務訊息密鑰"
   search:
-    within_post: "#{{post_number}} 由 {{username}}"
+    within_post: "#%{post_number} 由 %{username}"
     types:
       category: "分類"
       topic: "結果"
@@ -2279,11 +2279,6 @@ zh_TW:
     email_reject_bad_destination_address:
       title: "電子郵件拒絕 不良目的地位址"
       subject_template: "[%{email_prefix}] 電子郵件錯誤 -- 未知的電子郵件地址"
-      text_body_template: |
-        我們非常抱歉，但是你發送至%{destination}（名為%{former_title}） 郵件出問題了。
-
-        寄送的郵件地址無法識別
-        請重新確認電子郵件地址或向管理人員提供的郵件地址發信。
     email_reject_old_destination:
       title: "電子郵件拒絕：舊的目的地（Old Destination）"
       subject_template: "[%{email_prefix}] 電子郵件錯誤 -- 你正在嘗試回覆老舊通知"
@@ -3290,7 +3285,7 @@ zh_TW:
     staff_tag_disallowed: '“%{tag}”只可由管理人員使用。'
     staff_tag_remove_disallowed: '“%{tag}”只可由管理人員刪除。'
     minimum_required_tags:
-      other: "您必須至少選擇{{count}}個標籤"
+      other: "您必須至少選擇%{count}個標籤"
     upload_row_too_long: "CSV檔案每一行應該有一個標籤，可選，標籤後面可以是逗號，然後是標籤群組名稱。"
     forbidden:
       in_this_category: '「%{tag_name}」不能被使用在這個分類'
@@ -3464,7 +3459,7 @@ zh_TW:
       watching_first_post: '%{username}建立了新的討論話題「%{topic}- %{site_title}」'
       confirm_title: "通知已啟用 - %{site_title}"
       confirm_body: "成功! 通知已啟用"
-      custom: "新的通知來自{{username}}在%{site_title}"
+      custom: "新的通知來自%{username}在%{site_title}"
   staff_action_logs:
     not_found: "未找到"
     unknown: "未知的"

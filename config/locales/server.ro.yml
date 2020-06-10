@@ -490,7 +490,7 @@ ro:
       title: "Necorespunzător"
       long_form: "marcat ca necorespunzător"
     notify_user:
-      title: "Trimite-i un mesaj lui @{{username}}"
+      title: "Trimite-i un mesaj lui @%{username}"
       long_form: "utilizator căruia i-a fost trimis mesaj"
       email_title: 'Postarea ta din "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1189,6 +1189,7 @@ ro:
       category: "Categorii"
       topic: "Rezultate"
       user: "Utilizatori"
+    results_page: "Caută rezultate pentru '%{term}'"
   sso:
     not_found: "Contul tău nu a putut fi găsit. Te rugăm contactează administratorul site-ului."
     account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."

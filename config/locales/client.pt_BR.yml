@@ -23,8 +23,8 @@ pt_BR:
             mb: MB
             tb: TB
       short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
+        thousands: "%{number}k"
+        millions: "%{number}M"
     dates:
       time: "HH:mm"
       time_with_zone: "HH:mm (z)"
@@ -227,11 +227,11 @@ pt_BR:
     weekly: "semanal"
     every_month: "a cada mês"
     every_six_months: "a cada seis meses"
-    max_of_count: "máx de {{count}}"
+    max_of_count: "máx de %{count}"
     alternation: "ou"
     character_count:
-      one: "{{count}} caracter"
-      other: "{{count}} caracteres"
+      one: "%{count} caracter"
+      other: "%{count} caracteres"
     related_messages:
       title: "Mensagens Relacionadas"
       see_all: 'Ver <a href="%{path}">todas as mensagens</a> de @ %{username} ...'
@@ -306,14 +306,14 @@ pt_BR:
         yes_value: "Sim, descartar."
         no_value: "Não, manter."
     topic_count_latest:
-      one: "Veja {{count}} tópico novo ou atualizado"
-      other: "Veja {{count}} tópicos novos ou atualizados"
+      one: "Veja %{count} tópico novo ou atualizado"
+      other: "Veja %{count} tópicos novos ou atualizados"
     topic_count_unread:
-      one: "Veja {{count}} tópico não lido"
-      other: "Veja {{count}} tópicos não lidos"
+      one: "Veja %{count} tópico não lido"
+      other: "Veja %{count} tópicos não lidos"
     topic_count_new:
-      one: "Veja {{count}} novo tópico"
-      other: "Veja {{count}} novos tópicos"
+      one: "Veja %{count} novo tópico"
+      other: "Veja %{count} novos tópicos"
     preview: "pré-visualização"
     cancel: "cancelar"
     save: "Salvar Mudanças"
@@ -321,7 +321,7 @@ pt_BR:
     saved: "Salvo!"
     upload: "Enviar"
     uploading: "Enviando..."
-    uploading_filename: "Enviando: {{filename}}..."
+    uploading_filename: "Enviando: %{filename}..."
     clipboard: "área de transferência"
     uploaded: "Enviado!"
     pasting: "Colando..."
@@ -375,7 +375,7 @@ pt_BR:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."
         claimed_by_you: "Você reivindicou este item e pode revisá-lo."
-        claimed_by_other: "Este item só pode ser revisado por <b>{{username}}</b>."
+        claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
       claim:
         title: "reivindicar este tópico"
       unclaim:
@@ -395,7 +395,7 @@ pt_BR:
       view_pending: "visualização pendente"
       topic_has_pending:
         one: "Este tópico tem <b>%{count}</b> postagem pendente de aprovação"
-        other: "Este tópico tem <b>{{count}}</b> postagens pendentes de aprovação"
+        other: "Este tópico tem <b>%{count}</b> postagens pendentes de aprovação"
       title: "Revisar"
       topic: "Tópico:"
       filtered_topic: "Você filtrou para conteúdo de revisão em um único tópico."
@@ -412,17 +412,17 @@ pt_BR:
         fields: "Campos"
       user_percentage:
         summary:
-          one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} sinalização no total)"
-          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} sinalizações no total)"
+          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} sinalização no total)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} sinalizações no total)"
         agreed:
-          one: "{{count}}% concorda"
-          other: "{{count}}% concordam"
+          one: "%{count}% concorda"
+          other: "%{count}% concordam"
         disagreed:
-          one: "{{count}}% discorda"
-          other: "{{count}}% discordam"
+          one: "%{count}% discorda"
+          other: "%{count}% discordam"
         ignored:
-          one: "{{count}}% ignora"
-          other: "{{count}}% ignoram"
+          one: "%{count}% ignora"
+          other: "%{count}% ignoram"
       topics:
         topic: "Tópico"
         reviewable_count: "Contagem"
@@ -432,10 +432,10 @@ pt_BR:
         details: "detalhes"
         unique_users:
           one: "%{count} usuário"
-          other: "{{count}} usuários"
+          other: "%{count} usuários"
       replies:
         one: "%{count} resposta"
-        other: "{{count}} respostas"
+        other: "%{count} respostas"
       edit: "Editar"
       save: "Salvar"
       cancel: "Cancelar"
@@ -498,22 +498,22 @@ pt_BR:
         description: "Nós recebemos sua nova postagem, mas é necessário que seja aprovada por um moderador antes de ser exibida. Por favor, tenha paciência."
         pending_posts:
           one: "Você tem <strong>%{count}</strong> postagem pendente."
-          other: "Você tem postagens <strong>{{count}}</strong> pendentes."
+          other: "Você tem postagens <strong>%{count}</strong> pendentes."
         ok: "OK"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postou <a href='{{topicUrl}}'>o tópico</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>Você</a> postou <a href='{{topicUrl}}'>o tópico</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> respondeu <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>Você</a> respondeu a <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> respondeu ao <a href='{{topicUrl}}'>tópico</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>Você</a> respondeu ao <a href='{{topicUrl}}'>tópico</a>"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mencionou <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mencionou <a href='{{user2Url}}'>você</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Você</a> mencionou <a href='{{user2Url}}'>{{another_user}}</a>"
-      posted_by_user: "Postado por <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "Postado por <a href='{{userUrl}}'>você</a>"
-      sent_by_user: "Enviado por <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "Enviado por <a href='{{userUrl}}'>você</a>"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postou <a href='%{topicUrl}'>o tópico</a>"
+      you_posted_topic: "<a href='%{userUrl}'>Você</a> postou <a href='%{topicUrl}'>o tópico</a>"
+      user_replied_to_post: "<a href='%{userUrl}'>%{user}</a> respondeu <a href='%{postUrl}'>%{post_number}</a>"
+      you_replied_to_post: "<a href='%{userUrl}'>Você</a> respondeu a <a href='%{postUrl}'>%{post_number}</a>"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> respondeu ao <a href='%{topicUrl}'>tópico</a>"
+      you_replied_to_topic: "<a href='%{userUrl}'>Você</a> respondeu ao <a href='%{topicUrl}'>tópico</a>"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> mencionou <a href='%{user2Url}'>%{another_user}</a>"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> mencionou <a href='%{user2Url}'>você</a>"
+      you_mentioned_user: "<a href='%{user1Url}'>Você</a> mencionou <a href='%{user2Url}'>%{another_user}</a>"
+      posted_by_user: "Postado por <a href='%{userUrl}'>%{user}</a>"
+      posted_by_you: "Postado por <a href='%{userUrl}'>você</a>"
+      sent_by_user: "Enviado por <a href='%{userUrl}'>%{user}</a>"
+      sent_by_you: "Enviado por <a href='%{userUrl}'>você</a>"
     directory:
       filter_name: "filtrar por nome de usuário"
       title: "Usuários"
@@ -749,7 +749,7 @@ pt_BR:
       none: "(selecione uma opção)"
       required: 'Por favor preencha "%{name}"'
     user:
-      said: "{{username}}:"
+      said: "%{username}:"
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
@@ -825,12 +825,12 @@ pt_BR:
       enable_defer: "Habilitar adiar para marcar tópicos não lidos"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
-      moderator: "{{user}} é um moderador"
-      admin: "{{user}} é um administrador"
+      moderator: "%{user} é um moderador"
+      admin: "%{user} é um administrador"
       moderator_tooltip: "Este usuário é um moderador"
       admin_tooltip: "Este usuário é um administrador"
       silenced_tooltip: "Este usuário está silenciado"
-      suspended_notice: "Este usuário está suspenso até {{date}}."
+      suspended_notice: "Este usuário está suspenso até %{date}."
       suspended_permanently: "Este usuário está suspenso."
       suspended_reason: "Motivo:"
       github_profile: "Github"
@@ -843,7 +843,7 @@ pt_BR:
           Tópicos e categorias silenciadas não são incluídas nestes e-mails.
         individual: "Enviar um e-mail para cada postagem nova"
         individual_no_echo: "Enviar um e-mail para cada postagem nova, exceto as minhas"
-        many_per_day: "Me envie um e-mail para cada nova postagem (aproximadamente {{dailyEmailEstimate}} por dia)"
+        many_per_day: "Me envie um e-mail para cada nova postagem (aproximadamente %{dailyEmailEstimate} por dia)"
         few_per_day: "Me envie um e-mail para cada nova postagem (aproximadamente 2 por dia)"
         warning: "Modo de lista de correio habilitado. As configurações de notificação por e-mail são substituídas."
       tag_settings: "Etiquetas"
@@ -873,9 +873,7 @@ pt_BR:
       admin_delete: "Excluir"
       users: "Usuários"
       muted_users: "Silenciados"
-      muted_users_instructions: "Suprimir todas as notificações destes usuários."
       ignored_users: "Ignorados"
-      ignored_users_instructions: "Suprimir todas as postagens e notificações destes usuários."
       tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos quando eu chegar no final deles."
       apps: "Aplicativos"
@@ -931,12 +929,12 @@ pt_BR:
         disable: "Desabilitar"
         enable: "Habilitar"
         enable_long: "Habilitar códigos de backup"
-        manage: "Gerenciar códigos de backup. Você tem <strong>{{count}}</strong> códigos de backup restantes."
+        manage: "Gerenciar códigos de backup. Você tem <strong>%{count}</strong> códigos de backup restantes."
         copy_to_clipboard: "Copiar para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         download_backup_codes: "Baixar códigos de backup"
-        remaining_codes: "Você tem <strong>{{count}}</strong> códigos de backup restantes."
+        remaining_codes: "Você tem <strong>%{count}</strong> códigos de backup restantes."
         use: "Use um código de backup"
         enable_prerequisites: "Você deve habilitar um segundo fator primário antes de gerar códigos de backup."
         codes:
@@ -1001,10 +999,10 @@ pt_BR:
         success_staff: "Enviamos um e-mail para o seu endereço atual. Por favor, siga as instruções de confirmação."
       change_avatar:
         title: "Alterar sua imagem de perfil"
-        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a>, baseado em"
-        gravatar_title: "Altere seu avatar no site de {{gravatarName}}"
-        gravatar_failed: "Não foi possível encontrar um {{gravatarName}} com esse endereço de e-mail."
-        refresh_gravatar_title: "Recarregar seu {{gravatarName}}"
+        gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baseado em"
+        gravatar_title: "Altere seu avatar no site de %{gravatarName}"
+        gravatar_failed: "Não foi possível encontrar um %{gravatarName} com esse endereço de e-mail."
+        refresh_gravatar_title: "Recarregar seu %{gravatarName}"
         letter_based: "Imagem de perfil atribuída pelo sistema"
         uploaded_avatar: "Imagem personalizada"
         uploaded_avatar_empty: "Adicionar uma imagem personalizada"
@@ -1029,11 +1027,11 @@ pt_BR:
         ok: "Nós enviaremos um e-mail para confirmar"
         required: "Por favor preencha um endereço de e-mail"
         invalid: "Por favor, insira um endereço de e-mail válido"
-        authenticated: "Seu e-mail foi autenticado por {{provider}}"
+        authenticated: "Seu e-mail foi autenticado por %{provider}"
         frequency_immediately: "Enviaremos um e-mail imediatamente se você não tiver lido a coisa sobre a qual estamos enviando o e-mail."
         frequency:
           one: "Só lhe enviaremos um e-mail se não o tivermos visto no último minuto."
-          other: "Só lhe enviaremos um e-mail se não o tivermos visto nos últimos {{count}} minutos."
+          other: "Só lhe enviaremos um e-mail se não o tivermos visto nos últimos %{count} minutos."
       associated_accounts:
         title: "Contas Associadas"
         connect: "Conectar"
@@ -1054,9 +1052,9 @@ pt_BR:
       username:
         title: "Nome de Usuário"
         instructions: "único, sem espaços, curto"
-        short_instructions: "Pessoas podem mencionar você usando @{{username}}."
+        short_instructions: "Pessoas podem mencionar você usando @%{username}."
         available: "Seu nome de usuário está disponível"
-        not_available: "Não está disponível. Tente {{suggestion}}?"
+        not_available: "Não está disponível. Tente %{suggestion}?"
         not_available_no_suggestion: "Não disponível"
         too_short: "Seu nome de usuário é muito curto"
         too_long: "Seu nome de usuário é muito longo"
@@ -1080,11 +1078,11 @@ pt_BR:
         log_out_all: "Sair de todos"
         active: "ativo agora"
         not_you: "Não é você?"
-        show_all: "Mostrar todos ({{count}})"
+        show_all: "Mostrar todos (%{count})"
         show_few: "Mostrar menos"
         was_this_you: "Foi você?"
         was_this_you_description: "Se não foi você, recomendamos que você altere sua senha e saia de todos os dispositivos."
-        browser_and_device: "{{browser}} em {{device}}"
+        browser_and_device: "%{browser} em %{device}"
         secure_account: "Proteger minha Conta"
         latest_post: "Você postou por último…"
       last_posted: "Última Postagem"
@@ -1164,20 +1162,19 @@ pt_BR:
         none: "Não há convites para exibir."
         truncated:
           one: "Mostrando o primeiro convite."
-          other: "Mostrando os primeiros {{count}} convites."
+          other: "Mostrando os primeiros %{count} convites."
         redeemed: "Convites Usados"
         redeemed_tab: "Usados"
-        redeemed_tab_with_count: "Usados ({{count}})"
+        redeemed_tab_with_count: "Usados (%{count})"
         redeemed_at: "Usado"
         pending: "Convites Pendentes"
         pending_tab: "Pendentes"
-        pending_tab_with_count: "Pendentes ({{count}})"
+        pending_tab_with_count: "Pendentes (%{count})"
         topics_entered: "Tópicos Visualizados"
         posts_read_count: "Postagens Lidas"
         expired: "Este convite expirou."
         rescind: "Remover"
         rescinded: "Convite removido"
-        rescind_all: "Remover todos os Convites Expirados"
         rescinded_all: "Todos os Convites Expirados removidos!"
         rescind_all_confirm: "Você tem certeza de que deseja remover todos os convites expirados?"
         reinvite: "Reenviar Convite"
@@ -1188,13 +1185,18 @@ pt_BR:
         time_read: "Tempo de Leitura"
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta em dias"
-        create: "Enviar um Convite"
+        links_tab: "Links"
+        link_created_at: "Criado"
+        link_groups: Grupos
+        create: "Enviar Convite"
         generate_link: "Copiar Link do Convite"
         link_generated: "Link do convite gerado com sucesso!"
         valid_for: "Link do convite é válido apenas para este endereço de e-mail: %{email}"
+        single_user: "Único Usuário"
+        invite_link:
+          success: "Link do convite gerado com sucesso!"
         bulk_invite:
           none: "Você ainda não convidou ninguém para cá. Envie convites individuais, ou convide várias pessoas de uma só vez, fazendo a <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>importação de um arquivo CSV</a>."
-          text: "Convidar em Massa a partir de Arquivo"
           success: "Arquivo enviado com sucesso, você será notificado por mensagem quando o processo estiver completo."
           error: "Desculpe, o arquivo deve estar no formato CSV."
           confirmation_message: "Você está prestes a enviar convites por e-mail para todos no arquivo enviado."
@@ -1286,7 +1288,7 @@ pt_BR:
       desc:
         network: "Por favor, verifique sua conexão."
         network_fixed: "Parece que voltou."
-        server: "Código do erro: {{status}}"
+        server: "Código do erro: %{status}"
         forbidden: "Você não tem permissão para ver isto."
         not_found: "Oops, a aplicação tentou carregar uma URL que não existe."
         unknown: "Algo deu errado."
@@ -1349,8 +1351,8 @@ pt_BR:
       value_prop: "Quando você cria uma conta, lembramos exatamente o que você leu, para que você volte sempre de onde parou. Você também recebe notificações, aqui e via e-mail, sempre que alguém responder a você. E você pode gostar de postagens para compartilhar o amor. :heartpulse:"
     summary:
       enabled_description: "Você está vendo um resumo deste tópico: as postagens mais interessantes conforme determinados pela comunidade."
-      description: "Existem <b>{{replyCount}}</b> respostas."
-      description_time: "Existem <b>{{replyCount}}</b> respostas com tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
+      description: "Existem <b>%{replyCount}</b> respostas."
+      description_time: "Existem <b>%{replyCount}</b> respostas com tempo de leitura estimado de <b>%{readingTime} minutos</b>."
       enable: "Resumir Este Tópico"
       disable: "Exibir Todas as Postagens"
     deleted_filter:
@@ -1363,8 +1365,8 @@ pt_BR:
       invite: "Convidar Outros ..."
       edit: "Adicionar ou Remover ..."
       leave_message: "Você quer mesmo sair desta mensagem?"
-      remove_allowed_user: "Você quer mesmo remover {{name}} desta mensagem?"
-      remove_allowed_group: "Você quer mesmo remover {{name}} desta mensagem?"
+      remove_allowed_user: "Você quer mesmo remover %{name} desta mensagem?"
+      remove_allowed_group: "Você quer mesmo remover %{name} desta mensagem?"
     email: "E-mail"
     username: "Nome de Usuário"
     last_seen: "Visto"
@@ -1373,7 +1375,7 @@ pt_BR:
     trust_level: "Nível de Confiança"
     search_hint: "nome de usuário, e-mail ou endereço IP"
     create_account:
-      disclaimer: "Ao se registrar, você concorda com a <a href='{{privacy_link}}' target='blank'>política de privacidade</a> e os <a href='{{tos_link}}' target='blank'>termos de serviço</a>."
+      disclaimer: "Ao se registrar, você concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de serviço</a>."
       title: "Criar Nova Conta"
       failed: "Algo deu errado, talvez este e-mail já esteja cadastrado, tente usar o link de esqueci a senha."
     forgot_password:
@@ -1433,7 +1435,7 @@ pt_BR:
       awaiting_activation: "Sua conta está aguardando ativação, utilize o link de esqueci a senha para enviar um novo e-mail de ativação."
       awaiting_approval: "Sua conta ainda não foi aprovada por um membro da staff. Você receberá um e-mail quando sua conta for aprovada."
       requires_invite: "Desculpe, o acesso a este fórum é permitido somente por convite de outro membro."
-      not_activated: "Você não pode entrar ainda. Nós lhe enviamos um e-mail de ativação anteriormente para endereço <b>{{sentTo}}</b>. Por favor, siga as instruções contidas neste e-mail para ativar a sua conta."
+      not_activated: "Você não pode entrar ainda. Nós lhe enviamos um e-mail de ativação anteriormente para endereço <b>%{sentTo}</b>. Por favor, siga as instruções contidas neste e-mail para ativar a sua conta."
       not_allowed_from_ip_address: "Você não pode entrar com este endereço IP."
       admin_not_allowed_from_ip_address: "Você não pode entrar como administrador com este endereço IP."
       resend_activation_email: "Clique aqui para enviar o e-mail de ativação novamente."
@@ -1442,7 +1444,7 @@ pt_BR:
       change_email: "Alterar Endereço de E-mail"
       provide_new_email: "Forneça um novo endereço de e-mail e nós re-enviaremos seu e-mail de confirmação."
       submit_new_email: "Atualizar Endereço de E-mail"
-      sent_activation_email_again: "Nós enviamos mais um e-mail de ativação para você no endereço <b>{{currentEmail}}</b>. Pode ser que demore alguns minutos para chegar; verifique sempre sua caixa de spam."
+      sent_activation_email_again: "Nós enviamos mais um e-mail de ativação para você no endereço <b>%{currentEmail}</b>. Pode ser que demore alguns minutos para chegar; verifique sempre sua caixa de spam."
       sent_activation_email_again_generic: "Nós enviamos mais um e-mail de ativação. Pode ser que demore alguns minutos para chegar; tenha certeza de verificar sua caixa de spam."
       to_continue: "Por Favor, Entre"
       preferences: "Você precisa estar logado para mudar suas preferências de usuário."
@@ -1506,20 +1508,20 @@ pt_BR:
     conditional_loading_section:
       loading: Carregando...
     category_row:
-      topic_count: "{{count}} tópicos nesta categoria"
+      topic_count: "%{count} tópicos nesta categoria"
     select_kit:
       default_header_text: Selecionar...
       no_content: Nenhuma correspondência encontrada
       filter_placeholder: Pesquisar...
       filter_placeholder_with_any: Pesquisar ou criar…
-      create: "Criar: '{{content}}'"
+      create: "Criar: '%{content}'"
       max_content_reached:
-        one: "Você só pode selecionar {{count}} item."
-        other: "Você só pode selecionar {{count}} itens."
+        one: "Você só pode selecionar %{count} item."
+        other: "Você só pode selecionar %{count} itens."
       min_content_not_reached:
-        one: "Selecione pelo menos {{count}} item."
-        other: "Selecione pelo menos {{count}} itens."
-      invalid_selection_length: "A seleção deve ter pelo menos {{count}} caracteres."
+        one: "Selecione pelo menos %{count} item."
+        other: "Selecione pelo menos %{count} itens."
+      invalid_selection_length: "A seleção deve ter pelo menos %{count} caracteres."
       components:
         categories_admin_dropdown:
           title: "Categorias na caixa de seleção da administração"
@@ -1549,7 +1551,7 @@ pt_BR:
       default: Emojis personalizados
     shared_drafts:
       title: "Rascunhos Compartilhados"
-      notice: "Este tópico só é visível para aqueles que podem ver a categoria <b>{{category}}</b>."
+      notice: "Este tópico só é visível para aqueles que podem ver a categoria <b>%{category}</b>."
       destination_category: "Categoria de Destino"
       publish: "Publicar Rascunho Compartilhado"
       confirm_publish: "Você tem certeza de que deseja publicar este rascunho?"
@@ -1569,24 +1571,24 @@ pt_BR:
       similar_topics: "Seu tópico é parecido com..."
       drafts_offline: "rascunhos offline"
       edit_conflict: "editar conflito"
-      group_mentioned_limit: "<b>Aviso!</b> Você mencionou <a href='{{group_link}}'>{{group}}</a>; no entanto, este grupo tem mais membros do que o limite de menção configurado pelo administrador de {{max}} usuários. Ninguém será notificado."
+      group_mentioned_limit: "<b>Aviso!</b> Você mencionou <a href='%{group_link}'>%{group}</a>; no entanto, este grupo tem mais membros do que o limite de menção configurado pelo administrador de %{max} usuários. Ninguém será notificado."
       group_mentioned:
-        one: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>%{count} pessoa</a> – você tem certeza?"
-        other: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>{{count}} pessoas</a> – você tem certeza?"
+        one: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoa</a> – você tem certeza?"
+        other: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoas</a> – você tem certeza?"
       cannot_see_mention:
-        category: "Você mencionou {{username}}, mas ele(a) não será notificado(a), pois ele(a) não tem acesso à esta categoria. Você precisará adicioná-lo(a) ao grupo que tem acesso à categoria."
-        private: "Você mencionou {{username}}, mas ele(a) não será notificado(a), pois ele(a) não pode ver esta mensagem pessoal. Você precisará convidá-lo(a) para esta MP."
-      duplicate_link: "Parece que o seu link para <b>{{domain}}</b> já foi postado neste tópico por <b>@{{username}}</b> em <a href='{{post_url}}'>uma resposta em {{ago}}</a> – você tem certeza de que deseja postá-lo novamente?"
-      reference_topic_title: "RE: {{title}}"
+        category: "Você mencionou %{username}, mas ele(a) não será notificado(a), pois ele(a) não tem acesso à esta categoria. Você precisará adicioná-lo(a) ao grupo que tem acesso à categoria."
+        private: "Você mencionou %{username}, mas ele(a) não será notificado(a), pois ele(a) não pode ver esta mensagem pessoal. Você precisará convidá-lo(a) para esta MP."
+      duplicate_link: "Parece que o seu link para <b>%{domain}</b> já foi postado neste tópico por <b>@%{username}</b> em <a href='%{post_url}'>uma resposta em %{ago}</a> – você tem certeza de que deseja postá-lo novamente?"
+      reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Título é obrigatório"
-        title_too_short: "Título precisa ter no mínimo {{min}} caracteres"
-        title_too_long: "Título não pode ter mais de {{max}} caracteres"
+        title_too_short: "Título precisa ter no mínimo %{min} caracteres"
+        title_too_long: "Título não pode ter mais de %{max} caracteres"
         post_missing: "A postagem não pode estar vazia"
-        post_length: "Postagem precisa ter no mínimo {{min}} caracteres"
-        try_like: "Você já tentou o botão {{heart}}?"
+        post_length: "Postagem precisa ter no mínimo %{min} caracteres"
+        try_like: "Você já tentou o botão %{heart}?"
         category_missing: "Você precisa escolher uma categoria"
-        tags_missing: "Você precisa escolher pelo menos {{count}} etiquetas"
+        tags_missing: "Você precisa escolher pelo menos %{count} etiquetas"
         topic_template_not_modified: "Por favor, adicione detalhes e especificações ao seu tópico editando o modelo do tópico."
       save_edit: "Salvar Edição"
       overwrite_edit: "Sobrescrever Edição"
@@ -1684,10 +1686,10 @@ pt_BR:
       tooltip:
         regular:
           one: "%{count} notificação não visualizada"
-          other: "{{count}} notificações não visualizadas"
+          other: "%{count} notificações não visualizadas"
         message:
           one: "%{count} mensagem não lida"
-          other: "{{count}} mensagens não lidas"
+          other: "%{count} mensagens não lidas"
         high_priority:
           one: "%{count} notificação não lida de alta prioridade"
           other: "%{count} notificações não lidas de alta prioridade"
@@ -1696,48 +1698,48 @@ pt_BR:
       empty: "Nenhuma notificação foi encontrada."
       post_approved: "Sua postagem foi aprovada"
       reviewable_items: "itens que exigem revisão"
-      mentioned: "<span>{{username}}</span> {{description}}"
-      group_mentioned: "<span>{{username}}</span> {{description}}"
-      quoted: "<span>{{username}}</span> {{description}}"
-      bookmark_reminder: "<span>{{username}}</span> {{description}}"
-      replied: "<span>{{username}}</span> {{description}}"
-      posted: "<span>{{username}}</span> {{description}}"
-      edited: "<span>{{username}}</span> {{description}}"
-      liked: "<span>{{username}}</span> {{description}}"
-      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
+      mentioned: "<span>%{username}</span> %{description}"
+      group_mentioned: "<span>%{username}</span> %{description}"
+      quoted: "<span>%{username}</span> %{description}"
+      bookmark_reminder: "<span>%{username}</span> %{description}"
+      replied: "<span>%{username}</span> %{description}"
+      posted: "<span>%{username}</span> %{description}"
+      edited: "<span>%{username}</span> %{description}"
+      liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} e %{count} outro</span> {{description}}"
-        other: "<span>{{username}}, {{username2}} e {{count}} outros</span> {{description}}"
+        one: "<span>%{username}, %{username2} e %{count} outro</span> %{description}"
+        other: "<span>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_consolidated_description:
-        one: "curtiu {{count}} de suas postagens"
-        other: "curtiu {{count}} de suas postagens"
-      liked_consolidated: "<span>{{username}}</span> {{description}}"
-      private_message: "<span>{{username}}</span> {{description}}"
-      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
-      invited_to_topic: "<span>{{username}}</span> {{description}}"
-      invitee_accepted: "<span>{{username}}</span> aceitou o seu convite"
-      moved_post: "<span>{{username}}</span> moveu {{description}}"
-      linked: "<span>{{username}}</span> {{description}}"
-      granted_badge: "Ganhou '{{description}}'"
-      topic_reminder: "<span>{{username}}</span> {{description}}"
-      watching_first_post: "<span>Novo Tópico</span> {{description}}"
-      membership_request_accepted: "Afiliação aceita em '{{group_name}}'"
-      membership_request_consolidated: "{{count}} abre solicitações de associação para '{{group_name}}'"
+        one: "curtiu %{count} de suas postagens"
+        other: "curtiu %{count} de suas postagens"
+      liked_consolidated: "<span>%{username}</span> %{description}"
+      private_message: "<span>%{username}</span> %{description}"
+      invited_to_private_message: "<p><span>%{username}</span> %{description}"
+      invited_to_topic: "<span>%{username}</span> %{description}"
+      invitee_accepted: "<span>%{username}</span> aceitou o seu convite"
+      moved_post: "<span>%{username}</span> moveu %{description}"
+      linked: "<span>%{username}</span> %{description}"
+      granted_badge: "Ganhou '%{description}'"
+      topic_reminder: "<span>%{username}</span> %{description}"
+      watching_first_post: "<span>Novo Tópico</span> %{description}"
+      membership_request_accepted: "Afiliação aceita em '%{group_name}'"
+      membership_request_consolidated: "%{count} abre solicitações de associação para '%{group_name}'"
       group_message_summary:
-        one: "{{count}} mensagem na caixa de entrada de {{group_name}}"
-        other: "{{count}} mensagens na caixa de entrada de {{group_name}}"
+        one: "%{count} mensagem na caixa de entrada de %{group_name}"
+        other: "%{count} mensagens na caixa de entrada de %{group_name}"
       popup:
-        mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'
-        group_mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'
-        quoted: '{{username}} citou você em "{{topic}}" - {{site_title}}'
-        replied: '{{username}} te respondeu em "{{topic}}" - {{site_title}}'
-        posted: '{{username}} postou em "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} te enviou uma mensagem pessoal em "{{topic}}" - {{site_title}}'
-        linked: '{{username}} referenciou a sua postagem em "{{topic}}" - {{site_title}}'
-        watching_first_post: '{{username}} criou um novo tópico "{{topic}}" - {{site_title}}'
+        mentioned: '%{username} mencionou você em "%{topic}" - %{site_title}'
+        group_mentioned: '%{username} mencionou você em "%{topic}" - %{site_title}'
+        quoted: '%{username} citou você em "%{topic}" - %{site_title}'
+        replied: '%{username} te respondeu em "%{topic}" - %{site_title}'
+        posted: '%{username} postou em "%{topic}" - %{site_title}'
+        private_message: '%{username} te enviou uma mensagem pessoal em "%{topic}" - %{site_title}'
+        linked: '%{username} referenciou a sua postagem em "%{topic}" - %{site_title}'
+        watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
         confirm_title: "Notificações habilitadas - %{site_title}"
         confirm_body: "Sucesso! Notificações foram habilitadas."
-        custom: "Notificação de {{username}} em %{site_title}"
+        custom: "Notificação de %{username} em %{site_title}"
       titles:
         mentioned: "mencionado"
         replied: "nova resposta"
@@ -1767,9 +1769,9 @@ pt_BR:
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da Internet"
       remote_tip: "link para imagem"
-      remote_tip_with_attachments: "link para imagem ou arquivo {{authorized_extensions}}"
+      remote_tip_with_attachments: "link para imagem ou arquivo %{authorized_extensions}"
       local_tip: "selecione imagens a partir do seu dispositivo"
-      local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo {{authorized_extensions}}"
+      local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo %{authorized_extensions}"
       hint: "(você também pode arrastar e soltar no editor para enviá-las)"
       hint_for_supported_browsers: "você também pode arrastar e soltar no editor para enviá-las"
       uploading: "Enviando"
@@ -1786,15 +1788,15 @@ pt_BR:
       clear_all: "Limpar Todos"
       too_short: "Seu termo de pesquisa é muito curto."
       result_count:
-        one: "<span>%{count} resultado para</span><span class='term'>{{term}}</span>"
-        other: "<span>{{count}}{{plus}} resultados para</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
+        other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
       title: "pesquisar tópicos, postagens, usuários, ou categorias"
       full_page_title: "pesquisar tópicos ou postagens"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Nenhum outro resultado encontrado."
       searching: "Pesquisando..."
-      post_format: "#{{post_number}} por {{username}}"
-      results_page: "Pesquisar resultados para '{{term}}'"
+      post_format: "#%{post_number} por %{username}"
+      results_page: "Pesquisar resultados para '%{term}'"
       more_results: "Existem mais resultados. Por favor, restrinja os seus critérios de pesquisa."
       cant_find: "Não consegue encontrar o que você está procurando?"
       start_new_topic: "Que tal começar um novo tópico?"
@@ -1803,9 +1805,9 @@ pt_BR:
       search_google_button: "Google"
       search_google_title: "Pesquisar este site"
       context:
-        user: "Pesquisar postagens por @{{username}}"
-        category: "Pesquisar a categoria #{{category}}"
-        tag: "Pesquisar a #{{tag}} etiqueta"
+        user: "Pesquisar postagens por @%{username}"
+        category: "Pesquisar a categoria #%{category}"
+        tag: "Pesquisar a #%{tag} etiqueta"
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
       advanced:
@@ -1882,7 +1884,7 @@ pt_BR:
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
           one: "Você selecionou <b>%{count}</b> tópico."
-          other: "Você selecionou <b>{{count}}</b> tópicos."
+          other: "Você selecionou <b>%{count}</b> tópicos."
         change_tags: "Substituir Etiquetas"
         append_tags: "Adicionar Etiquetas"
         choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
@@ -1895,7 +1897,7 @@ pt_BR:
         posted: "Você ainda não postou em nenhum tópico."
         latest: "Não há últimos tópicos. Isto é triste."
         bookmarks: "Você ainda não tem nenhum tópico favorito."
-        category: "Não há tópicos na categoria {{category}}."
+        category: "Não há tópicos na categoria %{category}."
         top: "Não há melhores tópicos."
         educate:
           new: '<p>Seus novos tópicos aparecem aqui.</p><p>Por padrão, tópicos são considerados novos e mostrarão um indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se eles foram criados nos últimos 2 dias.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para alterar isto.</p>'
@@ -1906,13 +1908,13 @@ pt_BR:
         read: "Não há mais tópicos lidos."
         new: "Não há mais tópicos novos."
         unread: "Não há mais tópicos não lidos."
-        category: "Não há mais tópicos na categoria {{category}}."
+        category: "Não há mais tópicos na categoria %{category}."
         top: "Não há mais melhores tópicos."
         bookmarks: "Não há mais tópicos favoritos."
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
-        other: "{{count}} postagens no tópico"
+        other: "%{count} postagens no tópico"
       create: "Novo Tópico"
       create_long: "Criar um novo Tópico"
       open_draft: "Rascunho Aberto"
@@ -1941,10 +1943,10 @@ pt_BR:
       unread: "não lido"
       new_topics:
         one: "%{count} tópico novo"
-        other: "{{count}} tópicos novos"
+        other: "%{count} tópicos novos"
       unread_topics:
         one: "%{count} tópico não lido"
-        other: "{{count}} tópicos não lidos"
+        other: "%{count} tópicos não lidos"
       title: "Tópico"
       invalid_access:
         title: "Tópico é privado"
@@ -1958,24 +1960,24 @@ pt_BR:
         description: "Desculpe, não foi possível encontrar aquele tópico. Talvez ele tenha sido removido por um moderador?"
       total_unread_posts:
         one: "você tem %{count} postagem não lida neste tópico"
-        other: "você tem {{count}} postagens não lidas neste tópico"
+        other: "você tem %{count} postagens não lidas neste tópico"
       unread_posts:
         one: "você tem %{count} postagem antiga não lida neste tópico"
-        other: "você tem {{count}} postagens antigas não lidas neste tópico"
+        other: "você tem %{count} postagens antigas não lidas neste tópico"
       new_posts:
         one: "há %{count} postagem nova neste tópico desde a sua última leitura"
-        other: "há {{count}} postagens novas neste tópico desde a sua última leitura"
+        other: "há %{count} postagens novas neste tópico desde a sua última leitura"
       likes:
         one: "há %{count} curtida neste tópico"
-        other: "há {{count}} curtidas neste tópico"
+        other: "há %{count} curtidas neste tópico"
       back_to_list: "Voltar para a Lista de Tópicos"
       options: "Opções de Tópico"
       show_links: "mostrar links dentro deste tópico"
       toggle_information: "alternar detalhes do tópico"
-      read_more_in_category: "Quer ler mais? Veja outros tópicos em {{catLink}} ou {{latestLink}}."
-      read_more: "Quer ler mais? {{catLink}} ou {{latestLink}}."
-      group_request: "Você precisa solicitar filiação ao grupo `{{name}}` para ver este tópico"
-      group_join: "Você precisa juntar-se ao grupo `{{name}}` para ver este tópico"
+      read_more_in_category: "Quer ler mais? Veja outros tópicos em %{catLink} ou %{latestLink}."
+      read_more: "Quer ler mais? %{catLink} ou %{latestLink}."
+      group_request: "Você precisa solicitar filiação ao grupo `%{name}` para ver este tópico"
+      group_join: "Você precisa juntar-se ao grupo `%{name}` para ver este tópico"
       group_request_sent: "Sua solicitação de filiação ao grupo foi enviada. Você será informado(a) quando ela for aceita."
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
       read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 não lido</a> } other { <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
@@ -2079,7 +2081,7 @@ pt_BR:
           "2_8": "Você verá uma contagem de novas respostas porque está acompanhando esta categoria."
           "2_4": "Você verá uma contagem de novas respostas porque postou uma resposta a este tópico."
           "2_2": "Você verá uma contagem de novas respostas porque está acompanhando este tópico."
-          "2": 'Você verá uma contagem de novas respostas porque <a href="{{basePath}}/u/{{username}}/preferences/notifications">leu este tópico</a>.'
+          "2": 'Você verá uma contagem de novas respostas porque <a href="%{basePath}/u/%{username}/preferences/notifications">leu este tópico</a>.'
           "1_2": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "1": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "0_7": "Você está ignorando todas as notificações nesta categoria."
@@ -2155,25 +2157,25 @@ pt_BR:
         choose_category: "Por favor, escolha uma categoria para o tópico público:"
       feature_topic:
         title: "Destacar este tópico"
-        pin: "Fazer que este tópico apareça no topo da categoria {{categoryLink}} até"
-        confirm_pin: "Você já tem {{count}} tópicos fixos. Muitos tópicos fixados podem atrapalhar usuários novos e anônimos. Tem certeza que quer fixar outro tópico nesta categoria?"
-        unpin: "Remover este tópico do inicio da {{categoryLink}} categoria."
-        unpin_until: "Remover este tópico do topo da categoria {{categoryLink}} ou esperar até <strong>%{until}</strong>."
+        pin: "Fazer que este tópico apareça no topo da categoria %{categoryLink} até"
+        confirm_pin: "Você já tem %{count} tópicos fixos. Muitos tópicos fixados podem atrapalhar usuários novos e anônimos. Tem certeza que quer fixar outro tópico nesta categoria?"
+        unpin: "Remover este tópico do inicio da %{categoryLink} categoria."
+        unpin_until: "Remover este tópico do topo da categoria %{categoryLink} ou esperar até <strong>%{until}</strong>."
         pin_note: "Usuários podem desafixar o tópico individualmente para si."
         pin_validation: "Uma data é necessária para fixar este tópico."
-        not_pinned: "Não existem tópicos fixados em {{categoryLink}}."
+        not_pinned: "Não existem tópicos fixados em %{categoryLink}."
         already_pinned:
-          one: "Tópicos fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Tópicos fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "Tópicos fixados em %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "Tópicos fixados em %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Fazer com que este tópico apareça no topo de todas listas de tópicos até"
-        confirm_pin_globally: "Você já tem {{count}} tópicos fixados globalmente. Muitos tópicos fixados podem prejudicar usuários novos e anônimos. Tem certeza que quer fixar outro tópico globalmente?"
+        confirm_pin_globally: "Você já tem %{count} tópicos fixados globalmente. Muitos tópicos fixados podem prejudicar usuários novos e anônimos. Tem certeza que quer fixar outro tópico globalmente?"
         unpin_globally: "Remover este tópico do inicio de todas as listas de tópicos."
         unpin_globally_until: "Remover este tópico do topo de todas listagens de tópicos ou esperar até <strong>%{until}</strong>."
         global_pin_note: "Usuários podem desafixar o tópico individualmente para si."
         not_pinned_globally: "Não existem tópicos fixados globalmente."
         already_pinned_globally:
-          one: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>."
-          other: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>."
+          other: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "Tornar este tópico em um banner que apareça no inicio de todas as páginas."
         remove_banner: "Remover o banner que aparece no inicio de todas as páginas."
         banner_note: "Usuários podem dispensar o banner fechando-o. Apenas um tópico pode ser colocado como banner a cada momento."
@@ -2201,17 +2203,17 @@ pt_BR:
         to_topic_blank: "Entrar o nome de usuário ou endereço de e-mail da pessoa que você gostaria de convidar para este tópico."
         to_topic_email: "Você digitou um endereço de e-mail. Nós enviaremos um convite por e-mail que permite seu amigo responder imediatamente a este tópico."
         to_topic_username: "Você inseriu um nome de usuário. Nós vamos enviar uma notificação com um link convidando-o para este tópico."
-        to_username: "Insira o nome de usuário da pessoa que você gostaria de convidas. Nós vamos enviar uma notificação com um link convidando-o para este tópico."
+        to_username: "Insira o nome de usuário da pessoa que você gostaria de convidar. Nós vamos enviar uma notificação com um link convidando-o para este tópico."
         email_placeholder: "nome@exemplo.com"
-        success_email: "Enviamos um convite para <b>{{emailOrUsername}}</b>. Nós notificaremos você quando este convite for resgatado. Verifique a aba de convites na página de seu usuário para acompanhar seus convites."
+        success_email: "Enviamos um convite para <b>%{emailOrUsername}</b>. Nós notificaremos você quando este convite for resgatado. Verifique a aba de convites na página de seu usuário para acompanhar seus convites."
         success_username: "Nós convidamos o usuário para participar neste tópico."
         error: "Desculpe, nós não pudemos convidar esta pessoa. Talvez já seja usuário? (convites têm taxa limitada)"
-        success_existing_email: "Um usuário com e-mail <b>{{emailOrUsername}}</b> já existe. Convidamos este usuário a participar deste tópico."
+        success_existing_email: "Um usuário com e-mail <b>%{emailOrUsername}</b> já existe. Convidamos este usuário a participar deste tópico."
       login_reply: "Logar para Responder"
       filters:
         n_posts:
           one: "%{count} mensagem"
-          other: "{{count}} mensagens"
+          other: "%{count} mensagens"
         cancel: "Remover filtro"
       move_to:
         title: "Mover para"
@@ -2225,15 +2227,15 @@ pt_BR:
         error: "Houve um erro ao mover as mensagens para o novo tópico."
         instructions:
           one: "Você está prestes a criar um novo tópico e populá-lo com a resposta que você selecionou."
-          other: "Você está prestes a criar um novo tópico e populá-lo com as <b>{{count}}</b> respostas que você selecionou."
+          other: "Você está prestes a criar um novo tópico e populá-lo com as <b>%{count}</b> respostas que você selecionou."
       merge_topic:
         title: "Mover para tópico já existente"
         action: "mover para tópico já existente"
         error: "Houve um erro ao mover as mensagens para aquele tópico."
         radio_label: "Tópico Existente"
         instructions:
-          one: "Por favor selecione o tópico para o qual você gostaria de mover esta resposta."
-          other: "Por favor selecione o tópico para o qual você gostaria de mover estas <b>{{count}}</b> respostas."
+          one: "Por favor selecione o tópico para o qual você gostaria de mover esta postagem."
+          other: "Por favor selecione o tópico para o qual você gostaria de mover estas <b>%{count}</b> postagens."
       move_to_new_message:
         title: "Mover para Nova Mensagem"
         action: "mover para nova mensagem"
@@ -2242,7 +2244,7 @@ pt_BR:
         participants: "Participantes"
         instructions:
           one: "Você está prestes a criar uma nova mensagem e preenchê-la com a postagem que você selecionou."
-          other: "Você está prestes a criar uma nova mensagem e preenchê-la com as <b>{{count}}</b>postagens que você selecionou."
+          other: "Você está prestes a criar uma nova mensagem e preenchê-la com as <b>%{count}</b> postagens que você selecionou."
       move_to_existing_message:
         title: "Mover para Mensagem Existente"
         action: "mover para mensagem existente"
@@ -2250,7 +2252,7 @@ pt_BR:
         participants: "Participantes"
         instructions:
           one: "Por favor escolha a mensagem para a qual você gostaria de mover aquela postagem."
-          other: "Por favor escolha a mensagem para a qual você gostaria de mover aquelas <b>{{count}}</b> postagens."
+          other: "Por favor escolha a mensagem para a qual você gostaria de mover aquelas <b>%{count}</b> postagens."
       merge_posts:
         title: "Unificar as Mensagens Selecionadas"
         action: "unificar as mensagens selecionadas"
@@ -2273,11 +2275,11 @@ pt_BR:
         error: "Houve um erro ao alterar o autor destas mensagens."
         placeholder: "novo autor"
         instructions:
-          one: "Por favor escolha um novo autor para a postagem de <b>@{{old_user}}</b>"
-          other: "Por favor escolha um novo autor para as {{count}} postagens de <b>@{{old_user}}</b>"
+          one: "Por favor escolha um novo autor para a postagem de <b>@%{old_user}</b>"
+          other: "Por favor escolha um novo autor para as %{count} postagens de <b>@%{old_user}</b>"
         instructions_without_old_user:
           one: "Escolha um novo proprietário para a postagem"
-          other: "Escolha um novo proprietário para as {{count}} postagens"
+          other: "Escolha um novo proprietário para as %{count} postagens"
       change_timestamp:
         title: "Alterar o timestamp ..."
         action: "alterar horário"
@@ -2286,7 +2288,7 @@ pt_BR:
         instructions: "Por favor selecione um novo horário para o tópico. Mensagens no tópico serão atualizadas para manter a mesma diferença de tempo."
       multi_select:
         select: "selecionar"
-        selected: "({{count}}) selecionados"
+        selected: "(%{count}) selecionados"
         select_post:
           label: "selecione"
           title: "Adicionar postagem à seleção"
@@ -2305,20 +2307,20 @@ pt_BR:
         deselect_all: deselecionar tudo
         description:
           one: <b>%{count}</b> resposta selecionada.
-          other: "<b>{{count}}</b> respostas selecionadas."
+          other: "<b>%{count}</b> respostas selecionadas."
       deleted_by_author:
         one: "(tópico retirado pelo autor, será automaticamente excluído em %{count} hora a menos que seja sinalizado)"
         other: "(tópico retirado pelo autor, será automaticamente excluído em %{count} horas a menos que seja sinalizado)"
     post:
       quote_reply: "Citação"
       edit_reason: "Motivo:"
-      post_number: "resposta {{number}}"
+      post_number: "resposta %{number}"
       ignored: "Conteúdo ignorado"
       wiki_last_edited_on: "wiki última vez editada em"
       last_edited_on: "resposta editada pela última vez em"
       reply_as_new_topic: "Responder como um Tópico linkado"
       reply_as_new_private_message: "Responder como nova mensagem aos mesmos destinatários"
-      continue_discussion: "Continuando a discussão do {{postLink}}:"
+      continue_discussion: "Continuando a discussão do %{postLink}:"
       follow_quote: "ir para a resposta citada"
       show_full: "Exibir mensagem completa"
       show_hidden: "Ver o conteúdo ignorado."
@@ -2330,29 +2332,29 @@ pt_BR:
       locked: "um membro da equipe bloqueou este post de ser editado"
       gap:
         one: "ver %{count} resposta oculta"
-        other: "ver {{count}} respostas ocultas"
+        other: "ver %{count} respostas ocultas"
       notice:
-        new_user: "Esta é a primeira vez que o {{user}} postou — Vamos dar boas vindas da nossa comunidade"
-        returning_user: "Já faz um tempo desde que vimos {{user}} — Seu ultimo poste foi {{time}}."
+        new_user: "Esta é a primeira vez que o %{user} postou — Vamos dar boas vindas da nossa comunidade"
+        returning_user: "Já faz um tempo desde que vimos %{user} — Seu ultimo poste foi %{time}."
       unread: "Resposta não lida"
       has_replies:
-        one: "{{count}} Resposta"
-        other: "{{count}} Respostas"
+        one: "%{count} Resposta"
+        other: "%{count} Respostas"
       has_likes_title:
-        one: "{{count}} pessoa curtiu esta mensagem"
-        other: "{{count}} pessoas curtiram esta mensagem"
+        one: "%{count} pessoa curtiu esta postagem"
+        other: "%{count} pessoas curtiram esta postagem"
       has_likes_title_only_you: "você curtiu esta postagem"
       has_likes_title_you:
-        one: "você e mais %{count} pessoa gostaram desta postagem"
-        other: "você e mais {{count}} outras pessoas gostaram desta postagem"
+        one: "você e mais %{count} pessoa curtiram esta postagem"
+        other: "você e mais %{count} outras pessoas curtiram esta postagem"
       errors:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
         upload: "Desculpe, houve um erro ao enviar este arquivo. Por favor, tente outra vez."
-        file_too_large: "Desculpe, este arquivo é muito grande (o tamanho máximo é {{max_size_kb}}kb). Por que não faz o upload de seu arquivo grande em um serviço de nuvem e compartilha o link?"
+        file_too_large: "Desculpe, este arquivo é muito grande (o tamanho máximo é %{max_size_kb}kb). Por que não faz o upload de seu arquivo grande em um serviço de nuvem e compartilha o link?"
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
-        too_many_dragged_and_dropped_files: "Desculpe, você só pode enviar {{max}} arquivos de uma vez."
-        upload_not_authorized: "Desculpe, o arquivo que você está tentando enviar não é permitido (extensões permitidas: {{authorized_extensions}})."
+        too_many_dragged_and_dropped_files: "Desculpe, você só pode enviar %{max} arquivos de uma vez."
+        upload_not_authorized: "Desculpe, o arquivo que você está tentando enviar não é permitido (extensões permitidas: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa estar logado para baixar arquivos anexos."
@@ -2392,10 +2394,10 @@ pt_BR:
           confirm: "Você também deseja excluir as respostas desta postagem?"
           direct_replies:
             one: "Sim e %{count} resposta direta"
-            other: "Sim e {{count}} respostas diretas"
+            other: "Sim e %{count} respostas diretas"
           all_replies:
             one: "Sim e %{count} resposta"
-            other: "Sim, e todas as {{count}} respostas"
+            other: "Sim, e todas as %{count} respostas"
           just_the_post: "Não, apenas este post"
         admin: "ações administrativas da postagem"
         wiki: "Tornar Wiki"
@@ -2427,7 +2429,7 @@ pt_BR:
           spam: "Desfazer sinalização"
           inappropriate: "Desfazer sinalização"
           bookmark: "Remover favorito"
-          like: "Descurtir"
+          like: "Desfazer curtida"
         people:
           off_topic: "marcado como off-topic"
           spam: "marcado como spam"
@@ -2436,17 +2438,17 @@ pt_BR:
           notify_user: "enviou uma mensagem"
           bookmark: "favoritaram isto"
           like:
-            one: "gostou disto"
-            other: "gostaram disto"
+            one: "curtiu"
+            other: "curtiram"
           read:
             one: "leu isto"
             other: "Leram isto"
           like_capped:
-            one: "e {{count}} outro gostou disto"
-            other: "e {{count}} outros gostaram disto"
+            one: "e %{count} outro curtiu"
+            other: "e %{count} outros curtiram"
           read_capped:
-            one: "e {{count}} outra leu isto"
-            other: "e {{count}} outras leram isto"
+            one: "e %{count} outra leu isto"
+            other: "e %{count} outras leram isto"
         by_you:
           off_topic: "Você sinalizou isto como off-topic"
           spam: "Você sinalizou isto como spam"
@@ -2458,11 +2460,11 @@ pt_BR:
       delete:
         confirm:
           one: "Tem certeza de que deseja excluir esta postagem?"
-          other: "Tem certeza de que deseja excluir as postagens de {{count}}?"
+          other: "Tem certeza de que deseja excluir as postagens de %{count}?"
       merge:
         confirm:
           one: "Tem certeza de que deseja mesclar estas postagens?"
-          other: "Tem certeza de que deseja mesclar estas postagens de {{count}}?"
+          other: "Tem certeza de que deseja mesclar estas postagens de %{count}?"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -2474,7 +2476,7 @@ pt_BR:
           revert: "Reverter para esta revisão"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Postagem"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}} <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
             title: "Exibir a saída renderizada com adições e remoções em linha"
@@ -2665,13 +2667,13 @@ pt_BR:
       custom_message:
         at_least:
           one: "insira pelo menos %{count} caractere"
-          other: "insira pelo menos {{count}} caracteres"
+          other: "insira pelo menos %{count} caracteres"
         more:
           one: "Falta apenas %{count}..."
-          other: "Faltam {{count}}..."
+          other: "Faltam %{count}..."
         left:
           one: "%{count} restante"
-          other: "{{count}} restantes"
+          other: "%{count} restantes"
     flagging_topic:
       title: "Obrigado por ajudar a manter a civilidade da nossa comunidade!"
       action: "Sinalizar Tópico"
@@ -2715,7 +2717,7 @@ pt_BR:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Postagens"
-    posts_long: "há {{number}} mensagens neste tópico"
+    posts_long: "há %{number} mensagens neste tópico"
     posts_likes_MF: |
       Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
       low {com uma proporção alta de curtidas}
@@ -2730,20 +2732,20 @@ pt_BR:
     replies: "Respostas"
     views_long:
       one: "este tópico foi visto uma vez"
-      other: "este tópico foi visto {{number}} vezes"
+      other: "este tópico foi visto %{number} vezes"
     activity: "Atividade"
     likes: "Curtidas"
     likes_lowercase:
       one: "like"
-      other: "likes"
-    likes_long: "há {{number}} curtidas neste tópico"
+      other: "curtidas"
+    likes_long: "há %{number} curtidas neste tópico"
     users: "Usuários"
     users_lowercase:
       one: "usuário"
       other: "usuários"
     category_title: "Categoria"
     history: "Histórico"
-    changed_by: "por {{author}}"
+    changed_by: "por %{author}"
     raw_email:
       title: "Detalhes dos Emails Recebidos"
       not_available: "Não disponível!"
@@ -2755,33 +2757,33 @@ pt_BR:
         title: "Recente"
         title_with_count:
           one: "Recente (%{count})"
-          other: "Recentes ({{count}})"
+          other: "Recentes (%{count})"
         help: "tópicos com mensagens recentes"
       read:
         title: "Lido"
         help: "tópicos que você leu"
       categories:
         title: "Categorias"
-        title_in: "Categoria - {{categoryName}}"
+        title_in: "Categoria - %{categoryName}"
         help: "todos os tópicos agrupados por categoria"
       unread:
         title: "Não lidas"
         title_with_count:
           one: "Não lido (%{count})"
-          other: "Não lidos ({{count}})"
+          other: "Não lidos (%{count})"
         help: "tópicos que você está observando ou acompanhando com mensagens não lidas"
         lower_title_with_count:
           one: "%{count} não lido"
-          other: "{{count}} não lidos"
+          other: "%{count} não lidos"
       new:
         lower_title_with_count:
           one: "%{count} nova"
-          other: "{{count}} novas"
+          other: "%{count} novas"
         lower_title: "nova"
         title: "Novo"
         title_with_count:
           one: "Novo (%{count})"
-          other: "Novos ({{count}})"
+          other: "Novos (%{count})"
         help: "tópicos criados nos últimos dias"
       posted:
         title: "Minhas mensagens"
@@ -2790,11 +2792,11 @@ pt_BR:
         title: "Favoritos"
         help: "tópicos que você adicionou aos favoritos"
       category:
-        title: "{{categoryName}}"
+        title: "%{categoryName}"
         title_with_count:
-          one: "{{categoryName}} (%{count})"
-          other: "{{categoryName}} ({{count}})"
-        help: "tópicos recentes na categoria {{categoryName}}"
+          one: "%{categoryName} (%{count})"
+          other: "%{categoryName} (%{count})"
+        help: "tópicos recentes na categoria %{categoryName}"
       top:
         title: "Melhores"
         help: "os tópicos mais ativos no último ano, mês, semana ou dia"
@@ -2896,7 +2898,7 @@ pt_BR:
         reply_topic: "%{shortcut} Responder ao tópico"
         reply_post: "%{shortcut} Responder a mensagem"
         quote_post: "%{shortcut} Citar resposta"
-        like: "%{shortcut} Curtir a mensagem"
+        like: "%{shortcut} Curtir a postagem"
         flag: "%{shortcut} Sinalizar mensagem"
         bookmark: "%{shortcut} Favoritar mensagem"
         edit: "%{shortcut} Editar mensagem"
@@ -2919,7 +2921,7 @@ pt_BR:
       granted_on: "Concedido em %{date}"
       others_count: "Outros com este emblema (%{count})"
       title: Emblemas
-      allow_title: "Você pode usar este selo como um título"
+      allow_title: "Você pode usar este emblema como um título"
       multiple_grant: "Você pode ganhar isto várias vezes"
       badge_count:
         one: "%{count} Emblema"
@@ -2932,7 +2934,7 @@ pt_BR:
         other: "%{count} concedidos"
       select_badge_for_title: Selecione um emblema para usar como o seu título
       none: "(nenhum)"
-      successfully_granted: "Concedido com sucesso %{badge} to %{username}"
+      successfully_granted: "%{badge} concedido com sucesso para %{username}"
       badge_grouping:
         getting_started:
           name: Primeiros Passos
@@ -2958,8 +2960,8 @@ pt_BR:
       synonyms: "Sinônimos"
       synonyms_description: "Quando as seguintes etiquetas forem usadas, eles serão substituídas por <b>%{base_tag_name}</b>."
       tag_groups_info:
-        one: 'Esta etiqueta pertence a este grupo: {{tag_groups}}.'
-        other: "Esta etiqueta pertence a estes grupos: {{tag_groups}}."
+        one: 'Esta etiqueta pertence a este grupo: %{tag_groups}.'
+        other: "Esta etiqueta pertence a estes grupos: %{tag_groups}."
       category_restrictions:
         one: "Pode ser usada nesta categoria:"
         other: "Pode ser usada nestas categorias:"
@@ -2975,11 +2977,11 @@ pt_BR:
       delete_tag: "Apagar marcação"
       delete_confirm:
         one: "Tem certeza de que deseja excluir esta tag e removê-la de um tópico para o qual ela está atribuída?"
-        other: "Tem certeza de que deseja excluir esta tag e removê-la de {{count}} tópicos aos quais ela está atribuída?"
+        other: "Tem certeza de que deseja excluir esta tag e removê-la de %{count} tópicos aos quais ela está atribuída?"
       delete_confirm_no_topics: "Tem certeza de que deseja excluir esta tag?"
       delete_confirm_synonyms:
         one: "O sinônimo dela também será excluído."
-        other: "Os {{count}} sinônimos dela também serão excluídos."
+        other: "Os %{count} sinônimos dela também serão excluídos."
       rename_tag: "Renomear marcador"
       rename_instructions: "Escolha um novo nome para o marcador"
       sort_by: "Ordenar por"
@@ -3337,10 +3339,10 @@ pt_BR:
           redeliver: "Entregar novamente"
           incoming:
             one: "Existe um novo evento."
-            other: "Existem {{count}} novos eventos."
+            other: "Existem %{count} novos eventos."
           completed_in:
             one: "Completado em %{count} segundo."
-            other: "Completado em {{count}} segundos."
+            other: "Completado em %{count} segundos."
           request: "Requisição"
           response: "Resposta"
           redeliver_confirm: "Tem certeza que deseja enviar o mesmo payload novamente?"
@@ -3392,12 +3394,12 @@ pt_BR:
           label: "Enviar"
           title: "Enviar um backup para esta instância"
           uploading: "Enviando..."
-          uploading_progress: "Enviando... {{progress}}%"
-          success: "'{{filename}} foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
-          error: "Houve um erro ao carregar '{{filename}}': {{message}}"
+          uploading_progress: "Enviando... %{progress}%"
+          success: "'%{filename} foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
+          error: "Houve um erro ao carregar '%{filename}': %{message}"
         operations:
           is_running: "Uma operação está sendo executada..."
-          failed: "A {{operação}} falhou. Por favor, cheque os registros."
+          failed: "A %{operação} falhou. Por favor, cheque os registros."
           cancel:
             label: "Cancelar"
             title: "Cancelar a operação atual"
@@ -3520,7 +3522,7 @@ pt_BR:
           disabled_component_tooltip: "Este componente foi desabilitado"
           default_theme_tooltip: "Este tema é o tema padrão do site"
           updates_available_tooltip: "Atualizações estão disponíveis para este tema"
-          and_x_more: "e {{count}} mais."
+          and_x_more: "e %{count} mais."
           collapse: Recolher
           uploads: "Uploads"
           no_uploads: "Você pode fazer upload de recursos associados ao seu tema, como fontes e imagens"
@@ -3569,8 +3571,8 @@ pt_BR:
           disabled_by: "Este componente foi desabilitado por"
           required_version:
             error: "Este tema foi desabilitado automaticamente porque ele não é compatível com esta versão do Discourse."
-            minimum: "Requer versão {{version}} ou acima do Discourse."
-            maximum: "Requer versão {{version}} ou abaixo do Discourse."
+            minimum: "Requer versão %{version} ou acima do Discourse."
+            maximum: "Requer versão %{version} ou abaixo do Discourse."
           component_of: "Componente de:"
           update_to_latest: "Atualize para o mais recente"
           check_for_updates: "Verificar Atualizações"
@@ -3583,7 +3585,7 @@ pt_BR:
           empty: "Nenhum item"
           commits_behind:
             one: "O tema é %{count} commit por trás!"
-            other: "o tema é {{count}} confirmado por trás"
+            other: "o tema é %{count} confirmado por trás"
           compare_commits: "(Ver novos commits)"
           repo_unreachable: "Não foi possível contatar o repositório Git deste tema. Mensagem de erro:"
           imported_from_archive: "Este tema foi importado de um arquivo \".zip\""
@@ -3808,9 +3810,9 @@ pt_BR:
             delete_category: "apagar a categoria"
             create_category: "criar uma categoria"
             silence_user: "Silenciar usuário"
-            unsilence_user: "não silenciar usuário"
+            unsilence_user: "remover silenciamento de usuário usuário"
             removed_silence_user: "Silenciar usuário (removido)"
-            removed_unsilence_user: "não silenciar usuário (removido)"
+            removed_unsilence_user: "remover silenciamento de usuário (removido)"
             grant_admin: "conceder admin"
             revoke_admin: "revogar admin"
             grant_moderation: "conceder moderação"
@@ -3988,8 +3990,8 @@ pt_BR:
           title: "Mostrar endereço de e-mail deste usuário"
           text: "Mostrar"
       user:
-        suspend_failed: "Algo deu errado suspendendo este usuário {{error}}"
-        unsuspend_failed: "Algo deu errado reativando este usuário {{error}}"
+        suspend_failed: "Algo deu errado suspendendo este usuário %{error}"
+        unsuspend_failed: "Algo deu errado reativando este usuário %{error}"
         suspend_duration: "Por quanto tempo o usuário deverá ser suspenso?"
         suspend_reason_label: "Por que você está suspendendo? Este texto <b>será visível para todos</b> na página de perfil deste usuário, e será mostrado ao usuário quando ele tentar se logar. Seja breve."
         suspend_reason_hidden_label: "Por que você está suspendendo? Este texto será exibido para o usuário quando ele tentar efetuar login. Mantenha-o curto."
@@ -4011,7 +4013,7 @@ pt_BR:
         delete_all_posts: "Apagar todas mensagens"
         delete_posts_progress: "Excluindo postagens…"
         delete_posts_failed: "Houve um problema excluindo as postagens."
-        penalty_post_actions: "O que você gostaria de fazer com o post associado?"
+        penalty_post_actions: "O que você gostaria de fazer com a postagem associada?"
         penalty_post_delete: "Excluir a postagem"
         penalty_post_delete_replies: "Excluir a postagem + quaisquer respostas"
         penalty_post_edit: "editar a publicação"
@@ -4022,7 +4024,7 @@ pt_BR:
           description: "usuários com penalidades não podem alcançar TL3"
         delete_all_posts_confirm_MF: "Você está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} and {TOPICS, plural, one {1 tópico} other {# tópicos}}. Você tem certeza?"
         silence: "Silenciar"
-        unsilence: "Não silenciar"
+        unsilence: "Remover silenciamento"
         silenced: "Silenciado?"
         moderator: "Moderador?"
         admin: "Admin?"
@@ -4033,7 +4035,7 @@ pt_BR:
         impersonate: "Personificar"
         action_logs: "Registro de Atividades"
         ip_lookup: "Pesquisa do IP"
-        log_out: "Log Out"
+        log_out: "Sair"
         logged_out: "Usuário foi desconectado em todos os dipositivos"
         revoke_admin: "Revogar Admin"
         grant_admin: "Conceder Admin"
@@ -4048,7 +4050,7 @@ pt_BR:
         reputation: Reputação
         permissions: Permissões
         activity: Atividade
-        like_count: Curtidas dados / recebidos
+        like_count: Curtidas dadas / recebidas
         last_100_days: "nos últimos 100 dias"
         private_topics_count: Tópicos Privados
         posts_read_count: Mensagens lidas
@@ -4159,8 +4161,8 @@ pt_BR:
           posts_read_all_time: "Posts Lidos (todo o período)"
           flagged_posts: "Mensagens Sinalizadas"
           flagged_by_users: "Usuários que foram denunciados"
-          likes_given: "Curtidas dados"
-          likes_received: "Curtidas recebidos"
+          likes_given: "Curtidas dadas"
+          likes_received: "Curtidas recebidas"
           likes_received_days: "Curtidas recebidas: dias únicos"
           likes_received_users: "Curtidas recebidas: usuários únicos"
           suspended: "Suspenso (últimos 6 meses)"
@@ -4215,7 +4217,7 @@ pt_BR:
           dropdown: "Caixa de seleção"
       site_text:
         description: "Você pode personalizar qualquer parte do texto em seu fórum. Por favor, comece pesquisando abaixo:"
-        search: "Procure peloo texto que você gostaria de editar"
+        search: "Procure pelo texto que você gostaria de editar"
         title: "Texto"
         edit: "editar"
         revert: "Reverter alterações"
@@ -4345,7 +4347,7 @@ pt_BR:
           sample: "Exemplo:"
           grant:
             with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> for post in %{link}"
+            with_post: "<span class=\"username\">%{username}</span> por postar em %{link}"
             with_post_time: "<span class=\"username\">%{username}</span> por postar em %{link} às <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> às <span class=\"time\">%{time}</span>"
         badge_intro:
@@ -4366,6 +4368,7 @@ pt_BR:
         title: "Emoji"
         help: "Adicionar novo emoji que estará disponível para todos. (DICA: arraste & solte diversos arquivos de uma vez)"
         add: "Adicionar Novo Emoji"
+        uploading: "Enviando..."
         name: "Nome"
         group: "Grupo"
         image: "Imagem"

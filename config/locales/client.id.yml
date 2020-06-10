@@ -22,8 +22,8 @@ id:
             mb: MB
             tb: TB
       short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
+        thousands: "%{number}k"
+        millions: "%{number}M"
     dates:
       time: "h:mm a"
       time_short_day: "ddd, HH: mm"
@@ -202,10 +202,10 @@ id:
     weekly: "mingguan"
     every_month: "setiap bulan"
     every_six_months: "setiap enam bulan"
-    max_of_count: "maksimal dari {{count}}"
+    max_of_count: "maksimal dari %{count}"
     alternation: "atau"
     character_count:
-      other: "{{count}} karakter"
+      other: "%{count} karakter"
     related_messages:
       title: "Pesan Terkait"
       see_all: 'Lihat <a href="%{path}">semua pesan</a> dari @ %{username} ...'
@@ -256,11 +256,11 @@ id:
         yes_value: "Ya, abaikan"
         no_value: "Tidak, simpan"
     topic_count_latest:
-      other: "Lihat {{count}} topik baru atau diperbarui"
+      other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_unread:
-      other: "Lihat {{count}} topik belum dibaca"
+      other: "Lihat %{count} topik belum dibaca"
     topic_count_new:
-      other: "Lihat {{count}} topik baru"
+      other: "Lihat %{count} topik baru"
     preview: "pratinjau"
     cancel: "batal"
     save: "Simpan Perubahan"
@@ -268,7 +268,7 @@ id:
     saved: "Tersimpan!"
     upload: "Unggah"
     uploading: "Mengunggah..."
-    uploading_filename: "Sedang mengunggah {{filename}}..."
+    uploading_filename: "Sedang mengunggah %{filename}..."
     clipboard: "clipboard"
     uploaded: "Sudah Diunggah!"
     pasting: "Menempelkan..."
@@ -311,7 +311,7 @@ id:
         optional: "Anda dapat mengklaim item ini untuk mencegah orang lain meninjaunya."
         required: "Anda harus mengklaim hal ini sebelum dapat meninjaunya."
         claimed_by_you: "Anda telah mengklaim item ini dan dapat meninjaunya."
-        claimed_by_other: "Item ini hanya dapat ditinjau oleh <b>{{username}}</b> ."
+        claimed_by_other: "Item ini hanya dapat ditinjau oleh <b>%{username}</b> ."
       claim:
         title: "klaim topik ini"
       unclaim:
@@ -328,7 +328,7 @@ id:
       none: "Tidak ada item untuk diulas."
       view_pending: "tampilkan yang tertunda"
       topic_has_pending:
-        other: "Topik ini memiliki <b>{{count}}</b> tulisan menunggu persetujuan"
+        other: "Topik ini memiliki <b>%{count}</b> tulisan menunggu persetujuan"
       title: "Ulasan"
       topic: "Topik:"
       filtered_topic: "Anda telah menyaring ke konten yang dapat ditinjau dalam satu topik."
@@ -344,11 +344,11 @@ id:
         name: "Nama"
       user_percentage:
         agreed:
-          other: "{{count}}% setuju"
+          other: "%{count}% setuju"
         disagreed:
-          other: "{{count}}% tidak setuju"
+          other: "%{count}% tidak setuju"
         ignored:
-          other: "{{count}}% mengabaikan"
+          other: "%{count}% mengabaikan"
       topics:
         topic: "Topik"
         reviewable_count: "Menghitung"
@@ -357,9 +357,9 @@ id:
         original: "(topik asli)"
         details: "detail"
         unique_users:
-          other: "{{count}} pengguna"
+          other: "%{count} pengguna"
       replies:
-        other: "{{count}} balasan"
+        other: "%{count} balasan"
       edit: "Ubah"
       save: "Simpan"
       cancel: "Batal"
@@ -420,22 +420,22 @@ id:
         title: "Pesan Membutuhkan Persetujuan"
         description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
         pending_posts:
-          other: "Anda memiliki <strong>{{count}}</strong> pos sedang menunggu."
+          other: "Anda memiliki <strong>%{count}</strong> pos sedang menunggu."
         ok: "OK"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> memposting <a href='{{topicUrl}}'>topik</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>Anda</a> memposting <a href='{{topicUrl}}'>the topic</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> membalas <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>You</a> membalas <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> membalas <a href='{{topicUrl}}'>topik</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>Anda</a> membalas <a href='{{topicUrl}}'>topik</a>"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> menandai <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> menandai <a href='{{user2Url}}'>Anda</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Anda</a> menandai <a href='{{user2Url}}'>{{another_user}}</a>"
-      posted_by_user: "Dikirim oleh <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "Dikirim oleh <a href='{{userUrl}}'>Anda</a>"
-      sent_by_user: "Dikirim oleh <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "Dikirim oleh <a href='{{userUrl}}'>kamu</a>"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> memposting <a href='%{topicUrl}'>topik</a>"
+      you_posted_topic: "<a href='%{userUrl}'>Anda</a> memposting <a href='%{topicUrl}'>the topic</a>"
+      user_replied_to_post: "<a href='%{userUrl}'>%{user}</a> membalas <a href='%{postUrl}'>%{post_number}</a>"
+      you_replied_to_post: "<a href='%{userUrl}'>You</a> membalas <a href='%{postUrl}'>%{post_number}</a>"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> membalas <a href='%{topicUrl}'>topik</a>"
+      you_replied_to_topic: "<a href='%{userUrl}'>Anda</a> membalas <a href='%{topicUrl}'>topik</a>"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> menandai <a href='%{user2Url}'>%{another_user}</a>"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> menandai <a href='%{user2Url}'>Anda</a>"
+      you_mentioned_user: "<a href='%{user1Url}'>Anda</a> menandai <a href='%{user2Url}'>%{another_user}</a>"
+      posted_by_user: "Dikirim oleh <a href='%{userUrl}'>%{user}</a>"
+      posted_by_you: "Dikirim oleh <a href='%{userUrl}'>Anda</a>"
+      sent_by_user: "Dikirim oleh <a href='%{userUrl}'>%{user}</a>"
+      sent_by_you: "Dikirim oleh <a href='%{userUrl}'>kamu</a>"
     directory:
       filter_name: "Menyaring dari nama pengguna"
       title: "Pengguna"
@@ -654,7 +654,7 @@ id:
     user_fields:
       none: "(memilih sebuah pilihan)"
     user:
-      said: "{{username}}:"
+      said: "%{username}:"
       profile: "Profil"
       mute: "Redam"
       edit: "Ubah Preferensi"
@@ -718,12 +718,12 @@ id:
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
       change: "ubah"
       featured_topic: "Topik Unggulan"
-      moderator: "{{user}} adalah moderator"
-      admin: "{{user}} adalah admin"
+      moderator: "%{user} adalah moderator"
+      admin: "%{user} adalah admin"
       moderator_tooltip: "Pengguna ini adalah moderator"
       admin_tooltip: "Pengguna ini adalah admin"
       silenced_tooltip: "Pengguna ini dibungkam"
-      suspended_notice: "Pengguna ini ditangguhkan sampai {{date}}"
+      suspended_notice: "Pengguna ini ditangguhkan sampai %{date}"
       suspended_permanently: "Pengguna ini dicekal"
       suspended_reason: "Alasan:"
       github_profile: "Github"
@@ -756,7 +756,6 @@ id:
       admin_delete: "Hapus"
       users: "Pengguna"
       muted_users: "Diredam"
-      muted_users_instructions: "Menekan semua pemberitahuan dari semua pengguna."
       ignored_users: "Diabaikan"
       tracked_topics_link: "Tunjukkan"
       apps: "Aplikasi"
@@ -849,9 +848,9 @@ id:
         instructions: "Jangan pernah tunjukkan ke publik."
         ok: "Kami akan mengirimkan surel kepada anda untuk konfirmasi"
         invalid: "Silahkan masukkan alamat email yang valid"
-        authenticated: "Email anda sudah dikonfirmasi oleh {{provider}}"
+        authenticated: "Email anda sudah dikonfirmasi oleh %{provider}"
         frequency:
-          other: "Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama {{count}} menit."
+          other: "Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama %{count} menit."
       associated_accounts:
         title: "Akun Terkait"
         connect: "Hubungkan"
@@ -868,9 +867,9 @@ id:
       username:
         title: "Nama Pengguna"
         instructions: "unik, tidak ada spasi, pendek"
-        short_instructions: "Orang dapat menyebut anda sebagai @{{username}}"
+        short_instructions: "Orang dapat menyebut anda sebagai @%{username}"
         available: "Nama pengguna anda tersedia"
-        not_available: "Tidak tersedia. Coba {{suggestion}}?"
+        not_available: "Tidak tersedia. Coba %{suggestion}?"
         not_available_no_suggestion: "Tidak tersedia"
         too_short: "Nama pengguna anda terlalu pendek"
         too_long: "Nama pengguna anda terlalu panjang"
@@ -949,7 +948,7 @@ id:
         none: "Tidak ada undangan"
         pending: "Undangan yang tertunda"
         pending_tab: "Tertunda"
-        pending_tab_with_count: "Tertunda ({{count}})"
+        pending_tab_with_count: "Tertunda (%{count})"
         topics_entered: "Topik Dilihat"
         posts_read_count: "Tulisan dilihat"
         expired: "Undangan ini sudah kadaluarsa"
@@ -962,12 +961,15 @@ id:
         time_read: "Waktu Baca"
         days_visited: "Hari Berkunjung"
         account_age_days: "Umur akun dalam hari"
-        create: "Kirim Undangan"
+        links_tab: "Tautan"
+        link_created_at: "Dibuat"
+        link_groups: Grup
         generate_link: "Salin Tautan Undangan"
         link_generated: "Tautan undangan telah sukses dibuat!"
         valid_for: "Tautan undangan hanya berlaku untuk alamat surel: %{email}"
+        invite_link:
+          success: "Tautan undangan telah sukses dibuat!"
         bulk_invite:
-          text: "Undangan Massal dari Berkas"
           success: "File telah sukses diunggah, anda akan mendapat pesan pemberitahuan saat proses telah selesai."
           error: "Maaf, file harus dalam format CSV"
       password:
@@ -1038,7 +1040,7 @@ id:
         not_found: "Halaman Tidak Ditemukan"
       desc:
         network: "Harap cek koneksi internet anda"
-        server: "Kode kesalahan: {{status}}"
+        server: "Kode kesalahan: %{status}"
         forbidden: "Anda tidak diijinkan untuk melihatnya"
         unknown: "Terjadi kesalahan"
       buttons:
@@ -1077,7 +1079,7 @@ id:
       hide_session: "Ingat saya besok"
       hide_forever: "tidak, terima kasih"
     summary:
-      description: "Terdapat <b>{{replyCount}}</b> balasan."
+      description: "Terdapat <b>%{replyCount}</b> balasan."
       enable: "Rangkum Topik Ini"
       disable: "Tampilkan Semua Postingan"
     deleted_filter:
@@ -1087,8 +1089,8 @@ id:
       title: "Pesan"
       edit: "Tambah atau Hapus ..."
       leave_message: "Apakah Anda yakin ingin meninggalkan pesan ini?"
-      remove_allowed_user: "Apakah Anda yakin ingin menghapus {{name}} dari pesan ini?"
-      remove_allowed_group: "Apakah Anda yakin ingin menghapus {{name}} dari pesan ini?"
+      remove_allowed_user: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
+      remove_allowed_group: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
     email: "Surel"
     username: "Nama Pengguna"
     last_seen: "Terlihat"
@@ -1175,13 +1177,13 @@ id:
     conditional_loading_section:
       loading: Diproses...
     category_row:
-      topic_count: "{{count}} topik dalam kategori ini"
+      topic_count: "%{count} topik dalam kategori ini"
     select_kit:
       default_header_text: Pilih...
       no_content: Tidak ditemukan yang cocok
       filter_placeholder: Cari...
       filter_placeholder_with_any: Cari atau buat ...
-      create: "Buat: &#39;{{content}}&#39;"
+      create: "Buat: &#39;%{content}&#39;"
     date_time_picker:
       from: Dari
       to: Kepada
@@ -1197,16 +1199,16 @@ id:
       blockquote_text: "Blok Kutipan"
       add_warning: "Ini adalah peringatan resmi."
       similar_topics: "Topik anda mirip dengan..."
-      reference_topic_title: "RE: {{title}}"
+      reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Judul harus ada"
-        title_too_short: "Judul setidaknya {{min}} karakter"
-        title_too_long: "Judul tidak boleh lebih dari {{max}} karakter"
+        title_too_short: "Judul setidaknya %{min} karakter"
+        title_too_long: "Judul tidak boleh lebih dari %{max} karakter"
         post_missing: "Tulisan tidak boleh kosong"
-        post_length: "Tulisan setidaknya harus {{min}} karakter"
-        try_like: "Sudahkah Anda mencoba tombol {{heart}}?"
+        post_length: "Tulisan setidaknya harus %{min} karakter"
+        try_like: "Sudahkah Anda mencoba tombol %{heart}?"
         category_missing: "Anda harus memilih kategori"
-        tags_missing: "Anda harus memilih setidaknya {{count}} label"
+        tags_missing: "Anda harus memilih setidaknya %{count} label"
       save_edit: "Simpah Ubahan"
       reply_original: "Balas pada Topik Asal"
       reply_here: "Balas Disini"
@@ -1272,14 +1274,14 @@ id:
     notifications:
       tooltip:
         message:
-          other: "{{count}} pesan belum dibaca"
+          other: "%{count} pesan belum dibaca"
       title: "pemberitahuan penyebutan @nama, balasan ke artikel dan topik Anda, pesan, dll"
       empty: "Tidak ada pemberitahuan."
       post_approved: "Tulisan Anda telah disetujui"
       liked_consolidated_description:
-        other: "menyukai {{count}} dari tulisan Anda"
-      invitee_accepted: "<span>{{username}}</span> menerima undangan Anda"
-      granted_badge: "Mendapatkan &#39;{{description}}&#39;"
+        other: "menyukai %{count} dari tulisan Anda"
+      invitee_accepted: "<span>%{username}</span> menerima undangan Anda"
+      granted_badge: "Mendapatkan &#39;%{description}&#39;"
       titles:
         mentioned: "disebut"
         replied: "balasan baru"
@@ -1332,7 +1334,7 @@ id:
       list: "Topik"
       new: "topik baru"
       new_topics:
-        other: "{{count}} topik baru"
+        other: "%{count} topik baru"
       title: "Topik"
       invalid_access:
         description: "Maaf, kamu tidak berhak mengakses topik tersebut."
@@ -1341,7 +1343,7 @@ id:
       not_found:
         title: "Tidak ada topik"
       new_posts:
-        other: "ada {{count}} posting baru di topik ini sejak terakhir Anda mengunjunginya"
+        other: "ada %{count} posting baru di topik ini sejak terakhir Anda mengunjunginya"
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
@@ -1481,16 +1483,16 @@ id:
         title: "Belum dibaca"
       new:
         lower_title_with_count:
-          other: "{{count}} baru"
+          other: "%{count} baru"
         lower_title: "baru"
         title: "Baru"
         title_with_count:
-          other: "Baru ({{count}})"
+          other: "Baru (%{count})"
       bookmarks:
         title: "Markah"
       category:
-        title: "{{categoryName}}"
-        help: "topik terakhir di kategori {{categoryName}}"
+        title: "%{categoryName}"
+        help: "topik terakhir di kategori %{categoryName}"
       top:
         all:
           title: "Sepanjang Waktu"
@@ -1785,6 +1787,7 @@ id:
         reason: Alasan
         expand: Perluas &hellip;
       emoji:
+        uploading: "Mengunggah..."
         name: "Nama"
       permalink:
         topic_title: "Topik"

@@ -517,7 +517,7 @@ sk:
       title: "Nevhodné"
       long_form: "toto označ ako nevhodné"
     notify_user:
-      title: "Poslať @{{username}} správu"
+      title: "Poslať @%{username} správu"
       long_form: "úživateľovi bola zaslaná správa"
       email_title: 'Váš príspevok v "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1554,6 +1554,14 @@ sk:
       invites:
         title: "Pozvite členov"
   joined: "Vytvorený"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
+      quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
+      replied: '%{username} vám odpovedal v "%{topic}" - %{site_title}'
+      posted: '%{username} prispel v "%{topic}" - %{site_title}'
+      linked: '%{username} odkázal na váš príspevok z "%{topic}" - %{site_title}'
   reviewables:
     sensitivity:
       disabled: "Vypnuté"

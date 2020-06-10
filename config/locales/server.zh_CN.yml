@@ -761,7 +761,7 @@ zh_CN:
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
       long_form: "标记为不当内容"
     notify_user:
-      title: "给 @{{username}}发送一条私信"
+      title: "给 @%{username}发送一条私信"
       description: "我想亲自与此人私下交流关于该帖子的事情。"
       short_description: "我想亲自与此人私下交流关于该帖子的事情。"
       long_form: "以发送私信给用户"
@@ -1954,7 +1954,7 @@ zh_CN:
         value: "SSO密钥"
   search:
     extreme_load_error: "站点处于高负荷状态，搜索已关闭，稍后再试。"
-    within_post: "#{{post_number}} 由 {{username}}"
+    within_post: "#%{post_number} 由 %{username}"
     types:
       category: "分类"
       topic: "结果"
@@ -2110,6 +2110,7 @@ zh_CN:
       must_not_contain_two_special_chars_in_seq: "必须不包括连续的 2 个或更多的特殊字符（.-_）"
       must_not_end_with_confusing_suffix: "不能以难以分辨的后缀结尾，比如 .json 或者 .png 等"
     email:
+      invalid: "无效。"
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
       blocked: "不被允许。"
       revoked: "在%{date}之前不发送邮件至“%{email}”"
@@ -2640,10 +2641,6 @@ zh_CN:
     email_reject_bad_destination_address:
       title: "Email被拒绝：收件人地址不正确"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未知的发至：地址"
-      text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件消息无法发送。
-
-        无法识别目标邮件地址，或是邮件的 Message-ID 头已被修改。请确认在你正在将邮件发送至工作人员提供的正确的地址中。
     email_reject_old_destination:
       title: "邮件拒绝老地址"
       subject_template: "[%{email_prefix}] 邮件问题 - 你正尝试回复旧通知"

@@ -60,6 +60,9 @@ th:
   next_page: "หน้าถัดไป →"
   prev_page: "← หน้าก่อนหน้า"
   page_num: "หน้า %{num}"
+  bookmarks:
+    reminders:
+      tomorrow: "พรุ่งนี้"
   groups:
     default_names:
       everyone: "ทุกคน"
@@ -112,6 +115,8 @@ th:
       every_hour: "ทุกชั่วโมง"
       daily: "ทุกวัน"
       weekly: "รายสัปดาห์"
+      every_month: "ทุกเดือน"
+      every_six_months: "ทุกหกเดือน"
   reports:
     post_edits:
       labels:
@@ -178,6 +183,7 @@ th:
         user: ผู้ใช้
         location: ที่อยู่
   search:
+    within_post: "#%{post_number} ด้วย %{username}"
     types:
       category: "หมวดหมู่"
       user: "ผู้ใช้"
@@ -186,6 +192,7 @@ th:
       invalid: "มีตัวอักษรที่ไม่สามารถใช้งานได้"
   login:
     admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
+    not_available: "ใช้การไม่ได้ ลอง%{suggestion}?"
   subject_re: "ตอบ: "
   subject_pm: "[PM] "
   user_notifications:
@@ -326,6 +333,14 @@ th:
       emoji:
         title: "Emoji"
   joined: "สมัครสมาชิกเมื่อ"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} พูดถึงคุณใน "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} พูดถึงคุณใน "%{topic}" - %{site_title}'
+      quoted: '%{username} อ้างอิงถึงคุณใน "%{topic}" - %{site_title}'
+      replied: '%{username} ตอบคุณใน "%{topic}" - %{site_title}'
+      posted: '%{username} โพสท์ใน "%{topic}" - %{site_title}'
+      linked: '%{username} ลิงค์โพสของคุณจาก "%{topic}" - %{site_title}'
   reviewables:
     actions:
       delete_spammer:

@@ -609,7 +609,7 @@ ar:
       title: "غير مناسب"
       long_form: "ترفع علم هذا عن صورة غير ملائمة"
     notify_user:
-      title: "أرسل رسالة إلى @{{username}}"
+      title: "أرسل رسالة إلى @%{username}"
       long_form: "العضو أرسل"
       email_title: 'منشورك في "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1814,6 +1814,14 @@ ar:
       finished:
         title: "نسخة دسكورس جاهزة!"
   joined: "انضم"
+  discourse_push_notifications:
+    popup:
+      mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'
+      group_mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'
+      quoted: 'اقتبس %{username} كلامك في "%{topic}" - %{site_title}'
+      replied: 'ردّ %{username} عليك في "%{topic}" - %{site_title}'
+      posted: 'نشر %{username} في "%{topic}" - %{site_title}'
+      linked: '%{username} وضع رابطا لمنشورك في "%{topic}" - %{site_title}'
   reviewables:
     actions:
       agree_and_suspend:

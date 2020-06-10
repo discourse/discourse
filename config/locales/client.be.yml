@@ -21,8 +21,8 @@ be:
             mb: МБ
             tb: ТБ
       short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
+        thousands: "%{number}k"
+        millions: "%{number}M"
     dates:
       time: "HH:mm"
       long_no_year_no_time: "D MMM"
@@ -126,13 +126,13 @@ be:
     weekly: "штотыдзень"
     every_month: "кожны месяц"
     every_six_months: "кожныя паўгады"
-    max_of_count: "Не больш за {{count}}"
+    max_of_count: "Не больш за %{count}"
     alternation: "або"
     character_count:
-      one: "{{Count}} сімвал"
-      few: "{{Count}} сімвалы"
-      many: "{{Count}} сімвалаў"
-      other: "{{Count}} сімвалаў"
+      one: "%{Count} сімвал"
+      few: "%{Count} сімвалы"
+      many: "%{Count} сімвалаў"
+      other: "%{Count} сімвалаў"
     related_messages:
       title: "падобныя паведамленні"
     suggested_topics:
@@ -238,19 +238,19 @@ be:
         title: "Паведамленне мае патрэбу ў падцверджанні"
         ok: "Добра"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'> {{user}} <"
-      you_posted_topic: "<a href='{{userUrl}}'> Вы <"
-      user_replied_to_post: "<a href='{{userUrl}}'> {{user}} <"
-      you_replied_to_post: "<a href='{{userUrl}}'> Вы <"
-      user_replied_to_topic: "<a href='{{userUrl}}'> {{user}} <"
-      you_replied_to_topic: "<a href='{{userUrl}}'> Вы <"
-      user_mentioned_user: "<a href='{{user1Url}}'> {{user}} <"
-      user_mentioned_you: "<a href='{{user1Url}}'> {{user}} <"
-      you_mentioned_user: "<a href='{{user1Url}}'> Вы <"
-      posted_by_user: "Дададзена карыстальнікам <a href='{{userUrl}}'> {{user}} <"
-      posted_by_you: "Дададзена <a href='{{userUrl}}'> Вамі <"
-      sent_by_user: "Адпраўлена карыстальнікам <a href='{{userUrl}}'> {{user}} <"
-      sent_by_you: "Адпраўлена <a href='{{userUrl}}'> Вамі <"
+      user_posted_topic: "<a href='%{userUrl}'> %{user} <"
+      you_posted_topic: "<a href='%{userUrl}'> Вы <"
+      user_replied_to_post: "<a href='%{userUrl}'> %{user} <"
+      you_replied_to_post: "<a href='%{userUrl}'> Вы <"
+      user_replied_to_topic: "<a href='%{userUrl}'> %{user} <"
+      you_replied_to_topic: "<a href='%{userUrl}'> Вы <"
+      user_mentioned_user: "<a href='%{user1Url}'> %{user} <"
+      user_mentioned_you: "<a href='%{user1Url}'> %{user} <"
+      you_mentioned_user: "<a href='%{user1Url}'> Вы <"
+      posted_by_user: "Дададзена карыстальнікам <a href='%{userUrl}'> %{user} <"
+      posted_by_you: "Дададзена <a href='%{userUrl}'> Вамі <"
+      sent_by_user: "Адпраўлена карыстальнікам <a href='%{userUrl}'> %{user} <"
+      sent_by_you: "Адпраўлена <a href='%{userUrl}'> Вамі <"
     directory:
       filter_name: "фільтраваць па імені карыстальніка"
       title: "Карыстальнікі"
@@ -387,7 +387,7 @@ be:
       post_count: "колькасць паведамленняў"
       confirm_delete_other_accounts: "Вы ўпэўненыя, што жадаеце выдаліць гэтых карыстальнікаў?"
     user:
-      said: "{{Username}}"
+      said: "%{Username}"
       profile: "Профіль"
       mute: "Заглушыць"
       edit: "рэдагаваць налады"
@@ -506,7 +506,7 @@ be:
       username:
         title: "Імя карыстальніка"
         available: "Ваша імя даступна"
-        not_available: "Не даступна. Паспрабуеце {{suggestion}}?"
+        not_available: "Не даступна. Паспрабуеце %{suggestion}?"
         too_short: "Ваша імя кароткі"
         too_long: "Ваша імя доўгае"
         checking: "Праверка даступнасці імя карыстальніка ..."
@@ -582,9 +582,9 @@ be:
         time_read: "час чытання"
         days_visited: "дзён наведанае"
         account_age_days: "Ўзрост акаўнта ў днях"
-        create: "адправіць Запрашэнне"
-        bulk_invite:
-          text: "Масавае Запрашэнне з файла"
+        links_tab: "Спасылкі"
+        link_created_at: "створаны"
+        link_groups: Групы
       password:
         title: "Пароль"
         too_short: "Пароль занадта кароткі."
@@ -629,7 +629,7 @@ be:
         unknown: "памылка"
       desc:
         network: "Калі ласка, праверце злучэння."
-        server: "Код памылкі: {{status}}"
+        server: "Код памылкі: %{status}"
         forbidden: "Выбачайце, але гэта пераглядаць."
         unknown: "Нешта пайшло не так."
       buttons:
@@ -704,11 +704,11 @@ be:
       awaiting_activation: "Ваш рахунак чакае актывацыю. Для атрымання яшчэ аднаго актывацыйны лісты выкарыстоўвайце спасылкі Забыўся пароль."
       awaiting_approval: "Ваш рахунак яшчэ не зацверджаны членам каманды. Калі ён будзе актываваны, Вы атрымаеце электронны ліст."
       requires_invite: "Выбачайце, доступ да гэтага форуму - толькі па запрашэннях."
-      not_activated: "Вы яшчэ не можаце ўвайсці ў сістэму. Мы ўжо накіравалі Вам ліст для актывацыі на скрыню <b> {{sentTo}}"
+      not_activated: "Вы яшчэ не можаце ўвайсці ў сістэму. Мы ўжо накіравалі Вам ліст для актывацыі на скрыню <b> %{sentTo}"
       admin_not_allowed_from_ip_address: "Вы не можаце ўвайсці як адміністратар з гэтага IP-адрасу."
       resend_activation_email: "Націсніце тут, каб атрымаць яшчэ адзін ліст з актывацыяй."
       resend_title: "Актываваць зноў"
-      sent_activation_email_again: "Мы накіравалі ў паштовую скрыню <b> {{currentEmail}}"
+      sent_activation_email_again: "Мы накіравалі ў паштовую скрыню <b> %{currentEmail}"
       to_continue: "Калі ласка Увайдзіце"
       not_approved: "Ваш рахунак яшчэ не было прынята. Вы атрымаеце апавяшчэнне па электроннай пошце, калі зможаце ўвайсці ў сістэму."
       google_oauth2:
@@ -759,9 +759,9 @@ be:
       drafts_offline: "чарнавікі у афлайне"
       error:
         title_missing: "Загаловак неабходна"
-        title_too_short: "Загаловак павінен быць мінімум {{min}} сімвалаў"
-        title_too_long: "Загаловак не можа быць менш, чым {{max}} сімвалаў"
-        post_length: "Найменшы памер паведамленні павінна быць {{min}} сімвалаў"
+        title_too_short: "Загаловак павінен быць мінімум %{min} сімвалаў"
+        title_too_long: "Загаловак не можа быць менш, чым %{max} сімвалаў"
+        post_length: "Найменшы памер паведамленні павінна быць %{min} сімвалаў"
         category_missing: "Вы павінны выбраць катэгорыю"
       save_edit: "захаваць змены"
       reply_original: "Адказаць у пачатковай тэме"
@@ -816,8 +816,16 @@ be:
           label: "Стварыць новую тэму"
     notifications:
       popup:
+        mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
+        group_mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
+        quoted: '% {Імя карыстальніка} працытаваў вас у "% {} тэме" -% {SITE_TITLE}'
+        replied: '% {Імя карыстальніка} адказаў вам у "% {} тэме" -% {SITE_TITLE}'
+        posted: '% {Імя карыстальніка} пісаў у "% {} тэме" -% {SITE_TITLE}'
+        linked: '% {Імя карыстальніка} звязана з вашай пасады ад "% {} тэме" -% {SITE_TITLE}'
+        watching_first_post: '% {Імя карыстальніка} стварыў новую тэму "% {тэма}" - {%} SITE_TITLE'
         confirm_title: "Апавяшчэння ўключаная -% {SITE_TITLE}"
         confirm_body: "Поспех! Паведамлення былі ўключаны."
+        custom: "Апавяшчэнне ад% {імя карыстальніка} на {%} SITE_TITLE"
       titles:
         watching_first_post: "новая тэма"
     upload_selector:
@@ -837,6 +845,7 @@ be:
       full_page_title: "пошук тэмаў альбо пастоў"
       no_results: "Нічога не знойдзена."
       searching: "Пошук ..."
+      results_page: "Вынікі пошуку для '%{term}'"
       search_google_button: "Google"
       search_google_title: "Пошук на гэтым сайце"
       context:
@@ -877,7 +886,7 @@ be:
         posted: "Вы яшчэ не дапісвалі ў адну тэму."
         latest: "Апошніх тэм няма. Шкада."
         bookmarks: "У вас пакуль няма тэмаў у закладках."
-        category: "У катэгорыі {{category}} няма тэм."
+        category: "У катэгорыі %{category} няма тэм."
         top: "There are no top topics."
       bottom:
         latest: "Усе апошнія тэмы адлюстраваныя."
@@ -885,7 +894,7 @@ be:
         read: "Больш няма прачытаных тэм."
         new: "Больш няма новых тэм."
         unread: "Больш няма непрачытаных тэм."
-        category: "Больш няма тым у катэгорыі {{category}}."
+        category: "Больш няма тым у катэгорыі %{category}."
         top: "There are no more top topics."
         bookmarks: "Тэмы ў закладках адсутнічаюць."
     topic:
@@ -915,8 +924,8 @@ be:
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
       toggle_information: "паказаць"
-      read_more_in_category: "Хочаце пачытаць яшчэ? Глядзіце іншыя тэмы ў {{catLink}} або {{latestLink}}."
-      read_more: "Хочаце пачытаць яшчэ? {{CatLink}} або {{latestLink}}."
+      read_more_in_category: "Хочаце пачытаць яшчэ? Глядзіце іншыя тэмы ў %{catLink} або %{latestLink}."
+      read_more: "Хочаце пачытаць яшчэ? %{CatLink} або %{latestLink}."
       browse_all_categories: Паглядзець усе катэгорыі
       view_latest_topics: Праглядзіце апошнія тэмы
       suggest_create_topic: "Чаму б не стварыць тэму?"
@@ -1021,6 +1030,7 @@ be:
     post:
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
+        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
       abandon_edit:
         no_value: "Не, пачакайце"
       abandon:
@@ -1138,11 +1148,11 @@ be:
     replies: "адказы"
     activity: "актыўнасць"
     likes: "перавагі"
-    likes_long: "у гэтай тэме {{number}} пераваг"
+    likes_long: "у гэтай тэме %{number} пераваг"
     users: "Карыстальнікі"
     category_title: "Катэгорыя"
     history: "гісторыя"
-    changed_by: "{{Author}}"
+    changed_by: "%{Author}"
     categories_list: "Спіс катэгорый"
     filters:
       latest:
@@ -1153,7 +1163,7 @@ be:
         help: "тэмы, якія вы прачыталі ў парадку, у якім Вы іх чыталі ў апошні раз"
       categories:
         title: "Катэгорыі"
-        title_in: "Катэгорыя - {{categoryName}}"
+        title_in: "Катэгорыя - %{categoryName}"
         help: "усе тэмы згрупаваныя па катэгорыях"
       unread:
         title: "Непрачытаныя"
@@ -1166,8 +1176,8 @@ be:
       bookmarks:
         title: "закладкі"
       category:
-        title: "{{CategoryName}}"
-        help: "Апошнія тэмы ў катэгорыі {{categoryName}}"
+        title: "%{CategoryName}"
+        help: "Апошнія тэмы ў катэгорыі %{categoryName}"
       top:
         title: "Топ тэмаў"
         all:
@@ -1842,6 +1852,7 @@ be:
           sample: "Прыклад:"
       emoji:
         title: "Абразкі"
+        uploading: "Запампоўванне ..."
         name: "Імя"
         group: "Група"
         image: "Выява"

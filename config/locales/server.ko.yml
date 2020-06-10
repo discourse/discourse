@@ -697,7 +697,7 @@ ko:
       short_description: '<a href="%{base_path}/guidelines">커뮤니티 지침</a> 위반'
       long_form: "부적절함으로 신고하기"
     notify_user:
-      title: "@{{username}} 님에게 메시지를 보냅니다"
+      title: "@%{username} 님에게 메시지를 보냅니다"
       description: "이 사용자와 게시물에 대해 직접 개인적으로 이야기하고 싶습니다."
       short_description: "이 사용자와 게시물에 대해 직접 개인적으로 이야기하고 싶습니다."
       long_form: "메세지한 유저"

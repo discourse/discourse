@@ -194,6 +194,9 @@ nl:
     file_should_be_csv: "Het geüploade bestand dient de CSV-indeling te hebben."
     max_rows: "De eerste %{max_bulk_invites} uitnodigingen zijn verstuurd. Probeer het bestand in kleinere delen op te splitsen."
     error: "Er is een fout opgetreden bij het uploaden van dat bestand. Probeer het later opnieuw."
+  invite_link:
+    email_taken: "Dit e-mailadres is al in gebruik. Als u al een account hebt, meld u dan aan of herinitialiseer uw wachtwoord."
+    max_redemptions_limit: "moet tussen 2 en %{max_limit} liggen."
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. U kunt een gebruiker maar één keer voor een topic uitnodigen."
@@ -807,7 +810,7 @@ nl:
       short_description: 'Een overtreding van <a href="%{base_path}/guidelines">onze gemeenschapsrichtlijnen</a>'
       long_form: "heeft dit als ongepast gemarkeerd"
     notify_user:
-      title: "@{{username}} een bericht sturen"
+      title: "@%{username} een bericht sturen"
       description: "I wil rechtstreeks en persoonlijk met deze persoon over zijn of haar bericht praten."
       short_description: "I wil rechtstreeks en persoonlijk met deze persoon over zijn of haar bericht praten."
       long_form: "heeft bericht verstuurd naar gebruiker"
@@ -1468,6 +1471,7 @@ nl:
     moderators_view_emails: "Moderators mogen e-mails van gebruikers bekijken"
     prioritize_username_in_ux: "Eerst gebruikersnaam tonen op gebruikerspagina, gebruikerskaart en in berichten (wanneer uitgeschakeld, wordt eerst de naam getoond)"
     enable_rich_text_paste: "Automatische conversie van HTML naar Markdown bij het plakken van tekst in de editor inschakelen. (Experimenteel)"
+    send_old_credential_reminder_days: "Herinneren aan oude referenties na dagen"
     email_token_valid_hours: "Tokens voor Wachtwoord vergeten / Account activeren zijn (n) uur geldig."
     enable_badges: "Het badgesysteem inschakelen"
     enable_whispers: "Privécommunicatie van stafleden binnen topics toestaan."
@@ -1573,6 +1577,7 @@ nl:
     max_logins_per_ip_per_minute: "Maximale aantal toegestane aanmeldingen per IP-adres per minuut"
     max_post_deletions_per_minute: "Maximale aantal berichten dat een gebruiker per minuut kan verwijderen."
     max_post_deletions_per_day: "Maximale aantal berichten dat een gebruiker per dag kan verwijderen."
+    invite_link_max_redemptions_limit: "Het maximaal toegestane aantal inwisselingen voor uitnodigingskoppelingen kan niet meer zijn dan deze waarde."
     alert_admins_if_errors_per_minute: "Aantal foutmeldingen per minuut waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
     alert_admins_if_errors_per_hour: "Aantal foutmeldingen per uur waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
     categories_topics: "Aantal topics dat in de /categories-pagina wordt getoond. Als dit op 0 is ingesteld, wordt automatisch naar een waarde gezocht die de twee kolommen symmetrisch houdt (categorieën en topics)."
@@ -2177,6 +2182,7 @@ nl:
       must_not_contain_two_special_chars_in_seq: "mag geen 2 of meer opeenvolgende speciale tekens bevatten (.-_)"
       must_not_end_with_confusing_suffix: "mag niet eindigen op een verwarrend achtervoegsel zoals .json, .png etc."
     email:
+      invalid: "is ongeldig."
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
       blocked: "is niet toegestaan."
       revoked: "Stuurt geen e-mails naar '%{email}' tot %{date}."
@@ -2384,6 +2390,11 @@ nl:
         Het spijt ons, maar het plaatsen van uw e-mailbericht naar %{destination} (met de titel %{former_title}) is niet gelukt.
 
         De plaatsingsactie werd niet herkend. Probeer het opnieuw of plaats uw bericht via de website als het nog steeds niet lukt.
+    email_reject_bad_destination_address:
+      text_body_template: |
+        Het spijt ons, maar uw e-mailbericht naar %{destination} (met de titel %{former_title}) werkte niet.
+
+        Hebt u meer dan één e-mailadres gebruikt? Hebt u vanaf een andere e-mailadres geantwoord? E-mailantwoorden vereisen dat u bij het beantwoorden hetzelfde e-mailadres gebruikt. Het is ook mogelijk dat de header van het bericht-ID in het e-mailbericht is aangepast.
     silenced_by_staff:
       subject_template: "Account tijdelijk geblokkeerd"
     user_automatically_silenced:
@@ -2872,8 +2883,10 @@ nl:
       posted: '%{username} heeft een bericht geplaatst in ''%{topic}'' - %{site_title}'
       private_message: '%{username} heeft u een privébericht gestuurd in ''%{topic}'' - %{site_title}'
       linked: '%{username} heeft een koppeling naar uw bericht geplaatst vanaf ''%{topic}'' - %{site_title}'
+      watching_first_post: '%{username} heeft een nieuw topic gemaakt: ''%{topic}'' - %{site_title}'
       confirm_title: "Meldingen ingeschakeld - %{site_title}"
       confirm_body: "Gelukt! Meldingen zijn ingeschakeld."
+      custom: "Melding van %{username} op %{site_title}"
   staff_action_logs:
     not_found: "niet gevonden"
     unknown: "onbekend"
