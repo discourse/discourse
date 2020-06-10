@@ -97,7 +97,7 @@ export default Controller.extend({
       .map(g => {
         // prevents group "everyone" to be listed
         if (g.id !== 0) {
-          return { name: g.name, value: g.name };
+          return { name: g.name };
         }
       })
       .filter(Boolean);
@@ -251,7 +251,9 @@ export default Controller.extend({
     if (publicPoll) pollHeader += ` public=true`;
     if (chartType && pollType !== "number")
       pollHeader += ` chartType=${chartType}`;
-    if (pollGroups) pollHeader += ` groups=${pollGroups}`;
+    if (pollGroups && pollGroups.length > 0) {
+      pollHeader += ` groups=${pollGroups}`;
+    }
     if (autoClose) {
       let closeDate = moment(
         date + " " + time,

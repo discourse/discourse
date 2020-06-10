@@ -86,10 +86,10 @@ QUnit.test("will clear unsaved groups when switching user", async assert => {
     "the name should be correct"
   );
 
-  const groupSelector = selectKit(".admin-group-selector");
-  await groupSelector.expand();
-  await groupSelector.selectRowByValue(42);
-  assert.equal(groupSelector.header().value(), 42, "group should be set");
+  const groupChooser = selectKit(".group-chooser");
+  await groupChooser.expand();
+  await groupChooser.selectRowByValue(42);
+  assert.equal(groupChooser.header().value(), 42, "group should be set");
 
   await visit("/admin/users/1/eviltrout");
 
@@ -102,7 +102,7 @@ QUnit.test("will clear unsaved groups when switching user", async assert => {
   );
 
   assert.equal(
-    find('.admin-group-selector span[title="Macdonald"]').length,
+    find('.group-chooser span[title="Macdonald"]').length,
     0,
     "group should not be set"
   );
