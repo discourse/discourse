@@ -17,6 +17,13 @@ if ENV["REDIS_RAILS_FAILOVER"]
 end
 
 if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
+  if Rails.configuration.multisite
+    if ActiveRecord::Base.current_role == ActiveRecord::Base.reading_role
+      RailsMultisite::ConnectionManagement.default_connection_handler =
+        ActiveRecord::Base.connection_handlers[ActiveRecord::Base.reading_role]
+    end
+  end
+
   RailsFailover::ActiveRecord.on_failover do
     RailsMultisite::ConnectionManagement.each_connection do
       Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
@@ -28,6 +35,11 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
     RailsMultisite::ConnectionManagement.each_connection do
       Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       Sidekiq.unpause! if Sidekiq.paused?
+    end
+
+    if Rails.configuration.multisite
+      RailsMultisite::ConnectionManagement.default_connection_handler =
+        ActiveRecord::Base.connection_handlers[ActiveRecord::Base.writing_role]
     end
   end
 
