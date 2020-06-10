@@ -205,6 +205,72 @@ class UsersController < ApplicationController
     render json: failed_json, status: 403
   end
 
+  def update_primary_email
+    if !SiteSetting.enable_secondary_emails
+      return render json: failed_json, status: 410
+    end
+
+    params.require(:email)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit_email!(user)
+
+    old_primary = user.primary_email
+    if old_primary.email == params[:email]
+      return render json: success_json
+    end
+
+    new_primary = user.user_emails.find_by(email: params[:email])
+    if new_primary.blank?
+      return render json: failed_json.merge(errors: [I18n.t("change_email.doesnt_exist")]), status: 428
+    end
+
+    User.transaction do
+      old_primary.update!(primary: false)
+      new_primary.update!(primary: true)
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_update_email(user)
+      else
+        UserHistory.create!(action: UserHistory.actions[:update_email], target_user_id: user.id)
+      end
+    end
+
+    render json: success_json
+  end
+
+  def destroy_email
+    if !SiteSetting.enable_secondary_emails
+      return render json: failed_json, status: 410
+    end
+
+    params.require(:email)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    user_email = user.user_emails.find_by(email: params[:email])
+    if user_email&.primary
+      return render json: failed_json, status: 428
+    end
+
+    ActiveRecord::Base.transaction do
+      if user_email
+        user_email.destroy
+      elsif
+        user.email_change_requests.where(new_email: params[:email]).destroy_all
+      end
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_destroy_email(user)
+      else
+        UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id)
+      end
+    end
+
+    render json: success_json
+  end
+
   def topic_tracking_state
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)

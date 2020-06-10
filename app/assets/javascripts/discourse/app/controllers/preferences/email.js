@@ -7,10 +7,13 @@ import EmberObject from "@ember/object";
 import { emailValid } from "discourse/lib/utilities";
 
 export default Controller.extend({
+  queryParams: ["new"],
+
   taken: false,
   saving: false,
   error: false,
   success: false,
+  oldEmail: null,
   newEmail: null,
 
   newEmailEmpty: empty("newEmail"),
@@ -23,16 +26,17 @@ export default Controller.extend({
     "invalidEmail"
   ),
 
-  unchanged: propertyEqual("newEmailLower", "currentUser.email"),
+  unchanged: propertyEqual("newEmailLower", "oldEmail"),
 
   @discourseComputed("newEmail")
   newEmailLower(newEmail) {
     return newEmail.toLowerCase().trim();
   },
 
-  @discourseComputed("saving")
-  saveButtonText(saving) {
+  @discourseComputed("saving", "new")
+  saveButtonText(saving, isNew) {
     if (saving) return I18n.t("saving");
+    if (isNew) return I18n.t("user.add_email.add");
     return I18n.t("user.change");
   },
 
@@ -41,9 +45,9 @@ export default Controller.extend({
     return !emailValid(newEmail);
   },
 
-  @discourseComputed("invalidEmail")
-  emailValidation(invalidEmail) {
-    if (invalidEmail) {
+  @discourseComputed("invalidEmail", "oldEmail", "newEmail")
+  emailValidation(invalidEmail, oldEmail, newEmail) {
+    if (invalidEmail && (oldEmail || newEmail)) {
       return EmberObject.create({
         failed: true,
         reason: I18n.t("user.email.invalid")
@@ -62,10 +66,13 @@ export default Controller.extend({
   },
 
   actions: {
-    changeEmail() {
+    saveEmail() {
       this.set("saving", true);
 
-      return this.model.changeEmail(this.newEmail).then(
+      return (this.new
+        ? this.model.addEmail(this.newEmail)
+        : this.model.changeEmail(this.newEmail)
+      ).then(
         () => this.set("success", true),
         e => {
           this.setProperties({ error: true, saving: false });

@@ -12,6 +12,7 @@ import { findAll } from "discourse/models/login-method";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import logout from "discourse/lib/logout";
+import EmberObject from "@ember/object";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -96,6 +97,39 @@ export default Controller.extend(CanCheckEmails, {
   disableConnectButtons: propertyNotEqual("model.id", "currentUser.id"),
 
   @discourseComputed(
+    "model.email",
+    "model.secondary_emails.[]",
+    "model.unconfirmed_emails.[]"
+  )
+  emails(primaryEmail, secondaryEmails, unconfirmedEmails) {
+    const emails = [];
+
+    if (primaryEmail) {
+      emails.push(
+        EmberObject.create({
+          email: primaryEmail,
+          primary: true,
+          confirmed: true
+        })
+      );
+    }
+
+    if (secondaryEmails) {
+      secondaryEmails.forEach(email => {
+        emails.push(EmberObject.create({ email, confirmed: true }));
+      });
+    }
+
+    if (unconfirmedEmails) {
+      unconfirmedEmails.forEach(email => {
+        emails.push(EmberObject.create({ email }));
+      });
+    }
+
+    return emails.sort((a, b) => a.email.localeCompare(b.email));
+  },
+
+  @discourseComputed(
     "model.second_factor_enabled",
     "canCheckEmails",
     "model.is_anonymous"
@@ -147,6 +181,26 @@ export default Controller.extend(CanCheckEmails, {
         .save(this.saveAttrNames)
         .then(() => this.set("saved", true))
         .catch(popupAjaxError);
+    },
+
+    setPrimaryEmail(email) {
+      this.model.setPrimaryEmail(email).catch(popupAjaxError);
+    },
+
+    destroyEmail(email) {
+      this.model.destroyEmail(email);
+    },
+
+    resendConfirmationEmail(email) {
+      email.set("resending", true);
+      this.model
+        .addEmail(email.email)
+        .then(() => {
+          email.set("resent", true);
+        })
+        .finally(() => {
+          email.set("resending", false);
+        });
     },
 
     changePassword() {

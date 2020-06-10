@@ -246,6 +246,13 @@ const User = RestModel.extend({
     });
   },
 
+  addEmail(email) {
+    return ajax(userPath(`${this.username_lower}/preferences/email`), {
+      type: "POST",
+      data: { email }
+    });
+  },
+
   changeEmail(email) {
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "PUT",
@@ -373,6 +380,27 @@ const User = RestModel.extend({
       .finally(() => {
         this.set("isSaving", false);
       });
+  },
+
+  setPrimaryEmail(email) {
+    return ajax(userPath(`${this.username}/preferences/primary-email.json`), {
+      type: "PUT",
+      data: { email }
+    }).then(() => {
+      this.secondary_emails.removeObject(email);
+      this.secondary_emails.pushObject(this.email);
+      this.set("email", email);
+    });
+  },
+
+  destroyEmail(email) {
+    return ajax(userPath(`${this.username}/preferences/email.json`), {
+      type: "DELETE",
+      data: { email }
+    }).then(() => {
+      this.secondary_emails.removeObject(email);
+      this.unconfirmed_emails.removeObject(email);
+    });
   },
 
   changePassword() {

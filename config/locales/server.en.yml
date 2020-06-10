@@ -845,17 +845,20 @@ en:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
+    doesnt_exist: "That email address is not associated with your account."
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
     confirm: "Confirm"
 
     authorizing_new:
       title: "Confirm your new email"
-      description: "Please confirm you would like your new email address changed to:"
+      description: "Please confirm you would like your email address changed to:"
+      description_add: "Please confirm you would like to add an alternate email address:"
 
     authorizing_old:
       title: "Change your email address"
       description: "Please confirm your email address change"
+      description_add: "Please confirm you would like to add an alternate email address:"
       old_email: "Old email: %{email}"
       new_email: "New email: %{email}"
       almost_done_title: "Confirming new email address"
@@ -3674,6 +3677,18 @@ en:
 
         %{base_url}/u/confirm-old-email/%{email_token}
 
+    confirm_old_email_add:
+      title: "Confirm Old Email (Add)"
+      subject_template: "[%{email_prefix}] Confirm your current email address"
+      text_body_template: |
+        Before we can add a new email address, we need you to confirm that you control
+        the current email account. After you complete this step, we will have you confirm
+        the new email address.
+
+        Confirm your current email address for %{site_name} by clicking on the following link:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+
     notify_old_email:
       title: "Notify Old Email"
       subject_template: "[%{email_prefix}] Your email address has been changed"
@@ -3683,6 +3698,18 @@ en:
         a site administrator.
 
         Your email address has been changed to:
+
+        %{new_email}
+
+    notify_old_email_add:
+      title: "Notify Old Email (Add)"
+      subject_template: "[%{email_prefix}] A new email address has been added"
+      text_body_template: |
+        This is an automated message to let you know that an email address for
+        %{site_name} has been added. If this was done in error, please contact
+        a site administrator.
+
+        Your added email address is:
 
         %{new_email}
 
