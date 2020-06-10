@@ -271,6 +271,24 @@ QUnit.test("Create a Reply", async assert => {
   );
 });
 
+QUnit.test("Can edit a post after starting a reply", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  await click("#topic-footer-buttons .create");
+  await fillIn(".d-editor-input", "this is the content of my reply");
+
+  await click(".topic-post:eq(0) button.show-more-actions");
+  await click(".topic-post:eq(0) button.edit");
+
+  await click("a[data-handler='0']");
+
+  assert.ok(!visible(".bootbox.modal"));
+  assert.equal(
+    find(".d-editor-input").val(),
+    "this is the content of my reply"
+  );
+});
+
 QUnit.test("Posting on a different topic", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
