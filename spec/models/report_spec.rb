@@ -1236,4 +1236,33 @@ describe Report do
       end
     end
   end
+
+  describe "top_uploads" do
+    context "with no data" do
+      it "works" do
+        report = Report.find("top_uploads")
+
+        expect(report.data).to be_empty
+      end
+    end
+
+    context "with data" do
+      fab!(:jpg_upload) { Fabricate(:upload, extension: :jpg) }
+      fab!(:png_upload) { Fabricate(:upload, extension: :png) }
+
+      it "works" do
+        report = Report.find("top_uploads")
+
+        expect(report.data.length).to eq(2)
+        expect(report.data.map { |row| row[:extension] }).to contain_exactly("jpg", "png")
+      end
+
+      it "works with filters" do
+        report = Report.find("top_uploads", filters: { file_extension: "jpg" })
+
+        expect(report.data.length).to eq(1)
+        expect(report.data[0][:extension]).to eq("jpg")
+      end
+    end
+  end
 end
