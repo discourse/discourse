@@ -68,6 +68,14 @@ task 'assets:precompile:css' => 'environment' do
   end
 end
 
+task 'assets:flush_sw' => 'environment' do
+  begin
+    # Pending due to test failures.
+  rescue
+    STDERR.puts "Warning: unable to flush service worker script"
+  end
+end
+
 def assets_path
   "#{Rails.root}/public/assets"
 end
