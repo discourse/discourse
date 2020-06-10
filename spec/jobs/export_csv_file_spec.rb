@@ -121,7 +121,7 @@ describe Jobs::ExportCsvFile do
       user1.user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
 
       exporter.extra['name'] = 'visits'
-      exporter.extra['group_id'] = group.id
+      exporter.extra['group'] = group.id
       report = exporter.report_export.to_a
 
       expect(report.length).to eq(2)
