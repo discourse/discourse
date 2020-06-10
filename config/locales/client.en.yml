@@ -2907,8 +2907,8 @@ en:
         appearance: "Appearance"
         email: "Email"
       list_filters:
-        all: "all"
-        none: "none"
+        all: "all topics"
+        none: "no subcategories"
 
     flagging:
       title: "Thanks for helping to keep our community civil!"
