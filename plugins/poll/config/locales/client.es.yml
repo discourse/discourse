@@ -81,6 +81,8 @@ es:
           label: Grupos permitidos
         poll_chart_type:
           label: Tipo de gráfico
+          bar: Barras
+          pie: Tarta
         poll_config:
           max: Máximo
           min: Mínimo

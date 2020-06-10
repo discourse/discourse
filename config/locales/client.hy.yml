@@ -23,8 +23,8 @@ hy:
             mb: ՄԲ
             tb: ՏԲ
       short:
-        thousands: "{{number}}հզ"
-        millions: "{{number}}մլն"
+        thousands: "%{number}հզ"
+        millions: "%{number}մլն"
     dates:
       time: "h:mm"
       time_with_zone: "HH:mm (տեղական)"
@@ -227,11 +227,11 @@ hy:
     weekly: "շաբաթական"
     every_month: "ամիսը մեկ"
     every_six_months: "վեց ամիսը մեկ"
-    max_of_count: "առավելագույնը {{count}}"
+    max_of_count: "առավելագույնը %{count}"
     alternation: "կամ"
     character_count:
-      one: "{{count}} սիմվոլ"
-      other: "{{count}} սիմվոլ"
+      one: "%{count} սիմվոլ"
+      other: "%{count} սիմվոլ"
     related_messages:
       title: " Առնչվող Հաղորդագրություններ"
       see_all: 'Տեսնել %{username}-ի @<a href="%{path}">բոլոր նամակները</a>'
@@ -304,14 +304,14 @@ hy:
         yes_value: "Այո, հրաժարվել"
         no_value: "Ոչ, պահել"
     topic_count_latest:
-      one: "Տեսնել {{count}} նոր կամ թարմացված թեման"
-      other: "Դիտել {{count}} նոր կամ թարմացված թեմաները"
+      one: "Տեսնել %{count} նոր կամ թարմացված թեման"
+      other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
     topic_count_unread:
-      one: "Տեսնել {{count}} չկարդացած թեման"
-      other: "Դիտել {{count}} չկարդացած թեմաները"
+      one: "Տեսնել %{count} չկարդացած թեման"
+      other: "Դիտել %{count} չկարդացած թեմաները"
     topic_count_new:
-      one: "Տեսնել {{count}} նոր թեման"
-      other: "Դիտել {{count}} նոր թեմաները"
+      one: "Տեսնել %{count} նոր թեման"
+      other: "Դիտել %{count} նոր թեմաները"
     preview: "նախադիտում"
     cancel: "չեղարկել"
     save: "Պահպանել Փոփոխությունները"
@@ -319,7 +319,7 @@ hy:
     saved: "Պահված է!"
     upload: "Վերբեռնել"
     uploading: "Վերբեռնվում է..."
-    uploading_filename: "Վերբեռնվում է՝ {{filename}}..."
+    uploading_filename: "Վերբեռնվում է՝ %{filename}..."
     clipboard: "փոխանակման հարթակ"
     uploaded: "Վերբեռնված է !"
     pasting: "Տեղադրվում է..."
@@ -373,7 +373,7 @@ hy:
         optional: "Դուք կարող եք պահանջել այդ էլեմենտը, որպեսզի ուրիշները չկարողանան այն դիտել:  "
         required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
         claimed_by_you: "Դուք վերցրել եք այդ էլեմենտը և կարող եք այն դիտել: "
-        claimed_by_other: "Այս կետը կարելի է դիտել միայն <b>{{username}}</b>."
+        claimed_by_other: "Այս կետը կարելի է դիտել միայն <b>%{username}</b>."
       claim:
         title: "հայտարարել այս թեման"
       unclaim:
@@ -474,19 +474,19 @@ hy:
         description: "Մենք ստացել ենք Ձեր նոր գրառումը, սակայն այն պետք է հաստատվի մոդերատորի կողմից մինչև ցուցադրվելը: Խնդրում ենք սպասել:"
         ok: "ՕԿ"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>-ը հրապարակել է <a href='{{topicUrl}}'>այս թեման</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>Դուք</a> հրապարակել եք <a href='{{topicUrl}}'>այս թեման</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a>-ը պատասխանել է <a href='{{postUrl}}'>{{post_number}}</a> գրառմանը"
-      you_replied_to_post: "<a href='{{userUrl}}'>Դուք</a> պատասխանել եք <a href='{{postUrl}}'>{{post_number}}</a> գրառմանը"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>-ը պատասխանել է <a href='{{topicUrl}}'>այս թեմային</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>Դուք</a> պատասխանել եք <a href='{{topicUrl}}'>այս թեմային</a>"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a>-ը հիշատակել է <a href='{{user2Url}}'>{{another_user}}</a>-ին"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a>-ը հիշատակել է <a href='{{user2Url}}'>Ձեզ</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Դուք</a> հիշատակել եք <a href='{{user2Url}}'>{{another_user}}</a>-ին"
-      posted_by_user: "Հրապարակվել է <a href='{{userUrl}}'>{{user}}</a>-ի կողմից"
-      posted_by_you: "Հրապարակվել է <a href='{{userUrl}}'>Ձեր</a> կողմից"
-      sent_by_user: "Ուղարկվել է<a href='{{userUrl}}'>{{user}}</a>-ի կողմից"
-      sent_by_you: "Ուղարկվել է <a href='{{userUrl}}'>Ձեր</a>կողմից"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a>-ը հրապարակել է <a href='%{topicUrl}'>այս թեման</a>"
+      you_posted_topic: "<a href='%{userUrl}'>Դուք</a> հրապարակել եք <a href='%{topicUrl}'>այս թեման</a>"
+      user_replied_to_post: "<a href='%{userUrl}'>%{user}</a>-ը պատասխանել է <a href='%{postUrl}'>%{post_number}</a> գրառմանը"
+      you_replied_to_post: "<a href='%{userUrl}'>Դուք</a> պատասխանել եք <a href='%{postUrl}'>%{post_number}</a> գրառմանը"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a>-ը պատասխանել է <a href='%{topicUrl}'>այս թեմային</a>"
+      you_replied_to_topic: "<a href='%{userUrl}'>Դուք</a> պատասխանել եք <a href='%{topicUrl}'>այս թեմային</a>"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a>-ը հիշատակել է <a href='%{user2Url}'>%{another_user}</a>-ին"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a>-ը հիշատակել է <a href='%{user2Url}'>Ձեզ</a>"
+      you_mentioned_user: "<a href='%{user1Url}'>Դուք</a> հիշատակել եք <a href='%{user2Url}'>%{another_user}</a>-ին"
+      posted_by_user: "Հրապարակվել է <a href='%{userUrl}'>%{user}</a>-ի կողմից"
+      posted_by_you: "Հրապարակվել է <a href='%{userUrl}'>Ձեր</a> կողմից"
+      sent_by_user: "Ուղարկվել է<a href='%{userUrl}'>%{user}</a>-ի կողմից"
+      sent_by_you: "Ուղարկվել է <a href='%{userUrl}'>Ձեր</a>կողմից"
     directory:
       filter_name: "ֆիլտրել ըստ օգտանվան"
       title: "Օգտատերեր"
@@ -719,7 +719,7 @@ hy:
     user_fields:
       none: "(ընտրել)"
     user:
-      said: "{{username}} ՝"
+      said: "%{username} ՝"
       profile: "Պրոֆիլ"
       mute: "Խլացնել"
       edit: "Խմբագրել Նախընտրությունները"
@@ -794,12 +794,12 @@ hy:
       enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
-      moderator: "{{user}}-ը մոդերատոր է"
-      admin: "{{user}}-ը ադմին է"
+      moderator: "%{user}-ը մոդերատոր է"
+      admin: "%{user}-ը ադմին է"
       moderator_tooltip: "Այս օգտատերը մոդերատոր է"
       admin_tooltip: "Այս օգտատերն ադմին է"
       silenced_tooltip: "Այս օգտատերը լռեցված է"
-      suspended_notice: "Այս օգտատերը սառեցված է մինչև {{date}}:"
+      suspended_notice: "Այս օգտատերը սառեցված է մինչև %{date}:"
       suspended_permanently: "Այս օգտատերը սառեցված է"
       suspended_reason: "Պատճառը՝ "
       github_profile: "Github"
@@ -812,7 +812,7 @@ hy:
           Խլացված թեմաները և կատեգորիաները ներառված չեն լինի այս էլ. նամակներում:
         individual: "Ուղարկել էլ. նամակ յուրաքանչյուր նոր գրառման համար"
         individual_no_echo: "Ուղարկել էլ. նամակ յուրաքանչյուր նոր գրառման համար, բացառությամբ իմ սեփականների"
-        many_per_day: "Ստանալ էլ. նամակ յուրաքանչյուր նոր գրառման համար (օրը մոտ {{dailyEmailEstimate}} հատ)"
+        many_per_day: "Ստանալ էլ. նամակ յուրաքանչյուր նոր գրառման համար (օրը մոտ %{dailyEmailEstimate} հատ)"
         few_per_day: "Ստանալ էլ. նամակ յուրաքանչյուր նոր գրառման համար (օրը մոտ 2 հատ)"
         warning: "Փոստային ցուցակի ռեժիմը միացված է: Էլ. փոստով ծանուցումների կարգավորումները վերասահմանված են: "
       tag_settings: "Թեգեր"
@@ -842,9 +842,7 @@ hy:
       admin_delete: "Ջնջել"
       users: "Օգտատերեր"
       muted_users: "Խլացված"
-      muted_users_instructions: "Արգելել այս օգտատերերից բոլոր ծանուցումները:"
       ignored_users: "Անտեսված"
-      ignored_users_instructions: "Թաքցնել բոլոր գրառումները և ծանուցումները այս օգտատերերից:"
       tracked_topics_link: "Ցուցադրել"
       automatically_unpin_topics: "Ավտոմատ կերպով ապակցել թեմաները, երբ ես հասնեմ ներքև:"
       apps: "Հավելվածներ"
@@ -899,12 +897,12 @@ hy:
         disable: "Անջատել"
         enable: "Միացնել"
         enable_long: "Միացնել պահուստային կոդերը"
-        manage: "Կառավարել պահուստային կոդերով: Ձեզ մնացել է պահուստային <strong>{{count}}</strong> կոդ:"
+        manage: "Կառավարել պահուստային կոդերով: Ձեզ մնացել է պահուստային <strong>%{count}</strong> կոդ:"
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման հարթակում տվյալների կրկնօրինակման սխալ"
         copied_to_clipboard: "Կրնօրինակված է Փոխանակման հարթակում"
         download_backup_codes: "Ներբեռնել պահուստային կոդերը"
-        remaining_codes: "Ձեզ մնացել է պահուստային <strong>{{count}}</strong> կոդ:"
+        remaining_codes: "Ձեզ մնացել է պահուստային <strong>%{count}</strong> կոդ:"
         use: "Օգտագործել պահուստային կոդը"
         enable_prerequisites: "Դուք պետք է ակտիվացնեք առաջնային երկրորդ գործոնը՝ պահուստային կոդերի գեներացիայից առաջ:"
         codes:
@@ -967,10 +965,10 @@ hy:
         success_staff: "Մենք ուղարկել ենք էլ. նամակ Ձեր ընթացիկ հասցեին: Խնդրում ենք հետևել հաստատման հրահանգներին:"
       change_avatar:
         title: "Փոխել Ձեր պրոֆիլի նկարը"
-        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a> , հիմնված"
-        gravatar_title: "Փոխեք Ձեր անձնապատրկեը Gravatar-ի կայքում {{gravatarName}} "
-        gravatar_failed: "Մենք չկարողացանք գտնել Gravatar {{gravatarName}} այդ էլ. հասցեով:"
-        refresh_gravatar_title: "Թարմացնել Ձեր Gravatar-ը {{gravatarName}}"
+        gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> , հիմնված"
+        gravatar_title: "Փոխեք Ձեր անձնապատրկեը Gravatar-ի կայքում %{gravatarName} "
+        gravatar_failed: "Մենք չկարողացանք գտնել Gravatar %{gravatarName} այդ էլ. հասցեով:"
+        refresh_gravatar_title: "Թարմացնել Ձեր Gravatar-ը %{gravatarName}"
         letter_based: "Համակարգի կողմից դրված պրոֆիլի նկար"
         uploaded_avatar: "Անհատական նկար"
         uploaded_avatar_empty: "Ավելացնել անհատական նկար"
@@ -994,11 +992,11 @@ hy:
         instructions: "Երբեք չի ցուցադրվում հանրությանը"
         ok: "Հաստատման համար մենք Ձեզ կուղարկենք էլ. նամակ"
         invalid: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե"
-        authenticated: "Ձեր էլ. հասցեն վավերացվել է {{provider}}-ի կողմից"
+        authenticated: "Ձեր էլ. հասցեն վավերացվել է %{provider}-ի կողմից"
         frequency_immediately: "Մենք անհապաղ Ձեզ էլ. նամակ կուղարկենք, եթե դեռևս Դուք դա չեք կարդացել կայքում:"
         frequency:
           one: "Մենք էլ. նամակ կուղարկենք Ձեզ միայն այն դեպքում, եթե մենք չենք տեսել Ձեզ վերջին րոպեի ընթացքում:"
-          other: "Մենք Ձեզ էլ. նամակ կուղարկենք միայն այն դեպքում, եթե մենք չենք տեսել Ձեզ վերջին {{count}} րոպեի ընթացքում:"
+          other: "Մենք Ձեզ էլ. նամակ կուղարկենք միայն այն դեպքում, եթե մենք չենք տեսել Ձեզ վերջին %{count} րոպեի ընթացքում:"
       associated_accounts:
         title: "Կապակցված Հաշիվներ"
         connect: "Կապել"
@@ -1018,9 +1016,9 @@ hy:
       username:
         title: "Օգտանուն"
         instructions: "եզակի, առանց բացատների, կարճ"
-        short_instructions: "Մարդիկ կարող են հիշատակել Ձեզ որպես @{{username}}"
+        short_instructions: "Մարդիկ կարող են հիշատակել Ձեզ որպես @%{username}"
         available: "Ձեր օգտանունը հասանելի է"
-        not_available: "Հասանելի չէ: Փորձե՞լ {{suggestion}}-ը:"
+        not_available: "Հասանելի չէ: Փորձե՞լ %{suggestion}-ը:"
         not_available_no_suggestion: "Հասանելի չէ"
         too_short: "Ձեր օգտանունը շատ կարճ է"
         too_long: "Ձեր օգտանունը շատ երկար է"
@@ -1043,11 +1041,11 @@ hy:
         log_out_all: "Դուրս գրվել բոլոր սարքերից"
         active: "հիմա ակտիվ է"
         not_you: "Դուք չե՞ք:"
-        show_all: "Ցուցադրել բոլորը ({{count}})"
+        show_all: "Ցուցադրել բոլորը (%{count})"
         show_few: "Ցուցադրել ավելի քիչ"
         was_this_you: "Սա Դո՞ւք էիք:"
         was_this_you_description: "Եթե դա Դուք չէիք, մենք խորհուրդ ենք տալիս փոխել Ձեր գաղտնաբառը և դուրս գրվել բոլոր սարքերից: "
-        browser_and_device: "{{browser}} {{device}}-ի վրա"
+        browser_and_device: "%{browser} %{device}-ի վրա"
         secure_account: "Ապահովագրել իմ Հաշիվը"
         latest_post: "Դուք վերջին անգամ հրապարակում կատարել եք..."
       last_posted: "Վերջին Գրառումը"
@@ -1127,20 +1125,19 @@ hy:
         none: "Հրավերներ չկան:"
         truncated:
           one: "Առաջին հրավերի ցուցադրում"
-          other: "Ցույց են տրված առաջին {{count}} հրավերները:"
+          other: "Ցույց են տրված առաջին %{count} հրավերները:"
         redeemed: "Ընդունված Հրավերները"
         redeemed_tab: "Ընդունված"
-        redeemed_tab_with_count: "Ընդունված ({{count}})"
+        redeemed_tab_with_count: "Ընդունված (%{count})"
         redeemed_at: "Ընդունվել է"
         pending: "Սպասող Հրավերներ"
         pending_tab: "Սպասող"
-        pending_tab_with_count: "Սպասող ({{count}})"
+        pending_tab_with_count: "Սպասող (%{count})"
         topics_entered: "Դիտված Թեմաները"
         posts_read_count: "Կարդացած Գրառում"
         expired: "Այս հրավերի ժամկետն անցել է:"
         rescind: "Հեռացնել"
         rescinded: "Հրավերը հեռացված է"
-        rescind_all: "Հեռացնել բոլոր Ժամկետանց Հրավերները"
         rescinded_all: "Բոլոր Ժամկետանց Հրավերները հեռացված են!"
         rescind_all_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք հեռացնել բոլոր ժամկետանց հրավերները:"
         reinvite: "Հրավերը կրկին ուղարկել"
@@ -1151,13 +1148,18 @@ hy:
         time_read: "Կարդացած Ժամանակը"
         days_visited: "Այցելության Օր"
         account_age_days: "Հաշվի տարիքը օրերով"
+        links_tab: "Հղումներ"
+        link_created_at: "Ստեղծված"
+        link_groups: Խմբեր
         create: "Ուղարկել Հրավեր"
         generate_link: "Կրկնօրինակել Հրավերի Հղումը"
         link_generated: "Հրավերի հղումը հաջողությամբ գեներացված է!"
         valid_for: "Հրավերի հղումը վավեր է միայն հետևյալ էլ. հասցեի համար՝ %{email}"
+        single_user: "Առանձին Օգտատեր "
+        invite_link:
+          success: "Հրավերի հղումը հաջողությամբ գեներացված է!"
         bulk_invite:
           none: "Դուք դեռևս ոչ ոքի չեք հրավիրել այստեղ: Ուղարկեք անհատական հրավերներ կամ հրավիրեք բազմաթիվ մարդկանց միանգամից՝ <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>վերբեռնելով CSV ֆայլ</a>:"
-          text: "Զանգվածային Հրավեր ֆայլից"
           success: "Ֆայլը հաջողությամբ վերբեռնվել է, Դուք կստանաք ծանուցում հաղորդագրության միջոցով, երբ գործընթացն ավարտվի:"
           error: "Ներողություն, ֆայլը պետք է լինի CSV ձևաչափով:"
           confirmation_message: "Դուք պատրաստվում եք էլ. նամակով հրավերներ ուղարկել վերբեռնված ֆայլում բոլոր նշվածներին:"
@@ -1248,7 +1250,7 @@ hy:
       desc:
         network: "Խնդրում ենք ստուգել Ձեր ինտերնետը:"
         network_fixed: "Կապը համացանցին վերականգնվեց:"
-        server: "Սխալի կոդը՝ {{status}}"
+        server: "Սխալի կոդը՝ %{status}"
         forbidden: "Ձեզ թույլատրված չէ դիտել դա:"
         not_found: "Վա՜յ, հավելվածը փորձել է բեռնել գոյություն չունեցող URL:"
         unknown: "Ինչ-որ բան այն չէ:"
@@ -1300,8 +1302,8 @@ hy:
       value_prop: "Երբ Դուք ստեղծում եք հաշիվ, մենք հստակ հիշում ենք, թե Դուք ինչ եք կադացել, այսպիսով՝ Դուք միշտ վերադառնում եք ճիշտ այնտեղ, որտեղ կանգնել էիք: Դուք նաև ստանում եք ծանուցումներ այստեղ և էլ. փոստով, երբ որևէ մեկը պատասխանում է Ձեզ: Եվ Դուք կարող եք հավանել գրառումներ՝ կիսվելով սիրով: :heartpulse:"
     summary:
       enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
-      description: "Կա <b>{{replyCount}}</b> պատասխան:"
-      description_time: "Կա <b>{{replyCount}}</b> պատասխան՝ մոտավորապես <b>{{readingTime}} րոպե</b> կարդալու ժամանակով:"
+      description: "Կա <b>%{replyCount}</b> պատասխան:"
+      description_time: "Կա <b>%{replyCount}</b> պատասխան՝ մոտավորապես <b>%{readingTime} րոպե</b> կարդալու ժամանակով:"
       enable: "Ամփոփել Այս Թեման"
       disable: "Ցուցադրել Բոլոր Գրառումները"
     deleted_filter:
@@ -1314,8 +1316,8 @@ hy:
       invite: "Հրավիրել այլ Մարդկանց ..."
       edit: "Ավելացնել կամ Հեռացնել ..."
       leave_message: "Դուք իսկապե՞ս ցանկանում եք թողնել այս հաղորդագրությունը:"
-      remove_allowed_user: "Դուք իսկապե՞ս ցանկանում եք հեռացնել {{name}}-ը այս հաղորդագրությունից:"
-      remove_allowed_group: "Դուք իսկապե՞ս ցանկանում եք հեռացնել {{name}}-ը այս հաղորդագրությունից:"
+      remove_allowed_user: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
+      remove_allowed_group: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
     email: "Էլ. հասցե"
     username: "Օգտանուն"
     last_seen: "Ակտիվ էր"
@@ -1324,7 +1326,7 @@ hy:
     trust_level: "Վստահության Մակարդակ"
     search_hint: "օգտանուն, էլ. հասցե կամ IP հասցե"
     create_account:
-      disclaimer: "Գրանցվելով դուք ընդունում եք <a href='{{privacy_link}}' target='blank'> գաղտնիության քաղաքականությունը </a> և <a href='{{tos_link}}' target='blank'> պայմանները </a>:"
+      disclaimer: "Գրանցվելով դուք ընդունում եք <a href='%{privacy_link}' target='blank'> գաղտնիության քաղաքականությունը </a> և <a href='%{tos_link}' target='blank'> պայմանները </a>:"
       title: "Ստեղծել Նոր Հաշիվ"
       failed: "Ինչ-որ սխալ է տեղի ունեցել, հնարավոր է՝ այս էլ. հասցեն արդեն գրանցված է, փորձեք կատարել գաղտնաբառի վերականգնում:"
     forgot_password:
@@ -1383,7 +1385,7 @@ hy:
       awaiting_activation: "Ձեր հաշիվն ակտիվացված չէ, օգտագործեք մոռացել եմ գաղտնաբառը հղումը՝ ակտիվացման մեկ այլ էլ. նամակ ստանալու համար:"
       awaiting_approval: "Ձեր հաշիվը դեռևս չի հաստատվել անձնակազմի կողմից: Երբ այն հաստատվի, Դուք կստանաք էլ. նամակ:"
       requires_invite: "Ներողություն, այս ֆորումին թույլտվությունը միայն հրավերով է:"
-      not_activated: "Դուք դեռևս չեք կարող մուտք գործել: Մենք որոշ ժամանակ առաջ Ձեզ ուղարկել ենք ակտիվացման նամակ <b>{{sentTo}}</b> էլ. հասցեին: Խնդրում ենք հետևել այդ նամակի հրահանգներին՝ Ձեր հաշիվը ակտիվացնելու համար:"
+      not_activated: "Դուք դեռևս չեք կարող մուտք գործել: Մենք որոշ ժամանակ առաջ Ձեզ ուղարկել ենք ակտիվացման նամակ <b>%{sentTo}</b> էլ. հասցեին: Խնդրում ենք հետևել այդ նամակի հրահանգներին՝ Ձեր հաշիվը ակտիվացնելու համար:"
       not_allowed_from_ip_address: "Դուք չեք կարող մուտք գործել այդ IP հասցեից:"
       admin_not_allowed_from_ip_address: "Դուք չեք կարող մուտք գործել որպես ադմին այդ IP հասցեից:"
       resend_activation_email: "Սեղմեք այստեղ՝ ակտիվացման նամակը կրկին ուղարկելու համար: "
@@ -1392,7 +1394,7 @@ hy:
       change_email: "Փոփոխել Էլ. Հասցեն"
       provide_new_email: "Տրամադրեք նոր էլ. հասցե, և մենք կրկին կուղարկենք հաստատման էլ. նամակը:"
       submit_new_email: "Փոխել Էլ. Հասցեն"
-      sent_activation_email_again: "Մենք ուղարկել ենք ակտիվացման մեկ այլ նամակ <b>{{currentEmail}}</b> էլ. հասցեին: Այն կհասնի մի քանի րոպեի ընթացքում; խնդրում ենք անպայման ստուգել նաև Ձեր Սպամ թղթապանակը:"
+      sent_activation_email_again: "Մենք ուղարկել ենք ակտիվացման մեկ այլ նամակ <b>%{currentEmail}</b> էլ. հասցեին: Այն կհասնի մի քանի րոպեի ընթացքում; խնդրում ենք անպայման ստուգել նաև Ձեր Սպամ թղթապանակը:"
       sent_activation_email_again_generic: "Մենք ուղարկել ենք ակտիվացիայի մեկ այլ նամակ: Այն կժամանի մի քանի րոպեի ընթացքում. ստուգեք նաև սպամի արկղը:"
       to_continue: "Խնդրում ենք Մուտք Գործել"
       preferences: "Ձեր նախընտրությունները փոփոխելու համար անհրաժեշտ է մուտք գործել:"
@@ -1456,20 +1458,20 @@ hy:
     conditional_loading_section:
       loading: Բեռնվում է...
     category_row:
-      topic_count: "{{count}} թեմաներ այս կատեգորիայում "
+      topic_count: "%{count} թեմաներ այս կատեգորիայում "
     select_kit:
       default_header_text: Ընտրել...
       no_content: Համընկնումներ չեն գտնվել
       filter_placeholder: Որոնում...
       filter_placeholder_with_any: Որոնել կամ ստեղծել...
-      create: "Ստեղծել '{{content}}'"
+      create: "Ստեղծել '%{content}'"
       max_content_reached:
-        one: "Դուք կարող եք ընտրել միայն {{count}} տարր:"
-        other: "Դուք կարող եք ընտրել միայն {{count}} տարր:"
+        one: "Դուք կարող եք ընտրել միայն %{count} տարր:"
+        other: "Դուք կարող եք ընտրել միայն %{count} տարր:"
       min_content_not_reached:
-        one: "Ընտրեք առնվազն{{count}} տարր:"
-        other: "Ընտրեք առնվազն {{count}} տարր:"
-      invalid_selection_length: "Անհրաժեշտ է ընտրել առնվազն {{count}} սիմվոլ: "
+        one: "Ընտրեք առնվազն%{count} տարր:"
+        other: "Ընտրեք առնվազն %{count} տարր:"
+      invalid_selection_length: "Անհրաժեշտ է ընտրել առնվազն %{count} սիմվոլ: "
     date_time_picker:
       from: Ում կողմից
       to: Ում
@@ -1496,7 +1498,7 @@ hy:
       default: Մասնավոր էմոջիներ
     shared_drafts:
       title: "Կիսված Սևագրեր"
-      notice: "Այս թեման տեսանելի է միայն նրանց, ովքեր կարող են տեսնել <b>{{category}}</b> կատեգորիան:"
+      notice: "Այս թեման տեսանելի է միայն նրանց, ովքեր կարող են տեսնել <b>%{category}</b> կատեգորիան:"
       destination_category: "Նպատակային Կատեգորիա"
       publish: "Հրատարակել կիսված սևագիրը"
       confirm_publish: "Դուք համոզվա՞ծ եք, որ ցանկանում եք հրատարակել այս սևագիրը:"
@@ -1516,24 +1518,24 @@ hy:
       similar_topics: "Ձեր թեման նման է..."
       drafts_offline: "Օֆլայն սևագրեր"
       edit_conflict: "խմբագրել հակասությունը"
-      group_mentioned_limit: "<b>Նախազգուշացում!</b> Դուք հիշատակել եք <a href='{{group_link}}'>{{group}}</a> խումբը, սակայն այս խումբն ունի ավելի շատ անդամ, քան ադմինիստրատորի կողմից կարգավորված հիշատակումների {{max}} սահմանային թիվը: Ոչ ոք ծանուցում չի ստանա:"
+      group_mentioned_limit: "<b>Նախազգուշացում!</b> Դուք հիշատակել եք <a href='%{group_link}'>%{group}</a> խումբը, սակայն այս խումբն ունի ավելի շատ անդամ, քան ադմինիստրատորի կողմից կարգավորված հիշատակումների %{max} սահմանային թիվը: Ոչ ոք ծանուցում չի ստանա:"
       group_mentioned:
-        one: "Նշելով {{group}} ՝ Դուք ծանուցում եք <a href='{{group_link}}'>%{count} person</a> . Դուք համոզվա՞ծ եք:"
-        other: "Հիշատակելով {{group}}-ը՝ Դուք ծանուցում կուղարկեք <a href='{{group_link}}'>{{count}} օգտագիրոջ</a>: Համոզվա՞ծ եք:"
+        one: "Նշելով %{group} ՝ Դուք ծանուցում եք <a href='%{group_link}'>%{count} person</a> . Դուք համոզվա՞ծ եք:"
+        other: "Հիշատակելով %{group}-ը՝ Դուք ծանուցում կուղարկեք <a href='%{group_link}'>%{count} օգտագիրոջ</a>: Համոզվա՞ծ եք:"
       cannot_see_mention:
-        category: "Դուք հիշատակել եք {{username}}-ին, բայց նա ծանուցում չի ստանա, քանի որ այս կատեգորիան նրան հասանելի չէ: Դուք պետք է ավելացնեք նրան որևէ խմբում, որը թուլտվություն ունի այս կատեգորիային:"
-        private: "Դուք հիշատակել եք {{username}}-ին, բայց նա ծանուցում չի ստանա, քանի որ չի կարող տեսնել այս անձնական նամակը: Դուք պետք է հրավիրեք նրան այս անձնական նամակագրությանը:"
-      duplicate_link: "Կարծես թե դեպի <b>{{domain}}</b> Ձեր հղումն արդեն իսկ հրապարակված է թեմայում <b>@{{username}}</b>-ի <a href='{{post_url}}'>պատասխանում {{ago}}</a>: Դուք համոզվա՞ծ եք, որ ցանկանում եք այն կրկին հրապարակել:"
-      reference_topic_title: "RE: {{title}}"
+        category: "Դուք հիշատակել եք %{username}-ին, բայց նա ծանուցում չի ստանա, քանի որ այս կատեգորիան նրան հասանելի չէ: Դուք պետք է ավելացնեք նրան որևէ խմբում, որը թուլտվություն ունի այս կատեգորիային:"
+        private: "Դուք հիշատակել եք %{username}-ին, բայց նա ծանուցում չի ստանա, քանի որ չի կարող տեսնել այս անձնական նամակը: Դուք պետք է հրավիրեք նրան այս անձնական նամակագրությանը:"
+      duplicate_link: "Կարծես թե դեպի <b>%{domain}</b> Ձեր հղումն արդեն իսկ հրապարակված է թեմայում <b>@%{username}</b>-ի <a href='%{post_url}'>պատասխանում %{ago}</a>: Դուք համոզվա՞ծ եք, որ ցանկանում եք այն կրկին հրապարակել:"
+      reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Վերնագիրը պարտադիր է:"
-        title_too_short: "Վերնագիրը պետք է լինի առնվազն {{min}} սիմվոլ:"
-        title_too_long: "Վերնագիրը չպետք է գերազանցի {{max}} սիմվոլը:"
+        title_too_short: "Վերնագիրը պետք է լինի առնվազն %{min} սիմվոլ:"
+        title_too_long: "Վերնագիրը չպետք է գերազանցի %{max} սիմվոլը:"
         post_missing: "Գրառումը չի կարող դատարկ լինել:"
-        post_length: "Գրառումը պետք է լինի առնվազն {{min}} սիմվոլ:"
-        try_like: "Դուք փորձե՞լ եք {{heart}} կոճակը:"
+        post_length: "Գրառումը պետք է լինի առնվազն %{min} սիմվոլ:"
+        try_like: "Դուք փորձե՞լ եք %{heart} կոճակը:"
         category_missing: "Դուք պետք է ընտրեք կատեգորիա:"
-        tags_missing: "Դուք պետք է ընտրեք առնվազն{{count}} թեգ:"
+        tags_missing: "Դուք պետք է ընտրեք առնվազն%{count} թեգ:"
         topic_template_not_modified: "Դետալները գրանցել թեմայի մեջ և խմբագրել ձևանմուշը: "
       save_edit: "Պահել Խմբագրումը"
       overwrite_edit: "Վերասահմանել Խմբագրումը"
@@ -1631,57 +1633,57 @@ hy:
       tooltip:
         regular:
           one: "%{count} չդիտված ծանուցում"
-          other: "{{count}} չդիտված ծանուցում"
+          other: "%{count} չդիտված ծանուցում"
         message:
           one: "%{count} չկարդացած հաղորդագրություն"
-          other: "{{count}} չկարդացած հաղորդագրություն"
+          other: "%{count} չկարդացած հաղորդագրություն"
       title: "@անունի հիշատակումների, Ձեր գրառումների և թեմաների պատասխանների, հաղորդագրությունների և այլնի մասին ծանուցումներ "
       none: "Սյս պահին հնարավոր չէ բեռնել ծանուցումները"
       empty: "Ծանուցումներ չեն գտնվել:"
       post_approved: "Ձեր գրառումը հաստատված է"
       reviewable_items: "վերանայում պահանջող կետեր"
-      mentioned: "<span>{{username}}</span> {{description}}"
-      group_mentioned: "<span>{{username}}</span> {{description}}"
-      quoted: "<span>{{username}}</span> {{description}}"
-      bookmark_reminder: "<span>{{username}}</span> {{description}}"
-      replied: "<span>{{username}}</span> {{description}}"
-      posted: "<span>{{username}}</span> {{description}}"
-      edited: "<span>{{username}}</span> {{description}}"
-      liked: "<span>{{username}}</span> {{description}}"
-      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
+      mentioned: "<span>%{username}</span> %{description}"
+      group_mentioned: "<span>%{username}</span> %{description}"
+      quoted: "<span>%{username}</span> %{description}"
+      bookmark_reminder: "<span>%{username}</span> %{description}"
+      replied: "<span>%{username}</span> %{description}"
+      posted: "<span>%{username}</span> %{description}"
+      edited: "<span>%{username}</span> %{description}"
+      liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} and %{count} other</span> {{description}}"
-        other: "<span>{{username}}, {{username2}} և ևս {{count}}-ը</span> {{description}}"
+        one: "<span>%{username}, %{username2} and %{count} other</span> %{description}"
+        other: "<span>%{username}, %{username2} և ևս %{count}-ը</span> %{description}"
       liked_consolidated_description:
-        one: "հավանել է Ձեր {{count}} գրառում"
-        other: "հավանել է Ձեր {{count}} գրառումը"
-      liked_consolidated: "<span>{{username}}</span> {{description}}"
-      private_message: "<span>{{username}}</span> {{description}}"
-      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
-      invited_to_topic: "<span>{{username}}</span> {{description}}"
-      invitee_accepted: "<span>{{username}}</span>-ը ընդունել է Ձեր հրավերը"
-      moved_post: "<span>{{username}}</span>-ը տեղափոխել է {{description}}-ը"
-      linked: "<span>{{username}}</span> {{description}}"
-      granted_badge: "Վասատկել է '{{description}}'"
-      topic_reminder: "<span>{{username}}</span> {{description}}"
-      watching_first_post: "<span>Նոր Թեմա</span> {{description}}"
-      membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '{{group_name}}'"
-      membership_request_consolidated: "{{count}} բաց անդամակցության հարցումներ '{{group_name}}' "
+        one: "հավանել է Ձեր %{count} գրառում"
+        other: "հավանել է Ձեր %{count} գրառումը"
+      liked_consolidated: "<span>%{username}</span> %{description}"
+      private_message: "<span>%{username}</span> %{description}"
+      invited_to_private_message: "<p><span>%{username}</span> %{description}"
+      invited_to_topic: "<span>%{username}</span> %{description}"
+      invitee_accepted: "<span>%{username}</span>-ը ընդունել է Ձեր հրավերը"
+      moved_post: "<span>%{username}</span>-ը տեղափոխել է %{description}-ը"
+      linked: "<span>%{username}</span> %{description}"
+      granted_badge: "Վասատկել է '%{description}'"
+      topic_reminder: "<span>%{username}</span> %{description}"
+      watching_first_post: "<span>Նոր Թեմա</span> %{description}"
+      membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '%{group_name}'"
+      membership_request_consolidated: "%{count} բաց անդամակցության հարցումներ '%{group_name}' "
       group_message_summary:
-        one: "{{count}} հաղորդագրություն Ձեր {{group_name}} մուտքային արկղում"
-        other: "{{count}} հաղորդագրություն Ձեր {{group_name}}-ի մուտքային արկղում"
+        one: "%{count} հաղորդագրություն Ձեր %{group_name} մուտքային արկղում"
+        other: "%{count} հաղորդագրություն Ձեր %{group_name}-ի մուտքային արկղում"
       popup:
-        mentioned: '{{username}}-ը հիշատակել է Ձեզ այստեղ՝ "{{topic}}" - {{site_title}}'
-        group_mentioned: '{{username}}-ը հիշատակել է Ձեզ այստեղ՝ "{{topic}}" - {{site_title}}'
-        quoted: '{{username}}-ը մեջբերել է Ձեզ այստեղ՝ "{{topic}}" - {{site_title}}'
-        replied: '{{username}}-ը պատասխանել է Ձեզ այստեղ՝ "{{topic}}" - {{site_title}}'
-        posted: '{{username}}-ը գրառում է կատարել այստեղ՝ "{{topic}}" - {{site_title}}'
-        private_message: '{{username}}-ը ուղարկել է Ձեզ անձնական հաղորդագրություն այստեղ՝ "{{topic}}" - {{site_title}}'
-        linked: '{{username}}-ը "{{topic}}" - {{site_title}}"-ից հղում է կատարել Ձեր գրառմանը:'
-        watching_first_post: '{{username}} -ը ստեղծել է նոր թեմա՝ "{{topic}}" - {{site_title}}'
+        mentioned: '%{username}-ը հիշատակել է Ձեզ այստեղ՝ "%{topic}" - %{site_title}'
+        group_mentioned: '%{username}-ը հիշատակել է Ձեզ այստեղ՝ "%{topic}" - %{site_title}'
+        quoted: '%{username}-ը մեջբերել է Ձեզ այստեղ՝ "%{topic}" - %{site_title}'
+        replied: '%{username}-ը պատասխանել է Ձեզ այստեղ՝ "%{topic}" - %{site_title}'
+        posted: '%{username}-ը գրառում է կատարել այստեղ՝ "%{topic}" - %{site_title}'
+        private_message: '%{username}-ը ուղարկել է Ձեզ անձնական հաղորդագրություն այստեղ՝ "%{topic}" - %{site_title}'
+        linked: '%{username}-ը "%{topic}" - %{site_title}"-ից հղում է կատարել Ձեր գրառմանը:'
+        watching_first_post: '%{username} -ը ստեղծել է նոր թեմա՝ "%{topic}" - %{site_title}'
         confirm_title: "Ծանուցումները միացված են. %{site_title}"
         confirm_body: "Հաջողվեց! Ծանուցումները միացված են:"
-        custom: "Ծանուցում {{username}} -ից մինչև %{site_title}"
+        custom: "Ծանուցում %{username} -ից մինչև %{site_title}"
       titles:
         mentioned: "Հիշատակված "
         replied: "նոր պատասխան"
@@ -1711,9 +1713,9 @@ hy:
       from_my_computer: "Իմ սարքից"
       from_the_web: "Համացանցից"
       remote_tip: "նկարի հղումը"
-      remote_tip_with_attachments: "նկարի կամ ֆայլի հղում՝ {{authorized_extensions}}"
+      remote_tip_with_attachments: "նկարի կամ ֆայլի հղում՝ %{authorized_extensions}"
       local_tip: "ընտրեք նկարներ Ձեր սարքից"
-      local_tip_with_attachments: "ընտրեք նկարներ կամ ֆայլեր Ձեր սարքից՝ {{authorized_extensions}}"
+      local_tip_with_attachments: "ընտրեք նկարներ կամ ֆայլեր Ձեր սարքից՝ %{authorized_extensions}"
       hint: "(վերբեռնելու համար կարող եք նաև քաշել և գցել խմբագրիչի մեջ)"
       hint_for_supported_browsers: "Դուք կարող եք նաև քաշել և գցել կամ տեղադրել նկարները խմբագրիչի մեջ"
       uploading: "Վերբեռնվում է"
@@ -1730,15 +1732,15 @@ hy:
       clear_all: "Մաքրել Բոլորը"
       too_short: "Ձեր որոնման տեքստը շատ կարճ է:"
       result_count:
-        one: "<span>%{count} result for</span><span class='term'>{{term}}</span>"
-        other: "<span>{{count}}{{plus}} արդյունք</span><span class='term'>{{term}}</span>-ի համար"
+        one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
+        other: "<span>%{count}%{plus} արդյունք</span><span class='term'>%{term}</span>-ի համար"
       title: "որոնել թեմաներ, հաղորդագրություններ, օգտատերեր կամ կատեգորիաներ"
       full_page_title: "որոնել թեմաներ կամ հաղորդագրություններ"
       no_results: "Արդյունքներ չեն գտնվել:"
       no_more_results: "Արդյունքներ այլևս չեն գտնվել:"
       searching: "Փնտրվում է..."
-      post_format: "#{{post_number}} {{username}}-ի կողմից"
-      results_page: "Որոնել արդյունքները '{{term}}'-ի համար"
+      post_format: "#%{post_number} %{username}-ի կողմից"
+      results_page: "Որոնել արդյունքները '%{term}'-ի համար"
       more_results: "Գտնվել են բազմաթիվ արդյունքներ: Խնդրում ենք հստակեցնել Ձեր որոնման չափանիշները:"
       cant_find: "Չե՞ք կարողանում գտնել այն, ինչ փնտրում էիք:"
       start_new_topic: "Միգուցե՞ սկսեք նոր թեմա:"
@@ -1747,9 +1749,9 @@ hy:
       search_google_button: "Google"
       search_google_title: "Որոնել այս կայքում"
       context:
-        user: "Որոնել @{{username}}-ի գրառումները"
-        category: "Որոնել #{{category}} կատեգորիայում"
-        tag: "Որոնում #{{tag}} թեգով"
+        user: "Որոնել @%{username}-ի գրառումները"
+        category: "Որոնել #%{category} կատեգորիայում"
+        tag: "Որոնում #%{tag} թեգով"
         topic: "Որոնել այս թեմայում"
         private_messages: "Որոնել հաղորդագրություններում"
       advanced:
@@ -1826,7 +1828,7 @@ hy:
         choose_new_category: "Ընտրել նոր կատեգորիա թեմաների համար՝"
         selected:
           one: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
-          other: "Դուք ընտրել եք <b>{{count}}</b> թեմա:"
+          other: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
         change_tags: "Փոխարինել Թեգերը"
         append_tags: "Ավելացնել Թեգեր"
         choose_new_tags: "Ընտրել նոր թեգեր այս թեմաների համար՝"
@@ -1839,7 +1841,7 @@ hy:
         posted: "Դուք դեռևս գրառում չեք կատարել ոչ մի թեմայում:"
         latest: "Վերջերս կատարված հրապարակումներ չկան: Տխուր է:"
         bookmarks: "Դուք դեռևս չունեք էջանշված թեմաներ:"
-        category: " {{category}}-ում թեմաներ չկան:"
+        category: " %{category}-ում թեմաներ չկան:"
         top: "Թոփ թեմաներ չկան:"
         educate:
           new: '<p>Ձեր նոր թեմաները ցույց կտրվեն այստեղ:</p><p>Սկզբում թեմաները համարվում են նոր և ցույց է տրվում <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">նոր</span> ցուցիչը, եթե նրանք ստեղծվել են վերջին 2 օրվա ընթացում:</p><p>Սա փոփոխելու համար բացեք Ձեր <a href="%{userPrefsUrl}">նախընտրությունները</a>:</p>'
@@ -1850,13 +1852,13 @@ hy:
         read: "Կարդացած թեմաներ այլևս չկան:"
         new: "Նոր թեմաներ այլևս չկան:"
         unread: "Չկարդացած թեմաներ այլևս չկան:"
-        category: "{{category}}-ում թեմաներ այլևս չկան:"
+        category: "%{category}-ում թեմաներ այլևս չկան:"
         top: "Թոփ թեմաներ այլևս չկան:"
         bookmarks: "Էջանշված թեմաներ այլևս չկան:"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
-        other: "{{count}} գրառում թեմայում"
+        other: "%{count} գրառում թեմայում"
       create: "Նոր Թեմա"
       create_long: "Ստեղծել Նոր Թեմա"
       open_draft: "Բացել Սևագիրը"
@@ -1885,10 +1887,10 @@ hy:
       unread: "չկարդացած"
       new_topics:
         one: "%{count} նոր թեմա"
-        other: "{{count}} նոր թեմա"
+        other: "%{count} նոր թեմա"
       unread_topics:
         one: "%{count} չկարդացած թեմա"
-        other: "{{count}} չկարդացած թեմա"
+        other: "%{count} չկարդացած թեմա"
       title: "Թեմա"
       invalid_access:
         title: "Թեման անձնական է"
@@ -1902,24 +1904,24 @@ hy:
         description: "Ներողություն, մենք չկարողացանք գտնել այդ թեման: Միգուցե՞ այն հեռացվել է մոդերատորի կողմից:"
       total_unread_posts:
         one: "Դուք ունեք %{count} չկարդացած հրապարակում այս թեմայում"
-        other: "Այս թեմայում Դուք ունեք {{count}} չկարդացած գրառում"
+        other: "Այս թեմայում Դուք ունեք %{count} չկարդացած գրառում"
       unread_posts:
         one: "Դուք ունեք %{count} չկարդացած հին հրապարակում այս թեմայում"
-        other: "Այս թեմայում Դուք ունեք {{count}} հին չկարդացած գրառում"
+        other: "Այս թեմայում Դուք ունեք %{count} հին չկարդացած գրառում"
       new_posts:
         one: "Այս թեմայում կա %{count} նոր հրապարակում՝ Ձեր վերջին կարդալուց հետո:"
-        other: "Ձեր վերջին կարդալուց հետո այս թեմայում կա {{count}} նոր գրառում"
+        other: "Ձեր վերջին կարդալուց հետո այս թեմայում կա %{count} նոր գրառում"
       likes:
         one: "Այս թեմայում կա %{count} հավանում:"
-        other: "Այս թեմայում կա {{count}} հավանում"
+        other: "Այս թեմայում կա %{count} հավանում"
       back_to_list: "Վերադառնալ Թեմաների Ցանկին"
       options: "Թեմաների Տարբերակները"
       show_links: "ցուցադրել այս թեմայի հղումները"
       toggle_information: "փոխանջատել թեմայի մանրամասները"
-      read_more_in_category: "Ցանկանո՞ւմ եք կարդալ ավելին: Դիտեք այլ թեմաներ՝ {{catLink}}-ում կամ {{latestLink}}."
-      read_more: "Ցանկանո՞ւմ եք կարդալ ավելին: {{catLink}} կամ {{latestLink}}."
-      group_request: "Այս թեման տեսնելու համար ձեզ հարկավոր է անդամակցել {{name}} խմբին: "
-      group_join: "Այս թեման տեսնելու համար հարկավոր է միանալ {{name}} խմբին:"
+      read_more_in_category: "Ցանկանո՞ւմ եք կարդալ ավելին: Դիտեք այլ թեմաներ՝ %{catLink}-ում կամ %{latestLink}."
+      read_more: "Ցանկանո՞ւմ եք կարդալ ավելին: %{catLink} կամ %{latestLink}."
+      group_request: "Այս թեման տեսնելու համար ձեզ հարկավոր է անդամակցել %{name} խմբին: "
+      group_join: "Այս թեման տեսնելու համար հարկավոր է միանալ %{name} խմբին:"
       group_request_sent: "Խմբին անդամության ձեր հարցումն ուղարկվել է: Ձեզ կտեղեկացնեն, երբ այն ընդունվի:"
       unread_indicator: "Ոչ մի անդամ դեռ չի կարդացել այս թեմայի մինչև վերջին գրառումը: "
       read_more_MF: " { UNREAD, plural, =0 {} one {<a href='{basePath}/unread'>1 չկարդացած</a> } other { <a href='{basePath}/unread'># չկարդացած</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {Կա} other{}} <a href='{basePath}/new'>1 նոր</a> topic} other { {BOTH, select, true{and } false {կա } other{}} <a href='{basePath}/new'># նոր</a> թեմա} } , կամ {CATEGORY, select, true {դիտեք այլ թեմաներ {catLink}} false {{latestLink}} other {}}"
@@ -2023,7 +2025,7 @@ hy:
           "2_8": "Դուք կտեսնեք նոր պատասխանների քանակը, քանի որ հետևում եք այս կատեգորիային:"
           "2_4": "Դուք կտեսնեք նոր պատասխանների քանակը, քանի որ հրապարակել եք պատասխան այս թեմայում:"
           "2_2": "Դուք կտեսնեք նոր պատասխանների քանակը, քանի որ հետևում եք այս թեմային:"
-          "2": 'Դուք կտեսնեք նոր պատասխանների քանակը, քանի որ Դուք <a href="{{basePath}}/u/{{username}}/preferences/notifications"> կարդացել եք այս թեման </a>.'
+          "2": 'Դուք կտեսնեք նոր պատասխանների քանակը, քանի որ Դուք <a href="%{basePath}/u/%{username}/preferences/notifications"> կարդացել եք այս թեման </a>.'
           "1_2": "Դուք ծանուցում կստանաք, եթե որևէ մեկը հիշատակի Ձեր @անունը կամ պատասխանի Ձեզ:"
           "1": "Դուք ծանուցում կստանաք, եթե որևէ մեկը հիշատակի Ձեր @անունը կամ պատասխանի Ձեզ:"
           "0_7": "Դուք անտեսում եք այս կատեգորիայի բոլոր ծանուցումները:"
@@ -2099,25 +2101,25 @@ hy:
         choose_category: "Խնդրում ենք ընտրել կատեգորիա՝ հրապարակային թեմայի համար"
       feature_topic:
         title: "Ամրացնել այս թեման"
-        pin: "Այս թեման տեղադրել {{categoryLink}} կատեգորիայի վերևում մինչև"
-        confirm_pin: "Դուք արդեն ունեք {{count}} ամրակցված թեմա: Չափից շատ ամրակցված թեմաները կարող են անհարմարություն պատճառել նոր և անանուն օգտատերերին: Դուք համոզվա՞ծ եք, որ ցանկանում եք ամրակցել ևս մեկ թեմա այս կատեգորիայում:"
-        unpin: "Հանել այս թեման {{categoryLink}} կատեգորիայի վերևից:"
-        unpin_until: "Հանել այս թեման{{categoryLink}} կատեգորիայի վերևից կամ սպասել մինչև <strong>%{until}</strong>:"
+        pin: "Այս թեման տեղադրել %{categoryLink} կատեգորիայի վերևում մինչև"
+        confirm_pin: "Դուք արդեն ունեք %{count} ամրակցված թեմա: Չափից շատ ամրակցված թեմաները կարող են անհարմարություն պատճառել նոր և անանուն օգտատերերին: Դուք համոզվա՞ծ եք, որ ցանկանում եք ամրակցել ևս մեկ թեմա այս կատեգորիայում:"
+        unpin: "Հանել այս թեման %{categoryLink} կատեգորիայի վերևից:"
+        unpin_until: "Հանել այս թեման%{categoryLink} կատեգորիայի վերևից կամ սպասել մինչև <strong>%{until}</strong>:"
         pin_note: "Օգտատերերը կարող են ապակցել թեման անհատապես իրենց համար:"
         pin_validation: "Ամսաթիվը պարտադիր է այս թեման ամրակցելու համար:"
-        not_pinned: "{{categoryLink}} կատեգորիայում ոչ մի թեմա ամրակցված չէ:"
+        not_pinned: "%{categoryLink} կատեգորիայում ոչ մի թեմա ամրակցված չէ:"
         already_pinned:
-          one: "Ներկայումս {{categoryLink}}կատեգորիայում ամրակցված Թեմաներ՝ <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Ներկայումս {{categoryLink}} կատեգորիայում ամրակցված թեմաները՝ <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "Ներկայումս %{categoryLink}կատեգորիայում ամրակցված Թեմաներ՝ <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "Ներկայումս %{categoryLink} կատեգորիայում ամրակցված թեմաները՝ <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Այս թեման տեղադրել բոլոր թեմաների ցանկերի վերում, մինչև"
-        confirm_pin_globally: "Դուք արդեն ունեք գլոբալ կերպով ամրակցված {{count}}թեմա: Չափից շատ ամրակցված թեմաները կարող են անհարմարություն պատճառել նոր և անանուն օգտատերերին: Դուք համոզվա՞ծ եք, որ ցանկանում եք գլոբալ կերպով ամրակցել ևս մեկ թեմա:"
+        confirm_pin_globally: "Դուք արդեն ունեք գլոբալ կերպով ամրակցված %{count}թեմա: Չափից շատ ամրակցված թեմաները կարող են անհարմարություն պատճառել նոր և անանուն օգտատերերին: Դուք համոզվա՞ծ եք, որ ցանկանում եք գլոբալ կերպով ամրակցել ևս մեկ թեմա:"
         unpin_globally: "Հանել այս թեման բոլոր թեմաների ցանկերի վերևից"
         unpin_globally_until: "Հանել այս թեման բոլոր թեմաների ցանկերի վերևից կամ սպասել մինչև <strong>%{until}</strong>:"
         global_pin_note: "Օգտատերերը կարող են ապակցել թեման անհատապես իրենց համար:"
         not_pinned_globally: "Գլոբալ կերպով ամրակցված թեմաներ չկան:"
         already_pinned_globally:
           one: "Ներկայումս գլոբալ կերպով ամրակցված թեմաներ՝ <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Ներկայումս գլոբալ կերպով ամրակցված թեմաները՝<strong class='badge badge-notification unread'>{{count}}</strong>"
+          other: "Ներկայումս գլոբալ կերպով ամրակցված թեմաները՝<strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "Այս թեման դարձնել բաններ, որը հայտնվում է բոլոր էջերի վերևում:"
         remove_banner: "Հանել բանները, որը հայտնվում է բոլոր էջերի վերևում:"
         banner_note: "Օգտատերերը կարող են չեղարկել բանները՝ փակելով այն: Ցանկացած պահի միայն մեկ թեմա կարող է լինել որպես բաններ:"
@@ -2147,15 +2149,15 @@ hy:
         to_topic_username: "Դուք մուտքագրել եք օգտանուն: Մենք կուղարկենք ծանուցում՝ այս թեմային հրավերի հղումով:"
         to_username: "Մուտքագրեք այն անձի օգտանունը, ում ցանկանում եք հրավիրել: Մենք կուղարկենք ծանուցում՝ այս թեմային հրավերի հղումով:"
         email_placeholder: "name@example.com"
-        success_email: "Մենք ուղարկել ենք հրավերի էլ. նամակ <b>{{emailOrUsername}}</b>-ին: Մենք ծանուցում կուղարկենք Ձեզ, երբ հրավերն ընդունվի: Ստուգեք Ձեր էջի հրավերների ներդիրը՝ Ձեր հրավերներին հետևելու համար:"
+        success_email: "Մենք ուղարկել ենք հրավերի էլ. նամակ <b>%{emailOrUsername}</b>-ին: Մենք ծանուցում կուղարկենք Ձեզ, երբ հրավերն ընդունվի: Ստուգեք Ձեր էջի հրավերների ներդիրը՝ Ձեր հրավերներին հետևելու համար:"
         success_username: "Մենք հրավիրել ենք այդ օգտատիրոջը մասնակցելու այս թեմային:"
         error: "Ներողություն, մենք չկարողացանք հրավիրել այդ մարդուն: Միգուցե նա արդեն հրավիրվա՞ծ է: (Հրավերները սահմանափակ են)"
-        success_existing_email: " <b>{{emailOrUsername}}</b> էլ. հասցեով օգատեր արդեն գոյություն ունի: Մենք հրավիրել ենք նրան մասնակցելու այս թեմային:"
+        success_existing_email: " <b>%{emailOrUsername}</b> էլ. հասցեով օգատեր արդեն գոյություն ունի: Մենք հրավիրել ենք նրան մասնակցելու այս թեմային:"
       login_reply: "Պատասխանելու համար Մուտք Գործեք"
       filters:
         n_posts:
           one: "%{count} հրապարակում"
-          other: "{{count}} գրառում"
+          other: "%{count} գրառում"
         cancel: "Հանել ֆիլտրը"
       move_to:
         title: "Տեղափոխել դեպի"
@@ -2169,7 +2171,7 @@ hy:
         error: "Գրառումները նոր թեմա տեղափոխելիս տեղի է ունեցել սխալ:"
         instructions:
           one: "Դուք պատրաստվում եք ստեղծել նոր թեմա և մուտքագրել Ձեր ընտրած հրապարակումով:"
-          other: "Դուք պատրաստվում եք ստեղծել նոր թեմա և մուտքագրել Ձեր ընտրած <b>{{count}}</b> գրառումը:"
+          other: "Դուք պատրաստվում եք ստեղծել նոր թեմա և մուտքագրել Ձեր ընտրած <b>%{count}</b> գրառումը:"
       merge_topic:
         title: "Տեղափոխել դեպի Գոյություն Ունեցող Թեմա"
         action: "տեղափոխել դեպի գոյություն ունեցող թեմա"
@@ -2177,7 +2179,7 @@ hy:
         radio_label: "Գոյություն Ունեցող Թեմա"
         instructions:
           one: "Խնդրում ենք ընտրել թեմա, ուր ցանկանում եք տեղափոխել այդ հրապարակումը: "
-          other: "Խնդրում ենք ընտրել թեմա, ուր ցանկանում եք տեղափոխել այդ <b>{{count}}</b> գրառումը:"
+          other: "Խնդրում ենք ընտրել թեմա, ուր ցանկանում եք տեղափոխել այդ <b>%{count}</b> գրառումը:"
       move_to_new_message:
         title: "Տեղափոխել դեպի Նոր Հաղորդագրություն"
         action: "տեղափոխել դեպի նոր հաղորդագրություն"
@@ -2186,7 +2188,7 @@ hy:
         participants: "Մասնակիցներ"
         instructions:
           one: "Դուք պատրաստվում եք ստեղծել նոր հաղորդագրություն և մասսայականացնել այն Ձեր ընտրած գրառումով:"
-          other: "Դուք պատրաստվում եք ստեղծել նոր հաղորդագրություն և լցնել այն Ձեր ընտրած <b>{{count}}</b> գրառումով:"
+          other: "Դուք պատրաստվում եք ստեղծել նոր հաղորդագրություն և լցնել այն Ձեր ընտրած <b>%{count}</b> գրառումով:"
       move_to_existing_message:
         title: "Տեղափոխել դեպի Գոյություն Ունեցող Հաղորդագրություն"
         action: "տեղափոխել դեպի գոյություն ունեցող հաղորդագրություն"
@@ -2194,7 +2196,7 @@ hy:
         participants: "Մասնակիցներ"
         instructions:
           one: "Խնդրում ենք ընտրել հաղորդագրությունը, ուր ցանկանում եք տեղափոխել այդ գրառումը:"
-          other: "Խնդրում ենք ընտրել հաղորդագրությունը, ուր ցանկանում եք տեղափոխել այդ <b>{{count}}</b> գրառումները:"
+          other: "Խնդրում ենք ընտրել հաղորդագրությունը, ուր ցանկանում եք տեղափոխել այդ <b>%{count}</b> գրառումները:"
       merge_posts:
         title: "Միավորել Ընտրված Գրառումները"
         action: "միավորել ընտրված գրառումները"
@@ -2216,8 +2218,8 @@ hy:
         error: "Գրառումների սեփականատիրոջը փոփոխելիս տեղի է ունեցել սխալ:"
         placeholder: "նոր սեփականատիրոջ օգտանունը"
         instructions:
-          one: "Խնդրում ենք ընտրել նոր սեփականատեր <b>@{{old_user}}</b> կողմից կատարված հրապարակման համար"
-          other: "Խնդրում ենք ընտրել նոր սեփականատեր <b>@{{old_user}}</b>-ի {{count}} գրառման համար:"
+          one: "Խնդրում ենք ընտրել նոր սեփականատեր <b>@%{old_user}</b> կողմից կատարված հրապարակման համար"
+          other: "Խնդրում ենք ընտրել նոր սեփականատեր <b>@%{old_user}</b>-ի %{count} գրառման համար:"
       change_timestamp:
         title: "Փոփոխել Ժամանակակետը"
         action: "փոփոխել ժամանակակետը"
@@ -2226,7 +2228,7 @@ hy:
         instructions: "Խնդրում ենք ընտրել թեմայի նոր ժամանակակետը: Թեմայի գրառումները կթարմացվեն՝ նույն ժամային տարբերությունն ունենալու համար:"
       multi_select:
         select: "ընտրել"
-        selected: "ընտրված ({{count}})"
+        selected: "ընտրված (%{count})"
         select_post:
           label: "ընտրել"
           title: "Ընտրվածին ավելացնել գրառում"
@@ -2245,17 +2247,17 @@ hy:
         deselect_all: հետընտրել բոլորը
         description:
           one: 'Դուք ընտրել եք <b>%{count}</b> հրապարակում:'
-          other: "Դուք ընտրել եք <b>{{count}}</b> գրառում:"
+          other: "Դուք ընտրել եք <b>%{count}</b> գրառում:"
     post:
       quote_reply: "Մեջբերել"
       edit_reason: "Պատճառը՝ "
-      post_number: "գրառում {{number}}"
+      post_number: "գրառում %{number}"
       ignored: "Անտեսված բովանդակություն"
       wiki_last_edited_on: "wiki-ն վերջին անգամ խմբագրվել է"
       last_edited_on: "գրառումը վերջին անգամ խմբագրվել է"
       reply_as_new_topic: "Պատասխանել որպես հղված թեմա"
       reply_as_new_private_message: "Պատասխանել որպես հաղորդագրություն նույն ստացողներին"
-      continue_discussion: "Շարունակելով {{postLink}} քննարկումը՝ "
+      continue_discussion: "Շարունակելով %{postLink} քննարկումը՝ "
       follow_quote: "գնալ դեպի մեջբերված գրառումը"
       show_full: "Ցուցադրել Գրառումն Ամբողջությամբ"
       show_hidden: "Դիտել անտեսված բովանդակությունը "
@@ -2267,29 +2269,29 @@ hy:
       locked: "անձնակազմի որևէ ներկայացուցիչ արգելափակել է այս գրառման խմբագրումը"
       gap:
         one: "դիտել %{count} թաքցրած պատասխան"
-        other: "դիտել {{count}} թաքցրած պատասխանները"
+        other: "դիտել %{count} թաքցրած պատասխանները"
       notice:
-        new_user: "Առաջին անգամն է, որ {{user}} -ը գրառում է կատարել — եկեք ողջունենք նրան մեր համայնքում!"
-        returning_user: "Բավական ժամանակ է անցել {{user}} -ին տեսնելուց հետո — նրա վերջին գրառումը եղել է {{time}}:"
+        new_user: "Առաջին անգամն է, որ %{user} -ը գրառում է կատարել — եկեք ողջունենք նրան մեր համայնքում!"
+        returning_user: "Բավական ժամանակ է անցել %{user} -ին տեսնելուց հետո — նրա վերջին գրառումը եղել է %{time}:"
       unread: "Գրառումը կարդացած չէ"
       has_replies:
-        one: "{{count}} պատասխան"
-        other: "{{count}} Պատասխան"
+        one: "%{count} պատասխան"
+        other: "%{count} Պատասխան"
       has_likes_title:
         one: "%{count} անձ հավանել է այս հրապարակումը"
-        other: "{{count}} մարդ հավանել է այս գրառումը"
+        other: "%{count} մարդ հավանել է այս գրառումը"
       has_likes_title_only_you: "Դուք հավանել եք այս գրառումը"
       has_likes_title_you:
         one: "Դուք և %{count} այլ անձ հավանել եք այս հրապարակումը"
-        other: "Դուք և {{count}} հոգի հավանել են այս գրառումը"
+        other: "Դուք և %{count} հոգի հավանել են այս գրառումը"
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         upload: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
-        file_too_large: "Ներողություն, այդ ֆայլը շատ մեծ է (առավելագույն չափը {{max_size_kb}}ԿԲ է): Առաջարկվում ենք վերբեռնել Ձեր մեծ ֆայլը որևէ ամպային ծառայություն(cloud service) և կիսվել հղումով:"
+        file_too_large: "Ներողություն, այդ ֆայլը շատ մեծ է (առավելագույն չափը %{max_size_kb}ԿԲ է): Առաջարկվում ենք վերբեռնել Ձեր մեծ ֆայլը որևէ ամպային ծառայություն(cloud service) և կիսվել հղումով:"
         too_many_uploads: "Ներողություն, Դուք կարող եք վերբեռնել միաժամանակ միայն մեկ ֆայլ:"
-        too_many_dragged_and_dropped_files: "Ներողություն, Դուք կարող եք վերբեռնել միաժամանակ միայն {{max}} ֆայլ:"
-        upload_not_authorized: "Ներողություն, ֆայլը, որ Դուք փորձում եք վերբեռնել թուլատրելի չէ (թույլատրվում են միայն՝ {{authorized_extensions}}):"
+        too_many_dragged_and_dropped_files: "Ներողություն, Դուք կարող եք վերբեռնել միաժամանակ միայն %{max} ֆայլ:"
+        upload_not_authorized: "Ներողություն, ֆայլը, որ Դուք փորձում եք վերբեռնել թուլատրելի չէ (թույլատրվում են միայն՝ %{authorized_extensions}):"
         image_upload_not_allowed_for_new_user: "Ներողություն, նոր օգտատերերը չեն կարող վերբեռնել նկարներ:"
         attachment_upload_not_allowed_for_new_user: "Ներողություն, նոր օգտատերերը չեն կարող ֆայլեր կցել:"
         attachment_download_requires_login: "Ներողություն, Դուք պետք է մուտք գործեք՝ կցված ֆայլերը ներբեռնելու համար:"
@@ -2329,10 +2331,10 @@ hy:
           confirm: "Դուք ցանկանո՞ւմ եք ջնջել նաև այս գրառման պատասխանները:"
           direct_replies:
             one: "Այո, և %{count} ուղղակի պատասխան"
-            other: "Այո, և {{count}} ուղղակի պատասխանները"
+            other: "Այո, և %{count} ուղղակի պատասխանները"
           all_replies:
             one: "Այո, և %{count} պատասխանը"
-            other: "Այո, և բոլոր {{count}} պատասխանները"
+            other: "Այո, և բոլոր %{count} պատասխանները"
           just_the_post: "Ոչ, միայն այս գրառումը"
         admin: "գրառման ադմինի գործողություններ"
         wiki: "Դարձնել Wiki"
@@ -2373,8 +2375,8 @@ hy:
           notify_user: "ուղարկել է հաղորդագրություն"
           bookmark: "էջանշել է սա"
           like_capped:
-            one: "և {{count}} այլ անձ հավանել է սա"
-            other: "և {{count}} հոգի հավանել են սա"
+            one: "և %{count} այլ անձ հավանել է սա"
+            other: "և %{count} հոգի հավանել են սա"
         by_you:
           off_topic: "Դուք դրոշակավորել եք սա որպես թեմայից դուրս"
           spam: "Դուք դրոշակավորել եք սա որպես սպամ"
@@ -2386,11 +2388,11 @@ hy:
       delete:
         confirm:
           one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հրապարակումը:"
-          other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ{{count}} գրառումները:"
+          other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ%{count} գրառումները:"
       merge:
         confirm:
           one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք միավորել այդ հրապարակումները:"
-          other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք միավորել այդ {{count}} գրառումները:"
+          other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք միավորել այդ %{count} գրառումները:"
       revisions:
         controls:
           first: "Առաջին խմբագրությունը"
@@ -2402,7 +2404,7 @@ hy:
           revert: "Վերադարձնել այս խմբագրությանը"
           edit_wiki: "Խմբագրել Wiki-ն"
           edit_post: "Խմբագրել Գրառումը"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}} <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
             title: "Ցուցադրել ստացված արդյունքը` հավելումներն ու հեռացումները մեկ տեղում"
@@ -2593,13 +2595,13 @@ hy:
       custom_message:
         at_least:
           one: "մուտքագրեք առնվազն %{count} սիմվոլ"
-          other: "մուտքագրեք առնվազն {{count}} սիմվոլ"
+          other: "մուտքագրեք առնվազն %{count} սիմվոլ"
         more:
           one: "%{count} ևս..."
-          other: "ևս {{count}} շարունակելու համար..."
+          other: "ևս %{count} շարունակելու համար..."
         left:
           one: "%{count}-ը մնում է"
-          other: "{{count}} հատ է մնացել"
+          other: "%{count} հատ է մնացել"
     flagging_topic:
       title: "Շնորհակալ ենք, որ օգնում եք պահել մեր համայնքը քաղաքակիրթ:"
       action: "Դրոշակավորել Թեման"
@@ -2643,7 +2645,7 @@ hy:
         title: "Այս թեման անձնական հաղորդագրություն է"
         help: "Այս թեման անձնական հաղորդագրություն է"
     posts: "Գրառումներ"
-    posts_long: "այս թեմայում կա {{number}} գրառում"
+    posts_long: "այս թեմայում կա %{number} գրառում"
     posts_likes_MF: |
       Այս թեման ունի {count, plural, one {1 պատասխան} other {# պատասխան}} {ratio, select,
         low {գրառման հավանումների բարձր հարաբերակցությամբ}
@@ -2658,20 +2660,20 @@ hy:
     replies: "Պատասխան"
     views_long:
       one: "այս թեման դիտվել է %{count} անգամ"
-      other: "այս թեման դիտվել է {{number}} անգամ"
+      other: "այս թեման դիտվել է %{number} անգամ"
     activity: "Ակտիվություն"
     likes: "Հավանում"
     likes_lowercase:
       one: "հավանում"
       other: "հավանում"
-    likes_long: "այս թեմայում կա {{number}} հավանում"
+    likes_long: "այս թեմայում կա %{number} հավանում"
     users: "Օգտատեր"
     users_lowercase:
       one: "օգտատեր"
       other: "օգտատերեր"
     category_title: "Կատեգորիա"
     history: "Պատմություն"
-    changed_by: "{{author}}-ի կողմից"
+    changed_by: "%{author}-ի կողմից"
     raw_email:
       title: "Մուտքային Էլ. նամակ"
       not_available: "Հասանելի չէ!"
@@ -2682,34 +2684,34 @@ hy:
       latest:
         title: "Վերջինները"
         title_with_count:
-          one: "Վերջին ({{count}})"
-          other: "Վերջինները ({{count}})"
+          one: "Վերջին (%{count})"
+          other: "Վերջինները (%{count})"
         help: "վերջերս կատարված գրառումներով թեմաները"
       read:
         title: "Կարդացած"
         help: "Ձեր կարդացած թեմաները այն հերթականությամբ, որով Դուք վերջին անգամ կարդացել եք դրանք"
       categories:
         title: "Կատեգորիաներ"
-        title_in: "Կատեգորիա - {{categoryName}}"
+        title_in: "Կատեգորիա - %{categoryName}"
         help: "ըստ կատեգորիայի խմբավորված բոլոր թեմաները"
       unread:
         title: "Չկարդացած"
         title_with_count:
           one: "Չկարդացած (%{count})"
-          other: "Չկարդացած ({{count}})"
+          other: "Չկարդացած (%{count})"
         help: "չկարդացած գրառումներով թեմաները, որոնց Դուք այժմ դիտում եք կամ հետևում եք"
         lower_title_with_count:
           one: "%{count} չկարդացած"
-          other: "{{count}} չկարդացած"
+          other: "%{count} չկարդացած"
       new:
         lower_title_with_count:
           one: "%{count} նոր"
-          other: "{{count}} նոր"
+          other: "%{count} նոր"
         lower_title: "նոր"
         title: "Նոր"
         title_with_count:
           one: "Նոր (%{count})"
-          other: "Նոր ({{count}})"
+          other: "Նոր (%{count})"
         help: "վերջին մի քանի օրվա ընթացքում ստեղծված թեմաներ"
       posted:
         title: "Իմ Գրառումները"
@@ -2718,11 +2720,11 @@ hy:
         title: "Էջանշաններ"
         help: "թեմաները, որոնք Դուք էջանշել եք"
       category:
-        title: "{{categoryName}}"
+        title: "%{categoryName}"
         title_with_count:
-          one: "{{categoryName}} (%{count})"
-          other: "{{categoryName}} ({{count}})"
-        help: "{{categoryName}} կատեգորիայի վերջին թեմաները"
+          one: "%{categoryName} (%{count})"
+          other: "%{categoryName} (%{count})"
+        help: "%{categoryName} կատեգորիայի վերջին թեմաները"
       top:
         title: "Թոփ"
         help: "վերջին տարվա, ամսվա, շաբաթվա կամ օրվա ընթացքում ամենաակտիվ թեմաները"
@@ -2886,8 +2888,8 @@ hy:
       synonyms: "Հոմանիշներ"
       synonyms_description: "Հետևյալ տեգերի օգտագործման դեպքում, դրանք կփոխարինվեն <b>%{base_tag_name}</b> -ով:"
       tag_groups_info:
-        one: 'Այս պիտակը պատկանում է «{{tag_groups}}» խմբին:'
-        other: "Այս թեգը պատկանում է այս խմբերին՝ {{tag_groups}}"
+        one: 'Այս պիտակը պատկանում է «%{tag_groups}» խմբին:'
+        other: "Այս թեգը պատկանում է այս խմբերին՝ %{tag_groups}"
       edit_synonyms: "Կարգավորել Հոմանիշները"
       add_synonyms_label: "Ավելացնել հոմանիշներ."
       add_synonyms: "Ավելացնել"
@@ -2897,7 +2899,7 @@ hy:
       delete_tag: "Ջնջել Թեգը"
       delete_confirm:
         one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որին այն վերագրված է:"
-        other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն {{count}} թեմայից, որոնց այն վերագրված է:"
+        other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որոնց այն վերագրված է:"
       delete_confirm_no_topics: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը:"
       rename_tag: "Վերանվանել Թեգը"
       rename_instructions: "Ընտրեք նոր անուն թեգի համար՝ "
@@ -3256,10 +3258,10 @@ hy:
           redeliver: "Վերաուղարկել"
           incoming:
             one: "Կա նոր իրադարձություն:"
-            other: "Կա {{count}} նոր իրադարձություն:"
+            other: "Կա %{count} նոր իրադարձություն:"
           completed_in:
             one: "Ավարտվել է %{count} վայրկյանում:"
-            other: "Ավարտվել է {{count}} վայրկյանում:"
+            other: "Ավարտվել է %{count} վայրկյանում:"
           request: "Հարցում"
           response: "Արձագանք"
           redeliver_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք կրկին ուղարկել միևնույն տվյալները:"
@@ -3311,12 +3313,12 @@ hy:
           label: "Վերբեռնել"
           title: "Վերբեռնել պահուստ այս օրինակում"
           uploading: "Վերբեռնում..."
-          uploading_progress: "Վերբեռնում... {{progress}}%"
-          success: "'{{filename}}' -ը հաջողությամբ վերբեռնվել է: Այս ֆայլը այժմ մշակվում է, և մինչև մեկ րոպե կպահանջվի այն ցանկում ցուցադրելու համար:"
-          error: " '{{filename}}' -ը վերբեռնելիս տեղի է ունեցել սխալ՝ {{message}}"
+          uploading_progress: "Վերբեռնում... %{progress}%"
+          success: "'%{filename}' -ը հաջողությամբ վերբեռնվել է: Այս ֆայլը այժմ մշակվում է, և մինչև մեկ րոպե կպահանջվի այն ցանկում ցուցադրելու համար:"
+          error: " '%{filename}' -ը վերբեռնելիս տեղի է ունեցել սխալ՝ %{message}"
         operations:
           is_running: "Գործողությունը ներկայումս ընթանում է..."
-          failed: "{{operation}}-ը ձախողվեց: Խնդրում ենք ստուգել գրառումները:"
+          failed: "%{operation}-ը ձախողվեց: Խնդրում ենք ստուգել գրառումները:"
           cancel:
             label: "Չեղարկել"
             title: "Չեղարկել ընթացիկ գործողությունը"
@@ -3439,7 +3441,7 @@ hy:
           disabled_component_tooltip: "Այս բաղադրիչը անջատված է"
           default_theme_tooltip: "Այս թեման կայքի լռելյայն թեման է"
           updates_available_tooltip: "Այս թեմայի համար հասանելի են թարմացումներ"
-          and_x_more: "և ևս {{count}} հատ:"
+          and_x_more: "և ևս %{count} հատ:"
           collapse: Կրճատել
           uploads: "Վերբեռնումներ"
           no_uploads: "Դուք կարող եք վերբեռնել Ձեր թեմայի հետ կապված ակտիվներ, օրինակ՝ տառատեսակներ կամ նկարներ:"
@@ -3488,8 +3490,8 @@ hy:
           disabled_by: "Այս բաղադրիչը անջատված է եղել"
           required_version:
             error: "Այս թեման ավտոմատ կերպով անջատվել է, քանի որ այն համատեղելի չէ Discourse-ի այս տարբերակի հետ:"
-            minimum: "Պահանջում է Discourse-ի {{version}} կամ ավելի բարձր տարբերակ:"
-            maximum: "Պահանջում է Discourse-ի {{version}} կամ ավելի ցածր տարբերակ:"
+            minimum: "Պահանջում է Discourse-ի %{version} կամ ավելի բարձր տարբերակ:"
+            maximum: "Պահանջում է Discourse-ի %{version} կամ ավելի ցածր տարբերակ:"
           component_of: "Հետևյալի Բաղադրիչ՝ "
           update_to_latest: "Թարմացնել Վերջինով"
           check_for_updates: "Ստուգել Թարմացումները"
@@ -3502,7 +3504,7 @@ hy:
           empty: "Տարրեր չկան"
           commits_behind:
             one: "Թեման գտնվում է %{count} քոմմիթ ետ!"
-            other: "Թեման {{count}} commit ետ է!"
+            other: "Թեման %{count} commit ետ է!"
           compare_commits: "(Տեսնել նոր commit-ները)"
           repo_unreachable: "Հնարավոր չէ կապ հաստատել այս թեմայի Git ռեպոզիտորիայի հետ: Սխալի հաղորդագրությունը՝ "
           imported_from_archive: "Այս թեման ներմուծվել է .zip ֆայլից"
@@ -3907,8 +3909,8 @@ hy:
           title: "Ցուցադրել այս օգտատիրոջ էլ. հասցեն"
           text: "Ցուցադրել"
       user:
-        suspend_failed: "Այս օգտատիրոջը սառեցնելիս ինչ-որ սխալ է տեղի ունեցել՝ {{error}}"
-        unsuspend_failed: "Այս օգտատիրոջը վերականգնելիս ինչ-որ սխալ է տեղի ունեցել՝ {{error}}"
+        suspend_failed: "Այս օգտատիրոջը սառեցնելիս ինչ-որ սխալ է տեղի ունեցել՝ %{error}"
+        unsuspend_failed: "Այս օգտատիրոջը վերականգնելիս ինչ-որ սխալ է տեղի ունեցել՝ %{error}"
         suspend_duration: "Որքա՞ն ժամանակ պետք է սառեցվի օգտատերը:"
         suspend_reason_label: "Ինչո՞ւ եք սառեցնում այս օգտատիրոջը: Այս տեքստը <b>տեսանելի կլինի բոլորին</b> այս օգտատիրոջ պրոֆիլի էջում և կցուցադրվի օգտատիրոջը, երբ նա փորձի մուտք գործել: Մուտքագրեք կարճ տեքստ:"
         suspend_reason_hidden_label: "Ինչո՞ւ եք սառեցնում այս օգտատիրոջը: Այս տեքստը կցուցադրվի օգտատիրոջը, երբ նա փորձի մուտք գործել: Մուտքագրեք կարճ տեքստ:"
@@ -4285,6 +4287,7 @@ hy:
         title: "Էմոջի"
         help: "Ավելացրեք նոր էմոջի, որը հասանելի կլինի բոլորին: (ՀՈՒՇՈՒՄ՝ քաշեք և գցեք բազմակի ֆայլեր միանգամից)"
         add: "Ավելացնել Նոր Էմոջի"
+        uploading: "Վերբեռնում..."
         name: "Անուն"
         group: "Խումբ"
         image: "Նկար"

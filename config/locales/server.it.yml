@@ -787,7 +787,7 @@ it:
       short_description: 'Una violazione delle <a href="%{base_path}/guidelines">linee guida della nostra comunità</a>'
       long_form: "segnalato come inappropriato"
     notify_user:
-      title: "Invia un messaggio a @{{username}}"
+      title: "Invia un messaggio a @%{username}"
       description: "Voglio parlare direttamente con questa persona a proposito del suo messaggio."
       short_description: "Voglio parlare direttamente con questa persona a proposito del suo messaggio."
       long_form: "messaggio inviato"
@@ -2469,10 +2469,6 @@ it:
     email_reject_bad_destination_address:
       title: "Email Rifiutata Indirizzo di Destinazione Errato"
       subject_template: "[%{email_prefix}] Problema email -- Sconosciuto A: Indirizzo"
-      text_body_template: |
-        Spiacenti, ma il tuo messaggio email per %{destination}(intitolato %{former_title}) non ha funzionato.
-
-        Nessuno degli indirizzi email di destinazione viene riconosciuto o l'intestazione Message-ID della email è stata modificata. Assicurati di inviare all'indirizzo email corretto fornito dallo staff.
     email_reject_old_destination:
       title: "Email Rifiutate - Vecchia Destinazione"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica: stai tentando di rispondere a una vecchia notifica"

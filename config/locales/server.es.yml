@@ -371,6 +371,10 @@ es:
       trust_level_4: "nivel_de_confianza_4"
     request_membership_pm:
       title: "Solicitud de membresía para @%{group_name}"
+    request_accepted_pm:
+      title: "Te han aceptado para el grupo @%{group_name}"
+      body: |
+        Tu solicitud para entrar al grupo @%{group_name} ha sido aceptada y ahora eres parte de él.
     view_hidden_topic_request_reason: "Me gustaría unirme al grupo «%{group_name}» para poder acceder a [este tema](%{topic_url})"
   education:
     until_posts:
@@ -537,7 +541,7 @@ es:
     title: "Te damos la bienvenida a la Sala VIP"
     body: |2
 
-      ¡Felicitaciones! :confetti_ball:
+      ¡Enhorabuena! :confetti_ball:
 
       Si puedes ver este tema, es que has sido promovido a usuario **habitual** (nivel de confianza 3).
 
@@ -795,7 +799,7 @@ es:
       short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
       long_form: "reportado como inapropiado"
     notify_user:
-      title: "Enviar un mensaje a @{{username}}"
+      title: "Enviar un mensaje a @%{username}"
       description: "Quiero hablar con esta persona directamente y personalmente sobre su publicación."
       short_description: "Quiero hablar con esta persona directamente y personalmente sobre su publicación."
       long_form: "usuario notificado por mensaje"
@@ -2692,10 +2696,6 @@ es:
     email_reject_bad_destination_address:
       title: "Correo electrónico de rechazo. Dirección del destinatario incorrecta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Dirección desconocida"
-      text_body_template: |
-        Lo sentimos, tu correo electrónico para %{destination} (con el título %{former_title}) no funcionó.
-
-        Ninguna de las direcciones de correo electrónico fue reconocida o el encabezado de ID del mensaje en el correo ha sido modificado. Por favor, asegúrate de que estás enviando los correos a las direcciones correctas provistas por el staff.
     email_reject_old_destination:
       title: "Correo electrónico de rechazo. Destino antiguo"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Estás intentando responder a una notificación antigua"
@@ -2873,7 +2873,7 @@ es:
       title: "¡Eres el usuario nuevo del mes!"
       subject_template: "¡Eres el usuario nuevo del mes!"
       text_body_template: |
-        ¡Felicitaciones! Ganaste el **premio de usuario nuevo del mes de%{month_year}**. :trophy:
+        ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de%{month_year}**. :trophy:
 
         Este premio solo lo ganan dos de los nuevos miembros de cada mes y será visible permanentemente en [la página de medallas](%{url}).
 
@@ -3296,6 +3296,8 @@ es:
         Si has sido tú, ¡genial! No tienes que hacer más nada.
 
         Si no has sido tú, por favor, [revisa tus sesiones activas](%{base_url}/my/preferences/account) y considera cambiar tu contraseña.
+  page_forbidden:
+    title: "¡Ups! Esa página es privada."
   page_not_found:
     title: "¡Ups! Esa página no existe o es privada."
     popular_topics: "Destacados"
@@ -3782,7 +3784,7 @@ es:
       name: ¡Bienvenido/a!
       description: Recibió un me gusta
       long_description: |
-        Esta medalla se concede al recibir tu primer me gusta en una publicación. ¡Felicitaciones! Publicaste algo que los demás miembros de la comunidad han considerado útil, interesante o entretenido.
+        Esta medalla se concede al recibir tu primer me gusta en una publicación. ¡Enhorabuena! Publicaste algo que los demás miembros de la comunidad han considerado útil, interesante o entretenido.
     autobiographer:
       name: Autobiógrafo
       description: "Detalló información en su <a href=\"%{base_uri}/my/preferences/profile\">perfil</a> de usuario"
@@ -4022,7 +4024,7 @@ es:
     synonyms_exist: "no está permitido mientras existan sinónimos"
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
-    congratulations: "¡Felicitaciones, has instalado Discourse!"
+    congratulations: "¡Enhorabuena, has instalado Discourse!"
     register:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"

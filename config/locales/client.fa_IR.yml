@@ -23,8 +23,8 @@ fa_IR:
             mb: مگابایت
             tb: ترابایت
       short:
-        thousands: "{{number}} هزار"
-        millions: "{{number}} میلیون"
+        thousands: "%{number} هزار"
+        millions: "%{number} میلیون"
     dates:
       time: "HH:mm"
       time_with_zone: "HH:mm (z)"
@@ -227,11 +227,11 @@ fa_IR:
     weekly: "هفتگی"
     every_month: "هر ماه"
     every_six_months: "هر شش ماه"
-    max_of_count: "حداکثر {{count}}"
+    max_of_count: "حداکثر %{count}"
     alternation: "یا"
     character_count:
-      one: "{{count}} نویسه"
-      other: "{{count}} نویسه"
+      one: "%{count} نویسه"
+      other: "%{count} نویسه"
     related_messages:
       title: "پیام‌های مرتبط"
       see_all: '<a href="%{path}">تمام پیام‌های</a>از طرف%{username}@ را ببینید'
@@ -296,14 +296,14 @@ fa_IR:
         yes_value: "بله، رها کن"
         no_value: "خیر، نگه دار"
     topic_count_latest:
-      one: "{{count}} موضوع تازه یا به‌ روز شده."
-      other: "{{count}} موضوع تازه یا به‌ روز شده."
+      one: "%{count} موضوع تازه یا به‌ روز شده."
+      other: "%{count} موضوع تازه یا به‌ روز شده."
     topic_count_unread:
-      one: "خواندن {{count}} موضوعات خوانده نشده"
-      other: "خواندن {{count}} موضوع خوانده نشده"
+      one: "خواندن %{count} موضوعات خوانده نشده"
+      other: "خواندن %{count} موضوع خوانده نشده"
     topic_count_new:
-      one: "مشاهده {{count}} موضوعات جدید"
-      other: "مشاهده {{count}} موضوع جدید"
+      one: "مشاهده %{count} موضوعات جدید"
+      other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
     cancel: "لغو"
     save: "ذخیره سازی تغییرات"
@@ -311,7 +311,7 @@ fa_IR:
     saved: "ذخیره شد!"
     upload: "بارگذاری"
     uploading: "در حال بارگذاری..."
-    uploading_filename: "بارگذاری {{filename}}..."
+    uploading_filename: "بارگذاری %{filename}..."
     clipboard: "کلیپ بورد"
     uploaded: "بارگذاری شد!"
     pasting: "چسباندن..."
@@ -365,7 +365,7 @@ fa_IR:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
         required: "شما قبل از بازنگری موارد باید آن‌ها را درخواست دهید ."
         claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
-        claimed_by_other: "این مورد فقط توسط کاربر<b>{{username}} </b>قابل بازنگری است."
+        claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
       claim:
         title: "درخواست این مبحث"
       unclaim:
@@ -385,7 +385,7 @@ fa_IR:
       view_pending: "نمایش صف انتظار"
       topic_has_pending:
         one: "این مبحث <b>%{count}</b>نوشته در حال انتظار دارد"
-        other: "این مبحث <b>{{count}}</b>نوشته در حال انتظار دارد."
+        other: "این مبحث <b>%{count}</b>نوشته در حال انتظار دارد."
       title: "بازنگری"
       topic: "موضوع:"
       filtered_topic: "شما یک مبحث را بر حسب محتوای قابل بازنگری فیلتر کرده‌اید"
@@ -402,17 +402,17 @@ fa_IR:
         fields: "فیلدها"
       user_percentage:
         summary:
-          one: "{{agreed}}، {{disagreed}}، {{ignored}}({{count}}پرچم)"
-          other: "{{agreed}}، {{disagreed}}، {{ignored}} ({{count}}پرچم)"
+          one: "%{agreed}، %{disagreed}، %{ignored}(%{count}پرچم)"
+          other: "%{agreed}، %{disagreed}، %{ignored} (%{count}پرچم)"
         agreed:
-          one: "{{count}}% موافقت شده"
-          other: "{{count}}% موافقت شده"
+          one: "%{count}% موافقت شده"
+          other: "%{count}% موافقت شده"
         disagreed:
-          one: "{{count}}% موافقت نشده"
-          other: "{{count}}% موافقت نشده"
+          one: "%{count}% موافقت نشده"
+          other: "%{count}% موافقت نشده"
         ignored:
-          one: "{{count}}% صرف نظر شده"
-          other: "{{count}}% صرف نظر شده"
+          one: "%{count}% صرف نظر شده"
+          other: "%{count}% صرف نظر شده"
       topics:
         topic: "موضوعات"
         reviewable_count: "تعداد"
@@ -422,10 +422,10 @@ fa_IR:
         details: "جزئیات"
         unique_users:
           one: "%{count}کاربر"
-          other: "{{count}}کاربر"
+          other: "%{count}کاربر"
       replies:
         one: "%{count}پاسخ"
-        other: "{{count}}پاسخ"
+        other: "%{count}پاسخ"
       edit: "ویرایش"
       save: "ذخیره"
       cancel: "لغو کردن"
@@ -489,22 +489,22 @@ fa_IR:
         description: "ما نوشته شما را دریافت کرده ایم ولی قبل از نمایش نیاز به تایید آن توسط یکی از مدیران است. لطفا صبر داشته باشید."
         pending_posts:
           one: "شما <strong>%{count}</strong> نوشته در انتظار دارید"
-          other: "شما <strong>{{count}}</strong> نوشته در انتظار دارید"
+          other: "شما <strong>%{count}</strong> نوشته در انتظار دارید"
         ok: "باشه"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> <a href='{{topicUrl}}'>یک موضوع</a> ایجاد کرد"
-      you_posted_topic: "<a href='{{userUrl}}'>شما یک </a><a href='{{topicUrl}}'>موضوع</a> جدید ایجاد کردید."
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a>\n به <a href='{{postUrl}}'>{{post_number}}</a> پاسخ داد"
-      you_replied_to_post: "<a href='{{userUrl}}'>شما</a>\n به <a href='{{postUrl}}'>{{post_number}}</a> پاسخ دادید"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>\n به <a href='{{postUrl}}'>موضوع</a> پاسخ داد"
-      you_replied_to_topic: "<a href='{{userUrl}}'>شما</a>\n به <a href='{{postUrl}}'>موضوع</a> پاسخ دادید"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> به <a href='{{user2Url}}'>شما</a> اشاره کرد"
-      you_mentioned_user: "<a href='{{user1Url}}'>شما</a> به <a href='{{user2Url}}'>{{another_user}}</a> اشاره کردید"
-      posted_by_user: "ارسال شده توسط <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "ارسال شده توسط <a href='{{userUrl}}'>شما</a>"
-      sent_by_user: "ارسال شده توسط <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "ارسال شده توسط <a href='{{userUrl}}'>شما</a>"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>یک موضوع</a> ایجاد کرد"
+      you_posted_topic: "<a href='%{userUrl}'>شما یک </a><a href='%{topicUrl}'>موضوع</a> جدید ایجاد کردید."
+      user_replied_to_post: "<a href='%{userUrl}'>%{user}</a>\n به <a href='%{postUrl}'>%{post_number}</a> پاسخ داد"
+      you_replied_to_post: "<a href='%{userUrl}'>شما</a>\n به <a href='%{postUrl}'>%{post_number}</a> پاسخ دادید"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a>\n به <a href='%{postUrl}'>موضوع</a> پاسخ داد"
+      you_replied_to_topic: "<a href='%{userUrl}'>شما</a>\n به <a href='%{postUrl}'>موضوع</a> پاسخ دادید"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> mentioned <a href='%{user2Url}'>%{another_user}</a>"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> به <a href='%{user2Url}'>شما</a> اشاره کرد"
+      you_mentioned_user: "<a href='%{user1Url}'>شما</a> به <a href='%{user2Url}'>%{another_user}</a> اشاره کردید"
+      posted_by_user: "ارسال شده توسط <a href='%{userUrl}'>%{user}</a>"
+      posted_by_you: "ارسال شده توسط <a href='%{userUrl}'>شما</a>"
+      sent_by_user: "ارسال شده توسط <a href='%{userUrl}'>%{user}</a>"
+      sent_by_you: "ارسال شده توسط <a href='%{userUrl}'>شما</a>"
     directory:
       filter_name: "فیلتر بر اساس نام کاربری"
       title: "کاربران"
@@ -740,7 +740,7 @@ fa_IR:
     user_fields:
       none: "(یک گزینه انتخاب کنید)"
     user:
-      said: "{{username}}:"
+      said: "%{username}:"
       profile: "نمایه"
       mute: "بی‌صدا"
       edit: "ویرایش تنظیمات"
@@ -815,12 +815,12 @@ fa_IR:
       enable_defer: "تاخیر را برای علامت زدن مباحث به عنوان خوانده نشده فعال کن"
       change: "تغییر"
       featured_topic: "مبحث برجسته"
-      moderator: "{{user}} یک مدیر است"
-      admin: "{{user}} یک مدیر ارشد است"
+      moderator: "%{user} یک مدیر است"
+      admin: "%{user} یک مدیر ارشد است"
       moderator_tooltip: "این کاربر یک مدیر است"
       admin_tooltip: "این کاربر یک ادمین است"
       silenced_tooltip: "صدای این کاربر قطع شده است"
-      suspended_notice: "این کاربر تا {{date}} در وضعیت معلق است."
+      suspended_notice: "این کاربر تا %{date} در وضعیت معلق است."
       suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "
       github_profile: "Github"
@@ -833,7 +833,7 @@ fa_IR:
           موضوعات و دسته‌بندی‌های قفل شده در این ایمیل‌ها نخواهند بود.
         individual: "ارسال یک ایمیل برای هر پست جدید"
         individual_no_echo: "ارسال ایمیل برای هر پست جدید، به جز پست‌های خودم"
-        many_per_day: "برای هر پست جدید یک ایمیل برای من بفرست. (حدود {{dailyEmailEstimate}} در روز)"
+        many_per_day: "برای هر پست جدید یک ایمیل برای من بفرست. (حدود %{dailyEmailEstimate} در روز)"
         few_per_day: "ارسال یک ایمیل برای هر پست جدید (حدود 2 ایمیل در روز)"
         warning: "حالت ایمیل فعال شد. تنظیمات اگاه سازی ایمیلی بازنویسی میشود."
       tag_settings: "برچسب‌ها"
@@ -863,9 +863,7 @@ fa_IR:
       admin_delete: "پاک کردن"
       users: "کاربران"
       muted_users: "بی‌صدا"
-      muted_users_instructions: "متوقف کردن تمام اطلاعیه ها از طرف این کاربران."
       ignored_users: "صرف نظر شده"
-      ignored_users_instructions: "تمام نوشته ها و اگاه سازی ها از این کاربران را خاموش کنید."
       tracked_topics_link: "نمایش"
       automatically_unpin_topics: "برداشتن پین موضوعات وقتی به پایین صفحه رسیدم."
       apps: "برنامه‌ها"
@@ -919,11 +917,11 @@ fa_IR:
         disable: "ازکاراندازی"
         enable: "فعال کردن"
         enable_long: "کدهای پشتیبان را به کار بگیر"
-        manage: "مدیریت کد‌های پشتیبانی، <strong>{{count}}</strong> از کد‌های پشتیبانی شما باقی مانده"
+        manage: "مدیریت کد‌های پشتیبانی، <strong>%{count}</strong> از کد‌های پشتیبانی شما باقی مانده"
         copy_to_clipboard: "کپی در clipboard"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
         copied_to_clipboard: "کپی شد"
-        remaining_codes: "شما <strong>{{count}}</strong>کد پشتیبان باقی مانده دارید."
+        remaining_codes: "شما <strong>%{count}</strong>کد پشتیبان باقی مانده دارید."
         use: "از کد پشتیبان استفاده کنید"
         enable_prerequisites: "شما باید قبل از ساخت کد‌های پشتیبانی یک تایید هویت دوعاملی اصلی را فعال کنید "
         codes:
@@ -982,7 +980,7 @@ fa_IR:
         success_staff: "یک ایمیل به آدرس کنونی شما ارسال کردیم. لطفا دستورالعمل آن را دنبال کنید."
       change_avatar:
         title: "عکس نمایه خود را تغییر دهید"
-        gravatar: "<a href='//{{gravatarBaseUrl}}{{gravatarLoginUrl}}' target='_blank'>{{gravatarName}}</a> ، بر اساس"
+        gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> ، بر اساس"
         letter_based: "سیستم تصویر پرفایل را اختصاص داده است"
         uploaded_avatar: "تصویر سفارشی"
         uploaded_avatar_empty: "افزودن تصویر سفارشی"
@@ -1003,11 +1001,11 @@ fa_IR:
         ok: "برای تایید ایمیلی برایتان ارسال خواهیم کرد."
         required: "لطفا یک آدرس ایمیل وارد کنید"
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
-        authenticated: "ایمیل شما توسط {{provider}} تصدیق شد"
+        authenticated: "ایمیل شما توسط %{provider} تصدیق شد"
         frequency_immediately: "اگر به سرعت چیزی را که برایتان ارسال نکردیم نخوانده باشید، بلافاصله برایتان ایمیل ارسال می‌کنیم."
         frequency:
-          one: "ما فقط در صورتی برای شما ایمیل میفرستیم که در {{count}} دقیقه آخر شما را ندیده باشیم."
-          other: "ما فقط در صورتی برای شما ایمیل میفرستیم که در {{count}} دقیقه آخر شما را ندیده باشیم."
+          one: "ما فقط در صورتی برای شما ایمیل میفرستیم که در %{count} دقیقه آخر شما را ندیده باشیم."
+          other: "ما فقط در صورتی برای شما ایمیل میفرستیم که در %{count} دقیقه آخر شما را ندیده باشیم."
       associated_accounts:
         title: "حساب های مرتبط"
         connect: "وصل شدن"
@@ -1028,9 +1026,9 @@ fa_IR:
       username:
         title: "نام‌کاربری"
         instructions: "یکتا، بدون فاصله، کوتاه"
-        short_instructions: "می توانید به کاربران دیگر اشاره کنید با@{{username}}"
+        short_instructions: "می توانید به کاربران دیگر اشاره کنید با@%{username}"
         available: "نام کاربری شما در دسترس است"
-        not_available: "در دسترس نیست. این را امتحان کن {{suggestion}} ؟"
+        not_available: "در دسترس نیست. این را امتحان کن %{suggestion} ؟"
         not_available_no_suggestion: "در دسترس نیست"
         too_short: "نام کاربری انتخابی شما خیلی کوتاه است"
         too_long: "نام کاربری انتخابی شما خیلی طولانی است"
@@ -1053,11 +1051,11 @@ fa_IR:
         log_out_all: "از همه خارج شو"
         active: "الان فعال است"
         not_you: "شما نیستید؟"
-        show_all: "نمایش همه ({{count}})"
+        show_all: "نمایش همه (%{count})"
         show_few: "کمتر نشان بده"
         was_this_you: "آیا شما بودید؟"
         was_this_you_description: "اگر شما نبودید، پیشنهاد می‌کنیم رمز عبور خود را تغییر دهید و از همه حساب ها خارج شوید"
-        browser_and_device: "{{browser}} در {{device}}"
+        browser_and_device: "%{browser} در %{device}"
         secure_account: "از حساب کاربری من محافظت کن"
         latest_post: "آخرین بار شما نوشتید ..."
       last_posted: "آخرین نوشته"
@@ -1135,21 +1133,20 @@ fa_IR:
         user: "کاربر دعوت شده"
         none: "هیچ دعوتنامه ای برای نمایش نیست"
         truncated:
-          one: "نمایش {{count}} دعوت اول."
-          other: "نمایش {{count}} دعوت اول."
+          one: "نمایش %{count} دعوت اول."
+          other: "نمایش %{count} دعوت اول."
         redeemed: "دعوت‌نامه‌های استفاده شده"
         redeemed_tab: "استفاده شده"
-        redeemed_tab_with_count: "({{count}}) استفاده شده"
+        redeemed_tab_with_count: "(%{count}) استفاده شده"
         redeemed_at: "استفاده شده"
         pending: "دعوت‌های در انتظار"
         pending_tab: "در انتظار"
-        pending_tab_with_count: "({{count}}) در انتظار"
+        pending_tab_with_count: "(%{count}) در انتظار"
         topics_entered: "موضوعات بازدید شده"
         posts_read_count: "نوشته‌های خوانده شده"
         expired: "این دعوت منقضی شده است."
         rescind: "پاک کردن"
         rescinded: "دعوت حذف شد"
-        rescind_all: "تمام دعوتنامه های منقضی شده را پاک کن"
         rescinded_all: "تمام دعوت نامه های منقضی شده حذف شدند!"
         rescind_all_confirm: "مطمئنی می‌خواهی تمام دعوتنامه های منقضی شده را پاک کنی؟"
         reinvite: "ارسال دوباره دعوت"
@@ -1160,13 +1157,17 @@ fa_IR:
         time_read: "زمان خواندن"
         days_visited: "روز های بازدید شده"
         account_age_days: "عمر حساب بر اساس روز"
-        create: "فرستادن یک دعوتنامه"
+        links_tab: "پیوندها"
+        link_created_at: "ساخته شده"
+        link_groups: گروه ها
+        create: "ارسال دعوتنامه "
         generate_link: "کپی لینک دعوت"
         link_generated: "لینک دعوت با موفقیت ایجاد شد!"
         valid_for: "لینک دعوت فقط برای این ایمیل معتبر است: %{email}"
+        invite_link:
+          success: "لینک دعوت با موفقیت ایجاد شد!"
         bulk_invite:
           none: "هنوز کسی را دعوت نکرده‌اید. افراد را یکی یکی یا یک جا با <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>فایل CSV</a> دعوت کنید."
-          text: "دعوت گروهی از طریق فایل"
           success: "فایل با موفقیت بارگذاری شد٬ وقتی که پروسه تمام شد به شما را از طریق پیام اطلاع می دهیم. "
           error: "با عرض پوزش، نوع فایل باید CSV باشد."
           confirmation_message: "میخواهید به همه ی افراد فایل اپلود شده دعوتنامه بفرستید"
@@ -1258,7 +1259,7 @@ fa_IR:
       desc:
         network: "ارتباط اینترنتی‌تان را بررسی کنید."
         network_fixed: "به نظر می رسد درست شد!"
-        server: "کد خطا: {{status}}"
+        server: "کد خطا: %{status}"
         forbidden: "شما اجازه دیدن آن را ندارید."
         not_found: "اوه, برنامه سعی کرد پیوندی را که وجود ندارد باز کند."
         unknown: "اشتباهی روی داد."
@@ -1315,8 +1316,8 @@ fa_IR:
       value_prop: "وقتی یک حساب کاربری بسازید، دقیقا به جایی که پیشتر مطالعه می‌کردید برمی‌گردید. در ضمن وقتی کسی به شما پاسخ داد، آگاه‌سازی ایمیلی هم دریافت می‌کنید. و می‌توانید نوشته‌های خوب را لایک کنید و محبت را در فضا توسعه دهید :heartpulse:"
     summary:
       enabled_description: "شما خلاصه ای از این موضوع را می بینید: بالاترین‌ نوشته‌هایی که توسط انجمن انتخاب شده."
-      description: "<b>{{replyCount}}</b> پاسخ وجود دارد."
-      description_time: " <b>{{replyCount}}</b> پاسخ با زمان برآورد شده <b>{{readingTime}} دقیقه</b> برای خواندن وجود دارد."
+      description: "<b>%{replyCount}</b> پاسخ وجود دارد."
+      description_time: " <b>%{replyCount}</b> پاسخ با زمان برآورد شده <b>%{readingTime} دقیقه</b> برای خواندن وجود دارد."
       enable: "خلاصه‌ی این موضوع"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
@@ -1329,8 +1330,8 @@ fa_IR:
       invite: "فراخواندن دیگران ..."
       edit: "حذف یا اضافه ... "
       leave_message: "واقعا میخواهید این پیام را ترک کنید؟"
-      remove_allowed_user: "آیا واقعا می خواهید اسم {{name}} از پیام برداشته شود ؟ "
-      remove_allowed_group: "آیا از حذف {{name}} از این پیام اطمینان دارید؟"
+      remove_allowed_user: "آیا واقعا می خواهید اسم %{name} از پیام برداشته شود ؟ "
+      remove_allowed_group: "آیا از حذف %{name} از این پیام اطمینان دارید؟"
     email: "ایمیل"
     username: "نام‌کاربری"
     last_seen: "مشاهده شد"
@@ -1339,7 +1340,7 @@ fa_IR:
     trust_level: "سطح اعتماد"
     search_hint: "نام کاربری ، ایمیل یا ای پی "
     create_account:
-      disclaimer: "با ثبت نام شما با <a href='{{privacy_link}}' target='blank'>حریم خصوصی</a> و <a href='{{tos_link}}' target='blank'>شرایط و ضوابط استفاده از سرویس </a> موافقت کرده اید."
+      disclaimer: "با ثبت نام شما با <a href='%{privacy_link}' target='blank'>حریم خصوصی</a> و <a href='%{tos_link}' target='blank'>شرایط و ضوابط استفاده از سرویس </a> موافقت کرده اید."
       title: "ساختن حساب‌کاربری جدید"
       failed: "اشتباهی روی داده، شاید این نام کاربری پیش‌تر استفاده شده؛ پیوند فراموشی گذرواژه می‌تواند کمک کند."
     forgot_password:
@@ -1392,7 +1393,7 @@ fa_IR:
       awaiting_activation: "حساب‌کاربری شما در انتظار فعالسازی‌ است، برای ارسال مجدد ایمیل فعالسازی از گزینه فراموشی رمز عبور استفاده کنید."
       awaiting_approval: "هنوز همکاران حساب کاربری شما را تأیید نکرده‌اند. پس از تأیید، یک ایمیل دریافت خواهید کرد."
       requires_invite: "متأسفیم، دسترسی به این انجمن تنها با دعوت امکان دارد."
-      not_activated: "هنوز امکان ورود وجود ندارد. برای شما یک ایمیل فعالسازی به <b>{{sentTo}}</b> فرستادیم. برای فعال‌سازی شناسه‌تان لطفاً دستورالعمل ایمیل را دنبال کنید."
+      not_activated: "هنوز امکان ورود وجود ندارد. برای شما یک ایمیل فعالسازی به <b>%{sentTo}</b> فرستادیم. برای فعال‌سازی شناسه‌تان لطفاً دستورالعمل ایمیل را دنبال کنید."
       not_allowed_from_ip_address: "شما نمی توانید با این آدرس آیپی وارد شوید."
       admin_not_allowed_from_ip_address: "شما نمی تواند با این آدرس آیپی وارد بخش مدیریت شوید."
       resend_activation_email: "برای ارسال مجدد ایمیل فعالسازی، اینجا را کلیک کنید."
@@ -1401,7 +1402,7 @@ fa_IR:
       change_email: "تغییر ایمیل"
       provide_new_email: "یک ایمیل جدید وارد کنید و ما ایمیل فعالسازی را برایتان ارسال می‌کنیم."
       submit_new_email: "تغییر ایمیل"
-      sent_activation_email_again: "ایمیل فعال‌سازی دیگری را به نشانی <b>{{currentEmail}}</b> فرستادیم. ممکن است چند دقیقه طول بکشد؛ مطمئن شوید که پوشه اسپم را نیز بررسی کنید."
+      sent_activation_email_again: "ایمیل فعال‌سازی دیگری را به نشانی <b>%{currentEmail}</b> فرستادیم. ممکن است چند دقیقه طول بکشد؛ مطمئن شوید که پوشه اسپم را نیز بررسی کنید."
       sent_activation_email_again_generic: "یک ایمیل فعالسازی دیگر فرستادیم. رسیدن آن ممکن است چند دقیقه طول بکشد؛ لطفا پوشه‌ی اسپم را هم چک کنید."
       to_continue: "لطفا وارد شوید"
       preferences: "شما باید وارد شوید تا بتوانید تنظیمات کاربری خود را تغییر بدهید."
@@ -1461,19 +1462,19 @@ fa_IR:
     conditional_loading_section:
       loading: بارگذاری...
     category_row:
-      topic_count: "{{count}} مبحث در این دسته بندی"
+      topic_count: "%{count} مبحث در این دسته بندی"
     select_kit:
       default_header_text: انتخاب...
       no_content: چیزی یافت نشد.
       filter_placeholder: جستجو...
       filter_placeholder_with_any: "جستجو کنید یا بسازید ... "
-      create: "بسازید `{{content}}`"
+      create: "بسازید `%{content}`"
       max_content_reached:
-        one: "شما فقط {{count}}مورد میتوانید انتخاب کنید"
-        other: "شما فقط {{count}} مورد میتوانید انتخاب کنید"
+        one: "شما فقط %{count}مورد میتوانید انتخاب کنید"
+        other: "شما فقط %{count} مورد میتوانید انتخاب کنید"
       min_content_not_reached:
-        one: "لطفا حداقل {{count}} ایتم را انتخاب کنید"
-        other: "لطفا حداقل {{count}}ایتم را انتخاب کنید"
+        one: "لطفا حداقل %{count} ایتم را انتخاب کنید"
+        other: "لطفا حداقل %{count}ایتم را انتخاب کنید"
     date_time_picker:
       from: از طرف
       to: به
@@ -1498,7 +1499,7 @@ fa_IR:
       default: ایموجی های مخصوص
     shared_drafts:
       title: "درفت مشترک"
-      notice: "این موضوع فقط برای افرادی که به دسته بندی <b>{{category}}</b>دسترسی دارند نمایش داده می‌شود."
+      notice: "این موضوع فقط برای افرادی که به دسته بندی <b>%{category}</b>دسترسی دارند نمایش داده می‌شود."
       destination_category: "دسته بندی مقصد"
       publish: "درفت مشترک را منتشر کن"
       confirm_publish: "از انتشار درفت مطمئنید؟"
@@ -1519,21 +1520,21 @@ fa_IR:
       drafts_offline: "پیش نویس آفلاین"
       edit_conflict: "ویرایش تناقض"
       group_mentioned:
-        one: "با اشاره به {{group}}، به <a href='{{group_link}}'>{{count}} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
-        other: "با اشاره به {{group}}، به <a href='{{group_link}}'>{{count}} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
+        one: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
+        other: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
       cannot_see_mention:
-        category: "شما به {{username}} اشاره کردید ولی ایشان به دلیل نداشتن دسترسی به این دسته‌بندی، مطلع نخواهند شد. برای دسترسی باید آن‌ها را به گروهی که به این دسته‌بندی دسترسی دارند اضافه کنید."
-        private: "شما به {{username}} اشاره کردید ولی به دلیل نداشتن دسترسی به این پیام خصوصی مطلع نخواهند شد. برای دسترسی باید آن‌ها را به این پیام خصوصی دعوت کنید."
-      duplicate_link: "به نظر می‌رسد پیوند شما به <b>{{domain}}</b> قبلاً در یک مبحث توسط <b>@ {{username}}</b> در <a href='{{post_url}}'>پاسخ به {{ago}} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
+        category: "شما به %{username} اشاره کردید ولی ایشان به دلیل نداشتن دسترسی به این دسته‌بندی، مطلع نخواهند شد. برای دسترسی باید آن‌ها را به گروهی که به این دسته‌بندی دسترسی دارند اضافه کنید."
+        private: "شما به %{username} اشاره کردید ولی به دلیل نداشتن دسترسی به این پیام خصوصی مطلع نخواهند شد. برای دسترسی باید آن‌ها را به این پیام خصوصی دعوت کنید."
+      duplicate_link: "به نظر می‌رسد پیوند شما به <b>%{domain}</b> قبلاً در یک مبحث توسط <b>@ %{username}</b> در <a href='%{post_url}'>پاسخ به %{ago} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
       error:
         title_missing: "عنوان الزامی است"
-        title_too_short: "عنوان دست‌کم باید {{min}} نویسه باشد"
-        title_too_long: "عنوان نمی‌تواند بیش‌تر از {{max}} نویسه باشد"
+        title_too_short: "عنوان دست‌کم باید %{min} نویسه باشد"
+        title_too_long: "عنوان نمی‌تواند بیش‌تر از %{max} نویسه باشد"
         post_missing: "فرسته نمی‌تواند خالی باشد."
-        post_length: "نوشته باید دست‌کم {{min}} نویسه داشته باشد"
-        try_like: "دکمه‌ی {{heart}} را امتحان کرده‌اید؟ "
+        post_length: "نوشته باید دست‌کم %{min} نویسه داشته باشد"
+        try_like: "دکمه‌ی %{heart} را امتحان کرده‌اید؟ "
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
-        tags_missing: "شما باید حداقل {{count}}برچسب انتخاب کنید"
+        tags_missing: "شما باید حداقل %{count}برچسب انتخاب کنید"
       save_edit: "ذخیره ویرایش"
       overwrite_edit: "بازنویسی ویرایش"
       reply_original: "پاسخ دادن در موضوع اصلی"
@@ -1626,57 +1627,57 @@ fa_IR:
     notifications:
       tooltip:
         regular:
-          one: "{{count}} اعلان دیده نشده"
-          other: "{{count}} اعلان دیده نشده"
+          one: "%{count} اعلان دیده نشده"
+          other: "%{count} اعلان دیده نشده"
         message:
-          one: "{{count}} خوانده نشده"
-          other: "{{count}} خوانده نشده"
+          one: "%{count} خوانده نشده"
+          other: "%{count} خوانده نشده"
       title: "اطلاع‌رسانی‌های اشاره به @نام، پاسخ به نوشته‌ها، موضوعات، پیام‌های شما و ..."
       none: "قادر به بارگیری اعلان‌ها در این زمان نیستیم."
       empty: "اعلانی پیدا نشد."
       post_approved: "نوشته ی شما تایید شد"
       reviewable_items: "موارد نیازمند بازبینی است"
-      mentioned: "<span>{{username}}</span>{{description}}"
-      group_mentioned: "<span>{{username}}</span>{{description}}"
-      quoted: "<span>{{username}}</span>{{description}}"
-      bookmark_reminder: "<span>{{username}}</span>{{description}}"
-      replied: "<span>{{username}}</span>{{description}}"
-      posted: "<span>{{username}}</span>{{description}}"
-      edited: "<span>{{username}}</span>{{description}}"
-      liked: "<span>{{username}}</span>{{description}}"
-      liked_2: "<span>{{username}}،{{username2}}</span>{{description}}"
+      mentioned: "<span>%{username}</span>%{description}"
+      group_mentioned: "<span>%{username}</span>%{description}"
+      quoted: "<span>%{username}</span>%{description}"
+      bookmark_reminder: "<span>%{username}</span>%{description}"
+      replied: "<span>%{username}</span>%{description}"
+      posted: "<span>%{username}</span>%{description}"
+      edited: "<span>%{username}</span>%{description}"
+      liked: "<span>%{username}</span>%{description}"
+      liked_2: "<span>%{username}،%{username2}</span>%{description}"
       liked_many:
-        one: "<span>{{username}}،{{username2}}و %{count} دیگر</span>{{description}}"
-        other: "<span>{{username}}،{{username2}}و {{count}} دیگر</span>{{description}}"
+        one: "<span>%{username}،%{username2}و %{count} دیگر</span>%{description}"
+        other: "<span>%{username}،%{username2}و %{count} دیگر</span>%{description}"
       liked_consolidated_description:
-        one: "{{count}}نوشته ی شما را پسندید"
-        other: "{{count}}نوشته ی شما را پسندید"
-      liked_consolidated: "<span>{{username}}</span>{{description}}"
-      private_message: "<span>{{username}}</span>{{description}}"
-      invited_to_private_message: "<p><span>{{username}}</span>{{description}}"
-      invited_to_topic: "<span>{{username}}</span>{{description}}"
-      invitee_accepted: "<span>{{username}}</span>دعوت شما را پذیرفت"
-      moved_post: "<span>{{username}}</span> منتقل کرد {{description}}"
-      linked: "<span>{{username}}</span>{{description}}"
-      granted_badge: "به دست آوردید '{{description}}'"
-      topic_reminder: "<span>{{username}}</span>{{description}}"
-      watching_first_post: "<span>مبحث جدید</span>{{description}}"
-      membership_request_accepted: "عضویت در {{group_name}} پذیرفته‌شد"
+        one: "%{count}نوشته ی شما را پسندید"
+        other: "%{count}نوشته ی شما را پسندید"
+      liked_consolidated: "<span>%{username}</span>%{description}"
+      private_message: "<span>%{username}</span>%{description}"
+      invited_to_private_message: "<p><span>%{username}</span>%{description}"
+      invited_to_topic: "<span>%{username}</span>%{description}"
+      invitee_accepted: "<span>%{username}</span>دعوت شما را پذیرفت"
+      moved_post: "<span>%{username}</span> منتقل کرد %{description}"
+      linked: "<span>%{username}</span>%{description}"
+      granted_badge: "به دست آوردید '%{description}'"
+      topic_reminder: "<span>%{username}</span>%{description}"
+      watching_first_post: "<span>مبحث جدید</span>%{description}"
+      membership_request_accepted: "عضویت در %{group_name} پذیرفته‌شد"
       group_message_summary:
-        one: "{{count}}پیام در اینباکس {{group_name}}"
-        other: "{{count}}پیام در اینباکس {{group_name}}"
+        one: "%{count}پیام در اینباکس %{group_name}"
+        other: "%{count}پیام در اینباکس %{group_name}"
       popup:
-        mentioned: '{{username}} در "{{topic}}" - {{site_title}} به شما اشاره کرد'
-        group_mentioned: '{{username}} به شما در "{{topic}}" - {{site_title}} اشاره نمود'
-        quoted: '{{username}} از شما در "{{topic}}" - {{site_title}} نقل قول کرد '
-        replied: '{{username}} در "{{topic}}" - {{site_title}} به شما پاسخ داد'
-        posted: '{{username}} در "{{topic}}" - {{site_title}} مطلبی نوشت'
-        private_message: '{{username}} برای شما یک پیام خصوصی در "{{topic}}" - {{site_title}} ارسال کرد'
-        linked: '{{username}} در "{{topic}}" - {{site_title}} به نوشته‌ی شما پیوندی قرار داد'
-        watching_first_post: '{{username}} یک مبحث جدید در "{{topic}}" - {{site_title}} ساخته'
+        mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'
+        group_mentioned: '%{username} به شما در "%{topic}" - %{site_title} اشاره نمود'
+        quoted: '%{username} از شما در "%{topic}" - %{site_title} نقل قول کرد '
+        replied: '%{username} در "%{topic}" - %{site_title} به شما پاسخ داد'
+        posted: '%{username} در "%{topic}" - %{site_title} مطلبی نوشت'
+        private_message: '%{username} برای شما یک پیام خصوصی در "%{topic}" - %{site_title} ارسال کرد'
+        linked: '%{username} در "%{topic}" - %{site_title} به نوشته‌ی شما پیوندی قرار داد'
+        watching_first_post: '%{username} یک مبحث جدید در "%{topic}" - %{site_title} ساخته'
         confirm_title: "اعلانات فعال شد - %{site_title}"
         confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
-        custom: "اعلان از طرف {{username}} بر روی %{site_title}"
+        custom: "اعلان از طرف %{username} بر روی %{site_title}"
       titles:
         mentioned: "احضار شده"
         replied: "پاسخ جدید"
@@ -1703,9 +1704,9 @@ fa_IR:
       from_my_computer: "از دستگاه من"
       from_the_web: "از وب"
       remote_tip: "پیوند به تصویر"
-      remote_tip_with_attachments: "پیوند به عکس یا فایل {{authorized_extensions}}"
+      remote_tip_with_attachments: "پیوند به عکس یا فایل %{authorized_extensions}"
       local_tip: "عکس ها را از روی سیستم خود انتخاب کنید"
-      local_tip_with_attachments: "عکس ها یا فایل ها را از دستگاه خود انتخاب کنید {{authorized_extensions}}"
+      local_tip_with_attachments: "عکس ها یا فایل ها را از دستگاه خود انتخاب کنید %{authorized_extensions}"
       hint: "(برای آپلود می توانید فایل را کشیده و در ویرایشگر متن رها کنید)"
       hint_for_supported_browsers: "شما همچنین میتوانید عکس ها را به داخل ویرایشگر بکشید و رها کنید یا کپی کنید"
       uploading: "در حال بروز‌رسانی "
@@ -1726,8 +1727,8 @@ fa_IR:
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
       searching: "در حال جستجو..."
-      post_format: "#{{post_number}} توسط {{username}}"
-      results_page: "نتایج جستجو برای '{{term}}'"
+      post_format: "#%{post_number} توسط %{username}"
+      results_page: "نتایج جستجو برای '%{term}'"
       more_results: "نتایج بیشتری موجود است. لطفاً معیارهای جست‌وجوی خود را محدودتر کنید."
       cant_find: "چیزی را که به دنبالش بودید نیافتید؟"
       start_new_topic: "شاید باید یک موضوع جدید را شروع کنید؟"
@@ -1736,8 +1737,8 @@ fa_IR:
       search_google_button: "گوگل"
       search_google_title: "جستجو در سایت"
       context:
-        user: "جستجوی نوشته‌ها با @{{username}}"
-        category: "جستجوی دسته‌بندی #{{category}}"
+        user: "جستجوی نوشته‌ها با @%{username}"
+        category: "جستجوی دسته‌بندی #%{category}"
         topic: "جستجوی این موضوع"
         private_messages: "جستجوی پیام‌ها"
       advanced:
@@ -1812,8 +1813,8 @@ fa_IR:
         notification_level: "اعلان‌ها"
         choose_new_category: "یک دسته‌بندی جدید برای موضوع انتخاب نمایید"
         selected:
-          one: "شما <b>{{count}}</b> موضوع را انتخاب کرده اید."
-          other: "شما <b>{{count}}</b> موضوع را انتخاب کرده اید."
+          one: "شما <b>%{count}</b> موضوع را انتخاب کرده اید."
+          other: "شما <b>%{count}</b> موضوع را انتخاب کرده اید."
         change_tags: "جایگزینی برچسب‌ها"
         append_tags: "افزودن برچسب‌ها"
         choose_new_tags: "انتخاب برچسب‌های جدید برای این موضوعات:"
@@ -1826,7 +1827,7 @@ fa_IR:
         posted: "هنوز در هیچ موضوعی نوشته نگذاشته‌اید."
         latest: "هیچ موضوع تازه‌ای نیست. چه بد!"
         bookmarks: "هنوز هیچ موضوع نشانک‌داری ندارید."
-        category: "هیچ موضوعی در {{category}} نیست."
+        category: "هیچ موضوعی در %{category} نیست."
         top: "موضوع برتری وجود ندارد."
         educate:
           new: "<p>موضوعات جدید در اینجا نمایش داده می‌شوند.</p><p>به صورت پیشفرض موضوعات جدید با علامت <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\">جدید</span>نمایش داده می‌شوند\n موضوعاتی که کمتر از 2 روز از ایجادشان گذشته جدید هستند. برای تغییر این مقدار روی گزینه</p><p><a href=\"%{userPrefsUrl}\">تنظیمات</a> کلیک کنید.</p>"
@@ -1837,13 +1838,13 @@ fa_IR:
         read: "موضوع خوانده شده‌ی دیگری نیست."
         new: "موضوع تازه‌ی دیگری وجود ندارد."
         unread: "موضوع خوانده نشده‌ی دیگری وجود ندارد."
-        category: "هیچ موضوع دیگری در {{category}} نیست."
+        category: "هیچ موضوع دیگری در %{category} نیست."
         top: "موضوع برتر دیگری وجود ندارد"
         bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
     topic:
       filter_to:
-        one: "{{count}} نوشته در این موضوع وجود دارد"
-        other: "{{count}} نوشته در این موضوع وجود دارد"
+        one: "%{count} نوشته در این موضوع وجود دارد"
+        other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
       create_long: "ساخت یک موضوع جدید"
       open_draft: "بازکردن پیشنویس"
@@ -1864,11 +1865,11 @@ fa_IR:
       new: "موضوع جدید"
       unread: "خوانده نشده"
       new_topics:
-        one: "{{count}} موضوعات جدید"
-        other: "{{count}} موضوعات جدید"
+        one: "%{count} موضوعات جدید"
+        other: "%{count} موضوعات جدید"
       unread_topics:
-        one: "{{count}} موضوع خوانده نشده"
-        other: "{{count}} موضوع خوانده نشده"
+        one: "%{count} موضوع خوانده نشده"
+        other: "%{count} موضوع خوانده نشده"
       title: "موضوع"
       invalid_access:
         title: "موضوع خصوصی است"
@@ -1881,25 +1882,25 @@ fa_IR:
         title: "موضوع پیدا نشد"
         description: "متأسفیم، نتوانستیم آن موضوع را پیدا کنیم. شاید یکی از همکاران آن را پاک کرده؟"
       total_unread_posts:
-        one: "شما {{count}} نوشته‌ی خوانده نشده در این موضوع دارید"
-        other: "شما {{count}} نوشته‌ی خوانده نشده در این موضوع دارید"
+        one: "شما %{count} نوشته‌ی خوانده نشده در این موضوع دارید"
+        other: "شما %{count} نوشته‌ی خوانده نشده در این موضوع دارید"
       unread_posts:
-        one: "شما {{count}} نوشته‌ی خوانده نشده قدیمی در این موضوع دارید"
-        other: "شما {{count}} نوشته‌ی خوانده نشده قدیمی در این موضوع دارید"
+        one: "شما %{count} نوشته‌ی خوانده نشده قدیمی در این موضوع دارید"
+        other: "شما %{count} نوشته‌ی خوانده نشده قدیمی در این موضوع دارید"
       new_posts:
-        one: "{{count}} نوشته‌ی جدید از آخرین خواندن شما در این موضوع وجود دارد"
-        other: "{{count}} نوشته‌ی جدید از آخرین خواندن شما در این موضوع وجود دارد"
+        one: "%{count} نوشته‌ی جدید از آخرین خواندن شما در این موضوع وجود دارد"
+        other: "%{count} نوشته‌ی جدید از آخرین خواندن شما در این موضوع وجود دارد"
       likes:
-        one: "{{count}} پسند به این موضوع داده شده است"
-        other: "{{count}} پسند به این موضوع داده شده است"
+        one: "%{count} پسند به این موضوع داده شده است"
+        other: "%{count} پسند به این موضوع داده شده است"
       back_to_list: "بازگشت به فهرست موضوعات"
       options: "گزینه‌های موضوع"
       show_links: "نمایش پیوندهای درون این موضوع"
       toggle_information: " تغییر وضعیت جزئیات موضوع"
-      read_more_in_category: "می‌خواهید بیشتر بخوانید؟موضوعات دیگر را در {{catLink}} یا {{latestLink}} مرور کنید."
-      read_more: "می‌خواهید بیشتر بخوانید؟ {{catLink}} یا {{latestLink}}."
-      group_request: "برای مشاهده این مبحث نیازمند درخواست عضویت در گروه  `{{name}}` می‌باشید"
-      group_join: "برای مشاهده این مبحث نیازمند پیوستن به گروه `{{name}}` می‌باشید"
+      read_more_in_category: "می‌خواهید بیشتر بخوانید؟موضوعات دیگر را در %{catLink} یا %{latestLink} مرور کنید."
+      read_more: "می‌خواهید بیشتر بخوانید؟ %{catLink} یا %{latestLink}."
+      group_request: "برای مشاهده این مبحث نیازمند درخواست عضویت در گروه  `%{name}` می‌باشید"
+      group_join: "برای مشاهده این مبحث نیازمند پیوستن به گروه `%{name}` می‌باشید"
       group_request_sent: "درخواست عضویت شما در گروه ارسال شده است. در صورت پذیرش، شما مطلع خواهید شد."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>یک پیام خوانده نشده</a> } other { <a href='{basePath}/unread'># پیام خوانده نشده</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'>1 موضوع جدید</a> } other { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'># موضوع جدید</a> } } وجود دارد, یا {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
@@ -2071,25 +2072,25 @@ fa_IR:
         choose_category: "لطفا یک دسته‌بندی برای این تاپیک عمومی انتخاب کنید:"
       feature_topic:
         title: "این موضوع را برجسته کن"
-        pin: "این موضوع را در بالای دسته‌بندی {{categoryLink}} نمایش بده تا وقتی که"
-        confirm_pin: "در حال حاضر {{count}} موضوع سنجاق‌شده دارید. تعداد زیاد موضوع‌های سنجاق‌شده شاید کاربران جدید یا ناشناس را به زحمت بیندازد. آیا از سنجاق کردن یک موضوع دیگر در این دسته‌بندی اطمینان دارید؟"
-        unpin: "این موضوع را از فهرست برترین‌های دسته‌بندی {{categoryLink}} حذف کن"
-        unpin_until: "این موضوع از برترین‌های دسته‌بندی {{categoryLink}} حذف شود یا تا <strong>%{until}</strong>منتظر بمانید."
+        pin: "این موضوع را در بالای دسته‌بندی %{categoryLink} نمایش بده تا وقتی که"
+        confirm_pin: "در حال حاضر %{count} موضوع سنجاق‌شده دارید. تعداد زیاد موضوع‌های سنجاق‌شده شاید کاربران جدید یا ناشناس را به زحمت بیندازد. آیا از سنجاق کردن یک موضوع دیگر در این دسته‌بندی اطمینان دارید؟"
+        unpin: "این موضوع را از فهرست برترین‌های دسته‌بندی %{categoryLink} حذف کن"
+        unpin_until: "این موضوع از برترین‌های دسته‌بندی %{categoryLink} حذف شود یا تا <strong>%{until}</strong>منتظر بمانید."
         pin_note: "کاربران می توانند موضوع را بصورت جداگانه برای خود از سنجاق در بیاورند"
         pin_validation: "برای سنجاق کردن این موضوع نیاز به یک تاریخ معین است."
-        not_pinned: "هیچ موضوعی در {{categoryLink}} سنجاق نشده."
+        not_pinned: "هیچ موضوعی در %{categoryLink} سنجاق نشده."
         already_pinned:
-          one: "موضوعاتی که در حال حاضر در {{categoryLink}} سنجاق شده اند: <strong class='badge badge-notification unread'>{{count}}</strong>"
-          other: "موضوعاتی که در حال حاضر در {{categoryLink}} سنجاق شده اند: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "موضوعاتی که در حال حاضر در %{categoryLink} سنجاق شده اند: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "موضوعاتی که در حال حاضر در %{categoryLink} سنجاق شده اند: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "نمایش این موضوع در بالای فهرست همه موضوعات تا وقتی که"
-        confirm_pin_globally: "شما قبلا این موضوع {{count}} را بصورت سراسری سنجاق زده‌اید. تعداد زیاد موضوع های سنجاق شده برای کاربران جدید و ناشناس می تواند سخت باشد. آیا از سنجاق کردن موضوعات به‌صورت سراری اطمینان دارید؟ "
+        confirm_pin_globally: "شما قبلا این موضوع %{count} را بصورت سراسری سنجاق زده‌اید. تعداد زیاد موضوع های سنجاق شده برای کاربران جدید و ناشناس می تواند سخت باشد. آیا از سنجاق کردن موضوعات به‌صورت سراری اطمینان دارید؟ "
         unpin_globally: "حذف این موضوع از بالای لیست همه‌ی موضوعات."
         unpin_globally_until: "حذف این موضوع از بالای لیست همه مباحث یا صبر کردن تا <strong>%{until}</strong>."
         global_pin_note: "کاربران می توانند موضوع را بصورت جداگانه برای خود از سنجاق در بیاورند"
         not_pinned_globally: "هیچ موضوعی به صورت سراسری سنجاق نشده."
         already_pinned_globally:
-          one: "موضوعاتی که در حال حاضر به صورت سراسری سنجاق شده‌اند: <strong class='badge badge-notification unread'>{{count}}</strong>"
-          other: "موضوعاتی که در حال حاضر به صورت سراسری سنجاق شده‌اند: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "موضوعاتی که در حال حاضر به صورت سراسری سنجاق شده‌اند: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "موضوعاتی که در حال حاضر به صورت سراسری سنجاق شده‌اند: <strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "این موضوع را در وارد بنر کن که در تمام صفحات در بالای صفحه نشان داده شود"
         remove_banner: "حذف بنری که از بالای تمام صفحات نمایش داده می شود. "
         banner_note: "کاربران می توانند سر‌صفحه را با بستن آنها رد کنند. فقط یک موضوع را می توان در یک زمان به سر‌صفحه تبدیل کرد."
@@ -2119,15 +2120,15 @@ fa_IR:
         to_topic_username: "شما نام کاربری شخصی را وارد کرده‌اید. ما این امر را به اطلاع او رسانده و او را به این موضوع دعوت می‌کنیم."
         to_username: "نام کاربری شخصی که می‌خواهید او را دعوت کنید، وارد کنید. ما این امر را به اطلاع او رسانده و او را به این عنوان دعوت می‌کنیم."
         email_placeholder: "name@example.com"
-        success_email: "lما از طریق ایمیل دعوت نامه ارسال کردیم <B> {{emailOrUsername}} </ B>. هنگامی که به دعوت شما پاسخ داده شد ما به شما اطلاع خواهیم داد.برای پی گیری به تب دعوت ها در پنل کاربری مراجعه نمایید"
+        success_email: "lما از طریق ایمیل دعوت نامه ارسال کردیم <B> %{emailOrUsername} </ B>. هنگامی که به دعوت شما پاسخ داده شد ما به شما اطلاع خواهیم داد.برای پی گیری به تب دعوت ها در پنل کاربری مراجعه نمایید"
         success_username: "ما آن کاربر را برای شرکت در این جستار دعوت کردیم."
         error: "متاسفیم٬‌ ما آن شخص را نمی توانیم دعوت کنیم. شاید قبلا دعوت شده اند. (فراخوان ها تعداد محدودی دارند)"
-        success_existing_email: "یک کاربر با رایانامه <b>{{emailOrUsername}}</b> وجو دارد. ما آن کاربر را برای شرکت در این مبحث دعوت کردیم."
+        success_existing_email: "یک کاربر با رایانامه <b>%{emailOrUsername}</b> وجو دارد. ما آن کاربر را برای شرکت در این مبحث دعوت کردیم."
       login_reply: "برای پاسخ دادن وارد شوید"
       filters:
         n_posts:
-          one: "{{count}} نوشته"
-          other: "{{count}} نوشته"
+          one: "%{count} نوشته"
+          other: "%{count} نوشته"
         cancel: "حذف فیلتر"
       move_to:
         title: "انتقال به"
@@ -2140,16 +2141,16 @@ fa_IR:
         radio_label: "موضوع جدید"
         error: "یک مشکل در انتقال نوشته‌ها به موضوع جدید پیش آمد."
         instructions:
-          one: "شما در حال ایجاد موضوع جدید و افزودن <b>{{count}}</b> نوشته انتخاب شده به آن هستید."
-          other: "شما در حال ایجاد موضوع جدید و افزودن <b>{{count}}</b> نوشته انتخاب شده به آن هستید."
+          one: "شما در حال ایجاد موضوع جدید و افزودن <b>%{count}</b> نوشته انتخاب شده به آن هستید."
+          other: "شما در حال ایجاد موضوع جدید و افزودن <b>%{count}</b> نوشته انتخاب شده به آن هستید."
       merge_topic:
         title: "انتقال به موضوع موجود"
         action: "انتقال به موضوع موجود"
         error: "یک خطا در انتقال نوشته‌ها به آن موضوع وجود داشت."
         radio_label: "موضوع قدیمی"
         instructions:
-          one: "لطفاً موضوعی را که قصد دارید تا <b>{{count}}</b> نوشته‌ را به آن انتقال دهید، انتخاب نمایید."
-          other: "لطفاً موضوعی را که قصد دارید تا <b>{{count}}</b> نوشته‌ را به آن انتقال دهید، انتخاب نمایید."
+          one: "لطفاً موضوعی را که قصد دارید تا <b>%{count}</b> نوشته‌ را به آن انتقال دهید، انتخاب نمایید."
+          other: "لطفاً موضوعی را که قصد دارید تا <b>%{count}</b> نوشته‌ را به آن انتقال دهید، انتخاب نمایید."
       move_to_new_message:
         title: "انتقال به پیام جدید"
         action: "انتقال به پیام جدید"
@@ -2186,7 +2187,7 @@ fa_IR:
         instructions: "لطفا یک زمان جدید برای موضوع انتخاب کنید. ارسال‌های موضوع برای اعمال اختلاف زمانی، به روز می‌شوند."
       multi_select:
         select: "انتخاب"
-        selected: "انتخاب شده ({{count}}) "
+        selected: "انتخاب شده (%{count}) "
         select_post:
           label: "انتخاب"
           title: "انتخاب نوشته"
@@ -2200,18 +2201,18 @@ fa_IR:
         select_all: انتخاب همه
         deselect_all: عدم انتخاب همه
         description:
-          one: شما <b>{{count}}</b> نوشته انتخاب کرده اید
-          other: "شما <b>{{count}}</b> نوشته انتخاب کرده اید"
+          one: شما <b>%{count}</b> نوشته انتخاب کرده اید
+          other: "شما <b>%{count}</b> نوشته انتخاب کرده اید"
     post:
       quote_reply: "نقل‌قول"
       edit_reason: "دلیل:"
-      post_number: "نوشته {{number}}"
+      post_number: "نوشته %{number}"
       ignored: "محتوای نادیده گرفته‌شد"
       wiki_last_edited_on: "دانشنامه آخرین بار در این زمان ویرایش شده"
       last_edited_on: "نوشته آخرین بار ویرایش شده در"
       reply_as_new_topic: "پاسخگویی به عنوان یک موضوع لینک شده"
       reply_as_new_private_message: "پاسخ به عنوان پیام جدید به همین دریافت کنندگان"
-      continue_discussion: "ادامه دادن بحث از {{postLink}}:"
+      continue_discussion: "ادامه دادن بحث از %{postLink}:"
       follow_quote: "برو به نوشته ای که نقل‌قول شده"
       show_full: "نمایش کامل نوشته"
       show_hidden: "دیدن محتوای نادیده گرفته‌شد"
@@ -2222,27 +2223,27 @@ fa_IR:
       expand_collapse: "باز کردن/بستن"
       locked: "یکی از دست‌اندرکاران انجمن این پست را جهت جلوگیری از ویرایش قفل کرده است"
       gap:
-        one: "{{count}} پاسخ پنهان را مشاهده کنید"
-        other: "{{count}} پاسخ پنهان را مشاهده کنید"
+        one: "%{count} پاسخ پنهان را مشاهده کنید"
+        other: "%{count} پاسخ پنهان را مشاهده کنید"
       unread: "نوشته‌ی خوانده نشده"
       has_replies:
-        one: "{{count}} پاسخ"
-        other: "{{count}} پاسخ"
+        one: "%{count} پاسخ"
+        other: "%{count} پاسخ"
       has_likes_title:
-        one: "{{count}} کاربر این مورد را پسندیده‌اند"
-        other: "{{count}} کاربر این مورد را پسندیده‌اند"
+        one: "%{count} کاربر این مورد را پسندیده‌اند"
+        other: "%{count} کاربر این مورد را پسندیده‌اند"
       has_likes_title_only_you: "شما این نوشته را پسندیده‌اید"
       has_likes_title_you:
-        one: "شما و {{count}} شخص دیگر این نوشته را پسندیده‌اید"
-        other: "شما و {{count}} شخص دیگر این نوشته را پسندیده‌اید"
+        one: "شما و %{count} شخص دیگر این نوشته را پسندیده‌اید"
+        other: "شما و %{count} شخص دیگر این نوشته را پسندیده‌اید"
       errors:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         upload: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
-        file_too_large: "با عرض پوزش، حجم پرونده بسیار بالاست (بالاترین حجم قابل بارگذاری {{max_size_kb}} کیلوبایت است). چرا فایل‌های حجیم را در سرویس‌های ابری بارگذاری نمی‌کنید و پیوند آن را اینجا نمی‌چسبانید؟"
+        file_too_large: "با عرض پوزش، حجم پرونده بسیار بالاست (بالاترین حجم قابل بارگذاری %{max_size_kb} کیلوبایت است). چرا فایل‌های حجیم را در سرویس‌های ابری بارگذاری نمی‌کنید و پیوند آن را اینجا نمی‌چسبانید؟"
         too_many_uploads: "متأسفیم، هر بار تنها می‌توانید یک پرونده را بار‌گذاری کنید."
-        too_many_dragged_and_dropped_files: "با عرض پوزش، شما فقط می‌توانید {{max}} پرونده به صورت یک‌جا بارگذاری کنید."
-        upload_not_authorized: "با عرض پوزش، فایلی که در حال‌ بارگذاری آن هستید مجاز نیست. (پسوند‌های قابل بارگذاری: {{authorized_extensions}})."
+        too_many_dragged_and_dropped_files: "با عرض پوزش، شما فقط می‌توانید %{max} پرونده به صورت یک‌جا بارگذاری کنید."
+        upload_not_authorized: "با عرض پوزش، فایلی که در حال‌ بارگذاری آن هستید مجاز نیست. (پسوند‌های قابل بارگذاری: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار‌گذاری کنند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
@@ -2323,8 +2324,8 @@ fa_IR:
             one: "این را بخوان"
             other: "خوانده اند"
           like_capped:
-            one: "و {{count}} نفر دیگر این را دوست داشتند"
-            other: "و {{count}} نفر دیگر این را پسندیده‌اند."
+            one: "و %{count} نفر دیگر این را دوست داشتند"
+            other: "و %{count} نفر دیگر این را پسندیده‌اند."
         by_you:
           off_topic: "شما برای این مورد پرچم خارج از بحث زدید"
           spam: "شما برای این مورد پرچم هرزنامه زدید"
@@ -2336,11 +2337,11 @@ fa_IR:
       delete:
         confirm:
           one: "آیا مطمئن هستید که می خواهید آن پست را حذف کنید؟"
-          other: "آیا مطمئن هستید که می‌خواهید آن {{count}} فرسته را حذف کنید؟"
+          other: "آیا مطمئن هستید که می‌خواهید آن %{count} فرسته را حذف کنید؟"
       merge:
         confirm:
           one: "آیا مطمئن هستید که می خواهید آن پست ها را ادغام کنید؟"
-          other: "آیا مطمئن هستید که می‌خواهید آن {{count}} فرسته را ادغام کنید؟"
+          other: "آیا مطمئن هستید که می‌خواهید آن %{count} فرسته را ادغام کنید؟"
       revisions:
         controls:
           first: "بازبینی نخست"
@@ -2352,7 +2353,7 @@ fa_IR:
           revert: "بازگشت به این بازبینی"
           edit_wiki: "ویرایش دانشنامه"
           edit_post: "ویرایش نوشته"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong>{{icon}}<strong>{{current}}</strong>/{{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong>%{icon}<strong>%{current}</strong>/%{total}"
         displays:
           inline:
             title: "نمایش خروجی رندر با اضافات و از بین بردن درون خطی"
@@ -2515,14 +2516,14 @@ fa_IR:
       custom_placeholder_notify_moderators: "به ما اجازه دهید بدانیم شما در مورد چه چیز آن نگران هستید، و تا جای ممکن از پیوند‌ها و مثال‌های مرتبط استفاده کنید."
       custom_message:
         at_least:
-          one: "حداقل {{count}} نویسه وارد کنید"
-          other: "حداقل {{count}} نویسه وارد کنید"
+          one: "حداقل %{count} نویسه وارد کنید"
+          other: "حداقل %{count} نویسه وارد کنید"
         more:
-          one: "{{count}} نیاز است..."
-          other: "{{count}} نیاز است..."
+          one: "%{count} نیاز است..."
+          other: "%{count} نیاز است..."
         left:
-          one: "{{count}} باقی مانده"
-          other: "{{count}} باقی مانده"
+          one: "%{count} باقی مانده"
+          other: "%{count} باقی مانده"
     flagging_topic:
       title: "تشکر برای کمک به جامعه مدنی انجمن ما!"
       action: "پرچم‌گذاری موضوع"
@@ -2566,7 +2567,7 @@ fa_IR:
         title: "این تاپیک یک پیام‌خصوصی است"
         help: "این تاپیک یک پیام‌خصوصی است"
     posts: "نوشته‌ها"
-    posts_long: "این موضوع {{number}} نوشته دارد"
+    posts_long: "این موضوع %{number} نوشته دارد"
     posts_likes_MF: |
       این موضوع دارای {count, plural, one {1 پاسخ} other {# پاسخ}} است {ratio, select,
       low {و مورد پسند دیگران واقع شده است}
@@ -2580,21 +2581,21 @@ fa_IR:
       other: "بازدیدها"
     replies: "پاسخ‌ها"
     views_long:
-      one: "این موضوع {{number}} بار دیده شده"
-      other: "این موضوع {{number}} بار دیده شده"
+      one: "این موضوع %{number} بار دیده شده"
+      other: "این موضوع %{number} بار دیده شده"
     activity: "فعالیت"
     likes: "پسندها"
     likes_lowercase:
       one: "پسند‌ها"
       other: "پسند‌ها"
-    likes_long: "{{number}} پسند در این موضوع وجود دارد"
+    likes_long: "%{number} پسند در این موضوع وجود دارد"
     users: "کاربران"
     users_lowercase:
       one: "کاربران"
       other: "کاربران"
     category_title: "دسته"
     history: "تاریخچه"
-    changed_by: "توسط {{author}}"
+    changed_by: "توسط %{author}"
     raw_email:
       title: "ایمیل دریافتی"
       not_available: "در دسترس نیست!"
@@ -2605,34 +2606,34 @@ fa_IR:
       latest:
         title: "آخرین"
         title_with_count:
-          one: "آخرین ({{count}})"
-          other: "آخرین ({{count}})"
+          one: "آخرین (%{count})"
+          other: "آخرین (%{count})"
         help: "موضوعات با نوشته‌های تازه"
       read:
         title: "خواندن"
         help: "موضوعاتی که شما خواندید، به ترتیب آخرین خوانده شده‌ها. "
       categories:
         title: "دسته‌‌بندی‌ها"
-        title_in: "دسته بندی - {{categoryName}}"
+        title_in: "دسته بندی - %{categoryName}"
         help: "همه‌ی موضوعات در دسته‌‌بندی‌ها جای گرفتند"
       unread:
         title: "خوانده‌ نشده‌"
         title_with_count:
-          one: " ({{count}}) خوانده‌ نشده‌"
-          other: " ({{count}}) خوانده‌ نشده‌"
+          one: " (%{count}) خوانده‌ نشده‌"
+          other: " (%{count}) خوانده‌ نشده‌"
         help: "موضوعاتی که در حال حاضر مشاهده می کنید یا دنبال می کنید با نوشته های خوانده نشده"
         lower_title_with_count:
-          one: "{{count}} خوانده نشده"
-          other: "{{count}} خوانده نشده"
+          one: "%{count} خوانده نشده"
+          other: "%{count} خوانده نشده"
       new:
         lower_title_with_count:
-          one: "{{count}} تازه"
-          other: "{{count}} تازه"
+          one: "%{count} تازه"
+          other: "%{count} تازه"
         lower_title: "جدید"
         title: "جدید"
         title_with_count:
-          one: "({{count}}) جدید"
-          other: "({{count}}) جدید"
+          one: "(%{count}) جدید"
+          other: "(%{count}) جدید"
         help: "موضوعات ایجاد شده در چند روز گذشته"
       posted:
         title: "نوشته‌های من"
@@ -2641,11 +2642,11 @@ fa_IR:
         title: "نشانک‌ها"
         help: "موضوعاتی که نشانک زده‌اید"
       category:
-        title: "{{categoryName}}"
+        title: "%{categoryName}"
         title_with_count:
-          one: "{{categoryName}} ({{count}})"
-          other: "{{categoryName}} ({{count}})"
-        help: "موضوعات تازه در دستهٔ {{categoryName}}"
+          one: "%{categoryName} (%{count})"
+          other: "%{categoryName} (%{count})"
+        help: "موضوعات تازه در دستهٔ %{categoryName}"
       top:
         title: "برترین‌ها"
         help: "بیشترین موضوعات فعال در سال گذشته، ماه ، هفته یا روز"
@@ -3089,11 +3090,11 @@ fa_IR:
           none: "رویداد مشابهی وجود ندارد"
           redeliver: "تحویل مجدد"
           incoming:
-            one: "{{count}} رویداد جدید جود دارد."
-            other: "{{count}} رویداد جدید جود دارد."
+            one: "%{count} رویداد جدید جود دارد."
+            other: "%{count} رویداد جدید جود دارد."
           completed_in:
-            one: "در {{count}} ثانیه کامل شد."
-            other: "در {{count}} ثانیه کامل شد."
+            one: "در %{count} ثانیه کامل شد."
+            other: "در %{count} ثانیه کامل شد."
           request: "درخواست"
           response: "پاسخ"
           redeliver_confirm: "آیا از تحویل مجدد payload اطمینان دارید؟"
@@ -3145,11 +3146,11 @@ fa_IR:
           label: "بار گذاری"
           title: "آپلود یک نسخه پشتیبان برای نمونه"
           uploading: "در حال بار گذاری ..."
-          uploading_progress: "درحال بارگذاری... 0 {{progress}}%"
-          error: "هنگام آپلود خطایی رخ می دهد '{{filename}}': {{message}}"
+          uploading_progress: "درحال بارگذاری... 0 %{progress}%"
+          error: "هنگام آپلود خطایی رخ می دهد '%{filename}': %{message}"
         operations:
           is_running: "عملیاتی در جریان است..."
-          failed: "{{operation}} ناموفق شد. لطفا گزارشات را بررسی نمایید."
+          failed: "%{operation} ناموفق شد. لطفا گزارشات را بررسی نمایید."
           cancel:
             label: "لغو کردن"
             title: "کنار گذاشتن عملیات کنونی"
@@ -3263,7 +3264,7 @@ fa_IR:
           disabled_component_tooltip: "این کامپوننت غیر فعال شده"
           default_theme_tooltip: "این تم، تم پیش‌فرض انجمن است"
           updates_available_tooltip: "بروزرسانی برای این تم موجود است"
-          and_x_more: "و {{count}} مورد دیگر"
+          and_x_more: "و %{count} مورد دیگر"
           collapse: جمع کردن
           uploads: "بارگذاری‌ها"
           no_uploads: "می‌توانید فایل‌های ثابت همراه با قالب خود مثل فونت و تصویر بارگذاری کنید"
@@ -3303,7 +3304,7 @@ fa_IR:
           theme_translations: "ترجمه تم"
           commits_behind:
             one: "قالب %{count}تغییر دیگر نیاز دارد."
-            other: "قالب {{count}} تغییر دیگر نیاز دارد."
+            other: "قالب %{count} تغییر دیگر نیاز دارد."
           scss:
             text: "سی اس اس"
             title: "کد CSS مد نظرتان را وارد کنید، از تمام کد‌های CSS و SCSS معتبر پشتیبانی می‌شود."
@@ -3608,8 +3609,8 @@ fa_IR:
           title: "ایمیل این کاربران را قابل رویت کن"
           text: "نشان دادن"
       user:
-        suspend_failed: "در جریان به تعلیق درآوردن این کاربر اشتباهی رخ داد. {{error}}"
-        unsuspend_failed: "در جریان خارج کردن این کاربر از تعلیق، اشتباهی رخ داد {{error}}"
+        suspend_failed: "در جریان به تعلیق درآوردن این کاربر اشتباهی رخ داد. %{error}"
+        unsuspend_failed: "در جریان خارج کردن این کاربر از تعلیق، اشتباهی رخ داد %{error}"
         suspend_duration: "کاربر چه مدت در تعلیق خواهد بود؟"
         suspend_reason_label: "شما چرا معلق شده‌اید؟ این متن بر روی صفحه‌ی نمایه‌ی کاربر <b/>برای همه قابل مشاهده خواهد بود<b>، و در هنگام ورود به سیستم نیز به خود کاربر نشان داده خواهد شد. لطفاً خلاصه بنویسید."
         suspend_reason: "دلیل"
@@ -3906,6 +3907,7 @@ fa_IR:
         title: "شکلک"
         help: "اضافه کردن شکلک های جدید که در دسترس همگان خواهد بود.(PROTIP: کشیدن و رها کردن چند فایل در یک بار)"
         add: "افزودن شکلک جدید"
+        uploading: "در حال بار گذاری ..."
         name: "نام"
         group: "گروه"
         image: "تصویر"

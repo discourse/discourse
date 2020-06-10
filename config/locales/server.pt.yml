@@ -530,7 +530,7 @@ pt:
       title: "Inapropriado"
       long_form: "sinalizou isto como inapropriado"
     notify_user:
-      title: "Enviar uma mensagem a @{{username}}"
+      title: "Enviar uma mensagem a @%{username}"
       long_form: "utilizador com mensagens"
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1228,6 +1228,7 @@ pt:
       category: "Categorias"
       topic: "Resultados"
       user: "Utilizadores"
+    results_page: "Resultados da pesquisa por '%{term}'"
   sso:
     login_error: "Erro de Início de Sessão"
     not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
@@ -2104,6 +2105,13 @@ pt:
   joined: "Juntou-se"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
+      quoted: '%{username} citou-o em "%{topic}" - %{site_title}'
+      replied: '%{username} respondeu-lhe em "%{topic}" - %{site_title}'
+      posted: '%{username} publicou em "%{topic}" - %{site_title}'
+      linked: '%{username} ligou à sua publicação de "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
       confirm_title: "Notificações ativas - %{site_title}"
       confirm_body: "Sucesso! As notificações foram ativadas."
   reviewables:

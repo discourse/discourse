@@ -464,6 +464,7 @@ gl:
     errors:
       min_username_length_range: "O mínimo non pode ser maior que o máximo."
   search:
+    within_post: "#%{post_number} de %{username}"
     types:
       category: "Categorías"
       user: "Usuarios"
@@ -478,6 +479,7 @@ gl:
       invalid: "contén caracteres incorrectos"
   login:
     admin_not_allowed_from_ip_address: "Non podes acceder como administrador desde este enderezo IP."
+    not_available: "Non dispoñíbel. Tentar %{suggestion}?"
     new_registrations_disabled: "Neste momento non se permite o rexistro de novas contas."
   admin:
     email:
@@ -597,6 +599,14 @@ gl:
       emoji:
         title: "Emoji"
   joined: "Inscrito"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} mencionoute en "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} mencionoute en "%{topic}" - %{site_title}'
+      quoted: '%{username} citoute en "%{topic}" - %{site_title}'
+      replied: '%{username} respondeute en "%{topic}" - %{site_title}'
+      posted: '%{username} publicou en "%{topic}" - %{site_title}'
+      linked: '%{username} ligou a túa publicación desde "%{topic}" - %{site_title}'
   reviewables:
     actions:
       agree_and_suspend:
@@ -607,6 +617,8 @@ gl:
         title: "Eliminar"
       disagree:
         title: "Non aceptar"
+      ignore:
+        title: "Ignorar"
       approve:
         title: "Aprobar"
       reject_user:

@@ -405,7 +405,7 @@ bg:
       title: "Неприлично"
       long_form: "Маркирахте това като неприлично"
     notify_user:
-      title: "Изпрати съобщение до @{{username}}"
+      title: "Изпрати съобщение до @%{username}"
       long_form: "оведомен потребител"
       email_title: 'Вашата публикация в "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -915,6 +915,7 @@ bg:
       category: "Категории"
       topic: "Резултати"
       user: "Потребители"
+    results_page: "Резултати от търсенето на '%{term}'"
   original_poster: "Автор"
   most_posts: "Повечето мнения"
   most_recent_poster: "Последен Автор"

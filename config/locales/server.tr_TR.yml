@@ -771,7 +771,7 @@ tr_TR:
       short_description: '<a href="%{base_path}/guidelines">Topluluk kurallarımızın</a> ihlali'
       long_form: "bunu uygunsuz olarak bildirdi"
     notify_user:
-      title: "@{{username}} adlı kullanıcıya ileti gönder"
+      title: "@%{username} adlı kullanıcıya ileti gönder"
       description: "Bu kişiyle doğrudan ve kişisel olarak gönderileri hakkında konuşmak istiyorum."
       short_description: "Bu kişiyle doğrudan ve kişisel olarak gönderileri hakkında konuşmak istiyorum."
       long_form: "ileti gönderilen kullanıcı"
@@ -2583,10 +2583,6 @@ tr_TR:
     email_reject_bad_destination_address:
       title: "E-posta Reddedildi Sorunlu Alıcı Adresi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Bilinmeyen: Adres"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        Gönderilen adreslerinin hiçbiri bilinmiyor veya e-mail deki mesaj ID başlıkları değiştirildi.Lütfen görevliler tarafından sağlanan doğru e-mail adresine yolladığınızdan emin olun.
     email_reject_old_destination:
       title: "E-posta Reddedildi Eski Gönderim Yeri"
       subject_template: "[%{email_prefix}] E-posta sorunu - Eski bir bildirimi yanıtlamaya çalışıyorsunuz"
