@@ -105,11 +105,13 @@ export default Controller.extend(CanCheckEmails, {
     const emails = [];
 
     if (primaryEmail) {
-      emails.push(EmberObject.create({ 
-        email: primaryEmail, 
-        primary: true, 
-        confirmed: true
-      }));
+      emails.push(
+        EmberObject.create({
+          email: primaryEmail,
+          primary: true,
+          confirmed: true
+        })
+      );
     }
 
     if (secondaryEmails) {
