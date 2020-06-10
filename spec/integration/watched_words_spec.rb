@@ -141,7 +141,13 @@ describe WatchedWord do
     end
 
     it "should flag the post as inappropriate" do
-      should_flag_post(tl2_user, "I thought the #{flag_word.word} was bad.", Fabricate(:topic, user: tl2_user))
+      topic = Fabricate(:topic, user: tl2_user)
+      post = Fabricate(:post, raw: "I said.... #{flag_word.word}", topic: topic, user: tl2_user)
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(PostAction.where(post_id: post.id, post_action_type_id: PostActionType.types[:inappropriate]).exists?).to eq(true)
+      reviewable = ReviewableFlaggedPost.where(target: post)
+      expect(reviewable).to be_present
+      expect(ReviewableScore.where(reviewable: reviewable, reason: 'watched_word')).to be_present
     end
 
     it "should look at the title too" do

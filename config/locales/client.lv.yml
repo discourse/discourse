@@ -24,8 +24,8 @@ lv:
             mb: MB
             tb: TB
       short:
-        thousands: "{{number}} tūkst."
-        millions: "{{number}} milj."
+        thousands: "%{number} tūkst."
+        millions: "%{number} milj."
     dates:
       time: "hh:mm"
       timeline_date: "MMM YYYY"
@@ -214,12 +214,12 @@ lv:
     weekly: "katru nedēļu"
     every_month: "katru mēnesi"
     every_six_months: "katrus sešus mēnešus"
-    max_of_count: "ne vairāk kā {{count}}"
+    max_of_count: "ne vairāk kā %{count}"
     alternation: "vai"
     character_count:
-      zero: "{{count}} zīmes"
-      one: "{{count}} zīme"
-      other: "{{count}} zīmes"
+      zero: "%{count} zīmes"
+      one: "%{count} zīme"
+      other: "%{count} zīmes"
     related_messages:
       title: "Saistītās ziņas"
     suggested_topics:
@@ -331,19 +331,19 @@ lv:
         description: "Mēs saņēmām jūsu ierakstu, taču vispirms to jāapstiprina moderatoram. Lūdzu, esiet pacietīgi."
         ok: "OK"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> pievienoja ierakstus <a href='{{topicUrl}}'>tēmai</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>Jūs</a> pievienojāt ierakstu <a href='{{topicUrl}}'>tēmai</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> atbildēja <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>Jūs</a> atbildējāt <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> atbildēja <a href='{{topicUrl}}'>temā</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>Jūs</a> atbildējāt <a href='{{topicUrl}}'>temā</a>"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> pieminēja <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> pieminēja <a href='{{user2Url}}'>Jūs</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Jūs</a> pieminējāt <a href='{{user2Url}}'>{{another_user}}</a>"
-      posted_by_user: "Ierakstīja <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "Ierakstījāt <a href='{{userUrl}}'>Jūs</a>"
-      sent_by_user: "Nosūtīja <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "Nosūtījāt <a href='{{userUrl}}'>Jūs</a>"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> pievienoja ierakstus <a href='%{topicUrl}'>tēmai</a>"
+      you_posted_topic: "<a href='%{userUrl}'>Jūs</a> pievienojāt ierakstu <a href='%{topicUrl}'>tēmai</a>"
+      user_replied_to_post: "<a href='%{userUrl}'>%{user}</a> atbildēja <a href='%{postUrl}'>%{post_number}</a>"
+      you_replied_to_post: "<a href='%{userUrl}'>Jūs</a> atbildējāt <a href='%{postUrl}'>%{post_number}</a>"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> atbildēja <a href='%{topicUrl}'>temā</a>"
+      you_replied_to_topic: "<a href='%{userUrl}'>Jūs</a> atbildējāt <a href='%{topicUrl}'>temā</a>"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> pieminēja <a href='%{user2Url}'>%{another_user}</a>"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> pieminēja <a href='%{user2Url}'>Jūs</a>"
+      you_mentioned_user: "<a href='%{user1Url}'>Jūs</a> pieminējāt <a href='%{user2Url}'>%{another_user}</a>"
+      posted_by_user: "Ierakstīja <a href='%{userUrl}'>%{user}</a>"
+      posted_by_you: "Ierakstījāt <a href='%{userUrl}'>Jūs</a>"
+      sent_by_user: "Nosūtīja <a href='%{userUrl}'>%{user}</a>"
+      sent_by_you: "Nosūtījāt <a href='%{userUrl}'>Jūs</a>"
     directory:
       filter_name: "atlasīt pēc lietotājvārda"
       title: "Lietotāji"
@@ -520,7 +520,7 @@ lv:
     user_fields:
       none: "(izvēlieties opciju)"
     user:
-      said: "{{username}}:"
+      said: "%{username}:"
       profile: "Profils"
       mute: "Klusināt"
       edit: "Mainīt iestatījumus"
@@ -572,11 +572,11 @@ lv:
       external_links_in_new_tab: "Atvērt visas saites jaunā cilnē"
       enable_quoting: "Ieslēgt atbildi ar iezīmētā teksta citēšanu"
       change: "mainīt"
-      moderator: "{{user}} ir moderators"
-      admin: "{{user}} ir administrators"
+      moderator: "%{user} ir moderators"
+      admin: "%{user} ir administrators"
       moderator_tooltip: "Šis lietotājs ir moderators"
       admin_tooltip: "Šis lietotājs ir administrators"
-      suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz {{date}}."
+      suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_reason: "Iemesls:"
       github_profile: "Github"
       email_activity_summary: "Aktivitātes atskaite"
@@ -588,7 +588,7 @@ lv:
           Klusinātās tēmas un sadaļas nav iekļautas šajos e-pastos.
         individual: "Sūtīt e-pastu par katru jauno ierakstu"
         individual_no_echo: "Sūtīt e-pastu par katru jauno ierakstu, izņemot manus"
-        many_per_day: "Sūtīt e-pastu par katru jauno ierakstu (apmēram {{dailyEmailEstimate}} dienā)"
+        many_per_day: "Sūtīt e-pastu par katru jauno ierakstu (apmēram %{dailyEmailEstimate} dienā)"
         few_per_day: "Sūtīt e-pastu par katru jauno ierakstu (apmēram divus dienā)"
       tag_settings: "Tagi"
       watched_tags: "Skatīts"
@@ -614,7 +614,6 @@ lv:
       admin_delete: "Dzēst"
       users: "Lietotāji"
       muted_users: "Klusināts"
-      muted_users_instructions: "Nerādīt paziņojumus no šiem lietotājiem."
       tracked_topics_link: "Parādīt"
       automatically_unpin_topics: "Automātiski atspraust tēmas, kad sasniedzu beigas."
       apps: "Lietotnes"
@@ -699,12 +698,12 @@ lv:
         title: "E-pasts"
         ok: "Mēs jums nosūtīsim apstiprinājuma e-pastu"
         invalid: "Lūdzu ievadiet derīgu e-pasta adresi"
-        authenticated: "Jūsu e-pastu autentificēja {{provider}}"
+        authenticated: "Jūsu e-pastu autentificēja %{provider}"
         frequency_immediately: "Mēs nekavējoties sūtīsim jums epastu par jaunām neizlasītām ziņām."
         frequency:
-          zero: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējo {{count}} minūšu laikā."
+          zero: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējo %{count} minūšu laikā."
           one: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējās minūtes laikā."
-          other: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējo {{count}} minūšu laikā."
+          other: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējo %{count} minūšu laikā."
       associated_accounts:
         revoke: "Atsaukt"
         cancel: "Atcelt"
@@ -717,9 +716,9 @@ lv:
       username:
         title: "Lietotājvārds"
         instructions: "unikāls, bez atstarpēm, īss"
-        short_instructions: "Cilvēki var pieminēt jūs kā @{{username}}"
+        short_instructions: "Cilvēki var pieminēt jūs kā @%{username}"
         available: "Jūsu lietotājvārds ir pieejams"
-        not_available: "Nav pieejams. Mēģiniet {{suggestion}}?"
+        not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
         not_available_no_suggestion: "Nav pieejams"
         too_short: "Jūsu lietotājvārds ir parāk īss"
         too_long: "Jūsu lietotājvārds ir pārāk garš"
@@ -803,14 +802,14 @@ lv:
         truncated:
           zero: "Nav ielūgumu."
           one: "Pirmais ielūgums."
-          other: "Pirmie {{count}} ielūgumi."
+          other: "Pirmie %{count} ielūgumi."
         redeemed: "Pieņemtie ielūgumi"
         redeemed_tab: "Pieņemti"
-        redeemed_tab_with_count: "Pieņemti ({{count}})"
+        redeemed_tab_with_count: "Pieņemti (%{count})"
         redeemed_at: "Pieņemti"
         pending: "Gaidošie ielūgumi"
         pending_tab: "Gaidošie"
-        pending_tab_with_count: "Gaidošie ({{count}})"
+        pending_tab_with_count: "Gaidošie (%{count})"
         topics_entered: "Apskatītās tēmas"
         posts_read_count: "Izlasītie ieraksti"
         expired: "Šis ielūgums ir izbeidzies."
@@ -824,13 +823,17 @@ lv:
         time_read: "Laiks, ko lasīja"
         days_visited: "Dienas, kurās apmeklēja"
         account_age_days: "Konta vecums dienās"
+        links_tab: "Saites"
+        link_created_at: "Radīts"
+        link_groups: Grupas
         create: "Nosūtīt ielūgumu"
         generate_link: "Kopēt ielūguma saiti"
         link_generated: "Ielūguma saite gatava!"
         valid_for: "Ielūguma saite ir derīga tikai šai e-pasta adresei: %{email}"
+        invite_link:
+          success: "Ielūguma saite gatava!"
         bulk_invite:
           none: "Jūs vēl šeit neesat nevienu ielūdzis. Nosūtiet atsevišķus ielūgumus vai ielūdziet daudzus lietotājus vienlaicīgi,<a href='https://meta.discourse.org/t/send-bulk-invites/16468'> augšupielādējot CSV failu</a>"
-          text: "Ielūgt visus no faila"
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:
@@ -914,7 +917,7 @@ lv:
       desc:
         network: "Lūdzu, pārbaudiet jūsu savienojumu."
         network_fixed: "Šķiet, tīkls atkal pieslēgts."
-        server: "Kļūdas kods: {{status}}"
+        server: "Kļūdas kods: %{status}"
         forbidden: "Jums nav pieejas šai lapai."
         not_found: "Upss, aplikācija mēģināja ielādēt saiti, kura neeksistē."
         unknown: "Kaut kas nogāja greizi."
@@ -959,8 +962,8 @@ lv:
       hidden_for_session: "Labi, pajautāšu jums rīt. Starp citu, vienmēr var piereģistrēties, spiežot \"Ieiet sistēmā\"."
     summary:
       enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
-      description: "Ir <b>{{replyCount}}</b> atbildes."
-      description_time: "Ir <b>{{replyCount}}</b> atbildes ar paredzamo lasīšanas laiku: <b>{{readingTime}} minūtes</b>."
+      description: "Ir <b>%{replyCount}</b> atbildes."
+      description_time: "Ir <b>%{replyCount}</b> atbildes ar paredzamo lasīšanas laiku: <b>%{readingTime} minūtes</b>."
       enable: "Tēmas kopsavilkums"
       disable: "Parādīt visus ierakstus"
     deleted_filter:
@@ -971,8 +974,8 @@ lv:
     private_message_info:
       title: "Ziņa"
       edit: "Pievienot vai noņemt..."
-      remove_allowed_user: "Vai jūs tiešām gribat dzēst {{name}} no šīs ziņas?"
-      remove_allowed_group: "Vai jūs tiešām gribat dzēst {{name}} no šīs ziņas?"
+      remove_allowed_user: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
+      remove_allowed_group: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
     email: "E-pasts"
     username: "Lietotājvārds"
     last_seen: "Redzēts"
@@ -1015,7 +1018,7 @@ lv:
       awaiting_activation: "Jūsu profils gaida aktivizāciju; izmantojiet saiti \"aizmirsu paroli\", lai izsūtītu citu aktivizācijas e-pastu."
       awaiting_approval: "Darbinieki pagaidām nav apstiprinājuši jūsu profilu. Jums nosūtīs e-pastu, kad tas notiks."
       requires_invite: "Atvainojiet, šim forumam var piekļūt tikai ar ielūgumiem."
-      not_activated: "Lai ieietu forumā, nepieciešams aktivizēt jūsu profilu. Mēs nosūtījām uz e-pastu {{sentTo}} instrukcijas, kā to paveikt."
+      not_activated: "Lai ieietu forumā, nepieciešams aktivizēt jūsu profilu. Mēs nosūtījām uz e-pastu %{sentTo} instrukcijas, kā to paveikt."
       not_allowed_from_ip_address: "Jūs nevarat ieiet no šīs IP adreses."
       admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
       resend_activation_email: "Klikšķiniet šeit, lai saņemtu aktivācijas e-pastu atkārtoti."
@@ -1023,7 +1026,7 @@ lv:
       change_email: "Mainīt e-pasta adresi"
       provide_new_email: "Norādiet jaunu adresi, un mēs atkārtoti nosūtīsim jūsu apstiprinājuma e-pastu."
       submit_new_email: "Atjaunināt e-pasta adresi"
-      sent_activation_email_again: "Mēs nosūtijām vēl vienu aktivācijas epastu uz <b>{{currentEmail}}</b>. Tas var pienākt dažu minūšu laikā; atcerieties pārbaudīt jūsu surogātpasta mapi."
+      sent_activation_email_again: "Mēs nosūtijām vēl vienu aktivācijas epastu uz <b>%{currentEmail}</b>. Tas var pienākt dažu minūšu laikā; atcerieties pārbaudīt jūsu surogātpasta mapi."
       to_continue: "Lūdzu ieejiet"
       preferences: "Jums ir jāieiet, lai izmainītu savus iestatījumus."
       forgot: "Es nevaru atcerēties sava konta informāciju."
@@ -1107,18 +1110,18 @@ lv:
       similar_topics: "Jūsu tēma ir līdzīga..."
       drafts_offline: "lokāls melnraksts"
       group_mentioned:
-        zero: "Pieminot {{group}}, neviens nesaņems paziņojumu, jo grupa ir tukša."
-        one: "Pieminot {{group}}, šis cilvēks saņems paziņojumu – esat pārliecināti?"
-        other: "Pieminot {{group}}, šiem <a href='{{group_link}}'>{{count}} cilvēki</a> saņems paziņojumu – esat pārliecināti?"
+        zero: "Pieminot %{group}, neviens nesaņems paziņojumu, jo grupa ir tukša."
+        one: "Pieminot %{group}, šis cilvēks saņems paziņojumu – esat pārliecināti?"
+        other: "Pieminot %{group}, šiem <a href='%{group_link}'>%{count} cilvēki</a> saņems paziņojumu – esat pārliecināti?"
       cannot_see_mention:
-        category: "Jūs pieminējāt {{username}}, kas ir bez piekļuves šai sadaļai un tāpēc nesaņems nekādu paziņojumu. Lai to izlabotu, pievieno viņus grupai ar pieeju šai sadaļai."
-        private: "Jūsu pieminējāt {{username}}, kas neredzēs šo privāto ziņu un tāpēc nesaņems nekādu paziņojumu. Lai to izlabotu, pievieno viņus šai ziņai."
-      duplicate_link: "Izskatās, ka jūsu saiti uz <b>{{domain}}</b> tēmā jau ievietoja <b>@{{username}}</b> <a href='{{post_url}}'>ierakstā {{ago}}</a> - vai jūs tiešām vēlaties to ievietot vēlreiz?"
+        category: "Jūs pieminējāt %{username}, kas ir bez piekļuves šai sadaļai un tāpēc nesaņems nekādu paziņojumu. Lai to izlabotu, pievieno viņus grupai ar pieeju šai sadaļai."
+        private: "Jūsu pieminējāt %{username}, kas neredzēs šo privāto ziņu un tāpēc nesaņems nekādu paziņojumu. Lai to izlabotu, pievieno viņus šai ziņai."
+      duplicate_link: "Izskatās, ka jūsu saiti uz <b>%{domain}</b> tēmā jau ievietoja <b>@%{username}</b> <a href='%{post_url}'>ierakstā %{ago}</a> - vai jūs tiešām vēlaties to ievietot vēlreiz?"
       error:
         title_missing: "Vajadzīgs nosaukums"
-        title_too_short: "Nosaukumā jābūt vismaz {{min}} burtiem"
-        title_too_long: "Nosaukums nevar būt garāks par {{max}} burtiem"
-        post_length: "Ierakstā jābūt vismaz {{min}} burtiem"
+        title_too_short: "Nosaukumā jābūt vismaz %{min} burtiem"
+        title_too_long: "Nosaukums nevar būt garāks par %{max} burtiem"
+        post_length: "Ierakstā jābūt vismaz %{min} burtiem"
         category_missing: "Jums ir jāizvēlas sadaļa"
       save_edit: "Saglabāt izmaiņas"
       reply_original: "Atbildēt sākotnējā tēmā"
@@ -1179,12 +1182,12 @@ lv:
       none: "Pašlaik neizdodas ielādēt paziņojumus."
       empty: "Nav atrasti paziņojumi."
       popup:
-        mentioned: '{{username}} pieminēja jūs "{{topic}}" - {{site_title}}'
-        group_mentioned: '{{username}} pieminēja jūs "{{topic}}" - {{site_title}}'
-        quoted: '{{username}} citēja jūs "{{topic}}" - {{site_title}}'
-        replied: '{{username}} atbildēja jums "{{topic}}" - {{site_title}}'
-        posted: '{{username}} ierakstīja "{{topic}}" - {{site_title}}'
-        linked: '{{username}} ievietoja saiti uz jūsu ierakstu no "{{topic}}" - {{site_title}}'
+        mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
+        group_mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
+        quoted: '%{username} citēja jūs "%{topic}" - %{site_title}'
+        replied: '%{username} atbildēja jums "%{topic}" - %{site_title}'
+        posted: '%{username} ierakstīja "%{topic}" - %{site_title}'
+        linked: '%{username} ievietoja saiti uz jūsu ierakstu no "%{topic}" - %{site_title}'
       titles:
         watching_first_post: "Jauna tēma"
     upload_selector:
@@ -1193,9 +1196,9 @@ lv:
       from_my_computer: "No manas ierīces"
       from_the_web: "No interneta"
       remote_tip: "saite uz attēlu"
-      remote_tip_with_attachments: "saite uz attēlu vai failu {{authorized_extensions}}"
+      remote_tip_with_attachments: "saite uz attēlu vai failu %{authorized_extensions}"
       local_tip: "izvēlēties attēlus no jūsu ierīces"
-      local_tip_with_attachments: "izvēlēties attēlus vai failus no jūsu ierīces {{authorized_extensions}}"
+      local_tip_with_attachments: "izvēlēties attēlus vai failus no jūsu ierīces %{authorized_extensions}"
       hint: "(Jūs varat arī augšuplādēt failus, ievelkot tos redaktorā)"
       hint_for_supported_browsers: "Jūs varat arī ievilkt vai ielīmēt redaktorā attēlus"
       uploading: "Augšuplādē"
@@ -1214,13 +1217,13 @@ lv:
       no_results: "Nav rezultātu."
       no_more_results: "Vairāk nav rezultātu."
       searching: "Meklējam..."
-      post_format: "#{{post_number}} - {{username}}"
+      post_format: "#%{post_number} - %{username}"
       more_results: "Ir vēl vairāk rezultātu. Lūdzu precizējiet meklēšanas kritērijus."
       search_google_button: "Google"
       search_google_title: "Meklēt šajā vietnē"
       context:
-        user: "Meklēt ierakstus ar @{{username}}"
-        category: "Meklēt #{{category}} sadaļā"
+        user: "Meklēt ierakstus ar @%{username}"
+        category: "Meklēt #%{category} sadaļā"
         topic: "Meklēt šai tēmā"
         private_messages: "Meklēt ziņās"
       advanced:
@@ -1284,7 +1287,7 @@ lv:
         selected:
           zero: "Jūs izvēlējāties <b>0.</b> tēmas."
           one: "Jūs izvēlējāties <b>%{count}.</b> tēmu."
-          other: "Jūs izvēlējāties <b>{{count}}</b> tēmas."
+          other: "Jūs izvēlējāties <b>%{count}</b> tēmas."
         change_tags: "Aizvietot tagus"
         append_tags: "Pievienot tagus"
         choose_new_tags: "Izvēlēties jaunus tagus šīm tēmām:"
@@ -1297,7 +1300,7 @@ lv:
         posted: "Jūs vel neesat rakstījuši nevienā tēmā."
         latest: "Nav jaunu tēmu. Neraža."
         bookmarks: "Jūs vēl neesat pievienojuši grāmatzīmēm nevienu tēmu."
-        category: "Sadaļā {{category}} nav tēmu."
+        category: "Sadaļā %{category} nav tēmu."
         top: "Nav svarīgu tēmu."
         educate:
           new: '<p>Jūsu jaunās tēmas parādās šeit.</p> <p>Pēc noklusējuma tēmas tiek uzskatītas par jaunām un parādīsies <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">jauns</span> indikators, ja tās tika izveidotas pēdējo 2 dienu laikā.</p> <p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
@@ -1308,14 +1311,14 @@ lv:
         read: "Vairāk lasīto tēmu nav. "
         new: "Vairāk jauno tēmu nav. "
         unread: "Vairāk nelasīto tēmu nav. "
-        category: "Vairāk sadaļās {{category}} tēmu nav. "
+        category: "Vairāk sadaļās %{category} tēmu nav. "
         top: "Vairāk svarīgu tēmu nav. "
         bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
     topic:
       filter_to:
         zero: "tēmā ziņu nav"
         one: "%{count} ziņa tēmā"
-        other: "{{count}} ziņas tēmā"
+        other: "%{count} ziņas tēmā"
       create: "Jauna tēma"
       create_long: "Izveidot jaunu tēmu "
       private_message: "Rakstīt ziņu "
@@ -1335,11 +1338,11 @@ lv:
       new_topics:
         zero: "Jaunu tēmu nav"
         one: "%{count} jauna tēma"
-        other: "{{count}} jaunas tēmas "
+        other: "%{count} jaunas tēmas "
       unread_topics:
         zero: "Nelasītu tēmu nav"
         one: "%{count} nelasīta tēma"
-        other: "{{count}} nelasītas tēmas"
+        other: "%{count} nelasītas tēmas"
       title: "Tēma"
       invalid_access:
         title: "Šī tēma ir privāta "
@@ -1354,25 +1357,25 @@ lv:
       total_unread_posts:
         zero: "Tev šajā tēmā nav neizlasītu ziņojumu"
         one: "Tev šajā tēmā ir %{count} neizlasīts ziņojums"
-        other: "Tev šajā tēmā ir {{count}} neizlasītu ziņojumu "
+        other: "Tev šajā tēmā ir %{count} neizlasītu ziņojumu "
       unread_posts:
         zero: "Tev šajā tēmā nav vecu neizlasītu ziņojumu"
         one: "Tev šajā tēmā ir %{count} vecs neizlasīts ziņojums"
-        other: "Tev šajā tēmā ir {{count}} vecu neizlasītu ziņojumu. "
+        other: "Tev šajā tēmā ir %{count} vecu neizlasītu ziņojumu. "
       new_posts:
         zero: "Šajā tēmā nav jaunu nelasītu ziņojumu"
         one: "Šajā tēmā ir %{count} jauns nelasīts ziņojums"
-        other: "Šajā tēmā ir {{count}} jauni nelasīti ziņojumi"
+        other: "Šajā tēmā ir %{count} jauni nelasīti ziņojumi"
       likes:
         zero: "Šai tēmai nav \"patīk\""
         one: "Šai tēmai ir viens \"patīk\""
-        other: "Šai tēmā ir {{count}} atzinības"
+        other: "Šai tēmā ir %{count} atzinības"
       back_to_list: "Atpakaļ pie tēmu saraksta "
       options: "Tēmas iestatījumi "
       show_links: "rādīt saites šajā tēmā"
       toggle_information: "rādīt / slēpt tēmas informāciju "
-      read_more_in_category: "Vēlies lasīt vēl? Pārlūko citas tēmas: {{catLink}} vai {{latestLink}}."
-      read_more: "Vēlies lasīt vēl? {{catLink}} or {{latestLink}}."
+      read_more_in_category: "Vēlies lasīt vēl? Pārlūko citas tēmas: %{catLink} vai %{latestLink}."
+      read_more: "Vēlies lasīt vēl? %{catLink} or %{latestLink}."
       read_more_MF: "{ UNREAD, plural, =0 {} one { Palikusi <a href='{basePath}/unread'>1 nelasīta</a> } other { Palikušas <a href='{basePath}/unread'># nelasītas</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 jauna</a> tēma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># jaunas</a> tēmas} } remaining, or {CATEGORY, select, true {pārlūkot citas tēmas iekš {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pārlūkot visas sadaļas
       view_latest_topics: Skatīt jaunākās tēmas
@@ -1522,27 +1525,27 @@ lv:
         success_message: "Jūs veiksmīgi ziņojāt par šo tēmu."
       feature_topic:
         title: "Novietot šo tēmu augšgalā"
-        pin: "Nostiprināt šo tēmu sadaļas {{categoryLink}} augšgalā līdz"
-        confirm_pin: "Jums jau ir {{count}} piespraustas tēmas. Pārāk daudz piespraustu tēmu ir apgrūtinājums jauniem un anonīmiem lietotājiem. Vai jūs esat drošs, ka vēlaties piespraust vēl vienu tēmu šajā sadaļā."
-        unpin: "Noņemt šo tēmu no sadaļas {{categoryLink}} augšgala."
-        unpin_until: "Noņemt šo tēmu no sadaļas {{categoryLink}} augšgala vai gaidīt līdz <strong>%{until}</strong>."
+        pin: "Nostiprināt šo tēmu sadaļas %{categoryLink} augšgalā līdz"
+        confirm_pin: "Jums jau ir %{count} piespraustas tēmas. Pārāk daudz piespraustu tēmu ir apgrūtinājums jauniem un anonīmiem lietotājiem. Vai jūs esat drošs, ka vēlaties piespraust vēl vienu tēmu šajā sadaļā."
+        unpin: "Noņemt šo tēmu no sadaļas %{categoryLink} augšgala."
+        unpin_until: "Noņemt šo tēmu no sadaļas %{categoryLink} augšgala vai gaidīt līdz <strong>%{until}</strong>."
         pin_note: "Lietotāji var atspraust tēmu, katrs sev personīgi."
         pin_validation: "Lai piespraustu šo tēmu, ir nepieciešams datums."
-        not_pinned: "Sadaļā {{categoryLink}} nav piespraustu tēmu."
+        not_pinned: "Sadaļā %{categoryLink} nav piespraustu tēmu."
         already_pinned:
-          zero: "Sadaļā {{categoryLink}} šobrīd nav piespraustu tēmu"
-          one: "Sadaļā {{categoryLink}} šobrīd piesprausta {{count}} tēma"
-          other: "Sadaļā {{categoryLink}} šobrīd piespraustas <strong class='badge badge-notification unread'>{{count}}</strong> tēmas"
+          zero: "Sadaļā %{categoryLink} šobrīd nav piespraustu tēmu"
+          one: "Sadaļā %{categoryLink} šobrīd piesprausta %{count} tēma"
+          other: "Sadaļā %{categoryLink} šobrīd piespraustas <strong class='badge badge-notification unread'>%{count}</strong> tēmas"
         pin_globally: "Likt šai tēmai parādīties visu tēmu sarakstu augšgalos līdz"
-        confirm_pin_globally: "Jums jau ir {{count}} globāli piespraustas tēmas. Pārāk daudz piespraustu tēmu ir apgrūtinājums jauniem un anonīmiem lietotājiem. Vai jūs esat drošs, ka vēlaties globāli piespraust vēl vienu tēmu."
+        confirm_pin_globally: "Jums jau ir %{count} globāli piespraustas tēmas. Pārāk daudz piespraustu tēmu ir apgrūtinājums jauniem un anonīmiem lietotājiem. Vai jūs esat drošs, ka vēlaties globāli piespraust vēl vienu tēmu."
         unpin_globally: "Noņemt šo tēmu no visu tēmu sarakstu augšgaliem."
         unpin_globally_until: "Noņemt šo tēmu no visu tēmu sarakstu augšgaliem vai gaidīt līdz <strong>%{until}</strong>."
         global_pin_note: "Lietotāji var atspraust tēmu, katrs sev personīgi."
         not_pinned_globally: "Nav nevienas globāli piespraustas tēmas."
         already_pinned_globally:
-          zero: "Šobrīd globāli piespraustas <strong class='badge badge-notification unread'>{{count}}</strong> tēmas"
+          zero: "Šobrīd globāli piespraustas <strong class='badge badge-notification unread'>%{count}</strong> tēmas"
           one: "Šobrīd globāli piesprausta <strong class='badge badge-notification unread'>%{count}</strong> tēma"
-          other: "Šobrīd globāli piespraustas <strong class='badge badge-notification unread'>{{count}}</strong> tēmas"
+          other: "Šobrīd globāli piespraustas <strong class='badge badge-notification unread'>%{count}</strong> tēmas"
         make_banner: "Pārveidot šo tēmu par baneri, kas parādīsies visu lapu augšpusē."
         remove_banner: "Noņemt baneri, kas parādās visu lapu augšpusē."
         banner_note: "Lietotāji var noņemt baneri, aizverot to. Jebkurā brīdī tikai viena tēma var būt par baneri."
@@ -1572,16 +1575,16 @@ lv:
         to_topic_username: "Jūs esat ievadījis lietotājvārdu. Mēs nosūtīsim paziņojumu ar saiti, kas ļaus pievienoties šai tēmai."
         to_username: "Ievadiet personas, ko vēlētos ielūgt, lietotājvārdu. Mēs nosūtīsim paziņojumu ar saiti, kas ļaus pievienoties šai tēmai."
         email_placeholder: "vards@piemers.com"
-        success_email: "Mēs nosūtījām ielūguma e-pastu uz <b>{{emailOrUsername}}</b>. Mēs paziņosim jums, kad ielūgums būs izmantots. Pārbaudiet ielūgumu cilni jūsu lietotāja lapā, lai sekotu līdzi savu ielūgumu statusiem."
+        success_email: "Mēs nosūtījām ielūguma e-pastu uz <b>%{emailOrUsername}</b>. Mēs paziņosim jums, kad ielūgums būs izmantots. Pārbaudiet ielūgumu cilni jūsu lietotāja lapā, lai sekotu līdzi savu ielūgumu statusiem."
         success_username: "Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
         error: "Atvainojiet, mēs nevarējām ielūgt šo cilvēku. Varbūt jau ir nosūtīts ielūgums?"
-        success_existing_email: "Jau pastāv lietotājs ar e-pastu <b>{{emailOrUsername}}</b>. Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
+        success_existing_email: "Jau pastāv lietotājs ar e-pastu <b>%{emailOrUsername}</b>. Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
       login_reply: "Lai atbildētu, ienāc forumā"
       filters:
         n_posts:
-          zero: "{{count}} ieraksti"
+          zero: "%{count} ieraksti"
           one: "%{count} ieraksts"
-          other: "{{count}} ieraksti"
+          other: "%{count} ieraksti"
         cancel: "Noņemt filtru"
       split_topic:
         title: "Pārvietot uz jaunu tēmu"
@@ -1591,7 +1594,7 @@ lv:
         instructions:
           zero: "Jūs tūlīt izveidosiet jaunu tēmu bez ierakstiem."
           one: "Jūs tūlīt izveidosiet jaunu tēmu ar izvēlēto ierakstu."
-          other: "Jūs tūlīt izveidosiet jaunu tēmu un aizpildīsiet to ar <b>{{count}}</b> izvēlētajiem ierakstiem."
+          other: "Jūs tūlīt izveidosiet jaunu tēmu un aizpildīsiet to ar <b>%{count}</b> izvēlētajiem ierakstiem."
       merge_topic:
         title: "Pārvietot uz esošu tēmu"
         action: "pārvietot uz esošu tēmu"
@@ -1599,7 +1602,7 @@ lv:
         instructions:
           zero: "Lūdzu izvēlieties tēmu, uz kuru vēlaties pārvietot šos ierakstus."
           one: "Lūdzu izvēlieties tēmu, uz kuru vēlaties pārvietot šo ierakstu."
-          other: "Lūdzu izvēlieties tēmu, uz kuru vēlaties pārvietot šos <b>{{count}}</b> ierakstus."
+          other: "Lūdzu izvēlieties tēmu, uz kuru vēlaties pārvietot šos <b>%{count}</b> ierakstus."
       move_to_new_message:
         radio_label: "Jauns ziņa"
       merge_posts:
@@ -1618,7 +1621,7 @@ lv:
         instructions: "Lūdzu izvēlieties tēmas jauno laika zīmogu. Tēmas ieraksti tiks atjaunināti, ņemot vērā attiecīgo laika starpību."
       multi_select:
         select: "izvēlēties"
-        selected: "izvēlēti ({{count}})"
+        selected: "izvēlēti (%{count})"
         select_post:
           label: "izvēlēties"
         select_replies:
@@ -1630,16 +1633,16 @@ lv:
         description:
           zero: "Jūs esat izvēlējies <b>0</b> ierakstu."
           one: Jūs esat izvēlējies <b>%{count}</b> ierakstu.
-          other: "Jūs esat izvēlējies <b>{{count}}</b> ierakstus."
+          other: "Jūs esat izvēlējies <b>%{count}</b> ierakstus."
     post:
       quote_reply: "Citāts"
       edit_reason: "Iemesls:"
-      post_number: "ieraksts {{number}}"
+      post_number: "ieraksts %{number}"
       wiki_last_edited_on: "wiki pēdējo reizi rediģēta"
       last_edited_on: "ieraksts pēdējo reizi rediģēts"
       reply_as_new_topic: "Atbildēt jaunā saistītā tēmā"
       reply_as_new_private_message: "Atbildēt jaunā vēstulē tiem pašiem adresātiem"
-      continue_discussion: "Turpinot diskusiju no {{postLink}}:"
+      continue_discussion: "Turpinot diskusiju no %{postLink}:"
       follow_quote: "doties uz citēto ierakstu"
       show_full: "Parādīt visu ierakstu"
       deleted_by_author:
@@ -1648,31 +1651,31 @@ lv:
         other: "(autors atcēlis ierakstu, tas tiks automātiski dzēsts pēc %{count} stundām, ja neviens nav ziņojis par to)"
       expand_collapse: "paplašināt/minimizēt"
       gap:
-        zero: "apslēpt {{count}} slēptās atbildes"
+        zero: "apslēpt %{count} slēptās atbildes"
         one: "aplūjot %{count} slēpto atbildi"
-        other: "aplūkot {{count}} slēptās atbildes"
+        other: "aplūkot %{count} slēptās atbildes"
       notice:
-        new_user: "Šis ir pirmais {{user}} ieraksts — sagaidīsim viņu mūsu kopienā!"
+        new_user: "Šis ir pirmais %{user} ieraksts — sagaidīsim viņu mūsu kopienā!"
       unread: "Ieraksts nav lasīts"
       has_replies:
-        zero: "{{count}} atbildes"
-        one: "{{count}} atbilde"
-        other: "{{count}} atbildes"
+        zero: "%{count} atbildes"
+        one: "%{count} atbilde"
+        other: "%{count} atbildes"
       has_likes_title:
-        zero: "{{count}} cilvēkiem patika šis ieraksts"
+        zero: "%{count} cilvēkiem patika šis ieraksts"
         one: "%{count} cilvēkam patika šis ieraksts"
-        other: "{{count}} cilvēkiem patika šis ieraksts"
+        other: "%{count} cilvēkiem patika šis ieraksts"
       has_likes_title_only_you: "jums patika šis ieraksts"
       has_likes_title_you:
         zero: "jums patika šis ieraksts"
         one: "jums un %{count} citam cilvēkam patika šis ieraksts"
-        other: "jums un {{count}} citiem cilvēkiem patika šis ieraksts"
+        other: "jums un %{count} citiem cilvēkiem patika šis ieraksts"
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         upload: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         too_many_uploads: "Atvainojiet, jūs varat augšuplādēt tikai vienu failu vienā reizē."
-        upload_not_authorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: {{authorized_extensions}})."
+        upload_not_authorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt attēlus."
         attachment_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt pielikumus."
         attachment_download_requires_login: "Atvainojiet, jums jābūt ienākušam forumā, lai varētu lejuplādēt pielikumus."
@@ -1740,9 +1743,9 @@ lv:
           like: "Jūs izteicāt atzinību šim"
       merge:
         confirm:
-          zero: "Vai jūs esat drošs, ka vēlaties apvienot šos {{count}} ierakstus?"
+          zero: "Vai jūs esat drošs, ka vēlaties apvienot šos %{count} ierakstus?"
           one: "Vai jūs esat drošs, ka vēlaties apvienot šos ierakstus?"
-          other: "Vai jūs esat drošs, ka vēlaties apvienot šos {{count}} ierakstus?"
+          other: "Vai jūs esat drošs, ka vēlaties apvienot šos %{count} ierakstus?"
       revisions:
         controls:
           first: "Pirmā versija"
@@ -1886,17 +1889,17 @@ lv:
       custom_placeholder_notify_moderators: "Ļaujiet mums uzzināt, kādu problēmu saredzat, un sniedziet būtiskās saites un piemērus, ja iespējams."
       custom_message:
         at_least:
-          zero: "ievadiet vismaz {{count}} simbolus"
+          zero: "ievadiet vismaz %{count} simbolus"
           one: "ievadiet vismaz %{count} simbolu"
-          other: "ievadiet vismaz {{count}} simbolus"
+          other: "ievadiet vismaz %{count} simbolus"
         more:
-          zero: "vēl {{count}}..."
+          zero: "vēl %{count}..."
           one: "vēl %{count}"
-          other: "vēl {{count}}..."
+          other: "vēl %{count}..."
         left:
-          zero: "palikuši {{count}}"
+          zero: "palikuši %{count}"
           one: "palicis %{count}"
-          other: "palikuši {{count}}"
+          other: "palikuši %{count}"
     flagging_topic:
       title: "Paldies, ka palīdzat uzturēt mūsu forumu civilizētu!"
       action: "Ziņot par tēmu"
@@ -1938,7 +1941,7 @@ lv:
       unlisted:
         help: "Šī tēma nav iekļauta sarakstos; tā netiks attēlota tēmu sarakstos, un piekļūt tai varēs, tikai izmantojot tiešu saiti"
     posts: "Ieraksti"
-    posts_long: "šai tēmā ir {{number}} ieraksts"
+    posts_long: "šai tēmā ir %{number} ieraksts"
     posts_likes_MF: |
       Šai tēmā ir {count, plural, one {1 atbilde} other {# atbildes}} {ratio, select,
       low {ar nedaudzām atzinībām}
@@ -1953,16 +1956,16 @@ lv:
       other: "skatījumi"
     replies: "Atbildes"
     views_long:
-      zero: "šo tēmu ir apskatījuši {{number}} reizes"
+      zero: "šo tēmu ir apskatījuši %{number} reizes"
       one: "šo tēmu ir apskatījuši %{count} reizi"
-      other: "šo tēmu ir apskatījuši {{number}} reizes"
+      other: "šo tēmu ir apskatījuši %{number} reizes"
     activity: "Aktivitāte"
     likes: "Patīk"
     likes_lowercase:
       zero: "atzinības"
       one: "atzinība"
       other: "atzinības"
-    likes_long: "šajā tēmā ir {{number}} atzinības"
+    likes_long: "šajā tēmā ir %{number} atzinības"
     users: "Lietotāji"
     users_lowercase:
       zero: "lietotāji"
@@ -1970,7 +1973,7 @@ lv:
       other: "lietotāji"
     category_title: "Sadaļa"
     history: "Vēsture"
-    changed_by: "{{author}}"
+    changed_by: "%{author}"
     raw_email:
       title: "Ienākošie e-pasti"
       not_available: "Nav pieejams!"
@@ -1981,39 +1984,39 @@ lv:
       latest:
         title: "Pēdējie"
         title_with_count:
-          zero: "Pēdējie ({{count}})"
+          zero: "Pēdējie (%{count})"
           one: "Pēdējais (%{count})"
-          other: "Pēdējie ({{count}})"
+          other: "Pēdējie (%{count})"
         help: "tēmas ar neseniem ierakstiem"
       read:
         title: "Lasīts"
         help: "Jūsu lasītās tēmas tajā secībā, kādā lasījāt"
       categories:
         title: "Sadaļas"
-        title_in: "Kategorija - {{categoryName}}"
+        title_in: "Kategorija - %{categoryName}"
         help: "visas tēmas, sagrupētas pēc sadaļām"
       unread:
         title: "Nelasīts"
         title_with_count:
-          zero: "Nelasīti ({{count}})"
+          zero: "Nelasīti (%{count})"
           one: "Nelasīts (%{count})"
-          other: "Nelasīti ({{count}})"
+          other: "Nelasīti (%{count})"
         help: "tēmas, kuras novērojat vai kurām sekojat, ar nelasītiem ierakstiem"
         lower_title_with_count:
-          zero: "{{count}} nelasītas"
+          zero: "%{count} nelasītas"
           one: "%{count} nelasīta"
-          other: "{{count}} nelasītas"
+          other: "%{count} nelasītas"
       new:
         lower_title_with_count:
-          zero: "{{count}} jaunas"
+          zero: "%{count} jaunas"
           one: "%{count} jauna"
-          other: "{{count}} jaunas"
+          other: "%{count} jaunas"
         lower_title: "jaunie"
         title: "Jaunie"
         title_with_count:
-          zero: "Jaunie ({{count}})"
+          zero: "Jaunie (%{count})"
           one: "Jauns (%{count})"
-          other: "Jaunie ({{count}})"
+          other: "Jaunie (%{count})"
         help: "pēdējās dažās dienās izveidotās tēmas"
       posted:
         title: "Mani ieraksti"
@@ -2022,12 +2025,12 @@ lv:
         title: "Grāmatzīmes"
         help: "tēmas, kurās esat veicis grāmatzīmes"
       category:
-        title: "{{categoryName}}"
+        title: "%{categoryName}"
         title_with_count:
-          zero: "{{categoryName}} ({{count}})"
-          one: "{{categoryName}} (%{count})"
-          other: "{{categoryName}} ({{count}})"
-        help: "pēdējās tēmas sadaļā {{categoryName}}"
+          zero: "%{categoryName} (%{count})"
+          one: "%{categoryName} (%{count})"
+          other: "%{categoryName} (%{count})"
+        help: "pēdējās tēmas sadaļā %{categoryName}"
       top:
         title: "Populārākās"
         help: "visaktīvākās tēmas pēdējā gada, mēneša, nedēļas vai dienas laikā"
@@ -2356,13 +2359,13 @@ lv:
           none: "Nav saistītu notikumu."
           redeliver: "Atkārtot piegādi"
           incoming:
-            zero: "Ir {{count}} jauni notikumi."
+            zero: "Ir %{count} jauni notikumi."
             one: "Ir viens jauns notikums."
-            other: "Ir {{count}} notikumi."
+            other: "Ir %{count} notikumi."
           completed_in:
-            zero: "Pabeigts {{count}} sekundēs."
+            zero: "Pabeigts %{count} sekundēs."
             one: "Pabeigts %{count} sekundē."
-            other: "Pabeigts {{count}} sekundēs."
+            other: "Pabeigts %{count} sekundēs."
           request: "Pieprasījums"
           response: "Atbilde"
           headers: "Virsraksts"
@@ -2409,9 +2412,9 @@ lv:
           label: "Augšupielādēt"
           title: "Augšupielādēt rezerves kopiju uz šo instanci"
           uploading: "Augšupielādē..."
-          error: "Augšupielādējot '{{filename}}', notika kļūda: {{message}}"
+          error: "Augšupielādējot '%{filename}', notika kļūda: %{message}"
         operations:
-          failed: "{{operation}} neizdevās. Lūdzu pārbaudīt žurnāla ierakstus."
+          failed: "%{operation} neizdevās. Lūdzu pārbaudīt žurnāla ierakstus."
           cancel:
             label: "Atcelt"
             title: "Atcelt šī brīža procesu"
@@ -2742,8 +2745,8 @@ lv:
           title: "Atklāt šī lietotāja e-pasta adresi"
           text: "Parādīt"
       user:
-        suspend_failed: "Kaut kas nenostrādāj apturot šo lietotāju {{error}}"
-        unsuspend_failed: "Kaut kas nenostrādāj atjaunojot šo lietotāju {{error}}"
+        suspend_failed: "Kaut kas nenostrādāj apturot šo lietotāju %{error}"
+        unsuspend_failed: "Kaut kas nenostrādāj atjaunojot šo lietotāju %{error}"
         suspend_duration: "Uz cik ilgu laiku lietotājs tiks atstādināts?"
         suspend_reason_label: "Kādēļ apturēt? Šis texts <b>būt redzams visiem</b> šajā lietotāja profila lapā, un tiks rādīts visiem, kas \"ielogojas\"."
         suspend_reason: "Iemesls"
@@ -3036,6 +3039,7 @@ lv:
         title: "Smaidiņi"
         help: "Pievienot jaunu smaidiņu, kas būs pieejams visiem."
         add: "Pievienot Jaunu Smaidiņu"
+        uploading: "Notiek ielāde..."
         name: "Nosaukums"
         group: "Grupa"
         image: "Attēls"

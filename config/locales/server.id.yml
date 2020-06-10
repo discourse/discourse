@@ -312,7 +312,7 @@ id:
     inappropriate:
       long_form: "menandai sebagai tidak pantas"
     notify_user:
-      title: "Kirim @{{username}} sebuah pesan"
+      title: "Kirim @%{username} sebuah pesan"
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Hal Lain"
@@ -540,6 +540,7 @@ id:
     autoclosed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
     autoclosed_disabled_lastpost: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
   login:
+    not_available: "Tidak tersedia. Coba %{suggestion}?"
     omniauth_confirm_button: "Lanjutkan"
   admin:
     email:

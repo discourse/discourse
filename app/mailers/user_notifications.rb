@@ -63,9 +63,24 @@ class UserNotifications < ActionMailer::Base
                 new_email: opts[:new_email])
   end
 
+  def notify_old_email_add(user, opts = {})
+    build_email(user.email,
+                template: "user_notifications.notify_old_email_add",
+                locale: user_locale(user),
+                new_email: opts[:new_email])
+  end
+
   def confirm_old_email(user, opts = {})
     build_user_email_token_by_template(
       "user_notifications.confirm_old_email",
+      user,
+      opts[:email_token]
+    )
+  end
+
+  def confirm_old_email_add(user, opts = {})
+    build_user_email_token_by_template(
+      "user_notifications.confirm_old_email_add",
       user,
       opts[:email_token]
     )
@@ -224,7 +239,7 @@ class UserNotifications < ActionMailer::Base
         @counts << { label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
       end
 
-      if @counts.size < 3 && user.user_option.digest_after_minutes >= 1440
+      if @counts.size < 3 && user.user_option.digest_after_minutes.to_i >= 1440
         value = summary_new_users_count(min_date)
         @counts << { label_key: 'user_notifications.digest.new_users', value: value, href: "#{Discourse.base_url}/about" } if value > 0
       end

@@ -10,8 +10,10 @@ class Topic < ActiveRecord::Base
   include LimitedEdit
   extend Forwardable
 
-  # TODO(2021-01-04): remove
-  self.ignored_columns = ["avg_time"]
+  self.ignored_columns = [
+    "avg_time", # TODO(2021-01-04): remove
+    "image_url" # TODO(2021-06-01): remove
+  ]
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
   def_delegator :featured_users, :choose, :feature_topic_users
@@ -1663,7 +1665,6 @@ end
 #  featured_user3_id         :integer
 #  deleted_at                :datetime
 #  highest_post_number       :integer          default(0), not null
-#  image_url                 :string
 #  like_count                :integer          default(0), not null
 #  incoming_link_count       :integer          default(0), not null
 #  category_id               :integer

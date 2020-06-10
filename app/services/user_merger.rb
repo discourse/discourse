@@ -257,7 +257,7 @@ class UserMerger
     IncomingLink.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
     IncomingLink.where(current_user_id: @source_user.id).update_all(current_user_id: @target_user.id)
 
-    Invite.with_deleted.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    InvitedUser.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
     Invite.with_deleted.where(invited_by_id: @source_user.id).update_all(invited_by_id: @target_user.id)
     Invite.with_deleted.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
 
@@ -358,6 +358,8 @@ class UserMerger
 
   def delete_source_user
     @source_user.reload
+
+    @source_user.skip_email_validation = true
     @source_user.update(
       admin: false,
       email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid"

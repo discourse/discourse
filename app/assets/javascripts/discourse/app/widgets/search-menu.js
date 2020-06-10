@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import { get } from "@ember/object";
 import { debounce } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -118,7 +119,7 @@ export default createWidget("search-menu", {
       url = `${url}?${params.join("&")}`;
     }
 
-    return Discourse.getURL(url);
+    return getURL(url);
   },
 
   panelContents() {

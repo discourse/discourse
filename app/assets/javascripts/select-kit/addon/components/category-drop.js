@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { readOnly } from "@ember/object/computed";
 import { computed } from "@ember/object";
@@ -126,14 +127,16 @@ export default ComboBoxComponent.extend({
     "parentCategoryUrl",
     "selectKit.options.subCategory",
     function() {
-      return Discourse.getURL(
-        this.selectKit.options.subCategory ? this.parentCategoryUrl || "/" : "/"
+      return getURL(
+        this.selectKit.options.subCategory
+          ? `${this.parentCategoryUrl}/all` || "/"
+          : "/"
       );
     }
   ),
 
   noCategoriesUrl: computed("parentCategoryUrl", function() {
-    return Discourse.getURL(`${this.parentCategoryUrl}/none`);
+    return getURL(`${this.parentCategoryUrl}/none`);
   }),
 
   search(filter) {

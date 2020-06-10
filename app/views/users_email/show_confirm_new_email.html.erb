@@ -13,7 +13,11 @@
   <% else %>
     <h2><%= t 'change_email.authorizing_new.title' %></h2>
     <p>
-      <%= t 'change_email.authorizing_new.description' %>
+      <% if @change_request&.old_email %>
+        <%= t 'change_email.authorizing_new.description' %>
+      <% else %>
+        <%= t 'change_email.authorizing_new.description_add' %>
+      <% end %>
     </p>
     <p>
       <%= @to_email %>

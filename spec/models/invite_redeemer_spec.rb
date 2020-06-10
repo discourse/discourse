@@ -6,7 +6,8 @@ describe InviteRedeemer do
 
   describe '#create_user_from_invite' do
     it "should be created correctly" do
-      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White')
+      invite = Fabricate(:invite, email: 'walter.white@email.com')
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White')
       expect(user.username).to eq('walter')
       expect(user.name).to eq('Walter White')
       expect(user).to be_active
@@ -17,7 +18,8 @@ describe InviteRedeemer do
     it "can set the password and ip_address" do
       password = 's3cure5tpasSw0rD'
       ip_address = '192.168.1.1'
-      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White', password, nil, ip_address)
+      invite = Fabricate(:invite, email: 'walter.white@email.com')
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White', password: password, ip_address: ip_address)
       expect(user).to have_password
       expect(user.confirm_password?(password)).to eq(true)
       expect(user.approved).to eq(true)
@@ -27,8 +29,9 @@ describe InviteRedeemer do
 
     it "raises exception with record and errors" do
       error = nil
+      invite = Fabricate(:invite, email: 'walter.white@email.com')
       begin
-        InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White', 'aaa')
+        InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White', password: 'aaa')
       rescue ActiveRecord::RecordInvalid => e
         error = e
       end
@@ -38,7 +41,8 @@ describe InviteRedeemer do
 
     it "should unstage user" do
       staged_user = Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name')
-      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'staged@account.com'), 'walter', 'Walter White')
+      invite = Fabricate(:invite, email: 'staged@account.com')
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White')
 
       expect(user.id).to eq(staged_user.id)
       expect(user.username).to eq('walter')
@@ -49,7 +53,9 @@ describe InviteRedeemer do
     end
 
     it "should not activate user invited via links" do
-      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com', emailed_status: Invite.emailed_status_types[:not_required]), 'walter', 'Walter White')
+      invite = Fabricate(:invite, email: 'walter.white@email.com', emailed_status: Invite.emailed_status_types[:not_required])
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White')
+
       expect(user.username).to eq('walter')
       expect(user.name).to eq('Walter White')
       expect(user.email).to eq('walter.white@email.com')
@@ -63,7 +69,7 @@ describe InviteRedeemer do
     let(:name) { 'john snow' }
     let(:username) { 'kingofthenorth' }
     let(:password) { 'know5nOthiNG' }
-    let(:invite_redeemer) { InviteRedeemer.new(invite, username, name) }
+    let(:invite_redeemer) { InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name) }
 
     it "should redeem the invite if invited by staff" do
       SiteSetting.must_approve_users = true
@@ -112,19 +118,13 @@ describe InviteRedeemer do
       expect(user.approved).to eq(true)
     end
 
-    it "should not blow up if invited_by user has been removed" do
+    it "should delete invite if invited_by user has been removed" do
       invite.invited_by.destroy!
-      invite.reload
-
-      user = invite_redeemer.redeem
-
-      expect(user.name).to eq(name)
-      expect(user.username).to eq(username)
-      expect(user.invited_by).to eq(nil)
+      expect { invite.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "can set password" do
-      user = InviteRedeemer.new(invite, username, name, password).redeem
+      user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
       expect(user).to have_password
       expect(user.confirm_password?(password)).to eq(true)
       expect(user.approved).to eq(true)
@@ -137,7 +137,7 @@ describe InviteRedeemer do
         required_field.id.to_s => 'value1',
         optional_field.id.to_s => 'value2'
       }
-      user = InviteRedeemer.new(invite, username, name, password, user_fields).redeem
+      user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password, user_custom_fields: user_fields).redeem
 
       expect(user).to be_present
       expect(user.custom_fields["user_field_#{required_field.id}"]).to eq('value1')
@@ -147,7 +147,7 @@ describe InviteRedeemer do
     it "adds user to group" do
       group = Fabricate(:group, grant_trust_level: 2)
       InvitedGroup.create(group_id: group.id, invite_id: invite.id)
-      user = InviteRedeemer.new(invite, username, name, password).redeem
+      user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
 
       expect(user.group_users.count).to eq(4)
       expect(user.trust_level).to eq(2)
@@ -160,7 +160,7 @@ describe InviteRedeemer do
       user.email = "john@example.com"
       user.save!
 
-      another_invite_redeemer = InviteRedeemer.new(invite, username, name)
+      another_invite_redeemer = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name)
       another_user = another_invite_redeemer.redeem
       expect(another_user).to eq(nil)
     end
@@ -176,7 +176,40 @@ describe InviteRedeemer do
 
       expect(user.invited_by).to eq(inviter)
       expect(inviter.notifications.count).to eq(1)
-      expect(invite.redeemed_at).not_to eq(nil)
+      expect(invite.invited_users.first).to be_present
+    end
+
+    context 'invite_link' do
+      fab!(:invite_link) { Fabricate(:invite, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required]) }
+      let(:invite_redeemer) { InviteRedeemer.new(invite: invite_link, email: 'foo@example.com') }
+
+      it 'works as expected' do
+        user = invite_redeemer.redeem
+        invite_link.reload
+
+        expect(user.send_welcome_message).to eq(true)
+        expect(user.trust_level).to eq(SiteSetting.default_invitee_trust_level)
+        expect(user.active).to eq(false)
+        expect(invite_link.redemption_count).to eq(1)
+      end
+
+      it "should not redeem the invite if InvitedUser record already exists for email" do
+        user = invite_redeemer.redeem
+        invite_link.reload
+
+        another_invite_redeemer = InviteRedeemer.new(invite: invite_link, email: 'foo@example.com')
+        another_user = another_invite_redeemer.redeem
+        expect(another_user).to eq(nil)
+      end
+
+      it "should redeem the invite if InvitedUser record does not exists for email" do
+        user = invite_redeemer.redeem
+        invite_link.reload
+
+        another_invite_redeemer = InviteRedeemer.new(invite: invite_link, email: 'bar@example.com')
+        another_user = another_invite_redeemer.redeem
+        expect(another_user.is_a?(User)).to eq(true)
+      end
     end
 
   end

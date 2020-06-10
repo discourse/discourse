@@ -583,6 +583,7 @@ te:
       invalid_string_min: "కనీసం %{min} అక్షరాలు ఉండాలి."
       invalid_string_max: "%{max} కంటే ఎక్కువ అక్షరాలు ఉండకూడదు."
   search:
+    within_post: "%{username} నుండి #%{post_number}"
     types:
       category: "వర్గాలు"
       topic: "ఫలితాలు"

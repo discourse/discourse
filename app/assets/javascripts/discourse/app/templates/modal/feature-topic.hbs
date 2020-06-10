@@ -53,15 +53,17 @@
         {{else}}
           <p class="with-validation">
             {{html-safe pinMessage}}
-            {{d-icon "far-clock"}}
-            {{future-date-input
-              class="pin-until"
-              includeFarFuture=true
-              clearable=true
-              input=model.pinnedInCategoryUntil
-              onChangeInput=(action (mut model.pinnedInCategoryUntil))
-            }}
-            {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
+            <span>
+              {{d-icon "far-clock"}}
+              {{future-date-input
+                class="pin-until"
+                includeFarFuture=true
+                clearable=true
+                input=model.pinnedInCategoryUntil
+                onChangeInput=(action (mut model.pinnedInCategoryUntil))
+              }}
+              {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
+            </span>
           </p>
         {{/if}}
         <p>
@@ -100,15 +102,17 @@
         {{else}}
           <p class="with-validation">
             {{i18n "topic.feature_topic.pin_globally"}}
-            {{d-icon "far-clock"}}
-            {{future-date-input
-              class="pin-until"
-              includeFarFuture=true
-              clearable=true
-              input=model.pinnedGloballyUntil
-              onChangeInput=(action (mut model.pinnedGloballyUntil))
-            }}
-            {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
+            <span>
+              {{d-icon "far-clock"}}
+              {{future-date-input
+                class="pin-until"
+                includeFarFuture=true
+                clearable=true
+                input=model.pinnedGloballyUntil
+                onChangeInput=(action (mut model.pinnedGloballyUntil))
+              }}
+              {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
+            </span>
           </p>
         {{/if}}
         <p>

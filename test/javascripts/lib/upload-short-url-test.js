@@ -84,7 +84,7 @@ QUnit.test("resolveAllShortUrls", async assert => {
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
   assert.deepEqual(lookup, {});
 
-  await resolveAllShortUrls(ajax, { secure_media: false });
+  await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
 
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
 
@@ -126,7 +126,7 @@ QUnit.test(
   "resolveAllShortUrls - href + src replaced correctly",
   async assert => {
     stubUrls();
-    await resolveAllShortUrls(ajax, { secure_media: false });
+    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
 
     let image1 = fixture()
       .find("img")
@@ -156,7 +156,7 @@ QUnit.test(
       ],
       null
     );
-    await resolveAllShortUrls(ajax, { secure_media: true });
+    await resolveAllShortUrls(ajax, { secure_media: true }, fixture()[0]);
 
     let link = fixture().find("a");
     assert.equal(
@@ -169,7 +169,9 @@ QUnit.test(
 QUnit.test("resolveAllShortUrls - scoped", async assert => {
   stubUrls();
   let lookup;
-  await resolveAllShortUrls(ajax, ".scoped-area");
+
+  let scopedElement = fixture()[0].querySelector(".scoped-area");
+  await resolveAllShortUrls(ajax, {}, scopedElement);
 
   lookup = lookupCachedUploadUrl("upload://z.jpeg");
 
@@ -181,7 +183,7 @@ QUnit.test("resolveAllShortUrls - scoped", async assert => {
   // do this because the pretender caches ALL the urls, not
   // just the ones being looked up (like the normal behaviour)
   resetCache();
-  await resolveAllShortUrls(ajax, ".scoped-area");
+  await resolveAllShortUrls(ajax, {}, scopedElement);
 
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
   assert.deepEqual(lookup, {});

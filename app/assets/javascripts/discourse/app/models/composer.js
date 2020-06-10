@@ -374,7 +374,7 @@ const Composer = RestModel.extend({
     "tags",
     "topicFirstPost",
     "minimumRequiredTags",
-    "isStaffUser"
+    "user.staff"
   )
   cantSubmitPost(
     loading,

@@ -497,3 +497,24 @@ task 'import:file', [:file_name] => [:environment] do |_, args|
   ImportExport.import(args[:file_name])
   puts "", "Done", ""
 end
+
+desc "Update first_post_created_at column in user_stats table"
+task "import:update_first_post_created_at" => :environment do
+  log "Updating first_post_created_at..."
+
+  DB.exec <<~SQL
+    WITH sub AS (
+      SELECT user_id, MIN(posts.created_at) AS first_post_created_at
+      FROM posts
+      GROUP BY user_id
+    )
+    UPDATE user_stats
+    SET first_post_created_at = sub.first_post_created_at
+    FROM user_stats u1
+    JOIN sub ON sub.user_id = u1.user_id
+    WHERE u1.user_id = user_stats.user_id
+      AND user_stats.first_post_created_at IS DISTINCT FROM sub.first_post_created_at
+  SQL
+
+  log "Done"
+end

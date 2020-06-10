@@ -445,7 +445,7 @@ sw:
       title: "Haifai"
       long_form: "imeripotiwa kuwa haiko sawa"
     notify_user:
-      title: "Mtumie @{{username}} ujumbe"
+      title: "Mtumie @%{username} ujumbe"
       description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
       short_description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
       long_form: "mtumiaji aliepokea ujumbe"
@@ -1342,10 +1342,6 @@ sw:
     email_reject_bad_destination_address:
       title: "Barua Pepe Kataa Anwani ya Mpokeaji Sio Sawa"
       subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Haijulikani Inapoenda: Anwani"
-      text_body_template: |
-        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
-
-        Barua pepe zote za kupokea ujumbe hazijulikani, au Utambulisho wa Kichwa cha Ujumbe kwenye barua pepe umebadilishwa. Tafadhali hakikisha unatuma kwenda kwa barua pepe zilizotolewa na wasaidizi wetu.
     email_reject_topic_not_found:
       title: "Barua Pepe Kataza Mada Hajapatikana"
       subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Mada Haijapatikana"
@@ -2203,6 +2199,12 @@ sw:
   joined: "Alijiunga"
   discourse_push_notifications:
     popup:
+      mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'
+      group_mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'
+      quoted: '%{jina la mtumiaji} amekunukulu kwenye "%{mada}" - %{jina la_tovuti}'
+      replied: '%{jina la mtumiaji} amekujibu kwenye "%{mada}" - %{jina la_tovuti}'
+      posted: '%{jina la mtumiaji} amechapisha kwenye "%{mada}" - %{jina la_tovuti}'
+      linked: '%{jina la mtumiaji} ametengeneza kiungo kutoka kwenye "%{mada}" - %{jina la_tovuti}'
       confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
       confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
   reviewables:

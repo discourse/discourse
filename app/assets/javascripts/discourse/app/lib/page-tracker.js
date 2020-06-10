@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import { next } from "@ember/runloop";
 let _started = false;
 let cache = {};
@@ -28,7 +29,7 @@ export function startPageTracking(router, appEvents) {
       transition.urlMethod === "replace" && transition.queryParamsOnly;
 
     router.send("refreshTitle");
-    const url = Discourse.getURL(router.get("url"));
+    const url = getURL(router.get("url"));
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.

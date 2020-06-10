@@ -93,6 +93,10 @@ task "uploads:migrate_from_s3" => :environment do
   ENV["RAILS_DB"] ? migrate_from_s3 : migrate_all_from_s3
 end
 
+task "uploads:batch_migrate_from_s3", [:limit] => :environment do |_, args|
+  ENV["RAILS_DB"] ? migrate_from_s3(limit: args[:limit]) : migrate_all_from_s3(limit: args[:limit])
+end
+
 def guess_filename(url, raw)
   begin
     uri = URI.parse("http:#{url}")
@@ -110,17 +114,17 @@ def guess_filename(url, raw)
   end
 end
 
-def migrate_all_from_s3
-  RailsMultisite::ConnectionManagement.each_connection { migrate_from_s3 }
+def migrate_all_from_s3(limit: nil)
+  RailsMultisite::ConnectionManagement.each_connection { migrate_from_s3(limit: limit) }
 end
 
-def migrate_from_s3
+def migrate_from_s3(limit: nil)
   require "file_store/s3_store"
 
   # make sure S3 is disabled
   if SiteSetting.Upload.enable_s3_uploads
     puts "You must disable S3 uploads before running that task."
-    return
+    exit 1
   end
 
   db = RailsMultisite::ConnectionManagement.current_db
@@ -129,10 +133,12 @@ def migrate_from_s3
 
   max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
-  Post
+  migrate_posts = Post
     .where("user_id > 0")
-    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%(upload://%'")
-    .find_each do |post|
+    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%#{SiteSetting.Upload.absolute_base_url}%' OR raw LIKE '%(upload://%'")
+  migrate_posts = migrate_posts.limit(limit.to_i) if limit
+
+  migrate_posts.find_each do |post|
     begin
       updated = false
 

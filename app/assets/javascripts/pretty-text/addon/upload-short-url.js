@@ -1,5 +1,4 @@
 import { debounce } from "@ember/runloop";
-import { ATTACHMENT_CSS_CLASS } from "./engines/discourse-markdown-it";
 let _cache = {};
 
 export function lookupCachedUploadUrl(shortUrl) {
@@ -44,12 +43,14 @@ export function resetCache() {
   _cache = {};
 }
 
-function retrieveCachedUrl($upload, siteSettings, dataAttribute, callback) {
-  const cachedUpload = lookupCachedUploadUrl($upload.data(dataAttribute));
+function retrieveCachedUrl(upload, siteSettings, dataAttribute, callback) {
+  const cachedUpload = lookupCachedUploadUrl(
+    upload.getAttribute(`data-${dataAttribute}`)
+  );
   const url = getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings);
 
   if (url) {
-    $upload.removeAttr(`data-${dataAttribute}`);
+    upload.removeAttribute(`data-${dataAttribute}`);
     if (url !== MISSING) {
       callback(url);
     }
@@ -78,52 +79,40 @@ function getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings) {
   return cachedUpload.short_path;
 }
 
-function _loadCachedShortUrls($uploads, siteSettings) {
-  $uploads.each((_idx, upload) => {
-    const $upload = $(upload);
+function _loadCachedShortUrls(uploadElements, siteSettings) {
+  uploadElements.forEach(upload => {
     switch (upload.tagName) {
       case "A":
-        retrieveCachedUrl($upload, siteSettings, "orig-href", url => {
-          $upload.attr("href", url);
-
-          // Replace "|attachment" with class='attachment'
-          // TODO: This is a part of the cooking process now and should be
-          // removed in the future.
-          const content = $upload.text().split("|");
-          if (content[1] === ATTACHMENT_CSS_CLASS) {
-            $upload.addClass(ATTACHMENT_CSS_CLASS);
-            $upload.text(content[0]);
-          }
+        retrieveCachedUrl(upload, siteSettings, "orig-href", url => {
+          upload.href = url;
         });
 
         break;
       case "IMG":
-        retrieveCachedUrl($upload, siteSettings, "orig-src", url => {
-          $upload.attr("src", url);
+        retrieveCachedUrl(upload, siteSettings, "orig-src", url => {
+          upload.src = url;
         });
 
         break;
       case "SOURCE": // video/audio tag > source tag
-        retrieveCachedUrl($upload, siteSettings, "orig-src", url => {
-          $upload.attr("src", url);
-
+        retrieveCachedUrl(upload, siteSettings, "orig-src", url => {
           if (url.startsWith(`//${window.location.host}`)) {
             let hostRegex = new RegExp("//" + window.location.host, "g");
             url = url.replace(hostRegex, "");
           }
           let fullUrl = window.location.origin + url;
-          $upload.attr("src", fullUrl);
+          upload.src = fullUrl;
 
           // this is necessary, otherwise because of the src change the
           // video/audio just doesn't bother loading!
-          let $parent = $upload.parent();
-          $parent[0].load();
+          upload.parentElement.load();
 
           // set the url and text for the <a> tag within the <video/audio> tag
-          $parent
-            .find("a")
-            .attr("href", fullUrl)
-            .text(fullUrl);
+          const link = upload.parentElement.querySelector("a");
+          if (link) {
+            link.href = fullUrl;
+            link.textContent = fullUrl;
+          }
         });
 
         break;
@@ -131,31 +120,36 @@ function _loadCachedShortUrls($uploads, siteSettings) {
   });
 }
 
-function _loadShortUrls($uploads, ajax, siteSettings) {
-  let urls = $uploads.toArray().map(upload => {
-    const $upload = $(upload);
-    return $upload.data("orig-src") || $upload.data("orig-href");
+function _loadShortUrls(uploads, ajax, siteSettings) {
+  let urls = [...uploads].map(upload => {
+    return (
+      upload.getAttribute("data-orig-src") ||
+      upload.getAttribute("data-orig-href")
+    );
   });
 
   return lookupUncachedUploadUrls(urls, ajax).then(() =>
-    _loadCachedShortUrls($uploads, siteSettings)
+    _loadCachedShortUrls(uploads, siteSettings)
   );
 }
 
-export function resolveAllShortUrls(ajax, siteSettings, scope = null) {
+export function resolveAllShortUrls(ajax, siteSettings, scope) {
   const attributes =
     "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
-  let $shortUploadUrls = $(scope || document).find(attributes);
+  let shortUploadElements = scope.querySelectorAll(attributes);
 
-  if ($shortUploadUrls.length > 0) {
-    _loadCachedShortUrls($shortUploadUrls, siteSettings);
+  if (shortUploadElements.length > 0) {
+    _loadCachedShortUrls(shortUploadElements, siteSettings);
 
-    $shortUploadUrls = $(scope || document).find(attributes);
-    if ($shortUploadUrls.length > 0) {
+    shortUploadElements = scope.querySelectorAll(attributes);
+    if (shortUploadElements.length > 0) {
       // this is carefully batched so we can do a leading debounce (trigger right away)
       return debounce(
         null,
-        () => _loadShortUrls($shortUploadUrls, ajax, siteSettings),
+        _loadShortUrls,
+        shortUploadElements,
+        ajax,
+        siteSettings,
         450,
         true
       );

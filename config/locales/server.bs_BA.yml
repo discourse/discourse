@@ -729,6 +729,7 @@ bs_BA:
       category: "Kategorije"
       topic: "Rezultati"
       user: "Korisnici"
+    results_page: "Pretraži za termin '%{term}'"
   original_poster: "Originalni Autor"
   most_posts: "Najviše postova"
   most_recent_poster: "Posljednji Autor"
@@ -995,8 +996,16 @@ bs_BA:
   joined: "Registrovan"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'
+      quoted: '%{username} vas je citirao/la u "%{topic}" - %{site_title}'
+      replied: '%{username} vam je odgovorio/la u "%{topic}" - %{site_title}'
+      posted: '%{username} je objavio/la "%{topic}" - %{site_title}'
+      linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti uključene - %{site_title}"
       confirm_body: "Uspješno! Obavijesti su sada uključene."
+      custom: "Obavijest od %{username} na %{site_title}"
   reviewables:
     priorities:
       low: "Nisko"

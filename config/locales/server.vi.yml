@@ -371,7 +371,7 @@ vi:
       title: "Không thích hợp"
       long_form: "đánh dấu cái này không thích hợp"
     notify_user:
-      title: "Gửi tin nhắn cho @{{username}}."
+      title: "Gửi tin nhắn cho @%{username}."
       long_form: "đã nhắn tin cho thành viên"
       email_title: 'Bài đăng của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1440,6 +1440,14 @@ vi:
       emoji:
         title: "Emoji"
   joined: "Đã tham gia"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
+      quoted: '%{username} trích lời bạn trong "%{topic}" - %{site_title}'
+      replied: '%{username} trả lời cho bạn trong "%{topic}" - %{site_title}'
+      posted: '%{username} gửi bài trong "%{topic}" - %{site_title}'
+      linked: '%{username} liên quan đến bài viết của bạn từ "%{topic}" - %{site_title}'
   reviewables:
     priorities:
       medium: "Trung bình"

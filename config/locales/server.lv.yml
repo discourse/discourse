@@ -291,12 +291,14 @@ lv:
     errors:
       invalid_email: "Nepareiza e-pasta adrese."
   search:
+    within_post: "#%{post_number} - %{username}"
     types:
       category: "Sadaļas"
       user: "Lietotāji"
   login:
     not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
     admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
+    not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
     omniauth_confirm_button: "Turpināt"
   admin:
     email:
@@ -319,6 +321,8 @@ lv:
     see_more: "Vairāk"
     search_title: "Meklēt šajā vietnē"
     search_button: "Meklēt"
+  upload:
+    unauthorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
   csv_export:
     boolean_yes: "Jā"
     boolean_no: "Nē"
@@ -372,6 +376,14 @@ lv:
       emoji:
         title: "Smaidiņi"
   joined: "Pievienojās"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
+      quoted: '%{username} citēja jūs "%{topic}" - %{site_title}'
+      replied: '%{username} atbildēja jums "%{topic}" - %{site_title}'
+      posted: '%{username} ierakstīja "%{topic}" - %{site_title}'
+      linked: '%{username} ievietoja saiti uz jūsu ierakstu no "%{topic}" - %{site_title}'
   reviewables:
     actions:
       agree_and_suspend:

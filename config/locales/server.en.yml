@@ -235,6 +235,10 @@ en:
     max_rows: "First %{max_bulk_invites} invites has been sent. Try splitting the file in smaller parts."
     error: "There was an error uploading that file. Please try again later."
 
+  invite_link:
+    email_taken: "This email is already in use. If you already have an account please login or reset password."
+    max_redemptions_limit: "should be between 2 and %{max_limit}."
+
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
@@ -841,17 +845,20 @@ en:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
+    doesnt_exist: "That email address is not associated with your account."
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
     confirm: "Confirm"
 
     authorizing_new:
       title: "Confirm your new email"
-      description: "Please confirm you would like your new email address changed to:"
+      description: "Please confirm you would like your email address changed to:"
+      description_add: "Please confirm you would like to add an alternate email address:"
 
     authorizing_old:
       title: "Change your email address"
       description: "Please confirm your email address change"
+      description_add: "Please confirm you would like to add an alternate email address:"
       old_email: "Old email: %{email}"
       new_email: "New email: %{email}"
       almost_done_title: "Confirming new email address"
@@ -899,7 +906,7 @@ en:
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
       long_form: "flagged this as inappropriate"
     notify_user:
-      title: "Send @{{username}} a message"
+      title: "Send @%{username} a message"
       description: "I want to talk to this person directly and personally about their post."
       short_description: "I want to talk to this person directly and personally about their post."
       long_form: "messaged user"
@@ -1714,6 +1721,8 @@ en:
     max_post_deletions_per_minute: "Maximum number of posts a user can delete per minute."
     max_post_deletions_per_day: "Maximum number of posts a user can delete per day."
 
+    invite_link_max_redemptions_limit: "Maximum redemptions allowed for invite links can't be more than this value."
+
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
 
@@ -2451,6 +2460,7 @@ en:
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
       must_not_end_with_confusing_suffix: "must not end with a confusing suffix like .json or .png etc."
     email:
+      invalid: "is invalid."
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
       revoked: "Won't be sending emails to '%{email}' until %{date}."
@@ -3038,7 +3048,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        None of the destination email addresses are recognized, or the Message-ID header in the email has been modified. Please make sure that you are sending to the correct email address provided by staff.
+        Do you use more than one email address? Did you reply from a different email address? Email replies require that you use the same email address when replying. Alternately, the Message-ID header in the email may have been modified.
 
     email_reject_old_destination:
       title: "Email Reject Old Destination"
@@ -3667,6 +3677,18 @@ en:
 
         %{base_url}/u/confirm-old-email/%{email_token}
 
+    confirm_old_email_add:
+      title: "Confirm Old Email (Add)"
+      subject_template: "[%{email_prefix}] Confirm your current email address"
+      text_body_template: |
+        Before we can add a new email address, we need you to confirm that you control
+        the current email account. After you complete this step, we will have you confirm
+        the new email address.
+
+        Confirm your current email address for %{site_name} by clicking on the following link:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+
     notify_old_email:
       title: "Notify Old Email"
       subject_template: "[%{email_prefix}] Your email address has been changed"
@@ -3676,6 +3698,18 @@ en:
         a site administrator.
 
         Your email address has been changed to:
+
+        %{new_email}
+
+    notify_old_email_add:
+      title: "Notify Old Email (Add)"
+      subject_template: "[%{email_prefix}] A new email address has been added"
+      text_body_template: |
+        This is an automated message to let you know that an email address for
+        %{site_name} has been added. If this was done in error, please contact
+        a site administrator.
+
+        Your added email address is:
 
         %{new_email}
 
@@ -4826,9 +4860,9 @@ en:
     title: "Reminder about old credentials"
     body: |
       Hello! This is a routine yearly security reminder from your Discourse instance.
-      
+
       As a courtesy, we wanted to let you know that the following credentials used on your Discourse instance have not been updated in more than two years:
-      
+
       %{keys}
-      
+
       No action is required at this time, however, it is considered good security practice to cycle all your important credentials every few years.

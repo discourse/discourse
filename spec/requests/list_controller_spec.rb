@@ -524,6 +524,12 @@ RSpec.describe ListController do
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
+
+    it "returns 404 if `hide_profile_and_presence` user option is checked" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+      get "/topics/created-by/#{user.username}.json"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe "private_messages" do
@@ -620,6 +626,14 @@ RSpec.describe ListController do
       expect(ListController.best_periods_for(nil, :monthly)).to eq([:monthly, :all])
       expect(ListController.best_periods_for(nil, :weekly)).to eq([:weekly, :all])
       expect(ListController.best_periods_for(nil, :daily)).to eq([:daily, :all])
+    end
+  end
+
+  describe "user_topics_feed" do
+    it "returns 404 if `hide_profile_and_presence` user option is checked" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+      get "/u/#{user.username}/activity/topics.rss"
+      expect(response.status).to eq(404)
     end
   end
 end

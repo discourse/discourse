@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import EmberObject from "@ember/object";
@@ -13,7 +14,7 @@ EmailLog.reopenClass({
     }
 
     if (attrs.post_url) {
-      attrs.post_url = Discourse.getURL(attrs.post_url);
+      attrs.post_url = getURL(attrs.post_url);
     }
 
     return this._super(attrs);

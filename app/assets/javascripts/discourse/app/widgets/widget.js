@@ -11,12 +11,16 @@ import {
   WidgetChangeHook,
   WidgetMouseUpHook,
   WidgetMouseDownHook,
-  WidgetMouseMoveHook
+  WidgetMouseMoveHook,
+  WidgetMouseOverHook,
+  WidgetMouseOutHook,
+  WidgetTouchStartHook,
+  WidgetTouchEndHook
 } from "discourse/widgets/hooks";
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isProduction } from "discourse-common/config/environment";
 import { get } from "@ember/object";
 
 const _registry = {};
@@ -127,7 +131,7 @@ export default class Widget {
     this.init(this.attrs);
 
     // Helps debug widgets
-    if (Discourse.Environment === "development" || ENV.environment === "test") {
+    if (!isProduction()) {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
         throw new Error(`defaultState must return an object`);
@@ -323,6 +327,13 @@ export default class Widget {
     });
   }
 
+  callWidgetFunction(name, param) {
+    const widget = this._findAncestorWithProperty(name);
+    if (widget) {
+      return widget[name].call(widget, param);
+    }
+  }
+
   sendWidgetAction(name, param) {
     return this.rerenderResult(() => {
       const widget = this._findAncestorWithProperty(name);
@@ -408,6 +419,22 @@ export default class Widget {
 
     if (this.mouseMove) {
       properties["widget-mouse-move"] = new WidgetMouseMoveHook(this);
+    }
+
+    if (this.mouseOver) {
+      properties["widget-mouse-over"] = new WidgetMouseOverHook(this);
+    }
+
+    if (this.mouseOut) {
+      properties["widget-mouse-out"] = new WidgetMouseOutHook(this);
+    }
+
+    if (this.touchStart) {
+      properties["widget-touch-start"] = new WidgetTouchStartHook(this);
+    }
+
+    if (this.touchEnd) {
+      properties["widget-touch-end"] = new WidgetTouchEndHook(this);
     }
 
     const attributes = properties["attributes"] || {};

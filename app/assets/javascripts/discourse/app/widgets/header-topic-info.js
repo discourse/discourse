@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
@@ -27,7 +28,7 @@ createWidget("topic-header-participant", {
       url = user.get("path");
     } else {
       content = [iconNode("users")];
-      url = Discourse.getURL(`/g/${group.name}`);
+      url = getURL(`/g/${group.name}`);
       content.push(h("span", group.name));
     }
 

@@ -564,7 +564,7 @@ cs:
       title: "Nevhodné"
       long_form: "nahlášeno jako nevhodné"
     notify_user:
-      title: "Poslat @{{username}} zprávu"
+      title: "Poslat @%{username} zprávu"
       long_form: "obeslaný uživatel"
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
@@ -876,9 +876,11 @@ cs:
       min_username_length_range: "Nemůžete nastavit minimum nad maximum."
       max_username_length_range: "Nemůžete nastavit maximum pod minimum."
   search:
+    within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorie"
       user: "Uživatelé"
+    results_page: "Výsledky hledání pro '%{term}'"
   original_poster: "Autor tématu"
   most_posts: "Více příspěvků"
   most_recent_poster: "Poslední přispěvatel"
@@ -1164,6 +1166,12 @@ cs:
   joined: "Účet vytvořen"
   discourse_push_notifications:
     popup:
+      mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
+      group_mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
+      quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
+      replied: '%{username} vám odpověděl v "%{topic}" - %{site_title}'
+      posted: '%{username} přispěl do "%{topic}" - %{site_title}'
+      linked: '%{username} odkázal na vás příspěvek v "%{topic}" - %{site_title}'
       confirm_title: "Upozornění zapnuta - %{site_title}"
       confirm_body: "Upozornění úspěšně zapnuta."
   reviewables:

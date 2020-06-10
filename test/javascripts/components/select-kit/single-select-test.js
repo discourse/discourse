@@ -259,44 +259,6 @@ componentTest("prevents propagating click event on header", {
   }
 });
 
-componentTest("focusAfterOnChange", {
-  template:
-    "{{d-button class='focus-me'}}{{single-select options=(hash focusAfterOnChange=focusAfterOnChange) value=value content=content onChange=onChange}}",
-
-  beforeEach() {
-    this.setProperties({
-      onChange: () => {
-        find(".focus-me").focus();
-        this.set("value", "foo");
-      },
-      content: DEFAULT_CONTENT,
-      value: DEFAULT_VALUE
-    });
-  },
-
-  async test(assert) {
-    this.set("focusAfterOnChange", true);
-
-    await this.subject.expand();
-    await this.subject.selectRowByIndex(0);
-
-    assert.ok(
-      document.activeElement.classList.contains("single-select-header"),
-      "it selects the header"
-    );
-
-    this.set("focusAfterOnChange", false);
-
-    await this.subject.expand();
-    await this.subject.selectRowByIndex(0);
-
-    assert.notOk(
-      document.activeElement.classList.contains("single-select-header"),
-      "it doesn’t select the header"
-    );
-  }
-});
-
 componentTest("labelProperty", {
   template: '{{single-select labelProperty="foo" value=value content=content}}',
 

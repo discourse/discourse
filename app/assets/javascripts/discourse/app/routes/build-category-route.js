@@ -30,6 +30,11 @@ export default (filterArg, params) => {
             category,
             category_slug_path_with_id
           });
+        } else if (modelParams.id === "all") {
+          modelParams.category_slug_path_with_id = [
+            modelParams.parentSlug,
+            modelParams.slug
+          ].join("/");
         } else {
           modelParams.category_slug_path_with_id = [
             modelParams.parentSlug,
@@ -61,12 +66,12 @@ export default (filterArg, params) => {
           const record = this.store.createRecord("category", result.category);
           record.setupGroupsAndPermissions();
           this.site.updateCategory(record);
-          return { category: record };
+          return { category: record, modelParams };
         });
       }
 
       if (category) {
-        return { category };
+        return { category, modelParams };
       }
     },
 
@@ -76,10 +81,24 @@ export default (filterArg, params) => {
         return;
       }
 
-      this._setupNavigation(model.category);
+      const { category, modelParams } = model;
+
+      if (
+        category.default_list_filter === "none" &&
+        filterArg === "default" &&
+        modelParams &&
+        modelParams.id !== "all"
+      ) {
+        this.replaceWith("discovery.categoryNone", {
+          category,
+          category_slug_path_with_id: modelParams.category_slug_path_with_id
+        });
+      }
+
+      this._setupNavigation(category);
       return all([
-        this._createSubcategoryList(model.category),
-        this._retrieveTopicList(model.category, transition)
+        this._createSubcategoryList(category),
+        this._retrieveTopicList(category, transition, modelParams)
       ]);
     },
 
@@ -113,11 +132,11 @@ export default (filterArg, params) => {
       return Promise.resolve();
     },
 
-    _retrieveTopicList(category, transition) {
+    _retrieveTopicList(category, transition, modelParams) {
       const listFilter = `c/${Category.slugFor(category)}/${
           category.id
         }/l/${this.filter(category)}`,
-        findOpts = filterQueryParams(transition.to.queryParams, params),
+        findOpts = filterQueryParams(modelParams, params),
         extras = { cached: this.isPoppedState(transition) };
 
       return findTopicList(
@@ -158,7 +177,7 @@ export default (filterArg, params) => {
         category = model.category,
         canCreateTopic = topics.get("can_create_topic"),
         canCreateTopicOnCategory =
-          category.get("permission") === PermissionType.FULL,
+          canCreateTopic && category.get("permission") === PermissionType.FULL,
         filter = this.filter(category);
 
       this.controllerFor("navigation/category").setProperties({

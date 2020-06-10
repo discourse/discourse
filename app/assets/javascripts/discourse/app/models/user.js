@@ -1,3 +1,5 @@
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
@@ -109,11 +111,7 @@ const User = RestModel.extend({
     if (isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) {
       return "".htmlSafe();
     }
-    return (
-      "background-image: url(" +
-      Discourse.getURLWithCDN(bgUrl) +
-      ")"
-    ).htmlSafe();
+    return ("background-image: url(" + getURLWithCDN(bgUrl) + ")").htmlSafe();
   },
 
   @discourseComputed()
@@ -183,22 +181,22 @@ const User = RestModel.extend({
   @discourseComputed()
   mutedTopicsPath() {
     return defaultHomepage() === "latest"
-      ? Discourse.getURL("/?state=muted")
-      : Discourse.getURL("/latest?state=muted");
+      ? getURL("/?state=muted")
+      : getURL("/latest?state=muted");
   },
 
   @discourseComputed()
   watchingTopicsPath() {
     return defaultHomepage() === "latest"
-      ? Discourse.getURL("/?state=watching")
-      : Discourse.getURL("/latest?state=watching");
+      ? getURL("/?state=watching")
+      : getURL("/latest?state=watching");
   },
 
   @discourseComputed()
   trackingTopicsPath() {
     return defaultHomepage() === "latest"
-      ? Discourse.getURL("/?state=tracking")
-      : Discourse.getURL("/latest?state=tracking");
+      ? getURL("/?state=tracking")
+      : getURL("/latest?state=tracking");
   },
 
   @discourseComputed("username")
@@ -245,6 +243,13 @@ const User = RestModel.extend({
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
       type: "PUT",
       data: { new_username }
+    });
+  },
+
+  addEmail(email) {
+    return ajax(userPath(`${this.username_lower}/preferences/email`), {
+      type: "POST",
+      data: { email }
     });
   },
 
@@ -375,6 +380,27 @@ const User = RestModel.extend({
       .finally(() => {
         this.set("isSaving", false);
       });
+  },
+
+  setPrimaryEmail(email) {
+    return ajax(userPath(`${this.username}/preferences/primary-email.json`), {
+      type: "PUT",
+      data: { email }
+    }).then(() => {
+      this.secondary_emails.removeObject(email);
+      this.secondary_emails.pushObject(this.email);
+      this.set("email", email);
+    });
+  },
+
+  destroyEmail(email) {
+    return ajax(userPath(`${this.username}/preferences/email.json`), {
+      type: "DELETE",
+      data: { email }
+    }).then(() => {
+      this.secondary_emails.removeObject(email);
+      this.unconfirmed_emails.removeObject(email);
+    });
   },
 
   changePassword() {
@@ -653,6 +679,17 @@ const User = RestModel.extend({
     return ajax("/invites/link", {
       type: "POST",
       data: { email, group_names, topic_id }
+    });
+  },
+
+  generateMultipleUseInviteLink(
+    group_names,
+    max_redemptions_allowed,
+    expires_at
+  ) {
+    return ajax("/invites/link", {
+      type: "POST",
+      data: { group_names, max_redemptions_allowed, expires_at }
     });
   },
 

@@ -765,7 +765,7 @@ ca:
       short_description: 'Una violació de les <a href="%{base_path}/guidelines">directrius de la nostra comunitat</a>'
       long_form: "marcat amb bandera com a inapropiat"
     notify_user:
-      title: "Envia un missatge a @{{username}}"
+      title: "Envia un missatge a @%{username}"
       description: "Vull parlar amb aquesta persona directament i personalment sobre la seva publicació."
       short_description: "Vull parlar amb aquesta persona directament i personalment sobre la seva publicació."
       long_form: "usuari contactat"
@@ -1333,6 +1333,7 @@ ca:
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
     same_site_cookies: "Utilitza les mateixes galetes del lloc web. Eliminen tots els vectors Cross Site Request Forgery (falsificació de petició entre llocs) en els navegadors compatibles (Lax o Strict). Advertència: Strict sols funcionarà en llocs que forcin l'inici de sessió i utilitzin SSO."
     summary_score_threshold: "La puntuació mínima requerida perquè una publicació sigui inclosa en 'Resumeix aquest tema'"
+    summary_likes_required: "Nombre mínim de 'M'agrada' en un tema abans que sigui activat 'Resumeix aquest tema'. Els canvis en aquesta configuració s'aplicaran retroactivament dins d'una setmana."
     summary_percent_filter: "Quan un usuari fa clic en 'Resumeix aquest tema', mostra el % superior de les publicacions"
     summary_max_results: "Nombre màxim de publicacions retornades per \"Resumeix aquest tema\""
     enable_personal_messages: "Permet que els usuaris amb nivell de confiança 1 puguin crear missatges i respondre-hi (configurable amb nivell de confiança mínim per a enviar missatges). Observeu que l'equip responsable sempre pot enviar tota mena de missatges."
@@ -1509,6 +1510,7 @@ ca:
     max_post_deletions_per_day: "Nombre màxim de publicacions que pot suprimir un usuari per dia."
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
+    categories_topics: "Nombre de temes en la pàgina /categories. Si es posa a 0, s'intentarà automàticament trobar un valor per a mantenir les dues columnes simètriques (categories i temes)."
     suggested_topics: "Nombre de temes recomanats que es mostren a baix d'un tema."
     limit_suggested_to_category: "Mostra solament temes de la categoria actual en els temes recomanats."
     suggested_topics_max_days_old: "Els temes recomanats no haurien de tenir més de n dies."
@@ -2347,10 +2349,6 @@ ca:
     email_reject_bad_destination_address:
       title: "Correu rebutjat: adreça de destinació no vàlida"
       subject_template: "[%{email_prefix}] Problema de correu electrònic: adreça de destinatari desconeguda"
-      text_body_template: |
-        Ho sentim, però el vostre missatge de correu a %{destination} (titulat %{former_title}) no ha funcionat.
-
-        No es reconeix cap de les adreces de correu electrònic de destinació, o bé s'ha modificat la capçalera de missatge/ID del correu. Assegureu-vos que envieu a l'adreça correcta proporcionada per l'equip responsable.
     email_reject_old_destination:
       title: "Correu rebutjat: destinació antiga"
       subject_template: "[%{email_prefix}] Problema de correu electrònic: heu intentat respondre a una notificació antiga"
@@ -2706,6 +2704,7 @@ ca:
       unsubscribe: "Aquest resum és enviat des de %{site_link} quan no us hem vist en molt de temps. Canvieu %{email_preferences_link} o %{unsubscribe_link} per a cancel·lar la subscripció."
       your_email_settings: "la vostra configuració de correu"
       click_here: "feu clic aquí"
+      from: "%{site_name}"
       preheader: "Un resum breu des de la vostra darrera visita el %{last_seen_at}"
     forgot_password:
       title: "Contrasenya oblidada"
@@ -3030,6 +3029,7 @@ ca:
         Aquesta insígnia es concedeix quan rebeu 5 'M'agrada' en 300 publicacions diferents. Molt bé! La comunitat admira les vostres aportacions freqüents i d'alta gran qualitat a les converses!
     out_of_love:
       name: Sense amor
+      description: "S'han fet servir %{max_likes_per_day} 'm'agrada' en un dia"
       long_description: |
         Aquesta insígnia es concedeix quan gasteu tots els %{max_likes_per_day} dels vostres 'M'agrada' diaris. Dedicar un temps a mostrar estima per les publicacions que us han agradat encoratja els membres de la comunitat a crear discussions encara millors en el futur.
     higher_love:

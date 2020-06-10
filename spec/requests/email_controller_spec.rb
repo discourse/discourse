@@ -169,22 +169,6 @@ RSpec.describe EmailController do
     end
   end
 
-  context '#preferences_redirect' do
-    it 'requires you to be logged in' do
-      get "/email_preferences.json"
-      expect(response.status).to eq(403)
-    end
-
-    context 'when logged in' do
-      let!(:user) { sign_in(Fabricate(:user)) }
-
-      it 'redirects to your user preferences' do
-        get "/email_preferences.json"
-        expect(response).to redirect_to("/u/#{user.username}/preferences")
-      end
-    end
-  end
-
   context '#unsubscribe' do
     it 'displays not found if key is not found' do
       navigate_to_unsubscribe(SecureRandom.hex)

@@ -329,6 +329,7 @@ class CategoriesController < ApplicationController
         :required_tag_group_name,
         :min_tags_from_required_group,
         :read_only_banner,
+        :default_list_filter,
         custom_fields: [params[:custom_fields].try(:keys)],
         permissions: [*p.try(:keys)],
         allowed_tags: [],

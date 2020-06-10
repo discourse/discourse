@@ -260,6 +260,7 @@ sr:
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
   search:
+    within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorije"
       user: "Korisnici"
@@ -268,6 +269,7 @@ sr:
       invalid: "sadrži nevažeće karaktere."
   login:
     admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
+    not_available: "Nije dostupno. Pokušajte %{suggestion}?"
   admin:
     email:
       sent_test: "poslato!"

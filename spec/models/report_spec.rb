@@ -771,7 +771,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('flags', filters: { category: c0.id, 'include-subcategories': true }) }
+          let(:report) { Report.find('flags', filters: { category: c0.id, 'include_subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -801,7 +801,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics', filters: { category: c0.id, 'include-subcategories': true }) }
+          let(:report) { Report.find('topics', filters: { category: c0.id, 'include_subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -892,7 +892,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('posts', filters: { category: c0.id, 'include-subcategories': true }) }
+          let(:report) { Report.find('posts', filters: { category: c0.id, 'include_subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -924,7 +924,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics_with_no_response', filters: { category: c0.id, 'include-subcategories': true }) }
+          let(:report) { Report.find('topics_with_no_response', filters: { category: c0.id, 'include_subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -960,7 +960,7 @@ describe Report do
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('likes', filters: { category: c0.id, 'include-subcategories': true }) }
+          let(:report) { Report.find('likes', filters: { category: c0.id, 'include_subcategories': true }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -1233,6 +1233,35 @@ describe Report do
         expect(tl2_reached[:data][0][:y]).to eql(1)
         expect(tl3_reached[:data][0][:y]).to eql(0)
         expect(tl4_reached[:data][0][:y]).to eql(1)
+      end
+    end
+  end
+
+  describe "top_uploads" do
+    context "with no data" do
+      it "works" do
+        report = Report.find("top_uploads")
+
+        expect(report.data).to be_empty
+      end
+    end
+
+    context "with data" do
+      fab!(:jpg_upload) { Fabricate(:upload, extension: :jpg) }
+      fab!(:png_upload) { Fabricate(:upload, extension: :png) }
+
+      it "works" do
+        report = Report.find("top_uploads")
+
+        expect(report.data.length).to eq(2)
+        expect(report.data.map { |row| row[:extension] }).to contain_exactly("jpg", "png")
+      end
+
+      it "works with filters" do
+        report = Report.find("top_uploads", filters: { file_extension: "jpg" })
+
+        expect(report.data.length).to eq(1)
+        expect(report.data[0][:extension]).to eq("jpg")
       end
     end
   end

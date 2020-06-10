@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -8,7 +9,7 @@ export default createWidget("home-logo", {
   tagName: "div.title",
 
   settings: {
-    href: Discourse.getURL("/")
+    href: getURL("/")
   },
 
   href() {
@@ -44,7 +45,7 @@ export default createWidget("home-logo", {
         return h("img#site-logo.logo-small", {
           key: "logo-small",
           attributes: {
-            src: Discourse.getURL(logoSmallUrl),
+            src: getURL(logoSmallUrl),
             width: 36,
             alt: title
           }
@@ -55,12 +56,12 @@ export default createWidget("home-logo", {
     } else if (showMobileLogo) {
       return h("img#site-logo.logo-big", {
         key: "logo-mobile",
-        attributes: { src: Discourse.getURL(mobileLogoUrl), alt: title }
+        attributes: { src: getURL(mobileLogoUrl), alt: title }
       });
     } else if (logoUrl.length) {
       return h("img#site-logo.logo-big", {
         key: "logo-big",
-        attributes: { src: Discourse.getURL(logoUrl), alt: title }
+        attributes: { src: getURL(logoUrl), alt: title }
       });
     } else {
       return h("h1#site-text-logo.text-logo", { key: "logo-text" }, title);

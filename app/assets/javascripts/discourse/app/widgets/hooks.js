@@ -13,6 +13,10 @@ const CHANGE_ATTRIBUTE_NAME = "_discourse_change_widget";
 const MOUSE_DOWN_ATTRIBUTE_NAME = "_discourse_mouse_down_widget";
 const MOUSE_UP_ATTRIBUTE_NAME = "_discourse_mouse_up_widget";
 const MOUSE_MOVE_ATTRIBUTE_NAME = "_discourse_mouse_move_widget";
+const MOUSE_OVER_ATTRIBUTE_NAME = "_discourse_mouse_over_widget";
+const MOUSE_OUT_ATTRIBUTE_NAME = "_discourse_mouse_out_widget";
+const TOUCH_START_ATTRIBUTE_NAME = "_discourse_touch_start_widget";
+const TOUCH_END_ATTRIBUTE_NAME = "_discourse_touch_end_widget";
 
 function buildHook(attributeName, setAttr) {
   return class {
@@ -54,6 +58,10 @@ export const WidgetChangeHook = buildHook(CHANGE_ATTRIBUTE_NAME);
 export const WidgetMouseUpHook = buildHook(MOUSE_UP_ATTRIBUTE_NAME);
 export const WidgetMouseDownHook = buildHook(MOUSE_DOWN_ATTRIBUTE_NAME);
 export const WidgetMouseMoveHook = buildHook(MOUSE_MOVE_ATTRIBUTE_NAME);
+export const WidgetMouseOverHook = buildHook(MOUSE_OVER_ATTRIBUTE_NAME);
+export const WidgetMouseOutHook = buildHook(MOUSE_OUT_ATTRIBUTE_NAME);
+export const WidgetTouchStartHook = buildHook(TOUCH_START_ATTRIBUTE_NAME);
+export const WidgetTouchEndHook = buildHook(TOUCH_END_ATTRIBUTE_NAME);
 
 function nodeCallback(node, attrName, cb, options = { rerender: true }) {
   const { rerender } = options;
@@ -111,6 +119,18 @@ WidgetClickHook.setupDocumentCallback = function() {
       widget.drag(tt);
     }
   };
+
+  $(document).on("mouseover.discourse-widget", e => {
+    nodeCallback(e.target, MOUSE_OVER_ATTRIBUTE_NAME, w => w.mouseOver(e), {
+      rerender: false
+    });
+  });
+
+  $(document).on("mouseout.discourse-widget", e => {
+    nodeCallback(e.target, MOUSE_OUT_ATTRIBUTE_NAME, w => w.mouseOut(e), {
+      rerender: false
+    });
+  });
 
   document.addEventListener("touchmove", onDrag, {
     passive: false,
@@ -198,6 +218,18 @@ WidgetClickHook.setupDocumentCallback = function() {
 
   $(document).on("change.discourse-widget", e => {
     nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, w => w.change(e), {
+      rerender: false
+    });
+  });
+
+  $(document).on("touchstart.discourse-widget", e => {
+    nodeCallback(e.target, TOUCH_START_ATTRIBUTE_NAME, w => w.touchStart(e), {
+      rerender: false
+    });
+  });
+
+  $(document).on("touchend.discourse-widget", e => {
+    nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, w => w.touchEnd(e), {
       rerender: false
     });
   });

@@ -664,7 +664,7 @@ hy:
       short_description: '<a href="%{base_path}/guidelines">Մեր համայնքի ուղեցույցի</a> խախտում'
       long_form: "դրոշակավորել է սա որպես անհամապատասխան"
     notify_user:
-      title: "Ուղարկել նամակ @{{username}} -ին"
+      title: "Ուղարկել նամակ @%{username} -ին"
       description: "Ես ցանկանում եմ ուղղակիորեն և անձամբ խոսել այս մարդու հետ իր գրառման մասին:"
       short_description: "Ես ցանկանում եմ ուղղակիորեն և անձամբ խոսել այս մարդու հետ իր գրառման մասին:"
       long_form: "նամակ է գրել օգտատիրոջը"
@@ -2228,10 +2228,6 @@ hy:
     email_reject_bad_destination_address:
       title: "Էլ. փոստի Մերժում - Նպատակակետի Վատ Հասցե"
       subject_template: "[%{email_prefix}] Էլ. փոստի խնդիր -- Անհայտ Ում Հասցե"
-      text_body_template: |
-        Ցավում ենք բայց, Ձեր էլ. նամակը %{destination}-ին (%{former_title} վերնագրով) չաշխատեց:
-
-        Նպատակային էլ. հասցեներից ոչ մեկը ճանաչված չէ, կամ Message-ID վերնագիրը փոփոխված չէ: Խնդրում ենք համոզվել, որ Դուք ուղարկում եք անձնակազմի կողմից տրամադրված ճիշտ էլ. հասցեի:
     email_reject_old_destination:
       title: "Էլ. փոստի Մերժում - Հին Նպատակակետ"
       subject_template: "[%{email_prefix}] Էլ. փոստի խնդիր -- Դուք փորձում եք պատասխանել հին ծանուցմանը"
@@ -3289,8 +3285,10 @@ hy:
       posted: '%{username} -ը գրառում է կատարել այստեղ՝ "%{topic}" - %{site_title}'
       private_message: '%{username} -ը Ձեզ անձնական հաղորդագրություն է ուղարկել այստեղ՝ "%{topic}" - %{site_title}'
       linked: '%{username} -ը հղում է կատարել Ձեր գրառմանը այստեղից՝ "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} -ը ստեղծել է նոր թեմա՝ "%{topic}" - %{site_title}'
       confirm_title: "Ծանուցումները միացված են - %{site_title}"
       confirm_body: "Հաջողվեց! Ծանուցումները միացվեցին:"
+      custom: "Ծանուցում %{username} -ից մինչև %{site_title}"
   staff_action_logs:
     not_found: "չգտնված"
     unknown: "չճանաչված"

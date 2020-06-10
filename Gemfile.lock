@@ -1,10 +1,9 @@
 GIT
   remote: https://github.com/discourse/rails_failover
-  revision: 0e668eba86591c20aa7a43f47b0cd36d4eacaeb6
+  revision: 66602aa73785851b81c506f0023d3c2a2e40de0a
   specs:
     rails_failover (0.4.0)
       activerecord (~> 6.0)
-      listen (~> 3.2)
       railties (~> 6.0)
 
 GEM
@@ -94,7 +93,7 @@ GEM
     coderay (1.1.3)
     colored2 (3.1.2)
     concurrent-ruby (1.1.6)
-    connection_pool (2.2.2)
+    connection_pool (2.2.3)
     cose (1.0.0)
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 0.4.0)
@@ -115,7 +114,7 @@ GEM
       in_threads (~> 1.3)
       progress (~> 3.0, >= 3.0.1)
     docile (1.3.2)
-    email_reply_trimmer (0.1.12)
+    email_reply_trimmer (0.1.13)
     ember-data-source (3.0.2)
       ember-source (>= 2, < 3.0)
     ember-handlebars-template (0.8.0)
@@ -156,7 +155,7 @@ GEM
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
-    i18n (1.8.2)
+    i18n (1.8.3)
       concurrent-ruby (~> 1.0)
     image_size (1.5.0)
     in_threads (1.5.4)
@@ -192,7 +191,7 @@ GEM
       mini_mime (>= 0.1.1)
     maxminddb (0.1.22)
     memory_profiler (0.9.14)
-    message_bus (3.3.0)
+    message_bus (3.3.1)
       rack (>= 1.1.3)
     method_source (1.0.0)
     mini_mime (1.0.2)
@@ -268,6 +267,9 @@ GEM
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    pry-byebug (3.9.0)
+      byebug (~> 11.0)
+      pry (~> 0.13.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.5)
@@ -286,7 +288,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
-    rails_multisite (2.1.2)
+    rails_multisite (2.3.0)
       activerecord (> 5.0, < 7)
       railties (> 5.0, < 7)
     railties (6.0.3.1)
@@ -311,6 +313,7 @@ GEM
     redis (4.1.4)
     redis-namespace (1.7.0)
       redis (>= 3.0.4)
+    regexp_parser (1.7.1)
     request_store (1.5.0)
       rack (>= 1.4)
     rexml (3.2.4)
@@ -350,10 +353,11 @@ GEM
       json-schema (~> 2.2)
       railties (>= 3.1, < 7.0)
     rtlit (0.0.5)
-    rubocop (0.84.0)
+    rubocop (0.85.1)
       parallel (~> 1.10)
       parser (>= 2.7.0.1)
       rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.7)
       rexml
       rubocop-ast (>= 0.0.3)
       ruby-progressbar (~> 1.7)
@@ -515,6 +519,7 @@ DEPENDENCIES
   onebox
   parallel_tests
   pg
+  pry-byebug
   pry-rails
   puma
   r2

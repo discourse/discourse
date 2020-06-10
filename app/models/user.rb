@@ -21,7 +21,6 @@ class User < ActiveRecord::Base
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
   has_many :email_tokens, dependent: :destroy
-  has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
   has_many :user_emails, dependent: :destroy
@@ -37,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: 'GroupHistory'
   has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
   has_many :reviewable_scores, dependent: :destroy
+  has_many :invites, foreign_key: :invited_by_id, dependent: :destroy
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_one :single_sign_on_record, dependent: :destroy
   has_one :anonymous_user_master, class_name: 'AnonymousUser', dependent: :destroy
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser', dependent: :destroy
+  has_one :invited_user, dependent: :destroy
 
   # delete all is faster but bypasses callbacks
   has_many :bookmarks, dependent: :delete_all
@@ -425,7 +426,7 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
-    used_invite = invites.where("redeemed_at is not null").includes(:invited_by).first
+    used_invite = Invite.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
     used_invite.try(:invited_by)
   end
 
@@ -1199,7 +1200,7 @@ class User < ActiveRecord::Base
     if primary_email
       new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
     else
-      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true)
+      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true, skip_validate_email: !should_validate_email_address?)
     end
   end
 
@@ -1209,6 +1210,10 @@ class User < ActiveRecord::Base
 
   def secondary_emails
     self.user_emails.secondary.pluck(:email)
+  end
+
+  def unconfirmed_emails
+    self.email_change_requests.where.not(change_state: EmailChangeRequest.states[:complete]).pluck(:new_email)
   end
 
   RECENT_TIME_READ_THRESHOLD ||= 60.days
@@ -1300,6 +1305,10 @@ class User < ActiveRecord::Base
       .select(:credential_id)
       .where(factor_type: UserSecurityKey.factor_types[:second_factor])
       .pluck(:credential_id)
+  end
+
+  def encoded_username(lower: false)
+    UrlHelper.encode_component(lower ? username_lower : username)
   end
 
   protected

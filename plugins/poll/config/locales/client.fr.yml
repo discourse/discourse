@@ -52,7 +52,7 @@ fr:
         label: "Afficher les détails"
       ungroup-results:
         title: "Combiner tous les votes"
-        label: "Cacher les détails"
+        label: "Masquer les détails"
       export-results:
         title: "Exporter les résultats du sondage"
         label: "Exporter"

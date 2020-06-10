@@ -10,7 +10,10 @@ export default Component.extend({
   @discourseComputed("rs.score_type.title", "reviewable.target_created_by")
   title(title, targetCreatedBy) {
     if (title && targetCreatedBy) {
-      return title.replace("{{username}}", targetCreatedBy.username);
+      return title.replace(
+        /{{username}}|%{username}/,
+        targetCreatedBy.username
+      );
     }
 
     return title;

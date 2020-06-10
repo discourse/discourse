@@ -44,6 +44,13 @@ describe UserBadgesController do
       expect(parsed["user_badges"].length).to eq(1)
     end
 
+    it "returns 404 if `hide_profile_and_presence` user option is checked" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+
+      get "/user-badges/#{user.username}.json"
+      expect(response.status).to eq(404)
+    end
+
     it 'returns user_badges for a user with period in username' do
       user.update!(username: "myname.test")
       get "/user-badges/#{user.username}", xhr: true

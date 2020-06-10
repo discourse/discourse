@@ -9,7 +9,7 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import { cookAsync } from "discourse/lib/text";
+import { generateCookFunction } from "discourse/lib/text";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { siteDir } from "discourse/lib/text-direction";
@@ -28,7 +28,7 @@ import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -344,18 +344,32 @@ export default Component.extend({
     return toolbar;
   },
 
+  cachedCookAsync(text) {
+    if (this._cachedCookFunction) {
+      return Promise.resolve(this._cachedCookFunction(text));
+    }
+
+    const markdownOptions = this.markdownOptions || {};
+    return generateCookFunction(markdownOptions).then(cook => {
+      this._cachedCookFunction = cook;
+      return cook(text);
+    });
+  },
+
   _updatePreview() {
     if (this._state !== "inDOM") {
       return;
     }
 
     const value = this.value;
-    const markdownOptions = this.markdownOptions || {};
 
-    cookAsync(value, markdownOptions).then(cooked => {
+    this.cachedCookAsync(value).then(cooked => {
       if (this.isDestroyed) {
         return;
       }
+
+      if (this.preview === cooked) return;
+
       this.set("preview", cooked);
       schedule("afterRender", () => {
         if (this._state !== "inDOM") {
@@ -378,7 +392,7 @@ export default Component.extend({
     }
 
     // Debouncing in test mode is complicated
-    if (ENV.environment === "test") {
+    if (isTesting()) {
       this._updatePreview();
     } else {
       debounce(this, this._updatePreview, 30);
@@ -425,7 +439,7 @@ export default Component.extend({
           return false;
         }
 
-        const matches = /(?:^|[^a-z])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+        const matches = /(?:^|[>.,\/#!$%^&*;:{}=\-_`~()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
           text.substring(0, cp)
         );
 

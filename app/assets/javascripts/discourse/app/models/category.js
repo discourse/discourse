@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -96,7 +97,7 @@ const Category = RestModel.extend({
 
   @discourseComputed("name")
   url() {
-    return Discourse.getURL(`/c/${Category.slugFor(this)}/${this.id}`);
+    return getURL(`/c/${Category.slugFor(this)}/${this.id}`);
   },
 
   @discourseComputed
@@ -187,7 +188,8 @@ const Category = RestModel.extend({
         ),
         search_priority: this.search_priority,
         reviewable_by_group_name: this.reviewable_by_group_name,
-        read_only_banner: this.read_only_banner
+        read_only_banner: this.read_only_banner,
+        default_list_filter: this.default_list_filter
       },
       type: id ? "PUT" : "POST"
     });

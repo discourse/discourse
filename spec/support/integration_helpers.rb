@@ -26,7 +26,7 @@ module IntegrationHelpers
   end
 
   def sign_in(user)
-    get "/session/#{user.username}/become"
+    get "/session/#{user.encoded_username}/become"
     user
   end
 

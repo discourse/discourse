@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import { schedule } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
@@ -15,7 +16,7 @@ function replaceSpan($e, username, opts) {
       extraClass = "notify";
     }
     $e.replaceWith(
-      `<a href='${Discourse.getURL("/g/") +
+      `<a href='${getURL("/g/") +
         username}' class='mention-group ${extraClass}' ${extra}>@${username}</a>`
     );
   } else {

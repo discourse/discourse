@@ -104,6 +104,10 @@
               label="admin.user.delete"}}
             </li>
           {{/if}}
+          {{plugin-outlet
+            name="user-card-additional-buttons"
+            args=(hash user=this.user close=(action "close"))
+            tagName="li"}}
         </ul>
         {{plugin-outlet
         name="user-card-additional-controls"

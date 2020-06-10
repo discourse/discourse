@@ -615,7 +615,7 @@ nb_NO:
       title: "Upassende"
       long_form: "markerte dette som upassende"
     notify_user:
-      title: "Send en melding til @{{username}}"
+      title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
       short_description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
       long_form: "sendt melding til bruker"
@@ -1099,10 +1099,12 @@ nb_NO:
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
   search:
+    within_post: "#%{post_number} av %{username}"
     types:
       category: "Kategorier"
       topic: "Resultater"
       user: "Brukere"
+    results_page: "Søkeresultater for \"%{term}\""
   most_posts: "Flest innlegg"
   most_recent_poster: "Ferskeste innlegg av"
   redirected_to_top_reasons:
@@ -1513,6 +1515,12 @@ nb_NO:
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
+      quoted: '%{username} siterte deg i "%{topic}" - %{site_title}'
+      replied: '%{username} svarte deg i "%{topic}" - %{site_title}'
+      posted: '%{username} skrev noe i "%{topic}" - %{site_title}'
+      linked: '%{username} lenket til innlegget ditt i "%{topic}" - %{site_title}'
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
   reviewables:

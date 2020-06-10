@@ -117,6 +117,11 @@ ca:
       random_mention:
         reply: |-
           Hola! Per a trobar què puc fer, digueu `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Ara sé com fer les coses següents:
+
+          `@ %{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Inicia un tutorial interactiu només per a vós, en un missatge personal. El `{name-of-tutorial}` pot ser un dels següents: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -222,6 +227,8 @@ ca:
       bookmark:
         instructions: |-
           Si voleu saber-ne més, seleccioneu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a sota i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marqueu com a preferit aquest missatge privat**. Si ho feu, potser tindreu un :gift: més avant!
+        reply: |-
+          Fantàstic! Ara podeu trobar fàcilment com tornar a la nostra conversa privada en qualsevol moment, des de [la pestanya de favorits del vostre perfil](%{bookmark_url}). Només heu de seleccionar la vostra imatge de perfil dalt a la dreta &#8599;
         not_found: |-
           Ui, no veig cap favorit marcat en aquest tema. ¿Heu trobat el marcador de favorits a sota de cada publicació? Utilitzeu "mostra'n més" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per a mostrar accions addicionals si calen.
       emoji:

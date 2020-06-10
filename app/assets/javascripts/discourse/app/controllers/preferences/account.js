@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { not, or, gt } from "@ember/object/computed";
 import Controller from "@ember/controller";
@@ -11,6 +12,7 @@ import { findAll } from "discourse/models/login-method";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import logout from "discourse/lib/logout";
+import EmberObject from "@ember/object";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -95,6 +97,39 @@ export default Controller.extend(CanCheckEmails, {
   disableConnectButtons: propertyNotEqual("model.id", "currentUser.id"),
 
   @discourseComputed(
+    "model.email",
+    "model.secondary_emails.[]",
+    "model.unconfirmed_emails.[]"
+  )
+  emails(primaryEmail, secondaryEmails, unconfirmedEmails) {
+    const emails = [];
+
+    if (primaryEmail) {
+      emails.push(
+        EmberObject.create({
+          email: primaryEmail,
+          primary: true,
+          confirmed: true
+        })
+      );
+    }
+
+    if (secondaryEmails) {
+      secondaryEmails.forEach(email => {
+        emails.push(EmberObject.create({ email, confirmed: true }));
+      });
+    }
+
+    if (unconfirmedEmails) {
+      unconfirmedEmails.forEach(email => {
+        emails.push(EmberObject.create({ email }));
+      });
+    }
+
+    return emails.sort((a, b) => a.email.localeCompare(b.email));
+  },
+
+  @discourseComputed(
     "model.second_factor_enabled",
     "canCheckEmails",
     "model.is_anonymous"
@@ -148,6 +183,26 @@ export default Controller.extend(CanCheckEmails, {
         .catch(popupAjaxError);
     },
 
+    setPrimaryEmail(email) {
+      this.model.setPrimaryEmail(email).catch(popupAjaxError);
+    },
+
+    destroyEmail(email) {
+      this.model.destroyEmail(email);
+    },
+
+    resendConfirmationEmail(email) {
+      email.set("resending", true);
+      this.model
+        .addEmail(email.email)
+        .then(() => {
+          email.set("resent", true);
+        })
+        .finally(() => {
+          email.set("resending", false);
+        });
+    },
+
     changePassword() {
       if (!this.passwordProgress) {
         this.set(
@@ -195,7 +250,7 @@ export default Controller.extend(CanCheckEmails, {
                 () => {
                   bootbox.alert(
                     I18n.t("user.deleted_yourself"),
-                    () => (window.location = Discourse.getURL("/"))
+                    () => (window.location = getURL("/"))
                   );
                 },
                 () => {

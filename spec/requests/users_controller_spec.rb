@@ -1505,7 +1505,8 @@ describe UsersController do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(inviter)
       invitee = Fabricate(:user)
-      _invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+      _invite = Fabricate(:invite, invited_by: inviter)
+      Fabricate(:invited_user, invite: _invite, user: invitee)
       get "/u/#{user.username}/invited_count.json"
       expect(response.status).to eq(200)
 
@@ -1535,61 +1536,66 @@ describe UsersController do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(inviter)
 
+      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter)
+      redeemed_invite = Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter)
       invitee = Fabricate(:user)
-      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter, user: invitee)
-      Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter, user: invitee)
+      Fabricate(:invited_user, invite: redeemed_invite, user: invitee)
 
-      get "/u/#{inviter.username}/invited.json", params: { search: 'billybob' }
+      get "/u/#{inviter.username}/invited.json", params: { filter: 'pending', search: 'billybob' }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
       expect(invites.size).to eq(1)
       expect(invites.first).to include('email' => 'billybob@example.com')
 
-      get "/u/#{inviter.username}/invited.json", params: { search: invitee.username }
+      get "/u/#{inviter.username}/invited.json", params: { filter: 'redeemed', search: invitee.username }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
-      expect(invites.size).to eq(2)
-      expect(invites[0]['email']).to be_present
+      expect(invites.size).to eq(1)
+      expect(invites[0]['user']).to be_present
     end
 
     it "doesn't filter by email if another regular user" do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(Fabricate(:user, trust_level: 2))
 
+      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter)
+      redeemed_invite = Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter)
       invitee = Fabricate(:user)
-      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter, user: invitee)
-      Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter, user: invitee)
+      Fabricate(:invited_user, invite: redeemed_invite, user: invitee)
 
-      get "/u/#{inviter.username}/invited.json", params: { search: 'billybob' }
+      get "/u/#{inviter.username}/invited.json", params: { filter: 'pending', search: 'billybob' }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
       expect(invites.size).to eq(0)
 
-      get "/u/#{inviter.username}/invited.json", params: { search: invitee.username }
+      get "/u/#{inviter.username}/invited.json", params: { filter: 'redeemed', search: invitee.username }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
-      expect(invites.size).to eq(2)
-      expect(invites[0]['email']).to be_blank
+      expect(invites.size).to eq(1)
+      expect(invites[0]['user']).to be_present
     end
 
     it "filters by email if staff" do
       inviter = Fabricate(:user, trust_level: 2)
       sign_in(Fabricate(:moderator))
 
-      invitee = Fabricate(:user)
-      Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter, user: invitee)
-      Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter, user: invitee)
+      invite_1 = Fabricate(:invite, email: 'billybob@example.com', invited_by: inviter)
+      invitee_1 = Fabricate(:user)
+      Fabricate(:invited_user, invite: invite_1, user: invitee_1)
+      invite_2 = Fabricate(:invite, email: 'jimtom@example.com', invited_by: inviter)
+      invitee_2 = Fabricate(:user)
+      Fabricate(:invited_user, invite: invite_2, user: invitee_2)
 
       get "/u/#{inviter.username}/invited.json", params: { search: 'billybob' }
       expect(response.status).to eq(200)
 
       invites = response.parsed_body['invites']
       expect(invites.size).to eq(1)
-      expect(invites[0]['email']).to be_present
+      expect(invites[0]['user']).to include('id' => invitee_1.id)
     end
 
     context 'with guest' do
@@ -1604,18 +1610,19 @@ describe UsersController do
       end
 
       context 'with redeemed invites' do
-        it 'returns invites' do
+        it 'returns invited_users' do
           inviter = Fabricate(:user, trust_level: 2)
           sign_in(inviter)
           invitee = Fabricate(:user)
-          invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+          invite = Fabricate(:invite, invited_by: inviter)
+          invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
 
           get "/u/#{inviter.username}/invited.json"
           expect(response.status).to eq(200)
 
           invites = response.parsed_body['invites']
           expect(invites.size).to eq(1)
-          expect(invites.first).to include('email' => invite.email)
+          expect(invites[0]).to include('id' => invite.id)
         end
       end
     end
@@ -1641,7 +1648,6 @@ describe UsersController do
           it 'does not return invites' do
             user = sign_in(Fabricate(:user))
             inviter = Fabricate(:user)
-            _invitee = Fabricate(:user)
             Fabricate(:invite, invited_by: inviter)
             stub_guardian(user) do |guardian|
               guardian.stubs(:can_see_invite_details?).
@@ -1659,14 +1665,42 @@ describe UsersController do
           sign_in(Fabricate(:moderator))
           inviter = Fabricate(:user)
           invitee = Fabricate(:user)
-          invite = Fabricate(:invite, invited_by: inviter, user: invitee)
+          invite = Fabricate(:invite, invited_by: inviter)
+          Fabricate(:invited_user, invite: invite, user: invitee)
 
           get "/u/#{inviter.username}/invited.json"
           expect(response.status).to eq(200)
 
           invites = response.parsed_body['invites']
           expect(invites.size).to eq(1)
-          expect(invites.first).to include('email' => invite.email)
+          expect(invites[0]).to include('id' => invite.id)
+        end
+      end
+
+      context 'with invite links' do
+        context 'with permission to see invite links' do
+          it 'returns invites' do
+            inviter = sign_in(Fabricate(:admin))
+            invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invite_links.json"
+            expect(response.status).to eq(200)
+
+            invites = response.parsed_body['invites']
+            expect(invites.size).to eq(1)
+            expect(invites.first).to include("id" => invite.id)
+          end
+        end
+
+        context 'without permission to see invite links' do
+          it 'does not return invites' do
+            user = Fabricate(:user, trust_level: 2)
+            inviter = Fabricate(:admin)
+            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invite_links.json"
+            expect(response.status).to eq(403)
+          end
         end
       end
     end
@@ -2433,8 +2467,10 @@ describe UsersController do
 
   describe '#my_redirect' do
     it "redirects if the user is not logged in" do
-      get "/my/wat.json"
-      expect(response).to be_redirect
+      get "/my/wat"
+      expect(response).to redirect_to("/login-preferences")
+      expect(response.cookies).to have_key("destination_url")
+      expect(response.cookies["destination_url"]).to eq("/my/wat")
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
@@ -2447,13 +2483,21 @@ describe UsersController do
       end
 
       it "will redirect to an valid path" do
-        get "/my/preferences.json"
-        expect(response).to be_redirect
+        get "/my/preferences"
+        expect(response).to redirect_to("/u/#{user.username}/preferences")
       end
 
       it "permits forward slashes" do
-        get "/my/activity/posts.json"
-        expect(response).to be_redirect
+        get "/my/activity/posts"
+        expect(response).to redirect_to("/u/#{user.username}/activity/posts")
+      end
+
+      it "correctly redirects for Unicode usernames" do
+        SiteSetting.unicode_usernames = true
+        user = sign_in(Fabricate(:unicode_user))
+
+        get "/my/preferences"
+        expect(response).to redirect_to("/u/#{user.encoded_username}/preferences")
       end
     end
   end
@@ -2511,6 +2555,52 @@ describe UsersController do
         expect(json["secondary_emails"]).to eq(inactive_user.secondary_emails)
         expect(json["associated_accounts"]).to eq([])
       end
+    end
+  end
+
+  describe '#update_primary_email' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_email) { user.primary_email }
+    fab!(:other_email) { Fabricate(:secondary_email, user: user) }
+
+    before do
+      SiteSetting.email_editable = true
+
+      sign_in(user)
+    end
+
+    it "changes user's primary email" do
+      put "/u/#{user.username}/preferences/primary-email.json", params: { email: user_email.email }
+      expect(response.status).to eq(200)
+      expect(user_email.reload.primary).to eq(true)
+      expect(other_email.reload.primary).to eq(false)
+
+      put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email }
+      expect(response.status).to eq(200)
+      expect(user_email.reload.primary).to eq(false)
+      expect(other_email.reload.primary).to eq(true)
+    end
+  end
+
+  describe '#destroy_email' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_email) { user.primary_email }
+    fab!(:other_email) { Fabricate(:secondary_email, user: user) }
+
+    before do
+      SiteSetting.email_editable = true
+
+      sign_in(user)
+    end
+
+    it "can destroy secondary emails" do
+      delete "/u/#{user.username}/preferences/email.json", params: { email: user_email.email }
+      expect(response.status).to eq(428)
+      expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
+
+      delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email }
+      expect(response.status).to eq(200)
+      expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email)
     end
   end
 
@@ -3483,19 +3573,6 @@ describe UsersController do
           response.parsed_body['users'].map { |u| u['username'] }
         end
       end
-    end
-  end
-
-  describe '#user_preferences_redirect' do
-    it 'requires the user to be logged in' do
-      get '/user_preferences'
-      expect(response.status).to eq(404)
-    end
-
-    it "redirects to their profile when logged in" do
-      sign_in(user)
-      get '/user_preferences'
-      expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
     end
   end
 

@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
@@ -23,7 +24,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
 import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 
@@ -71,7 +72,7 @@ function loadDraft(store, opts) {
 
 const _popupMenuOptionsCallbacks = [];
 
-let _checkDraftPopup = ENV.environment !== "test";
+let _checkDraftPopup = !isTesting();
 
 export function toggleCheckDraftPopup(enabled) {
   _checkDraftPopup = enabled;
@@ -561,7 +562,7 @@ export default Controller.extend({
       ) {
         groups.forEach(group => {
           let body;
-          const groupLink = Discourse.getURL(`/g/${group.name}/members`);
+          const groupLink = getURL(`/g/${group.name}/members`);
 
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {
@@ -1109,7 +1110,7 @@ export default Controller.extend({
       if (model.draftSaving) {
         // in test debounce is Ember.run, this will cause
         // an infinite loop
-        if (ENV.environment !== "test") {
+        if (!isTesting()) {
           this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
         }
       } else {
@@ -1157,6 +1158,7 @@ export default Controller.extend({
     const tagsArray = tags || [];
     if (
       this.site.can_tag_topics &&
+      !this.currentUser.staff &&
       category &&
       category.minimum_required_tags > tagsArray.length
     ) {

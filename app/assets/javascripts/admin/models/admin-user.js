@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { filter, or, gt, lt, not } from "@ember/object/computed";
@@ -43,7 +44,7 @@ const AdminUser = User.extend({
 
   @discourseComputed
   bounceLink() {
-    return Discourse.getURL("/admin/email/bounced");
+    return getURL("/admin/email/bounced");
   },
 
   canResetBounceScore: gt("bounce_score", 0),
@@ -306,7 +307,7 @@ const AdminUser = User.extend({
       type: "POST",
       data: { username_or_email: this.username }
     })
-      .then(() => (document.location = Discourse.getURL("/")))
+      .then(() => (document.location = getURL("/")))
       .catch(e => {
         if (e.status === 404) {
           bootbox.alert(I18n.t("admin.impersonate.not_found"));
@@ -395,11 +396,11 @@ const AdminUser = User.extend({
         .then(function(data) {
           if (data.success) {
             if (data.username) {
-              document.location = Discourse.getURL(
+              document.location = getURL(
                 `/admin/users/${user.get("id")}/${data.username}`
               );
             } else {
-              document.location = Discourse.getURL("/admin/users/list/active");
+              document.location = getURL("/admin/users/list/active");
             }
           } else {
             bootbox.alert(I18n.t("admin.user.anonymize_failed"));
@@ -456,7 +457,7 @@ const AdminUser = User.extend({
             if (/^\/admin\/users\/list\//.test(location)) {
               document.location = location;
             } else {
-              document.location = Discourse.getURL("/admin/users/list/active");
+              document.location = getURL("/admin/users/list/active");
             }
           } else {
             bootbox.alert(I18n.t("admin.user.delete_failed"));

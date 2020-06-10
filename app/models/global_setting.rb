@@ -169,9 +169,15 @@ class GlobalSetting
         c[:port] = redis_port if redis_port
 
         if redis_slave_host && redis_slave_port
-          c[:slave_host] = redis_slave_host
-          c[:slave_port] = redis_slave_port
-          c[:connector] = DiscourseRedis::Connector
+          if ENV["REDIS_RAILS_FAILOVER"]
+            c[:replica_host] = redis_slave_host
+            c[:replica_port] = redis_slave_port
+            c[:connector] = RailsFailover::Redis::Connector
+          else
+            c[:slave_host] = redis_slave_host
+            c[:slave_port] = redis_slave_port
+            c[:connector] = DiscourseRedis::Connector
+          end
         end
 
         c[:password] = redis_password if redis_password.present?
@@ -193,9 +199,15 @@ class GlobalSetting
         c[:port] = message_bus_redis_port if message_bus_redis_port
 
         if message_bus_redis_slave_host && message_bus_redis_slave_port
-          c[:slave_host] = message_bus_redis_slave_host
-          c[:slave_port] = message_bus_redis_slave_port
-          c[:connector] = DiscourseRedis::Connector
+          if ENV["REDIS_RAILS_FAILOVER"]
+            c[:replica_host] = message_bus_redis_slave_host
+            c[:replica_port] = message_bus_redis_slave_port
+            c[:connector] = RailsFailover::Redis::Connector
+          else
+            c[:slave_host] = message_bus_redis_slave_host
+            c[:slave_port] = message_bus_redis_slave_port
+            c[:connector] = DiscourseRedis::Connector
+          end
         end
 
         c[:password] = message_bus_redis_password if message_bus_redis_password.present?
@@ -206,6 +218,23 @@ class GlobalSetting
 
         c.freeze
       end
+  end
+
+  # test only
+  def self.reset_whitelisted_theme_ids!
+    @whitelisted_theme_ids = nil
+  end
+
+  def self.whitelisted_theme_ids
+    return nil if whitelisted_theme_repos.blank?
+
+    @whitelisted_theme_ids ||= begin
+      urls = whitelisted_theme_repos.split(",").map(&:strip)
+      Theme
+        .joins(:remote_theme)
+        .where('remote_themes.remote_url in (?)', urls)
+        .pluck(:id)
+    end
   end
 
   def self.add_default(name, default)

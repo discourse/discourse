@@ -4,19 +4,19 @@ class UsersController < ApplicationController
   skip_before_action :authorize_mini_profiler, only: [:avatar]
 
   requires_login only: [
-    :username, :update, :user_preferences_redirect, :upload_user_image,
+    :username, :update, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor_totp,
     :enable_second_factor_totp, :disable_second_factor, :list_second_factors,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks
+    :bookmarks, :invited
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset_show, :password_reset_update, :update, :account_created,
-    :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
+    :activate_account, :perform_account_activation, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
     :feature_topic, :clear_featured_topic, :bookmarks
   ]
@@ -129,10 +129,6 @@ class UsersController < ApplicationController
     show
   end
 
-  def user_preferences_redirect
-    redirect_to email_preferences_path(current_user.username_lower)
-  end
-
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
@@ -209,6 +205,72 @@ class UsersController < ApplicationController
     render json: failed_json, status: 403
   end
 
+  def update_primary_email
+    if !SiteSetting.enable_secondary_emails
+      return render json: failed_json, status: 410
+    end
+
+    params.require(:email)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit_email!(user)
+
+    old_primary = user.primary_email
+    if old_primary.email == params[:email]
+      return render json: success_json
+    end
+
+    new_primary = user.user_emails.find_by(email: params[:email])
+    if new_primary.blank?
+      return render json: failed_json.merge(errors: [I18n.t("change_email.doesnt_exist")]), status: 428
+    end
+
+    User.transaction do
+      old_primary.update!(primary: false)
+      new_primary.update!(primary: true)
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_update_email(user)
+      else
+        UserHistory.create!(action: UserHistory.actions[:update_email], target_user_id: user.id)
+      end
+    end
+
+    render json: success_json
+  end
+
+  def destroy_email
+    if !SiteSetting.enable_secondary_emails
+      return render json: failed_json, status: 410
+    end
+
+    params.require(:email)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    user_email = user.user_emails.find_by(email: params[:email])
+    if user_email&.primary
+      return render json: failed_json, status: 428
+    end
+
+    ActiveRecord::Base.transaction do
+      if user_email
+        user_email.destroy
+      elsif
+        user.email_change_requests.where(new_email: params[:email]).destroy_all
+      end
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_destroy_email(user)
+      else
+        UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id)
+      end
+    end
+
+    render json: success_json
+  end
+
   def topic_tracking_state
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
@@ -273,7 +335,7 @@ class UsersController < ApplicationController
       cookies[:destination_url] = path("/my/#{params[:path]}")
       redirect_to path("/login-preferences")
     else
-      redirect_to(path("/u/#{current_user.username}/#{params[:path]}"))
+      redirect_to(path("/u/#{current_user.encoded_username}/#{params[:path]}"))
     end
   end
 
@@ -301,28 +363,42 @@ class UsersController < ApplicationController
   def invited
     guardian.ensure_can_invite_to_forum!
 
-    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
-    filter_by = params[:filter]
+    filter_by = params[:filter] || "redeemed"
+    inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
 
     invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
       Invite.find_pending_invites_from(inviter, offset)
-    else
+    elsif filter_by == "redeemed"
       Invite.find_redeemed_invites_from(inviter, offset)
+    else
+      []
     end
 
     show_emails = guardian.can_see_invite_emails?(inviter)
-    if params[:search].present?
+    if params[:search].present? && invites.present?
       filter_sql = '(LOWER(users.username) LIKE :filter)'
       filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
       invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
     end
 
     render json: MultiJson.dump(InvitedSerializer.new(
-      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter),
+      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter, type: filter_by),
       scope: guardian,
       root: false
     ))
+  end
+
+  def invite_links
+    guardian.ensure_can_invite_to_forum!
+
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    guardian.ensure_can_see_invite_details!(inviter)
+
+    offset = params[:offset].to_i || 0
+    invites = Invite.find_links_invites_from(inviter, offset)
+
+    render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
   end
 
   def invited_count
@@ -332,8 +408,9 @@ class UsersController < ApplicationController
 
     pending_count = Invite.find_pending_invites_count(inviter)
     redeemed_count = Invite.find_redeemed_invites_count(inviter)
+    links_count = Invite.find_links_invites_count(inviter)
 
-    render json: { counts: { pending: pending_count, redeemed: redeemed_count,
+    render json: { counts: { pending: pending_count, redeemed: redeemed_count, links: links_count,
                              total: (pending_count.to_i + redeemed_count.to_i) } }
   end
 

@@ -4,14 +4,14 @@ import { avatarAtts } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
-import ENV from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 function animateHeart($elem, start, end, complete) {
-  if (ENV.environment === "test") {
+  if (isTesting()) {
     return run(this, complete);
   }
 
@@ -552,8 +552,21 @@ export default createWidget("post-menu", {
       postControls.push(repliesButton);
     }
 
-    let extraControls = applyDecorators(this, "extra-controls", attrs, state);
-    postControls.push(h("div.actions", visibleButtons.concat(extraControls)));
+    const extraControls = applyDecorators(this, "extra-controls", attrs, state);
+    const beforeExtraControls = applyDecorators(
+      this,
+      "before-extra-controls",
+      attrs,
+      state
+    );
+
+    const controlsButtons = [
+      ...beforeExtraControls,
+      ...visibleButtons,
+      ...extraControls
+    ];
+
+    postControls.push(h("div.actions", controlsButtons));
     if (state.adminVisible) {
       postControls.push(this.attach("post-admin-menu", attrs));
     }

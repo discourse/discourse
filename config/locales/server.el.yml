@@ -527,7 +527,7 @@ el:
       title: "Ανάρμοστο"
       long_form: "το επισήμαναν ως ανάρμοστο"
     notify_user:
-      title: "Αποστολή μηνύματος στον @{{username}} "
+      title: "Αποστολή μηνύματος στον @%{username} "
       long_form: "ειδοποίησε το μέλος"
       email_title: 'Η δημοσίευση σας στο "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1663,11 +1663,6 @@ el:
     email_reject_bad_destination_address:
       title: "Απόρριψη email Μη Έγκυρη Διεύθυνση Προορισμού"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Άγνωστη Διεύθυνση Προς:"
-      text_body_template: |2
-
-        Λυπούμαστε, αλλά το email προς %{destination} (με τίτλο%{former_title}) απέτυχε.
-
-        Δεν αναγνωρίστηκε καμία από τις διευθύνσεις παραληπτών ή το Message-ID header στο email έχει τροποποιηθεί. Παρακαλούμε βεβαιωθείται ότι στέλνετε στην σωστή διεύθυνση email που σας έχει δοθεί από τους συνεργάτες.
     email_reject_topic_not_found:
       title: "Απόρριψη email Δε βρέθηκε το νήμα"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Δεν Βρέθηκε Νήμα"
@@ -2672,6 +2667,14 @@ el:
       finished:
         title: "Το Discourse σου είναι έτοιμο!"
   joined: "Έγινε μέλος"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} σε ανέφερε στο "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} σε ανέφερε στο "%{topic}" - %{site_title}'
+      quoted: '%{username} σε παράθεσε στο "%{topic}" - %{site_title}'
+      replied: '%{username} σου απάντησε στο "%{topic}" - %{site_title}'
+      posted: '%{username} ανάρτησε στο "%{topic}" - %{site_title}'
+      linked: '%{username} έκανε μια σύνδεση στην ανάρτηση που έκανες στο νήμα "%{topic}" - %{site_title}'
   reviewables:
     actions:
       agree_and_keep:

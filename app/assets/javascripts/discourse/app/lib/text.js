@@ -1,3 +1,4 @@
+import { getURLWithCDN } from "discourse-common/lib/get-url";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { performEmojiUnescape, buildEmojiUrl } from "pretty-text/emoji";
 import WhiteLister from "pretty-text/white-lister";
@@ -6,8 +7,6 @@ import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
-
-const getURLWithCDN = url => Discourse.getURLWithCDN(url);
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
@@ -37,6 +36,15 @@ export function cook(text, options) {
 // cook
 export function cookAsync(text, options) {
   return loadMarkdownIt().then(() => cook(text, options));
+}
+
+// Warm up pretty text with a set of options and return a function
+// which can be used to cook without rebuilding prettytext every time
+export function generateCookFunction(options) {
+  return loadMarkdownIt().then(() => {
+    const prettyText = createPrettyText(options);
+    return text => prettyText.cook(text);
+  });
 }
 
 export function sanitize(text, options) {

@@ -10,7 +10,7 @@ const Invite = EmberObject.extend({
   rescind() {
     ajax("/invites", {
       type: "DELETE",
-      data: { email: this.email }
+      data: { id: this.id }
     });
     this.set("rescinded", true);
   },
@@ -42,7 +42,14 @@ Invite.reopenClass({
     if (!isNone(search)) data.search = search;
     data.offset = offset || 0;
 
-    return ajax(userPath(`${user.username_lower}/invited.json`), {
+    let path;
+    if (filter === "links") {
+      path = userPath(`${user.username_lower}/invite_links.json`);
+    } else {
+      path = userPath(`${user.username_lower}/invited.json`);
+    }
+
+    return ajax(path, {
       data
     }).then(result => {
       result.invites = result.invites.map(i => Invite.create(i));

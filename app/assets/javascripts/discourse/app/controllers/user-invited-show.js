@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { equal, reads, gte } from "@ember/object/computed";
+import { equal, reads } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import Invite from "discourse/models/invite";
 import discourseDebounce from "discourse/lib/debounce";
@@ -35,21 +35,30 @@ export default Controller.extend({
   }, INPUT_DELAY),
 
   inviteRedeemed: equal("filter", "redeemed"),
+  invitePending: equal("filter", "pending"),
+
+  @discourseComputed("filter")
+  inviteLinks(filter) {
+    return filter === "links" && this.currentUser.staff;
+  },
 
   @discourseComputed("filter")
   showBulkActionButtons(filter) {
     return (
       filter === "pending" &&
       this.model.invites.length > 4 &&
-      this.currentUser.get("staff")
+      this.currentUser.staff
     );
   },
 
   canInviteToForum: reads("currentUser.can_invite_to_forum"),
-
   canBulkInvite: reads("currentUser.admin"),
+  canSendInviteLink: reads("currentUser.staff"),
 
-  showSearch: gte("totalInvites", 10),
+  @discourseComputed("totalInvites", "inviteLinks")
+  showSearch(totalInvites, inviteLinks) {
+    return totalInvites >= 10 && !inviteLinks;
+  },
 
   @discourseComputed("invitesCount.total", "invitesCount.pending")
   pendingLabel(invitesCountTotal, invitesCountPending) {
@@ -70,6 +79,17 @@ export default Controller.extend({
       });
     } else {
       return I18n.t("user.invited.redeemed_tab");
+    }
+  },
+
+  @discourseComputed("invitesCount.total", "invitesCount.links")
+  linksLabel(invitesCountTotal, invitesCountLinks) {
+    if (invitesCountTotal > 50) {
+      return I18n.t("user.invited.links_tab_with_count", {
+        count: invitesCountLinks
+      });
+    } else {
+      return I18n.t("user.invited.links_tab");
     }
   },
 

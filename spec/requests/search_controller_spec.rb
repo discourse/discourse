@@ -179,6 +179,61 @@ describe SearchController do
       expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'wookie')).to be_blank
     end
+
+    context 'rate limited' do
+      before do
+        SiteSetting.rate_limit_search_user = 3
+        SiteSetting.rate_limit_search_anon = 2
+      end
+
+      it 'rate limits searches' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        2.times do
+          get "/search/query.json", params: {
+                term: 'wookie'
+              }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(nil)
+        end
+
+        get "/search/query.json", params: {
+              term: 'wookie'
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+      end
+
+      context "and a logged in user" do
+        before { sign_in(user) }
+
+        it 'rate limits logged in searches' do
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          3.times do
+            get "/search/query.json", params: {
+                  term: 'wookie'
+                }
+
+            expect(response.status).to eq(200)
+            json = response.parsed_body
+            expect(json["grouped_search_result"]["error"]).to eq(nil)
+          end
+
+          get "/search/query.json", params: {
+                term: 'wookie'
+              }
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+        end
+      end
+    end
   end
 
   context "#show" do
@@ -216,6 +271,63 @@ describe SearchController do
       get "/search.json", params: { q: 'bantha' }
       expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'bantha')).to be_blank
+    end
+
+    context 'rate limited' do
+
+      before do
+        SiteSetting.rate_limit_search_user = 3
+        SiteSetting.rate_limit_search_anon = 2
+      end
+
+      it 'rate limits searches' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        2.times do
+          get "/search.json", params: {
+                q: 'bantha'
+              }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(nil)
+        end
+
+        get "/search.json", params: {
+              q: 'bantha'
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+
+      end
+
+      context "and a logged in user" do
+        before { sign_in(user) }
+
+        it 'rate limits searches' do
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          3.times do
+            get "/search.json", params: {
+                  q: 'bantha'
+                }
+
+            expect(response.status).to eq(200)
+            json = response.parsed_body
+            expect(json["grouped_search_result"]["error"]).to eq(nil)
+          end
+
+          get "/search.json", params: {
+                q: 'bantha'
+              }
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+        end
+      end
     end
   end
 

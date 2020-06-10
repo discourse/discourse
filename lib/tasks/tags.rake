@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-task "tags:bulk_tag_category", [:tags, :category] => [:environment] do |_, args|
+task "tags:bulk_tag_category", [:tags, :category, :append] => [:environment] do |_, args|
+  args.with_defaults(append: false)
   tags = args[:tags].split("|")
   category_id = args[:category]
+  append = args[:append]
 
   if !tags || !category_id
     puts 'ERROR: Expecting tags:bulk_tag_category["tag",category_id]'
@@ -16,7 +18,7 @@ task "tags:bulk_tag_category", [:tags, :category] => [:environment] do |_, args|
   total = category.topics.count
 
   category.topics.find_each do |topic|
-    DiscourseTagging.tag_topic_by_names(topic, guardian, tags)
+    DiscourseTagging.tag_topic_by_names(topic, guardian, tags, append: append)
     print_status(tagged += 1, total)
   end
 

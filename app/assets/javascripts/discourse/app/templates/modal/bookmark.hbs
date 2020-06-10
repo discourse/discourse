@@ -9,7 +9,7 @@
     {{/if}}
 
     <div class="control-group bookmark-name-wrap">
-      {{input id="bookmark-name" value=model.name name="name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
+      {{input id="bookmark-name" value=model.name name="bookmark-name" class="bookmark-name" placeholder=(i18n "post.bookmarks.name_placeholder")}}
       {{d-button icon="cog" action=(action "toggleOptionsPanel") class="bookmark-options-button"}}
     </div>
 
@@ -96,7 +96,7 @@
         {{/tap-tile-grid}}
 
       {{else}}
-        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=basePath)}}</div>
+        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-uri))}}</div>
       {{/if}}
     </div>
 

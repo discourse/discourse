@@ -606,7 +606,7 @@ da:
       title: "Upassende"
       long_form: "markerede dette som stødende"
     notify_user:
-      title: "Send @{{username}} en besked"
+      title: "Send @%{username} en besked"
       long_form: "sendt besked til brugeren"
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1099,6 +1099,7 @@ da:
       category: "Kategorier"
       topic: "Resultater"
       user: "Brugere"
+    results_page: "Søgeresultater for '%{term}'"
   original_poster: "Oprindelig forfatter"
   most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
@@ -1163,7 +1164,7 @@ da:
     activated_by_staff: "Aktiveret af hjælperteamet"
     new_user_typed_too_fast: "Ny bruger tastede for hurtigt"
     username:
-      short: "skal være på mindst %{{min}} tegn."
+      short: "skal være på mindst %%{min} tegn."
       long: "skal være kortere end %{max} tegn"
       unique: "skal være unik"
       blank: "skal udfyldes"
@@ -1788,8 +1789,16 @@ da:
   joined: "Tilmeldt"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
+      quoted: '%{username} citerede dig i "%{topic}" - %{site_title}'
+      replied: '%{username} svarede dig i "%{topic}" - %{site_title}'
+      posted: '%{username} skrev i "%{topic}" - %{site_title}'
+      linked: '%{username} linkede til dit indlæg fra "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} oprettet et nyt emne"%{topic}" - %{site_title}'
       confirm_title: "Notifikationer aktiveret - %{site_title}"
       confirm_body: "Succes! notifikationer er aktiveret."
+      custom: "Notifikation fra %{username}på %{site_title}"
   reviewables:
     priorities:
       low: "Lav"

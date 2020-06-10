@@ -3,8 +3,8 @@
 Report.add_report('top_uploads') do |report|
   report.modes = [:table]
 
-  extension_filter = report.filters.dig(:"file-extension")
-  report.add_filter('file-extension',
+  extension_filter = report.filters.dig(:file_extension)
+  report.add_filter('file_extension',
     type: 'list',
     default: extension_filter || 'any',
     choices: (SiteSetting.authorized_extensions.split('|') + Array(extension_filter)).uniq

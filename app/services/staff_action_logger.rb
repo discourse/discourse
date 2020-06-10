@@ -744,6 +744,36 @@ class StaffActionLogger
     ))
   end
 
+  def log_add_email(user)
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      action: UserHistory.actions[:add_email],
+      acting_user_id: @admin.id,
+      target_user_id: user.id
+    )
+  end
+
+  def log_update_email(user)
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      action: UserHistory.actions[:update_email],
+      acting_user_id: @admin.id,
+      target_user_id: user.id
+    )
+  end
+
+  def log_destroy_email(user)
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      action: UserHistory.actions[:destroy_email],
+      acting_user_id: @admin.id,
+      target_user_id: user.id
+    )
+  end
+
   private
 
   def get_changes(changes)

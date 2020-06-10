@@ -170,6 +170,7 @@ module SvgSprite
     "sign-in-alt",
     "sign-out-alt",
     "signal",
+    "star",
     "step-backward",
     "step-forward",
     "stream",

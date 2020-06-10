@@ -3,7 +3,7 @@
 
     <div class="control-group">
       <div class="controls">
-        <h3>{{i18n "user.change_email.title"}}</h3>
+        <h3>{{i18n (if new "user.add_email.title" "user.change_email.title")}}</h3>
       </div>
     </div>
 
@@ -51,7 +51,7 @@
         <div class="controls">
           {{#d-button
             class="btn-primary"
-            action=(action "changeEmail")
+            action=(action "saveEmail")
             type="submit"
             disabled=saveDisabled
           }}

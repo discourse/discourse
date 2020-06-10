@@ -101,7 +101,7 @@ class PostAlerter
       if post.topic.private_message?
         notify_pm_users(post, reply_to_user, notified)
       elsif notify_about_reply?(post)
-        notify_post_users(post, notified)
+        notify_post_users(post, notified, new_record: new_record)
       end
     end
 
@@ -463,6 +463,7 @@ class PostAlerter
         .where("push_url IS NOT NULL AND push_url <> ''")
         .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
         .where("revoked_at IS NULL")
+        .order(client_id: :asc)
         .pluck(:client_id, :push_url)
 
       if clients.length > 0
@@ -566,7 +567,7 @@ class PostAlerter
     end
   end
 
-  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true)
+  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true, new_record: false)
     return unless post.topic
 
     warn_if_not_sidekiq
@@ -627,7 +628,7 @@ class PostAlerter
     already_seen_user_ids = Set.new TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
 
     each_user_in_batches(notify) do |user|
-      notification_type = already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
+      notification_type = !new_record && already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
       opts = {}
       opts[:display_username] = post.last_editor.username if notification_type == Notification.types[:edited]
       create_notification(user, notification_type, post, opts)

@@ -45,6 +45,7 @@ fi:
       unrecognized_extension: "Tuntematon tiedostomuoto: %{extension}"
     import_error:
       generic: Teeman tuomisessa tapahtui virhe
+      about_json: "Virhe tuotaessa: about.json ei ole olemassa tai ei kelpaa. Oletko varma, että tämä on Discourse-teema?"
       about_json_values: "about.json sisältää arvoja, jotka eivät kelpaa: %{errors}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei ole pääsyoikeutta tai tietovarastoa ei löytynyt"
       unpack_failed: "Tiedoston purku epäonnistui"
@@ -58,6 +59,7 @@ fi:
       optimized_link: Optimoidut kuvalinkit ovat lyhytikäisiä eikä niitä tulisi sisällyttää teeman lähdekoodiin.
     settings_errors:
       invalid_yaml: "Annettu YAML ei kelpaa"
+      data_type_not_a_number: "Tietotyypiksi ei ole mahdollista asettaa `%{name}`. Tuettuja tietotyyppejä ovat `integer`, `bool`, `list`, `enum` ja `upload`"
       name_too_long: "Jollain asetuksella on liian pitkä nimi. Enimmäispituus on 255."
       default_value_missing: "Asetuksella \"%{name}\" ei ole oletusarvoa"
       default_not_match_type: "Asetuksen \"%{name}\" oletusarvo ei sovi asetuksen tyyppiin."
@@ -362,6 +364,10 @@ fi:
       trust_level_4: "luottamustaso_4"
     request_membership_pm:
       title: "Jäsenhakemus ryhmään @%{group_name}"
+    request_accepted_pm:
+      title: "Sinut hyväksyttiin ryhmään @%{group_name}"
+      body: |
+        Pyyntösi ryhmään @%{group_name} liittymiseksi on hyväksytty ja olet nyt jäsen.
     view_hidden_topic_request_reason: "Haluaisin liittyä ryhmään '%{group_name}', jotta pääsen [tähän ketjuun](%{topic_url})"
   education:
     until_posts:
@@ -403,6 +409,12 @@ fi:
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen maalaamalla lainattavan viestin tekstiä ja klikkaamalla ilmestyvää <b>lainaa</b>-painiketta.
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
+    dominating_topic: |
+      ### Anna muidenkin osallistua keskusteluun
+
+      Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
+
+      Ketju voisi olla vielä parempi, jos useammilla olisi tilaa jakaa omia näkökulmiaan. Voisit kutsua heitä tänne?
     get_a_room: |
       ### Rohkaise kaikkia osallistumaan keskusteluun
 
@@ -447,6 +459,7 @@ fi:
               no_user_selected: "Sinun täytyy valita kelpaava käyttäjä."
               reply_by_email_disabled: "Sähköpostilla vastaaminen ei ole käytössä."
               target_user_not_found: "Ei löydetty yhtä niistä käyttäjistä, joille lähetät viestiä."
+              unable_to_update: "Ketjun päivittäminen epäonnistui."
             featured_link:
               invalid: "ei ole käypä. URL:in tulisi sisältää http:// tai https://."
               invalid_category: "ei voi muokata tällä alueella."
@@ -465,6 +478,10 @@ fi:
               same_as_password: "on sama kuin salasanasi."
             ip_address:
               signup_not_allowed: "Liittyminen ei ole sallittu tälle tilille."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "Tätä ketjua et voi valikoida profiiliisi."
         user_email:
           attributes:
             user_id:
@@ -781,7 +798,7 @@ fi:
       short_description: '<a href="%{base_path}/guidelines">Palstan sääntöjen</a> vastainen'
       long_form: "liputti tämän sopimattomaksi"
     notify_user:
-      title: "Lähetä käyttäjälle @{{username}} viesti."
+      title: "Lähetä käyttäjälle @%{username} viesti."
       description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
       short_description: "Haluan keskustella viestistä kirjoittajan kanssa suoraan ja henkilökohtaisesti."
       long_form: "lähetä käyttäjälle viesti"
@@ -1280,6 +1297,7 @@ fi:
     unreachable_themes: "Näille teemoille ei löytynyt päivityksiä:"
     watched_word_regexp_error: "Säännöllinen lauseke %{action}-tyypin tarkkailuille sanoille ei kelpaa. Käy läpi <a href='%{base_path}/admin/logs/watched_words'>Tarkkaillut sanat -asetuksesi</a> tai poista käytöstä 'watched words regular expressions' -sivustoasetus."
   site_settings:
+    display_local_time_in_user_card: "Näytä käyttäjän aikavyöhykkeeseen perustuva paikallinen aika hänen käyttäjäkortissaan."
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Tämän Discourse-ympäristön oletuskieli. Voit korvata systeemin luomien alueiden ja ketjujen tekstejä kohteessa <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Mukauta / Tekstit</a>."
@@ -2594,10 +2612,6 @@ fi:
     email_reject_bad_destination_address:
       title: "Sähköposti hylätty - tuntematon vastaanottajaosoite"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon Vastaanottaja: -osoite"
-      text_body_template: |
-        Pahoittelut, sähköpostin lähettäminen kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
-
-        Viestisi kohdesähköpostiosoitteet olivat tuntemattomia tai sähköpostiviestin ID-otsikkotietoa (engl. Message-ID) on muutettu. Varmistu, että lähetät oikeaan henkilökunnan antamaan sähköpostiosoitteeseen.
     email_reject_old_destination:
       title: "Sähköposti hylätty - vanha kohde"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Yrität vastata vanhaan ilmoitukseen"

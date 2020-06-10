@@ -8,6 +8,7 @@ class WebHookUserSerializer < UserSerializer
   end
 
   %i{
+    unconfirmed_emails
     can_edit
     can_edit_username
     can_edit_email

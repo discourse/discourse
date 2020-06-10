@@ -842,7 +842,7 @@ pl_PL:
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
       long_form: "oflagowano jako niewłaściwe"
     notify_user:
-      title: "Wyślij @{{username}} wiadomość"
+      title: "Wyślij @%{username} wiadomość"
       description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
       short_description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
       long_form: "użytkownik został powiadomiony"
@@ -1938,6 +1938,7 @@ pl_PL:
       category: "Kategorie"
       topic: "Wyniki"
       user: "Użytkownicy"
+    results_page: "Wyniki wyszukiwania dla '%{term}'"
   sso:
     login_error: "Błąd logowania"
     not_found: "Nie znaleziono takiego konta. Skontaktuj się z administratorem."
@@ -3239,8 +3240,16 @@ pl_PL:
   joined: "Dołączył"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} wspomina o tobie w "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} wspomina o tobie w "%{topic}" - %{site_title}'
+      quoted: '%{username} cytuje cie w "%{topic}" - %{site_title}'
+      replied: '%{username} odpowiada na twój wpis w "%{topic}" - %{site_title}'
+      posted: '%{username} pisze w "%{topic}" - %{site_title}'
+      linked: '%{username} linkuje do twojego wpisu z "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} utworzył nowy temat „%{topic}” - %{site_title}'
       confirm_title: "Powiadomienia włączone - %{site_title}"
       confirm_body: "Powodzenie! Powiadomienia zostały włączone."
+      custom: "Powiadomienie od %{username} na %{site_title}"
   staff_action_logs:
     api_key:
       revoked: Unieważniono

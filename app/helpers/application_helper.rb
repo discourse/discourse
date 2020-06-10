@@ -356,6 +356,7 @@ module ApplicationHelper
   end
 
   def loading_admin?
+    return false unless defined?(controller)
     controller.class.name.split("::").first == "Admin"
   end
 

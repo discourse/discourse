@@ -349,7 +349,7 @@ sq:
       title: "i papërshtatshëm"
       long_form: "sinjalizoi këtë postim si të papërshtatshëm"
     notify_user:
-      title: "Dërgoji @{{username}} një mesazh"
+      title: "Dërgoji @%{username} një mesazh"
       long_form: "messaged user"
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1412,6 +1412,14 @@ sq:
       emoji:
         title: "Emoji"
   joined: "Anëtarësuar"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
+      quoted: '%{username} ju ka cituar në "%{topic}" - %{site_title}'
+      replied: '%{username} ju u përgjigj në "%{topic}" - %{site_title}'
+      posted: '%{username} postoi në "%{topic}" - %{site_title}'
+      linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
   reviewables:
     actions:
       agree_and_suspend:

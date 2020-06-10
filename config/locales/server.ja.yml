@@ -448,7 +448,7 @@ ja:
       title: "不適切"
       long_form: "不適切として通報する"
     notify_user:
-      title: "@{{username}}へメッセージを送る"
+      title: "@%{username}へメッセージを送る"
       description: "この投稿について直接話がしたいです。"
       short_description: "彼らの投稿に対して直接話したいです。"
       long_form: "メッセージが送られたユーザー"
@@ -1669,6 +1669,12 @@ ja:
   joined: "参加日"
   discourse_push_notifications:
     popup:
+      mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
+      group_mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
+      quoted: '"%{topic}"で%{username}が引用しました - %{site_title}'
+      replied: '%{username}が"%{topic}"へ返信しました - %{site_title}'
+      posted: '%{username} が投稿しました "%{topic}" - %{site_title}'
+      linked: '"%{topic}"にあるあなたの投稿に%{username}がリンクしました - %{site_title}'
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
     priorities:

@@ -14,6 +14,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def upload_asset
+
+    ban_in_whitelist_mode!
+
     path = params[:file].path
 
     hijack do
@@ -49,6 +52,9 @@ class Admin::ThemesController < Admin::AdminController
   def import
     @theme = nil
     if params[:theme] && params[:theme].content_type == "application/json"
+
+      ban_in_whitelist_mode!
+
       # .dcstyle.json import. Deprecated, but still available to allow conversion
       json = JSON::parse(params[:theme].read)
       theme = json['theme']
@@ -85,15 +91,21 @@ class Admin::ThemesController < Admin::AdminController
       else
         render json: @theme.errors, status: :unprocessable_entity
       end
-    elsif params[:remote]
+    elsif remote = params[:remote]
+
+      guardian.ensure_allowed_theme_repo_import!(remote.strip)
+
       begin
         branch = params[:branch] ? params[:branch] : nil
-        @theme = RemoteTheme.import_theme(params[:remote], theme_user, private_key: params[:private_key], branch: branch)
+        @theme = RemoteTheme.import_theme(remote, theme_user, private_key: params[:private_key], branch: branch)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
     elsif params[:bundle] || (params[:theme] && THEME_CONTENT_TYPES.include?(params[:theme].content_type))
+
+      ban_in_whitelist_mode!
+
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
@@ -139,6 +151,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def create
+
+    ban_in_whitelist_mode!
+
     @theme = Theme.new(name: theme_params[:name],
                        user_id: theme_user.id,
                        user_selectable: theme_params[:user_selectable] || false,
@@ -282,6 +297,10 @@ class Admin::ThemesController < Admin::AdminController
 
   private
 
+  def ban_in_whitelist_mode!
+    raise Discourse::InvalidAccess if !GlobalSetting.whitelisted_theme_ids.nil?
+  end
+
   def add_relative_themes!(kind, ids)
     expected = ids.map(&:to_i)
 
@@ -338,6 +357,8 @@ class Admin::ThemesController < Admin::AdminController
 
   def set_fields
     return unless fields = theme_params[:theme_fields]
+
+    ban_in_whitelist_mode!
 
     fields.each do |field|
       @theme.set_field(

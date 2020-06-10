@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { findAll } from "discourse/models/login-method";
 
@@ -23,9 +24,9 @@ export default function logout(siteSettings, keyValueStore) {
   if (siteSettings.login_required && (sso || oneAuthenticator)) {
     // In this situation visiting most URLs will start the auth process again
     // Go to the `/login` page to avoid an immediate redirect
-    window.location.href = Discourse.getURL("/login");
+    window.location.href = getURL("/login");
     return;
   }
 
-  window.location.href = Discourse.getURL("/");
+  window.location.href = getURL("/");
 }

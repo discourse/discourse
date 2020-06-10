@@ -1,3 +1,4 @@
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import PeriodComputationMixin from "admin/mixins/period-computation";
@@ -45,6 +46,6 @@ export default Controller.extend(PeriodComputationMixin, {
   },
 
   _reportsForPeriodURL(period) {
-    return Discourse.getURL(`/admin/dashboard/moderation?period=${period}`);
+    return getURL(`/admin/dashboard/moderation?period=${period}`);
   }
 });

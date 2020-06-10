@@ -13,7 +13,17 @@ export default RestrictedUserRoute.extend({
 
   setupController: function(controller, model) {
     controller.reset();
-    controller.setProperties({ model: model, newEmail: model.get("email") });
+    controller.setProperties({
+      model: model,
+      oldEmail: controller.new ? "" : model.get("email"),
+      newEmail: controller.new ? "" : model.get("email")
+    });
+  },
+
+  resetController: function(controller, isExiting) {
+    if (isExiting) {
+      controller.set("new", undefined);
+    }
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet

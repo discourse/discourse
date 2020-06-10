@@ -528,7 +528,7 @@ fa_IR:
       title: "نامناسب"
       long_form: "به عنوان نامناسب علامت گذاری شده"
     notify_user:
-      title: "فرستادن پیام به @{{username}}"
+      title: "فرستادن پیام به @%{username}"
       long_form: "به کاربر پیام داده شد"
       email_title: 'فرسته‌ی شما در « %{title} »'
       email_body: "%{link}\n\n%{message}"
@@ -1251,6 +1251,7 @@ fa_IR:
       category: "دسته‌ها"
       topic: "نتایج"
       user: "کاربران"
+    results_page: "نتایج جستجو برای '%{term}'"
   sso:
     login_error: "خطا در ورود"
     not_found: "حساب کاربری پیدا نشد. لطفا با مدیریت سایت تماس بگیرید."
@@ -2263,8 +2264,16 @@ fa_IR:
   joined: "ملحق شده"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'
+      group_mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'
+      quoted: '%{username} از شما در "%{topic}" - %{site_title} نقل قول کرد '
+      replied: '%{username} در "%{topic}" - %{site_title} به شما پاسخ داد'
+      posted: '%{username} در "%{topic}" - %{site_title} مطلبی نوشت'
+      linked: '%{username} در "%{topic}" - %{site_title} به نوشته‌ی شما پیوندی قرار داد'
+      watching_first_post: '%{username} یک مبحث جدید در "%{topic}" - %{site_title} ساخته'
       confirm_title: "اعلانات فعال شد - %{site_title}"
       confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
+      custom: "اعلان از طرف %{username} بر روی %{site_title}"
   reviewables:
     priorities:
       low: "کم"

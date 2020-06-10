@@ -1,5 +1,7 @@
 <p>{{i18n "user.invited.link_generated"}}</p>
 <p>
-  <input value={{link}} class="invite-link-input" style="width: 75%" type="text">
+  <input value={{link}} class="invite-link-input" type="text">
 </p>
-<p>{{i18n "user.invited.valid_for" email=email}}</p>
+{{#if email}}
+  <p>{{i18n "user.invited.valid_for" email=email}}</p>
+{{/if}}

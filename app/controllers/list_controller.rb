@@ -121,6 +121,8 @@ class ListController < ApplicationController
   def topics_by
     list_opts = build_topic_list_options
     target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) }, [:user_stat, :user_option])
+    ensure_can_see_profile!(target_user)
+
     list = generate_list_for("topics_by", target_user, list_opts)
     list.more_topics_url = construct_url_with(:next, list_opts)
     list.prev_topics_url = construct_url_with(:prev, list_opts)
@@ -205,6 +207,7 @@ class ListController < ApplicationController
   def user_topics_feed
     discourse_expires_in 1.minute
     target_user = fetch_user_from_params
+    ensure_can_see_profile!(target_user)
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
     @link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics"
@@ -383,6 +386,10 @@ class ListController < ApplicationController
     opts.delete(:category) if page_params.include?(:category_slug_path_with_id)
 
     public_send(method, opts.merge(page_params)).sub('.json?', '?')
+  end
+
+  def ensure_can_see_profile!(target_user = nil)
+    raise Discourse::NotFound unless guardian.can_see_profile?(target_user)
   end
 
   def self.best_period_for(previous_visit_at, category_id = nil)

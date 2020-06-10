@@ -480,7 +480,7 @@ et:
       title: "Ebasünnis"
       long_form: "tähistasin selle kui sobimatu"
     notify_user:
-      title: "Saada kasutajale @{{username}} sõnum"
+      title: "Saada kasutajale @%{username} sõnum"
       long_form: "saatsin kasutajale sõnumi"
       email_title: 'Sinu postitus teemas "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -781,6 +781,7 @@ et:
       min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
       max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
   search:
+    within_post: "postituse nr%{post_number} tegi %{username}"
     types:
       category: "Liigid"
       user: "Kasutajad"
@@ -795,6 +796,7 @@ et:
   login:
     not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
+    not_available: "Pole saadaval. Proovime %{suggestion}?"
     omniauth_confirm_button: "Jätka"
     already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   admin:
@@ -869,6 +871,7 @@ et:
   deleted: "kustutatud"
   image: "pilt"
   upload:
+    unauthorized: "Vabandust, fail mida püüad üles laadida, ei ole lubatud (lubatud faililaiendid: %{authorized_extensions})."
     pasted_image_filename: "Asetatud pilt"
   skipped_email_log:
     user_email_anonymous_user: "Kasutaja on anonüümne"
@@ -1107,6 +1110,14 @@ et:
       finished:
         title: "Sinu Discourse on valmis!"
   joined: "Liitus"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
+      quoted: '%{username} tsiteeris Sind teemas "%{topic}" - %{site_title}'
+      replied: '%{username} vastas Sulle teemas "%{topic}" - %{site_title}'
+      posted: '%{username} postitas teemasse "%{topic}" - %{site_title}'
+      linked: '%{username} viitas Sinu postitusele teemas "%{topic}" - %{site_title}'
   staff_action_logs:
     not_found: "ei leitud"
     unknown: "tundmatu"

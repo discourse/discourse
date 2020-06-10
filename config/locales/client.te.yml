@@ -129,11 +129,11 @@ te:
     every_hour: "ప్రతి గంట"
     daily: "ప్రతిరోజూ"
     weekly: "ప్రతీవారం"
-    max_of_count: "{{count}} గరిష్టం"
+    max_of_count: "%{count} గరిష్టం"
     alternation: "లేదా"
     character_count:
-      one: "{{count}} అక్షరం"
-      other: "{{count}} అక్షరాలు"
+      one: "%{count} అక్షరం"
+      other: "%{count} అక్షరాలు"
     suggested_topics:
       title: "సూచించే విషయాలు"
     about:
@@ -223,19 +223,19 @@ te:
       approval:
         ok: "సరే"
     user_action:
-      user_posted_topic: "<a href='{{topicUrl}}'>విషయాన్ని</a> <a href='{{userUrl}}'>{{user}}</a> రాసారు "
-      you_posted_topic: "<a href='{{userUrl}}'>మీరు</a> <a href='{{topicUrl}}'>విషయాన్ని</a> రాసారు"
-      user_replied_to_post: "<a href='{{postUrl}}'>{{post_number}}</a> కు <a href='{{userUrl}}'>{{user}}</a> జవాబిచ్చారు"
-      you_replied_to_post: "<a href='{{userUrl}}'>మీరు</a> <a href='{{postUrl}}'>{{post_number}}</a> కు జవాబిచ్చారు"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>కు <a href='{{topicUrl}}'>విషయానికి</a> జవాబిచ్చారు"
-      you_replied_to_topic: "<a href='{{userUrl}}'>మీరు</a> కు <a href='{{topicUrl}}'>విషయానికి</a> జవాబిచ్చారు"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a>, <a href='{{user2Url}}'>{{another_user}}</a> ను ప్రస్తావించారు"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a>, <a href='{{user2Url}}'>మిమ్ము</a> ప్రస్తావించారు"
-      you_mentioned_user: "<a href='{{user1Url}}'>మీరు</a>, <a href='{{user2Url}}'>{{another_user}}</a> ను ప్రస్తావించారు"
-      posted_by_user: "<a href='{{userUrl}}'>{{user}}</a> రాసారు"
-      posted_by_you: "<a href='{{userUrl}}'>మీరు</a> రాసారు"
-      sent_by_user: "<a href='{{userUrl}}'>{{user}}</a> పంపారు"
-      sent_by_you: "<a href='{{userUrl}}'>మీరు</a> పంపారు"
+      user_posted_topic: "<a href='%{topicUrl}'>విషయాన్ని</a> <a href='%{userUrl}'>%{user}</a> రాసారు "
+      you_posted_topic: "<a href='%{userUrl}'>మీరు</a> <a href='%{topicUrl}'>విషయాన్ని</a> రాసారు"
+      user_replied_to_post: "<a href='%{postUrl}'>%{post_number}</a> కు <a href='%{userUrl}'>%{user}</a> జవాబిచ్చారు"
+      you_replied_to_post: "<a href='%{userUrl}'>మీరు</a> <a href='%{postUrl}'>%{post_number}</a> కు జవాబిచ్చారు"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a>కు <a href='%{topicUrl}'>విషయానికి</a> జవాబిచ్చారు"
+      you_replied_to_topic: "<a href='%{userUrl}'>మీరు</a> కు <a href='%{topicUrl}'>విషయానికి</a> జవాబిచ్చారు"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a>, <a href='%{user2Url}'>%{another_user}</a> ను ప్రస్తావించారు"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a>, <a href='%{user2Url}'>మిమ్ము</a> ప్రస్తావించారు"
+      you_mentioned_user: "<a href='%{user1Url}'>మీరు</a>, <a href='%{user2Url}'>%{another_user}</a> ను ప్రస్తావించారు"
+      posted_by_user: "<a href='%{userUrl}'>%{user}</a> రాసారు"
+      posted_by_you: "<a href='%{userUrl}'>మీరు</a> రాసారు"
+      sent_by_user: "<a href='%{userUrl}'>%{user}</a> పంపారు"
+      sent_by_you: "<a href='%{userUrl}'>మీరు</a> పంపారు"
     directory:
       title: "వాడుకరులు"
       topics_entered_long: "సందర్శించిన విషయాలు "
@@ -339,7 +339,7 @@ te:
       post_count: "# టపాలు"
       confirm_delete_other_accounts: "మీరు నిజ్జంగా ఈ ఖాతాలు తొలగించాలనుకుంటున్నారా?"
     user:
-      said: "{{username}}:"
+      said: "%{username}:"
       profile: "ప్రవర"
       mute: "నిశ్శబ్దం"
       edit: "అభిరుచులు సవరించు"
@@ -370,11 +370,11 @@ te:
       external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరువు"
       enable_quoting: "హైలైట్ అయిన పాఠ్యానికి కోట్ జవాబు చేతనం చేయి"
       change: "మార్చు"
-      moderator: "{{user}} ఒక నిర్వాహకుడు"
-      admin: "{{user}} ఒక అధికారి"
+      moderator: "%{user} ఒక నిర్వాహకుడు"
+      admin: "%{user} ఒక అధికారి"
       moderator_tooltip: "ఈ సభ్యుడు ఒక నిర్వాహకుడు"
       admin_tooltip: "ఈ సభ్యుడు ఒక అధికారి"
-      suspended_notice: "ఈ సభ్యుడు {{date}} వరకూ సస్పెండయ్యాడు"
+      suspended_notice: "ఈ సభ్యుడు %{date} వరకూ సస్పెండయ్యాడు"
       suspended_reason: "కారణం:"
       github_profile: "గిట్ హబ్"
       tag_settings: "ట్యాగులు"
@@ -452,7 +452,7 @@ te:
         title: "ఈమెయిల్"
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
-        authenticated: "మీ ఈమెయిల్ {{provider}} చేత ద్రువీకరించబడింది"
+        authenticated: "మీ ఈమెయిల్ %{provider} చేత ద్రువీకరించబడింది"
         frequency_immediately: "మీకు వెంటనే ఈమెయిల్ చేసాము, మీరు ఈమెయిల్ విషయం చదవకపోతే. "
       associated_accounts:
         revoke: "రివోక్"
@@ -465,9 +465,9 @@ te:
         ok: "మీ పేరు బాగుంది"
       username:
         title: "వాడుకరి పేరు"
-        short_instructions: "జనాలు మిమ్మల్ని @{{username}} అని ప్రస్తావించవచ్చు"
+        short_instructions: "జనాలు మిమ్మల్ని @%{username} అని ప్రస్తావించవచ్చు"
         available: "మీ సభ్యనామం అందుబాటులో ఉంది."
-        not_available: "అందుబాటులో లేదు. {{suggestion}} ప్రయత్నించండి?"
+        not_available: "అందుబాటులో లేదు. %{suggestion} ప్రయత్నించండి?"
         not_available_no_suggestion: "అందుబాటులో లేదు"
         too_short: "మీ సభ్యనామం మరీ చిన్నది"
         too_long: "మీ సభ్యనామం మరీ పొడుగు"
@@ -530,9 +530,9 @@ te:
         time_read: "చదువు సమయం"
         days_visited: "దర్శించిన రోజులు"
         account_age_days: "రోజుల్లో ఖాతా వయసు"
-        create: "ఒక ఆహ్వానం పంపు"
-        bulk_invite:
-          text: "దస్త్రం నుండి బహుళ ఆహ్వానాలు"
+        links_tab: "లంకెలు"
+        link_created_at: "సృష్టించిన"
+        link_groups: గుంపులు
       password:
         title: "సంకేతపదం"
         too_short: "మీ సంకేతపదం మరీ చిన్నది."
@@ -573,7 +573,7 @@ te:
       desc:
         network: "దయచేసి మీ కనక్షన్ సరిచూడండి. "
         network_fixed: "ఇప్పుడు మరలా పనిచేస్తుంది."
-        server: "దోష కోడు: {{status}}"
+        server: "దోష కోడు: %{status}"
         forbidden: "దాన్ని చూడటానికి మీకు అనుమతి లేదు"
         unknown: "ఏదో తేడా జరిగింది."
       buttons:
@@ -650,11 +650,11 @@ te:
       awaiting_activation: "మీ ఖాతా చేతనం కోసం ఎదురుచూస్తుంది. సంకేతపదం మర్చిపోయా లంకెను వాడు మరో చేతన ఈమెయిల్ పొందండి."
       awaiting_approval: "మీ ఖాతా ఇంకా సిబ్బంది ఒప్పుకొనలేదు. సిబ్బంది ఒప్పుకోగానే మీకు ఒక ఈమెయిల్ వస్తుంది."
       requires_invite: "క్షమించాలి. ఈ పోరమ్ ప్రవేశం కేవలం ఆహ్వానితులకు మాత్రమే."
-      not_activated: "మీరప్పుడే లాగిన్ అవ్వలేరు. గతంలో మేము మీకు చేతన ఈమెయల్ <b>{{sentTo}}</b> కు పంపాము. దయచేసి ఆ వేగులోని సూచనలు పాటించి మీ ఖాతాను చేతనం చేసుకోండి."
+      not_activated: "మీరప్పుడే లాగిన్ అవ్వలేరు. గతంలో మేము మీకు చేతన ఈమెయల్ <b>%{sentTo}</b> కు పంపాము. దయచేసి ఆ వేగులోని సూచనలు పాటించి మీ ఖాతాను చేతనం చేసుకోండి."
       not_allowed_from_ip_address: "ఆ ఐపీ చిరునామా నుండి మీరు లాగిన్ అవ్వలేరు."
       admin_not_allowed_from_ip_address: "మీరు ఆ IP చిరునామా నుండి నిర్వాహకుని వలె లాగిన్ కాలేరు."
       resend_activation_email: "చేతన ఈమెయిల్ మరలా పంపడానికి ఇక్కడ నొక్కండి."
-      sent_activation_email_again: "మీకు <b>{{currentEmail}}</b> మరో చేతన ఈమెయిల్ పంపాము. అది చేరుకోడానికి కొద్ది నిమిషాలు పట్టవచ్చు. ఇంకా స్పామ్ ఫోల్డరు చూడటం మర్చిపోకండి సుమా. "
+      sent_activation_email_again: "మీకు <b>%{currentEmail}</b> మరో చేతన ఈమెయిల్ పంపాము. అది చేరుకోడానికి కొద్ది నిమిషాలు పట్టవచ్చు. ఇంకా స్పామ్ ఫోల్డరు చూడటం మర్చిపోకండి సుమా. "
       google_oauth2:
         name: "గూగుల్"
         title: "గూగుల్ తో"
@@ -693,9 +693,9 @@ te:
       drafts_offline: "చిత్తుప్రతులు ఆఫ్లైను."
       error:
         title_missing: "శీర్షిక తప్పనిసరి"
-        title_too_short: "శీర్షిక కనీసం {{min}} అక్షరాలు ఉండాలి"
-        title_too_long: "శీర్షిక {{max}} అక్షరాలకు మించి ఉండకూడదు"
-        post_length: "టపా కనీసం {{min}} అక్షరాలు కలిగి ఉండాలి"
+        title_too_short: "శీర్షిక కనీసం %{min} అక్షరాలు ఉండాలి"
+        title_too_long: "శీర్షిక %{max} అక్షరాలకు మించి ఉండకూడదు"
+        post_length: "టపా కనీసం %{min} అక్షరాలు కలిగి ఉండాలి"
         category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
       save_edit: "దాచి సవరించు"
       reply_original: "మూల విషయంకు జవాబివ్వు"
@@ -755,11 +755,11 @@ te:
       title: "విషయాలు, టపాలు, సభ్యులు లేదా వర్గాలు వెతుకు"
       no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
       searching: "వెతుకుతున్నామ్..."
-      post_format: "{{username}} నుండి #{{post_number}}"
+      post_format: "%{username} నుండి #%{post_number}"
       search_google_button: "గూగుల్"
       search_google_title: "ఈ సైట్ వెదుకు"
       context:
-        user: "@{{username}} యొక్క విషయాలు వెతుకు"
+        user: "@%{username} యొక్క విషయాలు వెతుకు"
         topic: "ఈ విషయంలో వెతుకు"
       advanced:
         posted_by:
@@ -782,7 +782,7 @@ te:
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
           one: "మీరు <b>%{count}</b> విషయం ఎంచుకున్నారు."
-          other: " మీరు <b>{{count}}</b> విషయాలు ఎంచుకున్నారు."
+          other: " మీరు <b>%{count}</b> విషయాలు ఎంచుకున్నారు."
       none:
         unread: "మీరు చదవని విషయాలు లేవు"
         new: "మీకు కొత్త విషయాలు లేవు"
@@ -790,7 +790,7 @@ te:
         posted: "మీరింకా ఏ విషయాలూ రాయలేదు."
         latest: "కొత్త విషయాలు లేవు. అహో ఎంతటి విపరిణామం."
         bookmarks: "మీకింకా ఎట్టి పేజీక విషయాలూ లేవు."
-        category: "ఎట్టి {{category}} విషయాలూ లేవు"
+        category: "ఎట్టి %{category} విషయాలూ లేవు"
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
       bottom:
         latest: "ఇంకా కొత్త విషయాలు లేవు."
@@ -798,7 +798,7 @@ te:
         read: "ఇంకా చదవని విషయాలు లేవు."
         new: "కొత్త విషయాలు లేవు."
         unread: "ఇంకా చదవని విషయాలు లేవు."
-        category: "ఇంకా {{category}} విషయాలు లేవు."
+        category: "ఇంకా %{category} విషయాలు లేవు."
         top: "ఇంకా అగ్ర విషయాలు లేవు."
         bookmarks: "ఇంకా పేజీక విషయాలు లేవు."
     topic:
@@ -813,10 +813,10 @@ te:
       unread: "చదవని"
       new_topics:
         one: "%{count} కొత్త విషయం"
-        other: "{{count}} కొత్త విషయాలు"
+        other: "%{count} కొత్త విషయాలు"
       unread_topics:
         one: "%{count} చదవని విషయం"
-        other: "{{count}} చదవని విషయాలు"
+        other: "%{count} చదవని విషయాలు"
       title: "విషయం"
       invalid_access:
         title: "విషయం ప్రైవేటు"
@@ -830,22 +830,22 @@ te:
         description: "క్షమించాలి. ఆ విషయం మేము కనుగొనలేకున్నాము. బహుశా నిర్వాహకులు దాన్ని తొలగించారేమో?"
       total_unread_posts:
         one: "మీకు ఈ విషయంలో %{count} చదవని టపా ఉంది"
-        other: "మీకు ఈ విషయంలో {{count}} చదవని టపాలు ఉన్నాయి"
+        other: "మీకు ఈ విషయంలో %{count} చదవని టపాలు ఉన్నాయి"
       unread_posts:
         one: "మీకు ఈ విషయంలో %{count} చదవని పాత టపా ఉంది"
-        other: "మీకు ఈ విషయంలో {{count}} చదవని పాత టపాలు ఉన్నాయి"
+        other: "మీకు ఈ విషయంలో %{count} చదవని పాత టపాలు ఉన్నాయి"
       new_posts:
         one: "మీరు చివరసారి చదివాక ఈ విషయంలో %{count} కొత్త టపా వచ్చింది"
-        other: "మీరు చివరసారి చదివాక ఈ విషయంలో {{count}} కొత్త టపాలు వచ్చాయి"
+        other: "మీరు చివరసారి చదివాక ఈ విషయంలో %{count} కొత్త టపాలు వచ్చాయి"
       likes:
         one: "ఈ విషయానికి %{count} ఇష్టం ఉంది"
-        other: "ఈ విషయానికి {{count}} ఇష్టాలు ఉన్నాయి"
+        other: "ఈ విషయానికి %{count} ఇష్టాలు ఉన్నాయి"
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
       toggle_information: "విషయపు వివరాలు అటుఇటుచేయి"
-      read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? {{catLink}} లేదా {{latestLink}} లో ఇతర విషయాలు చూడు."
-      read_more: "మరిన్ని చదవాలనుకుంటున్నారా? {{catLink}} లేదా {{latestLink}}."
+      read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink} లో ఇతర విషయాలు చూడు."
+      read_more: "మరిన్ని చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink}."
       browse_all_categories: అన్ని వర్గాలూ జల్లించు
       view_latest_topics: తాజా విషయాలు చూడు
       suggest_create_topic: "ఓ విషయమెందుకు సృష్టించకూడదూ?"
@@ -947,7 +947,7 @@ te:
       filters:
         n_posts:
           one: "%{count} టపా"
-          other: "{{count}} టపాలు"
+          other: "%{count} టపాలు"
         cancel: "జల్లెడ తొలగించు"
       split_topic:
         title: "కొత్త విషయానికి జరుపు"
@@ -956,21 +956,21 @@ te:
         error: "టపాలను కొత్త విషయానికి జరిపేటప్పుడు దోషం తలెత్తింది"
         instructions:
           one: "మీరు కొత్త విషయం సృష్టించి దాన్ని మీరు ఈ టపాతో నింపబోతున్నారు."
-          other: "మీరు కొత్త విషయం సృష్టించి దాన్ని <b>{{count}}</b> టపాలతో నింపబోతున్నారు."
+          other: "మీరు కొత్త విషయం సృష్టించి దాన్ని <b>%{count}</b> టపాలతో నింపబోతున్నారు."
       merge_topic:
         title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
         action: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
         error: " ఆ విషయంలోకి టపాలను జరపడంలో దోషం."
         instructions:
           one: "ఈ టపాలు జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
-          other: "ఈ <b>{{count}}</b> టపాలను జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
+          other: "ఈ <b>%{count}</b> టపాలను జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
       change_owner:
         action: "యజమానిని మార్చు"
         error: "ఆ టపాల యజమానిని మార్చేప్పుడు దోషం జరిగింది."
         placeholder: "కొత్త యజమాని సభ్యనామం"
       multi_select:
         select: "ఎంచుకో"
-        selected: "ఎంచుకున్నవి ({{count}})"
+        selected: "ఎంచుకున్నవి (%{count})"
         select_post:
           label: "ఎంచుకో"
         select_replies:
@@ -981,13 +981,13 @@ te:
         deselect_all: అన్నీ వియెంచుకో
         description:
           one: మీరు <b>%{count}</b> టపా ఎంచుకున్నారు
-          other: "మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు"
+          other: "మీరు <b>%{count}</b> టపాలు ఎంచుకున్నారు"
     post:
       edit_reason: "కారణం:"
-      post_number: "టపా {{number}}"
+      post_number: "టపా %{number}"
       last_edited_on: "టపా చివర సవరించిన కాలం"
       reply_as_new_topic: "లంకె విషయంగా జవాబివ్వు"
-      continue_discussion: "{{postLink}} నుండి చర్చ కొనసాగుతుంది;"
+      continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోటెడ్ టపాకు వెళ్లు"
       show_full: "పూర్తి టపా చూపు"
       deleted_by_author:
@@ -1180,20 +1180,20 @@ te:
       unlisted:
         help: "ఈ విషయం జాబితాలనుండి తొలగించబడింది. ఇహ కేవలం నేరు లంకె ద్వారా మాత్రమే చూడగలరు."
     posts: "టపాలు"
-    posts_long: "ఈ విషయానికి {{number}} టపాలు ఉన్నాయి. "
+    posts_long: "ఈ విషయానికి %{number} టపాలు ఉన్నాయి. "
     original_post: "మూల టపా"
     views: "చూపులు"
     replies: "జవాబులు"
     activity: "కలాపం"
     likes: "ఇష్టాలు"
-    likes_long: "ఈ విషయానికి {{number}} ఇష్టాలు ఉన్నాయి"
+    likes_long: "ఈ విషయానికి %{number} ఇష్టాలు ఉన్నాయి"
     users: "సభ్యులు"
     users_lowercase:
       one: "వాడుకరి"
       other: "వాడుకరులు"
     category_title: "వర్గం"
     history: "చరిత్ర"
-    changed_by: " {{author}} రాసిన"
+    changed_by: " %{author} రాసిన"
     raw_email:
       not_available: "అందుబాటులో లేదు!"
     categories_list: "వర్గాల జాబితా"
@@ -1208,7 +1208,7 @@ te:
         help: "మీరు చదివిన విషయాలు, మీరు చివరిసారి చదివిన వరుసలో"
       categories:
         title: "వర్గాలు"
-        title_in: "వర్గం - {{categoryName}}"
+        title_in: "వర్గం - %{categoryName}"
         help: "వర్గాల వారీగా జట్టు కట్టిన అన్ని విషయాలూ"
       unread:
         title: "చదవని"
@@ -1224,8 +1224,8 @@ te:
         title: "పేజీకలు"
         help: "మీరు పేజీక ఉంచిన విషయాలు"
       category:
-        title: "{{categoryName}}"
-        help: "{{categoryName}} వర్గంలోని కొత్త విషయాలు"
+        title: "%{categoryName}"
+        help: "%{categoryName} వర్గంలోని కొత్త విషయాలు"
       top:
         title: "అగ్ర"
         help: "గత సంవత్సరం, నెల, వారం లేదా రోజులోని అత్యంత క్రియాశీల విషయాలు"
@@ -1459,7 +1459,7 @@ te:
         upload:
           label: "ఎక్కించు"
           uploading: "ఎగుమతవుతోంది..."
-          error: "'{{filename}}' ఎగుమతించుటలో దోషం: {{message}}"
+          error: "'%{filename}' ఎగుమతించుటలో దోషం: %{message}"
         operations:
           is_running: "ఒక కార్యం ప్రస్తుతం నడుస్తోంది..."
           failed: "కార్యం విఫలమైంది. దయచేసి లాగులు చూడండి."
@@ -1736,8 +1736,8 @@ te:
           title: "ఈ సభ్యుని ఈమెయిల్ చూపు"
           text: "చూపు"
       user:
-        suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది. {{error}}"
-        unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది {{error}}"
+        suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది. %{error}"
+        unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది %{error}"
         suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
         suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
         suspend_reason: "కారణం"
@@ -1965,6 +1965,7 @@ te:
       emoji:
         title: "ఇమోజి"
         add: "కొత్త ఇమోజి కలుపు"
+        uploading: "ఎగుమతవుతోంది..."
         name: "పేరు"
         group: "సమూహం"
         image: "బొమ్మ"

@@ -826,7 +826,7 @@ uk:
       short_description: 'Порушення наших <a href="%{base_path}/guidelines">принципів спільноти</a>'
       long_form: "позначити це як неприйнятне"
     notify_user:
-      title: "Відправити @{{username}} повідомлення"
+      title: "Відправити @%{username} повідомлення"
       description: "Я хочу поговорити з автором особисто про цей пост."
       short_description: "Я хочу поговорити з автором особисто про цей пост."
       long_form: "повідомлений користувач"

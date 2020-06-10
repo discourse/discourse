@@ -3,6 +3,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import User from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
+
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.
@@ -56,7 +58,7 @@ const TopicDetails = RestModel.extend({
     } else {
       return I18n.t(localeString, {
         username: User.currentProp("username_lower"),
-        basePath: Discourse.BaseUri
+        basePath: getURL("/")
       });
     }
   },

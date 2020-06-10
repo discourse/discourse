@@ -24,7 +24,8 @@ class InvitesController < ApplicationController
         store_preloaded("invite_info", MultiJson.dump(
           invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
           email: invite.email,
-          username: UserNameSuggester.suggest(invite.email))
+          username: UserNameSuggester.suggest(invite.email),
+          is_invite_link: invite.is_invite_link?)
         )
 
         render layout: 'application'
@@ -40,23 +41,30 @@ class InvitesController < ApplicationController
 
   def perform_accept_invitation
     params.require(:id)
-    params.permit(:username, :name, :password, :timezone, user_custom_fields: {})
+    params.permit(:email, :username, :name, :password, :timezone, user_custom_fields: {})
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
       begin
-        user = invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields], ip_address: request.remote_ip)
+        user = if invite.is_invite_link?
+          invite.redeem_invite_link(email: params[:email], username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields], ip_address: request.remote_ip)
+        else
+          invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields], ip_address: request.remote_ip)
+        end
+
         if user.present?
           log_on_user(user) if user.active?
           user.update_timezone_if_missing(params[:timezone])
           post_process_invite(user)
+          response = { success: true }
+        else
+          response = { success: false, message: I18n.t('invite.not_found_json') }
         end
 
-        response = { success: true }
         if user.present? && user.active?
           topic = invite.topics.first
           response[:redirect_to] = topic.present? ? path("#{topic.relative_url}") : path("/")
-        else
+        elsif user.present?
           response[:message] = I18n.t('invite.confirm_email')
         end
 
@@ -67,6 +75,8 @@ class InvitesController < ApplicationController
           errors: e.record&.errors&.to_hash || {},
           message: I18n.t('invite.error_message')
         }
+      rescue Invite::UserExists => e
+        render json: { success: false, message: [e.message] }
       end
     else
       render json: { success: false, message: I18n.t('invite.not_found_json') }
@@ -101,27 +111,49 @@ class InvitesController < ApplicationController
   end
 
   def create_invite_link
-    params.require(:email)
+    params.permit(:email, :max_redemptions_allowed, :expires_at, :group_ids, :group_names, :topic_id)
+
+    is_single_invite = params[:email].present?
+    unless is_single_invite
+      guardian.ensure_can_send_invite_links!(current_user)
+    end
 
     groups = Group.lookup_groups(
       group_ids: params[:group_ids],
       group_names: params[:group_names]
     )
     guardian.ensure_can_invite_to_forum!(groups)
-
-    topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_invite_to!(topic) if topic.present?
-
     group_ids = groups.map(&:id)
 
-    invite_exists = Invite.exists?(email: params[:email], invited_by_id: current_user.id)
-    if invite_exists && !guardian.can_send_multiple_invites?(current_user)
-      return render json: failed_json, status: 422
+    if is_single_invite
+      invite_exists = Invite.exists?(email: params[:email], invited_by_id: current_user.id)
+      if invite_exists && !guardian.can_send_multiple_invites?(current_user)
+        return render json: failed_json, status: 422
+      end
+
+      if params[:topic_id].present?
+        topic = Topic.find_by(id: params[:topic_id])
+
+        if topic.present?
+          guardian.ensure_can_invite_to!(topic)
+        else
+          raise Discourse::InvalidParameters.new(:topic_id)
+        end
+      end
     end
 
     begin
-      # generate invite link
-      if invite_link = Invite.generate_invite_link(params[:email], current_user, topic, group_ids)
+      invite_link = if is_single_invite
+        Invite.generate_single_use_invite_link(params[:email], current_user, topic, group_ids)
+      else
+        Invite.generate_multiple_use_invite_link(
+          invited_by: current_user,
+          max_redemptions_allowed: params[:max_redemptions_allowed],
+          expires_at: params[:expires_at],
+          group_ids: group_ids
+        )
+      end
+      if invite_link.present?
         render_json_dump(invite_link)
       else
         render json: failed_json, status: 422
@@ -132,20 +164,20 @@ class InvitesController < ApplicationController
   end
 
   def destroy
-    params.require(:email)
+    params.require(:id)
 
-    invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
-    raise Discourse::InvalidParameters.new(:email) if invite.blank?
+    invite = Invite.find_by(invited_by_id: current_user.id, id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) if invite.blank?
     invite.trash!(current_user)
 
-    render body: nil
+    render json: success_json
   end
 
   def rescind_all_invites
     guardian.ensure_can_rescind_all_invites!(current_user)
 
     Invite.rescind_all_expired_invites_from(current_user)
-    render body: nil
+    render json: success_json
   end
 
   def resend_invite
@@ -155,7 +187,7 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.resend_invite
-    render body: nil
+    render json: success_json
 
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
@@ -165,7 +197,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_resend_all_invites!(current_user)
 
     Invite.resend_all_invites_from(current_user.id)
-    render body: nil
+    render json: success_json
   end
 
   def upload_csv

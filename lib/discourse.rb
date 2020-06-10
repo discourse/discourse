@@ -518,12 +518,21 @@ module Discourse
     postgres_last_read_only[Discourse.redis.namespace] = Time.zone.now
   end
 
+  def self.clear_postgres_readonly!
+    postgres_last_read_only[Discourse.redis.namespace] = nil
+  end
+
   def self.received_redis_readonly!
     redis_last_read_only[Discourse.redis.namespace] = Time.zone.now
   end
 
+  def self.clear_redis_readonly!
+    redis_last_read_only[Discourse.redis.namespace] = nil
+  end
+
   def self.clear_readonly!
-    postgres_last_read_only[Discourse.redis.namespace] = redis_last_read_only[Discourse.redis.namespace] = nil
+    clear_redis_readonly!
+    clear_postgres_readonly!
     Site.clear_anon_cache!
     true
   end
@@ -657,13 +666,9 @@ module Discourse
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool
-    Sidekiq.redis_pool.shutdown { |c| nil }
+    Sidekiq.redis_pool.shutdown { |conn| conn.close  }
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
-
-    if ENV['ACTIVE_RECORD_RAILS_FAILOVER']
-      RailsFailover::ActiveRecord.after_fork
-    end
 
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
@@ -838,7 +843,7 @@ module Discourse
 
     # load up schema cache for all multisite assuming all dbs have
     # an identical schema
-    RailsMultisite::ConnectionManagement.each_connection do
+    RailsMultisite::ConnectionManagement.safe_each_connection do
       dup_cache = schema_cache.dup
       # this line is not really needed, but just in case the
       # underlying implementation changes lets give it a shot
