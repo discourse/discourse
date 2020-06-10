@@ -165,14 +165,14 @@ class InvitesController < ApplicationController
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
     invite.trash!(current_user)
 
-    render body: nil
+    render json: success_json
   end
 
   def rescind_all_invites
     guardian.ensure_can_rescind_all_invites!(current_user)
 
     Invite.rescind_all_expired_invites_from(current_user)
-    render body: nil
+    render json: success_json
   end
 
   def resend_invite
@@ -182,7 +182,7 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.resend_invite
-    render body: nil
+    render json: success_json
 
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
@@ -192,7 +192,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_resend_all_invites!(current_user)
 
     Invite.resend_all_invites_from(current_user.id)
-    render body: nil
+    render json: success_json
   end
 
   def upload_csv

@@ -70,6 +70,9 @@ describe InvitesController do
 
       it "destroys the invite" do
         delete "/invites.json", params: { id: invite.id }
+
+        expect(response.status).to eq(200)
+
         invite.reload
         expect(invite.trashed?).to be_truthy
       end
