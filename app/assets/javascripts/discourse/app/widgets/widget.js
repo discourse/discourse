@@ -336,12 +336,12 @@ export default class Widget {
 
   sendWidgetAction(name, param) {
     return this.rerenderResult(() => {
-      const widgetFunction = this.callWidgetFunction(name, param);
+      const widget = this._findAncestorWithProperty(name);
+      if (widget) {
+        return widget[name].call(widget, param);
+      }
 
-      return (
-        widgetFunction ||
-        this._sendComponentAction(name, param || this.findAncestorModel())
-      );
+      return this._sendComponentAction(name, param || this.findAncestorModel());
     });
   }
 
