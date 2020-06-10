@@ -11,6 +11,10 @@ class WebHookPostSerializer < PostSerializer
     true
   end
 
+  def include_raw?
+    true
+  end
+
   %i{
     can_view
     can_edit
