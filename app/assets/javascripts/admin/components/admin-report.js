@@ -226,14 +226,18 @@ export default Component.extend({
 
   @action
   exportCsv() {
-    const customFilters = this.get("filters.customFilters") || {};
-    exportEntity("report", {
+    const args = {
       name: this.get("model.type"),
       start_date: this.startDate.toISOString(true).split("T")[0],
-      end_date: this.endDate.toISOString(true).split("T")[0],
-      category_id: customFilters.category,
-      group_id: customFilters.group
-    }).then(outputExportResult);
+      end_date: this.endDate.toISOString(true).split("T")[0]
+    };
+
+    const customFilters = this.get("filters.customFilters");
+    if (customFilters) {
+      Object.assign(args, customFilters);
+    }
+
+    exportEntity("report", args).then(outputExportResult);
   },
 
   @action
