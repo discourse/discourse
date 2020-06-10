@@ -34,6 +34,8 @@ class UploadCreator
       return @upload
     end
 
+    DiscourseEvent.trigger(:before_upload_creation, @file)
+
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
       # test for image regardless of input
       @image_info = FastImage.new(@file) rescue nil
