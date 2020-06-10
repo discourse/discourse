@@ -2558,6 +2558,52 @@ describe UsersController do
     end
   end
 
+  describe '#update_primary_email' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_email) { user.primary_email }
+    fab!(:other_email) { Fabricate(:secondary_email, user: user) }
+
+    before do
+      SiteSetting.email_editable = true
+
+      sign_in(user)
+    end
+
+    it "changes user's primary email" do
+      put "/u/#{user.username}/preferences/primary-email.json", params: { email: user_email.email }
+      expect(response.status).to eq(200)
+      expect(user_email.reload.primary).to eq(true)
+      expect(other_email.reload.primary).to eq(false)
+
+      put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email }
+      expect(response.status).to eq(200)
+      expect(user_email.reload.primary).to eq(false)
+      expect(other_email.reload.primary).to eq(true)
+    end
+  end
+
+  describe '#destroy_email' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_email) { user.primary_email }
+    fab!(:other_email) { Fabricate(:secondary_email, user: user) }
+
+    before do
+      SiteSetting.email_editable = true
+
+      sign_in(user)
+    end
+
+    it "can destroy secondary emails" do
+      delete "/u/#{user.username}/preferences/email.json", params: { email: user_email.email }
+      expect(response.status).to eq(428)
+      expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
+
+      delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email }
+      expect(response.status).to eq(200)
+      expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email)
+    end
+  end
+
   describe '#is_local_username' do
     fab!(:user) { Fabricate(:user) }
     fab!(:group) { Fabricate(:group, name: "Discourse", mentionable_level: Group::ALIAS_LEVELS[:everyone]) }

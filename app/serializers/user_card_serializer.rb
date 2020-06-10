@@ -34,6 +34,8 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   attributes :email,
+             :secondary_emails,
+             :unconfirmed_emails,
              :last_posted_at,
              :last_seen_at,
              :created_at,

@@ -42,7 +42,7 @@ describe EmailUpdater do
       it "creates a change request authorizing the new email and immediately confirms it " do
         updater.change_to(new_email)
         change_req = user.email_change_requests.first
-        expect(change_req.change_state).to eq(EmailChangeRequest.states[:complete])
+        expect(user.reload.email).to eq(new_email)
       end
 
       it "sends a reset password email to the user so they can set a password for their new email" do
@@ -110,44 +110,65 @@ describe EmailUpdater do
     let(:user) { Fabricate(:user, email: old_email) }
     let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
 
-    before do
-      Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_new_email, to_address: new_email))
-      updater.change_to(new_email)
-      @change_req = user.email_change_requests.first
-    end
-
-    it "starts the new confirmation process" do
-      expect(updater.errors).to be_blank
-
-      expect(@change_req).to be_present
-      expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
-
-      expect(@change_req.old_email).to eq(old_email)
-      expect(@change_req.new_email).to eq(new_email)
-      expect(@change_req.old_email_token).to be_blank
-      expect(@change_req.new_email_token.email).to eq(new_email)
-    end
-
-    context 'confirming an invalid token' do
-      it "produces an error" do
-        updater.confirm('random')
-        expect(updater.errors).to be_present
-        expect(user.reload.email).not_to eq(new_email)
+    context "changing primary email" do
+      before do
+        Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_new_email, to_address: new_email))
+        updater.change_to(new_email)
+        @change_req = user.email_change_requests.first
       end
-    end
 
-    context 'confirming a valid token' do
-      it "updates the user's email" do
-        Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email, to_address: old_email))
-        updater.confirm(@change_req.new_email_token.token)
+      it "starts the new confirmation process" do
         expect(updater.errors).to be_blank
-        expect(user.reload.email).to eq(new_email)
 
-        @change_req.reload
-        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])
+        expect(@change_req).to be_present
+        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
+
+        expect(@change_req.old_email).to eq(old_email)
+        expect(@change_req.new_email).to eq(new_email)
+        expect(@change_req.old_email_token).to be_blank
+        expect(@change_req.new_email_token.email).to eq(new_email)
+      end
+
+      context 'confirming an invalid token' do
+        it "produces an error" do
+          updater.confirm('random')
+          expect(updater.errors).to be_present
+          expect(user.reload.email).not_to eq(new_email)
+        end
+      end
+
+      context 'confirming a valid token' do
+        it "updates the user's email" do
+          Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email, to_address: old_email))
+          updater.confirm(@change_req.new_email_token.token)
+          expect(updater.errors).to be_blank
+          expect(user.reload.email).to eq(new_email)
+
+          @change_req.reload
+          expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])
+        end
       end
     end
 
+    context "adding an email" do
+      before do
+        Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_new_email, to_address: new_email))
+        updater.change_to(new_email, add: true)
+        @change_req = user.email_change_requests.first
+      end
+
+      context 'confirming a valid token' do
+        it "adds a user email" do
+          Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email_add, to_address: old_email))
+          updater.confirm(@change_req.new_email_token.token)
+          expect(updater.errors).to be_blank
+          expect(UserEmail.where(user_id: user.id).pluck(:email)).to contain_exactly(user.email, new_email)
+
+          @change_req.reload
+          expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])
+        end
+      end
+    end
   end
 
   context 'as a staff user' do

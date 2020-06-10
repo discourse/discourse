@@ -46,12 +46,49 @@
   <div class="control-group pref-email">
     <label class="control-label">{{i18n "user.email.title"}}</label>
     {{#if model.email}}
-      <div class="controls">
-        <span class="static">{{model.email}}</span>
-        {{#if model.can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
-        {{/if}}
-      </div>
+      {{#if siteSettings.enable_secondary_emails}}
+        <div class="emails">
+          {{#each emails as |email|}}
+            <div class="row email">
+              {{email-dropdown email=email
+                              setPrimaryEmail=(action "setPrimaryEmail")
+                              destroyEmail=(action "destroyEmail")}}
+
+              <div class="email-first">{{email.email}}</div>
+
+              <div class="email-second">
+                {{#if email.primary}}
+                  <span class="primary">{{i18n "user.email.primary_label"}}</span>
+                {{/if}}
+
+                {{#unless email.confirmed}}
+                  <span class="unconfirmed">{{i18n "user.email.unconfirmed_label"}}</span>
+                  &bull;
+                  {{#if email.resending}}
+                    <span>{{i18n "user.email.resending_label"}}</span>
+                  {{else if email.resent}}
+                    <span>{{i18n "user.email.resent_label"}}</span>
+                  {{else}}
+                    <a {{action "resendConfirmationEmail" email}} href>{{i18n "user.email.resend_label"}}</a>
+                  {{/if}}
+                {{/unless}}
+              </div>
+            </div>
+          {{/each}}
+        </div>
+
+        {{#link-to "preferences.email" (query-params new=1) class="pull-right"}}
+          {{d-icon "plus"}} {{i18n "user.email.add_email"}}
+        {{/link-to}}
+      {{else}}
+        <div class="controls">
+          <span class="static">{{model.email}}</span>
+          {{#if model.can_edit_email}}
+            {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
+          {{/if}}
+        </div>
+      {{/if}}
+
       <div class="instructions">
         {{#if siteSettings.sso_overrides_email}}
           {{i18n "user.email.sso_override_instructions"}}

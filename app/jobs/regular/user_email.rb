@@ -154,7 +154,7 @@ module Jobs
       raise Discourse::InvalidParameters.new("type=#{type}") unless UserNotifications.respond_to?(type)
 
       email_args[:email_token] = email_token if email_token.present?
-      email_args[:new_email] = user.email if type.to_s == "notify_old_email"
+      email_args[:new_email] = args[:new_email] || user.email if type.to_s == "notify_old_email" || type.to_s == "notify_old_email_add"
 
       if args[:client_ip] && args[:user_agent]
         email_args[:client_ip] = args[:client_ip]

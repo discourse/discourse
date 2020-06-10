@@ -1212,6 +1212,10 @@ class User < ActiveRecord::Base
     self.user_emails.secondary.pluck(:email)
   end
 
+  def unconfirmed_emails
+    self.email_change_requests.where.not(change_state: EmailChangeRequest.states[:complete]).pluck(:new_email)
+  end
+
   RECENT_TIME_READ_THRESHOLD ||= 60.days
 
   def self.preload_recent_time_read(users)

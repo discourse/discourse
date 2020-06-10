@@ -1083,6 +1083,10 @@ en:
         taken: "Sorry, that username is taken."
         invalid: "That username is invalid. It must only include numbers and letters"
 
+      add_email:
+        title: "Add Email"
+        add: "add"
+
       change_email:
         title: "Change Email"
         taken: "Sorry, that email is not available."
@@ -1118,8 +1122,16 @@ en:
         title: "Email"
         primary: "Primary Email"
         secondary: "Secondary Emails"
-        no_secondary: "No secondary emails"
-        sso_override_instructions: "Email can be updated from SSO provider."
+        primary_label: "primary"
+        unconfirmed_label: "unconfirmed"
+        resend_label: "resend confirmation email"
+        resending_label: "sending..."
+        resent_label: "email sent"
+        update_email: "Change Email"
+        set_primary: "Set Primary Email"
+        destroy: "Remove Email"
+        add_email: "Add Alternate Email"
+        ssDestroy_override_instructions: "Email can be updated from SSO provider."
         instructions: "Never shown to the public."
         ok: "We will email you to confirm"
         required: "Please enter an email address"
@@ -4175,6 +4187,9 @@ en:
             override_upload_secure_status: "override upload secure status"
             page_published: "page published"
             page_unpublished: "page unpublished"
+            add_email: "add email"
+            update_email: "update email"
+            destroy_email: "destroy email"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
