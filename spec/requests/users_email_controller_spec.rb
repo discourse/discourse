@@ -267,11 +267,12 @@ describe UsersEmailController do
     it 'has an email token' do
       sign_in(user)
 
-      expect do
-        post "/u/#{user.username}/preferences/email.json", params: {
-          email: new_email
-        }
-      end.to change(EmailChangeRequest, :count)
+      expect { post "/u/#{user.username}/preferences/email.json", params: { email: new_email } }
+        .to change(EmailChangeRequest, :count)
+
+      emailChangeRequest = EmailChangeRequest.last
+      expect(emailChangeRequest.old_email).to eq(nil)
+      expect(emailChangeRequest.new_email).to eq(new_email)
     end
   end
 
