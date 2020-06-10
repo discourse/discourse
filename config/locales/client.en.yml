@@ -3464,7 +3464,7 @@ en:
               label: Group
             category:
               label: Category
-            include-subcategories:
+            include_subcategories:
               label: "Include Subcategories"
 
       commits:

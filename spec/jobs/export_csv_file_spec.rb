@@ -202,7 +202,7 @@ describe Jobs::ExportCsvFile do
       expect(report[0]).to contain_exactly("Count", "Day")
       expect(report[1]).to contain_exactly("1", "2010-01-01")
 
-      exporter.extra['include-subcategories'] = true
+      exporter.extra['include_subcategories'] = true
       report = exporter.report_export.to_a
       expect(report[0]).to contain_exactly("Count", "Day")
       expect(report[1]).to contain_exactly("2", "2010-01-01")
