@@ -489,7 +489,7 @@ module Discourse
   end
 
   def self.readonly_mode?(keys = READONLY_KEYS)
-    recently_readonly? || Discourse.redis.exists?(*keys)
+    recently_readonly? || Discourse.redis.exists(*keys)
   end
 
   def self.pg_readonly_mode?
