@@ -59,10 +59,10 @@ def process_uploads
     print "\r#{progress}% Fixed dimensions: #{dimensions_count} Downsized: #{downsized_count} Skipped: #{skipped} (upload id: #{upload.id})"
     log "\n"
 
-    if upload.local?
-      path = Discourse.store.path_for(upload)
+    path = if upload.local?
+      Discourse.store.path_for(upload)
     else
-      path = (Discourse.store.download(upload, max_file_size_kb: 100.megabytes) rescue nil)&.path
+      (Discourse.store.download(upload, max_file_size_kb: 100.megabytes) rescue nil)&.path
     end
 
     unless path
