@@ -128,7 +128,7 @@
       {{/if}}
 
       {{#if displayRevert}}
-        {{d-button action=(action "revertToVersion") icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
+        {{d-button action=(action "revertToVersion") icon="undo" translatedLabel=revertToRevisionText class="btn-danger" disabled=loading}}
       {{/if}}
 
       {{#if displayHide}}
