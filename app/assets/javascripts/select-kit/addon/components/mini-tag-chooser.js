@@ -45,7 +45,7 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   modifyComponentForRow(collection, item) {
-    if (this.getValue(item) === this.selectKit.filter) {
+    if (this.getValue(item) === this.selectKit.filter && !item.count) {
       return "select-kit/select-kit-row";
     }
 
