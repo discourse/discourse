@@ -2,7 +2,7 @@
 
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
-if ENV["LOGSTASH_UNICORN_URI"]
+if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
   require_relative '../lib/discourse_logstash_logger'
   logger DiscourseLogstashLogger.logger(uri: ENV['LOGSTASH_UNICORN_URI'], type: :unicorn)
 end
