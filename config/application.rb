@@ -19,6 +19,8 @@ require 'action_controller/railtie'
 require 'action_view/railtie'
 require 'action_mailer/railtie'
 require 'sprockets/railtie'
+require 'rails_failover/active_record'
+require 'rails_failover/redis'
 
 # Plugin related stuff
 require_relative '../lib/plugin_initialization_guard'
@@ -26,14 +28,6 @@ require_relative '../lib/discourse_event'
 require_relative '../lib/discourse_plugin_registry'
 
 require_relative '../lib/plugin_gem'
-
-if ENV['ACTIVE_RECORD_RAILS_FAILOVER']
-  require 'rails_failover/active_record'
-end
-
-if ENV['REDIS_RAILS_FAILOVER']
-  require 'rails_failover/redis'
-end
 
 # Global config
 require_relative '../app/models/global_setting'
