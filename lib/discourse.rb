@@ -745,7 +745,7 @@ module Discourse
       )
     else
       # no logster ... fallback
-      Rails.logger.warn("#{message} #{e}")
+      Rails.logger.warn("#{message} #{e}\n#{e.backtrace.join("\n")}")
     end
   rescue
     STDERR.puts "Failed to report exception #{e} #{message}"
