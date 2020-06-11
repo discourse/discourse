@@ -10,10 +10,14 @@ module Onebox
       matches_regexp(/^https?:\/\/(mobile\.|www\.)?twitter\.com\/.+?\/status(es)?\/\d+(\/(video|photo)\/\d?+)?+(\/?\?.*)?\/?$/)
       always_https
 
+      def http_params
+        { 'User-Agent' => 'DiscourseBot/1.0' }
+      end
+
       private
 
       def get_twitter_data
-        response = Onebox::Helpers.fetch_response(url) rescue nil
+        response = Onebox::Helpers.fetch_response(url, nil, nil, http_params) rescue nil
         html = Nokogiri::HTML(response)
         twitter_data = {}
         html.css('meta').each do |m|
