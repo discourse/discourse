@@ -65,9 +65,14 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
   end
 
   RailsFailover::ActiveRecord.register_force_reading_role_callback do
-    Discourse.redis.exists(
-      Discourse::PG_READONLY_MODE_KEY,
-      Discourse::PG_FORCE_READONLY_MODE_KEY
-    )
+    begin
+      Discourse.redis.exists?(
+        Discourse::PG_READONLY_MODE_KEY,
+        Discourse::PG_FORCE_READONLY_MODE_KEY
+      )
+    rescue => e
+      Discourse.warn_exception(e)
+      false
+    end
   end
 end
