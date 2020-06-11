@@ -666,7 +666,7 @@ module Discourse
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool
-    Sidekiq.redis_pool.shutdown { |conn| conn.close  }
+    Sidekiq.redis_pool.shutdown { |conn| conn.disconnect!  }
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
 
