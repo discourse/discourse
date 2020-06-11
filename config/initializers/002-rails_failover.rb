@@ -30,7 +30,7 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
       Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
   rescue => e
-    Discourse.warn_exception(e, message: "Failed to run failover callback")
+    Rails.logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
     false
   end
 
@@ -45,7 +45,7 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
         ActiveRecord::Base.connection_handlers[ActiveRecord::Base.writing_role]
     end
   rescue => e
-    Discourse.warn_exception(e, message: "Failed to run fallback callback")
+    Rails.logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
     false
   end
 
@@ -76,7 +76,7 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
       Discourse::PG_FORCE_READONLY_MODE_KEY
     )
   rescue => e
-    Discourse.warn_exception(e, message: "Failed to force AR reading role")
+    Rails.logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
     false
   end
 end
