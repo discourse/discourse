@@ -168,6 +168,25 @@ describe EmailUpdater do
           expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])
         end
       end
+
+      context 'that was deleted before' do
+        it 'works' do
+          Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email_add, to_address: old_email))
+          updater.confirm(@change_req.new_email_token.token)
+          expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email, new_email)
+
+          user.user_emails.where(email: new_email).delete_all
+          expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email)
+
+          Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_new_email, to_address: new_email))
+          updater.change_to(new_email, add: true)
+          @change_req = user.email_change_requests.first
+
+          Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email_add, to_address: old_email))
+          updater.confirm(@change_req.new_email_token.token)
+          expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email, new_email)
+        end
+      end
     end
   end
 
