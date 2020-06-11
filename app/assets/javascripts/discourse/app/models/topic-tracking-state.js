@@ -408,7 +408,7 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countCategoryByState(fn, categoryId) {
+  countCategoryByState(fn, categoryId, tagId) {
     const subcategoryIds = this.getSubCategoryIds(categoryId);
     return _.chain(this.states)
       .filter(fn)
@@ -416,17 +416,18 @@ const TopicTrackingState = EmberObject.extend({
         topic =>
           topic.archetype !== "private_message" &&
           !topic.deleted &&
-          (!categoryId || subcategoryIds.has(topic.category_id))
+          (!categoryId || subcategoryIds.has(topic.category_id)) &&
+          (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1))
       )
       .value().length;
   },
 
-  countNew(categoryId) {
-    return this.countCategoryByState(isNew, categoryId);
+  countNew(categoryId, tagId) {
+    return this.countCategoryByState(isNew, categoryId, tagId);
   },
 
-  countUnread(categoryId) {
-    return this.countCategoryByState(isUnread, categoryId);
+  countUnread(categoryId, tagId) {
+    return this.countCategoryByState(isUnread, categoryId, tagId);
   },
 
   countTags(tags) {
@@ -462,10 +463,14 @@ const TopicTrackingState = EmberObject.extend({
     return counts;
   },
 
-  countCategory(category_id) {
+  countCategory(category_id, tagId) {
     let sum = 0;
     Object.values(this.states).forEach(topic => {
-      if (topic.category_id === category_id && !topic.deleted) {
+      if (
+        topic.category_id === category_id &&
+        !topic.deleted &&
+        (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1))
+      ) {
         sum +=
           topic.last_read_post_number === null ||
           topic.last_read_post_number < topic.highest_post_number
@@ -476,23 +481,24 @@ const TopicTrackingState = EmberObject.extend({
     return sum;
   },
 
-  lookupCount(name, category) {
+  lookupCount(name, category, tagId) {
     if (name === "latest") {
       return (
-        this.lookupCount("new", category) + this.lookupCount("unread", category)
+        this.lookupCount("new", category, tagId) +
+        this.lookupCount("unread", category, tagId)
       );
     }
 
     let categoryId = category ? get(category, "id") : null;
 
     if (name === "new") {
-      return this.countNew(categoryId);
+      return this.countNew(categoryId, tagId);
     } else if (name === "unread") {
-      return this.countUnread(categoryId);
+      return this.countUnread(categoryId, tagId);
     } else {
       const categoryName = name.split("/")[1];
       if (categoryName) {
-        return this.countCategory(categoryId);
+        return this.countCategory(categoryId, tagId);
       }
     }
   },
