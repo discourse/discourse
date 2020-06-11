@@ -76,13 +76,13 @@ module FileStore
       not_implemented
     end
 
-    def download(upload)
+    def download(upload, max_file_size_kb: nil)
       DistributedMutex.synchronize("download_#{upload.sha1}", validity: 3.minutes) do
         filename = "#{upload.sha1}#{File.extname(upload.original_filename)}"
         file = get_from_cache(filename)
 
         if !file
-          max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+          max_file_size_kb ||= [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
           url = upload.secure? ?
             Discourse.store.signed_url_for_path(upload.url) :
