@@ -29,6 +29,9 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
       Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
+  rescue => e
+    Discourse.warn_exception(e, message: "Failed to run failover callback")
+    false
   end
 
   RailsFailover::ActiveRecord.on_fallback do
@@ -41,6 +44,9 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
       RailsMultisite::ConnectionManagement.default_connection_handler =
         ActiveRecord::Base.connection_handlers[ActiveRecord::Base.writing_role]
     end
+  rescue => e
+    Discourse.warn_exception(e, message: "Failed to run fallback callback")
+    false
   end
 
   module Discourse
@@ -65,14 +71,12 @@ if ENV["ACTIVE_RECORD_RAILS_FAILOVER"]
   end
 
   RailsFailover::ActiveRecord.register_force_reading_role_callback do
-    begin
-      Discourse.redis.exists(
-        Discourse::PG_READONLY_MODE_KEY,
-        Discourse::PG_FORCE_READONLY_MODE_KEY
-      )
-    rescue => e
-      Discourse.warn_exception(e, message: "Failed to force AR reading role")
-      false
-    end
+    Discourse.redis.exists(
+      Discourse::PG_READONLY_MODE_KEY,
+      Discourse::PG_FORCE_READONLY_MODE_KEY
+    )
+  rescue => e
+    Discourse.warn_exception(e, message: "Failed to force AR reading role")
+    false
   end
 end
