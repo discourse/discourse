@@ -2290,19 +2290,18 @@ describe UsersController do
 
       context 'selectable avatars is enabled' do
 
-        before { SiteSetting.selectable_avatars_enabled = true }
+        before do
+          SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+          SiteSetting.selectable_avatars_enabled = true
+        end
 
         it 'raises an error when selectable avatars is empty' do
+          SiteSetting.selectable_avatars = ""
           put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
           expect(response.status).to eq(422)
         end
 
         context 'selectable avatars is properly setup' do
-
-          before do
-            SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
-          end
-
           it 'raises an error when url is not in selectable avatars list' do
             put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
             expect(response.status).to eq(422)
