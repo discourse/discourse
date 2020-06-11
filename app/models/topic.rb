@@ -155,7 +155,12 @@ class Topic < ActiveRecord::Base
                                     message: :has_already_been_used,
                                     allow_blank: true,
                                     case_sensitive: false,
-                                    collection: Proc.new { Topic.listable_topics } }
+                                    collection: Proc.new { |t|
+                                      SiteSetting.allow_duplicate_topic_titles_category? ?
+                                        Topic.listable_topics.where("category_id = ?", t.category_id) :
+                                        Topic.listable_topics
+                                    }
+                                  }
 
   validates :category_id,
             presence: true,

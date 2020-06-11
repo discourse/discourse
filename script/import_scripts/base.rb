@@ -77,6 +77,7 @@ class ImportScripts::Base
       min_personal_message_post_length: 1,
       min_personal_message_title_length: 1,
       allow_duplicate_topic_titles: true,
+      allow_duplicate_topic_titles_category: false,
       disable_emails: 'yes',
       max_attachment_size_kb: 102400,
       max_image_size_kb: 102400,
