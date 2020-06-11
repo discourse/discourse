@@ -186,7 +186,7 @@ class TopicTrackingState
   end
 
   def self.include_tags_in_report?
-    @include_tags_in_report
+    @include_tags_in_report || SiteSetting.show_filter_by_tag
   end
 
   def self.include_tags_in_report=(v)
