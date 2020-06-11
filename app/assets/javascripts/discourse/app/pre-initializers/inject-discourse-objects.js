@@ -29,7 +29,9 @@ export default {
       ALL_TARGETS.forEach(t => app.inject(t, "store", "service:store"));
     }
 
-    app.register("message-bus:main", MessageBus, { instantiate: false });
+    if (!app.hasRegistration("message-bus:main")) {
+      app.register("message-bus:main", MessageBus, { instantiate: false });
+    }
 
     ALL_TARGETS.concat("service").forEach(t =>
       app.inject(t, "messageBus", "message-bus:main")
@@ -43,15 +45,21 @@ export default {
       messageBus: MessageBus,
       currentUser
     });
-    app.register("topic-tracking-state:main", topicTrackingState, {
-      instantiate: false
-    });
+
+    if (!app.hasRegistration("topic-tracking-state:main")) {
+      app.register("topic-tracking-state:main", topicTrackingState, {
+        instantiate: false
+      });
+    }
     ALL_TARGETS.forEach(t =>
       app.inject(t, "topicTrackingState", "topic-tracking-state:main")
     );
 
     const siteSettings = app.SiteSettings;
-    app.register("site-settings:main", siteSettings, { instantiate: false });
+
+    if (!app.hasRegistration("site-settings:main")) {
+      app.register("site-settings:main", siteSettings, { instantiate: false });
+    }
     ALL_TARGETS.concat("service").forEach(t =>
       app.inject(t, "siteSettings", "site-settings:main")
     );
