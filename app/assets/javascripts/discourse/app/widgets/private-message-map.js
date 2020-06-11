@@ -179,7 +179,7 @@ export default createWidget("private-message-map", {
       controls.push(
         this.attach("button", {
           action: "showInvite",
-          icon: "plus",
+          label: "private_message_info.invite",
           className: "btn.no-text.btn-icon"
         })
       );
