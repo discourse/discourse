@@ -53,9 +53,11 @@ module BackupRestore
 
     def vacate_legacy_prefix
       legacy_s3_helper = S3Helper.new(s3_bucket_name_with_legacy_prefix, '', @s3_options.clone)
-      legacy_keys = legacy_s3_helper.list.map { |o| o.key }
+      bucket, prefix = s3_bucket_name_with_prefix.split('/', 2)
+      legacy_keys = legacy_s3_helper.list
+        .reject { |o| o.key.starts_with? prefix }
+        .map { |o| o.key }
       legacy_keys.each do |legacy_key|
-        bucket, prefix = s3_bucket_name_with_prefix.split('/', 2)
         @s3_helper.s3_client.copy_object({
           copy_source: File.join(bucket, legacy_key),
           bucket: bucket,
