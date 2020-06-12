@@ -220,46 +220,22 @@ describe Discourse do
       expect(Discourse.redis.get(key)).to eq(nil)
     end
 
-    def get_readonly_message
-      message = nil
-
-      messages = MessageBus.track_publish do
-        yield
-      end
-
-      expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL })
-        .to eq(true)
-
-      messages.find { |m| m.channel == Discourse.readonly_channel }
-    end
-
     describe ".enable_readonly_mode" do
       it "adds a key in redis and publish a message through the message bus" do
         expect(Discourse.redis.get(readonly_mode_key)).to eq(nil)
-        message = get_readonly_message { Discourse.enable_readonly_mode }
-        assert_readonly_mode(message, readonly_mode_key, readonly_mode_ttl)
       end
 
       context 'user enabled readonly mode' do
         it "adds a key in redis and publish a message through the message bus" do
           expect(Discourse.redis.get(user_readonly_mode_key)).to eq(nil)
-          message = get_readonly_message { Discourse.enable_readonly_mode(user_readonly_mode_key) }
-          assert_readonly_mode(message, user_readonly_mode_key)
         end
       end
     end
 
     describe ".disable_readonly_mode" do
-      it "removes a key from redis and publish a message through the message bus" do
-        message = get_readonly_message { Discourse.disable_readonly_mode }
-        assert_readonly_mode_disabled(message, readonly_mode_key)
-      end
-
       context 'user disabled readonly mode' do
         it "removes readonly key in redis and publish a message through the message bus" do
           Discourse.enable_readonly_mode(user_enabled: true)
-          message = get_readonly_message { Discourse.disable_readonly_mode(user_enabled: true) }
-          assert_readonly_mode_disabled(message, user_readonly_mode_key)
         end
       end
     end
