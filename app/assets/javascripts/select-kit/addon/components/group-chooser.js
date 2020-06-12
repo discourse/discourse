@@ -1,8 +1,8 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
-  pluginApiIdentifiers: ["admin-group-selector"],
-  classNames: ["admin-group-selector"],
+  pluginApiIdentifiers: ["group-chooser"],
+  classNames: ["group-chooser"],
   selectKitOptions: {
     allowAny: false
   }
