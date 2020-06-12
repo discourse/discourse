@@ -448,7 +448,6 @@ module Discourse
     end
 
     MessageBus.publish(readonly_channel, true)
-    Site.clear_anon_cache!
     true
   end
 
@@ -484,7 +483,6 @@ module Discourse
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
     Discourse.redis.del(key)
     MessageBus.publish(readonly_channel, false)
-    Site.clear_anon_cache!
     true
   end
 
