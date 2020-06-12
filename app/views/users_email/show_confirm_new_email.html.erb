@@ -77,9 +77,11 @@
     <%end%>
   <% end%>
 
-  <%= preload_script "ember_jquery" %>
   <%= preload_script "locales/#{I18n.locale}" %>
-  <%= preload_script "locales/i18n" %>
+  <%- if ExtraLocalesController.client_overrides_exist? %>
+    <%= preload_script_url ExtraLocalesController.url('overrides') %>
+  <%- end %>
+  <%= preload_script 'ember_jquery' %>
   <%= preload_script "discourse/app/lib/webauthn" %>
   <%= preload_script "confirm-new-email/confirm-new-email" %>
   <%= preload_script "confirm-new-email/bootstrap" %>
