@@ -57,7 +57,6 @@ class Group < ActiveRecord::Base
 
   def remove_review_groups
     Category.where(review_group_id: self.id).update_all(review_group_id: nil)
-    Category.where(review_group_id: self.id).update_all(review_group_id: nil)
   end
 
   validate :name_format_validator
