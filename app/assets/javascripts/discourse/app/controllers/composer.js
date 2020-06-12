@@ -1040,7 +1040,7 @@ export default Controller.extend({
     const keyPrefix =
       this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
 
-    let promise = new Promise(resolve => {
+    let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
           {
@@ -1052,8 +1052,10 @@ export default Controller.extend({
               if (differentDraft) {
                 this.model.clearState();
                 this.close();
+                resolve();
               }
-              resolve();
+
+              reject();
             }
           },
           {
