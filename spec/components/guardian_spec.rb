@@ -3446,8 +3446,23 @@ describe Guardian do
       end
     end
 
+    context 'trust_level >= 2 user' do
+      fab!(:topic_creator) { build(:user, trust_level: 2) }
+      fab!(:topic) { Fabricate(:topic, user: topic_creator) }
+
+      before do
+        topic.allowed_users << topic_creator
+        topic.allowed_users << another_user
+      end
+
+      it 'should be true' do
+        expect(Guardian.new(topic_creator).can_remove_allowed_users?(topic))
+          .to eq(true)
+      end
+    end
+
     context 'normal user' do
-      fab!(:topic) { Fabricate(:topic, user: Fabricate(:user)) }
+      fab!(:topic) { Fabricate(:topic, user: Fabricate(:user, trust_level: 1)) }
 
       before do
         topic.allowed_users << user
