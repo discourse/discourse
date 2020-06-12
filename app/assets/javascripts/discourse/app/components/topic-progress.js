@@ -180,7 +180,7 @@ export default Component.extend({
     this.set("docked", isDocked);
 
     const $replyArea = $("#reply-control .reply-area");
-    if ($replyArea && $replyArea.length > 0 && wrapperDir === "left") {
+    if ($replyArea && $replyArea.length > 0) {
       $wrapper.css(wrapperDir, `${$replyArea.offset().left}px`);
     } else {
       $wrapper.css(wrapperDir, "1em");
