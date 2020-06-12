@@ -24,18 +24,35 @@ class TopicTrackingState
   def self.publish_new(topic)
     return unless topic.regular?
 
+    tags, tag_ids = nil
+    if SiteSetting.tagging_enabled
+      topic.tags.pluck(:id, :name).each do |id, name|
+        tags ||= []
+        tag_ids ||= []
+
+        tags << name
+        tag_ids << id
+      end
+    end
+
+    payload = {
+      last_read_post_number: nil,
+      highest_post_number: 1,
+      created_at: topic.created_at,
+      topic_id: topic.id,
+      category_id: topic.category_id,
+      archetype: topic.archetype,
+    }
+
+    if tags
+      payload[:tags] = tags
+      payload[:topic_tag_ids] = tag_ids
+    end
+
     message = {
       topic_id: topic.id,
       message_type: "new_topic",
-      payload: {
-        last_read_post_number: nil,
-        highest_post_number: 1,
-        created_at: topic.created_at,
-        topic_id: topic.id,
-        category_id: topic.category_id,
-        archetype: topic.archetype,
-        topic_tag_ids: topic.tags.pluck(:id)
-      }
+      payload: payload
     }
 
     group_ids = topic.category && topic.category.secure_group_ids
@@ -99,22 +116,31 @@ class TopicTrackingState
         post.topic.category && post.topic.category.secure_group_ids
       end
 
+    tags = nil
+    if include_tags_in_report?
+      tags = post.topic.tags.pluck(:name)
+    end
+
     TopicUser
       .tracking(post.topic_id)
       .select([:user_id, :last_read_post_number, :notification_level])
       .each do |tu|
 
+      payload = {
+        last_read_post_number: tu.last_read_post_number,
+        highest_post_number: post.post_number,
+        created_at: post.created_at,
+        category_id: post.topic.category_id,
+        notification_level: tu.notification_level,
+        archetype: post.topic.archetype
+      }
+
+      payload[:tags] = tags if tags
+
       message = {
         topic_id: post.topic_id,
         message_type: UNREAD_MESSAGE_TYPE,
-        payload: {
-          last_read_post_number: tu.last_read_post_number,
-          highest_post_number: post.post_number,
-          created_at: post.created_at,
-          category_id: post.topic.category_id,
-          notification_level: tu.notification_level,
-          archetype: post.topic.archetype
-        }
+        payload: payload
       }
 
       MessageBus.publish(self.unread_channel_key(tu.user_id), message.as_json, group_ids: group_ids)
@@ -186,7 +212,7 @@ class TopicTrackingState
   end
 
   def self.include_tags_in_report?
-    @include_tags_in_report || SiteSetting.show_filter_by_tag
+    SiteSetting.tagging_enabled && (@include_tags_in_report || SiteSetting.show_filter_by_tag)
   end
 
   def self.include_tags_in_report=(v)
