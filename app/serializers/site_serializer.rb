@@ -12,7 +12,6 @@ class SiteSerializer < ApplicationSerializer
     :top_menu_items,
     :anonymous_top_menu_items,
     :uncategorized_category_id, # this is hidden so putting it here
-    :is_readonly,
     :disabled_plugins,
     :user_field_max_length,
     :post_action_types,
@@ -93,10 +92,6 @@ class SiteSerializer < ApplicationSerializer
 
   def uncategorized_category_id
     SiteSetting.uncategorized_category_id
-  end
-
-  def is_readonly
-    Discourse.readonly_mode?
   end
 
   def disabled_plugins
