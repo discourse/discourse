@@ -11,6 +11,7 @@
     </thead>
     <tbody aria-labelledby="categories-only-category">
       {{#each categories as |c|}}
+        {{plugin-outlet name="category-list-above-each-category" connectorTagName="" tagName="" args=(hash category=c)}}
         <tr data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} class="{{if c.description_excerpt "has-description" "no-description"}} {{if c.uploaded_logo.url "has-logo" "no-logo"}}">
           <td class="category {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-style"}}" style={{unless noCategoryStyle (border-color c.color)}}>
             {{category-title-link category=c}}
