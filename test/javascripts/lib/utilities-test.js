@@ -1,5 +1,6 @@
 /* global Int8Array:true */
 import {
+  escapeExpression,
   emailValid,
   extractDomainFromUrl,
   avatarUrl,
@@ -14,8 +15,29 @@ import {
   fillMissingDates,
   inCodeBlock
 } from "discourse/lib/utilities";
+import Handlebars from "handlebars";
 
 QUnit.module("lib:utilities");
+
+QUnit.test("escapeExpression", assert => {
+  assert.equal(
+    escapeExpression(">"),
+    "&gt;",
+    "escapes unsafe characters"
+  );
+
+  assert.equal(
+    escapeExpression(new Handlebars.SafeString("&gt;")),
+    "&gt;",
+    "does not double-escape safe strings"
+  );
+
+  assert.equal(
+    escapeExpression(undefined),
+    "",
+    "returns a falsy string when given a falsy value"
+  );
+});
 
 QUnit.test("emailValid", assert => {
   assert.ok(

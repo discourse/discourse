@@ -25,6 +25,10 @@ export function translateSize(size) {
 }
 
 export function escapeExpression(string) {
+  if (!string) {
+    return "";
+  }
+
   // don't escape SafeStrings, since they're already safe
   if (string instanceof Handlebars.SafeString) {
     return string.toString();
