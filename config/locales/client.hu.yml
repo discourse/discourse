@@ -898,6 +898,8 @@ hu:
         confirm: "Biztosan meg szeretnéd változtatni a felhasználónevedet?"
         taken: "Sajnos ez a felhasználónév már foglalt."
         invalid: "Ez a felhasználónév érvénytelen. Csak számokat és betűket kell tartalmaznia."
+      add_email:
+        add: "hozzáadás"
       change_email:
         title: "E-mail cím módosítása"
         taken: "Sajnos az e-mail cím nem érhető el."
@@ -918,7 +920,8 @@ hu:
         title: "E-mail"
         primary: "Elsődleges Email"
         secondary: "Másodlagos Emailek"
-        no_secondary: "Nincsenek másodlagos emailek"
+        primary_label: "Elsődleges"
+        update_email: "E-mail cím módosítása"
         ok: " Jóváhagyás végett e-mailt fogunk küldeni"
         invalid: "Kérünk adj meg egy érvényes e-mail címet"
         authenticated: "Az email címedet %{provider} azonosította"

@@ -994,6 +994,8 @@ fi:
         confirm: "Oletko aivan varma että haluat vaihtaa käyttäjänimesi?"
         taken: "Pahoittelut, tuo nimi on jo käytössä."
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
+      add_email:
+        add: "lisää"
       change_email:
         title: "Vaihda sähköposti"
         taken: "Pahoittelut, tämä sähköpostiosoite ei ole saatavilla."
@@ -1023,7 +1025,8 @@ fi:
         title: "Sähköposti"
         primary: "Ensisijainen sähköpostiosoite"
         secondary: "Toissijaiset sähköpostiosoitteet"
-        no_secondary: "Ei toissijaisia sähköpostiosoitteita"
+        primary_label: "ensisijainen väri"
+        update_email: "Vaihda sähköposti"
         instructions: "Ei tule julkiseksi."
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
         required: "Syötä sähköpostiosoitteesi"
@@ -3116,7 +3119,7 @@ fi:
             more: '<a href="%{basePath}/admin/logs/search_logs">Hakulokit</a>'
             disabled: 'Trendaavat haut eivät ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>.'
           filters:
-            file-extension:
+            file_extension:
               label: Tiedostomuoto
             group:
               label: Ryhmä

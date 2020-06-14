@@ -2020,6 +2020,8 @@ be:
     confirm_old_email:
       title: "Пацвердзіце стары адрас электроннай пошты"
       subject_template: "[%{email_prefix}] Пацвердзіце свой бягучы адрас электроннай пошты"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Пацвердзіце свой бягучы адрас электроннай пошты"
     notify_old_email:
       title: "Апавяшчаць Стары e-mail"
       subject_template: "[%{email_prefix}] Ваш электронны адрас быў зменены"

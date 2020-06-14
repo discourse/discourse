@@ -2066,6 +2066,8 @@ el:
     confirm_old_email:
       title: "Επιβεβαίωση παλιάς διεύθυνσης email"
       subject_template: "[%{email_prefix}] Επικυρώστε την νέα σας διεύθυνση email"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Επικυρώστε την νέα σας διεύθυνση email"
     notify_old_email:
       title: "Ειδοποίηση παλιάς διεύθυνσης email"
       subject_template: "[%{email_prefix}] Η διεύθυνση email σας έχει αλλαχθεί"

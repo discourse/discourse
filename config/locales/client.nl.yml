@@ -996,6 +996,9 @@ nl:
         confirm: "Weet u absoluut zeker dat u uw gebruikersnaam wilt wijzigen?"
         taken: "Sorry, maar die gebruikersnaam is al in gebruik."
         invalid: "Die gebruikersnaam is ongeldig. Hij mag alleen cijfers en letters bevatten."
+      add_email:
+        title: "E-mailadres toevoegen"
+        add: "toevoegen"
       change_email:
         title: "E-mailadres wijzigen"
         taken: "Sorry, dat e-mailadres is niet beschikbaar."
@@ -1026,8 +1029,16 @@ nl:
         title: "E-mail"
         primary: "Primair e-mailadres"
         secondary: "Extra e-mailadressen"
-        no_secondary: "Geen extra e-mailadressen"
-        sso_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
+        primary_label: "primaire"
+        unconfirmed_label: "onbevestigd"
+        resend_label: "bevestigingsmail opnieuw verzenden"
+        resending_label: "verzenden..."
+        resent_label: "e-mail verzonden"
+        update_email: "E-mailadres wijzigen"
+        set_primary: "Primair e-mailadres instellen"
+        destroy: "E-mailadres verwijderen"
+        add_email: "Alternatief e-mailadres toevoegen"
+        ssDestroy_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
         instructions: "Nooit openbaar zichtbaar."
         ok: "We sturen een e-mail ter bevestiging"
         required: "Voer een e-mailadres in"
@@ -3180,13 +3191,13 @@ nl:
             more: '<a href="%{basePath}/admin/logs/search_logs">Zoeklogboeken</a>'
             disabled: 'Rapport voor populaire zoekopdrachten is uitgeschakeld. Schakel <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zoekopdrachten registreren</a> in om gegevens te verzamelen.'
           filters:
-            file-extension:
+            file_extension:
               label: Bestandsextensie
             group:
               label: Groep
             category:
               label: Categorie
-            include-subcategories:
+            include_subcategories:
               label: "Subcategorieën bijvoegen"
       commits:
         latest_changes: "Laatste wijzigingen: werk regelmatig bij!"
@@ -3884,6 +3895,9 @@ nl:
             override_upload_secure_status: "status beveiligd uploaden negeren"
             page_published: "pagina gepubliceerd"
             page_unpublished: "pagina niet gepubliceerd"
+            add_email: "e-mailadres toevoegen"
+            update_email: "e-mailadres bijwerken"
+            destroy_email: "e-mailadres verwijderen"
         screened_emails:
           title: "Gecontroleerde e-mails"
           description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd."

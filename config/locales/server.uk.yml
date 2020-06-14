@@ -778,7 +778,6 @@ uk:
     confirm: "Підтвердіть"
     authorizing_new:
       title: "Підтвердьте свій новий електронний лист"
-      description: "Підтвердьте, що хочете, щоб ваша нова електронна пошта була змінена на:"
     authorizing_old:
       title: "Змінити свою електронну пошту"
       description: "Підтвердьте зміну своєї електронної пошти"
@@ -2517,6 +2516,8 @@ uk:
       subject_template: "[%{email_prefix}] Підтвердіть свою нову електронну пошту"
     confirm_old_email:
       title: "Підтвердіть стару електронну пошту"
+      subject_template: "[%{email_prefix}] Підтвердіть свою поточну адресу електроної пошти"
+    confirm_old_email_add:
       subject_template: "[%{email_prefix}] Підтвердіть свою поточну адресу електроної пошти"
     notify_old_email:
       title: "Повідомлення на стару електронну пошту"

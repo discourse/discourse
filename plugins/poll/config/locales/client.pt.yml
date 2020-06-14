@@ -9,22 +9,34 @@ pt:
   js:
     poll:
       voters:
-        one: "eleitor"
-        other: "eleitores"
+        one: "votante"
+        other: "votantes"
       total_votes:
         one: "total da votação"
         other: "total de votos"
       average_rating: "Classificação média: <strong>%{average}</strong>."
       public:
         title: "Os votos são <strong>públicos</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Escolha pelo menos <strong>%{count}</strong> opção."
+            other: "Escolha pelo menos <strong>%{count}</strong> opções."
+          up_to_max_options:
+            one: "Escolha até <strong>%{count}</strong> opção."
+            other: "Escolha até <strong>%{count}</strong> opções."
+          x_options:
+            one: "Escolha <strong>%{count}</strong> opção"
+            other: "Escolha <strong>%{count}</strong> opções"
+          between_min_and_max_options: "Escolha entre as opções <strong>%{min}</strong> e <strong>%{max}</strong>."
       cast-votes:
-        title: "Votar"
+        title: "Vote"
         label: "Vote agora!"
       show-results:
         title: "Exibir os resultados da sondagem"
         label: "Mostrar resultados"
       hide-results:
-        title: "Voltar aos meus votos"
+        title: "Voltar para os seus votos"
         label: "Mostrar voto"
       group-results:
         title: "Agrupar votos por campo de utilizador"
@@ -42,18 +54,19 @@ pt:
         confirm: "Tem a certeza que deseja encerrar esta sondagem?"
       error_while_toggling_status: "Desculpe, ocorreu um erro ao alternar o estado desta sondagem."
       error_while_casting_votes: "Desculpe, ocorreu um erro ao submeter os seus votos."
-      error_while_fetching_voters: "Pedimos desculpa, ocorreu um erro ao apresentar os eleitores."
+      error_while_fetching_voters: "Desculpe, ocorreu um erro ao exibir os votantes."
       ui_builder:
         title: Criar Sondagem
         insert: Inserir Sondagem
         help:
+          options_count: Insira pelo menos uma opção
           invalid_values: O valor mínimo deve ser menor que o valor máximo.
           min_step_value: O valor mínimo é 1
         poll_type:
           label: Tipo
           regular: Escolha Única
           multiple: Escolha Múltipla
-          number: Cotação numérica
+          number: Classificação Numérica
         poll_result:
           label: Resultados
         poll_config:
@@ -63,4 +76,4 @@ pt:
         poll_public:
           label: Mostrar quem votou
         poll_options:
-          label: Escreva uma opção de sondagem por linha
+          label: Insira uma opção de sondagem por linha

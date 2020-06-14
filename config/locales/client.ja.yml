@@ -815,6 +815,8 @@ ja:
         confirm: "ユーザー名を変更してもよろしいですか？"
         taken: "このユーザー名は既に使われています。"
         invalid: "このユーザー名は無効です。英数字のみ利用可能です。"
+      add_email:
+        add: "追加"
       change_email:
         title: "メールアドレスを変更"
         taken: "このメールアドレスは既に使われています。"
@@ -835,7 +837,8 @@ ja:
         title: "メールアドレス"
         primary: "主要なメールアドレス"
         secondary: "その他のメールアドレス"
-        no_secondary: "その他のメールアドレスはありません"
+        primary_label: "プライマリー"
+        update_email: "メールアドレスを変更"
         instructions: "他人に公開はされません"
         ok: "確認用メールを送信します"
         invalid: "正しいメールアドレスを入力してください"

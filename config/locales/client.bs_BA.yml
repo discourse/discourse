@@ -992,6 +992,8 @@ bs_BA:
         confirm: "Da li ste apsolutno sigurni da želite promijeniti svoje korisničko ime?"
         taken: "Nažalost, to korisničko ime je zauzeto."
         invalid: "To korisničko ime nije validno. Mora sadržavati samo brojeve i slova"
+      add_email:
+        add: "Dodaj"
       change_email:
         title: "Promijeni Email"
         taken: "Nažalost, taj email nije dostupan."
@@ -1018,8 +1020,9 @@ bs_BA:
         title: "Email"
         primary: "Primarni Email"
         secondary: "Sekundari Emailovi"
-        no_secondary: "Nema sekundarnih emailova"
-        sso_override_instructions: "E-pošta se može ažurirati od SSO provajdera."
+        primary_label: "primary"
+        update_email: "Promijeni Email"
+        ssDestroy_override_instructions: "E-pošta se može ažurirati od SSO provajdera."
         instructions: "Nikada nije prikazan javnosti."
         ok: "Izgleda dobro. Poslat ćemo email sa potvrdom."
         invalid: "Molimo vas da unesete validnu email adresu."
@@ -1305,8 +1308,6 @@ bs_BA:
       enabled: "Ovaj sajt je u read only mod-u: Dozvoljeno je čitati. Možete nastaviti sa pregledom, ali odgovaranje na objave, lajkanje i ostale akcije su isključene za sada."
       login_disabled: "Ulogovanje je isključeno jer je sajt u read only načinu rada."
       logout_disabled: "Odjava je isključena sve dok je sajt u read only tj. samo čitanje je dozvoljeno načinu rada."
-    logs_error_rate_notice:
-      reached_hour_MF: "<b>{realtivna starost}</b> - <a href='{url}' target='_blank'>{stopa, množina, jedna {# pogreška / sat} ostala {# errors / hour}}</a> dostigla je granicu postavljanja stranice {granica, množina, jednu {# error / hour} druge {# errors / hour}}."
     learn_more: "saznaj više..."
     all_time: "ukupno"
     all_time_desc: "ukupno kreiranih tema"
@@ -3099,7 +3100,7 @@ bs_BA:
             more: '<a href="%{basePath}/admin/logs/search_logs">Pretraživanje dnevnika</a>'
             disabled: 'Izvješće o pretraživanju trendova je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upite pretraživanja dnevnika</a> za prikupljanje podataka.'
           filters:
-            file-extension:
+            file_extension:
               label: Ekstenzija datoteke
             group:
               label: Grupa

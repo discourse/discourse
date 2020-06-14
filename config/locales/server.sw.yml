@@ -1713,6 +1713,8 @@ sw:
     confirm_old_email:
       title: "Thibitisha Barua pepe ya Zamani"
       subject_template: "[%{email_prefix}] Thibitisha barua pepe ya sasa"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Thibitisha barua pepe ya sasa"
     notify_old_email:
       title: "Ijulishe Barua Pepe ya Zamani"
       subject_template: "[%{email_prefix}] Barua pepe yako imebadilishwa"

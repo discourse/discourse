@@ -649,7 +649,6 @@ ko:
     confirm: "확인"
     authorizing_new:
       title: "새 이메일 확인"
-      description: "새 이메일 주소가 다음으로 변경되었는지 확인하십시오."
     authorizing_old:
       title: "이메일 주소 변경"
       description: "이메일 주소 변경을 확인하십시오"

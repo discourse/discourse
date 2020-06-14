@@ -7,11 +7,11 @@
 
 pt:
   site_settings:
-    discourse_narrative_bot_enabled: "Activar o bot do Discourse (discobot)"
+    discourse_narrative_bot_enabled: "Ativar Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Desativar a publicação de boas-vindas do Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomes de utilizador que o Discourse Narrative Bot deverá ignorar"
     discourse_narrative_bot_disable_public_replies: "Desativar as respostas públicas do Discourse Narrative Bot"
-    discourse_narrative_bot_welcome_post_type: "O tipo de publicação de boas-vindas que \"Discourse Narrative Bot\" deverá enviar"
+    discourse_narrative_bot_welcome_post_type: "O tipo de publicação de boas-vindas que Discourse Narrative Bot deverá enviar"
     discourse_narrative_bot_welcome_post_delay: "Aguardar (n) segundos antes de enviar a publicação de boas-vindas do Discurso Narrativa Bot."
   badges:
     certified:
@@ -26,7 +26,9 @@ pt:
     bio: "Olá. Não sou humano. Sou um bot que pode ensiná-lo acerca deste sítio. Para interagir comigo, envie-me uma mensagem ou mencione-me %{discobot_username} em qualquer lado."
     dice:
       not_enough_dice: |-
-        Só tenho %{num_of_dice} dado. [Vergonhoso] http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), bem sei!
+        Eu tenho apenas %{num_of_dice} dado. [Vergonhoso] http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), eu sei!
+      results: |-
+        > :game_die: %{results}
     quote:
       '1':
         quote: "Entre cada dificuldade há espaço para oportunidade."
@@ -45,7 +47,7 @@ pt:
       '6':
         author: "A mãe de Forrest Gump"
       '7':
-        quote: "Isto é um pequeno passo para o homem, um gigantesco para a humanidade."
+        quote: "Isto é um pequeno passo para o homem, um salto gigantesco para a humanidade."
         author: "Neil Armstrong"
       '8':
         author: "Eleanor Roosevelt"
@@ -65,9 +67,11 @@ pt:
         '9': "Sim"
         '12': "Perguntar novamente mais tarde"
         '13': "É melhor não lhe dizer agora"
+        '14': "Não pode prever agora"
         '15': "Concentre-se e pergunte novamente"
         '17': "A minha resposta é não"
         '18': "As minhas fontes dizem não"
+        '20': "Muito duvidoso"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -79,6 +83,8 @@ pt:
         alt: "Certificado de Realização"
     advanced_user_narrative:
       title: ":arrow_up: Funcionalidades de utilizador avançadas"
+      recover:
+        deleted_post_raw: "Por que é que @ %{discobot_username} eliminou a minha publicação? :angustiado:"
       details:
         reply: |-
           Ótimo trabalho — a sua atenção para o _detalhe_ é admirável!

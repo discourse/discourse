@@ -2727,6 +2727,8 @@ zh_TW:
     confirm_old_email:
       title: "確認原郵件地址"
       subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
     notify_old_email:
       title: "通知原郵件地址"
       subject_template: "[%{email_prefix}] 已變更你的郵件地址"

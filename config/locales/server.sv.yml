@@ -196,6 +196,7 @@ sv:
     error: "Det uppstod ett problem när filerna skulle laddas upp. Vad snäll och försök senare igen."
   invite_link:
     email_taken: "Den här e-postadressen används redan. Om du redan har ett konto ber vi dig logga in eller återställa lösenordet."
+    max_redemptions_limit: "bör vara mellan 2 och %{max_limit}."
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
     user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
@@ -736,15 +737,18 @@ sv:
     confirmed: "Din e-post har uppdaterats."
     please_continue: "Fortsätt till %{site_name}"
     error: "Det uppstod ett fel med ändringen av din e-postadress. Adressen kanske redan används?"
+    doesnt_exist: "Den e-postadressen är inte associerad till ditt konto."
     error_staged: "Ett problem uppstod vid ändring av din e-postadress. Adressen används redan av en annan användare. "
     already_done: "Tyvärr har den här aktiveringslänken löpt ut. Kanske är din e-postadress redan ändrad? "
     confirm: "Bekräfta"
     authorizing_new:
       title: "Bekräfta din nya e-post"
-      description: "Vänligen bekräfta att du önskar ändra din nya e-postadress till:"
+      description: "Vänligen bekräfta att du önskar ändra din e-postadress till:"
+      description_add: "Vänligen bekräfta att du önskar lägga till en alternativ e-postadress:"
     authorizing_old:
       title: "Ändra din e-postadress"
       description: "Vänligen konfirmera din e-postadressändring"
+      description_add: "Vänligen bekräfta att du önskar lägga till en alternativ e-postadress:"
       old_email: "Gammal e-post: %{email}"
       new_email: "Ny e-post: %{email}"
       almost_done_title: "Bekräftar ny e-postadress"
@@ -1556,6 +1560,7 @@ sv:
     max_logins_per_ip_per_minute: "Maximalt antal inloggningar tillåtna per IP-adress per minut"
     max_post_deletions_per_minute: "Maximalt antal inlägg som en användare kan radera per minut."
     max_post_deletions_per_day: "Maximalt antal inlägg som en användare kan radera per dag."
+    invite_link_max_redemptions_limit: "Maximalt antal återinbjudningar tillåtna för inbjudningslänkar kan inte vara större än detta värde."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     alert_admins_if_errors_per_hour: "Antal felindikeringar per timme för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktione. OBS: kräver omstart."
     categories_topics: "Antal ämnen som ska visas i /kategorisida. Om satt till 0 kommer systemet automatiskt att försöka hitta ett värde så att de två kolumnerna hålls symmetriskt (kategorier och ämnen.) "
@@ -3076,6 +3081,17 @@ sv:
         Du kan bekräfta e-postadressen för %{site_name} genom att följa länken nedan:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      title: "Bekräfta tidigare e-postadress (Lägg till)"
+      subject_template: "[%{email_prefix}] Bekräfta din nuvarande e-postadress"
+      text_body_template: |
+        Innan vi kan lägga till en e-postadress,  behöver du bekräfta att du kontrollerar
+        den nuvarande e-postadressen. Efter att du har genomfört detta steg, behöver du bekräfta
+        den nya e-postadressen.
+
+        Du kan bekräfta e-postadressen för %{site_name} genom att klicka på följande länk:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Meddela gamla epostmeddelanden"
       subject_template: "[%{email_prefix}] Din e-postadress har ändrats"
@@ -3083,6 +3099,17 @@ sv:
         Det här är ett automatiserat meddelande för att informera dig om att din e-postadress för %{site_name} har ändrats. Var vänlig kontakta en administratör om det inte var din avsikt.
 
         Din e-postadress har ändrats till:
+
+        %{new_email}
+    notify_old_email_add:
+      title: "Notifiera tidigare e-postadress (Lägg till)"
+      subject_template: "[%{email_prefix}] En ny e-postadress har lagts till"
+      text_body_template: |
+        Det här är ett automatiserat meddelande för att informera dig om att en e-postadress för
+        %{site_name} har lagts till. Om detta har gjorts felaktigt, vänligen kontakta
+        en administratör.
+
+        Din tillagda e-postadress är:
 
         %{new_email}
     signup_after_approval:

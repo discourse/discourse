@@ -925,6 +925,8 @@ ur:
         confirm: "کیا آپ کو بالکل یقین ہے کہ آپ اپنا صارف نام تبدیل کرنا چاہتے ہیں؟"
         taken: "معذرت، یِہ صارف نام پہلے سے لیا جاچکا ہے۔"
         invalid: "یہ صارف نام غلط ہے۔ اِس میں صرف ہندسوں اور حروف کو شامل کیا جا سکتا ہے"
+      add_email:
+        add: "شامل کریں"
       change_email:
         title: "اِی میل تبدیل کریں"
         taken: "معذرت، یہ اِی میل دستیاب نہیں ہے۔"
@@ -945,8 +947,9 @@ ur:
         title: "اِی میل"
         primary: "بنیادی ایمیل"
         secondary: "ثانوی ایمیلز"
-        no_secondary: "کوئی ثانوی ایمیلز نہیں"
-        sso_override_instructions: "SSO پرووَائیڈر سے ایمیل کو اَپ ڈیٹ کیا جا سکتا ہے۔"
+        primary_label: "بنیادی"
+        update_email: "اِی میل تبدیل کریں"
+        ssDestroy_override_instructions: "SSO پرووَائیڈر سے ایمیل کو اَپ ڈیٹ کیا جا سکتا ہے۔"
         instructions: "کبھی بھی عوام کو دکھایا نہیں گیا۔"
         ok: "ہم تصدیق کے لئے آپ کو اِی میل کریں گے"
         invalid: "براہ کرم، ایک قابلِ قبول ایِ میل ایڈریس درج کریں"
@@ -2930,7 +2933,7 @@ ur:
             more: '<a href="%{basePath}/admin/logs/search_logs">تلاشی کے لاگز</a>'
             disabled: 'سرچ رجحان کی رپورٹ غیر فعال ہے۔ اعداد و شمار جمع کرنے کیلئے <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ سرچ قُوَیریز</a> کو فعال کریں۔'
           filters:
-            file-extension:
+            file_extension:
               label: فائل ایکسٹینشن
             group:
               label: گروپ

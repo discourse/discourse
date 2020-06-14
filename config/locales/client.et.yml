@@ -704,6 +704,8 @@ et:
         title: "Muuda kasutajanime"
         taken: "Vabandust, see kasutajanimi on võetud."
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
+      add_email:
+        add: "lisa"
       change_email:
         title: "Muuda meiliaadressi"
         taken: "Vabandust, see meiliaadress ei ole saadaval."
@@ -723,7 +725,8 @@ et:
         title: "Meiliaadress"
         primary: "Peamine e-post"
         secondary: "Teine e-post"
-        no_secondary: "Teist e-posti pole"
+        primary_label: "primaarne"
+        update_email: "Muuda meiliaadressi"
         instructions: "Ära näita kunagi avalikkusele."
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
