@@ -16,6 +16,9 @@ acceptance("Composer Actions", {
   },
   beforeEach() {
     _clearSnapshots();
+  },
+  afterEach() {
+    _clearSnapshots();
   }
 });
 
@@ -385,6 +388,9 @@ acceptance("Composer Actions With New Topic Draft", {
     can_tag_topics: true
   },
   beforeEach() {
+    _clearSnapshots();
+  },
+  afterEach() {
     _clearSnapshots();
   }
 });
