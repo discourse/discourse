@@ -1076,6 +1076,9 @@ he:
         confirm: "האם את/ה בטוח/ה שברצונך לשנות את שם המשתמש/ת שלך?"
         taken: "סליחה, שם המשתמש הזה תפוס."
         invalid: "שם המשתמש אינו תקין. עליו לכלול רק אותיות באנגלית ומספרים."
+      add_email:
+        title: "הוסף דוא\"ל"
+        add: "הוספה"
       change_email:
         title: "שנה דואר אלקטרוני"
         taken: "סליחה, הכתובת הזו אינה זמינה."
@@ -1106,8 +1109,16 @@ he:
         title: "דואר אלקטרוני"
         primary: "כתובת דוא״ל ראשית"
         secondary: "כתובות דוא״ל משניות"
-        no_secondary: "אין כתובות דוא״ל משניות"
-        sso_override_instructions: "ניתן לעדכן את כתובת הדוא״ל דרך ספק ה־SSO."
+        primary_label: "ראשי"
+        unconfirmed_label: "לא מאושר"
+        resend_label: "שליחת הודעת אימות בדוא״ל מחדש"
+        resending_label: "שולח..."
+        resent_label: "דוא\"ל נשלח"
+        update_email: "שנה דואר אלקטרוני"
+        set_primary: "הגדר כתובת דוא\"ל ראשית"
+        destroy: "הסר דוא\"ל"
+        add_email: "הוסף דוא\"ל חלופי"
+        ssDestroy_override_instructions: "ניתן לעדכן את כתובת הדוא״ל דרך ספק ה־SSO."
         instructions: "לעולם לא מוצג לציבור."
         ok: "נשלח אליכם דואר אלקטרוני לאישור"
         required: "נא למלא כתובת דוא״ל"
@@ -1280,6 +1291,7 @@ he:
         links_tab_with_count: "קישורים (%{count})"
         link_url: "קישור"
         link_created_at: "נוצר"
+        link_redemption_stats: "ניצולים"
         link_groups: קבוצות
         link_expires_at: תפוגה
         create: "שלח הזמנה"
@@ -3426,13 +3438,13 @@ he:
             more: '<a href="%{basePath}/admin/logs/search_logs">חיפוש ביומנים</a>'
             disabled: 'דוח מגמות חיפושים מנוטרל. יש להפעיל <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">שאילתות חיפוש ביומן</a> כדי לאסוף נתונים.'
           filters:
-            file-extension:
+            file_extension:
               label: סיומת קובץ
             group:
               label: קבוצה
             category:
               label: קטגוריה
-            include-subcategories:
+            include_subcategories:
               label: "לכלול תת־קטגוריות"
       commits:
         latest_changes: "שינויים אחרונים: בבקשה עדכן תכופות!"
@@ -4136,6 +4148,9 @@ he:
             override_upload_secure_status: "דריסת מצב העלאה בטוח"
             page_published: "העמוד פורסם"
             page_unpublished: "פרסום העמוד נמשך"
+            add_email: "הוסף דוא\"ל"
+            update_email: "עדכן דוא\"ל"
+            destroy_email: "מחק דוא\"ל"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."

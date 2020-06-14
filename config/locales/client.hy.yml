@@ -957,6 +957,8 @@ hy:
         confirm: "Դուք միանշանակ համոզվա՞ծ եք, որ ցանկանում եք փոփոխել Ձեր օգտանունը:"
         taken: "Ներողություն, այդ օգտանունը զբաղված է:"
         invalid: "Այդ օգտանունն անվավեր է: Այն պետք է պարունակի միայն թվեր և տառեր:"
+      add_email:
+        add: "ավելացնել"
       change_email:
         title: "Փոփոխել Էլ. Հասցեն"
         taken: "Ներողություն, այդ էլ. հասցեն հասանելի չէ:"
@@ -987,8 +989,9 @@ hy:
         title: "Էլ. հասցե"
         primary: "Հիմնական Էլ. հասցե"
         secondary: "Երկրորդական Էլ. հասցեներ"
-        no_secondary: "Երկրորդական էլ. հասցեներ չկան"
-        sso_override_instructions: "Էլ. հասցեն կարող է թարմացվել SSO մատակարարից:"
+        primary_label: "հիմնական"
+        update_email: "Փոփոխել Էլ. Հասցեն"
+        ssDestroy_override_instructions: "Էլ. հասցեն կարող է թարմացվել SSO մատակարարից:"
         instructions: "Երբեք չի ցուցադրվում հանրությանը"
         ok: "Հաստատման համար մենք Ձեզ կուղարկենք էլ. նամակ"
         invalid: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե"
@@ -3080,13 +3083,13 @@ hy:
             more: '<a href="%{basePath}/admin/logs/search_logs">Որոնման գրառումներ</a>'
             disabled: 'Առաջատար որոնման հաշվետվությունն անջատված է: Միացրեք <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">գրառումների որոնման հարցումները</a>՝ տվյալներ հավաքելու համար:'
           filters:
-            file-extension:
+            file_extension:
               label: Ֆայլի ընդլայնում
             group:
               label: Խումբ
             category:
               label: Կատեգորիա
-            include-subcategories:
+            include_subcategories:
               label: "Ներառել Ենթակատեգորիաներ"
       commits:
         latest_changes: "Վերջին փոփոխությունները. խնդրում ենք ավելի հաճախ թարմացնել!"

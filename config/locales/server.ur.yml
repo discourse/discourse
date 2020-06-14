@@ -2936,6 +2936,8 @@ ur:
     confirm_old_email:
       title: "پرانی ای میل تصدیق"
       subject_template: "[%{email_prefix}] اپنا موجودہ ای میل ایڈریس تصدیق کریں"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] اپنا موجودہ ای میل ایڈریس تصدیق کریں"
     notify_old_email:
       title: "پرانا ای میل مطلع"
       subject_template: "[%{email_prefix}] آپ کا ای میل ایڈریس تبدیل ہوگیا ہے"

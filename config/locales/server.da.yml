@@ -1514,6 +1514,8 @@ da:
       subject_template: "[%{email_prefix}] Bekræft din nye e-mail-adresse"
     confirm_old_email:
       subject_template: "[%{email_prefix}] Bekræft din nuværende e-mail-adresse"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Bekræft din nuværende e-mail-adresse"
     notify_old_email:
       subject_template: "[%{email_prefix}] Din e-mail-adresse er ændret"
     signup_after_approval:

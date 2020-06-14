@@ -1299,6 +1299,8 @@ ja:
     confirm_old_email:
       title: "古いメールの確認"
       subject_template: "[%{email_prefix}]現在のメールアドレスの確認"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}]現在のメールアドレスの確認"
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
     signup:

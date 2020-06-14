@@ -844,7 +844,7 @@ id:
         title: "Surel"
         primary: "Email Utama"
         secondary: "Email Sekunder"
-        no_secondary: "Tidak ada email sekunder"
+        update_email: "Ganti Alamat Surel"
         instructions: "Jangan pernah tunjukkan ke publik."
         ok: "Kami akan mengirimkan surel kepada anda untuk konfirmasi"
         invalid: "Silahkan masukkan alamat email yang valid"

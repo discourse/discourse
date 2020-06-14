@@ -730,7 +730,6 @@ pt_BR:
     confirm: "Confirmar"
     authorizing_new:
       title: "Confirme seu novo e-mail"
-      description: "Por favor confirme que você deseja que seu novo endereço de e-mail seja alterado para:"
     authorizing_old:
       title: "Troque seu endereço de e-mail"
       description: "Por favor confirme a alteração do seu endereço de e-mail"
@@ -1983,12 +1982,12 @@ pt_BR:
     invalid_second_factor_method: "O método de autenticação de dois fatores selecionado é inválido."
     not_enabled_second_factor_method: "O método de autenticação de dois fatores selecionado não está ativado para sua conta."
     security_key_description: "Quando você tiver uma chave física de segurança preparada, pressione o Anti\n\nQuando sua chave de segurança física estiver pronta, pressione o botão \"Autenticar com Chave de Segurança\" abaixo."
-    security_key_alternative: "T"
+    security_key_alternative: "Tente de uma outra forma"
     security_key_authenticate: "Autenticar com Chave de Segurança"
     security_key_not_allowed_error: "O processo de autenticação de chave de segurança atingiu o limite de tempo ou foi cancelado."
     security_key_no_matching_credential_error: "Nenhuma credencial correspondente pôde ser encontrada na chave de segurança fornecida."
     security_key_support_missing_error: "Seu dispositivo atual ou navegador não suportam o uso de chaves de segurança. Por favor, use um método diferente."
-    not_approved: "A sua conta ainda não foi aprovada. Vais ser notificado por email assim que estiver pronto para fazeres log in."
+    not_approved: "A sua conta ainda não foi aprovada. Você será notificado por e-mail assim que estiver pronto para fazer login."
     incorrect_username_email_or_password: "Usuário, email ou senha incorretos"
     incorrect_password: "senha incorreta"
     wait_approval: "Obrigado por se registar. Você será notificado por email quando a sua conta for aprovada."
@@ -3010,6 +3009,8 @@ pt_BR:
       title: "Confirmar Antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
       text_body_template: "Antes de podermos alterar seu endereço de e-mail, precisamos confirmar que você \ncontrola a conta de e-mail atual. Depois de concluir esta etapa, solicitaremos que você \nconfirme o novo endereço de e-mail.\n\nConfirme seu endereço de email atual para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
     notify_old_email:
       title: "Notificar e-mail antigo"
       subject_template: "[%{email_prefix}] Seu endereço de e-mail foi alterado"

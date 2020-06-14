@@ -808,6 +808,8 @@ nb_NO:
         confirm: "Er du helt sikker på at du ønsker å endre brukernavnet ditt?"
         taken: "Beklager, det brukernavnet er tatt."
         invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
+      add_email:
+        add: "legg til"
       change_email:
         title: "Endre e-postadresse"
         taken: "Beklager, den e-postadressen er ikke tilgjengelig."
@@ -828,7 +830,8 @@ nb_NO:
         title: "E-post"
         primary: "Primær e-post"
         secondary: "Sekundære e-poster"
-        no_secondary: "Ingen sekundære e-poster"
+        primary_label: "primær"
+        update_email: "Endre e-postadresse"
         instructions: "Vises aldri offentlig"
         ok: "Vi sender deg en e-post for å bekrefte"
         invalid: "Oppgi en gyldig e-postadresse"

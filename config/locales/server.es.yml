@@ -751,7 +751,6 @@ es:
     confirm: "Confirmar"
     authorizing_new:
       title: "Confirmar tu nuevo correo electrónico"
-      description: "Por favor, confirma que quisieras cambiar tu correo electrónico por el nuevo: "
     authorizing_old:
       title: "Cambiar tu dirección de correo electrónico"
       description: "Por favor, confirma el cambio de tu dirección de correo electrónico"
@@ -3231,6 +3230,8 @@ es:
         Confirma tu dirección de correo electrónico actual para %{site_name} haciendo clic en el siguiente enlace:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"
     notify_old_email:
       title: "Antiguo correo electrónico de notificaciones"
       subject_template: "[%{email_prefix}] Tu dirección de correo electrónico ha sido cambiada"

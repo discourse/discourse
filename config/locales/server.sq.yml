@@ -1158,6 +1158,8 @@ sq:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
     confirm_old_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën e tanishme të emailit "
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Konfirmoni adresën e tanishme të emailit "
     notify_old_email:
       text_body_template: |
         Ky është një mesazh automatik që ju njofton se adresa juaj email për

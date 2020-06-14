@@ -1648,6 +1648,8 @@ sl:
     confirm_old_email:
       title: "Potrdite star e-naslov"
       subject_template: "[%{email_prefix}] Potrdite vaš trenutni e-naslov"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Potrdite vaš trenutni e-naslov"
     notify_old_email:
       title: "Obvesti stari e-naslov"
       subject_template: "[%{email_prefix}] Vaš e-naslov je bil spremenjen"

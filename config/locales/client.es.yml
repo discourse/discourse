@@ -989,6 +989,8 @@ es:
         confirm: "¿Estás completamente seguro de que quieres cambiar tu nombre de usuario?"
         taken: "Lo sentimos, ese nombre de usuario ya se encuentra en uso."
         invalid: "Este nombre de usuario no es válido. Este solo puede incluir números y letras"
+      add_email:
+        add: "añadir"
       change_email:
         title: "Cambiar correo electrónico"
         taken: "Lo sentimos, ese correo electrónico no está disponible."
@@ -1019,8 +1021,9 @@ es:
         title: "Correo electrónico"
         primary: "Correo electrónico principal"
         secondary: "Correos electrónicos secundarios"
-        no_secondary: "Sin correos electrónicos secundarios"
-        sso_override_instructions: "El correo electrónico puede actualizarse desde el proveedor de SSO."
+        primary_label: "primario"
+        update_email: "Cambiar correo electrónico"
+        ssDestroy_override_instructions: "El correo electrónico puede actualizarse desde el proveedor de SSO."
         instructions: "Nunca se mostrará al público."
         ok: "Te enviaremos un correo electrónico para confirmar"
         required: "Por favor, introduce un correo electrónico"
@@ -3149,13 +3152,13 @@ es:
             more: '<a href="%{basePath}/admin/logs/search_logs">Buscar registros</a>'
             disabled: 'El reporte de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recolectar datos.'
           filters:
-            file-extension:
+            file_extension:
               label: Extensión del archivo
             group:
               label: Grupo
             category:
               label: Categoría
-            include-subcategories:
+            include_subcategories:
               label: "Incluir subcategoría"
       commits:
         latest_changes: "Cambios recientes: ¡por favor, actualiza a menudo!"

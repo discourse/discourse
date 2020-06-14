@@ -26,6 +26,18 @@ it:
           title: "I risultati saranno mostrati a sondaggio <strong>chiuso</strong>."
         staff:
           title: "I risultati saranno mostrati solo ai membri dello <strong>staff</strong>"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Scegli almeno un&#39;opzione <strong>%{count}</strong> ."
+            other: "Scegli almeno <strong>%{count}</strong> opzioni."
+          up_to_max_options:
+            one: "Scegli fino a <strong>%{count}</strong> opzione."
+            other: "Scegli fino a <strong>%{count}</strong> opzioni."
+          x_options:
+            one: "Scegli <strong>%{count}</strong> opzione."
+            other: "Scegli <strong>%{count}</strong> opzioni."
+          between_min_and_max_options: "Scegli tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni."
       cast-votes:
         title: "Vota"
         label: "Vota!"

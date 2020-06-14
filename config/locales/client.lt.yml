@@ -756,6 +756,8 @@ lt:
         title: "Keisti vartotojo vardą"
         taken: "Atsiprašome, šis vartotojo vardas užimtas."
         invalid: "Šis vartotojo vardas yra neteisingas. Jame turi būti tik skaičiai ir raidės"
+      add_email:
+        add: "pridėti"
       change_email:
         title: "Keisti el. paštą"
         taken: "Atsiprašome, šis el. paštas negalimas."
@@ -775,7 +777,8 @@ lt:
         title: "El. paštas"
         primary: "Pagrindinis el. Paštas"
         secondary: "Antriniai el. Paštai"
-        no_secondary: "Antrinių el. Paštų nėra"
+        primary_label: "pirminė"
+        update_email: "Keisti el. paštą"
         instructions: "Nebus rodomas viešai."
         ok: "Mes jums atsiųsime patvirtinimo elektroninį laišką"
         invalid: "Prašom įrašyti teisingą elektroninį adresą"

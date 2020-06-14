@@ -542,6 +542,8 @@ gl:
         instructions: "As imaxes dos fondos centraranse e terán unha largura predeterminada de 590px."
       email:
         title: "Correo electrónico"
+        primary_label: "primario"
+        update_email: "Cambiar o correo electrónico"
         ok: "Enviarémosche un correo electrónico para confirmar"
         invalid: "Introduce un enderezo de correo electrónico correcto"
         authenticated: "O teu enderezo de correo electrónico foi autenticado por %{provider}"

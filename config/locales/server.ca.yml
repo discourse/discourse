@@ -717,7 +717,6 @@ ca:
     confirm: "Confirma"
     authorizing_new:
       title: "Confirmeu la vostra nova adreça electrònica"
-      description: "Confirmeu que voleu canviar la vostra nova adreça de correu electrònic a:"
     authorizing_old:
       title: "Canvieu la vostra adreça de correu electrònic"
       description: "Confirmeu el canvi d’adreça electrònica"
@@ -2740,6 +2739,8 @@ ca:
       title: "Confirmeu l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] Confirmeu la vostra adreça de correu actual"
       text_body_template: "Abans de canviar la vostra adreça electrònica, necessitem que confirmeu que controleu\nel compte de correu electrònic actual. Després de completar aquest pas, us haurem de confirmar \nla nova adreça electrònica. \n\nConfirmeu la vostra adreça electrònica actual per a %{site_name} fent clic en l'enllaç següent:\n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Confirmeu la vostra adreça de correu actual"
     notify_old_email:
       title: "Notifica l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] La vostra adreça de correu ha canviat"

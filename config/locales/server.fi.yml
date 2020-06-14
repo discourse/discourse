@@ -750,7 +750,6 @@ fi:
     confirm: "Vahvista"
     authorizing_new:
       title: "Vahvista uusi sähköpostiosoite"
-      description: "Vahvista, että haluat vaihtaa uudeksi sähköpostiosoitteeksesi:"
     authorizing_old:
       title: "Vaihda sähköpostiosoitettasi"
       description: "Vahvista sähköpostiosoitteesi vaihdos"
@@ -3145,6 +3144,8 @@ fi:
         Vahvista nykyinen sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
     notify_old_email:
       title: "Ilmoita vanhaan sähköpostiosoitteeseen"
       subject_template: "[%{email_prefix}] Sähköpostiosoitteesi on vaihdettu"

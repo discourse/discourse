@@ -712,7 +712,6 @@ de:
     confirm: "Bestätigen"
     authorizing_new:
       title: "Bestätige deine neue E-Mail"
-      description: "Bitte bestätige, dass deine E-Mail Adresse geändert wird auf:"
     authorizing_old:
       title: "Ändere deine E-Mail Adresse"
       description: "Bitte bestätige die Änderung deiner E-Mail Adresse"
@@ -3030,6 +3029,8 @@ de:
         Bestätige deine aktuelle E-Mail Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"

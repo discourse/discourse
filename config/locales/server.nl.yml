@@ -762,7 +762,6 @@ nl:
     confirm: "Bevestigen"
     authorizing_new:
       title: "Bevestig uw nieuwe e-mailadres"
-      description: "Bevestig dat u uw nieuwe e-mailadres gewijzigd wilt zien naar:"
     authorizing_old:
       title: "Uw e-mailadres wijzigen"
       description: "Bevestig de wijziging van uw e-mailadres"
@@ -2535,6 +2534,8 @@ nl:
         Bevestig uw huidige e-mailadres voor %{site_name} door op de volgende koppeling te klikken:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Bevestig uw huidige e-mailadres"
     notify_old_email:
       subject_template: "[%{email_prefix}] Uw e-mailadres is gewijzigd"
     signup_after_approval:

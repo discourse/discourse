@@ -794,7 +794,6 @@ pl_PL:
     confirm: "Potwierdź"
     authorizing_new:
       title: "Potwierdź swój nowy adres e-mail"
-      description: "Potwierdź zmianę adresu e-mail na:"
     authorizing_old:
       title: "Zmień swój adres e-mail"
       description: "Potwierdź zmianę adresu e-mail"
@@ -2636,6 +2635,8 @@ pl_PL:
       subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
     confirm_old_email:
       title: "Potwierdź stary email"
+      subject_template: "[%{site_name}] Potwierdź aktualny adres email"
+    confirm_old_email_add:
       subject_template: "[%{site_name}] Potwierdź aktualny adres email"
     notify_old_email:
       title: "Powiadom Stary Email"

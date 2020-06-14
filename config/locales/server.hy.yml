@@ -2660,6 +2660,8 @@ hy:
     confirm_old_email:
       title: "Հաստատել Հին Էլ. Հասցեն"
       subject_template: "[%{email_prefix}] Հաստատել Ձեր ընթացիկ էլ. հասցեն"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Հաստատել Ձեր ընթացիկ էլ. հասցեն"
     notify_old_email:
       title: "Ծանուցել Հին Էլ. Նամակը"
       subject_template: "[%{email_prefix}] Ձեր էլ. հասցեն փոփոխվել է "

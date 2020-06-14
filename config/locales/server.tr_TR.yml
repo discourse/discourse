@@ -723,7 +723,6 @@ tr_TR:
     confirm: "Onayla"
     authorizing_new:
       title: "Yeni e-postanı onayla"
-      description: "Lütfen yeni e-posta adresinizin değiştirilmesini istediğinizi onaylayın:"
     authorizing_old:
       title: "E posta adresini değiştir"
       description: "Lütfen e-posta adresİ değişikliğini onayla"
@@ -3078,6 +3077,8 @@ tr_TR:
       title: "Eski E-postayı Onayla"
       subject_template: "[%{email_prefix}] Mevcut e-posta adresinizi onaylayın"
       text_body_template: "E-posta adresinizi değiştirebilmemiz için \nmevcut e-posta hesabını kontrol ettiğinizi onaylamanız gerekiyor. \nBu adımı tamamladıktan sonra yeni e-posta adresini onaylamanızı isteyeceğiz. \n\nAşağıdaki bağlantıya tıklayarak %{site_name} için mevcut e-posta adresinizi onaylayın: \n\n%{base_url} / u / confirm-old-email / %{email_token}\n"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Mevcut e-posta adresinizi onaylayın"
     notify_old_email:
       title: "Eski E-postayı Bildir"
       subject_template: "[%{email_prefix}] E-posta adresiniz değiştirildi"

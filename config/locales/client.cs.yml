@@ -800,6 +800,8 @@ cs:
         confirm: "Jste si naprosto jisti, že chcete změnit své uživatelské jméno?"
         taken: "Toto uživatelské jméno je již zabrané."
         invalid: "Uživatelské jméno je neplatné. Musí obsahovat pouze písmena a číslice."
+      add_email:
+        add: "přidat"
       change_email:
         title: "Změnit emailovou adresu"
         taken: "Tato emailová adresa není k dispozici."
@@ -820,7 +822,8 @@ cs:
         title: "Emailová adresa"
         primary: "Hlavní email"
         secondary: "Záložní emailové adresy"
-        no_secondary: "Žádné záložní emailové adresy"
+        primary_label: "primární"
+        update_email: "Změnit emailovou adresu"
         instructions: "Nikdy nebude zveřejněno."
         ok: "Pro potvrzení vám pošleme email."
         invalid: "Zadejte prosím správnou emailovou adresu"
