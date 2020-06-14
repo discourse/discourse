@@ -147,6 +147,7 @@ function videoHTML(token, opts) {
   const preloadType = opts.secureMedia ? "none" : "metadata";
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
   return `<div class="video-container">
+    <p class="video-description">${opts.alt}</p>
     <video width="100%" height="100%" preload="${preloadType}" controls>
       <source src="${src}" ${dataOrigSrcAttr}>
       <a href="${src}">${src}</a>
@@ -176,7 +177,8 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   // handles |video and |audio alt transformations for image tags
   const mediaOpts = {
-    secureMedia: options.discourse.limitedSiteSettings.secureMedia
+    secureMedia: options.discourse.limitedSiteSettings.secureMedia,
+    alt: split[0]
   };
   if (split[1] === "video") {
     return videoHTML(token, mediaOpts);
