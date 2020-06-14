@@ -20,8 +20,8 @@ class LocaleFileChecker
       @locale_yaml = YAML.load_file(locale_path)
       @reference_yaml = YAML.load_file(reference_path)
 
-      # check_interpolation_keys
-      # check_plural_keys
+      check_interpolation_keys
+      check_plural_keys
       check_message_format
     end
 
