@@ -24,7 +24,10 @@ if Rails.configuration.multisite
   # Multisite needs to be first, because the request tracker and message bus rely on it
   Rails.configuration.middleware.unshift RailsMultisite::Middleware, RailsMultisite::DiscoursePatches.config
   Rails.configuration.middleware.delete ActionDispatch::Executor
-  Rails.configuration.middleware.insert_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
-else
+
+  if defined?(RailsFailover)
+    Rails.configuration.middleware.insert_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
+  end
+elsif defined?(RailsFailover)
   Rails.configuration.middleware.insert_before(MessageBus::Rack::Middleware, RailsFailover::ActiveRecord::Middleware)
 end
