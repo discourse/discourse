@@ -28,7 +28,7 @@ export default {
       Object.keys(preloaded).forEach(function(key) {
         PreloadStore.store(key, JSON.parse(preloaded[key]));
 
-        if (true) {
+        if (setupData.debugPreloadedAppData === "true") {
           /* eslint-disable no-console */
           console.log(key, PreloadStore.get(key));
           /* eslint-enable no-console */
