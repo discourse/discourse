@@ -20,14 +20,6 @@ require 'action_view/railtie'
 require 'action_mailer/railtie'
 require 'sprockets/railtie'
 
-if !GlobalSetting.skip_db
-  require 'rails_failover/active_record'
-end
-
-if !GlobalSetting.skip_redis
-  require 'rails_failover/redis'
-end
-
 # Plugin related stuff
 require_relative '../lib/plugin_initialization_guard'
 require_relative '../lib/discourse_event'
@@ -49,6 +41,14 @@ end
 if ENV['SKIP_DB_AND_REDIS'] == '1'
   GlobalSetting.skip_db = true
   GlobalSetting.skip_redis = true
+end
+
+if !GlobalSetting.skip_db
+  require 'rails_failover/active_record'
+end
+
+if !GlobalSetting.skip_redis
+  require 'rails_failover/redis'
 end
 
 require 'pry-rails' if Rails.env.development?
