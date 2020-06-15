@@ -207,17 +207,14 @@ class DiscourseRedis
     end
   end
 
-  # Implement our own because https://github.com/redis/redis-rb/issues/698 has stalled
-  def exists(*keys)
-    keys.map! { |a| "#{namespace}:#{a}" }  if @namespace
+  def exists(*args)
+    args.map! { |a| "#{namespace}:#{a}" } if @namespace
+    DiscourseRedis.ignore_readonly { @redis.exists(*args) }
+  end
 
-    DiscourseRedis.ignore_readonly do
-      @redis.synchronize do |client|
-        client.call([:exists, *keys]) do |value|
-          value > 0
-        end
-      end
-    end
+  def exists?(*args)
+    args.map! { |a| "#{namespace}:#{a}" } if @namespace
+    DiscourseRedis.ignore_readonly { @redis.exists?(*args) }
   end
 
   def mget(*args)
