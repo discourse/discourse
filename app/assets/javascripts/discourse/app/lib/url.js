@@ -30,7 +30,8 @@ const SERVER_SIDE_ONLY = [
   /^\/admin\/upgrade$/,
   /^\/logs($|\/)/,
   /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
-  /^\/pub\//
+  /^\/pub\//,
+  /^\/invites\//
 ];
 
 export function rewritePath(path) {
