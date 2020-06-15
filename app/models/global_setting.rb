@@ -151,6 +151,7 @@ class GlobalSetting
     hash["prepared_statements"] = !!self.db_prepared_statements
     hash["idle_timeout"] = connection_reaper_age if connection_reaper_age.present?
     hash["reaping_frequency"] = connection_reaper_interval if connection_reaper_interval.present?
+    hash["advisory_locks"] = !!self.db_advisory_locks
 
     { "production" => hash }
   end
