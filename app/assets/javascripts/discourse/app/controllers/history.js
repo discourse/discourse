@@ -261,9 +261,10 @@ export default Controller.extend(ModalFunctionality, {
       this.set("bodyDiff", html);
     } else {
       const opts = {
-        features: { editHistory: true },
+        features: { editHistory: true, historyOneboxes: true },
         whiteListed: {
-          editHistory: { custom: (tag, attr) => attr === "class" }
+          editHistory: { custom: (tag, attr) => attr === "class" },
+          historyOneboxes: ["header", "article", "div[style]"]
         }
       };
 
