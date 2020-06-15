@@ -306,6 +306,7 @@ describe Invite do
     context "when inviting to groups" do
       it "add the user to the correct groups" do
         group = Fabricate(:group)
+        group.add_owner(invite.invited_by)
         invite.invited_groups.build(group_id: group.id)
         invite.save
 
