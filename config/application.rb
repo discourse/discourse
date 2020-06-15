@@ -43,11 +43,11 @@ if ENV['SKIP_DB_AND_REDIS'] == '1'
   GlobalSetting.skip_redis = true
 end
 
-if !GlobalSetting.skip_db
+if !GlobalSetting.skip_db?
   require 'rails_failover/active_record'
 end
 
-if !GlobalSetting.skip_redis
+if !GlobalSetting.skip_redis?
   require 'rails_failover/redis'
 end
 
