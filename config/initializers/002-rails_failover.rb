@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if !GlobalSetting.skip_redis?
+if defined?(RailsFailover::Redis)
   message_bus_keepalive_interval = nil
 
   RailsFailover::Redis.on_failover do
@@ -16,7 +16,7 @@ if !GlobalSetting.skip_redis?
   end
 end
 
-if !GlobalSetting.skip_db?
+if defined?(RailsFailover::ActiveRecord)
   if Rails.configuration.multisite
     if ActiveRecord::Base.current_role == ActiveRecord::Base.reading_role
       RailsMultisite::ConnectionManagement.default_connection_handler =

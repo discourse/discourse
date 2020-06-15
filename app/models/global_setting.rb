@@ -163,7 +163,7 @@ class GlobalSetting
         c[:host] = redis_host if redis_host
         c[:port] = redis_port if redis_port
 
-        if redis_slave_host && redis_slave_port
+        if redis_slave_host && redis_slave_port && defined?(RailsFailover)
           c[:replica_host] = redis_slave_host
           c[:replica_port] = redis_slave_port
           c[:connector] = RailsFailover::Redis::Connector
