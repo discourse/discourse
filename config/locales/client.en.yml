@@ -2225,6 +2225,7 @@ en:
         time_frame_required: Please select a time frame
       auto_update_input:
         none: "Select a timeframe"
+        now: "Now"
         later_today: "Later today"
         tomorrow: "Tomorrow"
         later_this_week: "Later this week"
