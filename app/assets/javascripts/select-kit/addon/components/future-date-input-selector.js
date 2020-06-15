@@ -19,6 +19,13 @@ function buildTimeframe(opts) {
 
 export const TIMEFRAMES = [
   buildTimeframe({
+    id: "now",
+    format: "h:mm a",
+    enabled: opts => opts.canScheduleNow,
+    when: time => time.add(1, "minute"),
+    icon: "magic"
+  }),
+  buildTimeframe({
     id: "later_today",
     format: "h a",
     enabled: opts => opts.canScheduleToday,
@@ -214,6 +221,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
       includeFarFuture: this.includeFarFuture,
       includeDateTime: this.includeDateTime,
       includeBasedOnLastPost: this.statusType === CLOSE_STATUS_TYPE,
+      canScheduleNow: this.includeNow || false,
       canScheduleToday: 24 - now.hour() > 6
     };
 
