@@ -128,10 +128,14 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   end
 
   def add_user_to_groups
+    guardian = Guardian.new(invite.invited_by)
     new_group_ids = invite.groups.pluck(:id) - invited_user.group_users.pluck(:group_id)
     new_group_ids.each do |id|
-      invited_user.group_users.create!(group_id: id)
-      DiscourseEvent.trigger(:user_added_to_group, invited_user, Group.find_by(id: id), automatic: false)
+      group = Group.find_by(id: id)
+      if guardian.can_edit_group?(group)
+        invited_user.group_users.create!(group_id: group.id)
+        DiscourseEvent.trigger(:user_added_to_group, invited_user, group, automatic: false)
+      end
     end
   end
 
