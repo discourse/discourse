@@ -32,7 +32,7 @@ jobs:
         target: ["PLUGINS", "CORE"]
         os: [ubuntu-latest]
         ruby: ["2.6"]
-        postgres: ["10"]
+        postgres: ["12"]
         redis: ["4.x"]
 
     services:
