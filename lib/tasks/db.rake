@@ -180,7 +180,12 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   end
 
   SeedFu.quiet = true
-  SeedFu.seed(DiscoursePluginRegistry.seed_paths)
+
+  # Allows a plugin to exclude any specified seed data files from running
+  filter = DiscoursePluginRegistry.seedfu_filter.any? ?
+    /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/ : nil
+
+  SeedFu.seed(DiscoursePluginRegistry.seed_paths, filter)
 
   if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
     SiteIconManager.ensure_optimized!
