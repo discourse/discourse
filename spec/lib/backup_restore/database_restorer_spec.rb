@@ -127,6 +127,51 @@ describe BackupRestore::DatabaseRestorer do
       end
     end
 
+    context "rewrites database dump" do
+      let(:logger) do
+        Class.new do
+          attr_reader :log_messages
+
+          def initialize
+            @log_messages = []
+          end
+
+          def log(message, ex = nil)
+            @log_messages << message if message
+          end
+        end.new
+      end
+
+      def restore_and_log_output(filename)
+        path = File.join(Rails.root, "spec/fixtures/db/restore", filename)
+        BackupRestore::DatabaseRestorer.stubs(:psql_command).returns("cat")
+        execute_stubbed_restore(stub_psql: false, dump_file_path: path)
+        logger.log_messages.join("\n")
+      end
+
+      it "replaces `EXECUTE FUNCTION` when restoring on PostgreSQL < 11" do
+        BackupRestore.stubs(:postgresql_major_version).returns(10)
+        log = restore_and_log_output("trigger.sql")
+
+        expect(log).not_to be_blank
+        expect(log).not_to match(/CREATE SCHEMA public/)
+        expect(log).not_to match(/EXECUTE FUNCTION/)
+        expect(log).to match(/^CREATE TRIGGER foo_topic_id_readonly .+? EXECUTE PROCEDURE discourse_functions.raise_foo_topic_id_readonly/)
+        expect(log).to match(/^CREATE TRIGGER foo_user_id_readonly .+? EXECUTE PROCEDURE discourse_functions.raise_foo_user_id_readonly/)
+      end
+
+      it "does not replace `EXECUTE FUNCTION` when restoring on PostgreSQL >= 11" do
+        BackupRestore.stubs(:postgresql_major_version).returns(11)
+        log = restore_and_log_output("trigger.sql")
+
+        expect(log).not_to be_blank
+        expect(log).not_to match(/CREATE SCHEMA public/)
+        expect(log).not_to match(/EXECUTE PROCEDURE/)
+        expect(log).to match(/^CREATE TRIGGER foo_topic_id_readonly .+? EXECUTE FUNCTION discourse_functions.raise_foo_topic_id_readonly/)
+        expect(log).to match(/^CREATE TRIGGER foo_user_id_readonly .+? EXECUTE FUNCTION discourse_functions.raise_foo_user_id_readonly/)
+      end
+    end
+
     context "database connection" do
       it 'reconnects to the correct database', type: :multisite do
         RailsMultisite::ConnectionManagement.establish_connection(db: 'second')
