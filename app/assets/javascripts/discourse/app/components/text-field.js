@@ -12,7 +12,8 @@ export default TextField.extend({
     "autocapitalize",
     "autofocus",
     "maxLength",
-    "dir"
+    "dir",
+    "aria-label"
   ],
 
   init() {
