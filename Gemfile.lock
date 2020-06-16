@@ -250,7 +250,7 @@ GEM
     openssl-signature_algorithm (0.4.0)
     optimist (3.0.1)
     parallel (1.19.1)
-    parallel_tests (2.32.0)
+    parallel_tests (3.0.0)
       parallel
     parser (2.7.1.3)
       ast (~> 2.4.0)
