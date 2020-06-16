@@ -2745,7 +2745,7 @@ en:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
-          revert: "Revert to this revision"
+          revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
           edit_post: "Edit Post"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"

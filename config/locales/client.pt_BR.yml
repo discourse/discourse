@@ -2476,7 +2476,7 @@ pt_BR:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Exibir revisão"
-          revert: "Reverter para esta revisão"
+          revert: "Reverter para a revisão %{revision}"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Postagem"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"

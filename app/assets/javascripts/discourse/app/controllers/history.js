@@ -60,6 +60,11 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @discourseComputed("previousVersion")
+  revertToRevisionText(revision) {
+    return I18n.t("post.revisions.controls.revert", { revision });
+  },
+
   refresh(postId, postVersion) {
     this.set("loading", true);
 
