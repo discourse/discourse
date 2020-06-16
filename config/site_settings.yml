@@ -947,7 +947,7 @@ posting:
     max: 36500
   enable_page_publishing:
     default: false
-  show_public_pages_with_login_required:
+  show_published_pages_login_required:
     default: false
 
 email:
