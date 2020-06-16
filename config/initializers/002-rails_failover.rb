@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-return unless Rails.configuration.active_record_rails_failover
-
 if defined?(RailsFailover::Redis)
   message_bus_keepalive_interval = nil
 
@@ -19,6 +17,8 @@ if defined?(RailsFailover::Redis)
 end
 
 if defined?(RailsFailover::ActiveRecord)
+  return unless Rails.configuration.active_record_rails_failover
+
   if Rails.configuration.multisite
     if ActiveRecord::Base.current_role == ActiveRecord::Base.reading_role
       RailsMultisite::ConnectionManagement.default_connection_handler =

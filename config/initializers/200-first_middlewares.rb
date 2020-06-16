@@ -25,9 +25,9 @@ if Rails.configuration.multisite
   Rails.configuration.middleware.unshift RailsMultisite::Middleware, RailsMultisite::DiscoursePatches.config
   Rails.configuration.middleware.delete ActionDispatch::Executor
 
-  if defined?(RailsFailover) && Rails.configuration.active_record_rails_failover
+  if defined?(RailsFailover::ActiveRecord) && Rails.configuration.active_record_rails_failover
     Rails.configuration.middleware.insert_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
   end
-elsif defined?(RailsFailover) && Rails.configuration.active_record_rails_failover
+elsif defined?(RailsFailover::ActiveRecord) && Rails.configuration.active_record_rails_failover
   Rails.configuration.middleware.insert_before(MessageBus::Rack::Middleware, RailsFailover::ActiveRecord::Middleware)
 end
