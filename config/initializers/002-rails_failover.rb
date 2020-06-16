@@ -14,6 +14,10 @@ if defined?(RailsFailover::Redis)
     Discourse.request_refresh!
     MessageBus.keepalive_interval = message_bus_keepalive_interval
   end
+
+  if Rails.logger.respond_to? :chained
+    RailsFailover::Redis.logger = Rails.logger.chained.first
+  end
 end
 
 if defined?(RailsFailover::ActiveRecord)
