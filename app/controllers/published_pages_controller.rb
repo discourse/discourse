@@ -13,9 +13,10 @@ class PublishedPagesController < ApplicationController
     pp = PublishedPage.find_by(slug: params[:slug])
     raise Discourse::NotFound unless pp
 
-    if !pp.public
-      return if enforce_login_required!
+    return if enforce_login_required!
 
+    if !pp.public
+      # not public
       begin
         guardian.ensure_can_see!(pp.topic)
       rescue Discourse::InvalidAccess => e
@@ -95,7 +96,7 @@ private
   def enforce_login_required!
     if SiteSetting.login_required? &&
        !current_user &&
-       !SiteSetting.show_public_pages_with_login_required &&
+       !SiteSetting.show_public_pages_with_login_required? &&
       redirect_to_login
       true
     end
