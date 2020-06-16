@@ -104,7 +104,7 @@ RSpec.describe PublishedPagesController do
         context "login is required" do
           before do
             SiteSetting.login_required = true
-            SiteSetting.show_public_pages_with_login_required = false
+            SiteSetting.show_published_pages_login_required = false
           end
 
           context "a user is connected" do
@@ -125,7 +125,7 @@ RSpec.describe PublishedPagesController do
 
             context "show public pages with login required is enabled" do
               before do
-                SiteSetting.show_public_pages_with_login_required = true
+                SiteSetting.show_published_pages_login_required = true
               end
 
               it "returns 200" do

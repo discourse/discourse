@@ -95,7 +95,7 @@ private
   def enforce_login_required!
     if SiteSetting.login_required? &&
        !current_user &&
-       !SiteSetting.show_public_pages_with_login_required? &&
+       !SiteSetting.show_published_pages_login_required? &&
       redirect_to_login
       true
     end
