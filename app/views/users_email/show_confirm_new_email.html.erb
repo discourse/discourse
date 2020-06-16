@@ -46,11 +46,11 @@
       <% elsif @show_security_key %>
         <%= hidden_field_tag 'security_key_challenge', @security_key_challenge, id: 'security-key-challenge' %>	
         <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:security_key] %>	
-        <%= hidden_field_tag 'security_key_allowed_credential_ids', @security_key_allowed_credential_ids, id: 'security-key-allowed-credential-ids' %>
+        <%= hidden_field_tag 'security_key_allowed_credential_ids', @security_key_allowed_credential_ids.join(","), id: 'security-key-allowed-credential-ids' %>
         <div id="security-key-form">
           <h3><%= t('login.security_key_authenticate') %></h3>
           <p><%= t('login.security_key_description') %></p>
-          <%= button_tag t('login.security_key_authenticate'), id: 'submit-security-key' %>
+          <%= button_tag t('login.security_key_authenticate'), id: 'submit-security-key', class: 'btn btn-primary' %>
         </div>
         <br/>
         <% if @show_second_factor %>
