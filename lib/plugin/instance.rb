@@ -548,6 +548,9 @@ class Plugin::Instance
       if transpile_js
         DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
         DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+
+        test_path = "#{root_dir_name}/test/javascripts"
+        DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
       end
     end
 
