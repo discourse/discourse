@@ -78,6 +78,10 @@ class UserSerializer < UserCardSerializer
     object.group_users.order(:group_id)
   end
 
+  def include_group_users?
+    (object.id && object.id == scope.user.try(:id)) || scope.is_staff?
+  end
+
   def include_associated_accounts?
     (object.id && object.id == scope.user.try(:id))
   end
