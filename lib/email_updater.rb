@@ -38,7 +38,7 @@ class EmailUpdater
     if @guardian.is_staff? && @guardian.user != @user
       StaffActionLogger.new(@guardian.user).log_add_email(@user)
     else
-      UserHistory.create!(action: UserHistory.actions[:add_email], target_user_id: @user.id)
+      UserHistory.create!(action: UserHistory.actions[:add_email], acting_user_id: @user.id)
     end
 
     if @guardian.is_staff? && !@user.staff?
