@@ -2,5 +2,6 @@
 
 Fabricator(:published_page) do
   topic
-  slug "published-page-test"
+  slug "published-page-test-#{SecureRandom.hex}"
+  public false
 end

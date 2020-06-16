@@ -35,6 +35,7 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
       this.state === States.existing
     );
   }),
+
   showUnpublish: computed("state", function() {
     return this.state === States.existing || this.state === States.unpublishing;
   }),
@@ -95,7 +96,7 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
     this.set("state", States.saving);
 
     return this.publishedPage
-      .update({ slug: this.publishedPage.slug })
+      .update(this.publishedPage.getProperties("slug", "public"))
       .then(() => {
         this.set("state", States.existing);
         this.model.set("publishedPage", this.publishedPage);
@@ -110,11 +111,17 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
   startNew() {
     this.setProperties({
       state: States.new,
-      publishedPage: this.store.createRecord("published_page", {
-        id: this.model.id,
-        slug: this.model.slug
-      })
+      publishedPage: this.store.createRecord(
+        "published_page",
+        this.model.getProperties("id", "slug", "public")
+      )
     });
     this.checkSlug();
+  },
+
+  @action
+  onChangePublic(isPublic) {
+    this.publishedPage.set("public", isPublic);
+    this.publish();
   }
 });
