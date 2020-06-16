@@ -16,7 +16,6 @@ class PublishedPagesController < ApplicationController
     return if enforce_login_required!
 
     if !pp.public
-      # not public
       begin
         guardian.ensure_can_see!(pp.topic)
       rescue Discourse::InvalidAccess => e
