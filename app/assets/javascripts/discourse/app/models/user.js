@@ -595,7 +595,7 @@ const User = RestModel.extend({
         );
       }
 
-      if (!isEmpty(json.user.groups)) {
+      if (!isEmpty(json.user.groups) && !isEmpty(json.user.group_users)) {
         const groups = [];
 
         for (let i = 0; i < json.user.groups.length; i++) {
