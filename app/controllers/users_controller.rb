@@ -232,7 +232,7 @@ class UsersController < ApplicationController
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_update_email(user)
       else
-        UserHistory.create!(action: UserHistory.actions[:update_email], target_user_id: user.id)
+        UserHistory.create!(action: UserHistory.actions[:update_email], acting_user_id: user.id)
       end
     end
 
@@ -264,7 +264,7 @@ class UsersController < ApplicationController
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_destroy_email(user)
       else
-        UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id)
+        UserHistory.create(action: UserHistory.actions[:destroy_email], acting_user_id: user.id)
       end
     end
 
