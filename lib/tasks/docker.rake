@@ -58,9 +58,9 @@ desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
     @good = true
-
     unless ENV['SKIP_LINT']
       @good &&= run_or_fail("yarn install")
+      puts "travis_fold:start:lint" if ENV["TRAVIS"]
       puts "Running linters/prettyfiers"
       puts "eslint #{`yarn eslint -v`}"
       puts "prettier #{`yarn prettier -v`}"
@@ -93,9 +93,11 @@ task 'docker:test' do
           @good &&= run_or_fail('yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"')
         end
       end
+      puts "travis_fold:end:lint" if ENV["TRAVIS"]
     end
 
     unless ENV['SKIP_TESTS']
+      puts "travis_fold:start:prepare_tests" if ENV["TRAVIS"]
       puts "Cleaning up old test tmp data in tmp/test_data"
       `rm -fr tmp/test_data && mkdir -p tmp/test_data/redis && mkdir tmp/test_data/pg`
 
@@ -153,7 +155,11 @@ task 'docker:test' do
         @good &&= run_or_fail("#{command_prefix}bundle exec rake parallel:migrate")
       end
 
+      puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]
+
       unless ENV["JS_ONLY"]
+        puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
+
         if ENV['WARMUP_TMP_FOLDER']
           run_or_fail('bundle exec rspec ./spec/requests/groups_controller_spec.rb')
         end
@@ -204,11 +210,13 @@ task 'docker:test' do
             @good &&= run_or_fail("#{fail_fast} bundle exec rake plugin:spec")
           end
         end
+        puts "travis_fold:end:ruby_tests" if ENV["TRAVIS"]
       end
 
       unless ENV["RUBY_ONLY"]
         js_timeout = ENV["JS_TIMEOUT"].presence || 900_000 # 15 minutes
 
+        puts "travis_fold:start:js_tests" if ENV["TRAVIS"]
         unless ENV["SKIP_CORE"]
           @good &&= run_or_fail("bundle exec rake qunit:test['#{js_timeout}']")
           @good &&= run_or_fail("bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
@@ -221,9 +229,12 @@ task 'docker:test' do
             @good &&= run_or_fail("bundle exec rake plugin:qunit['*','#{js_timeout}']")
           end
         end
+        puts "travis_fold:end:js_tests" if ENV["TRAVIS"]
       end
     end
+
   ensure
+    puts "travis_fold:start:terminating" if ENV["TRAVIS"]
     puts "Terminating"
 
     if ENV['PAUSE_ON_TERMINATE']
@@ -235,7 +246,11 @@ task 'docker:test' do
     Process.kill("TERM", @pg_pid) if @pg_pid
     Process.wait @redis_pid if @redis_pid
     Process.wait @pg_pid if @pg_pid
+    puts "travis_fold:end:terminating" if ENV["TRAVIS"]
   end
 
-  exit 1 unless @good
+  if !@good
+    exit 1
+  end
+
 end
