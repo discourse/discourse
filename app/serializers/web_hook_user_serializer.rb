@@ -44,6 +44,8 @@ class WebHookUserSerializer < UserSerializer
     scope.is_admin?
   end
 
+  alias_method :include_secondary_emails?, :include_email?
+
   def include_external_id?
     scope.is_admin? && object.single_sign_on_record
   end
