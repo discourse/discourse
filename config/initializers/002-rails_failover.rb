@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+return unless Rails.configuration.active_record_rails_failover
+
 if defined?(RailsFailover::Redis)
   message_bus_keepalive_interval = nil
 
