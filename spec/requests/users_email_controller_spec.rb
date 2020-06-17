@@ -49,6 +49,17 @@ describe UsersEmailController do
         updater.change_to('new.n.cool@example.com')
       end
 
+      it 'includes security_key_allowed_credential_ids in a hidden field' do
+        key1 = Fabricate(:user_security_key_with_random_credential, user: user)
+        key2 = Fabricate(:user_security_key_with_random_credential, user: user)
+
+        get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+
+        doc = Nokogiri::HTML5(response.body)
+        credential_ids = doc.css("#security-key-allowed-credential-ids").first["value"].split(",")
+        expect(credential_ids).to contain_exactly(key1.credential_id, key2.credential_id)
+      end
+
       it 'confirms with a correct token' do
         user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
 
