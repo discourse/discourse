@@ -23,6 +23,7 @@
           {{~#if topic.featured_link~}}
           {{~topic-featured-link topic~}}
           {{~/if~}}
+          {{~raw-plugin-outlet name="topic-list-after-title"}}
           {{~#if topic.unseen~}}
             <span class="topic-post-badges">&nbsp;<span class="badge-notification new-topic"></span></span>
           {{~/if~}}
