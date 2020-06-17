@@ -2581,7 +2581,8 @@ describe UsersController do
       expect(user_email.reload.primary).to eq(true)
       expect(other_email.reload.primary).to eq(false)
 
-      put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email }
+      expect { put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email } }
+        .to change { UserHistory.where(action: UserHistory.actions[:update_email], acting_user_id: user.id).count }.by(1)
       expect(response.status).to eq(200)
       expect(user_email.reload.primary).to eq(false)
       expect(other_email.reload.primary).to eq(true)
@@ -2604,7 +2605,8 @@ describe UsersController do
       expect(response.status).to eq(428)
       expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
 
-      delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email }
+      expect { delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email } }
+        .to change { UserHistory.where(action: UserHistory.actions[:destroy_email], acting_user_id: user.id).count }.by(1)
       expect(response.status).to eq(200)
       expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email)
     end
