@@ -187,6 +187,12 @@ end
 
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
+  migrations = ActiveRecord::Base.connection.migration_context.migrations
+  now_timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S').to_i
+  epoch_timestamp = Time.at(0).utc.strftime('%Y%m%d%H%M%S').to_i
+
+  raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
+  raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
 
   ActiveRecord::Tasks::DatabaseTasks.migrate
 
