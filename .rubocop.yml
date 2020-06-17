@@ -1,7 +1,7 @@
-inherit_from: .rubocop_todo.yml
-
 inherit_gem:
   rubocop-discourse: default.yml
+
+inherit_from: .rubocop_todo.yml
 
 Discourse/NoResetColumnInformationInMigrations:
   Enabled: true
