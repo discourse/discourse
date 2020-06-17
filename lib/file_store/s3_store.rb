@@ -53,8 +53,14 @@ module FileStore
         cache_control: 'max-age=31556952, public, immutable',
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
-      # add a "content disposition" header for "attachments"
-      options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_media?(filename)
+
+      # add a "content disposition: attachment" header with the original filename
+      # for everything but images. audio and video will still stream correctly in
+      # HTML players, and when a direct link is provided to any file but an image
+      # it will download correctly in the browser.
+      if !FileHelper.is_supported_image?(filename)
+        options[:content_disposition] = "attachment; filename=\"#{filename}\""
+      end
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
 
