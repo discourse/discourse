@@ -890,12 +890,9 @@ describe Guardian do
           expect(Guardian.new(moderator).can_see?(post_revision)).to be_truthy
         end
 
-        it 'is true for trust level 4' do
-          expect(Guardian.new(trust_level_4).can_see?(post_revision)).to be_truthy
-        end
-
-        it 'is false for trust level lower than 4' do
+        it 'is false for trust level equal or lower than 4' do
           expect(Guardian.new(trust_level_3).can_see?(post_revision)).to be_falsey
+          expect(Guardian.new(trust_level_4).can_see?(post_revision)).to be_falsey
         end
       end
     end

@@ -220,7 +220,7 @@ module PostGuardian
     end
 
     authenticated? &&
-    (is_staff? || @user.has_trust_level?(TrustLevel[4]) || @user.id == post.user_id) &&
+    (is_staff? || @user.id == post.user_id) &&
     can_see_post?(post)
   end
 

@@ -1323,10 +1323,10 @@ describe PostsController do
         expect(response.status).to eq(200)
       end
 
-      it "ensures trust level 4 can see the revisions" do
+      it "ensures trust level 4 cannot see the revisions" do
         sign_in(Fabricate(:user, trust_level: 4))
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(403)
       end
     end
 
