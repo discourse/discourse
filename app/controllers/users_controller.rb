@@ -195,10 +195,12 @@ class UsersController < ApplicationController
     end
 
     email, *secondary_emails = user.emails
+    unconfirmed_emails = user.unconfirmed_emails
 
     render json: {
       email: email,
       secondary_emails: secondary_emails,
+      unconfirmed_emails: unconfirmed_emails,
       associated_accounts: user.associated_accounts
     }
   rescue Discourse::InvalidAccess

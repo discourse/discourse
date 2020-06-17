@@ -770,6 +770,7 @@ const User = RestModel.extend({
         this.setProperties({
           email: result.email,
           secondary_emails: result.secondary_emails,
+          unconfirmed_emails: result.unconfirmed_emails,
           associated_accounts: result.associated_accounts
         });
       }
