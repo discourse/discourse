@@ -107,48 +107,63 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   puts "Multisite migrator is running using #{concurrency} threads"
   puts
 
-  queue = Queue.new
   exceptions = Queue.new
 
   old_stdout = $stdout
   $stdout = StdOutDemux.new($stdout)
 
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    queue << db
-  end
-
-  concurrency.times { queue << :done }
-
   SeedFu.quiet = true
 
-  (1..concurrency).map do
-    Thread.new {
-      while true
-        db = queue.pop
-        break if db == :done
+  def execute_concurently(concurrency)
+    queue = Queue.new
 
-        RailsMultisite::ConnectionManagement.with_connection(db) do
-          begin
-            puts "Migrating #{db}"
-            ActiveRecord::Tasks::DatabaseTasks.migrate
-            SeedFu.seed(DiscoursePluginRegistry.seed_paths)
-            if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
-              SiteIconManager.ensure_optimized!
-            end
-          rescue => e
-            exceptions << [db, e]
-          ensure
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      queue << db
+    end
+
+    concurrency.times { queue << :done }
+
+    (1..concurrency).map do
+      Thread.new {
+        while true
+          db = queue.pop
+          break if db == :done
+
+          RailsMultisite::ConnectionManagement.with_connection(db) do
             begin
-              $stdout.finish_chunk
-            rescue => ex
-              STDERR.puts ex.inspect
-              STDERR.puts ex.backtrace
+              yield(db) if block_given?
+            rescue => e
+              exceptions << [db, e]
+            ensure
+              begin
+                $stdout.finish_chunk
+              rescue => ex
+                STDERR.puts ex.inspect
+                STDERR.puts ex.backtrace
+              end
             end
           end
         end
-      end
-    }
-  end.each(&:join)
+      }
+    end.each(&:join)
+  end
+
+  execute_concurently(concurrency) do |db|
+    puts "Migrating #{db}"
+    ActiveRecord::Tasks::DatabaseTasks.migrate
+
+    if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
+      SiteIconManager.ensure_optimized!
+    end
+  end
+
+  seed_paths = DiscoursePluginRegistry.seed_paths
+  SeedFu.seed(seed_paths, /001_refresh/)
+
+  execute_concurently(concurrency) do |db|
+    puts "Seeding #{db}"
+    SeedFu.seed(seed_paths)
+  end
 
   $stdout = old_stdout
 
