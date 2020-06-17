@@ -159,6 +159,8 @@ describe EmailUpdater do
 
       context 'confirming a valid token' do
         it "adds a user email" do
+          expect(UserHistory.where(action: UserHistory.actions[:add_email], acting_user_id: user.id).last).to be_present
+
           Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email_add, to_address: old_email))
           updater.confirm(@change_req.new_email_token.token)
           expect(updater.errors).to be_blank
