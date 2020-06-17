@@ -62,30 +62,18 @@ branding:
     default: -5
     client: true
     type: upload
-  logo_url:
-    hidden: true
-    default: "/images/d-logo-sketch.png"
   logo_small:
     default: -6
     client: true
     type: upload
-  logo_small_url:
-    hidden: true
-    default: "/images/d-logo-sketch-small.png"
   digest_logo:
     default: ""
     client: true
     type: upload
-  digest_logo_url:
-    hidden: true
-    default: ""
   mobile_logo:
     default: ""
     client: true
     type: upload
-  mobile_logo_url:
-    hidden: true
-    default: ""
   large_icon:
     default: ""
     client: true
@@ -93,35 +81,20 @@ branding:
   manifest_icon:
     default: ""
     type: upload
-  large_icon_url:
-    hidden: true
-    default: ""
   favicon:
     default: ""
     client: true
     type: upload
-  favicon_url:
-    hidden: true
-    default: "/images/default-favicon.ico"
   apple_touch_icon:
     default: ""
     client: true
     type: upload
-  apple_touch_icon_url:
-    hidden: true
-    default: "/images/default-apple-touch-icon.png"
   opengraph_image:
     default: ""
     type: upload
-  default_opengraph_image_url:
-    hidden: true
-    default: ""
   twitter_summary_large_image:
     default: ""
     type: upload
-  twitter_summary_large_image_url:
-    hidden: true
-    default: ""
 
 basic:
   display_local_time_in_user_card:
@@ -300,9 +273,6 @@ basic:
   push_notifications_icon:
     default: ""
     type: upload
-  push_notifications_icon_url:
-    hidden: true
-    default: ""
   short_title:
     default: ""
     max: 12
