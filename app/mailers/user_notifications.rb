@@ -174,14 +174,6 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
-  def short_date(dt)
-    if dt.year == Time.now.year
-      I18n.l(dt, format: :short_no_year)
-    else
-      I18n.l(dt, format: :date_only)
-    end
-  end
-
   def digest(user, opts = {})
     build_summary_for(user)
     min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
