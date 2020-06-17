@@ -2519,6 +2519,7 @@ describe UsersController do
 
       it "returns emails and associated_accounts for self" do
         user = Fabricate(:user)
+        Fabricate(:email_change_request, user: user)
         sign_in(user)
 
         get "/u/#{user.username}/emails.json"
@@ -2527,11 +2528,13 @@ describe UsersController do
         json = response.parsed_body
         expect(json["email"]).to eq(user.email)
         expect(json["secondary_emails"]).to eq(user.secondary_emails)
+        expect(json["unconfirmed_emails"]).to eq(user.unconfirmed_emails)
         expect(json["associated_accounts"]).to eq([])
       end
 
       it "returns emails and associated_accounts when you're allowed to see them" do
         user = Fabricate(:user)
+        Fabricate(:email_change_request, user: user)
         sign_in_admin
 
         get "/u/#{user.username}/emails.json"
@@ -2540,11 +2543,13 @@ describe UsersController do
         json = response.parsed_body
         expect(json["email"]).to eq(user.email)
         expect(json["secondary_emails"]).to eq(user.secondary_emails)
+        expect(json["unconfirmed_emails"]).to eq(user.unconfirmed_emails)
         expect(json["associated_accounts"]).to eq([])
       end
 
       it "works on inactive users" do
         inactive_user = Fabricate(:user, active: false)
+        Fabricate(:email_change_request, user: inactive_user)
         sign_in_admin
 
         get "/u/#{inactive_user.username}/emails.json"
@@ -2553,6 +2558,7 @@ describe UsersController do
         json = response.parsed_body
         expect(json["email"]).to eq(inactive_user.email)
         expect(json["secondary_emails"]).to eq(inactive_user.secondary_emails)
+        expect(json["unconfirmed_emails"]).to eq(inactive_user.unconfirmed_emails)
         expect(json["associated_accounts"]).to eq([])
       end
     end
