@@ -116,6 +116,10 @@
     max-height: 90vh;
     overflow: auto;
   }
+
+  &.insert-hyperlink-modal .modal-inner-container {
+    overflow: visible;
+  }
 }
 
 .modal .modal-body.reorder-categories {
