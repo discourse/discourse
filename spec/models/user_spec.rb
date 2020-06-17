@@ -164,6 +164,30 @@ describe User do
     end
   end
 
+  context 'enqueue_staff_welcome_message' do
+    let!(:first_admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+
+    it 'enqueues message for admin' do
+      expect {
+        user.grant_admin!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
+    end
+
+    it 'enqueues message for moderator' do
+      expect {
+        user.grant_moderation!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
+    end
+
+    it 'skips the message if already an admin' do
+      user.update(admin: true)
+      expect {
+        user.grant_admin!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 0
+    end
+  end
+
   context '.set_default_tags_preferences' do
     let(:tag) { Fabricate(:tag) }
 
