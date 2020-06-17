@@ -4,12 +4,13 @@ require 'rails_helper'
 require 'file_store/s3_store'
 
 RSpec.describe 'Multisite s3 uploads', type: :multisite do
-  let(:uploaded_file) { file_from_fixtures("smallest.png") }
+  let(:original_filename) { "smallest.png" }
+  let(:uploaded_file) { file_from_fixtures(original_filename) }
   let(:upload_sha1) { Digest::SHA1.hexdigest(File.read(uploaded_file)) }
   let(:upload_path) { Discourse.store.upload_path }
 
   def build_upload
-    Fabricate.build(:upload, sha1: upload_sha1, id: 1)
+    Fabricate.build(:upload, sha1: upload_sha1, id: 1, original_filename: original_filename)
   end
 
   context 'uploading to s3' do
@@ -24,6 +25,55 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       let(:s3_client) { Aws::S3::Client.new(stub_responses: true) }
       let(:s3_helper) { S3Helper.new(SiteSetting.s3_upload_bucket, '', client: s3_client) }
       let(:store) { FileStore::S3Store.new(s3_helper) }
+      let(:upload_opts) do
+        {
+          acl: "public-read",
+          cache_control: "max-age=31556952, public, immutable",
+          content_type: "image/png"
+        }
+      end
+
+      it "does not provide a content_disposition for images" do
+        s3_helper.expects(:upload).with(uploaded_file, kind_of(String), upload_opts).returns(["path", "etag"])
+        upload = build_upload
+        store.store_upload(uploaded_file, upload)
+      end
+
+      context "when the file is a PDF" do
+        let(:original_filename) { "small.pdf" }
+        let(:uploaded_file) { file_from_fixtures("small.pdf", "pdf") }
+
+        it "adds an attachment content-disposition with the original filename" do
+          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"", content_type: "application/pdf" }
+          s3_helper.expects(:upload).with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts)).returns(["path", "etag"])
+          upload = build_upload
+          store.store_upload(uploaded_file, upload)
+        end
+      end
+
+      context "when the file is a video" do
+        let(:original_filename) { "small.mp4" }
+        let(:uploaded_file) { file_from_fixtures("small.mp4", "media") }
+
+        it "adds an attachment content-disposition with the original filename" do
+          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"", content_type: "application/mp4" }
+          s3_helper.expects(:upload).with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts)).returns(["path", "etag"])
+          upload = build_upload
+          store.store_upload(uploaded_file, upload)
+        end
+      end
+
+      context "when the file is audio" do
+        let(:original_filename) { "small.mp3" }
+        let(:uploaded_file) { file_from_fixtures("small.mp3", "media") }
+
+        it "adds an attachment content-disposition with the original filename" do
+          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"", content_type: "audio/mpeg" }
+          s3_helper.expects(:upload).with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts)).returns(["path", "etag"])
+          upload = build_upload
+          store.store_upload(uploaded_file, upload)
+        end
+      end
 
       it "returns the correct url for default and second multisite db" do
         test_multisite_connection('default') do
