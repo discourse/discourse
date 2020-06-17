@@ -96,7 +96,7 @@ class PostCreator
     end
 
     if @opts[:target_usernames].present? && !skip_validations? && !@user.staff?
-      names = @opts[:target_usernames].split(',')
+      names = @opts[:target_usernames].split(',').flatten.map(&:downcase)
 
       # Make sure max_allowed_message_recipients setting is respected
       max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
@@ -111,7 +111,7 @@ class PostCreator
       end
 
       # Make sure none of the users have muted the creator
-      users = User.where(username: names).pluck(:id, :username).to_h
+      users = User.where(username_lower: names).pluck(:id, :username).to_h
 
       User
         .joins("LEFT JOIN user_options ON user_options.user_id = users.id")

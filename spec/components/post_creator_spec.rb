@@ -1203,7 +1203,7 @@ describe PostCreator do
   end
 
   context 'private message to a user that has disabled private messages' do
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:another_user) { Fabricate(:user, username: 'HelloWorld') }
 
     before do
       another_user.user_option.update!(allow_private_messages: false)
@@ -1223,6 +1223,18 @@ describe PostCreator do
       expect(post_creator.errors.full_messages).to include(I18n.t(
         "not_accepting_pms", username: another_user.username
       ))
+    end
+
+    it 'should not be valid if the name is downcased' do
+      post_creator = PostCreator.new(
+        user,
+        title: 'this message is to someone who muted me!',
+        raw: "you will have to see this even if you muted me!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{another_user.username.downcase}"
+      )
+
+      expect(post_creator).to_not be_valid
     end
   end
 
