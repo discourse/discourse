@@ -33,12 +33,13 @@
     </div>
 
     {{conditional-loading-spinner condition=loading}}
-    {{textarea
+    {{d-textarea
       autocomplete="discourse"
       tabindex=tabindex
       value=value
       class="d-editor-input"
       placeholder=placeholderTranslated
+      aria-label=placeholderTranslated
       disabled=disabled
       input=change}}
     {{popup-input-tip validation=validation}}
