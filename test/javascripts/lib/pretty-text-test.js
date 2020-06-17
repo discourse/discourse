@@ -1030,6 +1030,7 @@ QUnit.test("video - secure media enabled", assert => {
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
     { siteSettings: { secure_media: true } },
     `<p><div class="video-container">
+    <p class="video-description">baby shark</p>
     <video width="100%" height="100%" preload="none" controls>
       <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
       <a href="/404">/404</a>
@@ -1055,6 +1056,7 @@ QUnit.test("video", assert => {
   assert.cooked(
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
     `<p><div class="video-container">
+    <p class="video-description">baby shark</p>
     <video width="100%" height="100%" preload="metadata" controls>
       <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
       <a href="/404">/404</a>
@@ -1081,6 +1083,7 @@ QUnit.test("video - mapped url - secure media enabled", assert => {
       lookupUploadUrls: lookupUploadUrls
     },
     `<p><div class="video-container">
+    <p class="video-description">baby shark</p>
     <video width="100%" height="100%" preload="none" controls>
       <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
       <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
