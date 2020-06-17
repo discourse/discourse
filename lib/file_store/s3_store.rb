@@ -86,7 +86,7 @@ module FileStore
       return false if url.blank?
 
       begin
-        parsed_url = URI.parse(URI.encode(url))
+        parsed_url = URI.parse(UrlHelper.encode(url))
       rescue URI::InvalidURIError, URI::InvalidComponentError
         return false
       end
