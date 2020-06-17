@@ -305,4 +305,13 @@ a.topic-featured-link {
       2}
   );
   align-items: center;
+
+  .is-public {
+    padding: 0.25em 0.5em;
+    font-size: $font-down-2;
+    background: $tertiary;
+    color: $secondary;
+    border-radius: 3px;
+    text-transform: lowercase;
+  }
 }

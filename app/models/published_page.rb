@@ -23,12 +23,13 @@ class PublishedPage < ActiveRecord::Base
     "#{Discourse.base_url}#{path}"
   end
 
-  def self.publish!(publisher, topic, slug)
+  def self.publish!(publisher, topic, slug, options = {})
     pp = nil
 
     transaction do
       pp = find_or_initialize_by(topic: topic)
       pp.slug = slug.strip
+      pp.public = options[:public] || false
 
       if pp.save
         StaffActionLogger.new(publisher).log_published_page(topic.id, slug)
@@ -56,6 +57,7 @@ end
 #  slug       :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  public     :boolean          default(FALSE), not null
 #
 # Indexes
 #
