@@ -90,6 +90,9 @@
       {{#if model.publishedPage}}
         <div class="published-page-notice">
           <div class="details">
+            {{#if model.publishedPage.public}}
+              <span class="is-public">{{i18n "topic.publish_page.public"}}</span>
+            {{/if}}
             {{i18n "topic.publish_page.topic_published"}}
             <div>
               <a href={{model.publishedPage.url}} target="_blank" rel="noopener noreferrer">{{model.publishedPage.url}}</a>

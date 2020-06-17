@@ -947,6 +947,8 @@ posting:
     max: 36500
   enable_page_publishing:
     default: false
+  show_published_pages_login_required:
+    default: false
 
 email:
   email_time_window_mins:

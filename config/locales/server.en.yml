@@ -2131,6 +2131,7 @@ en:
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
+    show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
