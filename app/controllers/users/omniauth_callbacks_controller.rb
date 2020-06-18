@@ -137,6 +137,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
       @auth_result.admin_not_allowed_from_ip_address = true
     elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
+      user.save! if @auth_result.apply_user_attributes!
       log_on_user(user)
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
       session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere

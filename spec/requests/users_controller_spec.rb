@@ -984,7 +984,8 @@ describe UsersController do
             uid: '123545',
             info: OmniAuth::AuthHash::InfoHash.new(
               email: "osama@mail.com",
-              nickname: "testosama"
+              nickname: "testosama",
+              name: "Osama Test"
             )
           )
 
@@ -1036,6 +1037,24 @@ describe UsersController do
           json = response.parsed_body
           expect(json['success']).to eq(true)
         end
+
+        it "doesn't use provided username/name if sso_overrides is enabled" do
+          SiteSetting.sso_overrides_username = true
+          SiteSetting.sso_overrides_name = true
+          post "/u.json", params: {
+            username: "attemptednewname",
+            name: "Attempt At New Name",
+            password: "strongpassword",
+            email: "osama@mail.com"
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json['success']).to eq(true)
+          expect(User.last.username).to eq('testosama')
+          expect(User.last.name).to eq('Osama Test')
+        end
+
       end
     end
 

@@ -15,7 +15,7 @@ class Auth::Result
     :requires_invite,
     :not_allowed_from_ip_address,
     :admin_not_allowed_from_ip_address,
-    :omit_username,
+    :omit_username, # Used by plugins to prevent username edits
     :skip_email_validation,
     :destination_url,
     :omniauth_disallow_totp,
@@ -60,11 +60,40 @@ class Auth::Result
     SESSION_ATTRIBUTES.map { |att| [att, public_send(att)] }.to_h
   end
 
-  def self.from_session_data(data)
+  def self.from_session_data(data, user:)
     result = new
     data = data.symbolize_keys
     SESSION_ATTRIBUTES.each { |att| result.public_send("#{att}=", data[att]) }
+    result.user = user
     result
+  end
+
+  def apply_user_attributes!
+    change_made = false
+    if SiteSetting.sso_overrides_username? && username.present? && username != user.username
+      user.username = UserNameSuggester.suggest(username || name || email, user.username)
+      change_made = true
+    end
+
+    if SiteSetting.sso_overrides_email && email_valid && email.present? && user.email != Email.downcase(email)
+      user.email = email
+      change_made = true
+    end
+
+    if SiteSetting.sso_overrides_name && name.present? && user.name != name
+      user.name = name
+      change_made = true
+    end
+
+    change_made
+  end
+
+  def can_edit_name
+    !SiteSetting.sso_overrides_name
+  end
+
+  def can_edit_username
+    !(SiteSetting.sso_overrides_username || omit_username)
   end
 
   def to_client_hash
@@ -106,13 +135,15 @@ class Auth::Result
       username: UserNameSuggester.suggest(username || name || email),
       auth_provider: authenticator_name,
       email_valid: !!email_valid,
-      omit_username: !!omit_username
+      can_edit_username: can_edit_username,
+      can_edit_name: can_edit_name
     }
 
     result[:destination_url] = destination_url if destination_url.present?
 
     if SiteSetting.enable_names?
-      result[:name] = name.presence || User.suggest_name(username || email)
+      result[:name] = name.presence
+      result[:name] ||= User.suggest_name(username || email) if can_edit_name
     end
 
     result

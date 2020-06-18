@@ -6,7 +6,7 @@ class UserAuthenticator
     @user = user
     @session = session
     if session[:authentication] && session[:authentication].is_a?(Hash)
-      @auth_result = Auth::Result.from_session_data(session[:authentication])
+      @auth_result = Auth::Result.from_session_data(session[:authentication], user: user)
     end
     @authenticator_finder = authenticator_finder
   end
@@ -14,6 +14,7 @@ class UserAuthenticator
   def start
     if authenticated?
       @user.active = true
+      @auth_result.apply_user_attributes!
     else
       @user.password_required!
     end
@@ -38,7 +39,10 @@ class UserAuthenticator
   end
 
   def authenticated?
-    @auth_result && @auth_result.email.downcase == @user.email.downcase && @auth_result.email_valid.to_s == "true"
+    return false if !@auth_result
+    return false if @auth_result.email.downcase != @user.email.downcase
+    return false if @auth_result.email_valid != true # strong check for truth, in case we have another object type
+    true
   end
 
   private
