@@ -146,13 +146,14 @@
           action=(action "createAccount")
           disabled=submitDisabled
           label="create_account.title"
+          isLoading=formSubmitted
         }}
 
-        {{#conditional-loading-spinner condition=formSubmitted size="small"}}
-          {{#d-button class="btn-large" id="login-link" action=(route-action "showLogin")}}
+        {{#unless hasAuthOptions}}
+          {{#d-button class="btn-large" id="login-link" action=(route-action "showLogin") disabled=formSubmitted}}
             {{i18n "log_in"}}
           {{/d-button}}
-        {{/conditional-loading-spinner}}
+        {{/unless}}
 
         <div class="disclaimer">{{html-safe disclaimerHtml}}</div>
       </div>
