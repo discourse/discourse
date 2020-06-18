@@ -2224,6 +2224,7 @@ describe User do
       UserAction.create!(user_id: user.id, action_type: UserAction::LIKE)
       UserAction.create!(user_id: -1, action_type: UserAction::LIKE, target_user_id: user.id)
       UserAction.create!(user_id: -1, action_type: UserAction::LIKE, acting_user_id: user.id)
+      Developer.create!(user_id: user.id)
 
       user.reload
 
@@ -2233,6 +2234,7 @@ describe User do
       expect(UserAction.where(target_user_id: user.id).length).to eq(0)
       expect(UserAction.where(acting_user_id: user.id).length).to eq(0)
       expect(PostAction.with_deleted.where(user_id: user.id).length).to eq(0)
+      expect(Developer.where(user_id: user.id).length).to eq(0)
     end
   end
 
