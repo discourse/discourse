@@ -13,9 +13,11 @@
         includeMidFuture=includeMidFuture
         includeNow=includeNow
         clearable=clearable
-        none="topic.auto_update_input.none"
         onChangeInput=onChangeInput
         onChange=(action (mut selection))
+        options=(hash
+          none="topic.auto_update_input.none"
+        )
       }}
     </div>
   {{/unless}}
