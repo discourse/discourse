@@ -22,7 +22,6 @@ class UserMerger
     update_user_stats
 
     delete_source_user
-    delete_source_user_references
     log_merge
 
     @target_user.reload
@@ -366,17 +365,6 @@ class UserMerger
     )
 
     UserDestroyer.new(Discourse.system_user).destroy(@source_user, quiet: true)
-  end
-
-  def delete_source_user_references
-    Developer.where(user_id: @source_user.id).delete_all
-    DraftSequence.where(user_id: @source_user.id).delete_all
-    GivenDailyLike.where(user_id: @source_user.id).delete_all
-    MutedUser.where(user_id: @source_user.id).or(MutedUser.where(muted_user_id: @source_user.id)).delete_all
-    IgnoredUser.where(user_id: @source_user.id).or(IgnoredUser.where(ignored_user_id: @source_user.id)).delete_all
-    UserAuthTokenLog.where(user_id: @source_user.id).delete_all
-    UserAvatar.where(user_id: @source_user.id).delete_all
-    UserAction.where(acting_user_id: @source_user.id).delete_all
   end
 
   def log_merge
