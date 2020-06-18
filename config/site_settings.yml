@@ -716,6 +716,7 @@ posting:
     default: true
     refresh: true
   allow_duplicate_topic_titles: false
+  allow_duplicate_topic_titles_category: false
   min_title_similar_length:
     client: true
     default: 10
