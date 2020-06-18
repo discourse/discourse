@@ -7,6 +7,10 @@
         {{login-buttons externalLogin=(action "externalLogin")}}
       {{/unless}}
 
+      {{#if skipConfirmation}}
+        {{loading-spinner size="large"}}
+      {{/if}}
+
       {{#if showCreateForm}}
         <div class="login-form">
           <form>
