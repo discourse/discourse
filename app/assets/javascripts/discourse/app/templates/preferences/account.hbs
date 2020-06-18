@@ -50,9 +50,11 @@
         <div class="emails">
           {{#each emails as |email|}}
             <div class="row email">
-              {{email-dropdown email=email
-                              setPrimaryEmail=(action "setPrimaryEmail")
-                              destroyEmail=(action "destroyEmail")}}
+              {{#if model.can_edit_email}}
+                {{email-dropdown email=email
+                                setPrimaryEmail=(action "setPrimaryEmail")
+                                destroyEmail=(action "destroyEmail")}}
+              {{/if}}
 
               <div class="email-first">{{email.email}}</div>
 
@@ -77,9 +79,11 @@
           {{/each}}
         </div>
 
-        {{#link-to "preferences.email" (query-params new=1) class="pull-right"}}
-          {{d-icon "plus"}} {{i18n "user.email.add_email"}}
-        {{/link-to}}
+        {{#if model.can_edit_email}}
+          {{#link-to "preferences.email" (query-params new=1) class="pull-right"}}
+            {{d-icon "plus"}} {{i18n "user.email.add_email"}}
+          {{/link-to}}
+        {{/if}}
       {{else}}
         <div class="controls">
           <span class="static">{{model.email}}</span>
