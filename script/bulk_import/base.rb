@@ -137,7 +137,7 @@ class BulkImport::Base
     @raw_connection.get_result.stream_each do |row|
       id = row["value"].to_i
       ids << id
-      map[id] = row["#{name}_id"]
+      map[id] = row["#{name}_id"].to_i
     end
 
     @raw_connection.get_result
@@ -181,7 +181,7 @@ class BulkImport::Base
     @raw_connection.set_single_row_mode
 
     @raw_connection.get_result.stream_each do |row|
-      map[row["id"]] = row[column]
+      map[row["id"].to_i] = row[column].to_i
     end
 
     @raw_connection.get_result
