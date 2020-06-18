@@ -206,7 +206,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["username"]).to eq("Some_Name")
         expect(data["auth_provider"]).to eq("google_oauth2")
         expect(data["email_valid"]).to eq(true)
-        expect(data["omit_username"]).to eq(false)
+        expect(data["can_edit_username"]).to eq(true)
         expect(data["name"]).to eq("Some Name")
         expect(data["destination_url"]).to eq(destination_url)
       end
@@ -229,7 +229,8 @@ RSpec.describe Users::OmniauthCallbacksController do
           uid: '123545',
           info: OmniAuth::AuthHash::InfoHash.new(
             email: user.email,
-            name: 'Some name'
+            name: 'Some name',
+            nickname: 'Somenickname'
           ),
           extra: {
             raw_info: OmniAuth::AuthHash.new(
@@ -345,6 +346,44 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         # Delete the password, it may have been set by someone else
         expect(user.confirm_password?("securepassword")).to eq(false)
+      end
+
+      it "should update name/username/email when sso_overrides is enabled" do
+        SiteSetting.email_editable = false
+        SiteSetting.sso_overrides_email = true
+        SiteSetting.sso_overrides_name = true
+        SiteSetting.sso_overrides_username = true
+
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+
+        old_email = user.email
+        user.update!(name: 'somename', username: 'somusername', email: 'email@example.com')
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+
+        user.reload
+        expect(user.email).to eq(old_email)
+        expect(user.username).to eq('Somenickname')
+        expect(user.name).to eq('Some name')
+      end
+
+      it "will not update email if not verified" do
+        SiteSetting.email_editable = false
+        SiteSetting.sso_overrides_email = true
+
+        OmniAuth.config.mock_auth[:google_oauth2][:extra][:raw_info][:email_verified] = false
+
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+
+        old_email = user.email
+        user.update!(email: 'email@example.com')
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+
+        user.reload
+        expect(user.email).to eq('email@example.com')
       end
 
       context 'when user has TOTP enabled' do

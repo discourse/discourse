@@ -389,6 +389,6 @@ export default Controller.extend(ModalFunctionality, {
       authOptions: EmberObject.create(options)
     });
 
-    showModal("createAccount");
+    showModal("createAccount", { modalClass: "create-account" });
   }
 });
