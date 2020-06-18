@@ -30,7 +30,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (currentUser.staff) {
     contents.push({
       icon: "list",
-      className: "btn-default",
+      className: "popup-menu-button moderation-history",
       label: "review.moderation_history",
       url: `/review?topic_id=${attrs.topicId}&status=all`
     });
