@@ -2603,6 +2603,7 @@ en:
         one: "%{count} Reply"
         other: "%{count} Replies"
 
+      unknown_user: "(unknown/deleted user)"
       has_likes_title:
         one: "%{count} person liked this post"
         other: "%{count} people liked this post"

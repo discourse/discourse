@@ -12,8 +12,13 @@ export default createWidget("emoji", {
   tagName: "img.emoji",
 
   buildAttributes(attrs) {
-    let result = { src: emojiUrlFor(attrs.name), alt: `:${attrs.name}:` };
-    if (attrs.title) result.title = attrs.name;
+    let result = {
+      src: emojiUrlFor(attrs.name),
+      alt: `:${attrs.alt || attrs.name}:`
+    };
+    if (attrs.title) {
+      result.title = typeof attrs.title === "string" ? attrs.title : attrs.name;
+    }
     return result;
   }
 });
