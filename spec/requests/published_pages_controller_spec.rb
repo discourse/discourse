@@ -60,7 +60,9 @@ RSpec.describe PublishedPagesController do
         end
 
         context "published page is public" do
-          fab!(:public_published_page) { Fabricate(:published_page, public: true) }
+          fab!(:public_published_page) {
+            Fabricate(:published_page, public: true, slug: "a-public-page")
+          }
 
           it "returns 200 for a topic you can't see" do
             get public_published_page.path
