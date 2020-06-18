@@ -2414,6 +2414,22 @@ describe UsersController do
       let!(:ignored_user) { Fabricate(:ignored_user, user: user, ignored_user: another_user) }
       let!(:muted_user) { Fabricate(:muted_user, user: user, muted_user: another_user) }
 
+      context "when you can't change the notification" do
+        fab!(:staff_user) { Fabricate(:admin) }
+
+        it "ignoring includes a helpful error message" do
+          put "/u/#{staff_user.username}/notification_level.json", params: { notification_level: 'ignore' }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body['errors'][0]).to eq(I18n.t("notification_level.ignore_error"))
+        end
+
+        it "muting includes a helpful error message" do
+          put "/u/#{staff_user.username}/notification_level.json", params: { notification_level: 'mute' }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body['errors'][0]).to eq(I18n.t("notification_level.mute_error"))
+        end
+      end
+
       context 'when changing notification level to normal' do
         it 'changes notification level to normal' do
           put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "normal" }

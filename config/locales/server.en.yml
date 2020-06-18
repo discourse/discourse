@@ -4855,6 +4855,10 @@ en:
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"
 
+  notification_level:
+    ignore_error: "Sorry, you can't ignore that user."
+    mute_error: "Sorry, you can't mute that user."
+
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."
 
