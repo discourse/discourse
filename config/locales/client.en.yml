@@ -847,7 +847,7 @@ en:
           all: "All"
           read: "Read"
           unread: "Unread"
-        ignore_duration_title: "Ignore Timer"
+        ignore_duration_title: "Ignore User"
         ignore_duration_username: "Username"
         ignore_duration_when: "Duration:"
         ignore_duration_save: "Ignore"
