@@ -80,7 +80,7 @@ class Permalink < ActiveRecord::Base
     return external_url if external_url
     return "#{Discourse::base_uri}#{post.url}" if post
     return topic.relative_url if topic
-    return "#{category.url}/#{category.id}" if category
+    return category.url if category
     return tag.full_url if tag
     nil
   end

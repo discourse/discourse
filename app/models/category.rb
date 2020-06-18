@@ -721,11 +721,13 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache[self.id] ||= "#{Discourse.base_uri}/c/#{slug_path.join('/')}"
+    @@url_cache[self.id] ||= "#{Discourse.base_uri}/c/#{slug_path.join('/')}/#{self.id}"
   end
 
   def url_with_id
-    self.parent_category ? "#{url}/#{self.id}" : "#{Discourse.base_uri}/c/#{self.slug}/#{self.id}"
+    Discourse.deprecate("Category#url_with_id is deprecated. Use `Category#url` instead.", output_in_test: true)
+
+    url
   end
 
   # If the name changes, try and update the category definition topic too if it's an exact match
@@ -739,9 +741,10 @@ class Category < ActiveRecord::Base
 
   def create_category_permalink
     old_slug = saved_changes.transform_values(&:first)["slug"]
+
     url = +"#{Discourse.base_uri}/c"
     url << "/#{parent_category.slug_path.join('/')}" if parent_category_id
-    url << "/#{old_slug}"
+    url << "/#{old_slug}/#{id}"
     url = Permalink.normalize_url(url)
 
     if Permalink.where(url: url).exists?
