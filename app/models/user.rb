@@ -161,6 +161,13 @@ class User < ActiveRecord::Base
 
     # our relationship filters on enabled, this makes sure everything is deleted
     UserSecurityKey.where(user_id: self.id).delete_all
+
+    Developer.where(user_id: self.id).delete_all
+    DraftSequence.where(user_id: self.id).delete_all
+    GivenDailyLike.where(user_id: self.id).delete_all
+    MutedUser.where(user_id: self.id).or(MutedUser.where(muted_user_id: self.id)).delete_all
+    IgnoredUser.where(user_id: self.id).or(IgnoredUser.where(ignored_user_id: self.id)).delete_all
+    UserAvatar.where(user_id: self.id).delete_all
   end
 
   # Skip validating email, for example from a particular auth provider plugin
