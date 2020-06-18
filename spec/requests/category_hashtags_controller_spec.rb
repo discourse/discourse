@@ -18,7 +18,7 @@ describe CategoryHashtagsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "valid" => [{ "slug" => category.hashtag_slug, "url" => category.url_with_id }]
+            "valid" => [{ "slug" => category.hashtag_slug, "url" => category.url }]
           )
         end
 
@@ -45,7 +45,7 @@ describe CategoryHashtagsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "valid" => [{ "slug" => private_category.hashtag_slug, "url" => private_category.url_with_id }]
+            "valid" => [{ "slug" => private_category.hashtag_slug, "url" => private_category.url }]
           )
         end
       end
