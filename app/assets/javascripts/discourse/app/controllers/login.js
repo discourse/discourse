@@ -381,12 +381,16 @@ export default Controller.extend(ModalFunctionality, {
       return;
     }
 
+    const skipConfirmation =
+      options && this.siteSettings.external_auth_skip_create_confirm;
+
     const createAccountController = this.createAccount;
     createAccountController.setProperties({
       accountEmail: options.email,
       accountUsername: options.username,
       accountName: options.name,
-      authOptions: EmberObject.create(options)
+      authOptions: EmberObject.create(options),
+      skipConfirmation
     });
 
     showModal("createAccount", { modalClass: "create-account" });
