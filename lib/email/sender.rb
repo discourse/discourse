@@ -209,6 +209,8 @@ module Email
 
       email_log.message_id = @message.message_id
 
+      DiscourseEvent.trigger(:before_email_send, @message, @email_type)
+
       begin
         @message.deliver_now
       rescue *SMTP_CLIENT_ERRORS => e
