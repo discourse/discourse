@@ -174,9 +174,24 @@ class BulkImport::Base
     [klass.unscoped.maximum(:id) || 0, 0].max
   end
 
+  def load_values(name, column, size)
+    map = Array.new(size)
+
+    @raw_connection.send_query("SELECT id, #{column} FROM #{name}")
+    @raw_connection.set_single_row_mode
+
+    @raw_connection.get_result.stream_each do |row|
+      map[row["id"]] = row[column]
+    end
+
+    @raw_connection.get_result
+
+    map
+  end
+
   def load_indexes
     puts "Loading groups indexes..."
-    @last_group_id = Group.unscoped.maximum(:id)
+    @last_group_id = last_id(Group)
     @group_names = Group.unscoped.pluck(:name).map(&:downcase).to_set
 
     puts "Loading users indexes..."
@@ -192,12 +207,12 @@ class BulkImport::Base
 
     puts "Loading topics indexes..."
     @last_topic_id = last_id(Topic)
-    @highest_post_number_by_topic_id = Topic.unscoped.pluck(:id, :highest_post_number).to_h
+    @highest_post_number_by_topic_id = load_values("topics", "highest_post_number", @last_topic_id)
 
     puts "Loading posts indexes..."
     @last_post_id = last_id(Post)
-    @post_number_by_post_id = Post.unscoped.pluck(:id, :post_number).to_h
-    @topic_id_by_post_id = Post.unscoped.pluck(:id, :topic_id).to_h
+    @post_number_by_post_id = load_values("posts", "post_number", @last_post_id)
+    @topic_id_by_post_id = load_values("posts", "topic_id", @last_post_id)
 
     puts "Loading post actions indexes..."
     @last_post_action_id = last_id(PostAction)
