@@ -731,6 +731,12 @@
   }
 }
 
+.ignore-duration-with-username-modal {
+  .future-date-input {
+    margin-top: 1em;
+  }
+}
+
 .modal:not(.has-tabs) {
   .modal-tab {
     position: absolute;
