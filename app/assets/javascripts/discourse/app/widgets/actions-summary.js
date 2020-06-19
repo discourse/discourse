@@ -17,7 +17,7 @@ export function smallUserAtts(user) {
 }
 
 createWidget("small-user-list", {
-  tagName: "div.clearfix",
+  tagName: "div.clearfix.small-user-list",
 
   buildClasses(atts) {
     return atts.listClassName;
@@ -45,9 +45,8 @@ createWidget("small-user-list", {
       const icons = users.map(u => {
         postUrl = postUrl || u.post_url;
         if (u.unknown) {
-          return this.attach("emoji", {
-            name: "question",
-            title: I18n.t("post.unknown_user")
+          return h("div.unknown", {
+            attributes: { title: I18n.t("post.unknown_user") }
           });
         } else {
           return avatarFor.call(this, "small", u);
