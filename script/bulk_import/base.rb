@@ -258,10 +258,13 @@ class BulkImport::Base
   end
 
   def post_number_from_imported_id(id)
-    @post_number_by_post_id[post_id_from_imported_id(id)]
+    post_id = post_id_from_imported_id(id)
+    post_id && @post_number_by_post_id[post_id]
   end
+
   def topic_id_from_imported_post_id(id)
-    @topic_id_by_post_id[post_id_from_imported_id(id)]
+    post_id = post_id_from_imported_id(id)
+    post_id && @topic_id_by_post_id[post_id]
   end
 
   GROUP_COLUMNS ||= %i{
@@ -641,9 +644,8 @@ class BulkImport::Base
       imported_username, imported_postid = $1, $2
 
       username = @mapped_usernames[imported_username] || imported_username
-      post_id = post_id_from_imported_id(imported_postid)
-      post_number = @post_number_by_post_id[post_id]
-      topic_id = @topic_id_by_post_id[post_id]
+      post_number = post_number_from_imported_id(imported_postid)
+      topic_id = topic_id_from_imported_post_id(imported_post_id)
 
       if post_number && topic_id
         "\n[quote=\"#{username}, post:#{post_number}, topic:#{topic_id}\"]\n"
@@ -688,8 +690,7 @@ class BulkImport::Base
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
         begin
-          mapped = yield(row)
-          next unless mapped
+          next unless mapped = yield(row)
           processed = send(process_method_name, mapped)
           imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
           imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
@@ -697,7 +698,8 @@ class BulkImport::Base
           print "\r%7d - %6d/sec" % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
         rescue => e
           puts "\n"
-          puts "ERROR: #{e.inspect}"
+          puts "ERROR: #{e.message}"
+          puts backtrace.join("\n")
         end
       end
     end
@@ -725,8 +727,7 @@ class BulkImport::Base
     sql = "COPY #{table}_custom_fields (#{table}_id, name, value, created_at, updated_at) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
-        cf = yield row
-        next unless cf
+        next unless cf = yield(row)
         @raw_connection.put_copy_data [cf[:record_id], name, cf[:value], NOW, NOW]
       end
     end
