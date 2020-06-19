@@ -5,7 +5,7 @@ module TopicGuardian
 
   def can_remove_allowed_users?(topic, target_user = nil)
     is_staff? ||
-    (topic.user == user && user.has_trust_level?(TrustLevel[2])) ||
+    (topic.user == @user && @user.has_trust_level?(TrustLevel[2])) ||
     (
       topic.allowed_users.count > 1 &&
       topic.user != target_user &&

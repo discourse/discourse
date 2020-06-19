@@ -3503,6 +3503,21 @@ describe Guardian do
         end
       end
     end
+
+    context "anonymous users" do
+      fab!(:topic) { Fabricate(:topic) }
+
+      it 'should be false' do
+        expect(Guardian.new.can_remove_allowed_users?(topic)).to eq(false)
+      end
+
+      it 'should be false when the topic does not have a user (for example because the user was removed)' do
+        DB.exec("UPDATE topics SET user_id=NULL WHERE id=#{topic.id}")
+        topic.reload
+
+        expect(Guardian.new.can_remove_allowed_users?(topic)).to eq(false)
+      end
+    end
   end
 
   describe '#auth_token' do
