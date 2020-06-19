@@ -173,7 +173,7 @@ module Jobs
 
       # If file is on the forum or CDN domain or already has the
       # secure media url
-      if Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i || Upload.secure_media_url?(src)
+      if UrlHelper.is_local(src) || Upload.secure_media_url?(src)
         return false if src =~ /\/images\/emoji\//
 
         # Someone could hotlink a file from a different site on the same CDN,

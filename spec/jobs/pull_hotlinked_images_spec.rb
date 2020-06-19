@@ -350,6 +350,23 @@ describe Jobs::PullHotlinkedImages do
       end
     end
 
+    it "returns false for emoji" do
+      src = Emoji.url_for("testemoji.png")
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
+    it "returns false for emoji when app and S3 CDNs configured" do
+      set_cdn_url "https://mydomain.cdn/test"
+      SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+      SiteSetting.s3_access_key_id = "s3-access-key-id"
+      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+      SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+      SiteSetting.enable_s3_uploads = true
+
+      src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
     context "when download_remote_images_to_local? is false" do
       before do
         SiteSetting.download_remote_images_to_local = false
@@ -358,11 +375,6 @@ describe Jobs::PullHotlinkedImages do
       it "still returns true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
         expect(subject.should_download_image?(src)).to eq(true)
-      end
-
-      it "returns false for emoji" do
-        src = Emoji.url_for("testemoji.png")
-        expect(subject.should_download_image?(src)).to eq(false)
       end
 
       it 'returns false for valid remote URLs' do
