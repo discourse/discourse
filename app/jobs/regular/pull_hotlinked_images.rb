@@ -220,7 +220,7 @@ module Jobs
       uri.normalize!
       uri.scheme = nil
       uri.to_s
-    rescue URI::Error
+    rescue URI::Error, Addressable::URI::InvalidURIError
       src
     end
   end
