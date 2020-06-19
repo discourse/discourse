@@ -93,8 +93,10 @@ task "uploads:migrate_from_s3" => :environment do
   ENV["RAILS_DB"] ? migrate_from_s3 : migrate_all_from_s3
 end
 
-task "uploads:batch_migrate_from_s3", [:limit] => :environment do |_, args|
-  ENV["RAILS_DB"] ? migrate_from_s3(limit: args[:limit]) : migrate_all_from_s3(limit: args[:limit])
+# limit is the limit to consider migrating, max is the max to actually migrate
+# This is to manage resources during testing; limit 1000 max 1 is a reasonable test
+task "uploads:batch_migrate_from_s3", [:max, :limit] => :environment do |_, args|
+  ENV["RAILS_DB"] ? migrate_from_s3(max: args[:max], limit: args[:limit]) : migrate_all_from_s3(max: args[:max], limit: args[:limit])
 end
 
 def guess_filename(url, raw)
@@ -107,18 +109,19 @@ def guess_filename(url, raw)
     filename ||= raw[/<a class="attachment" href="(?:https?:)?#{Regexp.escape(url)}">([^<]+)<\/a>/, 1].presence
     filename ||= File.basename(url)
     filename
-  rescue
+  rescue => e
+    puts "Error guessing filename: #{e}"
     nil
   ensure
     f.try(:close!) rescue nil
   end
 end
 
-def migrate_all_from_s3(limit: nil)
-  RailsMultisite::ConnectionManagement.each_connection { migrate_from_s3(limit: limit) }
+def migrate_all_from_s3(max: nil, limit: nil)
+  RailsMultisite::ConnectionManagement.each_connection { migrate_from_s3(limit: limit, max: max) }
 end
 
-def migrate_from_s3(limit: nil)
+def migrate_from_s3(max: nil, limit: nil)
   require "file_store/s3_store"
 
   # make sure S3 is disabled
@@ -127,25 +130,42 @@ def migrate_from_s3(limit: nil)
     exit 1
   end
 
+  posts_modified = 0
+  # treat "0" the same as nil input; 0 means no limit and no max
+  limit = limit.to_i if limit && limit != "0"
+  max = max.to_i if max && max != "0"
+
+  # regexps from from app/assets/javascripts/discourse/app/lib/uploads.js
+  is_video = /\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)$/i
+  is_audio = /\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i
+
   db = RailsMultisite::ConnectionManagement.current_db
 
   puts "Migrating uploads from S3 to local storage for '#{db}'..."
+  puts "Migrating up to #{max} of #{limit ? limit : "unlimited"} posts..." if max
 
   max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
   migrate_posts = Post
     .where("user_id > 0")
     .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%#{SiteSetting.Upload.absolute_base_url}%' OR raw LIKE '%(upload://%'")
-  migrate_posts = migrate_posts.limit(limit.to_i) if limit
+  migrate_posts = migrate_posts.limit(limit) if limit
 
   migrate_posts.find_each do |post|
     begin
       updated = false
+      post_tag = "#{post.id}: #{post.topic_id}/#{post.post_number} - https://#{GlobalSetting.hostname}#{post.url}"
 
-      post.raw.gsub!(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
+      # Some uploads previously dropped a plain URL in raw, rather than a `[...](upload://)`.
+      post.raw.gsub!(/((https?:)?(\/\/[\w.-]+amazonaws\.com|#{Regexp.quote(SiteSetting.Upload.absolute_base_url)})\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
         begin
+          # remove the protocol
+          url = url.match(/(https?:)?(.*)/)[2]
+          puts "Processing #{url} in #{post_tag}"
           if filename = guess_filename(url, post.raw)
+            puts "found filename #{filename}"
             file = FileHelper.download("http:#{url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
+            raise "#{url} not found or exceeds max size #{max_file_size / 1024} for #{post_tag}" if file.nil?
             sha1 = Upload.generate_digest(file)
             origin = nil
 
@@ -153,18 +173,21 @@ def migrate_from_s3(limit: nil)
             if existing_upload&.url&.start_with?("//")
               filename = existing_upload.original_filename
               origin = existing_upload.origin
+              puts "Replacing existing #{existing_upload.url} with #{filename}" if max
               existing_upload.destroy
             end
 
             new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
             if new_upload&.save
+              tag = ""
+              tag = "|audio" if filename.match(is_audio)
+              tag = "|video" if filename.match(is_video)
+              url = "![#{filename}#{tag}](#{new_upload.short_url})"
+              puts "Substituting url #{url} in #{post_tag}" if max
               updated = true
-              url = new_upload.url
             end
           end
 
-          url
-        rescue
           url
         end
       end
@@ -175,21 +198,21 @@ def migrate_from_s3(limit: nil)
             if upload = Upload.find_by(sha1: sha1)
               if upload.url.start_with?("//")
                 file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
+                # This can be a temporary error if download from S3 fails
+                raise "#{url} not found for #{post_tag}" if file.nil?
                 filename = upload.original_filename
                 origin = upload.origin
                 upload.destroy
 
                 new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
                 if new_upload&.save
+                  raise "Error: upload url #{url} changed to #{new_upload.short_url}, should be unchanged." if url != new_upload.short_url
                   updated = true
-                  url = new_upload.url
                 end
               end
             end
           end
 
-          url
-        rescue
           url
         end
       end
@@ -197,13 +220,25 @@ def migrate_from_s3(limit: nil)
       if updated
         post.save!
         post.rebake!
-        putc "#"
+        posts_modified += 1
+        if max
+          # max is for debugging purposes, so be verbose
+          puts "\nModified #{posts_modified}/#{max}: #{post_tag}\n"
+        else
+          putc "#"
+        end
+        if max && posts_modified >= max
+          puts "Modification limit #{max} reached, halting migration"
+          return
+        end
       else
         putc "."
       end
 
-    rescue
-      putc "X"
+    rescue => e
+      # Unanticipated failure should be investigated before going further with a migration to limit harm
+      puts "Unhandled failure in #{post_tag} processing: #{e}"
+      exit 1
     end
   end
 

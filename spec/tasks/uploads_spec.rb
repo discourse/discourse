@@ -145,45 +145,69 @@ RSpec.describe "tasks/uploads" do
     let(:upload1) { Fabricate(:upload_s3) }
     let(:upload2) { Fabricate(:upload_s3) }
 
-    let!(:url1) { "upload://#{upload1.base62_sha1}.jpg" }
-    let!(:url2) { "upload://#{upload2.base62_sha1}.jpg" }
+    let!(:url1) { "upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png" } # base62_sha1 from logo.png
+    let!(:url2) { "upload://#{upload2.base62_sha1}.png" } # intentionally fail
 
     let(:post1) { Fabricate(:post, raw: "[foo](#{url1})") }
     let(:post2) { Fabricate(:post, raw: "[foo](#{url2})") }
+
+    let(:user_id) { 1 }
 
     before do
       global_setting :s3_bucket, 'file-uploads/folder'
       global_setting :s3_region, 'us-east-1'
       enable_s3_uploads(uploads)
-      upload1.url = "//#{SiteSetting.s3_upload_bucket}.amazonaws.com/original/1X/#{upload1.base62_sha1}.png"
-      upload1.save!
-      upload2.url = "//#{SiteSetting.s3_upload_bucket}.amazonaws.com/original/1X/#{upload2.base62_sha1}.png"
-      upload2.save!
+
+      stub_request(:put, "https://s3-upload-bucket.s3.amazonaws.com/original/1X/bc975735dfc6409c1c2aa5ebf2239949bcbdbd65.png").to_return(status: 200, body: "", headers: { etag: "bc975735dfc6409c1c2aa5ebf2239949bcbdbd65" })
+      upload1 = UploadCreator.new(file_from_fixtures("logo.png", "images"), "logo.png").create_for(user_id)
+
+      stub_request(:put, "https://s3-upload-bucket.s3.amazonaws.com/original/1X/acc66bed1ab1fc1b5963bb15e40292fde6a5cd4f.png").to_return(status: 200, body: "", headers: { etag: "acc66bed1ab1fc1b5963bb15e40292fde6a5cd4f" })
+      upload2 = UploadCreator.new(file_from_fixtures("logo-dev.png", "images"), "logo-dev.png").create_for(user_id)
 
       PostUpload.create(post: post1, upload: upload1)
       PostUpload.create(post: post2, upload: upload2)
       SiteSetting.enable_s3_uploads = false
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png")).once()
     end
 
-    def invoke_task
+    def invoke_task(max, limit)
       capture_stdout do
-        Rake::Task['uploads:batch_migrate_from_s3'].invoke('1')
+        Rake::Task['uploads:batch_migrate_from_s3'].invoke(max, limit)
       end
     end
 
     it "applies the limit" do
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png")).once()
-
       freeze_time
 
       post1.update_columns(baked_at: 1.week.ago)
       post2.update_columns(baked_at: 1.week.ago)
-      invoke_task
+      invoke_task("1000", "1") # nonsense arguments; max greater than limit will never be reached
 
       expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
       expect(post2.reload.baked_at).to eq_time(1.week.ago)
     end
 
+    it "applies the max when unlimited" do
+      freeze_time
+
+      post1.update_columns(baked_at: 1.week.ago)
+      post2.update_columns(baked_at: 1.week.ago)
+      invoke_task("1", nil)
+
+      expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+      expect(post2.reload.baked_at).to eq_time(1.week.ago)
+    end
+
+    it "applies the max before the limit is reached" do
+      freeze_time
+
+      post1.update_columns(baked_at: 1.week.ago)
+      post2.update_columns(baked_at: 1.week.ago)
+      invoke_task("1", "2")
+
+      expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+      expect(post2.reload.baked_at).to eq_time(1.week.ago)
+    end
   end
 
   describe "uploads:migrate_from_s3" do
@@ -197,20 +221,27 @@ RSpec.describe "tasks/uploads" do
     let(:upload1) { Fabricate(:upload_s3) }
     let(:upload2) { Fabricate(:upload_s3) }
 
-    let!(:url1) { "upload://#{upload1.base62_sha1}.jpg" }
-    let!(:url2) { "upload://#{upload2.base62_sha1}.jpg" }
+    let!(:url1) { "upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png" } # base62_sha1 from logo.png
+    let!(:url2) { "upload://oEreXc9X7kL1gm1PHfb0URLl2DJ.png" } # base62_sha1 from logo-dev.png
 
     let(:post1) { Fabricate(:post, raw: "[foo](#{url1})") }
     let(:post2) { Fabricate(:post, raw: "[foo](#{url2})") }
+
+    let(:user_id) { 1 }
 
     before do
       global_setting :s3_bucket, 'file-uploads/folder'
       global_setting :s3_region, 'us-east-1'
       enable_s3_uploads(uploads)
-      upload1.url = "//#{SiteSetting.s3_upload_bucket}.amazonaws.com/original/1X/#{upload1.base62_sha1}.png"
-      upload1.save!
-      upload2.url = "//#{SiteSetting.s3_upload_bucket}.amazonaws.com/original/1X/#{upload2.base62_sha1}.png"
-      upload2.save!
+
+      stub_request(:put, "https://s3-upload-bucket.s3.amazonaws.com/original/1X/bc975735dfc6409c1c2aa5ebf2239949bcbdbd65.png").to_return(status: 200, body: "", headers: { etag: "bc975735dfc6409c1c2aa5ebf2239949bcbdbd65" })
+      upload1 = UploadCreator.new(file_from_fixtures("logo.png", "images"), "logo.png").create_for(user_id)
+
+      stub_request(:put, "https://s3-upload-bucket.s3.amazonaws.com/original/1X/acc66bed1ab1fc1b5963bb15e40292fde6a5cd4f.png").to_return(status: 200, body: "", headers: { etag: "acc66bed1ab1fc1b5963bb15e40292fde6a5cd4f" })
+      upload2 = UploadCreator.new(file_from_fixtures("logo-dev.png", "images"), "logo-dev.png").create_for(user_id)
+
+      stub_request(:get, "http://s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/original/1X/bc975735dfc6409c1c2aa5ebf2239949bcbdbd65.png").to_return(status: 200, body: file_from_fixtures("logo.png", "images"))
+      stub_request(:get, "http://s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/original/1X/acc66bed1ab1fc1b5963bb15e40292fde6a5cd4f.png").to_return(status: 200, body: file_from_fixtures("logo-dev.png", "images"))
 
       PostUpload.create(post: post1, upload: upload1)
       PostUpload.create(post: post2, upload: upload2)
@@ -229,9 +260,6 @@ RSpec.describe "tasks/uploads" do
     end
 
     it "does not apply a limit" do
-      FileHelper.stubs(:download).with("http:#{upload1.url}", max_file_size: 4194304, tmp_file_name: "from_s3", follow_redirect: true).returns(file_from_fixtures("logo.png")).once()
-      FileHelper.stubs(:download).with("http:#{upload2.url}", max_file_size: 4194304, tmp_file_name: "from_s3", follow_redirect: true).returns(file_from_fixtures("logo.png")).once()
-
       freeze_time
 
       post1.update_columns(baked_at: 1.week.ago)
