@@ -222,6 +222,16 @@ describe Jobs::PullHotlinkedImages do
       MD
     end
 
+    it 'works when invalid url in post'  do
+      post = Fabricate(:post, raw: <<~MD)
+      ![some test](#{image_url})
+      ![some test 2]("#{image_url})
+      MD
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+    end
+
     it 'replaces bbcode images' do
       post = Fabricate(:post, raw: <<~MD)
       [img]
