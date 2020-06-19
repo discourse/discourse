@@ -15,6 +15,6 @@ widgetTest("renders avatars and support for unknown", {
   async test(assert) {
     assert.ok(find("[data-user-card=eviltrout]").length === 1);
     assert.ok(find("[data-user-card=someone]").length === 0);
-    assert.ok(find(".emoji").length, "includes unkown emoji");
+    assert.ok(find(".unknown").length, "includes unkown user");
   }
 });
