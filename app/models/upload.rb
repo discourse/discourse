@@ -329,7 +329,7 @@ class Upload < ActiveRecord::Base
                   follow_redirect: true
                 )
               rescue OpenURI::HTTPError
-                retry if (retires += 1) < 1
+                retry if (retries += 1) < 1
                 next
               end
 
