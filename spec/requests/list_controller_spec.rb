@@ -142,6 +142,16 @@ RSpec.describe ListController do
       expect(response.status).to eq(404)
     end
 
+    it 'should fail for staff users if disabled' do
+      SiteSetting.allow_staff_to_tag_pms = false
+
+      [moderator, admin].each do |user|
+        sign_in(user)
+        get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
     it 'should be success for staff users' do
       [moderator, admin].each do |user|
         sign_in(user)

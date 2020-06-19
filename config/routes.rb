@@ -736,7 +736,7 @@ Discourse::Application.routes.draw do
       get "private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", defaults: { format: :json }
       get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", defaults: { format: :json }
       get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", defaults: { format: :json }
-      get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
+      get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", defaults: { format: :json }
       get "groups/:group_name" => "list#group_topics", as: "group_topics", group_name: RouteFormat.username
 
       scope "/private-messages-group/:username", group_name: RouteFormat.username do
