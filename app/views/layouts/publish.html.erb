@@ -6,6 +6,8 @@
     <%= render partial: "common/discourse_publish_stylesheet" %>
   </head>
   <body class="<%= @body_classes.to_a.join(' ') %>">
+    <%= theme_lookup("header") %>
     <%= yield %>
+    <%= theme_lookup("footer") %>
   </body>
 </html>
