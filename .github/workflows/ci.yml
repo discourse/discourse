@@ -68,6 +68,13 @@ jobs:
           sudo apt-get -yqq install postgresql-client libpq-dev gifsicle jpegoptim optipng jhead
           wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
 
+      - name: Update imagemagick
+        if: env.BUILD_TYPE == 'BACKEND'
+        run: |
+          wget https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-imagemagick
+          chmod +x install-imagemagick
+          sudo ./install-imagemagick
+
       - name: Setup redis
         uses: shogo82148/actions-setup-redis@v1
         if: env.BUILD_TYPE != 'LINT'
