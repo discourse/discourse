@@ -197,7 +197,14 @@ def migrate_from_s3(max: nil, limit: nil)
           if sha1 = Upload.sha1_from_short_url(url)
             if upload = Upload.find_by(sha1: sha1)
               if upload.url.start_with?("//")
-                file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
+                download_attempts_remaining = 3
+                file = nil
+                while file.nil? && download_attempts_remaining > 0
+                  file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
+                  # work-around for intermittent download failures
+                  sleep 1 if file.nil?
+                  download_attempts_remaining -= 1
+                end
                 # This can be a temporary error if download from S3 fails
                 raise "#{url} not found for #{post_tag}" if file.nil?
                 filename = upload.original_filename
