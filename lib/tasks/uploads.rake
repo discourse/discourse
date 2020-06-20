@@ -99,6 +99,12 @@ task "uploads:batch_migrate_from_s3", [:max, :limit] => :environment do |_, args
   ENV["RAILS_DB"] ? migrate_from_s3(max: args[:max], limit: args[:limit]) : migrate_all_from_s3(max: args[:max], limit: args[:limit])
 end
 
+def wait_for_queue_tasks(max_queue_tasks)
+  while Sidekiq::Stats.new.enqueued > max_queue_tasks
+    sleep 1
+  end
+end
+
 def guess_filename(url, raw)
   begin
     uri = URI.parse("http:#{url}")
@@ -130,6 +136,7 @@ def migrate_from_s3(max: nil, limit: nil)
     exit 1
   end
 
+  max_queue_tasks = ENV["DISCOURSE_MIGRATION_MAX_ENQUEUED"] ? ENV["DISCOURSE_MIGRATION_MAX_ENQUEUED"].to_i : 0
   posts_modified = 0
   # treat "0" the same as nil input; 0 means no limit and no max
   limit = limit.to_i if limit && limit != "0"
@@ -238,6 +245,8 @@ def migrate_from_s3(max: nil, limit: nil)
           puts "Modification limit #{max} reached, halting migration"
           return
         end
+        # don't spam the default queue, limit rate of modification
+        wait_for_queue_tasks max_queue_tasks
       else
         putc "."
       end
@@ -939,6 +948,7 @@ def determine_upload_security_and_posts_to_rebake(uploads_to_update, mark_secure
 end
 
 def inline_uploads(post)
+  max_queue_tasks = ENV["DISCOURSE_MIGRATION_MAX_ENQUEUED"] ? ENV["DISCOURSE_MIGRATION_MAX_ENQUEUED"].to_i : 0
   replaced = false
 
   original_raw = post.raw
@@ -974,10 +984,12 @@ def inline_uploads(post)
     post.save_custom_fields
     post.save!(validate: false)
     post.rebake!
+    wait_for_queue_tasks max_queue_tasks
   end
 end
 
 def inline_img_tags(post)
+  max_queue_tasks = ENV["DISCOURSE_MIGRATION_MAX_ENQUEUED"] ? ENV["DISCOURSE_MIGRATION_MAX_ENQUEUED"].to_i : 0
   replaced = false
 
   original_raw = post.raw
@@ -1015,6 +1027,7 @@ def inline_img_tags(post)
     post.save_custom_fields
     post.save!(validate: false)
     post.rebake!
+    wait_for_queue_tasks max_queue_tasks
   end
 end
 
