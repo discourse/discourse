@@ -1323,6 +1323,7 @@ sv:
     category_search_priority_very_high_weight: "Vikt applicerad på rankning vid mycket hög sökprioritet för kategori"
     allow_uncategorized_topics: "Tillåt att ämnen skapas utan en kategori. VARNING: Om det finns några okategoriserade ämnen så måste dessa omkategoriseras innan den här inställningen stängs av. "
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
+    allow_duplicate_topic_titles_category: "Tillåt ämnen med identisk, duplicerad titel om kategorierna är olika. allow_duplicate_topic_titles måste vara avbockad."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     educate_until_posts: "Visa hjälppanelen för komponering tills dess att användaren har gjort (n) nya inlägg. "
     title: "Namnet på denna webbplats som används i titel-taggen."
@@ -1529,7 +1530,7 @@ sv:
     s3_backup_bucket: "Den externa behållaren för säkerhetskopieringar. VARNING: Se till att det är en privat behållare."
     s3_endpoint: "Ändpunkten kan ändras för att säkerhetskopiera till en S3-kompatibel tjänst som DigitalOcean Spaces eller Minio. VARNING: Lämna tomt om du använder AWS S3."
     s3_configure_tombstone_policy: "Aktivera automatisk raderingspolicy för Tombstone uppladdningar. VIKTIGT: Om det är inaktiverat kommer inget utrymme att återtas efter att överföringar har tagits bort."
-    s3_disable_cleanup: "Inaktivera borttagande av säkerhetskopior från S3 när de tagits bort lokalt."
+    s3_disable_cleanup: "Förhindra borttagning av äldre säkerhetskopior från S3 när det finns fler säkerhetskopior än högsta tillåtna."
     enable_s3_inventory: "Generera rapporter och verifiera uppladdningar med Amazon S3 inventering. VIKTIGT: kräver giltiga S3-referenser (både åtkomstnyckel-ID och hemlig åtkomstnyckel)."
     backup_time_of_day: "Tid på dygnet UTC då säkerhetskopieringen sker."
     backup_with_uploads: "Inkludera uppladdning i schemalagda säkerhetskopieringar. Inaktivering av det här kommer endast att säkerhetskopiera databasen."
@@ -1870,6 +1871,7 @@ sv:
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar bör gå innan en användare anses återkomma."
     enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
+    show_published_pages_login_required: "Anonyma användare kan se publicerade sidor, även när inloggning krävs."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar e-postsammanfattningar."
     default_include_tl0_in_digests: "Standardinställning för hur ofta nya användare får e-postsammanfattningar. Användare kan ändra det i sina inställningar."
     default_email_level: "Ställ in standardnivå för e-postmeddelanden för vanliga ämnen."
@@ -1929,7 +1931,7 @@ sv:
     city_for_disputes: "Stad för tvister"
     shared_drafts_category: "Aktivera funktionen delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin exkluderas från ämneslistor för personalanvändare."
     push_notifications_prompt: "Visa användarens samtycke genast."
-    push_notifications_icon: "Utmärkelseikonen som visas i notifieringshörnet. Obligatorisk storlek är 96 x 96."
+    push_notifications_icon: "Utmärkelseikonen som visas i notifieringshörnet. En 96x96 enfärgad PNG med genomskinlighet rekommenderas."
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Det bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -3888,6 +3890,9 @@ sv:
         reason: "Raderad via granskningskön"
   email_style:
     html_missing_placeholder: "Html-mallen måste inkludera %{placeholder}"
+  notification_level:
+    ignore_error: "Tyvärr, du kan inte ignorera den användaren."
+    mute_error: "Tyvärr, du kan inte tysta den användaren."
   discord:
     not_in_allowed_guild: "Autentisering misslyckades. Du är inte medlem i ett tillåtet Discord sällskap. "
   old_keys_reminder:

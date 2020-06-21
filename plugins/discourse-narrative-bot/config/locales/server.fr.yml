@@ -120,7 +120,7 @@ fr:
       help_trigger: "afficher l'aide"
       random_mention:
         reply: |-
-          Bonjour ! Pour voir ce que je peux faire, dites `@%{discobot_username} `.
+          Bonjour ! Pour voir ce que je peux faire, dites `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           Pour le moment, je sais faire les choses suivantes :
 
@@ -426,7 +426,7 @@ fr:
           [/details]
           ```
         reply: |-
-          Bau travail — votre attention aux _détails_ est admirable !
+          Beau travail — votre attention aux _détails_ est admirable !
       end:
         message: |-
           Vous avez suivis ce tutoriel comme un _utiliser avancé_ :bow:

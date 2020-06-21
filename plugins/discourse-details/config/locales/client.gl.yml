@@ -7,5 +7,8 @@
 
 gl:
   js:
+    details:
+      title: Agochar detalles
     composer:
       details_title: Resumo
+      details_text: "Este texto será ocultado"

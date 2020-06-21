@@ -1749,6 +1749,8 @@ sw:
         title: "Unganisha Machapisho Uliyochagua"
         action: "unganisha machapisho uliyochagua"
         error: "Hitilafu imetokea wakati wa kuunganisha machapisho yaliyochaguliwa."
+      publish_page:
+        public: "Umma"
       change_owner:
         action: "badilisha umiliki"
         error: "Hitilafu imetokea wakati wa kubadilisha mmiliki wa machapisho."
@@ -1900,7 +1902,6 @@ sw:
           last: "Sahihisho iliopita"
           hide: "Ficha sahihisho"
           show: "Onyesha sahihisho"
-          revert: "Rudi kwenye sahihisho hili"
           edit_wiki: "Hariri Wiki"
           edit_post: "Hariri Chapisho"
         displays:

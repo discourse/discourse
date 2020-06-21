@@ -1526,7 +1526,6 @@ it:
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: assicurati che sia un bucket privato."
     s3_endpoint: "L'endpoint può essere modificato per eseguire il backup su un servizio compatibile S3 come DigitalOcean Spaces o Minio. ATTENZIONE: lasciare vuoto se si utilizza AWS S3."
     s3_configure_tombstone_policy: "Abilita la cancellazione automatica per i caricamenti in \"tombstone\". IMPORTANTE: se disabilitato, nessuno spazio verrà recuperato dopo aver eliminato i caricamenti."
-    s3_disable_cleanup: "Disabilita la rimozione dei backup da S3 quando rimossi localmente."
     enable_s3_inventory: "Genera rapporti e verifica i caricamenti utilizzando l'inventario Amazon S3. IMPORTANTE: richiede credenziali S3 valide (sia l'access key id che la secret access key)."
     backup_time_of_day: "Ora del giorno in UTC in cui eseguire il backup."
     backup_with_uploads: "Includi i caricamenti nei backup programmati. Se disabilitata verrà eseguito il backup del solo database."
@@ -1898,7 +1897,6 @@ it:
     city_for_disputes: "Sede per eventuali controversie"
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
     push_notifications_prompt: "Visualizza richiesta di consenso dell'utente."
-    push_notifications_icon: "L'icona del Distintivo che appare nell'angolo della notifica. La dimensione richiesta è 96 × 96."
     short_title: "Il titolo breve verrà utilizzato nella schermata iniziale dell'tente, nel programma di avvio o in altri contesti in cui lo spazio potrebbe essere limitato. Dovrebbe essere limitato a 12 caratteri."
     dashboard_general_tab_activity_metrics: "Scegli i report da visualizzare come metriche di attività nella scheda generale."
     errors:

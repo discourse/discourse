@@ -8,7 +8,32 @@
 gl:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: Hoxe %{time}
+        tomorrow: Mañá %{time}
+        yesterday: Onte %{time}
+        countdown:
+          passed: superouse a data
+      title: Inserir data e hora
       create:
         form:
+          insert: Inserir
+          advanced_mode: Modo avanzado
+          simple_mode: Modo simple
+          recurring_title: Periodicidade
+          recurring_none: Sen periodicidade
+          invalid_date: Data non válida; asegúrate de que data e hora son correctas
           date_title: Data
           time_title: Hora
+          format_title: Formato da data
+          timezone: Fuso horario
+          until: Ata...
+          recurring:
+            every_day: "Todos os días"
+            every_week: "Todas as semanas"
+            every_two_weeks: "Cada dúas semanas"
+            every_month: "Todos os meses"
+            every_two_months: "Cada dous meses"
+            every_three_months: "Cada tres meses"
+            every_six_months: "Cada seis meses"
+            every_year: "Todos os anos"

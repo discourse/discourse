@@ -770,7 +770,6 @@ fi:
           all: "Kaikki"
           read: "Luetut"
           unread: "Lukematta"
-        ignore_duration_title: "Estoajastin"
         ignore_duration_username: "Käyttäjätunnus"
         ignore_duration_when: "Kesto:"
         ignore_duration_save: "Sivuuta"
@@ -876,7 +875,9 @@ fi:
       admin_delete: "Poista"
       users: "Käyttäjät"
       muted_users: "Vaimennetut"
+      muted_users_instructions: "Älä näytä ilmoituksia tai vastaanota yksityisviestejä näiltä käyttäjiltä."
       ignored_users: "Sivuutettu"
+      ignored_users_instructions: "Älä näytä näiden käyttäjien viestejä, näytä heiltä ilmoituksia äläkä vastaanota heiltä yksityisviestejä."
       tracked_topics_link: "Näytä"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
       apps: "Sovellukset"
@@ -995,6 +996,7 @@ fi:
         taken: "Pahoittelut, tuo nimi on jo käytössä."
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
       add_email:
+        title: "Lisää sähköpostiosoite"
         add: "lisää"
       change_email:
         title: "Vaihda sähköposti"
@@ -1026,7 +1028,15 @@ fi:
         primary: "Ensisijainen sähköpostiosoite"
         secondary: "Toissijaiset sähköpostiosoitteet"
         primary_label: "ensisijainen väri"
+        unconfirmed_label: "vahvistamaton"
+        resend_label: "lähetä vahvistussähköposti uudelleen"
+        resending_label: "lähetetään..."
+        resent_label: "sähköposti lähetetty"
         update_email: "Vaihda sähköposti"
+        set_primary: "Aseta ensisijainen sähköpostiosoite"
+        destroy: "Poista sähköpostiosoite"
+        add_email: "Lisää vaihtoehtoinen sähköpostiosoite"
+        no_secondary: "Ei toissijaisia sähköpostiosoitteita"
         instructions: "Ei tule julkiseksi."
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
         required: "Syötä sähköpostiosoitteesi"
@@ -1179,6 +1189,7 @@ fi:
         expired: "Tämä kutsu on rauennut."
         rescind: "Poista"
         rescinded: "Kutsu poistettu"
+        rescind_all: "Poista vanhentuneet kutsut"
         rescinded_all: "Kaikki vanhentuneet kutsut poistettu!"
         rescind_all_confirm: "Haluatko varmasti poistaa kaikki vanhentuneet kutsut?"
         reinvite: "Lähetä kutsu uudestaan"
@@ -1189,18 +1200,29 @@ fi:
         time_read: "Lukuaika"
         days_visited: "Päiviä vierailtu"
         account_age_days: "Tilin ikä päivissä"
+        source: "Kutsuttiin tavalla"
         links_tab: "Linkit"
+        links_tab_with_count: "Linkit (%{count})"
+        link_url: "Linkki"
         link_created_at: "Luotu"
         link_groups: Ryhmät
+        link_expires_at: Vanhenee
         create: "Lähetä kutsu"
+        copy_link: "Kopioi linkki"
         generate_link: "Kopioi kutsulinkki"
         link_generated: "Kutsulinkki luotiin onnistuneesti!"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
         single_user: "Yksittäinen käyttäjä"
+        multiple_user: "Useita käyttäjiä"
         invite_link:
+          title: "Kutsulinkki"
           success: "Kutsulinkki luotiin onnistuneesti!"
+          error: "Kutsulinkin luominen epäonnistui"
+          max_redemptions_allowed_label: "Kuinka moni voi enintään liittyä tämä linkin avulla?"
+          expires_at: "Koska tämä linkki vanhenee?"
         bulk_invite:
           none: "Et ole kutsunut vielä ketään tänne. Voit lähettää yksittäisiä kutsuja tai kutsua joukon ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lataamalla CSV-tiedoston</a>."
+          text: "Massakutsu"
           success: "Tiedoston lähettäminen onnistui. Saat viestin, kun prosessi on valmis."
           error: "Pahoittelut, tiedoston tulee olla CSV-muodossa."
           confirmation_message: "Olet lähettämässä kutsun kaikkiin sähköpostiosoitteisiin, jotka lähettämässäsi tiedostossa on."
@@ -1691,6 +1713,9 @@ fi:
         message:
           one: "Uusi yksityisviesti"
           other: "%{count} uutta yksityisviestiä"
+        high_priority:
+          one: "%{count} korkean prioriteetin ilmoitus"
+          other: "%{count} lukematonta korkean prioriteetin ilmoitusta"
       title: "ilmoitukset @nimeen viittauksista, vastauksista omiin viesteihin ja ketjuihin, viesteistä ym."
       none: "Ilmoitusten lataaminen ei onnistunut."
       empty: "Ilmoituksia ei löydetty."
@@ -1999,6 +2024,7 @@ fi:
         time_frame_required: Valitse ajanjakso
       auto_update_input:
         none: "Valitse ajanjakso"
+        now: "Nyt"
         later_today: "Myöhemmin tänään"
         tomorrow: "Huomenna"
         later_this_week: "Myöhemmin tällä viikolla"
@@ -2258,6 +2284,18 @@ fi:
       publish_page:
         title: "Sivujulkaisu"
         publish: "Julkaise"
+        description: "Kun ketju julkaistaan sivuna, sen verkko-osoitteen voi jakaa ja se näytetään erityisellä tavalla muotoiltuna."
+        slug: "Polkutunnus"
+        public: "Julkinen"
+        public_description: "Ihmiset näkevät sivun, vaikka siihen liittyvä ketju olisi yksityinen."
+        publish_url: "Sivusi julkaistiin osoitteessa:"
+        topic_published: "Ketjusi julkaistiin osoitteessa;"
+        preview_url: "Sivusi julkaistaan osoitteessa:"
+        invalid_slug: "Pahoittelut, et voi julkaista tätä sivua."
+        unpublish: "Peru julkaisu"
+        update: "Päivitä"
+        unpublished: "Sivusi julkaisu peruttiin, sille ei ole enää pääsyä."
+        publishing_settings: "Julkaisuasetukset"
       change_owner:
         title: "Vaihda omistajaa"
         action: "muokkaa omistajuutta"
@@ -2266,6 +2304,9 @@ fi:
         instructions:
           one: "Valitse uusi omistaja käyttäjän <b>@%{old_user}</b> viestille."
           other: "Valitse uusi omistaja käyttäjän <b>@%{old_user}</b> %{count} viestille."
+        instructions_without_old_user:
+          one: "Valitse uusi omistaja viestille"
+          other: "Valitse uusi omistaja %{count} viestille"
       change_timestamp:
         title: "Muuta aikaleimaa..."
         action: "muuta aikaleimaa"
@@ -2459,7 +2500,7 @@ fi:
           last: "Viimeinen revisio"
           hide: "Piilota revisio"
           show: "Näytä revisio"
-          revert: "Palaa tähän revisioon"
+          revert: "Palaa revisioon %{revision}"
           edit_wiki: "Muokkaa wikiä"
           edit_post: "Muokkaa viestiä"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2486,13 +2527,19 @@ fi:
             button: "HTML"
       bookmarks:
         create: "Luo kirjanmerkki"
+        edit: "Muokkaa kirjanmerkkiä"
         created: "Luotu"
         updated: "Päivitetty"
         name: "Nimi"
+        name_placeholder: "Mitä varten kirjanmerkki on?"
+        set_reminder: "Muistuta minua"
         actions:
           delete_bookmark:
             name: "Poista kirjanmerkki"
             description: "Poistaa kirjanmerkin profiilistasi ja kumoaa kaikki kirjanmerkkiin liittyvät muistutukset"
+          edit_bookmark:
+            name: "Muokkaa kirjanmerkkiä"
+            description: "Muokkaa kirjanmerkin nimeä tai säädä muistutuksen päivämäärää ja kellonaikaa"
     category:
       can: "voivat&hellip; "
       none: "(ei aluetta)"
@@ -2797,6 +2844,7 @@ fi:
         this_month: "Kuukausi"
         this_week: "Viikko"
         today: "Tänään"
+    browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaimesi on liian vanha eikä siksi toimi tällä sivustolla</a>. <a href="https://browsehappy.com">Päivitä selaimesi</a> niin voit katsella nykyaikaisia sisältöjä, kirjautua sisään ja vastata.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -2852,6 +2900,18 @@ fi:
         title: "Kirjoittaminen"
         return: "%{shortcut} Palaa viestikenttään"
         fullscreen: "%{shortcut} Koko ruudun kirjoitustila"
+      bookmarks:
+        title: "Kirjanmerkit"
+        later_today: "%{shortcut} Myöhemmin tänään"
+        later_this_week: "%{shortcut} Myöhemmin tällä viikolla "
+        tomorrow: "%{shortcut} Huomenna"
+        next_week: "%{shortcut} Ensi viikolla"
+        next_month: "%{shortcut} Ensi kuussa"
+        next_business_week: "%{shortcut} Ensi viikon alussa"
+        next_business_day: "%{shortcut} Seuraavana arkipäivänä"
+        custom: "%{shortcut} Valitse päivämäärä ja kellonaika"
+        none: "%{shortcut} Ei muistutusta"
+        delete: "%{shortcut} Poista kirjanmerkk"
       actions:
         title: "Toiminnot"
         bookmark_topic: "%{shortcut} Aseta kirjanmerkkeihin/poista"
@@ -2874,6 +2934,8 @@ fi:
         print: "%{shortcut} Tulosta ketju"
         defer: "%{shortcut} Lykkää ketjua"
         topic_admin_actions: "%{shortcut} Avaa ketjun ylläpitotyökalut"
+      search_menu:
+        title: "Hakuvalikko"
     badges:
       earned_n_times:
         one: "Ansaitsi tämän ansiomerkin yhden kerran"

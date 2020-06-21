@@ -80,6 +80,8 @@ th:
       other: "%{count} โพส"
   activerecord:
     attributes:
+      category:
+        name: "ชื่อหมวดหมู่"
       topic:
         title: "ชื่อเรื่อง"
         category_id: "หมวดหมู่"
@@ -110,11 +112,17 @@ th:
   post_action_types:
     spam:
       title: "ขยะ"
+      long_form: "ปักธงไว้ว่าเป็นสแปม"
+    inappropriate:
+      long_form: "ปักธงไว้ว่าไม่เหมาะสม"
     bookmark:
       title: "บุ๊คมาร์ค"
   topic_flag_types:
     spam:
       title: "ขยะ"
+      long_form: "ปักธงไว้ว่าเป็นสแปม"
+    inappropriate:
+      long_form: "ปักธงไว้ว่าไม่เหมาะสม"
   archetypes:
     banner:
       title: "ป้ายหัวข้อ"
@@ -198,6 +206,9 @@ th:
       labels:
         user: ผู้ใช้
         location: ที่อยู่
+    top_uploads:
+      labels:
+        filename: ชื่อไฟล์
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:
@@ -322,7 +333,9 @@ th:
     set_password:
       title: "ตั้งรหัสผ่าน"
   page_not_found:
+    popular_topics: "ยอดนิยม"
     see_more: "อื่น"
+    search_title: "ค้นหาเว็บไซต์นี้"
     search_button: "ค้นหา"
   image: "รูปภาพ"
   csv_export:
@@ -372,6 +385,8 @@ th:
         title: "องค์กร"
       colors:
         title: "ธีม"
+      themes_further_reading:
+        title: "ธีม"
       homepage:
         fields:
           homepage_style:
@@ -399,9 +414,12 @@ th:
       custom: "การแจ้งเตือนจาก %{username} บน %{site_title}"
   reviewables:
     priorities:
+      low: "ต่ำ"
       medium: "ปานกลาง"
       high: "สูง"
     sensitivity:
+      disabled: "ปิดใช้งานแล้ว"
+      low: "ต่ำ"
       medium: "ปานกลาง"
       high: "สูง"
     actions:
