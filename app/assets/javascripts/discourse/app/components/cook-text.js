@@ -13,11 +13,13 @@ const CookText = Component.extend({
       this.set("cooked", cooked);
       // no choice but to defer this cause
       // pretty text may only be loaded now
-      next(() =>
-        window
-          .requireModule("pretty-text/upload-short-url")
-          .resolveAllShortUrls(ajax, this.siteSettings, this.element)
-      );
+      next(() => {
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          return window
+            .requireModule("pretty-text/upload-short-url")
+            .resolveAllShortUrls(ajax, this.siteSettings, this.element);
+        }
+      });
     });
   }
 });
