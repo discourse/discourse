@@ -76,17 +76,19 @@ module FileStore
       not_implemented
     end
 
-    def download(upload, max_file_size_kb: nil)
-      DistributedMutex.synchronize("download_#{upload.sha1}", validity: 3.minutes) do
-        filename = "#{upload.sha1}#{File.extname(upload.original_filename)}"
+    def download(object, max_file_size_kb: nil)
+      DistributedMutex.synchronize("download_#{object.sha1}", validity: 3.minutes) do
+        extension = File.extname(object.respond_to?(:original_filename) ? object.original_filename : object.url)
+        filename = "#{object.sha1}#{extension}"
         file = get_from_cache(filename)
 
         if !file
           max_file_size_kb ||= [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
-          url = upload.secure? ?
-            Discourse.store.signed_url_for_path(upload.url) :
-            Discourse.store.cdn_url(upload.url)
+          secure = object.respond_to?(:secure) ? object.secure? : object.upload.secure?
+          url = secure ?
+            Discourse.store.signed_url_for_path(object.url) :
+            Discourse.store.cdn_url(object.url)
 
           url = SiteSetting.scheme + ":" + url if url =~ /^\/\//
           file = FileHelper.download(
@@ -95,6 +97,7 @@ module FileStore
             tmp_file_name: "discourse-download",
             follow_redirect: true
           )
+
           cache_file(file, filename)
           file = get_from_cache(filename)
         end

@@ -292,68 +292,82 @@ describe OptimizedImage do
     end
 
     describe "external store" do
-      let(:s3_upload) { Fabricate(:upload_s3) }
-
       before do
         SiteSetting.enable_s3_uploads = true
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "some key"
         SiteSetting.s3_secret_access_key = "some secret key"
         SiteSetting.s3_region = "us-east-1"
-
-        tempfile = Tempfile.new(["discourse-external", ".png"])
-
-        %i{head get}.each do |method|
-          stub_request(method, "http://#{s3_upload.url}")
-            .to_return(
-              status: 200,
-              body: tempfile.read
-            )
-        end
       end
 
       context "when we have a bad file returned" do
         it "returns nil" do
-          # tempfile is empty
-          # this can not be resized
+          s3_upload = Fabricate(:upload_s3)
+          stub_request(:head, "http://#{s3_upload.url}").to_return(status: 200)
+          stub_request(:get, "http://#{s3_upload.url}").to_return(status: 200)
+
           expect(OptimizedImage.create_for(s3_upload, 100, 200)).to eq(nil)
         end
       end
 
       context "when the thumbnail is properly generated" do
-        before do
-          OptimizedImage.expects(:resize).returns(true)
+        context "secure media disabled" do
+          let(:s3_upload) { Fabricate(:upload_s3) }
+          let(:optimized_path) { "/optimized/1X/#{s3_upload.sha1}_2_100x200.png" }
+
+          before do
+            stub_request(:head, "http://#{s3_upload.url}").to_return(status: 200)
+            stub_request(:get, "http://#{s3_upload.url}").to_return(status: 200, body: file_from_fixtures("logo.png"))
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+            stub_request(:put, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{optimized_path}")
+              .to_return(status: 200, headers: { "ETag" => "someetag" })
+          end
+
+          it "downloads a copy of the original image" do
+            oi = OptimizedImage.create_for(s3_upload, 100, 200)
+
+            expect(oi.sha1).to_not be_nil
+            expect(oi.extension).to eq(".png")
+            expect(oi.width).to eq(100)
+            expect(oi.height).to eq(200)
+            expect(oi.url).to eq("//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com#{optimized_path}")
+            expect(oi.filesize).to be > 0
+          end
+
+          it "allows to recalculate the filesize" do
+            oi = OptimizedImage.create_for(s3_upload, 100, 200)
+            oi.filesize = nil
+
+            stub_request(
+              :get,
+              "http://#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com#{optimized_path}"
+            ).to_return(status: 200, body: file_from_fixtures("resized.png"))
+
+            expect(oi.filesize).to be > 0
+          end
         end
 
-        it "downloads a copy of the original image" do
-          optimized_path = "/optimized/1X/#{s3_upload.sha1}_2_100x200.png"
+        context "secure uploads enabled" do
+          it "allows to recalculate the filesize" do
+            SiteSetting.secure_media = true
+            s3_upload = Fabricate(:secure_upload_s3)
 
-          stub_request(
-            :head,
-            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/"
-          )
+            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+            stub_request(:get, Discourse.store.signed_url_for_path(s3_upload.url)).to_return(status: 200, body: file_from_fixtures("logo.png"))
+            stub_request(:put, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/optimized/1X/#{s3_upload.sha1}_2_100x200.png")
+              .to_return(status: 200, headers: { "ETag" => "someetag" })
 
-          stub_request(
-            :put,
-            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{optimized_path}"
-          ).to_return(
-            status: 200,
-            headers: { "ETag" => "someetag" }
-          )
+            oi = OptimizedImage.create_for(s3_upload, 100, 200)
+            oi.filesize = nil
 
-          oi = OptimizedImage.create_for(s3_upload, 100, 200)
+            stub_request(:get, Discourse.store.signed_url_for_path(oi.url))
+              .to_return(status: 200, body: file_from_fixtures("resized.png"))
 
-          expect(oi.sha1).to eq("da39a3ee5e6b4b0d3255bfef95601890afd80709")
-          expect(oi.extension).to eq(".png")
-          expect(oi.width).to eq(100)
-          expect(oi.height).to eq(200)
-          expect(oi.url).to eq("//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com#{optimized_path}")
+            expect(oi.filesize).to be > 0
+          end
         end
-
       end
-
     end
-
   end
 
   describe '#destroy' do

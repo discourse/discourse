@@ -156,9 +156,7 @@ class OptimizedImage < ActiveRecord::Base
     if size = read_attribute(:filesize)
       size
     else
-      # we may have a bad optimized image so just skip for now
-      # and do not break here
-      size = calculate_filesize rescue nil
+      size = calculate_filesize
 
       write_attribute(:filesize, size)
       if !new_record?
