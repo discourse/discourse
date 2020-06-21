@@ -1516,7 +1516,6 @@ sq:
           last: "Revizioni i fundit"
           hide: "Fshihe revizionin"
           show: "Trego revizionin"
-          revert: "Rikthe këtë version"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"

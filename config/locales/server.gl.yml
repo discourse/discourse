@@ -20,17 +20,68 @@ gl:
     <<: *datetime_formats
   time:
     <<: *datetime_formats
+    am: "am"
+    pm: "pm"
   title: "Discourse"
   topics: "Temas"
   posts: "publicacións"
-  loading: "Cargndo"
+  loading: "Cargando"
+  powered_by_html: 'Con tecnoloxía de <a href="https://www.discourse.org">Discourse</a>, vese mellor con Java habilitado'
   sign_up: "Crear unha conta"
   log_in: "Iniciar sesión"
   submit: "Enviar"
+  purge_reason: "Conta eliminada automaticamente por abandono; conta desactivada"
+  disable_remote_images_download_reason: "Habilitouse a descarga remota de imaxes por non haber espazo suficiente no disco."
   anonymous: "Anónimo"
+  remove_posts_deleted_by_author: "Eliminada polo autor"
+  redirect_warning: "Non puidemos verificar que a ligazón que seleccionaches está publicada agora mesmo no foro. Se queres continuar igualmente, selecciona a seguinte ligazón."
+  on_another_topic: "Noutro tema"
+  themes:
+    bad_color_scheme: "Non se pode actualizar o tema; paleta de cores non válida"
+    other_error: "Algo foi mal ao actualizar o tema"
+    compile_error:
+      unrecognized_extension: "Extensión de ficheiro non recoñecida: %{extension}"
+    import_error:
+      generic: Produciuse un erro mentres se importaba este tema
+      about_json: "Erro importante: about.json non existe ou non é válido. Tes a certeza que este é un tema de Discourse?"
+      about_json_values: "about.json contén valores non válidos: %{errors}"
+      modifier_values: "os modificadores about.json coteñen valores non válidos: %{errors}"
+      git: "Erro ao clonar o repositorio git; o acceso está denegado ou non se atopou o repositorio"
+      unpack_failed: "Erro ao descomprimir o ficheiro"
+      file_too_big: "O ficheiro sen comprimir é demasiado grande."
+      unknown_file_type: "O ficheiro que cargaches non semella ser un tema válido de Discourse."
+    errors:
+      component_no_user_selectable: "Os compoñentes do tema non poden ser seleccionados polo usuario"
+      component_no_default: "Os compoñentes do tema non poden ser o tema predefinido"
+      component_no_color_scheme: "Os compoñenetes do tema non poden ter paletas de cores"
+    settings_errors:
+      invalid_yaml: "O YAML proporcionado non é válido."
+      name_too_long: "Hai un axuste cun nome demasiado longo; a lonxitude máxima é de 255 caracteres"
+      default_value_missing: "O axuste '%{name}' non ten un valor predefinido"
+      number_value_not_valid: "O novo valor no nestá dentro do rango permitido."
+      number_value_not_valid_min_max: "Debe ser entre %{min} e %{max}."
+      number_value_not_valid_min: "Debe ser maior ou igual que %{min}."
+      number_value_not_valid_max: "Debe ser menor ou igual que %{max}."
+      string_value_not_valid: "A lonxitude do novo valor non está no intervalo permitido."
+      string_value_not_valid_min_max: "Debe ter entre %{min} e %{max} caracteres de lonxitude."
+      string_value_not_valid_min: "Debe ter ao menos %{min} caracteres."
+      string_value_not_valid_max: "Debe ter un máximo de %{max} caracteres."
+    locale_errors:
+      invalid_yaml: "YAML de tradución non válido"
+  emails:
+    incoming:
+      default_subject: "Este tema necesita un título"
+      show_trimmed_content: "Mostrar contido recortado"
+      maximum_staged_user_per_email_reached: "Alcanzouse o número máximo de usuarios creados por correo electrónico."
+      no_subject: "(sen asunto)"
+      no_body: "(sen mensaxe)"
+      missing_attachment: "(falta o ficheiro anexo %{filename})"
+      unrecognized_error: "Erro non recoñecido"
   errors: &errors
     format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      too_long_validation: "Límite de %{max} caracteres; inseriches %{length}."
       taken: "xa está en uso"
       accepted: debe ser aceptado
       blank: non pode quedar baleiro
@@ -44,60 +95,234 @@ gl:
       has_already_been_used: "xa está en uso"
       inclusion: no está incluído na lista
       invalid: é incorrecto
+      is_invalid: "parece pouco claro, é unha oración completa?"
+      invalid_timezone: "'%{tz}' non é un fuso horario válido"
+      contains_censored_words: "contén as seguintes palabras censuradas: %{censored_words}"
       less_than: "debe ser menor de %{count}"
       less_than_or_equal_to: "debe ser igual ou menor de %{count}"
       not_a_number: non é un número
       not_an_integer: debe ser un enteiro
       odd: debe ser impar
       record_invalid: "Fallou a validación: %{errors}"
+      max_emojis: "non pode ter máis de %{max_emojis_count} emojis"
+      emojis_disabled: "non pode ter emojis"
+      ip_address_already_screened: "xa está incluído nunha regra existente"
       restrict_dependent_destroy:
-        one: "Non é posíbel eliminalo porque existe outro %{record} dependente"
-        many: "Non é posíbel eliminalo porque existen outros %{record} dependentes"
+        one: "Non é posible eliminalo porque existe outro %{record} dependente"
+        many: "Non é posible eliminalo porque existen outros %{record} dependentes"
       too_long:
         one: demasiado longo (máximo un caracterer)
         other: demasiado longo (máximo %{count} caracteres)
       too_short:
         one: demasiado curto (mínimo un caracter)
         other: demasiado curto (mínimo %{count} caracteres)
+      wrong_length:
+        one: ten unha lonxitude incorrecta (debería ser de %{count} caracter)
+        other: ten unha lonxitude incorrecta (debería ser de %{count} caracteres)
       other_than: "debe ser distinto de %{count}"
+      sso_overrides_username: "O nome de usuario ten que actualizarse do lado do provedor SSO, dado que o axuste `sso_overrides_username` está activado."
     template:
       body: "Producíronse problemas cos seguintes campos:"
+      header:
+        one: "%{count} erro impediu gardar este %{model}"
+        other: "%{count} erros impediron gardar este %{model}"
     embed:
       load_from_remote: "Produciuse un erro cargando esta publicación."
+    site_settings:
+      invalid_category_id: "Especificaches unha categoría que non existe"
+      default_categories_already_selected: "Non podes seleccionar unha categoría utilizada noutra listaxe."
+      default_tags_already_selected: "Non podes seleccionar unha etiqueta utilizada noutra listaxe."
+      s3_upload_bucket_is_required: "Non se poden activar as cargas a S3 a menos que proporciones un valor 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "Non podes activar o inventario en S3 a menos que actives as cargas en S3."
+      s3_backup_requires_s3_settings: "Non podes utilizar S3 como localización da copia de seguranza a menos que proporcionaras '%{setting_name}'."
+      s3_bucket_reused: "Non podes utilizar o mesmo depósito (bucket) para 's3_upload_bucket' e 's3_backup_bucket'. Elixe un depósito diferente ou utiliza un camiño distinto para cada un deles."
+      secure_media_requirements: "Débese habilitar a carga de S3 antes de habilitar medios seguros."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Non podes aplicar 2FA se os inicios de sesión locais estás deshabilitados."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "Non podes deshabilitar o inicio de sesión local se se aplica 2FA. Deshabilita 2FA antes de deshabilitar os inicios de sesión locais."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "Non podes habilitar as cargas S3 porque xa están habilitadas globalmente e habilitar este nivel de sitio podería provocar problemas críticos coas cargas."
+    conflicting_google_user_id: 'A ID de Google para esta conta cambiou; requírese a intervención do equipo por razóns de seguridade. Contacta con el e envíalle esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
       <<: *errors
+  invite:
+    not_found: "O teu código de invitación non é válido. <a href='%{base_url}/about'>Contacta co noso equipo</a>."
+    not_found_json: "O teu  código de invitación non é válido. Contacta co noso equipo."
+    not_found_template: |
+      <p>A túa invitación a <a href="%{base_url}">%{site_name}</a> xa foi aceptada.</p>
+
+      <p>Se lembras o teu contrasina, podes <a href="%{base_url}/login">iniciar sesión.</p>
+
+      <p>Se non é así, </a>restablece o contrasinal</a>.</p>
+    error_message: "Houbo un erro ao aceptar a invitación. Contacta co administrador do sitio."
+    user_exists: "Non necesitas invitar a <b>%{email}</b>, pois <a href='%{base_path}/u/%{username}/summary'>xa teñen unha conta!</a>"
+    confirm_email: "<p>Xa case está! Enviámosche un correo de activación ao teu enderezo electrónico. Sigue as instrucións para activar a túa conta.</p><p>Se non che chega, comprobar o cartafol de correo lixo.</p>"
+  bulk_invite:
+    file_should_be_csv: "O ficheiro cargado debe ter o formato CSV."
+    max_rows: "As primeiras %{max_bulk_invites} invitacións xa foron enviadas. Tenta dividir o ficheiro en partes máis pequenas."
+    error: "Houbo un erro ao cargar o ficheiro. Téntao máis tarde."
+  invite_link:
+    email_taken: "Este correo electrónico xa está en uso. Se xa tes unha conta, inicia sesión ou restablece o contrasinal."
+    max_redemptions_limit: "debería estar entre 2 e %{max_limit}."
+  topic_invite:
+    failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
+    user_exists: "Este usuario xa foi invitado. Só se pode invitar a un usuario a un tema unha única vez."
+  backup:
+    operation_already_running: "Estase a executar unha operación. Nestes intres non se pode iniciar un novo traballo."
+    backup_file_should_be_tar_gz: "O ficheiro da copia de seguranza debe ter formato .tar.gz."
+    not_enough_space_on_disk: "Non hai suficiente espazo no disco para cargar a copia de seguranza."
+    invalid_filename: "O nome do ficheiro da copia de seguranza contén caracteres non válidos. Os caracteres que se admiten son a-z e 0-9."
+    file_exists: "O ficheiro que estás tentando subir xa existe."
+    location:
+      local: "Local"
+      s3: "Amazon S3"
+  invalid_params: "Proporcionaches parámetros non válidos para a solicitude: %{message}"
   not_logged_in: "Debes iniciar sesión para facer iso."
   not_found: "Non foi posíbel atopar o recurso ou URL solicitado."
   invalid_access: "Non se che permite ver o recurso solicitado."
+  authenticator_not_found: "O método de verificación non existe ou foi deshabilitado."
+  invalid_api_credentials: "Non tes permiso para ver o recurso solicitado. O nome de usuario API ou a chave non é válida."
+  provider_not_enabled: "Non tes permiso para ver o recurso solicitado. O provedor de autenticación non está habilitado."
+  provider_not_found: "Non tes permiso para ver o recurso solicitado. O provedor de autenticación non existe."
   read_only_mode_enabled: "O sitio está en modo só-lectura. As interaccións están desactivadas."
+  email_template_cant_be_modified: "Este modelo de correo electrónico non pode ser modificado."
+  not_in_group:
+    title_topic: "Debes estar no grupo para ver este tema."
+    title_category: "Debes estar no grupo para ver esta categoría."
+    request_membership: "Solicitar ser membro"
+    join_group: "Unirse ao grupo"
+  deleted_topic: "Vaites! Este tema foi eliminado e xa non está dispoñible."
+  delete_topic_failed: "Houbo un erro ao eliminar este tema. Contacta co administrador do sitio."
   reading_time: "Tempo de lectura"
   likes: "Gústames"
+  too_many_replies:
+    one: "Sentímolo, mais os novos usuarios teñen temporalmente o límite de %{count} respostas no mesmo tema."
+    other: "Sentímolo, mais os novos usuarios teñen temporalmente un límite de %{count} resposta no mesmo tema."
+  max_consecutive_replies:
+    one: "Non se permiten respostas consecutivas. Edita a túa resposta anterior ou agarda a que alguén che responda."
+    other: "Non se permiten máis de %{count} respostas consecutivas. Edita a túa resposta anterior ou agarda a que alguén che responda."
   embed:
-    start_discussion: "Comezar a discusión"
-    continue: "Continuar a discusión"
+    start_discussion: "Comezar discusión"
+    continue: "Continuar discusión"
+    error: "Erro ao inserir"
+    referer: "Referente:"
+    error_topics: "A configuración do sitio 'listaxe de temas inseridos' non está activada"
+    mismatch: "O referente non se enviou ou non coincide con ningún dos seguintes hosts:"
+    configure: "Configurar inserción"
     more_replies:
       one: "Unha resposta máis"
       other: "%{count} respostas máis"
-    loading: "Cargando a discusión..."
+    loading: "Cargando discusión..."
     permalink: "Ligazón permanente"
+    imported_from: "Este é un tema de discusión derivado da entrada %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} resposta"
+      other: "%{count} repostas"
+    likes:
+      one: "%{count} gústame"
+      other: "%{count} gústames"
+    last_reply: "Última resposta"
     created: "Creado"
-  no_mentions_allowed: "Sentímolo pero non podes mencionar outros usuarios"
+    new_topic: "Crear novo tema"
+  no_mentions_allowed: "Sentímolo, mais non podes mencionar outros usuarios."
+  too_many_mentions:
+    one: "Sentímolo, pero só podes mencionar un outro usuario nunha publicación."
+    other: "Sentímolo, mais non podes mencionar %{count} usuarios nunha publicación."
+  no_mentions_allowed_newuser: "Sentímolo, mais os novos usuarios non poden mencionar a outros."
+  too_many_mentions_newuser:
+    one: "Sentímolo, mais os novos usuarios só poden mencionar un usuario nunha publicación."
+    other: "Sentímolo, mais os novos usuarios só poden mencionar a %{count} usuarios nunha publicación."
+  no_images_allowed_trust: "Sentímolo, mais non podes poñer imaxes nunha publicación."
+  no_images_allowed: "Sentímolo, mais os novos usuarios non poden poñer imaxes nas publicacións."
+  too_many_images:
+    one: "Sentímolo, mais os novos usuarios só poden poñer unha imaxe nunha publicación."
+    other: "Sentímolo, mais os novos usuarios só poden poñer %{count} imaxes nunha publicación."
+  no_attachments_allowed: "Sentímolo, mais os novos usuarios non poden anexar ficheiros nas publicacións."
+  too_many_attachments:
+    one: "Sentímolo, mais os novos usuarios só poden anexar un ficheiro nunha publicación."
+    other: "Sentímolo, mais os novos usuarios só poden anexar %{count} ficheiros nunha publicación."
+  no_links_allowed: "Sentímolo, mais os novos usuarios non poden poñer ligazóns nas publicacións."
+  links_require_trust: "Sentímolo, non podes incluír ligazóns nas túas publicacións."
+  too_many_links:
+    one: "Sentímolo, mais os novos usuarios só poden poñer unha ligazón nunha publicación."
+    other: "Sentímolo, mais os novos usuarios só poden poñer %{count} ligazóns nunha publicación."
+  contains_blocked_word: "A túa publicación contén unha palabra que non está permitida: %{word}"
+  contains_blocked_words: "A túa publicación contén varias palabras que non están permitidas: %{words}"
+  spamming_host: "Sentímolo, non podes publicar unha ligazón a ese sitio."
+  user_is_suspended: "Aos usuarios suspendidos non se lles permite publicar."
+  topic_not_found: "Algo foi mal. Talvez este tema foi pechado ou eliminado mentres o estabas a mirar?"
+  not_accepting_pms: "Sentímolo, %{username} non acepta mensaxes neste momento."
+  max_pm_recipients: "Sentímolo, podes enviar mensaxes a un máximo de %{recipients_limit} destinatarios."
+  pm_reached_recipients_limit: "Sentímolo, non podes ter máis de %{recipients_limit} destinatarios nunha mensaxe."
+  just_posted_that: "é moi semellante ao que xa publicaches recentemente."
   invalid_characters: "contén caracteres incorrectos"
+  is_invalid: "parece pouco claro, é unha oración completa?"
   next_page: "páxina seguinte →"
   prev_page: "← páxina anterior"
   page_num: "Páxina %{num}"
   home_title: "Inicio"
+  topics_in_category: "Temas na categoría '%{category}'"
   rss_posts_in_topic: "Fonte RSS de '%{topic}»"
+  rss_topics_in_category: "Fonte RSS dos temas na categoría '%{category}'"
+  rss_num_posts:
+    one: "%{count} publicación"
+    other: "%{count} publicacións"
+  rss_num_participants:
+    one: "%{count} participante"
+    other: "%{count} participantes"
   read_full_topic: "Ler todo o tema"
   private_message_abbrev: "Msx."
   rss_description:
     latest: "Últimos temas"
+    top: "Temas destacados"
+    top_all: "Todos os temas destacados"
+    top_yearly: "Temas destacados do ano"
+    top_quarterly: "Temas destacados do trimestre"
+    top_monthly: "Temas destacados do mes"
+    top_weekly: "Temas destacados da semana"
+    top_daily: "Temas destacados do día"
     posts: "Últimas publicacións"
-  too_late_to_edit: "Esta publicación ten moito tempo. Xa non se pode modificar nin eliminar."
+    private_posts: "Últimas mensaxes privadas"
+    group_posts: "Últimas publicacións de %{group_name}"
+    group_mentions: "Últimas mencións de %{group_name}"
+    user_posts: "Últimas publicacións de @%{username}"
+    user_topics: "Últimos temas de @%{username}"
+    tag: "Temas etiquetados"
+  too_late_to_edit: "Esta publicación é de hai moito tempo. Xa non se pode modificar nin eliminar."
+  edit_conflict: "Esta publicación foi editada por outro usuario e os teus cambios non se poden gardar."
+  revert_version_same: "A versión actual é a mesma que a versión á que tentas volver."
   excerpt_image: "imaxe"
+  bookmarks:
+    errors:
+      already_bookmarked_post: "Non podes gardar a mesma publicación nos marcadores dúas veces."
+      cannot_set_past_reminder: "Non podes establecer un recordatorio de marcador no pasado."
+      cannot_set_reminder_in_distant_future: "Non podes establecer un recordatorio de marcador máis de 10 anos cara ao futuro."
+      time_must_be_provided: "o período debe ser facilitado para todos os recordatorios"
+    reminders:
+      at_desktop: "A vindeira vez que estea no meu ordenador"
+      later_today: "Hoxe, máis tarde"
+      next_business_day: "O vindeiro día laborable"
+      tomorrow: "Mañá"
+      next_week: "A vindeira semana"
+      next_month: "O vindeiro mes"
+      custom: "Personalizar data e hora"
   groups:
+    success:
+      bulk_add:
+        one: "%{count} usuario foi engadido ao grupo."
+        other: "%{count} usuarios foron engadidos ao grupo."
+    errors:
+      grant_trust_level_not_valid: "'%{trust_level}' non é un nivel de confianza válido."
+      can_not_modify_automatic: "Non podes modificar un grupo automático"
+      member_already_exist:
+        one: "'%{username}' xa é membro deste grupo."
+        other: "Os seguintes usuarios xa son membros deste grupo: %{username}"
+      invalid_domain: "'%{domain}' non é un dominio válido."
+      invalid_incoming_email: "'%{email}' non é un enderezo electrónico válido."
+      email_already_used_in_group: "'%{email}' xa está en uso polo grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' xa está en uso pola categoría '%{category_name}'."
+      cant_allow_membership_requests: "Non podes permitir solicitudes para ser membros de grupos que carecen de propietario."
+      already_requested_membership: "Xa solicitaches ser membro deste grupo. "
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -108,10 +333,59 @@ gl:
       trust_level_2: "nivel_de_confianza_2"
       trust_level_3: "nivel_de_confianza_3"
       trust_level_4: "nivel_de_confianza_4"
+    request_membership_pm:
+      title: "Solicitude de ser membro para @%{group_name}"
+    request_accepted_pm:
+      title: "Aceptouse a túa solicitude para  @%{group_name}"
+      body: |
+        A túa solicitude para entrar no grupo @%{group_name} foi aceptada e agora xa es membro.
+    view_hidden_topic_request_reason: "Gustaríame unirme ao grupo '%{group_name}' para poder acceder a [este tema](%{topic_url})"
   education:
     until_posts:
-      one: "Unha publicación"
+      one: "%{count} publicación"
       other: "%{count} publicacións"
+    "new-topic": |
+      Benvido/a a %{site_name} &mdash; **grazas por iniciares unha nova conversa!**
+
+      - Se o les en voz alta, soa ben o seu título? É un bo resumo do que trata?
+
+      - Quen terá interese por ler isto? Por que é importante? A que tipo de respostas queres dar pé?
+
+      - Inclúe palabras de uso frecuente no teu tema para facilitar que poida ser atopado. Para agrupalo con outros temas relacionados, selecciona unha categoría.
+
+      Para máis información, [visita as nosas guías para a comunidade](%{base_path}/guidelines). Este panel só aparecerá nas túas %{education_posts_text} primeiras publicacións.
+    "new-reply": |
+      Benvido/a a %{site_name} &mdash; **grazas pola túa contribución!**
+
+      - Dalgún xeito a túa resposta mellora a conversa?
+
+      - Sé amable cos demais membros da comunidade.
+
+      - A crítica construtiva é benvida, mais lembra criticar as ideas non as persoas.
+
+      Para máis información, [visita as nosas guías para a comunidade](%{base_path}/guidelines). Este panel só aparecerá nas túas %{education_posts_text} primeiras publicacións.
+    avatar: |
+      ### Que tal se lle engades unha imaxe á túa conta?
+
+      Xa publicaches uns cantos temas e respostas, mais a túa imaxe de perfil non é única coma ti; é simplemente unha letra.
+
+      Pensaches na posibilidade de **[visitar o teu perfil de usuario](%{profile_path})** e subir unha imaxe que te represente?
+
+      É máis fácil seguir debates e atopar xente interesante nas conversas cando cadaquén ten unha imaxe de perfil individualizada!
+    sequential_replies: |
+      ### Considera a posibilidade de responder varias publicación a un tempo
+
+      No canto de publicares varias respostas seguidas nun mesmo tema, pensa na opción de dar unha única resposta que inclúa citas de respostas anteriores ou mencións a outros @usuarios.
+
+      Podes editar a túa resposta e engadir unha cita seleccionando o texto e premendo no botón <b>citar resposta</b> que aparece.
+
+      É máis sinxelo para a comunidade ler temas con menos respostas, pero con máis contido, que moitas respostas pequenas e individuais.
+    dominating_topic: |
+      ### Permite que máis xente se una á conversa
+
+      Parece claro que este tema che importa &ndash; publicaches máis do %{percent}% das respostas.
+
+      Aínda podería ser mellor se lles deses espazo a outras persoas para compartiren o seu punto de vista. Que tal se as convidas?
   activerecord:
     attributes:
       category:
@@ -154,6 +428,9 @@ gl:
     topic_prefix: "Sobre a categoría %{category}"
     errors:
       depth: "Non podes aniñar unha subcategoría dentro doutra"
+      invalid_email_in: "'%{email}' non é un enderezo electrónico válido."
+      email_already_used_in_group: "'%{email}' xa está en uso polo grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' xa está en uso pola categoría '%{category_name}'."
   trust_levels:
     newuser:
       title: "novo usuario"
@@ -206,6 +483,8 @@ gl:
       half_a_minute: "agora mesmiño"
       less_than_x_seconds: "agora mesmiño"
   password_reset:
+    choose_new: "Elixir un novo contrasinal"
+    choose: "Elixir un contrasinal"
     update: "Actualizar contrasinal"
     save: "Estabelecer o contrasinal"
     title: "Contrasinal restabelecido"
@@ -268,6 +547,8 @@ gl:
       every_hour: "cada hora"
       daily: "diariamente"
       weekly: "semanalmente"
+      every_month: "cada mes"
+      every_six_months: "cada seis meses"
   user_api_key:
     otp_confirmation:
       confirm_title: "Continuar a %{site_name}"
@@ -284,9 +565,13 @@ gl:
     user_flagging_ratio:
       labels:
         user: Usuario
+        score: Puntuación
     moderators_activity:
       labels:
         moderator: Moderador
+    flags_status:
+      labels:
+        flag: Tipo
     visits:
       title: "Visitas de usuarios"
       xaxis: "Día"
@@ -336,11 +621,19 @@ gl:
       xaxis: "Nivel de confianza"
       yaxis: "Número de usuarios"
     users_by_type:
+      xaxis: "Tipo"
       yaxis: "Número de usuarios"
+      labels:
+        type: Tipo
       xaxis_labels:
         admin: Administración
         moderator: Moderador
         suspended: Suspendido
+        silenced: Silenciado
+    trending_search:
+      labels:
+        term: Termo
+        searches: Buscas
     emails:
       title: "Correos-e enviados"
       xaxis: "Día"
@@ -428,8 +721,10 @@ gl:
     time_to_first_response:
       xaxis: "Día"
     topics_with_no_response:
+      title: "Temas sen resposta"
       xaxis: "Día"
       yaxis: "Total"
+      description: "Número de temas novos que non recibiron resposta."
     mobile_visits:
       xaxis: "Día"
       yaxis: "Número de visitas"
@@ -468,6 +763,7 @@ gl:
     types:
       category: "Categorías"
       user: "Usuarios"
+    results_page: "Buscar resultados para '%{term}'"
   original_poster: "Publicador orixinal"
   most_recent_poster: "Publicador máis recente"
   frequent_poster: "Publicador frecuente"
@@ -478,9 +774,16 @@ gl:
       blank: "non pode quedar baleiro"
       invalid: "contén caracteres incorrectos"
   login:
+    security_key_alternative: "Tentalo doutro xeito"
+    not_approved: "A túa conta non foi aínda aprobada. Notificaráseche por correo electrónico cando poidas iniciar a sesión."
     admin_not_allowed_from_ip_address: "Non podes acceder como administrador desde este enderezo IP."
     not_available: "Non dispoñíbel. Tentar %{suggestion}?"
+    omniauth_confirm_button: "Continuar"
     new_registrations_disabled: "Neste momento non se permite o rexistro de novas contas."
+    second_factor_title: "Autenticación de dobre factor"
+    second_factor_backup_description: "Escribe un dos códigos de copia de seguranza"
+    second_factor_toggle:
+      backup_code: "Usar no seu lugar un código de copia de seguranza"
   admin:
     email:
       sent_test: "enviado!"
@@ -507,6 +810,7 @@ gl:
       title: "Estabelecer o contrasinal"
   page_not_found:
     see_more: "Máis"
+    search_title: "Buscar neste sitio"
     search_button: "Buscar"
   image: "imaxe"
   csv_export:
@@ -586,16 +890,46 @@ gl:
       name: Ligazón popular
   admin_login:
     submit_button: "Enviar correo-e"
+  tags:
+    title: "Etiquetas"
+  finish_installation:
+    resend_email:
+      title: "Reenviar correo electrónico de activación"
   wizard:
     step:
       forum_title:
         title: "Nome"
+      privacy:
+        title: "Acceso"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Público"
+              restricted:
+                label: "Privado"
       contact:
         fields:
           contact_email:
             placeholder: "name@example.com"
       corporate:
         title: "Organización"
+      colors:
+        title: "Tema"
+      themes_further_reading:
+        title: "Temas"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "Só categorías"
+              categories_with_featured_topics:
+                label: "Categorías con temas destacados"
+              categories_and_latest_topics:
+                label: "Categorías e últimos temas"
+              categories_and_top_topics:
+                label: "Categorías e temas destacados"
       emoji:
         title: "Emoji"
   joined: "Inscrito"
@@ -607,10 +941,22 @@ gl:
       replied: '%{username} respondeute en "%{topic}" - %{site_title}'
       posted: '%{username} publicou en "%{topic}" - %{site_title}'
       linked: '%{username} ligou a túa publicación desde "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} creou un tema novo "%{topic}" - %{site_title}'
+      confirm_title: "Notificacións habilitadas - %{site_title}"
+      confirm_body: "Perfecto! As notificacións están habilitadas."
+      custom: "Notificación de %{username} en %{site_title}"
   reviewables:
+    priorities:
+      medium: "Media"
+      high: "Alta"
+    sensitivity:
+      medium: "Media"
+      high: "Alta"
     actions:
       agree_and_suspend:
         title: "Suspender usuario"
+      agree_and_silence:
+        title: "Silenciar usuario"
       delete_spammer:
         title: "Eliminar spammer"
       delete_single:

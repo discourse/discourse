@@ -770,7 +770,7 @@ nl:
           all: "Alle"
           read: "Gelezen"
           unread: "Ongelezen"
-        ignore_duration_title: "Negeertimer"
+        ignore_duration_title: "Gebruiker negeren"
         ignore_duration_username: "Gebruikersnaam"
         ignore_duration_when: "Tijdsduur:"
         ignore_duration_save: "Negeren"
@@ -1038,7 +1038,8 @@ nl:
         set_primary: "Primair e-mailadres instellen"
         destroy: "E-mailadres verwijderen"
         add_email: "Alternatief e-mailadres toevoegen"
-        ssDestroy_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
+        sso_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
+        no_secondary: "Geen extra e-mailadressen"
         instructions: "Nooit openbaar zichtbaar."
         ok: "We sturen een e-mail ter bevestiging"
         required: "Voer een e-mailadres in"
@@ -2027,6 +2028,7 @@ nl:
         time_frame_required: Selecteer een tijdsbestek
       auto_update_input:
         none: "Selecteer een tijdsbestek"
+        now: "Nu"
         later_today: "Later vandaag"
         tomorrow: "Morgen"
         later_this_week: "Later deze week"
@@ -2288,11 +2290,14 @@ nl:
         publish: "Publiceren"
         description: "Wanneer een topic als een pagina wordt gepubliceerd, kan de URL ervan worden gedeeld en wordt deze met aangepaste stijlen weergegeven."
         slug: "Slug"
+        public: "Openbaar"
+        public_description: "Mensen kunnen de pagina ook zien als het gekoppelde topic privé is."
         publish_url: "Uw pagina is gepubliceerd op:"
         topic_published: "Uw topic is gepubliceerd op:"
         preview_url: "Uw pagina wordt gepubliceerd op:"
         invalid_slug: "Sorry, u kunt deze pagina niet publiceren."
         unpublish: "Publicatie ongedaan maken"
+        update: "Bijwerken"
         unpublished: "Uw pagina is niet meer gepubliceerd en niet meer toegankelijk."
         publishing_settings: "Publicatie-instellingen"
       change_owner:
@@ -2366,6 +2371,7 @@ nl:
       has_replies:
         one: "%{count} antwoord"
         other: "%{count} antwoorden"
+      unknown_user: "(onbekende/verwijderde gebruiker)"
       has_likes_title:
         one: "%{count} persoon heeft dit bericht geliket"
         other: "%{count} personen hebben dit bericht geliket"
@@ -2499,7 +2505,7 @@ nl:
           last: "Laatste revisie"
           hide: "Revisie verbergen"
           show: "Revisie tonen"
-          revert: "Terugkeren naar deze revisie"
+          revert: "Terugkeren naar revisie %{revision}"
           edit_wiki: "Wiki bewerken"
           edit_post: "Bericht bewerken"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3555,7 +3561,7 @@ nl:
           and_x_more: "en nog %{count}."
           collapse: Samenvouwen
           uploads: "Uploads"
-          no_uploads: "U kunt aan uw thema gerelateerde assets uploaden zoals fonts en afbeeldingen"
+          no_uploads: "U kunt aan uw thema gerelateerde assets uploaden, zoals lettertypen en afbeeldingen"
           add_upload: "Upload toevoegen"
           upload_file_tip: "Kies een asset om te uploaden (png, woff2, etc...)"
           variable_name: "SCSS-variabelenaam:"

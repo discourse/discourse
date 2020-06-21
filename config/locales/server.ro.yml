@@ -906,7 +906,6 @@ ro:
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
-    s3_disable_cleanup: "Dezactivează eliminarea backup-urilor de pe S3 când sunt șterse local."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
     backup_with_uploads: "Include încărcări în backup-urile programate. Dezactivarea acestei opțiuni va face backup doar la baza de date."
     active_user_rate_limit_secs: "Cât de des se actualizează câmpul 'last_seen_at', în secunde"

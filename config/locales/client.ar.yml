@@ -2045,7 +2045,6 @@ ar:
           last: "آخر مراجعة"
           hide: "أخفِ المراجعة"
           show: "أظهر المراجعة"
-          revert: "ارجع إلى هذه المراجعة"
           edit_wiki: "عدل الwiki"
           edit_post: "عدل المنشور"
         displays:

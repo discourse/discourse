@@ -779,6 +779,7 @@ lt:
         secondary: "Antriniai el. Paštai"
         primary_label: "pirminė"
         update_email: "Keisti el. paštą"
+        no_secondary: "Antrinių el. Paštų nėra"
         instructions: "Nebus rodomas viešai."
         ok: "Mes jums atsiųsime patvirtinimo elektroninį laišką"
         invalid: "Prašom įrašyti teisingą elektroninį adresą"
@@ -1712,6 +1713,8 @@ lt:
       merge_posts:
         title: "Sulieti pasirinktus įrašus"
         action: "sulieti pasirinktus įrašus"
+      publish_page:
+        public: "Vieša"
       change_owner:
         action: "pakeisti valdymo teises"
         error: "Įvyko klaida keičiant įrašų valdymo teisę."

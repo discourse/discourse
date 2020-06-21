@@ -832,6 +832,7 @@ nb_NO:
         secondary: "Sekundære e-poster"
         primary_label: "primær"
         update_email: "Endre e-postadresse"
+        no_secondary: "Ingen sekundære e-poster"
         instructions: "Vises aldri offentlig"
         ok: "Vi sender deg en e-post for å bekrefte"
         invalid: "Oppgi en gyldig e-postadresse"
@@ -1871,6 +1872,8 @@ nb_NO:
         title: "Slå sammen valgte innlegg"
         action: "slå sammen valgte innlegg"
         error: "Feil ved fletting av valgte innlegg."
+      publish_page:
+        public: "Offentlig"
       change_owner:
         action: "Endre eierskap"
         error: "Det oppstod en feil ved endring av eierskap til innleggene."
@@ -2040,7 +2043,6 @@ nb_NO:
           last: "Siste versjon"
           hide: "Skjul versjon"
           show: "Vis versjon"
-          revert: "Gå tilbake til denne versjonen"
           edit_wiki: "Rediger wiki"
           edit_post: "Rediger innlegg"
         displays:
