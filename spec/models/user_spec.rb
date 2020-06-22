@@ -2033,8 +2033,8 @@ describe User do
     it "sets a random avatar when selectable avatars is enabled" do
       avatar1 = Fabricate(:upload)
       avatar2 = Fabricate(:upload)
-      SiteSetting.selectable_avatars_enabled = true
       SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+      SiteSetting.selectable_avatars_enabled = true
 
       user = Fabricate(:user)
       expect(user.uploaded_avatar_id).not_to be(nil)
