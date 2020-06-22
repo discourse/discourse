@@ -390,6 +390,17 @@ describe UserDestroyer do
           d.destroy(user)
         }.to change { User.count }.by(-1)
       end
+
+      it 'can delete the user if they were to fall into another trust level and have no email' do
+        g2 = Fabricate(:group, grant_trust_level: 1)
+        g2.add(user)
+
+        UserEmail.where(user: user).delete_all
+        user.reload
+        expect {
+          UserDestroyer.new(admin).destroy(user)
+        }.to change { User.count }.by(-1)
+      end
     end
 
     context 'user has staff action logs' do
