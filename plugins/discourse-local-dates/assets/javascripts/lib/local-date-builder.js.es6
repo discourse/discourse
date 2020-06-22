@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
 
 const TIME_FORMAT = "LLL";
