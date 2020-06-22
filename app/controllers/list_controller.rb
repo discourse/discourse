@@ -144,6 +144,10 @@ class ListController < ApplicationController
 
   def self.generate_message_route(action)
     define_method("#{action}") do
+      if action == :private_messages_tag && !guardian.can_tag_pms?
+        raise Discourse::NotFound
+      end
+
       list_opts = build_topic_list_options
       target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
       guardian.ensure_can_see_private_messages!(target_user.id)
