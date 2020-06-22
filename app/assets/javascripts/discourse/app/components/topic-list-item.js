@@ -187,6 +187,11 @@ export default Component.extend({
     return false;
   },
 
+  @discourseComputed("expandPinned", "hideMobileAvatar")
+  showMobileAvatar(expandPinned, hideMobileAvatar) {
+    return !(hideMobileAvatar || expandPinned);
+  },
+
   showEntrance,
 
   click(e) {
