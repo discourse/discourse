@@ -22,8 +22,8 @@ class Onebox::Engine::YoutubeOnebox
 
   def to_html
     if video_id && !params['list']
-      video_width = (params['width'] && params['width'].to_i <= 695) ? params['width'] : 480 # embed width
-      video_height = (params['height'] && params['height'].to_i <= 500) ? params['height'] : 270 # embed height
+      video_width = (params['width'] && params['width'].to_i <= 695) ? params['width'] : 690 # embed width
+      video_height = (params['height'] && params['height'].to_i <= 500) ? params['height'] : 388 # embed height
 
       og = get_opengraph.data
       thumbnail_url = og[:image] || "https://img.youtube.com/vi/#{video_id}/hqdefault.jpg"
