@@ -225,7 +225,7 @@ def migrate_from_s3(max: nil, limit: nil)
       end
 
       if updated
-        post.save!
+        post.save!(validate: false)
         post.rebake!
         posts_modified += 1
         if max
