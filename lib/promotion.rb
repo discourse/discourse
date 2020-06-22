@@ -126,8 +126,8 @@ class Promotion
     # Then consider the group locked level
     user_group_granted_trust_level = user.group_granted_trust_level
 
-    unless user_group_granted_trust_level.blank?
-      return user.update!(
+    if user_group_granted_trust_level.present?
+      return user.update(
         trust_level: user_group_granted_trust_level
       )
     end
