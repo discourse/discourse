@@ -4762,6 +4762,7 @@ en:
         tag_name: "Tag name"
         external_url: "External or Relative URL"
         destination: "Destination"
+        copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?
         form:
           label: "New:"
