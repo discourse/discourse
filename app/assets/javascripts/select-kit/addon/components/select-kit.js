@@ -800,15 +800,19 @@ export default Component.extend(
               name: "applySmallScreenMaxWidth",
               enabled: window.innerWidth <= 450,
               phase: "beforeWrite",
-              fn({ state }) {
+              fn: ({ state }) => {
                 if (inModal) {
                   const innerModal = document.querySelector(
                     "#discourse-modal div.modal-inner-container"
                   );
 
                   if (innerModal) {
-                    state.styles.popper.width = `${innerModal.clientWidth -
-                      20}px`;
+                    if (this.multiSelect) {
+                      state.styles.popper.width = `${this.element.offsetWidth}px`;
+                    } else {
+                      state.styles.popper.width = `${innerModal.clientWidth -
+                        20}px`;
+                    }
                   }
                 } else {
                   state.styles.popper.width = `${window.innerWidth - 20}px`;
