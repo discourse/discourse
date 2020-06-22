@@ -1241,6 +1241,7 @@ files:
   selectable_avatars_enabled:
     default: false
     client: true
+    validator: "SelectableAvatarsEnabledValidator"
   selectable_avatars:
     default: ""
     type: uploaded_image_list

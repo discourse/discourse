@@ -2255,6 +2255,7 @@ en:
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
       max_username_length_range: "You cannot set the maximum below the minimum."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
+      empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
       category_search_priority:
         very_low_weight_invalid: "You cannot set the weight to be greater than 'category_search_priority_low_weight'."
         low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
