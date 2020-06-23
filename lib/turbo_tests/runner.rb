@@ -44,7 +44,6 @@ module TurboTests
       group_opts = {}
 
       if use_runtime_info
-        FileUtils.rm("tmp/turbo_rspec_runtime.log", force: true)
         group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log"
       else
         group_opts[:group_by] = :filesize
@@ -189,14 +188,12 @@ module TurboTests
             @messages << { type: 'exit', process_id: process_id }
           end
 
-        stdout_thread = start_copy_thread(stdout, STDOUT)
-        stderr_thread = start_copy_thread(stderr, STDERR)
-        @threads << stdout_thread
-        @threads << stderr_thread
+        @threads << start_copy_thread(stdout, STDOUT)
+        @threads << start_copy_thread(stderr, STDERR)
 
         @threads << Thread.new do
           if wait_thr.value.exitstatus != 0
-            @messages << { type: 'error', record_runtime: record_runtime }
+            @messages << { type: 'error' }
           end
         end
       end
@@ -238,15 +235,13 @@ module TurboTests
               @threads.each(&:kill)
               break
             end
+          when 'message'
+            @reporter.message(message[:message])
           when 'seed'
           when 'close'
           when 'error'
-            if message[:record_runtime]
-              STDERR.puts File.read("tmp/turbo_rspec_runtime.log")
-            end
-            @threads.each(&:kill)
+            @reporter.error_outside_of_examples
             @error = true
-            break
           when 'exit'
             exited += 1
             if exited == @num_processes + 1
