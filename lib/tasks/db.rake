@@ -200,7 +200,7 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     Rake::Task['db:_dump'].invoke
   end
 
-  SeedFu.quiet = true
+  SeedFu.quiet = false
 
   # Allows a plugin to exclude any specified seed data files from running
   filter = DiscoursePluginRegistry.seedfu_filter.any? ?
