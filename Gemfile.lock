@@ -96,7 +96,7 @@ GEM
     css_parser (1.7.1)
       addressable
     debug_inspector (0.0.3)
-    diff-lcs (1.3)
+    diff-lcs (1.4)
     diffy (3.3.0)
     discourse-ember-source (3.12.2.0)
     discourse_image_optim (0.26.2)
