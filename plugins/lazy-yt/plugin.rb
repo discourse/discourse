@@ -22,8 +22,11 @@ class Onebox::Engine::YoutubeOnebox
 
   def to_html
     if video_id && !params['list']
-      video_width = (params['width'] && params['width'].to_i <= 695) ? params['width'] : 480 # embed width
-      video_height = (params['height'] && params['height'].to_i <= 500) ? params['height'] : 270 # embed height
+
+      size_restricted = [params['width'], params['height']].any?
+      video_width = (params['width'] && params['width'].to_i <= 695) ? params['width'] : 690 # embed width
+      video_height = (params['height'] && params['height'].to_i <= 500) ? params['height'] : 388 # embed height
+      size_tags = ["width=\"#{video_width}\"", "height=\"#{video_height}\""]
 
       og = get_opengraph.data
       thumbnail_url = og[:image] || "https://img.youtube.com/vi/#{video_id}/hqdefault.jpg"
@@ -35,11 +38,13 @@ class Onebox::Engine::YoutubeOnebox
       <div class="onebox lazyYT lazyYT-container"
            data-youtube-id="#{video_id}"
            data-youtube-title="#{escaped_title}"
-           data-width="#{video_width}"
-           data-height="#{video_height}"
+           #{size_restricted ? size_tags.map { |t| "data-#{t}" }.join(' ') : ""}
            data-parameters="#{embed_params}">
         <a href="https://www.youtube.com/watch?v=#{video_id}" target="_blank">
-          <img class="ytp-thumbnail-image" src="#{thumbnail_url}" width="#{video_width}" height="#{video_height}" title="#{escaped_title}">
+          <img class="ytp-thumbnail-image"
+               src="#{thumbnail_url}"
+               #{size_restricted ? size_tags.join(' ') : ""}
+               title="#{escaped_title}">
         </a>
       </div>
       EOF
