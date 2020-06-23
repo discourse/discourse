@@ -151,10 +151,6 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   execute_concurently(concurrency, exceptions) do |db|
     puts "Migrating #{db}"
     ActiveRecord::Tasks::DatabaseTasks.migrate
-
-    if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
-      SiteIconManager.ensure_optimized!
-    end
   end
 
   seed_paths = DiscoursePluginRegistry.seed_paths
@@ -163,6 +159,10 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   execute_concurently(concurrency, exceptions) do |db|
     puts "Seeding #{db}"
     SeedFu.seed(seed_paths)
+
+    if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
+      SiteIconManager.ensure_optimized!
+    end
   end
 
   $stdout = old_stdout
