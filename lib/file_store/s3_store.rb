@@ -59,7 +59,9 @@ module FileStore
       # HTML players, and when a direct link is provided to any file but an image
       # it will download correctly in the browser.
       if !FileHelper.is_supported_image?(filename)
-        options[:content_disposition] = "attachment; filename=\"#{filename}\""
+        options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+          disposition: "attachment", filename: filename
+        )
       end
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
