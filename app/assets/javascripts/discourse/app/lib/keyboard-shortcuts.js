@@ -355,7 +355,8 @@ export default {
     this.container.lookup("controller:topic").togglePinnedState();
   },
 
-  goToPost() {
+  goToPost(event) {
+    preventKeyboardEvent(event);
     this.appEvents.trigger("topic:keyboard-trigger", { type: "jump" });
   },
 
