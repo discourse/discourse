@@ -379,13 +379,11 @@ describe Jobs::PullHotlinkedImages do
 
     it "returns false for plugin assets" do
       src = UrlHelper.cook_url("/plugins/discourse-amazing-plugin/myasset.png")
-      puts "src is #{src}"
       expect(subject.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for local non-uploaded files" do
       src = UrlHelper.cook_url("/mycustomroute.png")
-      puts "src is #{src}"
       expect(subject.should_download_image?(src)).to eq(false)
     end
 
