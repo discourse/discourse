@@ -32,6 +32,7 @@ module TurboTests
 
       @messages = Queue.new
       @threads = []
+      @error = false
     end
 
     def run
@@ -43,6 +44,7 @@ module TurboTests
       group_opts = {}
 
       if use_runtime_info
+        FileUtils.rm("tmp/turbo_rspec_runtime.log", force: true)
         group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log"
       else
         group_opts[:group_by] = :filesize
@@ -73,7 +75,7 @@ module TurboTests
 
       @threads.each(&:join)
 
-      @reporter.failed_examples.empty?
+      @reporter.failed_examples.empty? && !@error
     end
 
     protected
@@ -86,12 +88,14 @@ module TurboTests
 
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths = ['db/migrate', 'db/post_migrate']
 
-      conn = ActiveRecord::Base.establish_connection(config).connection
       begin
+        conn = ActiveRecord::Base.establish_connection(config).connection
         ActiveRecord::Migration.check_pending!(conn)
       rescue ActiveRecord::PendingMigrationError
         puts "There are pending migrations, run rake parallel:migrate"
         exit 1
+      ensure
+        conn&.close
       end
     end
 
@@ -168,7 +172,8 @@ module TurboTests
           STDERR.puts "Process #{process_id}: #{command_str}"
         end
 
-        _stdin, stdout, stderr, _wait_thr = Open3.popen3(env, *command)
+        stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
+        stdin.close
 
         @threads <<
           Thread.new do
@@ -184,8 +189,16 @@ module TurboTests
             @messages << { type: 'exit', process_id: process_id }
           end
 
-        @threads << start_copy_thread(stdout, STDOUT)
-        @threads << start_copy_thread(stderr, STDERR)
+        stdout_thread = start_copy_thread(stdout, STDOUT)
+        stderr_thread = start_copy_thread(stderr, STDERR)
+        @threads << stdout_thread
+        @threads << stderr_thread
+
+        @threads << Thread.new do
+          if wait_thr.value.exitstatus != 0
+            @messages << { type: 'error', record_runtime: record_runtime }
+          end
+        end
       end
     end
 
@@ -195,6 +208,7 @@ module TurboTests
           begin
             msg = src.readpartial(4096)
           rescue EOFError
+            src.close
             break
           else
             dst.write(msg)
@@ -226,6 +240,13 @@ module TurboTests
             end
           when 'seed'
           when 'close'
+          when 'error'
+            if message[:record_runtime]
+              STDERR.puts File.read("tmp/turbo_rspec_runtime.log")
+            end
+            @threads.each(&:kill)
+            @error = true
+            break
           when 'exit'
             exited += 1
             if exited == @num_processes + 1
