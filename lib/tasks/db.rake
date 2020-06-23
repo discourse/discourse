@@ -112,7 +112,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   old_stdout = $stdout
   $stdout = StdOutDemux.new($stdout)
 
-  SeedFu.quiet = false
+  SeedFu.quiet = true
 
   def execute_concurently(concurrency, exceptions)
     queue = Queue.new
@@ -153,17 +153,14 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
     ActiveRecord::Tasks::DatabaseTasks.migrate
   end
 
-  # Allows a plugin to exclude any specified seed data files from running
-  filter = DiscoursePluginRegistry.seedfu_filter.any? ?
-    /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/ : nil
-
   seed_paths = DiscoursePluginRegistry.seed_paths
-  puts "001_refresh"
   SeedFu.seed(seed_paths, /001_refresh/)
 
   execute_concurently(concurrency, exceptions) do |db|
-    puts "Seeding #{db}"
-    SeedFu.seed(seed_paths, filter)
+    if ENV['SKIP_SEED'] != '1'
+      puts "Seeding #{db}"
+      SeedFu.seed(seed_paths)
+    end
 
     if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
       SiteIconManager.ensure_optimized!
@@ -205,7 +202,7 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     Rake::Task['db:_dump'].invoke
   end
 
-  SeedFu.quiet = false
+  SeedFu.quiet = true
 
   # Allows a plugin to exclude any specified seed data files from running
   filter = DiscoursePluginRegistry.seedfu_filter.any? ?
