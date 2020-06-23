@@ -44,8 +44,6 @@ class Onebox::Engine::YoutubeOnebox
           <img class="ytp-thumbnail-image"
                src="#{thumbnail_url}"
                #{size_restricted ? size_tags.join(' ') : ""}
-               width="#{video_width}"
-               height="#{video_height}"
                title="#{escaped_title}">
         </a>
       </div>
