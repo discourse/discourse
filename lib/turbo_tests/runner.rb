@@ -87,14 +87,15 @@ module TurboTests
 
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths = ['db/migrate', 'db/post_migrate']
 
+      conn = ActiveRecord::Base.establish_connection(config).connection
+
       begin
-        conn = ActiveRecord::Base.establish_connection(config).connection
         ActiveRecord::Migration.check_pending!(conn)
       rescue ActiveRecord::PendingMigrationError
         puts "There are pending migrations, run rake parallel:migrate"
         exit 1
       ensure
-        conn&.close
+        conn.close
       end
     end
 
