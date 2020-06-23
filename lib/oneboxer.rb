@@ -219,9 +219,7 @@ module Oneboxer
       end
     end
 
-    topic = Topic.find_by(id: route[:topic_id])
-
-    return unless topic
+    return unless topic = Topic.find_by(id: route[:id] || route[:topic_id])
     return if topic.private_message?
 
     if current_category.blank? || current_category.id != topic.category_id
