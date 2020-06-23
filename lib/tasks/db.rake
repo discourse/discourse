@@ -112,7 +112,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   old_stdout = $stdout
   $stdout = StdOutDemux.new($stdout)
 
-  SeedFu.quiet = true
+  SeedFu.quiet = false
 
   def execute_concurently(concurrency, exceptions)
     queue = Queue.new
