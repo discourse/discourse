@@ -158,6 +158,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
     /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/ : nil
 
   seed_paths = DiscoursePluginRegistry.seed_paths
+  puts "001_refresh"
   SeedFu.seed(seed_paths, /001_refresh/)
 
   execute_concurently(concurrency, exceptions) do |db|
