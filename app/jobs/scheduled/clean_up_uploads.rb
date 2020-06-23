@@ -60,6 +60,8 @@ module Jobs
         .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
         .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")
         .joins("LEFT JOIN groups g ON g.flair_upload_id = uploads.id")
+        .joins("LEFT JOIN reviewables r ON r.target_id = uploads.id")
+        .where("r.target_id IS NULL OR r.target_type != 'Upload'")
         .where("pu.upload_id IS NULL")
         .where("u.uploaded_avatar_id IS NULL")
         .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")

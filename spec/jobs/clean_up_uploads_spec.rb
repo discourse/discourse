@@ -284,4 +284,17 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: csv_file.id)).to eq(true)
   end
+
+  it "does not delete uploads referenced by reviewables" do
+    reviewable_upload = fabricate_upload
+    ReviewableUpload.create!(target: reviewable_upload, created_by: Discourse.system_user)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: reviewable_upload.id)).to eq(true)
+  end
+
+  # We don't have a way to review uploads in core yet. Remove when we have a better system for referencing orphan uploads.
+  class ReviewableUpload < Reviewable; end
 end
