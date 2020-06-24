@@ -8,6 +8,8 @@ module Jobs
     CLEANUP_GRACE_PERIOD ||= 1.day.ago
 
     def execute(args)
+      @verbose = true if args && Hash === args && args[:verbose]
+
       rebuild_problem_topics
       rebuild_problem_posts
       rebuild_problem_categories
@@ -15,10 +17,16 @@ module Jobs
       rebuild_problem_tags
       clean_post_search_data
       clean_topic_search_data
+
+      @verbose = nil
     end
 
     def rebuild_problem_categories(limit: 500)
       category_ids = load_problem_category_ids(limit)
+
+      if @verbose
+        puts "rebuilding #{category_ids.length} categories"
+      end
 
       category_ids.each do |id|
         category = Category.find_by(id: id)
@@ -29,6 +37,10 @@ module Jobs
     def rebuild_problem_users(limit: 10000)
       user_ids = load_problem_user_ids(limit)
 
+      if @verbose
+        puts "rebuilding #{user_ids.length} users"
+      end
+
       user_ids.each do |id|
         user = User.find_by(id: id)
         SearchIndexer.index(user, force: true) if user
@@ -38,6 +50,10 @@ module Jobs
     def rebuild_problem_topics(limit: 10000)
       topic_ids = load_problem_topic_ids(limit)
 
+      if @verbose
+        puts "rebuilding #{topic_ids.length} topics"
+      end
+
       topic_ids.each do |id|
         topic = Topic.find_by(id: id)
         SearchIndexer.index(topic, force: true) if topic
@@ -46,6 +62,10 @@ module Jobs
 
     def rebuild_problem_posts(limit: 20000, indexer: SearchIndexer)
       post_ids = load_problem_post_ids(limit)
+
+      if @verbose
+        puts "rebuilding #{post_ids.length} posts"
+      end
 
       post_ids.each do |id|
         # could be deleted while iterating through batch
@@ -58,6 +78,10 @@ module Jobs
     def rebuild_problem_tags(limit: 10000)
       tag_ids = load_problem_tag_ids(limit)
 
+      if @verbose
+        puts "rebuilding #{tag_ids.length} tags"
+      end
+
       tag_ids.each do |id|
         tag = Tag.find_by(id: id)
         SearchIndexer.index(tag, force: true) if tag
@@ -67,6 +91,8 @@ module Jobs
     private
 
     def clean_post_search_data
+      puts "cleaning up post search data" if @verbose
+
       PostSearchData
         .joins("LEFT JOIN posts p ON p.id = post_search_data.post_id")
         .where("p.raw = ''")
@@ -90,6 +116,8 @@ module Jobs
     end
 
     def clean_topic_search_data
+      puts "cleaning up topic search data" if @verbose
+
       DB.exec(<<~SQL, deleted_at: CLEANUP_GRACE_PERIOD)
       DELETE FROM topic_search_data
       WHERE topic_id IN (
