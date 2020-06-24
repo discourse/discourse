@@ -4714,8 +4714,9 @@ he:
         category_id: "מזהה לקטגוריה"
         category_title: "קטגוריה"
         tag_name: "שם תגית"
-        external_url: "כתובת חיצונית"
+        external_url: "כתובת חיצונית או יחסית"
         destination: "יעד"
+        copy_to_clipboard: "העתקת קישור קבוע ללוח"
         delete_confirm: " להסיר את הקישור הקבוע?"
         form:
           label: "חדש:"

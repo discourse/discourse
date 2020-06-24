@@ -730,6 +730,7 @@ zh_CN:
           all: "全部"
           read: "阅读"
           unread: "未读"
+        ignore_duration_title: "忽略的用户"
         ignore_duration_username: "用户名"
         ignore_duration_when: "持续时间："
         ignore_duration_save: "忽略"
@@ -1961,6 +1962,7 @@ zh_CN:
         time_frame_required: 请选择一个时间范围
       auto_update_input:
         none: "选择时间范围"
+        now: "当前"
         later_today: "今天的某个时候"
         tomorrow: "明天"
         later_this_week: "这周的某个时候"
@@ -2215,11 +2217,13 @@ zh_CN:
         description: "当一个主题被出版为一个页面时，其链接是共享的，并且会以自定义的样式显示。"
         slug: "Slug"
         public: "公开"
+        public_description: "尽管关联的主题是私有主题，但还是能被其他用户查看。"
         publish_url: "你的页面已出版于："
         topic_published: "你的主题已出版于："
         preview_url: "你的页面将出版于："
         invalid_slug: "抱歉，您不能出版此页面。"
         unpublish: "取消出版"
+        update: "更新"
         unpublished: "你的页面已经取消出版并且不再可用。"
         publishing_settings: "出版设置"
       change_owner:
@@ -2286,6 +2290,7 @@ zh_CN:
       unread: "未读帖子"
       has_replies:
         other: "%{count} 回复"
+      unknown_user: "（未知或已删除的用户）"
       has_likes_title:
         other: "%{count} 人赞了该贴"
       has_likes_title_only_you: "你喜欢了这个帖子"
@@ -2408,6 +2413,7 @@ zh_CN:
           last: "最新版"
           hide: "隐藏版本历史"
           show: "显示版本历史"
+          revert: "还原到版本%{revision}"
           edit_wiki: "编辑维基"
           edit_post: "编辑帖子"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -4315,8 +4321,9 @@ zh_CN:
         category_id: "分类 ID"
         category_title: "分类"
         tag_name: "标签名称"
-        external_url: "外部 URL"
+        external_url: "外部或相关 URL"
         destination: "目标"
+        copy_to_clipboard: "拷贝永久链接到剪贴板"
         delete_confirm: 你确定要删除该永久链接？
         form:
           label: "新："

@@ -1766,6 +1766,7 @@ ru:
       max_username_length_exists: "Вы не можете установить максимальную длину имени пользователя короче самого длинного псевдонима (%{username})."
       max_username_length_range: "Нельзя установить максимум ниже минимума."
       invalid_hex_value: "Значения цвета должны быть шестнадцатеричными кодами из 6 цифр."
+      empty_selectable_avatars: "Для включения этого параметра необходимо загрузить не менее двух аватаров, из которых можно будет сделать выбор."
       category_search_priority:
         very_low_weight_invalid: "Вы не можете установить вес больше, чем 'category_search_priority_low_weight'."
         low_weight_invalid: "Вы не можете установить вес больше или равно 1 или меньше, чем указано в 'category_search_priority_very_low_weight'."

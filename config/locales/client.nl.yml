@@ -4449,8 +4449,9 @@ nl:
         category_id: "Categorie-ID"
         category_title: "Categorie"
         tag_name: "Tagnaam"
-        external_url: "Externe URL"
+        external_url: "Externe of relatieve URL"
         destination: "Bestemming"
+        copy_to_clipboard: "Permalink naar klembord kopiëren"
         delete_confirm: "Weet u zeker dat u deze permalink wilt verwijderen?"
         form:
           label: "Nieuw:"

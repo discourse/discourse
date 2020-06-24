@@ -4452,8 +4452,9 @@ sv:
         category_id: "Kategori-ID"
         category_title: "Kategori"
         tag_name: "Namn på tagg"
-        external_url: "Extern URL"
+        external_url: "Extern eller relativ URL"
         destination: "Mål"
+        copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: "Är du säker på att du vill ta bort den här permalänken?"
         form:
           label: "Ny:"
