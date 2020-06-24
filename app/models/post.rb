@@ -752,18 +752,16 @@ class Post < ActiveRecord::Base
   # Enqueue post processing for this post
   def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false, skip_pull_hotlinked_images: false)
     args = {
-      post_id: id,
       bypass_bump: bypass_bump,
+      cooking_options: self.cooking_options,
       new_post: new_post,
+      post_id: id,
       skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
-    args[:image_sizes] = image_sizes if image_sizes.present?
-    args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
-    args[:cooking_options] = self.cooking_options
 
-    if priority && priority != :normal
-      args[:queue] = priority.to_s
-    end
+    args[:image_sizes] = image_sizes if self.image_sizes.present?
+    args[:invalidate_oneboxes] = true if self.invalidate_oneboxes.present?
+    args[:queue] = priority.to_s if priority && priority != :normal
 
     Jobs.enqueue(:process_post, args)
     DiscourseEvent.trigger(:after_trigger_post_process, self)
