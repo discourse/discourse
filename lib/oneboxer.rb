@@ -313,7 +313,8 @@ module Oneboxer
 
       options = {
         max_width: 695,
-        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX
+        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
+        hostname: GlobalSetting.hostname,
       }
 
       options[:cookie] = fd.cookie if fd.cookie
