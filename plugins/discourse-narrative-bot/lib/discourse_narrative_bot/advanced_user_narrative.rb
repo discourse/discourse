@@ -41,7 +41,7 @@ module DiscourseNarrativeBot
       tutorial_recover: {
         next_state: :tutorial_category_hashtag,
         next_instructions: Proc.new do
-          category = Category.secured.last
+          category = Category.secured(Guardian.new(@user)).last
           slug = category.slug
 
           if parent_category = category.parent_category
