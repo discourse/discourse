@@ -669,7 +669,6 @@ id:
           all: "Semua"
           read: "Dibaca"
           unread: "Belum dibaca"
-        ignore_duration_title: "Abaikan Timer"
         ignore_duration_username: "Nama Pengguna"
         ignore_duration_when: "Durasi:"
         ignore_duration_save: "Abaikan"
@@ -844,6 +843,7 @@ id:
         title: "Surel"
         primary: "Email Utama"
         secondary: "Email Sekunder"
+        update_email: "Ganti Alamat Surel"
         no_secondary: "Tidak ada email sekunder"
         instructions: "Jangan pernah tunjukkan ke publik."
         ok: "Kami akan mengirimkan surel kepada anda untuk konfirmasi"
@@ -1392,6 +1392,8 @@ id:
         error: "Ada kesalahan dalam memindahkan posting sebagai topik baru"
       move_to_new_message:
         radio_label: "Pesan Baru"
+      publish_page:
+        public: "Umum"
       change_owner:
         placeholder: "username pemilik yang baru"
     post:

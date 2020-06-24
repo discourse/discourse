@@ -734,7 +734,6 @@ ca:
           all: "Tot"
           read: "Llegit"
           unread: "No llegits"
-        ignore_duration_title: "Ignora el temporitzador"
         ignore_duration_username: "Nom d'usuari "
         ignore_duration_when: "Duració:"
         ignore_duration_save: "Ignora"
@@ -942,6 +941,8 @@ ca:
         confirm: "Esteu del tot segur que voleu canviar el nom d'usuari?"
         taken: "Aquest nom d'usuari ja està agafat."
         invalid: "El nom d'usuari no és vàlid. Ha d'incloure només xifres i lletres."
+      add_email:
+        add: "afegeix"
       change_email:
         title: "Canvi de correu"
         taken: "Aquest correu electrònic no està disponible."
@@ -969,8 +970,10 @@ ca:
         title: "Correu electrònic"
         primary: "Adreça de correu primària"
         secondary: "Adreces de correu secundàries"
-        no_secondary: "Sense adreces de correu secundàries"
+        primary_label: "primari"
+        update_email: "Canvi de correu"
         sso_override_instructions: "L'adreça de correu es pot actualitzar des d'un proveïdor SSO"
+        no_secondary: "Sense adreces de correu secundàries"
         instructions: "No es mostra mai en públic."
         ok: "Us enviarem un correu electrònic de confirmació"
         invalid: "Introduïu una adreça vàlida de correu electrònic"
@@ -1249,7 +1252,7 @@ ca:
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc web es trobi en mode només de lectura."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora} </a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
+      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}."
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}."
@@ -2161,6 +2164,8 @@ ca:
         title: "Combina les publicacions seleccionades"
         action: "combina les publicacions seleccionades"
         error: "Hi ha hagut un error en unir les publicacions seleccionades."
+      publish_page:
+        public: "Públic"
       change_owner:
         title: "Canvia el propietari"
         action: "canvia la propietat"
@@ -2355,7 +2360,6 @@ ca:
           last: "Darrera revisió"
           hide: "Amaga la revisió"
           show: "Mostra la revisió"
-          revert: "Reverteix a aquesta revisió"
           edit_wiki: "Edita Wiki"
           edit_post: "Edita publicació"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2988,7 +2992,7 @@ ca:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca de registres (logs)</a>'
             disabled: 'El report de cerca de tendències està desactivat. Habiliteu <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">les consultes de cerca de registres</a> per a recopilar dades.'
           filters:
-            file-extension:
+            file_extension:
               label: Extensió de fitxer
             group:
               label: Grup

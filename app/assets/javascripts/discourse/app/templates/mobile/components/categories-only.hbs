@@ -1,6 +1,7 @@
 {{#if categories}}
   <div class="category-list {{if showTopics "with-topics"}}">
     {{#each categories as |c|}}
+      {{plugin-outlet name="category-list-above-each-category" connectorTagName="" tagName="" args=(hash category=c)}}
       <div data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} style={{border-color c.color}} class="category-list-item category {{if c.isMuted "muted"}}">
         <table class="topic-list">
           <tbody>

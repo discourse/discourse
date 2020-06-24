@@ -744,7 +744,6 @@ sl:
           all: "Vsi"
           read: "Čas branja"
           unread: "Neprebrane"
-        ignore_duration_title: "Prezri opomnik"
         ignore_duration_username: "Uporabniško ime"
         ignore_duration_when: "Trajanje:"
         ignore_duration_save: "Prezri"
@@ -932,6 +931,8 @@ sl:
         confirm: "Ali ste prepričani, da želite zamenjati vaše uporabniško ime?"
         taken: "Oprostite, to uporabniško ime je zasedeno."
         invalid: "Uporabniško ime ni pravilno. Vsebuje lahko samo črke in številke. Preslednica in posebni znaki niso dovoljeni."
+      add_email:
+        add: "dodaj"
       change_email:
         title: "Spremeni e-naslov"
         taken: "Ta e-naslov ni na voljo."
@@ -952,8 +953,9 @@ sl:
         title: "E-naslov"
         primary: "E-naslov"
         secondary: "Dodatni e-naslovi"
-        no_secondary: "Ni dodatnih e-naslovov"
+        update_email: "Spremeni e-naslov"
         sso_override_instructions: "E-naslov se lahko spremeni pri SSO ponudniku."
+        no_secondary: "Ni dodatnih e-naslovov"
         instructions: "se nikoli ne prikaže javno"
         ok: "Poslali vam bomo e-sporočilo za potrditev."
         invalid: "Vnesite veljaven e-naslov."
@@ -2191,6 +2193,8 @@ sl:
         title: "Združi izbrane prispevke"
         action: "združi izbrane prispevke"
         error: "Med združevanjem izbranih prispevkov je prišlo do napake."
+      publish_page:
+        public: "Javno"
       change_owner:
         title: "Spremeni lastnika"
         action: "spremeni lastnika"
@@ -2408,7 +2412,6 @@ sl:
           last: "Zadnja verzija"
           hide: "Skrij verzije"
           show: "Prikaži verzije"
-          revert: "Povrni to verzijo"
           edit_wiki: "Uredi wiki"
           edit_post: "Uredi prispevek"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3076,7 +3079,7 @@ sl:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnik iskanj</a>'
           filters:
-            file-extension:
+            file_extension:
               label: Pripona datoteke
             group:
               label: Skupina

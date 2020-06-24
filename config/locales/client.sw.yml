@@ -717,6 +717,8 @@ sw:
         confirm: "Je, una uhakika unataka kuabadili jina la mtumiaji?"
         taken: "Samahani, hilo jina limechukuliwa."
         invalid: "Hilo jina ni batili. Jina lazima liwe na namba au herufi au vyote viwili"
+      add_email:
+        add: "ongeza"
       change_email:
         title: "Badilisha Barua Pepe"
         taken: "Samahani, hiyo barua pepe haipo hewani."
@@ -737,6 +739,8 @@ sw:
         title: "Barua pepe"
         primary: "Barua pepe ya awali"
         secondary: "Barua pepe"
+        primary_label: "msingi"
+        update_email: "Badilisha Barua Pepe"
         ok: "Tutakutumia barua pepe kuthibitisha"
         invalid: "Andika barua pepe iliyo sahihi"
         authenticated: "Barua pepe yako imethibitishwa na %{mkimu}"
@@ -1745,6 +1749,8 @@ sw:
         title: "Unganisha Machapisho Uliyochagua"
         action: "unganisha machapisho uliyochagua"
         error: "Hitilafu imetokea wakati wa kuunganisha machapisho yaliyochaguliwa."
+      publish_page:
+        public: "Umma"
       change_owner:
         action: "badilisha umiliki"
         error: "Hitilafu imetokea wakati wa kubadilisha mmiliki wa machapisho."
@@ -1896,7 +1902,6 @@ sw:
           last: "Sahihisho iliopita"
           hide: "Ficha sahihisho"
           show: "Onyesha sahihisho"
-          revert: "Rudi kwenye sahihisho hili"
           edit_wiki: "Hariri Wiki"
           edit_post: "Hariri Chapisho"
         displays:
@@ -2018,7 +2023,7 @@ sw:
       notify_action: "Ujumbe"
       official_warning: "Onyo Rasmi"
       delete_spammer: "Futa Muandishi wa Taka"
-      delete_confirm_MF: "Unakaribia kufuta {POSTS, plural, one {chapisho<b>1</b>} other {machapisho <b>#</b>}} na {TOPICS, plural, one {mada<b>1</b>} other {mada<b>#</b>}} kutoka kwa mtumiaji mwingine, ondoa akaunti yao, zuia usajili kutoka kwenye anwani zao za mtandao<b>{anwani_ya mtandao}</b>, na ongeza barua pepe zao <b>{barua pepe}</b>kwenye orodha ya waliozuliwa. Una uhakika mtumiaji huyu anatuma barua au ujumbe taka?"
+      delete_confirm_MF: "Unakaribia kufuta {POSTS, plural, one {chapisho<b>1</b>} other {machapisho <b>#</b>}} na {TOPICS, plural, one {mada<b>1</b>} other {mada<b>#</b>}} kutoka kwa mtumiaji mwingine, ondoa akaunti yao, zuia usajili kutoka kwenye anwani zao za mtandao<b>{ip_address}</b>, na ongeza barua pepe zao <b>{email}</b>kwenye orodha ya waliozuliwa. Una uhakika mtumiaji huyu anatuma barua au ujumbe taka?"
       yes_delete_spammer: "Ndiyo, futa mtuma barua taka"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(imefichwa)"
@@ -2996,7 +3001,7 @@ sw:
         penalty_post_delete: "Futa taarifa"
         penalty_post_edit: "Hariri Taarifa"
         penalty_post_none: "Usifanye chochote"
-        delete_all_posts_confirm_MF: "Unaenda kufuta {POSTS, plural, one {chapisho 1} other {machapisho #}} na {TOPICS, plural, one {mada 1} ziada {mada #}}. Una uhakika?"
+        delete_all_posts_confirm_MF: "Unaenda kufuta {POSTS, plural, one {chapisho 1} other {machapisho #}} na {TOPICS, plural, one {mada 1} other {mada #}}. Una uhakika?"
         silence: "Imenyamazishwa"
         unsilence: "Imeruhusiwa"
         silenced: "Nyamazishwa?"

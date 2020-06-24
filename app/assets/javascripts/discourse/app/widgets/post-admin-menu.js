@@ -14,6 +14,7 @@ createWidget("post-admin-menu-button", {
     return this.attach("button", {
       className: attrs.className,
       action: attrs.action,
+      url: attrs.url,
       icon: attrs.icon,
       label: attrs.label,
       secondaryAction: attrs.secondaryAction
@@ -30,7 +31,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (currentUser.staff) {
     contents.push({
       icon: "list",
-      className: "btn-default",
+      className: "popup-menu-button moderation-history",
       label: "review.moderation_history",
       url: `/review?topic_id=${attrs.topicId}&status=all`
     });

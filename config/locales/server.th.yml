@@ -60,9 +60,15 @@ th:
   next_page: "หน้าถัดไป →"
   prev_page: "← หน้าก่อนหน้า"
   page_num: "หน้า %{num}"
+  home_title: "หน้าแรก"
+  excerpt_image: "รูปภาพ"
   bookmarks:
     reminders:
+      later_today: "ภายหลังในวันนี้"
+      next_business_day: "ในวันทำการถัดไป"
       tomorrow: "พรุ่งนี้"
+      next_week: "สัปดาห์หน้า"
+      next_month: "เดือนหน้า"
   groups:
     default_names:
       everyone: "ทุกคน"
@@ -74,6 +80,8 @@ th:
       other: "%{count} โพส"
   activerecord:
     attributes:
+      category:
+        name: "ชื่อหมวดหมู่"
       topic:
         title: "ชื่อเรื่อง"
         category_id: "หมวดหมู่"
@@ -93,17 +101,28 @@ th:
     choose: "เลือกรหัสผู้ใช้"
     save: "ตั้งรหัสผ่าน"
     title: "รีเซ็ทรหัสผ่าน"
+  change_email:
+    please_continue: "ดำเนินการต่อไปยัง %{site_name}"
+  activation:
+    continue_button: "ดำเนินการต่อไปยัง %{site_name}"
+    welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
   reviewable_score_types:
     needs_approval:
       title: "ต้องการอนุมัติ"
   post_action_types:
     spam:
       title: "ขยะ"
+      long_form: "ปักธงไว้ว่าเป็นสแปม"
+    inappropriate:
+      long_form: "ปักธงไว้ว่าไม่เหมาะสม"
     bookmark:
       title: "บุ๊คมาร์ค"
   topic_flag_types:
     spam:
       title: "ขยะ"
+      long_form: "ปักธงไว้ว่าเป็นสแปม"
+    inappropriate:
+      long_form: "ปักธงไว้ว่าไม่เหมาะสม"
   archetypes:
     banner:
       title: "ป้ายหัวข้อ"
@@ -117,6 +136,10 @@ th:
       weekly: "รายสัปดาห์"
       every_month: "ทุกเดือน"
       every_six_months: "ทุกหกเดือน"
+  user_api_key:
+    otp_confirmation:
+      confirm_title: "ดำเนินการต่อไปยัง %{site_name}"
+      confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
   reports:
     post_edits:
       labels:
@@ -126,6 +149,7 @@ th:
     user_flagging_ratio:
       labels:
         user: ผู้ใช้
+        score: คะแนน
     moderators_activity:
       labels:
         moderator: ผู้ดูแล
@@ -156,6 +180,9 @@ th:
         admin: ผู้ดูแลระบบ
         moderator: ผู้ดูแล
         suspended: ระงับการใช้งาน
+    trending_search:
+      labels:
+        searches: ค้นหา
     system_private_messages:
       title: "ระบบ"
     top_referrers:
@@ -165,15 +192,21 @@ th:
         user: "ผู้ใช้"
         num_topics: "หัวข้อ"
     top_traffic_sources:
+      xaxis: "โดเมน"
       num_topics: "หัวข้อ"
       num_users: "ผู้ใช้"
       labels:
+        domain: โดเมน
         num_topics: หัวข้อ
     top_referred_topics:
       labels:
         topic: "หัวข้อ"
     page_view_anon_reqs:
       title: "ไม่ระบุชื่อ"
+    http_total_reqs:
+      title: "ทั้งหมด"
+    topics_with_no_response:
+      yaxis: "ทั้งหมด"
     suspicious_logins:
       labels:
         user: ผู้ใช้
@@ -182,6 +215,9 @@ th:
       labels:
         user: ผู้ใช้
         location: ที่อยู่
+    top_uploads:
+      labels:
+        filename: ชื่อไฟล์
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:
@@ -191,8 +227,19 @@ th:
     slug_errors:
       invalid: "มีตัวอักษรที่ไม่สามารถใช้งานได้"
   login:
+    security_key_alternative: "ลองวิธีอื่น"
+    not_approved: "บัญชีของคุณยังไม่ได้รับการยืนยัน คุณจะได้รับการแจ้งเตือนทางอีเมลเมื่อคุณสามารถเข้าสู่ระบบได้"
     admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
     not_available: "ใช้การไม่ได้ ลอง%{suggestion}?"
+    omniauth_confirm_button: "ดำเนินการต่อ"
+  admin:
+    email:
+      sent_test: "ส่งแล้ว!"
+  system_messages:
+    welcome_user:
+      subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
+    welcome_invite:
+      subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
   subject_re: "ตอบ: "
   subject_pm: "[PM] "
   user_notifications:
@@ -298,16 +345,22 @@ th:
     set_password:
       title: "ตั้งรหัสผ่าน"
   page_not_found:
+    popular_topics: "ยอดนิยม"
     see_more: "อื่น"
+    search_title: "ค้นหาเว็บไซต์นี้"
     search_button: "ค้นหา"
+  image: "รูปภาพ"
   csv_export:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"
+    rate_limit_error: "สามารถดาวน์โหลดโพสต์ได้วันละหนึ่งครั้งเท่านั้น กรุณาลองใหม่พรุ่งนี้"
   tos_topic:
     title: "เงื่อนไขการบริการ"
   privacy_topic:
     title: "นโยบายความเป็นส่วนตัว"
   badges:
+    member:
+      name: สมาชิก
     regular:
       name: ทั่วไป
     first_link:
@@ -318,18 +371,44 @@ th:
       name: ลิงค์ที่ได้รับความนิยม
   tags:
     title: "ป้าย"
+  finish_installation:
+    register:
+      button: "ลงทะเบียน"
+    resend_email:
+      title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
   wizard:
     step:
       forum_title:
         title: "ชื่อ"
       privacy:
         title: "การเข้าถึง"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "สาธารณะ"
+              restricted:
+                label: "ส่วนตัว"
       contact:
         fields:
           contact_email:
             placeholder: "name@example.com"
       corporate:
         title: "องค์กร"
+      colors:
+        title: "ธีม"
+      themes_further_reading:
+        title: "ธีม"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "หมวดหมู่เท่านั้น"
+              categories_and_latest_topics:
+                label: "หมวดหมู่และกระทู้ล่าสุด"
+              categories_and_top_topics:
+                label: "หมวดหมู่และกระทู้ยอดนิยม"
       emoji:
         title: "Emoji"
   joined: "สมัครสมาชิกเมื่อ"
@@ -341,7 +420,20 @@ th:
       replied: '%{username} ตอบคุณใน "%{topic}" - %{site_title}'
       posted: '%{username} โพสท์ใน "%{topic}" - %{site_title}'
       linked: '%{username} ลิงค์โพสของคุณจาก "%{topic}" - %{site_title}'
+      watching_first_post: '%{username}ได้สร้างกระทู้ใหม่ "%{topic}"-%{site_title}'
+      confirm_title: "เปิดการแจ้งเตือนแล้ว - %{site_title}"
+      confirm_body: "สำเร็จแล้ว! การแจ้งเตือนถูกเปิดใช้งาน"
+      custom: "การแจ้งเตือนจาก %{username} บน %{site_title}"
   reviewables:
+    priorities:
+      low: "ต่ำ"
+      medium: "ปานกลาง"
+      high: "สูง"
+    sensitivity:
+      disabled: "ปิดใช้งานแล้ว"
+      low: "ต่ำ"
+      medium: "ปานกลาง"
+      high: "สูง"
     actions:
       delete_spammer:
         title: "ลบสแปมเมอร์"
@@ -349,6 +441,8 @@ th:
         title: "ลบ"
       disagree:
         title: "ไม่เห็นด้วย"
+      ignore:
+        title: "ไม่สนใจ"
       approve:
         title: "อนุมัติ"
       reject_user:

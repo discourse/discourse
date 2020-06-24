@@ -800,6 +800,8 @@ cs:
         confirm: "Jste si naprosto jisti, že chcete změnit své uživatelské jméno?"
         taken: "Toto uživatelské jméno je již zabrané."
         invalid: "Uživatelské jméno je neplatné. Musí obsahovat pouze písmena a číslice."
+      add_email:
+        add: "přidat"
       change_email:
         title: "Změnit emailovou adresu"
         taken: "Tato emailová adresa není k dispozici."
@@ -820,6 +822,8 @@ cs:
         title: "Emailová adresa"
         primary: "Hlavní email"
         secondary: "Záložní emailové adresy"
+        primary_label: "primární"
+        update_email: "Změnit emailovou adresu"
         no_secondary: "Žádné záložní emailové adresy"
         instructions: "Nikdy nebude zveřejněno."
         ok: "Pro potvrzení vám pošleme email."
@@ -1943,6 +1947,8 @@ cs:
         title: "Sluč vybrané příspěvky"
         action: "sluč vybrané příspěvky"
         error: "Během slučování vybraných příspěvků došlo k chybě."
+      publish_page:
+        public: "Veřejné"
       change_owner:
         title: "Změnit vlastníka"
         action: "změnit autora"
@@ -2142,7 +2148,6 @@ cs:
           last: "Poslední revize"
           hide: "Schovejte revizi"
           show: "Zobrazte revizi"
-          revert: "Vrátit se k této revizi"
           edit_wiki: "Upravit Wiki"
           edit_post: "upravit příspěvek"
         displays:

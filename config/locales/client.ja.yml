@@ -815,6 +815,8 @@ ja:
         confirm: "ユーザー名を変更してもよろしいですか？"
         taken: "このユーザー名は既に使われています。"
         invalid: "このユーザー名は無効です。英数字のみ利用可能です。"
+      add_email:
+        add: "追加"
       change_email:
         title: "メールアドレスを変更"
         taken: "このメールアドレスは既に使われています。"
@@ -835,6 +837,8 @@ ja:
         title: "メールアドレス"
         primary: "主要なメールアドレス"
         secondary: "その他のメールアドレス"
+        primary_label: "プライマリー"
+        update_email: "メールアドレスを変更"
         no_secondary: "その他のメールアドレスはありません"
         instructions: "他人に公開はされません"
         ok: "確認用メールを送信します"
@@ -1818,6 +1822,8 @@ ja:
         title: "選択した投稿を統合"
         action: "選択した投稿を統合"
         error: "選択した投稿の統合に失敗しました。"
+      publish_page:
+        public: "公開"
       change_owner:
         action: "オーナーシップを変更"
         error: "オーナーの変更ができませんでした。"
@@ -1947,7 +1953,6 @@ ja:
           last: "最後のリビジョン"
           hide: "リビジョンを隠す"
           show: "リビジョンを表示"
-          revert: "このリビジョンに戻す"
           edit_wiki: "Wikiを編集"
           edit_post: "投稿を編集"
         displays:

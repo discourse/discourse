@@ -29,9 +29,9 @@ describe CategorySerializer do
     expect(json[:custom_fields]).to be_present
   end
 
-  it "includes the default notification level" do
+  it "does not include the default notification level when there is no user" do
     json = described_class.new(category, scope: Guardian.new, root: false).as_json
-    expect(json[:notification_level]).to eq(CategoryUser.default_notification_level)
+    expect(json.key?(:notification_level)).to eq(false)
   end
 
   describe "user notification level" do

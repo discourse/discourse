@@ -13,7 +13,7 @@ describe CategoriesController do
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
       html = Nokogiri::HTML5(response.body)
       expect(html.css('body.crawler')).to be_present
-      expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
+      expect(html.css("a[href=\"/forum/c/#{category.slug}/#{category.id}\"]")).to be_present
     end
 
     it "properly preloads topic list" do

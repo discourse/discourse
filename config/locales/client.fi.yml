@@ -770,7 +770,6 @@ fi:
           all: "Kaikki"
           read: "Luetut"
           unread: "Lukematta"
-        ignore_duration_title: "Estoajastin"
         ignore_duration_username: "Käyttäjätunnus"
         ignore_duration_when: "Kesto:"
         ignore_duration_save: "Sivuuta"
@@ -876,7 +875,9 @@ fi:
       admin_delete: "Poista"
       users: "Käyttäjät"
       muted_users: "Vaimennetut"
+      muted_users_instructions: "Älä näytä ilmoituksia tai vastaanota yksityisviestejä näiltä käyttäjiltä."
       ignored_users: "Sivuutettu"
+      ignored_users_instructions: "Älä näytä näiden käyttäjien viestejä, näytä heiltä ilmoituksia äläkä vastaanota heiltä yksityisviestejä."
       tracked_topics_link: "Näytä"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
       apps: "Sovellukset"
@@ -994,6 +995,9 @@ fi:
         confirm: "Oletko aivan varma että haluat vaihtaa käyttäjänimesi?"
         taken: "Pahoittelut, tuo nimi on jo käytössä."
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
+      add_email:
+        title: "Lisää sähköpostiosoite"
+        add: "lisää"
       change_email:
         title: "Vaihda sähköposti"
         taken: "Pahoittelut, tämä sähköpostiosoite ei ole saatavilla."
@@ -1023,6 +1027,15 @@ fi:
         title: "Sähköposti"
         primary: "Ensisijainen sähköpostiosoite"
         secondary: "Toissijaiset sähköpostiosoitteet"
+        primary_label: "ensisijainen väri"
+        unconfirmed_label: "vahvistamaton"
+        resend_label: "lähetä vahvistussähköposti uudelleen"
+        resending_label: "lähetetään..."
+        resent_label: "sähköposti lähetetty"
+        update_email: "Vaihda sähköposti"
+        set_primary: "Aseta ensisijainen sähköpostiosoite"
+        destroy: "Poista sähköpostiosoite"
+        add_email: "Lisää vaihtoehtoinen sähköpostiosoite"
         no_secondary: "Ei toissijaisia sähköpostiosoitteita"
         instructions: "Ei tule julkiseksi."
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
@@ -1176,6 +1189,7 @@ fi:
         expired: "Tämä kutsu on rauennut."
         rescind: "Poista"
         rescinded: "Kutsu poistettu"
+        rescind_all: "Poista vanhentuneet kutsut"
         rescinded_all: "Kaikki vanhentuneet kutsut poistettu!"
         rescind_all_confirm: "Haluatko varmasti poistaa kaikki vanhentuneet kutsut?"
         reinvite: "Lähetä kutsu uudestaan"
@@ -1186,18 +1200,29 @@ fi:
         time_read: "Lukuaika"
         days_visited: "Päiviä vierailtu"
         account_age_days: "Tilin ikä päivissä"
+        source: "Kutsuttiin tavalla"
         links_tab: "Linkit"
+        links_tab_with_count: "Linkit (%{count})"
+        link_url: "Linkki"
         link_created_at: "Luotu"
         link_groups: Ryhmät
+        link_expires_at: Vanhenee
         create: "Lähetä kutsu"
+        copy_link: "Kopioi linkki"
         generate_link: "Kopioi kutsulinkki"
         link_generated: "Kutsulinkki luotiin onnistuneesti!"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
         single_user: "Yksittäinen käyttäjä"
+        multiple_user: "Useita käyttäjiä"
         invite_link:
+          title: "Kutsulinkki"
           success: "Kutsulinkki luotiin onnistuneesti!"
+          error: "Kutsulinkin luominen epäonnistui"
+          max_redemptions_allowed_label: "Kuinka moni voi enintään liittyä tämä linkin avulla?"
+          expires_at: "Koska tämä linkki vanhenee?"
         bulk_invite:
           none: "Et ole kutsunut vielä ketään tänne. Voit lähettää yksittäisiä kutsuja tai kutsua joukon ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lataamalla CSV-tiedoston</a>."
+          text: "Massakutsu"
           success: "Tiedoston lähettäminen onnistui. Saat viestin, kun prosessi on valmis."
           error: "Pahoittelut, tiedoston tulee olla CSV-muodossa."
           confirmation_message: "Olet lähettämässä kutsun kaikkiin sähköpostiosoitteisiin, jotka lähettämässäsi tiedostossa on."
@@ -1688,6 +1713,9 @@ fi:
         message:
           one: "Uusi yksityisviesti"
           other: "%{count} uutta yksityisviestiä"
+        high_priority:
+          one: "%{count} korkean prioriteetin ilmoitus"
+          other: "%{count} lukematonta korkean prioriteetin ilmoitusta"
       title: "ilmoitukset @nimeen viittauksista, vastauksista omiin viesteihin ja ketjuihin, viesteistä ym."
       none: "Ilmoitusten lataaminen ei onnistunut."
       empty: "Ilmoituksia ei löydetty."
@@ -1996,6 +2024,7 @@ fi:
         time_frame_required: Valitse ajanjakso
       auto_update_input:
         none: "Valitse ajanjakso"
+        now: "Nyt"
         later_today: "Myöhemmin tänään"
         tomorrow: "Huomenna"
         later_this_week: "Myöhemmin tällä viikolla"
@@ -2255,6 +2284,18 @@ fi:
       publish_page:
         title: "Sivujulkaisu"
         publish: "Julkaise"
+        description: "Kun ketju julkaistaan sivuna, sen verkko-osoitteen voi jakaa ja se näytetään erityisellä tavalla muotoiltuna."
+        slug: "Polkutunnus"
+        public: "Julkinen"
+        public_description: "Ihmiset näkevät sivun, vaikka siihen liittyvä ketju olisi yksityinen."
+        publish_url: "Sivusi julkaistiin osoitteessa:"
+        topic_published: "Ketjusi julkaistiin osoitteessa;"
+        preview_url: "Sivusi julkaistaan osoitteessa:"
+        invalid_slug: "Pahoittelut, et voi julkaista tätä sivua."
+        unpublish: "Peru julkaisu"
+        update: "Päivitä"
+        unpublished: "Sivusi julkaisu peruttiin, sille ei ole enää pääsyä."
+        publishing_settings: "Julkaisuasetukset"
       change_owner:
         title: "Vaihda omistajaa"
         action: "muokkaa omistajuutta"
@@ -2263,6 +2304,9 @@ fi:
         instructions:
           one: "Valitse uusi omistaja käyttäjän <b>@%{old_user}</b> viestille."
           other: "Valitse uusi omistaja käyttäjän <b>@%{old_user}</b> %{count} viestille."
+        instructions_without_old_user:
+          one: "Valitse uusi omistaja viestille"
+          other: "Valitse uusi omistaja %{count} viestille"
       change_timestamp:
         title: "Muuta aikaleimaa..."
         action: "muuta aikaleimaa"
@@ -2456,7 +2500,7 @@ fi:
           last: "Viimeinen revisio"
           hide: "Piilota revisio"
           show: "Näytä revisio"
-          revert: "Palaa tähän revisioon"
+          revert: "Palaa revisioon %{revision}"
           edit_wiki: "Muokkaa wikiä"
           edit_post: "Muokkaa viestiä"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2483,13 +2527,19 @@ fi:
             button: "HTML"
       bookmarks:
         create: "Luo kirjanmerkki"
+        edit: "Muokkaa kirjanmerkkiä"
         created: "Luotu"
         updated: "Päivitetty"
         name: "Nimi"
+        name_placeholder: "Mitä varten kirjanmerkki on?"
+        set_reminder: "Muistuta minua"
         actions:
           delete_bookmark:
             name: "Poista kirjanmerkki"
             description: "Poistaa kirjanmerkin profiilistasi ja kumoaa kaikki kirjanmerkkiin liittyvät muistutukset"
+          edit_bookmark:
+            name: "Muokkaa kirjanmerkkiä"
+            description: "Muokkaa kirjanmerkin nimeä tai säädä muistutuksen päivämäärää ja kellonaikaa"
     category:
       can: "voivat&hellip; "
       none: "(ei aluetta)"
@@ -2550,6 +2600,7 @@ fi:
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       mailinglist_mirror: "Alue jäljittelee postituslistaa"
       show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
+      read_only_banner: "Banneriteksti joka näytetään, jos käyttäjä ei voi aloittaa ketjua tälle alueelle:"
       num_featured_topics: "Kuinka monta ketjua näytetään Keskustelualueet-sivulla:"
       subcategory_num_featured_topics: "Kuinka monta ketjua näytetään emoalueen sivulla:"
       all_topics_wiki: "Tee uusista ketjuista wiki-viestejä oletuksena."
@@ -2619,6 +2670,9 @@ fi:
         moderation: "Valvonta"
         appearance: "Ulkoasu"
         email: "Sähköposti"
+      list_filters:
+        all: "kaikki ketjut"
+        none: "ei tytäralueita"
     flagging:
       title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa viesti"
@@ -2794,6 +2848,8 @@ fi:
         this_month: "Kuukausi"
         this_week: "Viikko"
         today: "Tänään"
+        other_periods: "katso kuumat:"
+    browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaimesi on liian vanha eikä siksi toimi tällä sivustolla</a>. <a href="https://browsehappy.com">Päivitä selaimesi</a> niin voit katsella nykyaikaisia sisältöjä, kirjautua sisään ja vastata.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -2849,6 +2905,18 @@ fi:
         title: "Kirjoittaminen"
         return: "%{shortcut} Palaa viestikenttään"
         fullscreen: "%{shortcut} Koko ruudun kirjoitustila"
+      bookmarks:
+        title: "Kirjanmerkit"
+        later_today: "%{shortcut} Myöhemmin tänään"
+        later_this_week: "%{shortcut} Myöhemmin tällä viikolla "
+        tomorrow: "%{shortcut} Huomenna"
+        next_week: "%{shortcut} Ensi viikolla"
+        next_month: "%{shortcut} Ensi kuussa"
+        next_business_week: "%{shortcut} Ensi viikon alussa"
+        next_business_day: "%{shortcut} Seuraavana arkipäivänä"
+        custom: "%{shortcut} Valitse päivämäärä ja kellonaika"
+        none: "%{shortcut} Ei muistutusta"
+        delete: "%{shortcut} Poista kirjanmerkk"
       actions:
         title: "Toiminnot"
         bookmark_topic: "%{shortcut} Aseta kirjanmerkkeihin/poista"
@@ -2871,6 +2939,10 @@ fi:
         print: "%{shortcut} Tulosta ketju"
         defer: "%{shortcut} Lykkää ketjua"
         topic_admin_actions: "%{shortcut} Avaa ketjun ylläpitotyökalut"
+      search_menu:
+        title: "Hakuvalikko"
+        prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
+        insert_url: "%{shortcut} Lisää valittu avoinna olevaan viestieditoriin"
     badges:
       earned_n_times:
         one: "Ansaitsi tämän ansiomerkin yhden kerran"
@@ -3106,6 +3178,7 @@ fi:
           view_table: "taulukko"
           view_graph: "graafi"
           refresh_report: "Päivitä raportti"
+          dates: "Päivämäärät (UTC)"
           groups: "Kaikki ryhmät"
           disabled: "Raportti ei ole käytössä"
           totals_for_sample: "Otos yhteensä"
@@ -3116,12 +3189,14 @@ fi:
             more: '<a href="%{basePath}/admin/logs/search_logs">Hakulokit</a>'
             disabled: 'Trendaavat haut eivät ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>.'
           filters:
-            file-extension:
+            file_extension:
               label: Tiedostomuoto
             group:
               label: Ryhmä
             category:
               label: Alue
+            include_subcategories:
+              label: "Sisällytä tytäralueet"
       commits:
         latest_changes: "Viimeisimmät muutokset: päivitä usein!"
         by: "käyttäjältä"
@@ -3166,6 +3241,7 @@ fi:
             effects: Vaikutukset
             trust_levels_none: "Ei mitään"
             automatic_membership_email_domains: "Käyttäjä, joka rekisteröityy sähköpostiverkkotunnuksella joka täsmää tähän luetteloon, liitetään ryhmään automaattisesti:"
+            automatic_membership_user_count: "%{count} käyttäjällä on joku uusista sähköposti-verkkotunnuksista; heidät lisätään ryhmään."
             primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
         name_placeholder: "Ryhmän nimi, ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
         primary: "Ensisijainen ryhmä"
@@ -3277,6 +3353,9 @@ fi:
         notification_event:
           name: "Ilmoitustapahtuma"
           details: "Kun käyttäjä saa ilmoituksen syötteeseensä."
+        user_badge_event:
+          name: "Ansiomerkinmyöntämistapahtuma"
+          details: "Kun käyttäjä saa ansiomerkin."
         delivery_status:
           title: "Toimituksen tila"
           inactive: "Ei toiminnassa"
@@ -3426,6 +3505,7 @@ fi:
           theme_name: "Teeman nimi"
           component_name: "Komponentin nimi"
           themes_intro: "Aloita valitsemalla olemassa oleva teema tai asenna uusi."
+          themes_intro_emoji: "naistaiteilijaemoji"
           beginners_guide_title: "Aloittelijan opas Discourse-teemojen käyttämiseen"
           developers_guide_title: "Kehittäjän opas Discourse-teemoihin"
           browse_themes: "Selaile yhteisön kehittämiä teemoja"
@@ -4014,9 +4094,27 @@ fi:
         delete: "Poista käyttäjä"
         merge:
           prompt:
+            title: "Siirrä & poista %{username}"
+            description: |
+              <p>Valitse uusi omistaja käyttäjän <b>@%{username}'s</b> sisälölle.</p>
+
+              <p>Kaikki ketjunaloitukset, viestit, yksityisviestit ja muu käyttäjän <b>@%{username}</b> luoma sisältö siirtyvät.</p>
+            target_username_placeholder: "Uuden omistajan käyttäjänim"
+            transfer_and_delete: "Siirrä & poista %{username}"
             cancel: "Peru"
           confirmation:
+            title: "Siirrä & poista %{username}"
+            description: |
+              <p>Kaikki käyttäjän <b>@%{username}'s</b> sisältö siirretään käyttäjän <b>@%{targetUsername}</b> nimiin. Kun sisältö on siirretty, käyttäjän <b>@%{username}'s</b> tili poistetaan.</p>
+
+              <p><b>Tätä ei voi peruuttaa!</b></p>
+
+              <p>Jatka kirjoittamalla: <code>%{text}</code></p>
+            text: "siirrä käyttäjä @%{username} käyttäjälle @%{targetUsername}"
+            transfer_and_delete: "Siirrä & poista %{username}"
             cancel: "Peru"
+        merging_user: "Yhdistetään käyttäjää..."
+        merge_failed: "Käyttäjien yhdistäminen epäonnistui."
         delete_forbidden_because_staff: "Ylläpitäjiä ja valvojia ei voi poistaa."
         delete_posts_forbidden_because_staff: "Ylläpitäjien ja valvojien kaikkia viestejä ei voi poistaa."
         delete_forbidden:
@@ -4060,6 +4158,7 @@ fi:
           threshold_reached: "Vastaanotettiin liian monta palautusta tästä sähköpostiosoiteesta"
         trust_level_change_failed: "Käyttäjän luottamustason vaihtamisessa tapahtui virhe."
         suspend_modal_title: "Hyllytä käyttäjä"
+        confirm_cancel_penalty: "Oletko varma, että haluat pyyhkiä rangaistuksen?"
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
         trust_level_3_requirements: "Luottamustaso 3 vaatimukset"
         trust_level_locked_tip: "luottamustaso on lukittu, järjestelmä ei ylennä tai alenna käyttäjää"
@@ -4202,6 +4301,8 @@ fi:
           modal_description: "Haluatko tämän muutoksen vaikuttavan takautuvasti? Tämä muuttaa kaikkien %{count} olemassa olevan käyttäjän käyttäjäasetusta."
           modal_yes: "Kyllä"
           modal_no: "Ei, muutosta sovellettakoon vain tästedes"
+        simple_list:
+          add_item: "Lisää asia..."
       badges:
         title: Ansiomerkit
         new_badge: Uusi ansiomerkki
@@ -4273,6 +4374,7 @@ fi:
             with_time: "<span class=\"username\">%{username}</span> <span class=\"time\">%{time}</span>"
         badge_intro:
           title: "Aloita valitsemalla olemassa oleva ansiomerkki tai luomalla uusi"
+          emoji: "naisopiskelijaemoji"
           what_are_badges_title: "Mitä ansiomerkit ovat?"
           badge_query_examples_title: "Esimerkkejä ansiomerkin tietokantakyselyistä"
         mass_award:
@@ -4280,6 +4382,8 @@ fi:
           description: Myönnä sama ansiomerkki useille käyttäjille samalla kertaa.
           no_badge_selected: Aloita valitsemalla ansiomerkki.
           perform: "Myönnä ansiomerkki käyttäjille"
+          upload_csv: "Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteet tai käyttäjänimet"
+          aborted: "Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteet tai käyttäjänimet"
           success: CSV tuli perille ja käyttäjät saavat ansiomerkkinsä pian.
           replace_owners: Poista ansiomerkki aiemmilta omistajilta
       emoji:
@@ -4290,6 +4394,7 @@ fi:
         name: "Nimi"
         group: "Ryhmä"
         image: "Kuva"
+        alt: "mukautetun emojin esikatselu"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä isäntä."

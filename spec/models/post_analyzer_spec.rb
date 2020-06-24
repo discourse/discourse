@@ -31,6 +31,7 @@ describe PostAnalyzer do
 
       it 'invalidates the oneboxes for urls in the post' do
         Oneboxer.expects(:invalidate).with url
+        InlineOneboxer.expects(:invalidate).with url
         post_analyzer.cook(raw, options)
       end
     end

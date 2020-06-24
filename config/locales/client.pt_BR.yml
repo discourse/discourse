@@ -767,7 +767,6 @@ pt_BR:
           all: "Tudo"
           read: "Lido"
           unread: "Não lidas"
-        ignore_duration_title: "Ignorar Temporizador"
         ignore_duration_username: "Nome de Usuário"
         ignore_duration_when: "Duração:"
         ignore_duration_save: "Ignorar"
@@ -991,6 +990,9 @@ pt_BR:
         confirm: "Você tem certeza absoluta de que deseja alterar seu nome de usuário?"
         taken: "Desculpe, este nome de usuário já está sendo usado."
         invalid: "Este nome de usuário é inválido. Ele deve conter apenas números e letras"
+      add_email:
+        title: "Adicione o e-mail"
+        add: "adicionar"
       change_email:
         title: "Alterar E-mail"
         taken: "Desculpe, este e-mail não está disponível."
@@ -1021,8 +1023,11 @@ pt_BR:
         title: "E-mail"
         primary: "E-mail Primário"
         secondary: "E-mails Secundários"
-        no_secondary: "Nenhum e-mail secundário"
+        primary_label: "primário"
+        unconfirmed_label: "não confirmado"
+        update_email: "Alterar E-mail"
         sso_override_instructions: "E-mail pode ser atualizado do provedor de SSO."
+        no_secondary: "Nenhum e-mail secundário"
         instructions: "Nunca visível publicamente."
         ok: "Nós enviaremos um e-mail para confirmar"
         required: "Por favor preencha um endereço de e-mail"
@@ -2262,6 +2267,7 @@ pt_BR:
         publish: "Publicar"
         description: "Quando um tópico é publicado como uma página, sua URL pode ser compartilhada e ela será exibida com um estilo personalizado."
         slug: "Slug"
+        public: "Público"
         publish_url: "Sua página foi publicada em:"
         topic_published: "Seu tópico foi publicado em:"
         preview_url: "Sua página será publicada em:"
@@ -2473,7 +2479,6 @@ pt_BR:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Exibir revisão"
-          revert: "Reverter para esta revisão"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Postagem"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3161,13 +3166,13 @@ pt_BR:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de pesquisa</a>'
             disabled: 'O relatório de pesquisa em alta está desativado. Habilitar <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de pesquisa de registro</a> para coletar dados.'
           filters:
-            file-extension:
+            file_extension:
               label: Extensão de arquivo
             group:
               label: Grupo
             category:
               label: Categoria
-            include-subcategories:
+            include_subcategories:
               label: "Incluir subcategorias"
       commits:
         latest_changes: "Últimas atualizações: atualize com frequência!"

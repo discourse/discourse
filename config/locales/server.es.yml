@@ -751,7 +751,6 @@ es:
     confirm: "Confirmar"
     authorizing_new:
       title: "Confirmar tu nuevo correo electrónico"
-      description: "Por favor, confirma que quisieras cambiar tu correo electrónico por el nuevo: "
     authorizing_old:
       title: "Cambiar tu dirección de correo electrónico"
       description: "Por favor, confirma el cambio de tu dirección de correo electrónico"
@@ -1530,7 +1529,6 @@ es:
     s3_backup_bucket: "El bucket remoto para mantener copias de respaldo. AVISO: Asegúrate de que es un bucket privado."
     s3_endpoint: "El endpoint se puede modificar para realizar una copia de respaldo en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
     s3_configure_tombstone_policy: "Habilitar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está deshabilitado, no se reclamará ningún espacio después de eliminar las cargas."
-    s3_disable_cleanup: "Desactivar el eliminado de respaldos de S3 cuando se eliminen de forma local."
     enable_s3_inventory: "Generar informes y verificar las cargas utilizando el inventario de Amazon S3. IMPORTANTE: requiere credenciales S3 válidas (tanto la clave de acceso como la clave de acceso secreta)."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
     backup_with_uploads: "Incluir archivos subidos en los respaldos programados. Si esta opción está deshabilitada, tan solo se ejecutará una copia de respaldo de la base de datos."
@@ -1929,7 +1927,6 @@ es:
     city_for_disputes: "Ciudad de disputas"
     shared_drafts_category: "Habilite la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del staff."
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
-    push_notifications_icon: "El icono de la medalla que aparece en la esquina de notificación. El tamaño requerido es de 96 × 96."
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_general_tab_activity_metrics: "Selecciona los reportes que se muestran como medidas de actividad en la pestaña general."
     gravatar_name: "Nombre del proveedor de Gravatar"
@@ -3231,6 +3228,8 @@ es:
         Confirma tu dirección de correo electrónico actual para %{site_name} haciendo clic en el siguiente enlace:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"
     notify_old_email:
       title: "Antiguo correo electrónico de notificaciones"
       subject_template: "[%{email_prefix}] Tu dirección de correo electrónico ha sido cambiada"

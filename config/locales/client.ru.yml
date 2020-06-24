@@ -528,7 +528,7 @@ ru:
           medium: "Средний"
           high: "Высокий"
       conversation:
-        view_full: "просмотреть полный разговор"
+        view_full: "Просмотреть всё обсуждение"
       scores:
         about: "Оценка рассчитывается на основе уровня доверия сообщающего, точности его предыдущих жалоб и приоритета сообщения."
         score: "Оценка"
@@ -779,7 +779,7 @@ ru:
       "15": "Черновики"
     categories:
       all: "Все разделы"
-      all_subcategories: "все"
+      all_subcategories: "Все"
       no_subcategory: "Вне подразделов"
       category: "Раздел"
       category_list: "Показать список разделов"
@@ -850,7 +850,7 @@ ru:
           all: "Все"
           read: "Прочитанные"
           unread: "Непрочитанные"
-        ignore_duration_title: "Игнорировать таймер"
+        ignore_duration_title: "Игнорировать пользователя"
         ignore_duration_username: "Псевдоним"
         ignore_duration_when: "Продолжительность:"
         ignore_duration_save: "Игнорировать"
@@ -956,7 +956,9 @@ ru:
       admin_delete: "Удалить"
       users: "Пользователи"
       muted_users: "Выключено"
+      muted_users_instructions: "Игнорировать все уведомления и личные сообщения от этих пользователей."
       ignored_users: "Игнорировать"
+      ignored_users_instructions: "Игнорировать все сообщения, уведомления и личные сообщения от этих пользователей."
       tracked_topics_link: "Показать"
       automatically_unpin_topics: "Автоматически откреплять темы после прочтения"
       apps: "Приложения"
@@ -1074,6 +1076,9 @@ ru:
         confirm: "Вы абсолютно действительно хотите изменить свое имя пользователя?"
         taken: "Этот псевдоним уже занят."
         invalid: "Псевдоним должен состоять только из цифр и латинских букв"
+      add_email:
+        title: "Добавить E-mail"
+        add: "добавить"
       change_email:
         title: "Изменить E-mail"
         taken: "Этот e-mail недоступен."
@@ -1104,8 +1109,17 @@ ru:
         title: "E-mail"
         primary: "Основной адрес электронной почты"
         secondary: "Дополнительный адрес электронной почты"
-        no_secondary: "Нет дополнительного адреса электронной почты"
+        primary_label: "основной"
+        unconfirmed_label: "неподтвержденный"
+        resend_label: "Отправить заново подтверждение по e-mail"
+        resending_label: "отправка..."
+        resent_label: "e-mail отправлен"
+        update_email: "Изменить E-mail"
+        set_primary: "Указать как основной E-mail"
+        destroy: "Удалить E-mail"
+        add_email: "Добавить дополнительный E-mail"
         sso_override_instructions: "E-mail может быть переопределен от поставщика SSO."
+        no_secondary: "Нет дополнительного адреса электронной почты"
         instructions: "Не будет опубликован."
         ok: "Мы вышлем вам письмо для подтверждения"
         required: "Пожалуйста, введите email"
@@ -1262,6 +1276,7 @@ ru:
         expired: "Это приглашение истекло."
         rescind: "Отозвать"
         rescinded: "Приглашение отозвано"
+        rescind_all: "Удалить просроченные приглашения"
         rescinded_all: "Все просроченные приглашения удалены!"
         rescind_all_confirm: "Вы действительно хотите удалить все просроченные приглашения?"
         reinvite: "Повторить приглашение"
@@ -1272,18 +1287,30 @@ ru:
         time_read: "Времени читал"
         days_visited: "Дней посещал"
         account_age_days: "Дней с момента регистрации"
+        source: "Способ отправки приглашения"
         links_tab: "Ссылки"
+        links_tab_with_count: "Ссылки (%{count})"
+        link_url: "Ссылка"
         link_created_at: "Создано"
-        link_groups: Групп
+        link_redemption_stats: "Принятые приглашения"
+        link_groups: Группы
+        link_expires_at: Истекает
         create: "Отправить приглашение"
+        copy_link: "Копировать ссылку"
         generate_link: "Скопировать ссылку для приглашений"
         link_generated: "Пригласительная ссылка успешно создана!"
         valid_for: "Пригласительная ссылка действительна только для этого email: %{email}"
-        single_user: "Отдельный пользователь"
+        single_user: "Приглашение единичного пользователя"
+        multiple_user: "Приглашение нескольких пользователей"
         invite_link:
-          success: "Пригласительная ссылка успешно создана!"
+          title: "Ссылка на приглашение"
+          success: "Ссылка на приглашение успешно создана!"
+          error: "Произошла ошибка при создании ссылки на приглашение"
+          max_redemptions_allowed_label: "Сколько человек могут зарегистрироваться по этой ссылке?"
+          expires_at: "Когда истечет срок действия этой ссылки?"
         bulk_invite:
           none: "Вы ещё никого не приглашали сюда. Отправьте индивидуальные приглашения или пригласите несколько людей за раз, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>загрузив файл CSV</a>."
+          text: "Массовое приглашение"
           success: "Файл успешно загружен, вы получите сообщение, когда процесс будет завершен."
           error: "Извините, но файл должен быть в формате CSV."
           confirmation_message: "Вы собираетесь отправить приглашения по электронной почте всем в загруженном файле."
@@ -1418,10 +1445,10 @@ ru:
     too_few_posts_notice_MF: >-
       Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} или {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} или {# errors/hour}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} или {# errors/minute}}</a> достигнут предел настройки сайта {limit, plural, one {# error/minute} или {# errors/minute}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} или {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} или {# errors/hour}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} или {# errors/minute}}</a> превышен лимит настроек сайта {limit, plural, one {# error/minute} или {# errors/minute}}."
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} other {# errors/hour}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> достигнут предел настройки сайта {limit, plural, one {# error/minute} other {# errors/minute}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> превышен лимит настроек сайта {limit, plural, one {# error/hour} other {# errors/hour}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> превышен лимит настроек сайта {limit, plural, one {# error/minute} other {# errors/minute}}."
     learn_more: "подробнее..."
     all_time: "всего"
     all_time_desc: "всего создано тем"
@@ -2142,6 +2169,7 @@ ru:
         time_frame_required: "Пожалуйста, выберите временные рамки"
       auto_update_input:
         none: "Выбор таймфрейма"
+        now: "Сейчас"
         later_today: "Сегодня, но позже"
         tomorrow: "Завтра"
         later_this_week: "Позже на этой неделе"
@@ -2418,12 +2446,15 @@ ru:
         title: "Публикация страниц"
         publish: "Публиковать"
         description: "Когда тема публикуется в виде страницы, ее URL-адрес может быть предоставлен для общего доступа, и она будет отображаться с пользовательским стилем."
-        slug: "Slug"
+        slug: "Слаг (текстовый идентификатор)"
+        public: "Опубликованная страница"
+        public_description: "Пользователи могут видеть страницу, даже если соответствующая тема является закрытой."
         publish_url: "Ваша страница была опубликована по адресу:"
-        topic_published: "Ваша тема была опубликована на:"
+        topic_published: "Ваша тема была опубликована по адресу:"
         preview_url: "Ваша страница будет опубликована по адресу:"
         invalid_slug: "Извините, вы не можете опубликовать эту страницу."
         unpublish: "Отменить публикацию"
+        update: "Обновить"
         unpublished: "Публикация страницы была отменена и более недоступна по указанному ранее адресу."
         publishing_settings: "Настройки публикации"
       change_owner:
@@ -2511,6 +2542,7 @@ ru:
         few: "%{count} ответа"
         many: "%{count} ответов"
         other: "%{count} ответов"
+      unknown_user: "(неизвестный/удалённый пользователь)"
       has_likes_title:
         one: "Это сообщение понравилось %{count} человеку"
         few: "Это сообщение понравилось %{count} людям"
@@ -2666,7 +2698,7 @@ ru:
           last: "Последняя версия"
           hide: "Скрыть редакцию"
           show: "Показать редакцию"
-          revert: "Откат до этой версии"
+          revert: "Откат до версии %{revision}"
           edit_wiki: "Редактировать Wiki"
           edit_post: "Редактировать запись"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2837,6 +2869,9 @@ ru:
         moderation: "Модерация"
         appearance: "Внешний вид"
         email: "Email"
+      list_filters:
+        all: "все темы"
+        none: "без подразделов"
     flagging:
       title: "Спасибо за вашу помощь в поддержании порядка!"
       action: "Пожаловаться на сообщение"
@@ -3409,13 +3444,13 @@ ru:
             more: '<a href="%{basePath}/admin/logs/search_logs">Поисковые логи</a>'
             disabled: 'Отчет о поисковых запросов отключен. Включить <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал поисковых запросов</a> для сбора данных.'
           filters:
-            file-extension:
+            file_extension:
               label: Расширение файла
             group:
               label: Группа
             category:
               label: Раздел
-            include-subcategories:
+            include_subcategories:
               label: "Включая подразделы"
       commits:
         latest_changes: "Обновления в репозитории Github"
@@ -4119,6 +4154,9 @@ ru:
             override_upload_secure_status: "перезаписать защищенный статус загрузки"
             page_published: "страница опубликована"
             page_unpublished: "публикация страницы отменена"
+            add_email: "добавить e-mail"
+            update_email: "обновить e-mail"
+            destroy_email: "уничтожить e-mail"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создаёт новую учётную запись, указанный пользователем почтовый адрес проверяется на соответствие с указанным ниже списком, и в случае совпадения регистрация блокируется или производятся другие дополнительные действия."
@@ -4545,6 +4583,8 @@ ru:
           modal_description: "Хотели бы вы применить это изменение исторически? Это изменит настройки для %{count} существующих пользователей."
           modal_yes: "Да"
           modal_no: "Нет, только применить изменения в будущем"
+        simple_list:
+          add_item: "Добавить элемент..."
       badges:
         title: Награды
         new_badge: Новая награда
@@ -4674,8 +4714,9 @@ ru:
         category_id: "Номер раздела"
         category_title: "Раздел"
         tag_name: "Имя тега"
-        external_url: "Внешняя ссылка"
+        external_url: "Внешняя или относительная ссылка"
         destination: "Назначения"
+        copy_to_clipboard: "Скопировать ссылку в буфер обмена"
         delete_confirm: "Удалить эту постоянную ссылку?"
         form:
           label: "Новая постоянная ссылка:"

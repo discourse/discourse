@@ -31,7 +31,20 @@ componentTest("create a tag", {
     assert.equal(this.subject.header().value(), "foo,bar");
 
     await this.subject.expand();
-    await this.subject.fillInFilter("monkey");
+    await this.subject.fillInFilter("mon");
+    assert.equal(
+      find(".select-kit-row")
+        .text()
+        .trim(),
+      "monkey x1"
+    );
+    await this.subject.fillInFilter("key");
+    assert.equal(
+      find(".select-kit-row")
+        .text()
+        .trim(),
+      "monkey x1"
+    );
     await this.subject.keyboard("enter");
 
     assert.equal(this.subject.header().value(), "foo,bar,monkey");

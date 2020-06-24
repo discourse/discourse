@@ -224,8 +224,9 @@ module FileStore
           upload = Upload.find_by(url: "/#{file}")
 
           if upload&.original_filename
-            options[:content_disposition] =
-              %Q{attachment; filename="#{upload.original_filename}"}
+            options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+              disposition: "attachment", filename: upload.original_filename
+            )
           end
 
           if upload&.secure

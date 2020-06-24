@@ -33,6 +33,55 @@ describe TagsController do
       end
     end
 
+    context "with allow_staff_to_tag_pms" do
+      fab!(:admin) { Fabricate(:admin) }
+      fab!(:topic) { Fabricate(:topic, tags: [topic_tag]) }
+      fab!(:pm) do
+        Fabricate(
+          :private_message_topic,
+          tags: [test_tag],
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: admin)
+          ]
+        )
+      end
+
+      context "enabled" do
+        before do
+          SiteSetting.allow_staff_to_tag_pms = true
+          sign_in(admin)
+        end
+
+        it "shows topic tags and pm tags" do
+          get "/tags.json"
+          tags = response.parsed_body["tags"]
+          expect(tags.length).to eq(2)
+
+          serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+          expect(serialized_tag["count"]).to eq(2)
+          expect(serialized_tag["pm_count"]).to eq(0)
+
+          serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+          expect(serialized_tag["count"]).to eq(0)
+          expect(serialized_tag["pm_count"]).to eq(1)
+        end
+      end
+
+      context "disabled" do
+        before do
+          SiteSetting.allow_staff_to_tag_pms = false
+          sign_in(admin)
+        end
+
+        it "hides pm tags" do
+          get "/tags.json"
+          tags = response.parsed_body["tags"]
+          expect(tags.length).to eq(1)
+          expect(tags[0]["id"]).to eq(topic_tag.name)
+        end
+      end
+    end
+
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
       include_examples "successfully retrieve tags with topic_count > 0"

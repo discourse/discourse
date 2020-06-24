@@ -1,6 +1,6 @@
 import { next, run } from "@ember/runloop";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { avatarAtts } from "discourse/widgets/actions-summary";
+import { smallUserAtts } from "discourse/widgets/actions-summary";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
@@ -696,7 +696,7 @@ export default createWidget("post-menu", {
         post_action_type_id: LIKE_ACTION
       })
       .then(users => {
-        state.likedUsers = users.map(avatarAtts);
+        state.likedUsers = users.map(smallUserAtts);
         state.total = users.totalRows;
       });
   },
@@ -705,7 +705,7 @@ export default createWidget("post-menu", {
     const { attrs, state } = this;
 
     return this.store.find("post-reader", { id: attrs.id }).then(users => {
-      state.readers = users.map(avatarAtts);
+      state.readers = users.map(smallUserAtts);
       state.totalReaders = users.totalRows;
     });
   },

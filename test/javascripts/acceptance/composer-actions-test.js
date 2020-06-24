@@ -16,6 +16,9 @@ acceptance("Composer Actions", {
   },
   beforeEach() {
     _clearSnapshots();
+  },
+  afterEach() {
+    _clearSnapshots();
   }
 });
 
@@ -174,6 +177,7 @@ QUnit.test("hide component if no content", async assert => {
   await composerActions.selectRowByValue("reply_as_private_message");
 
   assert.ok(composerActions.el().hasClass("is-hidden"));
+  assert.equal(composerActions.el().children().length, 0);
 
   await click("button#create-topic");
   await composerActions.expand();
@@ -385,6 +389,9 @@ acceptance("Composer Actions With New Topic Draft", {
     can_tag_topics: true
   },
   beforeEach() {
+    _clearSnapshots();
+  },
+  afterEach() {
     _clearSnapshots();
   }
 });

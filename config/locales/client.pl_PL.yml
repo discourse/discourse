@@ -829,7 +829,6 @@ pl_PL:
           all: "Wszystkie"
           read: "Przeczytane"
           unread: "Nieprzeczytane"
-        ignore_duration_title: "Ignoruj licznik"
         ignore_duration_username: "Nazwa użytkownika"
         ignore_duration_when: "Oczekiwanie"
         ignore_duration_save: "Ignoruj"
@@ -1043,6 +1042,8 @@ pl_PL:
         confirm: "Czy jesteś absolutnie pewien że chcesz zmienić swoją nazwę użytkownika?"
         taken: "Przykro nam, ale ta nazwa jest zajęta."
         invalid: "Ta nazwa jest niepoprawna. Powinna zawierać jedynie liczby i litery."
+      add_email:
+        add: "dodaj"
       change_email:
         title: "Zmień adres email"
         taken: "Przykro nam, ale ten adres email nie jest dostępny."
@@ -1073,8 +1074,10 @@ pl_PL:
         title: "Email"
         primary: "Podstawowy adres email"
         secondary: "Drugorzędne adresy email"
-        no_secondary: "Brak drugorzędnych adresów email"
+        primary_label: "podstawowy"
+        update_email: "Zmień adres email"
         sso_override_instructions: "E-mail można zaktualizować od dostawcy SSO."
+        no_secondary: "Brak drugorzędnych adresów email"
         instructions: "Nie będzie publicznie widoczny."
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
@@ -1376,17 +1379,6 @@ pl_PL:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, lajkowanie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Rozpocznijmy dyskusję!</a> Jest {currentTopics, liczba mnoga, jeden {jest <strong>#</strong> tematem} inny {are <strong>#</strong> topics}} i {currentPosts, liczba mnoga, jeden { <strong>#</strong> post} inne { <strong>#</strong> posty}}. Odwiedzający potrzebują więcej do przeczytania i odpowiedzi - zalecamy co najmniej {wymaganeTopiki, liczba mnoga, jeden { <strong>#</strong> temat} inne { <strong>#</strong> tematy}} i {wymaganePosty, liczba mnoga, jeden { <strong>#</strong> post} inne { <strong>#</strong> posty}}. Tylko pracownicy mogą zobaczyć tę wiadomość.
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Rozpocznijmy dyskusję!</a> Jest {currentTopics, liczba mnoga, jeden {is <strong>#</strong> topic} other {are <strong>#</strong> topics}}. Odwiedzający potrzebują więcej do przeczytania i udzielenia odpowiedzi - zalecamy co najmniej {wymaganeTopiki, liczba mnoga, jeden { <strong>#</strong> temat} inny { <strong>#</strong> tematy}}. Tylko pracownicy mogą zobaczyć tę wiadomość.
-    too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Rozpocznijmy dyskusję!</a> Jest {currentPosts, liczba mnoga, jeden {is <strong>#</strong> post} other {are <strong>#</strong> posts}}. Odwiedzający potrzebują więcej do przeczytania i odpowiedzi - zalecamy co najmniej {wymaganePosty, liczba mnoga, jeden { <strong>#</strong> post} inny { <strong>#</strong> posty}}. Tylko pracownicy mogą zobaczyć tę wiadomość.
-    logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{stopa, liczba mnoga, jeden {# błąd / godzina} inne {# błędy / godzina}}</a> osiągnęła limit ustawienia witryny w wysokości {limit, liczba mnoga, jeden {# błąd / godzina} inne {# błędy / godzina}}."
-      reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{stopa, liczba mnoga, jeden {# błąd / minuta} inna {# błędy / minuta}}</a> osiągnęła limit ustawienia witryny w wysokości {limit, liczba mnoga, jeden {# błąd / minuta} inne {# błędy / minuta}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{stopa, liczba mnoga, jeden {# błąd / godzina} inny {# błędy / godzina}}</a> przekroczył limit ustawienia witryny o {limit, liczba mnoga, jeden {# błąd / godzina} inne {# błędy / godzina}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{stopa, liczba mnoga, jeden {# błąd / minuta} inna {# błędy / minuta}}</a> przekroczyła limit ustawienia witryny o {limit, liczba mnoga, jeden {# błąd / minuta} inne {# błędy / minuta}}."
     learn_more: "dowiedz się więcej…"
     all_time: "łącznie"
     all_time_desc: "łącznie utworzonych tematów"
@@ -2361,6 +2353,8 @@ pl_PL:
         title: "Scal wybrane posty"
         action: "scal wybrane posty"
         error: "Wystąpił błąd podczas łączenia wybranych postów"
+      publish_page:
+        public: "Publiczna"
       change_owner:
         title: "Zmiana właściciela"
         action: "zmień właściciela"
@@ -2563,7 +2557,6 @@ pl_PL:
           last: "Ostatnia wersja"
           hide: "Ukryj tę wersję"
           show: "Pokaż tę wersję"
-          revert: "Przywróć do tej wersji"
           edit_wiki: "Edytuj Wiki"
           edit_post: "Edytuj wpis"
         displays:
@@ -2782,12 +2775,6 @@ pl_PL:
         help: "Temat jest niewidoczny: nie będzie wyświetlany na listach tematów a dostęp do niego można uzyskać jedynie poprzez link bezpośredni"
     posts: "Wpisy"
     posts_long: "jest %{number} wpisów w tym temacie"
-    posts_likes_MF: |
-      Ten temat ma {count, plural, one {1 reply} other {# replies}} {ratio, select
-      low{odpowiedzi z dużą ilością lajk'ów w poście}
-      med{odpowiedzi z bardzo dużą ilością lajk'ów w poście}
-      high{odpowiedzi z ekstremalnie dużą ilością lajk'ów w poście}
-      other{}}
     original_post: "Oryginalny wpis"
     views: "Odsłony"
     views_lowercase:
@@ -3204,7 +3191,7 @@ pl_PL:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logi wyszukiwania</a>'
           filters:
-            file-extension:
+            file_extension:
               label: Rozszerzenie pliku
             group:
               label: Grupa

@@ -743,6 +743,8 @@ te:
         title: "సంస్థ"
       colors:
         title: "అలంకారం"
+      themes_further_reading:
+        title: "అలంకారాలు"
       homepage:
         fields:
           homepage_style:

@@ -60,6 +60,11 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @discourseComputed("previousVersion")
+  revertToRevisionText(revision) {
+    return I18n.t("post.revisions.controls.revert", { revision });
+  },
+
   refresh(postId, postVersion) {
     this.set("loading", true);
 
@@ -261,9 +266,10 @@ export default Controller.extend(ModalFunctionality, {
       this.set("bodyDiff", html);
     } else {
       const opts = {
-        features: { editHistory: true },
+        features: { editHistory: true, historyOneboxes: true },
         whiteListed: {
-          editHistory: { custom: (tag, attr) => attr === "class" }
+          editHistory: { custom: (tag, attr) => attr === "class" },
+          historyOneboxes: ["header", "article", "div[style]"]
         }
       };
 

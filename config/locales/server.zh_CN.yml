@@ -189,6 +189,9 @@ zh_CN:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     max_rows: "前%{max_bulk_invites}个邀请已经被发出。尝试将文件分割成更小的部分。"
     error: "上传文件的时候出错了。请稍后重试。"
+  invite_link:
+    email_taken: "这个电子邮件地址已被注册。如果你已经有一个账户，请登录或重置密码。"
+    max_redemptions_limit: "应该在 2 和 %{max_limit} 之间。"
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入到此主题：%{group_names}。"
     user_exists: "抱歉，用户已经被邀请过了。你只可以邀请一个用户到一个主题中一次。"
@@ -708,15 +711,18 @@ zh_CN:
     confirmed: "你的电子邮箱已被更新。"
     please_continue: "转入到%{site_name}"
     error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
+    doesnt_exist: "这个电子邮件地址与你的账户没有关联。"
     error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
     already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
     confirm: "确认"
     authorizing_new:
       title: "确认您的新邮箱"
-      description: "请你确认要将新的电子邮件地址更改为："
+      description: "请确认你想要修改的电子邮件地址："
+      description_add: "请确认你要添加的次要电子邮件地址："
     authorizing_old:
       title: "修改你的电子邮件地址"
       description: "请确认你的电子邮件地址更改"
+      description_add: "请确认你要添加的次要电子邮件地址："
       old_email: "旧邮件：%{email}"
       new_email: "新邮件：%{email}"
       almost_done_title: "确认新的电子邮件地址"
@@ -1421,6 +1427,7 @@ zh_CN:
     moderators_view_emails: "允许版主查看用户电子邮件"
     prioritize_username_in_ux: "在用户页、用户卡片和帖子上优先显示用户名（未选时，昵称将先显示）"
     enable_rich_text_paste: "将文本粘贴到编辑器中时自动启用HTML到Markdown转换。（实验性）"
+    send_old_credential_reminder_days: "几天后提醒有关旧凭证"
     email_token_valid_hours: "“忘记密码”/“激活账户”令牌有效的小时数。"
     enable_badges: "启用徽章系统"
     enable_whispers: "允许管理人员在主题中私密交流。"
@@ -1495,7 +1502,6 @@ zh_CN:
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     s3_endpoint: "可以修改端点以备份到S3兼容服务，如DigitalOcean Spaces或Minio。警告：留空以使用AWS S3。"
     s3_configure_tombstone_policy: "为逻辑删除上载启用自动删除策略。注意：如果禁用，在删除上载后不会回收空间。"
-    s3_disable_cleanup: "当在本地删除备份时不删除 S3 上的备份。"
     enable_s3_inventory: "使用Amazon S3存储验证上传并生成报告。重要：需要有效的S3证书（包括 access key id & secret access key)。"
     backup_time_of_day: "备份的 UTC 时间"
     backup_with_uploads: "在备份日程中包括上传。关闭此项仅备份数据库。"
@@ -1526,6 +1532,7 @@ zh_CN:
     max_logins_per_ip_per_minute: "一分钟内同一个IP（网络）地址能允许最大的登录次数。"
     max_post_deletions_per_minute: "用户每分钟可以删除的最大帖子数。"
     max_post_deletions_per_day: "用户每天可以删除的最大帖子数。"
+    invite_link_max_redemptions_limit: "邀请链接所允许的最大兑换量不能超过这个数值。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"
     categories_topics: "要在 /categories 页面中显示的主题数量。如果设置为0，它将自动尝试寻找一个值来保持两列对称（分类和主题）。"
@@ -1894,7 +1901,6 @@ zh_CN:
     city_for_disputes: "争议之城"
     shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
     push_notifications_prompt: "显示用户同意提示。"
-    push_notifications_icon: "通知角中显示的徽章图标。尺寸必须为96px × 96px。"
     short_title: "短标题将用于用户主页、启动器或其他可能空间有限的地方。应该控制在12个字符内。"
     dashboard_hidden_reports: "允许从仪表盘中隐藏指定的报告。"
     dashboard_visible_tabs: "选择可见的仪表盘标签页"
@@ -2641,6 +2647,10 @@ zh_CN:
     email_reject_bad_destination_address:
       title: "Email被拒绝：收件人地址不正确"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未知的发至：地址"
+      text_body_template: |
+        很抱歉，你通过邮件发往%{destination}（标题%{former_title}）的私信/消息没有成功。
+
+        你是否使用一个以上的电子邮件地址？你是否使用了不同的电子邮件地址回复？电子邮件回复要求你在回复时使用相同的电子邮件地址。或者，邮件中的私信/消息-ID 头可能被修改。
     email_reject_old_destination:
       title: "邮件拒绝老地址"
       subject_template: "[%{email_prefix}] 邮件问题 - 你正尝试回复旧通知"
@@ -3183,6 +3193,17 @@ zh_CN:
         点击下面链接以确认你当前在%{site_name}的邮件地址：
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      title: "确认旧邮箱（添加）"
+      subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
+      text_body_template: |
+        在我们添加新的电子邮件地址之前，我们需要确认你控制了
+        当前的电子邮件账户。在你完成这一步后，我们会让你确认
+        新的电子邮件地址。
+
+        点击以下链接，确认你当前的%{site_name}电子邮件地址：
+
+        %{base_url}/u/confirm old-email/%{email_token}
     notify_old_email:
       title: "通知旧邮箱"
       subject_template: "[%{email_prefix}] 你的邮箱已经修改成功"
@@ -3190,6 +3211,17 @@ zh_CN:
         这是%{site_name}自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
 
         你的邮箱地址被修改为：
+
+        %{new_email}
+    notify_old_email_add:
+      title: "通知旧邮件（添加）"
+      subject_template: "[%{email_prefix}]一个新的电子邮件已被添加。"
+      text_body_template: |
+        请了解，这是一条自动的私信/消息，这个电子邮件地址
+        已添加至%{site_name}。如果有误，请联系
+        网站管理员。
+
+        你添加的电子邮件地址是：
 
         %{new_email}
     signup_after_approval:
@@ -4258,3 +4290,13 @@ zh_CN:
     html_missing_placeholder: "HTML模板必须包含%{placeholder}"
   discord:
     not_in_allowed_guild: "验证失败。您不是允许的Discord公会的成员。"
+  old_keys_reminder:
+    title: "关于旧凭证的提醒"
+    body: |
+      Hello！这是你的 Discourse 实例每年例行安全提醒。
+
+      出于礼貌，我们想让你知道，你的 Discourse 实例上使用的以下凭证已经两年多没有更新了。
+
+      %{keys}
+
+      目前不需要采取任何行动，但是，每隔几年对所有重要凭证进行周期性更新是一种良好的安全做法。

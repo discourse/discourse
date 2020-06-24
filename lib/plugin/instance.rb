@@ -78,6 +78,10 @@ class Plugin::Instance
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
 
+  def seed_fu_filter(filter = nil)
+    @seed_fu_filter = filter
+  end
+
   def self.find_all(parent_path)
     [].tap { |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
@@ -415,6 +419,10 @@ class Plugin::Instance
     SeedFu.fixture_paths.concat(paths)
   end
 
+  def register_seedfu_filter(filter = nil)
+    DiscoursePluginRegistry.register_seedfu_filter(filter)
+  end
+
   def listen_for(event_name)
     return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
@@ -540,6 +548,9 @@ class Plugin::Instance
       if transpile_js
         DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
         DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+
+        test_path = "#{root_dir_name}/test/javascripts"
+        DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
       end
     end
 

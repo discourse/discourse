@@ -33,7 +33,10 @@ class PostAnalyzer
 
     result = Oneboxer.apply(cooked) do |url|
       @onebox_urls << url
-      Oneboxer.invalidate(url) if opts[:invalidate_oneboxes]
+      if opts[:invalidate_oneboxes]
+        Oneboxer.invalidate(url)
+        InlineOneboxer.invalidate(url)
+      end
       onebox = Oneboxer.cached_onebox(url)
       @found_oneboxes = true if onebox.present?
       onebox

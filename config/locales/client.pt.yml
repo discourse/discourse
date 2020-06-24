@@ -776,6 +776,8 @@ pt:
         confirm: "Tem a certeza absoluta que pretende alterar o seu nome de utilizador?"
         taken: "Pedimos desculpa, esse nome de utilizador já está a ser utilizado."
         invalid: "Esse nome de utilizador é inválido. Deve conter apenas números e letras."
+      add_email:
+        add: "adicionar"
       change_email:
         title: "Alterar Email"
         taken: "Pedimos desculpa, esse email não está disponível."
@@ -796,6 +798,8 @@ pt:
         title: "Email"
         primary: "Email Principal"
         secondary: "Emails Secundários"
+        primary_label: "primária"
+        update_email: "Alterar Email"
         no_secondary: "Não existem emails secundários"
         ok: "Enviar-lhe-emos um email para confirmar"
         invalid: "Por favor introduza um endereço de email válido"
@@ -1874,8 +1878,8 @@ pt:
         radio_label: "Novo Tópico"
         error: "Ocorreu um erro ao mover as publicações para um novo tópico."
         instructions:
-          one: "Está prestes a criar um novo tópico e populá-lo com a publicação que selecionou."
-          other: "Está prestes a criar um novo tópico e populá-lo com as <b>%{count}</b> publicações que selecionou."
+          one: "Está prestes a criar um novo tópico e a incorporar a publicação que selecionou."
+          other: "Está prestes a criar um novo tópico e a incorporar <b>%{count}</b>publicações que selecionou."
       merge_topic:
         title: "Mover para Tópico Existente"
         action: "mover para tópico existente"
@@ -1898,7 +1902,9 @@ pt:
       merge_posts:
         title: "Juntar Publicações Selecionadas"
         action: "juntar publicações selecionadas"
-        error: "Ocorreu um erro ao juntar os tópicos selecionados."
+        error: "Ocorreu um erro ao juntar as publicações selecionadas."
+      publish_page:
+        public: "Público"
       change_owner:
         action: "mudar titularidade"
         error: "Ocorreu um erro na mudança de dono das publicações."
@@ -1929,7 +1935,7 @@ pt:
       quote_reply: "Citar"
       edit_reason: "Motivo:"
       post_number: "publicação %{number}"
-      last_edited_on: "publicação editada pela última vez em"
+      last_edited_on: "última edição da publicação em"
       reply_as_new_topic: "Responder com novo Tópico"
       continue_discussion: "Continuar a discussão de %{postLink}:"
       follow_quote: "ir para a publicação citada"
@@ -1953,8 +1959,8 @@ pt:
         one: "você e %{count} outra pessoa gostaram desta publicação"
         other: "você e %{count} outras pessoas gostaram desta publicação"
       errors:
-        create: "Pedimos desculpa, ocorreu um erro ao criar a sua publicação. Por favor, tente novamente."
-        edit: "Pedimos desculpa, ocorreu um erro ao editar a sua publicação. Por favor, tente novamente."
+        create: "Desculpe, ocorreu um erro ao criar a sua publicação. Por favor, tente novamente."
+        edit: "Desculpe, ocorreu um erro ao editar a sua publicação. Por favor, tente novamente."
         upload: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
         too_many_uploads: "Pedimos desculpa, só pode carregar um ficheiro de cada vez."
         upload_not_authorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -1967,7 +1973,7 @@ pt:
         confirm: "Tem a certeza que deseja abandonar a sua publicação?"
         no_value: "Não, manter"
         yes_value: "Sim, abandonar"
-      via_email: "esta publicação chegou por email"
+      via_email: "esta publicação chegou por ''e-mail''"
       via_auto_generated_email: "esta publicação chegou via um email gerado automaticamente"
       whisper: "esta publicação é um susurro privado para os moderadores"
       wiki:
@@ -1977,7 +1983,7 @@ pt:
       few_likes_left: "Obrigado por partilhar o amor! Restam-lhe apenas um gostos para hoje."
       controls:
         reply: "começar a compor uma resposta a este tópico"
-        like: "gostar deste tópico"
+        like: "gostar desta publicação"
         has_liked: "gostou desta publicação"
         undo_like: "desfazer gosto"
         edit: "editar esta publicação"
@@ -2031,7 +2037,6 @@ pt:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Mostrar revisão"
-          revert: "Reverter para esta revisão"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Publicação"
         displays:
@@ -2145,7 +2150,7 @@ pt:
       notify_action: "Mensagem"
       official_warning: "Aviso Oficial"
       delete_spammer: "Eliminar Spammer"
-      delete_confirm_MF: "Está prestes a eliminar {POSTS, plural, one {<b>1</b> publicação} outras {<b>#</b> publicações}} e {TOPICS, plural, one {<b>1</b> tópico} outros {<b>#</b> tópicos}} deste utilizador, remover a conta do mesmo, bloquear registos a partir do endereço de IP <b>{ip_address}</b> correspondente, e adicionar o endereço de e-mail <b>{email}</b> dos mesmos a uma lista negra permanente. Tem a certeza que este utilizador é de facto um spammer?"
+      delete_confirm_MF: "Está prestes a eliminar {POSTS, plural, one {<b>1</b> publicação} other {<b>#</b> publicações}} e {TOPICS, plural, one {<b>1</b> tópico} other {<b>#</b> tópicos}} deste utilizador, remover a conta do mesmo, bloquear registos a partir do endereço de IP <b>{ip_address}</b> correspondente, e adicionar o endereço de e-mail <b>{email}</b> dos mesmos a uma lista negra permanente. Tem a certeza que este utilizador é de facto um spammer?"
       yes_delete_spammer: "Sim, Eliminar Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(escondido)"
@@ -2951,7 +2956,7 @@ pt:
             allow: "Permitir"
         screened_urls:
           title: "URLs Filtrados"
-          description: "Os URLs listados aqui foram usados em publicações de utilizadores que foram identificados como spammers."
+          description: "Os URLs listados aqui foram utilizados nas publicações dos utilizadores que foram identificados como ''spammers''."
           url: "URL"
           domain: "Domínio"
         screened_ips:
@@ -3088,7 +3093,7 @@ pt:
           one: "Não é possível eliminar todas as publicações. Algumas publicações existem há mais de %{count} dia. (A configuração delete_user_max_post_age.)"
           other: "Não é possível eliminar todas as publicações. Algumas publicações existem há mais de %{count} dias. (A configuração delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Não é possível eliminar todas as publicações porque o utilizador tem mais de %{count} publicações. (delete_all_posts_max)"
+          one: "Não é possível eliminar todas as publicações porque o utilizador tem mais de %{count} publicação. (delete_all_posts_max)"
           other: "Não é possível eliminar todas as publicações porque o utilizador tem mais de %{count} publicações. (delete_all_posts_max)"
         delete_and_block: "Eliminar e <b>bloquear<b> este e-mail e endereço de IP"
         delete_dont_block: "Apenas eliminar"

@@ -450,6 +450,8 @@ te:
         instructions: "వెనుతలం బొమ్మలు కేంద్రీకరించబడతాయి మరియు అప్రమేయ వెడల్పు 590 పిక్సెలు ఉంటాయి."
       email:
         title: "ఈమెయిల్"
+        primary_label: "ప్రాథమిక"
+        update_email: "ఈమెయిల్ మార్చు"
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
         authenticated: "మీ ఈమెయిల్ %{provider} చేత ద్రువీకరించబడింది"
@@ -964,6 +966,8 @@ te:
         instructions:
           one: "ఈ టపాలు జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
           other: "ఈ <b>%{count}</b> టపాలను జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
+      publish_page:
+        public: "బహిరంగం"
       change_owner:
         action: "యజమానిని మార్చు"
         error: "ఆ టపాల యజమానిని మార్చేప్పుడు దోషం జరిగింది."
@@ -1298,6 +1302,7 @@ te:
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"
+      sort_by_name: "పేరు"
       cancel_delete_unused: "రద్దుచేయి"
       notifications:
         watching:
@@ -1514,6 +1519,7 @@ te:
           body: "శరీరం"
         theme:
           theme: "అలంకారం"
+          title: "అలంకారాలు"
           create_type: "రకం"
           create_name: "పేరు"
           edit: "సవరించు"

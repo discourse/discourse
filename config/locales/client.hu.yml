@@ -717,7 +717,6 @@ hu:
           all: "Mind"
           read: "Olvasás"
           unread: "Olvasatlan"
-        ignore_duration_title: "Időzítő figyelmen kívül hagyása"
         ignore_duration_username: "Felhasználónév"
         ignore_duration_when: "Időtartam:"
         ignore_duration_save: "Ignorál"
@@ -898,6 +897,8 @@ hu:
         confirm: "Biztosan meg szeretnéd változtatni a felhasználónevedet?"
         taken: "Sajnos ez a felhasználónév már foglalt."
         invalid: "Ez a felhasználónév érvénytelen. Csak számokat és betűket kell tartalmaznia."
+      add_email:
+        add: "hozzáadás"
       change_email:
         title: "E-mail cím módosítása"
         taken: "Sajnos az e-mail cím nem érhető el."
@@ -918,6 +919,8 @@ hu:
         title: "E-mail"
         primary: "Elsődleges Email"
         secondary: "Másodlagos Emailek"
+        primary_label: "Elsődleges"
+        update_email: "E-mail cím módosítása"
         no_secondary: "Nincsenek másodlagos emailek"
         ok: " Jóváhagyás végett e-mailt fogunk küldeni"
         invalid: "Kérünk adj meg egy érvényes e-mail címet"
@@ -1832,6 +1835,8 @@ hu:
       merge_posts:
         title: "Kiválasztott bejegyzések összevonása"
         action: "kiválasztott bejegyzések összevonása"
+      publish_page:
+        public: "Nyilvános"
       change_owner:
         title: "Tulajdonosváltás"
         action: "tulajdonjog módosítása"

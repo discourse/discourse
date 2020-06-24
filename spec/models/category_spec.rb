@@ -430,7 +430,7 @@ describe Category do
     end
 
     it "reuses existing permalink when category slug is changed" do
-      permalink = Permalink.create!(url: "c/#{@category.slug}", category_id: 42)
+      permalink = Permalink.create!(url: "c/#{@category.slug}/#{@category.id}", category_id: 42)
 
       expect { @category.update(slug: 'new-slug') }.to_not change { Permalink.count }
       expect(permalink.reload.category_id).to eq(@category.id)
@@ -695,47 +695,20 @@ describe Category do
 
     describe "for normal categories" do
       it "builds a url" do
-        expect(category.url).to eq("/c/root")
+        expect(category.url).to eq("/c/root/#{category.id}")
       end
     end
 
     describe "for subcategories" do
       it "builds a url" do
-        expect(sub_category.url).to eq("/c/root/child")
+        expect(sub_category.url).to eq("/c/root/child/#{sub_category.id}")
       end
     end
 
     describe "for sub-sub-categories" do
       it "builds a url" do
         expect(sub_sub_category.url)
-          .to eq("/c/root/child/child-of-child")
-      end
-    end
-  end
-
-  describe "#url_with_id" do
-    fab!(:category) do
-      Fabricate(
-        :category_with_definition,
-        name: 'cats',
-      )
-    end
-
-    it "includes the id in the URL" do
-      expect(category.url_with_id).to eq("/c/cats/#{category.id}")
-    end
-
-    context "child category" do
-      fab!(:child_category) do
-        Fabricate(
-          :category,
-          parent_category_id: category.id,
-          name: 'dogs',
-        )
-      end
-
-      it "includes the id in the URL" do
-        expect(child_category.url_with_id).to eq("/c/cats/dogs/#{child_category.id}")
+          .to eq("/c/root/child/child-of-child/#{sub_sub_category.id}")
       end
     end
   end
@@ -1158,6 +1131,24 @@ describe Category do
       it "should be 1 when the category has an ancestor" do
         expect(subcategory.height_of_ancestors).to eq(1)
       end
+    end
+  end
+
+  describe "messageBus" do
+    it "does not publish notification level when publishing to /categories" do
+      category = Fabricate(:category)
+      category.name = "Amazing category"
+      messages = MessageBus.track_publish("/categories") do
+        category.save!
+      end
+
+      expect(messages.length).to eq(1)
+      message = messages.first
+
+      category_hash = message.data[:categories].first
+
+      expect(category_hash[:name]).to eq(category.name)
+      expect(category_hash.key?(:notification_level)).to eq(false)
     end
   end
 

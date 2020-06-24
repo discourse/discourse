@@ -808,6 +808,8 @@ nb_NO:
         confirm: "Er du helt sikker på at du ønsker å endre brukernavnet ditt?"
         taken: "Beklager, det brukernavnet er tatt."
         invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
+      add_email:
+        add: "legg til"
       change_email:
         title: "Endre e-postadresse"
         taken: "Beklager, den e-postadressen er ikke tilgjengelig."
@@ -828,6 +830,8 @@ nb_NO:
         title: "E-post"
         primary: "Primær e-post"
         secondary: "Sekundære e-poster"
+        primary_label: "primær"
+        update_email: "Endre e-postadresse"
         no_secondary: "Ingen sekundære e-poster"
         instructions: "Vises aldri offentlig"
         ok: "Vi sender deg en e-post for å bekrefte"
@@ -1868,6 +1872,8 @@ nb_NO:
         title: "Slå sammen valgte innlegg"
         action: "slå sammen valgte innlegg"
         error: "Feil ved fletting av valgte innlegg."
+      publish_page:
+        public: "Offentlig"
       change_owner:
         action: "Endre eierskap"
         error: "Det oppstod en feil ved endring av eierskap til innleggene."
@@ -2037,7 +2043,6 @@ nb_NO:
           last: "Siste versjon"
           hide: "Skjul versjon"
           show: "Vis versjon"
-          revert: "Gå tilbake til denne versjonen"
           edit_wiki: "Rediger wiki"
           edit_post: "Rediger innlegg"
         displays:

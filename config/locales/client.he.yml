@@ -850,7 +850,7 @@ he:
           all: "הכל"
           read: "נקרא"
           unread: "לא-נקראו"
-        ignore_duration_title: "מתזמן התעלמות"
+        ignore_duration_title: "התעלמות ממשתמש"
         ignore_duration_username: "שם משתמש"
         ignore_duration_when: "משך:"
         ignore_duration_save: "התעלמות"
@@ -1076,6 +1076,9 @@ he:
         confirm: "האם את/ה בטוח/ה שברצונך לשנות את שם המשתמש/ת שלך?"
         taken: "סליחה, שם המשתמש הזה תפוס."
         invalid: "שם המשתמש אינו תקין. עליו לכלול רק אותיות באנגלית ומספרים."
+      add_email:
+        title: "הוסף דוא\"ל"
+        add: "הוספה"
       change_email:
         title: "שנה דואר אלקטרוני"
         taken: "סליחה, הכתובת הזו אינה זמינה."
@@ -1106,8 +1109,17 @@ he:
         title: "דואר אלקטרוני"
         primary: "כתובת דוא״ל ראשית"
         secondary: "כתובות דוא״ל משניות"
-        no_secondary: "אין כתובות דוא״ל משניות"
+        primary_label: "ראשי"
+        unconfirmed_label: "לא מאושר"
+        resend_label: "שליחת הודעת אימות בדוא״ל מחדש"
+        resending_label: "שולח..."
+        resent_label: "דוא\"ל נשלח"
+        update_email: "שנה דואר אלקטרוני"
+        set_primary: "הגדר כתובת דוא\"ל ראשית"
+        destroy: "הסר דוא\"ל"
+        add_email: "הוסף דוא\"ל חלופי"
         sso_override_instructions: "ניתן לעדכן את כתובת הדוא״ל דרך ספק ה־SSO."
+        no_secondary: "אין כתובות דוא״ל משניות"
         instructions: "לעולם לא מוצג לציבור."
         ok: "נשלח אליכם דואר אלקטרוני לאישור"
         required: "נא למלא כתובת דוא״ל"
@@ -1280,6 +1292,7 @@ he:
         links_tab_with_count: "קישורים (%{count})"
         link_url: "קישור"
         link_created_at: "נוצר"
+        link_redemption_stats: "ניצולים"
         link_groups: קבוצות
         link_expires_at: תפוגה
         create: "שלח הזמנה"
@@ -2156,6 +2169,7 @@ he:
         time_frame_required: נא לבחור מסגרת זמנים
       auto_update_input:
         none: "נא לבחור טווח זמן"
+        now: "כעת"
         later_today: "בהמשך היום"
         tomorrow: "מחר"
         later_this_week: "בהמשך השבוע"
@@ -2433,11 +2447,14 @@ he:
         publish: "פרסום"
         description: "כאשר נושא מפורסם כעמוד, ניתן לשתף את הכתובת שלו והיא תוצג בסגנון עצמאי."
         slug: "מזהה ייצוגי"
+        public: "ציבורי"
+        public_description: "אנשים יכולים לראות את העמוד אפילו אם הנושא המשויך הוא פרטי."
         publish_url: "העמוד שלך פורסם ב־:"
         topic_published: "הנושא שלך פורסם ב־:"
         preview_url: "העמוד שלך יפורסם ב־:"
         invalid_slug: "אין לך אפשרות לפרסם את העמוד הזה, עמך הסליחה."
         unpublish: "משיכת הפרסום"
+        update: "עדכון"
         unpublished: "פרסום העמוד שלך נמשך ואין זמין עוד."
         publishing_settings: "הגדרות פרסום"
       change_owner:
@@ -2525,6 +2542,7 @@ he:
         two: "%{count} תגובות"
         many: "%{count} תגובות"
         other: "%{count} תגובות"
+      unknown_user: "(משתמש לא ידוע/נמחק)"
       has_likes_title:
         one: "מישהו אחד אהב את התגובה הזו"
         two: "%{count} אנשים אהבו את התגובה הזו"
@@ -2680,7 +2698,7 @@ he:
           last: "מהדורה אחרונה"
           hide: "הסתרת שינויים"
           show: "הצגת שינויים"
-          revert: "חזרה לגרסה זו"
+          revert: "החזרה לגרסה %{revision}"
           edit_wiki: "עריכת וויקי"
           edit_post: "עריכת פוסט"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3426,13 +3444,13 @@ he:
             more: '<a href="%{basePath}/admin/logs/search_logs">חיפוש ביומנים</a>'
             disabled: 'דוח מגמות חיפושים מנוטרל. יש להפעיל <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">שאילתות חיפוש ביומן</a> כדי לאסוף נתונים.'
           filters:
-            file-extension:
+            file_extension:
               label: סיומת קובץ
             group:
               label: קבוצה
             category:
               label: קטגוריה
-            include-subcategories:
+            include_subcategories:
               label: "לכלול תת־קטגוריות"
       commits:
         latest_changes: "שינויים אחרונים: בבקשה עדכן תכופות!"
@@ -4136,6 +4154,9 @@ he:
             override_upload_secure_status: "דריסת מצב העלאה בטוח"
             page_published: "העמוד פורסם"
             page_unpublished: "פרסום העמוד נמשך"
+            add_email: "הוסף דוא\"ל"
+            update_email: "עדכן דוא\"ל"
+            destroy_email: "מחק דוא\"ל"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -4693,8 +4714,9 @@ he:
         category_id: "מזהה לקטגוריה"
         category_title: "קטגוריה"
         tag_name: "שם תגית"
-        external_url: "כתובת חיצונית"
+        external_url: "כתובת חיצונית או יחסית"
         destination: "יעד"
+        copy_to_clipboard: "העתקת קישור קבוע ללוח"
         delete_confirm: " להסיר את הקישור הקבוע?"
         form:
           label: "חדש:"

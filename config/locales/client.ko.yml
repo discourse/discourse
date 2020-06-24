@@ -709,7 +709,6 @@ ko:
           all: "모두"
           read: "읽기"
           unread: "읽지 않은 글"
-        ignore_duration_title: "타이머 무시"
         ignore_duration_username: "아이디"
         ignore_duration_when: "지속:"
         ignore_duration_save: "무시"
@@ -923,6 +922,8 @@ ko:
         confirm: "정말로 아이디를 변경 하시겠습니까?"
         taken: "죄송합니다. 이미 사용 중인 아이디입니다."
         invalid: "아이디가 잘못되었습니다. 숫자와 문자를 포함해야합니다."
+      add_email:
+        add: "추가"
       change_email:
         title: "이메일 변경"
         taken: "죄송합니다. 해당 이메일은 사용 할 수 없습니다."
@@ -953,8 +954,9 @@ ko:
         title: "이메일"
         primary: "기본 이메일"
         secondary: "보조 이메일"
+        primary_label: "주요"
+        update_email: "이메일 변경"
         no_secondary: "보조 이메일이 없습니다"
-        sso_override_instructions: "SSO 제공자로부터 이메일을 업데이트 할 수 있습니다."
         instructions: "절대로 공개되지 않습니다."
         ok: "내 이메일로 확인 메일이 전송됩니다."
         invalid: "유효한 이메일 주소를 입력해주세요."
@@ -1225,17 +1227,10 @@ ko:
       enabled: "이 사이트는 현재 읽기전용 모드입니다. 브라우징은 가능하지만, 댓글달기, 좋아요 등 다른 행위들은 현재 비활성화 되어있습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
       logout_disabled: "사이트가 읽기 전용모드일 때 로그아웃은 비활성화됩니다."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> 이 {currentTopics, plural, one <strong>{#</strong> 주제} other은 {입니다 <strong>#</strong> 주제}}과 {currentPosts, plural, one <strong>{# 포스트}</strong> other <strong>{#</strong> 포스트}}. 방문객들은 읽고 댓글을 올리려면 더 필요 - 우리는 적어도 {requiredTopics, plural, one <strong>{# 주제}</strong> other <strong>{#</strong> 주제}}과 {requiredPosts, plural, one <strong>{# 포스트}</strong> other <strong>{#</strong> 게시물}} 좋습니다. 직원 만이 메시지를 볼 수 있습니다.
     too_few_topics_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}}가 있습니다. 방문자는 더 읽고 답장해야합니다. 적어도 {requiredTopics, plural, one { <strong>#</strong> topic} other { <strong>#</strong> topics}}을 (를) 권장합니다. 직원 만이 메시지를 볼 수 있습니다.
     too_few_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}가 있습니다. 방문자는 더 읽고 답장해야합니다. – {requiredPosts, plural, one { <strong>#</strong> post} other { <strong>#</strong> posts}} 이상을 권장합니다. 직원 만이 메시지를 볼 수 있습니다.
-    logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error / hour} other {# errors / hour}}의</a> 사이트 설정 한계 {a0cd0dadb4f0b0b0f0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0d0"
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error / minute} other {# errors / minute}}의</a> 사이트 설정 한계 {a0cd0d0b0f0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b2"
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural,</a> one {# 오류 / 시간}}"
-      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{a07e6f5c6cb6z485z0, plural, one {# 오류 / 분}} {0/0</a> <b>{0/0} {0} {0} {0} {0} {0} {0} {0} {0} {0} {0} 0 {0}</b>"
     learn_more: "더 배우기"
     all_time: "총"
     all_time_desc: "총 토픽"
@@ -2134,6 +2129,7 @@ ko:
         publish: "게시"
         description: "주제가 페이지로 게시되면 해당 URL을 공유 할 수 있으며 사용자 정의 스타일과 함께 표시됩니다."
         slug: "강타"
+        public: "공개"
         publish_url: "귀하의 페이지는 다음 위치에 게시되었습니다."
         topic_published: "귀하의 주제는 다음 위치에 게시되었습니다."
         preview_url: "귀하의 페이지는 다음 위치에 게시됩니다."
@@ -2307,7 +2303,6 @@ ko:
           last: "최신판"
           hide: "편집 기록 가리기"
           show: "편집 기록 보기"
-          revert: "이 수정본으로 되돌리기"
           edit_wiki: "Wiki 편집"
           edit_post: "포스트 편집"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2951,14 +2946,10 @@ ko:
             more: '<a href="%{basePath}/admin/logs/search_logs">검색 로그</a>'
             disabled: '인기 검색 보고서가 비활성화되었습니다. <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">로그 검색 쿼리</a> 를 사용하여 데이터를 수집하십시오.'
           filters:
-            file-extension:
-              label: 파일 확장자
             group:
               label: 그룹
             category:
               label: 카테고리
-            include-subcategories:
-              label: "하위 카테고리 포함"
       commits:
         latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
         by: "에 의해"

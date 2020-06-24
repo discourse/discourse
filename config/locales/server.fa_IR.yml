@@ -958,7 +958,6 @@ fa_IR:
     maximum_backups: "حداکثر تعداد پشتیبان برای نگه داری بر روی دیسک. نسخه های پشتیبان قدیمی بطور خودکار پاک شده است"
     automatic_backups_enabled: "فعالسازی پشتیبان‌گیری خودکار در بازه زمانی مشخص"
     s3_backup_bucket: "میزبان راه‌دور برای نگهداری از نسخه‌های پشتیبان. اخطار: مطمئن شوید که میزبان خصوصی است. "
-    s3_disable_cleanup: "غیر‌فعال‌سازی حذف نسخه پشتیبان از S3 وقتی در هاست حذف می‌شود."
     backup_time_of_day: "زمان UTC روز برای رخ دادن نسخه پشتیبان."
     backup_with_uploads: "قراردادن فایل های بارگذاری شده در نسخه های پشتیبان. غیر فعال کردن این بخش باعث تهیه نسخه پشتیبان از دیتابیس می‌شود."
     active_user_rate_limit_secs: "چگونه فیلد 'last_seen_at' را به روز کنیم، واحد ثانیه "
@@ -1888,6 +1887,8 @@ fa_IR:
       subject_template: "[%{email_prefix}] ایمیل جدیدتان را تایید کنید"
     confirm_old_email:
       title: "تایید ایمیل قبلی"
+      subject_template: "[%{email_prefix}] ایمیل فعلی خود را تایید کنید"
+    confirm_old_email_add:
       subject_template: "[%{email_prefix}] ایمیل فعلی خود را تایید کنید"
     notify_old_email:
       title: "اعلام ایمیل قبلی"

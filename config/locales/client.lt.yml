@@ -756,6 +756,8 @@ lt:
         title: "Keisti vartotojo vardą"
         taken: "Atsiprašome, šis vartotojo vardas užimtas."
         invalid: "Šis vartotojo vardas yra neteisingas. Jame turi būti tik skaičiai ir raidės"
+      add_email:
+        add: "pridėti"
       change_email:
         title: "Keisti el. paštą"
         taken: "Atsiprašome, šis el. paštas negalimas."
@@ -775,6 +777,8 @@ lt:
         title: "El. paštas"
         primary: "Pagrindinis el. Paštas"
         secondary: "Antriniai el. Paštai"
+        primary_label: "pirminė"
+        update_email: "Keisti el. paštą"
         no_secondary: "Antrinių el. Paštų nėra"
         instructions: "Nebus rodomas viešai."
         ok: "Mes jums atsiųsime patvirtinimo elektroninį laišką"
@@ -1709,6 +1713,8 @@ lt:
       merge_posts:
         title: "Sulieti pasirinktus įrašus"
         action: "sulieti pasirinktus įrašus"
+      publish_page:
+        public: "Vieša"
       change_owner:
         action: "pakeisti valdymo teises"
         error: "Įvyko klaida keičiant įrašų valdymo teisę."

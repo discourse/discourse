@@ -2,7 +2,8 @@
 
 class PostActionUserSerializer < BasicUserSerializer
   attributes :post_url,
-             :username_lower
+             :username_lower,
+             :unknown
 
   def id
     object.user.id
@@ -22,6 +23,14 @@ class PostActionUserSerializer < BasicUserSerializer
 
   def post_url
     object.related_post.url if object.related_post_id && object.related_post
+  end
+
+  def unknown
+    true
+  end
+
+  def include_unknown?
+    (@options[:unknown_user_ids] || []).include?(object.user.id)
   end
 
 end

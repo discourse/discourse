@@ -712,7 +712,6 @@ de:
     confirm: "Bestätigen"
     authorizing_new:
       title: "Bestätige deine neue E-Mail"
-      description: "Bitte bestätige, dass deine E-Mail Adresse geändert wird auf:"
     authorizing_old:
       title: "Ändere deine E-Mail Adresse"
       description: "Bitte bestätige die Änderung deiner E-Mail Adresse"
@@ -1486,7 +1485,6 @@ de:
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
     s3_endpoint: "Dieser Endpunkt kann so angepasst werden, dass er die Sicherung an einen S3-kompatiblen Service wie DigitalOcean Spaces oder Minio übertragt. WARNUNG: Verwende den Standard bei Verwendung von AWS S3."
     s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Grabstein-Uploads. WICHTIG: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
-    s3_disable_cleanup: "Deaktiviere das Löschen von Backups aus S3 wenn sie lokal entfernt werden"
     enable_s3_inventory: "Erstelle Berichte und überprüfe Uploads mit Amazon S3-Bestand. WICHTIG: Benötigt gültige S3-Anmeldeinformationen (sowohl access_key_id als auch secret_access_key)."
     backup_time_of_day: "Uhrzeit in UTC, wenn Backups ausgeführt werden sollen."
     backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups mit einbeziehen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
@@ -1874,7 +1872,6 @@ de:
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Vorlagen“, indem du eine Kategorie für Themen-Vorlagen bestimmst. Themen in dieser Kategorie werden unterdrückt in der Themen Liste für Team Mitarbeiter."
     push_notifications_prompt: "Zeige eine Aufforderung zur Benutzerzustimmung an."
-    push_notifications_icon: "Das Abzeichen-Icon, das in der Benachrichtigungsecke erscheint. Erforderliche Größe ist 96 × 96."
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_general_tab_activity_metrics: "Wähle Berichte, die als Aktivitätsmetrik auf dem Allgemein-Tab angezeigt werden."
     errors:
@@ -3030,6 +3027,8 @@ de:
         Bestätige deine aktuelle E-Mail Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"

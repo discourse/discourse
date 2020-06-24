@@ -291,6 +291,8 @@ de:
         tomorrow_with_time: "morgen um %{time}"
         at_time: "um %{date_time}"
         existing_reminder: "Es gibt eine Erinnerung für dieses Lesezeichen, die versendet werden wird"
+    copy_codeblock:
+      copied: "kopiert!"
     drafts:
       resume: "Fortsetzen"
       remove: "Entfernen"
@@ -679,6 +681,9 @@ de:
       flair_color_placeholder: "(Optoinal) Hex-Farbwert"
       flair_preview_icon: "Vorschau-Icon"
       flair_preview_image: "Vorschaubild"
+      flair_type:
+        icon: "Wähle ein Symbol"
+        image: "Lade ein Bild hoch"
     user_action_groups:
       "1": "Abgegebene Likes"
       "2": "Erhaltene Likes"
@@ -758,7 +763,6 @@ de:
           all: "Alle"
           read: "Gelesen"
           unread: "Ungelesen"
-        ignore_duration_title: "Zeitschaltuhr ignorieren"
         ignore_duration_username: "Benutzername"
         ignore_duration_when: "Dauer:"
         ignore_duration_save: "Ignorieren"
@@ -973,6 +977,8 @@ de:
         confirm: "Bist du dir ganz sicher, dass du deinen Benutzernamen ändern möchtest?"
         taken: "Der Benutzername ist bereits vergeben."
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
+      add_email:
+        add: "Hinzufügen"
       change_email:
         title: "E-Mail-Adresse ändern"
         taken: "Entschuldige, diese E-Mail-Adresse ist nicht verfügbar."
@@ -1001,8 +1007,10 @@ de:
         title: "E-Mail"
         primary: "Primäre E-Mail-Adresse"
         secondary: "Weitere E-Mail-Adressen"
-        no_secondary: "Keine weiteren E-Mail-Adressen"
+        primary_label: "erste"
+        update_email: "E-Mail-Adresse ändern"
         sso_override_instructions: "E-Mail kann vom SSO-Provider aktualisiert werden."
+        no_secondary: "Keine weiteren E-Mail-Adressen"
         instructions: "Nie öffentlich gezeigt."
         ok: "Wir senden dir zur Bestätigung eine E-Mail"
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
@@ -1164,12 +1172,15 @@ de:
         account_age_days: "Konto-Alter in Tagen"
         links_tab: "Links"
         link_created_at: "Erstellt"
+        link_redemption_stats: "Rücknahmen"
         link_groups: Gruppen
         create: "Einladung versenden"
+        copy_link: "Link kopieren"
         generate_link: "Einladungslink kopieren"
         link_generated: "Der Einladungslink wurde erfolgreich generiert!"
         valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
         single_user: "Einzelbenutzer"
+        multiple_user: "Mehrere Benutzer"
         invite_link:
           success: "Der Einladungslink wurde erfolgreich generiert!"
         bulk_invite:
@@ -2211,6 +2222,8 @@ de:
         title: "Ausgewählte Beiträge zusammenführen"
         action: "ausgewählte Beiträge zusammenführen"
         error: "Es gab einen Fehler beim Zusammenführen der ausgewählten Beiträge."
+      publish_page:
+        public: "Öffentlich"
       change_owner:
         title: "Eigentümer ändern"
         action: "Eigentümer ändern"
@@ -2411,7 +2424,6 @@ de:
           last: "Letzte Überarbeitung"
           hide: "Überarbeitung verstecken"
           show: "Überarbeitung anzeigen"
-          revert: "Diese Überarbeitung wiederherstellen"
           edit_wiki: "Bearbeite Wiki"
           edit_post: "Bearbeite Beitrag"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3067,7 +3079,7 @@ de:
             more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokoll</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
           filters:
-            file-extension:
+            file_extension:
               label: Dateiendung
             group:
               label: Gruppe

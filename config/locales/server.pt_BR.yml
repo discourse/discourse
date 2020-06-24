@@ -730,7 +730,6 @@ pt_BR:
     confirm: "Confirmar"
     authorizing_new:
       title: "Confirme seu novo e-mail"
-      description: "Por favor confirme que você deseja que seu novo endereço de e-mail seja alterado para:"
     authorizing_old:
       title: "Troque seu endereço de e-mail"
       description: "Por favor confirme a alteração do seu endereço de e-mail"
@@ -1469,7 +1468,6 @@ pt_BR:
     s3_backup_bucket: "O repositório remoto para realizar backups. AVISO: Certifique-se de que é um repositório privado."
     s3_endpoint: "O endpoint pode ser modificado para fazer backup em um serviço compatível com S3, como DigitalOcean Spaces ou Minio. AVISO: Deixe em branco se estiver usando o AWS S3."
     s3_configure_tombstone_policy: "Habilitar a política de exclusão automática para uploads de tombstone. IMPORTANTE: Se desabilitado, nenhum espaço será recuperado depois que os uploads forem excluídos."
-    s3_disable_cleanup: "Desabilitar a remoção de backups na S3 quando removidos localmente."
     enable_s3_inventory: "Gerar relatórios e verificar os uploads usando o inventário do Amazon S3. IMPORTANTE: requer credenciais S3 válidas (tanto a ID da chave de acesso quanto a chave de acesso secreta)."
     backup_time_of_day: "Hora do dia, em UTC, quando o backup deve ocorrer."
     backup_with_uploads: "Incluir uploads nos backups programados. Desabilite para copiar apenas a base de dados. "
@@ -1831,7 +1829,6 @@ pt_BR:
     city_for_disputes: "Cidade para Disputas"
     shared_drafts_category: "Habilitar o recurso Rascunhos Compartilhados, designando uma categoria para rascunhos de tópicos. Os tópicos nesta categoria serão suprimidos das listas de tópicos para usuários da staff."
     push_notifications_prompt: "Exibir o prompt de consentimento do usuário."
-    push_notifications_icon: "O ícone do emblema que aparece no canto de notificação. O tamanho requerido é 96 × 96."
     short_title: "O título abreviado será usado na tela inicial do usuário, no iniciador ou em outros locais onde o espaço possa ser limitado. Deveria ser limitado a 12 caracteres."
     dashboard_general_tab_activity_metrics: "Escolher relatórios para serem exibidos como métricas de atividade na guia geral."
     errors:
@@ -1983,12 +1980,12 @@ pt_BR:
     invalid_second_factor_method: "O método de autenticação de dois fatores selecionado é inválido."
     not_enabled_second_factor_method: "O método de autenticação de dois fatores selecionado não está ativado para sua conta."
     security_key_description: "Quando você tiver uma chave física de segurança preparada, pressione o Anti\n\nQuando sua chave de segurança física estiver pronta, pressione o botão \"Autenticar com Chave de Segurança\" abaixo."
-    security_key_alternative: "T"
+    security_key_alternative: "Tente de uma outra forma"
     security_key_authenticate: "Autenticar com Chave de Segurança"
     security_key_not_allowed_error: "O processo de autenticação de chave de segurança atingiu o limite de tempo ou foi cancelado."
     security_key_no_matching_credential_error: "Nenhuma credencial correspondente pôde ser encontrada na chave de segurança fornecida."
     security_key_support_missing_error: "Seu dispositivo atual ou navegador não suportam o uso de chaves de segurança. Por favor, use um método diferente."
-    not_approved: "A sua conta ainda não foi aprovada. Vais ser notificado por email assim que estiver pronto para fazeres log in."
+    not_approved: "A sua conta ainda não foi aprovada. Você será notificado por e-mail assim que estiver pronto para fazer login."
     incorrect_username_email_or_password: "Usuário, email ou senha incorretos"
     incorrect_password: "senha incorreta"
     wait_approval: "Obrigado por se registar. Você será notificado por email quando a sua conta for aprovada."
@@ -3010,6 +3007,8 @@ pt_BR:
       title: "Confirmar Antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
       text_body_template: "Antes de podermos alterar seu endereço de e-mail, precisamos confirmar que você \ncontrola a conta de e-mail atual. Depois de concluir esta etapa, solicitaremos que você \nconfirme o novo endereço de e-mail.\n\nConfirme seu endereço de email atual para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
     notify_old_email:
       title: "Notificar e-mail antigo"
       subject_template: "[%{email_prefix}] Seu endereço de e-mail foi alterado"

@@ -40,6 +40,17 @@ QUnit.test("displayEdit", async function(assert) {
   const html = `<div class="revision-content">
   <p><img src="/uploads/default/original/1X/6b963ffc13cb0c053bbb90c92e99d4fe71b286ef.jpg" alt="" class="diff-del"><img/src=x onerror=alert(document.domain)>" width="276" height="183"></p>
 </div>
+<aside class="onebox whitelistedgeneric">
+  <header class="source">
+    <img src="/uploads/default/original/1X/1b0984d7ee08bce90572f46a1950e1ced436d028.png" class="site-icon" width="32" height="32">
+    <a href="https://meta.discourse.org/t/discourse-version-2-5/125302">Discourse Meta – 9 Aug 19</a>
+  </header>
+  <article class="onebox-body">
+    <img src="/uploads/default/optimized/1X/ecc92a52ee7353e03d5c0d1ea6521ce4541d9c25_2_500x500.png" class="thumbnail onebox-avatar d-lazyload" width="500" height="500">
+    <h3><a href="https://meta.discourse.org/t/discourse-version-2-5/125302" target="_blank">Discourse Version 2.5</a></h3>
+    <div style="clear: both"></div>
+  </article>
+</aside>
 <table background="javascript:alert(\"HACKEDXSS\")">
   <thead>
     <tr>
@@ -58,6 +69,17 @@ QUnit.test("displayEdit", async function(assert) {
   const expectedOutput = `<div class="revision-content">
   <p><img src="/uploads/default/original/1X/6b963ffc13cb0c053bbb90c92e99d4fe71b286ef.jpg" alt class="diff-del">" width="276" height="183"&gt;</p>
 </div>
+<aside class="onebox whitelistedgeneric">
+  <header class="source">
+    <img src="/uploads/default/original/1X/1b0984d7ee08bce90572f46a1950e1ced436d028.png" class="site-icon" width="32" height="32">
+    <a href="https://meta.discourse.org/t/discourse-version-2-5/125302">Discourse Meta – 9 Aug 19</a>
+  </header>
+  <article class="onebox-body">
+    <img src="/uploads/default/optimized/1X/ecc92a52ee7353e03d5c0d1ea6521ce4541d9c25_2_500x500.png" class="thumbnail onebox-avatar d-lazyload" width="500" height="500">
+    <h3><a href="https://meta.discourse.org/t/discourse-version-2-5/125302" target="_blank">Discourse Version 2.5</a></h3>
+    <div style="clear: both"></div>
+  </article>
+</aside>
 <table>
   <thead>
     <tr>
@@ -85,5 +107,9 @@ QUnit.test("displayEdit", async function(assert) {
   await HistoryController.bodyDiffChanged();
 
   const output = HistoryController.get("bodyDiff");
-  assert.equal(output, expectedOutput, "it keeps safe HTML");
+  assert.equal(
+    output,
+    expectedOutput,
+    "it keeps HTML safe and doesn't strip onebox tags"
+  );
 });

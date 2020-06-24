@@ -595,7 +595,7 @@ const User = RestModel.extend({
         );
       }
 
-      if (!isEmpty(json.user.groups)) {
+      if (!isEmpty(json.user.groups) && !isEmpty(json.user.group_users)) {
         const groups = [];
 
         for (let i = 0; i < json.user.groups.length; i++) {
@@ -770,6 +770,7 @@ const User = RestModel.extend({
         this.setProperties({
           email: result.email,
           secondary_emails: result.secondary_emails,
+          unconfirmed_emails: result.unconfirmed_emails,
           associated_accounts: result.associated_accounts
         });
       }

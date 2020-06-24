@@ -175,7 +175,10 @@ QUnit.test("getSubCategoryIds", assert => {
 
 QUnit.test("countNew", assert => {
   const store = createStore();
-  const foo = store.createRecord("category", { id: 1, slug: "foo" });
+  const foo = store.createRecord("category", {
+    id: 1,
+    slug: "foo"
+  });
   const bar = store.createRecord("category", {
     id: 2,
     slug: "bar",
@@ -202,6 +205,7 @@ QUnit.test("countNew", assert => {
   };
 
   assert.equal(state.countNew(1), 1);
+  assert.equal(state.countNew(1, "missing-tag"), 0);
   assert.equal(state.countNew(2), 1);
   assert.equal(state.countNew(3), 0);
 
@@ -209,12 +213,15 @@ QUnit.test("countNew", assert => {
     last_read_post_number: null,
     id: 113,
     notification_level: NotificationLevels.TRACKING,
-    category_id: 3
+    category_id: 3,
+    tags: ["amazing"]
   };
 
   assert.equal(state.countNew(1), 2);
   assert.equal(state.countNew(2), 2);
   assert.equal(state.countNew(3), 1);
+  assert.equal(state.countNew(3, "amazing"), 1);
+  assert.equal(state.countNew(3, "missing"), 0);
 
   state.states["t111"] = {
     last_read_post_number: null,

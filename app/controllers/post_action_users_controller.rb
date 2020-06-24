@@ -15,6 +15,16 @@ class PostActionUsersController < ApplicationController
     post = finder.first
     guardian.ensure_can_see!(post)
 
+    unknown_user_ids = Set.new
+    if current_user.present?
+      result = DB.query_single(<<~SQL, user_id: current_user.id)
+        SELECT mu.muted_user_id AS id FROM muted_users AS mu WHERE mu.user_id = :user_id
+        UNION
+        SELECT iu.ignored_user_id AS id FROM ignored_users AS iu WHERE iu.user_id = :user_id
+      SQL
+      unknown_user_ids.merge(result)
+    end
+
     post_actions = post.post_actions.where(post_action_type_id: post_action_type_id)
       .includes(:user)
       .offset(page * page_size)
@@ -29,7 +39,13 @@ class PostActionUsersController < ApplicationController
     action_type = PostActionType.types.key(post_action_type_id)
     total_count = post["#{action_type}_count"].to_i
 
-    data = { post_action_users: serialize_data(post_actions.to_a, PostActionUserSerializer) }
+    data = {
+      post_action_users: serialize_data(
+        post_actions.to_a,
+        PostActionUserSerializer,
+        unknown_user_ids: unknown_user_ids
+      )
+    }
 
     if total_count > page_size
       data[:total_rows_post_action_users] = total_count

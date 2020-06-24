@@ -568,7 +568,7 @@ fr:
         profile:
           title: Profil
         interaction:
-          title: Intéraction
+          title: Interaction
           posting: Contribution
           notification: Notification
         membership:
@@ -668,7 +668,7 @@ fr:
           description: "Vous serez notifié de chaque nouvelle réponse dans chaque message, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
-          description: "Vous serez averti de nouveaux messages dans ce groupe mais pas de réponses aux messages."
+          description: "Vous serez averti des nouveaux messages dans ce groupe mais pas des réponses aux messages."
         tracking:
           title: "Suivre"
           description: "Vous serez notifié si quelqu'un vous mentionne ou vous répond, et le nombre de nouvelles réponses sera affiché."
@@ -770,7 +770,6 @@ fr:
           all: "Toutes"
           read: "Temps de lecture"
           unread: "Non lus"
-        ignore_duration_title: "Ignorer la planification"
         ignore_duration_username: "Nom d'utilisateur"
         ignore_duration_when: "Durée :"
         ignore_duration_save: "Ignorer"
@@ -806,7 +805,7 @@ fr:
       notifications: "Notifications"
       statistics: "Statistiques"
       desktop_notifications:
-        label: "Notifications actives"
+        label: "Notifications instantanées"
         not_supported: "Les notifications ne sont pas supportées sur ce navigateur. Désolé."
         perm_default: "Activer les notifications"
         perm_denied_btn: "Permission refusée"
@@ -876,9 +875,9 @@ fr:
       admin_delete: "Supprimer"
       users: "Utilisateurs"
       muted_users: "Silencieux"
-      muted_users_instructions: "Ignorer toutes les notifications et messages privés provenant de ces utilisateurs."
+      muted_users_instructions: "Ignorer toutes les notifications et messages directs provenant de ces utilisateurs."
       ignored_users: "Ignorés"
-      ignored_users_instructions: "Ignorer tous les billets, notifications et messages privés provenant de ces utilisateurs."
+      ignored_users_instructions: "Ignorer tous les messages, notifications et messages directs provenant de ces utilisateurs."
       tracked_topics_link: "Afficher"
       automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'arrive à la fin."
       apps: "Applications"
@@ -996,6 +995,9 @@ fr:
         confirm: "Êtes-vous sûr de vouloir modifier votre nom d'utilisateur ?"
         taken: "Désolé, ce nom d'utilisateur est déjà pris."
         invalid: "Ce nom d'utilisateur est invalide. Il ne doit être composé que de lettres et de chiffres."
+      add_email:
+        title: "Ajouter une adresse courriel"
+        add: "ajouter"
       change_email:
         title: "Modifier l'adresse courriel"
         taken: "Désolé, cette adresse courriel est indisponible."
@@ -1026,8 +1028,17 @@ fr:
         title: "Courriel"
         primary: "Adresse courriel principale"
         secondary: "Adresses courriel secondaires"
-        no_secondary: "Aucune adresse courriel secondaire"
+        primary_label: "primaire"
+        unconfirmed_label: "non confirmée"
+        resend_label: "renvoyer le courriel d'activation"
+        resending_label: "envoi en cours…"
+        resent_label: "courriel envoyé"
+        update_email: "Modifier l'adresse courriel"
+        set_primary: "Définir comme adresse courriel principale"
+        destroy: "Supprimer l'adresse courriel"
+        add_email: "Ajouter une adresse courriel alternative"
         sso_override_instructions: "Le courriel peut être mis à jour à partir du fournisseur SSO."
+        no_secondary: "Aucune adresse courriel secondaire"
         instructions: "Jamais visible publiquement."
         ok: "Nous vous enverrons un courriel de confirmation"
         required: "Veuillez entrer une adresse courriel"
@@ -2019,6 +2030,7 @@ fr:
         time_frame_required: Veuillez sélectionner un intervalle de temps
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
+        now: "Maintenant"
         later_today: "Plus tard aujourd'hui"
         tomorrow: "Demain"
         later_this_week: "Plus tard cette semaine"
@@ -2033,7 +2045,7 @@ fr:
         one_year: "Une année"
         forever: "Toujours"
         pick_date_and_time: "Sélectionner une date et heure"
-        set_based_on_last_post: "Fermer par rapport au dernier message"
+        set_based_on_last_post: "Fermer selon le dernier message"
       publish_to_category:
         title: "Planifier la publication"
       temp_open:
@@ -2280,11 +2292,14 @@ fr:
         publish: "Publier"
         description: "Lorsqu'un sujet est publié comme page, son URL peut être partagée et il sera affiché avec un style personnalisé."
         slug: "Identifiant"
+        public: "Public"
+        public_description: "Les utilisateurs peuvent voir cette page même si le sujet associé est privé."
         publish_url: "Votre page a été publiée sur :"
         topic_published: "Votre sujet a été publié sur :"
         preview_url: "Votre page sera publiée sur :"
         invalid_slug: "Désolé, vous ne pouvez pas publier cette page."
         unpublish: "Annuler la publication"
+        update: "Mettre à jour"
         unpublished: "La publication de votre page a été annulée et elle n'est plus accessible."
         publishing_settings: "Paramètres de publication"
       change_owner:
@@ -2491,7 +2506,7 @@ fr:
           last: "Dernière révision"
           hide: "Masquer la révision"
           show: "Afficher la révision"
-          revert: "Revenir à cette révision"
+          revert: "Revenir à la révision %{revision}"
           edit_wiki: "Modifier le wiki"
           edit_post: "Modifier le message"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon}<strong>%{current}</strong> / %{total}"
@@ -3187,13 +3202,13 @@ fr:
             more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activez la <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collecter des données.'
           filters:
-            file-extension:
+            file_extension:
               label: Extension de fichier
             group:
               label: Groupe
             category:
               label: Catégorie
-            include-subcategories:
+            include_subcategories:
               label: "Inclure les sous-catégories"
       commits:
         latest_changes: "Dernières modifications : veuillez mettre à jour régulièrement !"
@@ -3212,7 +3227,7 @@ fr:
         bulk_add:
           title: "Ajouter au groupe en masse"
           complete_users_not_added: "Ces utilisateurs n'ont pas été ajoutés (vérifiez qu'ils ont un compte) :"
-          paste: "Coller une liste de nom d'utilisateur ou courriel, un par ligne :"
+          paste: "Coller une liste de noms d'utilisateurs ou de courriels, un par ligne :"
         add_members:
           as_owner: "Rendre des utilisateurs propriétaires de ce groupe"
         manage:
@@ -3891,6 +3906,9 @@ fr:
             override_upload_secure_status: "passer outre le statut de téléchargement sécurisé"
             page_published: "page publiée"
             page_unpublished: "publication de la page annulée"
+            add_email: "ajouter une adresse courriel"
+            update_email: "mettre à jour une adresse courriel"
+            destroy_email: "supprimer une adresse courriel"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."

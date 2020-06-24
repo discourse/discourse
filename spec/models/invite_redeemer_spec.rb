@@ -144,9 +144,19 @@ describe InviteRedeemer do
       expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq('value2')
     end
 
+    it "does not add user to group if inviter does not have permissions" do
+      group = Fabricate(:group, grant_trust_level: 2)
+      InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+      user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
+
+      expect(user.group_users.count).to eq(0)
+    end
+
     it "adds user to group" do
       group = Fabricate(:group, grant_trust_level: 2)
       InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+      group.add_owner(invite.invited_by)
+
       user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
 
       expect(user.group_users.count).to eq(4)

@@ -451,6 +451,7 @@ it:
         category: "Categoria"
         orders:
           score: "Punteggio"
+          score_asc: "Punteggio (inverso)"
           created_at: "Creato il"
           created_at_asc: "Data creazione (inversa)"
         priority:
@@ -769,7 +770,6 @@ it:
           all: "Tutti"
           read: "Letti"
           unread: "Non letti"
-        ignore_duration_title: "Ignora Timer"
         ignore_duration_username: "Nome utente"
         ignore_duration_when: "Durata:"
         ignore_duration_save: "Ignora"
@@ -875,7 +875,9 @@ it:
       admin_delete: "Cancella"
       users: "Utenti"
       muted_users: "Silenziati"
+      muted_users_instructions: "Elimina tutte le notifiche e i PM da questi utenti."
       ignored_users: "Ignorato"
+      ignored_users_instructions: "Elimina tutti i post, le notifiche e i PM da questi utenti."
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
       apps: "Applicazioni"
@@ -993,6 +995,9 @@ it:
         confirm: "Sei sicuro di voler davvero cambiare il tuo nome utente?"
         taken: "Spiacenti, questo nome utente è già riservato."
         invalid: "Nome utente non valido: usa solo lettere e cifre"
+      add_email:
+        title: "Aggiungi email"
+        add: "aggiungi"
       change_email:
         title: "Cambia email"
         taken: "Spiacenti, questa email non è disponibile."
@@ -1023,8 +1028,17 @@ it:
         title: "Email"
         primary: "Email principale"
         secondary: "Email secondaria"
-        no_secondary: "Nessuna email secondaria"
+        primary_label: "primario"
+        unconfirmed_label: "non confermata"
+        resend_label: "Reinvia email di conferma"
+        resending_label: "invio in corso..."
+        resent_label: "email inviata"
+        update_email: "Cambia email"
+        set_primary: "Imposta email principale"
+        destroy: "Rimuovi email"
+        add_email: "Aggiungi email alternativa"
         sso_override_instructions: "L'email può essere aggiornata dal provider SSO."
+        no_secondary: "Nessuna email secondaria"
         instructions: "Mai mostrato pubblicamente"
         ok: "Ti invieremo una email di conferma"
         required: "Inserisci un indirizzo email"
@@ -1177,6 +1191,7 @@ it:
         expired: "L'invito è scaduto."
         rescind: "Rimuovi"
         rescinded: "Invito revocato"
+        rescind_all: "Rimuovi inviti scaduti"
         rescinded_all: "Tutti gli inviti scaduti sono stati rimossi!"
         rescind_all_confirm: "Sei sicuro di voler rimuovere tutti gli inviti scaduti?"
         reinvite: "Rinvia Invito"
@@ -1187,18 +1202,30 @@ it:
         time_read: "Ora di Lettura"
         days_visited: "Giorni Frequenza"
         account_age_days: "Età dell'utente in giorni"
+        source: "Invitato via"
         links_tab: "Collegamenti"
+        links_tab_with_count: "Link (%{count})"
+        link_url: "Link"
         link_created_at: "Creazione"
+        link_redemption_stats: "Redemptions"
         link_groups: Gruppi
+        link_expires_at: Scadenza
         create: "Invia Invito"
+        copy_link: "Copia link"
         generate_link: "Copia il collegamento di invito"
         link_generated: "Collegamento di invito generato con successo!"
         valid_for: "Questo collegamento di invito è valido solamente per il seguente indirizzo email: %{email}"
         single_user: "Utente Singolo"
+        multiple_user: "Utenti multipli"
         invite_link:
+          title: "Link di invito"
           success: "Collegamento di invito generato con successo!"
+          error: "Si è verificato un errore durante la generazione del link di invito"
+          max_redemptions_allowed_label: "Quante persone sono autorizzate a registrarsi utilizzando questo link?"
+          expires_at: "Quando scadrà questo link di invito?"
         bulk_invite:
           none: "Non hai ancora invitato nessuno. Puoi inviare degli inviti individuali o più persone alla volta <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>caricando un file CSV</a>."
+          text: "Inviti di gruppo"
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
           error: "Spiacenti, il file deve essere in formato CSV."
           confirmation_message: "Stai per inviare un invito via email a tutti gli indirizzi inclusi nel file caricato."
@@ -1316,11 +1343,6 @@ it:
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono<strong>#</strong> argomenti}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}}. Solo lo staff può vedere questo messaggio.
     too_few_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentPosts, plural, one {C'è <strong>#</strong> messaggio} other {Ci sono <strong>#</strong> messaggi}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
-    logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} altro {# errors/hour}}</a> il limite impostato di {limit, plural, one {# error/hour} altro {# errors/hour}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} altro {# errors/minute}}</a> raggiunto il limite impostato di {limit, plural, one {# error/minute} altro {# errors/minute}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} altro {# errors/hour}}</a> superato il limite impostato di {limit, plural, one {# error/hour} altro {# errors/hour}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} altro {# errors/minute}}</a> superato il limite impostato di {limit, plural, one {# error/minute} other {# errors/minute}}."
     learn_more: "per saperne di più..."
     all_time: "totale"
     all_time_desc: "totale argomenti creati"
@@ -2261,6 +2283,7 @@ it:
         publish: "Pubblica"
         description: "Quando un argomento viene pubblicato come pagina, l'URL può essere condiviso e verrà visualizzato con uno stile personalizzato."
         slug: "Abbreviazione"
+        public: "Pubblico"
         publish_url: "La tua pagina è stata pubblicata su:"
         topic_published: "Il tuo argomento è stato pubblicato su:"
         preview_url: "La tua pagina sarà pubblicata su:"
@@ -2472,7 +2495,6 @@ it:
           last: "Ultima revisione"
           hide: "Nascondi revisione"
           show: "Mostra revisione"
-          revert: "Ritorna a questa revisione"
           edit_wiki: "Modifica Wiki"
           edit_post: "Modifica Messaggio"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2580,6 +2602,7 @@ it:
       sort_order: "Lista Argomenti Ordinata Per:"
       default_view: "Lista Argomenti Predefinita:"
       default_top_period: "Periodo Predefinito Argomenti Di Punta:"
+      default_list_filter: "Filtro predefinito della lista:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
       reviewable_by_group: "Oltre che dallo staff, i messaggi e le segnalazioni in questa categoria possono essere revisionati da:"
@@ -2642,6 +2665,9 @@ it:
         moderation: "Moderazione"
         appearance: "Aspetto"
         email: "Email"
+      list_filters:
+        all: "tutti gli argomenti"
+        none: "nessuna sottocategoria"
     flagging:
       title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
       action: "Segnala Messaggio"
@@ -3156,13 +3182,13 @@ it:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> per iniziare a raccogliere i dati.'
           filters:
-            file-extension:
+            file_extension:
               label: Estensione file
             group:
               label: Gruppo
             category:
               label: Categoria
-            include-subcategories:
+            include_subcategories:
               label: "Includi Sottocategorie"
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
@@ -3860,6 +3886,9 @@ it:
             override_upload_secure_status: "sovrascrivere stato caricamento sicuro"
             page_published: "pagina pubblicata"
             page_unpublished: "pagina non pubblicata"
+            add_email: "aggiungi email"
+            update_email: "aggiorna email"
+            destroy_email: "distruggi email"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -4276,6 +4305,8 @@ it:
           modal_description: "Desideri applicare questa modifica storicamente? Questo cambierà le preferenze per %{count} utenti esistenti."
           modal_yes: "Sì"
           modal_no: "No, applica le modifiche solo da adesso in avanti"
+        simple_list:
+          add_item: "Aggiungi elemento..."
       badges:
         title: Distintivi
         new_badge: Nuovo Distintivo
@@ -4402,6 +4433,7 @@ it:
         post_title: "Messaggio"
         category_id: "ID della categoria"
         category_title: "Categoria"
+        tag_name: "Nome etichetta"
         external_url: "URL esterna"
         destination: "Destinazione"
         delete_confirm: "Sei sicuro di voler cancellare questo collegamento permanente?"

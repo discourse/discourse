@@ -736,7 +736,6 @@ hy:
           all: "Ամբողջը"
           read: "Կարդացած"
           unread: "Չկարդացած"
-        ignore_duration_title: "Անտեսված Օգտատեր"
         ignore_duration_username: "Օգտանուն"
         ignore_duration_when: "Տևողությունը."
         ignore_duration_save: "Անտեսել"
@@ -957,6 +956,8 @@ hy:
         confirm: "Դուք միանշանակ համոզվա՞ծ եք, որ ցանկանում եք փոփոխել Ձեր օգտանունը:"
         taken: "Ներողություն, այդ օգտանունը զբաղված է:"
         invalid: "Այդ օգտանունն անվավեր է: Այն պետք է պարունակի միայն թվեր և տառեր:"
+      add_email:
+        add: "ավելացնել"
       change_email:
         title: "Փոփոխել Էլ. Հասցեն"
         taken: "Ներողություն, այդ էլ. հասցեն հասանելի չէ:"
@@ -987,8 +988,10 @@ hy:
         title: "Էլ. հասցե"
         primary: "Հիմնական Էլ. հասցե"
         secondary: "Երկրորդական Էլ. հասցեներ"
-        no_secondary: "Երկրորդական էլ. հասցեներ չկան"
+        primary_label: "հիմնական"
+        update_email: "Փոփոխել Էլ. Հասցեն"
         sso_override_instructions: "Էլ. հասցեն կարող է թարմացվել SSO մատակարարից:"
+        no_secondary: "Երկրորդական էլ. հասցեներ չկան"
         instructions: "Երբեք չի ցուցադրվում հանրությանը"
         ok: "Հաստատման համար մենք Ձեզ կուղարկենք էլ. նամակ"
         invalid: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե"
@@ -2205,6 +2208,7 @@ hy:
         title: "Էջի Հրատարակում"
         publish: "Հրատարակել"
         description: "Երբ թեման հրապարակվում է որպես էջ, դրա URL- ն կարող է համընդհանուր տարածվել և պատկերվել օգտատերերի խմբագրմամբ: "
+        public: "Հանրային"
         publish_url: "Ձեր էջը հրապարակվել է այս հասցեով՝ "
         topic_published: "Ձեր թեման հրապարակվել է՝"
         preview_url: "Ձեր էջը կհրապարակվի այս հասցեով՝"
@@ -2401,7 +2405,6 @@ hy:
           last: "Վերջին խմբագրությունը"
           hide: "Թաքցնել խմբագրությունը"
           show: "Ցուցադրել խմբագրությունը"
-          revert: "Վերադարձնել այս խմբագրությանը"
           edit_wiki: "Խմբագրել Wiki-ն"
           edit_post: "Խմբագրել Գրառումը"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3080,13 +3083,13 @@ hy:
             more: '<a href="%{basePath}/admin/logs/search_logs">Որոնման գրառումներ</a>'
             disabled: 'Առաջատար որոնման հաշվետվությունն անջատված է: Միացրեք <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">գրառումների որոնման հարցումները</a>՝ տվյալներ հավաքելու համար:'
           filters:
-            file-extension:
+            file_extension:
               label: Ֆայլի ընդլայնում
             group:
               label: Խումբ
             category:
               label: Կատեգորիա
-            include-subcategories:
+            include_subcategories:
               label: "Ներառել Ենթակատեգորիաներ"
       commits:
         latest_changes: "Վերջին փոփոխությունները. խնդրում ենք ավելի հաճախ թարմացնել!"

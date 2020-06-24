@@ -585,6 +585,14 @@ describe TopicTrackingState do
       expect(row.tags).to contain_exactly("apples", "bananas")
 
       TopicTrackingState.include_tags_in_report = false
+      SiteSetting.show_filter_by_tag = true
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.tags).to contain_exactly("apples", "bananas")
+
+      SiteSetting.show_filter_by_tag = false
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)

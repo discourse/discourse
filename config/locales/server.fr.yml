@@ -757,15 +757,18 @@ fr:
     confirmed: "Votre adresse courriel a été mise à jour."
     please_continue: "Continuer vers %{site_name}"
     error: "Il y a eu une erreur lors de la modification de votre adresse courriel. Votre adresse courriel est peut-être déjà utilisée ?"
+    doesnt_exist: "Cette adresse courriel n'est pas associée à votre compte."
     error_staged: "Une erreur est survenue lors de la modification de votre adresse courriel. Cette adresse est déjà utilisée par un utilisateur distant."
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre adresse courriel a peut-être déjà été changée ?"
     confirm: "Confirmer"
     authorizing_new:
       title: "Confirmer votre nouvelle adresse courriel"
       description: "Veuillez confirmer que vous souhaitez changer votre adresse courriel à :"
+      description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse courriel alternative :"
     authorizing_old:
       title: "Changer votre adresse courriel"
       description: "Veuillez confirmer votre changement d'adresse courriel"
+      description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse courriel alternative :"
       old_email: "Adresse courriel précédente : %{email}"
       new_email: "Nouvelle adresse courriel : %{email}"
       almost_done_title: "Confirmer une nouvelle adresse courriel"
@@ -1172,12 +1175,12 @@ fr:
         topic: "Sujet"
       description: "Sujets qui ont reçu le plus de visites depuis des sources externes."
     page_view_anon_reqs:
-      title: "Anonyme"
+      title: "Anonymes"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés"
       description: "Nombre de nouvelles vues de pages par des visiteurs sans compte."
     page_view_logged_in_reqs:
-      title: "Connecté"
+      title: "Connectés"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs connectés"
       description: "Nombre de nouvelles vues d'utilisateurs connectés."
@@ -1545,7 +1548,6 @@ fr:
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION : vérifiez que le bucket est privé."
     s3_endpoint: "La destination peut être modifiée pour envoyer les sauvegardes vers un service compatible avec S3, par exemple DigitalOcean Spaces ou Minio. ATTENTION : laisser vide si vous utilisez AWS S3."
     s3_configure_tombstone_policy: "Activer la suppression automatique des fichiers non utilisés. IMPORTANT : en cas de désactivation, aucun espace disque ne sera récupéré après la suppression des fichiers."
-    s3_disable_cleanup: "Désactiver la suppression des sauvegardes sur S3 lorsqu'elles sont supprimées localement."
     enable_s3_inventory: "Générer des rapports et vérifier les envois avec l'inventaire Amazon S3. IMPORTANT : nécessite un accès valide à S3 (l'identifiant et la clé secrète). "
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
     backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si désactivé, seule la base de données sera sauvegardée."
@@ -1884,6 +1886,7 @@ fr:
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs revenant."
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
     enable_page_publishing: "Autorisez les responsables de publier des sujets vers de nouvelles URL utilisant leur propre style."
+    show_published_pages_login_required: "Les utilisateurs anonymes peuvent voir les pages publiées même quand la connexion est nécessaire."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
     default_email_level: "Définissez le niveau de notification courriel par défaut pour les sujets standards."
@@ -1943,7 +1946,7 @@ fr:
     city_for_disputes: "Ville pour les litiges"
     shared_drafts_category: "Activez la fonction Brouillons partagés en désignant une catégorie pour les brouillons de sujet. Les sujets dans cette catégorie ne figureront pas dans les listes de sujets pour les responsables."
     push_notifications_prompt: "Afficher la demande de consentement de l'utilisateur"
-    push_notifications_icon: "L'icône du badge qui apparaît dans les notifications. Taille requise : 96 x 96."
+    push_notifications_icon: "L'icône du badge qui apparaît dans les notifications. Une image monochrome de taille 96×96 et au format PNG avec transparence est recommandée."
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, le lanceur d'applications ou d'autres endroits où la place disponible est limitée. Il devrait être limité à 12 caractères."
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
@@ -3208,7 +3211,15 @@ fr:
       text_body_template: |
         Avant de pouvoir modifier votre adresse courriel, nous avons besoin de confirmer que vous contrôlez bien ce compte de messagerie. Une fois cette étape terminée, nous vous demanderons de confirmer la nouvelle adresse courriel.
 
-        Confirmez votre adresse courriel actuelle pour %{site_name} en cliquant sur le lien suivant:
+        Confirmez votre adresse courriel actuelle pour %{site_name} en cliquant sur le lien suivant :
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Confirmez votre adresse courriel actuelle"
+      text_body_template: |
+        Avant de pouvoir ajouter une nouvelle adresse courriel, nous avons besoin de confirmer que vous contrôlez bien ce compte de messagerie. Une fois cette étape terminée, nous vous demanderons de confirmer la nouvelle adresse courriel.
+
+        Confirmez votre adresse courriel actuelle pour %{site_name} en cliquant sur le lien suivant :
 
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
@@ -3220,6 +3231,14 @@ fr:
         un administrateur du site.
 
         Votre adresse courriel a été modifiée à :
+
+        %{new_email}
+    notify_old_email_add:
+      subject_template: "[%{email_prefix}] Une nouvelle adresse courriel a été ajoutée"
+      text_body_template: |
+        Ceci est un message automatique pour vous informer qu'une adresse courriel pour %{site_name} a été ajoutée. Si c'est une erreur, merci de contacter ²un administrateur du site.
+
+        Votre adresse courriel ajoutée :
 
         %{new_email}
     signup_after_approval:

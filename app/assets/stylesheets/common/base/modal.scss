@@ -689,24 +689,51 @@
   }
 }
 
-.publish-page-modal .modal-body {
-  p.publish-description {
-    margin-top: 0;
-  }
-  input.publish-slug {
-    width: 100%;
-  }
+.publish-page-modal {
+  .modal-body {
+    p.publish-description {
+      margin-top: 0;
+    }
+    input.publish-slug {
+      width: 100%;
+    }
 
-  .publish-url {
-    margin-bottom: 1em;
-    .example-url,
-    .invalid-slug {
-      font-weight: bold;
+    .publish-url {
+      margin-bottom: 1em;
+      .example-url,
+      .invalid-slug {
+        font-weight: bold;
+      }
+    }
+
+    .publish-slug:disabled {
+      cursor: not-allowed;
+    }
+
+    .controls {
+      margin-bottom: 1em;
+
+      .description {
+        margin: 0;
+        display: flex;
+        align-items: center;
+      }
     }
   }
 
-  .publish-slug:disabled {
-    cursor: not-allowed;
+  .modal-footer {
+    display: flex;
+
+    .close-publish-page {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+}
+
+.ignore-duration-with-username-modal {
+  .future-date-input {
+    margin-top: 1em;
   }
 }
 

@@ -539,6 +539,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("customHTML", custom_html_json)
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
+    store_preloaded("isReadOnly", @readonly_mode.to_s)
   end
 
   def preload_current_user_data

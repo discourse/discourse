@@ -821,7 +821,6 @@ uk:
           all: "Усі"
           read: "Прочитані"
           unread: "Непрочитані"
-        ignore_duration_title: "Ігнорувати таймер"
         ignore_duration_username: "Ім'я користувача"
         ignore_duration_when: "Тривалість:"
         ignore_duration_save: "Ігнорувати"
@@ -1034,6 +1033,8 @@ uk:
         confirm: "Ви цілковито впевнені, що бажаєте змінити своє ім'я користувача?"
         taken: "Даруйте, це ім'я користувача вже зайняте."
         invalid: "Таке ім'я користувача не підійде. Воно має містити лише цифри та літери"
+      add_email:
+        add: "додати"
       change_email:
         title: "Змінити адресу електронної пошти"
         taken: "Даруйте, ця адреса не доступна."
@@ -1060,8 +1061,10 @@ uk:
         title: "Електронна пошта"
         primary: "Основна електронна пошта"
         secondary: "Другорядна електронна пошта"
-        no_secondary: "Немає другорядних електронних скриньок"
+        primary_label: "основний"
+        update_email: "Змінити адресу електронної пошти"
         sso_override_instructions: "Електронну пошту можна оновити через SSO-провайдера."
+        no_secondary: "Немає другорядних електронних скриньок"
         instructions: "Ніколи не показується публічно."
         ok: "Ми надішлемо Вам листа для підтвердження"
         invalid: "Будь ласка, введіть вірний email"
@@ -1359,11 +1362,6 @@ uk:
       enabled: "Сайт працює в режимі \"тільки для читання\". Зараз ви можете продовжувати переглядати сайт, але інші дії будуть недоступні. "
       login_disabled: "Вхід вимкнено, поки сайт перебуває в режимі лише для читання."
       logout_disabled: "Вихід відключений, поки сайт в режимі «тільки для читання»"
-    logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} або {# errors/hour}}</a> досягнуто максимально дозволене значення {limit, plural, one {# error/hour} або {# errors/hour}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} або {# errors/minute}}</a> досягнуто максимально дозволене значення {limit, plural, one {# error/minute} або {# errors/minute}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} або {# errors/hour}}</a> досягнуто максимально дозволене значення {limit, plural, one {# error/hour} або {# errors/hour}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} або {# errors/minute}}</a> перевищено максимально дозволене значення {limit, plural, one {# error/minute} або {# errors/minute}}."
     learn_more: "дізнатися більше..."
     all_time: "всього"
     all_time_desc: "всього створено тем"
@@ -2337,6 +2335,8 @@ uk:
         title: "З’єднати виділені повідомлення"
         action: "З’єднати виділені повідомлення"
         error: "Сталася помилка під час з’єднання виділених повідомлень."
+      publish_page:
+        public: "Публічні"
       change_owner:
         title: "Змінити Власника"
         action: "змінити власність"
@@ -2571,7 +2571,6 @@ uk:
           last: "Остання версія"
           hide: "Приховати версію"
           show: "Показати версію"
-          revert: "Відкат до цієї версії"
           edit_wiki: "редагувати Wiki"
           edit_post: "редагувати запис"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3285,7 +3284,7 @@ uk:
             more: '<a href="%{basePath}/admin/logs/search_logs">Пошукові логи</a>'
             disabled: 'Звіт про пошукові запити відключено. Включити <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал пошукових запитів</a> для збору даних.'
           filters:
-            file-extension:
+            file_extension:
               label: Розширення файлу
             group:
               label: Група

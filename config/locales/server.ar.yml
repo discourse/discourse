@@ -1013,7 +1013,6 @@ ar:
     maximum_backups: "أكبر قدر ممكن من النسخ الاحتياطي للحفاظ على القرص. يتم حذف النسخ الاحتياطية القديمة تلقائيا"
     automatic_backups_enabled: "فعل النسخ الإحتياطي التلقائي بشكل متكرر كما هو محدد."
     s3_backup_bucket: "الرفع عن بعد لإجراء نسخ إحتياطية. تحذير : تأكد من أنه رفع خاص."
-    s3_disable_cleanup: "عطل النسخ الاحتياطيه المحذوفه من S3 عندما يتم حذفها محلياً"
     backup_time_of_day: "الوقت الذي يجب ان تأخد النسخ الاحتياطية فيه."
     backup_with_uploads: "إضافة التحميلات ل النسخ الإحتياطية. إلغاء هذة الخاصية سوف تؤدي إلى أخذ نسخ إحتياطية من قاعدة البيانات فقط."
     active_user_rate_limit_secs: "كيف في كثير من الأحيان نقوم بتحديث حقل 'last_seen_at، في ثوان"
@@ -1455,6 +1454,8 @@ ar:
     confirm_new_email:
       subject_template: "أكّد عنوان بريد الإلكتروني الجديد %{email_prefix}"
     confirm_old_email:
+      subject_template: "أكّد عنوان بريد الإلكتروني الحالي %{email_prefix}"
+    confirm_old_email_add:
       subject_template: "أكّد عنوان بريد الإلكتروني الحالي %{email_prefix}"
     notify_old_email:
       subject_template: "عنوان بريد الإلكتروني تم تغييرة %{email_prefix}"

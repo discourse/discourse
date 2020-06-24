@@ -679,6 +679,8 @@ lv:
         title: "Mainīt lietotājvārdu"
         taken: "Atvainojiet, šis lietotājvārds ir aizņemts."
         invalid: "Šis lietotājvārds ir nederīgs. Izmantojiet tikai ciparus un burtus"
+      add_email:
+        add: "Pievienot"
       change_email:
         title: "Mainīt e-pastu"
         taken: "Atvainojiet, šis e-pasts nav pieejams."
@@ -696,6 +698,7 @@ lv:
         instructions: "Fona attēli būs centrēti un ar noklusējuma platumu 590px."
       email:
         title: "E-pasts"
+        update_email: "Mainīt e-pastu"
         ok: "Mēs jums nosūtīsim apstiprinājuma e-pastu"
         invalid: "Lūdzu ievadiet derīgu e-pasta adresi"
         authenticated: "Jūsu e-pastu autentificēja %{provider}"
@@ -1609,6 +1612,8 @@ lv:
         title: "Apvienot izvēlētos ierakstus"
         action: "apvienot izvēlētos ierakstus"
         error: "Apvienojot izvēlētos ierakstus, notika kļūda."
+      publish_page:
+        public: "Publisks"
       change_owner:
         action: "nomainīt īpašnieku"
         error: "Mainot ierakstu īpašnieku, notika kļūda."
@@ -1754,7 +1759,6 @@ lv:
           last: "Pēdējā versija"
           hide: "Paslēpt versiju"
           show: "Parādīt versiju"
-          revert: "Atgriezties pie šīs versijas"
           edit_wiki: "Rediģēt wiki"
           edit_post: "Rediģēt ierakstu"
         displays:

@@ -2290,19 +2290,18 @@ describe UsersController do
 
       context 'selectable avatars is enabled' do
 
-        before { SiteSetting.selectable_avatars_enabled = true }
+        before do
+          SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+          SiteSetting.selectable_avatars_enabled = true
+        end
 
         it 'raises an error when selectable avatars is empty' do
+          SiteSetting.selectable_avatars = ""
           put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
           expect(response.status).to eq(422)
         end
 
         context 'selectable avatars is properly setup' do
-
-          before do
-            SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
-          end
-
           it 'raises an error when url is not in selectable avatars list' do
             put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
             expect(response.status).to eq(422)
@@ -2414,6 +2413,22 @@ describe UsersController do
       let!(:ignored_user) { Fabricate(:ignored_user, user: user, ignored_user: another_user) }
       let!(:muted_user) { Fabricate(:muted_user, user: user, muted_user: another_user) }
 
+      context "when you can't change the notification" do
+        fab!(:staff_user) { Fabricate(:admin) }
+
+        it "ignoring includes a helpful error message" do
+          put "/u/#{staff_user.username}/notification_level.json", params: { notification_level: 'ignore' }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body['errors'][0]).to eq(I18n.t("notification_level.ignore_error"))
+        end
+
+        it "muting includes a helpful error message" do
+          put "/u/#{staff_user.username}/notification_level.json", params: { notification_level: 'mute' }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body['errors'][0]).to eq(I18n.t("notification_level.mute_error"))
+        end
+      end
+
       context 'when changing notification level to normal' do
         it 'changes notification level to normal' do
           put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "normal" }
@@ -2519,6 +2534,7 @@ describe UsersController do
 
       it "returns emails and associated_accounts for self" do
         user = Fabricate(:user)
+        Fabricate(:email_change_request, user: user)
         sign_in(user)
 
         get "/u/#{user.username}/emails.json"
@@ -2527,11 +2543,13 @@ describe UsersController do
         json = response.parsed_body
         expect(json["email"]).to eq(user.email)
         expect(json["secondary_emails"]).to eq(user.secondary_emails)
+        expect(json["unconfirmed_emails"]).to eq(user.unconfirmed_emails)
         expect(json["associated_accounts"]).to eq([])
       end
 
       it "returns emails and associated_accounts when you're allowed to see them" do
         user = Fabricate(:user)
+        Fabricate(:email_change_request, user: user)
         sign_in_admin
 
         get "/u/#{user.username}/emails.json"
@@ -2540,11 +2558,13 @@ describe UsersController do
         json = response.parsed_body
         expect(json["email"]).to eq(user.email)
         expect(json["secondary_emails"]).to eq(user.secondary_emails)
+        expect(json["unconfirmed_emails"]).to eq(user.unconfirmed_emails)
         expect(json["associated_accounts"]).to eq([])
       end
 
       it "works on inactive users" do
         inactive_user = Fabricate(:user, active: false)
+        Fabricate(:email_change_request, user: inactive_user)
         sign_in_admin
 
         get "/u/#{inactive_user.username}/emails.json"
@@ -2553,6 +2573,7 @@ describe UsersController do
         json = response.parsed_body
         expect(json["email"]).to eq(inactive_user.email)
         expect(json["secondary_emails"]).to eq(inactive_user.secondary_emails)
+        expect(json["unconfirmed_emails"]).to eq(inactive_user.unconfirmed_emails)
         expect(json["associated_accounts"]).to eq([])
       end
     end
@@ -2575,7 +2596,8 @@ describe UsersController do
       expect(user_email.reload.primary).to eq(true)
       expect(other_email.reload.primary).to eq(false)
 
-      put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email }
+      expect { put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email } }
+        .to change { UserHistory.where(action: UserHistory.actions[:update_email], acting_user_id: user.id).count }.by(1)
       expect(response.status).to eq(200)
       expect(user_email.reload.primary).to eq(false)
       expect(other_email.reload.primary).to eq(true)
@@ -2598,7 +2620,8 @@ describe UsersController do
       expect(response.status).to eq(428)
       expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
 
-      delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email }
+      expect { delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email } }
+        .to change { UserHistory.where(action: UserHistory.actions[:destroy_email], acting_user_id: user.id).count }.by(1)
       expect(response.status).to eq(200)
       expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email)
     end

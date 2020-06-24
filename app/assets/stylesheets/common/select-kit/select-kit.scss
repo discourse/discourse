@@ -7,10 +7,6 @@
   vertical-align: middle;
   user-select: none;
 
-  &.is-hidden {
-    display: none !important;
-  }
-
   &.is-disabled {
     pointer-events: none;
   }
@@ -71,6 +67,7 @@
     .selected-name {
       text-align: left;
       flex: 0 1 auto;
+      align-items: center;
       color: inherit;
       display: flex;
       outline: none;

@@ -762,7 +762,6 @@ nl:
     confirm: "Bevestigen"
     authorizing_new:
       title: "Bevestig uw nieuwe e-mailadres"
-      description: "Bevestig dat u uw nieuwe e-mailadres gewijzigd wilt zien naar:"
     authorizing_old:
       title: "Uw e-mailadres wijzigen"
       description: "Bevestig de wijziging van uw e-mailadres"
@@ -1340,6 +1339,7 @@ nl:
     category_search_priority_very_high_weight: "Op rangschikking toegepast gewicht voor zeer hoge prioriteit bij doorzoeken van categorie."
     allow_uncategorized_topics: "Topics maken zonder categorie toestaan. WAARSCHUWING: als er topics zonder categorie zijn, moet u deze opnieuw aan een categorie toewijzen voordat dit wordt uitgezet."
     allow_duplicate_topic_titles: "Topics met dezelfde identieke titels toestaan"
+    allow_duplicate_topic_titles_category: "Topics met identieke, dubbele titels toestaan als de categorie anders is. allow_duplicate_topic_titles moet moet false zijn."
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "De pop-up voor nieuwe gebruikers tonen als een gebruiker begint met het typen van de eerste (n) nieuwe berichten in de berichteditor."
     title: "De naam van deze website, zoals gebruikt in de titeltag"
@@ -1546,7 +1546,7 @@ nl:
     s3_backup_bucket: "De externe bucket voor back-ups. WAARSCHUWING: zorg ervoor dat dit een privébucket is."
     s3_endpoint: "Het eindpunt kan worden gewijzigd voor back-ups van een met S3 compatibele dienst, zoals DigitalOcean Spaces of Minio. WAARSCHUWING: laat dit leeg als u AWS S3 gebruikt."
     s3_configure_tombstone_policy: "Automatisch verwijderingsbeleid voor tombstone-uploads inschakelen. BELANGRIJK: wanneer uitgeschakeld, wordt geen ruimte vrijgemaakt na het verwijderen van uploads."
-    s3_disable_cleanup: "Verwijderen van back-ups van S3 uitschakelen bij lokaal verwijderen."
+    s3_disable_cleanup: "Verwijderen van oude back-ups van S3 voorkomen als er meer back-ups zijn dan maximaal toegestaan."
     enable_s3_inventory: "Rapporten genereren en uploads verifiëren via Amazon S3-inventory. BELANGRIJK: vereist geldige S3-referenties (zowel toegangssleutel-ID als geheime toegangssleutel)."
     backup_time_of_day: "Tijdstip (UTC) waarop de back-up moet plaatsvinden."
     backup_with_uploads: "Uploads opnemen in geplande back-ups. Wanneer uitgeschakeld, wordt alleen een back-up van de database gemaakt."
@@ -1887,6 +1887,7 @@ nl:
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."
     returning_users_days: "Het aantal dagen dat voorbij moet gaan voordat een gebruiker als terugkerend wordt beschouwd."
     enable_page_publishing: "Stafleden mogen topics naar nieuwe URL's publiceren met hun eigen stijlen."
+    show_published_pages_login_required: "Anonieme gebruikers kunnen gepubliceerde pagina's zien, zelfs wanneer aanmelding is vereist."
     default_email_digest_frequency: "Hoe vaak gebruikers standaard e-mailsamenvattingen ontvangen."
     default_include_tl0_in_digests: "Standaard berichten van nieuwe gebruikers in e-mailsamenvattingen opnemen. Gebruikers kunnen dit in hun voorkeuren wijzigen."
     default_email_level: "Standaard e-mailmeldingsniveau voor normale topics."
@@ -1946,7 +1947,7 @@ nl:
     city_for_disputes: "Stad voor geschillen"
     shared_drafts_category: "Schakel de functie Gedeelde concepten in door een categorie voor topicconcepten aan te geven. Topics in deze categorie worden onderdrukt in topiclijsten voor stafgebruikers."
     push_notifications_prompt: "Prompt voor gebruikerstoestemming weergeven."
-    push_notifications_icon: "Het badgepictogram dat in de meldingenhoek verschijnt. Vereiste grootte is 96 × 96."
+    push_notifications_icon: "Het badgepictogram dat in de meldingshoek verschijnt. Een eenkleurige PNG van 96×96 met transparantie wordt aanbevolen."
     short_title: "De korte titel wordt gebruikt op het startscherm van de gebruiker, de starter, of andere plaatsen waar ruimte beperkt kan zijn. Beperk de naam tot 12 tekens."
     dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
     dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
@@ -1990,6 +1991,7 @@ nl:
       max_username_length_exists: "U kunt de maximale gebruikersnaamlengte niet lager instellen dan de langste gebruikersnaam (%{username})."
       max_username_length_range: "U kunt het maximum niet lager instellen dan het minimum."
       invalid_hex_value: "Kleurwaarden moeten 6-cijferige hexadecimale codes zijn."
+      empty_selectable_avatars: "U moet eerst minstens twee selecteerbare avatars uploaden voordat u deze instelling inschakelt."
       category_search_priority:
         very_low_weight_invalid: "U kunt het gewicht niet groter instellen dan 'category_search_priority_low_weight'."
         low_weight_invalid: "U kunt het gewicht niet groter of gelijk aan 1 of kleiner instellen dan 'category_search_priority_very_low_weight'."
@@ -2171,8 +2173,8 @@ nl:
     new_user_typed_too_fast: "Nieuwe gebruiker typte te snel"
     content_matches_auto_block_regex: "Inhoud komt overeen met regex voor auto-blokkeren"
     username:
-      short: "moet ten minste %{min} tekens zijn"
-      long: "moet niet meer dan %{max} tekens zijn"
+      short: "moet uit minstens %{min} tekens bestaan"
+      long: "mag niet meer dan %{max} tekens zijn"
       too_long: "is te lang"
       characters: "mag alleen cijfers, letters, streepjes, punten en onderstrepingstekens bevatten"
       unique: "moet uniek zijn"
@@ -2535,6 +2537,8 @@ nl:
         Bevestig uw huidige e-mailadres voor %{site_name} door op de volgende koppeling te klikken:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Bevestig uw huidige e-mailadres"
     notify_old_email:
       subject_template: "[%{email_prefix}] Uw e-mailadres is gewijzigd"
     signup_after_approval:
@@ -2987,3 +2991,6 @@ nl:
         title: "Gebruiker verwijderen"
         confirm: "Weet u zeker dat u die gebruiker wilt verwijderen? Dit verwijdert alle berichten en blokkeert het e-mail- en IP-adres van de gebruiker."
         reason: "Verwijderd via wachtrij voor beoordeling"
+  notification_level:
+    ignore_error: "Sorry, u kunt die gebruiker niet negeren."
+    mute_error: "Sorry, u kunt die gebruiker niet dempen."

@@ -790,6 +790,8 @@ sk:
         confirm: "Ste si naozaj istý(á), že si chcete zmeniť vaše užívateľské meno?"
         taken: "Ľutujeme, toto používateľské meno je obsadené."
         invalid: "Toto používateľské meno nie je platné. Musí obsahovať iba znaky a čísla."
+      add_email:
+        add: "pridať"
       change_email:
         title: "Zmeniť email"
         taken: "Ľutujeme, tento email nie je k dispozícii."
@@ -810,6 +812,8 @@ sk:
         title: "Email"
         primary: "Primárny e-mail"
         secondary: "Sekundárne e-maily"
+        primary_label: "primárny"
+        update_email: "Zmeniť email"
         no_secondary: "Žiadne sekundárne e-maily"
         ok: "Pošleme vám email pre potvrdenie"
         invalid: "Zadajte prosím platný email"
@@ -1696,6 +1700,8 @@ sk:
       merge_posts:
         title: "Spojiť označené príspevky"
         action: "spojiť označené príspevky"
+      publish_page:
+        public: "Verejné"
       change_owner:
         action: "zmeň vlastníka"
         error: "Nastala chyba pri zmene vlastníka príspevkov."

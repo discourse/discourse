@@ -1449,6 +1449,7 @@ en:
     category_search_priority_very_high_weight: "Weight applied to ranking for very high category search priority."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
+    allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be false."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "The name of this site, as used in the title tag."
@@ -1682,7 +1683,7 @@ en:
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
-    s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
+    s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
     enable_s3_inventory: "Generate reports and verify uploads using Amazon S3 inventory. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
@@ -2131,6 +2132,7 @@ en:
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
+    show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
@@ -2205,7 +2207,7 @@ en:
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
 
     push_notifications_prompt: "Display user consent prompt."
-    push_notifications_icon: "The badge icon that appears in the notification corner. Required size is 96 × 96."
+    push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
@@ -2253,6 +2255,7 @@ en:
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
       max_username_length_range: "You cannot set the maximum below the minimum."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
+      empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
       category_search_priority:
         very_low_weight_invalid: "You cannot set the weight to be greater than 'category_search_priority_low_weight'."
         low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
@@ -4852,6 +4855,10 @@ en:
 
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"
+
+  notification_level:
+    ignore_error: "Sorry, you can't ignore that user."
+    mute_error: "Sorry, you can't mute that user."
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

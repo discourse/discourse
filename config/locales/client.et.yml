@@ -704,6 +704,8 @@ et:
         title: "Muuda kasutajanime"
         taken: "Vabandust, see kasutajanimi on võetud."
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
+      add_email:
+        add: "lisa"
       change_email:
         title: "Muuda meiliaadressi"
         taken: "Vabandust, see meiliaadress ei ole saadaval."
@@ -723,6 +725,8 @@ et:
         title: "Meiliaadress"
         primary: "Peamine e-post"
         secondary: "Teine e-post"
+        primary_label: "primaarne"
+        update_email: "Muuda meiliaadressi"
         no_secondary: "Teist e-posti pole"
         instructions: "Ära näita kunagi avalikkusele."
         ok: "Saadame sulle kinnituseks meili"
@@ -1686,6 +1690,8 @@ et:
         title: "Ühenda valitud postitused"
         action: "ühenda valitud postitused"
         error: "Valitud postituste ühendamisel tekkis viga."
+      publish_page:
+        public: "Avalik"
       change_owner:
         title: "Muuda omanikku"
         action: "muuda omanikku"
@@ -1832,7 +1838,6 @@ et:
           last: "Viimane redaktsioon"
           hide: "Peida redaktsioon"
           show: "Näita redaktsiooni"
-          revert: "Ennista selleks redaktsiooniks"
           edit_wiki: "Muuda wikit"
           edit_post: "Muuda postitust"
         displays:

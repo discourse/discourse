@@ -767,7 +767,6 @@ es:
           all: "Todo"
           read: "Leídos"
           unread: "Sin leer"
-        ignore_duration_title: "Temporizador de ignorado"
         ignore_duration_username: "Nombre de usuario"
         ignore_duration_when: "Duración:"
         ignore_duration_save: "Ignorar"
@@ -989,6 +988,8 @@ es:
         confirm: "¿Estás completamente seguro de que quieres cambiar tu nombre de usuario?"
         taken: "Lo sentimos, ese nombre de usuario ya se encuentra en uso."
         invalid: "Este nombre de usuario no es válido. Este solo puede incluir números y letras"
+      add_email:
+        add: "añadir"
       change_email:
         title: "Cambiar correo electrónico"
         taken: "Lo sentimos, ese correo electrónico no está disponible."
@@ -1019,8 +1020,10 @@ es:
         title: "Correo electrónico"
         primary: "Correo electrónico principal"
         secondary: "Correos electrónicos secundarios"
-        no_secondary: "Sin correos electrónicos secundarios"
+        primary_label: "primario"
+        update_email: "Cambiar correo electrónico"
         sso_override_instructions: "El correo electrónico puede actualizarse desde el proveedor de SSO."
+        no_secondary: "Sin correos electrónicos secundarios"
         instructions: "Nunca se mostrará al público."
         ok: "Te enviaremos un correo electrónico para confirmar"
         required: "Por favor, introduce un correo electrónico"
@@ -2253,6 +2256,7 @@ es:
         publish: "Publicar"
         description: "Cuando un tema se publica como página su URL se puede compartir y se mostrará con estilos personalizados."
         slug: "Slug"
+        public: "Público"
         publish_url: "La página se ha publicado en:"
         topic_published: "El tema se ha publicado en:"
         preview_url: "La página será publicada en:"
@@ -2464,7 +2468,6 @@ es:
           last: "Última revisión"
           hide: "Ocultar revisión."
           show: "Mostrar revisión."
-          revert: "Volver a esta revisión"
           edit_wiki: "Editar wiki"
           edit_post: "Editar publicación"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3149,13 +3152,13 @@ es:
             more: '<a href="%{basePath}/admin/logs/search_logs">Buscar registros</a>'
             disabled: 'El reporte de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recolectar datos.'
           filters:
-            file-extension:
+            file_extension:
               label: Extensión del archivo
             group:
               label: Grupo
             category:
               label: Categoría
-            include-subcategories:
+            include_subcategories:
               label: "Incluir subcategoría"
       commits:
         latest_changes: "Cambios recientes: ¡por favor, actualiza a menudo!"

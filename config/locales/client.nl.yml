@@ -770,7 +770,7 @@ nl:
           all: "Alle"
           read: "Gelezen"
           unread: "Ongelezen"
-        ignore_duration_title: "Negeertimer"
+        ignore_duration_title: "Gebruiker negeren"
         ignore_duration_username: "Gebruikersnaam"
         ignore_duration_when: "Tijdsduur:"
         ignore_duration_save: "Negeren"
@@ -996,6 +996,9 @@ nl:
         confirm: "Weet u absoluut zeker dat u uw gebruikersnaam wilt wijzigen?"
         taken: "Sorry, maar die gebruikersnaam is al in gebruik."
         invalid: "Die gebruikersnaam is ongeldig. Hij mag alleen cijfers en letters bevatten."
+      add_email:
+        title: "E-mailadres toevoegen"
+        add: "toevoegen"
       change_email:
         title: "E-mailadres wijzigen"
         taken: "Sorry, dat e-mailadres is niet beschikbaar."
@@ -1026,8 +1029,17 @@ nl:
         title: "E-mail"
         primary: "Primair e-mailadres"
         secondary: "Extra e-mailadressen"
-        no_secondary: "Geen extra e-mailadressen"
+        primary_label: "primaire"
+        unconfirmed_label: "onbevestigd"
+        resend_label: "bevestigingsmail opnieuw verzenden"
+        resending_label: "verzenden..."
+        resent_label: "e-mail verzonden"
+        update_email: "E-mailadres wijzigen"
+        set_primary: "Primair e-mailadres instellen"
+        destroy: "E-mailadres verwijderen"
+        add_email: "Alternatief e-mailadres toevoegen"
         sso_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
+        no_secondary: "Geen extra e-mailadressen"
         instructions: "Nooit openbaar zichtbaar."
         ok: "We sturen een e-mail ter bevestiging"
         required: "Voer een e-mailadres in"
@@ -2016,6 +2028,7 @@ nl:
         time_frame_required: Selecteer een tijdsbestek
       auto_update_input:
         none: "Selecteer een tijdsbestek"
+        now: "Nu"
         later_today: "Later vandaag"
         tomorrow: "Morgen"
         later_this_week: "Later deze week"
@@ -2277,11 +2290,14 @@ nl:
         publish: "Publiceren"
         description: "Wanneer een topic als een pagina wordt gepubliceerd, kan de URL ervan worden gedeeld en wordt deze met aangepaste stijlen weergegeven."
         slug: "Slug"
+        public: "Openbaar"
+        public_description: "Mensen kunnen de pagina ook zien als het gekoppelde topic privé is."
         publish_url: "Uw pagina is gepubliceerd op:"
         topic_published: "Uw topic is gepubliceerd op:"
         preview_url: "Uw pagina wordt gepubliceerd op:"
         invalid_slug: "Sorry, u kunt deze pagina niet publiceren."
         unpublish: "Publicatie ongedaan maken"
+        update: "Bijwerken"
         unpublished: "Uw pagina is niet meer gepubliceerd en niet meer toegankelijk."
         publishing_settings: "Publicatie-instellingen"
       change_owner:
@@ -2355,6 +2371,7 @@ nl:
       has_replies:
         one: "%{count} antwoord"
         other: "%{count} antwoorden"
+      unknown_user: "(onbekende/verwijderde gebruiker)"
       has_likes_title:
         one: "%{count} persoon heeft dit bericht geliket"
         other: "%{count} personen hebben dit bericht geliket"
@@ -2488,7 +2505,7 @@ nl:
           last: "Laatste revisie"
           hide: "Revisie verbergen"
           show: "Revisie tonen"
-          revert: "Terugkeren naar deze revisie"
+          revert: "Terugkeren naar revisie %{revision}"
           edit_wiki: "Wiki bewerken"
           edit_post: "Bericht bewerken"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3180,13 +3197,13 @@ nl:
             more: '<a href="%{basePath}/admin/logs/search_logs">Zoeklogboeken</a>'
             disabled: 'Rapport voor populaire zoekopdrachten is uitgeschakeld. Schakel <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zoekopdrachten registreren</a> in om gegevens te verzamelen.'
           filters:
-            file-extension:
+            file_extension:
               label: Bestandsextensie
             group:
               label: Groep
             category:
               label: Categorie
-            include-subcategories:
+            include_subcategories:
               label: "Subcategorieën bijvoegen"
       commits:
         latest_changes: "Laatste wijzigingen: werk regelmatig bij!"
@@ -3544,7 +3561,7 @@ nl:
           and_x_more: "en nog %{count}."
           collapse: Samenvouwen
           uploads: "Uploads"
-          no_uploads: "U kunt aan uw thema gerelateerde assets uploaden zoals fonts en afbeeldingen"
+          no_uploads: "U kunt aan uw thema gerelateerde assets uploaden, zoals lettertypen en afbeeldingen"
           add_upload: "Upload toevoegen"
           upload_file_tip: "Kies een asset om te uploaden (png, woff2, etc...)"
           variable_name: "SCSS-variabelenaam:"
@@ -3884,6 +3901,9 @@ nl:
             override_upload_secure_status: "status beveiligd uploaden negeren"
             page_published: "pagina gepubliceerd"
             page_unpublished: "pagina niet gepubliceerd"
+            add_email: "e-mailadres toevoegen"
+            update_email: "e-mailadres bijwerken"
+            destroy_email: "e-mailadres verwijderen"
         screened_emails:
           title: "Gecontroleerde e-mails"
           description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd."
@@ -4429,8 +4449,9 @@ nl:
         category_id: "Categorie-ID"
         category_title: "Categorie"
         tag_name: "Tagnaam"
-        external_url: "Externe URL"
+        external_url: "Externe of relatieve URL"
         destination: "Bestemming"
+        copy_to_clipboard: "Permalink naar klembord kopiëren"
         delete_confirm: "Weet u zeker dat u deze permalink wilt verwijderen?"
         form:
           label: "Nieuw:"

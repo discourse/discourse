@@ -740,7 +740,6 @@ tr_TR:
           all: "Tümü"
           read: "Okunan"
           unread: "Okunmamış"
-        ignore_duration_title: "Zamanlayıcıyı Yoksay"
         ignore_duration_username: "Kullanıcı Adı"
         ignore_duration_when: "Süre:"
         ignore_duration_save: "Yoksay"
@@ -951,6 +950,8 @@ tr_TR:
         confirm: "\"Kullanıcı Adı\"nı değiştirmek istediğine emin misin?"
         taken: "Üzgünüz, bu kullanıcı adı daha önce alınmış. "
         invalid: "Bu kullanıcı adı geçersiz. Kullanıcı adı, sadece sayı ve harf içerebilir. "
+      add_email:
+        add: "ekle"
       change_email:
         title: "\"E-posta Adresi\"ni Değiştir"
         taken: "Üzgünüz, bu e-posta kullanılabilir değil."
@@ -977,8 +978,10 @@ tr_TR:
         title: "E-posta"
         primary: "Öncelikli E-posta"
         secondary: "İkincil E-postalar"
-        no_secondary: "İkincil e-posta adresi mevcut değil"
+        primary_label: "Ana"
+        update_email: "\"E-posta Adresi\"ni Değiştir"
         sso_override_instructions: "E-posta SSO sağlayıcısından güncellenebilir."
+        no_secondary: "İkincil e-posta adresi mevcut değil"
         instructions: "Hiç kimseye gösterilmedi."
         ok: "Onaylaman için sana e-posta göndereceğiz"
         invalid: "Lütfen geçerli bir e-posta adresi gir"
@@ -1257,10 +1260,10 @@ tr_TR:
       login_disabled: "Site salt-okunur modda iken giriş işlemi devre dışı bırakılır ."
       logout_disabled: "Site salt-okunur modda iken çıkış işlemi yapılamaz."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b>– <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} diğeri {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
-      reached_minute_MF: "<b>{relativeAge}</b>– <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat}  {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b>– <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} diğeri {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} diğer{# hata/saat}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b>– <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat}  {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} diğer {# hata/dakika}}."
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
     learn_more: "daha fazlasını öğren..."
     all_time: "toplam"
     all_time_desc: "oluşturulan tüm konular "
@@ -2180,6 +2183,8 @@ tr_TR:
         title: "Seçili Gönderileri Birleştir"
         action: "seçili gönderileri birleştir"
         error: "Seçili gönderileri birleştirirken bir hata oluştu."
+      publish_page:
+        public: "Herkese Açık"
       change_owner:
         title: "Sahibini Değiştir"
         action: "sahipliği değiştir"
@@ -2380,7 +2385,6 @@ tr_TR:
           last: "Son revizyon"
           hide: "Düzenlemeyi gizle"
           show: "Düzenlemeyi göster"
-          revert: "Bu uyarlamaya geri dön"
           edit_wiki: "Wiki'yi düzenle"
           edit_post: "Gönderiyi düzenle"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong>%{icon}<strong>%{current}</strong>/%{total}"
@@ -3036,7 +3040,7 @@ tr_TR:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama Günlükleri</a>'
             disabled: 'Trend arama raporu devredışı. Veri toplamak için <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log arama sorgusunu</a> etkinleştirin.'
           filters:
-            file-extension:
+            file_extension:
               label: Dosya uzantısı
             group:
               label: Grup

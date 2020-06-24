@@ -27,14 +27,6 @@ require_relative '../lib/discourse_plugin_registry'
 
 require_relative '../lib/plugin_gem'
 
-if ENV['ACTIVE_RECORD_RAILS_FAILOVER']
-  require 'rails_failover/active_record'
-end
-
-if ENV['REDIS_RAILS_FAILOVER']
-  require 'rails_failover/redis'
-end
-
 # Global config
 require_relative '../app/models/global_setting'
 GlobalSetting.configure!
@@ -49,6 +41,14 @@ end
 if ENV['SKIP_DB_AND_REDIS'] == '1'
   GlobalSetting.skip_db = true
   GlobalSetting.skip_redis = true
+end
+
+if !GlobalSetting.skip_db?
+  require 'rails_failover/active_record'
+end
+
+if !GlobalSetting.skip_redis?
+  require 'rails_failover/redis'
 end
 
 require 'pry-rails' if Rails.env.development?

@@ -196,6 +196,7 @@ sv:
     error: "Det uppstod ett problem när filerna skulle laddas upp. Vad snäll och försök senare igen."
   invite_link:
     email_taken: "Den här e-postadressen används redan. Om du redan har ett konto ber vi dig logga in eller återställa lösenordet."
+    max_redemptions_limit: "bör vara mellan 2 och %{max_limit}."
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
     user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
@@ -736,15 +737,18 @@ sv:
     confirmed: "Din e-post har uppdaterats."
     please_continue: "Fortsätt till %{site_name}"
     error: "Det uppstod ett fel med ändringen av din e-postadress. Adressen kanske redan används?"
+    doesnt_exist: "Den e-postadressen är inte associerad till ditt konto."
     error_staged: "Ett problem uppstod vid ändring av din e-postadress. Adressen används redan av en annan användare. "
     already_done: "Tyvärr har den här aktiveringslänken löpt ut. Kanske är din e-postadress redan ändrad? "
     confirm: "Bekräfta"
     authorizing_new:
       title: "Bekräfta din nya e-post"
-      description: "Vänligen bekräfta att du önskar ändra din nya e-postadress till:"
+      description: "Vänligen bekräfta att du önskar ändra din e-postadress till:"
+      description_add: "Vänligen bekräfta att du önskar lägga till en alternativ e-postadress:"
     authorizing_old:
       title: "Ändra din e-postadress"
       description: "Vänligen konfirmera din e-postadressändring"
+      description_add: "Vänligen bekräfta att du önskar lägga till en alternativ e-postadress:"
       old_email: "Gammal e-post: %{email}"
       new_email: "Ny e-post: %{email}"
       almost_done_title: "Bekräftar ny e-postadress"
@@ -1319,6 +1323,7 @@ sv:
     category_search_priority_very_high_weight: "Vikt applicerad på rankning vid mycket hög sökprioritet för kategori"
     allow_uncategorized_topics: "Tillåt att ämnen skapas utan en kategori. VARNING: Om det finns några okategoriserade ämnen så måste dessa omkategoriseras innan den här inställningen stängs av. "
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
+    allow_duplicate_topic_titles_category: "Tillåt ämnen med identisk, duplicerad titel om kategorierna är olika. allow_duplicate_topic_titles måste vara avbockad."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     educate_until_posts: "Visa hjälppanelen för komponering tills dess att användaren har gjort (n) nya inlägg. "
     title: "Namnet på denna webbplats som används i titel-taggen."
@@ -1525,7 +1530,7 @@ sv:
     s3_backup_bucket: "Den externa behållaren för säkerhetskopieringar. VARNING: Se till att det är en privat behållare."
     s3_endpoint: "Ändpunkten kan ändras för att säkerhetskopiera till en S3-kompatibel tjänst som DigitalOcean Spaces eller Minio. VARNING: Lämna tomt om du använder AWS S3."
     s3_configure_tombstone_policy: "Aktivera automatisk raderingspolicy för Tombstone uppladdningar. VIKTIGT: Om det är inaktiverat kommer inget utrymme att återtas efter att överföringar har tagits bort."
-    s3_disable_cleanup: "Inaktivera borttagande av säkerhetskopior från S3 när de tagits bort lokalt."
+    s3_disable_cleanup: "Förhindra borttagning av äldre säkerhetskopior från S3 när det finns fler säkerhetskopior än högsta tillåtna."
     enable_s3_inventory: "Generera rapporter och verifiera uppladdningar med Amazon S3 inventering. VIKTIGT: kräver giltiga S3-referenser (både åtkomstnyckel-ID och hemlig åtkomstnyckel)."
     backup_time_of_day: "Tid på dygnet UTC då säkerhetskopieringen sker."
     backup_with_uploads: "Inkludera uppladdning i schemalagda säkerhetskopieringar. Inaktivering av det här kommer endast att säkerhetskopiera databasen."
@@ -1556,6 +1561,7 @@ sv:
     max_logins_per_ip_per_minute: "Maximalt antal inloggningar tillåtna per IP-adress per minut"
     max_post_deletions_per_minute: "Maximalt antal inlägg som en användare kan radera per minut."
     max_post_deletions_per_day: "Maximalt antal inlägg som en användare kan radera per dag."
+    invite_link_max_redemptions_limit: "Maximalt antal återinbjudningar tillåtna för inbjudningslänkar kan inte vara större än detta värde."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     alert_admins_if_errors_per_hour: "Antal felindikeringar per timme för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktione. OBS: kräver omstart."
     categories_topics: "Antal ämnen som ska visas i /kategorisida. Om satt till 0 kommer systemet automatiskt att försöka hitta ett värde så att de två kolumnerna hålls symmetriskt (kategorier och ämnen.) "
@@ -1865,6 +1871,7 @@ sv:
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar bör gå innan en användare anses återkomma."
     enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
+    show_published_pages_login_required: "Anonyma användare kan se publicerade sidor, även när inloggning krävs."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar e-postsammanfattningar."
     default_include_tl0_in_digests: "Standardinställning för hur ofta nya användare får e-postsammanfattningar. Användare kan ändra det i sina inställningar."
     default_email_level: "Ställ in standardnivå för e-postmeddelanden för vanliga ämnen."
@@ -1924,7 +1931,7 @@ sv:
     city_for_disputes: "Stad för tvister"
     shared_drafts_category: "Aktivera funktionen delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin exkluderas från ämneslistor för personalanvändare."
     push_notifications_prompt: "Visa användarens samtycke genast."
-    push_notifications_icon: "Utmärkelseikonen som visas i notifieringshörnet. Obligatorisk storlek är 96 x 96."
+    push_notifications_icon: "Utmärkelseikonen som visas i notifieringshörnet. En 96x96 enfärgad PNG med genomskinlighet rekommenderas."
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Det bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -1968,6 +1975,7 @@ sv:
       max_username_length_exists: "Du kan inte sätta högsta tillåtna längd på användarnamn lägre än det längsta användarnamnet (%{username})."
       max_username_length_range: "Du kan inte sätta maximum högre än minimum."
       invalid_hex_value: "Färgvärden måste vara sexsiffriga hexadecimala koder."
+      empty_selectable_avatars: "Du måste först ladda upp åtminstone två valbara avatarer innan du aktiverar denna inställning."
       category_search_priority:
         very_low_weight_invalid: "Du kan inte ställa in vikten att vara större än 'category_search_priority_low_weight'."
         low_weight_invalid: "Du kan inte ställa in vikten att vara större än eller lika med 1 eller mindre än 'category_search_priority_very_low_weight'."
@@ -3076,6 +3084,17 @@ sv:
         Du kan bekräfta e-postadressen för %{site_name} genom att följa länken nedan:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      title: "Bekräfta tidigare e-postadress (Lägg till)"
+      subject_template: "[%{email_prefix}] Bekräfta din nuvarande e-postadress"
+      text_body_template: |
+        Innan vi kan lägga till en e-postadress,  behöver du bekräfta att du kontrollerar
+        den nuvarande e-postadressen. Efter att du har genomfört detta steg, behöver du bekräfta
+        den nya e-postadressen.
+
+        Du kan bekräfta e-postadressen för %{site_name} genom att klicka på följande länk:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Meddela gamla epostmeddelanden"
       subject_template: "[%{email_prefix}] Din e-postadress har ändrats"
@@ -3083,6 +3102,17 @@ sv:
         Det här är ett automatiserat meddelande för att informera dig om att din e-postadress för %{site_name} har ändrats. Var vänlig kontakta en administratör om det inte var din avsikt.
 
         Din e-postadress har ändrats till:
+
+        %{new_email}
+    notify_old_email_add:
+      title: "Notifiera tidigare e-postadress (Lägg till)"
+      subject_template: "[%{email_prefix}] En ny e-postadress har lagts till"
+      text_body_template: |
+        Det här är ett automatiserat meddelande för att informera dig om att en e-postadress för
+        %{site_name} har lagts till. Om detta har gjorts felaktigt, vänligen kontakta
+        en administratör.
+
+        Din tillagda e-postadress är:
 
         %{new_email}
     signup_after_approval:
@@ -3861,6 +3891,9 @@ sv:
         reason: "Raderad via granskningskön"
   email_style:
     html_missing_placeholder: "Html-mallen måste inkludera %{placeholder}"
+  notification_level:
+    ignore_error: "Tyvärr, du kan inte ignorera den användaren."
+    mute_error: "Tyvärr, du kan inte tysta den användaren."
   discord:
     not_in_allowed_guild: "Autentisering misslyckades. Du är inte medlem i ett tillåtet Discord sällskap. "
   old_keys_reminder:

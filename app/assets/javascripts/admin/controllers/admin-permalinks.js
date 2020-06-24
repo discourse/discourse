@@ -22,6 +22,16 @@ export default Controller.extend({
       this.model.unshiftObject(arg);
     },
 
+    copyUrl(pl) {
+      let linkElement = document.querySelector(`#admin-permalink-${pl.id}`);
+      let textArea = document.createElement("textarea");
+      textArea.value = linkElement.textContent;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("Copy");
+      textArea.remove();
+    },
+
     destroy: function(record) {
       return bootbox.confirm(
         I18n.t("admin.permalink.delete_confirm"),

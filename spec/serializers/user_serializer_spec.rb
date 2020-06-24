@@ -14,6 +14,10 @@ describe UserSerializer do
     it "doesn't serialize untrusted attributes" do
       untrusted_attributes.each { |attr| expect(json).not_to have_key(attr) }
     end
+
+    it "doesn't serialize group_users" do
+      expect(json[:group_users]).to be_nil
+    end
   end
 
   context "as current user" do
@@ -24,9 +28,10 @@ describe UserSerializer do
       SiteSetting.default_other_new_topic_duration_minutes = 60 * 24
 
       user = Fabricate.build(:user,
-                              user_profile: Fabricate.build(:user_profile),
-                              user_option: UserOption.new(dynamic_favicon: true),
-                              user_stat: UserStat.new
+                             id: 1,
+                             user_profile: Fabricate.build(:user_profile),
+                             user_option: UserOption.new(dynamic_favicon: true),
+                             user_stat: UserStat.new
                             )
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
@@ -36,6 +41,7 @@ describe UserSerializer do
       expect(json[:user_option][:auto_track_topics_after_msecs]).to eq(0)
       expect(json[:user_option][:notification_level_when_replying]).to eq(3)
 
+      expect(json[:group_users]).to eq([])
     end
   end
 

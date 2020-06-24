@@ -178,7 +178,7 @@ end
 group :development do
   gem 'ruby-prof', require: false, platform: :mri
   gem 'bullet', require: !!ENV['BULLET']
-  gem 'better_errors', platform: :mri
+  gem 'better_errors', platform: :mri, require: !!ENV['BETTER_ERRORS']
   gem 'binding_of_caller'
   gem 'yaml-lint'
   gem 'annotate'
@@ -250,4 +250,4 @@ gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
 
-gem 'rails_failover', require: false, git: 'https://github.com/discourse/rails_failover'
+gem 'rails_failover', require: false

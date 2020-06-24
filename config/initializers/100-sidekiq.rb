@@ -70,7 +70,12 @@ if Sidekiq.server?
     scheduler_hostname = ENV["UNICORN_SCHEDULER_HOSTNAME"]
 
     if !scheduler_hostname || scheduler_hostname.split(',').include?(Discourse.os_hostname)
-      MiniScheduler.start(workers: GlobalSetting.mini_scheduler_workers)
+      begin
+        MiniScheduler.start(workers: GlobalSetting.mini_scheduler_workers)
+      rescue MiniScheduler::DistributedMutex::Timeout
+        sleep 5
+        retry
+      end
     end
   end
 end

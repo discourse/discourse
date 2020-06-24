@@ -750,7 +750,6 @@ fi:
     confirm: "Vahvista"
     authorizing_new:
       title: "Vahvista uusi sähköpostiosoite"
-      description: "Vahvista, että haluat vaihtaa uudeksi sähköpostiosoitteeksesi:"
     authorizing_old:
       title: "Vaihda sähköpostiosoitettasi"
       description: "Vahvista sähköpostiosoitteesi vaihdos"
@@ -1518,7 +1517,6 @@ fi:
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
     s3_endpoint: "Kohdeasemaksi voidaan vaihtaa muu S3-yhteensopiva palvelu kuten DigitalOcean Spaces tai Minio. VAROITUS: Jätä tyhjäksi, jos käytät AWS S3:a."
     s3_configure_tombstone_policy: "Ota käyttöön tombstone-hakemiston automaattinen tyhjennys.  TÄRKEÄÄ: Jos ei käytössä, tilaa ei vapaudu kun ladattuja tiedostoja poistetaan."
-    s3_disable_cleanup: "Älä poista varmuuskopiota S3:sta, kun se poistetaan paikallisesti."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä on pois käytöstä, vain tietokanta varmuuskopioidaan."
     backup_location: "SIjainti, jonne varmuuskopiot säilötään. TÄRKEÄÄ: S3 vaatii toimiakseen, että käyvät S3-käyttöoikeustiedot on syötetty Tiedostot-asetuksiin."
@@ -1895,7 +1893,6 @@ fi:
     city_for_disputes: "Kaupunki jonka oikeudessa riidat ratkotaan"
     shared_drafts_category: "Ota käyttöön jaetut luonnokset -toiminto määrittämällä alue, joka on ketjuluonnoksille varattu. Alueen ketjut eivät näy ketjulistauksissa henkilökunnankaan jäsenille."
     push_notifications_prompt: "Näytä käyttäjäsuostumuspyyntö."
-    push_notifications_icon: "Kuvakemerkki, joka näkyy ilmoituksen kulmassa. Vaadittu koko on 96×96."
     short_title: "Lyhyttä nimeä käytetään käyttäjän kotiruudussa (home screen), käynnistyssovelluksissa (launcher) ja muissa tilanteissa, joissa tilaa on rajallisesti. Sen tulisi olla enintään 12 merkin pituinen."
     dashboard_general_tab_activity_metrics: "Valitse raportit, jotka näytetään aktiivisuusmittareina Yleistä-välilehdellä."
     errors:
@@ -3145,6 +3142,8 @@ fi:
         Vahvista nykyinen sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
     notify_old_email:
       title: "Ilmoita vanhaan sähköpostiosoitteeseen"
       subject_template: "[%{email_prefix}] Sähköpostiosoitteesi on vaihdettu"

@@ -726,7 +726,6 @@ ur:
           all: "تمام"
           read: "پڑھ لیا گیا"
           unread: "بغیر پڑھے"
-        ignore_duration_title: "ٹائمر نظر انداز کریں"
         ignore_duration_username: "صارف کا نام"
         ignore_duration_when: "دورانیہ:"
         ignore_duration_save: "نظر انداز کریں"
@@ -925,6 +924,8 @@ ur:
         confirm: "کیا آپ کو بالکل یقین ہے کہ آپ اپنا صارف نام تبدیل کرنا چاہتے ہیں؟"
         taken: "معذرت، یِہ صارف نام پہلے سے لیا جاچکا ہے۔"
         invalid: "یہ صارف نام غلط ہے۔ اِس میں صرف ہندسوں اور حروف کو شامل کیا جا سکتا ہے"
+      add_email:
+        add: "شامل کریں"
       change_email:
         title: "اِی میل تبدیل کریں"
         taken: "معذرت، یہ اِی میل دستیاب نہیں ہے۔"
@@ -945,8 +946,10 @@ ur:
         title: "اِی میل"
         primary: "بنیادی ایمیل"
         secondary: "ثانوی ایمیلز"
-        no_secondary: "کوئی ثانوی ایمیلز نہیں"
+        primary_label: "بنیادی"
+        update_email: "اِی میل تبدیل کریں"
         sso_override_instructions: "SSO پرووَائیڈر سے ایمیل کو اَپ ڈیٹ کیا جا سکتا ہے۔"
+        no_secondary: "کوئی ثانوی ایمیلز نہیں"
         instructions: "کبھی بھی عوام کو دکھایا نہیں گیا۔"
         ok: "ہم تصدیق کے لئے آپ کو اِی میل کریں گے"
         invalid: "براہ کرم، ایک قابلِ قبول ایِ میل ایڈریس درج کریں"
@@ -2116,6 +2119,8 @@ ur:
         title: "منتخب کردہ پوسٹس کو ضم کریں"
         action: "منتخب کردہ پوسٹس کو ضم کریں"
         error: "منتخب کردہ پوسٹس کو ضم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
+      publish_page:
+        public: "عوامی"
       change_owner:
         title: "مالک تبدیل کریں"
         action: "پوسٹس کے مالک کو تبدیل کریں"
@@ -2305,7 +2310,6 @@ ur:
           last: "آخری رَوِیژن"
           hide: "رَوِیژن چھپائیں"
           show: "رَوِیژن دکھائیں"
-          revert: "اِس رَوِیژن پر واپس جائیں"
           edit_wiki: "وِیکی میں ترمیم کریں"
           edit_post: "پوسٹ میں ترمیم کریں"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2930,7 +2934,7 @@ ur:
             more: '<a href="%{basePath}/admin/logs/search_logs">تلاشی کے لاگز</a>'
             disabled: 'سرچ رجحان کی رپورٹ غیر فعال ہے۔ اعداد و شمار جمع کرنے کیلئے <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ سرچ قُوَیریز</a> کو فعال کریں۔'
           filters:
-            file-extension:
+            file_extension:
               label: فائل ایکسٹینشن
             group:
               label: گروپ

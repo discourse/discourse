@@ -10,7 +10,7 @@
                         messageCount=messageCount
                         addLinkLookup=(action "addLinkLookup")}}
     {{#if model.viewOpenOrFullscreen}}
-      <div class="reply-area {{if canEditTags "with-tags"}}">
+      <div role="form" aria-label={{I18n saveLabel}} class="reply-area {{if canEditTags "with-tags"}}">
         <div class="composer-fields">
           {{plugin-outlet name="composer-open" args=(hash model=model)}}
           <div class="reply-to">
@@ -100,7 +100,7 @@
               </div>
             {{/if}}
 
-            {{plugin-outlet name="composer-fields" args=(hash model=model)}}
+            {{plugin-outlet name="composer-fields" args=(hash model=model showPreview=showPreview)}}
           {{/unless}}
 
         </div>

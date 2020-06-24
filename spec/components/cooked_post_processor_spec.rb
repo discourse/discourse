@@ -86,7 +86,7 @@ describe CookedPostProcessor do
       end
 
       after do
-        InlineOneboxer.purge(url)
+        InlineOneboxer.invalidate(url)
         Oneboxer.invalidate(url)
       end
 
@@ -210,7 +210,7 @@ describe CookedPostProcessor do
         end
 
         after do
-          urls.each { |url| InlineOneboxer.purge(url) }
+          urls.each { |url| InlineOneboxer.invalidate(url) }
         end
 
         it 'should convert the right links to inline oneboxes' do

@@ -77,7 +77,6 @@ class BulkImport::Base
     db = ActiveRecord::Base.connection_config
     @encoder = PG::TextEncoder::CopyRow.new
     @raw_connection = PG.connect(dbname: db[:database], host: db[:host_names]&.first, port: db[:port])
-    # @raw_connection = PG.connect(dbname: db[:database], host: db[:host_names]&.first, port: db[:port], password: "discourse")
     @uploader = ImportScripts::Uploader.new
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
@@ -128,28 +127,44 @@ class BulkImport::Base
     SQL
   end
 
+  def imported_ids(name)
+    map = []
+    ids = []
+
+    @raw_connection.send_query("SELECT value, #{name}_id FROM #{name}_custom_fields WHERE name = 'import_id'")
+    @raw_connection.set_single_row_mode
+
+    @raw_connection.get_result.stream_each do |row|
+      id = row["value"].to_i
+      ids << id
+      map[id] = row["#{name}_id"].to_i
+    end
+
+    @raw_connection.get_result
+
+    [map, ids]
+  end
+
   def load_imported_ids
     puts "Loading imported group ids..."
-    @groups = GroupCustomField.where(name: "import_id").pluck(:value, :group_id).to_h
-    @last_imported_group_id = @groups.keys.map(&:to_i).max || -1
+    @groups, imported_group_ids = imported_ids("group")
+    @last_imported_group_id = imported_group_ids.max || -1
 
     puts "Loading imported user ids..."
-    @users = UserCustomField.where(name: "import_id").pluck(:value, :user_id).to_h
-    @last_imported_user_id = @users.keys.map(&:to_i).max || -1
+    @users, imported_user_ids = imported_ids("user")
+    @last_imported_user_id = imported_user_ids.max || -1
 
     puts "Loading imported category ids..."
-    @categories = CategoryCustomField.where(name: "import_id").pluck(:value, :category_id).to_h
-    @last_imported_category_id = @categories.keys.map(&:to_i).max || -1
+    @categories, imported_category_ids = imported_ids("category")
+    @last_imported_category_id = imported_category_ids.max || -1
 
     puts "Loading imported topic ids..."
-    @topics = TopicCustomField.where(name: "import_id").pluck(:value, :topic_id).to_h
-    imported_topic_ids = @topics.keys.map(&:to_i)
+    @topics, imported_topic_ids = imported_ids("topic")
     @last_imported_topic_id = imported_topic_ids.select { |id| id < PRIVATE_OFFSET }.max || -1
     @last_imported_private_topic_id = imported_topic_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
 
     puts "Loading imported post ids..."
-    @posts = PostCustomField.where(name: "import_id").pluck(:value, :post_id).to_h
-    imported_post_ids = @posts.keys.map(&:to_i)
+    @posts, imported_post_ids = imported_ids("post")
     @last_imported_post_id = imported_post_ids.select { |id| id < PRIVATE_OFFSET }.max || -1
     @last_imported_private_post_id = imported_post_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
   end
@@ -159,9 +174,24 @@ class BulkImport::Base
     [klass.unscoped.maximum(:id) || 0, 0].max
   end
 
+  def load_values(name, column, size)
+    map = Array.new(size)
+
+    @raw_connection.send_query("SELECT id, #{column} FROM #{name}")
+    @raw_connection.set_single_row_mode
+
+    @raw_connection.get_result.stream_each do |row|
+      map[row["id"].to_i] = row[column].to_i
+    end
+
+    @raw_connection.get_result
+
+    map
+  end
+
   def load_indexes
     puts "Loading groups indexes..."
-    @last_group_id = Group.unscoped.maximum(:id)
+    @last_group_id = last_id(Group)
     @group_names = Group.unscoped.pluck(:name).map(&:downcase).to_set
 
     puts "Loading users indexes..."
@@ -177,12 +207,12 @@ class BulkImport::Base
 
     puts "Loading topics indexes..."
     @last_topic_id = last_id(Topic)
-    @highest_post_number_by_topic_id = Topic.unscoped.pluck(:id, :highest_post_number).to_h
+    @highest_post_number_by_topic_id = load_values("topics", "highest_post_number", @last_topic_id)
 
     puts "Loading posts indexes..."
     @last_post_id = last_id(Post)
-    @post_number_by_post_id = Post.unscoped.pluck(:id, :post_number).to_h
-    @topic_id_by_post_id = Post.unscoped.pluck(:id, :topic_id).to_h
+    @post_number_by_post_id = load_values("posts", "post_number", @last_post_id)
+    @topic_id_by_post_id = load_values("posts", "topic_id", @last_post_id)
 
     puts "Loading post actions indexes..."
     @last_post_action_id = last_id(PostAction)
@@ -208,26 +238,33 @@ class BulkImport::Base
   end
 
   def group_id_from_imported_id(id)
-    @groups[id.to_s]
+    @groups[id.to_i]
   end
+
   def user_id_from_imported_id(id)
-    @users[id.to_s]
+    @users[id.to_i]
   end
+
   def category_id_from_imported_id(id)
-    @categories[id.to_s]
+    @categories[id.to_i]
   end
+
   def topic_id_from_imported_id(id)
-    @topics[id.to_s]
+    @topics[id.to_i]
   end
+
   def post_id_from_imported_id(id)
-    @posts[id.to_s]
+    @posts[id.to_i]
   end
 
   def post_number_from_imported_id(id)
-    @post_number_by_post_id[post_id_from_imported_id(id)]
+    post_id = post_id_from_imported_id(id)
+    post_id && @post_number_by_post_id[post_id]
   end
+
   def topic_id_from_imported_post_id(id)
-    @topic_id_by_post_id[post_id_from_imported_id(id)]
+    post_id = post_id_from_imported_id(id)
+    post_id && @topic_id_by_post_id[post_id]
   end
 
   GROUP_COLUMNS ||= %i{
@@ -337,7 +374,7 @@ class BulkImport::Base
   end
 
   def process_group(group)
-    @groups[group[:imported_id].to_s] = group[:id] = @last_group_id += 1
+    @groups[group[:imported_id].to_i] = group[:id] = @last_group_id += 1
 
     group[:name] = fix_name(group[:name])
 
@@ -356,7 +393,7 @@ class BulkImport::Base
   end
 
   def process_user(user)
-    @users[user[:imported_id].to_s] = user[:id] = @last_user_id += 1
+    @users[user[:imported_id].to_i] = user[:id] = @last_user_id += 1
 
     imported_username = user[:username].dup
 
@@ -392,7 +429,7 @@ class BulkImport::Base
 
   def process_user_email(user_email)
     user_email[:id] = @last_user_email_id += 1
-    user_email[:user_id] = @users[user_email[:imported_user_id].to_s]
+    user_email[:user_id] = @users[user_email[:imported_user_id].to_i]
     user_email[:primary] = true
     user_email[:created_at] ||= NOW
     user_email[:updated_at] ||= user_email[:created_at]
@@ -403,7 +440,7 @@ class BulkImport::Base
   end
 
   def process_user_stat(user_stat)
-    user_stat[:user_id] = @users[user_stat[:imported_user_id].to_s]
+    user_stat[:user_id] = @users[user_stat[:imported_user_id].to_i]
     user_stat[:topic_reply_count] = user_stat[:post_count] - user_stat[:topic_count]
     user_stat[:topics_entered] ||= 0
     user_stat[:time_read] ||= 0
@@ -434,7 +471,7 @@ class BulkImport::Base
 
   def process_category(category)
     category[:id] ||= @last_category_id += 1
-    @categories[category[:imported_id].to_s] ||= category[:id]
+    @categories[category[:imported_id].to_i] ||= category[:id]
     category[:name] = category[:name][0...50].scrub.strip
     # TODO: unique name
     category[:name_lower] = category[:name].downcase
@@ -447,7 +484,7 @@ class BulkImport::Base
   end
 
   def process_topic(topic)
-    @topics[topic[:imported_id].to_s] = topic[:id] = @last_topic_id += 1
+    @topics[topic[:imported_id].to_i] = topic[:id] = @last_topic_id += 1
     topic[:archetype] ||= Archetype.default
     topic[:title] = topic[:title][0...255].scrub.strip
     topic[:fancy_title] ||= pre_fancy(topic[:title])
@@ -465,7 +502,7 @@ class BulkImport::Base
   end
 
   def process_post(post)
-    @posts[post[:imported_id].to_s] = post[:id] = @last_post_id += 1
+    @posts[post[:imported_id].to_i] = post[:id] = @last_post_id += 1
     post[:user_id] ||= Discourse::SYSTEM_USER_ID
     post[:last_editor_id] = post[:user_id]
     @highest_post_number_by_topic_id[post[:topic_id]] ||= 0
@@ -607,9 +644,8 @@ class BulkImport::Base
       imported_username, imported_postid = $1, $2
 
       username = @mapped_usernames[imported_username] || imported_username
-      post_id = post_id_from_imported_id(imported_postid)
-      post_number = @post_number_by_post_id[post_id]
-      topic_id = @topic_id_by_post_id[post_id]
+      post_number = post_number_from_imported_id(imported_postid)
+      topic_id = topic_id_from_imported_post_id(imported_post_id)
 
       if post_number && topic_id
         "\n[quote=\"#{username}, post:#{post_number}, topic:#{topic_id}\"]\n"
@@ -654,8 +690,7 @@ class BulkImport::Base
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
         begin
-          mapped = yield(row)
-          next unless mapped
+          next unless mapped = yield(row)
           processed = send(process_method_name, mapped)
           imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
           imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
@@ -663,7 +698,8 @@ class BulkImport::Base
           print "\r%7d - %6d/sec" % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
         rescue => e
           puts "\n"
-          puts "ERROR: #{e.inspect}"
+          puts "ERROR: #{e.message}"
+          puts backtrace.join("\n")
         end
       end
     end
@@ -691,8 +727,7 @@ class BulkImport::Base
     sql = "COPY #{table}_custom_fields (#{table}_id, name, value, created_at, updated_at) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
-        cf = yield row
-        next unless cf
+        next unless cf = yield(row)
         @raw_connection.put_copy_data [cf[:record_id], name, cf[:value], NOW, NOW]
       end
     end

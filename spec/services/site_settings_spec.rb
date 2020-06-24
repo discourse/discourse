@@ -32,11 +32,11 @@ describe SiteSettingsTask do
     end
 
     it "updates hidden settings" do
-      yml = "logo_url: /logo.png"
+      yml = "default_theme_id: 999999999"
       log, counts = SiteSettingsTask.import(yml)
-      expect(log[0]).to eq "Changed logo_url FROM: /images/d-logo-sketch.png TO: /logo.png"
-      expect(counts[:updated]).to eq 1
-      expect(SiteSetting.logo_url).to eq "/logo.png"
+      expect(log[0]).to eq "Changed default_theme_id FROM: 2 TO: 999999999"
+      expect(counts[:updated]).to eq(1)
+      expect(SiteSetting.default_theme_id).to eq(999999999)
     end
 
     it "won't update a setting that doesn't exist" do

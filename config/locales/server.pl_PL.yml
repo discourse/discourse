@@ -794,7 +794,6 @@ pl_PL:
     confirm: "Potwierdź"
     authorizing_new:
       title: "Potwierdź swój nowy adres e-mail"
-      description: "Potwierdź zmianę adresu e-mail na:"
     authorizing_old:
       title: "Zmień swój adres e-mail"
       description: "Potwierdź zmianę adresu e-mail"
@@ -1575,7 +1574,6 @@ pl_PL:
     s3_backup_bucket: "Zdalne wiadro do przechowywania kopii zapasowych. UWAGA: Upewnij się, że jest to wiadro prywatne."
     s3_endpoint: "Punkt końcowy można zmodyfikować, aby utworzyć kopię zapasową w usłudze zgodnej z S3, takiej jak DigitalOcean Spaces lub Minio. OSTRZEŻENIE: Pozostaw puste, jeśli używasz AWS S3."
     s3_configure_tombstone_policy: "Włącz zasady automatycznego usuwania przy przesyłaniu nagrobków. WAŻNE: Jeśli ta opcja jest wyłączona, nie zostanie odzyskane żadne miejsce po usunięciu przesłanych plików."
-    s3_disable_cleanup: "Dezaktywuj usuwanie kopii zapasowych z S3 kiedy usunięte lokalnie."
     enable_s3_inventory: "Generuj raporty i weryfikuj przesyłane materiały za pomocą zasobów Amazon S3. WAŻNE: wymaga prawidłowych poświadczeń S3 (zarówno identyfikator klucza dostępu, jak i tajny klucz dostępu)."
     backup_time_of_day: "Godzina (UTC) wykonania kopii zapasowej."
     backup_with_uploads: "Uwzględniaj przesyły w zaplanowanych backupach. Wyłączenie tej opcji spowoduje backup jedynie bazy danych."
@@ -2636,6 +2634,8 @@ pl_PL:
       subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
     confirm_old_email:
       title: "Potwierdź stary email"
+      subject_template: "[%{site_name}] Potwierdź aktualny adres email"
+    confirm_old_email_add:
       subject_template: "[%{site_name}] Potwierdź aktualny adres email"
     notify_old_email:
       title: "Powiadom Stary Email"

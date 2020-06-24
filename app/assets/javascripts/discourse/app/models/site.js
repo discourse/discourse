@@ -132,7 +132,9 @@ Site.reopenClass(Singleton, {
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
     const store = Discourse.__container__.lookup("service:store");
-    return store.createRecord("site", PreloadStore.get("site"));
+    const siteAttributes = PreloadStore.get("site");
+    siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
+    return store.createRecord("site", siteAttributes);
   },
 
   create() {

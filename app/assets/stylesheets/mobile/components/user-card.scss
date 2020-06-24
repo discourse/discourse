@@ -22,10 +22,13 @@ $avatar_width: 120px;
       margin-top: 1em;
       max-width: 100%;
       li {
-        flex: 1;
+        flex: 1 0 auto;
         min-width: 0;
         &:nth-child(2) {
           border-left: 0.5em solid transparent;
+        }
+        &:empty {
+          display: none;
         }
         button {
           @include ellipsis;

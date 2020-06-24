@@ -587,6 +587,8 @@ sq:
         title: "Ndrysho emrin e përdoruesit"
         taken: "Na vjen keq, por ky emër është i zënë."
         invalid: "Emri i përdoruesit nuk është i vlefshëm. Duhet të përmbaje vetëm shkronja ose numra"
+      add_email:
+        add: "shto"
       change_email:
         title: "Ndrysho email"
         taken: "Na vjen keq, por ky email nuk është i disponueshëm."
@@ -605,6 +607,8 @@ sq:
         instructions: "Sfondi do të vendoset në qendër dhe do të ketë një gjerësi prej 590px."
       email:
         title: "Email"
+        primary_label: "parësor"
+        update_email: "Ndrysho email"
         instructions: "Mos e shfaq në publik."
         ok: "Do ju nisim emailin e konfirmimit"
         invalid: "Ju lutemi të vendosni një email të vlefshëm"
@@ -1512,7 +1516,6 @@ sq:
           last: "Revizioni i fundit"
           hide: "Fshihe revizionin"
           show: "Trego revizionin"
-          revert: "Rikthe këtë version"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"

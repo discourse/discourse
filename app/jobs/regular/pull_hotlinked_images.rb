@@ -171,10 +171,13 @@ module Jobs
       # make sure we actually have a url
       return false unless src.present?
 
-      # If file is on the forum or CDN domain or already has the
-      # secure media url
-      if Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i || Upload.secure_media_url?(src)
-        return false if src =~ /\/images\/emoji\//
+      local_bases = [
+        Discourse.base_url,
+        Discourse.asset_host,
+      ].compact.map { |s| normalize_src(s) }
+
+      if Discourse.store.has_been_uploaded?(src) || normalize_src(src).start_with?(*local_bases) || src =~ /\A\/[^\/]/i
+        return false if !(src =~ /\/uploads\// || Upload.secure_media_url?(src))
 
         # Someone could hotlink a file from a different site on the same CDN,
         # so check whether we have it in this database
@@ -220,7 +223,7 @@ module Jobs
       uri.normalize!
       uri.scheme = nil
       uri.to_s
-    rescue URI::Error
+    rescue URI::Error, Addressable::URI::InvalidURIError
       src
     end
   end

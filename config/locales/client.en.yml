@@ -847,7 +847,7 @@ en:
           all: "All"
           read: "Read"
           unread: "Unread"
-        ignore_duration_title: "Ignore Timer"
+        ignore_duration_title: "Ignore User"
         ignore_duration_username: "Username"
         ignore_duration_when: "Duration:"
         ignore_duration_save: "Ignore"
@@ -1131,7 +1131,8 @@ en:
         set_primary: "Set Primary Email"
         destroy: "Remove Email"
         add_email: "Add Alternate Email"
-        ssDestroy_override_instructions: "Email can be updated from SSO provider."
+        sso_override_instructions: "Email can be updated from SSO provider."
+        no_secondary: "No secondary emails"
         instructions: "Never shown to the public."
         ok: "We will email you to confirm"
         required: "Please enter an email address"
@@ -2225,6 +2226,7 @@ en:
         time_frame_required: Please select a time frame
       auto_update_input:
         none: "Select a timeframe"
+        now: "Now"
         later_today: "Later today"
         tomorrow: "Tomorrow"
         later_this_week: "Later this week"
@@ -2512,11 +2514,14 @@ en:
         publish: "Publish"
         description: "When a topic is published as a page, its URL can be shared and it will displayed with custom styling."
         slug: "Slug"
+        public: "Public"
+        public_description: "People can see the page even if the associated topic is private."
         publish_url: "Your page has been published at:"
         topic_published: "Your topic has been published at:"
         preview_url: "Your page will be published at:"
         invalid_slug: "Sorry, you can't publish this page."
         unpublish: "Unpublish"
+        update: "Update"
         unpublished: "Your page has been unpublished and is no longer accessible."
         publishing_settings: "Publishing Settings"
 
@@ -2598,6 +2603,7 @@ en:
         one: "%{count} Reply"
         other: "%{count} Replies"
 
+      unknown_user: "(unknown/deleted user)"
       has_likes_title:
         one: "%{count} person liked this post"
         other: "%{count} people liked this post"
@@ -2744,7 +2750,7 @@ en:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
-          revert: "Revert to this revision"
+          revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
           edit_post: "Edit Post"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -4754,8 +4760,9 @@ en:
         category_id: "Category ID"
         category_title: "Category"
         tag_name: "Tag name"
-        external_url: "External URL"
+        external_url: "External or Relative URL"
         destination: "Destination"
+        copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?
         form:
           label: "New:"

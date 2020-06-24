@@ -164,6 +164,30 @@ describe User do
     end
   end
 
+  context 'enqueue_staff_welcome_message' do
+    let!(:first_admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+
+    it 'enqueues message for admin' do
+      expect {
+        user.grant_admin!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
+    end
+
+    it 'enqueues message for moderator' do
+      expect {
+        user.grant_moderation!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
+    end
+
+    it 'skips the message if already an admin' do
+      user.update(admin: true)
+      expect {
+        user.grant_admin!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 0
+    end
+  end
+
   context '.set_default_tags_preferences' do
     let(:tag) { Fabricate(:tag) }
 
@@ -2009,8 +2033,8 @@ describe User do
     it "sets a random avatar when selectable avatars is enabled" do
       avatar1 = Fabricate(:upload)
       avatar2 = Fabricate(:upload)
-      SiteSetting.selectable_avatars_enabled = true
       SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+      SiteSetting.selectable_avatars_enabled = true
 
       user = Fabricate(:user)
       expect(user.uploaded_avatar_id).not_to be(nil)
@@ -2200,6 +2224,7 @@ describe User do
       UserAction.create!(user_id: user.id, action_type: UserAction::LIKE)
       UserAction.create!(user_id: -1, action_type: UserAction::LIKE, target_user_id: user.id)
       UserAction.create!(user_id: -1, action_type: UserAction::LIKE, acting_user_id: user.id)
+      Developer.create!(user_id: user.id)
 
       user.reload
 
@@ -2209,6 +2234,7 @@ describe User do
       expect(UserAction.where(target_user_id: user.id).length).to eq(0)
       expect(UserAction.where(acting_user_id: user.id).length).to eq(0)
       expect(PostAction.with_deleted.where(user_id: user.id).length).to eq(0)
+      expect(Developer.where(user_id: user.id).length).to eq(0)
     end
   end
 

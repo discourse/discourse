@@ -219,9 +219,7 @@ module Oneboxer
       end
     end
 
-    topic = Topic.find_by(id: route[:topic_id])
-
-    return unless topic
+    return unless topic = Topic.find_by(id: route[:id] || route[:topic_id])
     return if topic.private_message?
 
     if current_category.blank? || current_category.id != topic.category_id
@@ -315,7 +313,8 @@ module Oneboxer
 
       options = {
         max_width: 695,
-        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX
+        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
+        hostname: GlobalSetting.hostname,
       }
 
       options[:cookie] = fd.cookie if fd.cookie

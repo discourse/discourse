@@ -1348,7 +1348,6 @@ zh_TW:
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_endpoint: "Discourse 備份空間有支援其他第三方服務，可修改備份空間存向 DigitalOcean Spaces、Minio或是Amazon S3。警告：如果使用Amazon S3，請留白。"
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
-    s3_disable_cleanup: "當在本地刪除備份時不刪除 S3 上的備份。"
     enable_s3_inventory: "使用Amazon S3 清單生成報告並驗證上傳。注意：需要設定Amazon S3 驗證資料（包括Access Key ID、Secret Access Key）。"
     backup_time_of_day: "備份的 UTC 時間"
     backup_with_uploads: "在備份日程中包括上傳。關閉此項僅備份資料庫。"
@@ -1705,7 +1704,6 @@ zh_TW:
     city_for_disputes: "爭議"
     shared_drafts_category: "通過為討論話題的草稿以指定一個類別，來啟用「共用草稿」功能。此類別中的話題將從工作人員使用者的主題清單中取消。"
     push_notifications_prompt: "顯示使用者同意提示"
-    push_notifications_icon: "通知角中顯示的徽章 icon，所需圖片尺寸為96×96"
     short_title: "短標題將用於使用者的主螢幕、啟動器或其他可能空白鍵有限的地方，它應限制為12個字。"
     dashboard_general_tab_activity_metrics: "選擇在一般頁面中要顯示為活躍指標的報告"
     errors:
@@ -2726,6 +2724,8 @@ zh_TW:
       subject_template: "[%{email_prefix}] 確認你的新郵件地址"
     confirm_old_email:
       title: "確認原郵件地址"
+      subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
+    confirm_old_email_add:
       subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
     notify_old_email:
       title: "通知原郵件地址"

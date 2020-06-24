@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require 'seed_data/topics'
-
-User.reset_column_information
-Topic.reset_column_information
-Post.reset_column_information
-
 if !Rails.env.test?
+  require 'seed_data/topics'
+
   topics_exist = Topic.where(<<~SQL).exists?
     id NOT IN (
       SELECT topic_id

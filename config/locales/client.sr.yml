@@ -535,6 +535,8 @@ sr:
         title: "Promijeni Korisničko ime"
         taken: "Žao nam je, to je ime zauzeto."
         invalid: "Korisničko ime je nevažeće. Može sadržati samo slova i brojeve."
+      add_email:
+        add: "dodaj"
       change_email:
         title: "Promeni e-mail"
         taken: "Žao nam je, taj e-mail nije dostupan"
@@ -551,6 +553,8 @@ sr:
         instructions: "Pozadinske slike će biti centrirane i imati standardu širinu od 590px."
       email:
         title: "E-mail"
+        primary_label: "primarna"
+        update_email: "Promeni e-mail"
         ok: "Poslaćemo vam e-mail za potvrdu"
         invalid: "Molimo unesite validnu e-mail adresu"
         authenticated: "E-mail vam je potvrđen od %{provider}"

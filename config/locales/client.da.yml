@@ -730,7 +730,6 @@ da:
           all: "Alle"
           read: "Læste"
           unread: "Ulæst"
-        ignore_duration_title: "Ignorér timer"
         ignore_duration_username: "Brugernavn"
         ignore_duration_when: "Varighed:"
         ignore_duration_save: "Ignorér"
@@ -936,6 +935,8 @@ da:
         confirm: "Er du helt sikker på, at du vil ændre dit brugernavn?"
         taken: "Beklager, det brugernavn er optaget."
         invalid: "Det brugernavn er ugyldigt. Det må kun bestå af bogstaver og tal."
+      add_email:
+        add: "tilføj"
       change_email:
         title: "Skift e-mail-adresse"
         taken: "Beklager, den e-mail-adresse er optaget af en anden bruger."
@@ -956,8 +957,10 @@ da:
         title: "E-mail"
         primary: "Primær email"
         secondary: "Sekundære emails"
-        no_secondary: "Ingen sekundære emails"
+        primary_label: "Primær"
+        update_email: "Skift e-mail-adresse"
         sso_override_instructions: "Email kan opdateres fra SSO-udbyderen."
+        no_secondary: "Ingen sekundære emails"
         instructions: "Vis aldrig offentligt"
         ok: "Vi vil sende dig en bekræftelses email"
         invalid: "Indtast venligst en gyldig email adresse"
@@ -1233,11 +1236,6 @@ da:
       enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktiveret mens websitet er i læs kun tilstand"
-    logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, en {# error / hour} anden {# fejl / time}}</a> nåede indstillingsgrænsen på {limit, plural, en {# error / hour} anden {# fejl / hour}}."
-      reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, en {# error / minute} other {# fejl / minut}}</a> nåede indstillingsgrænsen på {limit, plural, en {# error / minute} anden {# fejl / minut}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, en {# error / hour} other {# error / hour}}</a> har overskredet indstillingsgræsen på {limit, plural, en {# error / hour} anden {# error / hour}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, en {# error / minute} anden {# fejl / minut}}</a> overskredet indstillingsgrænsen på {limit, plural, en {# error / minute} anden {# fejl / minut}}."
     learn_more: "Læs mere…"
     all_time: "i alt"
     all_time_desc: "emner oprettet i alt"
@@ -2126,6 +2124,8 @@ da:
         title: "Flet valgte indlæg"
         action: "flet valgte indlæg"
         error: "Der opstod en fejl med at flette de valgte indlæg."
+      publish_page:
+        public: "Offentlig"
       change_owner:
         title: "Skift ejer"
         action: "skift ejerskab"
@@ -2315,7 +2315,6 @@ da:
           last: "Sidste udgave"
           hide: "Skjul udgave"
           show: "Vis udgave"
-          revert: "Gå tilbage til denne udgave"
           edit_wiki: "Ret Wiki"
           edit_post: "Ret Indlæg"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2939,7 +2938,7 @@ da:
             more: '<a href="%{basePath}/admin/logs/search_logs">Søg logfiler</a>'
             disabled: 'Rapport over søge tendenser er deaktiveret. Aktivér <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log søgeforespørgelser for</a> at indsamle data.'
           filters:
-            file-extension:
+            file_extension:
               label: Filtypenavn
             group:
               label: Gruppe

@@ -32,7 +32,7 @@ jobs:
         target: ["PLUGINS", "CORE"]
         os: [ubuntu-latest]
         ruby: ["2.6"]
-        postgres: ["10"]
+        postgres: ["12"]
         redis: ["4.x"]
 
     services:
@@ -64,8 +64,16 @@ jobs:
       - name: Setup packages
         if: env.BUILD_TYPE != 'LINT'
         run: |
+          sudo apt-get update
           sudo apt-get -yqq install postgresql-client libpq-dev gifsicle jpegoptim optipng jhead
           wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
+
+      - name: Update imagemagick
+        if: env.BUILD_TYPE == 'BACKEND'
+        run: |
+          wget https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-imagemagick
+          chmod +x install-imagemagick
+          sudo ./install-imagemagick
 
       - name: Setup redis
         uses: shogo82148/actions-setup-redis@v1

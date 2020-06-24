@@ -770,7 +770,7 @@ sv:
           all: "Alla"
           read: "Läst"
           unread: "Olästa"
-        ignore_duration_title: "Ignorera timer"
+        ignore_duration_title: "Ignorera användare"
         ignore_duration_username: "Användarnamn"
         ignore_duration_when: "Varaktighet:"
         ignore_duration_save: "Ignorera"
@@ -875,7 +875,9 @@ sv:
       admin_delete: "Radera"
       users: "Användare"
       muted_users: "Tystat"
+      muted_users_instructions: "Undanta alla notiser och PM från dessa användare."
       ignored_users: "Ignorerade"
+      ignored_users_instructions: "Undanta alla inlägg, notiser och PM från dessa användare."
       tracked_topics_link: "Visa"
       automatically_unpin_topics: "Avklistra automatiskt ämnen när jag når botten"
       apps: "Appar"
@@ -994,6 +996,9 @@ sv:
         confirm: "Är du absolut säker på att du vill ändra ditt användarnamn?"
         taken: "Tyvärr, det användarnamnet är taget."
         invalid: "Det användarnamnet är ogiltigt. Det får bara innehålla siffror och bokstäver"
+      add_email:
+        title: "Lägg till e-post"
+        add: "lägg till"
       change_email:
         title: "Byt e-post"
         taken: "Tyvärr den e-postadressen är inte tillgänglig."
@@ -1024,8 +1029,17 @@ sv:
         title: "E-post"
         primary: "Primär e-post"
         secondary: "Sekundär e-post"
-        no_secondary: "Inga sekundära e-post"
+        primary_label: "primär"
+        unconfirmed_label: "obekräftad"
+        resend_label: "återsänd bekräftelse e-post"
+        resending_label: "skickar..."
+        resent_label: "e-post skickat"
+        update_email: "Byt e-post"
+        set_primary: "Ange primär e-post"
+        destroy: "Ta bort e-post"
+        add_email: "Lägg till alternativ e-post"
         sso_override_instructions: "E-post kan uppdateras från SSO leverantören."
+        no_secondary: "Inga sekundära e-post"
         instructions: "Visas aldrig publikt"
         ok: "Vi skickar e-post till dig för bekräftelse"
         required: "Vänligen ange en e-postadress"
@@ -1178,6 +1192,7 @@ sv:
         expired: "Denna inbjudan har gått ut."
         rescind: "Ta bort"
         rescinded: "Inbjudan borttagen"
+        rescind_all: "Ta bort utgångna inbjudningar"
         rescinded_all: "Alla utgångna inbjudningar har tagits bort!"
         rescind_all_confirm: "Är du säker på att du vill ta bort alla utgångna inbjudningar?"
         reinvite: "Skicka inbjudan igen"
@@ -1188,18 +1203,30 @@ sv:
         time_read: "Lästid"
         days_visited: "Dagar besökta"
         account_age_days: "Kontoålder i dagar"
+        source: "Inbjuden genom"
         links_tab: "Länkar"
+        links_tab_with_count: "Länkar (%{count})"
+        link_url: "Länk"
         link_created_at: "Skapad"
+        link_redemption_stats: "Återbeviljade"
         link_groups: Grupper
+        link_expires_at: Upphör
         create: "Skicka inbjudan"
+        copy_link: "Kopiera länk"
         generate_link: "Kopiera inbjudningslänken"
         link_generated: "Länk för inbjudan framgångsrikt skapad!"
         valid_for: "Länk för inbjudan är endast giltig för denna email adress: %{email}"
         single_user: "Enstaka användare"
+        multiple_user: "Flera användare"
         invite_link:
+          title: "Inbjudningslänk"
           success: "Länk för inbjudan framgångsrikt skapad!"
+          error: "Ett fel inträffade vid skapande av inbjudningslänk"
+          max_redemptions_allowed_label: "Hur många personer är tillåtna att registrera sig via denna länk?"
+          expires_at: "När ska denna inbjudningslänk upphöra?"
         bulk_invite:
           none: "Du har inte bjudit in någon ännu. Skicka individuella inbjudningar eller bjud in många personer på en gång genom att <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ladda upp en CSV-fil</a>."
+          text: "Massinbjudan"
           success: "Filen laddades upp, du blir underrättad via meddelande när processen är klar"
           error: "Tyvärr, filen bör vara i CSV-format."
           confirmation_message: "Du är på väg att e-posta inbjudningar till alla personer i den uppladdade filen."
@@ -2004,6 +2031,7 @@ sv:
         time_frame_required: Vänligen välj en tidsram
       auto_update_input:
         none: "Välj en tidsram"
+        now: "Nu"
         later_today: "Senare idag"
         tomorrow: "Imorgon"
         later_this_week: "Senare denna vecka"
@@ -2265,11 +2293,14 @@ sv:
         publish: "Publicera"
         description: "När ett ämne publiceras som en sida kan deras URL delas och den kommer att visas med anpassad utformning."
         slug: "Slug"
+        public: "Offentligt"
+        public_description: "Folk kan se sidan även om det associerade ämnet är privat."
         publish_url: "Din sida har publicerats vid:"
         topic_published: "Ditt ämne har publicerats vid:"
         preview_url: "Din sida kommer publiceras vid:"
         invalid_slug: "Tyvärr, du kan inte publicera denna sida."
         unpublish: "Avpublicera"
+        update: "Uppdatera"
         unpublished: "Din sida har blivit avpublicerad och är inte längre tillgänglig."
         publishing_settings: "Inställningar för publicering"
       change_owner:
@@ -2343,6 +2374,7 @@ sv:
       has_replies:
         one: "%{count} svar"
         other: "%{count} svar"
+      unknown_user: "(okänd/raderad användare)"
       has_likes_title:
         one: "%{count} person gillade detta inlägg"
         other: "%{count} personer gillade detta inlägg"
@@ -2476,7 +2508,7 @@ sv:
           last: "Senaste revisionen"
           hide: "Göm version"
           show: "Visa version"
-          revert: "Återgå till den här revisionen"
+          revert: "Återgå till revision %{revision}"
           edit_wiki: "Uppdatera Wiki"
           edit_post: "Ändra meddelandet"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong>%{icon}<strong>%{current}</strong> / %{total}"
@@ -2647,6 +2679,9 @@ sv:
         moderation: "Moderering"
         appearance: "Utseende"
         email: "E-post"
+      list_filters:
+        all: "alla ämnen"
+        none: "inga underkategorier"
     flagging:
       title: "Tack för att du hjälper till att hålla forumet civiliserat!"
       action: "Flagga inlägg"
@@ -3165,13 +3200,13 @@ sv:
             more: '<a href="%{basePath}/admin/logs/search_logs">Sökloggar</a>'
             disabled: 'Den trendiga sökrapporten är inaktiverad. Aktivera <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">sökfrågor för loggar</a> för att samla data.  '
           filters:
-            file-extension:
+            file_extension:
               label: Filändelse
             group:
               label: Grupp
             category:
               label: Kategori
-            include-subcategories:
+            include_subcategories:
               label: "Inkludera underkategorier"
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
@@ -3869,6 +3904,9 @@ sv:
             override_upload_secure_status: "åsidosätt säkerhetsstatus för uppladdning"
             page_published: "sida publicerad"
             page_unpublished: "sida avpublicerad"
+            add_email: "lägg till e-post"
+            update_email: "Uppdatera e-post"
+            destroy_email: "förstör e-post"
         screened_emails:
           title: "Kontrollerad e-post"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
@@ -4414,8 +4452,9 @@ sv:
         category_id: "Kategori-ID"
         category_title: "Kategori"
         tag_name: "Namn på tagg"
-        external_url: "Extern URL"
+        external_url: "Extern eller relativ URL"
         destination: "Mål"
+        copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: "Är du säker på att du vill ta bort den här permalänken?"
         form:
           label: "Ny:"

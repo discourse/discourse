@@ -312,22 +312,36 @@ describe TopicViewSerializer do
   context "published_page" do
     fab!(:published_page) { Fabricate(:published_page, topic: topic) }
 
-    it "doesn't return the published page if not enabled" do
-      json = serialize_topic(topic, admin)
-      expect(json[:published_page]).to be_blank
+    context "page publishing is disabled" do
+      before do
+        SiteSetting.enable_page_publishing = false
+      end
+
+      it "doesn't return the published page if not enabled" do
+        json = serialize_topic(topic, admin)
+        expect(json[:published_page]).to be_blank
+      end
     end
 
-    it "doesn't return the published page unless staff" do
-      SiteSetting.enable_page_publishing = true
-      json = serialize_topic(topic, user)
-      expect(json[:published_page]).to be_blank
-    end
+    context "page publishing is enabled" do
+      before do
+        SiteSetting.enable_page_publishing = true
+      end
 
-    it "returns the published page if enabled and staff" do
-      SiteSetting.enable_page_publishing = true
-      json = serialize_topic(topic, admin)
-      expect(json[:published_page]).to be_present
-      expect(json[:published_page][:slug]).to eq("published-page-test")
+      context "not staff" do
+        it "doesn't return the published page" do
+          json = serialize_topic(topic, user)
+          expect(json[:published_page]).to be_blank
+        end
+      end
+
+      context "staff" do
+        it "returns the published page" do
+          json = serialize_topic(topic, admin)
+          expect(json[:published_page]).to be_present
+          expect(json[:published_page][:slug]).to eq(published_page.slug)
+        end
+      end
     end
   end
 

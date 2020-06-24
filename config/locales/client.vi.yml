@@ -701,7 +701,6 @@ vi:
           all: "Tất cả"
           read: "Đã đọc"
           unread: "Chưa đọc"
-        ignore_duration_title: "Bỏ qua bộ đếm giờ"
         ignore_duration_username: "Tên đăng nhập"
         ignore_duration_when: "Thời lượng:"
         ignore_duration_save: "Bỏ qua"
@@ -881,6 +880,8 @@ vi:
         title: "Email"
         primary: "Email chính"
         secondary: "Email thứ hai"
+        primary_label: "chính"
+        update_email: "Thay đổi Email"
         no_secondary: "Không có email thứ hai"
         instructions: "Không hiển thị công cộng"
         ok: "Chúng tôi sẽ gửi thư điện tử xác nhận đến cho bạn"
@@ -1737,6 +1738,8 @@ vi:
           other: "Hãy chọn chủ đề bạn muốn di chuyển <b>%{count}</b> bài viết này tới."
       move_to_new_message:
         radio_label: "Tin nhắn mới"
+      publish_page:
+        public: "Công khai"
       change_owner:
         action: "chuyển chủ sở hữu"
         error: "Có lỗi xảy ra khi thay đổi quyền sở hữu của các bài viết."
@@ -1863,7 +1866,6 @@ vi:
           last: "Sửa đổi gần nhất"
           hide: "Ẩn sửa đổi"
           show: "Hiện sửa đổi"
-          revert: "Hoàn nguyên sửa đổi"
           edit_wiki: "Sửa wiki"
           edit_post: "Sửa bài đăng"
         displays:

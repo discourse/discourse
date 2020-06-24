@@ -38,7 +38,7 @@ class EmailUpdater
     if @guardian.is_staff? && @guardian.user != @user
       StaffActionLogger.new(@guardian.user).log_add_email(@user)
     else
-      UserHistory.create!(action: UserHistory.actions[:add_email], target_user_id: @user.id)
+      UserHistory.create!(action: UserHistory.actions[:add_email], acting_user_id: @user.id)
     end
 
     if @guardian.is_staff? && !@user.staff?
@@ -54,7 +54,7 @@ class EmailUpdater
       change_req.new_email = email
     end
 
-    if change_req.change_state.blank?
+    if change_req.change_state.blank? || change_req.change_state == EmailChangeRequest.states[:complete]
       change_req.change_state = if @user.staff?
         # Staff users must confirm their old email address first.
         EmailChangeRequest.states[:authorizing_old]

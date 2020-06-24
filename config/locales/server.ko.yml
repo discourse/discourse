@@ -649,7 +649,6 @@ ko:
     confirm: "확인"
     authorizing_new:
       title: "새 이메일 확인"
-      description: "새 이메일 주소가 다음으로 변경되었는지 확인하십시오."
     authorizing_old:
       title: "이메일 주소 변경"
       description: "이메일 주소 변경을 확인하십시오"
@@ -1427,7 +1426,6 @@ ko:
     s3_backup_bucket: "백업본을 유지할 s3 버켓 이름. 주의 : 프라이빗 버켓인지 반드시 확인해야하세요."
     s3_endpoint: "엔드 포인트는 DigitalOcean Spaces 또는 Minio와 같은 S3 호환 서비스에 백업하도록 수정할 수 있습니다. 경고 : AWS S3를 사용하는 경우 비워 두십시오."
     s3_configure_tombstone_policy: "삭제 표시 업로드에 대한 자동 삭제 정책을 사용하십시오. 중요 : 비활성화하면 업로드가 삭제 된 후 공간이 회수되지 않습니다."
-    s3_disable_cleanup: "로컬에서 백업 삭제 시 S3에서 백업 제거하는 기능 해제"
     enable_s3_inventory: "Amazon S3 인벤토리를 사용하여 보고서를 생성하고 업로드를 확인하십시오. 중요 : 유효한 S3 자격 증명 (액세스 키 ID 및 비밀 액세스 키 모두)이 필요합니다."
     backup_time_of_day: "백업이 실행되어야 할 UTC 시간"
     backup_with_uploads: "스케쥴링된 백업을 실행할 때 업로드된 자료도 포함. 해제하면 데이터베이스만 백업합니다."
@@ -1825,7 +1823,6 @@ ko:
     city_for_disputes: "분쟁의 도시"
     shared_drafts_category: "주제 초안의 범주를 지정하여 공유 초안 기능을 사용하십시오. 이 범주의 주제는 직원 사용자의 주제 목록에서 표시되지 않습니다."
     push_notifications_prompt: "사용자 동의 프롬프트를 표시합니다."
-    push_notifications_icon: "알림 코너에 나타나는 배지 아이콘. 필요한 크기는 96 × 96입니다."
     short_title: "짧은 제목은 사용자의 홈 화면, 실행기 또는 공간이 제한 될 수있는 다른 장소에서 사용됩니다. 12 자로 제한되어야합니다."
     dashboard_general_tab_activity_metrics: "일반 탭에서 활동 메트릭으로 표시 할 보고서를 선택하십시오."
     gravatar_name: "Gravatar 제공 업체 이름"

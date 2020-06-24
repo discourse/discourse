@@ -730,7 +730,7 @@ zh_CN:
           all: "全部"
           read: "阅读"
           unread: "未读"
-        ignore_duration_title: "忽略计时器"
+        ignore_duration_title: "忽略的用户"
         ignore_duration_username: "用户名"
         ignore_duration_when: "持续时间："
         ignore_duration_save: "忽略"
@@ -836,7 +836,9 @@ zh_CN:
       admin_delete: "删除"
       users: "用户"
       muted_users: "静音"
+      muted_users_instructions: "封禁来自这些用户的所有通知和私信。"
       ignored_users: "忽视"
+      ignored_users_instructions: "封禁来自这些用户的所有帖子、通知和私信。"
       tracked_topics_link: "显示"
       automatically_unpin_topics: "当我完整阅读了主题时自动解除置顶。"
       apps: "应用"
@@ -954,6 +956,9 @@ zh_CN:
         confirm: "你确定要更改用户名吗？"
         taken: "抱歉，此用户名已经有人使用了。"
         invalid: "此用户名不合法，用户名只能包含字母和数字"
+      add_email:
+        title: "添加邮箱地址"
+        add: "添加"
       change_email:
         title: "更换邮箱"
         taken: "抱歉，此邮箱不可用。"
@@ -984,8 +989,17 @@ zh_CN:
         title: "邮箱"
         primary: "主邮箱"
         secondary: "次邮箱"
-        no_secondary: "没有次邮箱"
+        primary_label: "主要"
+        unconfirmed_label: "未确认"
+        resend_label: "重新发送确认邮件"
+        resending_label: "发送中..."
+        resent_label: "邮件已发送"
+        update_email: "更换邮箱"
+        set_primary: "设置为主邮箱"
+        destroy: "删除邮箱"
+        add_email: "添加次要邮箱"
         sso_override_instructions: "电子邮件地址可以通过SSO登录来更新。"
+        no_secondary: "没有次邮箱"
         instructions: "绝不会被公开显示"
         ok: "将通过邮件验证确认"
         required: "请输入一个电子邮件地址"
@@ -1136,6 +1150,7 @@ zh_CN:
         expired: "邀请已过期。"
         rescind: "移除"
         rescinded: "邀请已删除"
+        rescind_all: "删除过期的邀请"
         rescinded_all: "所有过期邀请已删除！"
         rescind_all_confirm: "你确定你想要移除所有过期邀请么？"
         reinvite: "重新发送邀请"
@@ -1146,18 +1161,30 @@ zh_CN:
         time_read: "阅读时间"
         days_visited: "访问天数"
         account_age_days: "账户建立天数"
+        source: "被邀请通过"
         links_tab: "链接"
+        links_tab_with_count: "链接（%{count}）"
+        link_url: "链接"
         link_created_at: "创建日期"
+        link_redemption_stats: "兑换量"
         link_groups: 群组
+        link_expires_at: 过期
         create: "发送邀请"
+        copy_link: "复制链接"
         generate_link: "复制邀请链接"
         link_generated: "邀请链接生成成功！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         single_user: "单个用户"
+        multiple_user: "多个用户"
         invite_link:
+          title: "邀请链接"
           success: "邀请链接生成成功！"
+          error: "生成邀请链接时出错"
+          max_redemptions_allowed_label: "多少人被允许通过这个链接注册？"
+          expires_at: "邀请链接多久失效？"
         bulk_invite:
           none: "你还没有邀请任何人。你可以单独邀请用户，也可以通过<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传CSV文件</a>批量邀请。"
+          text: "批量邀请"
           success: "文件上传成功，当操作完成时将通过私信通知你。"
           error: "抱歉，文件必须是CSV格式。"
           confirmation_message: "你将通过电子邮件将邀请发送给在上传的文件中的每一个人。"
@@ -1935,6 +1962,7 @@ zh_CN:
         time_frame_required: 请选择一个时间范围
       auto_update_input:
         none: "选择时间范围"
+        now: "当前"
         later_today: "今天的某个时候"
         tomorrow: "明天"
         later_this_week: "这周的某个时候"
@@ -2188,11 +2216,14 @@ zh_CN:
         publish: "出版"
         description: "当一个主题被出版为一个页面时，其链接是共享的，并且会以自定义的样式显示。"
         slug: "Slug"
+        public: "公开"
+        public_description: "尽管关联的主题是私有主题，但还是能被其他用户查看。"
         publish_url: "你的页面已出版于："
         topic_published: "你的主题已出版于："
         preview_url: "你的页面将出版于："
         invalid_slug: "抱歉，您不能出版此页面。"
         unpublish: "取消出版"
+        update: "更新"
         unpublished: "你的页面已经取消出版并且不再可用。"
         publishing_settings: "出版设置"
       change_owner:
@@ -2259,6 +2290,7 @@ zh_CN:
       unread: "未读帖子"
       has_replies:
         other: "%{count} 回复"
+      unknown_user: "（未知或已删除的用户）"
       has_likes_title:
         other: "%{count} 人赞了该贴"
       has_likes_title_only_you: "你喜欢了这个帖子"
@@ -2381,7 +2413,7 @@ zh_CN:
           last: "最新版"
           hide: "隐藏版本历史"
           show: "显示版本历史"
-          revert: "还原至该版本"
+          revert: "还原到版本%{revision}"
           edit_wiki: "编辑维基"
           edit_post: "编辑帖子"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2552,6 +2584,9 @@ zh_CN:
         moderation: "审核"
         appearance: "主题"
         email: "邮箱"
+      list_filters:
+        all: "所有主题"
+        none: "无子分类"
     flagging:
       title: "感谢你帮助我们建设文明社区！"
       action: "标记帖子"
@@ -3043,13 +3078,13 @@ zh_CN:
             more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
             disabled: '趋势搜索报告已停用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
           filters:
-            file-extension:
+            file_extension:
               label: 文件扩展名
             group:
               label: 群组
             category:
               label: 分类
-            include-subcategories:
+            include_subcategories:
               label: "包括子分类"
       commits:
         latest_changes: "最近的更新：请经常升级！"
@@ -3744,6 +3779,9 @@ zh_CN:
             override_upload_secure_status: "覆盖上传安全状态"
             page_published: "页面已出版"
             page_unpublished: "页面未出版"
+            add_email: "添加邮箱"
+            update_email: "更新邮箱"
+            destroy_email: "删除邮箱"
         screened_emails:
           title: "已屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -4283,8 +4321,9 @@ zh_CN:
         category_id: "分类 ID"
         category_title: "分类"
         tag_name: "标签名称"
-        external_url: "外部 URL"
+        external_url: "外部或相关 URL"
         destination: "目标"
+        copy_to_clipboard: "拷贝永久链接到剪贴板"
         delete_confirm: 你确定要删除该永久链接？
         form:
           label: "新："

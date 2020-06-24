@@ -195,10 +195,12 @@ class UsersController < ApplicationController
     end
 
     email, *secondary_emails = user.emails
+    unconfirmed_emails = user.unconfirmed_emails
 
     render json: {
       email: email,
       secondary_emails: secondary_emails,
+      unconfirmed_emails: unconfirmed_emails,
       associated_accounts: user.associated_accounts
     }
   rescue Discourse::InvalidAccess
@@ -232,7 +234,7 @@ class UsersController < ApplicationController
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_update_email(user)
       else
-        UserHistory.create!(action: UserHistory.actions[:update_email], target_user_id: user.id)
+        UserHistory.create!(action: UserHistory.actions[:update_email], acting_user_id: user.id)
       end
     end
 
@@ -264,7 +266,7 @@ class UsersController < ApplicationController
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_destroy_email(user)
       else
-        UserHistory.create(action: UserHistory.actions[:destroy_email], target_user_id: user.id)
+        UserHistory.create(action: UserHistory.actions[:destroy_email], acting_user_id: user.id)
       end
     end
 
@@ -1176,6 +1178,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
 
     if params[:notification_level] == "ignore"
+      @error_message = "ignore_error"
       guardian.ensure_can_ignore_user!(user)
       MutedUser.where(user: current_user, muted_user: user).delete_all
       ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
@@ -1185,6 +1188,7 @@ class UsersController < ApplicationController
         IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
       end
     elsif params[:notification_level] == "mute"
+      @error_message = "mute_error"
       guardian.ensure_can_mute_user!(user)
       IgnoredUser.where(user: current_user, ignored_user: user).delete_all
       MutedUser.find_or_create_by!(user: current_user, muted_user: user)
@@ -1194,6 +1198,8 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
+  rescue Discourse::InvalidAccess => e
+    render_json_error(I18n.t("notification_level.#{@error_message}"))
   end
 
   def read_faq

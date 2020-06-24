@@ -430,8 +430,11 @@ const Topic = RestModel.extend({
     return this.firstPost().then(firstPost => {
       const toggleBookmarkOnServer = () => {
         if (bookmark) {
-          return firstPost.toggleBookmark().then(() => {
+          return firstPost.toggleBookmark().then(opts => {
             this.set("bookmarking", false);
+            if (opts.closedWithoutSaving) {
+              return;
+            }
             return this.afterTopicBookmarked(firstPost);
           });
         } else {

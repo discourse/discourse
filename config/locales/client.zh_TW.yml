@@ -649,7 +649,6 @@ zh_TW:
           all: "全部"
           read: "已讀"
           unread: "未讀"
-        ignore_duration_title: "忽略計時器"
         ignore_duration_username: "使用者名稱"
         ignore_duration_when: "持續時間："
         ignore_duration_save: "忽略"
@@ -836,6 +835,8 @@ zh_TW:
         confirm: "確定要修改你的使用者名稱嗎？"
         taken: "抱歉，此使用者名稱已經有人使用。"
         invalid: "此使用者名稱無效，只能使用數字與英文字母。"
+      add_email:
+        add: "添加"
       change_email:
         title: "修改電子郵件地址"
         taken: "抱歉，此電子郵件地址無效。"
@@ -856,8 +857,10 @@ zh_TW:
         title: "電子郵件"
         primary: "主要電子郵件"
         secondary: "次要電子郵件"
-        no_secondary: "無次要電子郵件"
+        primary_label: "一級"
+        update_email: "修改電子郵件地址"
         sso_override_instructions: "單一登入服務提供者可更新電子郵件"
+        no_secondary: "無次要電子郵件"
         instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
         invalid: "請輸入有效的電子郵件地址。"
@@ -1949,6 +1952,8 @@ zh_TW:
         title: "合併選擇的貼文"
         action: "合併選擇的貼文"
         error: "合併選擇的貼文試出錯。"
+      publish_page:
+        public: "公開"
       change_owner:
         title: "變更擁有者"
         action: "變更擁有者"
@@ -2120,7 +2125,6 @@ zh_TW:
           last: "最新版"
           hide: "隱藏修訂紀錄"
           show: "顯示修訂紀錄"
-          revert: "還原至該版本"
           edit_wiki: "編輯共筆"
           edit_post: "編輯貼文"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong>%{icon}<strong>%{current}</strong>/%{total}"
@@ -2706,7 +2710,7 @@ zh_TW:
             more: '<a href="%{basePath}/admin/logs/search_logs"> 搜尋記錄檔 </a>'
             disabled: '搜尋趨勢已停用，啟用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">搜尋紀錄以</a>收集資料。'
           filters:
-            file-extension:
+            file_extension:
               label: 檔案副檔名
             group:
               label: 群組

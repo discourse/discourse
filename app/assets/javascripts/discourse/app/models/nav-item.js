@@ -71,11 +71,16 @@ const NavItem = EmberObject.extend({
     return mode + name.replace(" ", "-");
   },
 
-  @discourseComputed("name", "category", "topicTrackingState.messageCount")
-  count(name, category) {
+  @discourseComputed(
+    "name",
+    "category",
+    "tagId",
+    "topicTrackingState.messageCount"
+  )
+  count(name, category, tagId) {
     const state = this.topicTrackingState;
     if (state) {
-      return state.lookupCount(name, category);
+      return state.lookupCount(name, category, tagId);
     }
   }
 });
