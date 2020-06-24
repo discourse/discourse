@@ -18,7 +18,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
 
   model(params) {
     const username = this.modelFor("user").get("username");
-    this._params = params;
+
     if (
       this.get("currentUser.username") === username ||
       this.get("currentUser.admin")
