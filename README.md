@@ -46,6 +46,14 @@ preview = Onebox.preview(url)
 "#{preview}" == preview.to_s #=> true
 ```
 
+### Twitch Onebox
+
+To be able to embed Twitch video and clips, pass `hostname` in the options to `Onebox.preview`
+
+```ruby
+preview = Onebox.preview(url, hostname: 'www.example.com')
+```
+
 Ruby Support
 ------------
 

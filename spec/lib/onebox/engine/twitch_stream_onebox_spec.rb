@@ -3,15 +3,15 @@
 require 'spec_helper'
 
 describe Onebox::Engine::TwitchStreamOnebox do
+  let(:hostname) { 'www.example.com' }
+  let(:options) { { hostname: hostname } }
 
   it "has the iframe with the correct channel" do
-    expect(Onebox.preview('https://www.twitch.tv/theduckie908').to_s).to match(/<iframe src="\/\/player\.twitch\.tv\/\?channel=theduckie908/)
-
+    expect(Onebox.preview('https://www.twitch.tv/theduckie908', options).to_s).to match(/<iframe src="\/\/player\.twitch\.tv\/\?channel=theduckie908&amp;parent=#{hostname}/)
   end
 
   it "works in the twitch new interface/url" do
-    expect(Onebox.preview('https://go.twitch.tv/admiralbulldog').to_s).to match(/<iframe src="\/\/player\.twitch\.tv\/\?channel=admiralbulldog/)
-
+    expect(Onebox.preview('https://go.twitch.tv/admiralbulldog', options).to_s).to match(/<iframe src="\/\/player\.twitch\.tv\/\?channel=admiralbulldog&amp;parent=#{hostname}/)
   end
 
 end
