@@ -16,13 +16,8 @@ export default Controller.extend({
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
-  @discourseComputed("model.content.length", "filter")
-  hasNotifications(length, filter) {
-    if (filter === "read") {
-      return this.model.filterBy("read", true).length > 0;
-    } else if (filter === "unread") {
-      return this.model.filterBy("read", false).length > 0;
-    }
+  @discourseComputed("model.content.length")
+  hasNotifications(length) {
     return length > 0;
   },
 
