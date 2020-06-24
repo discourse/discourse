@@ -60,17 +60,24 @@ module Jobs
       end
     end
 
-    def rebuild_problem_posts(limit: 20000, indexer: SearchIndexer)
+    def rebuild_problem_posts(limit: 20000, indexer: SearchIndexer, verbose: false)
       post_ids = load_problem_post_ids(limit)
+      verbose ||= @verbose
 
-      if @verbose
+      if verbose
         puts "rebuilding #{post_ids.length} posts"
       end
 
+      i = 0
       post_ids.each do |id|
         # could be deleted while iterating through batch
         if post = Post.find_by(id: id)
           indexer.index(post, force: true)
+          i += 1
+
+          if verbose && i % 1000 == 0
+            puts "#{i} posts reindexed"
+          end
         end
       end
     end
