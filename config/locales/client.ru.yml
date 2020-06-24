@@ -4714,8 +4714,9 @@ ru:
         category_id: "Номер раздела"
         category_title: "Раздел"
         tag_name: "Имя тега"
-        external_url: "Внешняя ссылка"
+        external_url: "Внешняя или относительная ссылка"
         destination: "Назначения"
+        copy_to_clipboard: "Скопировать ссылку в буфер обмена"
         delete_confirm: "Удалить эту постоянную ссылку?"
         form:
           label: "Новая постоянная ссылка:"

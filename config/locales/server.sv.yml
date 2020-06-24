@@ -1975,6 +1975,7 @@ sv:
       max_username_length_exists: "Du kan inte sätta högsta tillåtna längd på användarnamn lägre än det längsta användarnamnet (%{username})."
       max_username_length_range: "Du kan inte sätta maximum högre än minimum."
       invalid_hex_value: "Färgvärden måste vara sexsiffriga hexadecimala koder."
+      empty_selectable_avatars: "Du måste först ladda upp åtminstone två valbara avatarer innan du aktiverar denna inställning."
       category_search_priority:
         very_low_weight_invalid: "Du kan inte ställa in vikten att vara större än 'category_search_priority_low_weight'."
         low_weight_invalid: "Du kan inte ställa in vikten att vara större än eller lika med 1 eller mindre än 'category_search_priority_very_low_weight'."

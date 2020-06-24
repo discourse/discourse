@@ -1991,6 +1991,7 @@ nl:
       max_username_length_exists: "U kunt de maximale gebruikersnaamlengte niet lager instellen dan de langste gebruikersnaam (%{username})."
       max_username_length_range: "U kunt het maximum niet lager instellen dan het minimum."
       invalid_hex_value: "Kleurwaarden moeten 6-cijferige hexadecimale codes zijn."
+      empty_selectable_avatars: "U moet eerst minstens twee selecteerbare avatars uploaden voordat u deze instelling inschakelt."
       category_search_priority:
         very_low_weight_invalid: "U kunt het gewicht niet groter instellen dan 'category_search_priority_low_weight'."
         low_weight_invalid: "U kunt het gewicht niet groter of gelijk aan 1 of kleiner instellen dan 'category_search_priority_very_low_weight'."
@@ -2172,8 +2173,8 @@ nl:
     new_user_typed_too_fast: "Nieuwe gebruiker typte te snel"
     content_matches_auto_block_regex: "Inhoud komt overeen met regex voor auto-blokkeren"
     username:
-      short: "moet ten minste %{min} tekens zijn"
-      long: "moet niet meer dan %{max} tekens zijn"
+      short: "moet uit minstens %{min} tekens bestaan"
+      long: "mag niet meer dan %{max} tekens zijn"
       too_long: "is te lang"
       characters: "mag alleen cijfers, letters, streepjes, punten en onderstrepingstekens bevatten"
       unique: "moet uniek zijn"

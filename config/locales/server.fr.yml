@@ -1175,12 +1175,12 @@ fr:
         topic: "Sujet"
       description: "Sujets qui ont reçu le plus de visites depuis des sources externes."
     page_view_anon_reqs:
-      title: "Anonyme"
+      title: "Anonymes"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés"
       description: "Nombre de nouvelles vues de pages par des visiteurs sans compte."
     page_view_logged_in_reqs:
-      title: "Connecté"
+      title: "Connectés"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs connectés"
       description: "Nombre de nouvelles vues d'utilisateurs connectés."

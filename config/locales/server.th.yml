@@ -180,6 +180,9 @@ th:
         admin: ผู้ดูแลระบบ
         moderator: ผู้ดูแล
         suspended: ระงับการใช้งาน
+    trending_search:
+      labels:
+        searches: ค้นหา
     system_private_messages:
       title: "ระบบ"
     top_referrers:
@@ -189,15 +192,21 @@ th:
         user: "ผู้ใช้"
         num_topics: "หัวข้อ"
     top_traffic_sources:
+      xaxis: "โดเมน"
       num_topics: "หัวข้อ"
       num_users: "ผู้ใช้"
       labels:
+        domain: โดเมน
         num_topics: หัวข้อ
     top_referred_topics:
       labels:
         topic: "หัวข้อ"
     page_view_anon_reqs:
       title: "ไม่ระบุชื่อ"
+    http_total_reqs:
+      title: "ทั้งหมด"
+    topics_with_no_response:
+      yaxis: "ทั้งหมด"
     suspicious_logins:
       labels:
         user: ผู้ใช้
@@ -223,6 +232,9 @@ th:
     admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
     not_available: "ใช้การไม่ได้ ลอง%{suggestion}?"
     omniauth_confirm_button: "ดำเนินการต่อ"
+  admin:
+    email:
+      sent_test: "ส่งแล้ว!"
   system_messages:
     welcome_user:
       subject_template: "ยินดีต้อนรับสู่ %{site_name}!"

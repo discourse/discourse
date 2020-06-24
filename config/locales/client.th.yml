@@ -118,7 +118,7 @@ th:
         disabled: "เปิดเมื่อ %{when}"
       archived:
         enabled: "ถูกเก็บเข้าคลังเมื่อ %{when}"
-        disabled: "ถูกเอกออกจากคลังเมื่อ %{when}"
+        disabled: "ถูกเอาออกจากคลังเมื่อ %{when}"
       pinned:
         enabled: "ถูกปักหมุดเมื่อ %{when}"
         disabled: "ถูกปลดหมุดเมื่อ %{when}"
@@ -304,6 +304,7 @@ th:
       order_by: "สั่งโดย"
       in_reply_to: "ตอบไปยัง"
       explain:
+        total: "ทั้งหมด"
         trust_level_bonus:
           name: "ระดับความไว้ใจ"
       awaiting_approval: "กำลังรอการยืนยัน"
@@ -316,6 +317,7 @@ th:
       grouped_by_topic: "จัดกลุ่มโดยหมวดหมู่"
       topic_has_pending:
         other: "กระทู้นี้มี<b>%{count}</b>โพสต์ที่กำลังรอการอนุมัติ"
+      title: "รีวิว"
       topic: "กระทู้:"
       filtered_user: "ผู้ใช้"
       show_all_topics: "แสดงกระทู้ทั้งหมด"
@@ -358,6 +360,7 @@ th:
         category: "หมวดหมู่"
         orders:
           score: "คะแนน"
+          created_at: "ถูกสร้างเมื่อ"
         priority:
           medium: "ปานกลาง"
           high: "สูง"
@@ -434,11 +437,13 @@ th:
         change_group_setting: "แก้ไขการตั้งค่ากลุ่ม"
         add_user_to_group: "เพิ่มผู้ใช้"
         remove_user_from_group: "ลบผู้ใช้"
+        make_user_group_owner: "ตั้งเป็นเจ้าของ"
     groups:
       member_added: "เพิ่ม"
       member_requested: "ร้องขอเมื่อ"
       add_members:
         title: "เพิ่มสมาชิก"
+        description: "จัดการความเป็นสมาชิกของกลุ่มนี้"
         usernames: "ชื่อผู้ใช้"
       requests:
         title: "คำร้องขอ"
@@ -637,6 +642,7 @@ th:
           read: "อ่าน"
           unread: "ยังไม่อ่าน"
         ignore_duration_username: "ชื่อผู้ใช้"
+        ignore_duration_when: "ช่วงเวลา:"
         ignore_duration_save: "ไม่สนใจ"
         add_ignored_user: "เพิ่ม..."
         mute_option: "ปิด"
@@ -735,7 +741,7 @@ th:
         groups: "กลุ่มของฉัน"
         bulk_select: "เลือกข้อความ"
         move_to_inbox: "ย้ายไปกล่องขาเข้า"
-        move_to_archive: "เก็บ"
+        move_to_archive: "เก็บเข้าคลัง"
         failed_to_move: "เกิดความผิดพลาดในการย้ายข้อความที่เลือก (เครือข่ายของคุณอาจล่ม)"
         select_all: "เลือกทั้งหมด"
         tags: "แท็ก"
@@ -1017,7 +1023,7 @@ th:
         top_links: "ลิงก์ยอดนิยม"
         no_links: "ยังไม่มีลิงก์"
         most_liked_by: "ถูกใจมากที่สุดโดย"
-        most_liked_users: "ถูกใจมากที่สุด"
+        most_liked_users: "ไลค์มากที่สุด"
         most_replied_to_users: "ถูกตอบมากที่สุด"
         no_likes: "ยังไม่มีใครถูกใจ"
         top_categories: "หมวดหมู่ยอดนิยม"
@@ -1209,6 +1215,9 @@ th:
       apple_international: "แอปเปิล/นานาชาติ"
       google: "กูเกิล"
       twitter: "ทวิตเตอร์"
+      win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "หมวดหมู่เท่านั้น"
       categories_and_latest_topics: "หมวดหมู่และกระทู้ล่าสุด"
@@ -1251,6 +1260,9 @@ th:
     shared_drafts:
       title: "แบบร่างที่ถูกแบ่งปัน"
       notice: "กระทู้นี้แสดงให้ผู้ที่สามารถเห็นหมวดหมู่ <b>%{category}</b> เท่านั้น"
+      publish: "เผยแพร่แบบร่างที่ถูกแบ่งปัน"
+      confirm_publish: "คุณแน่ใจหรือว่าต้องการเผยแพร่แบบร่างนี้"
+      publishing: "กำลังเผยแพร่กระทู้..."
     composer:
       emoji: "อีโมจิ :)"
       more_emoji: "อื่นๆ..."
@@ -1300,8 +1312,8 @@ th:
       bold_title: "หนา"
       bold_text: "ตัวอักษรหนา"
       italic_label: "เอียง"
-      italic_title: "ความสำคัญ"
-      italic_text: "ข้อความสำคัญ"
+      italic_title: "เอียง"
+      italic_text: "ตัวอักษรเอียง"
       link_title: "ลิงค์"
       link_description: "กรอกรายละเอียดลิงก์ที่นี่"
       link_dialog_title: "เพิ่มลิงค์"
@@ -1311,6 +1323,7 @@ th:
       quote_text: "ส่วนอ้างถึง"
       code_title: "ข้อความก่อนจัดรูปแบบ"
       code_text: "ข้อความก่อนจัดรูปแบบเยื้อง 4 เคาะ"
+      paste_code_text: "พิมพ์หรือวางโค้ดที่นี่"
       upload_title: "อัปโหลด"
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
       olist_title: "รายการลำดับ"
@@ -1403,6 +1416,7 @@ th:
         group_message_summary: "ข้อความกลุ่มใหม่"
         watching_first_post: "กระทู้ใหม่"
         liked_consolidated: "ไลค์ใหม่"
+        post_approved: "โพสต์ได้รับอนุมัติ"
     upload_selector:
       title: "เพิ่มรูปภาพ"
       title_with_attachments: "เพิ่มรูปภาพหรือไฟล์"
@@ -1473,6 +1487,7 @@ th:
           open: เปิด
           closed: ปิด
           public: เป็นสาธารณะ
+          archived: ถูกเก็บเข้าคลัง
           noreplies: ไม่มีการตอบกลับ
         post:
           time:
@@ -1537,7 +1552,7 @@ th:
       open_draft: "เปิดแบบร่าง"
       private_message: "เริ่มข้อความ"
       archive_message:
-        help: "ย้ายข้อความไปกล่องเก็บข้อความ"
+        help: "ย้ายข้อความไปคลังของคุณ"
         title: "คลัง"
       move_to_inbox:
         title: "ย้ายไปกล่องขาเข้า"
@@ -1545,6 +1560,8 @@ th:
       edit_message:
         help: "แก้ไขโพสต์แรกของข้อความ"
         title: "แก้ไข"
+      defer:
+        help: "ทำเครื่องหมายว่ายังไม่ได้อ่าน"
       remove_from_profile:
         title: "ลบออกจากโปรไฟล์"
       list: "กระทู้"
@@ -1590,6 +1607,7 @@ th:
       topic_status_update:
         num_of_hours: "จำนวนชั่วโมง:"
         num_of_days: "จำนวนวัน:"
+        publish_to: "เผยแพร่ไปยัง:"
         when: "เมื่อ:"
       auto_update_input:
         now: "ตอนนี้"
@@ -1638,7 +1656,7 @@ th:
         back_description: "กลับไปยังโพสต์ล่าสุดที่ยังไม่ได้อ่าน"
         replies_short: "%{current} / %{total}"
       progress:
-        go_top: "บน"
+        go_top: "ด้านบน"
         go_bottom: "ปุ่ม"
         go: "ไป"
         jump_bottom: "ข้ามไปยังโพสต์ล่าสุด"
@@ -1745,7 +1763,7 @@ th:
         unpin_globally_until: "ลบกระทู้นี้ออกจากด้านบนสุดของรายการกระทู้ทั้งหมดหรือรอจนกระทั่ง <strong>%{until}</strong>"
       inviting: "กำลังเชิญ..."
       invite_private:
-        title: "ข้อความที่ใช้เชิญ"
+        title: "เชิญไปยังข้อความ"
         email_or_username: "อีเมลหรือชื่อผู้ใช้ที่ถูกเชิญ"
         email_or_username_placeholder: "อีเมลหรือชื่อผู้ใช้"
         action: "เชิญ"
@@ -1816,7 +1834,7 @@ th:
       change_owner:
         title: "เปลี่ยนเจ้าของ"
         action: "เปลี่ยนความเป็นเจ้าของ"
-        error: "มีความผิดพลาดขณะเปลี่ยนความเป็นเจ้าของโพส"
+        error: "มีข้อผิดพลาดขณะกำลังเปลี่ยนความเป็นเจ้าของโพสต์"
         placeholder: "ชื่อผู้ใช้ของเจ้าของใหม่"
         instructions:
           other: "กรุณาเลือกเจ้าของใหม่สำหรับ %{count}โพสต์ โดย<b>@%{old_user}</b>"
@@ -1868,6 +1886,7 @@ th:
       unread: "โพสต์นี้ยังไม่ถูกอ่าน"
       has_replies:
         other: "%{count} ตอบ"
+      unknown_user: "(ผู้ใช้ที่ลูกลบ/ไม่รู้จัก)"
       has_likes_title:
         other: "%{count} คนถูกใจโพสต์นี้"
       has_likes_title_only_you: "คุณถูกใจโพสต์นี้"
@@ -2220,7 +2239,7 @@ th:
         new: "%{shortcut} ใหม่"
         unread: "%{shortcut} ยังไม่อ่าน"
         categories: "%{shortcut} หมวดหมู่"
-        top: "%{shortcut} บน"
+        top: "%{shortcut} ด้านบน"
         bookmarks: "%{shortcut} บุ๊กมาร์ก"
         profile: "%{shortcut} โปรไฟล์"
         messages: "%{shortcut} ข้อความ"
@@ -2275,10 +2294,17 @@ th:
         mark_tracking: "%{shortcut} ติดตามกระทู้"
         mark_watching: "%{shortcut} ดูกระทู้"
         print: "%{shortcut}พิมพ์กระทู้"
+      search_menu:
+        title: "เมนูค้นหา"
     badges:
       granted_on: "ได้รับเมื่อ %{date}"
+      title: เหรียญ
+      allow_title: "คุณสามารถใช้เหรียญนี้เป็นชื่อเรื่อง"
+      badge_count:
+        other: "%{count}เหรียญ"
       more_badges:
         other: "อีก+%{count}"
+      select_badge_for_title: เลือกเหรียญเพื่อใช้เป็นชื่อเรื่อง
       none: "(ไม่มี)"
       badge_grouping:
         getting_started:
@@ -2482,7 +2508,7 @@ th:
       api:
         user: "ผู้ใช้"
         title: "API"
-        created: สร้าง
+        created: สร้างแล้ว
         updated: อัปเดตแล้ว
         last_used: ใช้ครั้งล่าสุด
         never_used: (ไม่เคย)
@@ -2501,6 +2527,8 @@ th:
         description: "รายละเอียด"
         wildcard_event: "ส่งทุกอย่างหาฉัน"
         active: "ใช้งานอยู่"
+        user_badge_event:
+          details: "เมื่อผู้ใช้ได้รับเหรียญ"
         delivery_status:
           title: "สถานะการส่ง"
           inactive: "ไม่ใช้งาน"
@@ -2619,18 +2647,35 @@ th:
             name: "หลัก"
         email_style:
           css: "CSS"
+          save_error_with_reason: "การเปลี่ยนแปลงไม่ได้ถูกบันทึก %{error}"
       email:
         title: "อีเมล"
         settings: "การตั้งค่า"
+        templates: "รูปแบบ"
+        advanced_test:
+          email: "ข้อความต้นฉบับ"
+        error: "<b>ผิดพลาด</b> - %{server_error}"
         sent: "ส่ง"
+        skipped: "ข้าม"
         received: "รับ"
-        rejected: "ปฏิเสธ"
+        rejected: "ถูกปฏิเสธ"
+        sent_at: "ถูกส่งเมื่อ"
         time: "เวลา"
         user: "ผู้ใช้"
+        email_type: "ประเภทอีเมล"
+        to_address: "ไปยังที่อยู่"
+        sent_test: "ส่งแล้ว!"
         refresh: "รีเฟรช"
+        send_digest_label: "ส่งผลลัพธ์นี้ไปยัง:"
+        send_digest: "ส่ง"
+        sending_email: "กำลังส่งอีเมล"
+        html: "html"
+        text: "ข้อความ"
+        last_seen_user: "ผู้ใช้ที่ดูล่าสุด:"
         incoming_emails:
           from_address: "จาก"
           to_addresses: "ถึง"
+          cc_addresses: "Cc"
           subject: "หัวข้อ"
           error: "ผิดพลาด"
           modal:
@@ -2655,13 +2700,17 @@ th:
         delete: "ลบ"
         edit: "แก้ไข"
         save: "บันทึก"
+        screened_actions:
+          block: "บล็อก"
         staff_actions:
           all: "ทั้งหมด"
           clear_filters: "แสดงทั้งหมด"
           staff_user: "ผู้ใช้"
+          target_user: "ผู้ใช้เป้าหมาย"
           subject: "หัวข้อ"
           when: "เมื่อ"
           details: "รายละเอียด"
+          previous_value: "ก่อนหน้า"
           new_value: "ใหม่"
           show: "แสดง"
           modal_title: "รายละเอียด"
@@ -2669,30 +2718,90 @@ th:
           actions:
             delete_user: "ลบผู้ใช้"
             change_trust_level: "เปลี่ยนระดับความไว้ใจ"
+            change_username: "เปลี่ยนชื่อผู้ใช้"
+            change_theme: "เปลี่ยนธีม"
+            delete_theme: "ลบธีม"
+            suspend_user: "ระงับผู้ใช้"
+            unsuspend_user: "เลิกระงับผู้ใช้"
+            removed_suspend_user: "ระงับผู้ใช้ (ถูกลบ)"
+            removed_unsuspend_user: "เลิกระงับผู้ใช้ (ถูกลบ)"
+            check_email: "ตรวจสอบอีเมล"
             delete_topic: "ลบกระทู้"
             delete_post: "ลบโพสต์"
+            change_category_settings: "เปลี่ยนการตั้งค่าหมวดหมู่"
             delete_category: "ลบหมวดหมู่"
+            create_category: "สร้างหมวดหมู่"
+            deleted_tag: "แท็กที่ถูกลบ"
+            renamed_tag: "แท็กที่ถูกเปลี่ยนชื่อ"
+            activate_user: "เปิดใช้งานผู้ใช้"
+            deactivate_user: "ระงับการเปิดใช้งานผู้ใช้"
+            reviewed_post: "โพสต์ที่ถูกรีวิว"
+            check_personal_message: "ตรวจสอบข้อความส่วนตัว"
+            topic_published: "กระทู้ถูกเผยแพร่"
+            post_approved: "โพสต์ได้รับอนุมัติ"
+            post_rejected: "โพสต์ถูกปฏิเสธ"
+            create_badge: "สร้างเหรียญ"
+            change_badge: "เปลี่ยนเหรียญ"
+            delete_badge: "ลบเหรียญ"
+            change_name: "เปลี่ยนชื่อ"
+            approve_user: "ผู้ใช้ที่ได้รับอนุมัติ"
+            change_theme_setting: "เปลี่ยนการตั้งค่าธีม"
+            change_title: "เปลี่ยนชื่อเรื่อง"
+            page_published: "เพจถูกเผยแพร่"
+            page_unpublished: "เพจไม่ถูกเผยแพร่"
+            add_email: "เพิ่มอีเมล"
+            update_email: "อัปเดตอีเมล"
+            destroy_email: "ทำลายอีเมล"
+        screened_emails:
+          email: "ที่อยู่อีเมล"
+          actions:
+            allow: "อนุญาต"
         screened_urls:
           url: "URL"
+          domain: "โดเมน"
         screened_ips:
+          actions:
+            block: "บล็อก"
+            do_nothing: "อนุญาต"
+            allow_admin: "อนุญาตแอดมิน"
           form:
             label: "ใหม่:"
+            ip_address: "ที่อยู่ไอพี"
             add: "เพิ่ม"
             filter: "ค้นหา"
         search_logs:
+          searches: "ค้นหา"
           types:
+            all_search_types: "การค้นหาทั้งหมด"
             header: "Header"
+            full_page: "ทั้งหน้า"
       watched_words:
+        search: "ค้นหา"
         clear_filter: "ล้าง"
         download: ดาวน์โหลด
         clear_all: ล้างทั้งหมด
+        word_count:
+          other: "%{count}คำ"
         actions:
+          block: "บล็อก"
+          censor: "เซนเซอร์"
+          require_approval: "ต้องได้รับการอนุมัติ"
           flag: "ธง"
         form:
+          label: "คำใหม่:"
           add: "เพิ่ม"
+          success: "สำเร็จ"
+          exists: "มีอยู่แล้ว"
+          upload: "เพิ่มจากไฟล์"
+          upload_successful: "อัปโหลดสำเร็จแล้ว เพิ่มคำเรียบร้อย"
+      impersonate:
+        not_found: "ไม่พบผู้ใช้นั้น"
       users:
         title: "ผู้ใช้"
         last_emailed: "อีเมลล่าสุด"
+        active: "เปิดใช้งานแล้ว"
+        show_emails: "แสดงอีเมล"
+        hide_emails: "ซ่อนอีเมล"
         nav:
           new: "ใหม่"
           active: "ใช้งานอยู่"
@@ -2709,7 +2818,7 @@ th:
           regular: "ผู้ใช้ที่ระดับความไว้ใจ 3 (ทั่วไป)"
           leader: "ผู้ใช้ที่ระดับความไว้ใจ 4 (ผู้นำ)"
           staff: "ทีมงาน"
-          moderators: "ผู้ดูแล"
+          moderators: "ผู้ดูแลระบบ"
           suspended: "ผู้ใช้งานที่ถูกระงับ"
         not_verified: "ยังไม่ได้รับการตรวจสอบ"
         check_email:
@@ -2720,11 +2829,23 @@ th:
         unsuspend_failed: "มีข้อผิดพลาดในเปิดผู้ใช้งานนี้ %{error}"
         suspend_duration: "ผู้ใช้งานนี้จะถูกระงับถึงเมื่อไร"
         suspend_reason: "เหตุผล"
+        suspend_message: "ข้อความอีเมล"
         suspended_by: "ระงับการใช้งานโดย"
         silence_reason: "เหตุผล"
+        silence_message: "ข้อความอีเมล"
+        suspended_until: "(จนกระทั่ง%{until})"
+        cant_suspend: "ไม่สามารถระงับผู้ใช้งานนี้ได้"
         delete_all_posts: "ลบโพสต์ทั้งหมด"
+        delete_posts_progress: "กำลังลบโพสต์"
+        delete_posts_failed: "มีปัญหาขณะกำลังลบโพสต์"
+        penalty_post_delete: "ลบโพสต์"
+        penalty_post_delete_replies: "ลบโพสต์ + คำตอบ"
+        penalty_post_edit: "แก้ไขโพสต์"
+        moderator: "ผู้ดูแลระบบใช่ไหม"
+        admin: "แอดมินใช่ไหม"
         suspended: "ระงับการใช้งานหรือไม่"
         show_admin_profile: "แอดมิน"
+        show_public_profile: "แสดงโปรไฟล์สาธารณะ"
         ip_lookup: "ค้นหา IP"
         log_out: "ออกจากระบบ"
         unsuspend: "เปิดการใช้งาน"
@@ -2742,14 +2863,25 @@ th:
         delete: "ลบผู้ใช้"
         merge:
           prompt:
+            title: "ย้ายและลบ @%{username}"
+            target_username_placeholder: "ชื่อผู้ใช้ของเจ้าของใหม่"
+            transfer_and_delete: "ถ่ายโอนและลบ @%{username}"
             cancel: "ยกเลิก"
           confirmation:
+            title: "ถ่ายโอนและลบ @%{username}"
+            text: "ถ่ายโอน @%{username} ไปยัง @%{targetUsername}"
+            transfer_and_delete: "ถ่ายโอนและลบ @%{username}"
             cancel: "ยกเลิก"
         delete_forbidden_because_staff: "ไม่สามารถลบแอดมินและผู้ดูแลระบบได้"
         delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสต์ทั้งหมดของแอดมินและผู้ดูแลระบบได้"
         delete_and_block: "ลบและ <b>บล็อก</b> อีเมลและไอพีนี้"
         delete_dont_block: "ลบเท่านั้น"
+        deleting_user: "กำลังลบผู้ใช้..."
         deleted: "ผู้ใช้ถูกลบแล้ว"
+        delete_failed: "มีข้อผิดพลาดขณะกำลังลบผู้ใช้นั้น กรุณาตรวจสอบอีกครั้งว่าโพสต์ทั้งหมดถูกลบก่อนลบผู้ใช้นั้น"
+        send_activation_email: "ส่งอีเมลยืนยันตัวตน"
+        activation_email_sent: "อีเมลยืนยันตัวตนถูกส่งแล้ว"
+        send_activation_email_failed: "เกิดปัญหาขณะกำลังส่งอีเมลยืนยันตัวตนอีกฉบับ %{error}"
         trust_level_change_failed: "มีความผิดพลาดขณะกำลังเปลี่ยนระดับความไว้ใจของผู้ใช้"
         trust_level_2_users: "ระดับความไว้ใจ 2 ผู้ใช้"
         trust_level_3_requirements: "ระดับความไว้ใจ 3 ความต้องการ"
@@ -2759,14 +2891,19 @@ th:
         unlock_trust_level: "ปลดล็อกระดับความไว้ใจ"
         tl3_requirements:
           title: "ความต้องการเพิ่มปรับระดับความไว้ใจเป็น 3"
+          table_title:
+            other: "ในช่วง %{count}วันที่ผ่านมา:"
           value_heading: "ค่า"
           requirement_heading: "ความต้องการ"
           visits: "เยี่ยมชม"
           days: "วัน"
           topics_viewed: "กระทู้ที่ดู"
           posts_read: "โพสต์ที่อ่าน"
+          flagged_posts: "โพสต์ที่ถูกปักธง"
+          flagged_by_users: "ผู้ใช้ที่ปักธง"
           likes_given: "ได้ชอบ"
           likes_received: "ได้รับการชอบ"
+          suspended: "ถูกระงับการใช้งาน (6 เดือนที่ผ่านมา)"
           qualifies: "คุณสมบัติเพียงพอสำหรับระดับความไว้ใจที่ 3"
           does_not_qualify: "คุณสมบัติไม่เพียงพอสำหรับระดับความไว้ใจที่ 3"
           locked_will_not_be_promoted: "ระดับความไว้ใจถูกล็อก จะไม่ถูกปรับระดับความไว้ใจขึ้น"
@@ -2829,9 +2966,11 @@ th:
         clear_filter: "ล้าง"
         add_url: "เพิ่ม URL"
         add_host: "เพิ่มโฮส"
+        add_group: "เพิ่มกลุ่ม"
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
+            title: "อัปโหลดรูปภาพ"
         categories:
           all_results: "ทั้งหมด"
           required: "ต้องการ"
@@ -2861,23 +3000,35 @@ th:
         default_categories:
           modal_yes: "ใช่"
       badges:
+        title: เหรียญ
+        new_badge: เหรียญใหม่
         new: ใหม่
         name: ชื่อ
+        badge: เหรียญ
         display_name: ชื่อที่ใช้แสดง
         description: รายละเอียด
         long_description: รายละเอียดแบบยาว
+        badge_type: ประเภทเหรียญ
         badge_grouping: กลุ่ม
+        badge_groupings:
+          modal_title: การจัดกลุ่มเหรียญ
         granted_by: อนุญาตโดย
         granted_at: อนุญาตเมื่อ
         reason_help: (ลิงก์ไปยังหัวข้อหรือโพส)
         save: บันทึก
         delete: ลบ
+        delete_confirm: คุณแน่ใจหรือว่าต้องการลบเหรียญนี้
         revoke: เอาออก
         reason: เหตุผล
-        icon: ไอค่อน
+        edit_badges: แก้ไขเหรียญ
+        icon: ไอคอน
         image: ภาพ
         trigger_type:
+          none: "อัปเดตรายวัน"
+          post_revision: "เมื่อผู้ใช้แก้ไขหรือสร้างโพสต์"
           trust_level_change: "เมื่อผู้ใช้เปลี่ยนระดับความไว้ใจ"
+          user_change: "เมื่อผู้ใช้ถูกแก้ไขหรือถูกสร้าง"
+          post_processed: "หลังจากโพสต์ถูกดำเนินการ"
         preview:
           bad_count_warning:
             header: "ระวัง!"
@@ -2887,6 +3038,11 @@ th:
             with_post: "<span class=\"username\">%{username}</span> สำหรับโพสต์ใน %{link}"
             with_post_time: "<span class=\"username\">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> เมื่อ <span class=\"time\">%{time}</span>"
+        badge_intro:
+          emoji: "อีโมจินักเรียนหญิง"
+          what_are_badges_title: "เหรียญคืออะไร"
+        mass_award:
+          replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้
       emoji:
         title: "อีโมจิ"
         add: "เพิ่มอีโมจิใหม่"
@@ -2926,15 +3082,21 @@ th:
   wizard_js:
     wizard:
       done: "เสร็จ"
+      finish: "เสร็จสิ้น"
       back: "กลับ"
+      next: "ต่อไป"
       upload: "อัปโหลด"
       uploading: "กำลังอัปโหลด..."
       upload_error: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ กรุณาลองใหม่อีกครั้ง"
+      staff_count:
+        other: "ชุมชนของคุณมีทีมงาน %{count}คน รวมถึงคุณด้วย"
       invites:
         add_user: "เพิ่ม"
+        none_added: "คุณยังไม่ได้เชิญทีมงาน คุณแน่ใจหรือว่าต้องการดำเนินการต่อ"
         roles:
           admin: "แอดมิน"
           moderator: "ผู้ดูแล"
+          regular: "ผู้ใช้ทั่วไป"
       previews:
         share_button: "แบ่งปัน"
         reply_button: "ตอบ"

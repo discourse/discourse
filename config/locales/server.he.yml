@@ -2069,6 +2069,7 @@ he:
       max_username_length_exists: "לא ניתן להגדיר את האורך המרבי לשם המשתמש ליותר תווים מאשר שם המשתמש הארוך ביותר במערכת (%{username})."
       max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       invalid_hex_value: "ערכי הצבעים חייבים להיות קודים הקסדצימליים באורך 6 תווים."
+      empty_selectable_avatars: "עליך להעלות שתי תמונות ייצוגיות לפחות כדי לבחור ביניהן לפני הפעלת האפשרות הזאת."
       category_search_priority:
         very_low_weight_invalid: "לא ניתן להגדיר משקל מעבר ל־‚category_search_priority_low_weight’ (משקל נמוך לעדיפות חיפוש בקטגוריות)."
         low_weight_invalid: "לא ניתן להגדיר משקל שווה או גדול מ־1 או קטן מ־‚category_search_priority_very_low_weight’."

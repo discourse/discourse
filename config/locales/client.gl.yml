@@ -354,6 +354,7 @@ gl:
         fields: "Campos"
       topics:
         topic: "Tema"
+        reviewable_count: "Número"
         deleted: "[Tema eliminado]"
         original: "(tema orixinal)"
         details: "detalles"
@@ -792,6 +793,7 @@ gl:
         save: "Gardar"
         edit: "Editar"
         security_key:
+          register: "Rexistrarse"
           save: "Gardar"
       change_about:
         title: "Cambiar «Verbo de min»"
@@ -1197,6 +1199,7 @@ gl:
       complete_email_not_found: "Ningunha conta coincide co <b>%{email}</b>"
       confirm_title: "Continuar a %{site_name}"
       logging_in_as: "Iniciar sesión como %{email}"
+      confirm_button: Finalizar inicio de sesión
     login:
       title: "Iniciar sesión"
       username: "Usuario"
@@ -1951,6 +1954,7 @@ gl:
         edit: "Sentímolo pero produciuse un erro editando a publicación. Téntao de novo."
         upload: "Sentímolo pero produciuse un erro enviando a publicación. Téntao de novo."
         too_many_uploads: "Sentímolo pero só podes enviar un ficheiro de cada vez."
+        upload_not_authorized: "Sentímolo, o ficheiro que tentas subir non está autorizado (extensións permitidas: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir anexos."
         attachment_download_requires_login: "Sentímolo pero debes iniciar sesión para descargar anexos."
@@ -2127,6 +2131,7 @@ gl:
         options:
           normal: "Normal"
           ignore: "Ignorar"
+          low: "Baixa"
           high: "Alta"
       sort_options:
         likes: "Gústames"
@@ -2475,6 +2480,8 @@ gl:
         backups: "Copias de seguranza"
         traffic_short: "Tráfico"
         traffic: "Peticións web de aplicativos"
+        page_views: "Visualizacións de páxinas"
+        page_views_short: "Visualizacións de páxinas"
         show_traffic_report: "Amosar o informe detallado do tráfico"
         moderators_activity: Actividade dos moderadores
         whats_new_in_discourse: Novidades en Discourse
@@ -2714,6 +2721,7 @@ gl:
           upload: "Enviar"
           install: "Instalar"
           installed: "Instalado"
+          install_popular: "Destacados"
           about_theme: "Sobre"
           enable: "Activar"
           disable: "Desactivar"
@@ -2983,6 +2991,7 @@ gl:
           title: "Buscar rexistros"
           term: "Termo"
           searches: "Buscas"
+          click_through_rate: "CTR"
           types:
             all_search_types: "todos os tipos de busca"
             header: "Cabeceira"
