@@ -74,7 +74,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
         results.each_with_index do |topic_id, idx|
           begin
             c.category_featured_topics.create(topic_id: topic_id, rank: idx)
-          rescue PG::UniqueViolation
+          rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
             # If another process features this topic, just ignore it
           end
         end
