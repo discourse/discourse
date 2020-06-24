@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   application: controller(),
+  queryParams: ["filter"],
   router: service(),
   currentPath: readOnly("router._router.currentPath"),
   filter: "all",
@@ -41,10 +42,6 @@ export default Controller.extend({
 
     loadMore() {
       this.model.loadMore();
-    },
-
-    filterNotifications(value) {
-      this.set("filter", value);
     }
   }
 });

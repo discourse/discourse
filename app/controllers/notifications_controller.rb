@@ -37,18 +37,28 @@ class NotificationsController < ApplicationController
                        seen_notification_id: current_user.seen_notification_id)
     else
       offset = params[:offset].to_i
-
-      notifications = Notification.where(user_id: user.id)
-        .visible
-        .includes(:topic)
-        .order(created_at: :desc)
-
+      if params[:filter].present? && params[:filter] == "read"
+        notifications = Notification.where(user_id: user.id, read: true)
+          .visible
+          .includes(:topic)
+          .order(created_at: :desc)
+      elsif params[:filter].present? && params[:filter] == "unread"
+        notifications = Notification.where(user_id: user.id, read: false)
+          .visible
+          .includes(:topic)
+          .order(created_at: :desc)
+      else
+        notifications = Notification.where(user_id: user.id)
+          .visible
+          .includes(:topic)
+          .order(created_at: :desc)
+      end
       total_rows = notifications.dup.count
       notifications = notifications.offset(offset).limit(60)
       render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
                        total_rows_notifications: total_rows,
                        seen_notification_id: user.seen_notification_id,
-                       load_more_notifications: notifications_path(username: user.username, offset: offset + 60))
+                       load_more_notifications: notifications_path(username: user.username, offset: offset + 60, filter: params[:filter]))
     end
 
   end
